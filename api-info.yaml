@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ci
+  description: The official Harness SWAGGER APIs
+spec:
+  type: openapi
+  lifecycle: production
+  owner: ui
+  definition:
+    $text: https://qa.harness.io/api/swagger.json
