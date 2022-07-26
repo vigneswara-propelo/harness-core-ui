@@ -9,3 +9,4 @@ spec:
   lifecycle: production
   owner: ui-team
   type: service
+  consumesApis: swagger
