@@ -2,6 +2,6 @@ site_name: 'ng-ui'
 
 nav:
   - Home: index.md
-
+  - README: README.md
 plugins:
   - techdocs-core
