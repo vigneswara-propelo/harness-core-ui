@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app=next-gen-ui'
+    github.com/project-slug: 'sandeepa-kv-jois/harness-core-ui'
+  name: ng-ui
+spec:
+  lifecycle: production
+  owner: ui-team
+  type: service
