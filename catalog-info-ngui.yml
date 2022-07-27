@@ -10,6 +10,8 @@ spec:
   lifecycle: production
   owner: ui-team
   type: service
+  dependsOn: 
+    - ui-core-lib
   consumesApis: 
     - swagger
-  dependsOn: ['ui-core-lib']
+  
