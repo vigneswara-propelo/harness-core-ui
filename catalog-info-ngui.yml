@@ -11,7 +11,7 @@ spec:
   owner: ui-team
   type: service
   dependsOn: 
-    - ui-core-lib
+    - library:ui-core-lib
   consumesApis: 
     - swagger
   
