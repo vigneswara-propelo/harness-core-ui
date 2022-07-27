@@ -12,3 +12,5 @@ spec:
   type: service
   consumesApis: 
     - swagger
+  dependsOn:
+  - ui-core-lib
