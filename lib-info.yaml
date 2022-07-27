@@ -1,7 +1,9 @@
 apiVersion: backstage.io/v1alpha1
-kind: library
+kind: Component
 metadata:
-  name: Harness_UI
+  name: ui-core-lib
+  description: UI core library
 spec:
-  owner: ui
   type: library
+  lifecycle: experimental
+  owner: ui
