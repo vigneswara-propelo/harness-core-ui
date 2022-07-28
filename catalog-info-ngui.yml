@@ -8,6 +8,7 @@ metadata:
   name: ng-ui
 spec:
   lifecycle: production
+  system: ng 
   owner: ui-team
   type: service
   dependsOn: 
