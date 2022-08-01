@@ -3,7 +3,7 @@ kind: Component
 metadata:
   annotations:
     backstage.io/kubernetes-label-selector: 'app=next-gen-ui'
-    github.com/project-slug: 'harness/harness-core-ui'
+    github.com/project-slug: 'sandeepa-kv-jois/harness-core-ui'
     backstage.io/techdocs-ref: url:https://github.com/sandeepa-kv-jois/harness-core-ui
   name: ng-ui
 spec:
