@@ -330,7 +330,9 @@ function KustomizeWithGIT({
                     placeholder={getString('pipeline.manifestType.kustomizeFolderPathPlaceholder')}
                     name="folderPath"
                     tooltipProps={{
-                      dataTooltipId: 'kustomizePathHelperText'
+                      dataTooltipId: formik.values.optimizedKustomizeManifestCollection
+                        ? 'kustomizeBasePath'
+                        : 'kustomizePathHelperText'
                     }}
                     multiTextInputProps={{ expressions, allowableTypes }}
                   />
