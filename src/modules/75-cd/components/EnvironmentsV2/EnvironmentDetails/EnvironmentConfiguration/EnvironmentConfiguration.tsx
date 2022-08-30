@@ -24,7 +24,8 @@ import {
   MultiTypeInputType,
   ButtonVariation,
   Tag,
-  FormikForm
+  FormikForm,
+  HarnessDocTooltip
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
@@ -302,8 +303,14 @@ export default function EnvironmentConfiguration({
                 id="advanced"
                 addDomId={true}
                 summary={
-                  <Text color={Color.GREY_700} font={{ weight: 'bold' }} margin={{ left: 'small', right: 'small' }}>
+                  <Text
+                    color={Color.GREY_700}
+                    font={{ weight: 'bold' }}
+                    margin={{ left: 'small', right: 'small' }}
+                    data-tooltip-id="environmentGlobalOverride"
+                  >
                     {`${getString('common.advanced')}  ${getString('titleOptional')}`}
+                    <HarnessDocTooltip useStandAlone={true} tooltipId="environmentGlobalOverride" />
                   </Text>
                 }
                 details={
@@ -312,8 +319,14 @@ export default function EnvironmentConfiguration({
                       className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
                       id="variables"
                     >
-                      <Text color={Color.GREY_700} margin={{ bottom: 'small' }} font={{ weight: 'bold' }}>
+                      <Text
+                        color={Color.GREY_700}
+                        margin={{ bottom: 'small' }}
+                        font={{ weight: 'bold' }}
+                        data-tooltip-id="variableOverride"
+                      >
                         {getString('common.variables')}
+                        <HarnessDocTooltip useStandAlone={true} tooltipId="variableOverride" />
                       </Text>
                       <CustomVariablesEditableStage
                         formName="editEnvironment"
@@ -337,8 +350,14 @@ export default function EnvironmentConfiguration({
                         className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
                         id="manifests"
                       >
-                        <Text color={Color.GREY_700} font={{ weight: 'bold' }} margin={{ bottom: 'small' }}>
+                        <Text
+                          color={Color.GREY_700}
+                          font={{ weight: 'bold' }}
+                          margin={{ bottom: 'small' }}
+                          data-tooltip-id="manifestsOverride"
+                        >
                           {getString('manifests')}
+                          <HarnessDocTooltip useStandAlone={true} tooltipId="manifestsOverride" />
                         </Text>
                         <ServiceManifestOverride
                           manifestOverrides={defaultTo(formikProps.values.overrides?.manifests, [])}

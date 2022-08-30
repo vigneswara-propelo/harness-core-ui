@@ -20,7 +20,8 @@ import {
   Dialog,
   useToaster,
   Accordion,
-  IconName
+  IconName,
+  HarnessDocTooltip
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { FontVariation, Color } from '@harness/design-system'
@@ -217,8 +218,14 @@ export function ServiceOverrides(): React.ReactElement {
     <Container padding={{ left: 'xxlarge', right: 'medium' }}>
       <div className={css.serviceOverridesContainer}>
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-          <Text color={Color.GREY_700} margin={{ bottom: 'small' }} font={{ weight: 'bold' }}>
+          <Text
+            color={Color.GREY_700}
+            margin={{ bottom: 'small' }}
+            font={{ weight: 'bold' }}
+            data-tooltip-id="serviceOverrides"
+          >
             {getString('common.serviceOverrides')}
+            <HarnessDocTooltip useStandAlone={true} tooltipId="serviceOverrides" />
           </Text>
           <RbacButton
             size={ButtonSize.SMALL}
@@ -276,8 +283,14 @@ export function ServiceOverrides(): React.ReactElement {
                   <Layout.Vertical spacing="medium">
                     {!!variables.length && (
                       <Card>
-                        <Text color={Color.GREY_900} font={{ weight: 'semi-bold' }} margin={{ bottom: 'medium' }}>
+                        <Text
+                          color={Color.GREY_900}
+                          font={{ weight: 'semi-bold' }}
+                          margin={{ bottom: 'medium' }}
+                          data-tooltip-id="serviceVariableOverrides"
+                        >
                           {getString('cd.serviceOverrides.variableOverrides')}
+                          <HarnessDocTooltip useStandAlone={true} tooltipId="serviceVariableOverrides" />
                         </Text>
                         <ServiceVariablesOverridesList
                           variableOverrides={variables}
@@ -297,8 +310,14 @@ export function ServiceOverrides(): React.ReactElement {
                     )}
                     {!!manifests.length && (
                       <Card>
-                        <Text color={Color.GREY_900} font={{ weight: 'semi-bold' }} margin={{ bottom: 'medium' }}>
+                        <Text
+                          color={Color.GREY_900}
+                          font={{ weight: 'semi-bold' }}
+                          margin={{ bottom: 'medium' }}
+                          data-tooltip-id="serviceManifestOverrides"
+                        >
                           {getString('cd.serviceOverrides.manifestOverrides')}
+                          <HarnessDocTooltip useStandAlone={true} tooltipId="serviceManifestOverrides" />
                         </Text>
                         <ServiceManifestOverridesList
                           manifestOverridesList={manifests}

@@ -130,10 +130,10 @@ export default function AddEditServiceOverride({
     const serviceSelected = services.find(serviceObj => serviceObj.service?.identifier === item.value)
     const serviceOverride = serviceOverrides?.find(svcOverride => svcOverride.serviceRef === item.value)
 
-    const selectedSvcVariable = getVariablesOverrideInitialValue(serviceOverride)
+    const selectedSvcVariable = !isEmpty(serviceOverride) ? getVariablesOverrideInitialValue(serviceOverride) : []
     formikRef.current?.setFieldValue('variables', selectedSvcVariable)
 
-    const selectedSvcManifest = getManifestOverrideObject(serviceOverride)
+    const selectedSvcManifest = !isEmpty(serviceOverride) ? getManifestOverrideObject(serviceOverride) : []
     formikRef.current?.setFieldValue('manifests', selectedSvcManifest)
 
     // istanbul ignore else
