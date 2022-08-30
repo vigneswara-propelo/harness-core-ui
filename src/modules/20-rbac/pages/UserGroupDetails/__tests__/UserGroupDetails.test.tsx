@@ -21,6 +21,7 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps, userGroupPathProps } from '@common/utils/routeUtils'
 import { ResponseBoolean, useGetUserGroupAggregate } from 'services/cd-ng'
 import * as hooks from '@common/hooks/useFeatureFlag'
+import { communityLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
 import UserGroupDetails from '../UserGroupDetails'
 import {
   mockResponse,
@@ -124,6 +125,19 @@ describe('UserGroupDetails Test', () => {
   })
   test('render data', () => {
     expect(container).toMatchSnapshot()
+  })
+
+  test('render data for community editiion', () => {
+    const communityEditionRender = render(
+      <TestWrapper
+        defaultLicenseStoreValues={communityLicenseStoreValues}
+        path={routes.toUserGroupDetails({ ...accountPathProps, ...userGroupPathProps })}
+        pathParams={{ accountId: 'testAcc', userGroupIdentifier: 'New_RG' }}
+      >
+        <UserGroupDetails />
+      </TestWrapper>
+    )
+    expect(communityEditionRender.container).toMatchSnapshot()
   })
   test('Delete Member', async () => {
     deleteMember.mockReset()

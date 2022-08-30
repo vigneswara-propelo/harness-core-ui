@@ -118,12 +118,13 @@ const UserGroupDetails: React.FC = () => {
             ]}
           />
         }
+        className={css.header}
         title={
           <Layout.Vertical spacing="xsmall">
             <Text color={Color.BLACK} font="medium">
               {userGroup.name}
             </Text>
-            {userGroup.description && <Text>{userGroup.description}</Text>}
+            {userGroup.description && <Text lineClamp={1}>{userGroup.description}</Text>}
             {userGroup.tags && (
               <Layout.Horizontal padding={{ top: 'small' }}>
                 <TagsRenderer tags={userGroup.tags || /* istanbul ignore next */ {}} length={6} />
