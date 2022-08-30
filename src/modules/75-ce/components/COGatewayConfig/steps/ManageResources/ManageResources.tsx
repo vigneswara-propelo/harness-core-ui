@@ -30,7 +30,6 @@ import CORdsSelector from '@ce/components/CORdsSelector/CORdsSelector'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import { useGatewayContext } from '@ce/context/GatewayContext'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import COGatewayConfigStep from '../../COGatewayConfigStep'
 import { fromResourceToInstanceDetails, isFFEnabledForResource } from '../../helper'
 import ResourceSelectionModal from '../../ResourceSelectionModal'
@@ -104,7 +103,6 @@ const managedResources: ManagedResourecType[] = [
 const ManageResources: React.FC<ManageResourcesProps> = props => {
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps>()
-  const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
   const { trackEvent } = useTelemetry()
 
@@ -223,7 +221,7 @@ const ManageResources: React.FC<ManageResourcesProps> = props => {
 
   const handleErrorDisplay = (e: any, fallbackMsgKey?: string) => {
     if (!Utils.isUserAbortedRequest(e)) {
-      showError(getRBACErrorMessage(e), undefined, fallbackMsgKey)
+      showError(Utils.getASErrorMessage(e), undefined, fallbackMsgKey)
     }
   }
 

@@ -153,7 +153,7 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
     } catch (e) {
       showError(
         getString('ce.co.autoStoppingRule.configuration.step4.tabs.schedules.unsuccessfulDeletionMessage', {
-          error: defaultTo(e.data?.errors?.join('\n'), e.data?.message)
+          error: defaultTo(Utils.getASErrorMessage(e), e.data?.message)
         })
       )
     }
@@ -234,7 +234,7 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
       await handlePostRuleSave(result.response)
     } catch (e) /* istanbul ignore next */ {
       setSaveInProgress(false)
-      showError(e.data?.errors?.join('\n') || e.data?.message || e.message, undefined, 'ce.savegw.error')
+      showError(Utils.getASErrorMessage(e) || e.data?.message || e.message, undefined, 'ce.savegw.error')
     }
   }
   const nextTab = (): void => {

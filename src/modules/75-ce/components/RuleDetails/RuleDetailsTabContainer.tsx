@@ -367,7 +367,7 @@ const AdvancedConfigurationRow: React.FC<AdvancedConfigurationRowProps> = ({ ser
       showSuccess(getString('ce.co.ruleDetails.successfulResponse'))
       setService(response)
     } catch (err) /* istanbul ignore next */ {
-      showError(err.data?.errors?.join('\n') || err.data?.message)
+      showError(Utils.getASErrorMessage(err) || err.data?.message)
       if ('dry_run' in opts) {
         toggleDryRunMode()
       }

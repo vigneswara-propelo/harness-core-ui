@@ -96,7 +96,7 @@ const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> 
       })
       setData(savingsResponse.response as CumulativeSavings)
     } catch (error) {
-      const errMessage = _defaultTo(error?.data?.errors?.join(', '), error?.message)
+      const errMessage = _defaultTo(Utils.getASErrorMessage(error), error?.message)
       showError(errMessage)
     }
   }

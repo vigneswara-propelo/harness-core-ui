@@ -15,6 +15,7 @@ import { useDeleteAccessPoints, DeleteAccessPointPayload } from 'services/lw'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { Utils } from '@ce/common/Utils'
 
 const modalPropsLight: IDialogProps = {
   isOpen: true,
@@ -58,7 +59,7 @@ const DeleteAccessPoint = (props: DeleteAccessPointProps) => {
       showSuccess(getString('ce.co.accessPoint.delete.success'))
       refresh()
     } catch (e) {
-      showError(e.data.errors[0], undefined, 'ce.delete.ap.error')
+      showError(Utils.getASErrorMessage(e), undefined, 'ce.delete.ap.error')
     }
     hideModal()
   }

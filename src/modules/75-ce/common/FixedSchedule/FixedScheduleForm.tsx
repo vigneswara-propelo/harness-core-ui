@@ -130,7 +130,7 @@ const FixedScheduleForm: React.FC<FixedScheduleFormProps> = props => {
       )
       props.addSchedule(updatedData)
     } catch (e) {
-      setErrorString(e?.data?.errors?.join('\n'))
+      setErrorString(Utils.getASErrorMessage(e))
     }
     return updatedData
   }

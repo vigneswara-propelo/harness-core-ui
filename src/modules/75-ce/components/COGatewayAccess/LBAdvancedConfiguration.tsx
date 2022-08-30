@@ -112,7 +112,7 @@ const LBAdvancedConfiguration: React.FC<LBAdvancedConfigurationProps> = props =>
         handleSaveRoutingRecords(result.response)
       }
     } catch (e) {
-      showError(e.data?.message || e.message, undefined, 'ce.creaetap.result.error')
+      showError(Utils.getASErrorMessage(e) || e.data?.message || e.message, undefined, 'ce.creaetap.result.error')
     } finally {
       setShowRoutingTable(true)
     }
