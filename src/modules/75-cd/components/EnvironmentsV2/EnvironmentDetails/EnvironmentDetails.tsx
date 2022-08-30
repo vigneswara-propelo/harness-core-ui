@@ -281,10 +281,7 @@ export default function EnvironmentDetails(): React.ReactElement {
                           onClick={
                             /* istanbul ignore next */ () => {
                               if (selectedView === SelectedView.YAML) {
-                                const latestYaml = defaultTo(
-                                  yamlHandler?.getLatestYaml(),
-                                  /* istanbul ignore next */ ''
-                                )
+                                const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), '')
                                 yamlHandler?.getYAMLValidationErrorMap()?.size
                                   ? showError(getString('common.validation.invalidYamlText'))
                                   : onUpdate(parse(latestYaml)?.environment)
@@ -303,7 +300,7 @@ export default function EnvironmentDetails(): React.ReactElement {
                               formikRef?.current?.setValues({
                                 name: defaultTo(name, ''),
                                 identifier: defaultTo(identifier, ''),
-                                description: defaultTo(description, ''),
+                                description: description,
                                 tags: defaultTo(tags, {}),
                                 orgIdentifier: defaultTo(orgIdentifier, ''),
                                 projectIdentifier: defaultTo(projectIdentifier, ''),

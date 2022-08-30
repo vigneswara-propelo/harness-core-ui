@@ -38,7 +38,7 @@ import {
   useGetYamlSchema
 } from 'services/cd-ng'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
+import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { NameIdDescriptionTags } from '@common/components'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
@@ -150,7 +150,7 @@ export default function EnvironmentConfiguration({
     const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
     const yamlVisual = parse(yaml).environment as NGEnvironmentInfoConfig
     if (yamlVisual) {
-      formikProps?.setValues({
+      formikProps?.validateForm({
         ...yamlVisual
       })
     }
@@ -162,10 +162,12 @@ export default function EnvironmentConfiguration({
       if (view === SelectedView.VISUAL) {
         const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
         const yamlVisual = parse(yaml).environment as NGEnvironmentInfoConfig
+
         if (isModified && yamlHandler?.getYAMLValidationErrorMap()?.size) {
           showError(getString('common.validation.invalidYamlText'))
           return
         }
+
         if (yamlVisual) {
           formikProps?.setValues({
             ...yamlVisual
@@ -178,9 +180,7 @@ export default function EnvironmentConfiguration({
     [yamlHandler?.getLatestYaml, data]
   )
 
-  const handleEditMode = (): void => {
-    setIsYamlEditable(true)
-  }
+  const handleEditMode = (): void => setIsYamlEditable(true)
 
   const isInvalidYaml = useCallback((): boolean => {
     if (yamlHandler) {
@@ -237,6 +237,7 @@ export default function EnvironmentConfiguration({
             }),
             exact: true
           })
+
           return (
             !matchDefault?.isExact &&
             shouldBlockNavigation({
@@ -358,7 +359,7 @@ export default function EnvironmentConfiguration({
         </FormikForm>
       ) : (
         <div className={css.yamlBuilder}>
-          <YAMLBuilder
+          <YamlBuilderMemo
             {...yamlBuilderReadOnlyModeProps}
             existingJSON={{
               environment: {
@@ -378,7 +379,6 @@ export default function EnvironmentConfiguration({
             key={isYamlEditable.toString()}
             schema={environmentSchema?.data}
             bind={setYamlHandler}
-            showSnippetSection={false}
             isReadOnlyMode={!isYamlEditable}
             onChange={handleYamlChange}
             isEditModeSupported={canEdit}
