@@ -6,10 +6,12 @@
  */
 
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
 import { AppDynamicsMonitoringSourceFieldNames } from '../../AppDHealthSource.constants'
 import type { AppDynamicsFomikFormInterface } from '../../AppDHealthSource.types'
 import type { BasePathData } from '../BasePath/BasePath.types'
 import type { MetricPathData } from '../MetricPath/MetricPath.types'
+import { PATHTYPE } from './AppDCustomMetricForm.constants'
 import type { SetServiceInstanceInterface } from './AppDCustomMetricForm.types'
 
 export const getBasePathValue = (basePath: BasePathData): string => {
@@ -40,3 +42,15 @@ export const checkRuntimeFields = (formikValues: AppDynamicsFomikFormInterface) 
   getMultiTypeFromValue(formikValues?.continuousVerification) !== MultiTypeInputType.FIXED ||
   getMultiTypeFromValue(formikValues.appdApplication) !== MultiTypeInputType.FIXED ||
   getMultiTypeFromValue(formikValues.completeMetricPath) !== MultiTypeInputType.FIXED
+
+export const getDerivedCompleteMetricPath = (formikValues: AppDynamicsFomikFormInterface) => {
+  const baseFolder = getBasePathValue(formikValues?.basePath)
+  const metricPath = getMetricPathValue(formikValues?.metricPath)
+  let derivedCompleteMetricPath = ''
+  if (formikValues?.pathType === PATHTYPE.DropdownPath && baseFolder && formikValues.appDTier && metricPath) {
+    derivedCompleteMetricPath = `${baseFolder?.trim()}|${formikValues?.appDTier?.trim()}|${metricPath?.trim()}`
+  } else if (formikValues?.pathType === PATHTYPE.FullPath || formikValues?.pathType === PATHTYPE.CompleteMetricPath) {
+    derivedCompleteMetricPath = defaultTo(formikValues.completeMetricPath, '')
+  }
+  return derivedCompleteMetricPath
+}

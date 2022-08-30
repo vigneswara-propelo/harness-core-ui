@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useMemo, useEffect, useContext } from 'react'
+import React, { useState, useMemo, useEffect, useContext, useCallback } from 'react'
+
 import {
   Container,
   Accordion,
@@ -18,7 +19,6 @@ import {
   getMultiTypeFromValue,
   RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
-import { defaultTo } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -42,6 +42,7 @@ import { PATHTYPE } from './AppDCustomMetricForm.constants'
 import {
   checkRuntimeFields,
   getBasePathValue,
+  getDerivedCompleteMetricPath,
   getMetricPathValue,
   setServiceIntance
 } from './AppDCustomMetricForm.utils'
@@ -162,6 +163,18 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
   const [completeMetricPathType, setCompleteMetricPathType] = useState(
     getTypeOfInput(formikValues?.completeMetricPath as string)
   )
+
+  const derivedCompleteMetricPath = useCallback(
+    () => getDerivedCompleteMetricPath(formikValues),
+    [
+      formikValues?.basePath,
+      formikValues?.metricPath,
+      formikValues?.appDTier,
+      formikValues?.pathType,
+      formikValues?.completeMetricPath,
+      formikValues?.fullPath
+    ]
+  )()
 
   return (
     <Container className={css.main}>
@@ -290,11 +303,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                   <MetricChart
                     connectorIdentifier={connectorIdentifier}
                     appName={formikValues.appdApplication}
-                    tier={formikValues.appDTier}
-                    baseFolder={getBasePathValue(formikValues?.basePath)}
-                    metricPath={getMetricPathValue(formikValues?.metricPath)}
-                    completeMetricPath={defaultTo(formikValues.completeMetricPath, '')}
-                    fullPath={formikValues?.pathType === PATHTYPE.FullPath ? formikValues.fullPath : undefined}
+                    completeMetricPath={derivedCompleteMetricPath}
                   />
                 )}
               </>
