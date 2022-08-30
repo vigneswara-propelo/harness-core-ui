@@ -37,6 +37,7 @@ export interface UserGroupsInputProps {
   placeholder?: string
   onSuccess?: (userGroups: string[]) => void
   userGroupsMockData?: UserGroupDTO
+  identifierFilter?: string[]
 }
 interface MappedUserGroupData {
   name: Scope
@@ -62,7 +63,8 @@ const UserGroupsInput: React.FC<FormikUserGroupsInput> = props => {
     tooltipProps,
     disabled,
     formGroupClass = '',
-    onlyCurrentScope
+    onlyCurrentScope,
+    identifierFilter
   } = props
   const userGroupsReference: string[] = get(formik?.values, name)
 
@@ -73,7 +75,8 @@ const UserGroupsInput: React.FC<FormikUserGroupsInput> = props => {
       setUserGroupsScopeAndIndentifier(data)
       onSuccess?.(scopeObjToStringArry)
     },
-    onlyCurrentScope
+    onlyCurrentScope,
+    identifierFilter
   })
 
   const [userGroupsScopeAndIndentifier, setUserGroupsScopeAndIndentifier] = useState<ScopeAndIdentifier[]>()
