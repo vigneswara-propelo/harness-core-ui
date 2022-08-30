@@ -14,6 +14,7 @@ import {
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import type { ExecutionWrapperConfig } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import MonacoEditorMock from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -79,7 +80,14 @@ describe('<LoopingStrategy /> tests', () => {
   test('should have repeat selected with given content', async () => {
     const { findByTestId } = render(
       <TestWrapper>
-        <LoopingStrategy strategy={{ repeat: { items: '<+stage.output.hosts>' as any } }} stepType={StepType.Command} />
+        <LoopingStrategy
+          strategy={{ repeat: { items: '<+stage.output.hosts>' as any } }}
+          step={{
+            identifier: 'Step_1',
+            name: 'Step 1',
+            type: StepType.Command
+          }}
+        />
       </TestWrapper>
     )
 
@@ -89,6 +97,92 @@ describe('<LoopingStrategy /> tests', () => {
     expect(repeatStrategyPill).toHaveClass('Card--interactive')
     expect(matrixStrategyPill).not.toHaveClass('Card--interactive')
     expect(parallelismStrategyPill).not.toHaveClass('Card--interactive')
+    expect(repeatStrategyPill).toHaveClass('selected')
+    const editor = (await findByTestId('editor')) as HTMLTextAreaElement
+
+    expect(editor.value.trim()).toBe(`repeat:
+  items: <+stage.output.hosts>`)
+  })
+
+  test('should have repeat selected for Step Group when stepType is StepGroup and steps contain Command step', async () => {
+    const { findByTestId } = render(
+      <TestWrapper>
+        <LoopingStrategy
+          strategy={{ repeat: { items: '<+stage.output.hosts>' as any } }}
+          step={{
+            identifier: 'Step_Group_1',
+            name: 'Step Group 1',
+            type: StepType.StepGroup,
+            steps: [
+              {
+                step: {
+                  identifier: 'Step_1',
+                  name: 'Step 1',
+                  type: StepType.Command
+                }
+              },
+              {
+                step: {
+                  identifier: 'Step_2',
+                  name: 'Step 2',
+                  type: StepType.Command
+                }
+              }
+            ] as ExecutionWrapperConfig[]
+          }}
+        />
+      </TestWrapper>
+    )
+
+    const matrixStrategyPill = await findByTestId('matrix')
+    const repeatStrategyPill = await findByTestId('repeat')
+    const parallelismStrategyPill = await findByTestId('parallelism')
+    expect(repeatStrategyPill).toHaveClass('Card--interactive')
+    expect(matrixStrategyPill).not.toHaveClass('Card--interactive')
+    expect(parallelismStrategyPill).not.toHaveClass('Card--interactive')
+    expect(repeatStrategyPill).toHaveClass('selected')
+    const editor = (await findByTestId('editor')) as HTMLTextAreaElement
+
+    expect(editor.value.trim()).toBe(`repeat:
+  items: <+stage.output.hosts>`)
+  })
+
+  test('all looping strategies should be enabled for Step Group when stepType is StepGroup and steps does not contain Command step', async () => {
+    const { findByTestId } = render(
+      <TestWrapper>
+        <LoopingStrategy
+          strategy={{ repeat: { items: '<+stage.output.hosts>' as any } }}
+          step={{
+            identifier: 'Step_Group_1',
+            name: 'Step Group 1',
+            type: StepType.StepGroup,
+            steps: [
+              {
+                step: {
+                  identifier: 'Step_1',
+                  name: 'Step 1',
+                  type: StepType.Command
+                }
+              },
+              {
+                step: {
+                  identifier: 'Step_2',
+                  name: 'Step 2',
+                  type: StepType.SHELLSCRIPT
+                }
+              }
+            ] as ExecutionWrapperConfig[]
+          }}
+        />
+      </TestWrapper>
+    )
+
+    const matrixStrategyPill = await findByTestId('matrix')
+    const repeatStrategyPill = await findByTestId('repeat')
+    const parallelismStrategyPill = await findByTestId('parallelism')
+    expect(repeatStrategyPill).toHaveClass('Card--interactive')
+    expect(matrixStrategyPill).toHaveClass('Card--interactive')
+    expect(parallelismStrategyPill).toHaveClass('Card--interactive')
     expect(repeatStrategyPill).toHaveClass('selected')
     const editor = (await findByTestId('editor')) as HTMLTextAreaElement
 

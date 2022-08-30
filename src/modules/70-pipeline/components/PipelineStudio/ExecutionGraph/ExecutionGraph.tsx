@@ -48,6 +48,7 @@ import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeDimensionStore'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import { StepType as ExecutionStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { ExecutionStepModel, GridStyleInterface } from './ExecutionStepModel'
 import { StepType as PipelineStepType } from '../../PipelineSteps/PipelineStepInterface'
 import {
@@ -72,7 +73,8 @@ import {
   ExecutionWrapper,
   STATIC_SERVICE_GROUP_NAME,
   getDependencyFromNodeV1,
-  isServiceDependenciesSupported
+  isServiceDependenciesSupported,
+  getStepFromId
 } from './ExecutionGraphUtil'
 import { EmptyStageName } from '../PipelineConstants'
 import {
@@ -89,6 +91,7 @@ import {
   StepsType
 } from '../../Diagram'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
+import { getFlattenedSteps } from '../CommonUtils/CommonUtils'
 import css from './ExecutionGraph.module.scss'
 
 const diagram = new DiagramFactory('graph')
@@ -746,6 +749,44 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           ...prevState,
           states: newStateMap
         }))
+
+        // If after removing step, all steps in step group are of Command type
+        // then add repeat looping strategy for the step group
+        if (event?.node?.parentIdentifier) {
+          const parentStepGroupNode = getStepFromId(
+            state.stepsData,
+            defaultTo(event?.node?.parentIdentifier, ''),
+            false,
+            false,
+            state.isRollback
+          ).node
+          if (parentStepGroupNode) {
+            const allSteps = parentStepGroupNode.steps
+            const allFlattenedSteps = getFlattenedSteps(allSteps)
+            if (!isEmpty(allFlattenedSteps)) {
+              const commandSteps = allFlattenedSteps.filter(
+                (currStep: StepElementConfig) => currStep.type === ExecutionStepType.Command
+              )
+              if (
+                (commandSteps.length === allFlattenedSteps.length &&
+                  !isEmpty(parentStepGroupNode.strategy) &&
+                  !parentStepGroupNode.strategy?.repeat) ||
+                (commandSteps.length === allFlattenedSteps.length && isEmpty(parentStepGroupNode.strategy))
+              ) {
+                parentStepGroupNode['strategy'] = {
+                  repeat: {
+                    items: '<+stage.output.hosts>' as any, // used any because BE needs string variable while they can not change type
+                    maxConcurrency: 1,
+                    start: 0,
+                    end: 1,
+                    unit: 'Count'
+                  }
+                }
+              }
+            }
+          }
+        }
+
         updateStageWithNewData(state)
         trackEvent(StepActions.DeleteStep, { type: event?.entityType || '' })
       }

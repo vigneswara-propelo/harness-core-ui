@@ -56,8 +56,8 @@ import { StepType } from '../../PipelineSteps/PipelineStepInterface'
 import { FlowControlWithRef as FlowControl, FlowControlRef } from '../FlowControl/FlowControl'
 import { AdvancedOptions } from '../AdvancedOptions/AdvancedOptions'
 import { RightDrawerTitle } from './RightDrawerTitle'
-
 import { getFlattenedStages } from '../StageBuilder/StageBuilderUtil'
+import { getFlattenedSteps } from '../CommonUtils/CommonUtils'
 import css from './RightDrawer.module.scss'
 
 export const FullscreenDrawers: DrawerTypes[] = [
@@ -107,6 +107,34 @@ export const updateStepWithinStage = (
       if (stepWithinStage.stepGroup?.identifier === processingNodeIdentifier) {
         stepWithinStage.stepGroup = processedNode as any
       } else {
+        // For current Step Group, go through all steps and find out if all steps are of Command type
+        // If yes, and new step is also of Command type then add repeat looping strategy to Step Group
+        const allSteps = stepWithinStage.stepGroup.steps
+        const allFlattenedSteps = getFlattenedSteps(allSteps)
+        if (!isEmpty(allFlattenedSteps)) {
+          const commandSteps = allFlattenedSteps.filter(
+            (currStep: StepElementConfig) => currStep.type === StepType.Command
+          )
+          if (
+            (commandSteps.length === allFlattenedSteps.length &&
+              (processedNode as StepElementConfig)?.type === StepType.Command &&
+              !isEmpty(stepWithinStage.stepGroup.strategy) &&
+              !stepWithinStage.stepGroup.strategy?.repeat) ||
+            (commandSteps.length === allFlattenedSteps.length &&
+              (processedNode as StepElementConfig)?.type === StepType.Command &&
+              isEmpty(stepWithinStage.stepGroup.strategy))
+          ) {
+            stepWithinStage.stepGroup['strategy'] = {
+              repeat: {
+                items: '<+stage.output.hosts>' as any, // used any because BE needs string variable while they can not change type
+                maxConcurrency: 1,
+                start: 0,
+                end: 1,
+                unit: 'Count'
+              }
+            }
+          }
+        }
         updateStepWithinStage(stepWithinStage.stepGroup, processingNodeIdentifier, processedNode, isRollback)
       }
     } else if (stepWithinStage.parallel) {
@@ -164,14 +192,12 @@ const processNodeImpl = (
       set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
     }
 
-    // strategy: { repeat: { items: '<+stage.output.hosts>'}} will be added by default for Command Script step
-    // even if user does not go to Advanced tab
-    if (item.tab === TabTypes.Advanced || (item as StepElementConfig).type === StepType.Command) {
-      if (isEmpty(item.strategy)) {
-        delete (node as any).strategy
-      } else {
-        set(node, 'strategy', item.strategy)
-      }
+    // Looping strategies which are found in Advanced tab of steps
+    // Step group which has all of its steps as Command steps will have repeat looping strategy as default strategy
+    if (isEmpty(item.strategy)) {
+      delete (node as any).strategy
+    } else {
+      set(node, 'strategy', item.strategy)
     }
 
     // Delete values if they were already added and now removed

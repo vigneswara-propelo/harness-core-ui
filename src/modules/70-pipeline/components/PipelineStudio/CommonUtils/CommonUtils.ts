@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo } from 'lodash-es'
+import { defaultTo, flatMap } from 'lodash-es'
 import type { MultiSelectOption, SelectOption } from '@wings-software/uicore'
 import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
+import type { ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
 import { EmptyStageName } from '../PipelineConstants'
 import type { SelectedStageData, StageSelectionData } from '../../../utils/runPipelineUtils'
 
@@ -61,4 +62,20 @@ export function getSelectedStagesFromPipeline(
         stage?.parallel?.some(parallelStage => parallelStage.stage?.identifier === selectedStage.stageIdentifier)
     )
   ) as StageElementWrapperConfig[]
+}
+
+export const getFlattenedSteps = (allSteps: ExecutionWrapperConfig[]): StepElementConfig[] => {
+  let allFlattenedSteps = []
+  allFlattenedSteps = flatMap(allSteps, (currStep: ExecutionWrapperConfig) => {
+    const steps: StepElementConfig[] = []
+    if (currStep.parallel) {
+      steps.push(...getFlattenedSteps(currStep.parallel))
+    } else if (currStep.stepGroup) {
+      steps.push(...getFlattenedSteps(currStep.stepGroup.steps))
+    } else if (currStep.step) {
+      steps.push(currStep.step)
+    }
+    return steps
+  })
+  return allFlattenedSteps
 }

@@ -31,7 +31,7 @@ import {
 } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategyUtils'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { usePipelineSchema } from '../PipelineSchema/PipelineSchemaContext'
 
 import css from './LoopingStrategy.module.scss'
@@ -40,7 +40,7 @@ export interface LoopingStrategyProps {
   strategy?: StrategyConfig
   isReadonly?: boolean
   onUpdateStrategy?: (strategy: StrategyConfig) => void
-  stepType?: StepType
+  step?: StepOrStepGroupOrTemplateStepData
 }
 
 const DOCUMENT_URL = 'https://docs.harness.io/article/i36ibenkq2-step-skip-condition-settings'
@@ -56,7 +56,7 @@ export function LoopingStrategy({
   strategy = {},
   isReadonly,
   onUpdateStrategy = noop,
-  stepType
+  step
 }: LoopingStrategyProps): React.ReactElement {
   const { getString } = useStrings()
   const { loopingStrategySchema } = usePipelineSchema()
@@ -74,8 +74,13 @@ export function LoopingStrategy({
   } = useToggleOpen()
   const timerRef = React.useRef<null | number>(null)
   const onUpdateStrategyRef = React.useRef(onUpdateStrategy)
+
+  const availableStrategies = React.useMemo(() => {
+    return getAvailableStrategies(step)
+  }, [step])
+
   const initialSelectedStrategy = Object.keys(defaultTo(strategy, {}))[0] as LoopingStrategyEnum
-  const strategyEntries = Object.entries(getAvailableStrategies(stepType)) as [LoopingStrategyEnum, Strategy][]
+  const strategyEntries = Object.entries(availableStrategies) as [LoopingStrategyEnum, Strategy][]
 
   React.useEffect(() => {
     onUpdateStrategyRef.current = onUpdateStrategy
@@ -108,7 +113,7 @@ export function LoopingStrategy({
 
   const onChangeStrategy = (newStrategy: LoopingStrategyEnum, formikProps: FormikProps<StrategyConfig>): void => {
     const callback = (): void => {
-      const newValues: StrategyConfig = { [newStrategy]: clone(getAvailableStrategies()[newStrategy].defaultValue) }
+      const newValues: StrategyConfig = { [newStrategy]: clone(availableStrategies[newStrategy].defaultValue) }
       formikProps.setValues(newValues)
       onUpdateStrategy(newValues)
       callbackRef.current = null
@@ -157,7 +162,7 @@ export function LoopingStrategy({
         {(formikProps: FormikProps<StrategyConfig>) => {
           const values = defaultTo(formikProps.values, {})
           const selectedStrategy = Object.keys(values)[0] as LoopingStrategyEnum
-          const selectedStrategyMetaData = getAvailableStrategies()[selectedStrategy]
+          const selectedStrategyMetaData = availableStrategies[selectedStrategy]
 
           return (
             <Container className={css.mainContainer}>

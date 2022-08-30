@@ -62,9 +62,6 @@ describe('Command Scripts step', () => {
           onDelegate: false,
           outputVariables: []
         },
-        strategy: {
-          repeat: { items: '<+stage.output.hosts>' }
-        },
         timeout,
         type: StepType.Command
       })
@@ -132,9 +129,6 @@ describe('Command Scripts step', () => {
           commandUnits,
           environmentVariables,
           outputVariables
-        },
-        strategy: {
-          repeat: { items: '<+stage.output.hosts>' }
         },
         timeout,
         type: StepType.Command

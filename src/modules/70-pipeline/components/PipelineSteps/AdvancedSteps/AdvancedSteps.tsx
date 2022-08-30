@@ -105,7 +105,8 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
     stepsFactory,
     isReadonly,
     stageType,
-    stepType
+    stepType,
+    step
   } = props
 
   const accordionRef = React.useRef<AccordionHandle>({} as AccordionHandle)
@@ -190,7 +191,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
                   onUpdateStrategy={strategy => {
                     formikProps.setValues({ ...formikProps.values, strategy })
                   }}
-                  stepType={stepType}
+                  step={step}
                 />
               }
             />
