@@ -955,12 +955,8 @@ export function StageInputSetFormInternal({
                             infrastructureRef: infrastructureDefinition.identifier
                           }}
                           type={
-                            ((infraDefinitionTypeMapping[
-                              deploymentStage?.environment?.infrastructureDefinitions?.[index]?.inputs
-                                ?.type as unknown as string
-                            ] ||
-                              deploymentStage?.environment?.infrastructureDefinitions?.[index]?.inputs
-                                ?.type) as StepType) || StepType.KubernetesDirect
+                            (infraDefinitionTypeMapping[infrastructureDefinition?.inputs?.type as StepType] ||
+                              infrastructureDefinition?.inputs?.type) as StepType
                           }
                           path={`${path}.environment.infrastructureDefinitions.${index}.inputs.spec`}
                           readonly={readonly}
