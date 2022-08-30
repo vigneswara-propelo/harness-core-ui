@@ -132,7 +132,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
               (scope === Scope.PROJECT
                 ? (allowableTypes as MultiTypeInputType[]).filter(item => item !== MultiTypeInputType.EXPRESSION)
                 : (allowableTypes as MultiTypeInputType[]).filter(
-                    item => item !== MultiTypeInputType.FIXED
+                    item => item !== MultiTypeInputType.FIXED && item !== MultiTypeInputType.EXPRESSION
                   )) as AllowedTypes
             }
             onUpdate={val => updateEnvStep(val)}
