@@ -32,8 +32,6 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import useImportResource from '@pipeline/components/ImportResource/useImportResource'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncInterface'
@@ -55,7 +53,6 @@ function InputSetList(): React.ReactElement {
   const { getString } = useStrings()
   const [inputSetToDelete, setInputSetToDelete] = useState<InputSetSummaryResponse>()
   const { supportingGitSimplification } = useAppStore()
-  const isImportFlowEnabled = useFeatureFlag(FeatureFlag.NG_GIT_EXPERIENCE_IMPORT_FLOW)
 
   const {
     data: inputSet,
@@ -253,9 +250,7 @@ function InputSetList(): React.ReactElement {
                     showOverlayInputSetForm()
                   }}
                 />
-                {supportingGitSimplification &&
-                isImportFlowEnabled &&
-                pipeline?.data?.storeType === StoreType.REMOTE ? (
+                {supportingGitSimplification && pipeline?.data?.storeType === StoreType.REMOTE ? (
                   <MenuItem text={getString('common.importFromGit')} onClick={showImportResourceModal} />
                 ) : null}
               </Menu>

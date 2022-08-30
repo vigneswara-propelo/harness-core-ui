@@ -13,8 +13,6 @@ import RbacButton from '@rbac/components/Button/Button'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 
 export interface CreatePipelineButtonProps {
   label?: string
@@ -31,7 +29,6 @@ export default function CreatePipelineButton({
 }: CreatePipelineButtonProps): JSX.Element {
   const { getString } = useStrings()
   const { supportingGitSimplification } = useAppStore()
-  const isImportFlowEnabled = useFeatureFlag(FeatureFlag.NG_GIT_EXPERIENCE_IMPORT_FLOW)
 
   const [canCreate] = usePermission({
     permissions: [PermissionIdentifier.EDIT_PIPELINE],
@@ -40,7 +37,7 @@ export default function CreatePipelineButton({
     }
   })
 
-  if (supportingGitSimplification && isImportFlowEnabled) {
+  if (supportingGitSimplification) {
     return (
       <SplitButton
         variation={ButtonVariation.PRIMARY}
