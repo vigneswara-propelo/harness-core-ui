@@ -184,6 +184,10 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
         })
       )
 
+      if (__DEV__ && DEV_FF) {
+        Object.assign(featureFlagsMap, DEV_FF)
+      }
+
       setState(prevState => ({
         ...prevState,
         featureFlags: featureFlagsMap as FeatureFlagMap

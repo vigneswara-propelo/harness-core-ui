@@ -48,6 +48,7 @@ $ yarn setup-github-registry
 > Note: This is only needed if this is the first UI project you are installing on your machine
 
 5. Create self-assigned certificate before running the app
+
 ```
 $ yarn generate-certificate
 ```
@@ -75,6 +76,7 @@ $ yarn dev
 ```
 https://localhost:8181
 ```
+
 </details>
 
 ### Publishing
@@ -115,7 +117,7 @@ See [src/services/README.md](https://github.com/harness/harness-core-ui/blob/mas
 You can configure the application to use remote environments such as `uat.harness.io`, `qa.harness.io` or `qb.harness.io` to allow local UI development without the need to run backend services. To achieve this, two environment variables are available.
 
 | Variable            | Default value                   | Description                                                                  |
-|---------------------|---------------------------------|------------------------------------------------------------------------------|
+| ------------------- | ------------------------------- | ---------------------------------------------------------------------------- |
 | `BASE_URL`          | `https://qa.harness.io/gateway` | Location of backend services to access                                       |
 | `TARGET_LOCALHOST`  | `true`                          | Whether to use local backend services. Set to `false` to use remote services |
 | `DISABLE_TYPECHECK` | `false`                         | Whether to disable the `ForkTsCheckerWebpackPlugin` for local development    |
@@ -139,6 +141,14 @@ Run unit tests
 ```
 $ yarn test
 ```
+
+### Enabling Feature Flags in local
+
+To enable a Feature-Flag in local development mode, just add an entry to `.env` by prefixing the feature flag name with `FF_` and setting its value to `true` and (re)start your development server.
+
+For example, if you want to enable a feature flag named `MY_FETAURE_FLAG`. Just add an entry `FF_MY_FEATURE_FLAG=true` in `.env` file.
+
+> Note: This will only work when `NODE_ENV=development` is set.
 
 ### Hotfix Process
 

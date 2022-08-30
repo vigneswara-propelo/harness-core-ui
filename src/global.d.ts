@@ -10,6 +10,7 @@
 declare const __DEV__: boolean
 declare const Bugsnag: any
 declare const __BUGSNAG_RELEASE_VERSION__: string
+declare const DEV_FF: Record<string, boolean>
 declare module '*.png' {
   const value: string
   export default value
