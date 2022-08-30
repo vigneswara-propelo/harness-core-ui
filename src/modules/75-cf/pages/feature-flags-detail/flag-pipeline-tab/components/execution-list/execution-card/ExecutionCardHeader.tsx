@@ -8,7 +8,7 @@
 import { FontVariation, Color } from '@harness/design-system'
 import { Container, Text } from '@harness/uicore'
 import React, { FC } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Duration, TimeAgo } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
@@ -28,7 +28,6 @@ interface ExecutionCardHeaderProps {
 }
 
 const ExecutionCardHeader: FC<ExecutionCardHeaderProps> = ({ executionHistoryItem, pipelineIdentifier }) => {
-  const history = useHistory()
   const { orgIdentifier, accountId, projectIdentifier } = useParams<Record<string, string>>()
 
   const { getString } = useStrings()
@@ -81,8 +80,8 @@ const ExecutionCardHeader: FC<ExecutionCardHeaderProps> = ({ executionHistoryIte
               onClick:
                 /* istanbul ignore next */
                 () =>
-                  history.push(
-                    routes.toExecutionPipelineView({
+                  window.open(
+                    `/#${routes.toExecutionPipelineView({
                       accountId,
                       orgIdentifier,
                       module: 'cf',
@@ -90,7 +89,7 @@ const ExecutionCardHeader: FC<ExecutionCardHeaderProps> = ({ executionHistoryIte
                       executionIdentifier: executionHistoryItem.executionId,
                       pipelineIdentifier: pipelineIdentifier,
                       source: 'executions'
-                    })
+                    })}`
                   ),
               permission: {
                 resource: { resourceType: ResourceType.FEATUREFLAG },

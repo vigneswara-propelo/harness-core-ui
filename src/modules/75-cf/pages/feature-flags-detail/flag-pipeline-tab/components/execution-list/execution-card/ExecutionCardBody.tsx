@@ -112,14 +112,14 @@ const ExecutionCardBody: FC<ExecutionCardBodyProps> = ({ flagVariations, executi
 
           {executionHistoryItem.triggerDetails.variationMap?.map(variationMapItem => (
             <>
-              {variationMapItem.targets && (
+              {variationMapItem.targets && variationMapItem.targets?.length > 0 && (
                 <TargetItem
                   targets={variationMapItem.targets}
                   variation={variationMapItem.variation}
                   getVariationColorById={getVariationColorById}
                 />
               )}
-              {variationMapItem.targetSegments && (
+              {variationMapItem.targetSegments && variationMapItem.targetSegments?.length && (
                 <TargetGroupItem
                   targetSegments={variationMapItem.targetSegments}
                   variation={variationMapItem.variation}
