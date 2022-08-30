@@ -7,16 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly accessControl: string
-  readonly auditTrail: string
-  readonly cardTags: string
-  readonly enabledModules: string
-  readonly freezeWindows: string
-  readonly governance: string
-  readonly pageHeight: string
-  readonly projectCount: string
-  readonly projectsCard: string
-  readonly title: string
-  readonly wrap: string
+  readonly dropdownPopover: string
+  readonly expandSearch: string
+  readonly freeeWindowsPageSubHeader: string
+  readonly gitFilter: string
 }
 export default styles

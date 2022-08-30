@@ -40,6 +40,7 @@ import { GitSyncRouteDestinations } from '@gitsync/RouteDestinations'
 import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { TemplateRouteDestinations } from '@templates-library/RouteDestinations'
+import { FreezeWindowRouteDestinations } from '@freeze-windows/RouteDestinations'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
@@ -438,6 +439,14 @@ export default (
       TemplateRouteDestinations({
         templateStudioComponent: CDTemplateStudioWrapper,
         templateStudioPageName: PAGE_NAME.CDTemplateStudioWrapper,
+        moduleParams,
+        licenseRedirectData,
+        sidebarProps: CDSideNavProps
+      })?.props.children
+    }
+
+    {
+      FreezeWindowRouteDestinations({
         moduleParams,
         licenseRedirectData,
         sidebarProps: CDSideNavProps

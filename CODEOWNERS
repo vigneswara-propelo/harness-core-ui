@@ -56,6 +56,7 @@ src/modules/70-pipeline/components/TrialModalTemplate @harness/ui-plg
 src/modules/70-pipeline/interfaces/STOApp.ts @harness/ui-sto
 src/modules/70-pipeline/pages/execution/ExecutionSecurityView @harness/ui-sto
 src/modules/72-templates-library @harness/ui-pipeline
+src/modules/72-freeze-windows @harness/ui-pipeline
 src/modules/75-cd @harness/ui-pipeline
 src/modules/75-cd/modals/CDTrial @harness/ui-plg
 src/modules/75-cd/pages/home @harness/ui-plg

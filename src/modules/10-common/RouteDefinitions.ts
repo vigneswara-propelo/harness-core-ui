@@ -82,6 +82,20 @@ const routes = {
     }
   ),
 
+  toFreezeWindows: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `resources/freeze-windows`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+
   toUser: withAccountId(() => '/user'),
   toBilling: withAccountId(() => '/settings/billing'),
   toSubscriptions: withAccountId(({ moduleCard, tab }: SubscriptionQueryParams) => {

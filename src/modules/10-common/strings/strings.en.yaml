@@ -931,6 +931,7 @@ gitOps: GitOps
 showHarnessManagedError: Harness Managed Resource cannot be edited
 contentRequired: Content is required
 defaultSettings: Default Settings
+freezeWindows: Freeze Windows
 oAuthLabel: OAuth
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git

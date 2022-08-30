@@ -57,6 +57,7 @@ export enum PAGE_NAME {
   BuildCommits = 'BuildCommits',
   CIPipelineDeploymentList = 'CIPipelineDeploymentList',
   TemplatesPage = 'TemplatesPage',
+  FreezeWindowsPage = 'FreezeWindowsPage',
   TemplateStudioWrapper = 'TemplateStudioWrapper',
   CDHomePage = 'CDHomePage',
   CDTrialHomePage = 'CDTrialHomePage',

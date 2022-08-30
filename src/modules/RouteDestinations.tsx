@@ -20,6 +20,7 @@ import rbacRoutes from '@rbac/RouteDestinations'
 import projectsOrgsRoutes from '@projects-orgs/RouteDestinations'
 import connectorRoutes from '@connectors/RouteDestinations'
 import tempatesRoutes from '@templates-library/RouteDestinations'
+import freezeWindowRoutes from '@freeze-windows/RouteDestinations'
 import userProfileRoutes from '@user-profile/RouteDestinations'
 import '@pipeline/RouteDestinations'
 import CDRoutes from '@cd/RouteDestinations'
@@ -60,6 +61,7 @@ export default function RouteDestinations(): React.ReactElement {
       {GovernanceRoutes.props.children}
       {connectorRoutes.props.children}
       {tempatesRoutes.props.children}
+      {freezeWindowRoutes.props.children}
       {userProfileRoutes.props.children}
       {CHAOS_ENABLED ? ChaosRoutes().props.children : null}
       {CING_ENABLED ? CIRoutes.props.children : null}

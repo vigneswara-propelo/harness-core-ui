@@ -32,6 +32,7 @@ import css from './OrganizationDetailsPage.module.scss'
 const OrganizationDetailsPage: React.FC = () => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
   const { OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE, AUDIT_TRAIL_WEB_INTERFACE } = useFeatureFlags()
+  const DEPLOYMENT_FREEZE = false
   const history = useHistory()
   const { getString } = useStrings()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
@@ -96,6 +97,16 @@ const OrganizationDetailsPage: React.FC = () => {
 
     return list
   }
+
+  const deploymentFreezeCard: ResourceOption[] = [
+    {
+      label: <String stringID="common.freezeWindows" />,
+      icon: 'nav-settings',
+      colorClass: css.freezeWindows,
+      route: routes.toFreezeWindows({ accountId, orgIdentifier }),
+      selectable: true
+    } as ResourceOption
+  ]
 
   return (
     <>
@@ -235,7 +246,8 @@ const OrganizationDetailsPage: React.FC = () => {
                     icon: 'governance',
                     route: routes.toGovernance({ accountId, orgIdentifier }),
                     colorClass: css.governance
-                  }
+                  },
+                  ...(DEPLOYMENT_FREEZE ? deploymentFreezeCard : [])
                 ]}
               />
             </Layout.Vertical>

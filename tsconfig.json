@@ -44,6 +44,7 @@
       "@dashboards/*": ["modules/45-dashboards/*"],
       "@gitsync/*": ["modules/40-gitsync/*"],
       "@pipeline/*": ["modules/70-pipeline/*"],
+      "@freeze-windows/*": ["modules/72-freeze-windows/*"],
       "@templates-library/*": ["modules/72-templates-library/*"],
       "@triggers/*": ["modules/72-triggers/*"],
       "@cd/*": ["modules/75-cd/*"],

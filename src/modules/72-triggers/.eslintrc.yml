@@ -5,6 +5,7 @@ rules:
         - lodash.*
         - microfrontends/*
         - '!microfrontends/ChildAppMounter'
+        - modules/72-freeze-windows/*
         - modules/72-templates-library/*
         - modules/75-cd/*
         - modules/75-ce/*
@@ -14,6 +15,7 @@ rules:
         - modules/85-cv/*
         - modules/85-sto-steps/*
         - modules/90-gitops/*
+        - '@freeze-windows/*'
         - '@templates-library/*'
         - '@cd/*'
         - '@ce/*'

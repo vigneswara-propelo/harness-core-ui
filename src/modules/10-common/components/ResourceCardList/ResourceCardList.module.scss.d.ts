@@ -13,6 +13,7 @@ declare const styles: {
   readonly connectors: string
   readonly delegates: string
   readonly filestore: string
+  readonly freezeWindows: string
   readonly gitOpsEntities: string
   readonly secrets: string
   readonly smtp: string
