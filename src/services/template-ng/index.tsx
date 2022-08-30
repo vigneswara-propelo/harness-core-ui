@@ -31,10 +31,11 @@ export type AuditFilterProperties = FilterProperties & {
     | 'UNSUCCESSFUL_LOGIN'
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
+    | 'ERROR_BUDGET_RESET'
   )[]
   endTime?: number
   environments?: Environment[]
-  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE')[]
+  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS')[]
   principals?: Principal[]
   resources?: ResourceDTO[]
   scopes?: ResourceScopeDTO[]
@@ -48,7 +49,7 @@ export interface CcmConnectorFilter {
   azureTenantId?: string
   featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
   gcpProjectId?: string
-  k8sConnectorRef?: string
+  k8sConnectorRef?: string[]
 }
 
 export type ConnectorFilterProperties = FilterProperties & {
@@ -163,6 +164,7 @@ export interface Error {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -315,6 +317,7 @@ export interface Error {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -463,7 +466,9 @@ export interface Error {
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
     | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -511,6 +516,7 @@ export interface Failure {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -663,6 +669,7 @@ export interface Failure {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -811,12 +818,16 @@ export interface Failure {
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
     | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
+
+export type FilterCreatorErrorResponse = ErrorMetadataDTO & {}
 
 export interface FilterDTO {
   filterProperties: FilterProperties
@@ -846,6 +857,25 @@ export interface FilterProperties {
     [key: string]: string
   }
 }
+
+export interface InputSetError {
+  fieldName?: string
+  identifierOfErrorSource?: string
+  message?: string
+}
+
+export interface InputSetErrorResponse {
+  errors?: InputSetError[]
+}
+
+export type InputSetErrorWrapper = ErrorMetadataDTO & {
+  errorPipelineYaml?: string
+  uuidToErrorResponseMap?: {
+    [key: string]: InputSetErrorResponse
+  }
+}
+
+export type InvalidFieldsDTO = ErrorMetadataDTO & {}
 
 export interface JsonNode {
   [key: string]: any
@@ -885,6 +915,12 @@ export interface NodeInfo {
   identifier?: string
   localFqn?: string
   name?: string
+}
+
+export type OverlayInputSetErrorWrapper = ErrorMetadataDTO & {
+  invalidReferences?: {
+    [key: string]: string
+  }
 }
 
 export interface Page {
@@ -999,6 +1035,11 @@ export interface ResourceDTO {
     | 'PERSPECTIVE_REPORT'
     | 'COST_CATEGORY'
     | 'SMTP'
+    | 'PERSPECTIVE_FOLDER'
+    | 'AUTOSTOPPING_RULE'
+    | 'AUTOSTOPPING_LB'
+    | 'AUTOSTOPPING_STARTSTOP'
+    | 'SETTING'
 }
 
 export interface ResourceScopeDTO {
@@ -1073,6 +1114,7 @@ export interface ResponseMessage {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -1225,6 +1267,7 @@ export interface ResponseMessage {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -1373,7 +1416,9 @@ export interface ResponseMessage {
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
     | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1565,6 +1610,7 @@ export interface TemplateReferenceRequest {
 
 export interface TemplateReferenceSummary {
   fqn?: string
+  moduleInfo?: string[]
   scope?: 'account' | 'org' | 'project' | 'unknown'
   stableTemplate?: boolean
   templateIdentifier?: string
@@ -1629,7 +1675,7 @@ export interface Throwable {
   suppressed?: Throwable[]
 }
 
-export interface ValidateTemplateInputsResponseDTO {
+export type ValidateTemplateInputsResponseDTO = ErrorMetadataDTO & {
   errorNodeSummary?: ErrorNodeSummary
   validYaml?: boolean
 }
@@ -1685,6 +1731,8 @@ export type YamlSchemaErrorWrapperDTO = ErrorMetadataDTO & {
 }
 
 export type FilterDTORequestBody = FilterDTO
+
+export type TemplateApplyRequestRequestBody = TemplateApplyRequest
 
 export type UpdateExistingTemplateLabelBodyRequestBody = string
 
@@ -2419,7 +2467,7 @@ export type GetYamlWithTemplateRefsResolvedProps = Omit<
     ResponseTemplateMergeResponse,
     Failure | Error,
     GetYamlWithTemplateRefsResolvedQueryParams,
-    TemplateApplyRequest,
+    TemplateApplyRequestRequestBody,
     void
   >,
   'path' | 'verb'
@@ -2433,7 +2481,7 @@ export const GetYamlWithTemplateRefsResolved = (props: GetYamlWithTemplateRefsRe
     ResponseTemplateMergeResponse,
     Failure | Error,
     GetYamlWithTemplateRefsResolvedQueryParams,
-    TemplateApplyRequest,
+    TemplateApplyRequestRequestBody,
     void
   >
     verb="POST"
@@ -2448,7 +2496,7 @@ export type UseGetYamlWithTemplateRefsResolvedProps = Omit<
     ResponseTemplateMergeResponse,
     Failure | Error,
     GetYamlWithTemplateRefsResolvedQueryParams,
-    TemplateApplyRequest,
+    TemplateApplyRequestRequestBody,
     void
   >,
   'path' | 'verb'
@@ -2462,7 +2510,7 @@ export const useGetYamlWithTemplateRefsResolved = (props: UseGetYamlWithTemplate
     ResponseTemplateMergeResponse,
     Failure | Error,
     GetYamlWithTemplateRefsResolvedQueryParams,
-    TemplateApplyRequest,
+    TemplateApplyRequestRequestBody,
     void
   >('POST', `/templates/applyTemplates`, { base: getConfig('template/api'), ...props })
 
@@ -2474,7 +2522,7 @@ export const getYamlWithTemplateRefsResolvedPromise = (
     ResponseTemplateMergeResponse,
     Failure | Error,
     GetYamlWithTemplateRefsResolvedQueryParams,
-    TemplateApplyRequest,
+    TemplateApplyRequestRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -2483,9 +2531,91 @@ export const getYamlWithTemplateRefsResolvedPromise = (
     ResponseTemplateMergeResponse,
     Failure | Error,
     GetYamlWithTemplateRefsResolvedQueryParams,
-    TemplateApplyRequest,
+    TemplateApplyRequestRequestBody,
     void
   >('POST', getConfig('template/api'), `/templates/applyTemplates`, props, signal)
+
+export interface GetYamlWithTemplateRefsResolvedV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export type GetYamlWithTemplateRefsResolvedV2Props = Omit<
+  MutateProps<
+    ResponseTemplateMergeResponse,
+    Failure | Error,
+    GetYamlWithTemplateRefsResolvedV2QueryParams,
+    TemplateApplyRequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets complete yaml with templateRefs resolved
+ */
+export const GetYamlWithTemplateRefsResolvedV2 = (props: GetYamlWithTemplateRefsResolvedV2Props) => (
+  <Mutate<
+    ResponseTemplateMergeResponse,
+    Failure | Error,
+    GetYamlWithTemplateRefsResolvedV2QueryParams,
+    TemplateApplyRequestRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/templates/applyTemplates/V2`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseGetYamlWithTemplateRefsResolvedV2Props = Omit<
+  UseMutateProps<
+    ResponseTemplateMergeResponse,
+    Failure | Error,
+    GetYamlWithTemplateRefsResolvedV2QueryParams,
+    TemplateApplyRequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets complete yaml with templateRefs resolved
+ */
+export const useGetYamlWithTemplateRefsResolvedV2 = (props: UseGetYamlWithTemplateRefsResolvedV2Props) =>
+  useMutate<
+    ResponseTemplateMergeResponse,
+    Failure | Error,
+    GetYamlWithTemplateRefsResolvedV2QueryParams,
+    TemplateApplyRequestRequestBody,
+    void
+  >('POST', `/templates/applyTemplates/V2`, { base: getConfig('template/api'), ...props })
+
+/**
+ * Gets complete yaml with templateRefs resolved
+ */
+export const getYamlWithTemplateRefsResolvedV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseTemplateMergeResponse,
+    Failure | Error,
+    GetYamlWithTemplateRefsResolvedV2QueryParams,
+    TemplateApplyRequestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseTemplateMergeResponse,
+    Failure | Error,
+    GetYamlWithTemplateRefsResolvedV2QueryParams,
+    TemplateApplyRequestRequestBody,
+    void
+  >('POST', getConfig('template/api'), `/templates/applyTemplates/V2`, props, signal)
 
 export type DummyApiForSwaggerSchemaCheckProps = Omit<
   GetProps<ResponseNGTemplateConfig, Failure | Error, void, void>,
@@ -3111,6 +3241,65 @@ export const updateTemplateSettingsPromise = (
     void,
     UpdateTemplateSettingsPathParams
   >('PUT', getConfig('template/api'), `/templates/updateTemplateSettings/${templateIdentifier}`, props, signal)
+
+export interface CreateVariablesV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type CreateVariablesV2Props = Omit<
+  MutateProps<ResponseVariableMergeServiceResponse, Failure | Error, CreateVariablesV2QueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create variables for Template
+ */
+export const CreateVariablesV2 = (props: CreateVariablesV2Props) => (
+  <Mutate<ResponseVariableMergeServiceResponse, Failure | Error, CreateVariablesV2QueryParams, void, void>
+    verb="POST"
+    path={`/templates/v2/variables`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseCreateVariablesV2Props = Omit<
+  UseMutateProps<ResponseVariableMergeServiceResponse, Failure | Error, CreateVariablesV2QueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create variables for Template
+ */
+export const useCreateVariablesV2 = (props: UseCreateVariablesV2Props) =>
+  useMutate<ResponseVariableMergeServiceResponse, Failure | Error, CreateVariablesV2QueryParams, void, void>(
+    'POST',
+    `/templates/v2/variables`,
+    { base: getConfig('template/api'), ...props }
+  )
+
+/**
+ * Create variables for Template
+ */
+export const createVariablesV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseVariableMergeServiceResponse,
+    Failure | Error,
+    CreateVariablesV2QueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseVariableMergeServiceResponse, Failure | Error, CreateVariablesV2QueryParams, void, void>(
+    'POST',
+    getConfig('template/api'),
+    `/templates/v2/variables`,
+    props,
+    signal
+  )
 
 export interface ValidateTheIdentifierIsUniqueQueryParams {
   accountIdentifier?: string

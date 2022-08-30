@@ -54,7 +54,8 @@ describe('<TemplateVariables /> tests', () => {
             value={
               {
                 originalTemplate: pipelineTemplateMock,
-                variablesTemplate
+                variablesTemplate,
+                serviceExpressionPropertiesList: []
               } as unknown as TemplateVariablesData
             }
           >
@@ -79,7 +80,8 @@ describe('<TemplateVariables /> tests', () => {
             value={
               {
                 originalTemplate: stepTemplateMock,
-                variablesTemplate
+                variablesTemplate,
+                serviceExpressionPropertiesList: []
               } as unknown as TemplateVariablesData
             }
           >
@@ -104,7 +106,8 @@ describe('<TemplateVariables /> tests', () => {
             value={
               {
                 originalTemplate: stageTemplateMock,
-                variablesTemplate
+                variablesTemplate,
+                serviceExpressionPropertiesList: []
               } as unknown as TemplateVariablesData
             }
           >
@@ -185,7 +188,8 @@ describe('<TemplateVariables /> tests', () => {
             value={
               {
                 originalTemplate: pipelineTemplateMock,
-                variablesTemplate
+                variablesTemplate,
+                serviceExpressionPropertiesList: []
               } as unknown as TemplateVariablesData
             }
           >
@@ -231,7 +235,8 @@ describe('<TemplateVariables /> tests', () => {
               {
                 originalTemplate: monitoredServiceTemplateMock,
                 metadataMap: monitoedServiceMetaDataMap,
-                variablesTemplate
+                variablesTemplate,
+                serviceExpressionPropertiesList: []
               } as unknown as TemplateVariablesData
             }
           >

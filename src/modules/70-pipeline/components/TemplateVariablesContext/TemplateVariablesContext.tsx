@@ -14,13 +14,14 @@ import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import {
   Failure,
   NGTemplateInfoConfig,
-  useCreateVariables,
+  useCreateVariablesV2,
   useGetYamlWithTemplateRefsResolved,
   VariableMergeServiceResponse
 } from 'services/template-ng'
 import type { UseMutateAsGetReturn } from '@common/hooks/useMutateAsGet'
 import type { StageElementConfig, StepElementConfig } from 'services/cd-ng'
 import type { AllNGVariables } from '@pipeline/utils/types'
+import type { ServiceExpressionProperties } from 'services/pipeline-ng'
 
 const monitoredServiceYamlKey = 'monitoredService'
 const secretManagerYamlKey = 'secretManager'
@@ -41,6 +42,7 @@ export interface TemplateVariablesData {
   variablesTemplate: StepElementConfig | StageElementConfig | MonitoredServiceConfig
   originalTemplate: NGTemplateInfoConfig
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
+  serviceExpressionPropertiesList: ServiceExpressionProperties[]
   error?: UseMutateAsGetReturn<Failure | Error>['error'] | null
   initLoading: boolean
   loading: boolean
@@ -50,6 +52,7 @@ export const TemplateVariablesContext = React.createContext<TemplateVariablesDat
   variablesTemplate: { name: '', identifier: '' },
   originalTemplate: { name: '', identifier: '', versionLabel: '', type: 'Step' },
   metadataMap: {},
+  serviceExpressionPropertiesList: [],
   error: null,
   initLoading: true,
   loading: false
@@ -63,17 +66,19 @@ export function TemplateVariablesContextProvider(
   props: React.PropsWithChildren<{ template: NGTemplateInfoConfig }>
 ): React.ReactElement {
   const { template: originalTemplate } = props
-  const [{ variablesTemplate, metadataMap }, setTemplateVariablesData] = React.useState<
-    Pick<TemplateVariablesData, 'metadataMap' | 'variablesTemplate'>
-  >({
-    variablesTemplate: { name: '', identifier: '' },
-    metadataMap: {}
-  })
+  const [{ variablesTemplate, metadataMap, serviceExpressionPropertiesList }, setTemplateVariablesData] =
+    React.useState<
+      Pick<TemplateVariablesData, 'metadataMap' | 'variablesTemplate' | 'serviceExpressionPropertiesList'>
+    >({
+      variablesTemplate: { name: '', identifier: '' },
+      metadataMap: {},
+      serviceExpressionPropertiesList: []
+    })
   const { accountId, orgIdentifier, projectIdentifier } = useParams<TemplateStudioPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [resolvedTemplate, setResolvedTemplate] = React.useState<NGTemplateInfoConfig>(originalTemplate)
 
-  const { data, error, initLoading, loading } = useMutateAsGet(useCreateVariables, {
+  const { data, error, initLoading, loading } = useMutateAsGet(useCreateVariablesV2, {
     body: yamlStringify({ template: resolvedTemplate }) as unknown as void,
     requestOptions: {
       headers: {
@@ -117,7 +122,8 @@ export function TemplateVariablesContextProvider(
         : resolvedTemplate.type?.toLowerCase()
     setTemplateVariablesData({
       metadataMap: defaultTo(data?.data?.metadataMap, {}),
-      variablesTemplate: get(parse(defaultTo(data?.data?.yaml, '')), templateType)
+      variablesTemplate: get(parse(defaultTo(data?.data?.yaml, '')), templateType),
+      serviceExpressionPropertiesList: defaultTo(data?.data?.serviceExpressionPropertiesList, [])
     })
   }, [data?.data?.metadataMap, data?.data?.yaml])
 
@@ -127,6 +133,7 @@ export function TemplateVariablesContextProvider(
         variablesTemplate,
         originalTemplate: resolvedTemplate,
         metadataMap,
+        serviceExpressionPropertiesList,
         error,
         initLoading: initLoading || initLoadingResolvedTemplate,
         loading: loading || loadingResolvedTemplate
