@@ -43,7 +43,7 @@ export class AzureSwapSlot extends PipelineStep<AzureWebAppSwapSlotStepInfo> {
     type: StepType.AzureSwapSlot,
     name: '',
     identifier: '',
-    timeout: '10m',
+    timeout: '20m',
     spec: {
       targetSlot: ''
     }

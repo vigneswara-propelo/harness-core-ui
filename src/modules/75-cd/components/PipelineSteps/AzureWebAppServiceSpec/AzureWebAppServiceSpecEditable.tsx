@@ -78,7 +78,9 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
               className={cx(css.tabSubHeading, 'ng-tooltip-native')}
               data-tooltip-id={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
             >
-              {getString('pipeline.startupCommand.name')}
+              {getString('optionalField', {
+                name: getString('pipeline.startupCommand.name')
+              })}
               <HarnessDocTooltip
                 tooltipId={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
                 useStandAlone={true}
@@ -98,7 +100,9 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
               className={cx(css.tabSubHeading, 'ng-tooltip-native')}
               data-tooltip-id={getAppConfigHeaderTooltipId(selectedDeploymentType)}
             >
-              {getString('pipeline.appServiceConfig.title')}
+              {getString('optionalField', {
+                name: getString('pipeline.appServiceConfig.title')
+              })}
               <HarnessDocTooltip tooltipId={getAppConfigHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
             <AzureWebAppConfigSelection

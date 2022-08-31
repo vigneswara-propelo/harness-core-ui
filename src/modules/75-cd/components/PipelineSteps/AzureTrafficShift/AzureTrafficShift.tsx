@@ -42,7 +42,7 @@ export class AzureTrafficShift extends PipelineStep<AzureTrafficShiftStepInfo> {
     type: StepType.AzureTrafficShift,
     name: '',
     identifier: '',
-    timeout: '10m',
+    timeout: '20m',
     spec: {
       traffic: ''
     }

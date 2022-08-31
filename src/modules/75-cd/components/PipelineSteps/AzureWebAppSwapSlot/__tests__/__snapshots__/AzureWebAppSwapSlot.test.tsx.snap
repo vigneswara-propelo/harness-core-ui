@@ -458,7 +458,7 @@ exports[`Test Azure Web App Rollback step should render edit view as new step 1`
                 name="timeout"
                 placeholder="Enter w/d/h/m/s/ms"
                 type="text"
-                value="10m"
+                value="20m"
               />
             </div>
             <span
