@@ -44,8 +44,6 @@ import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderPr
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
@@ -65,7 +63,6 @@ export default function EnvironmentDetails(): React.ReactElement {
 
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
-  const isArgoManaged = useFeatureFlag(FeatureFlag.ARGO_PHASE2_MANAGED)
 
   const formikRef = useRef<FormikProps<NGEnvironmentInfoConfig>>()
 
@@ -255,8 +252,7 @@ export default function EnvironmentDetails(): React.ReactElement {
                       {
                         id: EnvironmentDetailsTab.GITOPS,
                         title: getString('cd.gitOpsCluster'),
-                        panel: <GitOpsCluster envRef={identifier} />,
-                        hidden: !isArgoManaged
+                        panel: <GitOpsCluster envRef={identifier} />
                       }
                     ]}
                   >

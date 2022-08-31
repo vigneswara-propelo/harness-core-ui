@@ -37,7 +37,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const { GITOPS_BYO_ARGO, NG_FILE_STORE, NG_SETTINGS } = useFeatureFlags()
+  const { NG_FILE_STORE, NG_SETTINGS } = useFeatureFlags()
   const DEPLOYMENT_FREEZE = false
 
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
@@ -46,10 +46,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     refetch()
   }
   const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchSmtpData })
-  const showGitOpsCard = useMemo(
-    () => history?.location?.pathname.includes('resources') && GITOPS_BYO_ARGO,
-    [history?.location?.pathname, GITOPS_BYO_ARGO]
-  )
+  const showGitOpsCard = useMemo(() => history?.location?.pathname.includes('resources'), [history?.location?.pathname])
   const smtpResource: ResourceOption[] = [
     {
       label: <String stringID="common.smtp.conifg" />,

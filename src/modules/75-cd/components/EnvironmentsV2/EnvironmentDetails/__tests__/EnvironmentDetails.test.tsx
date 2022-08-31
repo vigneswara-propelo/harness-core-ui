@@ -77,7 +77,7 @@ describe('EnvironmentDetails tests', () => {
       </TestWrapper>
     )
 
-    await waitFor(() => expect(screen.queryByText('cd.gitOpsCluster')).toBeNull())
+    await waitFor(() => expect(screen.queryByText('cd.gitOpsCluster')).not.toBeNull())
   })
 
   test('is gitops tab visible', async () => {

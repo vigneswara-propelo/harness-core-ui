@@ -42,22 +42,7 @@ const pipelineModuleParams: ModulePathParams = {
 }
 
 const GitOpsPage = (): React.ReactElement | null => {
-  const { ARGO_PHASE1, ARGO_PHASE2_MANAGED } = useFeatureFlags()
-
-  if (ARGO_PHASE2_MANAGED) {
-    return (
-      <ChildAppMounter<GitOpsCustomMicroFrontendProps>
-        getLinkForAccountResources={getLinkForAccountResources}
-        ChildApp={GitOpsServersList}
-        customComponents={{
-          DeployEnvironmentWidget,
-          DeployServiceWidget,
-          NewEditEnvironmentModal,
-          NewEditServiceModal
-        }}
-      />
-    )
-  }
+  const { ARGO_PHASE1 } = useFeatureFlags()
 
   if (ARGO_PHASE1) {
     return (
@@ -67,7 +52,18 @@ const GitOpsPage = (): React.ReactElement | null => {
     )
   }
 
-  return null
+  return (
+    <ChildAppMounter<GitOpsCustomMicroFrontendProps>
+      getLinkForAccountResources={getLinkForAccountResources}
+      ChildApp={GitOpsServersList}
+      customComponents={{
+        DeployEnvironmentWidget,
+        DeployServiceWidget,
+        NewEditEnvironmentModal,
+        NewEditServiceModal
+      }}
+    />
+  )
 }
 
 export default (
