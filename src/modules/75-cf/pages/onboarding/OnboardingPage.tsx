@@ -6,65 +6,68 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Container, Heading, Text } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, Icon, Layout, Text } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
-import { Intent, Color } from '@harness/design-system'
+import { Color, FontVariation, Intent } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
-import theBasicsImage from './basics.svg'
-import upAndRunningImage from './upAndRunning.svg'
+import ffOnboarding from '@cf/images/ff_onboarding.svg'
+import productsFreeForever from '@cf/images/products_free_forever.svg'
+import { OnboardingStepsDescription } from './OnboardingStepsDescription'
 import css from './OnboardingPage.module.scss'
 
-export const OnboardingPage = () => {
+export const OnboardingPage = (): React.ReactElement => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { getString } = useStrings()
   const history = useHistory()
   const { trackEvent } = useTelemetry()
 
   return (
-    <Container className={css.mainHeading} background={Color.WHITE}>
-      <Heading className={css.onboardingTitle}>
-        {getString('cf.onboarding.title')}
-        <Text className={css.onboardingSubTitle}>{getString('cf.onboarding.subTitle')}</Text>
-      </Heading>
-      <Container margin={{ top: 'xxxlarge' }}>
-        <Container className={css.basicImageContainer}>
-          <img src={theBasicsImage} width={1154} height={425} title={getString('featureFlagsText')} />
-        </Container>
-      </Container>
-
-      <Container margin={{ top: 'xxxlarge' }}>
-        <Heading level={2} className={css.h2}>
-          {getString('cf.onboarding.upAndRunning')}
-        </Heading>
-        <Container className={css.stepImageContainer}>
-          <img
-            src={upAndRunningImage}
-            className={css.stepsImage}
-            width={1162}
-            height={125}
-            title={getString('featureFlagsText')}
-          />
-        </Container>
-      </Container>
-
-      <Container className={css.buttonConatiner}>
-        <Button
-          intent={Intent.PRIMARY}
-          variation={ButtonVariation.PRIMARY}
-          text={getString('cf.onboarding.tryItOut')}
-          large
-          className={css.getStartedButton}
-          width={350}
-          onClick={() => {
-            trackEvent(FeatureActions.GetStartedClick, {
-              category: Category.FEATUREFLAG
-            })
-            history.push(routes.toCFOnboardingDetail({ accountId, orgIdentifier, projectIdentifier }))
-          }}
-        />
+    <Container>
+      <Layout.Horizontal flex={{ justifyContent: 'center' }} width="100%" margin={{ bottom: 'huge' }}>
+        <img src={productsFreeForever} />
+      </Layout.Horizontal>
+      <Container padding="huge" flex={{ justifyContent: 'center' }} height="65vh">
+        <Layout.Horizontal height="auto" width="auto" className={css.mainContentContainer} padding="huge">
+          {/* Left side - Text & Button */}
+          <Layout.Vertical flex={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
+            <Layout.Horizontal spacing="small" style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+              <Icon name="cf-main" height={30} size={30} />
+              <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_800}>
+                {getString('common.purpose.cf.continuous')}
+              </Text>
+            </Layout.Horizontal>
+            <Layout.Vertical>
+              <Text font={{ variation: FontVariation.H2 }} tag="h2" margin={{ bottom: 'medium' }}>
+                {getString('cf.onboarding.title')}
+              </Text>
+              <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800} margin={{ bottom: 'huge' }}>
+                {getString('cf.onboarding.subtitle')}
+              </Text>
+              {OnboardingStepsDescription()}
+            </Layout.Vertical>
+            <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+              <Button
+                intent={Intent.PRIMARY}
+                variation={ButtonVariation.PRIMARY}
+                text={getString('cf.onboarding.tryItOut')}
+                size={ButtonSize.LARGE}
+                onClick={() => {
+                  trackEvent(FeatureActions.GetStartedClick, {
+                    category: Category.FEATUREFLAG
+                  })
+                  history.push(routes.toCFOnboardingDetail({ accountId, orgIdentifier, projectIdentifier }))
+                }}
+              />
+            </Layout.Horizontal>
+          </Layout.Vertical>
+          {/* Right side - img */}
+          <Layout.Horizontal>
+            <img src={ffOnboarding} width={380} height={320} />
+          </Layout.Horizontal>
+        </Layout.Horizontal>
       </Container>
     </Container>
   )

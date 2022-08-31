@@ -188,7 +188,7 @@ exports[`OnboardingDetailPage OnboardingDetailPage empty state should be rendere
             <p
               class="StyledProps--font StyledProps--main"
             >
-              cf.onboarding.createAFlag
+              cf.onboarding.oneCreateAFlag
             </p>
           </div>
           <span
@@ -946,7 +946,7 @@ exports[`OnboardingDetailPage Should be able to create a flag 1`] = `
             <p
               class="StyledProps--font StyledProps--main"
             >
-              cf.onboarding.createAFlag
+              cf.onboarding.oneCreateAFlag
             </p>
           </div>
           <span

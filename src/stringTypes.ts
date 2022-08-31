@@ -5943,6 +5943,7 @@ export interface StringsMap {
   'cf.onboarding.connected': string
   'cf.onboarding.createAFlag': string
   'cf.onboarding.createEnv': string
+  'cf.onboarding.createEnvAndSdk': string
   'cf.onboarding.envCreated': string
   'cf.onboarding.help.getStarted': string
   'cf.onboarding.help.heading1': string
@@ -5959,6 +5960,7 @@ export interface StringsMap {
   'cf.onboarding.letsStart': string
   'cf.onboarding.listenToEvent': string
   'cf.onboarding.listeningToEvent': string
+  'cf.onboarding.oneCreateAFlag': string
   'cf.onboarding.otherTypes': string
   'cf.onboarding.readme.android': string
   'cf.onboarding.readme.dotnet': string
@@ -5974,10 +5976,11 @@ export interface StringsMap {
   'cf.onboarding.selectLanguage': string
   'cf.onboarding.setUpApp': string
   'cf.onboarding.setUpYourCode': string
+  'cf.onboarding.setupCode': string
   'cf.onboarding.setupLabel': string
   'cf.onboarding.simpliestFlag': string
   'cf.onboarding.simpliestFlagDescription': string
-  'cf.onboarding.subTitle': string
+  'cf.onboarding.subtitle': string
   'cf.onboarding.successLabel': string
   'cf.onboarding.testYourFlag': string
   'cf.onboarding.title': string

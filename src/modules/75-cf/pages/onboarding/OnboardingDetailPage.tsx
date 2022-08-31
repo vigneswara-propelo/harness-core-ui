@@ -128,7 +128,7 @@ export const OnboardingDetailPage: React.FC = () => {
             }
             title={
               <Text icon={flagCreated ? 'tick-circle' : undefined} iconProps={{ color: Color.GREEN_500, size: 14 }}>
-                {getString('cf.onboarding.createAFlag')}
+                {getString('cf.onboarding.oneCreateAFlag')}
               </Text>
             }
           />

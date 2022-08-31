@@ -598,11 +598,14 @@ onboarding:
   allSet: Congratulations! You’re all set!
   tryTarget: Try out our robust <a href='{{ link }}'>targeting rules for this flag</a> for more granular rollouts.
   backToStart: Back to Quick Start Guide
-  title: Feature Flags Quick Start Guide
-  subTitle: Everything you need to know in less than 15 minutes.
+  title: Let’s get you started with your first Feature Flag!
+  subtitle: Take your progressive rollout to the next level with Harness Feature Flags
   upAndRunning: Get a flag up and running in 3 steps
   tryItOut: '{{ $.getStarted }}'
-  createAFlag: '1. Create a Flag'
+  createAFlag: Create a Flag
+  createEnvAndSdk: Create an Environment and SDK Key
+  setupCode: Setup your Code
+  oneCreateAFlag: '1. Create a Flag'
   setUpApp: '2. Set Up Your Application'
   testYourFlag: '3. Test Your Flag'
   letsStart: Let's start off by creating a simple flag
