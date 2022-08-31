@@ -19,6 +19,8 @@ import { useGetPreflightCheckResponse, startPreflightCheckPromise, useGetPipelin
 
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { TestWrapper } from '@common/utils/testUtils'
+import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
+import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
 import { RunPipelineForm } from '../RunPipelineForm'
 import {
   getMockFor_Generic_useMutate,
@@ -37,6 +39,7 @@ const commonProps: PipelineType<PipelinePathProps & GitQueryParams> = {
   repoIdentifier: 'repoid',
   module: 'ci'
 }
+const successResponse = (): Promise<{ status: string }> => Promise.resolve({ status: 'SUCCESS', data: {} })
 
 window.IntersectionObserver = jest.fn().mockImplementation(() => ({
   observe: () => null,
@@ -46,6 +49,12 @@ window.IntersectionObserver = jest.fn().mockImplementation(() => ({
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('@common/utils/YamlUtils', () => ({}))
+
+jest.mock('react-monaco-editor', () => ({
+  MonacoDiffEditor: MonacoEditor
+}))
+
+jest.mock('@common/components/MonacoEditor/MonacoEditor')
 jest.mock('services/cd-ng', () => ({
   useGetSourceCodeManagers: () => ({
     data: []
@@ -130,7 +139,11 @@ jest.mock('services/pipeline-ng', () => ({
   // used within PreFlightCheckModal
   useGetPreflightCheckResponse: jest.fn(() => ({ data: { data: { status: 'SUCCESS' } } })),
   startPreflightCheckPromise: jest.fn().mockResolvedValue({}),
-  useValidateTemplateInputs: jest.fn(() => getMockFor_Generic_useMutate())
+  useValidateTemplateInputs: jest.fn(() => getMockFor_Generic_useMutate()),
+  useUpdateInputSetForPipeline: jest.fn().mockImplementation(() => ({ mutate: successResponse })),
+  useUpdateOverlayInputSetForPipeline: jest.fn().mockImplementation(() => ({ mutate: successResponse })),
+  useYamlDiffForInputSet: jest.fn(() => GetInputSetYamlDiffInline),
+  useDeleteInputSetForPipeline: jest.fn(() => ({ mutate: jest.fn() }))
 }))
 
 describe('STUDIO MODE', () => {
@@ -337,19 +350,6 @@ describe('STUDIO MODE', () => {
     // one for invalid input set and one forinvalid overlay set as per the mocked data
     expect(allinvalidflags.length).toBe(2)
 
-    act(() => {
-      fireEvent.mouseOver(allinvalidflags[0])
-    })
-    // when you hover over the invalid flag show the tooltip content
-    await waitFor(() => expect(queryByText('common.errorCount')).toBeTruthy())
-
-    // hover over the invalid flagt for overlay
-    act(() => {
-      fireEvent.mouseOver(allinvalidflags[1])
-    })
-    // when you hover over the invalid flag show the tooltip content
-    await waitFor(() => expect(queryByText('common.errorCount')).toBeTruthy())
-
     // Select the input sets - is2 and then is3
     act(() => {
       fireEvent.click(getByText('is2'))
@@ -398,19 +398,6 @@ describe('STUDIO MODE', () => {
 
     // one for invalid input set and one forinvalid overlay set as per the mocked data
     expect(allinvalidflags.length).toBe(2)
-
-    act(() => {
-      fireEvent.mouseOver(allinvalidflags[0])
-    })
-    // when you hover over the invalid flag show the tooltip content
-    await waitFor(() => expect(queryByText('common.errorCount')).toBeTruthy())
-
-    // hover over the invalid flagt for overlay
-    act(() => {
-      fireEvent.mouseOver(allinvalidflags[1])
-    })
-    // when you hover over the invalid flag show the tooltip content
-    await waitFor(() => expect(queryByText('common.errorCount')).toBeTruthy())
 
     // Select the input set is1
     // This(is1) should not be selected as it is invalid

@@ -44,6 +44,13 @@ export const PipelineResponse: UseGetReturnData<ResponsePMSPipelineResponseDTO> 
       entityValidityDetails: {
         valid: true
       },
+      gitDetails: {
+        objectId: '43bca185f257887bff5142b9aed7f61ade2c3e16',
+        branch: 'master',
+        repoIdentifier: 'oldgitsyncharness',
+        rootFolder: '/.harness/',
+        filePath: 'pipelines/testqqq.yaml'
+      },
       modules: ['cd']
     },
     correlationId: '7a84d477-4549-4026-8113-a02730b4f7c5'

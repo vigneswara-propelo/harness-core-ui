@@ -241,7 +241,9 @@ function RunPipelineFormBasic({
     error: inputSetsError,
     isInputSetApplied,
     refetch: getTemplateFromPipeline,
-    hasRuntimeInputs
+    hasRuntimeInputs,
+    invalidInputSetReferences,
+    onReconcile
   } = useInputSets({
     accountId,
     projectIdentifier,
@@ -255,7 +257,8 @@ function RunPipelineFormBasic({
     inputSetSelected: selectedInputSets,
     resolvedPipeline,
     executionInputSetTemplateYaml,
-    executionView
+    executionView,
+    setSelectedInputSets
   })
 
   const { mutate: runPipeline } = usePostPipelineExecuteWithInputSetYaml({
@@ -653,7 +656,7 @@ function RunPipelineFormBasic({
   }
 
   const shouldShowPageSpinner = (): boolean => {
-    return loadingPipeline || loadingInputSets || loadingValidateTemplateInputs
+    return loadingPipeline || loadingValidateTemplateInputs
   }
 
   const formRefDom = React.useRef<HTMLElement | undefined>()
@@ -782,6 +785,10 @@ function RunPipelineFormBasic({
                     loading={false}
                     loadingMergeInputSetUpdate={false}
                     selectedStageData={selectedStageData}
+                    pipelineResponse={pipelineResponse}
+                    invalidInputSetReferences={invalidInputSetReferences}
+                    loadingInputSets={loadingInputSets}
+                    onReconcile={onReconcile}
                   />
                 ) : (
                   <div className={css.editor}>

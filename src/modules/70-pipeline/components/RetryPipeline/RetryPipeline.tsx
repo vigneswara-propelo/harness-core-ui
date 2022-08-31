@@ -24,7 +24,7 @@ import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { isEmpty, pick } from 'lodash-es'
+import { get, isEmpty, pick, remove } from 'lodash-es'
 import type { FormikErrors } from 'formik'
 import { Classes, Dialog, Tooltip } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -74,6 +74,7 @@ import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/Pipelin
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
+import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import GitPopover from '../GitPopover/GitPopover'
 import SelectStagetoRetry from './SelectStagetoRetry'
@@ -178,6 +179,8 @@ function RetryPipeline({
   const [triggerValidation, setTriggerValidation] = useState(false)
   const [listOfSelectedStages, setListOfSelectedStages] = useState<Array<string>>([])
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig>()
+  const [invalidInputSetIds, setInvalidInputSetIds] = useState<Array<string>>([])
+  const [loadingSingleInputSet, setLoadingSingleInputSet] = useState<boolean>(false)
 
   const yamlTemplate = React.useMemo(() => {
     return parse<Pipeline>(inputSetTemplateYaml || '')?.pipeline
@@ -328,6 +331,11 @@ function RetryPipeline({
   )
   const inputSets = inputSetResponse?.data?.content
 
+  const onReconcile = (inpSetId: string): void => {
+    remove(invalidInputSetIds, id => id === inpSetId)
+    setInvalidInputSetIds(invalidInputSetIds)
+  }
+
   React.useEffect(() => {
     const mergedPipelineYaml = pipelineResponse?.data?.resolvedTemplatesPipelineYaml
     if (mergedPipelineYaml) {
@@ -376,7 +384,7 @@ function RetryPipeline({
             const data = await mergeInputSet({
               inputSetReferences: selectedInputSets.map(item => item.value as string)
             })
-            if (data?.data?.pipelineYaml) {
+            if (!data?.data?.errorResponse && data?.data?.pipelineYaml) {
               const inputSetPortion = parse(data.data.pipelineYaml) as {
                 pipeline: PipelineInfoConfig
               }
@@ -387,7 +395,10 @@ function RetryPipeline({
                 shouldUseDefaultValues: false
               })
               setCurrentPipeline(toBeUpdated)
+            } else if (data?.data?.errorResponse) {
+              setSelectedInputSets([])
             }
+            setInvalidInputSetIds(get(data?.data, 'inputSetErrorWrapper.invalidInputSetReferences', []))
           } catch (e) {
             showError(getRBACErrorMessage(e), undefined, 'pipeline.feth.inputSetTemplateYaml.error')
           }
@@ -406,7 +417,7 @@ function RetryPipeline({
               branch: selectedInputSets[0]?.gitDetails?.branch
             }
           })
-          if (data?.data?.inputSetYaml) {
+          if (data?.data && !isInputSetInvalid(data?.data) && data?.data?.inputSetYaml) {
             if (selectedInputSets[0].type === 'INPUT_SET') {
               const inputSetPortion = pick(parse<InputSet>(data.data.inputSetYaml)?.inputSet, 'pipeline') as {
                 pipeline: PipelineInfoConfig
@@ -419,9 +430,21 @@ function RetryPipeline({
               })
               setCurrentPipeline(toBeUpdated)
             }
+            setInvalidInputSetIds([])
+          } else if (data?.data && isInputSetInvalid(data?.data)) {
+            const invalidId: string = get(data, 'data.identifier', '')
+            setSelectedInputSets([])
+            setInvalidInputSetIds(isEmpty(invalidId) ? [] : [invalidId])
           }
         }
-        fetchData()
+        setLoadingSingleInputSet(true)
+        try {
+          fetchData()
+            .then(() => setLoadingSingleInputSet(false))
+            .catch(() => setLoadingSingleInputSet(false))
+        } catch (e) {
+          setLoadingSingleInputSet(false)
+        }
       } else if (!selectedInputSets?.length && !inputSetYaml?.length) {
         setCurrentPipeline(parsedTemplate)
       }
@@ -594,11 +617,15 @@ function RetryPipeline({
   }, [isParallelStage, isAllStage, selectedStage])
 
   const renderPipelineInputSetForm = (): React.ReactElement | undefined => {
-    if (loadingUpdate) {
+    if (loadingUpdate || loadingSingleInputSet) {
       return (
         <PageSpinner
           className={css.inputSetsUpdatingSpinner}
-          message={getString('pipeline.inputSets.applyingInputSets')}
+          message={
+            loadingSingleInputSet
+              ? getString('pipeline.inputSets.applyingInputSet')
+              : getString('pipeline.inputSets.applyingInputSets')
+          }
         />
       )
     }
@@ -769,6 +796,11 @@ function RetryPipeline({
                                 setSelectedInputSets(inputsets)
                               }}
                               value={selectedInputSets}
+                              pipelineGitDetails={get(pipelineResponse, 'data.gitDetails')}
+                              invalidInputSetReferences={invalidInputSetIds}
+                              loadingMergeInputSets={loadingUpdate || loadingSingleInputSet}
+                              isRetryPipelineForm={true}
+                              onReconcile={onReconcile}
                             />
                           </GitSyncStoreProvider>
                         )}

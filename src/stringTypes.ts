@@ -3321,6 +3321,13 @@ export interface StringsMap {
   'pipeline.infraSpecifications.serviceAccountName': string
   'pipeline.infraSpecifications.serviceAccountNamePlaceholder': string
   'pipeline.infraSpecifications.validation.requiredExistingStage': string
+  'pipeline.inputSetErrorStrip.errorInfo': string
+  'pipeline.inputSetErrorStrip.existingYaml': string
+  'pipeline.inputSetErrorStrip.goToInpSetBtn': string
+  'pipeline.inputSetErrorStrip.reconcileDialogTitle': string
+  'pipeline.inputSetErrorStrip.reconcileErrorInfo': string
+  'pipeline.inputSetErrorStrip.updateRuntimeFields': string
+  'pipeline.inputSetErrorStrip.validYaml': string
   'pipeline.inputSets.aboutInputSets': string
   'pipeline.inputSets.applyInputSet': string
   'pipeline.inputSets.applyInputSets': string
@@ -3328,17 +3335,24 @@ export interface StringsMap {
   'pipeline.inputSets.applyingInputSets': string
   'pipeline.inputSets.createNewInputSet': string
   'pipeline.inputSets.deleteInputSet': string
+  'pipeline.inputSets.deleteOverlayIS': string
   'pipeline.inputSets.editInYamlView': string
   'pipeline.inputSets.goBackToInputSetList': string
+  'pipeline.inputSets.inputSetApplied': string
   'pipeline.inputSets.inputSetNameLabel': string
   'pipeline.inputSets.inputSetPlaceholder': string
+  'pipeline.inputSets.inputSetUpdated': string
   'pipeline.inputSets.invalidFields': string
   'pipeline.inputSets.invalidInputSet': string
-  'pipeline.inputSets.invalidInputSet1': string
-  'pipeline.inputSets.invalidInputSet2': string
+  'pipeline.inputSets.invalidInputSetDesc1': string
+  'pipeline.inputSets.invalidInputSetDesc2': string
+  'pipeline.inputSets.invalidOverlayIS': string
+  'pipeline.inputSets.invalidOverlayISDesc1': string
+  'pipeline.inputSets.invalidOverlayISDesc2': string
   'pipeline.inputSets.noRuntimeInputsCurrently': string
   'pipeline.inputSets.noRuntimeInputsWhileExecution': string
   'pipeline.inputSets.overlayISHelperText': string
+  'pipeline.inputSets.overlayISUpdated': string
   'pipeline.inputSets.removeInvalidFields': string
   'pipeline.inputSets.selectPlaceholder': string
   'pipeline.invalidRequest': string

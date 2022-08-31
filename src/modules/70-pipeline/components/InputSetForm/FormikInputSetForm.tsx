@@ -7,7 +7,7 @@
 
 import React, { useEffect, useMemo } from 'react'
 import * as Yup from 'yup'
-import { defaultTo, isEmpty, omit, isUndefined } from 'lodash-es'
+import { defaultTo, isEmpty, omit, isUndefined, get } from 'lodash-es'
 import {
   Button,
   Container,
@@ -24,7 +24,8 @@ import type {
   PipelineInfoConfig,
   ResponsePMSPipelineResponseDTO,
   EntityGitDetails,
-  ResponseInputSetTemplateWithReplacedExpressionsResponse
+  ResponseInputSetTemplateWithReplacedExpressionsResponse,
+  InputSetResponse
 } from 'services/pipeline-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { InputSetGitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -49,6 +50,8 @@ import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { memoizedParse, parse } from '@common/utils/YamlHelperMethods'
+import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { factory } from '../PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -98,6 +101,7 @@ interface FormikInputSetFormProps {
   className?: string
   onCancel?: () => void
   filePath?: string
+  inputSetUpdateResponseHandler?: (responseData: InputSetResponse) => void
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -141,22 +145,22 @@ function useValidateValues({
       try {
         await NameIdSchema.validate(values)
       } catch (err) {
-        if (err.name === 'ValidationError') {
+        /* istanbul ignore else */ if (err.name === 'ValidationError') {
           errors = { [err.path]: err.message }
         }
       }
       if (values.pipeline && isYamlPresent(template, pipeline)) {
         errors.pipeline = validatePipeline({
           pipeline: values.pipeline,
-          template: parse<Pipeline>(defaultTo(template?.data?.inputSetTemplateYaml, '')).pipeline,
-          originalPipeline: parse<Pipeline>(defaultTo(pipeline?.data?.yamlPipeline, '')).pipeline,
+          template: parse<Pipeline>(get(template, 'data.inputSetTemplateYaml', '')).pipeline,
+          originalPipeline: parse<Pipeline>(get(pipeline, 'data.yamlPipeline', '')).pipeline,
           getString,
           viewType: StepViewType.InputSet,
           viewTypeMetadata: { isInputSet: true },
           resolvedPipeline
         }) as any
 
-        if (isEmpty(errors.pipeline)) {
+        /* istanbul ignore else */ if (isEmpty(errors.pipeline)) {
           delete errors.pipeline
         }
       }
@@ -220,7 +224,8 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     setYamlHandler,
     className,
     onCancel,
-    filePath
+    filePath,
+    inputSetUpdateResponseHandler
   } = props
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
@@ -285,7 +290,13 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   })
   const formRefDom = React.useRef<HTMLElement | undefined>()
   const getPipelineData = (): Pipeline => {
-    const omittedPipeline = omit(inputSet, 'gitDetails', 'entityValidityDetails', 'outdated') as Pipeline
+    const omittedPipeline = omit(
+      inputSet,
+      'gitDetails',
+      'entityValidityDetails',
+      'outdated',
+      'inputSetErrorWrapper'
+    ) as Pipeline
     return mergeTemplateWithInputSetData({
       templatePipeline: omittedPipeline,
       inputSetPortion: omittedPipeline,
@@ -415,7 +426,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                                 originalPipeline={
                                   parse<Pipeline>(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline
                                 }
-                                template={parse<Pipeline>(defaultTo(template?.data?.inputSetTemplateYaml, '')).pipeline}
+                                template={parse<Pipeline>(get(template, 'data.inputSetTemplateYaml', '')).pipeline}
                                 viewType={StepViewType.InputSet}
                               />
                             )}
@@ -445,6 +456,14 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                 ) : (
                   <div className={css.editor}>
                     <ErrorsStrip formErrors={formErrors} />
+                    {isInputSetInvalid(inputSet) && (
+                      <OutOfSyncErrorStrip
+                        inputSet={inputSet}
+                        pipelineGitDetails={get(pipeline, 'data.gitDetails')}
+                        inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
+                        fromInputSetForm={true}
+                      />
+                    )}
                     <Layout.Vertical className={css.content} padding="xlarge">
                       <YamlBuilderMemo
                         {...yamlBuilderReadOnlyModeProps}
@@ -458,7 +477,8 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                             'connectorRef',
                             'repoName',
                             'filePath',
-                            'storeType'
+                            'storeType',
+                            'inputSetErrorWrapper'
                           )
                         }}
                         bind={setYamlHandler}
@@ -470,7 +490,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                         isEditModeSupported={isEditable}
                         fileName={getYamlFileName({
                           isPipelineRemote,
-                          filePath: inputSet?.gitDetails?.filePath,
+                          filePath: get(inputSet, 'gitDetails.filePath'),
                           defaultName: yamlBuilderReadOnlyModeProps.fileName
                         })}
                       />

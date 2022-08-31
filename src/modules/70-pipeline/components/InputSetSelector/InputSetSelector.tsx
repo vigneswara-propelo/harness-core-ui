@@ -6,21 +6,13 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import {
-  Layout,
-  Popover,
-  Button,
-  Text,
-  TextInput,
-  ButtonVariation,
-  PageSpinner,
-  Container
-} from '@wings-software/uicore'
+import { Layout, Popover, Text, TextInput, ButtonVariation, PageSpinner, Container } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { clone, defaultTo, isEmpty } from 'lodash-es'
+import { clone, defaultTo, isEmpty, includes, isNil } from 'lodash-es'
 import cx from 'classnames'
 import { Classes, Position } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
+import { Button } from '@harness/uicore'
 import {
   EntityGitDetails,
   InputSetErrorWrapper,
@@ -49,6 +41,12 @@ export interface InputSetSelectorProps {
   isOverlayInputSet?: boolean
   showNewInputSet?: boolean
   onNewInputSetClick?: () => void
+  pipelineGitDetails?: EntityGitDetails | undefined
+  hideInputSetButton?: boolean
+  invalidInputSetReferences?: string[]
+  loadingMergeInputSets?: boolean
+  isRetryPipelineForm?: boolean
+  onReconcile?: (identifier: string) => void
 }
 
 export function InputSetSelector({
@@ -60,11 +58,20 @@ export function InputSetSelector({
   selectedBranch,
   isOverlayInputSet,
   showNewInputSet,
-  onNewInputSetClick
+  onNewInputSetClick,
+  pipelineGitDetails,
+  hideInputSetButton,
+  invalidInputSetReferences,
+  loadingMergeInputSets,
+  isRetryPipelineForm,
+  onReconcile
 }: InputSetSelectorProps): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [selectedInputSets, setSelectedInputSets] = React.useState<InputSetValue[]>(value || [])
+  const [openInputSetsList, setOpenInputSetsList] = useState(false)
   const { getString } = useStrings()
+  const { showError, showSuccess } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
 
   const { projectIdentifier, orgIdentifier, accountId } = useParams<{
     projectIdentifier: string
@@ -95,7 +102,8 @@ export function InputSetSelector({
   const {
     data: inputSetResponse,
     refetch,
-    error
+    error,
+    loading: loadingInpSets
   } = useGetInputSetsListForPipeline({
     queryParams: {
       accountIdentifier: accountId,
@@ -113,8 +121,14 @@ export function InputSetSelector({
     refetch()
   }, [repoIdentifier, branch, selectedRepo, selectedBranch, refetch])
 
-  const { showError } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
+  React.useEffect(() => {
+    if ((isEmpty(invalidInputSetReferences) || isNil(invalidInputSetReferences)) && openInputSetsList) {
+      setOpenInputSetsList(false)
+      showSuccess(getString('pipeline.inputSets.inputSetApplied'))
+    } else if (invalidInputSetReferences && invalidInputSetReferences.length > 0 && openInputSetsList) {
+      showError(getString('pipeline.inputSetErrorStrip.reconcileErrorInfo'))
+    }
+  }, [invalidInputSetReferences])
 
   const onCheckBoxHandler = React.useCallback(
     (
@@ -165,10 +179,23 @@ export function InputSetSelector({
       })
       .filter(set => defaultTo(set.identifier, '').toLowerCase().indexOf(searchParam.toLowerCase()) > -1)
       .map(inputSet => (
-        <MultipleInputSetList key={inputSet.identifier} inputSet={inputSet} onCheckBoxHandler={onCheckBoxHandler} />
+        <MultipleInputSetList
+          key={inputSet.identifier}
+          inputSet={inputSet}
+          onCheckBoxHandler={onCheckBoxHandler}
+          pipelineGitDetails={pipelineGitDetails}
+          refetch={refetch}
+          hideInputSetButton={hideInputSetButton}
+          showReconcile={
+            invalidInputSetReferences &&
+            invalidInputSetReferences.length > 0 &&
+            includes(invalidInputSetReferences, inputSet.identifier)
+              ? true
+              : false
+          }
+          onReconcile={onReconcile}
+        />
       ))
-
-  const [openInputSetsList, setOpenInputSetsList] = useState(false)
 
   return (
     <Popover
@@ -178,7 +205,6 @@ export function InputSetSelector({
       minimal={true}
       className={css.isPopoverParent}
       onOpening={() => {
-        refetch()
         setOpenInputSetsList(true)
       }}
       onInteraction={interaction => {
@@ -199,6 +225,8 @@ export function InputSetSelector({
         selectedValueClass={selectedValueClass}
         showNewInputSet={showNewInputSet}
         onNewInputSetClick={onNewInputSetClick}
+        invalidInputSetReferences={invalidInputSetReferences}
+        loadingMergeInputSets={loadingMergeInputSets}
       />
       {openInputSetsList ? (
         <Layout.Vertical spacing="small" className={css.popoverContainer}>
@@ -220,6 +248,7 @@ export function InputSetSelector({
             <PageSpinner className={css.spinner} />
           ) : (
             <Layout.Vertical padding={{ bottom: 'medium' }}>
+              {(loadingInpSets || (loadingMergeInputSets && !isRetryPipelineForm)) && <PageSpinner />}
               {inputSets && inputSets.length > 0 ? (
                 <>
                   <ul className={cx(Classes.MENU, css.list, { [css.multiple]: inputSets.length > 0 })}>
@@ -242,7 +271,6 @@ export function InputSetSelector({
                     variation={ButtonVariation.PRIMARY}
                     disabled={!selectedInputSets?.length}
                     onClick={() => {
-                      setOpenInputSetsList(false)
                       onChange?.(selectedInputSets)
                     }}
                   />

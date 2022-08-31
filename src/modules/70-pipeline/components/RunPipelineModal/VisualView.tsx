@@ -8,11 +8,11 @@
 import React, { Dispatch, FormEvent, SetStateAction } from 'react'
 import cx from 'classnames'
 import { FormikForm, Layout, PageSpinner, Text } from '@harness/uicore'
-import { isEmpty } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import type { PipelineInfoConfig, ResponsePMSPipelineResponseDTO } from 'services/pipeline-ng'
 import SelectExistingInputsOrProvideNew from './SelectExistingOrProvide'
 import { InputSetSelector } from '../InputSetSelector/InputSetSelector'
 import type { InputSetValue } from '../InputSetSelector/utils'
@@ -46,6 +46,10 @@ export interface VisualViewProps {
   loading?: boolean
   loadingMergeInputSetUpdate: boolean
   selectedStageData: StageSelectionData
+  pipelineResponse: ResponsePMSPipelineResponseDTO | null
+  invalidInputSetReferences: string[]
+  loadingInputSets: boolean
+  onReconcile: (identifier: string) => void
 }
 
 export default function VisualView(props: VisualViewProps): React.ReactElement {
@@ -68,7 +72,11 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     setSelectedInputSets,
     loading,
     loadingMergeInputSetUpdate,
-    selectedStageData
+    selectedStageData,
+    pipelineResponse,
+    invalidInputSetReferences,
+    loadingInputSets,
+    onReconcile
   } = props
   const { getString } = useStrings()
 
@@ -90,7 +98,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   }
 
   const showPipelineInputSetForm = (): boolean => {
-    return !!(existingProvide === 'provide' || selectedInputSets?.length || executionView)
+    return !!(existingProvide === 'provide' || selectedInputSets?.length || executionView) && !loadingInputSets
   }
 
   const showVoidPipelineInputSetForm = (): boolean => {
@@ -150,6 +158,10 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                             setSelectedInputSets(inputsets)
                           }}
                           value={selectedInputSets}
+                          pipelineGitDetails={get(pipelineResponse, 'data.gitDetails')}
+                          invalidInputSetReferences={invalidInputSetReferences}
+                          loadingMergeInputSets={loadingInputSets}
+                          onReconcile={onReconcile}
                         />
                       </GitSyncStoreProvider>
                     ) : null}

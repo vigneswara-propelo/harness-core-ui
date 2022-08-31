@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { defaultTo, isNull, isUndefined, omit, omitBy } from 'lodash-es'
+import { defaultTo, get, isNull, isUndefined, omit, omitBy, remove } from 'lodash-es'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import * as Yup from 'yup'
@@ -25,7 +25,6 @@ import {
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
 import {
   OverlayInputSetResponse,
@@ -40,7 +39,9 @@ import {
   EntityGitDetails,
   UpdateOverlayInputSetForPipelineQueryParams,
   UpdateOverlayInputSetForPipelinePathParams,
-  CreateOverlayInputSetForPipelineQueryParams
+  CreateOverlayInputSetForPipelineQueryParams,
+  useGetMergeInputSetFromPipelineTemplateWithListInput,
+  ResponseMergeInputSetResponse
 } from 'services/pipeline-ng'
 
 import { useToaster } from '@common/exports'
@@ -69,6 +70,9 @@ import type { CreateUpdateInputSetsReturnType, InputSetDTO } from '@pipeline/uti
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { getOverlayErrors } from '@pipeline/utils/runPipelineUtils'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
+import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
+import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
 import {
@@ -86,7 +90,7 @@ export interface OverlayInputSetDTO extends Omit<OverlayInputSetResponse, 'ident
   branch?: string
 }
 
-interface SaveOverlayInputSetDTO {
+export interface SaveOverlayInputSetDTO {
   overlayInputSet: OverlayInputSetDTO
 }
 
@@ -180,6 +184,8 @@ export function OverlayInputSetForm({
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const [formErrors, setFormErrors] = React.useState<Record<string, any>>({})
+  const [invalidInputSetIds, setInvalidInputSetIds] = React.useState<Array<string>>([])
+  const [invokeMergeInp, setInvokeMergeInp] = React.useState<boolean>(false)
   const isPipelineRemote = gitSimplification && storeType === StoreType.REMOTE
   const commonQueryParams = useMemo(() => {
     return {
@@ -251,6 +257,20 @@ export function OverlayInputSetForm({
     }
   })
 
+  const { mutate: mergeInputSet, loading: loadingMergeInputSets } =
+    useGetMergeInputSetFromPipelineTemplateWithListInput({
+      queryParams: {
+        accountIdentifier: accountId,
+        projectIdentifier,
+        orgIdentifier,
+        pipelineIdentifier,
+        pipelineRepoID: repoIdentifier,
+        pipelineBranch: branch,
+        repoIdentifier,
+        branch
+      }
+    })
+
   const inputSet = React.useMemo(() => {
     if (!overlayInputSetResponse?.data) {
       return getDefaultInputSet(orgIdentifier, projectIdentifier, pipelineIdentifier)
@@ -273,7 +293,8 @@ export function OverlayInputSetForm({
         pipelineIdentifier: parsedOverlayInputSet.pipelineIdentifier as string,
         inputSetReferences: defaultTo(parsedOverlayInputSet.inputSetReferences, []),
         gitDetails: defaultTo(inputSetObj.gitDetails, {}),
-        entityValidityDetails: defaultTo(inputSetObj.entityValidityDetails, {})
+        entityValidityDetails: defaultTo(inputSetObj.entityValidityDetails, {}),
+        outdated: inputSetObj.outdated
       }
     }
     return {
@@ -286,32 +307,38 @@ export function OverlayInputSetForm({
       pipelineIdentifier,
       inputSetReferences: defaultTo(inputSetObj?.inputSetReferences, []),
       gitDetails: defaultTo(inputSetObj.gitDetails, {}),
-      entityValidityDetails: defaultTo(inputSetObj.entityValidityDetails, {})
+      entityValidityDetails: defaultTo(inputSetObj.entityValidityDetails, {}),
+      outdated: inputSetObj.outdated
     }
   }, [overlayInputSetResponse?.data, isGitSyncEnabled])
 
   const [disableVisualView, setDisableVisualView] = React.useState(inputSet.entityValidityDetails?.valid === false)
 
   React.useEffect(() => {
-    if (inputSet.entityValidityDetails?.valid === false || selectedView === SelectedView.YAML) {
-      setSelectedView(SelectedView.YAML)
-    } else {
+    if (!isInputSetInvalid(inputSet)) {
       setSelectedView(SelectedView.VISUAL)
+    } else {
+      setSelectedView(SelectedView.YAML)
     }
-  }, [inputSet, inputSet.entityValidityDetails?.valid])
+  }, [inputSet, inputSet.entityValidityDetails?.valid, inputSet.outdated])
 
   React.useEffect(() => {
-    if (inputSet.entityValidityDetails?.valid === false) {
+    if (inputSet.entityValidityDetails?.valid === false || inputSet.outdated) {
       setDisableVisualView(true)
     } else {
       setDisableVisualView(false)
     }
-  }, [inputSet.entityValidityDetails?.valid])
+  }, [inputSet.entityValidityDetails?.valid, inputSet.outdated])
 
   const inputSetListYaml: CompletionItemInterface[] = React.useMemo(() => {
     if (!inputSetList?.data?.content) return []
     return inputSetList.data.content.map(constructInputSetYamlObject)
   }, [inputSetList?.data?.content])
+
+  const onReconcile = (inpSetId: string): void => {
+    remove(invalidInputSetIds, id => id === inpSetId)
+    setInvalidInputSetIds(invalidInputSetIds)
+  }
 
   React.useEffect(() => {
     const inputSetsToSelect = inputSet.inputSetReferences?.map(inputSetRef => {
@@ -328,6 +355,21 @@ export function OverlayInputSetForm({
     })
     setSelectedInputSets(inputSetsToSelect)
   }, [inputSetList?.data?.content, inputSet.inputSetReferences])
+
+  React.useEffect(() => {
+    if (invokeMergeInp && selectedInputSets?.length) {
+      mergeInputSet({
+        inputSetReferences: selectedInputSets?.map(item => item.value as string)
+      })
+        .then((response: ResponseMergeInputSetResponse) => {
+          if (response.data?.errorResponse) {
+            setSelectedInputSets([])
+          }
+          setInvalidInputSetIds(get(response?.data, 'inputSetErrorWrapper.invalidInputSetReferences', []))
+        })
+        .catch(() => setInvokeMergeInp(false))
+    }
+  }, [selectedInputSets, selectedInputSets?.length, invokeMergeInp])
 
   React.useEffect(() => {
     if (identifier) {
@@ -571,7 +613,7 @@ export function OverlayInputSetForm({
       isOpen={isOpen}
       {...dialogProps}
     >
-      {anyApiLoading && <PageSpinner />}
+      {anyApiLoading && selectedView === SelectedView.VISUAL && <PageSpinner />}
       <div className={Classes.DIALOG_BODY}>
         <Layout.Vertical spacing="medium">
           <div className={css.optionBtns}>
@@ -581,12 +623,14 @@ export function OverlayInputSetForm({
                 handleModeSwitch(nextMode)
               }}
               disableToggle={disableVisualView}
+              disableToggleReasonIcon={'danger-icon'}
+              showDisableToggleReason={true}
             />
           </div>
 
           <Formik<OverlayInputSetDTO & GitContextProps & StoreMetadata>
             initialValues={{
-              ...omit(inputSet, 'gitDetails', 'entityValidityDetails'),
+              ...omit(inputSet, 'gitDetails', 'entityValidityDetails', 'outdated'),
               repo: isGitSyncEnabled ? defaultTo(repoIdentifier, '') : defaultTo(repoName, ''),
               branch: defaultTo(branch, ''),
               connectorRef: defaultTo(connectorRef, ''),
@@ -687,12 +731,18 @@ export function OverlayInputSetForm({
                                   pipelineIdentifier={pipelineIdentifier}
                                   onChange={inputsets => {
                                     setSelectedInputSets(inputsets)
+                                    setInvokeMergeInp(true)
                                   }}
                                   value={selectedInputSets}
                                   selectedRepo={selectedRepo}
                                   selectedBranch={selectedBranch}
                                   isOverlayInputSet={true}
                                   selectedValueClass={css.selectedInputSetsContainer}
+                                  pipelineGitDetails={get(pipeline, 'data.gitDetails')}
+                                  hideInputSetButton={true}
+                                  invalidInputSetReferences={invalidInputSetIds}
+                                  loadingMergeInputSets={loadingMergeInputSets}
+                                  onReconcile={onReconcile}
                                 />
                               </GitSyncStoreProvider>
                             )}
@@ -716,35 +766,49 @@ export function OverlayInputSetForm({
                       {loading ? (
                         <PageSpinner />
                       ) : (
-                        <YAMLBuilder
-                          {...yamlBuilderReadOnlyModeProps}
-                          existingJSON={{
-                            overlayInputSet: {
-                              ...omit(
-                                formikProps?.values,
-                                'pipeline',
-                                'repo',
-                                'branch',
-                                'connectorRef',
-                                'repoName',
-                                'filePath',
-                                'storeType'
-                              ),
-                              inputSetReferences: selectedInputSetReferences
-                            }
-                          }}
-                          invocationMap={invocationMap}
-                          bind={setYamlHandler}
-                          schema={pipelineSchema?.data}
-                          isReadOnlyMode={isReadOnly}
-                          showSnippetSection={false}
-                          isEditModeSupported={!isReadOnly}
-                          fileName={getYamlFileName({
-                            isPipelineRemote,
-                            filePath: inputSet?.gitDetails?.filePath,
-                            defaultName: yamlBuilderReadOnlyModeProps.fileName
-                          })}
-                        />
+                        <>
+                          {isInputSetInvalid(inputSet) && (
+                            <OutOfSyncErrorStrip
+                              inputSet={inputSet}
+                              overlayInputSetRepoIdentifier={overlayInputSetRepoIdentifier}
+                              overlayInputSetBranch={overlayInputSetBranch}
+                              overlayInputSetIdentifier={identifier}
+                              pipelineGitDetails={get(pipeline, 'data.gitDetails')}
+                              hideForm={hideForm}
+                              isOverlayInputSet={true}
+                              hideInputSetButton={true}
+                            />
+                          )}
+                          <YAMLBuilder
+                            {...yamlBuilderReadOnlyModeProps}
+                            existingJSON={{
+                              overlayInputSet: {
+                                ...omit(
+                                  formikProps?.values,
+                                  'pipeline',
+                                  'repo',
+                                  'branch',
+                                  'connectorRef',
+                                  'repoName',
+                                  'filePath',
+                                  'storeType'
+                                ),
+                                inputSetReferences: selectedInputSetReferences
+                              }
+                            }}
+                            invocationMap={invocationMap}
+                            bind={setYamlHandler}
+                            schema={pipelineSchema?.data}
+                            isReadOnlyMode={isReadOnly}
+                            showSnippetSection={false}
+                            isEditModeSupported={!isReadOnly}
+                            fileName={getYamlFileName({
+                              isPipelineRemote,
+                              filePath: inputSet?.gitDetails?.filePath,
+                              defaultName: yamlBuilderReadOnlyModeProps.fileName
+                            })}
+                          />
+                        </>
                       )}
                       <Layout.Horizontal padding={{ top: 'medium' }}>
                         <Button

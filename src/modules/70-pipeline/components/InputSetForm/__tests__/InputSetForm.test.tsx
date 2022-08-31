@@ -27,6 +27,8 @@ import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineCon
 import type { InputSetDTO } from '@pipeline/utils/types'
 import type { ResponseInputSetTemplateWithReplacedExpressionsResponse } from 'services/pipeline-ng'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
+import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
+import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
 import { EnhancedInputSetForm } from '../InputSetForm'
 import {
   TemplateResponse,
@@ -67,6 +69,12 @@ YamlMock.YamlBuilderMemo = YamlMock
 
 jest.mock('@common/utils/YamlUtils', () => ({}))
 jest.mock('@common/components/YAMLBuilder/YamlBuilder', () => YamlMock)
+
+jest.mock('react-monaco-editor', () => ({
+  MonacoDiffEditor: MonacoEditor
+}))
+
+jest.mock('@common/components/MonacoEditor/MonacoEditor')
 
 jest.useFakeTimers()
 
@@ -116,7 +124,8 @@ jest.mock('services/pipeline-ng', () => ({
   useUpdateOverlayInputSetForPipeline: jest.fn().mockImplementation(() => ({ mutate: successResponse })),
   useCreateOverlayInputSetForPipeline: jest.fn(() => ({})),
   useGetInputSetsListForPipeline: jest.fn(() => GetInputSetsResponse),
-  useGetSchemaYaml: jest.fn(() => ({}))
+  useGetSchemaYaml: jest.fn(() => ({})),
+  useYamlDiffForInputSet: jest.fn(() => GetInputSetYamlDiffInline)
 }))
 
 const intersectionObserverMock = () => ({

@@ -109,7 +109,7 @@ const RenderColumnInputSet: Renderer<CellProps<InputSetLocal>> = ({ row }) => {
             <Badge
               text={'common.invalid'}
               iconName="error-outline"
-              showTooltip={true}
+              showTooltip={false}
               entityName={data.name}
               entityType={data.inputSetType === 'INPUT_SET' ? 'Input Set' : 'Overlay Input Set'}
               uuidToErrorResponseMap={data.inputSetErrorDetails?.uuidToErrorResponseMap}
@@ -248,7 +248,7 @@ const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }
 
   return (
     <RbacButton
-      disabled={!(column as any)?.pipelineHasRuntimeInputs || isPipelineInvalid}
+      disabled={!(column as any)?.pipelineHasRuntimeInputs || isPipelineInvalid || isInputSetInvalid(row.original)}
       tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
       icon="run-pipeline"
       variation={ButtonVariation.PRIMARY}

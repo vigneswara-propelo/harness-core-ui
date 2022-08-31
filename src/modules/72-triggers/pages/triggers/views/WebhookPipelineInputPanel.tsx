@@ -18,7 +18,7 @@ import {
   PageSpinner
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { merge, cloneDeep, isEmpty, defaultTo, get, debounce } from 'lodash-es'
+import { merge, cloneDeep, isEmpty, defaultTo, get, debounce, remove } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
 import {
@@ -209,6 +209,7 @@ function WebhookPipelineInputPanelForm({
     typeof ciCodebaseBuildValue === 'object' && !isEmpty(ciCodebaseBuildValue)
   )
   const [mergingInputSets, setMergingInputSets] = useState<boolean>(false)
+  const [invalidInputSetIds, setInvalidInputSetIds] = useState<Array<string>>([])
 
   const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier } = useParams<{
     projectIdentifier: string
@@ -237,6 +238,11 @@ function WebhookPipelineInputPanelForm({
       branch
     })
   }, [gitAwareForTriggerEnabled, branch, formikProps?.values?.pipelineBranchName])
+
+  const onReconcile = (inpSetId: string): void => {
+    remove(invalidInputSetIds, id => id === inpSetId)
+    setInvalidInputSetIds(invalidInputSetIds)
+  }
 
   const { mutate: mergeInputSet, error: mergeInputSetError } = useGetMergeInputSetFromPipelineTemplateWithListInput({
     queryParams: {
@@ -414,7 +420,7 @@ function WebhookPipelineInputPanelForm({
         const data = await mergeInputSet({
           inputSetReferences: selectedInputSets.map(item => item.value as string)
         })
-        if (data?.data?.pipelineYaml) {
+        if (!data?.data?.errorResponse && data?.data?.pipelineYaml) {
           const parsedInputSets = clearRuntimeInput(memoizedParse<Pipeline>(data.data.pipelineYaml).pipeline)
 
           const newPipelineObject = clearRuntimeInput(
@@ -433,7 +439,10 @@ function WebhookPipelineInputPanelForm({
             inputSetSelected: selectedInputSets,
             pipeline: mergedPipeline.pipeline
           })
+        } else if (data?.data?.errorResponse) {
+          setSelectedInputSets([])
         }
+        setInvalidInputSetIds(get(data?.data, 'inputSetErrorWrapper.invalidInputSetReferences', []))
       }
       setMergingInputSets(true)
       try {
@@ -541,7 +550,7 @@ function WebhookPipelineInputPanelForm({
 
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
-      {(loading || mergingInputSets) && !isPipelineBranchNameInFocus() ? (
+      {loading && !isPipelineBranchNameInFocus() ? (
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
           <PageSpinner />
         </div>
@@ -575,6 +584,9 @@ function WebhookPipelineInputPanelForm({
                     selectedBranch={inputSetSelectedBranch}
                     showNewInputSet={gitAwareForTriggerEnabled}
                     onNewInputSetClick={() => setShowNewInputSetModal(true)}
+                    invalidInputSetReferences={invalidInputSetIds}
+                    loadingMergeInputSets={mergingInputSets}
+                    onReconcile={onReconcile}
                   />
                 </GitSyncStoreProvider>
                 {inputSetError ? <Text intent="danger">{inputSetError}</Text> : null}
@@ -612,7 +624,10 @@ function WebhookPipelineInputPanelForm({
                 <div className={css.divider} />
               </Container>
             )}
-            {showPipelineInputSetForm && template?.data?.inputSetTemplateYaml ? (
+            {showPipelineInputSetForm &&
+            template?.data?.inputSetTemplateYaml &&
+            !mergingInputSets &&
+            isEmpty(invalidInputSetIds) ? (
               <PipelineInputSetForm
                 originalPipeline={resolvedPipeline}
                 template={defaultTo(

@@ -734,15 +734,21 @@ inputSets:
   createNewInputSet: Create New Input Set
   aboutInputSets: A Harness Input Set is a group of Pipeline settings and values. You create Input Sets and use them when you run a Pipeline. Input Sets let you use one Pipeline for many scenarios.
   overlayISHelperText: Selected inputs will be applied in the order listed. Drag to reorder the input sets.
-  invalidInputSet1: Your Input Set form contains invalid fields because they are no longer a pipeline runtime input. Would you like us to remove all invalid fields in your form?
   invalidFields: Invalid Fields
   removeInvalidFields: Remove Invalid Fields
   editInYamlView: Edit in YAML view
-  invalidInputSet2: Your input set is not valid anymore because you do not have any pipeline runtime inputs. You may delete this input set, update your pipeline or go back to the Input Set list.
+  invalidInputSetDesc1: Your input set is not valid anymore because you do not have any pipeline runtime inputs. You may delete this input set, update your pipeline or go back to the Input Set list.
+  invalidInputSetDesc2: Your input set is not valid anymore because you do not have any pipeline runtime inputs. You can either delete this input set or navigate to the Input Set list.
   invalidInputSet: Invalid Input Set
+  invalidOverlayISDesc1: Your overlay input set is not valid anymore because there are no valid input set references. This overlay input set may be removed.
+  invalidOverlayISDesc2: Your overlay input set is not valid anymore because there are no valid input set references. You can either delete this overlay input set or navigate to the Input Set list.
+  invalidOverlayIS: Invalid Overlay Input Set
   deleteInputSet: Delete Input Set
+  deleteOverlayIS: Delete Overlay Input Set
   goBackToInputSetList: Go back to Input Set list
-
+  inputSetUpdated: Input Set "{{name}}" updated
+  overlayISUpdated: Overlay Input Set "{{name}}" updated
+  inputSetApplied: Input Set(s) applied successfully
 provisionerSteps: Provisioner Steps
 addStage:
   title: Select Stage Type
@@ -1192,6 +1198,14 @@ reconcileDialog:
   refreshedYamlLabel: Refreshed
   updateAllLabel: Update all unsynced entities
   updateEntityLabel: 'Update {{entity}}'
+inputSetErrorStrip:
+  errorInfo: Your {{type}} form contains invalid fields!
+  goToInpSetBtn: Go to Input Set list
+  updateRuntimeFields: Update Runtime Field(s)
+  reconcileDialogTitle: '{{type}} ERROR INSPECTION'
+  existingYaml: Existing YAML (Invalid)
+  validYaml: Valid YAML
+  reconcileErrorInfo: Please reconcile the invalid input set present in selected input set(s)
 ACR:
   name: ACR
   subscription: '{{ $.common.subscriptionId }}'
