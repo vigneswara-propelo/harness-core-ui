@@ -4148,6 +4148,15 @@ export interface StringsMap {
   'cd.artifactRepoTooltip': string
   'cd.attributeFilters': string
   'cd.azureArmRollback.description': string
+  'cd.azureBlueprint.assignmentName': string
+  'cd.azureBlueprint.assignmentNameError': string
+  'cd.azureBlueprint.azureBlueprintTemplate': string
+  'cd.azureBlueprint.configuration': string
+  'cd.azureBlueprint.description': string
+  'cd.azureBlueprint.managementGroup': string
+  'cd.azureBlueprint.specifyTemplateFileSource': string
+  'cd.azureBlueprint.templateFileDetails': string
+  'cd.azureBlueprint.templateFileSource': string
   'cd.azureWebAppRollbackDescription': string
   'cd.azureWebAppSwapSlotDescription': string
   'cd.backEndConfig': string

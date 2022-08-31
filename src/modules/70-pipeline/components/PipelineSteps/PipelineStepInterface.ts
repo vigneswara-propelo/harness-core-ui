@@ -94,7 +94,8 @@ export enum StepType {
   AzureTrafficShift = 'AzureTrafficShift',
   AzureSwapSlot = 'AzureSwapSlot',
   AzureArmRollback = 'AzureARMRollback',
-  Background = 'Background'
+  Background = 'Background',
+  AzureBlueprint = 'AzureCreateBPResource'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

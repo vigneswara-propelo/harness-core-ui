@@ -57,6 +57,7 @@ import { AzureTrafficShift } from './AzureTrafficShift/AzureTrafficShift'
 import { AzureSwapSlot } from './AzureWebAppSwapSlot/AzureWebAppSwapSlot'
 import { AzureWebAppServiceSpec } from './AzureWebAppServiceSpec/AzureWebAppServiceSpec'
 import { AzureArmRollback } from './AzureArmRollback/AzureArmRollback'
+import { AzureBlueprintStep } from './AzureBlueprint/AzureBlueprint'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new HttpStep())
@@ -108,3 +109,4 @@ factory.registerStep(new AzureSlotDeployment())
 factory.registerStep(new AzureTrafficShift())
 factory.registerStep(new AzureSwapSlot())
 factory.registerStep(new AzureArmRollback())
+factory.registerStep(new AzureBlueprintStep())
