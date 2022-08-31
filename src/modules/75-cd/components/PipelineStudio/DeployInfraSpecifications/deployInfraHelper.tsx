@@ -357,3 +357,7 @@ export const isServerlessInfrastructureType = (infrastructureType?: string): boo
 export const isAzureWebAppInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.AzureWebApp
 }
+
+export const getInfraDefinitionDetailsHeaderTooltipId = (selectedInfrastructureType: string): string => {
+  return `${selectedInfrastructureType}InfraDefinitionDetails`
+}
