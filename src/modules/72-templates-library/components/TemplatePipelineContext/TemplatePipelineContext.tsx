@@ -44,11 +44,13 @@ import type {
 import type { PipelineSelectionState } from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { EntityGitDetails } from 'services/template-ng'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
 export interface TemplatePipelineProviderProps {
   queryParams: GetPipelineQueryParams
   initialValue: PipelineInfoConfig
   gitDetails: EntityGitDetails
+  storeMetadata?: StoreMetadata
   onUpdatePipeline: (pipeline: PipelineInfoConfig) => void
   contextType: PipelineContextType
   isReadOnly: boolean
@@ -59,6 +61,7 @@ export function TemplatePipelineProvider({
   queryParams,
   initialValue,
   gitDetails,
+  storeMetadata,
   onUpdatePipeline,
   isReadOnly,
   contextType,
@@ -137,7 +140,8 @@ export function TemplatePipelineProvider({
         originalPipeline: cloneDeep(initialValue),
         isBEPipelineUpdated: false,
         isUpdated: false,
-        gitDetails
+        gitDetails,
+        storeMetadata
       })
     )
     if (templateRefs.length > 0) {
@@ -147,8 +151,8 @@ export function TemplatePipelineProvider({
           orgIdentifier: queryParams.orgIdentifier,
           projectIdentifier: queryParams.projectIdentifier,
           templateListType: 'Stable',
-          repoIdentifier: gitDetails.repoIdentifier,
-          branch: gitDetails.branch,
+          repoIdentifier: gitDetails?.repoIdentifier,
+          branch: gitDetails?.branch,
           getDefaultFromOtherRepo: true
         },
         templateRefs
@@ -197,8 +201,8 @@ export function TemplatePipelineProvider({
       {
         ...queryParams,
         templateListType: 'Stable',
-        repoIdentifier: state.gitDetails.repoIdentifier,
-        branch: state.gitDetails.repoIdentifier,
+        repoIdentifier: state.gitDetails?.repoIdentifier,
+        branch: state.gitDetails?.branch,
         getDefaultFromOtherRepo: true
       },
       templateRefs

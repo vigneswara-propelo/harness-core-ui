@@ -24,6 +24,7 @@ export class StepGroupTemplate extends Template {
     fill: '#E4F7E1'
   }
   protected isEnabled = false
+  protected isRemoteEnabled = false
 
   renderTemplateCanvas(_formikRef: TemplateFormRef): JSX.Element {
     return <></>

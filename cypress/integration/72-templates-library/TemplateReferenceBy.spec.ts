@@ -20,7 +20,11 @@ describe('Template Reference By', () => {
       // failing the test
       return false
     })
-    cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
+    cy.intercept('GET', gitSyncEnabledCall, {
+      connectivityMode: null,
+      gitSyncEnabled: false,
+      gitSimplificationEnabled: false
+    })
     cy.intercept('POST', templatesListCall, { fixture: 'template/api/templatesList' }).as('templatesListCall')
     cy.intercept('POST', templatesListCallWithListType, { fixture: 'template/api/templatesList' }).as(
       'templatesListCallForDrawer'

@@ -46,11 +46,12 @@ const TemplateStudioSubHeader: (
   ref: React.ForwardedRef<TemplateStudioSubHeaderHandle>
 ) => JSX.Element = ({ onViewChange, getErrors, onGitBranchChange }, ref) => {
   const { state, fetchTemplate, view, isReadonly } = React.useContext(TemplateContext)
-  const { isUpdated, entityValidityDetails } = state
+  const { isUpdated, entityValidityDetails, templateYamlError } = state
   const { getString } = useStrings()
   const { templateIdentifier } = useParams<TemplateStudioPathProps>()
   const isYaml = view === SelectedView.YAML
   const isVisualViewDisabled = React.useMemo(() => entityValidityDetails.valid === false, [entityValidityDetails.valid])
+
   const saveTemplateHandleRef = React.useRef<SaveTemplateHandle | null>(null)
 
   React.useImperativeHandle(
@@ -73,52 +74,56 @@ const TemplateStudioSubHeader: (
     >
       <Layout.Horizontal height={'100%'} flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
         <TemplateStudioSubHeaderLeftView onGitBranchChange={onGitBranchChange} />
-        <Container>
-          <VisualYamlToggle
-            className={css.visualYamlToggle}
-            selectedView={isYaml || isVisualViewDisabled ? SelectedView.YAML : SelectedView.VISUAL}
-            onChange={nextMode => {
-              onViewChange(nextMode)
-            }}
-            disableToggle={isVisualViewDisabled}
-          />
-        </Container>
-        <Container>
-          <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center' }}>
-            {isReadonly && (
-              <Container>
-                <Layout.Horizontal spacing={'small'}>
-                  <Icon name="eye-open" size={16} color={Color.ORANGE_800} />
-                  <Text color={Color.ORANGE_800} font={{ size: 'small' }}>
-                    {getString('common.readonlyPermissions')}
-                  </Text>
-                </Layout.Horizontal>
-              </Container>
-            )}
-            {isUpdated && !isReadonly && (
-              <Text color={Color.ORANGE_600} font={{ size: 'small' }} className={css.tagRender}>
-                {getString('unsavedChanges')}
-              </Text>
-            )}
-            {!isReadonly && (
-              <Container>
-                <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
-                  <SaveTemplatePopoverWithRef getErrors={getErrors} ref={saveTemplateHandleRef} />
-                  {templateIdentifier !== DefaultNewTemplateId && (
-                    <Button
-                      disabled={!isUpdated}
-                      onClick={() => {
-                        fetchTemplate({ forceFetch: true, forceUpdate: true })
-                      }}
-                      variation={ButtonVariation.SECONDARY}
-                      text={getString('common.discard')}
-                    />
-                  )}
-                </Layout.Horizontal>
-              </Container>
-            )}
-          </Layout.Horizontal>
-        </Container>
+        {!templateYamlError && (
+          <Container>
+            <VisualYamlToggle
+              className={css.visualYamlToggle}
+              selectedView={isYaml || isVisualViewDisabled ? SelectedView.YAML : SelectedView.VISUAL}
+              onChange={nextMode => {
+                onViewChange(nextMode)
+              }}
+              disableToggle={isVisualViewDisabled}
+            />
+          </Container>
+        )}
+        {!templateYamlError && (
+          <Container>
+            <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center' }}>
+              {isReadonly && (
+                <Container>
+                  <Layout.Horizontal spacing={'small'}>
+                    <Icon name="eye-open" size={16} color={Color.ORANGE_800} />
+                    <Text color={Color.ORANGE_800} font={{ size: 'small' }}>
+                      {getString('common.readonlyPermissions')}
+                    </Text>
+                  </Layout.Horizontal>
+                </Container>
+              )}
+              {isUpdated && !isReadonly && (
+                <Text color={Color.ORANGE_600} font={{ size: 'small' }} className={css.tagRender}>
+                  {getString('unsavedChanges')}
+                </Text>
+              )}
+              {!isReadonly && (
+                <Container>
+                  <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
+                    <SaveTemplatePopoverWithRef getErrors={getErrors} ref={saveTemplateHandleRef} />
+                    {templateIdentifier !== DefaultNewTemplateId && (
+                      <Button
+                        disabled={!isUpdated}
+                        onClick={() => {
+                          fetchTemplate({ forceFetch: true, forceUpdate: true })
+                        }}
+                        variation={ButtonVariation.SECONDARY}
+                        text={getString('common.discard')}
+                      />
+                    )}
+                  </Layout.Horizontal>
+                </Container>
+              )}
+            </Layout.Horizontal>
+          </Container>
+        )}
       </Layout.Horizontal>
     </Container>
   )

@@ -9,6 +9,8 @@
 declare const styles: {
   readonly container: string
   readonly dropdown: string
+  readonly errorHandler: string
+  readonly errorPanel: string
   readonly innerTabsContainer: string
   readonly openInStudio: string
   readonly referencedByBody: string
@@ -17,5 +19,6 @@ declare const styles: {
   readonly shrink: string
   readonly tabsContainer: string
   readonly topContainer: string
+  readonly yamlLoader: string
 }
 export default styles

@@ -24,6 +24,7 @@ export class SecretManagerTemplate extends Template {
     stroke: '#D4E7D1',
     fill: '#CDF4FE'
   }
+  protected isRemoteEnabled = false
 
   renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
     return <ScriptTemplateCanvasWithRef ref={formikRef} />

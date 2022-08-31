@@ -70,7 +70,8 @@ export function StepCommands(
     className = '',
     viewType,
     allowableTypes,
-    gitDetails
+    gitDetails,
+    storeMetadata
   } = props
   const { getString } = useStrings()
   const [activeTab, setActiveTab] = React.useState(StepCommandTabs.StepConfiguration)
@@ -256,14 +257,19 @@ export function StepCommands(
                 }
               />
               {!isStepGroup &&
-              viewType === StepCommandsViews.Pipeline &&
-              module !== 'cf' &&
-              (step as StepElementConfig).type !== StepType.FlagConfiguration ? (
-                <>
-                  <Expander />
-                  <SaveTemplateButton data={getStepDataForTemplate} type={'Step'} gitDetails={gitDetails} />
-                </>
-              ) : null}
+                viewType === StepCommandsViews.Pipeline &&
+                module !== 'cf' &&
+                (step as StepElementConfig).type !== StepType.FlagConfiguration && (
+                  <>
+                    <Expander />
+                    <SaveTemplateButton
+                      data={getStepDataForTemplate}
+                      type={'Step'}
+                      gitDetails={gitDetails}
+                      storeMetadata={storeMetadata}
+                    />
+                  </>
+                )}
             </Tabs>
           </Container>
           {!isEmpty(referenceId) ? (

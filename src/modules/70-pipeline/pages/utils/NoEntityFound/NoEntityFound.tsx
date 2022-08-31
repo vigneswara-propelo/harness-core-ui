@@ -19,18 +19,20 @@ import type {
   TemplateStudioPathProps,
   TemplateStudioQueryParams
 } from '@common/interfaces/RouteInterfaces'
-import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import GitRemoteDetails, { GitRemoteDetailsProps } from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { Error, ResponseMessage } from 'services/pipeline-ng'
+import type { Error as TemplateError } from 'services/template-ng'
 import noEntityFoundImage from './images/no-entity-found.svg'
 import css from './NoEntityFound.module.scss'
 
 interface NoEntityFoundProps {
   identifier: string
   entityType: 'pipeline' | 'inputSet' | 'template'
-  errorObj?: Error
+  errorObj?: Error | TemplateError
+  gitDetails?: GitRemoteDetailsProps
 }
 
 const entityTypeLabelMapping = {
@@ -40,7 +42,7 @@ const entityTypeLabelMapping = {
 }
 
 function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
-  const { identifier, entityType, errorObj } = props
+  const { identifier, entityType, errorObj, gitDetails } = props
   const { repoIdentifier, branch, versionLabel, connectorRef, storeType, repoName } =
     useQueryParams<TemplateStudioQueryParams>()
 
@@ -145,16 +147,15 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
         <Text className={css.selectDiffBranch} margin={{ top: 'xsmall', bottom: 'xlarge' }}>
           {getString('pipeline.gitExperience.selectDiffBranch')}
         </Text>
-        {isPipelineRemote && connectorRef && (
+        {supportingGitSimplification ? (
           <GitRemoteDetails
-            connectorRef={connectorRef}
-            repoName={repoName}
-            branch={branch}
+            connectorRef={gitDetails?.connectorRef || connectorRef}
+            repoName={gitDetails?.repoName || repoName}
+            branch={gitDetails?.branch || branch}
             flags={{ borderless: false, showRepo: false, normalInputStyle: true }}
-            onBranchChange={onGitBranchChange}
+            onBranchChange={gitDetails?.onBranchChange ?? onGitBranchChange}
           />
-        )}
-        {!isPipelineRemote && (
+        ) : (
           <GitFilters
             onChange={onGitBranchChange}
             showRepoSelector={false}

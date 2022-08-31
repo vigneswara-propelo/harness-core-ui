@@ -8,8 +8,9 @@
 import React from 'react'
 import { defaultTo } from 'lodash-es'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import type { TemplateSummaryResponse } from 'services/template-ng'
+import type { EntityGitDetails, TemplateSummaryResponse } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { AddStageView } from './views/AddStageView'
 import type { PipelineStageProps } from './PipelineStage'
 
@@ -24,6 +25,8 @@ export interface PipelineStagesProps<T = Record<string, unknown>> {
   onSelectStage?: (stageType: string, stage?: T, pipeline?: PipelineInfoConfig) => void
   showSelectMenu?: boolean
   contextType?: string
+  gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
 }
 
 interface PipelineStageMap extends Omit<PipelineStageProps, 'minimal'> {
@@ -40,6 +43,8 @@ export function PipelineStages<T = Record<string, unknown>>({
   getNewStageFromTemplate,
   stageType,
   stageProps,
+  gitDetails,
+  storeMetadata,
   minimal = false
 }: PipelineStagesProps<T>): JSX.Element {
   const [stages, setStages] = React.useState<Map<string, PipelineStageMap>>(new Map())
@@ -83,7 +88,9 @@ export function PipelineStages<T = Record<string, unknown>>({
     try {
       const { template: newTemplate, isCopied } = await getTemplate({
         templateType: 'Stage',
-        allChildTypes: childTypes
+        allChildTypes: childTypes,
+        gitDetails,
+        storeMetadata
       })
       if (getNewStageFromType) {
         setShowMenu(false)

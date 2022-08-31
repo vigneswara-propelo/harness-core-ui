@@ -24,6 +24,7 @@ export class PipelineTemplate extends Template {
     stroke: '#CCCBFF',
     fill: '#E8E8FF'
   }
+  protected isRemoteEnabled = true
 
   renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
     return <PipelineTemplateCanvasWrapperWithRef ref={formikRef} />

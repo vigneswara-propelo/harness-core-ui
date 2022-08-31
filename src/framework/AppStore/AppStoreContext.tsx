@@ -46,6 +46,7 @@ export interface AppStoreContextProps {
   readonly isGitSimplificationEnabled?: boolean // DB state for a roject
   readonly supportingGitSimplification?: boolean // Computed value based on multiple flags
   readonly gitSyncEnabledOnlyForFF?: boolean
+  readonly supportingTemplatesGitx?: boolean
   readonly connectivityMode?: GitEnabledDTO['connectivityMode'] //'MANAGER' | 'DELEGATE'
   readonly currentUserInfo: UserInfo
   /** feature flags */
@@ -119,6 +120,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     isGitSimplificationEnabled: undefined,
     supportingGitSimplification: true,
     gitSyncEnabledOnlyForFF: false,
+    supportingTemplatesGitx: false,
     connectivityMode: undefined
   })
 
@@ -225,14 +227,16 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
         const gitXEnabled = !!response?.gitSimplificationEnabled
         const oldGitSyncEnabled = !!response?.gitSyncEnabled
         const gitSyncEnabledOnlyForFF = !!response?.gitSyncEnabledOnlyForFF
+        const supportingGitSimplification =
+          ((gitXEnabled || !state.featureFlags['USE_OLD_GIT_SYNC']) && !oldGitSyncEnabled) || gitSyncEnabledOnlyForFF
         setState(prevState => ({
           ...prevState,
           isGitSyncEnabled: oldGitSyncEnabled,
           connectivityMode: response?.connectivityMode,
           isGitSimplificationEnabled: gitXEnabled,
-          supportingGitSimplification:
-            ((gitXEnabled || !state.featureFlags['USE_OLD_GIT_SYNC']) && !oldGitSyncEnabled) || gitSyncEnabledOnlyForFF,
-          gitSyncEnabledOnlyForFF: gitSyncEnabledOnlyForFF
+          supportingGitSimplification,
+          gitSyncEnabledOnlyForFF: gitSyncEnabledOnlyForFF,
+          supportingTemplatesGitx: supportingGitSimplification && state.featureFlags['NG_TEMPLATE_GITX']
         }))
       })
     } else {
@@ -242,6 +246,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
         connectivityMode: undefined,
         isGitSimplificationEnabled: false,
         supportingGitSimplification: true,
+        supportingTemplatesGitx: state.featureFlags['NG_TEMPLATE_GITX'],
         gitSyncEnabledOnlyForFF: false
       }))
     }
@@ -251,7 +256,8 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     projectIdentifierFromPath,
     orgIdentifierFromPath,
     state.isGitSyncEnabled,
-    state.featureFlags[FeatureFlag.USE_OLD_GIT_SYNC]
+    state.featureFlags[FeatureFlag.USE_OLD_GIT_SYNC],
+    state.featureFlags[FeatureFlag.NG_TEMPLATE_GITX]
   ])
 
   // set selectedOrg when orgDetails are fetched

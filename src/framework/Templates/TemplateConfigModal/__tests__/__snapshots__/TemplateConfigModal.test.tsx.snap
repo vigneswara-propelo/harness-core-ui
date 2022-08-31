@@ -26,7 +26,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
               class="Layout--vertical Layout--layout-spacing-huge StyledProps--main"
             >
               <div
-                class="StyledProps--font StyledProps--main"
+                class="StyledProps--font StyledProps--main gitFormWrapper"
               >
                 <div
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
@@ -220,7 +220,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
                         </div>
                       </div>
                       <div
-                        class="bp3-form-group"
+                        class="bp3-form-group gitFormFieldWidth"
                         data-id="versionLabel-1"
                       >
                         <label

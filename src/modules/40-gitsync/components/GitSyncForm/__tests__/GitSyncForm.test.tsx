@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { act, findAllByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
-import { noop } from 'lodash-es'
 import { Formik, FormikForm } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -57,7 +56,7 @@ describe('GitSyncForm test', () => {
         >
           {formikProps => (
             <FormikForm>
-              <GitSyncForm formikProps={formikProps} handleSubmit={noop} isEdit={false} />
+              <GitSyncForm formikProps={formikProps} isEdit={false} />
             </FormikForm>
           )}
         </Formik>
@@ -115,7 +114,7 @@ describe('GitSyncForm test', () => {
         >
           {formikProps => (
             <FormikForm>
-              <GitSyncForm formikProps={formikProps} handleSubmit={noop} isEdit={true} />
+              <GitSyncForm formikProps={formikProps} isEdit={true} />
             </FormikForm>
           )}
         </Formik>

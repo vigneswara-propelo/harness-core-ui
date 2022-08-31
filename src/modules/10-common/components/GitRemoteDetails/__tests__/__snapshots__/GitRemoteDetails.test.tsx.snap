@@ -59,7 +59,7 @@ exports[`<GitRemoteDetails /> default rendering GitRemoteDetails 1`] = `
       class="Layout--horizontal StyledProps--main"
     >
       <div
-        class="bp3-form-group branchSelector branchSelector"
+        class="bp3-form-group branchSelector transparent branchSelector"
       >
         
         <div

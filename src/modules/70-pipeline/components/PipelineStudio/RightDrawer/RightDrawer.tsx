@@ -435,6 +435,7 @@ export function RightDrawer(): React.ReactElement {
       pipelineView,
       selectionState: { selectedStageId, selectedStepId },
       gitDetails,
+      storeMetadata,
       pipeline
     },
     allowableTypes,
@@ -723,7 +724,9 @@ export function RightDrawer(): React.ReactElement {
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
         allChildTypes: [stepType],
-        selectedTemplate
+        selectedTemplate,
+        gitDetails,
+        storeMetadata
       })
       const node = drawerData.data?.stepConfig?.node as StepOrStepGroupOrTemplateStepData
       const processNode = isCopied
@@ -844,6 +847,7 @@ export function RightDrawer(): React.ReactElement {
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           stageType={stageType as StageType}
           gitDetails={gitDetails}
+          storeMetadata={storeMetadata}
         />
       )}
       {type === DrawerTypes.AddStep && selectedStageId && data?.paletteData && (
@@ -900,6 +904,7 @@ export function RightDrawer(): React.ReactElement {
           allowableTypes={allowableTypes}
           withoutTabs
           stageType={stageType as StageType}
+          storeMetadata={storeMetadata}
         />
       )}
 
@@ -1012,6 +1017,7 @@ export function RightDrawer(): React.ReactElement {
             addOrUpdateTemplate(selectedTemplate, type, Boolean(isRollbackToggled))
           }
           onRemoveTemplate={() => removeTemplate(type, Boolean(isRollbackToggled))}
+          storeMetadata={storeMetadata}
         />
       )}
     </Drawer>

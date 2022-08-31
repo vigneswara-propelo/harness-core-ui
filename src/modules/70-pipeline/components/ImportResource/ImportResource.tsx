@@ -7,7 +7,7 @@
 
 import React, { useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, isEmpty, noop, omit } from 'lodash-es'
+import { defaultTo, isEmpty, omit } from 'lodash-es'
 import * as Yup from 'yup'
 import {
   Container,
@@ -27,8 +27,7 @@ import { useStrings } from 'framework/strings'
 import { Error, importInputSetPromise, importPipelinePromise, ResponsePipelineSaveResponse } from 'services/pipeline-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { NameIdDescriptionTags } from '@common/components'
-import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
-import { yamlPathRegex } from '@common/utils/StringUtils'
+import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
@@ -194,13 +193,7 @@ export default function ImportResource({
   const validationSchema = Yup.object().shape({
     name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
     identifier: IdentifierSchema(),
-    repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-    branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
-    connectorRef: Yup.string().trim().required(getString('validation.sshConnectorRequired')),
-    filePath: Yup.string()
-      .trim()
-      .required(getString('gitsync.gitSyncForm.yamlPathRequired'))
-      .matches(yamlPathRegex, getString('gitsync.gitSyncForm.yamlPathInvalid'))
+    ...gitSyncFormSchema(getString)
   })
 
   const modifiedInitialValues = React.useMemo(() => {
@@ -231,7 +224,6 @@ export default function ImportResource({
                   initialValues={{
                     filePath: formikProps.submitCount > 0 ? formikProps.values?.filePath : ''
                   }}
-                  handleSubmit={noop}
                   isEdit={false}
                   errorData={errorResponse}
                   disableFields={

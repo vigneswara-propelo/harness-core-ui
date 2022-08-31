@@ -16,7 +16,7 @@ import {
   refreshAllPromise as refreshAllTemplatePromise,
   ErrorNodeSummary,
   TemplateResponse,
-  updateExistingTemplateLabelPromise
+  updateExistingTemplateVersionPromise
 } from 'services/template-ng'
 import { YamlDiffView } from '@pipeline/components/TemplateLibraryErrorHandling/YamlDiffView/YamlDiffView'
 import { ErrorNode } from '@pipeline/components/TemplateLibraryErrorHandling/ErrorDirectory/ErrorNode'
@@ -27,7 +27,7 @@ import { String, useStrings } from 'framework/strings'
 import { refreshAllPromise as refreshAllPipelinePromise } from 'services/pipeline-ng'
 import { getScopeBasedProjectPathParams, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { GitQueryParams, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useQueryParams } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -113,7 +113,7 @@ export function ReconcileDialog({
           throw response
         }
       } catch (error) {
-        showError(getRBACErrorMessage(error), undefined, 'template.refresh.all.error')
+        showError(getRBACErrorMessage(error as RBACError), undefined, 'template.refresh.all.error')
       } finally {
         setLoading(false)
       }
@@ -135,7 +135,7 @@ export function ReconcileDialog({
           throw response
         }
       } catch (error) {
-        showError(getRBACErrorMessage(error), undefined, 'pipeline.refresh.all.error')
+        showError(getRBACErrorMessage(error as RBACError), undefined, 'pipeline.refresh.all.error')
       } finally {
         setLoading(false)
       }
@@ -145,7 +145,7 @@ export function ReconcileDialog({
   const updateTemplate = async (refreshedYaml: string) => {
     setLoading(true)
     try {
-      const response = await updateExistingTemplateLabelPromise({
+      const response = await updateExistingTemplateVersionPromise({
         templateIdentifier: defaultTo(selectedErrorNodeSummary?.templateResponse?.identifier, ''),
         versionLabel: defaultTo(selectedErrorNodeSummary?.templateResponse?.versionLabel, ''),
         body: refreshedYaml,
@@ -168,7 +168,7 @@ export function ReconcileDialog({
         throw response
       }
     } catch (error) {
-      showError(getRBACErrorMessage(error), undefined, 'template.update.error')
+      showError(getRBACErrorMessage(error as RBACError), undefined, 'template.update.error')
       throw error
     } finally {
       setLoading(false)

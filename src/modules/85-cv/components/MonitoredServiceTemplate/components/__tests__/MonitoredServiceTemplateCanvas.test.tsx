@@ -127,7 +127,8 @@ describe('Test MonitoredTemplateCanvasWithRef', () => {
         color: '#06B7C3',
         fill: '#E4F7E1',
         stroke: '#D4E7D1'
-      }
+      },
+      isRemoteEnabled: false
     })
   })
 

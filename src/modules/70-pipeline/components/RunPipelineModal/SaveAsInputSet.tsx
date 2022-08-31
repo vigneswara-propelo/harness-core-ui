@@ -9,7 +9,7 @@ import React, { Dispatch, SetStateAction } from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikErrors } from 'formik'
-import { defaultTo, isUndefined, omit, omitBy, isNull, noop } from 'lodash-es'
+import { defaultTo, isUndefined, omit, omitBy, isNull } from 'lodash-es'
 import type { MutateMethod } from 'restful-react'
 import { Button, ButtonVariation, Container, Formik, Layout, Popover } from '@wings-software/uicore'
 import { Classes } from '@blueprintjs/core'
@@ -151,7 +151,7 @@ interface SaveAsInputSetProps {
   connectorRef?: string
   repoName?: string
   branch?: string
-  storeType?: StoreType
+  storeType?: 'INLINE' | 'REMOTE'
   isGitSyncEnabled?: boolean
   supportingGitSimplification?: boolean
   setFormErrors: Dispatch<SetStateAction<FormikErrors<InputSetDTO>>>
@@ -335,7 +335,6 @@ function SaveAsInputSet({
                       <Container>
                         <GitSyncForm
                           formikProps={createInputSetFormikProps as any}
-                          handleSubmit={noop}
                           isEdit={false}
                           disableFields={{
                             connectorRef: true,

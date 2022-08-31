@@ -28,6 +28,11 @@ jest.mock('@templates-library/components/TemplateInputs/TemplateInputs', () => (
   }
 }))
 
+jest.mock('services/template-ng', () => ({
+  ...jest.requireActual('services/template-ng'),
+  useGetTemplate: jest.fn().mockImplementation(() => ({}))
+}))
+
 function ComponentWrapper(props: TemplateDetailsProps): React.ReactElement {
   const location = useLocation()
   return (

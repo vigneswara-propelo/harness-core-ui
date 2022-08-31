@@ -22,9 +22,10 @@ import {
   SelectOption,
   Text
 } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
 import produce from 'immer'
-import { Classes } from '@blueprintjs/core'
+import { Classes, Divider } from '@blueprintjs/core'
+import { Color, FontVariation } from '@harness/design-system'
+import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
@@ -42,9 +43,15 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { IdentifierSchema, NameSchema, TemplateVersionLabelSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getScopeFromDTO, getScopeLabelfromScope } from '@common/components/EntityReference/EntityReference'
+import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
+import { CardInterface, InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
+import { StoreMetadata, StoreType as GitStoreType } from '@common/constants/GitSyncTypes'
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { parse } from '@common/utils/YamlHelperMethods'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from '../templates'
 import css from './TemplateConfigModal.module.scss'
 
@@ -55,13 +62,18 @@ export enum Fields {
   Tags = 'tags',
   VersionLabel = 'versionLabel',
   Repo = 'repo',
-  Branch = 'branch'
+  RepoName = 'repoName',
+  Branch = 'branch',
+  ConnectorRef = 'connectorRef',
+  StoreType = 'storeType',
+  FilePath = 'filePath'
 }
 
 export interface PromiseExtraArgs {
   isEdit?: boolean
   updatedGitDetails?: EntityGitDetails
   comment?: string
+  storeMetadata?: StoreMetadata
 }
 
 export enum Intent {
@@ -74,6 +86,7 @@ export interface ModalProps {
   initialValues: NGTemplateInfoConfig
   promise: (values: NGTemplateInfoConfig, extraInfo: PromiseExtraArgs) => Promise<UseSaveSuccessResponse>
   gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
   title: string
   intent: Intent
   disabledFields?: Fields[]
@@ -87,8 +100,11 @@ export interface TemplateConfigValues extends NGTemplateInfoConfigWithGitDetails
 }
 
 export interface NGTemplateInfoConfigWithGitDetails extends NGTemplateInfoConfig {
+  connectorRef?: string
   repo?: string
   branch?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  filePath?: string
 }
 
 export interface ConfigModalProps extends ModalProps {
@@ -118,6 +134,7 @@ const BasicTemplateDetails = (
     setPreviewValues,
     onClose,
     gitDetails,
+    storeMetadata,
     allowScopeChange = false,
     title,
     intent,
@@ -126,14 +143,20 @@ const BasicTemplateDetails = (
     lastPublishedVersion,
     onFailure
   } = props
-  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const pathParams = useParams<TemplateStudioPathProps>()
+  const { orgIdentifier, projectIdentifier } = pathParams
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingTemplatesGitx
+  } = useAppStore()
+  const isTemplateGitxAccountEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATE_GITX_ACCOUNT_ORG)
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const formName = `create${initialValues.type}Template`
   const [loading, setLoading] = React.useState<boolean>()
   const { isReadonly } = useContext(TemplateContext)
-  const pathParams = useParams<TemplateStudioPathProps>()
-  const { orgIdentifier, projectIdentifier } = pathParams
   const scope = getScopeFromDTO(pathParams)
+  const [selectedScope, setSelectedScope] = React.useState<Scope>(scope)
   const allowedScopes = templateFactory.getTemplateAllowedScopes(initialValues.type)
   const formikRef = useRef<FormikProps<TemplateConfigValues>>()
   const scopeOptions = React.useMemo(
@@ -143,6 +166,15 @@ const BasicTemplateDetails = (
         label: getScopeLabelfromScope(item, getString)
       })),
     [allowedScopes]
+  )
+
+  const cardDisabledStatus = React.useMemo(
+    () =>
+      intent === Intent.EDIT ||
+      !!props.disabledFields?.includes(Fields.StoreType) ||
+      !templateFactory.getTemplateIsRemoteEnabled(initialValues.type) ||
+      (!isTemplateGitxAccountEnabled && selectedScope !== Scope.PROJECT),
+    [initialValues.type, intent, isTemplateGitxAccountEnabled, props.disabledFields, selectedScope]
   )
 
   React.useImperativeHandle(
@@ -166,10 +198,19 @@ const BasicTemplateDetails = (
         if (isEqual(initialValues.versionLabel, DefaultNewVersionLabel)) {
           unset(draft, 'versionLabel')
         }
-        draft.repo = gitDetails?.repoIdentifier
-        draft.branch = gitDetails?.branch
+
+        if (isGitSyncEnabled) {
+          draft.repo = gitDetails?.repoIdentifier
+          draft.branch = gitDetails?.branch
+        } else if (supportingTemplatesGitx) {
+          draft.connectorRef = defaultTo(storeMetadata?.connectorRef, '')
+          draft.repo = defaultTo(storeMetadata?.repoName, '')
+          draft.branch = defaultTo(storeMetadata?.branch, '')
+          draft.storeType = defaultTo(storeMetadata?.storeType, GitStoreType.INLINE)
+          draft.filePath = intent === Intent.SAVE ? '' : defaultTo(storeMetadata?.filePath, '')
+        }
       }),
-    [initialValues, gitDetails]
+    [initialValues, storeMetadata, gitDetails]
   )
 
   const submitButtonLabel = React.useMemo(() => {
@@ -191,11 +232,24 @@ const BasicTemplateDetails = (
   const onSubmit = React.useCallback(
     (values: TemplateConfigValues) => {
       setLoading(true)
-      const updateTemplate = omit(values, 'repo', 'branch', 'comment')
+      const storeMetadataValues = {
+        storeType: values.storeType,
+        connectorRef:
+          typeof values.connectorRef === 'string'
+            ? values.connectorRef
+            : (values.connectorRef as unknown as ConnectorSelectedValue)?.value,
+        repoName: values.repo,
+        branch: values.branch,
+        filePath: values.filePath
+      }
+
+      const updateTemplate = omit(values, 'repo', 'branch', 'comment', 'connectorRef', 'storeType', 'filePath')
       promise(updateTemplate, {
+        isEdit: intent === Intent.EDIT,
         ...(!isEmpty(values.repo) && {
           updatedGitDetails: { ...gitDetails, repoIdentifier: values.repo, branch: values.branch }
         }),
+        ...(supportingTemplatesGitx ? { storeMetadata: storeMetadataValues } : {}),
         ...(!isEmpty(values.comment?.trim()) && { comment: values.comment?.trim() })
       })
         .then(response => {
@@ -215,27 +269,71 @@ const BasicTemplateDetails = (
   )
 
   const onScopeChange = ({ value }: SelectOption) => {
+    setSelectedScope(value as Scope)
     formikRef.current?.setValues(
       produce(formikRef.current?.values, draft => {
         draft.projectIdentifier = value === Scope.PROJECT ? projectIdentifier : undefined
         draft.orgIdentifier = value === Scope.ACCOUNT ? undefined : orgIdentifier
-        if (value === Scope.PROJECT) {
-          draft.repo = gitDetails?.repoIdentifier
-          draft.branch = gitDetails?.branch
-        } else {
-          unset(draft, 'repo')
-          unset(draft, 'branch')
+        if (isGitSyncEnabled) {
+          if (value === Scope.PROJECT) {
+            draft.repo = gitDetails?.repoIdentifier
+            draft.branch = gitDetails?.branch
+          } else {
+            unset(draft, 'repo')
+            unset(draft, 'branch')
+          }
+        }
+
+        if (!isTemplateGitxAccountEnabled) {
+          if (value === Scope.PROJECT) {
+            draft.connectorRef = formInitialValues.connectorRef
+            draft.repo = formInitialValues.repo
+            draft.branch = formInitialValues.branch
+            draft.storeType = formInitialValues.storeType
+            draft.filePath = formInitialValues.filePath
+          } else {
+            draft.storeType = GitStoreType.INLINE
+            unset(draft, 'connectorRef')
+            unset(draft, 'repo')
+            unset(draft, 'branch')
+            unset(draft, 'filePath')
+          }
         }
       })
     )
+  }
+
+  const onInlineRemoteChange = (item: CardInterface): void => {
+    formikRef.current?.setFieldValue('storeType', item.type)
+    if (item.type === GitStoreType.REMOTE) {
+      setTimeout(() => {
+        const elem = document.getElementsByClassName(css.gitFormWrapper)[0]
+        elem?.scrollTo(0, elem.scrollHeight)
+      }, 0)
+    }
   }
 
   React.useEffect(() => {
     setPreviewValues(formInitialValues)
   }, [formInitialValues])
 
+  const gitxValidationSchema = supportingTemplatesGitx ? gitSyncFormSchema(getString) : {}
+  const gitsyncValidationSchema = isGitSyncEnabled
+    ? {
+        repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+        branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
+      }
+    : {}
+
   return (
-    <Container width={'55%'} className={css.basicDetails} background={Color.FORM_BG} padding={'huge'}>
+    <Container
+      width={'55%'}
+      className={classNames(css.basicDetails, {
+        [css.gitBasicDetails]: supportingTemplatesGitx
+      })}
+      background={Color.FORM_BG}
+      padding={'huge'}
+    >
       {loading && <PageSpinner />}
       <Text
         color={Color.GREY_800}
@@ -256,7 +354,9 @@ const BasicTemplateDetails = (
             })
           }),
           identifier: IdentifierSchema(),
-          versionLabel: TemplateVersionLabelSchema()
+          versionLabel: TemplateVersionLabelSchema(),
+          ...gitxValidationSchema,
+          ...gitsyncValidationSchema
         })}
       >
         {(formik: FormikProps<TemplateConfigValues>) => {
@@ -264,7 +364,7 @@ const BasicTemplateDetails = (
           return (
             <FormikForm>
               <Layout.Vertical spacing={'huge'}>
-                <Container>
+                <Container className={css.gitFormWrapper}>
                   <Layout.Vertical spacing={'small'}>
                     <Container>
                       <Layout.Vertical>
@@ -293,6 +393,7 @@ const BasicTemplateDetails = (
                           placeholder={getString('templatesLibrary.createNewModal.versionPlaceholder')}
                           label={getString('common.versionLabel')}
                           disabled={disabledFields.includes(Fields.VersionLabel) || isReadonly}
+                          className={css.gitFormFieldWidth}
                         />
                         {lastPublishedVersion && (
                           <Container
@@ -301,6 +402,7 @@ const BasicTemplateDetails = (
                             flex={{ alignItems: 'center' }}
                             padding={'small'}
                             margin={{ bottom: 'medium' }}
+                            className={css.gitFormFieldWidth}
                           >
                             <Layout.Horizontal spacing="small" flex={{ justifyContent: 'start' }} width={'100%'}>
                               <Icon name="info-messaging" size={18} />
@@ -334,19 +436,44 @@ const BasicTemplateDetails = (
                             />
                           </Container>
                         )}
-                        {intent === Intent.SAVE && (!isGitSyncEnabled || isEmpty(formik.values.repo)) && (
-                          <FormInput.TextArea
-                            name="comment"
-                            label={getString('optionalField', {
-                              name: getString('common.commentModal.commentLabel')
-                            })}
-                            textArea={{
-                              className: css.comment
-                            }}
-                          />
-                        )}
+                        {intent === Intent.SAVE &&
+                          (!isGitSyncEnabled || isEmpty(formik.values.repo)) &&
+                          (!supportingTemplatesGitx || formik.values?.storeType === GitStoreType.INLINE) && (
+                            <FormInput.TextArea
+                              name="comment"
+                              label={getString('optionalField', {
+                                name: getString('common.commentModal.commentLabel')
+                              })}
+                              textArea={{
+                                className: css.comment
+                              }}
+                            />
+                          )}
                       </Layout.Vertical>
                     </Container>
+                    {supportingTemplatesGitx && (
+                      <>
+                        <Divider />
+                        <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
+                          {getString('templatesLibrary.chooseTemplateSetupHeader')}
+                        </Text>
+                        <InlineRemoteSelect
+                          entityType={'Template'}
+                          className={css.inlineRemoteWrapper}
+                          selected={defaultTo(formik.values?.storeType, GitStoreType.INLINE)}
+                          onChange={onInlineRemoteChange}
+                          getCardDisabledStatus={() => cardDisabledStatus}
+                        />
+                        {formik.values?.storeType === GitStoreType.REMOTE && (
+                          <GitSyncForm
+                            formikProps={formik}
+                            isEdit={intent === Intent.EDIT}
+                            initialValues={formInitialValues}
+                            entityScope={getScopeFromDTO(formik.values)}
+                          />
+                        )}
+                      </>
+                    )}
                     {isGitSyncEnabled && isEmpty(gitDetails) && getScopeFromDTO(formik.values) === Scope.PROJECT && (
                       <GitSyncStoreProvider>
                         <GitContextForm formikProps={formik as any} />
@@ -388,10 +515,11 @@ const TemplateConfigModal = (
   const { initialValues, ...rest } = props
   const [previewValues, setPreviewValues] = useState<NGTemplateInfoConfigWithGitDetails>({
     ...initialValues,
-    repo: rest.gitDetails?.repoIdentifier,
+    repo: defaultTo(rest.gitDetails?.repoName, rest.gitDetails?.repoIdentifier),
     branch: rest.gitDetails?.branch
   })
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const basicTemplateDetailsHandle = React.useRef<BasicTemplateDetailsHandle>(null)
 
   React.useImperativeHandle(

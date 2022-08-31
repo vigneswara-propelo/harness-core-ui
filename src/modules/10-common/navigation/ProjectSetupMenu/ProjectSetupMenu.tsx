@@ -38,17 +38,17 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
   const DEPLOYMENT_FREEZE = false
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
-  const { isGitSimplificationEnabled, isGitSyncEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
+  const { supportingGitSimplification, isGitSyncEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
   const params = { accountId, orgIdentifier, projectIdentifier, module }
   const isCIorCDorSTO = module === 'ci' || module === 'cd' || module === 'sto'
   const isCIorCD = module === 'ci' || module === 'cd'
   const isCV = module === 'cv'
   const canUsePolicyEngine = useAnyEnterpriseLicense()
   //Supporting GIT_SIMPLIFICATION by default, old GitSync will be selected only for selected accounts
-  // isGitSimplificationEnabled will true if any customers using old GitSync enabled Git SImplification using API
+  // supportingGitSimplification will true if any customers using old GitSync enabled Git SImplification using API
   const isGitSyncSupported =
     (isGitSyncEnabled && !gitSyncEnabledOnlyForFF) ||
-    (USE_OLD_GIT_SYNC && (isCIorCDorSTO || !module) && !isGitSimplificationEnabled)
+    (USE_OLD_GIT_SYNC && (isCIorCDorSTO || !module) && !supportingGitSimplification)
 
   return (
     <NavExpandable title={getString('common.projectSetup')} route={routes.toSetup(params)}>

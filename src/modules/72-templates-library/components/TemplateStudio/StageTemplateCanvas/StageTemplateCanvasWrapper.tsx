@@ -24,7 +24,7 @@ import { PipelineContextType } from '@pipeline/components/PipelineStudio/Pipelin
 
 const StageTemplateCanvasWrapper = () => {
   const {
-    state: { template, isLoading, isUpdated, gitDetails },
+    state: { template, isLoading, isUpdated, gitDetails, storeMetadata },
     updateTemplate,
     isReadonly,
     renderPipelineStage
@@ -64,6 +64,7 @@ const StageTemplateCanvasWrapper = () => {
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
       initialValue={pipeline}
       gitDetails={gitDetails}
+      storeMetadata={storeMetadata}
       onUpdatePipeline={onUpdatePipeline}
       contextType={PipelineContextType.StageTemplate}
       isReadOnly={isReadonly}

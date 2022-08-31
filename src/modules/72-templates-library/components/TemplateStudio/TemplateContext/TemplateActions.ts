@@ -10,11 +10,13 @@ import type { Failure } from 'services/cd-ng'
 import type {
   EntityGitDetails,
   EntityValidityDetails,
+  Error as TemplateError,
   ErrorNodeSummary,
   NGTemplateInfoConfig
 } from 'services/template-ng'
 import type { TemplateViewData } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateReducer'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
 export enum TemplateActions {
   DBInitialize = 'DBInitialize',
@@ -50,10 +52,12 @@ export interface ActionResponse {
   versions?: string[]
   isLoading?: boolean
   gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
   entityValidityDetails?: EntityValidityDetails
   templateYaml?: string
   templateError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary
+  templateYamlError?: TemplateError
 }
 
 export interface ActionReturnType {

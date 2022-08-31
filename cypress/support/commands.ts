@@ -404,6 +404,18 @@ Cypress.Commands.add('apiMocksForVerifyStep', () => {
   )
 
   cy.intercept(
+    'POST',
+    '/template/api/templates/list-metadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&searchTerm=&page=0&size=20&includeAllTemplatesAvailableAtScope=true',
+    templatesAPIResponse
+  )
+
+  cy.intercept(
+    'POST',
+    '/template/api/templates/list-metadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&module=cd&templateListType=All',
+    allTemplatesResponse
+  )
+
+  cy.intercept(
     'GET',
     '/template/api/templates/templateInputs/Verify_step_mon_template?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&versionLabel=1.0&getDefaultFromOtherRepo=true',
     templateInputsResponse

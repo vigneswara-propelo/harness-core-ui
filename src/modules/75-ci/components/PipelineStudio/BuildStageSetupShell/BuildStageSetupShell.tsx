@@ -93,6 +93,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
       pipelineView,
       selectionState: { selectedStageId = '', selectedStepId, selectedSectionId },
       gitDetails,
+      storeMetadata,
       templateTypes
     },
     contextType,
@@ -467,7 +468,12 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
         {isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
           <>
             <Expander />
-            <SaveTemplateButton data={selectedStage?.stage} type={'Stage'} gitDetails={gitDetails} />
+            <SaveTemplateButton
+              data={selectedStage?.stage}
+              type={'Stage'}
+              gitDetails={gitDetails}
+              storeMetadata={storeMetadata}
+            />
           </>
         )}
       </Tabs>

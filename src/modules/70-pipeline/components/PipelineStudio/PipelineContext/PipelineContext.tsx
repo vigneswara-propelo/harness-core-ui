@@ -601,6 +601,14 @@ const _updateStoreMetadata = async (
     gitDetails.branch || ''
   )
   const isUpdated = !isEqual(originalPipeline, pipeline)
+
+  // In pipeline studio, storeMetadata only contains 2 properties - connectorRef and storeType.
+  // We need all 5 properties in storeMetadata for use in templates, Other 3 are coming from gitDetails
+  const newStoreMetadata: StoreMetadata = {
+    ...storeMetadata,
+    ...pick(gitDetails, 'repoName', 'branch', 'filePath')
+  }
+
   try {
     if (IdbPipeline) {
       const payload: PipelinePayload = {
@@ -613,10 +621,14 @@ const _updateStoreMetadata = async (
       }
       await IdbPipeline.put(IdbPipelineStoreName, payload)
     }
-    dispatch(PipelineContextActions.success({ error: '', pipeline, isUpdated, storeMetadata, gitDetails }))
+    dispatch(
+      PipelineContextActions.success({ error: '', pipeline, isUpdated, storeMetadata: newStoreMetadata, gitDetails })
+    )
   } catch (_) {
     logger.info(DBNotFoundErrorMessage)
-    dispatch(PipelineContextActions.success({ error: '', pipeline, isUpdated, storeMetadata, gitDetails }))
+    dispatch(
+      PipelineContextActions.success({ error: '', pipeline, isUpdated, storeMetadata: newStoreMetadata, gitDetails })
+    )
   }
 }
 

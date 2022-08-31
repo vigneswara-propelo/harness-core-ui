@@ -43,4 +43,8 @@ export class TemplateFactory {
   getTemplateAllowedScopes(type: string): Scope[] | undefined {
     return this.templateBank.get(type)?.getAllowedScopes()
   }
+
+  getTemplateIsRemoteEnabled(type: string): boolean | undefined {
+    return this.templateBank.get(type)?.getIsRemoteEnabled()
+  }
 }

@@ -18,6 +18,8 @@ import type { ApprovalStageMinimalModeProps } from '../types'
 
 export const getPropsForMinimalStage = (): PipelineStagesProps<ApprovalStageMinimalModeProps> => ({
   minimal: true,
+  gitDetails: {},
+  storeMetadata: {},
   stageProps: {
     data: {
       stage: {

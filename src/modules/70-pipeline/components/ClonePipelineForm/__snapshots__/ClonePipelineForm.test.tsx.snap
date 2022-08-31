@@ -252,14 +252,6 @@ exports[`<ClonePipelineForm /> tests supportingGitSimplification = false org and
           </div>
         </div>
         <div
-          class="bp3-divider"
-        />
-        <p
-          class="StyledProps--font StyledProps--main choosePipelineSetupHeader StyledProps--font-variation-h6"
-        >
-          pipeline.createPipeline.choosePipelineSetupHeader
-        </p>
-        <div
           class="container"
         >
           <div
@@ -811,14 +803,6 @@ exports[`<ClonePipelineForm /> tests supportingGitSimplification = false snapsho
             </div>
           </div>
         </div>
-        <div
-          class="bp3-divider"
-        />
-        <p
-          class="StyledProps--font StyledProps--main choosePipelineSetupHeader StyledProps--font-variation-h6"
-        >
-          pipeline.createPipeline.choosePipelineSetupHeader
-        </p>
         <div
           class="container"
         >

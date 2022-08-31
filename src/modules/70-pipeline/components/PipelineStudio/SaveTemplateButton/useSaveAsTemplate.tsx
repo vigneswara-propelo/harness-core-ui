@@ -11,6 +11,7 @@ import produce from 'immer'
 import { isEmpty, omit } from 'lodash-es'
 import { Dialog } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
+import classNames from 'classnames'
 import { useToaster } from '@wings-software/uicore'
 import { DefaultTemplate } from 'framework/Templates/templates'
 import {
@@ -24,6 +25,7 @@ import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
 import type { JsonNode } from 'services/cd-ng'
 import type { SaveTemplateButtonProps } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useStrings } from 'framework/strings'
+import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
@@ -38,9 +40,16 @@ interface TemplateActionsReturnType {
 
 type SaveAsTemplateProps = Omit<SaveTemplateButtonProps, 'buttonProps'>
 
-export function useSaveAsTemplate({ data, type, gitDetails }: SaveAsTemplateProps): TemplateActionsReturnType {
+export function useSaveAsTemplate({
+  data,
+  type,
+  gitDetails,
+  storeMetadata
+}: SaveAsTemplateProps): TemplateActionsReturnType {
   const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [modalProps, setModalProps] = React.useState<ModalProps>()
+  const { supportingTemplatesGitx } = React.useContext(AppStoreContext)
+
   const { getString } = useStrings()
   const templateConfigDialogHandler = useRef<TemplateConfigModalHandle>(null)
   const { saveAndPublish } = useSaveTemplate({ isTemplateStudio: false })
@@ -50,7 +59,13 @@ export function useSaveAsTemplate({ data, type, gitDetails }: SaveAsTemplateProp
 
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
-      <Dialog enforceFocus={false} isOpen={true} className={css.configDialog}>
+      <Dialog
+        enforceFocus={false}
+        isOpen={true}
+        className={classNames(css.configDialog, {
+          [css.gitConfigDialog]: supportingTemplatesGitx
+        })}
+      >
         {modalProps && (
           <TemplateConfigModalWithRef {...modalProps} onClose={hideConfigModal} ref={templateConfigDialogHandler} />
         )}
@@ -99,6 +114,7 @@ export function useSaveAsTemplate({ data, type, gitDetails }: SaveAsTemplateProp
           ) as JsonNode
         }),
         promise: saveAndPublish,
+        storeMetadata,
         gitDetails,
         title: getString('common.template.saveAsNewTemplateHeading'),
         allowScopeChange: true,

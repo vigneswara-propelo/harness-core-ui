@@ -152,15 +152,33 @@ const RenderColumnScope: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }
   )
 }
 
+const RenderRepoName: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+  const { gitDetails } = row.original
+  const repoName = gitDetails?.repoName || '-'
+
+  return (
+    <Layout.Horizontal padding={{ right: 'medium' }}>
+      <Text color={Color.GREY_800} lineClamp={1}>
+        {repoName}
+      </Text>
+    </Layout.Horizontal>
+  )
+}
+
 export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Element => {
   const { getString } = useStrings()
   const { data, selectedTemplate, gotoPage, onPreview, onOpenEdit, onOpenSettings, onDelete, onSelect } = props
-  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingTemplatesGitx
+  } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const isGitView = isGitSyncEnabled || supportingTemplatesGitx
   const hideMenu = !onPreview && !onOpenEdit && !onOpenSettings && !onDelete
 
-  const getTemplateNameWidth = (): string => {
-    if (isGitSyncEnabled) {
+  const getTemplateNameWidth = React.useCallback(() => {
+    if (isGitView) {
       if (hideMenu) {
         return '35%'
       }
@@ -171,14 +189,14 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
       }
       return '40%'
     }
-  }
+  }, [isGitView, hideMenu])
 
   const columns: CustomColumn<TemplateSummaryResponse>[] = React.useMemo(
     () => [
       {
         Header: getString('typeLabel').toUpperCase(),
         accessor: 'templateEntityType',
-        width: isGitSyncEnabled ? '15%' : '20%',
+        width: isGitView ? '15%' : '20%',
         Cell: RenderColumnType
       },
       {
@@ -190,7 +208,7 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
       {
         Header: getString('version').toUpperCase(),
         accessor: 'versionLabel',
-        width: isGitSyncEnabled ? '10%' : '20%',
+        width: isGitView ? '10%' : '20%',
         Cell: RenderColumnLabel,
         disableSortBy: true
       },
@@ -198,13 +216,13 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
         Header: getString('common.gitSync.repoDetails').toUpperCase(),
         accessor: 'gitDetails',
         width: '30%',
-        Cell: GitDetailsColumn,
+        Cell: supportingTemplatesGitx ? RenderRepoName : GitDetailsColumn,
         disableSortBy: true
       },
       {
         Header: 'Scope',
         accessor: 'accountId',
-        width: isGitSyncEnabled ? '10%' : '15%',
+        width: isGitView ? '10%' : '15%',
         Cell: RenderColumnScope,
         disableSortBy: true
       },
@@ -220,14 +238,14 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
         onDelete
       }
     ],
-    [isGitSyncEnabled, onPreview, onOpenEdit, onOpenSettings, onDelete]
+    [isGitView, getTemplateNameWidth, supportingTemplatesGitx, onPreview, onOpenEdit, onOpenSettings, onDelete]
   )
 
   if (hideMenu) {
     columns.pop()
   }
 
-  if (!isGitSyncEnabled) {
+  if (!isGitView) {
     columns.splice(3, 1)
   }
 

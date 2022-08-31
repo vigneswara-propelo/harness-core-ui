@@ -127,7 +127,9 @@ export const renderPopover = ({
   renderPipelineStage,
   isHoverView,
   contextType,
-  templateTypes
+  templateTypes,
+  gitDetails,
+  storeMetadata
 }: PopoverData): JSX.Element => {
   if (isStageView && data) {
     const stageData = {
@@ -140,6 +142,8 @@ export const renderPopover = ({
     return renderPipelineStage({
       minimal: true,
       stageType: data.stage?.type,
+      gitDetails,
+      storeMetadata,
       stageProps: {
         data: stageData,
         onSubmit: (values: StageElementWrapperConfig, identifier: string) => {
@@ -174,6 +178,8 @@ export const renderPopover = ({
   return renderPipelineStage({
     isParallel,
     showSelectMenu: true,
+    gitDetails,
+    storeMetadata,
     getNewStageFromType: getNewStageFromType as any,
     getNewStageFromTemplate: getNewStageFromTemplate as any,
     onSelectStage: (type, stage, pipelineTemp) => {
@@ -199,7 +205,9 @@ function StageBuilder(): JSX.Element {
       pipelineView,
       isInitialized,
       selectionState: { selectedStageId },
-      templateTypes
+      templateTypes,
+      gitDetails,
+      storeMetadata
     },
     // contextType = 'Pipeline',
     isReadonly,
@@ -804,7 +812,9 @@ function StageBuilder(): JSX.Element {
             {openSplitView && type === SplitViewTypes.StageView
               ? renderPipelineStage({
                   stageType: stageType,
-                  minimal: false
+                  minimal: false,
+                  gitDetails,
+                  storeMetadata
                 })
               : null}
           </div>

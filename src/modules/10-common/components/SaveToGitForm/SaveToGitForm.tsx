@@ -40,10 +40,10 @@ import {
 import { useStrings } from 'framework/strings'
 import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { getEntityNameFromType } from '@common/utils/StringUtils'
 import paths from '@common/RouteDefinitions'
 import { validateFilePath } from '@common/utils/gitSyncUtils'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { NameId } from '../NameIdDescriptionTags/NameIdDescriptionTags'
 import css from './SaveToGitForm.module.scss'
 

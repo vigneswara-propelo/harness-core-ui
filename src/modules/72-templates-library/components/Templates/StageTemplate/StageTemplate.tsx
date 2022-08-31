@@ -24,6 +24,7 @@ export class StageTemplate extends Template {
     stroke: '#C0FBFE',
     fill: '#D3FCFE'
   }
+  protected isRemoteEnabled = true
 
   renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
     return <StageTemplateCanvasWrapperWithRef ref={formikRef} />

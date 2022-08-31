@@ -156,6 +156,8 @@ export const pipelineContextMock = {
 
 export const getPropsForMinimalStage = (): PipelineStagesProps<CustomStageMinimalModeProps> => ({
   minimal: true,
+  gitDetails: {},
+  storeMetadata: {},
   stageProps: {
     data: {
       stage: {

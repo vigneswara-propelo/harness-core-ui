@@ -18,17 +18,21 @@ export interface CardInterface {
   icon: IconName
   size: number
   disabled?: boolean
+  entityType?: string
 }
 
 function getCards(
   getString: UseStringsReturn['getString'],
-  isDisabled: (current: StoreType) => boolean
+  isDisabled: (current: StoreType) => boolean,
+  entityType = 'Pipeline'
 ): CardInterface[] {
   return [
     {
       type: StoreType.INLINE,
       title: getString('inline'),
-      info: getString('common.git.inlineStoreLabel'),
+      info: getString('common.git.inlineStoreLabel', {
+        entityType
+      }),
       icon: 'repository',
       size: 16,
       disabled: isDisabled(StoreType.INLINE)
@@ -36,7 +40,9 @@ function getCards(
     {
       type: StoreType.REMOTE,
       title: getString('remote'),
-      info: getString('common.git.remoteStoreLabel'),
+      info: getString('common.git.remoteStoreLabel', {
+        entityType
+      }),
       icon: 'remote-setup',
       size: 20,
       disabled: isDisabled(StoreType.REMOTE)
@@ -45,17 +51,18 @@ function getCards(
 }
 
 export interface InlineRemoteSelectProps {
-  selected: StoreType
+  selected: 'INLINE' | 'REMOTE'
   onChange(item: CardInterface): void
   className?: string
-  getCardDisabledStatus(current: StoreType, selected: StoreType): boolean
+  getCardDisabledStatus(current: 'INLINE' | 'REMOTE', selected: 'INLINE' | 'REMOTE'): boolean
+  entityType?: string
 }
 
 export function InlineRemoteSelect(props: InlineRemoteSelectProps): React.ReactElement {
-  const { selected, getCardDisabledStatus = () => false, onChange, className } = props
+  const { selected, getCardDisabledStatus = () => false, onChange, className, entityType = 'Pipeline' } = props
   const { getString } = useStrings()
 
-  const cards = getCards(getString, (current: StoreType) => getCardDisabledStatus(current, selected))
+  const cards = getCards(getString, current => getCardDisabledStatus(current, selected), entityType)
   const selectedCard = cards.find(card => card.type === selected)
 
   return (

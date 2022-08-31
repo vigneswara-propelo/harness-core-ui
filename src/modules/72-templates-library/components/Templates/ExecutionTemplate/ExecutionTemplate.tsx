@@ -24,6 +24,7 @@ export class ExecutionTemplate extends Template {
     fill: '#EADEFF'
   }
   protected isEnabled = false
+  protected isRemoteEnabled = false
 
   renderTemplateCanvas(_formikRef: TemplateFormRef): JSX.Element {
     return <></>

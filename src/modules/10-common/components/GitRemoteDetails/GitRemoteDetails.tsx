@@ -12,7 +12,7 @@ import cx from 'classnames'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
 import css from './GitRemoteDetails.module.scss'
 
-interface GitRemoteDetailsProps {
+export interface GitRemoteDetailsProps {
   connectorRef?: string
   repoName?: string
   filePath?: string
@@ -104,7 +104,7 @@ const GitRemoteDetails = ({
             )
           }}
           selectedValue={branch}
-          branchSelectorClassName={css.branchSelector}
+          branchSelectorClassName={cx(css.branchSelector, { [css.transparent]: borderless })}
           selectProps={{ borderless }}
           showIcons={false}
           showErrorInModal

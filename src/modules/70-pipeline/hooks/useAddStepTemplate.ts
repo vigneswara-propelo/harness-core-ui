@@ -38,7 +38,9 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
   const {
     state: {
       pipelineView,
-      selectionState: { selectedStageId = '' }
+      selectionState: { selectedStageId = '' },
+      gitDetails,
+      storeMetadata
     },
     updateStage,
     getStageFromPipeline,
@@ -79,7 +81,12 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
 
   const addTemplate = async (event: ExecutionGraphAddStepEvent) => {
     try {
-      const { template, isCopied } = await getTemplate({ templateType: 'Step', allChildTypes })
+      const { template, isCopied } = await getTemplate({
+        templateType: 'Step',
+        allChildTypes,
+        gitDetails,
+        storeMetadata
+      })
       const newStepData = { step: createStepNodeFromTemplate(template, isCopied) }
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
       if (pipelineStage && !pipelineStage.stage?.spec) {

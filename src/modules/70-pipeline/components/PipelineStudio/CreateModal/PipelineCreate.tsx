@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { noop, omit, pick } from 'lodash-es'
+import { omit, pick } from 'lodash-es'
 import produce from 'immer'
 import * as Yup from 'yup'
 import { Container, Formik, FormikForm, Button, ButtonVariation, Text } from '@wings-software/uicore'
@@ -26,12 +26,11 @@ import GitContextForm, { IGitContextFormProps } from '@common/components/GitCont
 import type { EntityGitDetails, PipelineInfoConfig } from 'services/pipeline-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, PipelineActions } from '@common/constants/TrackingConstants'
-import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
+import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
-import { yamlPathRegex } from '@common/utils/StringUtils'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
@@ -100,15 +99,7 @@ export default function CreatePipelines({
 
   const getGitValidationSchema = () => {
     if (supportingGitSimplification && storeTypeParam === StoreType.REMOTE) {
-      return {
-        repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-        branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
-        connectorRef: Yup.string().trim().required(getString('validation.sshConnectorRequired')),
-        filePath: Yup.string()
-          .trim()
-          .required(getString('gitsync.gitSyncForm.yamlPathRequired'))
-          .matches(yamlPathRegex, getString('gitsync.gitSyncForm.yamlPathInvalid'))
-      }
+      return gitSyncFormSchema(getString)
     } else if (oldGitSyncEnabled) {
       return {
         repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
@@ -213,7 +204,6 @@ export default function CreatePipelines({
             {storeTypeParam === StoreType.REMOTE ? (
               <GitSyncForm
                 formikProps={formikProps as any}
-                handleSubmit={noop}
                 isEdit={isEdit}
                 initialValues={pick(newInitialValues, 'repo', 'branch', 'filePath', 'connectorRef')}
               />

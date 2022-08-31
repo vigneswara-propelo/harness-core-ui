@@ -139,7 +139,13 @@ function SavePipelinePopover(
 
   const isSaveEnabled = !isReadonly && isUpdated
 
-  const { save } = useSaveAsTemplate({ data: pipeline, type: 'Pipeline', gitDetails })
+  const { save } = useSaveAsTemplate({
+    data: pipeline,
+    type: 'Pipeline',
+    gitDetails,
+    storeMetadata
+  })
+
   const { openPipelineErrorsModal } = usePipelineErrors()
   const navigateToLocation = (newPipelineId: string, updatedGitDetails?: SaveToGitFormInterface): void => {
     history.replace(
@@ -273,7 +279,7 @@ function SavePipelinePopover(
     return { status: response?.status, nextCallback: () => publishPipeline(newPipelineId, updatedGitDetails) }
   }
 
-  const saveAngPublishWithGitInfo = async (
+  const saveAndPublishWithGitInfo = async (
     updatedGitDetails: SaveToGitFormInterface | SaveToGitFormV2Interface,
     payload?: SavePipelineObj,
     objectId?: string,
@@ -309,7 +315,7 @@ function SavePipelinePopover(
 
   const { openSaveToGitDialog } = useSaveToGitDialog<SavePipelineObj>({
     onSuccess: (gitData: GitData, payload?: SavePipelineObj, objectId?: string): Promise<UseSaveSuccessResponse> =>
-      saveAngPublishWithGitInfo(
+      saveAndPublishWithGitInfo(
         gitData,
         payload,
         objectId || gitDetails?.objectId || '',

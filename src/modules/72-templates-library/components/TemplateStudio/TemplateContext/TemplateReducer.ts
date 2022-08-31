@@ -11,6 +11,7 @@ import type { GetDataError } from 'restful-react'
 import type {
   EntityGitDetails,
   EntityValidityDetails,
+  Error as TemplateError,
   ErrorNodeSummary,
   NGTemplateInfoConfig
 } from 'services/template-ng'
@@ -23,6 +24,7 @@ import type { Failure } from 'services/cd-ng'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { DefaultNewTemplateId, DefaultNewVersionLabel, DefaultTemplate } from 'framework/Templates/templates'
 import type { StepData } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
 export interface DrawerData extends Omit<IDrawerProps, 'isOpen'> {
   type: DrawerTypes
@@ -54,10 +56,12 @@ export interface TemplateReducerState {
   isBETemplateUpdated: boolean
   isUpdated: boolean
   gitDetails: EntityGitDetails
+  storeMetadata?: StoreMetadata
   entityValidityDetails: EntityValidityDetails
   templateYaml: string
   templateError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary
+  templateYamlError?: TemplateError
 }
 
 export const initialState: TemplateReducerState = {
@@ -80,6 +84,7 @@ export const initialState: TemplateReducerState = {
   isUpdated: false,
   isInitialized: false,
   gitDetails: {},
+  storeMetadata: {},
   entityValidityDetails: {},
   templateYaml: ''
 }

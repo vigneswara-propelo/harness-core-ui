@@ -115,7 +115,9 @@ describe('useStageTemplateAction Test', () => {
     })
     expect(useTemplateSelector().getTemplate).toBeCalledWith({
       templateType: 'Stage',
-      allChildTypes: ['CI']
+      allChildTypes: ['CI'],
+      gitDetails: {},
+      storeMetadata: {}
     })
     expect(pipelineContextMock.updateStage).toBeCalledWith({
       identifier: 's1',

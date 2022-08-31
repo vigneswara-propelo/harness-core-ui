@@ -22,7 +22,7 @@ interface TemplateActionsReturnType {
 
 export function usePipelineTemplateActions(): TemplateActionsReturnType {
   const {
-    state: { pipeline },
+    state: { pipeline, gitDetails, storeMetadata },
     updatePipeline
   } = usePipelineContext()
   const { getTemplate } = useTemplateSelector()
@@ -41,7 +41,9 @@ export function usePipelineTemplateActions(): TemplateActionsReturnType {
     async (selectedTemplate?: TemplateSummaryResponse) => {
       const { template, isCopied } = await getTemplate({
         templateType: 'Pipeline',
-        selectedTemplate
+        selectedTemplate,
+        gitDetails,
+        storeMetadata
       })
       const processNode = isCopied
         ? produce(defaultTo(parse<any>(template?.yaml || '')?.template.spec, {}) as PipelineInfoConfig, draft => {
@@ -52,7 +54,7 @@ export function usePipelineTemplateActions(): TemplateActionsReturnType {
       copyPipelineMetaData(processNode)
       await updatePipeline(processNode)
     },
-    [pipeline.template, getTemplate, updatePipeline]
+    [getTemplate, gitDetails, storeMetadata, pipeline, copyPipelineMetaData, updatePipeline]
   )
 
   const removeTemplate = useCallback(async () => {

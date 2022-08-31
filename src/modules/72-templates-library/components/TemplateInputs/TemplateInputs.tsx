@@ -44,7 +44,7 @@ export interface TemplateInputsProps {
 
 export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template }) => {
   const templateSpec =
-    parse((template as TemplateSummaryResponse)?.yaml || '')?.template?.spec ||
+    parse((template as TemplateSummaryResponse).yaml || '')?.template?.spec ||
     (template as NGTemplateInfoConfigWithGitDetails).spec
   const [inputSetTemplate, setInputSetTemplate] = React.useState<
     StepElementConfig | StageElementConfig | PipelineInfoConfig

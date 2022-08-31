@@ -22,7 +22,7 @@ import { defaultTo, get, isEmpty, pick } from 'lodash-es'
 import { Formik } from 'formik'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PageSpinner, useToaster } from '@common/components'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
@@ -30,7 +30,8 @@ import { useMutateAsGet } from '@common/hooks'
 import {
   TemplateSummaryResponse,
   useDeleteTemplateVersionsOfIdentifier,
-  useGetTemplateList
+  useGetTemplateList,
+  useGetTemplateMetadataList
 } from 'services/template-ng'
 import { TemplatePreview } from '@templates-library/components/TemplatePreview/TemplatePreview'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -62,7 +63,11 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingTemplatesGitx
+  } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { mutate: deleteTemplates, loading: deleteLoading } = useDeleteTemplateVersionsOfIdentifier({})
   const [templateVersionsToDelete, setTemplateVersionsToDelete] = React.useState<string[]>([])
@@ -71,7 +76,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
     data: templateData,
     loading,
     error: templatesError
-  } = useMutateAsGet(useGetTemplateList, {
+  } = useMutateAsGet(supportingTemplatesGitx ? useGetTemplateMetadataList : useGetTemplateList, {
     body: { filterType: 'Template', templateIdentifiers: [template.identifier] },
     queryParams: {
       accountIdentifier: accountId,
@@ -79,15 +84,15 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
       projectIdentifier,
       module,
       templateListType: TemplateListType.All,
-      repoIdentifier: defaultTo(template.gitDetails?.repoIdentifier, ''),
-      branch: defaultTo(template.gitDetails?.branch, '')
+      repoIdentifier: template.gitDetails?.repoIdentifier,
+      branch: template.gitDetails?.branch
     },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
   React.useEffect(() => {
     if (templatesError) {
       onClose()
-      showError(getRBACErrorMessage(templatesError), undefined, 'template.fetch.template.error')
+      showError(getRBACErrorMessage(templatesError as RBACError), undefined, 'template.fetch.template.error')
     }
   }, [templatesError])
 
@@ -123,7 +128,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
       }
     } catch (err) {
       showError(
-        getRBACErrorMessage(err),
+        getRBACErrorMessage(err as RBACError),
         undefined,
         areMultipleVersionsSelected
           ? 'common.template.deleteTemplate.errorWhileDeletingTemplates'

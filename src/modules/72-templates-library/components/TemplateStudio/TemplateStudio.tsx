@@ -77,9 +77,12 @@ export function TemplateStudio(): React.ReactElement {
     isBETemplateUpdated,
     isInitialized,
     gitDetails,
+    storeMetadata,
     entityValidityDetails,
-    templateInputsErrorNodeSummary
+    templateInputsErrorNodeSummary,
+    templateYamlError
   } = state
+
   const { isYamlEditable } = templateView
   const { getString } = useStrings()
   const [blockNavigation, setBlockNavigation] = React.useState(false)
@@ -187,42 +190,45 @@ export function TemplateStudio(): React.ReactElement {
   }, [isBETemplateUpdated, discardBEUpdateDialog, openConfirmBEUpdateError, blockNavigation, openUnsavedChangesDialog])
 
   const onGitBranchChange = React.useMemo(
-    () => (selectedFilter: GitFilterScope) => {
+    () => (selectedFilter: GitFilterScope, defaultSelected?: boolean) => {
       setSelectedBranch(selectedFilter.branch as string)
-      if (isUpdated && branch !== selectedFilter.branch) {
-        setBlockNavigation(true)
-      } else if (branch !== selectedFilter.branch) {
-        deleteTemplateCache({
-          repoIdentifier: defaultTo(selectedFilter.repo, ''),
-          branch: defaultTo(selectedFilter.branch, '')
-        }).then(() => {
-          history.push(
-            routes.toTemplateStudio({
-              projectIdentifier,
-              orgIdentifier,
-              templateIdentifier: defaultTo(templateIdentifier, '-1'),
-              accountId,
-              module,
-              templateType: template.type,
-              versionLabel: template.versionLabel,
-              branch: selectedFilter.branch,
-              repoIdentifier: selectedFilter.repo
-            })
-          )
-        })
+      if (!defaultSelected) {
+        if (isUpdated && branch !== selectedFilter.branch) {
+          setBlockNavigation(true)
+        } else if (branch !== selectedFilter.branch) {
+          deleteTemplateCache({
+            repoIdentifier: defaultTo(selectedFilter.repo, ''),
+            branch: defaultTo(selectedFilter.branch, '')
+          }).then(() => {
+            history.push(
+              routes.toTemplateStudio({
+                projectIdentifier,
+                orgIdentifier,
+                templateIdentifier: defaultTo(templateIdentifier, '-1'),
+                accountId,
+                module,
+                templateType: template.type,
+                versionLabel: template.versionLabel,
+                branch: selectedFilter.branch,
+                repoIdentifier: selectedFilter.repo
+              })
+            )
+          })
+        }
       }
     },
     [
-      branch,
-      isUpdated,
-      templateIdentifier,
-      projectIdentifier,
-      orgIdentifier,
       accountId,
-      module,
+      branch,
       deleteTemplateCache,
       history,
-      template
+      isUpdated,
+      module,
+      orgIdentifier,
+      projectIdentifier,
+      template.type,
+      template.versionLabel,
+      templateIdentifier
     ]
   )
 
@@ -253,6 +259,50 @@ export function TemplateStudio(): React.ReactElement {
       await templateStudioSubHeaderHandleRef.current?.updateTemplate(entityYaml)
     },
     [templateStudioSubHeaderHandleRef.current]
+  )
+
+  const ErrorPanel = (): JSX.Element => (
+    <Container style={{ maxWidth: '570px', alignSelf: 'center' }} padding={'huge'}>
+      <NoEntityFound
+        identifier={templateIdentifier}
+        entityType={'template'}
+        errorObj={templateYamlError}
+        gitDetails={{
+          connectorRef: storeMetadata?.connectorRef,
+          repoName: storeMetadata?.repoName,
+          branch: storeMetadata?.branch,
+          onBranchChange: onGitBranchChange
+        }}
+      />
+    </Container>
+  )
+
+  const renderView =
+    view === SelectedView.VISUAL ? (
+      /* istanbul ignore next */
+      templateFactory.getTemplate(templateType)?.renderTemplateCanvas(templateFormikRef)
+    ) : (
+      <TemplateYamlView />
+    )
+
+  const studioCanvasUI = templateYamlError ? (
+    <ErrorPanel />
+  ) : (
+    <>
+      {templateInputsErrorNodeSummary && (
+        <OutOfSyncErrorStrip
+          errorNodeSummary={templateInputsErrorNodeSummary}
+          entity={TemplateErrorEntity.TEMPLATE}
+          originalYaml={yamlStringify({ template: originalTemplate })}
+          isReadOnly={isReadonly}
+          onRefreshEntity={() => {
+            fetchTemplate({ forceFetch: true, forceUpdate: true })
+          }}
+          updateRootEntity={updateEntity}
+        />
+      )}
+      <Container className={css.canvasContainer}>{renderView}</Container>
+    </>
   )
 
   return (
@@ -306,25 +356,7 @@ export function TemplateStudio(): React.ReactElement {
                   getErrors={getErrors}
                   onGitBranchChange={onGitBranchChange}
                 />
-                {templateInputsErrorNodeSummary && (
-                  <OutOfSyncErrorStrip
-                    errorNodeSummary={templateInputsErrorNodeSummary}
-                    entity={TemplateErrorEntity.TEMPLATE}
-                    originalYaml={yamlStringify({ template: originalTemplate })}
-                    isReadOnly={isReadonly}
-                    onRefreshEntity={() => {
-                      fetchTemplate({ forceFetch: true, forceUpdate: true })
-                    }}
-                    updateRootEntity={updateEntity}
-                  />
-                )}
-                <Container className={css.canvasContainer}>
-                  {view === SelectedView.VISUAL ? (
-                    templateFactory.getTemplate(templateType)?.renderTemplateCanvas(templateFormikRef)
-                  ) : (
-                    <TemplateYamlView />
-                  )}
-                </Container>
+                {studioCanvasUI}
               </>
             )}
             {templateType !== TemplateType.Pipeline && <RightBar />}

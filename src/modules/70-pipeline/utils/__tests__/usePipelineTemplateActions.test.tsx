@@ -129,7 +129,9 @@ describe('usePipelineTemplateActions Test', () => {
       fireEvent.click(addOrUpdateTemplateBtn)
     })
     expect(useTemplateSelector().getTemplate).toBeCalledWith({
-      templateType: 'Pipeline'
+      templateType: 'Pipeline',
+      gitDetails: {},
+      storeMetadata: {}
     })
     expect(pipelineContextMock.updatePipeline).toBeCalledWith({
       name: 'stage1',
@@ -155,7 +157,9 @@ describe('usePipelineTemplateActions Test', () => {
       fireEvent.click(addOrUpdateTemplateBtn)
     })
     expect(useTemplateSelector().getTemplate).toBeCalledWith({
-      templateType: 'Pipeline'
+      templateType: 'Pipeline',
+      gitDetails: {},
+      storeMetadata: {}
     })
     expect(pipelineContextMock.updatePipeline).toBeCalledWith({
       name: 'stage1',

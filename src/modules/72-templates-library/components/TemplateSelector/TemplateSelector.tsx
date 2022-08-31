@@ -24,7 +24,7 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
   const {
     state: { selectorData }
   } = useTemplateSelectorContext()
-  const { onSubmit, selectedTemplate: defaultTemplate } = selectorData || {}
+  const { onSubmit, selectedTemplate: defaultTemplate, storeMetadata } = selectorData || {}
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>()
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
@@ -33,12 +33,18 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
   const getTemplateDetails: React.ReactElement = React.useMemo(() => {
     if (selectedTemplate) {
       return (
-        <TemplateDetails template={selectedTemplate} setTemplate={setSelectedTemplate} allowStableSelection={true} />
+        <TemplateDetails
+          template={selectedTemplate}
+          setTemplate={setSelectedTemplate}
+          allowStableSelection
+          allowBranchChange={false}
+          storeMetadata={storeMetadata}
+        />
       )
     } else {
       return <></>
     }
-  }, [selectedTemplate, setSelectedTemplate])
+  }, [selectedTemplate, storeMetadata])
 
   const onUseTemplateConfirm = React.useCallback(
     (isCopied = false) => {
@@ -123,26 +129,28 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
                   getTemplateDetails
                 )}
               </Container>
-              <Container>
-                <Layout.Horizontal
-                  padding={'xxlarge'}
-                  background={Color.FORM_BG}
-                  className={css.btnContainer}
-                  spacing={'small'}
-                >
-                  <Button
-                    variation={ButtonVariation.PRIMARY}
-                    text={getString('templatesLibrary.useTemplateLabel')}
-                    disabled={areTemplatesEqual(defaultTemplate, selectedTemplate)}
-                    onClick={onUseTemplateClick}
-                  />
-                  <Button
-                    variation={ButtonVariation.LINK}
-                    text={getString('templatesLibrary.copyTemplateLabel')}
-                    onClick={onCopyTemplateClick}
-                  />
-                </Layout.Horizontal>
-              </Container>
+              {selectedTemplate?.yaml && (
+                <Container>
+                  <Layout.Horizontal
+                    padding={'xxlarge'}
+                    background={Color.FORM_BG}
+                    className={css.btnContainer}
+                    spacing={'small'}
+                  >
+                    <Button
+                      variation={ButtonVariation.PRIMARY}
+                      text={getString('templatesLibrary.useTemplateLabel')}
+                      disabled={areTemplatesEqual(defaultTemplate, selectedTemplate)}
+                      onClick={onUseTemplateClick}
+                    />
+                    <Button
+                      variation={ButtonVariation.LINK}
+                      text={getString('templatesLibrary.copyTemplateLabel')}
+                      onClick={onCopyTemplateClick}
+                    />
+                  </Layout.Horizontal>
+                </Container>
+              )}
             </Layout.Vertical>
           ) : (
             <Container padding={{ top: 'xxlarge', right: 'xlarge', bottom: 'xxlarge', left: 'xlarge' }} height={'100%'}>

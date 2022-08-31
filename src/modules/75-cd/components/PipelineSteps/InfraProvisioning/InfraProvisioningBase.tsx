@@ -48,7 +48,9 @@ export const InfraProvisioningBase = (
       pipelineView,
       selectionState: { selectedStageId = '' },
       templateTypes,
-      pipeline
+      pipeline,
+      gitDetails,
+      storeMetadata
     },
     updateStage,
     updatePipelineView,
@@ -124,7 +126,9 @@ export const InfraProvisioningBase = (
     try {
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
-        allChildTypes
+        allChildTypes,
+        gitDetails,
+        storeMetadata
       })
       const newStepData = { step: createStepNodeFromTemplate(template, isCopied) }
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId || ''))

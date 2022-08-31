@@ -11336,6 +11336,7 @@ export interface GetPipelineQueryParams {
   projectIdentifier: string
   branch?: string
   repoIdentifier?: string
+  repoName?: string
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string

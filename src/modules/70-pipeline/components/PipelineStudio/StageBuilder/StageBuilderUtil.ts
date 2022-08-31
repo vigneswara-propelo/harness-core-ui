@@ -13,7 +13,7 @@ import type { NodeModelListener, LinkModelListener, DiagramEngine } from '@proje
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
 import type { PageConnectorResponse, DeploymentStageConfig } from 'services/cd-ng'
-import type { StageElementWrapperConfig, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { StageElementWrapperConfig, PipelineInfoConfig, EntityGitDetails } from 'services/pipeline-ng'
 import type * as Diagram from '@pipeline/components/Diagram'
 import {
   getIdentifierFromValue,
@@ -26,6 +26,7 @@ import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { DiagramType, Event } from '@pipeline/components/Diagram'
 import { PipelineOrStageStatus } from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanelUtils'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { EmptyStageName } from '../PipelineConstants'
 import type { PipelineContextInterface, StagesMap } from '../PipelineContext/PipelineContext'
 import { getStageFromPipeline } from '../PipelineContext/helpers'
@@ -75,6 +76,8 @@ export interface PopoverData {
   renderPipelineStage: PipelineContextInterface['renderPipelineStage']
   isHoverView?: boolean
   templateTypes: { [key: string]: string }
+  gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
 }
 
 export const getStageIndexByIdentifier = (
@@ -440,7 +443,7 @@ export const getLinkEventListeners = (
   stageMap: Map<string, StageState>
 ): LinkModelListener => {
   const {
-    state: { pipeline, templateTypes },
+    state: { pipeline, templateTypes, gitDetails, storeMetadata },
     contextType = 'Pipeline',
     stagesMap,
     renderPipelineStage,
@@ -466,7 +469,9 @@ export const getLinkEventListeners = (
             stagesMap,
             renderPipelineStage,
             contextType,
-            templateTypes
+            templateTypes,
+            gitDetails,
+            storeMetadata
           },
           { useArrows: false, darkMode: false, fixedPosition: false }
         )
@@ -567,7 +572,9 @@ export const getNodeEventListerner = (
       pipeline,
       pipelineView: { isSplitViewOpen },
       pipelineView,
-      templateTypes
+      templateTypes,
+      gitDetails,
+      storeMetadata
     },
     contextType = 'Pipeline',
     stagesMap,
@@ -594,7 +601,9 @@ export const getNodeEventListerner = (
               renderPipelineStage,
               stagesMap,
               contextType,
-              templateTypes
+              templateTypes,
+              gitDetails,
+              storeMetadata
             },
             { useArrows: true, darkMode: false, fixedPosition: false }
           )
@@ -619,7 +628,9 @@ export const getNodeEventListerner = (
                   stagesMap,
                   renderPipelineStage,
                   contextType,
-                  templateTypes
+                  templateTypes,
+                  gitDetails,
+                  storeMetadata
                 },
                 { useArrows: false, darkMode: false, fixedPosition: false }
               )
@@ -646,7 +657,9 @@ export const getNodeEventListerner = (
                   stagesMap,
                   renderPipelineStage,
                   contextType,
-                  templateTypes
+                  templateTypes,
+                  gitDetails,
+                  storeMetadata
                 },
                 { useArrows: false, darkMode: false, fixedPosition: false }
               )
@@ -683,7 +696,9 @@ export const getNodeEventListerner = (
             stagesMap,
             renderPipelineStage,
             contextType,
-            templateTypes
+            templateTypes,
+            gitDetails,
+            storeMetadata
           },
           { useArrows: false, darkMode: false, fixedPosition: false },
           event.callback
@@ -781,7 +796,9 @@ export const getNodeEventListerner = (
             stagesMap,
             renderPipelineStage,
             contextType,
-            templateTypes
+            templateTypes,
+            gitDetails,
+            storeMetadata
           },
           { useArrows: true, darkMode: false, fixedPosition: false, placement: 'top' },
           noop,

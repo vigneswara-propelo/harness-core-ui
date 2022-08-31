@@ -22,8 +22,19 @@ jest.mock('services/pipeline-ng', () => ({
 }))
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
+const mockBranches = {
+  status: 'SUCCESS',
+  data: {
+    branches: [{ name: 'main' }, { name: 'main-demo' }, { name: 'main-patch' }, { name: 'main-patch2' }],
+    defaultBranch: { name: 'main' }
+  },
+  metaData: null,
+  correlationId: 'correlationId'
+}
+
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
 const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
+const fetchBranches = jest.fn(() => Promise.resolve(mockBranches))
 
 jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
@@ -34,6 +45,9 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
+  }),
+  useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
+    return { data: mockBranches, refetch: fetchBranches, error: null, loading: false }
   })
 }))
 

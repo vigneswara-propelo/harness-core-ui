@@ -77,6 +77,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       pipelineView,
       selectionState: { selectedStageId, selectedStepId, selectedSectionId },
       gitDetails,
+      storeMetadata,
       templateTypes,
       templateServiceData
     },
@@ -542,6 +543,7 @@ export default function DeployStageSetupShell(): JSX.Element {
               data={selectedStage.stage}
               type={'Stage'}
               gitDetails={gitDetails}
+              storeMetadata={storeMetadata}
               buttonProps={{
                 margin: { right: 'medium' },
                 disabled: !!selectedStage.stage.spec?.serviceConfig?.useFromStage

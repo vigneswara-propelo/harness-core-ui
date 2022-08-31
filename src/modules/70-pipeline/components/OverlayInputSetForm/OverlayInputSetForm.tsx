@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { defaultTo, isNull, isUndefined, noop, omit, omitBy } from 'lodash-es'
+import { defaultTo, isNull, isUndefined, omit, omitBy } from 'lodash-es'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import * as Yup from 'yup'
@@ -659,7 +659,6 @@ export function OverlayInputSetForm({
                             <Container>
                               <GitSyncForm
                                 formikProps={formikProps as any}
-                                handleSubmit={noop}
                                 isEdit={isEdit}
                                 disableFields={
                                   !isEdit

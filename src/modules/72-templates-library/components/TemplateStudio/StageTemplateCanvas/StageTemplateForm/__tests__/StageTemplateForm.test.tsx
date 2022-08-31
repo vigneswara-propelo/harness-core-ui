@@ -51,7 +51,9 @@ describe('<StageTemplateForm /> tests', () => {
     expect(pipelineContext.renderPipelineStage).toBeCalledWith({
       stageType: 'CI',
       minimal: false,
-      contextType: 'Template'
+      contextType: 'Template',
+      gitDetails: {},
+      storeMetadata: {}
     })
   })
   test('should not call renderPipelineStage when template drawer is open', async () => {

@@ -17,7 +17,9 @@ export const DefaultNewStageId = 'stage_name'
 export const StageTemplateForm = () => {
   const {
     state: {
-      selectionState: { selectedStageId }
+      selectionState: { selectedStageId },
+      gitDetails,
+      storeMetadata
     },
     contextType,
     renderPipelineStage,
@@ -36,6 +38,8 @@ export const StageTemplateForm = () => {
         renderPipelineStage({
           stageType: selectedStage?.stage?.stage?.type,
           minimal: false,
+          gitDetails,
+          storeMetadata,
           contextType
         })}
     </Container>

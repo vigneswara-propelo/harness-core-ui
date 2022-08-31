@@ -7,7 +7,7 @@
 
 import React, { useEffect, useMemo } from 'react'
 import * as Yup from 'yup'
-import { defaultTo, isEmpty, omit, isUndefined, noop } from 'lodash-es'
+import { defaultTo, isEmpty, omit, isUndefined } from 'lodash-es'
 import {
   Button,
   Container,
@@ -393,7 +393,6 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                               <Container className={css.gitRemoteDetailsForm}>
                                 <GitSyncForm
                                   formikProps={formikProps as any}
-                                  handleSubmit={noop}
                                   isEdit={isEdit}
                                   initialValues={storeMetadata}
                                   disableFields={

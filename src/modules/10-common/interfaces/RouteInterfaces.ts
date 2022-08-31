@@ -7,7 +7,7 @@
 
 import type { EntityGitDetails } from 'services/pipeline-ng'
 import type { Module as ModuleName } from 'framework/types/ModuleName'
-import type { StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
 export interface AccountPathProps {
   accountId: string
@@ -24,9 +24,9 @@ export interface DashboardPathProps extends AccountPathProps {
 export interface GitQueryParams {
   branch?: EntityGitDetails['branch']
   repoIdentifier?: EntityGitDetails['repoIdentifier']
-  repoName?: EntityGitDetails['repoName']
-  connectorRef?: string
-  storeType?: StoreType
+  repoName?: StoreMetadata['repoName']
+  connectorRef?: StoreMetadata['connectorRef']
+  storeType?: StoreMetadata['storeType']
 }
 
 export interface InputSetGitQueryParams extends GitQueryParams {

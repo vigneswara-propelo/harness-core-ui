@@ -24,7 +24,8 @@ interface GitSyncPageProps {
 
 export const GitSyncLandingView: React.FC<GitSyncPageProps> = ({ children }) => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
   useDocumentTitle(getString('gitManagement'))
 

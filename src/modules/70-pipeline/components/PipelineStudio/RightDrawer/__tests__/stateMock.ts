@@ -166,6 +166,7 @@ const stateMock = {
   },
   schemaErrors: false,
   gitDetails: {},
+  storeMetadata: {},
   isLoading: false,
   isBEPipelineUpdated: false,
   isDBInitialized: true,

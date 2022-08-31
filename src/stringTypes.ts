@@ -3950,7 +3950,9 @@ export interface StringsMap {
   'freezeWindows.freezeWindowsPage.noFreezeWindows': string
   'templatesLibrary.addNewTemplate': string
   'templatesLibrary.alwaysUseStableVersion': string
+  'templatesLibrary.changeGitBranch': string
   'templatesLibrary.changeTemplate': string
+  'templatesLibrary.chooseTemplateSetupHeader': string
   'templatesLibrary.commentModal.heading': string
   'templatesLibrary.commentModal.info': string
   'templatesLibrary.copyTemplate': string
@@ -3982,6 +3984,7 @@ export interface StringsMap {
   'templatesLibrary.setAsStableText': string
   'templatesLibrary.setAsStableTitle': string
   'templatesLibrary.stableVersion': string
+  'templatesLibrary.templateDoesNotExistInBranch': string
   'templatesLibrary.templateHasBeenDeleted': string
   'templatesLibrary.templateScope': string
   'templatesLibrary.templateSettings': string

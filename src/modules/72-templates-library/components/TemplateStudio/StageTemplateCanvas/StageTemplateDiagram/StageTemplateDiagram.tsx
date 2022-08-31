@@ -51,7 +51,9 @@ export const StageTemplateDiagram = (): JSX.Element => {
       pipeline,
       pipelineView,
       selectionState: { selectedStageId },
-      templateTypes
+      templateTypes,
+      gitDetails: pipelineGitDetails,
+      storeMetadata
     },
     contextType,
     stagesMap,
@@ -92,7 +94,9 @@ export const StageTemplateDiagram = (): JSX.Element => {
         renderPipelineStage,
         stagesMap: stagesMap,
         contextType,
-        templateTypes
+        templateTypes,
+        gitDetails: pipelineGitDetails,
+        storeMetadata
       },
       { useArrows: true, darkMode: false, fixedPosition: false, placement: 'bottom-start' }
     )

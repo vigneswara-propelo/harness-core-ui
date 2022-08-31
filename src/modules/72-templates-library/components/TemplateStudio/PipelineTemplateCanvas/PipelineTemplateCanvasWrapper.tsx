@@ -31,7 +31,7 @@ type EventDetailType = PipelineDrawerTypes.PipelineVariables | PipelineDrawerTyp
 
 const PipelineTemplateCanvasWrapper = (): JSX.Element => {
   const {
-    state: { template, templateView, isLoading, isUpdated, gitDetails },
+    state: { template, templateView, isLoading, isUpdated, gitDetails, storeMetadata },
     updateTemplate,
     updateTemplateView,
     isReadonly,
@@ -76,6 +76,7 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
       initialValue={pipeline}
       gitDetails={gitDetails}
+      storeMetadata={storeMetadata}
       onUpdatePipeline={onUpdatePipeline}
       contextType={PipelineContextType.PipelineTemplate}
       isReadOnly={isReadonly}

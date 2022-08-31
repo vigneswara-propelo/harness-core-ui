@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
-import type { TemplateSummaryResponse } from 'services/template-ng'
+import type { EntityGitDetails, TemplateSummaryResponse } from 'services/template-ng'
 import { TemplateSelectorContext } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import type { TemplateType } from '@common/interfaces/RouteInterfaces'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
 export interface GetTemplateResponse {
   template: TemplateSummaryResponse
@@ -19,6 +20,8 @@ export interface GetTemplateProps {
   templateType: TemplateType
   allChildTypes?: string[]
   selectedTemplate?: TemplateSummaryResponse
+  gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
 }
 
 interface TemplateActionsReturnType {

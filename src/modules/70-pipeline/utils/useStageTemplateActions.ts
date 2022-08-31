@@ -24,7 +24,9 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
   const {
     state: {
       selectionState: { selectedStageId = '' },
-      templateTypes
+      templateTypes,
+      gitDetails,
+      storeMetadata
     },
     updateStage,
     getStageFromPipeline
@@ -38,7 +40,9 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
         const { template, isCopied } = await getTemplate({
           templateType: 'Stage',
           allChildTypes: [getStageType(stage?.stage, templateTypes)],
-          selectedTemplate
+          selectedTemplate,
+          gitDetails,
+          storeMetadata
         })
         const node = stage?.stage
         const processNode = isCopied
@@ -52,7 +56,7 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
         // Do nothing.. user cancelled template selection
       }
     },
-    [stage?.stage, templateTypes, getTemplate, updateStage]
+    [getTemplate, stage?.stage, templateTypes, gitDetails, storeMetadata, updateStage]
   )
 
   const removeTemplate = useCallback(async () => {

@@ -120,7 +120,7 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
           noLabel={true}
           disabled={disableBranchSelection}
           connectorIdentifierRef={resource.storeMetadata?.connectorRef}
-          repoName={resource.gitDetails?.repoName}
+          repoName={defaultTo(resource.storeMetadata?.repoName, resource.gitDetails?.repoName)}
           onChange={(selected: SelectOption) => {
             formikRef.current?.setFieldValue('targetBranch', selected.value)
             setTargetBranch(selected.value as string)

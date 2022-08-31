@@ -20,7 +20,7 @@ import SaveToGitFormV2, { SaveToGitFormV2Interface } from '@common/components/Sa
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { getEntityNameFromType } from '@common/utils/StringUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { StoreType } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { EntityGitDetails, ResponseMessage, useCreatePR, useCreatePRV2 } from 'services/cd-ng'
 import { String, useStrings } from 'framework/strings'
 import type { GovernanceMetadata } from 'services/cd-ng'
@@ -39,7 +39,8 @@ export interface UseSaveToGitDialogProps<T> {
     data: SaveToGitFormInterface | SaveToGitFormV2Interface,
     payload?: T,
     objectId?: EntityGitDetails['objectId'],
-    isEdit?: boolean
+    isEdit?: boolean,
+    storeMetadata?: StoreMetadata
   ) => Promise<UseSaveSuccessResponse>
   onClose?: () => void
   onProgessOverlayClose?: () => void
@@ -378,7 +379,7 @@ export function useSaveToGitDialog<T = Record<string, string>>(
       showCreateUpdateModal()
     }
     props
-      .onSuccess?.(data, diffData, objectId, isEditMode)
+      .onSuccess?.(data, diffData, objectId, isEditMode, resource?.storeMetadata)
       .then(async response => {
         createPRHandlerV2(data, response)
       })

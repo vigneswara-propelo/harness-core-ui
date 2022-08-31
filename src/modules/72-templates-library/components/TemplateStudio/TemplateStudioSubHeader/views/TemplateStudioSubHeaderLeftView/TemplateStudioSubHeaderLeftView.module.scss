@@ -9,6 +9,10 @@
   width: 875px;
   padding-bottom: 0;
   position: relative;
+
+  &.gitCreateTemplateDialog {
+    width: 1160px;
+  }
 }
 
 .subHeaderLeftView {

@@ -14,6 +14,7 @@ import { isEmpty, unset } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikErrors } from 'formik'
 import produce from 'immer'
+import classNames from 'classnames'
 import { Container } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 import type { ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
@@ -30,6 +31,7 @@ import type { EntityGitDetails, Failure, NGTemplateInfoConfig } from 'services/t
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
 import useCommentModal from '@common/hooks/CommentModal/useCommentModal'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
@@ -55,7 +57,7 @@ function SaveTemplatePopover(
   ref: React.ForwardedRef<SaveTemplateHandle>
 ): React.ReactElement {
   const {
-    state: { template, originalTemplate, yamlHandler, gitDetails, isUpdated, lastPublishedVersion },
+    state: { template, originalTemplate, yamlHandler, gitDetails, storeMetadata, isUpdated, lastPublishedVersion },
     fetchTemplate,
     deleteTemplateCache,
     view,
@@ -74,7 +76,13 @@ function SaveTemplatePopover(
 
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
-      <Dialog enforceFocus={false} isOpen={true} className={css.configDialog}>
+      <Dialog
+        enforceFocus={false}
+        isOpen={true}
+        className={classNames(css.configDialog, {
+          [css.gitConfigDialog]: !isEmpty(storeMetadata)
+        })}
+      >
         {modalProps && (
           <TemplateConfigModalWithRef {...modalProps} onClose={hideConfigModal} ref={templateConfigModalHandler} />
         )}
@@ -109,6 +117,7 @@ function SaveTemplatePopover(
       await saveAndPublish(latestTemplate, {
         isEdit: templateIdentifier !== DefaultNewTemplateId,
         comment,
+        storeMetadata,
         updatedGitDetails: gitDetails
       })
     } catch (error) {
@@ -133,6 +142,7 @@ function SaveTemplatePopover(
           await saveAndPublish(refreshedTemplate, {
             isEdit,
             comment,
+            storeMetadata,
             updatedGitDetails: gitDetails
           })
         },
@@ -166,7 +176,7 @@ function SaveTemplatePopover(
   }
 
   const getComment = (): Promise<string | undefined> => {
-    if (!isEmpty(gitDetails)) {
+    if (!isEmpty(gitDetails) || storeMetadata?.storeType === StoreType.REMOTE) {
       return Promise.resolve(undefined)
     }
     const templateName = getTemplateNameWithLabel(template)
@@ -232,9 +242,10 @@ function SaveTemplatePopover(
         }),
         promise: saveAndPublish,
         gitDetails,
+        storeMetadata,
         title: getString('templatesLibrary.saveAsNewLabelModal.heading'),
         intent: Intent.SAVE,
-        disabledFields: [Fields.Name, Fields.Identifier],
+        disabledFields: [Fields.Name, Fields.Identifier, Fields.StoreType],
         lastPublishedVersion,
         onFailure: onSaveAsNewFailure
       })
@@ -255,6 +266,7 @@ function SaveTemplatePopover(
           draft.versionLabel = DefaultNewVersionLabel
         }),
         promise: saveAndPublish,
+        storeMetadata,
         title: getString('common.template.saveAsNewTemplateHeading'),
         intent: Intent.SAVE,
         allowScopeChange: true,

@@ -179,6 +179,7 @@ export function PipelineCanvas({
     yamlHandler,
     isBEPipelineUpdated,
     gitDetails,
+    storeMetadata,
     entityValidityDetails,
     templateError,
     templateInputsErrorNodeSummary,
@@ -515,7 +516,11 @@ export function PipelineCanvas({
   )
 
   const getPipelineTemplate = async (): Promise<void> => {
-    const { template: newTemplate, isCopied } = await getTemplate({ templateType: 'Pipeline' })
+    const { template: newTemplate, isCopied } = await getTemplate({
+      templateType: 'Pipeline',
+      gitDetails,
+      storeMetadata
+    })
     const processNode = isCopied
       ? produce(defaultTo(parse<any>(newTemplate?.yaml || '')?.template.spec, {}) as PipelineInfoConfig, draft => {
           draft.name = defaultTo(pipeline?.name, '')
@@ -530,7 +535,11 @@ export function PipelineCanvas({
   }
 
   React.useEffect(() => {
-    if (useTemplate && (!isGitSyncEnabled || !isEmpty(gitDetails))) {
+    if (
+      useTemplate &&
+      (!isGitSyncEnabled || !isEmpty(gitDetails)) &&
+      (!supportingGitSimplification || !isEmpty(storeMetadata))
+    ) {
       getPipelineTemplate()
         .catch(_ => {
           // Do nothing.. user cancelled template selection
@@ -539,7 +548,7 @@ export function PipelineCanvas({
           setUseTemplate(false)
         })
     }
-  }, [useTemplate, gitDetails])
+  }, [useTemplate, gitDetails, isGitSyncEnabled, storeMetadata, supportingGitSimplification])
 
   function handleViewChange(newView: SelectedView): boolean {
     if (newView === view) return false

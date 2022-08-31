@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, set, get, noop } from 'lodash-es'
+import { defaultTo, set, get } from 'lodash-es'
 import produce from 'immer'
 import { useHistory, useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
@@ -209,17 +209,19 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
               <div className={css.container}>
                 <NameIdDescriptionTags formikProps={formikProps} />
               </div>
-              <Divider />
-              <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
-                {getString('pipeline.createPipeline.choosePipelineSetupHeader')}
-              </Text>
               {supportingGitSimplification ? (
-                <InlineRemoteSelect
-                  className={css.inlineRemoteSelect}
-                  selected={formikProps.values.storeType}
-                  onChange={item => formikProps.setFieldValue('storeType', item.type)}
-                  getCardDisabledStatus={() => false}
-                />
+                <>
+                  <Divider />
+                  <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
+                    {getString('pipeline.createPipeline.choosePipelineSetupHeader')}
+                  </Text>
+                  <InlineRemoteSelect
+                    className={css.inlineRemoteSelect}
+                    selected={formikProps.values.storeType}
+                    onChange={item => formikProps.setFieldValue('storeType', item.type)}
+                    getCardDisabledStatus={() => false}
+                  />
+                </>
               ) : null}
               {storeType === StoreType.INLINE ? (
                 <div className={css.container}>
@@ -248,7 +250,7 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
               ) : null}
               {storeType === StoreType.REMOTE ? (
                 <React.Fragment>
-                  <GitSyncForm formikProps={formikProps as any} handleSubmit={noop} isEdit={false} initialValues={{}} />
+                  <GitSyncForm formikProps={formikProps as any} isEdit={false} initialValues={{}} />
                   <div className={css.container}>
                     <FormInput.TextArea label={getString('common.git.commitMessage')} name="commitMsg" />
                   </div>

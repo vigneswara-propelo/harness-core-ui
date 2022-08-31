@@ -9,23 +9,24 @@ import React, { useEffect, useState } from 'react'
 import type { FormikContextType } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-
+import * as Yup from 'yup'
 import { Container, FormInput, Layout, SelectOption } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import {
   ConnectorReferenceField,
   ConnectorSelectedValue
 } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { useQueryParams } from '@common/hooks'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import RepositorySelect from '@common/components/RepositorySelect/RepositorySelect'
-import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import { Connectors } from '@connectors/constants'
+import { yamlPathRegex } from '@common/utils/StringUtils'
 import css from './GitSyncForm.module.scss'
 
 export interface GitSyncFormFields {
@@ -34,20 +35,50 @@ export interface GitSyncFormFields {
   repo?: string
   branch?: string
   filePath?: string
+  versionLabel?: string
 }
 interface GitSyncFormProps<T> {
-  identifier?: string
   formikProps: FormikContextType<T>
   isEdit: boolean
-  modalErrorHandler?: any
-  handleSubmit: () => void
-  closeModal?: () => void
   disableFields?: {
-    [key: string]: boolean
+    connectorRef?: boolean
+    repoName?: boolean
+    branch?: boolean
+    filePath?: boolean
   }
   initialValues?: StoreMetadata
   errorData?: ResponseMessage[]
+  entityScope?: Scope
 }
+
+export const gitSyncFormSchema = (
+  getString: UseStringsReturn['getString']
+): {
+  repo: Yup.MixedSchema
+  branch: Yup.MixedSchema
+  connectorRef: Yup.MixedSchema
+  filePath: Yup.MixedSchema
+} => ({
+  repo: Yup.mixed().when('storeType', {
+    is: StoreType.REMOTE,
+    then: Yup.string().trim().required(getString('common.git.validation.repoRequired'))
+  }),
+  branch: Yup.mixed().when('storeType', {
+    is: StoreType.REMOTE,
+    then: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
+  }),
+  connectorRef: Yup.mixed().when('storeType', {
+    is: StoreType.REMOTE,
+    then: Yup.string().trim().required(getString('validation.sshConnectorRequired'))
+  }),
+  filePath: Yup.mixed().when('storeType', {
+    is: StoreType.REMOTE,
+    then: Yup.string()
+      .trim()
+      .required(getString('gitsync.gitSyncForm.yamlPathRequired'))
+      .matches(yamlPathRegex, getString('gitsync.gitSyncForm.yamlPathInvalid'))
+  })
+})
 
 const getConnectorIdentifierWithScope = (scope: Scope, identifier: string): string => {
   return scope === Scope.ORG || scope === Scope.ACCOUNT ? `${scope}.${identifier}` : identifier
@@ -66,10 +97,9 @@ const getSupportedProviders = (isAzureRepoSupported: boolean) => {
 export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
   props: GitSyncFormProps<T>
 ): React.ReactElement {
-  const { formikProps, isEdit, disableFields = {}, initialValues, errorData } = props
+  const { formikProps, isEdit, disableFields = {}, initialValues, errorData, entityScope = Scope.PROJECT } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
-  const { updateQueryParams } = useUpdateQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const isAzureRepoSupported = useFeatureFlag(FeatureFlag.AZURE_REPO_CONNECTOR)
   const [errorResponse, setErrorResponse] = useState<ResponseMessage[]>(errorData ?? [])
@@ -81,9 +111,13 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
 
   useEffect(() => {
     if (!isEdit && formikProps?.values?.identifier && isEmpty(initialValues?.filePath) && !filePathTouched) {
-      formikProps.setFieldValue('filePath', `.harness/${formikProps.values.identifier}.yaml`)
+      let versionLabel = ''
+      if (formikProps.values.versionLabel?.trim()) {
+        versionLabel = '_' + formikProps.values.versionLabel.trim().split(' ').join('_')
+      }
+      formikProps.setFieldValue('filePath', `.harness/${formikProps.values.identifier}${versionLabel}.yaml`)
     }
-  }, [formikProps?.values?.identifier, isEdit, filePathTouched])
+  }, [formikProps?.values?.identifier, formikProps?.values?.versionLabel, isEdit, filePathTouched])
 
   useEffect(() => {
     if (!filePathTouched && formikProps.touched.filePath) {
@@ -108,13 +142,13 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
             name="connectorRef"
             width={350}
             type={getSupportedProviders(isAzureRepoSupported)}
-            selected={formikProps.values.connectorRef || connectorRef}
+            selected={defaultTo(formikProps.values.connectorRef, connectorRef)}
             error={formikProps.submitCount > 0 ? (formikProps?.errors?.connectorRef as string) : undefined}
             label={getString('connectors.title.gitConnector')}
             placeholder={`- ${getString('select')} -`}
             accountIdentifier={accountId}
-            projectIdentifier={projectIdentifier}
-            orgIdentifier={orgIdentifier}
+            {...(entityScope === Scope.ACCOUNT ? {} : { orgIdentifier })}
+            {...(entityScope === Scope.PROJECT ? { projectIdentifier } : {})}
             onChange={(value, scope) => {
               const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
 
@@ -127,7 +161,6 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
               })
               formikProps.setFieldValue?.('repo', '')
               formikProps.setFieldValue?.('branch', '')
-              updateQueryParams({ repoName: '', branch: '' })
             }}
             disabled={isEdit || disableFields.connectorRef}
           />
@@ -140,7 +173,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
                 formikProps.setFieldValue?.('branch', '')
               }
             }}
-            selectedValue={formikProps?.values?.repo || repoName}
+            selectedValue={defaultTo(formikProps?.values?.repo, repoName)}
             disabled={isEdit || disableFields.repoName}
             setErrorResponse={setErrorResponse}
           />
@@ -153,7 +186,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
                 formikProps.setFieldValue?.('branch', selected.value)
               }
             }}
-            selectedValue={formikProps.values.branch || branch}
+            selectedValue={defaultTo(formikProps.values.branch, branch)}
             disabled={isEdit || disableFields.branch}
             setErrorResponse={setErrorResponse}
           />

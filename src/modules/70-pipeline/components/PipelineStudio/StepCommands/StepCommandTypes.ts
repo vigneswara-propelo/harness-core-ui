@@ -17,6 +17,7 @@ import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { TemplateStepNode, TemplateLinkConfig, EntityGitDetails } from 'services/pipeline-ng'
 import type { TemplateSummaryResponse } from 'services/template-ng'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
 export enum AdvancedPanels {
   PreRequisites = 'preRequisites',
@@ -52,6 +53,7 @@ export interface StepCommandsProps {
   viewType?: StepCommandsViews
   allowableTypes: AllowedTypes
   gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
 }
 
 export enum TabTypes {

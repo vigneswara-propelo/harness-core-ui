@@ -22,11 +22,11 @@ import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
-import type { GitQueryParams, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { TemplateSummaryResponse, useGetTemplateList } from 'services/template-ng'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { TemplateSummaryResponse, useGetTemplateList, useGetTemplateMetadataList } from 'services/template-ng'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
-import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import { useMutateAsGet } from '@common/hooks'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import TemplatesView from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -51,7 +51,12 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   const {
     state: { selectorData }
   } = useTemplateSelectorContext()
-  const { templateType = '', allChildTypes = [], selectedTemplate: defaultTemplate } = selectorData || {}
+  const {
+    templateType = '',
+    allChildTypes = [],
+    selectedTemplate: defaultTemplate,
+    gitDetails = {}
+  } = selectorData || {}
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>()
   const { getString } = useStrings()
   const [page, setPage] = useState(0)
@@ -59,8 +64,12 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   const [searchParam, setSearchParam] = useState('')
   const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
   const { projectIdentifier, orgIdentifier, accountId } = params
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const { repoIdentifier, branch } = gitDetails
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingTemplatesGitx
+  } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [selectedChildType, setSelectedChildType] = React.useState<string | undefined>(
     allChildTypes.length === 1 ? allChildTypes[0] : undefined
@@ -103,8 +112,8 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
       includeAllTemplatesAvailableAtScope: selectedScope.value === 'all',
       ...(isGitSyncEnabled &&
         (selectedScope.value === Scope.PROJECT || selectedScope.value === 'all') && {
-          repoIdentifier: repoIdentifier,
-          branch: branch,
+          repoIdentifier,
+          branch,
           getDefaultFromOtherRepo: true
         })
     }
@@ -148,7 +157,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     refetch: reloadTemplates,
     loading,
     error
-  } = useMutateAsGet(useGetTemplateList, {
+  } = useMutateAsGet(supportingTemplatesGitx ? useGetTemplateMetadataList : useGetTemplateList, {
     body,
     queryParams,
     queryParamStringifyOptions: { arrayFormat: 'comma' },
