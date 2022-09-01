@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, FormEvent, useMemo } from 'react'
 import {
   IconName,
   Layout,
@@ -19,11 +19,10 @@ import {
   ButtonSize,
   ButtonVariation,
   Table,
-  Text,
-  AllowedTypes
-} from '@wings-software/uicore'
+  AllowedTypes,
+  Checkbox
+} from '@harness/uicore'
 import type { ObjectSchema } from 'yup'
-import { Color } from '@harness/design-system'
 import type { Column } from 'react-table'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { parse } from 'yaml'
@@ -43,7 +42,8 @@ import {
   HostValidationDTO,
   HostDTO,
   ConnectorResponse,
-  SecretResponseWrapper
+  SecretResponseWrapper,
+  ErrorDetail
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
@@ -161,6 +161,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
   const [detailHosts, setDetailHosts] = useState<HostValidationDTO[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState([])
+  const [hostsToTest, setHostsToTest] = useState<any[]>([])
 
   const { mutate: getFilteredHosts } = useFilterHostsByConnector({
     queryParams: {
@@ -297,76 +298,100 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     getData()
   }
 
-  const columns: Column<HostValidationDTO>[] = [
-    {
-      Header: getString('cd.steps.pdcStep.no').toUpperCase(),
-      accessor: 'host',
-      id: 'no',
-      width: '6',
-      Cell: ({ row }) => row.index + 1
-    },
-    {
-      Header: getString('common.hostLabel').toUpperCase(),
-      accessor: 'host',
-      id: 'host',
-      width: '20%',
-      Cell: ({ row }) => row.original.host
-    },
-    {
-      Header: '',
-      accessor: 'status',
-      id: 'status',
-      width: '12%',
-      Cell: ({ row }) => (
-        <ConnectivityStatus
-          identifier={get(formikRef.current, 'values.credentialsRef', '')}
-          tags={get(formikRef.current, 'values.delegateSelectors', [])}
-          host={get(row.original, 'host', '')}
-          status={row.original.status}
-          resetError={(status: string) => {
-            set(row.original, 'status', defaultTo(status, 'UNKNOWN'))
-            if (!isEmpty(errors)) {
-              setErrors([])
-            }
-          }}
-        />
-      )
-    },
-    {
-      Header: '',
-      accessor: 'status',
-      id: 'action',
-      width: '22%',
-      Cell: ({ row }) => {
-        /* istanbul ignore next */
-        return row.original.status === 'FAILED' ? (
+  const onCheckboxSelect = (event: FormEvent<HTMLInputElement>, item: HostValidationDTO) => {
+    const identifier = item.host
+    if ((event.target as any).checked && identifier) {
+      setHostsToTest([...defaultTo(hostsToTest, []), item])
+    } else {
+      setHostsToTest([...hostsToTest.filter((selectedHost: HostValidationDTO) => selectedHost.host !== identifier)])
+    }
+  }
+
+  const columns: Column<HostValidationDTO>[] = useMemo(
+    () => [
+      {
+        Header: getString('cd.steps.pdcStep.no').toUpperCase(),
+        accessor: 'host',
+        id: 'no',
+        width: '6',
+        Cell: ({ row }) => row.index + 1
+      },
+      {
+        Header: getString('common.hostLabel').toUpperCase(),
+        accessor: 'host',
+        id: 'host',
+        width: '40%',
+        Cell: ({ row }) => row.original.host
+      },
+      {
+        Header: '',
+        accessor: 'status',
+        id: 'status',
+        width: '20%',
+        Cell: ({ row }) => (
+          <ConnectivityStatus
+            identifier={get(formikRef.current, 'values.credentialsRef', '')}
+            tags={get(formikRef.current, 'values.delegateSelectors', [])}
+            error={row.original.error as ErrorDetail}
+            host={get(row.original, 'host', '')}
+            status={row.original.status}
+            resetError={(status: string) => {
+              set(row.original, 'status', defaultTo(status, 'UNKNOWN'))
+              if (!isEmpty(errors)) {
+                setErrors([])
+              }
+            }}
+          />
+        )
+      },
+      {
+        Header: (
+          <Checkbox
+            data-testid={'selectAll'}
+            onClick={(event: FormEvent<HTMLInputElement>) => {
+              if ((event.target as any).checked) {
+                setHostsToTest(detailHosts)
+              } else {
+                setHostsToTest([])
+              }
+            }}
+          />
+        ),
+        id: 'selectHosts',
+        width: '20%',
+        Cell: ({ row, column }: any) => (
+          <Checkbox
+            onClick={event => column.onCheckboxSelect(event, row?.original)}
+            checked={column.hostsToTest.some(
+              (selectedHost: HostValidationDTO) => selectedHost?.host === row?.original?.host
+            )}
+          />
+        ),
+        onCheckboxSelect,
+        hostsToTest
+      },
+      {
+        Header: (
           <Button
-            onClick={() => testConnection(get(row.original, 'host', ''))}
+            onClick={() => testConnection()}
             size={ButtonSize.SMALL}
             variation={ButtonVariation.SECONDARY}
+            disabled={hostsToTest.length === 0 || !get(formikRef, 'current.values.credentialsRef', '')}
           >
-            {getString('retry')}
+            {getString('common.smtp.testConnection')}
           </Button>
-        ) : null
+        ),
+        id: 'testConnection',
+        width: '20%'
       }
-    },
-    {
-      Header: '',
-      accessor: 'error',
-      id: 'error',
-      width: '40%',
-      Cell: ({ row }) => (
-        <Text font={{ size: 'small' }} color={Color.RED_400}>
-          {get(row.original, 'error.message', '')}
-        </Text>
-      )
-    }
-  ]
+    ],
+    [getString]
+  )
 
   const testConnection = async (testHost?: string) => {
     setErrors([])
     try {
-      const validationHosts = testHost ? [testHost] : detailHosts.map(host => get(host, 'host', ''))
+      const validationHosts = testHost ? [testHost] : hostsToTest.map(host => get(host, 'host', ''))
       const hostResults = await validateHosts(
         {
           hosts: validationHosts,
@@ -377,7 +402,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
             accountIdentifier: accountId,
             projectIdentifier,
             orgIdentifier,
-            identifier: get(formikRef.current, 'values.credentialsRef', '')
+            identifier: get(formikRef, 'current.values.credentialsRef', '')
           }
         }
       )
@@ -386,9 +411,11 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
         detailHosts.forEach(hostItem => {
           tempMap[get(hostItem, 'host', '')] = hostItem
         }, {})
+
         get(hostResults, 'data', []).forEach((hostRes: HostValidationDTO) => {
           tempMap[get(hostRes, 'host', '')] = hostRes
         })
+
         setDetailHosts(Object.values(tempMap) as [])
       } else {
         /* istanbul ignore next */
@@ -663,15 +690,6 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                               />
                             </div>
                           ) : null}
-                          <Button
-                            onClick={() => testConnection()}
-                            size={ButtonSize.SMALL}
-                            variation={ButtonVariation.SECONDARY}
-                            style={{ marginTop: 10 }}
-                            disabled={detailHosts.length === 0 || !get(formikRef.current, 'values.credentialsRef', '')}
-                          >
-                            {getString('common.smtp.testConnection')}
-                          </Button>
                         </Layout.Horizontal>
                         {/* istanbul ignore next */}
                         {errors.length > 0 && <ErrorHandler responseMessages={errors} />}

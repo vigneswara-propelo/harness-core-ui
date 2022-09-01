@@ -322,6 +322,10 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     await waitFor(() => {
       expect(getByText('1.2.3.4')).toBeDefined()
     })
+    const selectAllCheckbox = queryByAttribute('data-testid', container, 'selectAll')
+    act(() => {
+      fireEvent.click(selectAllCheckbox!)
+    })
     await checkTestConnection(getByText)
   })
 })
@@ -347,6 +351,10 @@ describe('test api rejections', () => {
     refreshHosts(getByText)
     await waitFor(() => {
       expect(getByText('1.2.3.4')).toBeDefined()
+    })
+    const selectAllCheckbox = queryByAttribute('data-testid', container, 'selectAll')
+    act(() => {
+      fireEvent.click(selectAllCheckbox!)
     })
     await checkTestConnection(getByText)
   })
