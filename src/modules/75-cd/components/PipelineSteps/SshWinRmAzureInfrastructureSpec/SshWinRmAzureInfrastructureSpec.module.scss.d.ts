@@ -9,6 +9,7 @@
 declare const styles: {
   readonly accordionDetails: string
   readonly accordionPanel: string
+  readonly addBtn: string
   readonly connectorRef: string
   readonly formRow: string
   readonly inputWidth: string
@@ -18,5 +19,6 @@ declare const styles: {
   readonly removeTagBtn: string
   readonly simultaneousDeployment: string
   readonly tagsSelect: string
+  readonly textStyles: string
 }
 export default styles

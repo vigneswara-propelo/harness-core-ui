@@ -453,7 +453,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
               {selectedTags.map((tag, index) => (
                 <Layout.Horizontal spacing="small" key={index}>
                   <Layout.Vertical spacing="small">
-                    <Text>{index === 0 ? getString('keyLabel') : null}</Text>
+                    <Text className={css.textStyles}>{index === 0 ? getString('keyLabel') : null}</Text>
                     <Select
                       name={`${path}.tagslabel${index + 1}`}
                       value={{ label: tag.key, value: tag.key }}
@@ -467,7 +467,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                             : defaultTo(
                                 get(subscriptionTagsError, errorMessage, null),
                                 get(subscriptionTagsV2Error, errorMessage, null)
-                              ) || getString('pipeline.ACR.subscriptionError')}
+                              ) || getString('cd.infrastructure.sshWinRmAzure.noTagsAzure')}
                         </Text>
                       }
                       onChange={option => {
@@ -478,7 +478,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                     />
                   </Layout.Vertical>
                   <Layout.Vertical spacing="small">
-                    <Text>{index === 0 ? 'Value' : null}</Text>
+                    <Text className={css.textStyles}>{index === 0 ? 'Value' : null}</Text>
                     <FormInput.Text
                       name={`${path}.tags.${tag.key}`}
                       onChange={event => {
@@ -490,8 +490,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                   </Layout.Vertical>
                   <Layout.Horizontal className={css.removeTagBtn}>
                     <Button
-                      intent="primary"
-                      icon="delete"
+                      icon="trash"
                       iconProps={{ size: 12, margin: { right: 8 } }}
                       onClick={() => {
                         const newSelTags = [...selectedTags]
@@ -502,15 +501,14 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                       }}
                       size={ButtonSize.SMALL}
                       variation={ButtonVariation.LINK}
-                    >
-                      {getString('common.remove')}
-                    </Button>
+                    />
                   </Layout.Horizontal>
                 </Layout.Horizontal>
               ))}
               <Button
                 intent="primary"
                 icon="add"
+                className={css.addBtn}
                 iconProps={{ size: 12, margin: { right: 8 } }}
                 onClick={() => {
                   const newTagPair: SelectedTagsType = { key: '', value: '' }
@@ -519,7 +517,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                 size={ButtonSize.SMALL}
                 variation={ButtonVariation.LINK}
               >
-                {getString('add')}
+                {getString('tagLabel')}
               </Button>
             </MultiTypeFieldSelector>
           </div>

@@ -124,7 +124,7 @@ describe('Create WinRm Cred Wizard', () => {
             },
             type: 'NTLM'
           },
-          port: 22
+          port: 5985
         }
       }
     })

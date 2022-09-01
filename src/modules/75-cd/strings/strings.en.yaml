@@ -350,6 +350,7 @@ infrastructure:
     cloudProvider: Cloud Provider
     hostConnectionAttributes: Host Connection Attributes
     usePublicDns: Use Public DNS connection
+    noTagsAzure: No Tags found with given Connector and Subscription Id
 cloudFormation:
   createDescription: Provision resources using a CloudFormation template.
   deleteDescription: Remove any CloudFormation stack you provisioned via Harness or other methods.

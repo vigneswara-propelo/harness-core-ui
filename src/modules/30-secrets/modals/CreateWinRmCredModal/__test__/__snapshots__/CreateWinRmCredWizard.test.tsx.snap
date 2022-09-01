@@ -789,7 +789,7 @@ exports[`Create WinRm Cred Wizard should render form 2`] = `
                       class="bp3-input"
                       name="port"
                       type="text"
-                      value="22"
+                      value="5985"
                     />
                   </div>
                 </div>

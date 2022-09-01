@@ -53,6 +53,7 @@
 }
 
 .removeTagBtn {
+  padding-left: 12px !important;
   padding-bottom: 20px !important;
   align-items: flex-end;
 }
@@ -62,4 +63,12 @@
       color: var(--grey-500) !important;
     }
   }
+}
+
+.addBtn {
+  padding-left: 0px !important;
+}
+
+.textStyles {
+  font-size: 13px !important;
 }

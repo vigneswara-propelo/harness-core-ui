@@ -92,7 +92,7 @@ export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): Us
             principal: ((_winrmData.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).principal,
             realm: ((_winrmData.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).realm,
             keyPath: ((_winrmData.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).keyPath,
-            port: (_winrmData.spec as WinRmCredentialsSpecDTO).port || 22,
+            port: (_winrmData.spec as WinRmCredentialsSpecDTO).port || 5985,
             password: response.passwordSecret
           }
         })

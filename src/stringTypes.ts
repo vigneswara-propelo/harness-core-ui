@@ -4323,6 +4323,7 @@ export interface StringsMap {
   'cd.infrastructure.noInfrastructureInEnvironment': string
   'cd.infrastructure.sshWinRmAzure.cloudProvider': string
   'cd.infrastructure.sshWinRmAzure.hostConnectionAttributes': string
+  'cd.infrastructure.sshWinRmAzure.noTagsAzure': string
   'cd.infrastructure.sshWinRmAzure.usePublicDns': string
   'cd.infrastructure.updated': string
   'cd.installAdapterHelperText': string

@@ -16,9 +16,11 @@ import {
   getAzureResourceGroupsBySubscriptionPromise,
   getAzureSubscriptionsPromise,
   getConnectorListV2Promise,
+  getSubscriptionTagsPromise,
   SshWinRmAzureInfrastructure,
   ConnectorResponse,
-  AzureResourceGroupDTO
+  AzureResourceGroupDTO,
+  AzureTagDTO
 } from 'services/cd-ng'
 import type { AzureSubscriptionDTO } from 'services/cd-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
@@ -67,6 +69,7 @@ interface AzureInfrastructureSpecStep extends SshWinRmAzureInfrastructure {
 export const AzureConnectorRegex = /^.+infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
 export const AzureSubscriptionRegex = /^.+infrastructure\.infrastructureDefinition\.spec\.subscriptionId$/
 export const AzureResourceGroupRegex = /^.+infrastructure\.infrastructureDefinition\.spec\.resourceGroup$/
+export const AzureTagsRegex = /^.+infrastructure\.infrastructureDefinition\.spec\.tags$/
 export const SshWinRmAzureType = StepType.SshWinRmAzure
 
 export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastructureSpecStep> {
@@ -96,6 +99,7 @@ export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastru
     this.invocationMap.set(AzureConnectorRegex, this.getConnectorsListForYaml.bind(this))
     this.invocationMap.set(AzureSubscriptionRegex, this.getSubscriptionListForYaml.bind(this))
     this.invocationMap.set(AzureResourceGroupRegex, this.getResourceGroupListForYaml.bind(this))
+    this.invocationMap.set(AzureTagsRegex, this.getTagsForYaml.bind(this))
 
     this._hasStepVariables = true
   }
@@ -219,6 +223,51 @@ export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastru
             get(response, 'data.resourceGroups', []).map((rg: AzureResourceGroupDTO) => ({
               label: rg.resourceGroup,
               insertText: rg.resourceGroup,
+              kind: CompletionItemKind.Field
+            })) || /* istanbul ignore next */ []
+        )
+      }
+    }
+
+    return Promise.resolve([])
+  }
+  protected getTagsForYaml(
+    path: string,
+    yaml: string,
+    params: Record<string, unknown>
+  ): Promise<CompletionItemInterface[]> {
+    let pipelineObj
+    try {
+      pipelineObj = parse(yaml)
+    } catch (err: any) {
+      /* istanbul ignore next */ logger.error(yamlErrorMessage, err)
+    }
+    const { accountId, projectIdentifier, orgIdentifier } = params as {
+      accountId: string
+      orgIdentifier: string
+      projectIdentifier: string
+    }
+    // /* istanbul ignore else */
+    if (pipelineObj) {
+      const obj = get(pipelineObj, path.replace('.spec.tags', ''))
+      if (
+        get(obj, 'type', '') === SshWinRmAzureType &&
+        get(obj, 'spec.connectorRef', '') &&
+        get(obj, 'spec.subscriptionId', '')
+      ) {
+        return getSubscriptionTagsPromise({
+          queryParams: {
+            accountIdentifier: accountId,
+            orgIdentifier,
+            projectIdentifier,
+            connectorRef: get(obj, 'spec.connectorRef', '')
+          },
+          subscriptionId: get(obj, 'spec.subscriptionId', '')
+        }).then(
+          response =>
+            get(response, 'data.tags', []).map((azureTag: AzureTagDTO) => ({
+              label: azureTag.tag,
+              insertText: azureTag.tag,
               kind: CompletionItemKind.Field
             })) || /* istanbul ignore next */ []
         )

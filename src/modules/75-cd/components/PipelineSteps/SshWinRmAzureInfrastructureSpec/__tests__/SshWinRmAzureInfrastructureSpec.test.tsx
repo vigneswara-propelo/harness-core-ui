@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, getAllByText, getByText, queryByText, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, getByText, queryByText, render, waitFor } from '@testing-library/react'
 import { MultiTypeInputType, MultiTypeInputValue, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -201,7 +201,7 @@ describe('Test Azure Infrastructure Spec behavior', () => {
     fireEvent.change(subscriptionInput!, { target: { label: 's1', value: 'subscription1' } })
     const resourceGroupInput = getByPlaceholderText('cd.steps.azureInfraStep.resourceGroupPlaceholder') as HTMLElement
     fireEvent.change(resourceGroupInput!, { target: { value: 'rg1' } })
-    const addTags = getAllByText(container, 'add')[1] as HTMLElement
+    const addTags = container.querySelector('[data-icon="add"]') as HTMLElement
     fireEvent.click(addTags!)
     expect(getByText(container, 'keyLabel')).toBeTruthy()
     expect(container).toMatchSnapshot()
@@ -209,7 +209,7 @@ describe('Test Azure Infrastructure Spec behavior', () => {
     fireEvent.change(tagEl!, { target: { value: 'newKey' } })
     const tagValEl = container.querySelector('[name=".tags."]') as HTMLElement
     fireEvent.change(tagValEl!, { target: { value: 'newValue' } })
-    const deleteTag = getByText(container, 'common.remove') as HTMLElement
+    const deleteTag = container.querySelector('[data-icon="trash"]') as HTMLElement
     fireEvent.click(deleteTag!)
     expect(queryByText(container, 'keyLabel')).toBeNull()
     await waitFor(() => expect(onUpdateHandler).toHaveBeenCalled())
@@ -237,13 +237,13 @@ describe('Test Azure Infrastructure Spec behavior', () => {
     fireEvent.change(resourceGroupInput!, { target: { value: 'rg1' } })
     const tagEl = getByPlaceholderText('- Select -') as HTMLElement
     fireEvent.change(tagEl!, { target: { value: 'newKey' } })
-    const tagValEl = container.querySelector('[name="tags:key"]') as HTMLElement
+    const tagValEl = container.querySelector('[name="tags.key"]') as HTMLElement
     fireEvent.change(tagValEl!, { target: { value: 'newValue' } })
     expect(container).toMatchSnapshot()
-    const deleteTag = getByText(container, 'common.remove') as HTMLElement
+    const deleteTag = container.querySelector('[data-icon="trash"]') as HTMLElement
     fireEvent.click(deleteTag!)
     expect(queryByText(container, 'keyLabel')).toBeNull()
-    const addTags = getAllByText(container, 'add')[1] as HTMLElement
+    const addTags = container.querySelector('[data-icon="add"]') as HTMLElement
     fireEvent.click(addTags!)
     expect(getByText(container, 'keyLabel')).toBeTruthy()
     await waitFor(() => expect(onUpdateHandler).toHaveBeenCalled())

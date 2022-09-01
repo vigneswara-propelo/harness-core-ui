@@ -263,13 +263,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
         formName="sshWinRmAzureInfra"
         initialValues={getInitialValues()}
         validate={value => {
-          const tags =
-            getMultiTypeFromValue(value.tags) === MultiTypeInputType.FIXED
-              ? selectedTags.reduce((map: object, tag: SelectedTagsType) => {
-                  set(map, tag.key, tag.value)
-                  return map
-                }, {})
-              : value.tags
           const data: Partial<SshWinRmAzureInfrastructure> = {
             credentialsRef: value.credentialsRef,
             connectorRef: undefined,
@@ -281,7 +274,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
               getValue(value.resourceGroup) === ''
                 ? /* istanbul ignore next */ undefined
                 : getValue(value.resourceGroup),
-            tags,
+            tags: value.tags,
             usePublicDns: value.usePublicDns,
             allowSimultaneousDeployments: value.allowSimultaneousDeployments
           }
@@ -566,7 +559,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                     {selectedTags.map((tag, index) => (
                       <Layout.Horizontal spacing="small" key={index}>
                         <Layout.Vertical spacing="small">
-                          <Text>{index === 0 ? getString('keyLabel') : null}</Text>
+                          <Text className={css.textStyles}>{index === 0 ? getString('keyLabel') : null}</Text>
                           <Select
                             name={`tagslabel${index + 1}`}
                             value={{ label: tag.key, value: tag.key }}
@@ -578,7 +571,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                                 {loadingSubscriptionTags
                                   ? getString('loading')
                                   : get(subscriptionTagsError, errorMessage, null) ||
-                                    getString('pipeline.ACR.subscriptionError')}
+                                    getString('cd.infrastructure.sshWinRmAzure.noTagsAzure')}
                               </Text>
                             }
                             onChange={option => {
@@ -589,9 +582,9 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                           />
                         </Layout.Vertical>
                         <Layout.Vertical spacing="small">
-                          <Text>{index === 0 ? 'Value' : null}</Text>
+                          <Text className={css.textStyles}>{index === 0 ? 'Value' : null}</Text>
                           <FormInput.Text
-                            name={`tags:${tag.key}`}
+                            name={`tags.${tag.key}`}
                             onChange={event => {
                               const newSelTags = [...selectedTags]
                               newSelTags[index].value = get(event.target, 'value', '')
@@ -601,20 +594,17 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                         </Layout.Vertical>
                         <Layout.Horizontal className={css.removeTagBtn}>
                           <Button
-                            intent="primary"
-                            icon="delete"
+                            icon="trash"
                             iconProps={{ size: 12, margin: { right: 8 } }}
                             onClick={() => {
                               const newSelTags = [...selectedTags]
                               newSelTags.splice(index, 1)
-                              formik.setFieldValue(`tags:${tag.key}`, undefined)
                               setSelectedTags(newSelTags)
+                              formik.setFieldValue(`tags.${tag.key}`, undefined)
                             }}
                             size={ButtonSize.SMALL}
                             variation={ButtonVariation.LINK}
-                          >
-                            {getString('common.remove')}
-                          </Button>
+                          />
                         </Layout.Horizontal>
                       </Layout.Horizontal>
                     ))}
@@ -622,6 +612,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                       intent="primary"
                       icon="add"
                       iconProps={{ size: 12, margin: { right: 8 } }}
+                      className={css.addBtn}
                       onClick={() => {
                         const newTagPair: SelectedTagsType = { key: '', value: '' }
                         setSelectedTags(selTags => [...selTags, newTagPair])
@@ -629,7 +620,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                       size={ButtonSize.SMALL}
                       variation={ButtonVariation.LINK}
                     >
-                      {getString('add')}
+                      {getString('tagLabel')}
                     </Button>
                   </MultiTypeFieldSelector>
                 </Layout.Vertical>

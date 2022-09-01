@@ -171,7 +171,7 @@ const StepAuthentication: React.FC<StepProps<WinRmCredSharedObj> & StepAuthentic
             useSSL: false,
             username: '',
             keyPath: '',
-            port: 22,
+            port: 5985,
             ...prevStepData?.authData
           }}
         >
