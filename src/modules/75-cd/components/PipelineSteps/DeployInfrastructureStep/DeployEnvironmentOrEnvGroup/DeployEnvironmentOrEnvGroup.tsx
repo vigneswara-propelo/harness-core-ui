@@ -189,6 +189,7 @@ function DeployEnvironmentOrEnvGroup({
           isEditEnvironmentOrEnvGroup(selectedEnvironment) ? getString('editEnvironment') : getString('newEnvironment')
         }
         className={css.dialogStyles}
+        width={1024}
       >
         <AddEditEnvironmentModal
           data={{

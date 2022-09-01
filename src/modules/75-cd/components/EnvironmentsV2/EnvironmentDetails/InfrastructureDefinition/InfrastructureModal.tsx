@@ -7,7 +7,7 @@
 
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, merge, noop, set } from 'lodash-es'
+import { defaultTo, get, merge, noop, omit, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import produce from 'immer'
@@ -33,7 +33,6 @@ import {
   DeploymentStageConfig,
   InfrastructureConfig,
   InfrastructureDefinitionConfig,
-  InfrastructureRequestDTORequestBody,
   InfrastructureResponseDTO,
   useCreateInfrastructure,
   useGetYamlSchema,
@@ -41,7 +40,7 @@ import {
 } from 'services/cd-ng'
 
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
-import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
+import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { NameIdDescriptionTags } from '@common/components'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
@@ -177,7 +176,7 @@ function BootstrapDeployInfraDefinition({
     updateStage
   } = usePipelineContext()
   const { getString } = useStrings()
-  const { showSuccess, showError } = useToaster()
+  const { showSuccess, showError, clear } = useToaster()
   const { checkErrorsForTab } = useContext(StageErrorContext)
 
   const { name, identifier, description, tags } = defaultTo(
@@ -190,7 +189,6 @@ function BootstrapDeployInfraDefinition({
   const [isSavingInfrastructure, setIsSavingInfrastructure] = useState(false)
   const [selectedDeploymentType, setSelectedDeploymentType] = useState<ServiceDeploymentType | undefined>()
   const [isYamlEditable, setIsYamlEditable] = useState(false)
-  const [invalidYaml, setInvalidYaml] = useState(false)
   const [formValues, setFormValues] = useState({
     name,
     identifier,
@@ -207,9 +205,10 @@ function BootstrapDeployInfraDefinition({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const { data: environmentSchema } = useGetYamlSchema({
+  const { data: infrastructureDefinitionSchema } = useGetYamlSchema({
     queryParams: {
       entityType: 'Infrastructure',
+      identifier,
       projectIdentifier,
       orgIdentifier,
       accountIdentifier: accountId,
@@ -226,39 +225,26 @@ function BootstrapDeployInfraDefinition({
     })
 
     const stageData = produce(stage, draft => {
-      const infraDefinition = get(draft, 'stage.spec.infrastructure.infrastructureDefinition', {})
-      infraDefinition.spec = infrastructureDefinitionConfig.spec
+      const infraDefinition = get(draft, 'stage.spec.infrastructure', {})
+      infraDefinition.infrastructureDefinition.spec = infrastructureDefinitionConfig.spec
       infraDefinition.allowSimultaneousDeployments = infrastructureDefinitionConfig.allowSimultaneousDeployments
     })
     updateStage(stageData?.stage as StageElementConfig)
   }
 
-  const handleYamlChange = useCallback((): void => {
-    const errors = yamlHandler?.getYAMLValidationErrorMap()
-    const hasError = errors?.size ? true : false
-    setInvalidYaml(hasError)
-    const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
-    const yamlVisual = parse(yaml).infrastructureDefinition as InfrastructureDefinitionConfig
-
-    // istanbul ignore else
-    if (yamlVisual) {
-      updateFormValues(yamlVisual)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [yamlHandler])
-
   const handleModeSwitch = useCallback(
     (view: SelectedView) => {
       // istanbul ignore else
       if (view === SelectedView.VISUAL) {
-        const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
-        const yamlVisual = parse(yaml).infrastructureDefinition as InfrastructureDefinitionConfig
-
         // istanbul ignore else
         if (yamlHandler?.getYAMLValidationErrorMap()?.size && isYamlEditable) {
+          clear()
           showError(getString('common.validation.invalidYamlText'))
           return
         }
+
+        const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
+        const yamlVisual = parse(yaml).infrastructureDefinition as InfrastructureDefinitionConfig
 
         // istanbul ignore else
         if (yamlVisual) {
@@ -287,27 +273,15 @@ function BootstrapDeployInfraDefinition({
 
   const onSubmit = (values: InfrastructureDefinitionConfig): void => {
     setIsSavingInfrastructure(true)
-    const { name: newName, identifier: newIdentifier, description: newDescription, tags: newTags } = values
-    const body: InfrastructureRequestDTORequestBody = {
-      name: newName,
-      identifier: newIdentifier,
-      description: newDescription,
-      tags: newTags,
-      orgIdentifier,
-      projectIdentifier,
-      type: (pipeline.stages?.[0].stage?.spec as DeployStageConfig)?.infrastructure?.infrastructureDefinition?.type,
-      environmentRef: environmentIdentifier
-    }
+    const body = omit(values, ['spec', 'allowSimultaneousDeployments'])
 
     mutateFn({
       ...body,
       yaml: yamlStringify({
         infrastructureDefinition: {
           ...body,
-          spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure?.infrastructureDefinition
-            ?.spec,
-          allowSimultaneousDeployments: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
-            ?.allowSimultaneousDeployments
+          spec: values.spec,
+          allowSimultaneousDeployments: values.allowSimultaneousDeployments
         }
       })
     })
@@ -425,7 +399,7 @@ function BootstrapDeployInfraDefinition({
             </>
           ) : (
             <div className={css.yamlBuilder}>
-              <YAMLBuilder
+              <YamlBuilderMemo
                 {...yamlBuilderReadOnlyModeProps}
                 existingJSON={{
                   infrastructureDefinition: {
@@ -442,11 +416,10 @@ function BootstrapDeployInfraDefinition({
                   } as InfrastructureDefinitionConfig
                 }}
                 key={isYamlEditable.toString()}
-                schema={environmentSchema?.data}
+                schema={infrastructureDefinitionSchema?.data}
                 bind={setYamlHandler}
                 showSnippetSection={false}
                 isReadOnlyMode={!isYamlEditable}
-                onChange={handleYamlChange}
                 onEnableEditMode={handleEditMode}
               />
               {!isYamlEditable ? (
@@ -479,8 +452,13 @@ function BootstrapDeployInfraDefinition({
           variation={ButtonVariation.PRIMARY}
           onClick={() => {
             if (selectedView === SelectedView.YAML) {
-              const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), /* istanbul ignore next */ '')
-              onSubmit(parse(latestYaml)?.infrastructureDefinition)
+              if (yamlHandler?.getYAMLValidationErrorMap()?.size) {
+                clear()
+                showError(getString('common.validation.invalidYamlText'))
+              } else {
+                const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), /* istanbul ignore next */ '')
+                onSubmit(parse(latestYaml)?.infrastructureDefinition)
+              }
             } else {
               checkForErrors()
                 .then(() => {
@@ -488,13 +466,19 @@ function BootstrapDeployInfraDefinition({
                     ...formikRef.current?.values,
                     orgIdentifier,
                     projectIdentifier,
-                    environmentRef: environmentIdentifier
+                    environmentRef: environmentIdentifier,
+                    type: (pipeline.stages?.[0].stage?.spec as DeployStageConfig)?.infrastructure
+                      ?.infrastructureDefinition?.type,
+                    spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
+                      ?.infrastructureDefinition?.spec,
+                    allowSimultaneousDeployments: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)
+                      ?.infrastructure?.allowSimultaneousDeployments
                   } as InfrastructureDefinitionConfig)
                 })
                 .catch(noop)
             }
           }}
-          disabled={isSavingInfrastructure || invalidYaml}
+          disabled={isSavingInfrastructure}
           loading={isSavingInfrastructure}
         />
         <Button
