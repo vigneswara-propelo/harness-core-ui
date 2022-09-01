@@ -107,7 +107,7 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_HUB, {
   }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_SCENARIO, {
+AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_WORKFLOW, {
   moduleIcon: {
     name: 'chaos-main'
   },
@@ -125,7 +125,7 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_SCENARIO, {
   }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_DELEGATE, {
+AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_AGENT, {
   moduleIcon: {
     name: 'chaos-main'
   },
@@ -199,25 +199,25 @@ export default function ChaosRoutes(): React.ReactElement {
       }
     })
 
-    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_SCENARIO, {
+    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_WORKFLOW, {
       icon: 'chaos-main',
       label: 'chaos.chaosScenario',
       category: ResourceCategory.CHAOS,
       permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOS_SCENARIO]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_SCENARIO]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_SCENARIO]: <LocaleString stringID="delete" />
+        [PermissionIdentifier.VIEW_CHAOS_WORKFLOW]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_WORKFLOW]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.DELETE_CHAOS_WORKFLOW]: <LocaleString stringID="delete" />
       }
     })
 
-    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_DELEGATE, {
+    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_AGENT, {
       icon: 'chaos-main',
       label: 'chaos.chaosDelegate',
       category: ResourceCategory.CHAOS,
       permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOS_DELEGATE]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_DELEGATE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_DELEGATE]: <LocaleString stringID="delete" />
+        [PermissionIdentifier.VIEW_CHAOS_AGENT]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_AGENT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.DELETE_CHAOS_AGENT]: <LocaleString stringID="delete" />
       }
     })
 
