@@ -120,7 +120,7 @@ describe('Verify Step Addition', () => {
     cy.contains('span', 'Apply Changes').click()
   })
 
-  it.skip('should be able to select templatised monitored service in Verify Step', () => {
+  it('should be able to select templatised monitored service in Verify Step', () => {
     cy.apiMocksForVerifyStep()
     // adding new step
     cy.findByText(/Add step/i).should('be.visible')
@@ -210,7 +210,7 @@ describe('Verify Step Addition', () => {
     cy.get('button[type="submit"]').click()
   })
 
-  it.skip('should be able to create a verify step template with templatised monitored service', () => {
+  it('should be able to create a verify step template with templatised monitored service', () => {
     cy.apiMocksForVerifyStep()
 
     cy.contains('p', 'Project Setup').click()

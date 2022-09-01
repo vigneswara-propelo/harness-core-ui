@@ -411,7 +411,7 @@ Cypress.Commands.add('apiMocksForVerifyStep', () => {
 
   cy.intercept(
     'POST',
-    '/template/api/templates/list-metadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&module=cd&templateListType=All',
+    '/template/api/templates/list?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&module=cd&templateListType=All',
     allTemplatesResponse
   )
 
