@@ -661,6 +661,8 @@ export interface AgentMtlsEndpointRequest {
   mode?: 'LOOSE' | 'STRICT'
 }
 
+export type AllHostsFilter = Filter & {}
+
 export type AmazonS3ArtifactConfig = ArtifactConfig & {
   bucketName: string
   connectorRef: string
@@ -4653,7 +4655,7 @@ export type FilesFilterProperties = FilterProperties & {
 }
 
 export interface Filter {
-  ids?: string[]
+  type?: 'All' | 'HostNames' | 'HostAttributes'
 }
 
 export type FilterCreatorErrorResponse = ErrorMetadataDTO & {
@@ -6019,6 +6021,12 @@ export type HelmRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
 
+export type HostAttributesFilter = Filter & {
+  value?: {
+    [key: string]: string
+  }
+}
+
 export interface HostDTO {
   hostAttributes?: {
     [key: string]: string
@@ -6026,9 +6034,18 @@ export interface HostDTO {
   hostname: string
 }
 
+export interface HostFilter {
+  spec?: Filter
+  type: 'All' | 'HostNames' | 'HostAttributes'
+}
+
 export interface HostFilterDTO {
   filter?: string
-  type?: 'HOST_NAMES' | 'HOST_ATTRIBUTES'
+  type?: 'All' | 'HostNames' | 'HostAttributes'
+}
+
+export type HostNameFilter = Filter & {
+  value?: string[]
 }
 
 export interface HostValidationDTO {
@@ -8129,13 +8146,10 @@ export interface PaymentMethodCollectionDTO {
 }
 
 export type PdcInfrastructure = Infrastructure & {
-  attributeFilters?: {
-    [key: string]: string
-  }
   connectorRef?: string
   credentialsRef: string
   delegateSelectors?: string[]
-  hostFilters?: string[]
+  hostFilter: HostFilter
   hosts?: string[]
 }
 

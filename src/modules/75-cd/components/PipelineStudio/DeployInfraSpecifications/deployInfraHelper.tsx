@@ -139,8 +139,7 @@ export const getInfrastructureDefaultValue = (
       }
     }
     case InfraDeploymentType.PDC: {
-      const { connectorRef, credentialsRef, delegateSelectors, hostFilters, hosts, attributeFilters } =
-        infrastructure?.spec || {}
+      const { connectorRef, credentialsRef, delegateSelectors, hostFilter, hosts } = infrastructure?.spec || {}
 
       return {
         connectorRef,
@@ -148,8 +147,7 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments,
         hosts,
         delegateSelectors,
-        hostFilters,
-        attributeFilters,
+        hostFilter,
         serviceType
       }
     }

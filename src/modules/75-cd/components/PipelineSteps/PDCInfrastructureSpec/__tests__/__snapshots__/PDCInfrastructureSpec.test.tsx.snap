@@ -83,8 +83,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
                         class="bp3-input input"
                         name="hosts"
                       >
-                        localhost
-1.2.3.4
+                        localhost, 1.2.3.4
                       </textarea>
                       <span
                         class="bp3-popover-wrapper MultiTypeInput--wrapper"

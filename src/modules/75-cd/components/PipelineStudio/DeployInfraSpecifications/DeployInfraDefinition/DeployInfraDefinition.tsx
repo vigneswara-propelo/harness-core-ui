@@ -30,7 +30,8 @@ import {
   PdcInfrastructure,
   PipelineInfrastructure,
   StageElementConfig,
-  GetExecutionStrategyYamlQueryParams
+  GetExecutionStrategyYamlQueryParams,
+  SshWinRmAwsInfrastructure
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -106,6 +107,7 @@ type InfraTypes =
   | ServerlessInfraTypes
   | K8sAzureInfrastructure
   | PdcInfrastructure
+  | SshWinRmAwsInfrastructure
   | AzureWebAppInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
@@ -521,8 +523,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                 {
                   connectorRef: value.connectorRef?.connector?.identifier || value.connectorRef,
                   credentialsRef: value.credentialsRef,
-                  attributeFilters: value.attributeFilters,
-                  hostFilters: value.hostFilters,
+                  hostFilter: value.hostFilter,
                   hosts: value.hosts,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments,
                   delegateSelectors: value.delegateSelectors

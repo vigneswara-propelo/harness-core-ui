@@ -209,7 +209,7 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
     const allHosts = getByText('cd.steps.pdcStep.includeAllHosts')
     expect(allHosts).toBeDefined()
     fireEvent.click(allHosts)
-    await waitFor(() => expect(container.querySelector("input[value='allHosts']")).toBeChecked())
+    await waitFor(() => expect(container.querySelector("input[value='All']")).toBeChecked())
   })
 })
 
@@ -231,7 +231,7 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     )
 
     await checkForFormInit(container)
-    expect(container.querySelector('textarea')).toBe(null)
+    expect(container.querySelector('textarea')).not.toBe(null)
     await openPreviewHosts(getByText)
   })
 
@@ -247,11 +247,16 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
       />
     )
     await checkForFormInit(container)
+    await clickOnPreconfiguredHostsOption(getByText)
+    const filterHost = getByText('cd.steps.pdcStep.filterHostName')
+    expect(filterHost).toBeDefined()
     clickOn(getByText, 'cd.steps.pdcStep.filterHostName')
     await waitFor(() => {
       expect(getByPlaceholderText('cd.steps.pdcStep.specificHostsPlaceholder')).toBeDefined()
     })
     const customHostsTextArea = getByPlaceholderText('cd.steps.pdcStep.specificHostsPlaceholder')
+    expect(customHostsTextArea).toBeDefined()
+
     act(() => {
       fireEvent.change(customHostsTextArea, { target: { value: '1.1.1.1, 2.2.2.2' } })
     })
@@ -375,32 +380,23 @@ describe('test api rejections', () => {
 })
 
 describe('invocation map test', () => {
-  test('invocation map, empty yaml', () => {
-    const yaml = ''
-    const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
-    invocationMap?.get(PdcRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getConnectorListV2Promise).toBeCalled()
-    invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.listSecretsV2Promise).not.toBeCalled()
-  })
-
-  test('invocation map, wrong yaml', () => {
-    const yaml = {} as string
-    const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
-    invocationMap?.get(PdcRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getConnectorListV2Promise).toBeCalled()
-    invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.listSecretsV2Promise).not.toBeCalled()
-  })
-
-  test('invocation map should call template list', () => {
+  beforeEach(() => {
     jest.spyOn(CDNG, 'listSecretsV2Promise').mockImplementationOnce(() => Promise.resolve(mockListSecrets as any))
     jest
       .spyOn(CDNG, 'getConnectorListV2Promise')
       .mockImplementationOnce(() => Promise.resolve(ConnectorsResponse.data as any))
+  })
+  test('invocation map, empty yaml', () => {
+    const yaml = {} as string
+    const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
+    invocationMap?.get(PdcRegex)?.(infraDefPath, yaml, accountIdParams)
+    expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
+    invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
+    expect(CDNG.listSecretsV2Promise).not.toBeCalled()
+  })
 
+  test('invocation map, with yaml', () => {
     const yaml = getYaml()
-
     const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
     invocationMap?.get(PdcRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getConnectorListV2Promise).toBeCalled()
@@ -436,10 +432,18 @@ describe('test different stepViewType', () => {
   test('validateInputSet - render empty when default', () => {
     const response = new PDCInfrastructureSpec().validateInputSet({
       data: {
-        credentialsRef: 'account.cred'
+        credentialsRef: 'account.cred',
+        hostFilter: {
+          type: 'All',
+          spec: {}
+        }
       },
       template: {
-        credentialsRef: 'account.cred'
+        credentialsRef: 'account.cred',
+        hostFilter: {
+          type: 'All',
+          spec: {}
+        }
       },
       viewType: StepViewType.TriggerForm
     })
@@ -469,7 +473,12 @@ describe('test different stepViewType', () => {
         initialValues={getInitialValuesPreconfiguredWithAttributes()}
         template={{
           connectorRef: RUNTIME_INPUT_VALUE,
-          attributeFilters: RUNTIME_INPUT_VALUE
+          hostFilter: {
+            type: 'HostAttributes',
+            spec: {
+              value: RUNTIME_INPUT_VALUE
+            }
+          }
         }}
         allValues={getInitialValuesPreconfiguredWithAttributes()}
         type={StepType.PDC}
@@ -486,7 +495,12 @@ describe('test different stepViewType', () => {
         initialValues={getInitialValuePreconfiguredWithHostFilters()}
         template={{
           connectorRef: RUNTIME_INPUT_VALUE,
-          hostFilters: RUNTIME_INPUT_VALUE
+          hostFilter: {
+            type: 'HostNames',
+            spec: {
+              value: RUNTIME_INPUT_VALUE
+            }
+          }
         }}
         allValues={getInitialValuePreconfiguredWithHostFilters()}
         type={StepType.PDC}

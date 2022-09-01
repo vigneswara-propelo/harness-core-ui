@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import cx from 'classnames'
 import { defaultTo, get, isArray, isString, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -15,8 +15,7 @@ import { useStrings } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-
-import type { PdcInfrastructure } from 'services/cd-ng'
+import type { HostAttributesFilter, HostNameFilter, PdcInfrastructure } from 'services/cd-ng'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { Connectors } from '@connectors/constants'
 import { useQueryParams } from '@common/hooks'
@@ -25,11 +24,12 @@ import { FormMultiTypeTextAreaField } from '@common/components'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import {
   getValidationSchemaAll,
+  HostScope,
   parseAttributes,
   parseHosts,
-  PdcInfrastructureTemplate,
   PDCInfrastructureUI,
-  PDCInfrastructureYAML
+  PDCInfrastructureYAML,
+  PdcInfraTemplate
 } from './PDCInfrastructureInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PDCInfrastructureSpec.module.scss'
@@ -40,18 +40,30 @@ interface PDCInfrastructureSpecInputProps {
   onUpdate?: (data: PdcInfrastructure) => void
   stepViewType?: StepViewType
   readonly?: boolean
-  template?: PdcInfrastructureTemplate
+  template?: PdcInfraTemplate
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: PdcInfrastructure
   allowableTypes: AllowedTypes
 }
 
 export const getAttributeFilters = (value: PdcInfrastructure): string => {
-  return isString(value.attributeFilters)
-    ? value.attributeFilters
-    : Object.entries(defaultTo(value.attributeFilters, {}))
+  if (value.hostFilter && value.hostFilter.type !== HostScope.HOST_ATTRIBUTES) {
+    return ''
+  }
+  const attributeValue = (value.hostFilter?.spec as HostAttributesFilter)?.value
+  return isString(attributeValue)
+    ? attributeValue
+    : Object.entries(defaultTo(attributeValue, {}))
         .map(group => `${group[0]}:${group[1]}`)
         .join(', ')
+}
+
+export const getHostNames = (value: PdcInfrastructure): string => {
+  if (value.hostFilter && value.hostFilter.type !== HostScope.HOST_NAME) {
+    return ''
+  }
+  const hostNameValue = defaultTo((value.hostFilter?.spec as HostNameFilter)?.value, '')
+  return isString(hostNameValue) ? hostNameValue : hostNameValue?.join(', ')
 }
 
 export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInputProps & { path: string }> = ({
@@ -81,24 +93,22 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
     serviceType: ''
   }
 
-  const getInitialValues = (): PDCInfrastructureUI => {
+  const getInitialValues = useMemo((): PDCInfrastructureUI => {
     return {
       ...initialValues,
       hosts: isArray(initialValues.hosts) ? initialValues.hosts.join(', ') : defaultTo(initialValues.hosts, ''),
-      hostFilters: isArray(initialValues.hostFilters)
-        ? initialValues.hostFilters.join(', ')
-        : defaultTo(initialValues.hostFilters, ''),
+      hostFilters: getHostNames(initialValues),
       attributeFilters: getAttributeFilters(initialValues),
       serviceType: defaultTo(initialValues.serviceType, '')
     }
-  }
+  }, [])
 
   return (
     <Layout.Vertical spacing="small">
       {formikInitialValues && (
         <Formik<PDCInfrastructureUI>
           formName="pdcInfraRuntime"
-          initialValues={getInitialValues()}
+          initialValues={getInitialValues}
           enableReinitialize={true}
           validationSchema={getValidationSchemaAll(getString) as Partial<PDCInfrastructureYAML>}
           validate={
@@ -111,22 +121,42 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
                   data.hosts = parseHosts(value.hosts)
                 }
               }
-              if (getMultiTypeFromValue(template?.hostFilters) === MultiTypeInputType.RUNTIME) {
+              if (
+                template?.hostFilter?.type === HostScope.HOST_NAME &&
+                getMultiTypeFromValue(template?.hostFilter?.spec?.value) === MultiTypeInputType.RUNTIME
+              ) {
                 if (getMultiTypeFromValue(value.hostFilters) === MultiTypeInputType.EXPRESSION) {
                   data.hostFilters = value.hostFilters
                 } else {
                   data.hostFilters = parseHosts(value.hostFilters || '')
                 }
+                data.hostFilter = {
+                  type: 'HostNames',
+                  spec: {
+                    value: data.hostFilters
+                  } as HostNameFilter
+                }
+                data.hostFilters = undefined
               }
               if (getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME) {
                 data.connectorRef = value.connectorRef
               }
-              if (getMultiTypeFromValue(template?.attributeFilters) === MultiTypeInputType.RUNTIME) {
+              if (
+                template?.hostFilter?.type === HostScope.HOST_ATTRIBUTES &&
+                getMultiTypeFromValue(template?.hostFilter?.spec?.value) === MultiTypeInputType.RUNTIME
+              ) {
                 if (getMultiTypeFromValue(value.attributeFilters) === MultiTypeInputType.EXPRESSION) {
                   data.attributeFilters = value.attributeFilters
                 } else {
                   data.attributeFilters = parseAttributes(value.attributeFilters || '')
                 }
+                data.hostFilter = {
+                  type: 'HostAttributes',
+                  spec: {
+                    value: data.attributeFilters
+                  } as HostAttributesFilter
+                }
+                data.attributeFilters = undefined
               }
               if (getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME) {
                 data.credentialsRef = (value.credentialsRef || value.sshKey || '') as string
@@ -173,42 +203,44 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
                     />
                   </div>
                 )}
-                {getMultiTypeFromValue(template?.hostFilters) === MultiTypeInputType.RUNTIME && (
-                  <div className={cx(stepCss.formGroup, stepCss.md)}>
-                    <FormMultiTypeTextAreaField
-                      key={getString('cd.hostFilters')}
-                      name={getString('cd.hostFilters')}
-                      label={getString('cd.steps.pdcStep.specificHosts')}
-                      placeholder={getString('cd.steps.pdcStep.specificHostsPlaceholder')}
-                      className={cx(css.hostsTextArea, css.runtimeWidth)}
-                      tooltipProps={{
-                        dataTooltipId: 'pdcSpecificHosts'
-                      }}
-                      multiTypeTextArea={{
-                        expressions,
-                        allowableTypes
-                      }}
-                    />
-                  </div>
-                )}
-                {getMultiTypeFromValue(template?.attributeFilters) === MultiTypeInputType.RUNTIME && (
-                  <div className={cx(stepCss.formGroup, stepCss.md)}>
-                    <FormMultiTypeTextAreaField
-                      key={getString('cd.attributeFilters')}
-                      name={getString('cd.attributeFilters')}
-                      label={getString('cd.steps.pdcStep.specificAttributes')}
-                      placeholder={getString('cd.steps.pdcStep.attributesPlaceholder')}
-                      className={cx(css.hostsTextArea, css.runtimeWidth)}
-                      tooltipProps={{
-                        dataTooltipId: 'pdcSpecificAttributes'
-                      }}
-                      multiTypeTextArea={{
-                        expressions,
-                        allowableTypes
-                      }}
-                    />
-                  </div>
-                )}
+                {template?.hostFilter?.type === HostScope.HOST_NAME &&
+                  getMultiTypeFromValue(template?.hostFilter?.spec?.value) === MultiTypeInputType.RUNTIME && (
+                    <div className={cx(stepCss.formGroup, stepCss.md)}>
+                      <FormMultiTypeTextAreaField
+                        key={getString('cd.hostFilters')}
+                        name={getString('cd.hostFilters')}
+                        label={getString('cd.steps.pdcStep.specificHosts')}
+                        placeholder={getString('cd.steps.pdcStep.specificHostsPlaceholder')}
+                        className={cx(css.hostsTextArea, css.runtimeWidth)}
+                        tooltipProps={{
+                          dataTooltipId: 'pdcSpecificHosts'
+                        }}
+                        multiTypeTextArea={{
+                          expressions,
+                          allowableTypes
+                        }}
+                      />
+                    </div>
+                  )}
+                {template?.hostFilter?.type === HostScope.HOST_ATTRIBUTES &&
+                  getMultiTypeFromValue(template?.hostFilter?.spec?.value) === MultiTypeInputType.RUNTIME && (
+                    <div className={cx(stepCss.formGroup, stepCss.md)}>
+                      <FormMultiTypeTextAreaField
+                        key={getString('cd.attributeFilters')}
+                        name={getString('cd.attributeFilters')}
+                        label={getString('cd.steps.pdcStep.specificAttributes')}
+                        placeholder={getString('cd.steps.pdcStep.attributesPlaceholder')}
+                        className={cx(css.hostsTextArea, css.runtimeWidth)}
+                        tooltipProps={{
+                          dataTooltipId: 'pdcSpecificAttributes'
+                        }}
+                        multiTypeTextArea={{
+                          expressions,
+                          allowableTypes
+                        }}
+                      />
+                    </div>
+                  )}
                 {getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME && (
                   <div className={cx(stepCss.formGroup, stepCss.md, css.credRefWidth)}>
                     <MultiTypeSecretInput

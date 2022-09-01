@@ -9,7 +9,7 @@ import { defaultTo, set } from 'lodash-es'
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
-import type { PdcInfrastructure } from 'services/cd-ng'
+import type { Filter, HostFilter, PdcInfrastructure } from 'services/cd-ng'
 import { getConnectorSchema } from '../PipelineStepsUtil'
 
 export interface PDCInfrastructureYAML {
@@ -19,7 +19,8 @@ export interface PDCInfrastructureYAML {
   hosts: string | string[]
   connectorRef?: string
   delegateSelectors?: string[]
-  hostFilters: string | string[]
+  hostFilters?: string | string[]
+  hostFilter: HostFilter
   sshKey: SecretReferenceInterface | void
   credentialsRef: string
 }
@@ -28,13 +29,14 @@ export interface PDCInfrastructureUI {
   hostsType?: number
   allowSimultaneousDeployments?: boolean
   attributeFilters?: string
+  hostFilter?: HostFilter
   hosts: string
   connectorRef?: string
   delegateSelectors?: string[]
   hostFilters: string
   sshKey?: SecretReferenceInterface | void
   credentialsRef: string
-  serviceType: string
+  serviceType?: string
 }
 
 export const PreconfiguredHosts = {
@@ -43,9 +45,9 @@ export const PreconfiguredHosts = {
 }
 
 export const HostScope = {
-  ALL: 'allHosts',
-  HOST_NAME: 'hostName',
-  HOST_ATTRIBUTES: 'hostAttributes'
+  ALL: 'All',
+  HOST_NAME: 'HostNames',
+  HOST_ATTRIBUTES: 'HostAttributes'
 }
 
 export const parseByComma = (data: string) =>
@@ -65,12 +67,26 @@ export const parseAttributes = (attributes: string) =>
     const [key, value] = current.split(':')
     /* istanbul ignore else */
     if (key && value) {
-      set(prev, key, value)
+      set(prev, key, value.trim())
     }
     return prev
   }, {})
 
 export type PdcInfrastructureTemplate = { [key in keyof PdcInfrastructure]: string }
+export type PdcInfraTemplate = {
+  connectorRef?: string
+  credentialsRef: string
+  delegateSelectors?: string
+  hostFilter?: {
+    type: Filter
+    spec?: {
+      value: string
+    }
+  }
+  hosts?: string
+  hostFilters?: string
+  attributeFilters?: string
+}
 
 export function getValidationSchemaNoPreconfiguredHosts(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({

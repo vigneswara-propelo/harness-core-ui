@@ -27,7 +27,7 @@ import type { Column } from 'react-table'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import { useParams } from 'react-router-dom'
-import { debounce, noop, set, get, isEmpty, defaultTo, isString } from 'lodash-es'
+import { debounce, noop, set, get, isEmpty, defaultTo, isString, isArray } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { loggerFor } from 'framework/logging/logging'
@@ -43,6 +43,8 @@ import {
   HostDTO,
   ConnectorResponse,
   SecretResponseWrapper,
+  HostAttributesFilter,
+  HostNameFilter,
   ErrorDetail
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -68,7 +70,7 @@ import MultiTypeSecretInput, {
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import ConnectivityStatus from './connectivityStatus/ConnectivityStatus'
-import { getAttributeFilters, PDCInfrastructureSpecInputForm } from './PDCInfrastructureSpecInputForm'
+import { getAttributeFilters, getHostNames, PDCInfrastructureSpecInputForm } from './PDCInfrastructureSpecInputForm'
 import {
   getValidationSchemaAll,
   getValidationSchemaNoPreconfiguredHosts,
@@ -77,10 +79,10 @@ import {
   HostScope,
   parseAttributes,
   parseHosts,
-  PdcInfrastructureTemplate,
   PDCInfrastructureUI,
   PDCInfrastructureYAML,
-  PreconfiguredHosts
+  PreconfiguredHosts,
+  PdcInfraTemplate
 } from './PDCInfrastructureInterface'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import css from './PDCInfrastructureSpec.module.scss'
@@ -94,7 +96,7 @@ interface PDCInfrastructureSpecEditableProps {
   onUpdate?: (data: PdcInfrastructure) => void
   stepViewType?: StepViewType
   readonly?: boolean
-  template?: PdcInfrastructureTemplate
+  template?: PdcInfraTemplate
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: PdcInfrastructure
   allowableTypes: AllowedTypes
@@ -118,44 +120,11 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
   const { showError } = useToaster()
   const [showPreviewHostBtn, setShowPreviewHostBtn] = useState(true)
   const [formikInitialValues, setFormikInitialValues] = useState<PDCInfrastructureUI>()
-  const [isPreconfiguredHosts, setIsPreconfiguredHosts] = useState(
-    initialValues.connectorRef || initialValues.attributeFilters || initialValues.hostFilters
-      ? PreconfiguredHosts.TRUE
-      : PreconfiguredHosts.FALSE
-  )
-  const [hostsScope, setHostsScope] = useState(
-    initialValues.attributeFilters
-      ? HostScope.HOST_ATTRIBUTES
-      : initialValues.hostFilters
-      ? HostScope.HOST_NAME
-      : HostScope.ALL
-  )
 
-  useEffect(() => {
-    if (isPreconfiguredHosts === PreconfiguredHosts.TRUE) {
-      set(initialValues, 'hosts', undefined)
-      set(initialValues, 'connectorRef', get(initialValues, 'connectorRef', ''))
-      if (hostsScope === HostScope.HOST_ATTRIBUTES) {
-        set(initialValues, 'hostFilters', undefined)
-        set(initialValues, 'attributeFilters', get(initialValues, 'attributeFilters', {}))
-        delayedOnUpdate(initialValues)
-      } else if (hostsScope === HostScope.HOST_NAME) {
-        set(initialValues, 'attributeFilters', undefined)
-        set(initialValues, 'hostFilters', get(initialValues, 'hostFilters', []))
-        delayedOnUpdate(initialValues)
-      } else {
-        set(initialValues, 'hostFilters', undefined)
-        set(initialValues, 'attributeFilters', undefined)
-        delayedOnUpdate(initialValues)
-      }
-    } else {
-      set(initialValues, 'hosts', get(initialValues, 'hosts', []))
-      set(initialValues, 'connectorRef', undefined)
-      set(initialValues, 'hostFilters', undefined)
-      set(initialValues, 'attributeFilters', undefined)
-      delayedOnUpdate(initialValues)
-    }
-  }, [hostsScope, isPreconfiguredHosts])
+  const [isPreconfiguredHosts, setIsPreconfiguredHosts] = useState(
+    initialValues.hosts ? PreconfiguredHosts.FALSE : PreconfiguredHosts.TRUE
+  )
+  const [hostsScope, setHostsScope] = useState(defaultTo(initialValues.hostFilter?.type, 'All'))
 
   //table states
   const [detailHosts, setDetailHosts] = useState<HostValidationDTO[]>([])
@@ -186,59 +155,9 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     const setInitial = async () => {
       const values = {
         ...initialValues,
-        hosts:
-          getMultiTypeFromValue(initialValues?.hosts) !== MultiTypeInputType.RUNTIME
-            ? initialValues?.hosts?.join('\n')
-            : defaultTo(initialValues?.hosts, ''),
-        hostFilters:
-          getMultiTypeFromValue(initialValues?.hostFilters) !== MultiTypeInputType.RUNTIME
-            ? initialValues?.hostFilters?.join('\n')
-            : defaultTo(initialValues?.hostFilters, ''),
+        hosts: isArray(initialValues.hosts) ? initialValues.hosts.join(', ') : defaultTo(initialValues.hosts, ''),
+        hostFilters: getHostNames(initialValues),
         attributeFilters: getAttributeFilters(initialValues)
-      }
-      if (initialValues.connectorRef) {
-        const multiValueType = getMultiTypeFromValue(initialValues.connectorRef)
-        if (multiValueType === MultiTypeInputType.FIXED) {
-          try {
-            const splitedRef = initialValues.connectorRef.split('.')
-            let scope = ''
-            let identifier = ''
-            if (splitedRef.length > 1) {
-              scope = splitedRef[0]
-              identifier = splitedRef[1]
-            } else {
-              identifier = splitedRef[0]
-            }
-            const queryParams = {
-              accountIdentifier: accountId,
-              includeAllConnectorsAvailableAtScope: true
-            }
-            if (!scope) {
-              set(queryParams, 'orgIdentifier', orgIdentifier)
-              set(queryParams, 'projectIdentifier', projectIdentifier)
-            } else if (scope === 'org') {
-              set(queryParams, 'orgIdentifier', orgIdentifier)
-            }
-            const response = await getConnectorListV2Promise({
-              queryParams,
-              body: { types: ['Pdc'], filterType: 'Connector' }
-            })
-            const connResponse = get(response, 'data.content', []).find(
-              (conn: any) => conn.connector.identifier === identifier
-            )
-            const connectorData = {
-              label: initialValues.connectorRef,
-              value: `${scope ? `${scope}.` : ''}${identifier}`,
-              scope: scope,
-              live: connResponse?.status?.status === 'SUCCESS',
-              connector: connResponse.connector
-            }
-            set(values, 'connectorRef', connectorData)
-          } catch (e) {
-            /* istanbul ignore next */
-            showError(e.data?.message || e.message)
-          }
-        }
       }
       set(values, 'sshKey', initialValues.credentialsRef)
       setFormikInitialValues(values as PDCInfrastructureUI)
@@ -255,6 +174,53 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     return () => unSubscribeForm({ tab: DeployTabs.INFRASTRUCTURE, form: formikRef })
   }, [subscribeForm, unSubscribeForm])
 
+  useEffect(() => {
+    const data: Partial<PDCInfrastructureYAML> = {}
+    if (isPreconfiguredHosts === PreconfiguredHosts.TRUE) {
+      data.hosts = undefined
+      data.connectorRef = get(initialValues, 'connectorRef', '')
+    } else {
+      data.hosts = get(initialValues, 'hosts', '')
+      data.connectorRef = undefined
+    }
+    data.hostFilter = {
+      type: 'All',
+      spec: {} //todoremoveempty
+    }
+    formikRef.current?.setValues({ ...initialValues, ...data })
+  }, [isPreconfiguredHosts])
+
+  useEffect(() => {
+    const data: Partial<PDCInfrastructureYAML> = {}
+    if (hostsScope === HostScope.ALL) {
+      data.hostFilter = {
+        type: hostsScope,
+        spec: {} //todoremoveempty
+      }
+    } else if (hostsScope === HostScope.HOST_ATTRIBUTES) {
+      data.hostFilter = {
+        type: hostsScope,
+        spec: {
+          value:
+            getMultiTypeFromValue(getAttributeFilters(initialValues)) === MultiTypeInputType.FIXED
+              ? parseAttributes(getAttributeFilters(initialValues))
+              : getAttributeFilters(initialValues)
+        } as HostAttributesFilter
+      }
+    } else {
+      data.hostFilter = {
+        type: hostsScope,
+        spec: {
+          value:
+            getMultiTypeFromValue(getHostNames(initialValues)) === MultiTypeInputType.FIXED
+              ? parseHosts(getHostNames(initialValues))
+              : getHostNames(initialValues)
+        } as HostNameFilter
+      }
+    }
+    formikRef.current?.setValues({ ...initialValues, ...data })
+  }, [hostsScope])
+
   const fetchHosts = async () => {
     const formikValues = get(formikRef.current, 'values', {}) as PDCInfrastructureUI
     if (isPreconfiguredHosts === PreconfiguredHosts.FALSE) {
@@ -263,10 +229,10 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     }
     let filterData = {}
     if (hostsScope === HostScope.HOST_NAME) {
-      filterData = { type: 'HOST_NAMES', filter: formikValues.hostFilters }
+      filterData = { type: HostScope.HOST_NAME, filter: formikValues.hostFilters }
     } else if (hostsScope === HostScope.HOST_ATTRIBUTES) {
       /* istanbul ignore next */
-      filterData = { type: 'HOST_ATTRIBUTES', filter: formikValues.attributeFilters }
+      filterData = { type: HostScope.HOST_ATTRIBUTES, filter: formikValues.attributeFilters }
     }
     const identifier =
       typeof formikValues.connectorRef === 'string'
@@ -431,22 +397,22 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     }
   }
 
-  const isPreviewDisable = (value: PDCInfrastructureUI | PdcInfrastructure): boolean => {
+  const isPreviewDisable = (value: PDCInfrastructureUI): boolean => {
     if (isEmpty(value)) return false
-    if (getMultiTypeFromValue(value.credentialsRef) === MultiTypeInputType.RUNTIME) return true
+    if (getMultiTypeFromValue(value.credentialsRef) !== MultiTypeInputType.FIXED) return true
     if (isPreconfiguredHosts === PreconfiguredHosts.FALSE) {
-      return isString(value.hosts) && getMultiTypeFromValue(value.hosts) === MultiTypeInputType.RUNTIME
+      return isString(value.hosts) && getMultiTypeFromValue(value.hosts) !== MultiTypeInputType.FIXED
     } else {
-      let returnBool = getMultiTypeFromValue(value.connectorRef) === MultiTypeInputType.RUNTIME
+      let returnBool = getMultiTypeFromValue(value.connectorRef) !== MultiTypeInputType.FIXED
       if (hostsScope === HostScope.HOST_NAME) {
         returnBool =
           returnBool ||
-          (isString(value.hostFilters) && getMultiTypeFromValue(value.hostFilters) === MultiTypeInputType.RUNTIME)
+          (isString(value.hostFilters) && getMultiTypeFromValue(value.hostFilters) !== MultiTypeInputType.FIXED)
       } else if (hostsScope === HostScope.HOST_ATTRIBUTES) {
         returnBool =
           returnBool ||
           (isString(value.attributeFilters) &&
-            getMultiTypeFromValue(value.attributeFilters) === MultiTypeInputType.RUNTIME)
+            getMultiTypeFromValue(value.attributeFilters) !== MultiTypeInputType.FIXED)
       }
       return returnBool
     }
@@ -495,22 +461,30 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
               }
               if (isPreconfiguredHosts === PreconfiguredHosts.FALSE) {
                 data.hosts =
-                  getMultiTypeFromValue(value.hosts) === MultiTypeInputType.RUNTIME
-                    ? value.hosts
-                    : parseHosts(value.hosts)
+                  getMultiTypeFromValue(value.hosts) === MultiTypeInputType.FIXED
+                    ? parseHosts(value.hosts)
+                    : value.hosts
+                data.hostFilter = {
+                  type: 'All',
+                  spec: {} //todoremoveempty
+                }
               } else {
                 data.connectorRef = value.connectorRef
-                if (hostsScope === HostScope.HOST_NAME) {
-                  data.hostFilters =
-                    getMultiTypeFromValue(value.hostFilters) === MultiTypeInputType.RUNTIME
-                      ? value.hostFilters
-                      : parseHosts(value.hostFilters || '')
-                } else if (hostsScope === HostScope.HOST_ATTRIBUTES) {
-                  /* istanbul ignore next */
-                  data.attributeFilters =
-                    getMultiTypeFromValue(value.attributeFilters) !== MultiTypeInputType.FIXED
-                      ? value.attributeFilters
-                      : parseAttributes(value.attributeFilters || '')
+                data.hostFilter = {
+                  type: hostsScope as 'All' | 'HostNames' | 'HostAttributes',
+                  spec:
+                    hostsScope !== HostScope.ALL
+                      ? ({
+                          value:
+                            hostsScope === HostScope.HOST_NAME
+                              ? getMultiTypeFromValue(value.hostFilters) === MultiTypeInputType.FIXED
+                                ? parseHosts(value.hostFilters || '')
+                                : value.hostFilters
+                              : getMultiTypeFromValue(value.attributeFilters) === MultiTypeInputType.FIXED
+                              ? parseAttributes(value.attributeFilters || '')
+                              : value.attributeFilters
+                        } as HostNameFilter | HostAttributesFilter)
+                      : {} //todoremoveempty
                 }
               }
               delayedOnUpdate(data)
@@ -548,6 +522,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                           type={Connectors.PDC}
                           width={433}
                           selected={formik.values.connectorRef}
+                          setRefValue
                           multiTypeProps={{ allowableTypes, expressions }}
                           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                           onChange={(value, _valueType, connectorRefType) => {
@@ -615,7 +590,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                     <div className={css.credRefWidth}>
                       <MultiTypeSecretInput
                         name="credentialsRef"
-                        type={getMultiTypeSecretInputType(formikInitialValues.serviceType)}
+                        type={getMultiTypeSecretInputType(defaultTo(formikInitialValues.serviceType, 'SSHKey'))}
                         expressions={expressions}
                         allowableTypes={allowableTypes}
                         label={getString('cd.steps.common.specifyCredentials')}
@@ -736,7 +711,7 @@ interface PDCInfrastructureSpecEditableProps {
   onUpdate?: (data: PdcInfrastructure) => void
   stepViewType?: StepViewType
   readonly?: boolean
-  template?: PdcInfrastructureTemplate
+  template?: PdcInfraTemplate
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: PdcInfrastructure
   allowableTypes: AllowedTypes
@@ -770,7 +745,11 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
   protected type = StepType.PDC
   /* istanbul ignore next */
   protected defaultValues: PdcInfrastructure = {
-    credentialsRef: ''
+    credentialsRef: '',
+    hostFilter: {
+      type: 'All',
+      spec: {} //todoremoveempty
+    }
   }
 
   /* istanbul ignore next */
@@ -881,7 +860,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
     getString,
     viewType
   }: ValidateInputSetProps<PdcInfrastructure>): FormikErrors<PdcInfrastructure> {
-    const errors: Partial<PdcInfrastructureTemplate> = {}
+    const errors: Partial<PdcInfraTemplate> = {}
     /* istanbul ignore else */
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (
@@ -902,22 +881,25 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
       errors.hosts = getString?.('common.validation.fieldIsRequired', { name: getString('cd.hosts') })
     }
     if (
-      isEmpty(data.hostFilters) &&
+      data.hostFilter?.type === HostScope.HOST_NAME &&
+      isEmpty((data.hostFilter.spec as HostNameFilter)?.value) &&
       isRequired &&
-      getMultiTypeFromValue(template?.hostFilters) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue((template?.hostFilter?.spec as HostNameFilter)?.value) === MultiTypeInputType.RUNTIME
     ) {
       errors.hostFilters = getString?.('common.validation.fieldIsRequired', { name: getString('cd.hostFilters') })
     }
     if (
-      isEmpty(data.attributeFilters) &&
+      data.hostFilter?.type === HostScope.HOST_ATTRIBUTES &&
+      isEmpty((data.hostFilter.spec as HostAttributesFilter)?.value) &&
       isRequired &&
-      getMultiTypeFromValue(template?.attributeFilters as any) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue((template?.hostFilter?.spec as HostAttributesFilter)?.value as any) ===
+        MultiTypeInputType.RUNTIME
     ) {
       errors.attributeFilters = getString?.('common.validation.fieldIsRequired', {
         name: getString('cd.attributeFilters')
       })
     }
-    return errors
+    return errors as any
   }
 
   renderStep(props: StepProps<PdcInfrastructure>): JSX.Element {
@@ -931,7 +913,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
           onUpdate={onUpdate}
           stepViewType={stepViewType}
           readonly={readonly}
-          template={inputSetData?.template as PdcInfrastructureTemplate}
+          template={inputSetData?.template as PdcInfraTemplate}
           allValues={inputSetData?.allValues}
           allowableTypes={allowableTypes}
           path={inputSetData?.path || ''}
@@ -942,7 +924,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
         <PDCInfrastructureSpecVariablesForm
           onUpdate={onUpdate}
           stepViewType={stepViewType}
-          template={inputSetData?.template as PdcInfrastructureTemplate}
+          template={inputSetData?.template as PdcInfraTemplate}
           {...(customStepProps as PDCInfrastructureSpecEditableProps)}
           initialValues={initialValues}
         />
