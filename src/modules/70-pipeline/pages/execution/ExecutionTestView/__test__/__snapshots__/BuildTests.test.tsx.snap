@@ -6964,6 +6964,54 @@ exports[`BuildTests snapshot test should render Reports UI 1`] = `
                 class="Layout--horizontal StyledProps--main"
               >
                 <div
+                  class="StyledProps--font StyledProps--main expandSearchContainer StyledProps--flex"
+                >
+                  <div
+                    class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+                    data-name=""
+                    style="width: 200px; max-width: 200px;"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+                      data-icon="thinner-search"
+                    >
+                      <svg
+                        fill="none"
+                        height="14"
+                        viewBox="0 0 16 16"
+                        width="14"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                    <input
+                      class="bp3-input  ExpandingSearchInput--filter"
+                      dir="auto"
+                      placeholder="pipeline.testsReports.searchByTestName"
+                      style="padding-right: 38px;"
+                      type="search"
+                      value=""
+                    />
+                  </div>
+                  <button
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow"
+                    data-testid="search-btn"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      search
+                    </span>
+                  </button>
+                </div>
+                <div
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
                 >
                   <p
@@ -7018,6 +7066,7 @@ exports[`BuildTests snapshot test should render Reports UI 1`] = `
                 </div>
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main listIcons activeGroupedIcon StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                  data-testid="activeGroupedIcon"
                   type="button"
                 >
                   <span
@@ -7085,6 +7134,7 @@ exports[`BuildTests snapshot test should render Reports UI 1`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main widget testSuite expanded StyledProps--padding-medium"
+                data-testid="expanded"
               >
                 <div
                   class="StyledProps--font StyledProps--main headingContainer StyledProps--flex"
@@ -18490,6 +18540,54 @@ exports[`BuildTests snapshot test should render TI+Reports UI 1`] = `
                 class="Layout--horizontal StyledProps--main"
               >
                 <div
+                  class="StyledProps--font StyledProps--main expandSearchContainer StyledProps--flex"
+                >
+                  <div
+                    class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+                    data-name=""
+                    style="width: 200px; max-width: 200px;"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+                      data-icon="thinner-search"
+                    >
+                      <svg
+                        fill="none"
+                        height="14"
+                        viewBox="0 0 16 16"
+                        width="14"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                    <input
+                      class="bp3-input  ExpandingSearchInput--filter"
+                      dir="auto"
+                      placeholder="pipeline.testsReports.searchByTestName"
+                      style="padding-right: 38px;"
+                      type="search"
+                      value=""
+                    />
+                  </div>
+                  <button
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow"
+                    data-testid="search-btn"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      search
+                    </span>
+                  </button>
+                </div>
+                <div
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
                 >
                   <p
@@ -18544,6 +18642,7 @@ exports[`BuildTests snapshot test should render TI+Reports UI 1`] = `
                 </div>
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main listIcons activeGroupedIcon StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                  data-testid="activeGroupedIcon"
                   type="button"
                 >
                   <span
@@ -18611,6 +18710,7 @@ exports[`BuildTests snapshot test should render TI+Reports UI 1`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main widget testSuite expanded StyledProps--padding-medium"
+                data-testid="expanded"
               >
                 <div
                   class="StyledProps--font StyledProps--main headingContainer StyledProps--flex"

@@ -756,3 +756,12 @@
   color: var(--primary-7);
   cursor: pointer;
 }
+
+.expandSearchContainer {
+  margin-right: var(--spacing-xlarge) !important;
+  button {
+    margin-left: var(--spacing-medium);
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
+}

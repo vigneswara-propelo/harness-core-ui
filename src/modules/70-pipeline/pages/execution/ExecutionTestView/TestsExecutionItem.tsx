@@ -52,6 +52,7 @@ export interface TestExecutionEntryProps {
   stepId: string
   onShowCallGraphForClass?: (classname: string) => void
   isUngroupedList: boolean
+  testCaseSearchTerm?: string
 }
 
 const getServerSort = ({
@@ -257,7 +258,8 @@ export function TestsExecutionItem({
   stageId,
   stepId,
   onShowCallGraphForClass,
-  isUngroupedList
+  isUngroupedList,
+  testCaseSearchTerm = ''
 }: TestExecutionEntryProps): React.ReactElement {
   const containerRef = useRef<HTMLElement>(null)
   const rightSideContainerRef = useRef<HTMLElement>(null)
@@ -288,6 +290,7 @@ export function TestsExecutionItem({
         report: 'junit' as const,
         suite_name: executionSummary.name,
         status,
+        testCaseSearchTerm,
         sort: 'status',
         order: 'ASC',
         pageIndex,
@@ -307,7 +310,8 @@ export function TestsExecutionItem({
     pageIndex,
     stageId,
     stepId,
-    isUngroupedList
+    isUngroupedList,
+    testCaseSearchTerm
   ]) as TestCaseSummaryQueryParams
 
   const { data, error, loading, refetch } = useTestCaseSummary({
@@ -509,7 +513,12 @@ export function TestsExecutionItem({
   }, [])
 
   return (
-    <Container className={cx(css.widget, css.testSuite, expanded && css.expanded)} padding="medium" ref={containerRef}>
+    <Container
+      data-testid={expanded && 'expanded'}
+      className={cx(css.widget, css.testSuite, expanded && css.expanded)}
+      padding="medium"
+      ref={containerRef}
+    >
       <Container flex className={css.headingContainer}>
         <Text
           className={cx(css.testSuiteHeading, css.main)}

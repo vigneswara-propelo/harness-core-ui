@@ -713,6 +713,7 @@ testsReports:
   resultLabel: Test Execution Result
   sortBy: 'Sort by:'
   poweredByTI: 'Powered by Test Intelligence'
+  searchByTestName: Search by Test Name
   tiCallToAction:
     header: Did you know you can save time using Test Intelligence?
     upsellSubText: 'Optimize your tests cycle and reduce build time by using machine learning based Test Intelligence.'

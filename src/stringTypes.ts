@@ -3857,6 +3857,7 @@ export interface StringsMap {
   'pipeline.testsReports.poweredByTI': string
   'pipeline.testsReports.result': string
   'pipeline.testsReports.resultLabel': string
+  'pipeline.testsReports.searchByTestName': string
   'pipeline.testsReports.selectedTestMethods': string
   'pipeline.testsReports.selectionBreakdown': string
   'pipeline.testsReports.showOnlyFailedTests': string
