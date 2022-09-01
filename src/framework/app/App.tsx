@@ -17,6 +17,7 @@ import {
   MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY
 } from '@wings-software/uicore'
 import { tooltipDictionary } from '@wings-software/ng-tooltip'
+import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import SessionToken from 'framework/utils/SessionToken'
 
@@ -49,6 +50,7 @@ const TOO_MANY_REQUESTS_MESSAGE = 'Too many requests received, please try again 
 FocusStyleManager.onlyShowFocusOnTabs()
 SecureStorage.registerCleanupException(PREFERENCES_TOP_LEVEL_KEY)
 SecureStorage.registerCleanupException(MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY)
+SecureStorage.registerCleanupException(HELP_PANEL_STORAGE_KEY)
 
 // set up Immer
 setAutoFreeze(false)
