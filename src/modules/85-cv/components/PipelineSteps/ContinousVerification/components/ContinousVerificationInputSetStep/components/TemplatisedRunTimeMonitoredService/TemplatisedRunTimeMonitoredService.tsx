@@ -21,7 +21,12 @@ import {
   useGetHarnessEnvironments,
   useGetHarnessServices
 } from '@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment'
-import { checkIfRunTimeInput } from '@cv/components/PipelineSteps/ContinousVerification/utils'
+import {
+  checkIfRunTimeInput,
+  doesHealthSourceHasQueries,
+  getMetricDefinitionPath,
+  getMetricDefinitions
+} from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import { getMultiTypeInputProps } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { getRunTimeInputsFromHealthSource } from './TemplatisedRunTimeMonitoredService.utils'
 import css from './TemplatisedRunTimeMonitoredService.module.scss'
@@ -69,10 +74,12 @@ export default function TemplatisedRunTimeMonitoredService(
         ) : null}
       </Card>
       {healthSources?.map((healthSource: any, index: number) => {
-        const spec = healthSource?.spec
-        const path = `sources.healthSources.${index}.spec`
+        const spec = healthSource?.spec || {}
+        const hasQueries = doesHealthSourceHasQueries(healthSource)
+        let path = `sources.healthSources.${index}.spec`
         const runtimeInputs = getRunTimeInputsFromHealthSource(spec, path)
-        const metricDefinitions = healthSource?.spec?.metricDefinitions
+        const metricDefinitions = getMetricDefinitions(hasQueries, healthSource)
+
         return (
           <Card key={`${healthSource?.name}.${index}`} className={css.card}>
             <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: 'medium' }}>
@@ -121,7 +128,8 @@ export default function TemplatisedRunTimeMonitoredService(
             )}
             <Layout.Vertical padding={{ top: 'medium' }}>
               {metricDefinitions?.map((item: any, idx: number) => {
-                const runtimeItems = getNestedRuntimeInputs(item, [], `${path}.metricDefinitions.${idx}`)
+                path = getMetricDefinitionPath(path, hasQueries)
+                const runtimeItems = getNestedRuntimeInputs(item, [], `${path}.${idx}`)
                 return (
                   <>
                     <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: 'medium' }}>

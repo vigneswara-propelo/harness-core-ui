@@ -159,6 +159,8 @@ export function getSpecYamlData(specInfo?: spec, type?: string): spec {
 
 export function getMonitoredServiceYamlData(spec: ContinousVerificationData['spec']): VerifyStepMonitoredService {
   let monitoredService: VerifyStepMonitoredService = defaultMonitoredServiceSpec
+  const monitoredServiceTemplateSpec = omit(spec?.monitoredService?.spec, ['monitoredServiceRef'])
+
   switch (spec?.monitoredService?.type) {
     case MONITORED_SERVICE_TYPE.DEFAULT:
       monitoredService = defaultMonitoredServiceSpec
@@ -174,7 +176,7 @@ export function getMonitoredServiceYamlData(spec: ContinousVerificationData['spe
     case MONITORED_SERVICE_TYPE.TEMPLATE:
       monitoredService = {
         type: MONITORED_SERVICE_TYPE.TEMPLATE,
-        spec: { ...spec?.monitoredService?.spec }
+        spec: { ...monitoredServiceTemplateSpec }
       }
       break
     default:
@@ -257,4 +259,18 @@ export function isConfiguredMonitoredServiceRunTime(
 
 export function isTemplatisedMonitoredService(type: string): boolean {
   return type === MONITORED_SERVICE_TYPE.TEMPLATE
+}
+
+export function getMetricDefinitions(hasQueries: boolean, healthSource: any) {
+  return hasQueries
+    ? healthSource?.spec?.queries
+    : healthSource?.spec?.metricDefinitions || healthSource?.spec?.newRelicMetricDefinitions
+}
+
+export function doesHealthSourceHasQueries(healthSource: any) {
+  return healthSource?.spec?.queries !== undefined
+}
+
+export function getMetricDefinitionPath(path: string, hasQueries: boolean) {
+  return `${path}.${hasQueries ? 'queries' : 'metricDefinitions'}`
 }

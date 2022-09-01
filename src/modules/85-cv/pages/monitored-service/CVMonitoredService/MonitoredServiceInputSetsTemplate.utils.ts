@@ -89,15 +89,24 @@ export const getFieldLabelForVerifyTemplate = (name: string, getString: UseStrin
     case 'serviceInstanceMetricPath':
       return getString('cv.monitoringSources.appD.serviceInstanceMetricPath')
     case 'serviceInstanceFieldName':
+    case 'serviceInstanceIdentifier':
       return getString('cv.monitoringSources.appD.serviceInstanceFieldName')
+    case 'indexes':
+      return getString('cv.monitoringSources.datadogLogs.logIndexesLabel')
     case 'connectorRef':
       return getString('connector')
     case 'query':
       return getString('cv.query')
     case 'category':
       return `Category for ${getString('cv.monitoringSources.riskCategoryLabel')}`
+    case 'messageIdentifier':
+      return getString('cv.monitoringSources.gcoLogs.messageIdentifierTitle')
     case 'metricType':
       return `Metric type for ${getString('cv.monitoringSources.riskCategoryLabel')}`
+    case 'metricValueJsonPath':
+      return getString('cv.healthSource.connectors.NewRelic.metricFields.metricValueJsonPath.label')
+    case 'timestampJsonPath':
+      return getString('cv.healthSource.connectors.NewRelic.metricFields.timestampJsonPath.label')
     default:
       return name
   }

@@ -37,6 +37,8 @@ export const getLabelByName = (name: string, getString: UseStringsReturn['getStr
       return `Metric type for ${getString('cv.monitoringSources.riskCategoryLabel')}`
     case 'indexes':
       return getString('cv.monitoringSources.datadogLogs.logIndexesLabel')
+    case 'messageIdentifier':
+      return getString('cv.monitoringSources.gcoLogs.messageIdentifierTitle')
     case 'metricValueJsonPath':
       return getString('cv.healthSource.connectors.NewRelic.metricFields.metricValueJsonPath.label')
     case 'timestampJsonPath':

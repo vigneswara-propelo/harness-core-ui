@@ -410,6 +410,7 @@ monitoringSources:
     selectPathForMessageIdentifier: Select path for message identifier
     newGCOLogsServiceInstance: New Service Instance
     newGCOLogsMessageIdentifier: New Message Identifier
+    messageIdentifierTitle: Message Identifier
     fetchRecords: Fetch records
     newGCOLogsMessage: New GCO Logs Message
     records: Records

@@ -6872,6 +6872,7 @@ export interface StringsMap {
   'cv.monitoringSources.gcoLogs.gcoLogsQuery': string
   'cv.monitoringSources.gcoLogs.gcoLogsServiceInstance': string
   'cv.monitoringSources.gcoLogs.messageIdentifier': string
+  'cv.monitoringSources.gcoLogs.messageIdentifierTitle': string
   'cv.monitoringSources.gcoLogs.newGCOLogsMessage': string
   'cv.monitoringSources.gcoLogs.newGCOLogsMessageIdentifier': string
   'cv.monitoringSources.gcoLogs.newGCOLogsServiceInstance': string
