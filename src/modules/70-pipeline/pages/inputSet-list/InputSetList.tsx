@@ -31,7 +31,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
+
 import useImportResource from '@pipeline/components/ImportResource/useImportResource'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncInterface'
@@ -52,7 +52,6 @@ function InputSetList(): React.ReactElement {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { getString } = useStrings()
   const [inputSetToDelete, setInputSetToDelete] = useState<InputSetSummaryResponse>()
-  const { supportingGitSimplification } = useAppStore()
 
   const {
     data: inputSet,
@@ -228,58 +227,64 @@ function InputSetList(): React.ReactElement {
     }
   }
 
+  function getTooltipText() {
+    if (isPipelineInvalid) return <Text padding="medium">{getString('pipeline.cannotAddInputSetInvalidPipeline')}</Text>
+
+    if (!pipelineHasRuntimeInputs)
+      return <Text padding="medium">{getString('pipeline.inputSets.noRuntimeInputsCurrently')}</Text>
+  }
+
+  const NewInputSetButtonPopover = (
+    <Popover
+      minimal
+      content={
+        <Menu className={css.menuList}>
+          <MenuItem
+            text={getString('inputSets.inputSetLabel')}
+            onClick={() => {
+              goToInputSetForm()
+            }}
+          />
+          {(inputSet?.data?.content as InputSetSummaryResponse[])?.length > 0 && (
+            <MenuItem
+              text={getString('inputSets.overlayInputSet')}
+              onClick={() => {
+                setSelectedInputSet({ identifier: '', repoIdentifier, branch })
+                showOverlayInputSetForm()
+              }}
+            />
+          )}
+
+          {pipeline?.data?.storeType === StoreType.REMOTE && (
+            <MenuItem text={getString('common.importFromGit')} onClick={showImportResourceModal} />
+          )}
+        </Menu>
+      }
+      position={Position.BOTTOM}
+      disabled={!canUpdateInputSet || !pipelineHasRuntimeInputs || isPipelineInvalid}
+    >
+      <RbacButton
+        text={getString('inputSets.newInputSet')}
+        rightIcon="caret-down"
+        variation={ButtonVariation.PRIMARY}
+        permission={{
+          resource: {
+            resourceType: ResourceType.PIPELINE,
+            resourceIdentifier: pipelineIdentifier
+          },
+          permission: PermissionIdentifier.EDIT_PIPELINE
+        }}
+        disabled={!pipelineHasRuntimeInputs || isPipelineInvalid}
+        tooltip={getTooltipText()}
+      />
+    </Popover>
+  )
+
   return (
     <>
       <HelpPanel referenceId="InputSet" type={HelpPanelType.FLOATING_CONTAINER} />
       <Page.SubHeader>
-        <Layout.Horizontal>
-          <Popover
-            minimal
-            content={
-              <Menu className={css.menuList}>
-                <MenuItem
-                  text={getString('inputSets.inputSetLabel')}
-                  onClick={() => {
-                    goToInputSetForm()
-                  }}
-                />
-                <MenuItem
-                  text={getString('inputSets.overlayInputSet')}
-                  onClick={() => {
-                    setSelectedInputSet({ identifier: '', repoIdentifier, branch })
-                    showOverlayInputSetForm()
-                  }}
-                />
-                {supportingGitSimplification && pipeline?.data?.storeType === StoreType.REMOTE ? (
-                  <MenuItem text={getString('common.importFromGit')} onClick={showImportResourceModal} />
-                ) : null}
-              </Menu>
-            }
-            position={Position.BOTTOM}
-            disabled={!canUpdateInputSet || !pipelineHasRuntimeInputs || isPipelineInvalid}
-          >
-            <RbacButton
-              text={getString('inputSets.newInputSet')}
-              rightIcon="caret-down"
-              variation={ButtonVariation.PRIMARY}
-              permission={{
-                resource: {
-                  resourceType: ResourceType.PIPELINE,
-                  resourceIdentifier: pipelineIdentifier
-                },
-                permission: PermissionIdentifier.EDIT_PIPELINE
-              }}
-              disabled={!pipelineHasRuntimeInputs || isPipelineInvalid}
-              tooltip={
-                isPipelineInvalid ? (
-                  getString('pipeline.cannotAddInputSetInvalidPipeline')
-                ) : !pipelineHasRuntimeInputs ? (
-                  <Text padding="medium">{getString('pipeline.inputSets.noRuntimeInputsCurrently')}</Text>
-                ) : undefined
-              }
-            />
-          </Popover>
-        </Layout.Horizontal>
+        <Layout.Horizontal>{NewInputSetButtonPopover}</Layout.Horizontal>
 
         <Layout.Horizontal spacing="small">
           <TextInput
@@ -303,8 +308,7 @@ function InputSetList(): React.ReactElement {
           when: () => !inputSet?.data?.content?.length,
           icon: 'yaml-builder-input-sets',
           message: getString('pipeline.inputSets.aboutInputSets'),
-          buttonText: getString('inputSets.newInputSet'),
-          onClick: () => goToInputSetForm(),
+          button: NewInputSetButtonPopover,
           buttonDisabled: !canUpdateInputSet || !pipelineHasRuntimeInputs || isPipelineInvalid,
           buttonDisabledTooltip: isPipelineInvalid
             ? getString('pipeline.cannotAddInputSetInvalidPipeline')
