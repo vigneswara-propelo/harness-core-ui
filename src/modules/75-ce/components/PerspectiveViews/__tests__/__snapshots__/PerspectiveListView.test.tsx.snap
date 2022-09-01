@@ -98,11 +98,11 @@ exports[`test cases for perspective list view should be able to render list view
             style="width: 30%;"
           >
             <div
-              class="StyledProps--font StyledProps--main nameContainer"
+              class="StyledProps--font StyledProps--main nameContainer StyledProps--margin-right-small"
             >
               <span
-                class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
-                style="display: inline-flex; align-items: center;"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
+                style="--text-line-clamp: 1; display: inline-flex; align-items: center;"
               >
                 <span
                   class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
@@ -260,11 +260,11 @@ exports[`test cases for perspective list view should be able to render list view
             style="width: 30%;"
           >
             <div
-              class="StyledProps--font StyledProps--main nameContainer"
+              class="StyledProps--font StyledProps--main nameContainer StyledProps--margin-right-small"
             >
               <span
-                class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
-                style="display: inline-flex; align-items: center;"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
+                style="--text-line-clamp: 1; display: inline-flex; align-items: center;"
               >
                 <span
                   class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
@@ -428,11 +428,11 @@ exports[`test cases for perspective list view should be able to render list view
             style="width: 30%;"
           >
             <div
-              class="StyledProps--font StyledProps--main nameContainer"
+              class="StyledProps--font StyledProps--main nameContainer StyledProps--margin-right-small"
             >
               <span
-                class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
-                style="display: inline-flex; align-items: center;"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
+                style="--text-line-clamp: 1; display: inline-flex; align-items: center;"
               >
                 <span
                   class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
@@ -583,11 +583,11 @@ exports[`test cases for perspective list view should be able to render list view
             style="width: 30%;"
           >
             <div
-              class="StyledProps--font StyledProps--main nameContainer"
+              class="StyledProps--font StyledProps--main nameContainer StyledProps--margin-right-small"
             >
               <span
-                class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
-                style="display: inline-flex; align-items: center;"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
+                style="--text-line-clamp: 1; display: inline-flex; align-items: center;"
               >
                 <span
                   class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"

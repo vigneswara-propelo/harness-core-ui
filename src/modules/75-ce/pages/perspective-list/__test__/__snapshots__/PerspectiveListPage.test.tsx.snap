@@ -1005,10 +1005,11 @@ exports[`test cases for Perspective details Page should be able to render and sw
                     style="width: 30%;"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main nameContainer"
+                      class="StyledProps--font StyledProps--main nameContainer StyledProps--margin-right-small"
                     >
                       <span
-                        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
+                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
+                        style="--text-line-clamp: 1;"
                       >
                         name4
                       </span>
@@ -1195,10 +1196,11 @@ exports[`test cases for Perspective details Page should be able to render and sw
                     style="width: 30%;"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main nameContainer"
+                      class="StyledProps--font StyledProps--main nameContainer StyledProps--margin-right-small"
                     >
                       <span
-                        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
+                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
+                        style="--text-line-clamp: 1;"
                       >
                         name3
                       </span>
@@ -1310,10 +1312,11 @@ exports[`test cases for Perspective details Page should be able to render and sw
                     style="width: 30%;"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main nameContainer"
+                      class="StyledProps--font StyledProps--main nameContainer StyledProps--margin-right-small"
                     >
                       <span
-                        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
+                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
+                        style="--text-line-clamp: 1;"
                       >
                         name2
                       </span>
@@ -1477,10 +1480,11 @@ exports[`test cases for Perspective details Page should be able to render and sw
                     style="width: 30%;"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main nameContainer"
+                      class="StyledProps--font StyledProps--main nameContainer StyledProps--margin-right-small"
                     >
                       <span
-                        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
+                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800"
+                        style="--text-line-clamp: 1;"
                       >
                         name1
                       </span>

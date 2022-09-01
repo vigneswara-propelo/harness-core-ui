@@ -132,8 +132,13 @@ const PerspectiveListView: React.FC<PerspectiveListViewProps> = ({
       iconName = 'harness'
     }
     return cell.value ? (
-      <Container className={css.nameContainer}>
-        <Text icon={iconName} inline color="grey800">
+      <Container
+        className={css.nameContainer}
+        margin={{
+          right: 'small'
+        }}
+      >
+        <Text icon={iconName} inline color="grey800" lineClamp={1}>
           {cell.value}
         </Text>
         {folderName && (
