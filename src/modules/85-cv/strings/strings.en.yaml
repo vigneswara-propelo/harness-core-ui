@@ -499,6 +499,7 @@ monitoredServices:
   failedToFetchSummaryData: Failed to fetch summary data
   changeMonitoredServiceType: Change Monitored Service Type
   changeMonitoredServiceTypeMessage: Changing monitored service type will reset change sources
+  searchMonitoredServices: Search Monitored Services
   sloErrorBudget: SLO / Error Budget
   serviceHealth:
     last4Hrs: Last 4 hours

@@ -6707,6 +6707,7 @@ export interface StringsMap {
   'cv.monitoredServices.noAvailableData': string
   'cv.monitoredServices.noAvailableLogData': string
   'cv.monitoredServices.noMatchingData': string
+  'cv.monitoredServices.searchMonitoredServices': string
   'cv.monitoredServices.serviceAndEnvironment': string
   'cv.monitoredServices.serviceDependencies.noData': string
   'cv.monitoredServices.serviceHealth.anamolies': string

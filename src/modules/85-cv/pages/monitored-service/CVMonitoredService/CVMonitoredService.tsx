@@ -180,7 +180,7 @@ const MonitoredService: React.FC = () => {
                 alwaysExpanded
                 throttle={500}
                 onChange={setSearch}
-                placeholder={'Search monitered service'}
+                placeholder={getString('cv.monitoredServices.searchMonitoredServices')}
               />
             </Container>
             <Select

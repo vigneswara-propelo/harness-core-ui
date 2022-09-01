@@ -274,7 +274,7 @@ describe('Monitored Service list', () => {
     const searchContainer = container.querySelector('[data-name="monitoredServiceSeachContainer"]')
     const searchIcon = searchContainer?.querySelector('span[data-icon="thinner-search"]')
     const searchInput = searchContainer?.querySelector(
-      'input[placeholder="Search monitered service"]'
+      'input[placeholder="cv.monitoredServices.searchMonitoredServices"]'
     ) as HTMLInputElement
 
     expect(searchIcon).toBeTruthy()
