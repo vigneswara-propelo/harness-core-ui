@@ -95,7 +95,7 @@ describe('Connectors list', () => {
     cy.contains('span', 'Save').click()
   })
 
-  it.skip('jenkins step addition, with jobName as runtime values', () => {
+  it('jenkins step addition, with jobName as runtime values', () => {
     cy.contains('p', 'Jenkins').should('be.visible')
     cy.contains('p', 'Jenkins').click()
     cy.get('span[data-icon="service-jenkins"]').click({ force: true })
@@ -123,10 +123,11 @@ describe('Connectors list', () => {
     cy.get('input[name="stages[0].stage.spec.execution.steps[0].step.spec.jobName"]').click()
     cy.contains('p', 'alex-pipeline-test').click()
     cy.contains('p', 'AutomationQA').click()
-    cy.contains('span', 'Run Pipeline').click()
+    // check if selected jobname is visible
+    cy.contains('p', 'AutomationQA').should('be.visible')
   })
 
-  it.skip('jenkins step addition, with jobName and connector as runtime values', () => {
+  it('jenkins step addition, with jobName and connector as runtime values', () => {
     cy.contains('p', 'Jenkins').should('be.visible')
     cy.contains('p', 'Jenkins').click()
     cy.get('span[data-icon="service-jenkins"]').click({ force: true })
@@ -157,6 +158,7 @@ describe('Connectors list', () => {
     cy.get('input[name="stages[0].stage.spec.execution.steps[0].step.spec.jobName"]').click()
     cy.contains('p', 'alex-pipeline-test').click()
     cy.contains('p', 'AutomationQA').click()
-    cy.contains('span', 'Run Pipeline').click()
+    // check if selected jobname is visible
+    cy.contains('p', 'AutomationQA').should('be.visible')
   })
 })

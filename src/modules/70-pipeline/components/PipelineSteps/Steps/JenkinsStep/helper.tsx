@@ -21,7 +21,6 @@ export const resetForm = (
     if (updateJobName) {
       formik.setFieldValue(`${prefix}spec.jobName`, '')
     }
-    formik.setFieldValue(`${prefix}spec.jobParameter`, [])
   }
   if (parent === 'jobName') {
     formik.setFieldValue(`${prefix}spec.jobParameter`, [])

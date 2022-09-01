@@ -90,7 +90,9 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
     data: jobParameterResponse,
     loading: fetchingJobParameters
   } = useGetJobParametersForJenkins({
-    lazy: isArray(template?.spec?.jobParameter),
+    lazy:
+      isArray(template?.spec?.jobParameter) ||
+      getMultiTypeFromValue(template?.spec?.jobParameter) === MultiTypeInputType.RUNTIME,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRef.toString()
