@@ -22,6 +22,7 @@ import {
   PageSpinner
 } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   ConnectorFilterProperties,
   ConnectorInfoDTO,
@@ -50,6 +51,7 @@ import css from './GetStartedWithCI.module.scss'
 export default function GetStartedWithCI(): React.ReactElement {
   const { accountId } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
+  const { CIE_HOSTED_VMS } = useFeatureFlags()
   const [showWizard, setShowWizard] = useState<boolean>(false)
   const [showProvisioningCarousel, setShowProvisioningCarousel] = useState<boolean>(false)
   const { initiateProvisioning, delegateProvisioningStatus, fetchingDelegateDetails } =
@@ -288,7 +290,7 @@ export default function GetStartedWithCI(): React.ReactElement {
                       size={ButtonSize.LARGE}
                       text={getString('getStarted')}
                       onClick={() => {
-                        if (delegateProvisioningStatus === ProvisioningStatus.SUCCESS) {
+                        if (CIE_HOSTED_VMS || delegateProvisioningStatus === ProvisioningStatus.SUCCESS) {
                           setShowWizard(true)
                         } else {
                           initiateProvisioning()

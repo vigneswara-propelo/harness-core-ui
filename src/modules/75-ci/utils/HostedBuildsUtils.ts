@@ -38,8 +38,7 @@ const OAuthConnectorPayload: ConnectorRequestBody = {
           tokenRef: ''
         }
       },
-      delegateSelectors: [DELEGATE_SELECTOR_FOR_HARNESS_PROVISIONED_DELEGATE],
-      executeOnDelegate: true,
+      executeOnDelegate: false,
       type: 'Account'
     }
   }

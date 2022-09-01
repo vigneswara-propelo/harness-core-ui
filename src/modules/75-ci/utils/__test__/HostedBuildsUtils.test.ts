@@ -41,6 +41,7 @@ describe('Test HostedBuildsUtils methods', () => {
     expect(get(oAuthConnectorPayloadForGithub, 'connector.identifier')).toBe('Github_OAuth_1585699200000')
     expect(get(oAuthConnectorPayloadForGithub, 'connector.spec.authentication.spec.spec.tokenRef')).toBe('secret-token')
     expect(get(oAuthConnectorPayloadForGithub, 'connector.spec.apiAccess.spec.tokenRef')).toBe('secret-token')
+    expect(get(oAuthConnectorPayloadForGithub, 'connector.spec.executeOnDelegate')).toBe(false)
 
     const oAuthConnectorPayloadForGitlab = getOAuthConnectorPayload({
       tokenRef: 'secret-token',
@@ -57,6 +58,7 @@ describe('Test HostedBuildsUtils methods', () => {
     expect(get(oAuthConnectorPayloadForGitlab, 'connector.spec.apiAccess.spec.refreshTokenRef')).toBe(
       'secret-refresh-token'
     )
+    expect(get(oAuthConnectorPayloadForGithub, 'connector.spec.executeOnDelegate')).toBe(false)
 
     const oAuthConnectorPayloadForBitbucket = getOAuthConnectorPayload({
       tokenRef: 'secret-token',
@@ -75,6 +77,7 @@ describe('Test HostedBuildsUtils methods', () => {
     expect(get(oAuthConnectorPayloadForBitbucket, 'connector.spec.apiAccess.spec.refreshTokenRef')).toBe(
       'secret-refresh-token'
     )
+    expect(get(oAuthConnectorPayloadForGithub, 'connector.spec.executeOnDelegate')).toBe(false)
   })
 
   test('Test getBackendServerUrl method', () => {

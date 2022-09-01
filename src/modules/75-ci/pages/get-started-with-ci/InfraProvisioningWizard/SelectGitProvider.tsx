@@ -71,10 +71,7 @@ import {
   GitProviderIcons,
   NonGitOption
 } from './Constants'
-import {
-  DELEGATE_SELECTOR_FOR_HARNESS_PROVISIONED_DELEGATE,
-  getOAuthConnectorPayload
-} from '../../../utils/HostedBuildsUtils'
+import { getOAuthConnectorPayload } from '../../../utils/HostedBuildsUtils'
 
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -374,14 +371,13 @@ const SelectGitProviderRef = (
         identifier: type,
         type: type as ConnectorInfoDTO['type'],
         spec: {
-          executeOnDelegate: true,
+          executeOnDelegate: false,
           type: 'Account',
           url: getGitUrl(getString, gitProvider?.type as ConnectorInfoDTO['type']),
           authentication: {
             type: 'Http',
             spec: {}
           },
-          delegateSelectors: [DELEGATE_SELECTOR_FOR_HARNESS_PROVISIONED_DELEGATE],
           apiAccess: {}
         }
       }
