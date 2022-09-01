@@ -15,7 +15,6 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import { useResourceScopeModal } from '@rbac/modals/ResourceScope/ResourceScopeModal'
 import type { ResourceGroupV2, ScopeSelector } from 'services/resourcegroups'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   getScopeDropDownItems,
   getSelectedScopeType,
@@ -36,7 +35,6 @@ interface ResourceGroupScopeProps {
 const ResourceGroupScope: React.FC<ResourceGroupScopeProps> = ({ includedScopes, onSuccess, setIsUpdated }) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ResourceGroupDetailsPathProps & ModulePathParams>()
   const { getString } = useStrings()
-  const { CUSTOM_RESOURCEGROUP_SCOPE } = useFeatureFlags()
   const [isOpen, setIsOpen] = useState(false)
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const [selectedScope, setSelectedScope] = useState<SelectorScope>()
@@ -102,7 +100,7 @@ const ResourceGroupScope: React.FC<ResourceGroupScopeProps> = ({ includedScopes,
             {getString('rbac.resourceScope.label')}
           </Text>
           <DropDown
-            items={getScopeDropDownItems(scope, getString, CUSTOM_RESOURCEGROUP_SCOPE)}
+            items={getScopeDropDownItems(scope, getString)}
             value={selectedScope}
             filterable={false}
             onChange={item => {

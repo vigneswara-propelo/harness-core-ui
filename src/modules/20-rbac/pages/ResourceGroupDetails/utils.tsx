@@ -210,20 +210,15 @@ export const computeResourceMapOnMultiChange = (
 export const getSelectedScopeLabel = (
   getString: UseStringsReturn['getString'],
   resourceGroupScope: Scope,
-  scopes: ScopeSelector[],
-  includeCustomScope = false
+  scopes: ScopeSelector[]
 ): string => {
   const selectorScope = getSelectedScopeType(resourceGroupScope, scopes)
-  const dropDownItems = getScopeDropDownItems(resourceGroupScope, getString, includeCustomScope)
+  const dropDownItems = getScopeDropDownItems(resourceGroupScope, getString)
   const option = dropDownItems.filter(item => item.value === selectorScope)
   return option.length ? option[0].label : ''
 }
 
-export const getScopeDropDownItems = (
-  scope: Scope,
-  getString: UseStringsReturn['getString'],
-  includeCustomScope = false
-): Option[] => {
+export const getScopeDropDownItems = (scope: Scope, getString: UseStringsReturn['getString']): Option[] => {
   switch (scope) {
     case Scope.PROJECT:
       return [{ label: getString('rbac.scopeItems.projectOnly'), value: SelectorScope.CURRENT }]
@@ -231,18 +226,14 @@ export const getScopeDropDownItems = (
       return [
         { label: getString('rbac.scopeItems.orgOnly'), value: SelectorScope.CURRENT },
         { label: getString('rbac.scopeItems.orgAll'), value: SelectorScope.INCLUDE_CHILD_SCOPES },
-        ...(includeCustomScope
-          ? [{ label: getString('rbac.scopeItems.specificProjects'), value: SelectorScope.CUSTOM }]
-          : [])
+        { label: getString('rbac.scopeItems.specificProjects'), value: SelectorScope.CUSTOM }
       ]
     case Scope.ACCOUNT:
     default:
       return [
         { label: getString('rbac.scopeItems.accountOnly'), value: SelectorScope.CURRENT },
         { label: getString('rbac.scopeItems.accountAll'), value: SelectorScope.INCLUDE_CHILD_SCOPES },
-        ...(includeCustomScope
-          ? [{ label: getString('rbac.scopeItems.specificOrgsAndProjects'), value: SelectorScope.CUSTOM }]
-          : [])
+        { label: getString('rbac.scopeItems.specificOrgsAndProjects'), value: SelectorScope.CUSTOM }
       ]
   }
 }

@@ -38,7 +38,6 @@ describe('Resource Scope Form ', () => {
           orgIdentifier: 'testOrg',
           resourceGroupIdentifier: 'dummyResourceGroupIdentifier'
         }}
-        defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
       >
         <ResourceScopeForm scopes={[]} onSubmit={onSubmit} onCancel={jest.fn()} />
       </TestWrapper>
@@ -62,7 +61,6 @@ describe('Resource Scope Form ', () => {
           accountId: 'dummy',
           resourceGroupIdentifier: 'dummyResourceGroupIdentifier'
         }}
-        defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
       >
         <ResourceScopeForm
           scopes={[

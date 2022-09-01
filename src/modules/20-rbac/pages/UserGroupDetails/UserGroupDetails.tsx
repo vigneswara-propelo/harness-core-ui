@@ -20,7 +20,6 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { PageSpinner } from '@common/components'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import { useQueryParams } from '@common/hooks'
 import type { PrincipalScope } from '@common/interfaces/SecretsInterface'
@@ -77,7 +76,6 @@ const UserGroupDetails: React.FC = () => {
 
   const userGroupAggregateResponse: UserGroupAggregateDTO | undefined = data?.data
   const userGroup = userGroupAggregateResponse?.userGroupDTO
-  const { INHERITED_USER_GROUP } = useFeatureFlags()
 
   useDocumentTitle([userGroup?.name || '', getString('common.userGroups')])
 
@@ -103,7 +101,7 @@ const UserGroupDetails: React.FC = () => {
     userGroupInherited
   )
   const ssoBtnTooltipText = ssoBtnTooltip ? <Text padding="medium">{ssoBtnTooltip}</Text> : undefined
-  const shouldRenderScopeList = !userGroupInherited && INHERITED_USER_GROUP
+  const shouldRenderScopeList = !userGroupInherited
   return (
     <>
       <Page.Header

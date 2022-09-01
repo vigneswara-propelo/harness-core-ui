@@ -68,7 +68,7 @@ describe('Resource Groups Page', () => {
       <TestWrapper
         path={routes.toResourceGroupDetails({ ...accountPathProps, ...resourceGroupPathProps })}
         pathParams={{ accountId: 'dummy', resourceGroupIdentifier: 'dummyResourceGroupIdentifier' }}
-        defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true, ATTRIBUTE_TYPE_ACL_ENABLED: true }}
+        defaultFeatureFlagValues={{ ATTRIBUTE_TYPE_ACL_ENABLED: true }}
       >
         <ResourceGroupDetails />
       </TestWrapper>
@@ -274,7 +274,6 @@ test('Account Scope Resource Group Details', async () => {
         accountId: 'dummy',
         resourceGroupIdentifier: 'dummyResourceGroupIdentifier'
       }}
-      defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
     >
       <ResourceGroupDetails />
     </TestWrapper>
@@ -312,7 +311,6 @@ test('Org Scope Resource Group Details', async () => {
         orgIdentifier: 'testOrg',
         resourceGroupIdentifier: 'dummyResourceGroupIdentifier'
       }}
-      defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
     >
       <ResourceGroupDetails />
     </TestWrapper>
