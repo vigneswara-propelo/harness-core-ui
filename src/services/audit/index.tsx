@@ -1348,6 +1348,7 @@ export interface ResourceDTO {
     | 'AUTOSTOPPING_LB'
     | 'AUTOSTOPPING_STARTSTOP'
     | 'SETTING'
+    | 'NG_LOGIN_SETTINGS'
 }
 
 export interface ResourceGroupDTO {
