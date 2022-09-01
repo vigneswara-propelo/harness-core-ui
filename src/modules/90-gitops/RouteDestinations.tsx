@@ -44,7 +44,9 @@ const pipelineModuleParams: ModulePathParams = {
 const GitOpsPage = (): React.ReactElement | null => {
   const { ARGO_PHASE1 } = useFeatureFlags()
 
-  if (ARGO_PHASE1) {
+  // In localhost when argo_phase1 is true
+  // we just need to show the microfrontend gitops
+  if (ARGO_PHASE1 && window.location.hostname !== 'localhost') {
     return (
       <GitOpsServersPage>
         <GitOpsModalContainer />
