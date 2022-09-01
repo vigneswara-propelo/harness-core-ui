@@ -27,7 +27,8 @@ import {
   Error,
   ConnectorInfoDTO,
   EntityGitDetails,
-  ResponseMessage
+  ResponseMessage,
+  AccessControlCheckError
 } from 'services/cd-ng'
 
 import type { StepDetails } from '@connectors/interfaces/ConnectorInterface'
@@ -45,6 +46,7 @@ import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { connectorsTrackEventMap } from '@connectors/utils/connectorEvents'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import Suggestions from '../ErrorSuggestions/ErrorSuggestionsCe'
 import css from './VerifyOutOfClusterDelegate.module.scss'
 
@@ -179,7 +181,7 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
     } = useParams<ProjectPathProps>()
     const projectIdentifier = connectorInfo ? connectorInfo.projectIdentifier : projectIdentifierFromUrl
     const orgIdentifier = connectorInfo ? connectorInfo.orgIdentifier : orgIdentifierFromUrl
-
+    const { getRBACErrorMessage } = useRBACError()
     const [viewDetails, setViewDetails] = useState<boolean>(false)
     const [testConnectionResponse, setTestConnectionResponse] = useState<ResponseConnectorValidationResult>()
     const [stepDetails, setStepDetails] = useState<StepDetails>({
@@ -379,6 +381,21 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
       )
     }
 
+    const getErrorMessage = (): JSX.Element | undefined => {
+      if (stepDetails.status === 'ERROR') {
+        if ((testConnectionResponse?.data as AccessControlCheckError)?.code === 'NG_ACCESS_DENIED') {
+          return <> {getRBACErrorMessage(testConnectionResponse as RBACError)}</>
+        } else if (
+          testConnectionResponse?.data?.errorSummary ||
+          testConnectionResponse?.data?.errors ||
+          (testConnectionResponse?.data as Error)?.responseMessages
+        ) {
+          return renderError()
+        } else
+          return <Text padding={{ top: 'small' }}>{getString('connectors.testConnectionStep.placeholderError')}</Text>
+      }
+    }
+
     const getStepOne = (): JSX.Element => {
       return (
         <Layout.Vertical width={'100%'}>
@@ -398,17 +415,7 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
             </Text>
           ) : null}
 
-          {stepDetails.step === StepIndex.get(STEP.TEST_CONNECTION) ? (
-            stepDetails.status === 'ERROR' ? (
-              testConnectionResponse?.data?.errorSummary ||
-              testConnectionResponse?.data?.errors ||
-              (testConnectionResponse?.data as Error)?.responseMessages ? (
-                renderError()
-              ) : (
-                <Text padding={{ top: 'small' }}>{getString('connectors.testConnectionStep.placeholderError')}</Text>
-              )
-            ) : null
-          ) : null}
+          {stepDetails.step === StepIndex.get(STEP.TEST_CONNECTION) ? getErrorMessage() : null}
         </Layout.Vertical>
       )
     }
