@@ -14,6 +14,7 @@ import {
   isExecutionSuccess,
   isExecutionWaitingForIntervention
 } from '@pipeline/utils/statusHelpers'
+import type { ExecutionNode } from 'services/pipeline-ng'
 
 import { getDefaultReducerState } from './utils'
 import type { Action, ActionType, LogSectionData, State, ProgressMapValue, UnitLoadingStatus } from './types'
@@ -34,6 +35,24 @@ function parseToTime(p: unknown): number | undefined {
 
 const NON_MUTATE_STATES: UnitLoadingStatus[] = ['LOADING', 'QUEUED']
 
+function getTaskFromExecutableResponse(node: ExecutionNode): any {
+  /**
+   * task object must always be picked from the first entry
+   * in `executableResponses`
+   *
+   * It can be either be a `taskChain`, `task` or `sync`
+   */
+  const executableResponse = defaultTo(node?.executableResponses?.[0], {})
+  return (
+    executableResponse.taskChain ||
+    executableResponse.task ||
+    executableResponse.sync ||
+    executableResponse.async ||
+    executableResponse.child ||
+    executableResponse.children
+  )
+}
+
 export function createSections(state: State, action: Action<ActionType.CreateSections>): State {
   const { node, selectedStep, selectedStage, getSectionName } = action.payload
 
@@ -43,20 +62,7 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
 
   const isSameStage = selectedStage === state.selectedStage
   const isSameStep = isSameStage && selectedStep === state.selectedStep
-
-  /**
-   * task object must always be picked from the first entry
-   * in `executableResponses`
-   *
-   * It can be either be a `taskChain`, `task` or `sync`
-   */
-  const executableResponse = defaultTo(node?.executableResponses?.[0], {})
-  const task =
-    executableResponse.taskChain ||
-    executableResponse.task ||
-    executableResponse.sync ||
-    executableResponse.async ||
-    executableResponse.child
+  const task = getTaskFromExecutableResponse(node)
 
   // eslint-disable-next-line prefer-const, @typescript-eslint/no-explicit-any
   let { units = [], logKeys = [] } = defaultTo(task, {} as any)
