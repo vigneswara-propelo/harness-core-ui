@@ -17,15 +17,13 @@ import {
 } from '@harness/uicore'
 
 import type { ServiceSpec } from 'services/cd-ng'
-import { useStrings } from 'framework/strings'
-import type { StringsMap } from 'framework/strings/StringsContext'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getAllowedValuesFromTemplate } from '@pipeline/utils/CIUtils'
 
 interface UseRenderMultiTypeInputWithAllowedValuesArgs {
   name: string
   tooltipProps?: DataTooltipInterface
-  labelKey: keyof StringsMap
+  labelKey: string
   placeholderKey?: string
   fieldPath: string
   allowedTypes: AllowedTypes
@@ -43,7 +41,6 @@ export const useRenderMultiTypeInputWithAllowedValues = ({
   template,
   readonly
 }: UseRenderMultiTypeInputWithAllowedValuesArgs): { getMultiTypeInputWithAllowedValues: () => JSX.Element } => {
-  const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
   const getMultiTypeInputWithAllowedValues = (): JSX.Element => {
@@ -51,7 +48,7 @@ export const useRenderMultiTypeInputWithAllowedValues = ({
     return (
       <FormInput.MultiTypeInput
         name={name}
-        label={getString(labelKey)}
+        label={labelKey}
         useValue
         selectItems={items}
         placeholder={placeholderKey}
@@ -74,13 +71,13 @@ export const useRenderMultiTypeInputWithAllowedValues = ({
 interface UseRenderMultiSelectTypeInputWithAllowedValuesArgs {
   name: string
   tooltipProps?: DataTooltipInterface
-  labelKey: keyof StringsMap
+  labelKey: string
   placeholderKey?: string
   fieldPath: string
   allowedTypes: AllowedTypes
   template: ServiceSpec
   readonly?: boolean
-  options: SelectOption[]
+  options: MultiSelectOption[]
   onChange?: (
     value: boolean | string | number | SelectOption | string[] | MultiSelectOption[] | undefined,
     valueType: MultiTypeInputValue,
@@ -102,7 +99,6 @@ export const useRenderMultiSelectTypeInputWithAllowedValues = ({
 }: UseRenderMultiSelectTypeInputWithAllowedValuesArgs): {
   getMultiSelectTypeInputWithAllowedValues: () => JSX.Element
 } => {
-  const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
   const getMultiSelectTypeInputWithAllowedValues = (): JSX.Element => {
@@ -110,7 +106,7 @@ export const useRenderMultiSelectTypeInputWithAllowedValues = ({
     return (
       <FormInput.MultiSelectTypeInput
         name={name}
-        label={getString(labelKey)}
+        label={labelKey}
         selectItems={items}
         placeholder={placeholderKey}
         disabled={readonly}

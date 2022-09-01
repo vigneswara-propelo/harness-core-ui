@@ -109,10 +109,13 @@ const ManifestGitStoreRuntimeFields = ({
       {isFieldRuntime(`${manifestPath}.spec.store.spec.branch`, template) && (
         <div className={css.verticalSpacingInput}>
           <TextFieldInputSetView
-            fieldName={`${path}.${manifestPath}.spec.store.spec.branch`}
-            fieldLabel={'pipelineSteps.deploy.inputSet.branch'}
             disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.branch`)}
-            allowableTypes={allowableTypes}
+            name={`${path}.${manifestPath}.spec.store.spec.branch`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            label={getString('pipelineSteps.deploy.inputSet.branch')}
             fieldPath={`${manifestPath}.spec.store.spec.branch`}
             template={template}
           />

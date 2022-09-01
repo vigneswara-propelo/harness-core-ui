@@ -6,69 +6,53 @@
  */
 
 import React from 'react'
-import {
-  AllowedTypes,
-  DataTooltipInterface,
-  FormInput,
-  MultiSelectOption,
-  MultiTypeInputType,
-  MultiTypeInputValue
-} from '@harness/uicore'
+import { defaultTo, noop } from 'lodash-es'
+import { DataTooltipInterface, FormInput, MultiSelectOption, MultiTypeInputType } from '@harness/uicore'
+import type { MultiSelectTypeInputProps } from '@harness/uicore/dist/components/MultiTypeInput/MultiTypeInput'
 
-import type { ServiceSpec } from 'services/cd-ng'
-import { useStrings } from 'framework/strings'
-import type { StringsMap } from 'framework/strings/StringsContext'
-import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import { useRenderMultiSelectTypeInputWithAllowedValues } from '../utils/utils'
 
 interface MultiSelectInputSetViewProps {
-  fieldName: string
-  fieldLabel: keyof StringsMap
+  name: string
+  label: string
+  selectItems: MultiSelectOption[]
   fieldPath: string
-  options: SelectOption[]
-  template: ServiceSpec
-  allowableTypes: AllowedTypes
-  fieldPlaceholder?: keyof StringsMap
+  template: any
+  placeholder?: string
   disabled?: boolean
-  fieldHelperText?: string
+  helperText?: string
   readonly?: boolean
   tooltipProps?: DataTooltipInterface
-  onChange?: (
-    value: boolean | string | number | SelectOption | string[] | MultiSelectOption[] | undefined,
-    valueType: MultiTypeInputValue,
-    type: MultiTypeInputType
-  ) => void
+  multiSelectTypeInputProps: Omit<MultiSelectTypeInputProps, 'name'>
 }
 
 export function MultiSelectInputSetView(props: MultiSelectInputSetViewProps): JSX.Element {
   const {
-    options,
-    fieldName,
-    fieldLabel,
-    fieldPlaceholder,
+    name,
+    label,
+    selectItems,
+    placeholder,
     disabled,
-    allowableTypes,
     template,
     fieldPath,
     readonly,
     tooltipProps,
-    onChange
+    helperText,
+    multiSelectTypeInputProps
   } = props
 
-  const { getString } = useStrings()
-
   const { getMultiSelectTypeInputWithAllowedValues } = useRenderMultiSelectTypeInputWithAllowedValues({
-    name: fieldName,
-    labelKey: fieldLabel,
-    placeholderKey: fieldPlaceholder,
+    name: name,
+    labelKey: label,
+    placeholderKey: placeholder,
     fieldPath: fieldPath,
-    allowedTypes: allowableTypes,
+    allowedTypes: defaultTo(multiSelectTypeInputProps?.allowableTypes, [MultiTypeInputType.FIXED]),
     template: template,
     readonly: readonly,
     tooltipProps: tooltipProps,
-    options: options,
-    onChange: onChange
+    options: selectItems,
+    onChange: defaultTo(multiSelectTypeInputProps?.onChange, noop)
   })
 
   if (shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template)) {
@@ -77,21 +61,14 @@ export function MultiSelectInputSetView(props: MultiSelectInputSetViewProps): JS
 
   return (
     <FormInput.MultiSelectTypeInput
-      label={getString(fieldLabel)}
+      label={label}
       tooltipProps={tooltipProps}
-      name={fieldName}
+      name={name}
       disabled={disabled}
-      placeholder={fieldPlaceholder}
-      multiSelectTypeInputProps={{
-        multiSelectProps: {
-          usePortal: true,
-          items: options,
-          placeholder: fieldPlaceholder
-        },
-        allowableTypes: allowableTypes,
-        onChange: onChange
-      }}
-      selectItems={options}
+      placeholder={placeholder}
+      multiSelectTypeInputProps={multiSelectTypeInputProps}
+      selectItems={selectItems}
+      helperText={helperText}
     />
   )
 }

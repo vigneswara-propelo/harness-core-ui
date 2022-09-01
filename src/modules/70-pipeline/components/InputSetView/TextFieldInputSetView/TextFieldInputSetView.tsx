@@ -6,50 +6,45 @@
  */
 
 import React from 'react'
-import { AllowedTypes, DataTooltipInterface, FormInput } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
+import { DataTooltipInterface, FormInput, MultiTextInputProps, MultiTypeInputType } from '@harness/uicore'
 
-import type { ServiceSpec } from 'services/cd-ng'
-import { useStrings } from 'framework/strings'
-import type { StringsMap } from 'framework/strings/StringsContext'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import { useRenderMultiTypeInputWithAllowedValues } from '../utils/utils'
 
 interface TextFieldInputSetViewProps {
-  fieldName: string
-  fieldLabel: keyof StringsMap
+  name: string
+  label: string
   fieldPath: string
-  template: ServiceSpec
-  allowableTypes: AllowedTypes
+  template: any
   disabled?: boolean
-  fieldPlaceholder?: keyof StringsMap
+  placeholder?: string
   readonly?: boolean
   tooltipProps?: DataTooltipInterface
   onChange?: () => void
+  multiTextInputProps?: Omit<MultiTextInputProps, 'name'>
 }
 
 export function TextFieldInputSetView(props: TextFieldInputSetViewProps): JSX.Element {
   const {
-    fieldName,
-    fieldLabel,
-    fieldPlaceholder,
+    name,
+    label,
+    placeholder,
     disabled,
-    allowableTypes,
     template,
     fieldPath,
     readonly,
     tooltipProps,
-    onChange
+    onChange,
+    multiTextInputProps
   } = props
 
-  const { getString } = useStrings()
-  const { expressions } = useVariablesExpression()
   const { getMultiTypeInputWithAllowedValues } = useRenderMultiTypeInputWithAllowedValues({
-    name: fieldName,
-    labelKey: fieldLabel,
-    placeholderKey: fieldPlaceholder,
+    name: name,
+    labelKey: label,
+    placeholderKey: placeholder,
     fieldPath: fieldPath,
-    allowedTypes: allowableTypes,
+    allowedTypes: defaultTo(multiTextInputProps?.allowableTypes, [MultiTypeInputType.FIXED]),
     template: template,
     readonly: readonly,
     tooltipProps: tooltipProps
@@ -61,13 +56,10 @@ export function TextFieldInputSetView(props: TextFieldInputSetViewProps): JSX.El
 
   return (
     <FormInput.MultiTextInput
-      label={getString(fieldLabel)}
+      name={name}
+      label={label}
       disabled={disabled}
-      multiTextInputProps={{
-        expressions,
-        allowableTypes
-      }}
-      name={fieldName}
+      multiTextInputProps={multiTextInputProps}
       onChange={onChange}
     />
   )

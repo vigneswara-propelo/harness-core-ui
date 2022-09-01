@@ -6,71 +6,55 @@
  */
 
 import React from 'react'
-import { memoize } from 'lodash-es'
-import { Menu } from '@blueprintjs/core'
-import { AllowedTypes, DataTooltipInterface, FormInput, Layout, Text } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
+import { DataTooltipInterface, FormInput, MultiTypeInputProps, MultiTypeInputType } from '@harness/uicore'
 
-import type { ServiceSpec } from 'services/cd-ng'
-import type { StringsMap } from 'framework/strings/StringsContext'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import { useRenderMultiTypeInputWithAllowedValues } from '../utils/utils'
 
 interface SelectInputSetViewProps {
-  fieldName: string
-  fieldLabel: keyof StringsMap
+  className?: string
+  name: string
+  label: string
   fieldPath: string
-  options: SelectOption[]
-  template: ServiceSpec
-  allowableTypes: AllowedTypes
-  fieldPlaceholder?: keyof StringsMap
+  selectItems: SelectOption[]
+  template: any
+  placeholder?: string
   disabled?: boolean
-  fieldHelperText?: string
+  helperText?: string
   readonly?: boolean
   tooltipProps?: DataTooltipInterface
+  multiTypeInputProps?: Omit<MultiTypeInputProps, 'name'>
+  useValue?: boolean
 }
 
 export function SelectInputSetView(props: SelectInputSetViewProps): JSX.Element {
   const {
-    options,
-    fieldName,
-    fieldLabel,
-    fieldPlaceholder,
+    selectItems,
+    name,
+    label,
+    placeholder,
     disabled,
-    fieldHelperText,
-    allowableTypes,
+    helperText,
     template,
     fieldPath,
     readonly,
-    tooltipProps
+    tooltipProps,
+    multiTypeInputProps,
+    useValue
   } = props
 
-  const { expressions } = useVariablesExpression()
-
   const { getMultiTypeInputWithAllowedValues } = useRenderMultiTypeInputWithAllowedValues({
-    name: fieldName,
-    labelKey: fieldLabel,
-    placeholderKey: fieldPlaceholder,
+    name: name,
+    labelKey: label,
+    placeholderKey: placeholder,
     fieldPath: fieldPath,
-    allowedTypes: allowableTypes,
+    allowedTypes: defaultTo(multiTypeInputProps?.allowableTypes, [MultiTypeInputType.FIXED]),
     template: template,
     readonly: readonly,
     tooltipProps: tooltipProps
   })
-
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        onClick={handleClick}
-      />
-    </div>
-  ))
 
   if (shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template)) {
     return getMultiTypeInputWithAllowedValues()
@@ -78,22 +62,14 @@ export function SelectInputSetView(props: SelectInputSetViewProps): JSX.Element 
 
   return (
     <FormInput.MultiTypeInput
-      selectItems={options}
-      label={fieldLabel}
-      placeholder={fieldPlaceholder}
-      name={fieldName}
+      selectItems={selectItems}
+      label={label}
+      placeholder={placeholder}
+      name={name}
       disabled={disabled}
-      helperText={fieldHelperText}
-      useValue
-      multiTypeInputProps={{
-        expressions,
-        allowableTypes,
-        selectProps: {
-          itemRenderer: itemRenderer,
-          items: options,
-          allowCreatingNewItems: true
-        }
-      }}
+      helperText={helperText}
+      useValue={useValue}
+      multiTypeInputProps={multiTypeInputProps}
     />
   )
 }

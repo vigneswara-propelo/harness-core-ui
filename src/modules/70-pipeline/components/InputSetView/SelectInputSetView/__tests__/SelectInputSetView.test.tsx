@@ -18,9 +18,9 @@ describe('SelectInputSetView tests', () => {
     const { container } = render(
       <TestWrapper>
         <SelectInputSetView
-          fieldName={`spec.artifacts.primary.spec.artifactDirectory`}
+          name={`spec.artifacts.primary.spec.artifactDirectory`}
           fieldPath={`artifacts.primary.spec.artifactDirectory`}
-          fieldLabel={'pipeline.artifactsSelection.artifactDirectory'}
+          label={'pipeline.artifactsSelection.artifactDirectory'}
           template={{
             artifacts: {
               primary: {
@@ -31,8 +31,10 @@ describe('SelectInputSetView tests', () => {
               }
             }
           }}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
-          options={[{ label: 'Option 1', value: 'Option_1' }]}
+          multiTypeInputProps={{
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+          }}
+          selectItems={[{ label: 'Option 1', value: 'Option_1' }]}
         />
       </TestWrapper>
     )
@@ -58,9 +60,9 @@ describe('SelectInputSetView tests', () => {
     const { container } = render(
       <TestWrapper>
         <SelectInputSetView
-          fieldName={`spec.artifacts.primary.spec.artifactDirectory`}
+          name={`spec.artifacts.primary.spec.artifactDirectory`}
           fieldPath={`artifacts.primary.spec.artifactDirectory`}
-          fieldLabel={'pipeline.artifactsSelection.artifactDirectory'}
+          label={'pipeline.artifactsSelection.artifactDirectory'}
           template={{
             artifacts: {
               primary: {
@@ -71,8 +73,10 @@ describe('SelectInputSetView tests', () => {
               }
             }
           }}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
-          options={[
+          multiTypeInputProps={{
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+          }}
+          selectItems={[
             { label: 'Option 1', value: 'Option_1' },
             { label: 'Option 2', value: 'Option_2' }
           ]}

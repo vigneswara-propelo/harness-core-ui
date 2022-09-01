@@ -224,11 +224,14 @@ const Content = (props: NexusRenderContent): JSX.Element => {
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactPath`, template) && (
             <TextFieldInputSetView
-              fieldLabel={'pipeline.artifactPathLabel'}
+              label={getString('pipeline.artifactPathLabel')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactPath`)}
-              fieldName={`${path}.artifacts.${artifactPath}.spec.artifactPath`}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${path}.artifacts.${artifactPath}.spec.artifactPath`}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
-              allowableTypes={allowableTypes}
               fieldPath={`artifacts.${artifactPath}.spec.artifactPath`}
               template={template}
             />

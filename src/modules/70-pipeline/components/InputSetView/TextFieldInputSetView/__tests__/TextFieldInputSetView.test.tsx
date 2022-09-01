@@ -18,9 +18,9 @@ describe('TextFieldInputSetView tests', () => {
     const { container } = render(
       <TestWrapper>
         <TextFieldInputSetView
-          fieldName={`spec.artifacts.primary.spec.artifactDirectory`}
+          name={`spec.artifacts.primary.spec.artifactDirectory`}
           fieldPath={`artifacts.primary.spec.artifactDirectory`}
-          fieldLabel={'pipeline.artifactsSelection.artifactDirectory'}
+          label={'pipeline.artifactsSelection.artifactDirectory'}
           template={{
             artifacts: {
               primary: {
@@ -31,7 +31,9 @@ describe('TextFieldInputSetView tests', () => {
               }
             }
           }}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+          multiTextInputProps={{
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+          }}
         />
       </TestWrapper>
     )
@@ -57,9 +59,9 @@ describe('TextFieldInputSetView tests', () => {
     const { container } = render(
       <TestWrapper>
         <TextFieldInputSetView
-          fieldName={`spec.artifacts.primary.spec.artifactDirectory`}
+          name={`spec.artifacts.primary.spec.artifactDirectory`}
           fieldPath={`artifacts.primary.spec.artifactDirectory`}
-          fieldLabel={'pipeline.artifactsSelection.artifactDirectory'}
+          label={'pipeline.artifactsSelection.artifactDirectory'}
           template={{
             artifacts: {
               primary: {
@@ -70,7 +72,9 @@ describe('TextFieldInputSetView tests', () => {
               }
             }
           }}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+          multiTextInputProps={{
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+          }}
           onChange={onChange}
         />
       </TestWrapper>

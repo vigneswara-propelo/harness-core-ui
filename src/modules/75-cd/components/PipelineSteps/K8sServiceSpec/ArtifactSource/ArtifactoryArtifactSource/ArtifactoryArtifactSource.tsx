@@ -464,11 +464,14 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactDirectory`, template) && isGenericArtifactory && (
             <TextFieldInputSetView
-              fieldLabel={'pipeline.artifactsSelection.artifactDirectory'}
+              label={getString('pipeline.artifactsSelection.artifactDirectory')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactDirectory`)}
-              fieldName={`${path}.artifacts.${artifactPath}.spec.artifactDirectory`}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${path}.artifacts.${artifactPath}.spec.artifactDirectory`}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.artifactPath`)}
-              allowableTypes={allowableTypes}
               fieldPath={`artifacts.${artifactPath}.spec.artifactDirectory`}
               template={template}
             />
@@ -476,11 +479,14 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactPath`, template) && !isGenericArtifactory && (
             <TextFieldInputSetView
-              fieldLabel={'pipeline.artifactPathLabel'}
+              label={getString('pipeline.artifactPathLabel')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactPath`)}
-              fieldName={`${path}.artifacts.${artifactPath}.spec.artifactPath`}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${path}.artifacts.${artifactPath}.spec.artifactPath`}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
-              allowableTypes={allowableTypes}
               fieldPath={`artifacts.${artifactPath}.spec.artifactPath`}
               template={template}
             />

@@ -214,11 +214,14 @@ const Content = (props: ECRRenderContent): JSX.Element => {
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (
             <TextFieldInputSetView
-              fieldLabel={'pipeline.imagePathLabel'}
+              label={getString('pipeline.imagePathLabel')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
-              fieldName={`${path}.artifacts.${artifactPath}.spec.imagePath`}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
-              allowableTypes={allowableTypes}
               fieldPath={`artifacts.${artifactPath}.spec.imagePath`}
               template={template}
             />

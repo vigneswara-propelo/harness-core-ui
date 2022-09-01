@@ -19,9 +19,9 @@ describe('MultiSelectInputSetView tests', () => {
     const { container } = render(
       <TestWrapper>
         <MultiSelectInputSetView
-          fieldName={`spec.artifacts.primary.spec.artifactDirectory`}
+          name={`spec.artifacts.primary.spec.artifactDirectory`}
           fieldPath={`artifacts.primary.spec.artifactDirectory`}
-          fieldLabel={'pipeline.artifactsSelection.artifactDirectory'}
+          label={'pipeline.artifactsSelection.artifactDirectory'}
           template={{
             artifacts: {
               primary: {
@@ -32,9 +32,11 @@ describe('MultiSelectInputSetView tests', () => {
               }
             }
           }}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
-          options={[{ label: 'Option 1', value: 'Option_1' }]}
-          onChange={onChange}
+          selectItems={[{ label: 'Option 1', value: 'Option_1' }]}
+          multiSelectTypeInputProps={{
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+            onChange: onChange
+          }}
         />
       </TestWrapper>
     )
@@ -62,9 +64,9 @@ describe('MultiSelectInputSetView tests', () => {
     const { container } = render(
       <TestWrapper>
         <MultiSelectInputSetView
-          fieldName={`spec.artifacts.primary.spec.artifactDirectory`}
+          name={`spec.artifacts.primary.spec.artifactDirectory`}
           fieldPath={`artifacts.primary.spec.artifactDirectory`}
-          fieldLabel={'pipeline.artifactsSelection.artifactDirectory'}
+          label={'pipeline.artifactsSelection.artifactDirectory'}
           template={{
             artifacts: {
               primary: {
@@ -75,12 +77,18 @@ describe('MultiSelectInputSetView tests', () => {
               }
             }
           }}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
-          options={[
+          selectItems={[
             { label: 'Option 1', value: 'Option_1' },
             { label: 'Option 2', value: 'Option_2' }
           ]}
-          onChange={onChange}
+          multiSelectTypeInputProps={{
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+            onChange: onChange,
+            multiSelectProps: {
+              usePortal: true,
+              items: []
+            }
+          }}
         />
       </TestWrapper>
     )
