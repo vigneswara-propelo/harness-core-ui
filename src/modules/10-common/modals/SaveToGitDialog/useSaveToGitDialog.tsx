@@ -324,6 +324,15 @@ export function useSaveToGitDialog<T = Record<string, string>>(
     setNextCallback(() => response?.nextCallback)
     setCreateUpdateStatus(response.status)
 
+    // if OPA policy evaluation fails, then close overlay modal
+    if (
+      response.status === 'FAILURE' &&
+      (response.governanceMetaData?.status === 'error' || response.governanceMetaData?.status === 'warning')
+    ) {
+      hideCreateUpdateModal()
+      hideCreateUpdateWithPRCreationModal()
+    }
+
     // if entity creation/update succeeds, raise a PR, if specified
     if (response.status === 'SUCCESS' && data?.createPr) {
       createPR(data)
@@ -336,6 +345,15 @@ export function useSaveToGitDialog<T = Record<string, string>>(
   const createPRHandlerV2 = async (data: SaveToGitFormV2Interface, response: UseSaveSuccessResponse): Promise<void> => {
     setNextCallback(() => response?.nextCallback)
     setCreateUpdateStatus(response.status)
+
+    // if OPA policy evaluation fails, then close overlay modal
+    if (
+      response.status === 'FAILURE' &&
+      (response.governanceMetaData?.status === 'error' || response.governanceMetaData?.status === 'warning')
+    ) {
+      hideCreateUpdateModal()
+      hideCreateUpdateWithPRCreationModal()
+    }
 
     // if entity creation/update succeeds, raise a PR, if specified
     if (response.status === 'SUCCESS' && data?.createPr) {

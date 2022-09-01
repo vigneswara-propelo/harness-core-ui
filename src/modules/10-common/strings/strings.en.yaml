@@ -654,6 +654,7 @@ policiesSets:
     validIdRegex: '{{$.common.validation.formatMustBeAlphanumeric}}'
   selectPolicySet: Select Policy Set
   addOrModifyPolicySet: Add/Modify Policy Set
+  evaluations: Policy Set Evaluations
 accountResourcesPage:
   line1: 'Account Resources are shared and available for use within any organization or projects within your account.'
   line2: 'For better isolation of resources, it is recommended that you create resources at the organization or project levels respectively.'

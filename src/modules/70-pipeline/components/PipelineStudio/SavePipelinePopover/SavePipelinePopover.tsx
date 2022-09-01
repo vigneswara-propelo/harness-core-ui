@@ -10,16 +10,18 @@ import {
   Button,
   ButtonVariation,
   Container,
+  FontVariation,
+  Heading,
   PopoverProps,
   SplitButton,
   SplitButtonOption,
   useToaster,
   VisualYamlSelectedView as SelectedView
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, noop, omit } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
-import { Spinner } from '@blueprintjs/core'
+import { Spinner, Dialog } from '@blueprintjs/core'
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useStrings } from 'framework/strings'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -50,7 +52,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { AccessControlCheckError } from 'services/rbac'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { EvaluationModal } from '@governance/EvaluationModal'
+import { EvaluationView } from '@governance/EvaluationView'
 import type { SaveToGitFormV2Interface } from '@common/components/SaveToGitFormV2/SaveToGitFormV2'
 import { SCHEMA_VALIDATION_FAILED } from '@common/interfaces/GitSyncInterface'
 import type { Pipeline } from '@pipeline/utils/types'
@@ -58,6 +60,7 @@ import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateEr
 import { sanitize } from '@common/utils/JSONUtils'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import usePipelineErrors from '../PipelineCanvas/PipelineErrors/usePipelineErrors'
+import css from './SavePipelinePopover.module.scss'
 
 export default interface SavePipelinePopoverProps extends PopoverProps {
   toPipelineStudio: PathFn<PipelineType<PipelinePathProps> & PipelineStudioQueryParams>
@@ -107,18 +110,30 @@ function SavePipelinePopover(
 
   const [showOPAErrorModal, closeOPAErrorModal] = useModalHook(
     () => (
-      <EvaluationModal
-        accountId={accountId}
-        metadata={governanceMetadata}
-        headingErrorMessage={getString('pipeline.policyEvaluations.failedToSavePipeline')}
-        closeModal={() => {
+      <Dialog
+        isOpen
+        onClose={() => {
           closeOPAErrorModal()
           const { status, newPipelineId, updatedGitDetails } = governanceMetadata as GovernanceMetadata
           if (status === 'warning') {
             publishPipeline(newPipelineId, updatedGitDetails)
           }
         }}
-      />
+        title={
+          <Heading level={3} font={{ variation: FontVariation.H3 }} padding={{ top: 'medium' }}>
+            {getString('common.policiesSets.evaluations')}
+          </Heading>
+        }
+        enforceFocus={false}
+        className={css.policyEvaluationDialog}
+      >
+        <EvaluationView
+          metadata={governanceMetadata}
+          accountId={accountId}
+          module={module}
+          headingErrorMessage={getString('pipeline.policyEvaluations.failedToSavePipeline')}
+        />
+      </Dialog>
     ),
     [governanceMetadata]
   )
@@ -220,6 +235,7 @@ function SavePipelinePopover(
       setGovernanceMetadata({ ...governanceData, newPipelineId, updatedGitDetails })
       if (OPA_PIPELINE_GOVERNANCE && (governanceData?.status === 'error' || governanceData?.status === 'warning')) {
         showOPAErrorModal()
+        return { status: 'FAILURE', governanceMetaData: { ...governanceData, newPipelineId, updatedGitDetails } }
       }
       // Handling cache and page navigation only when Governance is disabled, or Governance Evaluation is successful
       // Otherwise, keep current pipeline editing states, and show Governance evaluation error
@@ -309,7 +325,8 @@ function SavePipelinePopover(
 
     return {
       status: response?.status,
-      nextCallback: response?.nextCallback || noop
+      nextCallback: response?.nextCallback || noop,
+      governanceMetaData: response.governanceMetaData
     }
   }
 

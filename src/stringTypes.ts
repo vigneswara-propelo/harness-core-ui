@@ -540,6 +540,7 @@ export interface StringsMap {
   'common.plusNumberNoSpace': string
   'common.policiesSets.addOrModifyPolicySet': string
   'common.policiesSets.evaluationCriteria': string
+  'common.policiesSets.evaluations': string
   'common.policiesSets.newPolicyset': string
   'common.policiesSets.noPolicySet': string
   'common.policiesSets.noPolicySetResult': string
