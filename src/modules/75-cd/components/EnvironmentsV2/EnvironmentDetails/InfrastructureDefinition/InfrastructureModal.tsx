@@ -375,6 +375,7 @@ function BootstrapDeployInfraDefinition({
     <>
       <Layout.Vertical
         padding={{ top: 'xlarge', bottom: 'large', right: 'xxlarge', left: 'huge' }}
+        className={css.body}
         background={Color.FORM_BG}
       >
         <Layout.Horizontal padding={{ bottom: 'large' }} width={'100%'}>

@@ -9,10 +9,9 @@
   :global {
     .ModalDialog--body {
       padding: 0 !important;
+      overflow: hidden;
     }
   }
-
-  overflow: hidden;
 }
 
 .formRow {

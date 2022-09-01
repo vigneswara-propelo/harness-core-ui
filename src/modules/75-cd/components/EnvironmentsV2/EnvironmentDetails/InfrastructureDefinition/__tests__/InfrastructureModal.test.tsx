@@ -106,7 +106,7 @@ describe('Infrastructure Modal Test', () => {
     })
 
     // This is the index of the kubernetes infra thumbnails
-    const kubernetesDirectInfraType = screen.getAllByRole('checkbox')[11]
+    const kubernetesDirectInfraType = screen.getAllByRole('checkbox')[7]
     userEvent.click(kubernetesDirectInfraType)
 
     expect(await screen.findByText('cd.steps.common.clusterDetails')).toBeVisible()
