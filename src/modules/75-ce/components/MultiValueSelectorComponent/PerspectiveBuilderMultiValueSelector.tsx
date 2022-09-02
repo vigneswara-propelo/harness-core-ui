@@ -62,7 +62,7 @@ const PerspectiveBuilderSelectorComponent: (props: PerspectiveBuilderSelectorCom
           }
           initialItemCount={initialItemCount}
           itemContent={(_, value) => {
-            const splitSearchResultAt = new RegExp(`(${searchText})`, 'g')
+            const splitSearchResultAt = new RegExp(`(${searchText})`, 'gi')
 
             return (
               <Container className={css.multiSelectOption} flex={{ justifyContent: 'flex-start' }} {...hoverProps}>
@@ -87,7 +87,8 @@ const PerspectiveBuilderSelectorComponent: (props: PerspectiveBuilderSelectorCom
                         <Text
                           key={`${str}-${i}`}
                           inline
-                          className={cx({ [css.searchTextHighlight]: str === searchText })}
+                          className={cx({ [css.searchTextHighlight]: str.toLowerCase() === searchText.toLowerCase() })}
+                          color={Color.GREY_700}
                         >
                           {str}
                         </Text>
@@ -138,7 +139,7 @@ const PerspectiveBuilderSelectorComponent: (props: PerspectiveBuilderSelectorCom
                     inline
                     className={css.searchText}
                     color={Color.GREY_500}
-                    margin={{ left: 'small' }}
+                    margin={{ left: 'small', bottom: 'small' }}
                     rightIcon="cross"
                     rightIconProps={{ color: Color.GREY_500, size: 12 }}
                   >
@@ -180,8 +181,12 @@ const PerspectiveBuilderSelectorComponent: (props: PerspectiveBuilderSelectorCom
         <Container className={css.valueFetching}>
           <Icon name="spinner" size={28} color={Color.BLUE_500} />
         </Container>
-      ) : (
+      ) : valueList.length ? (
         renderValues()
+      ) : (
+        <Text color={Color.GREY_500} className={css.noSearchResults}>
+          {getString('noSearchResultsFoundPeriod')}
+        </Text>
       )}
     </Container>
   )
