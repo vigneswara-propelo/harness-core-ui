@@ -130,6 +130,18 @@ function DeployInfrastructures({
         } else {
           formik?.setFieldValue('infrastructureInputs', parsedInfrastructureDefinitionYaml)
         }
+      } else {
+        if (selectedInfrastructure && path) {
+          const selectedInfrastructureParsed = parse(selectedInfrastructure)
+          const selectedInfraWithEmptyInputs = {
+            identifier: selectedInfrastructureParsed.infrastructureDefinition.identifier,
+            inputs: {
+              type: selectedInfrastructureParsed.infrastructureDefinition.type
+            }
+          }
+          updateTemplate(selectedInfraWithEmptyInputs, `${path}.infrastructureDefinitions[0]`)
+          formik?.setFieldValue('environment.infrastructureDefinitions[0].inputs.spec', {})
+        }
       }
     } else {
       formik?.setFieldValue('infrastructureInputs', undefined)
