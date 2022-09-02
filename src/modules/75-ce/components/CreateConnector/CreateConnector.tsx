@@ -122,7 +122,14 @@ export const NoConnectorDataHandling: (props: NoConnectorDataProps) => JSX.Eleme
   }
 
   return (
-    <div style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', height: '100%', width: '100%' }}>
+    <div
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        height: 'var(--page-min-height)',
+        width: '100%'
+      }}
+    >
       {showNoDataOverlay && <NoData onConnectorCreateClick={handleConnectorClick} />}
     </div>
   )

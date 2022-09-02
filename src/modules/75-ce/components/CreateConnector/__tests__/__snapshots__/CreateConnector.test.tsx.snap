@@ -565,7 +565,7 @@ exports[`Should render the create connector dialog Should render the minimal con
 exports[`Should render the create connector dialog Test case for no connector data 1`] = `
 <div>
   <div
-    style="background-image: url(test-file-stub); background-size: cover; height: 100%; width: 100%;"
+    style="background-image: url(test-file-stub); background-size: cover; width: 100%;"
   >
     <div
       class="nodata"
