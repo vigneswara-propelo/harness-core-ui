@@ -9,6 +9,7 @@ import { cloneDeep, isEmpty, isEqual, omit } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@wings-software/uicore'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type { MetricPackDTO } from 'services/cv'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/ValidationStatus.constants'
 import type {
   CreatedMetricsWithSelectedIndex,
@@ -358,4 +359,21 @@ export const persistCustomMetric = ({
       setMappedMetrics({ selectedMetric: selectedMetric, mappedMetrics: clonedMappedMetrics })
     }
   }
+}
+
+export const setNewRelicMultiTypeApplication = (
+  appdApplication: string | SelectOption,
+  tierOptions: SelectOption[],
+  multiType?: MultiTypeInputType
+): SelectOption | string | undefined => {
+  const applicationValue = typeof appdApplication === 'string' ? appdApplication : appdApplication.label
+  const value = !appdApplication ? undefined : tierOptions.find((item: SelectOption) => item.label === applicationValue)
+
+  if (multiType && isMultiTypeRuntime(multiType)) {
+    return appdApplication
+  }
+  if (multiType === MultiTypeInputType.EXPRESSION) {
+    return appdApplication
+  }
+  return value
 }

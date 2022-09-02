@@ -115,7 +115,7 @@ export default function AppDApplications({
           setCustomFieldAndValidation(selectedValue, true)
         }}
       />
-      {applicationError && <FormError name={'appdApplication'} errorMessage={applicationError} />}
+      {applicationError && <FormError name="appdApplication" errorMessage={applicationError} />}
     </>
   ) : (
     <FormInput.Select

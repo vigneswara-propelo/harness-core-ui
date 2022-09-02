@@ -9,6 +9,7 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   Container,
+  FormError,
   FormInput,
   getMultiTypeFromValue,
   Layout,
@@ -46,8 +47,15 @@ import { getTypeOfInput } from '../../../AppDynamics/AppDHealthSource.utils'
 import css from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.module.scss'
 
 export default function DynatraceMetricPacksToService(props: DynatraceMetricPacksToServiceProps): JSX.Element {
-  const { connectorIdentifier, dynatraceMetricData, setDynatraceMetricData, metricValues, isTemplate, expressions } =
-    props
+  const {
+    connectorIdentifier,
+    dynatraceMetricData,
+    setDynatraceMetricData,
+    metricValues,
+    isTemplate,
+    expressions,
+    metricErrors
+  } = props
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [servicesTracingId, validationTracingId] = useMemo(() => [Utils.randomId(), Utils.randomId()], [])
@@ -189,6 +197,7 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
                 <MultiTypeInput
                   key={inputType}
                   name={'dynatraceService'}
+                  data-testid="dynatraceService"
                   selectProps={{
                     items: dynatraceServiceOptions
                   }}
@@ -202,6 +211,9 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
                   value={dynatraceMetricData.selectedService}
                   onChange={onChangeMultiTypeDynatraceService}
                 />
+                {metricErrors?.dynatraceService && (
+                  <FormError name="dynatraceService" errorMessage={metricErrors?.dynatraceService} />
+                )}
               </>
             ) : (
               <FormInput.Select

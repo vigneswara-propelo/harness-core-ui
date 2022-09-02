@@ -57,7 +57,7 @@ describe('Create empty monitored service', () => {
     const applyTemplateCall = '/template/api/templates/applyTemplates?*'
     cy.intercept('POST', applyTemplateCall, { fixture: 'cv/templates/emptyTemplate' }).as('applyTemplates')
     cy.intercept('POST', '/template/api/templates/v2/variables?*', variablesResponse).as('VariablesCall1')
-
+    cy.addNewSRMTemplate()
     cy.populateTemplateDetails('AppD Template', '1')
 
     // set rutime
@@ -70,7 +70,9 @@ describe('Create empty monitored service', () => {
     cy.fillName('AppDApplication')
     cy.findByTestId('addVariableSave').click()
     cy.get('[name="variables[0].value"]').type('cv-app')
-    cy.intercept('POST', '/template/api/templates/v2/variables?*', variablesResponseWithAppDVariable).as('VariablesCall2')
+    cy.intercept('POST', '/template/api/templates/v2/variables?*', variablesResponseWithAppDVariable).as(
+      'VariablesCall2'
+    )
     cy.intercept('POST', applyTemplateCall, { fixture: 'cv/templates/variableTemplate' }).as('applyTemplates')
     cy.contains('span', 'Apply Changes').click()
     cy.wait(1000)
@@ -113,7 +115,7 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="metricData.Performance"]').check({ force: true })
     cy.contains('span', 'Plese select metric packs').should('not.exist')
 
-    cy.get('div[data-testid="appdApplication"] span[data-icon="fixed-input"]').should('be.visible').click()
+    cy.get('[data-testid="appdApplication"] span[data-icon="fixed-input"]').should('be.visible').click()
     cy.get('a.bp3-menu-item').should('have.length', 3).as('valueList')
     cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
     cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')
@@ -126,7 +128,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Please select applications').should('not.exist')
     cy.get('input[name="appDTier"]').should('have.value', '<+input>')
 
-    cy.get('div[data-testid="appDTier"] span[data-icon="runtime-input"]').should('be.visible').click()
+    cy.get('[data-testid="appDTier"] span[data-icon="runtime-input"]').should('be.visible').click()
     cy.get('a.bp3-menu-item').should('have.length', 2).as('valueList')
     cy.get('@valueList').eq(0).should('contain.text', 'Runtime input').as('runtimeValue')
     cy.get('@valueList').eq(1).should('contain.text', 'Expression').as('expressionValue')
@@ -137,8 +139,8 @@ describe('Create empty monitored service', () => {
     cy.wait(1000)
     cy.contains('span', 'Next').click({ force: true })
 
-    cy.get('div[data-testid="appDTier"] input').should('have.value', '<+input>')
-    cy.get('div[data-testid="appdApplication"] input').should(
+    cy.get('[data-testid="appDTier"] input').should('have.value', '<+input>')
+    cy.get('[data-testid="appdApplication"] input').should(
       'have.value',
       '<+monitoredService.variables.AppDApplication>'
     )
@@ -168,11 +170,12 @@ describe('Create empty monitored service', () => {
     // Creating the template.
     cy.findByRole('button', { name: /Save/i }).click()
     // Saving modal.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')
   })
 
   it('Add new AppDynamics monitored service with fixed value', () => {
+    cy.addNewSRMTemplate()
     cy.populateTemplateDetails('AppD Template', '1')
     // set rutime
     cy.setServiceEnvRuntime()
@@ -209,7 +212,7 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="metricData.Performance"]').check({ force: true })
     cy.contains('span', 'Plese select metric packs').should('not.exist')
 
-    cy.get('div[data-testid="appdApplication"] input').click()
+    cy.get('[data-testid="appdApplication"] input').click()
     cy.get('.bp3-popover-content').within(() => {
       cy.contains('li', 'cv-app').click({ force: true })
     })
@@ -221,7 +224,7 @@ describe('Create empty monitored service', () => {
 
     cy.wait('@TierCall')
 
-    cy.get('div[data-testid="appDTier"] input').click()
+    cy.get('[data-testid="appDTier"] input').click()
     cy.get('.bp3-popover-content').within(() => {
       cy.contains('li', 'docker-tier').click({ force: true })
     })
@@ -232,18 +235,19 @@ describe('Create empty monitored service', () => {
     cy.wait(1000)
     cy.contains('span', 'Next').click({ force: true })
 
-    cy.get('div[data-testid="appDTier"] input').should('have.value', 'docker-tier')
-    cy.get('div[data-testid="appdApplication"] input').should('have.value', 'cv-app')
+    cy.get('[data-testid="appDTier"] input').should('have.value', 'docker-tier')
+    cy.get('[data-testid="appdApplication"] input').should('have.value', 'cv-app')
     cy.contains('span', 'Submit').click({ force: true })
 
     // Creating the template.
     cy.findByRole('button', { name: /Save/i }).click()
     // Saving modal.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')
   })
 
   it('Add new AppDynamics monitored service with custom metric', () => {
+    cy.addNewSRMTemplate()
     cy.populateTemplateDetails('AppD Template', '1')
     cy.setServiceEnvRuntime()
 
@@ -261,14 +265,14 @@ describe('Create empty monitored service', () => {
     cy.wait('@ApplicationCall')
     cy.wait('@MetricPackCall')
 
-    cy.get('div[data-testid="appdApplication"] input').click()
+    cy.get('[data-testid="appdApplication"] input').click()
     cy.get('.bp3-popover-content').within(() => {
       cy.contains('li', 'cv-app').click({ force: true })
     })
 
     cy.wait('@TierCall')
 
-    cy.get('div[data-testid="appDTier"] input').click()
+    cy.get('[data-testid="appDTier"] input').click()
     cy.get('.bp3-popover-content').within(() => {
       cy.contains('li', 'docker-tier').click({ force: true })
     })
@@ -311,8 +315,8 @@ describe('Create empty monitored service', () => {
     cy.wait(1000)
     cy.contains('span', 'Next').click({})
 
-    cy.get('div[data-testid="appDTier"] input').should('have.value', 'docker-tier')
-    cy.get('div[data-testid="appdApplication"] input').should('have.value', 'cv-app')
+    cy.get('[data-testid="appDTier"] input').should('have.value', 'docker-tier')
+    cy.get('[data-testid="appdApplication"] input').should('have.value', 'cv-app')
     cy.get('input[name="groupName"]').should('have.value', 'group 1')
     cy.get('input[name="metricName"]').should('have.value', 'appdMetric')
     cy.get('input[name="completeMetricPath"]').should(
@@ -323,11 +327,12 @@ describe('Create empty monitored service', () => {
     // Creating the template.
     cy.findByRole('button', { name: /Save/i }).click()
     // Saving modal.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')
   })
 
   it('Add new AppDynamics monitored service with custom metric and all Runtime values', () => {
+    cy.addNewSRMTemplate()
     cy.populateTemplateDetails('AppD Template', '1')
     // set rutime
     cy.setServiceEnvRuntime()
@@ -376,8 +381,8 @@ describe('Create empty monitored service', () => {
     cy.wait(1000)
     cy.contains('span', 'Next').click({})
 
-    cy.get('div[data-testid="appDTier"] input').should('have.value', '<+input>')
-    cy.get('div[data-testid="appdApplication"] input').should('have.value', '<+input>')
+    cy.get('[data-testid="appDTier"] input').should('have.value', '<+input>')
+    cy.get('[data-testid="appdApplication"] input').should('have.value', '<+input>')
     cy.get('input[name="groupName"]').should('have.value', 'group 1')
     cy.get('input[name="metricName"]').should('have.value', 'appdMetric')
     cy.get('input[name="completeMetricPath"]').should('have.value', '<+input>')
@@ -389,7 +394,7 @@ describe('Create empty monitored service', () => {
     // Creating the template.
     cy.findByRole('button', { name: /Save/i }).click()
     // Saving modal.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')
   })
 })

@@ -87,6 +87,7 @@ declare global {
       visitChangeIntelligence(): void
       visitChangeIntelligenceForSLOs(): void
       visitSRMTemplate(): void
+      addNewSRMTemplate(): void
       populateTemplateDetails(name: string, version: string): void
       visitSRMMonitoredServicePage(): void
       fillName(name: string): void
@@ -229,6 +230,9 @@ Cypress.Commands.add('visitSRMTemplate', () => {
   cy.contains('p', 'Project 1').click()
   cy.contains('p', 'Project Setup').click()
   cy.contains('p', 'Templates').click()
+})
+
+Cypress.Commands.add('addNewSRMTemplate', () => {
   cy.contains('span', 'New Template').click()
   cy.contains('li', 'Monitored Service').should('be.visible')
   cy.contains('li', 'Monitored Service').should('not.be.disabled')

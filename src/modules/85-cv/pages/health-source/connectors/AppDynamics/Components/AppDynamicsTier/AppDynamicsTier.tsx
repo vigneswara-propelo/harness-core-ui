@@ -93,7 +93,7 @@ export default function AppDynamicsTier({
           }
         }}
       />
-      {tierError && <FormError name={'appdApplication'} errorMessage={tierError} />}
+      {tierError && <FormError name="appDTier" errorMessage={tierError} />}
     </>
   ) : (
     <FormInput.Select

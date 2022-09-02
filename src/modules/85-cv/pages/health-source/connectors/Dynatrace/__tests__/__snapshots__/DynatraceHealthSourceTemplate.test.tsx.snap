@@ -35,6 +35,7 @@ exports[`Validate DynatraceHealthSource should render DynatraceMetricPacksToServ
                 </p>
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                  data-testid="dynatraceService"
                 >
                   <div
                     class="TextInput--main MultiTypeInput--input"

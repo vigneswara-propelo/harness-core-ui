@@ -48,15 +48,16 @@ describe('Create empty monitored service', () => {
       fixture: 'cv/templates/emptyTemplate'
     }).as('applyTemplates')
 
+    cy.addNewSRMTemplate()
     cy.populateTemplateDetails('Empty Monitored Service Template', '1')
     cy.waitFor('@applyTemplates')
     cy.get('button').contains('span', 'Save').click()
     cy.contains('span', 'Service is required').should('be.visible')
     cy.contains('span', 'Environment is required').should('be.visible')
 
-    cy.get('div[data-testid="service"] input').click()
+    cy.get('[data-testid="service"] input').click()
     cy.contains('p', '+ Add New').should('be.visible')
-    cy.get('div[data-testid="environment"] input').click()
+    cy.get('[data-testid="environment"] input').click()
     cy.contains('p', '+ Add New').should('be.visible')
     cy.contains('span', 'Add New Change Source').should('be.visible')
     cy.contains('span', 'Add New Health Source').should('be.visible')
@@ -79,14 +80,15 @@ describe('Create empty monitored service', () => {
       fixture: 'cv/templates/emptyTemplate'
     }).as('applyTemplates')
 
+    cy.addNewSRMTemplate()
     cy.populateTemplateDetails('Empty Monitored Service Template', '1')
     cy.waitFor('@applyTemplates')
     cy.get('button').contains('span', 'Save').click()
     cy.contains('span', 'Service is required').should('be.visible')
     cy.contains('span', 'Environment is required').should('be.visible')
-    cy.get('div[data-testid="service"] input').click()
+    cy.get('[data-testid="service"] input').click()
     cy.contains('p', 'Service 101').click({ force: true })
-    cy.get('div[data-testid="environment"] input').click()
+    cy.get('[data-testid="environment"] input').click()
     cy.contains('p', 'QA').click({ force: true })
     cy.get('button').contains('span', 'Save').click()
     cy.get('[class*=bp3-dialog]').within(() => {
@@ -105,13 +107,14 @@ describe('Create empty monitored service', () => {
       fixture: 'cv/templates/emptyTemplate'
     }).as('applyTemplates')
 
+    cy.addNewSRMTemplate()
     cy.populateTemplateDetails('Empty Monitored Service Template', '1')
     cy.waitFor('@applyTemplates')
     cy.get('button').contains('span', 'Save').click()
     cy.contains('span', 'Service is required').should('be.visible')
     cy.contains('span', 'Environment is required').should('be.visible')
     cy.setMultiTypeService()
-    cy.get('div[data-testid="environment"] input').click()
+    cy.get('[data-testid="environment"] input').click()
     cy.contains('p', 'QA').click({ force: true })
     cy.get('button').contains('span', 'Save').click()
     cy.get('[class*=bp3-dialog]').within(() => {
@@ -130,12 +133,13 @@ describe('Create empty monitored service', () => {
       fixture: 'cv/templates/emptyTemplate'
     }).as('applyTemplates')
 
+    cy.addNewSRMTemplate()
     cy.populateTemplateDetails('Empty Monitored Service Template', '1')
     cy.waitFor('@applyTemplates')
     cy.get('button').contains('span', 'Save').click()
     cy.contains('span', 'Service is required').should('be.visible')
     cy.contains('span', 'Environment is required').should('be.visible')
-    cy.get('div[data-testid="service"] input').click()
+    cy.get('[data-testid="service"] input').click()
     cy.contains('p', 'Service 101').click({ force: true })
     cy.setMultiTypeEnvironment()
     cy.get('button').contains('span', 'Save').click()

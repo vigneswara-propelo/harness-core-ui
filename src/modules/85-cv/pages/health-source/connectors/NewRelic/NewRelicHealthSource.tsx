@@ -20,7 +20,8 @@ import {
   Button,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  MultiTypeInput
+  MultiTypeInput,
+  FormError
 } from '@wings-software/uicore'
 import { defaultTo, noop } from 'lodash-es'
 import { PopoverInteractionKind } from '@blueprintjs/core'
@@ -53,6 +54,7 @@ import {
   persistCustomMetric,
   setApplicationIfConnectorIsInput,
   setNewRelicApplication,
+  setNewRelicMultiTypeApplication,
   shouldRunValidation,
   validateMapping
 } from './NewRelicHealthSource.utils'
@@ -61,7 +63,7 @@ import MetricPackCustom from '../MetricPackCustom'
 import MetricThresholdProvider from './components/MetricThresholds/MetricThresholdProvider'
 import NewRelicCustomMetricForm from './components/NewRelicCustomMetricForm/NewRelicCustomMetricForm'
 import { initNewRelicCustomFormValue } from './components/NewRelicCustomMetricForm/NewRelicCustomMetricForm.utils'
-import { getTypeOfInput, setAppDynamicsApplication } from '../AppDynamics/AppDHealthSource.utils'
+import { getTypeOfInput } from '../AppDynamics/AppDHealthSource.utils'
 import { getIsMetricThresholdCanBeShown } from '../../common/MetricThresholds/MetricThresholds.utils'
 import css from './NewrelicMonitoredSource.module.scss'
 
@@ -279,6 +281,7 @@ export default function NewRelicHealthSource({
                       </Text>
                       <MultiTypeInput
                         key={inputType}
+                        data-testid="newRelicApplication"
                         name={'newRelicApplication'}
                         selectProps={{
                           items: applicationOptions
@@ -290,16 +293,20 @@ export default function NewRelicHealthSource({
                             : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
                         }
                         multitypeInputValue={inputType}
-                        value={setAppDynamicsApplication(
+                        value={setNewRelicMultiTypeApplication(
                           formik.values?.newRelicApplication,
                           applicationOptions,
                           inputType
                         )}
                         onChange={(item, _valueType, type) => {
                           if (type === MultiTypeInputType.FIXED) {
+                            const applicationItem = item as SelectOption
                             setNonCustomFeilds({
                               ...nonCustomFeilds,
-                              newRelicApplication: { label: item as string, value: item as string }
+                              newRelicApplication: {
+                                label: applicationItem?.label as string,
+                                value: applicationItem?.value as string
+                              }
                             })
                             onValidate(
                               formik?.values?.newRelicApplication?.label,
@@ -314,6 +321,9 @@ export default function NewRelicHealthSource({
                           }
                         }}
                       />
+                      {formik?.errors?.newRelicApplication && (
+                        <FormError name="newRelicApplication" errorMessage={formik?.errors?.newRelicApplication} />
+                      )}
                     </>
                   ) : (
                     <FormInput.Select

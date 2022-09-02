@@ -35,6 +35,7 @@ exports[`Unit tests for NewRelic health source Template should work with custom 
                 </p>
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                  data-testid="newRelicApplication"
                 >
                   <div
                     class="TextInput--main MultiTypeInput--input"

@@ -81,7 +81,10 @@ export const createNewRelicPayload = (formData: any, isMetricThresholdEnabled: b
     spec: {
       ...specPayload,
       feature: formData.product?.value as string,
-      connectorRef: (formData?.connectorRef?.connector?.identifier as string) || (formData.connectorRef as string),
+      connectorRef:
+        formData?.connectorRef.value ||
+        (formData?.connectorRef?.connector?.identifier as string) ||
+        (formData.connectorRef as string),
       metricPacks: getMetricPacksForPayload(formData, isMetricThresholdEnabled)
     }
   }

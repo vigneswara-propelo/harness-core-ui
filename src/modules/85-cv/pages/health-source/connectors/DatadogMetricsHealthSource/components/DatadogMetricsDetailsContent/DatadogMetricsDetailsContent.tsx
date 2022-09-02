@@ -10,7 +10,10 @@ import type { ITagInputProps } from '@blueprintjs/core'
 import { FormInput, SelectOption } from '@wings-software/uicore'
 import { DatadogMetricsHealthSourceFieldNames } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.constants'
 import GroupName from '@cv/components/GroupName/GroupName'
-import type { DatadogAggregationType } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.type'
+import type {
+  DatadogAggregationType,
+  DatadogMetricInfo
+} from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.type'
 import { useStrings } from 'framework/strings'
 import {
   DatadogMetricsQueryBuilder,
@@ -167,6 +170,28 @@ export default function DatadogMetricsDetailsContent(props: DatadogMetricsDetail
     }
   }, [formikProps.values.isManualQuery, formikProps.values.identifier, selectedMetricData])
 
+  const [groupNameState, setGroupNameState] = useState<SelectOption>()
+
+  useEffect(() => {
+    if (groupNameState?.value !== formikProps.values?.groupName?.value) {
+      setGroupNameState(formikProps.values.groupName)
+    }
+  }, [formikProps.values.groupName])
+
+  useEffect(() => {
+    if (groupNameState?.value && groupNameState?.value !== formikProps.values.groupName?.value) {
+      formikProps.setFieldValue('groupName', groupNameState)
+      const currentMetric = selectedMetric || Array.from(metricHealthDetailsData.keys())[0]
+      if (currentMetric) {
+        metricHealthDetailsData.set(currentMetric, {
+          ...selectedMetricData,
+          groupName: groupNameState
+        } as DatadogMetricInfo)
+        setMetricHealthDetailsData(new Map(metricHealthDetailsData))
+      }
+    }
+  }, [groupNameState, selectedMetric, selectedMetricData])
+
   return (
     <>
       <NameId
@@ -183,19 +208,8 @@ export default function DatadogMetricsDetailsContent(props: DatadogMetricsDetail
         fieldName={DatadogMetricsHealthSourceFieldNames.GROUP_NAME}
         title={getString('cv.monitoringSources.datadog.newDatadogGroupName')}
         groupNames={metricGroupNames}
-        onChange={(fieldName: string, chosenOption: SelectOption) => {
-          formikProps.setFieldValue(fieldName, chosenOption)
-          if (chosenOption.value) {
-            return
-          }
-          const filteredMetricTags = formikProps.values.metricTags?.filter(tag => tag.value)
-          onRebuildMetricData(
-            formikProps.values.metric,
-            formikProps.values.aggregator,
-            filteredMetricTags,
-            formikProps.values.serviceInstanceIdentifierTag,
-            chosenOption
-          )
+        onChange={(_fieldName: string, chosenOption: SelectOption) => {
+          setGroupNameState(chosenOption)
         }}
         setGroupNames={setMetricGroupNames}
       />

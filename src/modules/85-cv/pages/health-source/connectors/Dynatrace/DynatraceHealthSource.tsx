@@ -114,6 +114,7 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
               dynatraceMetricData={dynatraceMetricData}
               setDynatraceMetricData={setDynatraceMetricData}
               metricValues={formik.values}
+              metricErrors={formik.errors}
               isTemplate={isTemplate}
               expressions={expressions}
             />
