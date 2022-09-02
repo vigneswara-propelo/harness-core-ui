@@ -54,6 +54,7 @@ export type ArtifactType =
   | 'Acr'
   | 'Jenkins'
   | 'AmazonS3'
+  | 'GoogleArtifactRegistry'
 export interface OrganizationCreationType {
   type: ArtifactType
 }
@@ -152,6 +153,34 @@ export interface JenkinsArtifactProps {
   allowableTypes: AllowedTypes
 }
 
+export interface GoogleArtifactRegistryInitialValuesType {
+  identifier?: string
+  versionType?: TagTypes
+  spec: {
+    connectorRef: string
+    repositoryType: string
+    package: string
+    project: string
+    region: SelectOption & string
+    repositoryName: string
+    version?: string
+    versionRegex?: string
+  }
+}
+
+export interface GoogleArtifactRegistryProps {
+  key: string
+  name: string
+  expressions: string[]
+  context: number
+  initialValues: GoogleArtifactRegistryInitialValuesType
+  handleSubmit: (data: ArtifactConfig) => void
+  artifactIdentifiers: string[]
+  isReadonly?: boolean
+  selectedArtifact: ArtifactType | null
+  allowableTypes: AllowedTypes
+}
+
 export interface JenkinsArtifactType {
   identifier: string
   spec: {
@@ -169,6 +198,9 @@ export interface ConnectorRefLabelType {
 
 export interface ArtifactTagHelperText {
   imagePath?: string
+  package?: string
+  project?: string
+  repositoryName?: string
   artifactPath?: string
   region?: string
   connectorRef: string

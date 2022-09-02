@@ -187,6 +187,7 @@ validation:
     required: Email is required
     format: Please input valid email address
   repositoryName: Repository Name is required
+  package: Package is required
   invalidYamlText: 'You have provided invalid or empty YAML. Please provide a valid YAML'
   environmentIsRequired: 'Environment is required'
   subscription: 'Subscription is required'

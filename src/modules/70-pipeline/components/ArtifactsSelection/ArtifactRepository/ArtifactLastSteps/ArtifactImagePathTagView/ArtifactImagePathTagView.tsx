@@ -31,10 +31,12 @@ import css from '../../ArtifactConnector.module.scss'
 
 export function NoTagResults({
   tagError,
-  isServerlessDeploymentTypeSelected
+  isServerlessDeploymentTypeSelected,
+  defaultErrorText
 }: {
   tagError: GetDataError<Failure | Error> | null
   isServerlessDeploymentTypeSelected?: boolean
+  defaultErrorText?: string
 }): JSX.Element {
   const { getString } = useStrings()
 
@@ -42,7 +44,7 @@ export function NoTagResults({
     if (isServerlessDeploymentTypeSelected) {
       return getString('pipeline.noArtifactPaths')
     }
-    return getString('pipelineSteps.deploy.errors.notags')
+    return defaultErrorText || getString('pipelineSteps.deploy.errors.notags')
   }, [isServerlessDeploymentTypeSelected, getString])
 
   return (

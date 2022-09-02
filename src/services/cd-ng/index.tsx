@@ -2396,6 +2396,7 @@ export interface DelegateGroupDetails {
   delegateInstanceDetails?: DelegateInner[]
   delegateType?: string
   delegateVersion?: string
+  expirationTime?: string
   groupCustomSelectors?: string[]
   groupId?: string
   groupImplicitSelectors?: {
@@ -4705,6 +4706,14 @@ export interface FolderNodeDTO {
   type: 'FILE' | 'FOLDER'
 }
 
+export interface GARBuildDetailsDTO {
+  version?: string
+}
+
+export interface GARResponseDTO {
+  buildDetailsList?: GARBuildDetailsDTO[]
+}
+
 export interface GatewayAccountRequestDTO {
   accountName?: string
   companyName?: string
@@ -5951,6 +5960,18 @@ export interface GitopsProviderResponse {
   tags?: {
     [key: string]: string
   }
+}
+
+export type GoogleArtifactRegistryConfig = ArtifactConfig & {
+  connectorRef: string
+  googleArtifactRegistryType: string
+  metadata?: string
+  package: string
+  project: string
+  region: string
+  repositoryName: string
+  version?: string
+  versionRegex?: string
 }
 
 export interface GovernanceMetadata {
@@ -8269,6 +8290,7 @@ export interface PrimaryArtifact {
     | 'Acr'
     | 'Jenkins'
     | 'AmazonS3'
+    | 'GoogleArtifactRegistry'
 }
 
 export interface Principal {
@@ -9013,6 +9035,13 @@ export interface ResponseFilterDTO {
 export interface ResponseFolderNodeDTO {
   correlationId?: string
   data?: FolderNodeDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseGARResponseDTO {
+  correlationId?: string
+  data?: GARResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -11888,6 +11917,7 @@ export interface SidecarArtifact {
     | 'Acr'
     | 'Jenkins'
     | 'AmazonS3'
+    | 'GoogleArtifactRegistry'
 }
 
 export interface SidecarArtifactWrapper {
@@ -15476,6 +15506,7 @@ export interface GetBuildDetailsForACRRepositoryQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetBuildDetailsForACRRepositoryProps = Omit<
@@ -15537,6 +15568,7 @@ export interface GetBuildDetailsForAcrArtifactWithYamlQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
   serviceId?: string
 }
 
@@ -15870,6 +15902,7 @@ export interface GetBuildDetailsForArtifactoryArtifactQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetBuildDetailsForArtifactoryArtifactProps = Omit<
@@ -15937,6 +15970,7 @@ export interface GetBuildDetailsForArtifactoryArtifactWithYamlQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
   serviceId?: string
 }
 
@@ -16231,6 +16265,7 @@ export interface GetBuildDetailsForDockerQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetBuildDetailsForDockerProps = Omit<
@@ -16290,6 +16325,7 @@ export interface GetBuildDetailsForDockerWithYamlQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
   serviceId?: string
 }
 
@@ -16710,6 +16746,7 @@ export interface GetBuildDetailsForEcrQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetBuildDetailsForEcrProps = Omit<
@@ -16770,6 +16807,7 @@ export interface GetBuildDetailsForEcrWithYamlQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
   serviceId?: string
 }
 
@@ -17147,6 +17185,72 @@ export const validateArtifactImageForEcrPromise = (
     signal
   )
 
+export interface GetBuildDetailsForGoogleArtifactRegistryQueryParams {
+  connectorRef?: string
+  region?: string
+  repositoryName?: string
+  project?: string
+  package?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  version?: string
+  versionRegex?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
+}
+
+export type GetBuildDetailsForGoogleArtifactRegistryProps = Omit<
+  GetProps<ResponseGARResponseDTO, Failure | Error, GetBuildDetailsForGoogleArtifactRegistryQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets google artifact registry build details
+ */
+export const GetBuildDetailsForGoogleArtifactRegistry = (props: GetBuildDetailsForGoogleArtifactRegistryProps) => (
+  <Get<ResponseGARResponseDTO, Failure | Error, GetBuildDetailsForGoogleArtifactRegistryQueryParams, void>
+    path={`/artifacts/gar/getBuildDetails`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetBuildDetailsForGoogleArtifactRegistryProps = Omit<
+  UseGetProps<ResponseGARResponseDTO, Failure | Error, GetBuildDetailsForGoogleArtifactRegistryQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets google artifact registry build details
+ */
+export const useGetBuildDetailsForGoogleArtifactRegistry = (props: UseGetBuildDetailsForGoogleArtifactRegistryProps) =>
+  useGet<ResponseGARResponseDTO, Failure | Error, GetBuildDetailsForGoogleArtifactRegistryQueryParams, void>(
+    `/artifacts/gar/getBuildDetails`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets google artifact registry build details
+ */
+export const getBuildDetailsForGoogleArtifactRegistryPromise = (
+  props: GetUsingFetchProps<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseGARResponseDTO, Failure | Error, GetBuildDetailsForGoogleArtifactRegistryQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/gar/getBuildDetails`,
+    props,
+    signal
+  )
+
 export interface GetBuildDetailsForGcrQueryParams {
   imagePath: string
   registryHostname: string
@@ -17159,6 +17263,7 @@ export interface GetBuildDetailsForGcrQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetBuildDetailsForGcrProps = Omit<
@@ -17219,6 +17324,7 @@ export interface GetBuildDetailsForGcrWithYamlQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
   serviceId?: string
 }
 
@@ -17555,6 +17661,7 @@ export interface GetBuildsForJenkinsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export interface GetBuildsForJenkinsPathParams {
@@ -17625,6 +17732,7 @@ export interface GetJobParametersForJenkinsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export interface GetJobParametersForJenkinsPathParams {
@@ -17716,6 +17824,7 @@ export interface GetArtifactPathForJenkinsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export interface GetArtifactPathForJenkinsPathParams {
@@ -17803,6 +17912,7 @@ export interface GetJobDetailsForJenkinsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetJobDetailsForJenkinsProps = Omit<
@@ -17864,6 +17974,7 @@ export interface GetBuildDetailsForNexusArtifactQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetBuildDetailsForNexusArtifactProps = Omit<
@@ -17932,6 +18043,7 @@ export interface GetBuildDetailsForNexusArtifactWithYamlQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
   serviceId?: string
 }
 
@@ -19702,10 +19814,12 @@ export const getLocationsBySubscriptionPromise = (
   )
 
 export interface GetManagementGroupsQueryParams {
-  connectorRef: string
+  connectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  envId?: string
+  infraDefinitionId?: string
 }
 
 export type GetManagementGroupsProps = Omit<
@@ -20658,6 +20772,7 @@ export interface GetConnectorListQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetConnectorListProps = Omit<
@@ -20906,6 +21021,7 @@ export interface GetCCMK8SConnectorListQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -21138,6 +21254,7 @@ export interface GetConnectorListV2QueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -21280,6 +21397,7 @@ export interface GetConnectorStatisticsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetConnectorStatisticsProps = Omit<
@@ -21335,6 +21453,7 @@ export interface GetTestConnectionResultQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export interface GetTestConnectionResultPathParams {
@@ -21728,6 +21847,7 @@ export interface GetConnectorQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export interface GetConnectorPathParams {
@@ -24823,6 +24943,7 @@ export interface ListReferredByEntitiesQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type ListReferredByEntitiesProps = Omit<
@@ -25026,6 +25147,7 @@ export interface CreateEnvironmentGroupQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type CreateEnvironmentGroupProps = Omit<
@@ -25116,6 +25238,7 @@ export interface GetEnvironmentGroupListQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetEnvironmentGroupListProps = Omit<
@@ -25272,6 +25395,7 @@ export interface GetEnvironmentGroupQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export interface GetEnvironmentGroupPathParams {
@@ -29431,6 +29555,7 @@ export interface ListGitSyncErrorsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
   gitToHarness?: boolean
 }
 
@@ -29491,6 +29616,7 @@ export interface ListGitToHarnessErrorsCommitsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
   numberOfErrorsInSummary?: number
 }
 
@@ -29565,6 +29691,7 @@ export interface ListGitToHarnessErrorsForCommitQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export interface ListGitToHarnessErrorsForCommitPathParams {
@@ -29656,6 +29783,7 @@ export interface GetGitSyncErrorsCountQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetGitSyncErrorsCountProps = Omit<
@@ -32249,6 +32377,7 @@ export interface GetJiraIssueCreateMetadataQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetJiraIssueCreateMetadataProps = Omit<
@@ -32310,6 +32439,7 @@ export interface GetJiraProjectsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetJiraProjectsProps = Omit<
@@ -32368,6 +32498,7 @@ export interface GetJiraStatusesQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetJiraStatusesProps = Omit<
@@ -32425,6 +32556,7 @@ export interface GetJiraIssueUpdateMetadataQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetJiraIssueUpdateMetadataProps = Omit<
@@ -32486,6 +32618,7 @@ export interface ValidateJiraCredentialsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type ValidateJiraCredentialsProps = Omit<
@@ -35295,16 +35428,6 @@ export type UsePostExecutionStrategyYamlProps = Omit<
 /**
  * Gets generated Yaml snippet based on strategy parameters
  */
-export const usePostExecutionStrategyYaml = (props: UsePostExecutionStrategyYamlProps) =>
-  useMutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>(
-    'POST',
-    `/pipelines/configuration/strategies/yaml-snippets`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Gets generated Yaml snippet based on strategy parameters
- */
 export const postExecutionStrategyYamlPromise = (
   props: MutateUsingFetchProps<
     ResponseString,
@@ -35321,6 +35444,20 @@ export const postExecutionStrategyYamlPromise = (
     `/pipelines/configuration/strategies/yaml-snippets`,
     props,
     signal
+  )
+
+export interface ProcessPollingResultNgQueryParams {
+  accountId?: string
+}
+
+/**
+ * Gets generated Yaml snippet based on strategy parameters
+ */
+export const usePostExecutionStrategyYaml = (props: UsePostExecutionStrategyYamlProps) =>
+  useMutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>(
+    'POST',
+    `/pipelines/configuration/strategies/yaml-snippets`,
+    { base: getConfig('ng/api'), ...props }
   )
 
 export interface GetProjectListQueryParams {
@@ -37801,6 +37938,7 @@ export interface GetServiceNowIssueCreateMetadataQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetServiceNowIssueCreateMetadataProps = Omit<
@@ -37866,6 +38004,7 @@ export interface GetServiceNowTemplateMetadataQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetServiceNowTemplateMetadataProps = Omit<
@@ -37928,6 +38067,7 @@ export interface GetServiceNowIssueMetadataQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetServiceNowIssueMetadataProps = Omit<
@@ -37989,6 +38129,7 @@ export interface GetServiceNowTicketTypesQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityRepoURL?: string
 }
 
 export type GetServiceNowTicketTypesProps = Omit<

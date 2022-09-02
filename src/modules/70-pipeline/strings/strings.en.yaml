@@ -343,6 +343,7 @@ manifestType:
   kustomizeFolderPathPlaceholder: Enter Kustomize Folder Path
   kustomizePluginPathPlaceholder: Enter Kustomize Plugin Path
   repoNamePlaceholder: Enter Repository Name
+  packagePlaceholder: Enter Package Name
   serverlessConfigFilePath: Serverless Config File Path
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
   valuesYamlPath: Values.yaml
@@ -783,27 +784,35 @@ artifactPathLabel: Artifact Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
+  projectPlaceholder: Enter Project
+  repositoryTypePlaceholder: Select Repository Type
   repositoryPort: Repository Port
   repositoryPortPlaceholder: Enter Repository Port
   repositoryPlaceholder: Enter Repository
   artifactType: Artifact Type
   artifactDetails: Artifact Details
+  versionDetails: Version Details
+  versionPlaceholder: Enter Version
+  versionRegex: Version Regex
+  versionRegexPlaceholder: Enter Version Regex
   artifactTyperequired: Artifact Type is required
   loadingTags: Loading Tags...
   loadingArtifactPaths: Loading Artifact Paths...
   artifactPathPlaceholder: Enter Artifact Path
   artifactDirectory: Artifact Directory
   artifactDirectoryPlaceholder: Enter Artifact Directory
-  versionPlaceholder: Enter Version
   filePathRegexLabel: File Path Regex
   filePathRegexPlaceholder: Enter File Path Regex
   amazonS3Title: Amazon S3
+  googleArtifactRegistryTitle: Google Artifact Registry
   existingDocker:
     sidecarId: Sidecar Identifier
     sidecarIdPlaceholder: Enter Artifact Identifier
     imageNamePlaceholder: Enter Image Path
     enterTagRegex: Enter Tag Regex
   validation:
+    noBuild: No build found with given details
+    versionRegex: Version Regex is required
     imagePath: Image Path is required
     artifactPath: Artifact Path is required
     region: '{{$.validation.regionRequired}}'
@@ -812,6 +821,7 @@ artifactsSelection:
     sidecarId: Sidecar Identifier is required
     repositoryPort: Repository Port is required
     repositoryUrl: Repository URL is required
+    repositoryType: Repository Type is required
     artifactDirectory: Artifact Directory is required
     artifactPathFilter: Artifact Path Filter is required
     filePathRegex: File Path Regex is required

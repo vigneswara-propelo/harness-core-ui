@@ -164,6 +164,9 @@ export const getHelpeTextForTags = (
     artifactDirectory?: string
     registry?: string
     subscriptionId?: string
+    repositoryName?: string
+    package?: string
+    project?: string
   },
   getString: (key: StringKeys) => string,
   isServerlessDeploymentTypeSelected = false
@@ -178,11 +181,29 @@ export const getHelpeTextForTags = (
     repositoryPort,
     artifactDirectory,
     registry,
-    subscriptionId
+    subscriptionId,
+    repositoryName,
+    package: packageName,
+    project
   } = fields
   const invalidFields: string[] = []
   if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
     invalidFields.push(getString('connector'))
+  }
+  if (
+    repositoryName !== undefined &&
+    (!repositoryName || getMultiTypeFromValue(repositoryName) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('common.repositoryName'))
+  }
+  if (
+    packageName !== undefined &&
+    (!packageName || getMultiTypeFromValue(packageName) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.testsReports.callgraphField.package'))
+  }
+  if (project !== undefined && (!project || getMultiTypeFromValue(project) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('projectLabel'))
   }
   if (region !== undefined && (!region || getMultiTypeFromValue(region) === MultiTypeInputType.RUNTIME)) {
     invalidFields.push(getString('regionLabel'))

@@ -13,6 +13,7 @@ import { ENABLED_ARTIFACT_TYPES } from './ArtifactHelper'
 import {
   ArtifactTagHelperText,
   ArtifactType,
+  GoogleArtifactRegistryInitialValuesType,
   ImagePathTypes,
   JenkinsArtifactType,
   RepositoryPortOrServer,
@@ -53,6 +54,14 @@ export const helperTextData = (
   connectorIdValue: string
 ): ArtifactTagHelperText => {
   switch (selectedArtifact) {
+    case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
+      return {
+        package: formik.values?.spec?.package,
+        project: formik.values?.spec?.project,
+        region: formik.values?.spec?.region,
+        repositoryName: formik.values?.spec?.repositoryName,
+        connectorRef: connectorIdValue
+      }
     case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       return {
         imagePath: formik.values?.imagePath,
@@ -247,8 +256,57 @@ export const getJenkinsFormData = (
   return initialValues
 }
 
+const getVersionValues = (specValues: any): GoogleArtifactRegistryInitialValuesType => {
+  const formikInitialValues = {
+    versionType: specValues?.version ? TagTypes.Value : TagTypes.Regex,
+    spec: {
+      ...specValues,
+      version: specValues?.version,
+      versionRegex: specValues?.versionRegex
+    }
+  }
+  return formikInitialValues
+}
+
+export const getGoogleArtifactRegistryFormData = (
+  initialValues: GoogleArtifactRegistryInitialValuesType,
+  selectedArtifact: ArtifactType,
+  isSideCar: boolean
+): GoogleArtifactRegistryInitialValuesType => {
+  const specValues = get(initialValues, 'spec', null)
+
+  if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
+    return defaultArtifactInitialValues(selectedArtifact)
+  }
+
+  const values = getVersionValues(specValues)
+
+  if (isSideCar && initialValues?.identifier) {
+    merge(values, { identifier: initialValues?.identifier })
+  }
+  return values
+}
+
+export const isFieldFixedAndNonEmpty = (field: string): boolean => {
+  return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED && field?.length > 0
+}
+
 export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): any => {
   switch (selectedArtifact) {
+    case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
+      return {
+        identifier: '',
+        versionType: TagTypes.Value,
+        spec: {
+          connectorRef: '',
+          repositoryType: 'docker',
+          project: '',
+          region: '',
+          repositoryName: '',
+          package: '',
+          version: ''
+        }
+      }
     case ENABLED_ARTIFACT_TYPES.Jenkins:
       return {
         identifier: '',

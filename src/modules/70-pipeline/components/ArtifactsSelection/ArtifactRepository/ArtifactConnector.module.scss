@@ -33,6 +33,12 @@
     min-height: 400px;
   }
 
+  .artifactForm {
+    height: 450px;
+    margin-bottom: 20px;
+    overflow: scroll;
+  }
+
   .artifactSelect {
     button.bp3-button {
       width: 380px;

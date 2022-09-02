@@ -74,7 +74,8 @@ import type {
   ImagePathProps,
   ImagePathTypes,
   AmazonS3InitialValuesType,
-  JenkinsArtifactType
+  JenkinsArtifactType,
+  GoogleArtifactRegistryInitialValuesType
 } from './ArtifactInterface'
 import {
   ArtifactToConnectorMap,
@@ -95,6 +96,7 @@ import { showConnectorStep } from './ArtifactUtils'
 import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/ACRArtifact'
 import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
 import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
+import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
 import css from './ArtifactsSelection.module.scss'
 
 export default function ArtifactsSelection({
@@ -127,7 +129,7 @@ export default function ArtifactsSelection({
   const { expressions } = useVariablesExpression()
 
   const stepWizardTitle = getString('connectors.createNewConnector')
-  const { CUSTOM_ARTIFACT_NG } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
   const { getCache } = useCache([getServiceCacheId])
@@ -139,6 +141,13 @@ export default function ArtifactsSelection({
       isAllowedCustomArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
+    }
+    if (
+      deploymentType === 'Kubernetes' &&
+      NG_GOOGLE_ARTIFACT_REGISTRY &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentType])
@@ -459,7 +468,7 @@ export default function ArtifactsSelection({
   }, [selectedArtifact])
 
   const artifactLastStepProps = useCallback((): ImagePathProps<
-    ImagePathTypes & AmazonS3InitialValuesType & JenkinsArtifactType
+    ImagePathTypes & AmazonS3InitialValuesType & JenkinsArtifactType & GoogleArtifactRegistryInitialValuesType
   > => {
     return {
       key: getString('connectors.stepFourName'),
@@ -618,6 +627,8 @@ export default function ArtifactsSelection({
         return <ACRArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.Jenkins:
         return <JenkinsArtifact {...artifactLastStepProps()} />
+      case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
+        return <GoogleArtifactRegistry {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       default:
         return <DockerRegistryArtifact {...artifactLastStepProps()} />
