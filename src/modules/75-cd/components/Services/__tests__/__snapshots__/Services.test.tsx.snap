@@ -86,7 +86,7 @@ exports[`Services should render Services 1`] = `
           <span
             class="bp3-button-text"
           >
-            common.duration.month
+            common.subscriptions.usage.last30days
           </span>
           <span
             class="bp3-icon bp3-icon-caret-down StyledProps--main"

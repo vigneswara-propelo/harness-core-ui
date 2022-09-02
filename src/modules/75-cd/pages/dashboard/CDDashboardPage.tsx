@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Dialog, PageHeader, PageSpinner } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, get } from 'lodash-es'
+import { get } from 'lodash-es'
 import moment from 'moment'
 import { useModalHook } from '@harness/use-modal'
 import type { IDialogProps } from '@blueprintjs/core'
@@ -52,6 +52,7 @@ import DeploymentsHealthCards from './DeploymentsHealthCards'
 import DeploymentExecutionsChart from './DeploymentExecutionsChart'
 import WorkloadCard from './DeploymentCards/WorkloadCard'
 import bgImage from './images/CD-OverviewImageBG-compressed.png'
+import { getFormattedTimeRange, convertStringToDateTimeRange } from './dashboardUtils'
 import styles from './CDDashboardPage.module.scss'
 
 export interface CDModuleInfoProps {
@@ -93,15 +94,6 @@ const NoDataOverviewPage: React.FC<{ onHide: () => void }> = ({ onHide }) => {
       </ExecutionListFilterContextProvider>
     </div>
   )
-}
-
-export const validTimeFormat = (timeRange: TimeRangeSelectorProps): TimeRangeSelectorProps => {
-  //convert to valid format if string
-  if (typeof timeRange.range[0] === 'string') {
-    timeRange.range[0] = new Date(defaultTo(timeRange.range[0], ''))
-    timeRange.range[1] = new Date(defaultTo(timeRange.range[1], ''))
-  }
-  return timeRange
 }
 
 /** TODO: fix types after BE merge */
@@ -165,24 +157,21 @@ export const CDDashboardPage: React.FC = () => {
     },
     window.sessionStorage
   )
-  const resultTimeRange = validTimeFormat(timeRange)
-  timeRange.range[0] = resultTimeRange.range[0]
-  timeRange.range[1] = resultTimeRange.range[1]
+  const resultTimeRange = convertStringToDateTimeRange(timeRange)
 
   const history = useHistory()
 
   useDocumentTitle([getString('deploymentsText'), getString('overview')])
 
-  const startTime = defaultTo(timeRange?.range[0]?.getTime(), 0)
-  const endTime = defaultTo(timeRange?.range[1]?.getTime(), 0)
+  const [startTime, endTime] = getFormattedTimeRange(resultTimeRange)
 
   const { data, loading, error, refetch } = useGetDeployments({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      startTime: startTime,
-      endTime: endTime
+      startTime,
+      endTime
     }
   })
 
@@ -211,8 +200,8 @@ export const CDDashboardPage: React.FC = () => {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      startTime: startTime,
-      endTime: endTime
+      startTime,
+      endTime
     }
   })
 
@@ -245,7 +234,7 @@ export const CDDashboardPage: React.FC = () => {
         breadcrumbs={<NGBreadcrumbs links={[]} />}
         toolbar={
           <>
-            <TimeRangeSelector timeRange={timeRange?.range} setTimeRange={setTimeRange} minimal />
+            <TimeRangeSelector timeRange={resultTimeRange?.range} setTimeRange={setTimeRange} minimal />
           </>
         }
       ></PageHeader>
@@ -253,12 +242,12 @@ export const CDDashboardPage: React.FC = () => {
         {showOverviewDialog ? (
           <NoDataOverviewPage onHide={() => setShowOverviewDialog(false)} />
         ) : (
-          <DeploymentsTimeRangeContext.Provider value={{ timeRange, setTimeRange }}>
+          <DeploymentsTimeRangeContext.Provider value={{ timeRange: resultTimeRange, setTimeRange }}>
             <Container className={styles.page} padding="large">
-              <DeploymentsHealthCards range={timeRange} setRange={setTimeRange} title="Deployments Health" />
+              <DeploymentsHealthCards range={resultTimeRange} setRange={setTimeRange} title="Deployments Health" />
               <Container className={styles.executionsWrapper}>
                 <DeploymentExecutionsChart
-                  range={timeRange}
+                  range={resultTimeRange}
                   setRange={setTimeRange}
                   title={getString('executionsText')}
                 />

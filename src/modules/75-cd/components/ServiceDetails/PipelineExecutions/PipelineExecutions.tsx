@@ -14,6 +14,7 @@ import { useGetDeploymentsByServiceId, GetDeploymentsByServiceIdQueryParams } fr
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
 import { CardVariant } from '@pipeline/utils/constants'
+import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import { executionStatusInfoToExecutionSummary } from '@cd/pages/dashboard/CDDashboardPage'
 import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
 import { DashboardSelected } from '@pipeline/components/ServiceExecutionsCard/ServiceExecutionsCard'
@@ -27,13 +28,15 @@ export const PipelineExecutions: React.FC = () => {
   const { timeRange } = useContext(DeploymentsTimeRangeContext)
 
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
+  const [startTime, endTime] = getFormattedTimeRange(timeRange)
+
   const queryParams: GetDeploymentsByServiceIdQueryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
     serviceId,
-    startTime: timeRange?.range[0]?.getTime() || 0,
-    endTime: timeRange?.range[1]?.getTime() || 0
+    startTime,
+    endTime
   }
   const { loading, data, error, refetch } = useGetDeploymentsByServiceId({ queryParams })
   const [searchTerm, setSearchTerm] = useState('')

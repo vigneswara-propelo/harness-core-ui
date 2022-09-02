@@ -799,6 +799,7 @@ exploreAllPlans: Explore all plans
 duration:
   month: 'Last month'
   3months: 'Last 3 months'
+  90Days: 'Last 90 days'
   6months: 'Last 6 months'
   year: 'Last 1 year'
 exploreSaaSPlans: Explore SaaS plans

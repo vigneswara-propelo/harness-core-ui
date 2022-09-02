@@ -18,7 +18,7 @@ import {
   TimeRangeSelectorProps
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { useLocalStorage } from '@common/hooks'
-import { validTimeFormat } from '@cd/pages/dashboard/CDDashboardPage'
+import { convertStringToDateTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import { DeploymentsTimeRangeContext, ServiceStoreContext, useServiceStore } from './common'
 
 import { ServicesListPage } from './ServicesListPage/ServicesListPage'
@@ -40,9 +40,7 @@ export const Services: React.FC = () => {
     window.sessionStorage
   )
 
-  const resultTimeFilterRange = validTimeFormat(timeRange)
-  timeRange.range[0] = resultTimeFilterRange.range[0]
-  timeRange.range[1] = resultTimeFilterRange.range[1]
+  const resultTimeFilterRange = convertStringToDateTimeRange(timeRange)
 
   return (
     <ServiceStoreContext.Provider
@@ -55,12 +53,12 @@ export const Services: React.FC = () => {
       <Page.Header
         title={getString('services')}
         breadcrumbs={<NGBreadcrumbs />}
-        toolbar={<TimeRangeSelector timeRange={timeRange?.range} setTimeRange={setTimeRange} minimal />}
+        toolbar={<TimeRangeSelector timeRange={resultTimeFilterRange?.range} setTimeRange={setTimeRange} minimal />}
       />
       {isCommunity ? (
         <ServicesListPage />
       ) : (
-        <DeploymentsTimeRangeContext.Provider value={{ timeRange, setTimeRange }}>
+        <DeploymentsTimeRangeContext.Provider value={{ timeRange: resultTimeFilterRange, setTimeRange }}>
           <div className={css.tabs}>
             <Tabs
               id={'serviceLandingPageTabs'}

@@ -23,6 +23,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { Sort, SortFields } from '@cd/utils/listUtils'
+import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import css from '@cd/components/Services/ServicesContent/ServicesContent.module.scss'
 
 export const ServicesContent: React.FC = () => {
@@ -38,12 +39,14 @@ export const ServicesContent: React.FC = () => {
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
 
+  const [startTime, endTime] = getFormattedTimeRange(timeRange)
+
   const queryParams: GetServiceDetailsQueryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
-    startTime: timeRange?.range[0]?.getTime() || 0,
-    endTime: timeRange?.range[1]?.getTime() || 0,
+    startTime,
+    endTime,
     sort
   }
 

@@ -20,6 +20,7 @@ import NoDeployments from '@pipeline/components/Dashboards/images/NoDeployments.
 import { useErrorHandler } from '@pipeline/components/Dashboards/shared'
 import { OverviewChartsWithToggle } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
 import routes from '@common/RouteDefinitions'
+import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import styles from './CDDashboardPage.module.scss'
 
 const ONE_DAY_IN_MS = 86400000
@@ -29,13 +30,15 @@ export default function DeploymentExecutionsChart(props: any) {
   const history = useHistory()
   const { range, title } = props
 
+  const [startT, endT] = getFormattedTimeRange(range)
+
   const { data, error } = useGetDeploymentExecution({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      startTime: range?.range[0]?.getTime() || 0,
-      endTime: range?.range[1]?.getTime() || 0
+      startTime: startT,
+      endTime: endT
     }
   })
 

@@ -26,6 +26,7 @@ import {
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getTooltip } from '@pipeline/utils/DashboardUtils'
+import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import css from '@cd/components/Services/DeploymentsWidget/DeploymentsWidget.module.scss'
 
 export interface ChangeValue {
@@ -57,14 +58,16 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
   const { serviceIdentifier } = props
   const { timeRange } = useContext(DeploymentsTimeRangeContext)
 
+  const [startTime, endTime] = getFormattedTimeRange(timeRange)
+
   const queryParams: GetServiceDeploymentsInfoQueryParams = useMemo(() => {
     return {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
       serviceId: serviceIdentifier,
-      startTime: timeRange?.range[0]?.getTime() || 0,
-      endTime: timeRange?.range[1]?.getTime() || 0,
+      startTime,
+      endTime,
       bucketSizeInDays: getBucketSizeForTimeRange(timeRange?.range)
     }
   }, [accountId, orgIdentifier, projectIdentifier, serviceIdentifier, timeRange])

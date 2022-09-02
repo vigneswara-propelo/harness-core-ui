@@ -206,6 +206,7 @@ export interface StringsMap {
   'common.duplicateId': string
   'common.duration.3months': string
   'common.duration.6months': string
+  'common.duration.90Days': string
   'common.duration.month': string
   'common.duration.year': string
   'common.durationPrefix': string

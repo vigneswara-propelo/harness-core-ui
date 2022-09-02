@@ -24,6 +24,7 @@ import { useGetDeploymentHealth, DeploymentDateAndCount } from 'services/cd-ng'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
 
 import { numberFormatter } from '@cd/components/Services/common'
+import { getFormattedTimeRange } from './dashboardUtils'
 import styles from './CDDashboardPage.module.scss'
 
 export interface HealthCardProps {
@@ -51,13 +52,15 @@ export default function DeploymentsHealthCards(props: any) {
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const { range, title } = props
 
+  const [startTime, endTime] = getFormattedTimeRange(range)
+
   const { data, loading, error } = useGetDeploymentHealth({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      startTime: defaultTo(range?.range[0]?.getTime(), 0),
-      endTime: defaultTo(range?.range[1]?.getTime(), 0)
+      startTime,
+      endTime
     }
   })
 

@@ -20,6 +20,7 @@ import { getReadableDateTime } from '@common/utils/dateUtils'
 import { PageSpinner, TimeSeriesAreaChart } from '@common/components'
 import type { TimeSeriesAreaChartProps } from '@common/components/TimeSeriesAreaChart/TimeSeriesAreaChart'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
+import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import css from '@cd/components/ServiceDetails/InstanceCountHistory/InstanceCountHistory.module.scss'
 
 const instanceCountHistoryChartColors = ['#9CCC65', '#47D5DF', '#AE82FC', '#FFA86B', '#0BB6FF']
@@ -81,13 +82,15 @@ export const InstanceCountHistory: React.FC = () => {
   const { getString } = useStrings()
   const envData = useRef<Record<string, Record<string, number>>>({})
 
+  const [startTime, endTime] = getFormattedTimeRange(timeRange)
+
   const queryParams: GetInstanceCountHistoryQueryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
     serviceId,
-    startTime: timeRange?.range[0]?.getTime() || 0,
-    endTime: timeRange?.range[1]?.getTime() || 0
+    startTime,
+    endTime
   }
   const { loading, data, error, refetch } = useGetInstanceCountHistory({ queryParams })
 
