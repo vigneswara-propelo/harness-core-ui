@@ -3125,6 +3125,8 @@ export interface StringsMap {
   'pipeline.discard': string
   'pipeline.draft': string
   'pipeline.duplicateImport': string
+  'pipeline.duplicateImportInputset': string
+  'pipeline.duplicateImportPipeline': string
   'pipeline.duplicateStepIdentifiers': string
   'pipeline.duration': string
   'pipeline.enableVerificationHelpText': string

@@ -77,6 +77,16 @@ export default function ImportResource({
     return getString('common.resourceLabel')
   }
 
+  const getForceImportText = (): string => {
+    if (resourceType === ResourceType.PIPELINES) {
+      return getString('pipeline.duplicateImportPipeline')
+    }
+    if (resourceType === ResourceType.INPUT_SETS) {
+      return getString('pipeline.duplicateImportInputset')
+    }
+    return getString('pipeline.duplicateImport')
+  }
+
   const handleResponse = (response: ResponsePipelineSaveResponse) => {
     setIsLoading(false)
     if (response.status === 'SUCCESS') {
@@ -109,7 +119,7 @@ export default function ImportResource({
   }
 
   const { openDialog: openForceImportDialog } = useConfirmationDialog({
-    contentText: getString('pipeline.duplicateImport'),
+    contentText: getForceImportText(),
     titleText: getString('common.importFromGit'),
     confirmButtonText: getString('common.import'),
     cancelButtonText: getString('cancel'),
