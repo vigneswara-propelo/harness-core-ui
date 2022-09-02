@@ -27,7 +27,7 @@ interface UseRenderMultiTypeInputWithAllowedValuesArgs {
   placeholderKey?: string
   fieldPath: string
   allowedTypes: AllowedTypes
-  template: ServiceSpec
+  template: any
   readonly?: boolean
 }
 
