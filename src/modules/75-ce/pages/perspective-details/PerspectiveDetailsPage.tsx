@@ -412,13 +412,10 @@ const PerspectiveDetailsPage: React.FC = () => {
   const [openDownloadCSVModal] = useDownloadPerspectiveGridAsCsv({
     perspectiveName: persName,
     selectedColumnsToDownload: getGridColumnsByGroupBy(groupBy, isClusterOnly),
-    perspectiveTotalCount: gridData?.perspectiveTotalCount || 0,
     variables: {
       aggregateFunction: getAggregationFunc(),
       filters: queryFilters,
       isClusterOnly: isClusterOnly,
-      limit: PAGE_SIZE,
-      offset: gridPageOffset,
       groupBy: [getGroupByFilter(groupBy)]
     }
   })
