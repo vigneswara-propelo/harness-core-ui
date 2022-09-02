@@ -93,6 +93,9 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
   const [changed, setChanged] = React.useState(false)
 
   const value = get(formik?.values, name, getDefaultResetValue()) as MultiTypeMapValue
+  const allowableFileSelectTypes = (allowableTypes as MultiTypeInputType[])?.filter(
+    item => !isMultiTypeRuntime(item)
+  ) as AllowedTypes
 
   const isRunTime = React.useMemo(() => {
     return getMultiTypeFromValue(get(formik?.values, name, getDefaultResetValue())) === MultiTypeInputType.RUNTIME
@@ -180,7 +183,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                               [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
                                               true
                                             )}
-                                            allowedTypes={defaultTo(allowableTypes, [
+                                            allowedTypes={defaultTo(allowableFileSelectTypes, [
                                               MultiTypeInputType.FIXED,
                                               MultiTypeInputType.EXPRESSION
                                             ])}
