@@ -26,6 +26,8 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { CEView } from 'services/ce'
+import { usePage } from '@common/pages/pageContext/PageProvider'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { ProviderType } from '../PerspectiveBuilderFilter'
 import css from '../PerspectiveBuilderFilter.module.scss'
 
@@ -121,6 +123,9 @@ export const OperandSelectorPopOverContent: React.FC<PopoverContentProps> = ({
   labelData
 }) => {
   const nonCustomFields = fieldValuesList.filter(field => field.identifier !== ViewFieldIdentifier.Custom)
+
+  const pageInfo = usePage()
+
   const [canViewCostCategory] = usePermission(
     {
       resource: {
@@ -135,6 +140,12 @@ export const OperandSelectorPopOverContent: React.FC<PopoverContentProps> = ({
     <Layout.Vertical>
       {nonCustomFields.map(field => {
         const isBusinessMapping = field.identifier === ViewFieldIdentifier.BusinessMapping
+
+        if (isBusinessMapping && pageInfo.pageName === PAGE_NAME.CEBusinessMapping) {
+          // Do not show business mapping field in business mapping builder
+          return null
+        }
+
         return (
           <Popover
             key={field.identifier}
