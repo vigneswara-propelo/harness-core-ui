@@ -160,7 +160,7 @@ describe('BuildTests snapshot test', () => {
       </TestWrapper>
     )
     expect(document.querySelector('[class*="tiCallToActionWrapper"]')).not.toBeNull()
-    expect(queryByText(document.body, 'Support for .Net and Python coming soon!')).not.toBeNull()
+    expect(queryByText(document.body, 'Support for Scala, Kotlin and Python coming soon!')).not.toBeNull()
     expect(queryByText(document.body, 'common.findOutMore')).not.toBeNull()
     expect(queryByText(document.body, 'common.feature.upgradeRequired.title')).toBeNull()
   })
