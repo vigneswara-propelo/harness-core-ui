@@ -4964,6 +4964,8 @@ export interface StringsMap {
   'ce.co.autoStoppingRule.setupAccess.customDomain.noHostedZones': string
   'ce.co.autoStoppingRule.setupAccess.customDomain.overrideCustomDomainsInfoText': string
   'ce.co.autoStoppingRule.setupAccess.erroredAccessPointSelectionText': string
+  'ce.co.autoStoppingRule.setupAccess.healthCheckStatusLabel': string
+  'ce.co.autoStoppingRule.setupAccess.healthCheckTimeoutLabel': string
   'ce.co.autoStoppingRule.setupAccess.helpText.bgTasks.info': string
   'ce.co.autoStoppingRule.setupAccess.helpText.dns.info': string
   'ce.co.autoStoppingRule.setupAccess.helpText.dns.setup.mapToDNS.description': string
@@ -5221,8 +5223,10 @@ export interface StringsMap {
   'ce.common.expand': string
   'ce.common.hoverErrorHeader': string
   'ce.common.hoverWarningHeader': string
+  'ce.common.interval': string
   'ce.common.newBudget': string
   'ce.common.or': string
+  'ce.common.protocol': string
   'ce.common.refresh': string
   'ce.common.rule': string
   'ce.common.spendTillDate': string

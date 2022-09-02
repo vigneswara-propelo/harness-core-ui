@@ -3424,6 +3424,9 @@
         "port": {
           "type": "integer"
         },
+        "interval": {
+          "type": "integer"
+        },
         "timeout": {
           "type": "integer"
         },

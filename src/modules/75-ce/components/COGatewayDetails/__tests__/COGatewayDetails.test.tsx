@@ -75,7 +75,8 @@ const initialGatewayDetails = {
     protocol: 'http',
     path: '/',
     port: 80,
-    timeout: 30
+    timeout: 30,
+    interval: 90
   },
   opts: {
     preservePrivateIP: false,

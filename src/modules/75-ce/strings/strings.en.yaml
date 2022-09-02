@@ -22,6 +22,8 @@ common:
   detailsCtaLabel: 'Click to view details'
   hoverErrorHeader: 'ERROR {{message}}'
   hoverWarningHeader: 'WARNING {{message}}'
+  interval: 'Interval'
+  protocol: 'Protocol'
 allRegions: 'All Regions'
 allClusters: 'All Clusters'
 enforcementMessage:
@@ -268,6 +270,8 @@ co:
       selectLbHelpText: 'The rule requires a Load balancer to direct traffic/shut down appropriate instances. Multiple instances and rules can use a single Load balancer. It identifies instances based on hostnames and directs the HTTP traffic appropriately.'
       chooseLbText: '- Choose from existing Load balancers -'
       erroredAccessPointSelectionText: 'Access point in error state can not be selected'
+      healthCheckStatusLabel: 'STATUS (from-to)'
+      healthCheckTimeoutLabel: 'TIMEOUT'
       kubernetesDesc:
         resourceDefinition: The following is the resource definition YAML of the Kubernetes AutoStopping Rule that will be applied to the cluster. The specification here is the same as a Kubernetes Ingress with additional metadata.
         params:

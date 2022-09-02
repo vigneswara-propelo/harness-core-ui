@@ -83,8 +83,13 @@
   button[type='button'][data-id='btn-add'] {
     display: none;
   }
-  table tbody td > div[class*='TextInput'] {
-    margin-bottom: 0 !important;
+  table {
+    thead th {
+      text-transform: uppercase;
+    }
+    tbody td > div[class*='TextInput'] {
+      margin-bottom: 0 !important;
+    }
   }
 }
 

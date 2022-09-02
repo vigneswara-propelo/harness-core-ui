@@ -394,6 +394,7 @@ export interface GetAllRuleFiltersResponse {
 }
 
 export interface HealthCheck {
+  interval?: number
   path?: string
   port?: number
   protocol?: string
