@@ -6,7 +6,7 @@
  */
 
 :root {
-  --form-input-shadow: var(--bp3-intent-color, #dddddd);
+  --form-input-shadow: var(--bp3-intent-color, rgb(221, 221, 221));
 }
 
 .dialog {
@@ -20,7 +20,7 @@
   border-radius: 11px;
   position: relative;
   width: 500px;
-  height: 500px;
+  min-height: 500px;
   padding: var(--spacing-large);
 }
 

@@ -7,7 +7,16 @@
 
 import React, { useState } from 'react'
 import * as Yup from 'yup'
-import { Button, Container, Formik, FormikForm, FormInput, Text } from '@wings-software/uicore'
+import {
+  Button,
+  ButtonSize,
+  ButtonVariation,
+  Container,
+  Formik,
+  FormikForm,
+  FormInput,
+  Text
+} from '@wings-software/uicore'
 import type { SSHKeyValidationMetadata as ValidationMetadata } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -60,6 +69,8 @@ const VerifyConnection: React.FC<VerifyConnectionProps> = ({ identifier, closeMo
                     text={getString('secrets.createSSHCredWizard.btnVerifyConnection')}
                     style={{ fontSize: 'smaller' }}
                     margin={{ top: 'medium' }}
+                    variation={ButtonVariation.SECONDARY}
+                    size={ButtonSize.SMALL}
                   />
                 )}
               </FormikForm>
@@ -80,8 +91,8 @@ const VerifyConnection: React.FC<VerifyConnectionProps> = ({ identifier, closeMo
             <>
               <Button
                 text={getString('secrets.createSSHCredWizard.verifyRetest')}
-                minimal
-                intent="primary"
+                variation={ButtonVariation.SECONDARY}
+                size={ButtonSize.SMALL}
                 margin={{ top: 'medium' }}
                 onClick={() => {
                   setValidationMetadata(undefined)
@@ -90,6 +101,8 @@ const VerifyConnection: React.FC<VerifyConnectionProps> = ({ identifier, closeMo
               <Container margin={{ top: 'large' }}>
                 <Button
                   text={getString('finish').toUpperCase()}
+                  variation={ButtonVariation.SECONDARY}
+                  size={ButtonSize.SMALL}
                   onClick={() => {
                     trackEvent(SecretActions.SaveCreateSecret, {
                       category: Category.SECRET,
