@@ -4467,6 +4467,7 @@ export interface StringsMap {
   'cd.serviceDashboard.webApp': string
   'cd.serviceList.noIdentifier': string
   'cd.serviceName': string
+  'cd.serviceOverrides.configFileOverrides': string
   'cd.serviceOverrides.deleted': string
   'cd.serviceOverrides.deletedOneVariable': string
   'cd.serviceOverrides.helperText': string

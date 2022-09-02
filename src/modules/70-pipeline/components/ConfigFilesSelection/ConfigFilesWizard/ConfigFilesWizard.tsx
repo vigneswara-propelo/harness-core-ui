@@ -46,10 +46,9 @@ export function ConfigFilesWizard({
       onStepChange={onStepChange}
       icon={deploymentTypeIcon[deploymentType as ServiceTypes]}
       iconProps={{ size: 50 }}
-      title={`${getString(deploymentTypeLabel[deploymentType as ServiceDefinition['type']])} ${getString(
-        'pipeline.configFiles.title',
-        { type: 'Source' }
-      )}`}
+      title={`${
+        deploymentType && getString(deploymentTypeLabel[deploymentType as ServiceDefinition['type']])
+      } ${getString('pipeline.configFiles.title', { type: 'Source' })}`}
       initialStep={1}
     >
       <ConfigFilesStore

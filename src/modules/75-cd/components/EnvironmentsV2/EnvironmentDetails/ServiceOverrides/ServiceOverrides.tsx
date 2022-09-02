@@ -26,6 +26,7 @@ import {
 import { useModalHook } from '@harness/use-modal'
 import { FontVariation, Color } from '@harness/design-system'
 import {
+  ConfigFileWrapper,
   deleteServiceOverridePromise,
   ManifestConfigWrapper,
   NGServiceOverrideConfig,
@@ -50,6 +51,7 @@ import { ServiceOverrideTab } from './ServiceOverridesUtils'
 import AddEditServiceOverride from './AddEditServiceOverride'
 import ServiceManifestOverridesList from './ServiceManifestOverride/ServiceManifestOverridesList'
 import ServiceVariablesOverridesList from './ServiceVariablesOverrides/ServiceVariablesOverridesList'
+import ServiceConfigFileOverridesList from './ServiceConfigFileOverride/ServiceConfigFileOverridesList'
 import css from './ServiceOverrides.module.scss'
 
 export function ServiceOverrides(): React.ReactElement {
@@ -102,7 +104,7 @@ export function ServiceOverrides(): React.ReactElement {
 
   const handleDeleteOverride = async (
     overrideType: string,
-    overrideList: NGVariable[] | ManifestConfigWrapper[],
+    overrideList: NGVariable[] | ManifestConfigWrapper[] | ConfigFileWrapper[],
     index: number,
     isSingleOverride: boolean,
     serviceRef?: string
@@ -240,7 +242,7 @@ export function ServiceOverrides(): React.ReactElement {
         <Text>{getString('cd.serviceOverrides.helperText')}</Text>
         <Accordion activeId={serviceOverrides[0]?.serviceRef} allowMultiOpen>
           {serviceOverrides.map((serviceOverride: ServiceOverrideResponseDTO) => {
-            const { serviceOverrides: { serviceRef, variables = [], manifests = [] } = {} } = parse(
+            const { serviceOverrides: { serviceRef, variables = [], manifests = [], configFiles = [] } = {} } = parse(
               defaultTo(serviceOverride.yaml, '{}')
             ) as NGServiceOverrideConfig
             const isSingleOverride = variables.length + manifests.length === 1
@@ -330,6 +332,33 @@ export function ServiceOverrides(): React.ReactElement {
                           }}
                           removeManifestConfig={index =>
                             handleDeleteOverride('manifests', manifests, index, isSingleOverride, serviceRef)
+                          }
+                        />
+                        <RbacButton {...addOverrideBtnProps} />
+                      </Card>
+                    )}
+                    {!!configFiles.length && (
+                      <Card>
+                        <Text
+                          color={Color.GREY_900}
+                          font={{ weight: 'semi-bold' }}
+                          margin={{ bottom: 'medium' }}
+                          data-tooltip-id="serviceFilesOverrides"
+                        >
+                          {getString('cd.serviceOverrides.configFileOverrides')}
+                          <HarnessDocTooltip useStandAlone={true} tooltipId="serviceFilesOverrides" />
+                        </Text>
+                        <ServiceConfigFileOverridesList
+                          configFileOverrideList={configFiles}
+                          isReadonly={!canEdit}
+                          editFileOverride={() => {
+                            setSelectedTab(ServiceOverrideTab.CONFIG)
+                            setSelectedService(defaultTo(serviceRef, ''))
+                            setIsEdit(true)
+                            showModal()
+                          }}
+                          handleServiceFileDelete={index =>
+                            handleDeleteOverride('configFiles', configFiles, index, isSingleOverride, serviceRef)
                           }
                         />
                         <RbacButton {...addOverrideBtnProps} />

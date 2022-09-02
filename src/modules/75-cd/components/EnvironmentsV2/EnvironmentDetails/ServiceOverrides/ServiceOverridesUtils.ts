@@ -15,7 +15,7 @@ export enum VariableType {
 }
 export enum ServiceOverrideTab {
   VARIABLE = 'variableoverride',
-  CONFIG = 'CONFIGoverride',
+  CONFIG = 'configoverride',
   MANIFEST = 'manifestoverride'
 }
 

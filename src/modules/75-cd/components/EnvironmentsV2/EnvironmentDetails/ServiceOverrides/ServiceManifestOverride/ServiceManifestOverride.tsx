@@ -6,15 +6,7 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import {
-  AllowedTypesWithRunTime,
-  Button,
-  ButtonSize,
-  ButtonVariation,
-  Layout,
-  MultiTypeInputType,
-  StepProps
-} from '@harness/uicore'
+import { AllowedTypes, Button, ButtonSize, ButtonVariation, Layout, StepProps } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
 import { get, noop } from 'lodash-es'
@@ -53,6 +45,7 @@ interface ManifestVariableOverrideProps {
   handleManifestOverrideSubmit: (val: ManifestConfigWrapper, index: number) => void
   removeManifestConfig: (index: number) => void
   expressions: string[]
+  allowableTypes: AllowedTypes
   fromEnvConfigPage?: boolean
 }
 const DIALOG_PROPS: IDialogProps = {
@@ -70,14 +63,10 @@ function ServiceManifestOverride({
   removeManifestConfig,
   isReadonly,
   fromEnvConfigPage,
-  expressions
+  expressions,
+  allowableTypes
 }: ManifestVariableOverrideProps): React.ReactElement {
   const { getString } = useStrings()
-  const allowableTypes: AllowedTypesWithRunTime[] = [
-    MultiTypeInputType.FIXED,
-    MultiTypeInputType.RUNTIME,
-    MultiTypeInputType.EXPRESSION
-  ]
   const [selectedManifest, setSelectedManifest] = useState<OverrideManifestTypes | null>(null)
   const [manifestStore, setManifestStore] = useState('')
   const [manifestIndex, setEditIndex] = useState(0)
@@ -241,7 +230,7 @@ function ServiceManifestOverride({
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
       </Dialog>
     )
-  }, [selectedManifest, expressions.length, expressions, allowableTypes])
+  }, [selectedManifest, manifestIndex, manifestStore, expressions.length, expressions, allowableTypes])
 
   const addBtnCommonProps = {
     size: ButtonSize.SMALL,

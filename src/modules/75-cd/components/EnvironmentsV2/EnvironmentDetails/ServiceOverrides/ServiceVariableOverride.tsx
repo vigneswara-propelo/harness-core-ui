@@ -20,18 +20,21 @@ import {
 import { Form } from 'formik'
 import { useModalHook } from '@harness/use-modal'
 import type { IDialogProps } from '@blueprintjs/core'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type { NGServiceConfig, ServiceResponse } from 'services/cd-ng'
+import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { getVariableTypeOptions, VariableType } from './ServiceOverridesUtils'
 import type { VariableOverride } from './ServiceOverridesInterface'
 import ServiceVariablesOverridesList from './ServiceVariablesOverrides/ServiceVariablesOverridesList'
 
 interface ServiceVariableOverrideProps {
-  variablesOptions: SelectOption[]
+  selectedService: string
+  serviceList: ServiceResponse[]
   variableOverrides: VariableOverride[]
   isReadonly: boolean
   handleVariableSubmit: (val: VariableOverride, variableIndex: number) => void
@@ -46,7 +49,8 @@ const DIALOG_PROPS: IDialogProps = {
 }
 
 function ServiceVariableOverride({
-  variablesOptions,
+  serviceList,
+  selectedService,
   variableOverrides,
   handleVariableSubmit,
   isReadonly,
@@ -54,6 +58,22 @@ function ServiceVariableOverride({
 }: ServiceVariableOverrideProps): React.ReactElement {
   const { getString } = useStrings()
   const [variableIndex, setEditIndex] = useState(0)
+
+  const getVariableOptions = (): SelectOption[] => {
+    if (!isEmpty(selectedService)) {
+      const serviceSelected = serviceList.find(serviceObj => serviceObj.service?.identifier === selectedService)
+      if (serviceSelected) {
+        const parsedServiceYaml = yamlParse<NGServiceConfig>(defaultTo(serviceSelected?.service?.yaml, '')).service
+        const serviceVars = defaultTo(parsedServiceYaml?.serviceDefinition?.spec?.variables, [])
+        return serviceVars?.map(variable => ({
+          label: defaultTo(variable.name, ''),
+          value: defaultTo(variable.name, '')
+        }))
+      }
+    }
+    return []
+  }
+  const variablesOptions = getVariableOptions()
 
   const variableListItems = useMemo(() => {
     const serviceOverideVars = variableOverrides.map(varOverride => varOverride.name)

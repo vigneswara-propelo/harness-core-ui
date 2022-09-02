@@ -8,7 +8,7 @@
 import React, { Dispatch, SetStateAction, useCallback, useState } from 'react'
 import { useParams, useHistory, matchPath } from 'react-router-dom'
 import { parse } from 'yaml'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import {
@@ -25,7 +25,8 @@ import {
   ButtonVariation,
   Tag,
   FormikForm,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  AllowedTypesWithRunTime
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
@@ -33,6 +34,7 @@ import { projectPathProps, modulePathProps, environmentPathProps } from '@common
 import { NavigationCheck } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import {
+  ConfigFileWrapper,
   ManifestConfigWrapper,
   NGEnvironmentInfoConfig,
   ResponseEnvironmentResponse,
@@ -50,10 +52,10 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ServiceManifestOverride from '../ServiceOverrides/ServiceManifestOverride/ServiceManifestOverride'
+import ServiceConfigFileOverride from '../ServiceOverrides/ServiceConfigFileOverride/ServiceConfigFileOverride'
 import css from '../EnvironmentDetails.module.scss'
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -117,14 +119,19 @@ export default function EnvironmentConfiguration({
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & EnvironmentPathProps>()
   const history = useHistory()
   const { expressions } = useVariablesExpression()
-  const isServiceManifestEnabled = useFeatureFlag(FeatureFlag.NG_SERVICE_MANIFEST_OVERRIDE)
+  const { NG_SERVICE_MANIFEST_OVERRIDE, NG_SERVICE_CONFIG_FILES_OVERRIDE } = useFeatureFlags()
+
   const [canEdit] = usePermission({
     resource: {
       resourceType: ResourceType.ENVIRONMENT
     },
     permissions: [PermissionIdentifier.EDIT_ENVIRONMENT]
   })
-
+  const allowableTypes: AllowedTypesWithRunTime[] = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ]
   const typeList: { label: string; value: string }[] = [
     {
       label: getString('production'),
@@ -195,35 +202,32 @@ export default function EnvironmentConfiguration({
 
   const invalidYaml = isInvalidYaml()
 
-  /**********************************************Service Manifest CRUD Operations ************************************************/
-  const handleManifestOverrideSubmit = useCallback(
-    (manifestObj: ManifestConfigWrapper, manifestIndex: number): void => {
-      const manifestOverrides = formikProps.values.overrides
-      const manifestDefaultValue = Array.isArray(manifestOverrides?.manifests)
-        ? [...(manifestOverrides?.manifests as ManifestConfigWrapper[])]
-        : []
-      if (manifestDefaultValue.length > 0) {
-        manifestDefaultValue.splice(manifestIndex, 1, manifestObj)
+  /**********************************************Service Overide CRUD Operations ************************************************/
+  const handleOverrideSubmit = useCallback(
+    (overrideObj: ManifestConfigWrapper | ConfigFileWrapper, overrideIdx: number, type: string): void => {
+      const envOverrides = get(formikProps.values.overrides, `${type}`)
+      const overrideDefaultValue = Array.isArray(envOverrides) ? [...envOverrides] : []
+      if (overrideDefaultValue.length > 0) {
+        overrideDefaultValue.splice(overrideIdx, 1, overrideObj)
       } else {
-        manifestDefaultValue.push(manifestObj)
+        overrideDefaultValue.push(overrideObj)
       }
-      formikProps.setFieldValue('overrides.manifests', manifestDefaultValue)
+      formikProps.setFieldValue(`overrides.${type}`, overrideDefaultValue)
     },
     [formikProps]
   )
 
-  const removeManifestConfig = useCallback(
-    (index: number): void => {
-      const manifestOverrides = formikProps.values.overrides
-      const manifestDefaultValue = Array.isArray(manifestOverrides?.manifests)
-        ? [...(manifestOverrides?.manifests as ManifestConfigWrapper[])]
-        : []
-      manifestDefaultValue.splice(index, 1)
-      formikProps.setFieldValue('overrides.manifests', manifestDefaultValue)
+  const removeOverrideConfig = useCallback(
+    (index: number, type: string): void => {
+      const envOverrides = get(formikProps.values.overrides, `${type}`)
+
+      const overrideDefaultValue = Array.isArray(envOverrides) ? [...envOverrides] : []
+      overrideDefaultValue.splice(index, 1)
+      formikProps.setFieldValue(`overrides.${type}`, overrideDefaultValue)
     },
     [formikProps]
   )
-  /**********************************************Service Manifest CRUD Operations ************************************************/
+  /**********************************************Service Overide CRUD Operations ************************************************/
 
   return (
     <Container padding={{ left: 'xxlarge', right: 'medium' }}>
@@ -345,7 +349,7 @@ export default function EnvironmentConfiguration({
                         }}
                       />
                     </Card>
-                    {isServiceManifestEnabled && (
+                    {NG_SERVICE_MANIFEST_OVERRIDE && (
                       <Card
                         className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
                         id="manifests"
@@ -361,10 +365,39 @@ export default function EnvironmentConfiguration({
                         </Text>
                         <ServiceManifestOverride
                           manifestOverrides={defaultTo(formikProps.values.overrides?.manifests, [])}
-                          handleManifestOverrideSubmit={handleManifestOverrideSubmit}
-                          removeManifestConfig={removeManifestConfig}
+                          handleManifestOverrideSubmit={(manifestObj, index) =>
+                            handleOverrideSubmit(manifestObj, index, 'manifests')
+                          }
+                          removeManifestConfig={index => removeOverrideConfig(index, 'manifests')}
                           isReadonly={!canEdit}
                           fromEnvConfigPage
+                          expressions={expressions}
+                          allowableTypes={allowableTypes}
+                        />
+                      </Card>
+                    )}
+                    {NG_SERVICE_CONFIG_FILES_OVERRIDE && (
+                      <Card
+                        className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                        id="configFiles"
+                      >
+                        <Text
+                          color={Color.GREY_700}
+                          font={{ weight: 'bold' }}
+                          margin={{ bottom: 'small' }}
+                          data-tooltip-id="filesOverride"
+                        >
+                          {getString('pipelineSteps.configFiles')}
+                          <HarnessDocTooltip useStandAlone={true} tooltipId="filesOverride" />
+                        </Text>
+                        <ServiceConfigFileOverride
+                          fileOverrides={defaultTo(formikProps.values.overrides?.configFiles, [])}
+                          allowableTypes={allowableTypes}
+                          handleConfigFileOverrideSubmit={(filesObj, index) =>
+                            handleOverrideSubmit(filesObj, index, 'configFiles')
+                          }
+                          handleServiceFileDelete={index => removeOverrideConfig(index, 'configFiles')}
+                          isReadonly={!canEdit}
                           expressions={expressions}
                         />
                       </Card>

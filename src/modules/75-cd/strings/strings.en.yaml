@@ -176,7 +176,7 @@ pipelineSteps:
     plusNewService: '+ {{$.newService}}'
     serviceIsRequired: Service is required
     aboutYourService: About the Service
-    newServiceOverride: Add configuration overrides
+    newServiceOverride: New configuration overrides
   infraTab:
     deploymentType: Infrastructure type selection is required
     clusterError: No cluster found with given Connector
@@ -333,6 +333,7 @@ environment:
 serviceOverrides:
   variableOverrides: Variable Overrides
   manifestOverrides: Manifest Overrides
+  configFileOverrides: Config File Overrides
   helperText: Override existing variables or define new variables based on the selected service
   deleted: Successfully deleted Service Override
   deletedOneVariable: Successfully deleted variable from service override

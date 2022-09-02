@@ -8,7 +8,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
-import { defaultTo, isEmpty, isEqual } from 'lodash-es'
+import { defaultTo, get, isEmpty, isEqual } from 'lodash-es'
 import { parse } from 'yaml'
 import cx from 'classnames'
 import {
@@ -24,12 +24,14 @@ import {
   VisualYamlSelectedView as SelectedView,
   useToaster,
   Tabs,
-  Tab
+  Tab,
+  MultiTypeInputType,
+  AllowedTypesWithRunTime
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import {
+  ConfigFileWrapper,
   ManifestConfigWrapper,
-  NGServiceConfig,
   NGServiceOverrideConfig,
   ServiceOverrideResponseDTO,
   ServiceResponse,
@@ -40,12 +42,12 @@ import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { EnvironmentPathProps, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ServiceVariableOverride from './ServiceVariableOverride'
 import ServiceManifestOverride from './ServiceManifestOverride/ServiceManifestOverride'
 import { ServiceOverrideTab } from './ServiceOverridesUtils'
 import type { AddEditServiceOverrideFormProps, VariableOverride } from './ServiceOverridesInterface'
+import ServiceConfigFileOverride from './ServiceConfigFileOverride/ServiceConfigFileOverride'
 import css from './ServiceOverrides.module.scss'
 
 export interface AddEditServiceOverrideProps {
@@ -57,6 +59,7 @@ export interface AddEditServiceOverrideProps {
   isReadonly: boolean
   expressions: string[]
 }
+type OverrideTypes = VariableOverride | ManifestConfigWrapper | ConfigFileWrapper
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   fileName: `serviceOverrides.yaml`,
@@ -87,7 +90,12 @@ export default function AddEditServiceOverride({
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const formikRef = useRef<FormikProps<AddEditServiceOverrideFormProps>>()
-  const isServiceManifestEnabled = useFeatureFlag(FeatureFlag.NG_SERVICE_MANIFEST_OVERRIDE)
+  const { NG_SERVICE_MANIFEST_OVERRIDE, NG_SERVICE_CONFIG_FILES_OVERRIDE } = useFeatureFlags()
+  const allowableTypes: AllowedTypesWithRunTime[] = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ]
 
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
@@ -97,21 +105,6 @@ export default function AddEditServiceOverride({
   const selectedServiceOverride = serviceOverrides?.find(
     svcOverride => svcOverride.serviceRef === defaultTo(selectedService, formikRef.current?.values.serviceRef)
   )
-  const getVariableOptions = (): SelectOption[] => {
-    if (!isEmpty(selectedService)) {
-      const serviceSelected = services.find(serviceObj => serviceObj.service?.identifier === selectedService)
-      if (serviceSelected) {
-        const parsedServiceYaml = yamlParse<NGServiceConfig>(defaultTo(serviceSelected?.service?.yaml, '')).service
-        const serviceVars = defaultTo(parsedServiceYaml?.serviceDefinition?.spec?.variables, [])
-        return serviceVars?.map(variable => ({
-          label: defaultTo(variable.name, ''),
-          value: defaultTo(variable.name, '')
-        }))
-      }
-    }
-    return []
-  }
-  const [variablesOptions, setVariablesOptions] = useState<SelectOption[]>(getVariableOptions())
 
   const servicesOptions = useMemo(() => {
     return services.map(item => ({
@@ -127,32 +120,14 @@ export default function AddEditServiceOverride({
   })
 
   const handleServiceChange = (item: SelectOption): void => {
-    const serviceSelected = services.find(serviceObj => serviceObj.service?.identifier === item.value)
     const serviceOverride = serviceOverrides?.find(svcOverride => svcOverride.serviceRef === item.value)
 
-    const selectedSvcVariable = !isEmpty(serviceOverride) ? getVariablesOverrideInitialValue(serviceOverride) : []
+    const selectedSvcVariable = !isEmpty(serviceOverride) ? getOverrideObject('variables', serviceOverride) : []
     formikRef.current?.setFieldValue('variables', selectedSvcVariable)
-
-    const selectedSvcManifest = !isEmpty(serviceOverride) ? getManifestOverrideObject(serviceOverride) : []
+    const selectedSvcManifest = !isEmpty(serviceOverride) ? getOverrideObject('manifests', serviceOverride) : []
     formikRef.current?.setFieldValue('manifests', selectedSvcManifest)
-
-    // istanbul ignore else
-    if (serviceSelected) {
-      const parsedServiceYaml = defaultTo(
-        yamlParse(defaultTo(serviceSelected?.service?.yaml, '{}')),
-        ''
-      ) as NGServiceConfig
-      const serviceVars = defaultTo(parsedServiceYaml?.service?.serviceDefinition?.spec?.variables, [])
-      setVariablesOptions(
-        defaultTo(
-          serviceVars?.map(variable => ({
-            label: defaultTo(variable.name, ''),
-            value: defaultTo(variable.name, '')
-          })),
-          []
-        )
-      )
-    }
+    const selectedSvcConfigFiles = !isEmpty(serviceOverride) ? getOverrideObject('configFiles', serviceOverride) : []
+    formikRef.current?.setFieldValue('configFiles', selectedSvcConfigFiles)
   }
 
   const handleModeSwitch = useCallback(
@@ -166,97 +141,52 @@ export default function AddEditServiceOverride({
     [showError]
   )
 
-  /**********************************************Service Variable CRUD Operations ************************************************/
-  const getVariablesOverrideInitialValue = (svcOverride?: ServiceOverrideResponseDTO): Array<VariableOverride> => {
+  /**********************************************Service Override CRUD Operations ************************************************/
+  const getOverrideObject = (type: string, svcOverride?: ServiceOverrideResponseDTO): Array<any> => {
     const serviceOverrideData = defaultTo(svcOverride, selectedServiceOverride)
     if (!isEmpty(serviceOverrideData)) {
       const parsedServiceOverride = yamlParse<NGServiceOverrideConfig>(
         defaultTo(serviceOverrideData?.yaml, '')
       ).serviceOverrides
-      return defaultTo(parsedServiceOverride?.variables, []) as VariableOverride[]
+      return defaultTo(get(parsedServiceOverride, `${type}`), [])
     }
     return []
   }
-  const getVariablesOverrideValues = (): Array<VariableOverride> => {
-    const formikManifestOverrideData = formikRef.current?.values.variables
-    if (formikManifestOverrideData?.length) {
-      return formikManifestOverrideData
+
+  const getOverrideValues = (type: string): Array<OverrideTypes> => {
+    const formikOverrideData = get(formikRef.current?.values, `${type}`)
+    if (formikOverrideData?.length) {
+      return formikOverrideData
     }
-    return getVariablesOverrideInitialValue()
+    return getOverrideObject(type)
   }
 
-  const getVariablesOverrideFormdata = (values: AddEditServiceOverrideFormProps): VariableOverride[] | undefined => {
+  const getOverrideFormdata = (
+    values: AddEditServiceOverrideFormProps,
+    type: string
+  ): Array<OverrideTypes> | undefined => {
     if (selectedView === SelectedView.YAML) {
-      return values.variables
+      return get(values, `${type}`)
     }
-    return !isEmpty(formikRef.current?.values.variables) ? formikRef.current?.values.variables : undefined
+    return !isEmpty(get(formikRef.current?.values, `${type}`)) ? get(formikRef.current?.values, `${type}`) : undefined
   }
 
-  const handleVariableOverrideSubmit = useCallback((variableObj: VariableOverride, variableIndex: number): void => {
-    const variableDefaultValue = [...(formikRef.current?.values?.variables as VariableOverride[])]
-    if (variableDefaultValue?.length) {
-      variableDefaultValue.splice(variableIndex, 1, variableObj)
+  const handleOverrideSubmit = useCallback((overrideObj: OverrideTypes, index: number, type: string): void => {
+    const overrideDefaultValue = [...get(formikRef.current?.values, `${type}`)]
+    if (overrideDefaultValue?.length) {
+      overrideDefaultValue.splice(index, 1, overrideObj)
     } else {
-      variableDefaultValue.push(variableObj)
+      overrideDefaultValue.push(overrideObj)
     }
-    formikRef.current?.setFieldValue('variables', variableDefaultValue)
+    formikRef.current?.setFieldValue(`${type}`, overrideDefaultValue)
   }, [])
 
-  const onServiceVarDelete = useCallback((index: number): void => {
-    const variableDefaultValues = [...(formikRef.current?.values?.variables as VariableOverride[])]
-    variableDefaultValues.splice(index, 1)
-    formikRef.current?.setFieldValue('variables', variableDefaultValues)
+  const onServiceOverrideDelete = useCallback((index: number, type: string): void => {
+    const overrideDefaultValue = [...get(formikRef.current?.values, `${type}`)]
+    overrideDefaultValue.splice(index, 1)
+    formikRef.current?.setFieldValue(`${type}`, overrideDefaultValue)
   }, [])
-  /**********************************************Service Variable CRUD Operations ************************************************/
-
-  /**********************************************Service Manifest CRUD Operations ************************************************/
-  const getManifestOverrideObject = (svcOverride?: ServiceOverrideResponseDTO): Array<ManifestConfigWrapper> => {
-    const serviceOverrideData = defaultTo(svcOverride, selectedServiceOverride)
-    if (!isEmpty(serviceOverrideData)) {
-      const parsedServiceOverride = yamlParse<NGServiceOverrideConfig>(
-        defaultTo(serviceOverrideData?.yaml, '')
-      ).serviceOverrides
-      return defaultTo(parsedServiceOverride?.manifests, []) as ManifestConfigWrapper[]
-    }
-    return []
-  }
-
-  const getManifestOverrideValues = (): Array<ManifestConfigWrapper> => {
-    const formikManifestOverrideData = formikRef.current?.values.manifests
-    if (formikManifestOverrideData?.length) {
-      return formikManifestOverrideData
-    }
-    return getManifestOverrideObject()
-  }
-
-  const getManifestOverrideFormdata = (
-    values: AddEditServiceOverrideFormProps
-  ): ManifestConfigWrapper[] | undefined => {
-    if (selectedView === SelectedView.YAML) {
-      return values.manifests
-    }
-    return !isEmpty(formikRef.current?.values.manifests) ? formikRef.current?.values.manifests : undefined
-  }
-
-  const handleManifestOverrideSubmit = useCallback(
-    (manifestObj: ManifestConfigWrapper, manifestIndex: number): void => {
-      const manifestDefaultValue = [...(formikRef.current?.values?.manifests as ManifestConfigWrapper[])]
-      if (manifestDefaultValue?.length) {
-        manifestDefaultValue.splice(manifestIndex, 1, manifestObj)
-      } else {
-        manifestDefaultValue.push(manifestObj)
-      }
-      formikRef.current?.setFieldValue('manifests', manifestDefaultValue)
-    },
-    []
-  )
-
-  const removeManifestConfig = useCallback((index: number): void => {
-    const manifestDefaultValue = [...(formikRef.current?.values?.manifests as ManifestConfigWrapper[])]
-    manifestDefaultValue.splice(index, 1)
-    formikRef.current?.setFieldValue('manifests', manifestDefaultValue)
-  }, [])
-  /**********************************************Service Manifest CRUD Operations ************************************************/
+  /**********************************************Service Override CRUD Operations ************************************************/
 
   const onSubmit = async (values: AddEditServiceOverrideFormProps): Promise<void> => {
     try {
@@ -269,8 +199,9 @@ export default function AddEditServiceOverride({
           serviceOverrides: {
             environmentRef: environmentIdentifier,
             serviceRef: values.serviceRef,
-            variables: getVariablesOverrideFormdata(values),
-            manifests: getManifestOverrideFormdata(values)
+            variables: getOverrideFormdata(values, 'variables'),
+            manifests: getOverrideFormdata(values, 'manifests'),
+            configFiles: getOverrideFormdata(values, 'configFiles')
           }
         } as NGServiceOverrideConfig)
       })
@@ -290,8 +221,9 @@ export default function AddEditServiceOverride({
       serviceOverrides: {
         environmentRef: environmentIdentifier,
         serviceRef: formikRef.current?.values.serviceRef,
-        variables: getVariablesOverrideValues(),
-        manifests: getManifestOverrideValues()
+        variables: getOverrideValues('variables'),
+        manifests: getOverrideValues('manifests'),
+        configFiles: getOverrideValues('configFiles')
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -322,6 +254,10 @@ export default function AddEditServiceOverride({
           return !(Array.isArray(formikRef.current?.values.variables) && formikRef.current.values.variables.length > 0)
         } else if (selectedTab === ServiceOverrideTab.MANIFEST) {
           return !(Array.isArray(formikRef.current?.values.manifests) && formikRef.current.values.manifests.length > 0)
+        } else if (selectedTab === ServiceOverrideTab.CONFIG) {
+          return !(
+            Array.isArray(formikRef.current?.values.configFiles) && formikRef.current.values.configFiles.length > 0
+          )
         }
       }
       return false
@@ -334,8 +270,9 @@ export default function AddEditServiceOverride({
       initialValues={{
         serviceRef: selectedService,
         environmentRef: environmentIdentifier,
-        variables: getVariablesOverrideInitialValue(),
-        manifests: getManifestOverrideObject()
+        variables: getOverrideObject('variables'),
+        manifests: getOverrideObject('manifests'),
+        configFiles: getOverrideObject('configFiles')
       }}
       onSubmit={
         /* istanbul ignore next */ values => {
@@ -381,14 +318,17 @@ export default function AddEditServiceOverride({
                         panel={
                           <ServiceVariableOverride
                             variableOverrides={defaultTo(formikProps.values?.variables, [])}
-                            variablesOptions={variablesOptions}
-                            handleVariableSubmit={handleVariableOverrideSubmit}
+                            selectedService={formikProps.values?.serviceRef as string}
+                            serviceList={services}
+                            handleVariableSubmit={(variableObj, index) =>
+                              handleOverrideSubmit(variableObj, index, 'variables')
+                            }
+                            onServiceVarDelete={index => onServiceOverrideDelete(index, 'variables')}
                             isReadonly={isReadonly}
-                            onServiceVarDelete={onServiceVarDelete}
                           />
                         }
                       />
-                      {isServiceManifestEnabled && (
+                      {NG_SERVICE_MANIFEST_OVERRIDE && (
                         <Tab
                           id={ServiceOverrideTab.MANIFEST}
                           title={getString('manifestsText')}
@@ -397,8 +337,31 @@ export default function AddEditServiceOverride({
                               manifestOverrides={
                                 defaultTo(formikProps.values?.manifests, []) as ManifestConfigWrapper[]
                               }
-                              handleManifestOverrideSubmit={handleManifestOverrideSubmit}
-                              removeManifestConfig={removeManifestConfig}
+                              handleManifestOverrideSubmit={(manifestObj, index) =>
+                                handleOverrideSubmit(manifestObj, index, 'manifests')
+                              }
+                              removeManifestConfig={index => onServiceOverrideDelete(index, 'manifests')}
+                              isReadonly={isReadonly}
+                              expressions={expressions}
+                              allowableTypes={allowableTypes}
+                            />
+                          }
+                        />
+                      )}
+                      {NG_SERVICE_CONFIG_FILES_OVERRIDE && (
+                        <Tab
+                          id={ServiceOverrideTab.CONFIG}
+                          title={getString('cd.configFileStoreTitle')}
+                          panel={
+                            <ServiceConfigFileOverride
+                              fileOverrides={defaultTo(formikProps.values?.configFiles, [])}
+                              selectedService={formikProps.values?.serviceRef as string}
+                              serviceList={services}
+                              allowableTypes={allowableTypes}
+                              handleConfigFileOverrideSubmit={(filesObj, index) =>
+                                handleOverrideSubmit(filesObj, index, 'configFiles')
+                              }
+                              handleServiceFileDelete={index => onServiceOverrideDelete(index, 'configFiles')}
                               isReadonly={isReadonly}
                               expressions={expressions}
                             />
