@@ -31,7 +31,7 @@ const enableGitOpsUI = process.env.ENABLE_GITOPSUI !== 'false'
 const enableChaosUI = process.env.ENABLE_CHAOS === 'true'
 const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
-const enableSCM = process.env.ENABLE_SCM !== 'false'
+const enableSCM = process.env.ENABLE_SCM === 'true'
 
 console.log('Common build flags')
 console.table({ enableGovernance, enableGitOpsUI, enableChaosUI, enableCCMUI, enableSTO, enableSCM })
