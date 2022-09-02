@@ -227,7 +227,7 @@ export interface TemplateStudioQueryParams extends GitQueryParams {
   versionLabel?: string
 }
 
-type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>
+export type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>
 
 export interface GovernancePathProps
   extends RequireField<
@@ -237,6 +237,18 @@ export interface GovernancePathProps
   policyIdentifier?: string
   policySetIdentifier?: string
   evaluationId?: string
+}
+
+export interface SCMPathProps
+  extends RequireField<
+    Partial<Pick<ProjectPathProps, 'accountId' | 'orgIdentifier' | 'projectIdentifier'>>,
+    'accountId' | 'orgIdentifier' | 'projectIdentifier'
+  > {
+  repoName?: string
+  branchName?: string
+  filePath?: string
+  pullRequestId?: string
+  commitId?: string
 }
 
 export interface AccountLevelGitOpsPathProps {

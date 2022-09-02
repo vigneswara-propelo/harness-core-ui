@@ -31,9 +31,10 @@ const enableGitOpsUI = process.env.ENABLE_GITOPSUI !== 'false'
 const enableChaosUI = process.env.ENABLE_CHAOS === 'true'
 const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
+const enableSCM = process.env.ENABLE_SCM !== 'false'
 
 console.log('Common build flags')
-console.table({ enableGovernance, enableGitOpsUI, enableChaosUI, enableCCMUI, enableSTO })
+console.table({ enableGovernance, enableGitOpsUI, enableChaosUI, enableCCMUI, enableSTO, enableSCM })
 
 const config = {
   context: CONTEXT,
@@ -180,7 +181,7 @@ const config = {
   plugins: [
     new ExternalRemotesPlugin(),
     new ModuleFederationPlugin(
-      moduleFederationConfig({ enableGovernance, enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI })
+      moduleFederationConfig({ enableGovernance, enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI, enableSCM })
     ),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
     new webpack.DefinePlugin({
@@ -218,6 +219,23 @@ if (!enableSTO) {
   config.resolve.alias['stoV2/App'] = ChildAppError
   config.resolve.alias['sto/PipelineSecurityView'] = ChildAppError
   config.resolve.alias['stoV2/PipelineSecurityView'] = ChildAppError
+}
+
+// render a mock app when SCM MF is disabled
+if (!enableSCM) {
+  const scmModules = [
+    'scm/Welcome',
+    'scm/Repos',
+    'scm/NewRepo',
+    'scm/RepoFiles',
+    'scm/RepoFileDetail',
+    'scm/RepoCommits',
+    'scm/RepoCommitDetail',
+    'scm/RepoPullRequests',
+    'scm/RepoPullRequestDetail',
+    'scm/RepoSettings'
+  ]
+  scmModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
 }
 
 module.exports = config

@@ -31,6 +31,7 @@
       "@rbac/*": ["modules/20-rbac/*"],
       "@default-settings/*": ["modules/23-default-settings/*"],
       "@governance/*": ["modules/25-governance/*"],
+      "@scm/*": ["modules/60-scm/*"],
       "@sto/*": ["modules/27-sto/*"],
       "@filestore/*": ["modules/31-filestore/*"],
       "@et/*": ["modules/28-et/*"],

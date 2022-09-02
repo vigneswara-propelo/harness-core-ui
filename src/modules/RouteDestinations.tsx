@@ -36,6 +36,7 @@ import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
 import DefaultSettingsRoutes from '@default-settings/RouteDestinations'
+import SCMRoutes from '@scm/RouteDestinations'
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
   icon: 'nav-settings',
@@ -43,8 +44,17 @@ export const AccountSideNavProps: SidebarContext = {
 }
 
 export default function RouteDestinations(): React.ReactElement {
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SECURITY, CHAOS_ENABLED, NG_SETTINGS } =
-    useFeatureFlags()
+  const {
+    CDNG_ENABLED,
+    CVNG_ENABLED,
+    CING_ENABLED,
+    CENG_ENABLED,
+    CFNG_ENABLED,
+    SECURITY,
+    CHAOS_ENABLED,
+    NG_SETTINGS,
+    SCM_ENABLED
+  } = useFeatureFlags()
 
   return (
     <Switch>
@@ -59,6 +69,7 @@ export default function RouteDestinations(): React.ReactElement {
       {projectsOrgsRoutes.props.children}
       {DASHBOARDRoutes.props.children}
       {GovernanceRoutes.props.children}
+      {SCM_ENABLED ? SCMRoutes.props.children : null}
       {connectorRoutes.props.children}
       {tempatesRoutes.props.children}
       {freezeWindowRoutes.props.children}

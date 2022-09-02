@@ -48,7 +48,9 @@ import type {
   VariablesPathProps,
   EnvironmentQueryParams,
   AccountLevelGitOpsPathProps,
-  TemplateType
+  TemplateType,
+  SCMPathProps,
+  RequireField
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -1299,6 +1301,80 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/onboarding/detail`
   ),
+
+  // SCM Module (https://harness.atlassian.net/wiki/spaces/SCM/overview?homepageId=21144371782)
+  toSCM: withAccountId(() => `/scm`),
+  toSCMHome: withAccountId(() => `/scm/home`),
+  toSCMRepos: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: SCMPathProps) =>
+      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos`
+  ),
+  toSCMNewRepo: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: SCMPathProps) =>
+      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/new`
+  ),
+  toSCMRepoSettings: withAccountId(
+    ({ orgIdentifier, projectIdentifier, repoName }: RequireField<SCMPathProps, 'repoName'>) =>
+      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/settings`
+  ),
+  toSCMFiles: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      repoName,
+      branchName
+    }: RequireField<SCMPathProps, 'repoName' | 'branchName'>) =>
+      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}`
+  ),
+  toSCMFileDetails: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      repoName,
+      branchName,
+      filePath
+    }: RequireField<SCMPathProps, 'repoName' | 'branchName' | 'filePath'>) =>
+      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/files/${filePath}`
+  ),
+  toSCMPullRequests: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      repoName,
+      branchName
+    }: RequireField<SCMPathProps, 'repoName' | 'branchName'>) =>
+      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/pull-requests`
+  ),
+  toSCMPullRequestDetails: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      repoName,
+      branchName,
+      pullRequestId
+    }: RequireField<SCMPathProps, 'repoName' | 'branchName' | 'pullRequestId'>) =>
+      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/pull-requests/${pullRequestId}`
+  ),
+  toSCMCommits: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      repoName,
+      branchName
+    }: RequireField<SCMPathProps, 'repoName' | 'branchName'>) =>
+      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/commits`
+  ),
+  toSCMCommitDetails: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      repoName,
+      branchName,
+      commitId
+    }: RequireField<SCMPathProps, 'repoName' | 'branchName' | 'commitId'>) =>
+      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/commits/${commitId}`
+  ),
+
   /********************************************************************************************************************/
   toCV: (params: Partial<ProjectPathProps>): string =>
     params.orgIdentifier && params.projectIdentifier

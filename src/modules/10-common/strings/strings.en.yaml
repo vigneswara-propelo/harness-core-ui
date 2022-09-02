@@ -290,6 +290,8 @@ purpose:
     tests: '{{$.tests}}'
   errorTracking:
     title: Error Tracking
+  scm:
+    name: Repos
 trialInProgress: Trial in progress
 trialInProgressDescription: A Project contains your pipelines, resources, and team members. Get started by creating your first Project.
 letsGetYouStarted: Let’s get you started

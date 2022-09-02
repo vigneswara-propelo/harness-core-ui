@@ -23,7 +23,7 @@ const ExactSharedPackages = [
   'urql'
 ]
 
-module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI }) => {
+module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI, enableSCM }) => {
   const remotes = {}
 
   if (enableGitOpsUI) {
@@ -47,6 +47,10 @@ module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI }) => 
 
   if (enableChaosUI) {
     remotes.chaos = "chaos@[window.getApiBaseUrl('chaos/remoteEntry.js')]"
+  }
+
+  if (enableSCM) {
+    remotes.scm = "scm@[window.getApiBaseUrl('scm/remoteEntry.js')]"
   }
 
   if (process.env.TARGET_LOCALHOST) {

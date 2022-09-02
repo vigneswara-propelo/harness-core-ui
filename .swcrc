@@ -22,6 +22,7 @@
       "@rbac/*": ["modules/20-rbac/*"],
       "@default-settings/*": ["modules/23-default-settings/*"],
       "@governance/*": ["modules/25-governance/*"],
+      "@scm/*": ["modules/60-scm/*"],
       "@sto/*": ["modules/27-sto/*"],
       "@et/*": ["modules/28-et/*"],
       "@auth-settings/*": ["modules/33-auth-settings/*"],

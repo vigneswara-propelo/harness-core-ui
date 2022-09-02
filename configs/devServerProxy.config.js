@@ -96,6 +96,14 @@ module.exports = {
     pathRewrite: { '^/pm': '' },
     target: process.env.OPA_GOVERNANCE_UI_URL || 'http://localhost:3000'
   },
+  '/scm/api': {
+    pathRewrite: { '^/scm': '' },
+    target: process.env.SCM_API_URL || 'http://localhost:3001'
+  },
+  '/scm': {
+    pathRewrite: { '^/scm': '' },
+    target: process.env.SCM_API_URL || 'http://localhost:3000'
+  },
   '/sto/api': {
     pathRewrite: { '^/sto': '' },
     target: process.env.STO_API_URL || 'http://localhost:4000'

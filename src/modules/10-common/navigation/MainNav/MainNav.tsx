@@ -35,6 +35,7 @@ export default function L1Nav(): React.ReactElement {
     CENG_ENABLED,
     CFNG_ENABLED,
     CHAOS_ENABLED,
+    SCM_ENABLED,
     SECURITY,
     RESOURCE_CENTER_ENABLED,
     NG_DASHBOARDS
@@ -153,6 +154,23 @@ export default function L1Nav(): React.ReactElement {
                   className={css.text}
                 >
                   <String stringID="common.purpose.cv.serviceReliability" />
+                </Text>
+              </Layout.Vertical>
+            </Link>
+          </li>
+        )}
+        {SCM_ENABLED && (
+          <li className={css.navItem}>
+            <Link {...commonLinkProps} to={paths.toSCM(params)}>
+              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                <Icon name="gitops-green" size={30} />
+                <Text
+                  font={{ weight: 'semi-bold', align: 'center' }}
+                  padding={{ bottom: 'xsmall' }}
+                  color={Color.WHITE}
+                  className={css.text}
+                >
+                  <String stringID="common.purpose.scm.name" />
                 </Text>
               </Layout.Vertical>
             </Link>

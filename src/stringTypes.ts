@@ -612,6 +612,7 @@ export interface StringsMap {
   'common.purpose.errorTracking.title': string
   'common.purpose.howToProceed': string
   'common.purpose.moduleSuccess': string
+  'common.purpose.scm.name': string
   'common.purpose.selectAModule': string
   'common.purpose.service': string
   'common.purpose.setup': string

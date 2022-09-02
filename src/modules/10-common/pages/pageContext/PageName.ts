@@ -123,5 +123,15 @@ export enum PAGE_NAME {
   CECloudIntegration = 'CECloudIntegration',
   ErrorTrackingListPage = 'ErrorTrackingListPage',
   OPAPolicyDashboard = 'OPAPolicyDashboard',
+  SCMWelcome = 'SCMWelcome',
+  SCMRepos = 'SCMRepos',
+  SCMNewRepo = 'SCMNewRepo',
+  SCMRepoSettings = 'SCMRepoSettings',
+  SCMFiles = 'SCMFiles',
+  SCMFileDetail = 'SCMFileDetail',
+  SCMCommits = 'SCMCommits',
+  SCMCommitDetail = 'SCMCommitDetail',
+  SCMPullRequests = 'SCMPullRequests',
+  SCMPullRequestDetail = 'SCMPullRequestDetail',
   ExecutionList = 'ExecutionList'
 }
