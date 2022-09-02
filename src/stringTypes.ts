@@ -4560,6 +4560,7 @@ export interface StringsMap {
   'cd.updating': string
   'cd.updatingGitOpsServer': string
   'cd.useConnectorCredentials': string
+  'cd.validation.specifyFilter': string
   'cd.varFile': string
   'cd.varFileDetails': string
   'cd.whatIsHarnessAdapter': string

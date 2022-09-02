@@ -90,36 +90,32 @@ export type PdcInfraTemplate = {
 
 export function getValidationSchemaNoPreconfiguredHosts(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
-    credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('cd.credentialsRef') })),
-    hosts: Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString('cd.hosts') }))
+    credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('credentials') })),
+    hosts: Yup.string().required(
+      getString('common.validation.fieldIsRequired', { name: getString('connectors.pdc.hosts') })
+    )
   })
 }
 
 export function getValidationSchemaHostFilters(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
-    credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('cd.credentialsRef') })),
-    hostFilters: Yup.string().required(
-      getString('common.validation.fieldIsRequired', { name: getString('cd.hostFilters') })
-    )
+    credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('credentials') })),
+    hostFilters: Yup.string().required(getString('cd.validation.specifyFilter'))
   })
 }
 
 export function getValidationSchemaAttributeFilters(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
-    credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('cd.credentialsRef') })),
-    attributeFilters: Yup.string().required(
-      getString('common.validation.fieldIsRequired', {
-        name: getString('cd.attributeFilters')
-      })
-    )
+    credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('credentials') })),
+    attributeFilters: Yup.string().required(getString('cd.validation.specifyFilter'))
   })
 }
 
 export function getValidationSchemaAll(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
-    credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('cd.credentialsRef') }))
+    credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('credentials') }))
   })
 }
