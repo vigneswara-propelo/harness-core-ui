@@ -13120,6 +13120,8 @@ export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
 export type UploadSamlMetaDataRequestBody = void
 
+export type PostLdapAuthenticationTestRequestBody = void
+
 export interface GetAccountSettingQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -33118,6 +33120,85 @@ export const getTopProjectsPromise = (
     LandingDashboardRequestCDRequestBody,
     void
   >('POST', getConfig('ng/api'), `/landingDashboards/topProjects`, props, signal)
+
+export interface PostLdapAuthenticationTestQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type PostLdapAuthenticationTestProps = Omit<
+  MutateProps<
+    RestResponseLdapResponse,
+    Failure | Error,
+    PostLdapAuthenticationTestQueryParams,
+    PostLdapAuthenticationTestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Perform LDAP Login Test
+ */
+export const PostLdapAuthenticationTest = (props: PostLdapAuthenticationTestProps) => (
+  <Mutate<
+    RestResponseLdapResponse,
+    Failure | Error,
+    PostLdapAuthenticationTestQueryParams,
+    PostLdapAuthenticationTestRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/ldap/ldap-login-test`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UsePostLdapAuthenticationTestProps = Omit<
+  UseMutateProps<
+    RestResponseLdapResponse,
+    Failure | Error,
+    PostLdapAuthenticationTestQueryParams,
+    PostLdapAuthenticationTestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Perform LDAP Login Test
+ */
+export const usePostLdapAuthenticationTest = (props: UsePostLdapAuthenticationTestProps) =>
+  useMutate<
+    RestResponseLdapResponse,
+    Failure | Error,
+    PostLdapAuthenticationTestQueryParams,
+    PostLdapAuthenticationTestRequestBody,
+    void
+  >('POST', `/ldap/ldap-login-test`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Perform LDAP Login Test
+ */
+export const postLdapAuthenticationTestPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseLdapResponse,
+    Failure | Error,
+    PostLdapAuthenticationTestQueryParams,
+    PostLdapAuthenticationTestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseLdapResponse,
+    Failure | Error,
+    PostLdapAuthenticationTestQueryParams,
+    PostLdapAuthenticationTestRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/ldap/ldap-login-test`, props, signal)
 
 export interface ValidateLdapConnectionSettingsQueryParams {
   accountIdentifier: string

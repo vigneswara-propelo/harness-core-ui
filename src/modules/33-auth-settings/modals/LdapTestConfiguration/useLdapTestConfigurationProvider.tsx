@@ -27,7 +27,7 @@ import { isEmpty } from 'lodash-es'
 import { EmailSchema } from '@common/utils/Validation'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { usePostLdapLoginTest, useUpdateAuthMechanism } from 'services/cd-ng'
+import { usePostLdapAuthenticationTest, useUpdateAuthMechanism } from 'services/cd-ng'
 import { AuthenticationMechanisms } from '@rbac/utils/utils'
 import css from './useLdapTestConfiguration.module.scss'
 
@@ -57,7 +57,7 @@ const useLdapTestConfigurationProvider = ({
     password: Yup.string().min(6).required(getString('password'))
   })
 
-  const { mutate: ldapLoginTest, loading: isTestLoading } = usePostLdapLoginTest({
+  const { mutate: ldapLoginTest, loading: isTestLoading } = usePostLdapAuthenticationTest({
     queryParams: {
       accountIdentifier: accountId
     }

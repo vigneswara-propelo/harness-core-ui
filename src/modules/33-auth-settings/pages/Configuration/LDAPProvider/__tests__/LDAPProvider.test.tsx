@@ -138,7 +138,7 @@ describe('LDAP Provider', () => {
     await waitFor(() => getByText('authSettings.ldapProviderDeleted'))
   })
   test('LDAP Provider enable config', async () => {
-    jest.spyOn(cdngServices, 'usePostLdapLoginTest').mockImplementation(
+    jest.spyOn(cdngServices, 'usePostLdapAuthenticationTest').mockImplementation(
       () =>
         ({
           mutate: mockLdapLoginTest
@@ -183,7 +183,7 @@ describe('LDAP Provider', () => {
     await waitFor(() => expect(getByText('authSettings.ldap.authChangeSuccessful')).not.toBeNull())
   })
   test('LDAP Provider enable config test failure', async () => {
-    jest.spyOn(cdngServices, 'usePostLdapLoginTest').mockImplementation(
+    jest.spyOn(cdngServices, 'usePostLdapAuthenticationTest').mockImplementation(
       () =>
         ({
           mutate: mockLdapLoginDelegateFailure
@@ -228,7 +228,7 @@ describe('LDAP Provider', () => {
     await waitFor(() => expect(getByText('Delegate not found')).not.toBeNull())
   })
   test('LDAP Provider enable config auth failure', async () => {
-    jest.spyOn(cdngServices, 'usePostLdapLoginTest').mockImplementation(
+    jest.spyOn(cdngServices, 'usePostLdapAuthenticationTest').mockImplementation(
       () =>
         ({
           mutate: mockLdapLoginTest
@@ -273,7 +273,7 @@ describe('LDAP Provider', () => {
     await waitFor(() => expect(getByText('Not Allowed')).not.toBeNull())
   })
   test('LDAP Provider test config', async () => {
-    jest.spyOn(cdngServices, 'usePostLdapLoginTest').mockImplementation(
+    jest.spyOn(cdngServices, 'usePostLdapAuthenticationTest').mockImplementation(
       () =>
         ({
           mutate: mockLdapLoginTest
@@ -310,7 +310,7 @@ describe('LDAP Provider', () => {
     await waitFor(() => expect(getByText('authSettings.ldap.ldapTestSuccessful')).not.toBeNull())
   })
   test('LDAP Provider test config fail', async () => {
-    jest.spyOn(cdngServices, 'usePostLdapLoginTest').mockImplementation(
+    jest.spyOn(cdngServices, 'usePostLdapAuthenticationTest').mockImplementation(
       () =>
         ({
           mutate: mockLdapLoginTestFail

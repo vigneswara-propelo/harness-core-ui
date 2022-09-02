@@ -33,7 +33,7 @@ jest.mock('services/cd-ng', () => ({
   useGetSamlLoginTest: jest.fn().mockImplementation(() => {
     return { mutate: () => Promise.resolve(mockResponse) }
   }),
-  usePostLdapLoginTest: jest.fn().mockImplementation(() => {
+  usePostLdapAuthenticationTest: jest.fn().mockImplementation(() => {
     return { mutate: () => Promise.resolve(mockResponse) }
   }),
   useUpdateWhitelistedDomains: jest.fn().mockImplementation(() => {
