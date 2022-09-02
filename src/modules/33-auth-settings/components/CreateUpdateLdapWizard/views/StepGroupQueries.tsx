@@ -251,7 +251,7 @@ const GroupQueryPreview: React.FC<
           <li>
             <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
               <Text font={{ variation: FontVariation.BODY2 }} margin={{ right: 'xsmall' }}>
-                {`${getString('authSettings.ldap.groupMembershipAttributes')}: `}
+                {`${getString('authSettings.ldap.descriptionAttributes')}: `}
               </Text>
               <Text>{descriptionAttr}</Text>
             </Layout.Horizontal>

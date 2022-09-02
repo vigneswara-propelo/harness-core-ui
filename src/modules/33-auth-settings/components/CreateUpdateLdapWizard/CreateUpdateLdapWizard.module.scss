@@ -11,9 +11,8 @@
   overflow-y: auto;
 }
 
-.connectionSettingsListCtr {
-  max-height: 450px;
-  overflow-y: auto;
+.connectionSettingsFormCtr {
+  padding-bottom: var(--spacing-xxlarge) !important;
 }
 
 .groupSettingsList,

@@ -55,14 +55,22 @@ export const StepConnectionSettings: React.FC<
   })
 
   const validationSchema = Yup.object().shape({
-    host: Yup.string().trim().required(getString('authSettings.ldap.connSettings.validateHost')),
-    port: Yup.number().required(getString('common.smtp.portRequired')),
+    host: Yup.string().trim().required(getString('authSettings.ldap.connSettings.validateHost.required')),
+    port: Yup.number()
+      .typeError(getString('authSettings.ldap.connSettings.portNumber.number'))
+      .required(getString('authSettings.ldap.connSettings.portNumber.required')),
     maxReferralHops: Yup.number().when('referralsEnabled', {
       is: true,
-      then: Yup.number().required(getString('authSettings.ldap.connSettings.validateReferralHops'))
+      then: Yup.number()
+        .typeError(getString('authSettings.ldap.connSettings.validateReferralHops.number'))
+        .required(getString('authSettings.ldap.connSettings.validateReferralHops.required'))
     }),
-    connectTimeout: Yup.number().required(getString('authSettings.ldap.connSettings.validateConnectionTimeout')),
-    responseTimeout: Yup.number().required(getString('authSettings.ldap.connSettings.validateResponseTime')),
+    connectTimeout: Yup.number()
+      .typeError(getString('authSettings.ldap.connSettings.validateConnectionTimeout.number'))
+      .required(getString('authSettings.ldap.connSettings.validateConnectionTimeout.required')),
+    responseTimeout: Yup.number()
+      .typeError(getString('authSettings.ldap.connSettings.validateResponseTime.number'))
+      .required(getString('authSettings.ldap.connSettings.validateResponseTime.required')),
     bindDN: Yup.string().trim().required(getString('authSettings.ldap.connSettings.validateBindDN')),
     bindPassword: Yup.string().trim().required(getString('validation.password'))
   })
@@ -125,7 +133,7 @@ export const StepConnectionSettings: React.FC<
               <Layout.Horizontal margin={{ bottom: 'large' }}>
                 <Text font={{ variation: FontVariation.H4 }}>{getString('authSettings.ldap.connectionSettings')}</Text>
               </Layout.Horizontal>
-              <Layout.Vertical>
+              <Layout.Vertical className={css.connectionSettingsFormCtr}>
                 <Layout.Horizontal>
                   <Container className={css.connectionWiderFieldSet}>
                     <FormInput.Text
@@ -187,7 +195,7 @@ export const StepConnectionSettings: React.FC<
                 <hr className={css.separator} />
                 <Layout.Vertical>
                   <Layout.Horizontal spacing="medium">
-                    <Container className={css.connectionWiderFieldSet}>
+                    <Container className={css.connectionWiderFieldSet} padding={{ right: 'small' }}>
                       <FormInput.Text
                         name="bindDN"
                         placeholder={getString('authSettings.ldap.connSettings.bindDN')}

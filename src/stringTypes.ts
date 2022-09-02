@@ -1647,13 +1647,19 @@ export interface StringsMap {
   'authSettings.ldap.connSettings.hostAddress': string
   'authSettings.ldap.connSettings.maximumReferralHops': string
   'authSettings.ldap.connSettings.passwordPlaceholder': string
+  'authSettings.ldap.connSettings.portNumber.number': string
+  'authSettings.ldap.connSettings.portNumber.required': string
   'authSettings.ldap.connSettings.recursiveSearch': string
   'authSettings.ldap.connSettings.responseTime': string
   'authSettings.ldap.connSettings.validateBindDN': string
-  'authSettings.ldap.connSettings.validateConnectionTimeout': string
-  'authSettings.ldap.connSettings.validateHost': string
-  'authSettings.ldap.connSettings.validateReferralHops': string
-  'authSettings.ldap.connSettings.validateResponseTime': string
+  'authSettings.ldap.connSettings.validateConnectionTimeout.number': string
+  'authSettings.ldap.connSettings.validateConnectionTimeout.required': string
+  'authSettings.ldap.connSettings.validateHost.number': string
+  'authSettings.ldap.connSettings.validateHost.required': string
+  'authSettings.ldap.connSettings.validateReferralHops.number': string
+  'authSettings.ldap.connSettings.validateReferralHops.required': string
+  'authSettings.ldap.connSettings.validateResponseTime.number': string
+  'authSettings.ldap.connSettings.validateResponseTime.required': string
   'authSettings.ldap.connectionSettings': string
   'authSettings.ldap.descriptionAttributes': string
   'authSettings.ldap.editLdapConfiguration': string

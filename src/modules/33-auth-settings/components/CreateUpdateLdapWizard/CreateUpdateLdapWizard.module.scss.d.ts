@@ -12,7 +12,7 @@ declare const styles: {
   readonly alignCenter: string
   readonly commitBtn: string
   readonly connectionFieldSet: string
-  readonly connectionSettingsListCtr: string
+  readonly connectionSettingsFormCtr: string
   readonly connectionWiderFieldSet: string
   readonly fluidLabel: string
   readonly groupSettingsList: string

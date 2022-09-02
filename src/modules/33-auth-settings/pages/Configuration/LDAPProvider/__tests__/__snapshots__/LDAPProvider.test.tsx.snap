@@ -668,7 +668,7 @@ exports[`LDAP setup Wizard Connection Settings step renders in LDAP wizard ADD m
                   </p>
                 </div>
                 <div
-                  class="Layout--vertical StyledProps--main"
+                  class="Layout--vertical StyledProps--main connectionSettingsFormCtr"
                 >
                   <div
                     class="Layout--horizontal StyledProps--main"
@@ -737,7 +737,7 @@ exports[`LDAP setup Wizard Connection Settings step renders in LDAP wizard ADD m
                               <span
                                 class="FormError--error"
                               >
-                                authSettings.ldap.connSettings.validateHost
+                                authSettings.ldap.connSettings.validateHost.required
                               </span>
                             </div>
                           </div>
@@ -814,7 +814,7 @@ exports[`LDAP setup Wizard Connection Settings step renders in LDAP wizard ADD m
                                 <span
                                   class="FormError--error"
                                 >
-                                  common.smtp.portRequired
+                                  authSettings.ldap.connSettings.portNumber.required
                                 </span>
                               </div>
                             </div>
@@ -996,7 +996,7 @@ exports[`LDAP setup Wizard Connection Settings step renders in LDAP wizard ADD m
                                 <span
                                   class="FormError--error"
                                 >
-                                  authSettings.ldap.connSettings.validateConnectionTimeout
+                                  authSettings.ldap.connSettings.validateConnectionTimeout.required
                                 </span>
                               </div>
                             </div>
@@ -1100,7 +1100,7 @@ exports[`LDAP setup Wizard Connection Settings step renders in LDAP wizard ADD m
                                 <span
                                   class="FormError--error"
                                 >
-                                  authSettings.ldap.connSettings.validateResponseTime
+                                  authSettings.ldap.connSettings.validateResponseTime.required
                                 </span>
                               </div>
                             </div>
@@ -1119,7 +1119,7 @@ exports[`LDAP setup Wizard Connection Settings step renders in LDAP wizard ADD m
                       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                     >
                       <div
-                        class="StyledProps--font StyledProps--main connectionWiderFieldSet"
+                        class="StyledProps--font StyledProps--main connectionWiderFieldSet StyledProps--padding-right-small"
                       >
                         <div
                           class="bp3-form-group bp3-intent-danger"

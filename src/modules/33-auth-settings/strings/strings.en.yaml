@@ -238,10 +238,21 @@ ldap:
     bindDN: Bind DN
     bindDNPlaceholder: Enter Distinguished Name
     passwordPlaceholder: Enter Password
-    validateHost: 'Hostname or IP is required'
-    validateReferralHops: 'Referral Hops is required'
-    validateConnectionTimeout: 'Connection timeout is required'
-    validateResponseTime: 'Response timeout is required'
+    portNumber:
+      required: '{{ $.common.smtp.portRequired }}'
+      number: 'Port must be a number'
+    validateHost:
+      required: 'Hostname or IP is required'
+      number: 'Hostname or IP must be a number'
+    validateReferralHops:
+      required: 'Referral Hops is required'
+      number: 'Referral Hops must be a number'
+    validateConnectionTimeout:
+      required: 'Connection timeout is required'
+      number: 'Connection timeout must be a number'
+    validateResponseTime:
+      required: 'Response timeout is required'
+      number: 'Response timeout should be a number'
     validateBindDN: 'Bind Distinguished Name is required'
   updateStepFailMessage: 'Update failed'
 billingInfo:
