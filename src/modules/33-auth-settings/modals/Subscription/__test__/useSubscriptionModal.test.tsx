@@ -11,11 +11,12 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { Editions, TimeType } from '@common/constants/SubscriptionTypes'
 import * as useGetUsageAndLimit from '@common/hooks/useGetUsageAndLimit'
-import { useRetrieveProductPrices, useCreateFfSubscription } from 'services/cd-ng/index'
+import { useRetrieveProductPrices, useCreateFfSubscription, useRetrieveRecommendation } from 'services/cd-ng/index'
 import { useSubscribeModal } from '../useSubscriptionModal'
 
 jest.mock('services/cd-ng')
 const useRetrieveProductPricesMock = useRetrieveProductPrices as jest.MockedFunction<any>
+const useRetrieveRecommendationMock = useRetrieveRecommendation as jest.MockedFunction<any>
 
 const subscriptionData = {
   clientSecret: 'pi_3L9E7qIqk5P9Eha30B1Vpt0Z_secret_qXFya58HXLP0e3rIQEVzK3iyd'
@@ -153,6 +154,14 @@ useRetrieveProductPricesMock.mockImplementation(() => {
   return {
     refetch: jest.fn(),
     data: priceData,
+    loading: false
+  }
+})
+
+useRetrieveRecommendationMock.mockImplementation(() => {
+  return {
+    refetch: jest.fn(),
+    data: null,
     loading: false
   }
 })

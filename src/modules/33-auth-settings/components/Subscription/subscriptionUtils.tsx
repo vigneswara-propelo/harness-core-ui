@@ -77,6 +77,7 @@ interface GetCostCalculatorBodyByModuleProps {
   productPrices: ProductPricesProp
   subscriptionDetails: SubscriptionProps
   setSubscriptionDetails: (props: SubscriptionProps) => void
+  recommendation: { [key: string]: number } | null
 }
 
 export function getCostCalculatorBodyByModule({
@@ -86,7 +87,8 @@ export function getCostCalculatorBodyByModule({
   productPrices,
   paymentFrequency,
   subscriptionDetails,
-  setSubscriptionDetails
+  setSubscriptionDetails,
+  recommendation
 }: GetCostCalculatorBodyByModuleProps): React.ReactElement {
   const { edition, paymentFreq } = subscriptionDetails
   const productPricesByPayFreq = getProductPrices(edition, paymentFreq, productPrices)
@@ -116,6 +118,7 @@ export function getCostCalculatorBodyByModule({
           <FFDeveloperCard
             currentPlan={currentPlan}
             newPlan={edition}
+            recommended={get(recommendation, 'data.NUMBER_OF_USERS', null)}
             currentSubscribed={usageAndLimitInfo.limitData.limit?.ff?.totalFeatureFlagUnits || 0}
             unitPrice={licenseUnitPrice}
             usage={usageAndLimitInfo.usageData.usage?.ff?.activeFeatureFlagUsers?.count || 0}
@@ -134,9 +137,12 @@ export function getCostCalculatorBodyByModule({
             }}
           />
           <FFMAUCard
+            getRecommendedNumbers={getRecommendedNumbers}
+            recommended={get(recommendation, 'data.NUMBER_OF_MAUS', 0)}
             key={sampleData.minValue}
             minValue={sampleData.minValue}
             unit={sampleData.sampleUnit}
+            sampleMultiplier={sampleData.sampleMultiplier}
             currentPlan={currentPlan}
             newPlan={edition}
             paymentFreq={paymentFreq}
@@ -368,4 +374,19 @@ export const getQuantityFromValue = (value: string, multiplier: string, unit: st
   const sampleMultiplier = toInteger(strToNumber(multiplier))
 
   return `${currValue / sampleMultiplier}${unit}`
+}
+export const getRecommendedNumbers = (
+  recommeneded: number,
+  sampleMultiplier: number,
+  valuesArray: number[]
+): number => {
+  let recommendedNumber = valuesArray[0]
+  const recNum = recommeneded
+  for (const value of valuesArray) {
+    if (recNum < value * sampleMultiplier) {
+      recommendedNumber = value
+      break
+    }
+  }
+  return recommendedNumber
 }

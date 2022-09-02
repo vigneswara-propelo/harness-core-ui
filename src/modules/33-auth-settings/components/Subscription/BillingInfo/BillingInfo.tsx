@@ -24,7 +24,7 @@ import css from './BillingInfo.module.scss'
 interface BillingInfoProp {
   subscriptionProps: SubscriptionProps
   setView: (view: SubscribeViews) => void
-  setInvoiceData: (value: InvoiceDetailDTO) => void
+  setInvoiceData: (value?: InvoiceDetailDTO) => void
   setSubscriptionProps: (props: SubscriptionProps) => void
   className?: string
   countries: { label: string; value: string }[]
@@ -34,6 +34,7 @@ interface BillingInfoProp {
 export const BillingInfo: React.FC<BillingInfoProp> = ({
   subscriptionProps,
   setSubscriptionProps,
+  setInvoiceData,
   setView,
   className,
   countries,
@@ -59,6 +60,8 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
       let res
 
       if (!update) {
+        setSubscriptionProps({ ...subscriptionProps, subscriptionId: '' })
+        setInvoiceData(undefined)
         const sampleMultiplier = subscriptionProps.sampleDetails?.sampleMultiplier
         const numberOfMau =
           defaultTo(subscriptionProps.quantities?.featureFlag?.numberOfMau, 0) * defaultTo(sampleMultiplier, 0)
@@ -115,6 +118,7 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
 
   return (
     <Formik
+      validateOnChange={false}
       initialValues={initValues}
       validationSchema={Yup.object().shape({
         country: Yup.string().required(getString('common.banners.trial.contactSalesForm.countryValidation')),

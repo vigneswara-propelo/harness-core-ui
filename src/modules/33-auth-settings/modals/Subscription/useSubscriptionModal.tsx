@@ -60,7 +60,7 @@ interface LeftViewProps {
   subscriptionProps: SubscriptionProps
   invoiceData?: InvoiceDetailDTO
   setSubscriptionProps: (value: SubscriptionProps) => void
-  setInvoiceData: (value: InvoiceDetailDTO) => void
+  setInvoiceData: (value?: InvoiceDetailDTO) => void
   view: SubscribeViews
   setView: (value: SubscribeViews) => void
   countries: LabelValue[]

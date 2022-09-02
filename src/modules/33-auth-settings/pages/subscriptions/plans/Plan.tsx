@@ -120,9 +120,6 @@ const Plan: React.FC<PlanProps> = ({ plan, timeType, module }) => {
                       {planProps?.unit}
                     </Text>
                   </Popover>
-                  <Text font={{ size: 'small' }} color={Color.BLACK}>
-                    {getString('common.perMonth')}
-                  </Text>
                 </Layout.Vertical>
               )}
             </Layout.Horizontal>

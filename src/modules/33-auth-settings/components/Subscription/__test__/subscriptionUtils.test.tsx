@@ -263,7 +263,8 @@ describe.skip('subscriptionUtils', () => {
               }
             }
           }
-        }
+        },
+        recommendation: null
       })
       const { container } = render(<TestWrapper>{body}</TestWrapper>)
       await waitFor(() => {
@@ -291,7 +292,8 @@ describe.skip('subscriptionUtils', () => {
               ff: {}
             }
           }
-        }
+        },
+        recommendation: null
       })
       const { container } = render(<TestWrapper>{body}</TestWrapper>)
       await waitFor(() => {
@@ -328,7 +330,8 @@ describe.skip('subscriptionUtils', () => {
               }
             }
           }
-        }
+        },
+        recommendation: null
       })
       const { container } = render(<TestWrapper>{body}</TestWrapper>)
       await waitFor(() => {

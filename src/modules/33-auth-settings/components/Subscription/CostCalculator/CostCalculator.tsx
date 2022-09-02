@@ -8,12 +8,12 @@
 import React from 'react'
 import { Layout, PageError, Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import type { Module, ModuleName } from 'framework/types/ModuleName'
 import {
   RetrieveProductPricesQueryParams,
-  useRetrieveProductPrices
-  // useRetrieveRecommendation
+  useRetrieveProductPrices,
+  useRetrieveRecommendation
 } from 'services/cd-ng/index'
 import {
   Editions,
@@ -67,14 +67,20 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
       moduleType: module.toUpperCase() as RetrieveProductPricesQueryParams['moduleType']
     }
   })
-  // const { data: recommendation, refetch } = useRetrieveRecommendation({
-  //   queryParams: {
-  //     accountIdentifier: accountId
-  //   },
-  //   lazy: true
-  // })
+  const { data: recommendation, refetch: fetchRecommendations } = useRetrieveRecommendation({
+    queryParams: {
+      accountIdentifier: accountId,
+      numberOfMAUs: defaultTo(usageAndLimitInfo.usageData.usage?.ff?.activeClientMAUs?.count, 0),
+      numberOfUsers: defaultTo(usageAndLimitInfo.usageData.usage?.ff?.activeFeatureFlagUsers?.count, 0)
+    },
+    lazy: true
+  })
   const prices = data?.data?.prices
-
+  React.useEffect(() => {
+    if (usageAndLimitInfo.usageData.usage?.ff) {
+      fetchRecommendations()
+    }
+  }, [usageAndLimitInfo.usageData.usage?.ff])
   React.useEffect(() => {
     const newProductPrices: ProductPricesProp = { monthly: [], yearly: [] }
     if (prices) {
@@ -133,7 +139,8 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
           productPrices: subscriptionProps.productPrices,
           paymentFrequency: subscriptionProps.paymentFreq,
           subscriptionDetails: subscriptionProps,
-          setSubscriptionDetails: setSubscriptionProps
+          setSubscriptionDetails: setSubscriptionProps,
+          recommendation: defaultTo(recommendation?.data, null)
         })}
         <PremiumSupport
           premiumSupport={subscriptionProps.premiumSupport}

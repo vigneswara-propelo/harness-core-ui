@@ -15,9 +15,6 @@ import { Item } from './FFDeveloperCard'
 import SliderBar from './SliderBar'
 import css from './CostCalculator.module.scss'
 
-export const getRecommendedNumbers = (usage: number, currentSubscribed: number): number =>
-  Math.max(Math.ceil(usage * 1.2), currentSubscribed)
-
 const Header: React.FC<{ unitPrice: number; paymentFreq: TimeType }> = () => {
   const { getString } = useStrings()
   // const mauUnitDecr =
@@ -47,11 +44,17 @@ const Header: React.FC<{ unitPrice: number; paymentFreq: TimeType }> = () => {
 
 interface MAUSubscriptionInfoProps {
   currentSubscribed: number
-  usage: number
+  usage: string
   currentPlan: Editions
+  recommended: string
 }
 
-const MAUSubscriptionInfo: React.FC<MAUSubscriptionInfoProps> = ({ currentSubscribed, usage, currentPlan }) => {
+const MAUSubscriptionInfo: React.FC<MAUSubscriptionInfoProps> = ({
+  currentSubscribed,
+  usage,
+  currentPlan,
+  recommended
+}) => {
   const { getString } = useStrings()
   const currentPlanDescr = (
     <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'baseline', justifyContent: 'start' }}>
@@ -61,19 +64,19 @@ const MAUSubscriptionInfo: React.FC<MAUSubscriptionInfoProps> = ({ currentSubscr
       </Text>
     </Layout.Horizontal>
   )
-  const recommended = getRecommendedNumbers(usage, currentSubscribed)
+
   return (
     <Layout.Horizontal flex={{ justifyContent: 'space-between' }} className={css.subscriptionInfo}>
       <Item title={getString('authSettings.costCalculator.currentSubscribed')} value={currentPlanDescr} />
       <Item
         title={getString('authSettings.costCalculator.using')}
-        value={<Text font={{ weight: 'bold' }}>{usage}k</Text>}
+        value={<Text font={{ weight: 'bold' }}>{usage}</Text>}
       />
       <Item
         title={getString('authSettings.recomendation')}
         value={
           <Text color={Color.PRIMARY_7} font={{ weight: 'bold' }}>
-            {recommended}k
+            {recommended}
           </Text>
         }
       />
@@ -92,6 +95,9 @@ interface FFMAUCardProps {
   setNumberOfMAUs: (value: number) => void
   unit?: string
   minValue: number
+  sampleMultiplier?: number
+  recommended: number
+  getRecommendedNumbers: (recommeneded: number, sampleMultiplier: number, valuesArray: number[]) => number
 }
 
 const TEAM_MAU_LIST = [100, 200, 300, 400, 500]
@@ -107,7 +113,10 @@ const FFMAUCard: React.FC<FFMAUCardProps> = ({
   setNumberOfMAUs,
   paymentFreq,
   minValue,
-  unit
+  unit,
+  sampleMultiplier = 0,
+  recommended,
+  getRecommendedNumbers
 }) => {
   const numberOfMAUs = selectedNumberOfMAUs || usage
   const [mausRange, setMausRange] = useState<{
@@ -134,7 +143,6 @@ const FFMAUCard: React.FC<FFMAUCardProps> = ({
   }, [minValue])
 
   useEffect(() => {
-    // TODO: get tier from prices api call
     if (newPlan === Editions.TEAM) {
       setMausRange({
         min: 0,
@@ -159,13 +167,18 @@ const FFMAUCard: React.FC<FFMAUCardProps> = ({
     const finalValue = mausRange.list[val]
     setNumberOfMAUs(finalValue)
   }
-
+  const recommendedValue = `${getRecommendedNumbers(recommended, sampleMultiplier, mausRange.list)}${unit}`
   const selectedValue = mausRange.list.findIndex((num: number) => num === numberOfMAUs)
   return (
     <Card>
       <Layout.Vertical>
         <Header unitPrice={unitPrice} paymentFreq={paymentFreq} />
-        <MAUSubscriptionInfo currentSubscribed={currentSubscribed} usage={usage} currentPlan={currentPlan} />
+        <MAUSubscriptionInfo
+          currentSubscribed={currentSubscribed}
+          usage={`${usage === 0 ? usage : usage / defaultTo(sampleMultiplier, 1)}${unit}`}
+          currentPlan={currentPlan}
+          recommended={recommendedValue}
+        />
         <SliderBar
           min={mausRange.min}
           max={mausRange.max}

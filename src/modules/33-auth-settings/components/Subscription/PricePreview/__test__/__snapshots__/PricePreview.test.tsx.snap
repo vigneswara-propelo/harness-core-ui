@@ -33,6 +33,7 @@ exports[`PricePreview render 1`] = `
           <input
             checked=""
             class="Toggle--input"
+            disabled=""
             type="checkbox"
             value=""
           />

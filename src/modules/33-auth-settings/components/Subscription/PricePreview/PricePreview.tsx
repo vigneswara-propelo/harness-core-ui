@@ -28,12 +28,14 @@ interface PricePreviewProps {
   subscriptionDetails: SubscriptionProps
   setSubscriptionDetails: (value: SubscriptionProps) => void
   module: Module
+  canChangePaymentFrequency?: boolean
 }
 
 const PaymentFrequencyToggle: React.FC<{
   paymentFrequency: TimeType
   setPaymentFrequency: (value: TimeType) => void
-}> = ({ paymentFrequency, setPaymentFrequency }) => {
+  disabled?: boolean
+}> = ({ paymentFrequency, setPaymentFrequency, disabled }) => {
   const { getString } = useStrings()
   const monthlyClassName = paymentFrequency === TimeType.MONTHLY ? css.selected : ''
   const yearlyClassName = paymentFrequency === TimeType.YEARLY ? css.selected : ''
@@ -43,6 +45,7 @@ const PaymentFrequencyToggle: React.FC<{
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'baseline', justifyContent: 'start' }}>
         <Text className={monthlyClassName}>{getString('common.monthly')}</Text>
         <Toggle
+          disabled={disabled}
           data-testid="toggle"
           checked={paymentFrequency === TimeType.YEARLY}
           onToggle={isToggled => {
@@ -92,7 +95,12 @@ function getColorByModule(module: Module): string | undefined {
   return undefined
 }
 
-const PricePreview: React.FC<PricePreviewProps> = ({ module, subscriptionDetails, setSubscriptionDetails }) => {
+const PricePreview: React.FC<PricePreviewProps> = ({
+  module,
+  subscriptionDetails,
+  setSubscriptionDetails,
+  canChangePaymentFrequency
+}) => {
   const { getString } = useStrings()
   const { paymentFreq, productPrices, premiumSupport, quantities, taxAmount } = subscriptionDetails
   const products = useMemo(() => {
@@ -171,6 +179,7 @@ const PricePreview: React.FC<PricePreviewProps> = ({ module, subscriptionDetails
         {getString('authSettings.pricePreview.title')}
       </Text>
       <PaymentFrequencyToggle
+        disabled={!canChangePaymentFrequency}
         paymentFrequency={paymentFreq}
         setPaymentFrequency={(value: TimeType) => {
           if (value === TimeType.MONTHLY) {

@@ -6,13 +6,12 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { capitalize } from 'lodash-es'
+import { capitalize, defaultTo } from 'lodash-es'
 import { Card, Layout, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { Editions, CurrencyType } from '@common/constants/SubscriptionTypes'
 import { getAmountInCurrency } from '@auth-settings/utils'
-
 import SliderBar from './SliderBar'
 import css from './CostCalculator.module.scss'
 
@@ -47,6 +46,7 @@ interface DeveloperSubscriptionInfoProps {
   currentSubscribed: number
   usage: number
   currentPlan: Editions
+  recommended: number | null
 }
 
 export const Item: React.FC<{ title: string; value: React.ReactElement }> = ({ title, value }) => {
@@ -61,7 +61,8 @@ export const Item: React.FC<{ title: string; value: React.ReactElement }> = ({ t
 const DeveloperSubscriptionInfo: React.FC<DeveloperSubscriptionInfoProps> = ({
   currentSubscribed,
   usage,
-  currentPlan
+  currentPlan,
+  recommended
 }) => {
   const { getString } = useStrings()
   const currentPlanDescr = (
@@ -72,7 +73,7 @@ const DeveloperSubscriptionInfo: React.FC<DeveloperSubscriptionInfoProps> = ({
       </Text>
     </Layout.Horizontal>
   )
-  const recommended = Math.max(Math.ceil(usage * 1.2), currentSubscribed)
+  const recommendedNumber = defaultTo(recommended, Math.max(Math.ceil(usage * 1.2), currentSubscribed))
   return (
     <Layout.Horizontal flex={{ justifyContent: 'space-between' }} className={css.subscriptionInfo}>
       <Item title={getString('authSettings.costCalculator.currentSubscribed')} value={currentPlanDescr} />
@@ -84,7 +85,7 @@ const DeveloperSubscriptionInfo: React.FC<DeveloperSubscriptionInfoProps> = ({
         title={getString('authSettings.recomendation')}
         value={
           <Text color={Color.PRIMARY_7} font={{ weight: 'bold' }}>
-            {recommended}
+            {recommendedNumber}
           </Text>
         }
       />
@@ -100,6 +101,7 @@ interface FFDeveloperCardProps {
   newPlan: Editions
   toggledNumberOfDevelopers?: number
   setNumberOfDevelopers: (value: number) => void
+  recommended: number | null
 }
 
 const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
@@ -109,7 +111,8 @@ const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
   currentPlan,
   newPlan,
   toggledNumberOfDevelopers,
-  setNumberOfDevelopers
+  setNumberOfDevelopers,
+  recommended
 }) => {
   const numberOfDevelopers = toggledNumberOfDevelopers || usage
   const [licenseRange, setLicensesRange] = useState<{
@@ -154,7 +157,12 @@ const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
     <Card>
       <Layout.Vertical>
         <Header unitPrice={unitPrice} />
-        <DeveloperSubscriptionInfo currentSubscribed={currentSubscribed} usage={usage} currentPlan={currentPlan} />
+        <DeveloperSubscriptionInfo
+          recommended={recommended}
+          currentSubscribed={currentSubscribed}
+          usage={usage}
+          currentPlan={currentPlan}
+        />
         <SliderBar
           min={licenseRange.min}
           max={licenseRange.max}
