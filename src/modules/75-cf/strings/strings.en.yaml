@@ -1314,10 +1314,10 @@ onboarding:
     dotnet: |
       # Install
 
-      You can reference the SDK in your project using NuGet package. Package is published to default package repository (nuget.org).
-      Package name is 
+      You can reference the SDK in your project using NuGet package. The package is published to default package repository (nuget.org) and can be installed
+      with the following command:
       ```
-      ff-netF48-server-sdk --version 1.0.8
+      dotnet add package ff-dotnet-server-sdk
       ```
 
       More information can be found <a href="https://docs.microsoft.com/en-us/nuget/quickstart/install-and-use-a-package-using-the-dotnet-cli">here</>
