@@ -64,7 +64,7 @@ function DeployServiceDefinition(): React.ReactElement {
 
   const getGitOpsCheckValue = (): boolean => {
     if (isServiceCreateModalView) {
-      return defaultGitOpsValue
+      return defaultTo(defaultGitOpsValue, false)
     }
     return defaultTo((pipeline as ServicePipelineConfig).gitOpsEnabled, false)
   }

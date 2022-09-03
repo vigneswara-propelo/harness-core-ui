@@ -79,7 +79,7 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
       identifier: defaultTo(serviceYaml?.service?.identifier, DefaultNewPipelineId),
       description: serviceYaml?.service?.description,
       tags: serviceYaml?.service?.tags,
-      gitOpsEnabled: defaultTo(serviceYaml?.service?.gitOpsEnabled, false)
+      gitOpsEnabled: serviceYaml?.service?.gitOpsEnabled
     }
     return produce({ ...defaultPipeline }, draft => {
       if (!isEmpty(serviceYaml?.service?.serviceDefinition)) {

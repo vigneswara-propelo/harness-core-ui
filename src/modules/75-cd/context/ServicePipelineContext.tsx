@@ -187,7 +187,7 @@ export function ServicePipelineProvider({
         name: serviceDetails.name as string,
         description: serviceData.service.description,
         tags: serviceData.service.tags,
-        gitOpsEnabled: defaultTo(serviceData.service.gitOpsEnabled, false)
+        gitOpsEnabled: serviceData.service.gitOpsEnabled
       }
       const refetchedPipeline = produce({ ...defaultPipeline }, draft => {
         if (!isEmpty(serviceData.service.serviceDefinition)) {
