@@ -1252,7 +1252,6 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           render={renderPopover}
           bind={setDynamicPopoverHandler}
           usePortal
-          portalClassName={css.portalVisibility}
           closeOnMouseOut
         />
       </div>
