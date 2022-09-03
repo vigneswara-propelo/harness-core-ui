@@ -56,6 +56,12 @@ import { AzureSlotDeployment } from './AzureSlotDeployment/AzureSlotDeployment'
 import { AzureTrafficShift } from './AzureTrafficShift/AzureTrafficShift'
 import { AzureSwapSlot } from './AzureWebAppSwapSlot/AzureWebAppSwapSlot'
 import { AzureWebAppServiceSpec } from './AzureWebAppServiceSpec/AzureWebAppServiceSpec'
+import { ECSInfraSpec } from './ECSInfraSpec/ECSInfraSpec'
+import { ECSServiceSpec } from './ECSServiceSpec/ECSServiceSpec'
+import { ECSRollingDeployStep } from './ECSRollingDeployStep/ECSRollingDeployStep'
+import { ECSRollingRollbackStep } from './ECSRollingRollbackStep/ECSRollingRollbackStep'
+import { ECSCanaryDeployStep } from './ECSCanaryDeployStep/ECSCanaryDeployStep'
+import { ECSCanaryDeleteStep } from './ECSCanaryDeleteStep/ECSCanaryDeleteStep'
 import { AzureArmRollback } from './AzureArmRollback/AzureArmRollback'
 import { AzureBlueprintStep } from './AzureBlueprint/AzureBlueprint'
 
@@ -108,5 +114,11 @@ factory.registerStep(new AzureWebAppRollback())
 factory.registerStep(new AzureSlotDeployment())
 factory.registerStep(new AzureTrafficShift())
 factory.registerStep(new AzureSwapSlot())
+factory.registerStep(new ECSInfraSpec())
+factory.registerStep(new ECSServiceSpec())
+factory.registerStep(new ECSRollingDeployStep())
+factory.registerStep(new ECSRollingRollbackStep())
+factory.registerStep(new ECSCanaryDeployStep())
+factory.registerStep(new ECSCanaryDeleteStep())
 factory.registerStep(new AzureArmRollback())
 factory.registerStep(new AzureBlueprintStep())

@@ -93,6 +93,12 @@ export enum StepType {
   JenkinsBuild = 'JenkinsBuild',
   AzureTrafficShift = 'AzureTrafficShift',
   AzureSwapSlot = 'AzureSwapSlot',
+  EcsInfra = 'EcsInfra',
+  EcsService = 'EcsService',
+  EcsRollingDeploy = 'EcsRollingDeploy',
+  EcsRollingRollback = 'EcsRollingRollback',
+  EcsCanaryDeploy = 'EcsCanaryDeploy',
+  EcsCanaryDelete = 'EcsCanaryDelete',
   AzureArmRollback = 'AzureARMRollback',
   Background = 'Background',
   AzureBlueprint = 'AzureCreateBPResource'

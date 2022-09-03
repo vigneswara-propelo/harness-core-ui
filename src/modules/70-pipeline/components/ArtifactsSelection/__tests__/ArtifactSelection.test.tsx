@@ -8,17 +8,20 @@
 import React from 'react'
 import { render, findByText, fireEvent, waitFor, findAllByText, getByText } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContext,
   PipelineContextInterface
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ArtifactsSelection from '../ArtifactsSelection'
 import pipelineContextMock from './pipelineContext.json'
 import pipelineContextWithoutArtifactsMock from './pipelineContextWithoutArtifacts.json'
 import connectorsData from './connectors_mock.json'
 import ArtifactListView from '../ArtifactListView/ArtifactListView'
 import type { ArtifactListViewProps } from '../ArtifactInterface'
+import { testArtifactTypeList } from './helper'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -550,7 +553,7 @@ describe('ArtifactsSelection tests', () => {
     )
 
     const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
-    expect(addPrimaryButton).toBeDefined()
+    expect(addPrimaryButton).toBeInTheDocument()
     fireEvent.click(addPrimaryButton)
 
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
@@ -571,5 +574,65 @@ describe('ArtifactsSelection tests', () => {
     const overviewTitle = await findAllByText(portal, 'overview')
     expect(overviewTitle).toHaveLength(2)
     expect(getByText(portal, 'name')).toBeDefined()
+  })
+
+  test('clicking on Add Primary Artifact button should display all required artifact types for Amazon ECS', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { ECS_NG: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType={ServiceDeploymentType.ECS}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    expect(addPrimaryButton).toBeInTheDocument()
+    fireEvent.click(addPrimaryButton)
+    await testArtifactTypeList()
+  })
+
+  test('clicking on Add Sidecar button should display all required artifact types for Amazon ECS', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { ECS_NG: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType={ServiceDeploymentType.ECS}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    expect(addSidecarButton).toBeInTheDocument()
+    fireEvent.click(addSidecarButton)
+    await testArtifactTypeList()
   })
 })

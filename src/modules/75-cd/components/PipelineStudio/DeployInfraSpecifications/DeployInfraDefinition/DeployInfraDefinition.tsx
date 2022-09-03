@@ -30,6 +30,7 @@ import {
   PdcInfrastructure,
   PipelineInfrastructure,
   StageElementConfig,
+  EcsInfrastructure,
   GetExecutionStrategyYamlQueryParams,
   SshWinRmAwsInfrastructure
 } from 'services/cd-ng'
@@ -71,6 +72,7 @@ import type { ServerlessAzureSpec } from '@cd/components/PipelineSteps/Serverles
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import type { ECSInfraSpec } from '@cd/components/PipelineSteps/ECSInfraSpec/ECSInfraSpec'
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
@@ -109,6 +111,7 @@ type InfraTypes =
   | PdcInfrastructure
   | SshWinRmAwsInfrastructure
   | AzureWebAppInfrastructure
+  | EcsInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
@@ -582,6 +585,30 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                 InfraDeploymentType.SshWinRmAzure
               )
             }}
+          />
+        )
+      }
+      case InfraDeploymentType.ECS: {
+        return (
+          <StepWidget<ECSInfraSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as ECSInfraSpec}
+            type={StepType.EcsInfra}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  region: value.region,
+                  cluster: value.cluster,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.ECS
+              )
+            }
           />
         )
       }

@@ -637,7 +637,6 @@ recommendation:
     filters:
       minSaving: Monthly savings greater than
       minCost: Monthly cost greater than
-      clusterName: Cluster Name
       name: '{{ $.name }}'
       namespace: '{{ $.common.namespace }}'
       enterCost: Enter Cost

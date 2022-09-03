@@ -26,6 +26,7 @@ import { gitFetchTypeList, GitFetchTypes, GitRepoName, ManifestStoreMap } from '
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import DragnDropPaths from '../../DragnDropPaths'
 import { filePathWidth } from '../ManifestUtils'
+import { shouldAllowOnlyOneFilePath } from './utils'
 import css from './CommonManifestDetails.module.scss'
 
 interface ManifestDetailsCoreSectionProps {
@@ -42,6 +43,7 @@ const getAccountUrl = (prevStepData?: ConnectorConfigDTO): string => {
 
 export function ManifestDetailsCoreSection({
   formik,
+  selectedManifest,
   expressions,
   allowableTypes,
   prevStepData,
@@ -157,6 +159,7 @@ export function ManifestDetailsCoreSection({
           placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
           defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
           dragDropFieldWidth={filePathWidth}
+          allowOnlyOneFilePath={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
         />
         {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions

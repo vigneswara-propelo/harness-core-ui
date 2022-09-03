@@ -24,6 +24,7 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { DeployServiceStep } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
 import { GenericServiceSpec } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpec'
 import { ServerlessAwsLambdaServiceSpec } from '@cd/components/PipelineSteps/ServerlessAwsLambdaServiceSpec/ServerlessAwsLambdaServiceSpec'
+import { ECSServiceSpec } from '@cd/components/PipelineSteps/ECSServiceSpec/ECSServiceSpec'
 import services, { servicesV2Mock } from './servicesMock'
 import mockListSecrets from './mockListSecret.json'
 import connectorListJSON from './connectorList.json'
@@ -102,6 +103,7 @@ describe('Deploy service stage specifications', () => {
     factory.registerStep(new DeployServiceStep())
     factory.registerStep(new GenericServiceSpec())
     factory.registerStep(new ServerlessAwsLambdaServiceSpec())
+    factory.registerStep(new ECSServiceSpec())
   })
   test(`Propagate from option and dropdown to select previous stage and service should be present`, async () => {
     const { getByPlaceholderText, getByText } = render(
@@ -274,5 +276,39 @@ describe('Deploy service stage specifications', () => {
     expect(getElementByText(portalDiv, 'common.repo_provider.githubLabel')).toBeDefined()
     expect(getElementByText(portalDiv, 'common.repo_provider.gitlabLabel')).toBeDefined()
     expect(getElementByText(portalDiv, 'pipeline.manifestType.bitBucketLabel')).toBeDefined()
+  })
+
+  test('when deploymentType is ECS, ECS related UI should appear', async () => {
+    getOverrideContextValue().state.selectionState.selectedStageId = 'st1'
+    const { findAllByText, getByText, getAllByText } = render(
+      <TestWrapper defaultFeatureFlagValues={{ ECS_NG: true }}>
+        <PipelineContext.Provider value={getOverrideContextValue()}>
+          <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
+            {mockchildren}
+          </DeployServiceSpecifications>
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    expect(getByText('deploymentTypeText')).toBeDefined()
+
+    // Select ECS deployment type
+    const amazonEcs = getByText('pipeline.serviceDeploymentTypes.amazonEcs')
+    userEvent.click(amazonEcs)
+
+    // By checking Add buttons, check if manifest section for each manifest type is rendered
+    const allPlusAddManifestButtons = await findAllByText(/common.plusAddName/)
+    expect(allPlusAddManifestButtons).toHaveLength(4)
+    // Check header of each manifest section card
+    expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()
+    expect(getAllByText('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')).toHaveLength(2)
+    expect(getAllByText('common.headerWithOptionalText')).toHaveLength(2)
+
+    // Check for + Add Primary Artifact button which confirms if Primary Artifact section is rendered
+    expect(getByText('pipelineSteps.serviceTab.artifactList.addPrimary')).toBeInTheDocument()
+    // Check for + Add Sidecar button which confirms if Sidecar Artifact section is rendered
+    expect(getByText('pipelineSteps.serviceTab.artifactList.addSidecar')).toBeInTheDocument()
+
+    // Check if Variable section is rendered
+    expect(getByText('common.variables')).toBeInTheDocument()
   })
 })

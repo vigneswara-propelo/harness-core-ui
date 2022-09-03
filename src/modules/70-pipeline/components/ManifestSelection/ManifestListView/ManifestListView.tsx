@@ -20,7 +20,7 @@ import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/G
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
-import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, ServiceDefinition } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
@@ -47,7 +47,6 @@ import {
   ManifestStoreMap,
   manifestTypeIcons,
   manifestTypeLabels,
-  allowedManifestTypes,
   ManifestTypetoStoreMap,
   ManifestToPathKeyMap,
   getManifestLocation,
@@ -98,14 +97,14 @@ const DIALOG_PROPS: IDialogProps = {
 }
 
 const getManifestTypeToSelect = (
-  deploymentType: ServiceDefinition['type'],
+  availableManifestTypes: ManifestTypes[],
   preSelectedManifestType?: ManifestTypes
 ): ManifestTypes | null => {
   if (preSelectedManifestType) {
     return preSelectedManifestType
   }
-  if (allowedManifestTypes[deploymentType]?.length === 1) {
-    return allowedManifestTypes[deploymentType][0]
+  if (availableManifestTypes.length === 1) {
+    return availableManifestTypes[0]
   }
   return null
 }
@@ -122,7 +121,8 @@ function ManifestListView({
   removeValuesYaml,
   allowOnlyOneManifest = false,
   addManifestBtnText,
-  preSelectedManifestType
+  preSelectedManifestType,
+  availableManifestTypes
 }: ManifestListViewProps): JSX.Element {
   const [selectedManifest, setSelectedManifest] = useState<ManifestTypes | null>(null)
   const [connectorView, setConnectorView] = useState(false)
@@ -137,7 +137,7 @@ function ManifestListView({
 
   const addNewManifest = (): void => {
     setEditIndex(listOfManifests.length)
-    setSelectedManifest(getManifestTypeToSelect(deploymentType, preSelectedManifestType))
+    setSelectedManifest(getManifestTypeToSelect(availableManifestTypes, preSelectedManifestType))
     showConnectorModal()
   }
 
@@ -292,13 +292,7 @@ function ManifestListView({
       ) && manifestStore === ManifestStoreMap.InheritFromManifest:
         manifestDetailStep = <InheritFromManifest {...lastStepProps()} />
         break
-      case [
-        ManifestDataType.K8sManifest,
-        ManifestDataType.Values,
-        ManifestDataType.OpenshiftTemplate,
-        ManifestDataType.OpenshiftParam,
-        ManifestDataType.KustomizePatches
-      ].includes(selectedManifest as ManifestTypes) && manifestStore === ManifestStoreMap.Harness:
+      case manifestStore === ManifestStoreMap.Harness:
         manifestDetailStep = <HarnessFileStore {...lastStepProps()} />
         break
       case [
@@ -431,7 +425,7 @@ function ManifestListView({
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
           <ManifestWizard
-            types={allowedManifestTypes[deploymentType]}
+            types={availableManifestTypes}
             manifestStoreTypes={ManifestTypetoStoreMap[selectedManifest as ManifestTypes]}
             labels={getLabels()}
             selectedManifest={selectedManifest}

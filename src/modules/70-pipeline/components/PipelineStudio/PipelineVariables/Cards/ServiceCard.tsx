@@ -27,7 +27,8 @@ import css from '../PipelineVariables.module.scss'
 const StepsMap: Record<string, StepType> = {
   Kubernetes: StepType.K8sServiceSpec,
   ServerlessAwsLambda: StepType.ServerlessAwsLambda,
-  AzureWebApp: StepType.AzureWebAppServiceSpec
+  AzureWebApp: StepType.AzureWebAppServiceSpec,
+  ECS: StepType.EcsService
 }
 
 export interface ServiceCardProps {

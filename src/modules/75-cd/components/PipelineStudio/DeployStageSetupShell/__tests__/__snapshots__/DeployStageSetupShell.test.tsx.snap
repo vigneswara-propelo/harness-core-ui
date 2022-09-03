@@ -456,7 +456,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                 class="tabHeading"
                 id="serviceDefinition"
               >
-                pipelineSteps.deploy.serviceSpecifications.serviceDefinition
+                cd.pipelineSteps.serviceTab.manifest.serviceDefinition
               </div>
               <div
                 class="bp3-card bp3-elevation-0 Card--card sectionCard"

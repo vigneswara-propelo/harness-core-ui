@@ -23,7 +23,11 @@ export enum ModalViewFor {
 }
 
 export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
-  return deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.NativeHelm
+  return (
+    deploymentType === ServiceDeploymentType.Kubernetes ||
+    deploymentType === ServiceDeploymentType.NativeHelm ||
+    deploymentType === ServiceDeploymentType.ECS
+  )
 }
 
 export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
@@ -129,6 +133,14 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
   Ssh: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Jenkins],
   WinRm: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Jenkins],
   AzureWebApp: [
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.Gcr,
+    ENABLED_ARTIFACT_TYPES.Ecr,
+    ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
+    ENABLED_ARTIFACT_TYPES.Acr
+  ],
+  ECS: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Gcr,
     ENABLED_ARTIFACT_TYPES.Ecr,

@@ -140,6 +140,7 @@ configureOptions:
   advancedHelp: 'With the advanced option, <br> you can type in JEXL expressions to return a list of values. <br> <a target="_blank">More information</a> <br> E.g. ${env.type} == “prod” ? aws1, aws2 : aws3, aws4'
 namespace: Namespace
 cluster: Cluster
+clusterName: Cluster Name
 clusters: Clusters
 releaseName: Release name
 stage: Stage
@@ -963,6 +964,7 @@ true: 'true'
 false: 'false'
 saving: 'Saving'
 executedBy: Executed By
+headerWithOptionalText: '{{header}} (Optional)'
 selectWorkload: Select Workload
 
 # Onboarding

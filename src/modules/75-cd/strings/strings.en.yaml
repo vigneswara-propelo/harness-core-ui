@@ -176,6 +176,11 @@ pipelineSteps:
     plusNewService: '+ {{$.newService}}'
     serviceIsRequired: Service is required
     aboutYourService: About the Service
+    manifest:
+      taskDefinition: Task Definition
+      serviceDefinition: Service Definition
+      scallingPolicy: Scalling Policy
+      scalableTarget: Scalable Target
     newServiceOverride: New configuration overrides
   infraTab:
     deploymentType: Infrastructure type selection is required
@@ -238,6 +243,9 @@ serviceDashboard:
   unitDay: '/Day'
   lastPipelineExecution: Last Pipeline Execution
   noLastDeployment: No last deployment exist
+  taskDefinitionArn: Task Definition ARN
+  taskArn: Task ARN
+  awsRegion: AWS Region
 noEnvironment:
   title: No Environments Available
   message: Create an environment and let’s start configuring the deployment
@@ -432,6 +440,9 @@ getStartedWithCD:
   setupDelegate: Setup Delegate
   delegateInfo: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
   setupaNewDelegate: + Setup a New Delegate
+ecsRollingDeployStep:
+  sameAsAlreadyRunningInstances: Same as already running instances
+  forceNewDeployment: Force new deployment
 serviceName: '{{ $.common.serviceName }}'
 skipRendering: Skip K8s Manifest(s) Rendering
 credentialsRef: credentialsRef

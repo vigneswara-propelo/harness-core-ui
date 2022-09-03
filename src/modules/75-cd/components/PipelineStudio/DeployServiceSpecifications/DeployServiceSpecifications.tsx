@@ -463,7 +463,7 @@ export default function DeployServiceSpecifications({
             </>
             <>
               <div className={stageCss.tabHeading} id="serviceDefinition">
-                {getString('pipelineSteps.deploy.serviceSpecifications.serviceDefinition')}
+                {getString('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')}
               </div>
               <SelectDeploymentType
                 selectedDeploymentType={selectedDeploymentType}

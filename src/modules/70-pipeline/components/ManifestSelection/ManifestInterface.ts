@@ -25,6 +25,10 @@ export type ManifestTypes =
   | 'OpenshiftParam'
   | 'KustomizePatches'
   | 'ServerlessAwsLambda'
+  | 'EcsTaskDefinition'
+  | 'EcsServiceDefinition'
+  | 'EcsScalableTargetDefinition'
+  | 'EcsScalingPolicyDefinition'
 
 export type PrimaryManifestType = 'K8sManifest' | 'HelmChart' | 'OpenshiftTemplate' | 'Kustomize'
 
@@ -58,6 +62,8 @@ export interface ManifestSelectionProps {
   allowOnlyOneManifest?: boolean
   addManifestBtnText?: string
   preSelectedManifestType?: ManifestTypes
+  availableManifestTypes: ManifestTypes[]
+  deleteManifest?: (index: number) => void
 }
 
 export interface ManifestListViewProps {
@@ -74,6 +80,7 @@ export interface ManifestListViewProps {
   allowOnlyOneManifest?: boolean
   addManifestBtnText?: string
   preSelectedManifestType?: ManifestTypes
+  availableManifestTypes: ManifestTypes[]
 }
 
 export interface ManifestStepInitData {

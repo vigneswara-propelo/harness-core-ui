@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, findByText, fireEvent, findAllByText, waitFor } from '@testing-library/react'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
+
 import type { ManifestConfigWrapper, ServiceDefinition } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
@@ -19,13 +20,18 @@ import ManifestListView from '../ManifestListView/ManifestListView'
 import pipelineContextMock from './pipeline_mock.json'
 import gitOpsEnabledPipeline from './gitops_pipeline.json'
 import connectorsData from './connectors_mock.json'
+import { allowedManifestTypes } from '../Manifesthelper'
 
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
+  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
+  useGetConnector: jest.fn().mockImplementation(() => {
+    return { data: connectorsData.data.content[1], refetch: fetchConnectors, loading: false }
+  }),
   useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
 }))
 
@@ -57,14 +63,20 @@ const manifestListCommonProps = {
     MultiTypeInputType.FIXED,
     MultiTypeInputType.RUNTIME,
     MultiTypeInputType.EXPRESSION
-  ] as AllowedTypesWithRunTime[]
+  ] as AllowedTypesWithRunTime[],
+  availableManifestTypes: allowedManifestTypes['Kubernetes']
 }
 
 describe('ManifestSelection tests', () => {
   test(`renders without crashing`, () => {
     const { container } = render(
       <TestWrapper>
-        <ManifestSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
+        <ManifestSelection
+          isReadonlyServiceMode={false}
+          readonly={false}
+          deploymentType="Kubernetes"
+          availableManifestTypes={allowedManifestTypes['Kubernetes']}
+        />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -74,7 +86,12 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
+          <ManifestSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType="Kubernetes"
+            availableManifestTypes={allowedManifestTypes['Kubernetes']}
+          />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -95,7 +112,12 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
+          <ManifestSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType="Kubernetes"
+            availableManifestTypes={allowedManifestTypes['Kubernetes']}
+          />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -120,7 +142,12 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
+          <ManifestSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType="Kubernetes"
+            availableManifestTypes={allowedManifestTypes['Kubernetes']}
+          />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -138,7 +165,12 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
+          <ManifestSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType="Kubernetes"
+            availableManifestTypes={allowedManifestTypes['Kubernetes']}
+          />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -161,6 +193,7 @@ describe('ManifestSelection tests', () => {
             readonly={false}
             deploymentType="Kubernetes"
             isPropagating={false}
+            availableManifestTypes={allowedManifestTypes['Kubernetes']}
           />
         </PipelineContext.Provider>
       </TestWrapper>
@@ -177,6 +210,7 @@ describe('ManifestSelection tests', () => {
             readonly={false}
             deploymentType="Kubernetes"
             isPropagating={true}
+            availableManifestTypes={allowedManifestTypes['Kubernetes']}
           />
         </PipelineContext.Provider>
       </TestWrapper>
@@ -383,7 +417,12 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getGitOpsContextValue()}>
-          <ManifestSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
+          <ManifestSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType="Kubernetes"
+            availableManifestTypes={allowedManifestTypes['Kubernetes']}
+          />
         </PipelineContext.Provider>
       </TestWrapper>
     )

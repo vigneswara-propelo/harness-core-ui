@@ -177,7 +177,7 @@ function DeployServiceDefinition(): React.ReactElement {
   return (
     <div className={cx(css.contentSection, isServiceEntityModalView ? css.editServiceModal : css.nonModalView)}>
       <div className={css.tabHeading} id="serviceDefinition">
-        {getString('pipelineSteps.deploy.serviceSpecifications.serviceDefinition')}
+        {getString('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')}
       </div>
       <SelectDeploymentType
         viewContext="setup"

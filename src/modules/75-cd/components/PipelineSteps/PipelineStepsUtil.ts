@@ -203,6 +203,8 @@ export const getInfrastructureDefinitionValidationSchema = (
       })
     case ServiceDeploymentType.WinRm:
       return Yup.object().shape({})
+    case ServiceDeploymentType.ECS:
+      return getECSInfraValidationSchema(getString)
     default:
       return Yup.object().shape({
         connectorRef: getConnectorSchema(getString),

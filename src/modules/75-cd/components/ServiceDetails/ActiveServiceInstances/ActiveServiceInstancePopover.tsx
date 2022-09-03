@@ -11,10 +11,12 @@ import { Card, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import {
   AzureWebAppInstanceInfoDTO,
+  EcsInstanceInfoDTO,
   GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams,
   GitOpsInstanceInfoDTO,
   InstanceDetailsDTO,
   NativeHelmInstanceInfoDTO,
+  ServiceDefinition,
   useGetActiveInstancesByServiceIdEnvIdAndBuildIds
 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
@@ -129,6 +131,25 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
             value: instanceData.artifactName || ''
           }
         ]
+      case ServiceDeploymentType.ECS:
+        return [
+          {
+            label: getString('cd.serviceName'),
+            value: (instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.serviceName || ''
+          },
+          {
+            label: getString('pipeline.artifactTriggerConfigPanel.artifact'),
+            value: instanceData.artifactName || ''
+          },
+          {
+            label: getString('cd.serviceDashboard.taskDefinitionArn'),
+            value: (instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.taskDefinitionArn || ''
+          },
+          {
+            label: getString('cd.serviceDashboard.taskArn'),
+            value: (instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.taskArn || ''
+          }
+        ]
       default:
         return [
           {
@@ -146,11 +167,29 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     }
   }
 
-  const infrastructureSectionValues = Object.keys(instanceData.infrastructureDetails || {}).map(
-    infrastructureDetailsKey => ({
-      label: infrastructureDetailsKey,
-      value: instanceData.infrastructureDetails?.[infrastructureDetailsKey]
-    })
+  const getInfrastructureSectionValues = (deploymentType: ServiceDefinition['type']) => {
+    switch (deploymentType) {
+      case ServiceDeploymentType.ECS:
+        return [
+          {
+            label: getString('cd.serviceDashboard.awsRegion'),
+            value: instanceData.infrastructureDetails?.region
+          },
+          {
+            label: getString('common.clusterName'),
+            value: instanceData.infrastructureDetails?.cluster
+          }
+        ]
+      default:
+        return Object.keys(instanceData.infrastructureDetails || {}).map(infrastructureDetailsKey => ({
+          label: infrastructureDetailsKey,
+          value: instanceData.infrastructureDetails?.[infrastructureDetailsKey]
+        }))
+    }
+  }
+
+  const infrastructureSectionValues = getInfrastructureSectionValues(
+    instanceData.instanceInfoDTO?.type as ServiceDefinition['type']
   )
 
   const clusterIdentifier = (instanceData.instanceInfoDTO as GitOpsInstanceInfoDTO)?.clusterIdentifier

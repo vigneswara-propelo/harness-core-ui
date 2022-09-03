@@ -64,25 +64,6 @@ const intersectionObserverMock = () => ({
 
 window.IntersectionObserver = jest.fn().mockImplementation(intersectionObserverMock)
 
-jest.mock('@pipeline/components/AbstractSteps/StepWidget', () => ({
-  ...(jest.requireActual('@pipeline/components/AbstractSteps/StepWidget') as any),
-  // eslint-disable-next-line react/display-name
-  StepWidget: (props: any) => {
-    return (
-      <div className="step-widget-mock">
-        <button
-          name={'updateStepWidget'}
-          onClick={() => {
-            props.onUpdate(props.initialValues)
-          }}
-        >
-          Step Widget button
-        </button>
-      </div>
-    )
-  }
-}))
-
 describe('Deploy infra specifications test', () => {
   test('Should match snapshot', () => {
     const context = getOverrideContextValue()

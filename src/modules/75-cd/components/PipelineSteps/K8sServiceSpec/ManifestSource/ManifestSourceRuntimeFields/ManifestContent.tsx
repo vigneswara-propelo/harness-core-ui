@@ -17,6 +17,8 @@ import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactor
 import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
 import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { shouldAllowOnlyOneFilePath } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CommonManifestDetails/utils'
+import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from './ManifestGitStoreRuntimeFields'
@@ -76,6 +78,7 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
             style={{ marginBottom: 'var(--spacing-small)' }}
             expressions={expressions}
             isNameOfArrayType
+            allowOnlyOne={shouldAllowOnlyOneFilePath(manifest?.type as ManifestTypes)}
           />
         </div>
       )}

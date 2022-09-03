@@ -48,7 +48,6 @@ export enum StageType {
 export enum ServiceDeploymentType {
   Kubernetes = 'Kubernetes',
   NativeHelm = 'NativeHelm',
-  amazonEcs = 'amazonEcs',
   amazonAmi = 'amazonAmi',
   awsCodeDeploy = 'awsCodeDeploy',
   WinRm = 'WinRm',
@@ -522,7 +521,8 @@ export const deleteStageInfo = (stage?: DeploymentStageElementConfig): void => {
 }
 
 export const infraDefinitionTypeMapping: { [key: string]: string } = {
-  ServerlessAwsLambda: 'ServerlessAwsInfra'
+  ServerlessAwsLambda: StepType.ServerlessAwsInfra,
+  ECS: StepType.EcsInfra
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
@@ -535,11 +535,15 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.SshServiceSpec
     case ServiceDeploymentType.WinRm:
       return StepType.WinRmServiceSpec
+    case ServiceDeploymentType.ECS:
+      return StepType.EcsService
     default:
       return StepType.K8sServiceSpec
   }
 }
+
 export const STATIC_SERVICE_GROUP_NAME = 'static_service_group'
+
 export const getDefaultBuildDependencies = (serviceDependencies: DependencyElement[]): PipelineGraphState => ({
   id: uuid() as string,
   identifier: STATIC_SERVICE_GROUP_NAME as string,

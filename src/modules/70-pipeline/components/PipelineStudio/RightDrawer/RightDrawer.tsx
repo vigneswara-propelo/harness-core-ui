@@ -36,6 +36,7 @@ import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StringsMap } from 'stringTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import type { ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -163,6 +164,13 @@ const addReplace = (item: Partial<Values>, node: any): void => {
   if (item.when && item.tab === TabTypes.Advanced) node.when = item.when
   if ((item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced)
     node.timeout = (item as StepElementConfig).timeout
+  // For ECS
+  if ((item as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances && item.tab !== TabTypes.Advanced) {
+    node.sameAsAlreadyRunningInstances = (item as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances
+  }
+  if ((item as ECSRollingDeployStepInitialValues).forceNewDeployment && item.tab !== TabTypes.Advanced) {
+    node.forceNewDeployment = (item as ECSRollingDeployStepInitialValues).forceNewDeployment
+  }
 }
 
 const processNodeImpl = (
@@ -204,6 +212,20 @@ const processNodeImpl = (
     if (node.timeout && !(item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced) delete node.timeout
     if (node.description && !(item as StepElementConfig).description && item.tab !== TabTypes.Advanced)
       delete node.description
+    if (
+      (node as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances &&
+      !(item as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances &&
+      item.tab !== TabTypes.Advanced
+    ) {
+      delete (node as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances
+    }
+    if (
+      (node as ECSRollingDeployStepInitialValues).forceNewDeployment &&
+      !(item as ECSRollingDeployStepInitialValues).forceNewDeployment &&
+      item.tab !== TabTypes.Advanced
+    ) {
+      delete (node as ECSRollingDeployStepInitialValues).forceNewDeployment
+    }
     if (node.failureStrategies && !item.failureStrategies && item.tab === TabTypes.Advanced)
       delete node.failureStrategies
     if (

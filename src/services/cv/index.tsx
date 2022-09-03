@@ -105,7 +105,17 @@ export interface AnalysisResult {
 export interface AnalysisState {
   inputs?: AnalysisInput
   retryCount?: number
-  status?: 'CREATED' | 'RUNNING' | 'SUCCESS' | 'RETRY' | 'TRANSITION' | 'IGNORED' | 'TIMEOUT' | 'FAILED' | 'COMPLETED'
+  status?:
+    | 'CREATED'
+    | 'RUNNING'
+    | 'SUCCESS'
+    | 'RETRY'
+    | 'TRANSITION'
+    | 'IGNORED'
+    | 'TIMEOUT'
+    | 'FAILED'
+    | 'COMPLETED'
+    | 'TERMINATED'
   type?:
     | 'CANARY_TIME_SERIES'
     | 'DEPLOYMENT_LOG_ANALYSIS'
@@ -132,7 +142,17 @@ export interface AnalysisStateMachine {
   nextAttemptTime?: number
   startTime?: number
   stateMachineIgnoreMinutes: number
-  status?: 'CREATED' | 'RUNNING' | 'SUCCESS' | 'RETRY' | 'TRANSITION' | 'IGNORED' | 'TIMEOUT' | 'FAILED' | 'COMPLETED'
+  status?:
+    | 'CREATED'
+    | 'RUNNING'
+    | 'SUCCESS'
+    | 'RETRY'
+    | 'TRANSITION'
+    | 'IGNORED'
+    | 'TIMEOUT'
+    | 'FAILED'
+    | 'COMPLETED'
+    | 'TERMINATED'
   totalRetryCount?: number
   totalRetryCountToBePropagated?: number
   uuid?: string
@@ -264,6 +284,7 @@ export type ArtifactoryConnector = ConnectorConfigDTO & {
   artifactoryServerUrl: string
   auth?: ArtifactoryAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export type ArtifactoryUsernamePasswordAuth = ArtifactoryAuthCredentials & {
@@ -306,10 +327,12 @@ export type AwsCodeCommitSecretKeyAccessKeyDTO = AwsCodeCommitHttpsCredentialsSp
 export type AwsConnector = ConnectorConfigDTO & {
   credential: AwsCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface AwsCredential {
   crossAccountAccess?: CrossAccountAccess
+  region?: string
   spec?: AwsCredentialSpec
   type: 'InheritFromDelegate' | 'ManualConfig' | 'Irsa'
 }
@@ -415,6 +438,7 @@ export type AzureConnector = ConnectorConfigDTO & {
   azureEnvironmentType: 'AZURE' | 'AZURE_US_GOVERNMENT'
   credential: AzureCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface AzureCredential {
@@ -469,6 +493,7 @@ export type AzureRepoConnector = ConnectorConfigDTO & {
   apiAccess?: AzureRepoApiAccess
   authentication: AzureRepoAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
   type: 'Project' | 'Repo'
   url: string
   validationRepo?: string
@@ -533,6 +558,7 @@ export type BitbucketConnector = ConnectorConfigDTO & {
   apiAccess?: BitbucketApiAccess
   authentication: BitbucketAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -885,6 +911,7 @@ export interface ConnectorInfoDTO {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
+    | 'ELK'
 }
 
 export interface ControlClusterSummary {
@@ -961,6 +988,16 @@ export type CustomHealthSourceLogSpec = HealthSourceSpec & {
 
 export type CustomHealthSourceMetricSpec = HealthSourceSpec & {
   metricDefinitions?: CustomHealthMetricDefinition[]
+}
+
+export type CustomSecretManager = ConnectorConfigDTO & {
+  connectorRef?: string
+  default?: boolean
+  delegateSelectors?: string[]
+  host?: string
+  onDelegate: boolean
+  template: TemplateLinkConfigForCustomSecretManager
+  workingDirectory?: string
 }
 
 export interface DataCollectionInfo {
@@ -1143,6 +1180,7 @@ export interface DeploymentLogAnalysisDTO {
 }
 
 export interface DeploymentTimeSeriesAnalysisDTO {
+  failFast?: boolean
   hostSummaries?: HostInfo[]
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
   score?: number
@@ -1193,6 +1231,7 @@ export type DockerConnectorDTO = ConnectorConfigDTO & {
   auth?: DockerAuthenticationDTO
   delegateSelectors?: string[]
   dockerRegistryUrl: string
+  executeOnDelegate?: boolean
   providerType: 'DockerHub' | 'Harbor' | 'Quay' | 'Other'
 }
 
@@ -1256,6 +1295,16 @@ export interface DynatraceServiceDTO {
 export interface DynatraceValidateDataRequestDTO {
   metricPacks?: MetricPackDTO[]
   serviceMethodsIds?: string[]
+}
+
+export type ELKConnectorDTO = ConnectorConfigDTO & {
+  apiKeyId?: string
+  apiKeyRef?: string
+  authType?: 'UsernamePassword' | 'ApiClientToken' | 'None'
+  delegateSelectors?: string[]
+  passwordRef?: string
+  url: string
+  username?: string
 }
 
 export interface Edge {
@@ -1441,7 +1490,6 @@ export interface Error {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1535,6 +1583,7 @@ export interface Error {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -1618,6 +1667,14 @@ export interface Error {
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
     | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1843,7 +1900,6 @@ export interface Failure {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1937,6 +1993,7 @@ export interface Failure {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -2020,6 +2077,14 @@ export interface Failure {
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
     | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2052,6 +2117,7 @@ export type GcpCloudCostConnector = ConnectorConfigDTO & {
 export type GcpConnector = ConnectorConfigDTO & {
   credential: GcpConnectorCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface GcpConnectorCredential {
@@ -2187,6 +2253,7 @@ export type GitlabConnector = ConnectorConfigDTO & {
   apiAccess?: GitlabApiAccess
   authentication: GitlabAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -2912,6 +2979,7 @@ export interface MetricThreshold {
   groupName?: string
   metricIdentifier?: string
   metricName?: string
+  metricType?: string
   spec: MetricThresholdSpec
   type?: 'IgnoreThreshold' | 'FailImmediately'
 }
@@ -3001,6 +3069,13 @@ export type MonthlyCalenderSpec = CalenderSpec & {
 
 export interface NGTag {
   key: string
+  value: string
+}
+
+export interface NameValuePairWithDefault {
+  name?: string
+  type: string
+  useAsDefault?: boolean
   value: string
 }
 
@@ -3424,6 +3499,7 @@ export type PhysicalDataCenterConnectorDTO = ConnectorConfigDTO & {
 }
 
 export interface Point {
+  enabled?: boolean
   timestamp?: number
   value?: number
 }
@@ -3819,7 +3895,6 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -3913,6 +3988,7 @@ export interface ResponseMessage {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -3996,6 +4072,14 @@ export interface ResponseMessage {
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
     | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4007,6 +4091,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -5045,8 +5130,11 @@ export interface ServiceSummaryDetails {
 }
 
 export interface SloHealthIndicatorDTO {
+  errorBudgetBurnRate?: number
+  errorBudgetRemainingMinutes?: number
   errorBudgetRemainingPercentage?: number
   errorBudgetRisk?: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
+  monitoredServiceIdentifier?: string
   serviceLevelObjectiveIdentifier?: string
 }
 
@@ -5144,6 +5232,14 @@ export interface TaskInfo {
 }
 
 export interface TemplateDTO {
+  templateRef: string
+  versionLabel: string
+}
+
+export interface TemplateLinkConfigForCustomSecretManager {
+  templateInputs?: {
+    [key: string]: NameValuePairWithDefault[]
+  }
   templateRef: string
   versionLabel: string
 }
@@ -5292,6 +5388,7 @@ export interface TimeSeriesMetricDefinition {
   metricName?: string
   metricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
   occurrenceCount?: number
+  thresholdConfigType?: 'CUSTOMER' | 'DEFAULT'
   thresholdType?: 'ACT_WHEN_LOWER' | 'ACT_WHEN_HIGHER'
   value?: number
 }
@@ -5443,6 +5540,7 @@ export interface TransactionMetricHistory {
 
 export interface TransactionMetricHostData {
   anomalous?: boolean
+  failFast?: boolean
   hostData?: HostData[]
   metricName?: string
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
@@ -5522,6 +5620,7 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
   k8sAuthEndpoint?: string
   namespace?: string
   readOnly?: boolean
+  renewAppRoleToken?: boolean
   renewalIntervalMinutes: number
   secretEngineManuallyConfigured?: boolean
   secretEngineName?: string

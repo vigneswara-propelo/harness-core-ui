@@ -110,6 +110,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
+    | 'ELK'
   )[]
 }
 
@@ -295,7 +296,6 @@ export interface Error {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -476,6 +476,11 @@ export interface Error {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -640,7 +645,6 @@ export interface ErrorMetadata {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -821,6 +825,11 @@ export interface ErrorMetadata {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   errorMessage?: string
 }
 
@@ -991,7 +1000,6 @@ export interface Failure {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1172,6 +1180,11 @@ export interface Failure {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1392,10 +1405,12 @@ export interface ResourceDTO {
     | 'GOVERNANCE_POLICY'
     | 'GOVERNANCE_POLICY_SET'
     | 'VARIABLE'
-    | 'MONITORED_SERVICE'
     | 'CHAOS_HUB'
+    | 'MONITORED_SERVICE'
     | 'CHAOS_AGENT'
     | 'CHAOS_WORKFLOW'
+    | 'STO_TARGET'
+    | 'STO_EXEMPTION'
     | 'CHAOS_GITOPS'
     | 'STO_TARGET'
     | 'STO_EXEMPTION'
@@ -1613,7 +1628,6 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1794,6 +1808,11 @@ export interface ResponseMessage {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1863,6 +1882,13 @@ export interface ResponseTemplateMergeResponse {
 export interface ResponseTemplateResponse {
   correlationId?: string
   data?: TemplateResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseTemplateRetainVariablesResponse {
+  correlationId?: string
+  data?: TemplateRetainVariablesResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2045,6 +2071,15 @@ export interface TemplateResponse {
   version?: number
   versionLabel?: string
   yaml?: string
+}
+
+export interface TemplateRetainVariablesRequestDTO {
+  newTemplateInputs?: string
+  oldTemplateInputs?: string
+}
+
+export interface TemplateRetainVariablesResponse {
+  mergedTemplateInputs?: string
 }
 
 export interface TemplateSummaryResponse {
@@ -2796,6 +2831,7 @@ export interface CreateTemplateQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   repoName?: string
+  parentEntityScope?: 'account' | 'org' | 'project' | 'unknown'
   setDefaultTemplate?: boolean
   comments?: string
 }
@@ -3179,6 +3215,83 @@ export const getTemplateMetadataListPromise = (
     TemplateFilterPropertiesRequestBody,
     void
   >('POST', getConfig('template/api'), `/templates/list-metadata`, props, signal)
+
+export interface GetsMergedTemplateInputYamlQueryParams {
+  accountIdentifier: string
+}
+
+export type GetsMergedTemplateInputYamlProps = Omit<
+  MutateProps<
+    ResponseTemplateRetainVariablesResponse,
+    Failure | Error,
+    GetsMergedTemplateInputYamlQueryParams,
+    TemplateRetainVariablesRequestDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets merged template input yaml
+ */
+export const GetsMergedTemplateInputYaml = (props: GetsMergedTemplateInputYamlProps) => (
+  <Mutate<
+    ResponseTemplateRetainVariablesResponse,
+    Failure | Error,
+    GetsMergedTemplateInputYamlQueryParams,
+    TemplateRetainVariablesRequestDTO,
+    void
+  >
+    verb="POST"
+    path={`/templates/mergeTemplateInputs`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseGetsMergedTemplateInputYamlProps = Omit<
+  UseMutateProps<
+    ResponseTemplateRetainVariablesResponse,
+    Failure | Error,
+    GetsMergedTemplateInputYamlQueryParams,
+    TemplateRetainVariablesRequestDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets merged template input yaml
+ */
+export const useGetsMergedTemplateInputYaml = (props: UseGetsMergedTemplateInputYamlProps) =>
+  useMutate<
+    ResponseTemplateRetainVariablesResponse,
+    Failure | Error,
+    GetsMergedTemplateInputYamlQueryParams,
+    TemplateRetainVariablesRequestDTO,
+    void
+  >('POST', `/templates/mergeTemplateInputs`, { base: getConfig('template/api'), ...props })
+
+/**
+ * Gets merged template input yaml
+ */
+export const getsMergedTemplateInputYamlPromise = (
+  props: MutateUsingFetchProps<
+    ResponseTemplateRetainVariablesResponse,
+    Failure | Error,
+    GetsMergedTemplateInputYamlQueryParams,
+    TemplateRetainVariablesRequestDTO,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseTemplateRetainVariablesResponse,
+    Failure | Error,
+    GetsMergedTemplateInputYamlQueryParams,
+    TemplateRetainVariablesRequestDTO,
+    void
+  >('POST', getConfig('template/api'), `/templates/mergeTemplateInputs`, props, signal)
 
 export interface GetTemplateSchemaQueryParams {
   templateEntityType: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'

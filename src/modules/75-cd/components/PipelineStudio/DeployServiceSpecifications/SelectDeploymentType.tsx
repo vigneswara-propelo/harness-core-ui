@@ -90,7 +90,7 @@ export default function SelectDeploymentType({
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const { SSH_NG, AZURE_WEBAPP_NG } = useFeatureFlags()
+  const { SSH_NG, AZURE_WEBAPP_NG, ECS_NG } = useFeatureFlags()
 
   // Supported in NG (Next Gen - The one for which you are coding right now)
   const ngSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
@@ -130,17 +130,28 @@ export default function SelectDeploymentType({
         value: ServiceDeploymentType.AzureWebApp
       })
     }
+    if (ECS_NG) {
+      baseTypes.push({
+        label: getString('pipeline.serviceDeploymentTypes.amazonEcs'),
+        icon: 'service-amazon-ecs',
+        value: ServiceDeploymentType.ECS
+      })
+    }
     return baseTypes as DeploymentTypeItem[]
   }, [getString, SSH_NG, AZURE_WEBAPP_NG])
 
   // Suppported in CG (First Gen - Old Version of Harness App)
   const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
     const types = [
-      {
-        label: getString('pipeline.serviceDeploymentTypes.amazonEcs'),
-        icon: 'service-ecs',
-        value: ServiceDeploymentType.amazonEcs
-      },
+      ...(!ECS_NG
+        ? [
+            {
+              label: getString('pipeline.serviceDeploymentTypes.amazonEcs'),
+              icon: 'service-amazon-ecs',
+              value: ServiceDeploymentType.ECS
+            }
+          ]
+        : []),
       {
         label: getString('pipeline.serviceDeploymentTypes.amazonAmi'),
         icon: 'main-service-ami',
@@ -175,7 +186,7 @@ export default function SelectDeploymentType({
       })
     }
     return types as DeploymentTypeItem[]
-  }, [getString, SSH_NG])
+  }, [getString, SSH_NG, ECS_NG])
 
   const [cgDeploymentTypes, setCgDeploymentTypes] = React.useState(cgSupportedDeploymentTypes)
   const [ngDeploymentTypes, setNgDeploymentTypes] = React.useState(ngSupportedDeploymentTypes)

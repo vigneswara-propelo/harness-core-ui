@@ -131,6 +131,7 @@ export interface StringsMap {
   'common.clientId': string
   'common.clientSecret': string
   'common.cluster': string
+  'common.clusterName': string
   'common.clusters': string
   'common.comingSoon': string
   'common.comingSoon2': string
@@ -414,6 +415,7 @@ export interface StringsMap {
   'common.headerAccountName': string
   'common.headerCompanyName': string
   'common.headerDefaultAccount': string
+  'common.headerWithOptionalText': string
   'common.headers': string
   'common.help': string
   'common.hideAll': string
@@ -3533,6 +3535,10 @@ export interface StringsMap {
   'pipeline.manifestType.valuesYamlPath': string
   'pipeline.manifestTypeLabels.AwsSAM': string
   'pipeline.manifestTypeLabels.AzureFunctions': string
+  'pipeline.manifestTypeLabels.EcsScalableTargetDefinition': string
+  'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition': string
+  'pipeline.manifestTypeLabels.EcsServiceDefinition': string
+  'pipeline.manifestTypeLabels.EcsTaskDefinition': string
   'pipeline.manifestTypeLabels.HelmChartLabel': string
   'pipeline.manifestTypeLabels.K8sManifest': string
   'pipeline.manifestTypeLabels.KustomizeLabel': string
@@ -3790,6 +3796,7 @@ export interface StringsMap {
   'pipeline.stepDescription.CustomApproval': string
   'pipeline.stepDescription.DockerHub': string
   'pipeline.stepDescription.ECR': string
+  'pipeline.stepDescription.ECSRollingDeploy': string
   'pipeline.stepDescription.FlagConfiguration': string
   'pipeline.stepDescription.GCR': string
   'pipeline.stepDescription.GCS': string
@@ -4282,6 +4289,8 @@ export interface StringsMap {
   'cd.duplicateGitOpsServerIdError': string
   'cd.duplicateIdError': string
   'cd.dynamicProvisioning': string
+  'cd.ecsRollingDeployStep.forceNewDeployment': string
+  'cd.ecsRollingDeployStep.sameAsAlreadyRunningInstances': string
   'cd.editIdError': string
   'cd.enterTragets': string
   'cd.enterWorkDirectory': string
@@ -4398,6 +4407,10 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.aboutYourService': string
   'cd.pipelineSteps.serviceTab.deploymentTypeRequired': string
   'cd.pipelineSteps.serviceTab.differentService': string
+  'cd.pipelineSteps.serviceTab.manifest.scalableTarget': string
+  'cd.pipelineSteps.serviceTab.manifest.scallingPolicy': string
+  'cd.pipelineSteps.serviceTab.manifest.serviceDefinition': string
+  'cd.pipelineSteps.serviceTab.manifest.taskDefinition': string
   'cd.pipelineSteps.serviceTab.newService': string
   'cd.pipelineSteps.serviceTab.newServiceOverride': string
   'cd.pipelineSteps.serviceTab.overrideChanges': string
@@ -4425,6 +4438,7 @@ export interface StringsMap {
   'cd.serviceDashboard.activeInstanceCount': string
   'cd.serviceDashboard.activeServiceInstancesLabel': string
   'cd.serviceDashboard.artifact': string
+  'cd.serviceDashboard.awsRegion': string
   'cd.serviceDashboard.buildName': string
   'cd.serviceDashboard.deployedAt': string
   'cd.serviceDashboard.deployedBy': string
@@ -4468,6 +4482,8 @@ export interface StringsMap {
   'cd.serviceDashboard.serviceInstances': string
   'cd.serviceDashboard.serviceInstancesInLast': string
   'cd.serviceDashboard.servicesInLast': string
+  'cd.serviceDashboard.taskArn': string
+  'cd.serviceDashboard.taskDefinitionArn': string
   'cd.serviceDashboard.totalDeployments': string
   'cd.serviceDashboard.totalPipelines': string
   'cd.serviceDashboard.totalServices': string
@@ -5623,7 +5639,6 @@ export interface StringsMap {
   'ce.recommendation.listPage.backToPerspectives': string
   'ce.recommendation.listPage.byEOM': string
   'ce.recommendation.listPage.filterHereText': string
-  'ce.recommendation.listPage.filters.clusterName': string
   'ce.recommendation.listPage.filters.enterCost': string
   'ce.recommendation.listPage.filters.minCost': string
   'ce.recommendation.listPage.filters.minSaving': string
@@ -9554,10 +9569,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   'pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests': string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  'pipelineSteps.deploy.serviceSpecifications.serviceDefinition': string
   /**
    * @deprecated migrate this string to module level file
    */

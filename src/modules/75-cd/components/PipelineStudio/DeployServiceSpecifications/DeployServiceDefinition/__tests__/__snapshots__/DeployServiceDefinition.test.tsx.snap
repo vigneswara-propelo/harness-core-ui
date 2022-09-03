@@ -9,7 +9,7 @@ exports[`DeployServiceDefinition Changing the deployment type when the stage con
       class="tabHeading"
       id="serviceDefinition"
     >
-      pipelineSteps.deploy.serviceSpecifications.serviceDefinition
+      cd.pipelineSteps.serviceTab.manifest.serviceDefinition
     </div>
     <div
       class="bp3-card bp3-elevation-0 Card--card sectionCard"
@@ -227,7 +227,7 @@ exports[`DeployServiceDefinition checking on the gitops with other stage data sh
       class="tabHeading"
       id="serviceDefinition"
     >
-      pipelineSteps.deploy.serviceSpecifications.serviceDefinition
+      cd.pipelineSteps.serviceTab.manifest.serviceDefinition
     </div>
     <div
       class="bp3-card bp3-elevation-0 Card--card sectionCard"
@@ -445,7 +445,7 @@ exports[`DeployServiceDefinition should render DeployServiceDefinition and switc
       class="tabHeading"
       id="serviceDefinition"
     >
-      pipelineSteps.deploy.serviceSpecifications.serviceDefinition
+      cd.pipelineSteps.serviceTab.manifest.serviceDefinition
     </div>
     <div
       class="bp3-card bp3-elevation-0 Card--card sectionCard"

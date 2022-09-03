@@ -207,7 +207,7 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
         class="tabHeading"
         id="serviceDefinition"
       >
-        pipelineSteps.deploy.serviceSpecifications.serviceDefinition
+        cd.pipelineSteps.serviceTab.manifest.serviceDefinition
       </div>
       <div
         class="bp3-card bp3-elevation-0 Card--card sectionCard"
@@ -612,7 +612,7 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
               class="tabHeading"
               id="serviceDefinition"
             >
-              pipelineSteps.deploy.serviceSpecifications.serviceDefinition
+              cd.pipelineSteps.serviceTab.manifest.serviceDefinition
             </div>
             <div
               class="bp3-card bp3-elevation-0 Card--card sectionCard"
@@ -1273,7 +1273,7 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
               class="tabHeading"
               id="serviceDefinition"
             >
-              pipelineSteps.deploy.serviceSpecifications.serviceDefinition
+              cd.pipelineSteps.serviceTab.manifest.serviceDefinition
             </div>
             <div
               class="bp3-card bp3-elevation-0 Card--card sectionCard"

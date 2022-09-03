@@ -915,14 +915,13 @@ pipelineSteps:
       artifactServer: 'Artifact Server'
       branch: 'Branch'
     serviceSpecifications:
-      serviceDefinition: Service Definition
       useFromStageLabel: 'Use from Stage'
       deploymentTypes:
         artifacts: '{{ $.artifacts }}'
         manifests: '{{ $.manifests }}'
     infrastructure:
       infraDefinition: Infrastructure Definition
-      selectMethod: Select the best method for Harness to reach your Kubernetes Cluster.
+      selectMethod: Select the best method for Harness to reach your {{deploymentSpecificText}} Cluster.
       directConnection: Direct Connection
       viaCloudProvider: Via Cloud Provider
     provisioner:

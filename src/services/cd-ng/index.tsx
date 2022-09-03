@@ -177,7 +177,6 @@ export interface AccessControlCheckError {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -358,6 +357,11 @@ export interface AccessControlCheckError {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -1653,6 +1657,11 @@ export interface CeLicenseInfo {
   licenseType?: 'FULL_TRIAL' | 'LIMITED_TRIAL' | 'PAID'
 }
 
+export type ChaosModuleLicenseDTO = ModuleLicenseDTO & {
+  totalChaosDelegates?: number
+  totalChaosScenarioRun?: number
+}
+
 export interface CloudformationCreateStackStepConfiguration {
   capabilities?: string[]
   connectorRef: string
@@ -1891,6 +1900,7 @@ export interface ConnectorCatalogueItem {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
+    | 'ELK'
   )[]
 }
 
@@ -1969,6 +1979,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
+    | 'ELK'
   )[]
 }
 
@@ -2023,6 +2034,7 @@ export interface ConnectorInfoDTO {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
+    | 'ELK'
 }
 
 export interface ConnectorResponse {
@@ -2094,6 +2106,7 @@ export interface ConnectorTypeStatistics {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
+    | 'ELK'
 }
 
 export interface ConnectorValidationResult {
@@ -2580,14 +2593,16 @@ export interface DeploymentInfo {
 }
 
 export type DeploymentStageConfig = StageInfoConfig & {
-  deploymentType?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
+  deploymentType?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp' | 'ECS'
   environment?: EnvironmentYamlV2
   environmentGroup?: EnvironmentGroupYaml
+  environments?: EnvironmentsYaml
   execution: ExecutionElementConfig
   gitOpsEnabled?: boolean
   infrastructure?: PipelineInfrastructure
   service?: ServiceYamlV2
   serviceConfig?: ServiceConfig
+  services?: ServicesYaml
 }
 
 export interface DeploymentStatsSummary {
@@ -2729,6 +2744,16 @@ export type DynatraceConnectorDTO = ConnectorConfigDTO & {
   url: string
 }
 
+export type ELKConnectorDTO = ConnectorConfigDTO & {
+  apiKeyId?: string
+  apiKeyRef?: string
+  authType?: 'UsernamePassword' | 'ApiClientToken' | 'None'
+  delegateSelectors?: string[]
+  passwordRef?: string
+  url: string
+  username?: string
+}
+
 export type EcrArtifactConfig = ArtifactConfig & {
   connectorRef: string
   imagePath: string
@@ -2768,6 +2793,77 @@ export interface EcrRequestDTO {
 
 export interface EcrResponseDTO {
   buildDetailsList?: EcrBuildDetailsDTO[]
+}
+
+export type EcsCanaryDeleteStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type EcsCanaryDeployStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export interface EcsContainer {
+  containerArn?: string
+  image?: string
+  name?: string
+  runtimeId?: string
+}
+
+export type EcsInfrastructure = Infrastructure & {
+  cluster: string
+  connectorRef: string
+  metadata?: string
+  region: string
+}
+
+export type EcsInfrastructureDetails = InfrastructureDetails & {
+  cluster?: string
+  region?: string
+}
+
+export type EcsInstanceInfoDTO = InstanceInfoDTO & {
+  clusterArn: string
+  containers: EcsContainer[]
+  infraStructureKey?: string
+  launchType?: string
+  region: string
+  serviceName: string
+  startedAt?: number
+  startedBy?: string
+  taskArn: string
+  taskDefinitionArn: string
+  version?: number
+}
+
+export type EcsRollingDeployStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type EcsRollingRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type EcsScalableTargetDefinitionManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
+}
+
+export type EcsScalingPolicyDefinitionManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
+}
+
+export type EcsServiceDefinitionManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
+}
+
+export type EcsServiceSpec = ServiceSpec & {}
+
+export type EcsTaskDefinitionManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
 }
 
 export interface EditionActionDTO {
@@ -2928,6 +3024,10 @@ export interface EntityDetail {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -3159,6 +3259,15 @@ export interface EnvironmentYamlV2 {
   serviceOverrideInputs?: JsonNode
 }
 
+export interface EnvironmentsMetadata {
+  parallel?: boolean
+}
+
+export interface EnvironmentsYaml {
+  metadata?: EnvironmentsMetadata
+  values?: EnvironmentYamlV2[]
+}
+
 export interface Error {
   code?:
     | 'DEFAULT_ERROR_CODE'
@@ -3315,7 +3424,6 @@ export interface Error {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -3496,6 +3604,11 @@ export interface Error {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -3666,7 +3779,6 @@ export interface ErrorMetadata {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -3847,6 +3959,11 @@ export interface ErrorMetadata {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   errorMessage?: string
 }
 
@@ -4074,7 +4191,6 @@ export interface Failure {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -4255,6 +4371,11 @@ export interface Failure {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -4956,6 +5077,10 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -5060,6 +5185,10 @@ export interface GitEntityFilterProperties {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -5197,6 +5326,10 @@ export interface GitFullSyncEntityInfoDTO {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -5309,6 +5442,10 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -5529,6 +5666,10 @@ export interface GitSyncEntityDTO {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -5635,6 +5776,10 @@ export interface GitSyncEntityListDTO {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -5758,6 +5903,10 @@ export interface GitSyncErrorDTO {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -6231,6 +6380,7 @@ export interface InfrastructureDef {
     | 'ServerlessAwsLambda'
     | 'AzureWebApp'
     | 'SshWinRmAws'
+    | 'ECS'
 }
 
 export interface InfrastructureDefinitionConfig {
@@ -6254,6 +6404,7 @@ export interface InfrastructureDefinitionConfig {
     | 'ServerlessAwsLambda'
     | 'AzureWebApp'
     | 'SshWinRmAws'
+    | 'ECS'
 }
 
 export interface InfrastructureDetails {
@@ -6284,6 +6435,7 @@ export interface InfrastructureRequestDTO {
     | 'ServerlessAwsLambda'
     | 'AzureWebApp'
     | 'SshWinRmAws'
+    | 'ECS'
   yaml?: string
 }
 
@@ -6313,6 +6465,7 @@ export interface InfrastructureResponseDTO {
     | 'ServerlessAwsLambda'
     | 'AzureWebApp'
     | 'SshWinRmAws'
+    | 'ECS'
   yaml?: string
 }
 
@@ -6953,7 +7106,6 @@ export interface LdapConnectionSettings {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -7132,6 +7284,10 @@ export interface ManifestConfig {
     | 'Values'
     | 'ServerlessAwsLambda'
     | 'ReleaseRepo'
+    | 'EcsTaskDefinition'
+    | 'EcsServiceDefinition'
+    | 'EcsScalableTargetDefinition'
+    | 'EcsScalingPolicyDefinition'
 }
 
 export interface ManifestConfigWrapper {
@@ -8485,6 +8641,10 @@ export interface ReferencedByDTO {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -9379,6 +9539,10 @@ export interface ResponseListEntityType {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -9538,7 +9702,7 @@ export interface ResponseListServiceAccountDTO {
 
 export interface ResponseListServiceDefinitionType {
   correlationId?: string
-  data?: ('Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp')[]
+  data?: ('Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp' | 'ECS')[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9812,7 +9976,6 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -9993,6 +10156,11 @@ export interface ResponseMessage {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -11229,7 +11397,6 @@ export type SamlSettings = SSOSettings & {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -11400,7 +11567,6 @@ export interface SecretManagerMetadataDTO {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
@@ -11416,7 +11582,6 @@ export interface SecretManagerMetadataRequestDTO {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
@@ -11596,7 +11761,7 @@ export interface ServiceDashboardInfo {
 
 export interface ServiceDefinition {
   spec: ServiceSpec
-  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
+  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp' | 'ECS'
 }
 
 export interface ServiceDeployment {
@@ -11844,6 +12009,15 @@ export interface ServicesCount {
 
 export interface ServicesDashboardInfo {
   serviceDashboardInfoList?: ServiceDashboardInfo[]
+}
+
+export interface ServicesMetadata {
+  parallel?: boolean
+}
+
+export interface ServicesYaml {
+  metadata?: ServicesMetadata
+  values?: ServiceYamlV2[]
 }
 
 export interface SettingDTO {
@@ -12117,6 +12291,10 @@ export interface StepData {
     | 'TEMPLATIZED_SECRET_MANAGER'
     | 'ServerlessAwsLambdaDeploy'
     | 'ServerlessAwsLambdaRollback'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'Command'
     | 'JenkinsBuild'
     | 'AzureCreateARMResource'
@@ -13116,6 +13294,8 @@ export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
 
+export type PostLdapAuthenticationTestRequestBody = void
+
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
 export type UploadSamlMetaDataRequestBody = void
@@ -13689,6 +13869,10 @@ export interface ListActivitiesQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -13787,6 +13971,10 @@ export interface ListActivitiesQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -13989,6 +14177,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -14087,6 +14279,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -19433,6 +19629,52 @@ export const cFStatesForAwsPromise = (
     signal
   )
 
+export interface ClustersQueryParams {
+  awsConnectorRef: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  region: string
+}
+
+export type ClustersProps = Omit<GetProps<ResponseListString, Failure | Error, ClustersQueryParams, void>, 'path'>
+
+/**
+ * Get clusters
+ */
+export const Clusters = (props: ClustersProps) => (
+  <Get<ResponseListString, Failure | Error, ClustersQueryParams, void>
+    path={`/aws/aws-helper/clusters`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseClustersProps = Omit<UseGetProps<ResponseListString, Failure | Error, ClustersQueryParams, void>, 'path'>
+
+/**
+ * Get clusters
+ */
+export const useClusters = (props: UseClustersProps) =>
+  useGet<ResponseListString, Failure | Error, ClustersQueryParams, void>(`/aws/aws-helper/clusters`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get clusters
+ */
+export const clustersPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, ClustersQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, Failure | Error, ClustersQueryParams, void>(
+    getConfig('ng/api'),
+    `/aws/aws-helper/clusters`,
+    props,
+    signal
+  )
+
 export interface FilterHostsQueryParams {
   awsConnectorRef: string
   accountIdentifier: string
@@ -20753,6 +20995,7 @@ export interface GetConnectorListQueryParams {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
+    | 'ELK'
   category?:
     | 'CLOUD_PROVIDER'
     | 'SECRET_MANAGER'
@@ -20833,6 +21076,7 @@ export interface CreateConnectorQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   repoName?: string
+  parentEntityScope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
 export type CreateConnectorProps = Omit<
@@ -21143,6 +21387,7 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
+    | 'ELK'
 }
 
 export type GetAllAllowedFieldValuesProps = Omit<
@@ -24934,6 +25179,10 @@ export interface ListReferredByEntitiesQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -25090,6 +25339,10 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -28002,6 +28255,10 @@ export interface GetReferencedByQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -29363,6 +29620,10 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -29529,6 +29790,10 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'AzureSwapSlot'
       | 'AzureWebAppRollback'
       | 'JenkinsBuild'
+      | 'EcsRollingDeploy'
+      | 'EcsRollingRollback'
+      | 'EcsCanaryDeploy'
+      | 'EcsCanaryDelete'
       | 'AzureCreateARMResource'
       | 'BuildAndPushACR'
       | 'AzureCreateBPResource'
@@ -30580,6 +30845,7 @@ export interface CreateGitOpsProviderQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   repoName?: string
+  parentEntityScope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
 export type CreateGitOpsProviderProps = Omit<
@@ -30669,6 +30935,7 @@ export interface UpdateGitOpsProviderQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   repoName?: string
+  parentEntityScope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
 export type UpdateGitOpsProviderProps = Omit<
@@ -34814,6 +35081,10 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -35040,6 +35311,10 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -35292,7 +35567,7 @@ export const getServiceDefinitionTypesPromise = (
   )
 
 export interface GetStepsQueryParams {
-  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
+  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp' | 'ECS'
 }
 
 export type GetStepsProps = Omit<GetProps<ResponseStepCategory, Failure | Error, GetStepsQueryParams, void>, 'path'>
@@ -35429,7 +35704,7 @@ export const getProvisionerExecutionStrategyYamlPromise = (
   )
 
 export interface GetExecutionStrategyYamlQueryParams {
-  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
+  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp' | 'ECS'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -35479,7 +35754,7 @@ export const getExecutionStrategyYamlPromise = (
   )
 
 export interface PostExecutionStrategyYamlQueryParams {
-  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
+  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp' | 'ECS'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -38773,7 +39048,7 @@ export interface GetServiceListQueryParams {
   searchTerm?: string
   serviceIdentifiers?: string[]
   sort?: string[]
-  type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
+  type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp' | 'ECS'
   gitOpsEnabled?: boolean
 }
 
@@ -39115,7 +39390,7 @@ export interface GetServiceAccessListQueryParams {
   searchTerm?: string
   serviceIdentifiers?: string[]
   sort?: string[]
-  type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
+  type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp' | 'ECS'
   gitOpsEnabled?: boolean
 }
 
@@ -41830,57 +42105,6 @@ export const getDelegateInstallStatusPromise = (
   getUsingFetch<ResponseDelegateStatus, Failure | Error, GetDelegateInstallStatusQueryParams, void>(
     getConfig('ng/api'),
     `/trial-signup/delegate-install-status`,
-    props,
-    signal
-  )
-
-export interface GetAllUserReposQueryParams {
-  connectorRef?: string
-  accountIdentifier?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export type GetAllUserReposProps = Omit<
-  GetProps<ResponseListUserRepoResponse, Failure | Error, GetAllUserReposQueryParams, void>,
-  'path'
->
-
-/**
- * Get all repositories of the user from scm
- */
-export const GetAllUserRepos = (props: GetAllUserReposProps) => (
-  <Get<ResponseListUserRepoResponse, Failure | Error, GetAllUserReposQueryParams, void>
-    path={`/trial-signup/fetch-repo-list`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetAllUserReposProps = Omit<
-  UseGetProps<ResponseListUserRepoResponse, Failure | Error, GetAllUserReposQueryParams, void>,
-  'path'
->
-
-/**
- * Get all repositories of the user from scm
- */
-export const useGetAllUserRepos = (props: UseGetAllUserReposProps) =>
-  useGet<ResponseListUserRepoResponse, Failure | Error, GetAllUserReposQueryParams, void>(
-    `/trial-signup/fetch-repo-list`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Get all repositories of the user from scm
- */
-export const getAllUserReposPromise = (
-  props: GetUsingFetchProps<ResponseListUserRepoResponse, Failure | Error, GetAllUserReposQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseListUserRepoResponse, Failure | Error, GetAllUserReposQueryParams, void>(
-    getConfig('ng/api'),
-    `/trial-signup/fetch-repo-list`,
     props,
     signal
   )
@@ -46605,6 +46829,10 @@ export interface GetYamlSchemaQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -46651,6 +46879,7 @@ export interface GetYamlSchemaQueryParams {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
+    | 'ELK'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'

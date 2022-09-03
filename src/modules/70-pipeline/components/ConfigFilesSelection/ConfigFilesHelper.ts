@@ -41,7 +41,8 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
   ServerlessAwsLambda: [ConfigFilesMap.Harness],
   AzureWebApp: [ConfigFilesMap.Harness],
   Ssh: [ConfigFilesMap.Harness],
-  WinRm: [ConfigFilesMap.Harness]
+  WinRm: [ConfigFilesMap.Harness],
+  ECS: [ConfigFilesMap.Harness]
 }
 
 export const ConfigFilesToConnectorLabelMap: Record<ConfigFileType, StringKeys> = {

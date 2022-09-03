@@ -26,7 +26,8 @@ import css from '../PipelineVariables.module.scss'
 
 const StepsMap: Record<string, StepType> = {
   KubernetesDirect: StepType.KubernetesDirect,
-  ServerlessAwsLambda: StepType.ServerlessAwsInfra
+  ServerlessAwsLambda: StepType.ServerlessAwsInfra,
+  ECS: StepType.EcsInfra
 }
 
 export interface InfrastructureCardProps {

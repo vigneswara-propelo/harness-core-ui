@@ -43,7 +43,16 @@ interface ManifestWizardStepsProps<T, U> {
 }
 
 const showManifestStoreStepDirectly = (selectedManifest: ManifestTypes | null) => {
-  return !!(selectedManifest && [ManifestDataType.ServerlessAwsLambda].includes(selectedManifest))
+  return !!(
+    selectedManifest &&
+    [
+      ManifestDataType.ServerlessAwsLambda,
+      ManifestDataType.EcsTaskDefinition,
+      ManifestDataType.EcsServiceDefinition,
+      ManifestDataType.EcsScalingPolicyDefinition,
+      ManifestDataType.EcsScalableTargetDefinition
+    ].includes(selectedManifest)
+  )
 }
 
 export function ManifestWizard<T, U>({

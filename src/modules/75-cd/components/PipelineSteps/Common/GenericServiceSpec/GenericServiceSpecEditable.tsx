@@ -21,7 +21,10 @@ import {
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
-import { getManifestsHeaderTooltipId } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import {
+  allowedManifestTypes,
+  getManifestsHeaderTooltipId
+} from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
@@ -76,6 +79,7 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={!!readonly}
               allowOnlyOneManifest={isServerlessDeploymentType(selectedDeploymentType)}
+              availableManifestTypes={allowedManifestTypes[selectedDeploymentType]}
             />
           </Card>
           <Card

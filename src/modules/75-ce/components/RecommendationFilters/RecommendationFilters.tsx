@@ -106,7 +106,7 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ applyFilt
       new Map<string, string>([
         ['names', getString('ce.recommendation.listPage.filters.name')],
         ['namespaces', getString('ce.recommendation.listPage.filters.namespace')],
-        ['clusterNames', getString('ce.recommendation.listPage.filters.clusterName')],
+        ['clusterNames', getString('common.clusterName')],
         ['resourceTypes', getString('common.resourceTypeLabel')],
         ['minCost', getString('ce.recommendation.listPage.filters.potentialSpend')],
         ['minSaving', getString('ce.recommendation.listPage.filters.savings')]

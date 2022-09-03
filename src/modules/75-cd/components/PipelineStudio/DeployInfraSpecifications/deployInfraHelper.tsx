@@ -17,7 +17,8 @@ import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipelin
 import {
   isAzureWebAppDeploymentType,
   isServerlessDeploymentType,
-  isSSHWinRMDeploymentType
+  isSSHWinRMDeploymentType,
+  ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
 
 const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
@@ -240,6 +241,19 @@ export const getInfraGroups = (
     }
   ]
 
+  const ecsInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
+      items: [
+        {
+          label: getString('common.aws'),
+          icon: 'service-aws',
+          value: InfraDeploymentType.ECS
+        }
+      ]
+    }
+  ]
+
   const kuberntesInfraGroups: InfrastructureGroup[] = [
     {
       groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
@@ -258,6 +272,8 @@ export const getInfraGroups = (
       return azureWebAppInfraGroups
     case isSSHWinRMDeploymentType(deploymentType):
       return sshWinRMInfraGroups
+    case deploymentType === ServiceDeploymentType.ECS:
+      return ecsInfraGroups
     case deploymentType === null:
       return [
         {

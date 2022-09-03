@@ -40,7 +40,9 @@ export default function ManifestSelection({
   allowOnlyOneManifest,
   addManifestBtnText,
   updateManifestList,
-  preSelectedManifestType
+  preSelectedManifestType,
+  availableManifestTypes,
+  deleteManifest
 }: ManifestSelectionProps): JSX.Element | null {
   const {
     state: {
@@ -171,13 +173,17 @@ export default function ManifestSelection({
   )
   const removeManifestConfig = useCallback(
     (index: number): void => {
-      listOfManifests.splice(index, 1)
-      if (stage) {
-        const newStage = produce(stage, draft => {
-          set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', listOfManifests)
-        }).stage
-        if (newStage) {
-          updateStage(newStage)
+      if (deleteManifest) {
+        deleteManifest(index)
+      } else {
+        listOfManifests.splice(index, 1)
+        if (stage) {
+          const newStage = produce(stage, draft => {
+            set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', listOfManifests)
+          }).stage
+          if (newStage) {
+            updateStage(newStage)
+          }
         }
       }
     },
@@ -229,6 +235,7 @@ export default function ManifestSelection({
           allowOnlyOneManifest={allowOnlyOneManifest}
           addManifestBtnText={addManifestBtnText}
           preSelectedManifestType={preSelectedManifestType}
+          availableManifestTypes={availableManifestTypes}
         />
       ) : (
         <ReleaseRepoListView

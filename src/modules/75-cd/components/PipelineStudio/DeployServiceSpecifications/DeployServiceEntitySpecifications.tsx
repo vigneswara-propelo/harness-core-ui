@@ -379,7 +379,7 @@ export default function DeployServiceEntitySpecifications({
               <>
                 <Divider className={stageCss.divider} />
                 <div className={stageCss.tabHeading} id="serviceDefinition">
-                  {getString('pipelineSteps.deploy.serviceSpecifications.serviceDefinition')}
+                  {getString('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')}
                 </div>
                 <SelectDeploymentType
                   selectedDeploymentType={selectedDeploymentType}

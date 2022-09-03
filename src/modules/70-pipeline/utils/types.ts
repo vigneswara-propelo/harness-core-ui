@@ -14,7 +14,8 @@ import type {
   PipelineInfoConfig,
   StringNGVariable,
   NumberNGVariable,
-  SecretNGVariable
+  SecretNGVariable,
+  StepElementConfig
 } from 'services/pipeline-ng'
 
 export type AllNGVariables = StringNGVariable | NumberNGVariable | SecretNGVariable
@@ -77,3 +78,8 @@ export interface InputSet {
 }
 
 export type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
+
+export interface ECSRollingDeployStepInitialValues extends StepElementConfig {
+  sameAsAlreadyRunningInstances?: boolean | string
+  forceNewDeployment?: boolean | string
+}
