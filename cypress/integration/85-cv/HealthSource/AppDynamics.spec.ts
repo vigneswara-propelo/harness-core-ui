@@ -56,20 +56,20 @@ describe('Create empty monitored service', () => {
     cy.wait('@MetricPackCall')
     cy.wait(1000)
 
-    cy.get('input[name="metricData.Errors"]').should('be.checked')
-    cy.get('input[name="metricData.Performance"]').should('be.checked')
+    cy.get('input[name="Errors"]').should('be.checked')
+    cy.get('input[name="Performance"]').should('be.checked')
 
     // Validation
     cy.contains('span', 'Submit').click({ force: true })
 
     cy.contains('span', 'Please select applications').should('be.visible')
 
-    cy.get('input[name="metricData.Errors"]').uncheck({ force: true })
-    cy.get('input[name="metricData.Performance"]').uncheck({ force: true })
+    cy.get('input[name="Errors"]').uncheck({ force: true })
+    cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
     cy.contains('span', 'Plese select metric packs').should('be.visible')
-    cy.get('input[name="metricData.Errors"]').check({ force: true })
-    cy.get('input[name="metricData.Performance"]').check({ force: true })
+    cy.get('input[name="Errors"]').check({ force: true })
+    cy.get('input[name="Performance"]').check({ force: true })
     cy.contains('span', 'Plese select metric packs').should('not.exist')
 
     cy.get('input[name="appdApplication"]').click()
@@ -124,8 +124,8 @@ describe('Create empty monitored service', () => {
     cy.contains('p', 'docker-tier').click({ force: true })
 
     // Adding custom metric should make metric pack oprional
-    cy.get('input[name="metricData.Errors"]').uncheck({ force: true })
-    cy.get('input[name="metricData.Performance"]').uncheck({ force: true })
+    cy.get('input[name="Errors"]').uncheck({ force: true })
+    cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
     cy.contains('span', 'Plese select metric packs').should('be.visible')
     cy.contains('span', 'Add Metric').click()
@@ -199,8 +199,8 @@ describe('Create empty monitored service', () => {
     cy.contains('p', 'docker-tier').click({ force: true })
 
     // Adding custom metric should make metric pack oprional
-    cy.get('input[name="metricData.Errors"]').uncheck({ force: true })
-    cy.get('input[name="metricData.Performance"]').uncheck({ force: true })
+    cy.get('input[name="Errors"]').uncheck({ force: true })
+    cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
     cy.contains('span', 'Plese select metric packs').should('be.visible')
     cy.contains('span', 'Add Metric').click()
@@ -443,8 +443,8 @@ describe('Metric thresholds in AppDynamics', () => {
     cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
 
     // If no metric pack is selected, metric thresholds should be hidden
-    cy.get('input[name="metricData.Errors"]').uncheck({ force: true })
-    cy.get('input[name="metricData.Performance"]').uncheck({ force: true })
+    cy.get('input[name="Errors"]').uncheck({ force: true })
+    cy.get('input[name="Performance"]').uncheck({ force: true })
 
     cy.contains('.Accordion--label', 'Advanced (Optional)').should('not.exist')
   })
@@ -581,5 +581,118 @@ describe('Metric thresholds in AppDynamics', () => {
     cy.get("input[name='failFastThresholds.0.metricName']").click()
     cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'appdMetric')
     cy.get('.Select--menuItem:nth-child(1)').click()
+  })
+
+  it('should show prompt, if metric packs containing metric thresholds are being removed', () => {
+    cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
+    cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
+    cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
+    cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
+
+    cy.addNewMonitoredServiceWithServiceAndEnv()
+
+    // Fill Define HealthSource Tab with AppDynamics
+    cy.populateDefineHealthSource(Connectors.APP_DYNAMICS, 'appdtest', 'AppD')
+    cy.wait(1000)
+    cy.contains('span', 'Next').click({ force: true })
+
+    // Fill Customise HealthSource Tab for AppDynamics
+    cy.wait('@ApplicationCall')
+    cy.wait('@MetricPackCall')
+
+    cy.get('input[name="appdApplication"]').click()
+    cy.contains('p', 'cv-app').click({ force: true })
+
+    cy.wait('@TierCall')
+    cy.get('input[name="appDTier"]').click()
+    cy.contains('p', 'docker-tier').click({ force: true })
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
+
+    cy.findByTestId('AddThresholdButton').click()
+
+    cy.contains('div', 'Ignore Thresholds (1)').should('exist')
+
+    cy.get("input[name='ignoreThresholds.0.metricType']").should('have.value', 'Performance')
+
+    cy.get('input[name="Performance"]').scrollIntoView().click({ force: true })
+
+    cy.contains('p', 'Warning').should('be.visible')
+
+    cy.contains('button', 'Confirm').should('be.visible')
+    cy.contains('button', 'Confirm').click()
+
+    cy.contains('div', 'Ignore Thresholds (0)').should('exist')
+  })
+
+  it('should show prompt, if custom metrics containing metric thresholds are being deleted', () => {
+    cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
+    cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
+    cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
+    cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
+
+    cy.addNewMonitoredServiceWithServiceAndEnv()
+
+    // Fill Define HealthSource Tab with AppDynamics
+    cy.populateDefineHealthSource(Connectors.APP_DYNAMICS, 'appdtest', 'AppD')
+    cy.wait(1000)
+    cy.contains('span', 'Next').click({ force: true })
+
+    // Fill Customise HealthSource Tab for AppDynamics
+    cy.wait('@ApplicationCall')
+    cy.wait('@MetricPackCall')
+
+    cy.get('input[name="appdApplication"]').click()
+    cy.contains('p', 'cv-app').click({ force: true })
+
+    cy.wait('@TierCall')
+    cy.get('input[name="appDTier"]').click()
+    cy.contains('p', 'docker-tier').click({ force: true })
+
+    // Adding custom metrics
+    cy.contains('span', 'Add Metric').click()
+
+    cy.get('input[name="groupName"]').click()
+    cy.contains('p', '+ Add New').click({ force: true })
+    cy.get('.bp3-overlay input[name="name"]').type('group 1')
+    cy.get('.bp3-overlay button[type="submit"]').click({ force: true })
+
+    cy.contains('div', 'Assign').click({ force: true })
+    cy.contains('span', 'Continuous Verification').scrollIntoView().click({ force: true })
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
+
+    cy.findByTestId('AddThresholdButton').click()
+
+    cy.contains('div', 'Ignore Thresholds (1)').should('exist')
+
+    cy.get("input[name='ignoreThresholds.0.metricType']").click()
+
+    cy.get('.Select--menuItem:nth-child(3)').should('have.text', 'Custom')
+    cy.get('.Select--menuItem:nth-child(3)').click()
+
+    // group name should have created group name option
+    cy.get("input[name='ignoreThresholds.0.groupName']").click()
+
+    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'group 1')
+    cy.get('.Select--menuItem:nth-child(1)').click()
+
+    cy.get("input[name='ignoreThresholds.0.groupName']").should('have.value', 'group 1')
+    // Selected group's metric name must be listed
+    cy.get("input[name='ignoreThresholds.0.metricName']").click()
+
+    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'appdMetric')
+    cy.get('.Select--menuItem:nth-child(1)').click()
+
+    cy.get('span[data-icon="main-delete"]').should('exist').scrollIntoView().click()
+
+    cy.contains('p', 'Warning').should('be.visible')
+
+    cy.contains('button', 'Confirm').should('be.visible')
+    cy.contains('button', 'Confirm').click()
+
+    cy.contains('div', 'Ignore Thresholds (0)').should('exist')
   })
 })

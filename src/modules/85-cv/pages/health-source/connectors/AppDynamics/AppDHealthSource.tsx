@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import {
@@ -40,7 +40,13 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
-import { getOptions, validateMetrics, createMetricDataFormik } from '../MonitoredServiceConnector.utils'
+import {
+  getOptions,
+  validateMetrics,
+  createMetricDataFormik,
+  getUpdatedNonCustomFields,
+  getMetricNameFilteredNonCustomFields
+} from '../MonitoredServiceConnector.utils'
 import { HealthSoureSupportedConnectorTypes } from '../MonitoredServiceConnector.constants'
 import {
   checkAppAndTierAreNotFixed,
@@ -57,7 +63,7 @@ import {
   submitData,
   validateMapping
 } from './AppDHealthSource.utils'
-import type { AppDynamicsData, AppDynamicsFomikFormInterface } from './AppDHealthSource.types'
+import type { AppDynamicsData, AppDynamicsFomikFormInterface, NonCustomFeildsInterface } from './AppDHealthSource.types'
 import MetricPackCustom from '../MetricPackCustom'
 import CustomMetric from '../../common/CustomMetric/CustomMetric'
 import AppDCustomMetricForm from './Components/AppDCustomMetricForm/AppDCustomMetricForm'
@@ -149,35 +155,38 @@ export default function AppDMonitoredSource({
     }
   }, [appDynamicsData?.applicationName])
 
-  const onValidate = async (appName: string, tierName: string, metricObject: { [key: string]: any }): Promise<void> => {
-    if (checkAppAndTierAreNotFixed(appName, tierName)) {
-      return
-    }
-    setAppDValidation({ status: StatusOfValidation.IN_PROGRESS, result: [] })
-    const filteredMetricPack = selectedMetricPacks.filter(item => metricObject[item.identifier as string])
-    const guid = Utils.randomId()
-    setGuidMap(oldMap => {
-      oldMap.set(tierName, guid)
-      return new Map(oldMap)
-    })
-    const { validationStatus, validationResult } = await validateMetrics(
-      filteredMetricPack || [],
-      {
-        accountId,
-        appName: appName,
-        tierName: tierName,
-        connectorIdentifier: connectorIdentifier,
-        orgIdentifier,
-        projectIdentifier,
-        requestGuid: guid
-      },
-      HealthSoureSupportedConnectorTypes.APP_DYNAMICS
-    )
-    setAppDValidation({
-      status: validationStatus as string,
-      result: validationResult as AppdynamicsValidationResponse[]
-    })
-  }
+  const onValidate = useCallback(
+    async (appName: string, tierName: string, metricObject: { [key: string]: any }): Promise<void> => {
+      if (checkAppAndTierAreNotFixed(appName, tierName)) {
+        return
+      }
+      setAppDValidation({ status: StatusOfValidation.IN_PROGRESS, result: [] })
+      const filteredMetricPack = selectedMetricPacks.filter(item => metricObject[item.identifier as string])
+      const guid = Utils.randomId()
+      setGuidMap(oldMap => {
+        oldMap.set(tierName, guid)
+        return new Map(oldMap)
+      })
+      const { validationStatus, validationResult } = await validateMetrics(
+        filteredMetricPack || [],
+        {
+          accountId,
+          appName: appName,
+          tierName: tierName,
+          connectorIdentifier: connectorIdentifier,
+          orgIdentifier,
+          projectIdentifier,
+          requestGuid: guid
+        },
+        HealthSoureSupportedConnectorTypes.APP_DYNAMICS
+      )
+      setAppDValidation({
+        status: validationStatus as string,
+        result: validationResult as AppdynamicsValidationResponse[]
+      })
+    },
+    [accountId, connectorIdentifier, orgIdentifier, projectIdentifier, selectedMetricPacks]
+  )
 
   const applicationOptions: SelectOption[] = useMemo(
     () =>
@@ -254,6 +263,41 @@ export default function AppDMonitoredSource({
       appDTier: tierValue
     })
   }
+
+  const handleMetricPackUpdate = useCallback(
+    async (metricPackIdentifier: string, updatedValue: boolean, appdApplication: string, appDTier: string) => {
+      if (typeof metricPackIdentifier === 'string') {
+        const updatedNonCustomFields = getUpdatedNonCustomFields(
+          isMetricThresholdEnabled,
+          nonCustomFeilds,
+          metricPackIdentifier,
+          updatedValue
+        )
+
+        setNonCustomFeilds(updatedNonCustomFields as NonCustomFeildsInterface)
+
+        if (appdApplication && appDTier) {
+          await onValidate(appdApplication, appDTier, updatedNonCustomFields.metricData)
+        }
+      }
+    },
+    [isMetricThresholdEnabled, nonCustomFeilds, onValidate]
+  )
+
+  const filterRemovedMetricNameThresholds = useCallback(
+    (deletedMetricName: string) => {
+      if (isMetricThresholdEnabled && deletedMetricName) {
+        const updatedNonCustomFields = getMetricNameFilteredNonCustomFields<NonCustomFeildsInterface>(
+          isMetricThresholdEnabled,
+          nonCustomFeilds,
+          deletedMetricName
+        )
+
+        setNonCustomFeilds(updatedNonCustomFields)
+      }
+    },
+    [isMetricThresholdEnabled, nonCustomFeilds]
+  )
 
   useEffect(() => {
     if (!appDynamicsData.isEdit) {
@@ -370,13 +414,15 @@ export default function AppDMonitoredSource({
                     metricDataValue={formik.values.metricData}
                     setSelectedMetricPacks={setSelectedMetricPacks}
                     connector={HealthSoureSupportedConnectorTypes.APP_DYNAMICS}
-                    onChange={async metricValue => {
-                      setNonCustomFeilds({
-                        ...nonCustomFeilds,
-                        metricData: metricValue
-                      })
-                      await onValidate(formik?.values?.appdApplication, formik?.values?.appDTier, metricValue)
-                    }}
+                    isMetricThresholdEnabled={isMetricThresholdEnabled}
+                    onChange={(metricPackIdentifier, updatedValue) =>
+                      handleMetricPackUpdate(
+                        metricPackIdentifier,
+                        updatedValue,
+                        formik?.values.appdApplication,
+                        formik?.values.appDTier
+                      )
+                    }
                   />
                   {validationResultData && (
                     <MetricsVerificationModal
@@ -406,6 +452,8 @@ export default function AppDMonitoredSource({
                   addFieldLabel={getString('cv.monitoringSources.addMetric')}
                   initCustomForm={initAppDCustomFormValue()}
                   shouldBeAbleToDeleteLastMetric
+                  isMetricThresholdEnabled={isMetricThresholdEnabled}
+                  filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
                 >
                   <AppDCustomMetricForm
                     formikValues={formik.values}

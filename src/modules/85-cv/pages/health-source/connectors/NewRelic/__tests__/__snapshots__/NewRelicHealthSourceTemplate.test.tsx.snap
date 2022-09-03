@@ -114,7 +114,7 @@ exports[`Unit tests for NewRelic health source Template should work with custom 
               >
                 <div
                   class="bp3-form-group"
-                  data-id="metricData.Performance-0"
+                  data-id="Performance-0"
                 >
                   <div
                     class="bp3-form-content"
@@ -122,33 +122,19 @@ exports[`Unit tests for NewRelic health source Template should work with custom 
                     <div
                       class="StyledProps--font StyledProps--main metricPack"
                     >
-                      <div
-                        class="bp3-form-group"
-                        data-id="metricData.Performance-1"
+                      <label
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
                       >
-                        <div
-                          class="bp3-form-content"
-                        >
-                          <label
-                            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
-                          >
-                            <input
-                              checked=""
-                              name="metricData.Performance"
-                              type="checkbox"
-                            />
-                            <span
-                              class="bp3-control-indicator"
-                            />
-                            <span
-                              class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
-                              data-tooltip-id="newRelicHealthSourceform_metricData.Performance"
-                            >
-                              Performance
-                            </span>
-                          </label>
-                        </div>
-                      </div>
+                        <input
+                          checked=""
+                          name="Performance"
+                          type="checkbox"
+                        />
+                        <span
+                          class="bp3-control-indicator"
+                        />
+                        Performance
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -468,7 +454,7 @@ exports[`Unit tests for NewRelic health source Template should work with custom 
                               </div>
                               <div
                                 class="bp3-form-group"
-                                data-id="metricName-2"
+                                data-id="metricName-1"
                               >
                                 <label
                                   class="bp3-label"
@@ -505,7 +491,7 @@ exports[`Unit tests for NewRelic health source Template should work with custom 
                             </div>
                             <div
                               class="bp3-form-group"
-                              data-id="groupName-3"
+                              data-id="groupName-2"
                             >
                               <label
                                 class="bp3-label"

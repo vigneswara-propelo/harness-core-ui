@@ -160,6 +160,7 @@ export interface StringsMap {
   'common.configureOptions.validationErrors.regExIsRequired': string
   'common.configureOptions.validationErrors.regExNotValid': string
   'common.configureOptions.values': string
+  'common.confirmAction': string
   'common.confirmText': string
   'common.connectThroughDelegate': string
   'common.connectThroughDelegateInfo': string
@@ -901,6 +902,7 @@ export interface StringsMap {
   'common.viewReferences': string
   'common.viewText': string
   'common.viewUsage': string
+  'common.warning': string
   'common.webhookURL': string
   'common.welcome': string
   'common.whose': string
@@ -6703,6 +6705,9 @@ export interface StringsMap {
   'cv.methodLabel': string
   'cv.metricForGoodAndValidRequestsShouldBeDifferent': string
   'cv.metricIsRequired': string
+  'cv.metricThresholds.customMetricsDeletePromptContent': string
+  'cv.metricThresholds.deletePromptTitle': string
+  'cv.metricThresholds.metricPacksDeletePromptContent': string
   'cv.metricThresholds.validations.countValue': string
   'cv.metricThresholds.validations.criteria': string
   'cv.metricThresholds.validations.duplicateThreshold': string

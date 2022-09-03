@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor, act, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { Connectors } from '@connectors/constants'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
@@ -115,7 +116,7 @@ describe('Unit tests for NewRelic health source', () => {
     container.querySelectorAll('[type="checkbox"]').forEach(metricCheckbox => {
       expect(metricCheckbox).toBeChecked()
     })
-    const performanceCheckbox = container.querySelector('input[name="metricData.Performance"]')
+    const performanceCheckbox = container.querySelector('input[name="Performance"]')
     await waitFor(() => expect(performanceCheckbox).toBeChecked())
     act(() => {
       fireEvent.click(performanceCheckbox!)
@@ -137,7 +138,7 @@ describe('Unit tests for NewRelic health source', () => {
       </TestWrapper>
     )
     await waitFor(() => expect(getByText('submit')).not.toBeNull())
-    const performanceCheckbox = container.querySelector('input[name="metricData.Performance"]')
+    const performanceCheckbox = container.querySelector('input[name="Performance"]')
     expect(performanceCheckbox).toBeChecked()
     act(() => {
       fireEvent.click(performanceCheckbox!)
@@ -207,7 +208,7 @@ describe('Unit tests for NewRelic health source', () => {
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
       expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
 
-      expect(container.querySelector("input[name='metricData.Performance']")).toBeChecked()
+      expect(container.querySelector("input[name='Performance']")).toBeChecked()
 
       const addButton = screen.getByTestId('AddThresholdButton')
 
@@ -216,6 +217,49 @@ describe('Unit tests for NewRelic health source', () => {
       fireEvent.click(addButton)
 
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+    })
+
+    test('should show prompt if metric pack containing metric thresholds is being removed', async () => {
+      const submitData = jest.fn()
+      const { container } = render(
+        <TestWrapper {...createModeProps}>
+          <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+            <NewRelicHealthSourceContainer data={sourceData} onSubmit={submitData} />
+          </SetupSourceTabs>
+        </TestWrapper>
+      )
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
+      expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
+
+      expect(container.querySelector("input[name='Performance']")).toBeChecked()
+
+      const addButton = screen.getByTestId('AddThresholdButton')
+
+      expect(addButton).toBeInTheDocument()
+
+      fireEvent.click(addButton)
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+
+      expect(container.querySelector('input[name="ignoreThresholds.0.metricType"]')).toHaveValue('Performance')
+
+      userEvent.click(container.querySelector("input[name='Performance']")!)
+
+      expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
+
+      const modalDeleteBtn = screen.queryAllByText('confirm')[0]
+      act(() => {
+        userEvent.click(modalDeleteBtn!)
+      })
+
+      await waitFor(() => {
+        expect(document.body.innerHTML).not.toContain('useConfirmationDialog')
+      })
+
+      await waitFor(() => {
+        expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
+      })
     })
 
     test('should not render metric thresholds when feature flag is disabled', () => {

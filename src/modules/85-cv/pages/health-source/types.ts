@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { MetricThresholdType, ThresholdsPropertyNames } from './common/MetricThresholds/MetricThresholds.types'
+
 export enum HealthSourceTypes {
   AppDynamics = 'AppDynamics',
   NewRelic = 'NewRelic',
@@ -21,3 +23,7 @@ export enum HealthSourceTypes {
   ErrorTracking = 'ErrorTracking',
   Dynatrace = 'Dynatrace'
 }
+
+export type CommonNonCustomMetricFieldsType = {
+  metricData: Record<string, boolean>
+} & Record<ThresholdsPropertyNames, MetricThresholdType[]>

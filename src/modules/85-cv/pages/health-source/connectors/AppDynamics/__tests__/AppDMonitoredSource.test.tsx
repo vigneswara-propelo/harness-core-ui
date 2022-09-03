@@ -215,8 +215,8 @@ describe('Unit tests for createAppd monitoring source', () => {
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
       expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
 
-      expect(container.querySelector("input[name='metricData.Errors']")).toBeChecked()
-      expect(container.querySelector("input[name='metricData.Performance']")).toBeChecked()
+      expect(container.querySelector("input[name='Errors']")).toBeChecked()
+      expect(container.querySelector("input[name='Performance']")).toBeChecked()
 
       const addButton = screen.getByTestId('AddThresholdButton')
 
@@ -240,14 +240,14 @@ describe('Unit tests for createAppd monitoring source', () => {
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
       expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
 
-      expect(container.querySelector("input[name='metricData.Errors']")).toBeChecked()
-      expect(container.querySelector("input[name='metricData.Performance']")).toBeChecked()
+      expect(container.querySelector("input[name='Errors']")).toBeChecked()
+      expect(container.querySelector("input[name='Performance']")).toBeChecked()
 
-      userEvent.click(container.querySelector("input[name='metricData.Errors']")!)
-      userEvent.click(container.querySelector("input[name='metricData.Performance']")!)
+      userEvent.click(container.querySelector("input[name='Errors']")!)
+      userEvent.click(container.querySelector("input[name='Performance']")!)
 
-      expect(container.querySelector("input[name='metricData.Errors']")).not.toBeChecked()
-      expect(container.querySelector("input[name='metricData.Performance']")).not.toBeChecked()
+      expect(container.querySelector("input[name='Errors']")).not.toBeChecked()
+      expect(container.querySelector("input[name='Performance']")).not.toBeChecked()
 
       expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
       expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
@@ -307,6 +307,127 @@ describe('Unit tests for createAppd monitoring source', () => {
 
       expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
       expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
+    })
+
+    test('should show prompt if metric pack containing metric thresholds is being removed', async () => {
+      const submitData = jest.fn()
+      const { container } = render(
+        <TestWrapper {...createModeProps}>
+          <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+            <AppDMonitoredSource data={appDynamicsDataFull} onSubmit={submitData} onPrevious={jest.fn()} />
+          </SetupSourceTabs>
+        </TestWrapper>
+      )
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
+      expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
+
+      expect(container.querySelector("input[name='Errors']")).toBeChecked()
+      expect(container.querySelector("input[name='Performance']")).toBeChecked()
+
+      const addButton = screen.getByTestId('AddThresholdButton')
+
+      expect(addButton).toBeInTheDocument()
+
+      fireEvent.click(addButton)
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+
+      expect(container.querySelector('input[name="ignoreThresholds.0.metricType"]')).toHaveValue('Performance')
+
+      userEvent.click(container.querySelector("input[name='Performance']")!)
+
+      expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
+
+      const modalDeleteBtn = screen.queryAllByText('confirm')[0]
+      act(() => {
+        userEvent.click(modalDeleteBtn!)
+      })
+
+      await waitFor(() => {
+        expect(document.body.innerHTML).not.toContain('useConfirmationDialog')
+      })
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
+
+      userEvent.click(container.querySelector("input[name='Errors']")!)
+
+      expect(document.body.innerHTML).not.toContain('useConfirmationDialog')
+    })
+
+    test('should show prompt if custom metric containing metric thresholds is being deleted', async () => {
+      const submitData = jest.fn()
+      const { container } = render(
+        <TestWrapper {...createModeProps}>
+          <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+            <AppDMonitoredSource data={appDynamicsDataFull} onSubmit={submitData} onPrevious={jest.fn()} />
+          </SetupSourceTabs>
+        </TestWrapper>
+      )
+
+      userEvent.click(container.querySelector("input[name='Errors']")!)
+      userEvent.click(container.querySelector("input[name='Performance']")!)
+
+      await waitFor(() => expect(screen.getByText('cv.monitoringSources.addMetric')).not.toBeNull())
+      userEvent.click(screen.getByText('cv.monitoringSources.addMetric'))
+
+      await waitFor(() =>
+        expect(screen.getByText('cv.monitoringSources.prometheus.querySpecificationsAndMappings')).toBeTruthy()
+      )
+
+      const icon = container.querySelector('[data-icon="chevron-down"]')
+      if (!icon) {
+        throw Error('Input was not rendered.')
+      }
+
+      // click on new option
+      fireEvent.click(icon)
+      await waitFor(() => expect(screen.getByText('cv.addNew')).not.toBeNull())
+      fireEvent.click(screen.getByText('cv.addNew'))
+
+      //expect modal to show and fill out new name
+      await waitFor(() => expect(screen.getByText('cv.monitoringSources.appD.newGroupName')).not.toBeNull())
+      await setFieldValue({
+        container: document.body,
+        type: InputTypes.TEXTFIELD,
+        fieldId: 'name',
+        value: 'G1'
+      })
+
+      fireEvent.click(screen.getAllByText('submit')[0])
+
+      await waitFor(() => expect(screen.getByText('cv.monitoringSources.assign')).not.toBeNull())
+      fireEvent.click(screen.getByText('cv.monitoringSources.assign'))
+
+      await waitFor(() => expect(screen.getByText('cv.monitoredServices.continuousVerification')).toBeInTheDocument())
+      userEvent.click(container.querySelector('input[name="continuousVerification"]')!)
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
+
+      const addButton = screen.getByTestId('AddThresholdButton')
+
+      expect(addButton).toBeInTheDocument()
+
+      fireEvent.click(addButton)
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
+
+      // userEvent.click(container.querySelector('input[name="continuousVerification"]')!)
+
+      // expect(document.body.innerHTML).not.toContain('useConfirmationDialog')
+
+      await waitFor(() => {
+        expect(container.querySelector('input[name="ignoreThresholds.0.metricType"]')).toBeInTheDocument()
+      })
+      userEvent.click(container.querySelector('input[name="ignoreThresholds.0.metricType"]')!)
+
+      userEvent.click(screen.getByText('Custom'))
+
+      await waitFor(() => {
+        expect(container.querySelector('input[name="ignoreThresholds.0.metricType"]')).toHaveValue('Custom')
+      })
     })
   })
 })

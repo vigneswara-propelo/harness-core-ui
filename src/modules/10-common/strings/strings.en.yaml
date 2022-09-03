@@ -14,11 +14,13 @@ repositoryCertificates: Repository Certificates
 notEnabled: 'Not Enabled'
 apiStatus: 'API Status'
 gpgkey: 'GPG Key'
+warning: Warning
 gnupgKeys: GnuPG Keys
 featureComingSoon: This feature is coming soon.
 skip: Skip
 sync: Sync
 inputVariables: Input Variables
+confirmAction: Confirm action
 accountSetup: Account Setup
 projectSetup: Project Setup
 orgSetup: Org Setup

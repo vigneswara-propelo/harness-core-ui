@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   Text,
@@ -43,7 +43,9 @@ import {
   getOptions,
   getInputGroupProps,
   validateMetrics,
-  createMetricDataFormik
+  createMetricDataFormik,
+  getUpdatedNonCustomFields,
+  getMetricNameFilteredNonCustomFields
 } from '../MonitoredServiceConnector.utils'
 
 import { HealthSoureSupportedConnectorTypes } from '../MonitoredServiceConnector.constants'
@@ -65,6 +67,7 @@ import NewRelicCustomMetricForm from './components/NewRelicCustomMetricForm/NewR
 import { initNewRelicCustomFormValue } from './components/NewRelicCustomMetricForm/NewRelicCustomMetricForm.utils'
 import { getTypeOfInput } from '../AppDynamics/AppDHealthSource.utils'
 import { getIsMetricThresholdCanBeShown } from '../../common/MetricThresholds/MetricThresholds.utils'
+import type { NonCustomMetricFields } from './NewRelicHealthSource.types'
 import css from './NewrelicMonitoredSource.module.scss'
 
 const guid = Utils.randomId()
@@ -146,27 +149,30 @@ export default function NewRelicHealthSource({
     }
   }, [fetchApplication, isConnectorRuntimeOrExpression])
 
-  const onValidate = async (appName: string, appId: string, metricObject: { [key: string]: any }): Promise<void> => {
-    setNewRelicValidation({ status: StatusOfValidation.IN_PROGRESS, result: [] })
-    const filteredMetricPack = selectedMetricPacks?.filter(item => metricObject[item.identifier as string])
-    const { validationStatus, validationResult } = await validateMetrics(
-      filteredMetricPack || [],
-      {
-        appId,
-        appName,
-        accountId,
-        connectorIdentifier: connectorIdentifier,
-        orgIdentifier,
-        projectIdentifier,
-        requestGuid: guid
-      },
-      HealthSoureSupportedConnectorTypes.NEW_RELIC
-    )
-    setNewRelicValidation({
-      status: validationStatus as string,
-      result: validationResult as MetricPackValidationResponse[]
-    })
-  }
+  const onValidate = useCallback(
+    async (appName: string, appId: string, metricObject: { [key: string]: any }): Promise<void> => {
+      setNewRelicValidation({ status: StatusOfValidation.IN_PROGRESS, result: [] })
+      const filteredMetricPack = selectedMetricPacks?.filter(item => metricObject[item.identifier as string])
+      const { validationStatus, validationResult } = await validateMetrics(
+        filteredMetricPack || [],
+        {
+          appId,
+          appName,
+          accountId,
+          connectorIdentifier: connectorIdentifier,
+          orgIdentifier,
+          projectIdentifier,
+          requestGuid: guid
+        },
+        HealthSoureSupportedConnectorTypes.NEW_RELIC
+      )
+      setNewRelicValidation({
+        status: validationStatus as string,
+        result: validationResult as MetricPackValidationResponse[]
+      })
+    },
+    [accountId, connectorIdentifier, orgIdentifier, projectIdentifier, selectedMetricPacks]
+  )
 
   const applicationOptions: SelectOption[] = useMemo(
     () =>
@@ -222,6 +228,41 @@ export default function NewRelicHealthSource({
 
   const [inputType, setInputType] = React.useState<MultiTypeInputType | undefined>(() =>
     getTypeOfInput(newRelicData?.newRelicApplication)
+  )
+
+  const handleMetricPackUpdate = useCallback(
+    async (metricPackIdentifier: string, updatedValue: boolean, appName: string, appId: string) => {
+      if (typeof metricPackIdentifier === 'string') {
+        const updatedNonCustomFields = getUpdatedNonCustomFields<NonCustomMetricFields>(
+          isMetricThresholdEnabled,
+          nonCustomFeilds,
+          metricPackIdentifier,
+          updatedValue
+        )
+
+        setNonCustomFeilds(updatedNonCustomFields)
+
+        if (appName && appId) {
+          await onValidate(appName, appId, updatedNonCustomFields.metricData)
+        }
+      }
+    },
+    [isMetricThresholdEnabled, nonCustomFeilds, onValidate]
+  )
+
+  const filterRemovedMetricNameThresholds = useCallback(
+    (deletedMetricName: string) => {
+      if (isMetricThresholdEnabled && deletedMetricName) {
+        const updatedNonCustomFields = getMetricNameFilteredNonCustomFields<NonCustomMetricFields>(
+          isMetricThresholdEnabled,
+          nonCustomFeilds,
+          deletedMetricName
+        )
+
+        setNonCustomFeilds(updatedNonCustomFields)
+      }
+    },
+    [isMetricThresholdEnabled, nonCustomFeilds]
   )
 
   React.useEffect(() => {
@@ -395,17 +436,15 @@ export default function NewRelicHealthSource({
                       setSelectedMetricPacks as React.Dispatch<React.SetStateAction<TimeSeriesMetricPackDTO[]>>
                     }
                     connector={HealthSoureSupportedConnectorTypes.NEW_RELIC}
-                    onChange={async metricValue => {
-                      setNonCustomFeilds({
-                        ...nonCustomFeilds,
-                        metricData: metricValue
-                      })
-                      await onValidate(
+                    isMetricThresholdEnabled={isMetricThresholdEnabled}
+                    onChange={(metricPackIdentifier, updatedValue) =>
+                      handleMetricPackUpdate(
+                        metricPackIdentifier,
+                        updatedValue,
                         formik?.values?.newRelicApplication?.label,
-                        formik?.values?.newRelicApplication?.value,
-                        metricValue
+                        formik?.values?.newRelicApplication?.value
                       )
-                    }}
+                    }
                   />
                   {validationResultData && (
                     <MetricsVerificationModal
@@ -434,6 +473,8 @@ export default function NewRelicHealthSource({
                 addFieldLabel={getString('cv.monitoringSources.addMetric')}
                 initCustomForm={initNewRelicCustomFormValue()}
                 shouldBeAbleToDeleteLastMetric
+                isMetricThresholdEnabled={isMetricThresholdEnabled}
+                filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
               >
                 <NewRelicCustomMetricForm
                   connectorIdentifier={connectorIdentifier}

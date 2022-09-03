@@ -37,20 +37,20 @@ describe('Create empty monitored service', () => {
     cy.wait('@MetricPackCall')
     cy.wait(1000)
 
-    cy.get('input[name="metricData.Infrastructure"]').should('be.checked')
-    cy.get('input[name="metricData.Performance"]').should('be.checked')
+    cy.get('input[name="Infrastructure"]').should('be.checked')
+    cy.get('input[name="Performance"]').should('be.checked')
 
     // Validation
     cy.contains('span', 'Submit').click({ force: true })
 
     cy.contains('span', 'Please select a service').should('be.visible')
 
-    cy.get('input[name="metricData.Infrastructure"]').uncheck({ force: true })
-    cy.get('input[name="metricData.Performance"]').uncheck({ force: true })
+    cy.get('input[name="Infrastructure"]').uncheck({ force: true })
+    cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
     cy.contains('span', 'Plese select metric packs').should('be.visible')
-    cy.get('input[name="metricData.Infrastructure"]').check({ force: true })
-    cy.get('input[name="metricData.Performance"]').check({ force: true })
+    cy.get('input[name="Infrastructure"]').check({ force: true })
+    cy.get('input[name="Performance"]').check({ force: true })
     cy.contains('span', 'Plese select metric packs').should('not.exist')
 
     cy.get('input[name="dynatraceService"]').click()
@@ -87,8 +87,8 @@ describe('Create empty monitored service', () => {
     cy.wait('@MetricPackCall')
     cy.wait(1000)
 
-    cy.get('input[name="metricData.Infrastructure"]').should('be.checked')
-    cy.get('input[name="metricData.Performance"]').should('be.checked')
+    cy.get('input[name="Infrastructure"]').should('be.checked')
+    cy.get('input[name="Performance"]').should('be.checked')
 
     cy.get('input[name="dynatraceService"]').click()
     cy.contains('p', 'HealthResource').click({ force: true })

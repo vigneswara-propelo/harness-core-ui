@@ -7,7 +7,7 @@ import {
   MetricCriteriaValues,
   PercentageCriteriaDropdownValues
 } from '../MetricThresholds.constants'
-import type { MetricThresholdType } from '../MetricThresholds.types'
+import type { MetricThresholdType, ThresholdsPropertyNames } from '../MetricThresholds.types'
 
 export const groupedCreatedMetrics = {
   'group 1': [
@@ -81,35 +81,37 @@ export const metricPacksMock = [
   }
 ]
 
+export const metricThresholdsArrayMock: MetricThresholdType[] = [
+  {
+    criteria: { criteriaPercentageType: 'lessThan', spec: { lessThan: 1 }, type: 'Percentage' },
+    groupName: 'testP2',
+    metricName: 'average_wait_time_ms',
+    metricType: 'Performance',
+    spec: { action: 'Ignore' },
+    type: 'IgnoreThreshold'
+  },
+  {
+    criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+    groupName: 'testP',
+    metricName: 'stall_count',
+    metricType: 'Performance',
+    spec: { action: 'Ignore' },
+    type: 'IgnoreThreshold'
+  },
+  {
+    criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 22 }, type: 'Percentage' },
+    groupName: 'testPE',
+    metricName: 'average_response_time_ms',
+    metricType: 'Performance',
+    spec: { action: 'FailAfterOccurrence', spec: { count: 2 } },
+    type: 'FailImmediately'
+  }
+]
+
 export const metricThresholdsPayloadMockData = [
   {
     identifier: 'Performance',
-    metricThresholds: [
-      {
-        criteria: { criteriaPercentageType: 'lessThan', spec: { lessThan: 1 }, type: 'Percentage' },
-        groupName: 'testP2',
-        metricName: 'average_wait_time_ms',
-        metricType: 'Performance',
-        spec: { action: 'Ignore' },
-        type: 'IgnoreThreshold'
-      },
-      {
-        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
-        groupName: 'testP',
-        metricName: 'stall_count',
-        metricType: 'Performance',
-        spec: { action: 'Ignore' },
-        type: 'IgnoreThreshold'
-      },
-      {
-        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 22 }, type: 'Percentage' },
-        groupName: 'testPE',
-        metricName: 'average_response_time_ms',
-        metricType: 'Performance',
-        spec: { action: 'FailAfterOccurrence', spec: { count: 2 } },
-        type: 'FailImmediately'
-      }
-    ]
+    metricThresholds: metricThresholdsArrayMock
   },
   {
     identifier: 'Custom',
@@ -140,6 +142,31 @@ export const formDataMock = {
   ignoreThresholds: ignoreThresholdsMockData,
   failFastThresholds: failFastThresholdsMockData
 }
+
+export const formDataMockWithNoMetricData = {
+  metricData: {
+    Performance: false,
+    Errors: false
+  },
+  ignoreThresholds: ignoreThresholdsMockData,
+  failFastThresholds: failFastThresholdsMockData
+}
+
+export const expectedCustomOnlyResult = [
+  {
+    identifier: 'Custom',
+    metricThresholds: [
+      {
+        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+        groupName: 'testP',
+        metricName: 'stall_count',
+        metricType: 'Custom',
+        spec: { action: 'Ignore' },
+        type: 'IgnoreThreshold'
+      }
+    ]
+  }
+]
 
 export const formikInitialValuesCriteriaMock = {
   ignoreThresholds: [
@@ -192,6 +219,26 @@ export const singleFailFastThreshold: MetricThresholdType = {
 export const formikInitialValuesCriteriaGreaterThanMock = {
   ignoreThresholds: [singleIgnoreThreshold],
   failFastThresholds: []
+}
+
+export const metricThresholdsMock: Record<ThresholdsPropertyNames, MetricThresholdType[]> = {
+  ignoreThresholds: [
+    {
+      metricType: 'test1',
+      metricName: 'testMetricName',
+      type: 'IgnoreThreshold',
+      spec: {
+        action: 'Ignore'
+      },
+      criteria: {
+        type: 'Percentage',
+        spec: {
+          greaterThan: 21
+        }
+      }
+    }
+  ],
+  failFastThresholds: [singleFailFastThreshold]
 }
 
 export const thresholdsForCVEnableTest = {
@@ -289,3 +336,14 @@ export const cvEnabledThresholdsExpectedResultMock = {
     }
   ]
 }
+
+export const metricThresholdExpectedMock = [
+  {
+    criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 22 }, type: 'Percentage' },
+    groupName: 'testPE',
+    metricName: 'average_response_time_ms',
+    metricType: 'Performance',
+    spec: { action: 'FailAfterOccurrence', spec: { count: 2 } },
+    type: 'FailImmediately'
+  }
+]

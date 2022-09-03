@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useContext, useMemo } from 'react'
+import React, { useState, useContext, useMemo, useCallback } from 'react'
 import {
   Container,
   Formik,
@@ -56,6 +56,7 @@ import {
   getCustomMetricGroupNames,
   getFilteredCVDisabledMetricThresholds
 } from '../../common/MetricThresholds/MetricThresholds.utils'
+import { getMetricNameFilteredNonCustomFields } from '../MonitoredServiceConnector.utils'
 import css from './PrometheusHealthSource.module.scss'
 
 export interface PrometheusHealthSourceProps {
@@ -111,6 +112,21 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
     ignoreThresholds: transformedSourceData.ignoreThresholds,
     failFastThresholds: transformedSourceData.failFastThresholds
   })
+
+  const filterRemovedMetricNameThresholds = useCallback(
+    (deletedMetricName: string) => {
+      if (isMetricThresholdEnabled && deletedMetricName) {
+        const updatedMetricThresholds = getMetricNameFilteredNonCustomFields<MetricThresholdsState>(
+          isMetricThresholdEnabled,
+          metricThresholds,
+          deletedMetricName
+        )
+
+        setMetricThresholds(updatedMetricThresholds)
+      }
+    },
+    [isMetricThresholdEnabled, metricThresholds]
+  )
 
   const {
     createdMetrics,
@@ -216,6 +232,8 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
               }
               groupedCreatedMetrics={groupedCreatedMetrics}
               setGroupedCreatedMetrics={setGroupedCreatedMetrics}
+              isMetricThresholdEnabled={isMetricThresholdEnabled}
+              filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
             >
               <Container className={css.main}>
                 <SetupSourceCardHeader

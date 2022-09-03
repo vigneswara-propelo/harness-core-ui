@@ -204,7 +204,7 @@ exports[`Unit tests for NewRelic health source Test NewRelic healthSource contai
                     >
                       <div
                         class="bp3-form-group"
-                        data-id="metricData.Performance-1"
+                        data-id="Performance-1"
                       >
                         <div
                           class="bp3-form-content"
@@ -212,33 +212,19 @@ exports[`Unit tests for NewRelic health source Test NewRelic healthSource contai
                           <div
                             class="StyledProps--font StyledProps--main metricPack"
                           >
-                            <div
-                              class="bp3-form-group"
-                              data-id="metricData.Performance-2"
+                            <label
+                              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
                             >
-                              <div
-                                class="bp3-form-content"
-                              >
-                                <label
-                                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
-                                >
-                                  <input
-                                    checked=""
-                                    name="metricData.Performance"
-                                    type="checkbox"
-                                  />
-                                  <span
-                                    class="bp3-control-indicator"
-                                  />
-                                  <span
-                                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
-                                    data-tooltip-id="newRelicHealthSourceform_metricData.Performance"
-                                  >
-                                    Performance
-                                  </span>
-                                </label>
-                              </div>
-                            </div>
+                              <input
+                                checked=""
+                                name="Performance"
+                                type="checkbox"
+                              />
+                              <span
+                                class="bp3-control-indicator"
+                              />
+                              Performance
+                            </label>
                           </div>
                         </div>
                       </div>
@@ -784,7 +770,7 @@ exports[`Unit tests for NewRelic health source Validation in create mode 1`] = `
                     >
                       <div
                         class="bp3-form-group bp3-intent-danger"
-                        data-id="metricData.Performance-1"
+                        data-id="Performance-1"
                       >
                         <div
                           class="bp3-form-content"
@@ -792,32 +778,18 @@ exports[`Unit tests for NewRelic health source Validation in create mode 1`] = `
                           <div
                             class="StyledProps--font StyledProps--main metricPack"
                           >
-                            <div
-                              class="bp3-form-group"
-                              data-id="metricData.Performance-2"
+                            <label
+                              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
                             >
-                              <div
-                                class="bp3-form-content"
-                              >
-                                <label
-                                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
-                                >
-                                  <input
-                                    name="metricData.Performance"
-                                    type="checkbox"
-                                  />
-                                  <span
-                                    class="bp3-control-indicator"
-                                  />
-                                  <span
-                                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
-                                    data-tooltip-id="newRelicHealthSourceform_metricData.Performance"
-                                  >
-                                    Performance
-                                  </span>
-                                </label>
-                              </div>
-                            </div>
+                              <input
+                                name="Performance"
+                                type="checkbox"
+                              />
+                              <span
+                                class="bp3-control-indicator"
+                              />
+                              Performance
+                            </label>
                           </div>
                           <div
                             class="bp3-form-helper-text"

@@ -70,8 +70,8 @@ describe('Create empty monitored service', () => {
     cy.wait('@MetricPackCall')
     cy.wait(1000)
 
-    cy.get('input[name="metricData.Performance"]').should('be.checked')
-    cy.get('input[name="metricData.Performance"]').uncheck({ force: true })
+    cy.get('input[name="Performance"]').should('be.checked')
+    cy.get('input[name="Performance"]').uncheck({ force: true })
 
     // Validation
     cy.contains('span', 'Submit').click({ force: true })
@@ -79,7 +79,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Please select application').should('be.visible')
     cy.contains('span', 'Plese select metric packs').should('be.visible')
 
-    cy.get('input[name="metricData.Performance"]').check({ force: true })
+    cy.get('input[name="Performance"]').check({ force: true })
     cy.contains('span', 'Plese select metric packs').should('not.exist')
 
     cy.get('[data-testid="newRelicApplication"] input').click()
@@ -93,7 +93,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Next').click()
 
     cy.get('[data-testid="newRelicApplication"] input').should('have.value', 'My Application')
-    cy.get('input[name="metricData.Performance"]').should('be.checked')
+    cy.get('input[name="Performance"]').should('be.checked')
     cy.contains('span', 'Submit').click({ force: true })
 
     // Creating the template.
@@ -166,7 +166,7 @@ describe('Create empty monitored service', () => {
     cy.wait(1000)
     cy.contains('span', 'Next').click({ force: true })
     cy.get('[data-testid="newRelicApplication"] input').should('have.value', 'My Application')
-    cy.get('input[name="metricData.Performance"]').should('be.checked')
+    cy.get('input[name="Performance"]').should('be.checked')
     cy.contains('div', 'Query Specifications and mapping').click({ force: true })
     cy.get('div[class="view-lines"]').should(
       'have.text',
@@ -236,7 +236,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Next').click({ force: true })
 
     cy.get('[data-testid="newRelicApplication"] input').should('have.value', '<+input>')
-    cy.get('input[name="metricData.Performance"]').should('be.checked')
+    cy.get('input[name="Performance"]').should('be.checked')
     cy.contains('div', 'Query Specifications and mapping').click({ force: true })
     cy.get('input[name="query"]').should('have.value', '<+input>')
     cy.contains('div', 'Metric values and charts').click({ force: true })
@@ -277,7 +277,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Next').click({ force: true })
 
     cy.get('[data-testid="newRelicApplication"] input').should('have.value', '<+input>')
-    cy.get('input[name="metricData.Performance"]').should('be.checked')
+    cy.get('input[name="Performance"]').should('be.checked')
     cy.contains('div', 'Query Specifications and mapping').click({ force: true })
     cy.get('input[name="query"]').should('have.value', '<+input>')
     cy.contains('div', 'Metric values and charts').click({ force: true })

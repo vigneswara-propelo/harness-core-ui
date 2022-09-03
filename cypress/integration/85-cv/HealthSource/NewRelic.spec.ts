@@ -55,8 +55,8 @@ describe('Create empty monitored service', () => {
     cy.wait('@MetricPackCall')
     cy.wait(1000)
 
-    cy.get('input[name="metricData.Performance"]').should('be.checked')
-    cy.get('input[name="metricData.Performance"]').uncheck({ force: true })
+    cy.get('input[name="Performance"]').should('be.checked')
+    cy.get('input[name="Performance"]').uncheck({ force: true })
 
     // Validation
     cy.contains('span', 'Submit').click({ force: true })
@@ -64,7 +64,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Please select application').should('be.visible')
     cy.contains('span', 'Plese select metric packs').should('be.visible')
 
-    cy.get('input[name="metricData.Performance"]').check({ force: true })
+    cy.get('input[name="Performance"]').check({ force: true })
     cy.contains('span', 'Plese select metric packs').should('not.exist')
 
     cy.get('input[name="newRelicApplication"]').click()
@@ -77,7 +77,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Next').click()
 
     cy.get('input[name="newRelicApplication"]').should('have.value', 'My Application')
-    cy.get('input[name="metricData.Performance"]').should('be.checked')
+    cy.get('input[name="Performance"]').should('be.checked')
     cy.contains('span', 'Submit').click({ force: true })
 
     // Creating the monitored service.
@@ -103,7 +103,7 @@ describe('Create empty monitored service', () => {
 
     cy.get('input[name="newRelicApplication"]').click()
     cy.contains('p', 'My Application').click({ force: true })
-    cy.get('input[name="metricData.Performance"]').check({ force: true })
+    cy.get('input[name="Performance"]').check({ force: true })
 
     cy.contains('span', 'Add Metric').click()
 
@@ -228,7 +228,7 @@ describe('Create empty monitored service', () => {
       cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
 
       // If no metric pack is selected, metric thresholds should be hidden
-      cy.get('input[name="metricData.Performance"]').uncheck({ force: true })
+      cy.get('input[name="Performance"]').uncheck({ force: true })
 
       cy.contains('.Accordion--label', 'Advanced (Optional)').should('not.exist')
     })
@@ -273,16 +273,6 @@ describe('Create empty monitored service', () => {
       cy.contains('p', 'Calls per Minute').click()
 
       cy.get("input[name='ignoreThresholds.0.metricName']").should('have.value', 'Calls per Minute')
-
-      // changing metric type should reset groupName and metric name
-      // cy.get("input[name='ignoreThresholds.0.metricType']").click()
-
-      // cy.get('.Select--menuItem:nth-child(1)').click()
-
-      // cy.get("input[name='ignoreThresholds.0.metricType']").should('have.value', 'Errors')
-
-      // cy.get("input[name='ignoreThresholds.0.metricName']").should('have.value', '')
-      // cy.get("input[name='ignoreThresholds.0.groupName']").should('have.value', '')
 
       // testing criteria
 
@@ -361,6 +351,107 @@ describe('Create empty monitored service', () => {
       cy.get("input[name='failFastThresholds.0.metricName']").click()
       cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'New Relic Metric')
       cy.get('.Select--menuItem:nth-child(1)').click()
+    })
+
+    it('should show prompt, if metric packs containing metric thresholds are being removed', () => {
+      cy.intercept('GET', applicationCall, applicationResponse).as('ApplicationCall')
+      cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+      cy.intercept('GET', metricDataCall, metricDataResponse).as('MetricDataCall')
+      cy.intercept('GET', sampleDataCall, sampleDataResponse).as('SampleDataCall')
+
+      cy.addNewMonitoredServiceWithServiceAndEnv()
+
+      // Fill Define HealthSource Tab with AppDynamics
+      cy.populateDefineHealthSource(Connectors.NEW_RELIC, 'NewRelicConn', 'NewRelic HS')
+      cy.wait(1000)
+      cy.contains('span', 'Next').click({ force: true })
+
+      // Fill Customise HealthSource Tab for AppDynamics
+      cy.wait('@ApplicationCall')
+      cy.wait('@MetricPackCall')
+
+      cy.get('input[name="newRelicApplication"]').click()
+      cy.contains('p', 'My Application').click({ force: true })
+
+      cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
+
+      cy.findByTestId('AddThresholdButton').click()
+
+      cy.contains('div', 'Ignore Thresholds (1)').should('exist')
+
+      cy.get("input[name='ignoreThresholds.0.metricType']").should('have.value', 'Performance')
+
+      cy.get('input[name="Performance"]').scrollIntoView().click({ force: true })
+
+      cy.contains('p', 'Warning').should('be.visible')
+
+      cy.contains('button', 'Confirm').should('be.visible')
+      cy.contains('button', 'Confirm').click()
+
+      cy.contains('.Accordion--label', 'Advanced (Optional)').should('not.exist')
+    })
+
+    it('should show prompt, if custom metrics containing metric thresholds are being deleted', () => {
+      cy.intercept('GET', applicationCall, applicationResponse).as('ApplicationCall')
+      cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+      cy.intercept('GET', metricDataCall, metricDataResponse).as('MetricDataCall')
+      cy.intercept('GET', sampleDataCall, sampleDataResponse).as('SampleDataCall')
+
+      cy.addNewMonitoredServiceWithServiceAndEnv()
+
+      // Fill Define HealthSource Tab with AppDynamics
+      cy.populateDefineHealthSource(Connectors.NEW_RELIC, 'NewRelicConn', 'NewRelic HS')
+      cy.wait(1000)
+      cy.contains('span', 'Next').click({ force: true })
+
+      // Fill Customise HealthSource Tab for AppDynamics
+      cy.wait('@ApplicationCall')
+      cy.wait('@MetricPackCall')
+
+      cy.get('input[name="newRelicApplication"]').click()
+      cy.contains('p', 'My Application').click({ force: true })
+
+      // Adding custom metrics
+      cy.contains('span', 'Add Metric').click()
+
+      cy.get('input[name="groupName"]').click()
+      cy.contains('p', '+ Add New').click({ force: true })
+      cy.get('.bp3-overlay input[name="name"]').type('group 1')
+      cy.get('.bp3-overlay button[type="submit"]').click({ force: true })
+
+      cy.contains('div', 'Assign').click({ force: true })
+      cy.contains('span', 'Continuous Verification').click()
+
+      cy.findByTestId('AddThresholdButton').click()
+
+      cy.contains('div', 'Ignore Thresholds (1)').should('exist')
+
+      cy.get("input[name='ignoreThresholds.0.metricType']").scrollIntoView().click()
+
+      cy.wait(1000)
+
+      cy.get('.Select--menuItem:nth-child(2)').should('have.text', 'Custom')
+      cy.get('.Select--menuItem:nth-child(2)').click()
+
+      // group name should have created group name option
+      cy.get("input[name='ignoreThresholds.0.groupName']").click()
+
+      cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'group 1').scrollIntoView()
+      cy.get('.Select--menuItem:nth-child(1)').click()
+
+      // Selected group's metric name must be listed
+      cy.get("input[name='ignoreThresholds.0.metricName']").click()
+      cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'New Relic Metric')
+      cy.get('.Select--menuItem:nth-child(1)').click()
+
+      cy.get('span[data-icon="main-delete"]').should('exist').scrollIntoView().click()
+
+      cy.contains('p', 'Warning').should('be.visible')
+
+      cy.contains('button', 'Confirm').should('be.visible')
+      cy.contains('button', 'Confirm').click()
+
+      cy.contains('div', 'Ignore Thresholds (0)').should('exist')
     })
   })
 })

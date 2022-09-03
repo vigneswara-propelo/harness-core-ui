@@ -75,7 +75,7 @@ describe('Unit tests for NewRelic health source', () => {
 
     // should be default runtime
     expect(container.querySelector('input[name="newRelicApplication"]')).toHaveValue('<+input>')
-    const performanceCheckbox = container.querySelector('input[name="metricData.Performance"]')
+    const performanceCheckbox = container.querySelector('input[name="Performance"]')
     act(() => {
       fireEvent.click(performanceCheckbox!)
     })
@@ -108,7 +108,7 @@ describe('Unit tests for NewRelic health source', () => {
     )
     expect(container).toMatchSnapshot()
     expect(container.querySelector('input[name="newRelicApplication"]')).toHaveValue('<+input>')
-    const performanceCheckbox = container.querySelector('input[name="metricData.Performance"]')
+    const performanceCheckbox = container.querySelector('input[name="Performance"]')
     await waitFor(() => expect(performanceCheckbox).toBeChecked())
     expect(getByText('cv.monitoringSources.prometheus.querySpecificationsAndMappings')).toBeTruthy()
     await act(() => {

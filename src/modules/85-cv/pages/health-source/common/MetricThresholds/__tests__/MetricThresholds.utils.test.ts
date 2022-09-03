@@ -10,6 +10,7 @@ import type { TimeSeriesMetricPackDTO } from 'services/cv'
 import type { GroupedCreatedMetrics } from '../../CustomMetric/CustomMetric.types'
 
 import { MetricCriteriaValues, PercentageCriteriaDropdownValues } from '../MetricThresholds.constants'
+import type { ThresholdsPropertyNames } from '../MetricThresholds.types'
 import {
   checkDuplicate,
   getActionItems,
@@ -23,6 +24,8 @@ import {
   getGroupDropdownOptions,
   getIsMetricPacksSelected,
   getIsMetricThresholdCanBeShown,
+  getIsRemovedMetricNameContainsMetricThresholds,
+  getIsRemovedMetricPackContainsMetricThresholds,
   getIsShowGreaterThan,
   getIsShowLessThan,
   getMetricItems,
@@ -30,6 +33,9 @@ import {
   getMetricNameItems,
   getMetricPacksForPayload,
   getMetricsWithCVEnabled,
+  getMetricThresholdsCustomFiltered,
+  isGivenMetricNameContainsThresholds,
+  isGivenMetricPackContainsThresholds,
   isGroupTransationTextField,
   updateThresholdState,
   validateCommonFieldsForMetricThreshold
@@ -37,12 +43,17 @@ import {
 import {
   cvEnabledThresholdsExpectedResultMock,
   exceptionalGroupedCreatedMetrics,
+  expectedCustomOnlyResult,
   formDataMock,
+  formDataMockWithNoMetricData,
   groupedCreatedMetrics,
   groupedCreatedMetricsDefault,
   groupedCreatedMetricsForCVEnableTest,
   groupedCreatedMetricsForFailCVEnableTest,
   metricPacksMock,
+  metricThresholdExpectedMock,
+  metricThresholdsArrayMock,
+  metricThresholdsMock,
   metricThresholdsPayloadMockData,
   mockThresholdValue,
   singleIgnoreThreshold,
@@ -578,6 +589,11 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(result).toEqual(metricThresholdsPayloadMockData)
   })
 
+  test('getMetricPacksForPayload should give custom thresholds, though there is no metric pack values selected', () => {
+    const result = getMetricPacksForPayload(formDataMockWithNoMetricData, true)
+    expect(result).toEqual(expectedCustomOnlyResult)
+  })
+
   test('getIsMetricPacksSelected returns true if atleast one metric pack is selected', () => {
     const result = getIsMetricPacksSelected({ Performance: true })
 
@@ -678,5 +694,152 @@ describe('AppDIgnoreThresholdTabContent', () => {
     const result2 = getCustomMetricGroupNames(groupedCreatedMetricsForFailCVEnableTest)
 
     expect(result2).toEqual([])
+  })
+
+  test('isGivenMetricPackContainsThresholds should return false if not valid parameters are passed', () => {
+    // ℹ️ Casted to test unexpected scenario, to test function robustness
+    const result = isGivenMetricPackContainsThresholds(
+      null as unknown as Record<ThresholdsPropertyNames, MetricThresholdType[]>,
+      'test'
+    )
+
+    expect(result).toBe(false)
+
+    const result2 = isGivenMetricPackContainsThresholds(metricThresholdsMock, null as unknown as string)
+
+    expect(result2).toBe(false)
+  })
+
+  test('isGivenMetricPackContainsThresholds should return true if metric pack contains thresholds', () => {
+    const result = isGivenMetricPackContainsThresholds(metricThresholdsMock, 'test1')
+
+    expect(result).toBe(true)
+  })
+
+  test('isGivenMetricPackContainsThresholds should return false if metric pack contains thresholds', () => {
+    const result = isGivenMetricPackContainsThresholds(metricThresholdsMock, 'test2')
+
+    expect(result).toBe(false)
+  })
+
+  test('isGivenMetricNameContainsThresholds should return false if not valid parameters are passed', () => {
+    // ℹ️ Casted to test unexpected scenario, to test function robustness
+    const result = isGivenMetricNameContainsThresholds(
+      null as unknown as Record<ThresholdsPropertyNames, MetricThresholdType[]>,
+      'test'
+    )
+
+    expect(result).toBe(false)
+
+    const result2 = isGivenMetricNameContainsThresholds(metricThresholdsMock, null as unknown as string)
+
+    expect(result2).toBe(false)
+  })
+
+  test('isGivenMetricNameContainsThresholds should return true if metric name contains thresholds', () => {
+    const result = isGivenMetricNameContainsThresholds(metricThresholdsMock, 'testMetricName')
+
+    expect(result).toBe(true)
+  })
+
+  test('isGivenMetricNameContainsThresholds should return false if metric name contains thresholds', () => {
+    const result = isGivenMetricNameContainsThresholds(metricThresholdsMock, 'testMetricName2')
+
+    expect(result).toBe(false)
+  })
+
+  test('getIsRemovedMetricPackContainsMetricThresholds should return false if a metric pack is added', () => {
+    const result = getIsRemovedMetricPackContainsMetricThresholds(true, metricThresholdsMock, 'test1', true)
+
+    expect(result).toBe(false)
+  })
+
+  test('getIsRemovedMetricPackContainsMetricThresholds should return false if no valid values are passed', () => {
+    // ℹ️ Casted to test unexpected scenario, to test function robustness
+    const result = getIsRemovedMetricPackContainsMetricThresholds(
+      true,
+      null as unknown as Record<ThresholdsPropertyNames, MetricThresholdType[]>,
+      'test1',
+      false
+    )
+
+    expect(result).toBe(false)
+
+    // ℹ️ Casted to test unexpected scenario, to test function robustness
+    const result2 = getIsRemovedMetricPackContainsMetricThresholds(
+      true,
+      metricThresholdsMock,
+      null as unknown as string,
+      false
+    )
+
+    expect(result2).toBe(false)
+  })
+
+  test('getIsRemovedMetricPackContainsMetricThresholds should return false metric thresholds is  disabled', () => {
+    const result = getIsRemovedMetricPackContainsMetricThresholds(false, metricThresholdsMock, 'test1', false)
+
+    expect(result).toBe(false)
+  })
+
+  test('getIsRemovedMetricPackContainsMetricThresholds should return true if a metric pack is being removed and that contains any metric thresholds', () => {
+    const result = getIsRemovedMetricPackContainsMetricThresholds(true, metricThresholdsMock, 'test1', false)
+
+    expect(result).toBe(true)
+  })
+
+  test('getIsRemovedMetricNameContainsMetricThresholds should return true if given metric name contains thresholds', () => {
+    const result = getIsRemovedMetricNameContainsMetricThresholds(true, metricThresholdsMock, 'testMetricName')
+
+    expect(result).toBe(true)
+  })
+
+  test('getIsRemovedMetricNameContainsMetricThresholds should return false if no valid values are passed', () => {
+    // ℹ️ Casted to test unexpected scenario, to test function robustness
+    const result = getIsRemovedMetricNameContainsMetricThresholds(
+      true,
+      null as unknown as Record<ThresholdsPropertyNames, MetricThresholdType[]>,
+      'test1'
+    )
+
+    expect(result).toBe(false)
+
+    // ℹ️ Casted to test unexpected scenario, to test function robustness
+    const result2 = getIsRemovedMetricNameContainsMetricThresholds(
+      true,
+      metricThresholdsMock,
+      null as unknown as string
+    )
+
+    expect(result2).toBe(false)
+  })
+
+  test('getIsRemovedMetricNameContainsMetricThresholds should return false metric thresholds is  disabled', () => {
+    const result = getIsRemovedMetricNameContainsMetricThresholds(false, metricThresholdsMock, 'test1')
+
+    expect(result).toBe(false)
+  })
+
+  test('getMetricThresholdsCustomFiltered should return empty [], if not a valid metricThresholds is passed', () => {
+    // ℹ️ Casted to test unexpected scenario, to test function robustness
+    const result = getMetricThresholdsCustomFiltered(null as unknown as MetricThresholdType[], () => true)
+
+    expect(result).toEqual([])
+  })
+
+  test('getMetricThresholdsCustomFiltered should return empty [], if not a valid metricThresholds is empty []', () => {
+    // ℹ️ Casted to test unexpected scenario, to test function robustness
+    const result = getMetricThresholdsCustomFiltered([], () => true)
+
+    expect(result).toEqual([])
+  })
+
+  test('getMetricThresholdsCustomFiltered should return empty [], if not a valid metricThresholds is empty []', () => {
+    const result = getMetricThresholdsCustomFiltered(
+      metricThresholdsArrayMock,
+      threshold => threshold.metricName === 'average_response_time_ms'
+    )
+
+    expect(result).toEqual(metricThresholdExpectedMock)
   })
 })

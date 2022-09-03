@@ -407,4 +407,70 @@ describe('Prometheus metric thresholds', () => {
     cy.get("input[name='failFastThresholds.0.criteria.spec.greaterThan']").type('21')
     cy.get("input[name='failFastThresholds.0.criteria.spec.lessThan']").type('78')
   })
+
+  it('should show prompt, if custom metrics containing metric thresholds are being deleted', () => {
+    cy.addNewMonitoredServiceWithServiceAndEnv()
+    cy.populateDefineHealthSource(Connectors.PROMETHEUS, 'prometheus-sale', 'Prometheus')
+
+    cy.get('input[name="product"]').should('be.disabled')
+
+    cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', labelNamesAPI, labelNamesResponse)
+    cy.intercept('GET', metricListAPI, metricListResponse)
+
+    cy.findByRole('button', { name: /Next/i }).click()
+
+    cy.contains('h2', 'Query Specifications and Mapping').should('be.visible')
+
+    cy.fillField('metricName', 'Prometheus Metric 123')
+
+    cy.addingGroupName('Group 1')
+
+    cy.get('button span[data-icon="Edit"]').click()
+    cy.contains('p', 'Query Builder will not be available').should('be.visible')
+    cy.findByRole('button', { name: /Proceed to Edit/i }).click()
+    cy.get('textarea[name="query"]').type(`classes	{}`)
+
+    cy.contains('div', 'Assign').click()
+    cy.get('input[name="sli"]').click({ force: true })
+
+    cy.findByRole('button', { name: /Add Metric/i }).click()
+
+    cy.contains('div', 'Map Metric(s) to Harness Services').click()
+
+    cy.get('input[name="metricName"]').clear()
+
+    cy.fillField('metricName', 'Prometheus Metric')
+
+    cy.get('input[name="groupName"]').click()
+
+    cy.get('.Select--menuItem:nth-child(2)').should('have.text', 'Group 1')
+    cy.get('.Select--menuItem:nth-child(2)').click()
+
+    cy.contains('div', 'Assign').click({ force: true })
+    cy.contains('span', 'Continuous Verification').click()
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
+
+    cy.findByTestId('AddThresholdButton').click()
+
+    cy.contains('div', 'Ignore Thresholds (1)').should('exist')
+
+    cy.get("input[name='ignoreThresholds.0.metricType']").should('be.disabled')
+    cy.get("input[name='ignoreThresholds.0.metricType']").should('have.value', 'Custom')
+
+    cy.get("input[name='ignoreThresholds.0.metricName']").click()
+
+    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'Prometheus Metric')
+    cy.get('.Select--menuItem:nth-child(1)').click()
+
+    cy.get('span[data-icon="main-delete"]').first().should('exist').scrollIntoView().click()
+
+    cy.contains('p', 'Warning').should('be.visible')
+
+    cy.contains('button', 'Confirm').should('be.visible')
+    cy.contains('button', 'Confirm').click()
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').should('not.exist')
+  })
 })

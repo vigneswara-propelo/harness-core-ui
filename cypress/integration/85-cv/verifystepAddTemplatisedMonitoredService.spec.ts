@@ -282,18 +282,18 @@ describe('Verify Step Addition', () => {
     cy.wait('@MetricPackCall')
     cy.wait(1000)
 
-    cy.get('input[name="metricData.Errors"]').should('be.checked')
-    cy.get('input[name="metricData.Performance"]').should('be.checked')
+    cy.get('input[name="Errors"]').should('be.checked')
+    cy.get('input[name="Performance"]').should('be.checked')
 
     // Validation
     cy.contains('span', 'Submit').click({ force: true })
     cy.contains('span', 'Please select applications').should('be.visible')
-    cy.get('input[name="metricData.Errors"]').uncheck({ force: true })
-    cy.get('input[name="metricData.Performance"]').uncheck({ force: true })
+    cy.get('input[name="Errors"]').uncheck({ force: true })
+    cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
     cy.contains('span', 'Plese select metric packs').should('be.visible')
-    cy.get('input[name="metricData.Errors"]').check({ force: true })
-    cy.get('input[name="metricData.Performance"]').check({ force: true })
+    cy.get('input[name="Errors"]').check({ force: true })
+    cy.get('input[name="Performance"]').check({ force: true })
     cy.contains('span', 'Plese select metric packs').should('not.exist')
 
     cy.get('input[name="appdApplication"]').click()

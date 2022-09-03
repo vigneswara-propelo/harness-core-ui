@@ -69,6 +69,8 @@ export interface CustomMetricInterface {
   setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
   setCreatedMetrics: React.Dispatch<React.SetStateAction<CreatedMetricsWithSelectedIndex>>
   setGroupedCreatedMetrics: React.Dispatch<React.SetStateAction<GroupedCreatedMetrics>>
+  isMetricThresholdEnabled?: boolean
+  filterRemovedMetricNameThresholds?: (metricName: string) => void
 }
 
 export interface UpdateSelectedMetricsMapInterface {

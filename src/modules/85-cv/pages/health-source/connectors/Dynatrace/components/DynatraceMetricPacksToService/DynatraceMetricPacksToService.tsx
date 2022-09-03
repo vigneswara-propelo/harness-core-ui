@@ -112,25 +112,28 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
     }
   }, [connectorIdentifier, dynatraceMetricData.selectedService])
 
-  const onValidate = async (serviceMethods: string[], metricObject: { [key: string]: any }): Promise<void> => {
-    setDynatraceValidation({ status: StatusOfValidation.IN_PROGRESS, result: [] })
-    const filteredMetricPack = selectedMetricPacks.filter(item => metricObject[item.identifier as string])
-    const { validationStatus, validationResult } = await validateMetrics(
-      { metricPacks: filteredMetricPack, serviceMethodsIds: serviceMethods },
-      {
-        accountId,
-        connectorIdentifier: connectorIdentifier,
-        orgIdentifier,
-        projectIdentifier,
-        tracingId: validationTracingId
-      },
-      HealthSoureSupportedConnectorTypes.DYNATRACE
-    )
-    setDynatraceValidation({
-      status: validationStatus as string,
-      result: validationResult as MetricPackValidationResponse[]
-    })
-  }
+  const onValidate = useCallback(
+    async (serviceMethods: string[], metricObject: { [key: string]: any }): Promise<void> => {
+      setDynatraceValidation({ status: StatusOfValidation.IN_PROGRESS, result: [] })
+      const filteredMetricPack = selectedMetricPacks.filter(item => metricObject[item.identifier as string])
+      const { validationStatus, validationResult } = await validateMetrics(
+        { metricPacks: filteredMetricPack, serviceMethodsIds: serviceMethods },
+        {
+          accountId,
+          connectorIdentifier: connectorIdentifier,
+          orgIdentifier,
+          projectIdentifier,
+          tracingId: validationTracingId
+        },
+        HealthSoureSupportedConnectorTypes.DYNATRACE
+      )
+      setDynatraceValidation({
+        status: validationStatus as string,
+        result: validationResult as MetricPackValidationResponse[]
+      })
+    },
+    [accountId, connectorIdentifier, orgIdentifier, projectIdentifier, selectedMetricPacks, validationTracingId]
+  )
   useEffect(() => {
     if (
       !isConnectorRuntimeOrExpression &&
@@ -174,14 +177,19 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
   )
 
   const onChangeMetricPack = useCallback(
-    async metricValue => {
+    async (metricPackIdentifier: string, updatedValue: boolean) => {
+      const updatedMetricData = {
+        ...metricValues.metricData,
+        [metricPackIdentifier]: updatedValue
+      }
+
       setDynatraceMetricData({
         ...metricValues,
-        metricData: metricValue
+        metricData: updatedMetricData
       })
-      await onValidate(metricValues.serviceMethods || [], metricValue)
+      await onValidate(metricValues.serviceMethods || [], updatedMetricData)
     },
-    [metricValues]
+    [metricValues, onValidate, setDynatraceMetricData]
   )
 
   return (
@@ -276,6 +284,7 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
               }
               connector={HealthSoureSupportedConnectorTypes.DYNATRACE}
               onChange={onChangeMetricPack}
+              isMetricThresholdEnabled={false}
             />
             {validationResultData && (
               <MetricsVerificationModal

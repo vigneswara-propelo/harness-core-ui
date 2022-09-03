@@ -9,7 +9,6 @@ import { isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { MetricPackDTO, MetricThreshold, MetricThresholdCriteriaSpec, TimeSeriesMetricPackDTO } from 'services/cv'
 import type { GroupedMetric } from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
-import type { MetricThresholdType } from '../../connectors/AppDynamics/AppDHealthSource.types'
 import type { GroupedCreatedMetrics } from '../CustomMetric/CustomMetric.types'
 import {
   CustomMetricDropdownOption,
@@ -26,6 +25,7 @@ import type {
   AvailableThresholdTypes,
   CriteriaThresholdValues,
   MetricThresholdsState,
+  MetricThresholdType,
   SelectItem,
   ThresholdCriteriaPropsType,
   ThresholdObject,
@@ -567,7 +567,7 @@ export const getMetricPacksForPayload = (
 
   const filteredMetricPacks = metricPacks.filter(item => !isEmpty(item)) as TimeSeriesMetricPackDTO[]
 
-  if (filteredMetricPacks.length && isMetricThresholdEnabled) {
+  if (isMetricThresholdEnabled) {
     const customMetricThresholds = getMetricPacksOfCustomMetrics(ignoreThresholds, failFastThresholds)
 
     if (customMetricThresholds) {
@@ -688,4 +688,97 @@ export const getFilteredCVDisabledMetricThresholds = (
       ? getFilteredCVEnabledCustomThresholds(failFastThresholds, metricsWithCVEnabled)
       : []
   }
+}
+
+const isMetricThresholdsPresent = (
+  metricThresholds: Record<ThresholdsPropertyNames, MetricThresholdType[]>
+): boolean => {
+  return (
+    metricThresholds &&
+    Array.isArray(metricThresholds.ignoreThresholds) &&
+    Array.isArray(metricThresholds.failFastThresholds)
+  )
+}
+
+const getAllAvailableMetricThresholds = (
+  metricThresholds: Record<ThresholdsPropertyNames, MetricThresholdType[]>
+): MetricThresholdType[] => {
+  if (isMetricThresholdsPresent(metricThresholds)) {
+    return [...metricThresholds.ignoreThresholds, ...metricThresholds.failFastThresholds]
+  }
+
+  return []
+}
+
+const isAnyRequiredValueNotPresentForMetricPrompt = (
+  isMetricThresholdEnabled: boolean,
+  metricThresholds: Record<ThresholdsPropertyNames, MetricThresholdType[]>,
+  metricPackName: string
+): boolean => {
+  return Boolean(isMetricThresholdEnabled && metricPackName && isMetricThresholdsPresent(metricThresholds))
+}
+
+export const isGivenMetricPackContainsThresholds = (
+  metricThresholds: Record<ThresholdsPropertyNames, MetricThresholdType[]>,
+  metricPackName: string
+): boolean => {
+  if (isMetricThresholdsPresent(metricThresholds) && metricPackName) {
+    const allMetricThresholds = getAllAvailableMetricThresholds(metricThresholds)
+
+    return allMetricThresholds.some(metricThreshold => metricThreshold.metricType === metricPackName)
+  }
+
+  return false
+}
+
+export const isGivenMetricNameContainsThresholds = (
+  metricThresholds: Record<ThresholdsPropertyNames, MetricThresholdType[]>,
+  metricName: string
+): boolean => {
+  if (isMetricThresholdsPresent(metricThresholds)) {
+    const allMetricThresholds = getAllAvailableMetricThresholds(metricThresholds)
+
+    return allMetricThresholds.some(metricThreshold => metricThreshold.metricName === metricName)
+  }
+
+  return false
+}
+
+export const getIsRemovedMetricPackContainsMetricThresholds = (
+  isMetricThresholdEnabled: boolean,
+  metricThresholds: Record<ThresholdsPropertyNames, MetricThresholdType[]>,
+  metricPackName: string,
+  isMetricPackAdded: boolean
+): boolean => {
+  if (
+    isMetricPackAdded ||
+    !isAnyRequiredValueNotPresentForMetricPrompt(isMetricThresholdEnabled, metricThresholds, metricPackName)
+  ) {
+    return false
+  }
+
+  return isGivenMetricPackContainsThresholds(metricThresholds, metricPackName)
+}
+
+export const getIsRemovedMetricNameContainsMetricThresholds = (
+  isMetricThresholdEnabled: boolean,
+  metricThresholds: Record<ThresholdsPropertyNames, MetricThresholdType[]>,
+  metricName: string
+): boolean => {
+  if (!isAnyRequiredValueNotPresentForMetricPrompt(isMetricThresholdEnabled, metricThresholds, metricName)) {
+    return false
+  }
+
+  return isGivenMetricNameContainsThresholds(metricThresholds, metricName)
+}
+
+export const getMetricThresholdsCustomFiltered = (
+  metricThresholds: MetricThresholdType[],
+  filterCallbackFunction: (threshold: MetricThresholdType) => boolean
+): MetricThresholdType[] => {
+  if (Array.isArray(metricThresholds) && metricThresholds.length) {
+    return metricThresholds.filter(filterCallbackFunction)
+  }
+
+  return []
 }
