@@ -15,6 +15,7 @@ import { useParams } from 'react-router-dom'
 import type { KerberosConfigDTO, NTLMConfigDTO, SecretDTOV2, WinRmCredentialsSpecDTO } from 'services/cd-ng'
 import { getSecretReferencesforSSH } from '@secrets/utils/SSHAuthUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getScopeBasedProjectPathParams, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import CreateWinRmCredWizard, { WinRmCredSharedObj } from './CreateWinRmCredWizard'
 import css from './useCreateWinRmCredModal.module.scss'
 
@@ -33,7 +34,7 @@ export enum Views {
 }
 
 export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): UseCreateWinRmCredModalReturn => {
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const projectPathParams = useParams<ProjectPathProps>()
   const [view, setView] = useState(Views.CREATE)
   const [winrmData, setwinrmData] = useState<WinRmCredSharedObj>()
 
@@ -67,8 +68,13 @@ export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): Us
 
   const open = useCallback(
     async (_winrmData?: SecretDTOV2) => {
+      const params = getScopeBasedProjectPathParams(
+        projectPathParams,
+        getScopeFromValue((_winrmData?.spec as WinRmCredentialsSpecDTO)?.auth.spec?.spec?.password)
+      )
+
       if (_winrmData) {
-        const response = await getSecretReferencesforSSH(_winrmData, accountId, orgIdentifier, projectIdentifier)
+        const response = await getSecretReferencesforSSH(_winrmData, params)
         setwinrmData({
           detailsData: {
             ...pick(_winrmData, 'name', 'identifier', 'description', 'tags')
