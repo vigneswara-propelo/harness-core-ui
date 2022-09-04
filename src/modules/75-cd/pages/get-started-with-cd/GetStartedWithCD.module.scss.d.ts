@@ -13,12 +13,16 @@ declare const styles: {
   readonly buttonRow: string
   readonly ciIcon: string
   readonly ciLogo: string
+  readonly containerItemCss: string
   readonly icon: string
   readonly iconPadding: string
   readonly iconPaddingSmall: string
   readonly image: string
   readonly label: string
   readonly learnMore: string
+  readonly linkText: string
+  readonly listContainerCss: string
+  readonly listItemCss: string
   readonly paddingXSmall: string
   readonly topPage: string
 }

@@ -4188,6 +4188,8 @@ export interface StringsMap {
   'cd.addService': string
   'cd.addTFVarFileLabel': string
   'cd.allowSimultaneousDeployments': string
+  'cd.amazonElasticCmd': string
+  'cd.amazonElasticK8sService': string
   'cd.argoAdapterURL': string
   'cd.artifactFormErrors.artifactFilePath': string
   'cd.artifactFormErrors.artifactName': string
@@ -4196,6 +4198,7 @@ export interface StringsMap {
   'cd.artifactPaths': string
   'cd.artifactRepoTooltip': string
   'cd.attributeFilters': string
+  'cd.awsCli': string
   'cd.azureArmRollback.description': string
   'cd.azureBlueprint.assignmentName': string
   'cd.azureBlueprint.assignmentNameError': string
@@ -4206,6 +4209,10 @@ export interface StringsMap {
   'cd.azureBlueprint.specifyTemplateFileSource': string
   'cd.azureBlueprint.templateFileDetails': string
   'cd.azureBlueprint.templateFileSource': string
+  'cd.azureCli': string
+  'cd.azureCliCmd': string
+  'cd.azureCmd': string
+  'cd.azureK8sService': string
   'cd.azureWebAppRollbackDescription': string
   'cd.azureWebAppSwapSlotDescription': string
   'cd.backEndConfig': string
@@ -4218,6 +4225,7 @@ export interface StringsMap {
   'cd.cdSwitchToFirstGen.startWith14DayTrial': string
   'cd.cdTrialHomePage.startTrial.description': string
   'cd.cdTrialHomePage.startTrial.startBtn.description': string
+  'cd.checkCluster': string
   'cd.chooseProvisionerText': string
   'cd.cloudFormation.awsURL': string
   'cd.cloudFormation.cfTemplateFile': string
@@ -4259,6 +4267,7 @@ export interface StringsMap {
   'cd.cloudFormation.templateFileConnector': string
   'cd.cloudFormation.templateFileStore': string
   'cd.cloudFormation.urls': string
+  'cd.clusterVerify': string
   'cd.clustersSelected': string
   'cd.componentsInstalled': string
   'cd.configFileDetails': string
@@ -4285,9 +4294,19 @@ export interface StringsMap {
   'cd.dashboard.createProject': string
   'cd.dashboard.orSelectExisting': string
   'cd.dashboard.subHeading': string
+  'cd.delegateConnectionWait': string
+  'cd.delegateFailText1': string
+  'cd.delegateFailText2': string
+  'cd.delegateFailed': string
+  'cd.delegateInstallBtnText': string
+  'cd.delegateInstallCommand': string
+  'cd.delegateInstallation': string
+  'cd.delegateSuccess': string
+  'cd.delegateWarning': string
   'cd.deleteSourceBranch': string
   'cd.deletedGitOpsServerSuccessfully': string
   'cd.deletedSuccessfully': string
+  'cd.downloadYAML': string
   'cd.duplicateGitOpsServerIdError': string
   'cd.duplicateIdError': string
   'cd.dynamicProvisioning': string
@@ -4317,6 +4336,8 @@ export interface StringsMap {
   'cd.featureRestriction.banners.serviceWarningActive': string
   'cd.filePathPlaceholder': string
   'cd.filePathRequired': string
+  'cd.gCloud': string
+  'cd.gcloudClusterCmd': string
   'cd.getStartedWithCD.artifactLocation': string
   'cd.getStartedWithCD.artifactManifest': string
   'cd.getStartedWithCD.artifactManifestContent': string
@@ -4344,6 +4365,7 @@ export interface StringsMap {
   'cd.gitOps': string
   'cd.gitOpsCluster': string
   'cd.gitOpsWizardTitle': string
+  'cd.googleK8sService': string
   'cd.harnessManagedGitOpsWizardTitle': string
   'cd.hostFilters': string
   'cd.hosts': string
@@ -4361,11 +4383,27 @@ export interface StringsMap {
   'cd.infrastructure.sshWinRmAzure.usePublicDns': string
   'cd.infrastructure.updated': string
   'cd.installAdapterHelperText': string
+  'cd.installCluster': string
+  'cd.installDelegate': string
+  'cd.instructionsCluster': string
+  'cd.instructionsDelegate': string
+  'cd.kubectl': string
+  'cd.kubectlCommand': string
+  'cd.kubectlNamespace': string
+  'cd.kubectlNodes': string
   'cd.launchArgo': string
   'cd.learnMore': string
   'cd.learnMoreAboutHarnessAdapter': string
+  'cd.learnMoreDelegate': string
+  'cd.loadingDelegate': string
   'cd.manifestId': string
   'cd.manifestPathsCannotBeEmpty': string
+  'cd.miniKube': string
+  'cd.miniKubeCmd1': string
+  'cd.miniKubeCmd2': string
+  'cd.miniKubeCmd3': string
+  'cd.miniKubeCmd4': string
+  'cd.minikube': string
   'cd.moreIssue': string
   'cd.moreIssues': string
   'cd.nameEmptyError': string
@@ -4378,10 +4416,13 @@ export interface StringsMap {
   'cd.noGitOpsServerText': string
   'cd.noLinkedClusters': string
   'cd.notReachable': string
+  'cd.oauthPlugin': string
+  'cd.oauthPluginCmd': string
   'cd.overrideType': string
   'cd.overrideValue': string
   'cd.overrideYaml': string
   'cd.pathCannotBeEmpty': string
+  'cd.pipelineCreation': string
   'cd.pipelineSteps.environmentTab.allClustersSelected': string
   'cd.pipelineSteps.environmentTab.allEnvironmentsInEnvGroupSelected': string
   'cd.pipelineSteps.environmentTab.clusterIsRequired': string
@@ -4422,11 +4463,14 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.serviceIsRequired': string
   'cd.pipelineSteps.serviceTab.specifyYourService': string
   'cd.pipelineSteps.serviceTab.stageOverrides': string
+  'cd.pluginVersion': string
   'cd.preProduction': string
   'cd.preProductionType': string
+  'cd.previewYAML': string
   'cd.releaseNameValidation': string
   'cd.requiredPermissions': string
   'cd.resourceCannotBeEmpty': string
+  'cd.runDelegate': string
   'cd.searchPlaceholder': string
   'cd.secretManagerRequired': string
   'cd.selectArtifact': string
@@ -4591,6 +4635,7 @@ export interface StringsMap {
   'cd.validation.specifyFilter': string
   'cd.varFile': string
   'cd.varFileDetails': string
+  'cd.welcomeMessage': string
   'cd.whatIsHarnessAdapter': string
   'cd.whatIsHarnessManagedGitOpsServer': string
   'cd.workloadRequired': string

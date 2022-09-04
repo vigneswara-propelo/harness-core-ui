@@ -447,6 +447,7 @@ serviceName: '{{ $.common.serviceName }}'
 skipRendering: Skip K8s Manifest(s) Rendering
 credentialsRef: credentialsRef
 connectorRefText: connectorRef
+loadingDelegate: Please Wait, Creating a Delegate for you...
 hosts: hosts
 hostFilters: hostFilters
 attributeFilters: attributeFilters
@@ -464,3 +465,47 @@ azureBlueprint:
   managementGroup: Management Group
 validation:
   specifyFilter: Specify the filter condition
+welcomeMessage: Welcome to Harness
+delegateInstallation: Install the Delegate to deploy your cluster
+delegateInstallBtnText: Install the Delegate
+learnMoreDelegate: Learn more about Delegates
+runDelegate: How do you want to run the Delegate
+installDelegate: Install Delegate
+instructionsDelegate: Instructions to Install the Delegate
+downloadYAML: DOWNLOAD THE YAML
+previewYAML: Preview Yaml
+installCluster: INSTALL ON YOUR CLUSTER
+checkCluster: Check if you can connect to your cluster
+delegateInstallCommand: Install the delegate by running the following command
+delegateConnectionWait: WAITING FOR DELEGATE TO CONNECT
+delegateFailed: Delegate Failed to connect to Harness
+delegateFailText1: Harness Delegate Failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate is installed on can reach https://app.harness.io
+delegateFailText2: The Delegate failed to come up on the cluster, please check to see if the pods are healthy or could be scheduled on the cluster
+delegateSuccess: Great! You have successfully installed the Delegate.
+pipelineCreation: Please proceed to creating your first pipeline
+instructionsCluster: Instructions to check if you have access to your cluster
+googleK8sService: Google K8s Service
+amazonElasticK8sService: Amazon Elastic K8s Service
+azureK8sService: Azure K8s Service
+minikube: Minikube
+delegateWarning: Waiting for Delegate to connect. Visit Project Setup -> Delegates to check the status of delegate connection.
+gCloud: Make sure Gcloud is installed.
+kubectl: Install Kubectl
+kubectlCommand: gcloud components install kubectl
+oauthPlugin: Install Google auth plugin to the cluster
+oauthPluginCmd: gcloud components install gke-gcloud-auth-plugin
+clusterVerify: Verify the connection to the cluster
+gcloudClusterCmd: gcloud container clusters get-credentials CLUSTER_NAME
+kubectlNamespace: kubectl get namespaces
+pluginVersion: gke-gcloud-auth-plugin --version
+awsCli: Make sure the aws cli and eksctl and are installed
+amazonElasticCmd: eksctl utils write-kubeconfig --cluster=delegate
+azureCli: Make sure the Azure CLI is installed
+azureCliCmd: az aks install-cli
+azureCmd: az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+kubectlNodes: kubectl get nodes
+miniKube: Install Minikube
+miniKubeCmd1: curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+miniKubeCmd2: sudo install minikube-linux-amd64 /usr/local/bin/minikube
+miniKubeCmd3: minikube start
+miniKubeCmd4: kubectl get pods -A
