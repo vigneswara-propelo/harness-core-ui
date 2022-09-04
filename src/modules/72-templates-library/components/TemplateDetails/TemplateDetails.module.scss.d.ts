@@ -19,6 +19,7 @@ declare const styles: {
   readonly shrink: string
   readonly tabsContainer: string
   readonly topContainer: string
+  readonly versionListContainer: string
   readonly yamlLoader: string
 }
 export default styles

@@ -329,7 +329,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                 border={{ bottom: true }}
               >
                 <Layout.Horizontal className={css.shrink} spacing={'small'}>
-                  <Text lineClamp={2} font={{ size: 'medium', weight: 'bold' }} color={Color.GREY_800}>
+                  <Text lineClamp={1} font={{ size: 'medium', weight: 'bold' }} color={Color.GREY_800}>
                     {selectedTemplate.name}
                   </Text>
                   {supportingTemplatesGitx && (
@@ -423,7 +423,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                                 )}
                               </Layout.Vertical>
                             </Container>
-                            <Container>
+                            <Container className={css.versionListContainer}>
                               <Layout.Vertical spacing={'small'}>
                                 <Text font={{ weight: 'semi-bold' }} color={Color.BLACK}>
                                   {getString('common.versionLabel')}

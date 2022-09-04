@@ -116,3 +116,10 @@
 .yamlLoader {
   min-height: 300px !important;
 }
+.versionListContainer {
+  :global {
+    .bp3-overlay {
+      z-index: 30 !important;
+    }
+  }
+}

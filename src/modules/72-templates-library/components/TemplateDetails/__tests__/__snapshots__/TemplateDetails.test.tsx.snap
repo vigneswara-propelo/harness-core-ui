@@ -27,7 +27,7 @@ exports[`<TemplateDetails /> tests should match snapshot 1`] = `
             >
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey800"
-                style="--text-line-clamp: 2;"
+                style="--text-line-clamp: 1;"
               >
                 manju-test-template-qq-12344
               </p>
@@ -266,7 +266,7 @@ exports[`<TemplateDetails /> tests should match snapshot 1`] = `
                         </div>
                       </div>
                       <div
-                        class="StyledProps--font StyledProps--main"
+                        class="StyledProps--font StyledProps--main versionListContainer"
                       >
                         <div
                           class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
