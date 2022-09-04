@@ -1278,13 +1278,11 @@ exports[`LDAP setup Wizard Connection Settings step renders in LDAP wizard ADD m
                             common.smtp.testConnection
                           </span>
                         </button>
-                        <div
-                          class="Layout--horizontal StyledProps--main layoutIconMessage"
-                        >
-                          
-                        </div>
                       </div>
                     </div>
+                    <div
+                      class="Layout--horizontal StyledProps--main alignCenter"
+                    />
                   </div>
                 </div>
                 <div

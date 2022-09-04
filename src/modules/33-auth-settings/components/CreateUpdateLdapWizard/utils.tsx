@@ -8,7 +8,8 @@
 import { FontVariation, Text, Icon, Color, Layout } from '@harness/uicore'
 import React from 'react'
 import { useStrings } from 'framework/strings'
-import type { LdapConnectionSettings } from 'services/cd-ng'
+import type { LdapConnectionSettings, ResponseMessage } from 'services/cd-ng'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 
 export interface RawLdapConnectionSettings {
   accountId?: string
@@ -74,15 +75,8 @@ export const QueryTestSuccessMsg: React.FC<{ message: string }> = ({ message }) 
   )
 }
 
-export const QueryTestFailMsg: React.FC<{ message?: string }> = ({ message }) => {
-  return (
-    <>
-      <Icon name="cross" size={16} margin={{ right: 'xsmall' }} color={Color.RED_500} />
-      <Text font={{ variation: FontVariation.FORM_MESSAGE_DANGER }} color={Color.RED_500}>
-        {message}
-      </Text>
-    </>
-  )
+export const QueryTestFailMsgs: React.FC<{ errorMessages: ResponseMessage[] }> = ({ errorMessages }) => {
+  return <ErrorHandler responseMessages={errorMessages} />
 }
 
 export const QueryStepTitle: React.FC<{ stepTitle?: string }> = ({ stepTitle }) => {

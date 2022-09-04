@@ -19,16 +19,22 @@ import {
   Container,
   Formik,
   FormInput,
-  FormikForm
+  FormikForm,
+  Intent
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
-import { LdapGroupSettings, RestResponseLdapTestResponse, useValidateLdapGroupSettings } from 'services/cd-ng'
+import {
+  LdapGroupSettings,
+  ResponseMessage,
+  RestResponseLdapTestResponse,
+  useValidateLdapGroupSettings
+} from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CreateUpdateLdapWizardProps, LdapWizardStepProps } from '../CreateUpdateLdapWizard'
-import { QueryFormTitle, QueryStepTitle, QueryTestFailMsg, QueryTestSuccessMsg } from '../utils'
+import { QueryFormTitle, QueryStepTitle, QueryTestFailMsgs, QueryTestSuccessMsg } from '../utils'
 import css from '../CreateUpdateLdapWizard.module.scss'
 
 export interface StepGroupQueriesProps {
@@ -102,11 +108,29 @@ const GroupQueryEdit: React.FC<
       if (result.resource?.status === 'SUCCESS') {
         setGroupQueryTestResult(<QueryTestSuccessMsg message={getString('authSettings.ldap.queryTestSuccessful')} />)
       } else {
-        setGroupQueryTestResult(<QueryTestFailMsg message={result.resource?.message} />)
+        setGroupQueryTestResult(
+          <QueryTestFailMsgs
+            errorMessages={
+              (result?.responseMessages && result?.responseMessages?.length > 0 && result?.responseMessages) ||
+              ([
+                {
+                  level: 'ERROR',
+                  message: result?.resource?.message || getString('authSettings.ldap.queryTestFail')
+                }
+              ] as ResponseMessage[])
+            }
+          />
+        )
       }
-    } catch (err) /* istanbul ignore next */ {
-      const errMsg = err instanceof Error ? (err?.message as string) : getString('authSettings.ldap.queryTestFail')
-      setGroupQueryTestResult(<QueryTestFailMsg message={errMsg} />)
+    } catch (e: any) /* istanbul ignore next */ {
+      const hasResponseMessages = e.data?.responseMessages && e.data?.responseMessages.length > 0
+      setGroupQueryTestResult(
+        <QueryTestFailMsgs
+          errorMessages={
+            hasResponseMessages ? e.data?.responseMessages : [{ level: 'ERROR', message: e.data?.message || e.message }]
+          }
+        />
+      )
     }
   }
   return (
@@ -123,54 +147,61 @@ const GroupQueryEdit: React.FC<
           <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
             <QueryFormTitle title={getString('authSettings.ldap.groupQueryTitle', { index: index + 1 })} />
             <Container className={css.queryCtaContainer} flex={{ alignItems: 'center' }}>
-              {groupQueryTestResult}
               <Button
                 text={getString('test')}
-                variation={ButtonVariation.LINK}
+                variation={ButtonVariation.SECONDARY}
                 onClick={testQuery}
+                margin={{ right: 'medium' }}
                 data-testId="test-group-query-btn"
               />
+              <hr className={css.horizontalSeparator} />
               <Button
                 icon="tick"
-                className={css.commitBtn}
-                color={Color.GREEN_700}
                 type="submit"
-                minimal
+                intent={Intent.SUCCESS}
+                margin={{ left: 'medium' }}
+                tooltip={getString('applyChanges')}
                 data-testid="commit-group-query-btn"
               />
               <Button
                 icon="cross"
-                className={css.undoEditBtn}
-                minimal
-                data-testid="discard-group-query-btn"
+                intent={Intent.DANGER}
+                margin={{ left: 'small' }}
+                tooltip={getString('authSettings.ldap.discardChanges')}
                 onClick={() => {
                   onGroupQueryDiscardEdit(index)
                 }}
+                data-testid="discard-group-query-btn"
               />
             </Container>
           </Layout.Horizontal>
-          <Container className={css.settingsForm}>
-            <FormInput.Text
-              className={css.queryFormField}
-              label={getString('authSettings.ldap.baseDN')}
-              name="baseDN"
-            />
-            <FormInput.Text
-              className={css.queryFormField}
-              label={getString('authSettings.ldap.searchFilter')}
-              name="searchFilter"
-            />
-            <FormInput.Text
-              className={css.queryFormField}
-              label={getString('authSettings.ldap.nameAttributes')}
-              name="nameAttr"
-            />
-            <FormInput.Text
-              className={css.queryFormField}
-              label={getString('authSettings.ldap.descriptionAttributes')}
-              name="descriptionAttr"
-            />
-          </Container>
+          <Layout.Horizontal spacing="medium">
+            <Container className={css.settingsForm}>
+              <FormInput.Text
+                className={css.queryFormField}
+                label={getString('authSettings.ldap.baseDN')}
+                name="baseDN"
+              />
+              <FormInput.Text
+                className={css.queryFormField}
+                label={getString('authSettings.ldap.searchFilter')}
+                name="searchFilter"
+              />
+              <FormInput.Text
+                className={css.queryFormField}
+                label={getString('authSettings.ldap.nameAttributes')}
+                name="nameAttr"
+              />
+              <FormInput.Text
+                className={css.queryFormField}
+                label={getString('authSettings.ldap.descriptionAttributes')}
+                name="descriptionAttr"
+              />
+            </Container>
+            <Container className={css.queryTestResultWrapper} padding={{ top: 'medium' }} flex={true}>
+              {groupQueryTestResult}
+            </Container>
+          </Layout.Horizontal>
         </FormikForm>
       </Formik>
     </Layout.Vertical>
@@ -180,7 +211,7 @@ const GroupQueryEdit: React.FC<
 const GroupQueryPreview: React.FC<
   LdapGroupSettings &
     GroupQueryPreviewProps & {
-      onDeleteUserQuery: (idx: number) => void
+      onDeleteGroupQuery: (idx: number) => void
       onEnableGroupQueryDraftMode: (idx: number) => void
     }
 > = ({
@@ -190,7 +221,7 @@ const GroupQueryPreview: React.FC<
   nameAttr,
   index,
   customClass,
-  onDeleteUserQuery,
+  onDeleteGroupQuery,
   onEnableGroupQueryDraftMode
 }) => {
   const { getString } = useStrings()
@@ -217,7 +248,7 @@ const GroupQueryPreview: React.FC<
             withoutCurrentColor
             data-testid="delete-group-query-btn"
             onClick={() => {
-              onDeleteUserQuery(index)
+              onDeleteGroupQuery(index)
             }}
           />
         </Container>
@@ -276,7 +307,7 @@ export const StepGroupQueries: React.FC<
       accountIdentifier: accountId
     }
   })
-  const onDeleteUserQuery = (idx: number): void => {
+  const onDeleteGroupQuery = (idx: number): void => {
     setGroupSettingsList(
       produce(groupSettingsList, draft => {
         draft.splice(idx, 1)
@@ -316,6 +347,19 @@ export const StepGroupQueries: React.FC<
       })
     )
   }
+
+  const onGroupQueriesSave = (): void => {
+    /** This is to preserve any uncommitted changes on step change */
+    updateStepData(
+      groupSettingsList
+        .filter(groupSetting => !groupSetting.isNewSetting)
+        .map(groupSetting => {
+          delete groupSetting.isDraft
+          return groupSetting
+        })
+    )
+  }
+
   const onAddGroupSetting = (): void => {
     setGroupSettingsList(
       produce(groupSettingsList, draft => {
@@ -357,7 +401,7 @@ export const StepGroupQueries: React.FC<
         index={groupQueryIdx}
         customClass={css.queryPreviewItem}
         onEnableGroupQueryDraftMode={onEnableGroupQueryDraftMode}
-        onDeleteUserQuery={onDeleteUserQuery}
+        onDeleteGroupQuery={onDeleteGroupQuery}
       />
     )
   })
@@ -365,7 +409,9 @@ export const StepGroupQueries: React.FC<
     <Layout.Vertical className={cx(css.stepContainer, css.stepQueryContainer)}>
       <QueryStepTitle stepTitle={name as string} />
       <Layout.Horizontal margin={{ bottom: 'medium' }} className={css.alignCenter}>
-        <Text className={css.fluidLabel}>{getString('authSettings.ldap.setScopeForGroupQuery')}</Text>
+        <Text className={css.fluidLabel} color={Color.BLACK}>
+          {getString('authSettings.ldap.setScopeForGroupQuery')}
+        </Text>
         {!isSettingsListEmpty && (
           <Button
             text={getString('authSettings.ldap.newGroupQuery')}
@@ -396,7 +442,7 @@ export const StepGroupQueries: React.FC<
         <Button
           intent="primary"
           onClick={() => {
-            updateStepData(groupSettingsList)
+            onGroupQueriesSave()
             triggerSaveData?.()
           }}
           text={getString('save')}

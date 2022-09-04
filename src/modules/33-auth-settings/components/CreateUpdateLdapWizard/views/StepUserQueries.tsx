@@ -19,16 +19,23 @@ import {
   Container,
   Formik,
   FormikForm,
-  FormInput
+  FormInput,
+  Intent
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { LdapUserSettings, RestResponseLdapTestResponse, useValidateLdapUserSettings } from 'services/cd-ng'
+import {
+  LdapUserSettings,
+  ResponseMessage,
+  RestResponseLdapTestResponse,
+  useValidateLdapUserSettings
+} from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CreateUpdateLdapWizardProps, LdapWizardStepProps } from '../CreateUpdateLdapWizard'
-import { QueryFormTitle, QueryStepTitle, QueryTestFailMsg, QueryTestSuccessMsg } from '../utils'
+import { QueryFormTitle, QueryStepTitle, QueryTestFailMsgs, QueryTestSuccessMsg } from '../utils'
 import css from '../CreateUpdateLdapWizard.module.scss'
 
 export interface StepUserQueriesProps {
@@ -101,11 +108,28 @@ const UserQueryEdit: React.FC<
       if (result.resource?.status === 'SUCCESS') {
         setUserQueryTestResult(<QueryTestSuccessMsg message={getString('authSettings.ldap.queryTestSuccessful')} />)
       } else {
-        setUserQueryTestResult(<QueryTestFailMsg message={result.resource?.message} />)
+        setUserQueryTestResult(
+          <QueryTestFailMsgs
+            errorMessages={
+              (result?.responseMessages && result?.responseMessages?.length > 0 && result?.responseMessages) ||
+              ([
+                {
+                  level: 'ERROR',
+                  message: result?.resource?.message || getString('authSettings.ldap.queryTestFail')
+                }
+              ] as ResponseMessage[])
+            }
+          />
+        )
       }
-    } catch (err) /* istanbul ignore next */ {
-      const errMsg = err instanceof Error ? (err?.message as string) : getString('authSettings.ldap.queryTestFail')
-      setUserQueryTestResult(<QueryTestFailMsg message={errMsg} />)
+    } catch (e: any) /* istanbul ignore next */ {
+      setUserQueryTestResult(
+        <QueryTestFailMsgs
+          errorMessages={defaultTo(e.data?.responseMessages, [
+            { level: 'ERROR', message: e.data?.message || e.message }
+          ])}
+        />
+      )
     }
   }
   return (
@@ -122,25 +146,27 @@ const UserQueryEdit: React.FC<
           <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
             <QueryFormTitle title={getString('authSettings.ldap.userQueryTitle', { index: index + 1 })} />
             <Container className={css.queryCtaContainer} flex={{ alignItems: 'center' }}>
-              {userQueryTestResult}
               <Button
                 text={getString('test')}
-                variation={ButtonVariation.LINK}
+                variation={ButtonVariation.SECONDARY}
                 onClick={testUserQuery}
+                margin={{ right: 'medium' }}
                 data-testId="test-user-query-btn"
               />
+              <hr className={css.horizontalSeparator} />
               <Button
                 icon="tick"
-                className={css.commitBtn}
-                color={Color.GREEN_700}
                 type="submit"
-                minimal
+                intent={Intent.SUCCESS}
+                margin={{ left: 'medium' }}
+                tooltip={getString('applyChanges')}
                 data-testid="commit-query-btn"
               />
               <Button
                 icon="cross"
-                className={css.undoEditBtn}
-                minimal
+                intent={Intent.DANGER}
+                margin={{ left: 'small' }}
+                tooltip={getString('authSettings.ldap.discardChanges')}
                 onClick={() => {
                   onUserQueryDiscardEdit(index)
                 }}
@@ -148,33 +174,38 @@ const UserQueryEdit: React.FC<
               />
             </Container>
           </Layout.Horizontal>
-          <Container className={css.settingsForm}>
-            <FormInput.Text
-              className={css.queryFormField}
-              label={getString('authSettings.ldap.baseDN')}
-              name="baseDN"
-            />
-            <FormInput.Text
-              className={css.queryFormField}
-              label={getString('authSettings.ldap.searchFilter')}
-              name="searchFilter"
-            />
-            <FormInput.Text
-              className={css.queryFormField}
-              label={getString('authSettings.ldap.nameAttributes')}
-              name="displayNameAttr"
-            />
-            <FormInput.Text
-              className={css.queryFormField}
-              label={getString('authSettings.ldap.emailAttributes')}
-              name="emailAttr"
-            />
-            <FormInput.Text
-              className={css.queryFormField}
-              label={getString('authSettings.ldap.groupMembershipAttributes')}
-              name="groupMembershipAttr"
-            />
-          </Container>
+          <Layout.Horizontal spacing="medium">
+            <Container className={css.settingsForm}>
+              <FormInput.Text
+                className={css.queryFormField}
+                label={getString('authSettings.ldap.baseDN')}
+                name="baseDN"
+              />
+              <FormInput.Text
+                className={css.queryFormField}
+                label={getString('authSettings.ldap.searchFilter')}
+                name="searchFilter"
+              />
+              <FormInput.Text
+                className={css.queryFormField}
+                label={getString('authSettings.ldap.nameAttributes')}
+                name="displayNameAttr"
+              />
+              <FormInput.Text
+                className={css.queryFormField}
+                label={getString('authSettings.ldap.emailAttributes')}
+                name="emailAttr"
+              />
+              <FormInput.Text
+                className={css.queryFormField}
+                label={getString('authSettings.ldap.groupMembershipAttributes')}
+                name="groupMembershipAttr"
+              />
+            </Container>
+            <Container className={css.queryTestResultWrapper} padding={{ top: 'medium' }} flex={true}>
+              {userQueryTestResult}
+            </Container>
+          </Layout.Horizontal>
         </FormikForm>
       </Formik>
     </Layout.Vertical>
@@ -329,6 +360,19 @@ export const StepUserQueries: React.FC<
       })
     )
   }
+
+  const onUserQueriesSave = (): void => {
+    /** This is to preserve any uncommitted changes on step change */
+    updateStepData(
+      userSettingsList
+        .filter(userSetting => !userSetting.isNewSetting)
+        .map(userSetting => {
+          delete userSetting.isDraft
+          return userSetting
+        })
+    )
+  }
+
   const onAddUserSetting = (): void => {
     setUserSettingsList(
       produce(userSettingsList, draft => {
@@ -412,7 +456,7 @@ export const StepUserQueries: React.FC<
         <Button
           intent="primary"
           onClick={() => {
-            updateStepData(userSettingsList)
+            onUserQueriesSave()
             props.nextStep?.()
           }}
           text={getString('continue')}

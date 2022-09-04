@@ -23,9 +23,11 @@ import cx from 'classnames'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { LdapConnectionSettings, useValidateLdapConnectionSettings } from 'services/cd-ng'
+import { LdapConnectionSettings, ResponseMessage, useValidateLdapConnectionSettings } from 'services/cd-ng'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { RawLdapConnectionSettings, updateLDAPConnectionSettingsFormData } from '../utils'
 import type { CreateUpdateLdapWizardProps, LdapWizardStepProps } from '../CreateUpdateLdapWizard'
 import type { LdapOverview } from './StepOverview'
@@ -43,8 +45,8 @@ export const StepConnectionSettings: React.FC<
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
   const { getString } = useStrings()
-  const [testConnValue, setTestConnValue] = useState<string>('')
-  const [testConnError, setTestConnError] = useState<boolean>(false)
+  const [testConnSuccessOrFail, setTestConnSuccessOrFail] = useState<boolean>(false)
+  const [errorMessages, setErrorMessages] = useState<ResponseMessage[] | null>(null)
 
   const { mutate: validateLdapConnectionSettings, loading: testingConnection } = useValidateLdapConnectionSettings({
     queryParams: {
@@ -81,8 +83,8 @@ export const StepConnectionSettings: React.FC<
     const updatedLdapConnSettings = updateLDAPConnectionSettingsFormData(values, accountId, stepData?.maxReferralHops)
 
     // clear the state for re-setting after API call
-    setTestConnError(false)
-    setTestConnValue('')
+    setTestConnSuccessOrFail(false)
+    setErrorMessages(null)
 
     const ldapSettingValues = {
       accountId,
@@ -97,20 +99,18 @@ export const StepConnectionSettings: React.FC<
         headers: { 'content-type': 'application/json' }
       })
 
-      if (response?.resource?.status === 'SUCCESS') {
-        setTestConnValue(getString('common.test.connectionSuccessful'))
-      } else {
-        setSuccessOrError(response?.resource?.message ?? connectionErrorString)
+      if (response?.resource?.status !== 'SUCCESS') {
+        setErrorMessages(defaultTo(response?.responseMessages, [{ level: 'ERROR', message: connectionErrorString }]))
       }
-    } catch (err) /* istanbul ignore next */ {
-      const errorString = err instanceof Error ? String(err?.message) : connectionErrorString
-      setSuccessOrError(errorString)
+    } catch (e: any) /* istanbul ignore next */ {
+      setErrorMessages(
+        defaultTo(e.data?.responseMessages, [
+          { level: 'ERROR', message: e.data?.message || e.message || connectionErrorString }
+        ])
+      )
+    } finally {
+      setTestConnSuccessOrFail(true)
     }
-  }
-
-  const setSuccessOrError = (errorString: string) => {
-    setTestConnError(true)
-    setTestConnValue(errorString)
   }
 
   const handleSubmit = (formData: RawLdapConnectionSettings | undefined) => {
@@ -224,25 +224,20 @@ export const StepConnectionSettings: React.FC<
                         margin={{ right: 'medium', bottom: 'medium' }}
                         disabled={testingConnection}
                       />
-                      <Layout.Horizontal className={css.layoutIconMessage}>
-                        {testConnError && testConnValue && (
-                          <>
-                            <Icon name="cross" size={16} color={Color.RED_500} />
-                            <Text font={{ variation: FontVariation.FORM_MESSAGE_DANGER }} color={Color.RED_500}>
-                              {testConnValue}
-                            </Text>
-                          </>
-                        )}
-                        {!testConnError && testConnValue && (
-                          <>
-                            <Icon name="success-tick" size={16} />
-                            <Text font={{ variation: FontVariation.FORM_MESSAGE_SUCCESS }} color={Color.GREEN_800}>
-                              {getString('common.test.connectionSuccessful')}
-                            </Text>
-                          </>
-                        )}
-                      </Layout.Horizontal>
                     </Container>
+                  </Layout.Horizontal>
+                  <Layout.Horizontal className={css.alignCenter}>
+                    {testConnSuccessOrFail && errorMessages && (
+                      <ErrorHandler responseMessages={errorMessages} className={css.layoutIconMessage} />
+                    )}
+                    {testConnSuccessOrFail && !errorMessages && (
+                      <>
+                        <Icon margin={{ right: 'small' }} name="success-tick" size={16} />
+                        <Text font={{ variation: FontVariation.FORM_MESSAGE_SUCCESS }} color={Color.GREEN_800}>
+                          {getString('common.test.connectionSuccessful')}
+                        </Text>
+                      </>
+                    )}
                   </Layout.Horizontal>
                 </Layout.Vertical>
               </Layout.Vertical>

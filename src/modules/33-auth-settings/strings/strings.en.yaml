@@ -214,7 +214,7 @@ ldap:
   userQueryTitle: User Query {{index}}
   groupQueryTitle: Group Query {{index}}
   setScopeForUserQuery: Set the scope of any searches for LDAP users
-  setScopeForGroupQuery: Set the scope of any searches for LDAP groups
+  setScopeForGroupQuery: Set the scope of any searches for LDAP user groups
   newUserQuery: New User Query
   newGroupQuery: New Group Query
   queryTestSuccessful: Query test successful
@@ -255,6 +255,7 @@ ldap:
       number: 'Response timeout should be a number'
     validateBindDN: 'Bind Distinguished Name is required'
   updateStepFailMessage: 'Update failed'
+  discardChanges: 'Discard changes'
 billingInfo:
   address: Address
   billingContact: '{{$.common.billing}} Contact'

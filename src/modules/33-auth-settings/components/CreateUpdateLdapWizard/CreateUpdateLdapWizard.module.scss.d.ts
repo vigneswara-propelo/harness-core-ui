@@ -10,26 +10,26 @@ declare const styles: {
   readonly addQueryCtr: string
   readonly addQueryDescription: string
   readonly alignCenter: string
-  readonly commitBtn: string
   readonly connectionFieldSet: string
   readonly connectionSettingsFormCtr: string
   readonly connectionWiderFieldSet: string
   readonly fluidLabel: string
   readonly groupSettingsList: string
   readonly hangingFieldSet: string
+  readonly horizontalSeparator: string
   readonly layoutIconMessage: string
   readonly queryCtaContainer: string
   readonly queryCtr: string
   readonly queryDraftItem: string
   readonly queryFormField: string
   readonly queryPreviewItem: string
+  readonly queryTestResultWrapper: string
   readonly separator: string
   readonly settingsForm: string
   readonly settingsListCtr: string
   readonly stepContainer: string
   readonly stepCtaContainer: string
   readonly stepQueryContainer: string
-  readonly undoEditBtn: string
   readonly userSettingsList: string
   readonly verticalStretch: string
   readonly wizardContainer: string

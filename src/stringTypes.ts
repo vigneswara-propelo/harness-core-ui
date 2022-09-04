@@ -1666,6 +1666,7 @@ export interface StringsMap {
   'authSettings.ldap.connSettings.validateResponseTime.required': string
   'authSettings.ldap.connectionSettings': string
   'authSettings.ldap.descriptionAttributes': string
+  'authSettings.ldap.discardChanges': string
   'authSettings.ldap.editLdapConfiguration': string
   'authSettings.ldap.emailAttributes': string
   'authSettings.ldap.groupMembershipAttributes': string
