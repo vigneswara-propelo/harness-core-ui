@@ -6784,6 +6784,14 @@ export interface JiraStatusNG {
   statusCategory?: JiraStatusCategoryNG
 }
 
+export interface JiraUserData {
+  accountId?: string
+  active?: boolean
+  displayName?: string
+  emailAddress?: string
+  name?: string
+}
+
 export interface JobDetails {
   folder?: boolean
   jobName?: string
@@ -9647,6 +9655,13 @@ export interface ResponseListJiraProjectBasicNG {
 export interface ResponseListJiraStatusNG {
   correlationId?: string
   data?: JiraStatusNG[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListJiraUserData {
+  correlationId?: string
+  data?: JiraUserData[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -32749,6 +32764,59 @@ export const getJiraProjectsPromise = (
   getUsingFetch<ResponseListJiraProjectBasicNG, Failure | Error, GetJiraProjectsQueryParams, void>(
     getConfig('ng/api'),
     `/jira/projects`,
+    props,
+    signal
+  )
+
+export interface JiraUserSearchQueryParams {
+  projectIdentifier?: string
+  orgIdentifier?: string
+  accountIdentifier?: string
+  connectorIdentifier?: string
+  userQuery?: string
+  offset?: string
+}
+
+export type JiraUserSearchProps = Omit<
+  GetProps<ResponseListJiraUserData, Failure | Error, JiraUserSearchQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get jira usernames for the jira connector
+ */
+export const JiraUserSearch = (props: JiraUserSearchProps) => (
+  <Get<ResponseListJiraUserData, Failure | Error, JiraUserSearchQueryParams, void>
+    path={`/jira/searchUser`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseJiraUserSearchProps = Omit<
+  UseGetProps<ResponseListJiraUserData, Failure | Error, JiraUserSearchQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get jira usernames for the jira connector
+ */
+export const useJiraUserSearch = (props: UseJiraUserSearchProps) =>
+  useGet<ResponseListJiraUserData, Failure | Error, JiraUserSearchQueryParams, void>(`/jira/searchUser`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get jira usernames for the jira connector
+ */
+export const jiraUserSearchPromise = (
+  props: GetUsingFetchProps<ResponseListJiraUserData, Failure | Error, JiraUserSearchQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListJiraUserData, Failure | Error, JiraUserSearchQueryParams, void>(
+    getConfig('ng/api'),
+    `/jira/searchUser`,
     props,
     signal
   )

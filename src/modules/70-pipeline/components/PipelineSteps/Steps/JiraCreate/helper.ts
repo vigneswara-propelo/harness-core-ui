@@ -9,7 +9,7 @@ import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOpt
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import { isMultiTypeRuntime } from '@common/utils/utils'
-import type { JiraFieldNG } from 'services/cd-ng'
+import type { JiraFieldNG, JiraUserData } from 'services/cd-ng'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import type { JiraCreateData, JiraCreateFieldType, JiraFieldNGWithValue } from './types'
 
@@ -188,4 +188,11 @@ export const updateMap = (alreadySelectedFields: JiraFieldNG[]): Record<string, 
 
 export const isRuntimeOrExpressionType = (fieldType: MultiTypeInputType): boolean => {
   return fieldType === MultiTypeInputType.EXPRESSION || isMultiTypeRuntime(fieldType)
+}
+
+export const getUserValuesOptions = (userOptions: JiraUserData[]): MultiSelectOption[] => {
+  return userOptions.map(userOption => ({
+    label: userOption.emailAddress || '',
+    value: userOption.emailAddress || ''
+  }))
 }
