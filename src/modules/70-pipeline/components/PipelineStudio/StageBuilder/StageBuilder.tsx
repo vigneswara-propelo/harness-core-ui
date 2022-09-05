@@ -9,7 +9,7 @@ import React, { useMemo } from 'react'
 import { Layout, useToaster, useConfirmationDialog } from '@wings-software/uicore'
 import { Intent } from '@harness/design-system'
 import cx from 'classnames'
-import { cloneDeep, debounce, isNil, isEmpty } from 'lodash-es'
+import { cloneDeep, debounce, isNil } from 'lodash-es'
 import type { NodeModelListener, LinkModelListener } from '@projectstorm/react-diagrams-core'
 import SplitPane from 'react-split-pane'
 import produce from 'immer'
@@ -218,7 +218,7 @@ function StageBuilder(): JSX.Element {
     getStageFromPipeline,
     setSelection
   } = usePipelineContext()
-  const { sectionId, storeType } = useQueryParams<PipelineSelectionState>()
+  const { sectionId } = useQueryParams<PipelineSelectionState>()
   const { module } = useParams<ModulePathParams>()
 
   // NOTE: we are using ref as setSelection is getting cached somewhere
@@ -820,7 +820,7 @@ function StageBuilder(): JSX.Element {
           </div>
         </SplitPane>
       </div>
-      {module === 'cd' && (!isEmpty(sectionId) || (storeType === 'INLINE' && isEmpty(sectionId))) ? (
+      {module === 'cd' ? (
         <HelpPanel referenceId={referenceId(sectionId)} type={HelpPanelType.FLOATING_CONTAINER} />
       ) : null}
     </Layout.Horizontal>
