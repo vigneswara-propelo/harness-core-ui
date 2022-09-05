@@ -9,6 +9,7 @@ import { isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
 import { EXECUTION_TIME_INPUT_VALUE, MultiSelectOption, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
+import { yamlParse } from '@common/utils/YamlHelperMethods'
 
 export enum Validation {
   None = 'None',
@@ -154,7 +155,8 @@ export interface ParsedInput {
   } | null
   [InpuSetFunction.EXECUTION_INPUT]: boolean
   [InpuSetFunction.REGEX]: string | null
-  [InpuSetFunction.DEFAULT]: string | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [InpuSetFunction.DEFAULT]: any | null
 }
 
 export function isExecutionInput(input: string): boolean {
@@ -210,7 +212,7 @@ export function parseInput(input: string): ParsedInput | null {
       // slice the function name along with surrounding parenthesis
       const fnArgs = fn.slice(InpuSetFunction.DEFAULT.length + 1).slice(0, -1)
 
-      parsedInput[InpuSetFunction.DEFAULT] = fnArgs
+      parsedInput[InpuSetFunction.DEFAULT] = yamlParse(fnArgs)
     }
   })
 

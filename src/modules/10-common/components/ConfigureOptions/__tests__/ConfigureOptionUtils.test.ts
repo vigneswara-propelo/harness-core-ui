@@ -68,6 +68,24 @@ describe('ConfigureOptionsUtils tests', () => {
           default: 'myDefaultValue'
         })
       })
+
+      test('works with default number type', () => {
+        expect(parseInput('<+input>.default(2)')).toEqual({
+          allowedValues: null,
+          executionInput: false,
+          regex: null,
+          default: 2
+        })
+      })
+
+      test('works with default array type', () => {
+        expect(parseInput('<+input>.default([a,b,c])')).toEqual({
+          allowedValues: null,
+          executionInput: false,
+          regex: null,
+          default: ['a', 'b', 'c']
+        })
+      })
     })
 
     test('works with multiple fns', () => {
