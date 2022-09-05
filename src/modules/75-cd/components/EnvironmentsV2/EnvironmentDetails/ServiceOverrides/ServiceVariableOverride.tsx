@@ -31,6 +31,7 @@ import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { getVariableTypeOptions, VariableType } from './ServiceOverridesUtils'
 import type { VariableOverride } from './ServiceOverridesInterface'
 import ServiceVariablesOverridesList from './ServiceVariablesOverrides/ServiceVariablesOverridesList'
+import css from './ServiceOverrides.module.scss'
 
 interface ServiceVariableOverrideProps {
   selectedService: string
@@ -199,6 +200,7 @@ function ServiceVariableOverride({
         text={getString('common.plusNewName', { name: getString('common.override') })}
         size={ButtonSize.SMALL}
         variation={ButtonVariation.LINK}
+        className={css.addOverrideBtn}
         permission={{
           resource: {
             resourceType: ResourceType.ENVIRONMENT

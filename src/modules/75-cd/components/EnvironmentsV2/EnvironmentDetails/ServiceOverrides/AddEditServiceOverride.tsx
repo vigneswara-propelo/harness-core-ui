@@ -381,7 +381,7 @@ export default function AddEditServiceOverride({
                 onChange={handleYamlChange}
               />
             )}
-            <Layout.Horizontal spacing="medium" padding={{ top: 'medium' }}>
+            <Layout.Horizontal spacing="medium" padding={{ top: 'xxlarge' }}>
               <Button
                 variation={ButtonVariation.PRIMARY}
                 text={getString('save')}

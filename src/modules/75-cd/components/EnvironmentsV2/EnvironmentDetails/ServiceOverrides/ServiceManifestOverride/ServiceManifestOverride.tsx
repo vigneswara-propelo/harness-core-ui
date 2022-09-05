@@ -235,6 +235,7 @@ function ServiceManifestOverride({
   const addBtnCommonProps = {
     size: ButtonSize.SMALL,
     variation: ButtonVariation.LINK,
+    className: css.addOverrideBtn,
     permission: {
       resource: {
         resourceType: ResourceType.ENVIRONMENT

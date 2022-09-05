@@ -6,13 +6,13 @@
  */
 
 import React, { useCallback } from 'react'
-import { Button, Text, Layout, FontVariation, StepProps } from '@harness/uicore'
+import { Button, Text, Layout, FontVariation, StepProps, ButtonSize, ButtonVariation } from '@harness/uicore'
 import { get } from 'lodash-es'
 import type { ConfigFileWrapper, ConnectorConfigDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import ServiceConfigFileOverridesList from './ServiceConfigFileOverridesList'
-
+import css from '../ServiceOverrides.module.scss'
 interface ServiceConfigFileListProps {
   serviceConfigFileList: ConfigFileWrapper[]
   isReadonly: boolean
@@ -59,6 +59,9 @@ function ServiceConfigFileList({
         />
         <Button
           icon="plus"
+          size={ButtonSize.SMALL}
+          variation={ButtonVariation.LINK}
+          className={css.addOverrideBtn}
           text={getString('cd.serviceOverrides.newConfigFile')}
           onClick={() => nextStep?.({ ...prevStepData, isEditMode: false })}
           minimal

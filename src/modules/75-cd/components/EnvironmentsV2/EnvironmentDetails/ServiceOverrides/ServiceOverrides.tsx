@@ -256,6 +256,7 @@ export function ServiceOverrides(): React.ReactElement {
             const addOverrideBtnProps = {
               size: ButtonSize.SMALL,
               variation: ButtonVariation.LINK,
+              className: css.addOverrideBtn,
               onClick: () => {
                 setSelectedService(defaultTo(serviceRef, ''))
                 setIsEdit(false)

@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly addOverrideBtn: string
   readonly columnId: string
   readonly createConnectorWizard: string
   readonly crossIcon: string
