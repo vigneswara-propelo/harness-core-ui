@@ -7,9 +7,6 @@
 
 .table {
   padding: var(--spacing-large);
-  [role='row'] > div {
-    align-items: baseline;
-  }
 }
 
 .triggerInfo {
@@ -18,20 +15,6 @@
   color: var(--grey-600);
   flex: 1 1 auto;
   overflow: hidden;
-}
-
-.triggerType {
-  display: flex;
-  align-items: center;
-
-  &::before {
-    content: '';
-    display: inline-block;
-    width: 1px;
-    background: var(--grey-300);
-    height: calc(var(--font-size-small) + 2px);
-    margin: 0 var(--spacing-3);
-  }
 }
 
 .triggerInfoCell {
@@ -45,7 +28,7 @@
 
 .stage {
   display: grid;
-  grid-template-columns: 3% 15% 8% 45% 20% 4% 5%;
+  grid-template-columns: 3% 15% 8% 65% 4% 5%;
   padding: var(--spacing-4) 0;
   position: relative;
   align-items: center;
@@ -87,6 +70,47 @@
   }
 }
 
-.failureMessage {
-  padding-right: var(--spacing-5) !important;
+.checkbox label {
+  margin-bottom: 0 !important;
+}
+
+.iconWrapper {
+  width: var(--spacing-xlarge);
+  height: var(--spacing-xlarge);
+  background-color: var(--primary-1);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--white);
+  margin: 0 5px;
+}
+
+.execution {
+  margin-left: -7px !important;
+}
+
+.icon {
+  svg {
+    path {
+      fill: var(--primary-7) !important;
+    }
+  }
+}
+
+.selectiveStageExecution {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--grey-100);
+  padding: var(--spacing-xsmall);
+  border-radius: var(--spacing-3);
+}
+
+.stageInfo {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: var(--spacing-small);
+  margin-right: var(--spacing-small);
+  align-items: center;
 }

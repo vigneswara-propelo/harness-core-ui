@@ -1330,3 +1330,4 @@ azureWebApp:
     blueGreen: 'Harness performs a two phase deployment: Phase 1 deploys a new service version to deployment slot. Phase 2 swaps the deployment slot with target slot.'
 skipInstances:
   title: 'Skip instances with the same artifact version already deployed'
+selectiveStageExecution: 'Selective stage execution'

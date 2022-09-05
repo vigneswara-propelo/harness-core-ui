@@ -7,15 +7,19 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly checkbox: string
   readonly ci: string
+  readonly execution: string
   readonly executionStageSummary: string
-  readonly failureMessage: string
+  readonly icon: string
+  readonly iconWrapper: string
   readonly menu: string
+  readonly selectiveStageExecution: string
   readonly stage: string
+  readonly stageInfo: string
   readonly table: string
   readonly tags: string
   readonly triggerInfo: string
   readonly triggerInfoCell: string
-  readonly triggerType: string
 }
 export default styles

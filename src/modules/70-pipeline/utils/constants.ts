@@ -8,6 +8,7 @@ import type { IconName, SelectOption } from '@harness/uicore'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 
 import type { UseStringsReturn } from 'framework/strings'
+import type { ExecutorInfoDTO } from 'services/pipeline-ng'
 
 export const EXPRESSION_STRING = '<+expression>' // TODO: this needs to be exported from uicore for best use.
 
@@ -78,3 +79,5 @@ export const DEFAULT_PAGE_INDEX = 0
 export const DEFAULT_PAGE_SIZE = 20
 export const DEFAULT_PIPELINE_LIST_TABLE_SORT = ['lastUpdatedAt', 'DESC']
 export const DEFAULT_EXECUTION_LIST_TABLE_SORT = ['startTs', 'DESC']
+
+export const AUTO_TRIGGERS: ExecutorInfoDTO['triggerType'][] = ['WEBHOOK_CUSTOM', 'SCHEDULER_CRON']

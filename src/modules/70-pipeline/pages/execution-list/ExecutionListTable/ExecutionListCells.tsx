@@ -8,13 +8,13 @@
 
 import { Checkbox } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Icon, Layout, TagsPopover, Text } from '@harness/uicore'
+import { Avatar, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
 import { get, isEmpty, omit } from 'lodash-es'
 import defaultTo from 'lodash-es/defaultTo'
 import React, { useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseExpandedRowProps } from 'react-table'
-import { Duration, TimeAgoPopover, UserLabel } from '@common/components'
+import { Duration, TimeAgoPopover } from '@common/components'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import type { ExecutionPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -45,7 +45,7 @@ import {
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
 import type { EnvironmentDeploymentsInfo, ServiceDeploymentInfo } from 'services/cd-ng'
 import executionFactory from '@pipeline/factories/ExecutionFactory'
-import { CardVariant } from '@pipeline/utils/constants'
+import { AUTO_TRIGGERS, CardVariant } from '@pipeline/utils/constants'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { getRouteProps } from '@pipeline/pages/pipeline-list/PipelineListUtils'
@@ -78,7 +78,7 @@ export const RowSelectCell: CellType = ({ row }) => {
   }
 
   return (
-    <div ref={checkboxRef}>
+    <div ref={checkboxRef} className={css.checkbox}>
       <Checkbox
         size={12}
         checked={isCompareItem}
@@ -90,7 +90,11 @@ export const RowSelectCell: CellType = ({ row }) => {
 }
 
 export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<PipelineExecutionSummary> }> = ({ row }) => {
-  return <Icon name={row.isExpanded ? 'chevron-down' : 'chevron-right'} {...row.getToggleRowExpandedProps()} />
+  return (
+    <Layout.Horizontal>
+      <Icon name={row.isExpanded ? 'chevron-down' : 'chevron-right'} {...row.getToggleRowExpandedProps()} />
+    </Layout.Horizontal>
+  )
 }
 
 export const PipelineNameCell: CellType = ({ row }) => {
@@ -122,10 +126,10 @@ export const PipelineNameCell: CellType = ({ row }) => {
   })
 
   return (
-    <Layout.Vertical spacing="small">
+    <Layout.Vertical spacing="xsmall">
       <Layout.Horizontal spacing="small">
         <Link to={toPipelineStudio}>
-          <Text font={{ size: 'normal' }} color={Color.PRIMARY_7} lineClamp={1}>
+          <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
             {name}
           </Text>
         </Link>
@@ -141,7 +145,7 @@ export const PipelineNameCell: CellType = ({ row }) => {
         )}
       </Layout.Horizontal>
       <Link to={toExecutionPipelineView}>
-        <Text font={{ size: 'small' }} color={Color.PRIMARY_7} lineClamp={1}>
+        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.PRIMARY_7} lineClamp={1}>
           {`${getString('pipeline.executionId')}: ${runSequence}`}
         </Text>
       </Link>
@@ -153,46 +157,74 @@ export const StatusCell: CellType = ({ row }) => {
   return <ExecutionStatusLabel status={row.original.status as ExecutionStatus} />
 }
 
-export const LastExecutionCell: CellType = ({ row }) => {
+export const ExecutionCell: CellType = ({ row }) => {
   const data = row.original
+  const pathParams = useParams<PipelineType<PipelinePathProps>>()
+
   const { module = 'cd' } = useModuleInfo()
   const { getString } = useStrings()
   const TimeAgo = module === 'cd' ? TimePopoverWithLocal : TimeAgoPopover
+  const name =
+    get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.name') ||
+    get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.id') ||
+    get(data, 'executionTriggerInfo.triggeredBy.identifier') ||
+    'Anonymous'
+  const email =
+    get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.email') ||
+    get(data, 'executionTriggerInfo.triggeredBy.extraInfo.email')
+  const profilePictureUrl =
+    get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.avatar') || get(data, 'executionTriggerInfo.triggeredBy.avatar')
+
+  const triggerType = data.executionTriggerInfo?.triggerType
+
+  const isAutoTrigger = AUTO_TRIGGERS.includes(triggerType)
+
   return (
-    <Layout.Vertical spacing="small">
-      <div className={css.triggerInfo}>
-        <UserLabel
-          name={
-            get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.name') ||
-            get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.id') ||
-            get(data, 'executionTriggerInfo.triggeredBy.identifier') ||
-            'Anonymous'
-          }
-          email={
-            get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.email') ||
-            get(data, 'executionTriggerInfo.triggeredBy.extraInfo.email')
-          }
-          profilePictureUrl={
-            get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.avatar') ||
-            get(data, 'executionTriggerInfo.triggeredBy.avatar')
-          }
-          textProps={{
-            font: { variation: FontVariation.SMALL },
-            color: Color.GREY_900
-          }}
-          iconProps={{ color: Color.GREY_900 }}
+    <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }} className={css.execution}>
+      {!isAutoTrigger ? (
+        <Avatar
+          size={'small'}
+          src={profilePictureUrl}
+          name={!profilePictureUrl && (name || email)}
+          hoverCard={false}
+          backgroundColor={Color.PRIMARY_1}
+          color={Color.PRIMARY_7}
         />
-        <Text font={{ variation: FontVariation.SMALL }} className={css.triggerType}>
-          {getString(mapTriggerTypeToStringID(get(data, 'executionTriggerInfo.triggerType')))}
-        </Text>
+      ) : (
+        <Link
+          to={routes.toTriggersDetailPage({
+            projectIdentifier: pathParams.projectIdentifier,
+            orgIdentifier: pathParams.orgIdentifier,
+            accountId: pathParams.accountId,
+            module: pathParams.module,
+            pipelineIdentifier: data.pipelineIdentifier || '',
+            triggerIdentifier: get(data, 'executionTriggerInfo.triggeredBy.identifier') || '',
+            triggerType
+          })}
+          className={css.iconWrapper}
+        >
+          <Icon
+            size={10}
+            name={triggerType === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'}
+            aria-label="trigger"
+            className={css.icon}
+          />
+        </Link>
+      )}
+      <div>
+        <Layout.Horizontal>
+          <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
+            {name || email} | {getString(mapTriggerTypeToStringID(get(data, 'executionTriggerInfo.triggerType')))}
+          </Text>
+        </Layout.Horizontal>
+        <TimeAgo
+          time={defaultTo(data.startTs, 0)}
+          inline={false}
+          font={{ variation: FontVariation.TINY }}
+          color={Color.GREY_600}
+        />
       </div>
-      <TimeAgo
-        time={defaultTo(data.startTs, 0)}
-        inline={false}
-        font={{ variation: FontVariation.SMALL }}
-        color={Color.GREY_500}
-      />
-    </Layout.Vertical>
+    </Layout.Horizontal>
   )
 }
 
@@ -202,8 +234,8 @@ export const DurationCell: CellType = ({ row }) => {
     <Duration
       startTime={data.startTs}
       endTime={data?.endTs}
-      font={{ variation: FontVariation.SMALL }}
-      color={Color.GREY_500}
+      font={{ variation: FontVariation.TINY }}
+      color={Color.GREY_600}
       durationText=""
     />
   )

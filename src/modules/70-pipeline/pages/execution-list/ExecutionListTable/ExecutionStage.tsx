@@ -23,6 +23,7 @@ import css from './ExecutionListTable.module.scss'
 export interface ExecutionStageProps {
   row?: CellProps<PipelineExecutionSummary>['row']
   stage: PipelineGraphState
+  isSelectiveStage: boolean
 }
 
 const stageIconMap: Partial<Record<StageType, IconName>> = {
@@ -31,10 +32,16 @@ const stageIconMap: Partial<Record<StageType, IconName>> = {
   [StageType.SECURITY]: 'sto-color-filled'
 }
 
-export const ExecutionStage: FC<ExecutionStageProps> = ({ stage }) => {
+export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStage }) => {
+  const { getString } = useStrings()
   const iconName = stageIconMap[stage.type as StageType]
   const data: PipelineExecutionSummary = stage.data || {}
   const stageFailureMessage = data?.failureInfo?.message
+
+  const stageInfo = stage.data?.moduleInfo?.cd || ({} as CDStageModuleInfo)
+  const serviceDisplayName = stageInfo.serviceInfo?.displayName
+  const environment = stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier
+
   return (
     <div className={css.stage}>
       <div />
@@ -47,42 +54,61 @@ export const ExecutionStage: FC<ExecutionStageProps> = ({ stage }) => {
 
       <ExecutionStatusIcon status={data?.status as ExecutionStatus} />
 
-      <Text font={{ size: 'small' }} color={Color.GREY_900}>
-        <ExecutionStageSummary stage={data} />
-      </Text>
+      <div className={css.stageInfo}>
+        <div color={Color.GREY_900}>
+          <ExecutionStageSummary serviceDisplayName={serviceDisplayName} environment={environment} />
+        </div>
 
-      <Text font={{ size: 'small' }} color={Color.RED_800} lineClamp={1} className={css.failureMessage}>
-        {stageFailureMessage}
-      </Text>
+        <div>
+          {isSelectiveStage && (
+            <div className={css.selectiveStageExecution}>
+              <Icon name="info" size={10} color={Color.GREY_600} />
+              <Text margin={{ left: 'xsmall' }} font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_600}>
+                {getString('pipeline.selectiveStageExecution')}
+              </Text>
+            </div>
+          )}
+        </div>
+
+        <Text font={{ size: 'small' }} color={Color.RED_800} lineClamp={1}>
+          {stageFailureMessage}
+        </Text>
+      </div>
 
       <Duration
         startTime={data?.startTs}
         endTime={data?.endTs}
-        font={{ variation: FontVariation.SMALL }}
-        color={Color.GREY_500}
+        font={{ variation: FontVariation.TINY }}
+        color={Color.GREY_600}
         durationText=""
       />
     </div>
   )
 }
 
-export const ExecutionStageSummary: FC<{ stage: PipelineExecutionSummary }> = ({ stage }) => {
+export const ExecutionStageSummary: FC<{ environment?: string; serviceDisplayName?: string }> = ({
+  environment,
+  serviceDisplayName
+}) => {
   const { getString } = useStrings()
-  const stageInfo = stage?.moduleInfo?.cd || ({} as CDStageModuleInfo)
-  const serviceInfo = stageInfo?.serviceInfo || {}
-  const environment = stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier
 
-  return serviceInfo?.identifier && environment ? (
+  return (
     <Layout.Horizontal className={css.executionStageSummary}>
-      <div>
-        <Text font={{ size: 'small' }}>{getString('pipeline.executionList.servicesDeployedText', { size: 1 })}: </Text>
-        <Text font={{ size: 'small', weight: 'semi-bold' }}>{serviceInfo?.displayName} </Text>
-      </div>
+      {serviceDisplayName && (
+        <div>
+          <Text font={{ size: 'small' }}>
+            {getString('pipeline.executionList.servicesDeployedText', { size: 1 })}:{' '}
+          </Text>
+          <Text font={{ size: 'small', weight: 'semi-bold' }}>{serviceDisplayName} </Text>
+        </div>
+      )}
 
-      <div>
-        <Text font={{ size: 'small' }}>{getString('pipeline.executionList.EnvironmentsText', { size: 1 })}: </Text>
-        <Text font={{ size: 'small', weight: 'semi-bold' }}>{environment} </Text>
-      </div>
+      {environment && (
+        <div>
+          <Text font={{ size: 'small' }}>{getString('pipeline.executionList.EnvironmentsText', { size: 1 })}: </Text>
+          <Text font={{ size: 'small', weight: 'semi-bold' }}>{environment} </Text>
+        </div>
+      )}
     </Layout.Horizontal>
-  ) : null
+  )
 }

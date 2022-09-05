@@ -28,7 +28,7 @@ import {
   useExecutionListFilterContext
 } from './ExecutionListFilterContext/ExecutionListFilterContext'
 import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSubHeader'
-import { ExecutionListTable } from './ExecutionListTable/ExecutionListTable'
+import { MemoisedExecutionListTable } from './ExecutionListTable/ExecutionListTable'
 import { ExecutionListCards } from './ExecutionListCards/ExecutionListCards'
 import css from './ExecutionList.module.scss'
 
@@ -64,7 +64,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const isExecutionListPage = !!matchPath(location.pathname, {
     path: routes.toExecutions({ projectIdentifier, orgIdentifier, accountId, module })
   })
-  const Executions = isExecutionListPage ? ExecutionListTable : ExecutionListCards
+  const Executions = isExecutionListPage ? MemoisedExecutionListTable : ExecutionListCards
 
   const isExecutionHistoryView = !!matchPath(location.pathname, {
     path: routes.toPipelineDeploymentList({

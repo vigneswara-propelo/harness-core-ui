@@ -21,9 +21,13 @@ export function ExecutionStageList({ row }: { row: Row<PipelineExecutionSummary>
       {elements?.map(stage => {
         return (
           <Fragment key={stage.identifier}>
-            <ExecutionStage stage={stage} />
+            <ExecutionStage stage={stage} isSelectiveStage={!!data?.stagesExecuted?.length} />
             {stage.children?.map(subStage => (
-              <ExecutionStage stage={subStage} key={subStage.identifier} />
+              <ExecutionStage
+                stage={subStage}
+                key={subStage.identifier}
+                isSelectiveStage={!!data?.stagesExecuted?.length}
+              />
             ))}
           </Fragment>
         )

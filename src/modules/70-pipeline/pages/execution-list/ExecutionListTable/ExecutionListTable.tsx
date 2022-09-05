@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { memo } from 'react'
 import { TableV2 } from '@harness/uicore'
 import type { Column } from 'react-table'
+import { isEqual } from 'lodash-es'
 import type {
   GetListOfExecutionsQueryParams,
   PagePipelineExecutionSummary,
@@ -19,7 +20,7 @@ import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompar
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import {
   DurationCell,
-  LastExecutionCell,
+  ExecutionCell,
   MenuCell,
   PipelineNameCell,
   RowSelectCell,
@@ -118,7 +119,7 @@ export function ExecutionListTable({
         Header: getString('common.executedBy').toUpperCase(),
         accessor: 'startTs',
         width: '20%',
-        Cell: LastExecutionCell,
+        Cell: ExecutionCell,
         serverSortProps: getServerSortProps('startTs')
       },
       {
@@ -163,3 +164,7 @@ export function ExecutionListTable({
     />
   )
 }
+
+export const MemoisedExecutionListTable = memo(ExecutionListTable, (prev, current) => {
+  return isEqual(prev.executionList, current.executionList)
+})

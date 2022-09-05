@@ -29,11 +29,12 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { getReadableDateTime } from '@common/utils/dateUtils'
-import type { ExecutorInfoDTO, PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
+import type { PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
+import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import type { PipelineListColumnActions } from './PipelineListTable'
@@ -172,8 +173,7 @@ export const LastExecutionCell: CellType = ({ row }) => {
   const recentExecution: RecentExecutionInfoDTO = data.recentExecutionsInfo?.[0] || {}
   const { startTs, executorInfo } = recentExecution
   const executor = executorInfo?.email || executorInfo?.username
-  const autoTriggers: ExecutorInfoDTO['triggerType'][] = ['WEBHOOK_CUSTOM', 'SCHEDULER_CRON']
-  const isAutoTrigger = autoTriggers.includes(executorInfo?.triggerType)
+  const isAutoTrigger = AUTO_TRIGGERS.includes(executorInfo?.triggerType)
 
   return (
     <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
