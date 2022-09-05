@@ -27,6 +27,7 @@ export function ConfigFilesWizard({
   types,
   expressions,
   allowableTypes,
+  firstStep,
   lastSteps,
   deploymentType,
   isNewFile,
@@ -35,8 +36,8 @@ export function ConfigFilesWizard({
   const { getString } = useStrings()
   const onStepChange = (arg: StepChangeData<any>): void => {
     if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 1) {
-      handleConnectorViewChange(false)
-      handleStoreChange()
+      handleConnectorViewChange?.(false)
+      handleStoreChange?.()
     }
   }
 
@@ -49,8 +50,8 @@ export function ConfigFilesWizard({
       title={`${
         deploymentType && getString(deploymentTypeLabel[deploymentType as ServiceDefinition['type']])
       } ${getString('pipeline.configFiles.title', { type: 'Source' })}`}
-      initialStep={1}
     >
+      {firstStep}
       <ConfigFilesStore
         configFilesStoreTypes={types}
         name={getString('pipeline.configFiles.source')}

@@ -483,6 +483,7 @@ function ConfigFilesListView({
             variation={ButtonVariation.LINK}
             data-test-id="addConfigFile"
             onClick={addNewConfigFile}
+            icon="plus"
             text={getString('pipeline.configFiles.addConfigFile')}
           />
         )}

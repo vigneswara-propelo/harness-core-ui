@@ -4540,10 +4540,12 @@ export interface StringsMap {
   'cd.serviceList.noIdentifier': string
   'cd.serviceName': string
   'cd.serviceOverrides.configFileOverrides': string
+  'cd.serviceOverrides.configFileSelection': string
   'cd.serviceOverrides.deleted': string
   'cd.serviceOverrides.deletedOneVariable': string
   'cd.serviceOverrides.helperText': string
   'cd.serviceOverrides.manifestOverrides': string
+  'cd.serviceOverrides.newConfigFile': string
   'cd.serviceOverrides.variableOverrides': string
   'cd.serviceUpdated': string
   'cd.setUpProvisionerBtnText': string

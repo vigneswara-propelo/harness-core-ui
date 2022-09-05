@@ -187,7 +187,7 @@ function ServiceVariableOverride({
   }, [variableIndex, variableListItems])
 
   return (
-    <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
+    <Layout.Vertical flex={{ alignItems: 'flex-start' }} spacing="medium">
       <ServiceVariablesOverridesList
         variableOverrides={variableOverrides}
         isReadonly={isReadonly}

@@ -32,6 +32,7 @@ import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { HarnessConfigStep } from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/HarnessConfigStep'
 import type { ConfigFileType } from '@pipeline/components/ConfigFilesSelection/ConfigFilesInterface'
 import ServiceConfigFileOverridesList from './ServiceConfigFileOverridesList'
+import ServiceConfigFileList from './ServiceConfigFileList'
 import css from '../ServiceManifestOverride/ServiceManifestOverride.module.scss'
 
 interface ConfigFileDefaultValueType {
@@ -49,6 +50,7 @@ interface ServiceConfigFileOverrideProps {
   expressions: string[]
   selectedService?: string
   serviceList?: ServiceResponse[]
+  fromEnvConfigPage?: boolean
 }
 const DIALOG_PROPS: IDialogProps = {
   isOpen: true,
@@ -67,7 +69,8 @@ function ServiceConfigFileOverride({
   expressions,
   handleConfigFileOverrideSubmit,
   handleServiceFileDelete,
-  allowableTypes
+  allowableTypes,
+  fromEnvConfigPage
 }: ServiceConfigFileOverrideProps): React.ReactElement {
   const { getString } = useStrings()
   const [fileIndex, setEditIndex] = useState(0)
@@ -136,22 +139,15 @@ function ServiceConfigFileOverride({
 
   const getInitialValues = useCallback((): ConfigFileDefaultValueType => {
     if (isEditMode) {
-      const initValues = get(fileOverrides[fileIndex], 'configFile.spec.store.spec', null)
-      let files, fileType
-      if (get(fileOverrides[fileIndex], 'configFile.spec.store.spec.secretFiles', []).length > 0) {
-        files = get(fileOverrides[fileIndex], 'configFile.spec.store.spec.secretFiles', [''])
-        fileType = FILE_TYPE_VALUES.ENCRYPTED
-      } else {
-        files = get(fileOverrides[fileIndex], 'configFile.spec.store.spec.files', [''])
-        fileType = FILE_TYPE_VALUES.FILE_STORE
-      }
+      const initValues = get(fileOverrides[fileIndex], 'configFile.spec.store.spec')
+
       return {
         ...initValues,
         store: fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type,
         identifier: get(fileOverrides[fileIndex], 'configFile.identifier', ''),
-        files: defaultTo(files, ['']),
-        secretFiles: get(fileOverrides[fileIndex], 'configFile.spec.store.spec.secretFiles', ['']),
-        fileType
+        files: initValues?.secretFiles?.length ? initValues?.secretFiles : initValues?.files,
+        secretFiles: initValues?.secretFiles,
+        fileType: initValues?.secretFiles?.length ? FILE_TYPE_VALUES.ENCRYPTED : FILE_TYPE_VALUES.FILE_STORE
       }
     }
     return {
@@ -182,6 +178,17 @@ function ServiceConfigFileOverride({
             configFileIndex={fileIndex}
             deploymentType={getDeploymentType()}
             initialValues={getInitialValues()}
+            firstStep={
+              !fromEnvConfigPage &&
+              !isEditMode &&
+              getServiceConfigFiles().length > 0 && (
+                <ServiceConfigFileList
+                  name={getString('cd.serviceOverrides.configFileSelection')}
+                  serviceConfigFileList={getServiceConfigFiles()}
+                  isReadonly={isReadonly}
+                />
+              )
+            }
             lastSteps={getLastSteps()}
             isNewFile={!isEditMode}
           />
@@ -191,26 +198,34 @@ function ServiceConfigFileOverride({
     )
   }, [expressions, allowableTypes, fileIndex, isEditMode, isReadonly])
 
+  const addBtnCommonProps = {
+    size: ButtonSize.SMALL,
+    variation: ButtonVariation.LINK,
+    permission: {
+      resource: {
+        resourceType: ResourceType.ENVIRONMENT
+      },
+      permission: PermissionIdentifier.EDIT_ENVIRONMENT
+    },
+    onClick: createNewFileOverride
+  }
+
   return (
-    <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
+    <Layout.Vertical flex={{ alignItems: 'flex-start' }} spacing="medium">
       <ServiceConfigFileOverridesList
         configFileOverrideList={fileOverrides}
         isReadonly={isReadonly}
         editFileOverride={editFileOverride}
         handleServiceFileDelete={handleServiceFileDelete}
       />
-      <RbacButton
-        text={getString('common.plusNewName', { name: getString('common.override') })}
-        size={ButtonSize.SMALL}
-        variation={ButtonVariation.LINK}
-        permission={{
-          resource: {
-            resourceType: ResourceType.ENVIRONMENT
-          },
-          permission: PermissionIdentifier.EDIT_ENVIRONMENT
-        }}
-        onClick={createNewFileOverride}
-      />
+      {fromEnvConfigPage ? (
+        <RbacButton {...addBtnCommonProps} icon="plus" text={getString('pipeline.configFiles.addConfigFile')} />
+      ) : (
+        <RbacButton
+          {...addBtnCommonProps}
+          text={getString('common.plusNewName', { name: getString('common.override') })}
+        />
+      )}
     </Layout.Vertical>
   )
 }

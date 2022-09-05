@@ -10,6 +10,7 @@ import { Button, ButtonVariation, Text, Container, Formik, Layout, StepProps, Fo
 import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import type { ConfigFileWrapper, StoreConfigWrapper } from 'services/cd-ng'
 import { StringUtils } from '@common/exports'
 import { useStrings } from 'framework/strings'
@@ -39,6 +40,7 @@ export function HarnessConfigStep({
   configFileIndex
 }: StepProps<any> & ConfigFilesPropType): React.ReactElement {
   const { getString } = useStrings()
+  const isEditState = defaultTo(prevStepData.isEditMode, isEditMode)
 
   const [initialValues, setInitialValues] = useState({
     identifier: '',
@@ -48,10 +50,9 @@ export function HarnessConfigStep({
   })
 
   React.useEffect(() => {
-    if (!isEditMode) {
+    if (!isEditState) {
       setInitialValues({
         ...initialValues,
-
         ...prevStepData,
         secretFiles: undefined
       })
@@ -86,7 +87,7 @@ export function HarnessConfigStep({
   }
 
   const identifierValidation = Yup.lazy(value => {
-    return !isEditMode
+    return !isEditState
       ? Yup.mixed()
           .notOneOf(
             [...listOfConfigFiles.map(({ configFile }) => configFile.identifier)],
@@ -143,12 +144,12 @@ export function HarnessConfigStep({
                       }
                     }}
                   />
-                  {!isEditMode && (
+                  {!isEditState && (
                     <FormInput.RadioGroup
                       name="fileType"
                       className={css.selectFileType}
                       radioGroup={{ inline: true }}
-                      disabled={isEditMode}
+                      disabled={isEditState}
                       label={getString('pipeline.configFiles.selectFileType')}
                       onChange={() => {
                         formikProps.setFieldValue('files', [''])
@@ -195,7 +196,7 @@ export function HarnessConfigStep({
                     variation={ButtonVariation.PRIMARY}
                     type="submit"
                     disabled={formikProps.values.store === null}
-                    text={getString('continue')}
+                    text={getString('submit')}
                     rightIcon="chevron-right"
                     margin={{ left: 'medium' }}
                   />

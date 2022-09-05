@@ -245,7 +245,7 @@ function ServiceManifestOverride({
   }
 
   return (
-    <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
+    <Layout.Vertical flex={{ alignItems: 'flex-start' }} spacing="medium">
       <ServiceManifestOverridesList
         manifestOverridesList={manifestOverrides}
         isReadonly={isReadonly}

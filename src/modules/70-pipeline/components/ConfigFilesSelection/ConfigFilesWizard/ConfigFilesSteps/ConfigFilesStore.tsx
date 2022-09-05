@@ -67,6 +67,7 @@ function ConfigFileStore({
   initialValues,
   expressions,
   allowableTypes,
+  previousStep,
   prevStepData,
   nextStep
 }: StepProps<ConnectorConfigDTO> & ConfigFileStorePropType): React.ReactElement {
@@ -121,10 +122,10 @@ function ConfigFileStore({
   }
 
   const getInitialValues = useCallback((): any => {
-    const initValues = { ...initialValues }
+    const initValues = { ...initialValues, ...prevStepData }
 
     return { ...initValues, store: selectedStore }
-  }, [selectedStore])
+  }, [initialValues, prevStepData, selectedStore])
 
   const supportedConfigFilesStores = useMemo(
     () =>
@@ -239,6 +240,15 @@ function ConfigFileStore({
               </Layout.Vertical>
 
               <Layout.Horizontal spacing="medium" className={css.saveBtn}>
+                {!isEmpty(prevStepData) && (
+                  <Button
+                    text={getString('back')}
+                    icon="chevron-left"
+                    variation={ButtonVariation.SECONDARY}
+                    onClick={() => previousStep?.({ ...prevStepData })}
+                    margin={{ right: 'medium' }}
+                  />
+                )}
                 <Button
                   variation={ButtonVariation.PRIMARY}
                   type="submit"

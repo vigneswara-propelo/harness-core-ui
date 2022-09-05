@@ -399,6 +399,7 @@ export default function EnvironmentConfiguration({
                           handleServiceFileDelete={index => removeOverrideConfig(index, 'configFiles')}
                           isReadonly={!canEdit}
                           expressions={expressions}
+                          fromEnvConfigPage
                         />
                       </Card>
                     )}
@@ -424,7 +425,10 @@ export default function EnvironmentConfiguration({
                 projectIdentifier: defaultTo(formikProps.values.projectIdentifier, ''),
                 variables: defaultTo(formikProps.values.variables, []),
                 overrides: !isEmpty(formikProps.values.overrides)
-                  ? { manifests: formikProps.values.overrides?.manifests }
+                  ? {
+                      manifests: formikProps.values.overrides?.manifests,
+                      configFiles: formikProps.values.overrides?.configFiles
+                    }
                   : undefined
               }
             }}
