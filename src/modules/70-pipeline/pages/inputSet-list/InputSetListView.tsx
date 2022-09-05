@@ -21,6 +21,7 @@ import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { useParams } from 'react-router-dom'
 import { Classes, Menu, Position } from '@blueprintjs/core'
+import { get } from 'lodash-es'
 import type {
   PageInputSetSummaryResponse,
   InputSetSummaryResponse,
@@ -38,6 +39,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
+import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import useDeleteConfirmationDialog from '../utils/DeleteConfirmDialog'
 import { Badge } from '../utils/Badge/Badge'
 import css from './InputSetList.module.scss'
@@ -246,9 +248,19 @@ const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }
     storeType
   })
 
-  return (
+  return isInputSetInvalid(row.original) ? (
+    <OutOfSyncErrorStrip
+      inputSet={row.original}
+      onlyReconcileButton={true}
+      hideInputSetButton={true}
+      isOverlayInputSet={get(row.original, 'inputSetType') === 'OVERLAY_INPUT_SET'}
+      fromInputSetForm={false}
+      fromInputSetListView={true}
+      refetchInputSets={(column as any)?.refetchInputSet}
+    />
+  ) : (
     <RbacButton
-      disabled={!(column as any)?.pipelineHasRuntimeInputs || isPipelineInvalid || isInputSetInvalid(row.original)}
+      disabled={!(column as any)?.pipelineHasRuntimeInputs || isPipelineInvalid}
       tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
       icon="run-pipeline"
       variation={ButtonVariation.PRIMARY}
@@ -321,7 +333,8 @@ export function InputSetListView({
         pipelineHasRuntimeInputs,
         isPipelineInvalid,
         template,
-        isGitSyncEnabled
+        isGitSyncEnabled,
+        refetchInputSet
       },
       {
         Header: '',

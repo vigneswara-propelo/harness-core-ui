@@ -9,6 +9,7 @@
 declare const styles: {
   readonly mainContainer: string
   readonly reconcileButton: string
+  readonly reconcileButtonListView: string
   readonly reconcileDialog: string
 }
 export default styles

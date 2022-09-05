@@ -65,6 +65,7 @@ interface InputSetInfo {
   hideForm?: () => void
   inpSetGitDetails?: EntityGitDetails
   onReconcile?: (identifier: string) => void
+  refetchInputSets?: () => void
 }
 
 export function useSaveInputSetOrOverlayInpSet(inputSetInfo: InputSetInfo): UseSaveInputSetOrOverlayInpSetReturnType {
@@ -77,7 +78,8 @@ export function useSaveInputSetOrOverlayInpSet(inputSetInfo: InputSetInfo): UseS
     fromInputSetForm,
     hideForm,
     inpSetGitDetails,
-    onReconcile
+    onReconcile,
+    refetchInputSets
   } = inputSetInfo
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -107,6 +109,7 @@ export function useSaveInputSetOrOverlayInpSet(inputSetInfo: InputSetInfo): UseS
     }
     refetch?.()
     hideForm?.()
+    refetchInputSets?.()
   }
 
   const updateInpSetOrOverlayInpSet = React.useCallback(
@@ -180,6 +183,7 @@ export function useSaveInputSetOrOverlayInpSet(inputSetInfo: InputSetInfo): UseS
         /* istanbul ignore else */ if (isInline) {
           !!fromInputSetForm && history.goBack()
           hideForm?.()
+          refetchInputSets?.()
         }
       } catch (e) {
         if (isInline) {
@@ -211,7 +215,8 @@ export function useSaveInputSetOrOverlayInpSet(inputSetInfo: InputSetInfo): UseS
       updateInputSet,
       fromInputSetForm,
       history,
-      hideForm
+      hideForm,
+      refetchInputSets
     ]
   )
 

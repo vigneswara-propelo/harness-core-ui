@@ -745,6 +745,7 @@ inputSets:
   editInYamlView: Edit in YAML view
   invalidInputSetDesc1: Your input set is not valid anymore because you do not have any pipeline runtime inputs. You may delete this input set, update your pipeline or go back to the Input Set list.
   invalidInputSetDesc2: Your input set is not valid anymore because you do not have any pipeline runtime inputs. You can either delete this input set or navigate to the Input Set list.
+  invalidInputSetDesc3: Your input set is not valid anymore because you do not have any pipeline runtime inputs. This input set may be removed.
   invalidInputSet: Invalid Input Set
   invalidOverlayISDesc1: Your overlay input set is not valid anymore because there are no valid input set references. This overlay input set may be removed.
   invalidOverlayISDesc2: Your overlay input set is not valid anymore because there are no valid input set references. You can either delete this overlay input set or navigate to the Input Set list.

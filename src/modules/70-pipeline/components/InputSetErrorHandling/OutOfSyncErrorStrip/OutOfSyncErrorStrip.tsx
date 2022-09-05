@@ -60,6 +60,8 @@ interface OutOfSyncErrorStripProps {
   isOverlayInputSet?: boolean
   fromInputSetForm?: boolean
   onReconcile?: (identifier: string) => void
+  fromInputSetListView?: boolean
+  refetchInputSets?: () => void
 }
 
 export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.ReactElement {
@@ -75,7 +77,9 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     hideForm,
     isOverlayInputSet,
     fromInputSetForm,
-    onReconcile
+    onReconcile,
+    fromInputSetListView,
+    refetchInputSets
   } = props
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -178,7 +182,8 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     fromInputSetForm,
     hideForm,
     inpSetGitDetails: yamlDiffResponse?.data?.gitDetails,
-    onReconcile
+    onReconcile,
+    refetchInputSets
   })
 
   const { openDialog: openDeleteInputSetModal, closeDialog: closeDeleteInputSetModal } = useConfirmationDialog({
@@ -189,6 +194,8 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
           : 'pipeline.inputSets.invalidOverlayISDesc1'
         : fromInputSetForm
         ? 'pipeline.inputSets.invalidInputSetDesc1'
+        : fromInputSetListView
+        ? 'pipeline.inputSets.invalidInputSetDesc3'
         : 'pipeline.inputSets.invalidInputSetDesc2'
     ),
     titleText: getString(
@@ -240,6 +247,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
               if (get(response, 'status') === 'SUCCESS') {
                 showSuccess(getString('inputSets.inputSetDeleted', { name: get(inputSet, 'name', '') }))
                 refetch?.()
+                refetchInputSets?.()
               } else {
                 throw getString('somethingWentWrong')
               }
@@ -330,9 +338,12 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
           text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
           variation={ButtonVariation.SECONDARY}
           size={ButtonSize.SMALL}
-          onClick={() => refetchYamlDiff()}
+          onClick={e => {
+            if (fromInputSetListView) e.stopPropagation()
+            return refetchYamlDiff()
+          }}
           loading={loading}
-          className={css.reconcileButton}
+          className={fromInputSetListView ? css.reconcileButtonListView : css.reconcileButton}
         />
       ) : (
         <Container className={css.mainContainer}>
