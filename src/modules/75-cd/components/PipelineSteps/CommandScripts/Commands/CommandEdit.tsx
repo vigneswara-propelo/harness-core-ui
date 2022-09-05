@@ -91,7 +91,11 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
     >
       {(formik: FormikProps<CommandUnitType>) => (
         <FormikForm>
-          <Container className={css.commandUnitForm} data-testid="command-unit-form-container">
+          <Container
+            className={css.commandUnitForm}
+            height={formik.values.type === CommandType.Copy ? '300px' : '636px'}
+            data-testid="command-unit-form-container"
+          >
             <Container width={320}>
               <NameId inputGroupProps={{ disabled: readonly }} identifierProps={{ isIdentifierEditable: !isEdit }} />
             </Container>
@@ -121,7 +125,7 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
             <Button
               variation={ButtonVariation.PRIMARY}
               type="submit"
-              text={isEdit ? getString('edit') : getString('add')}
+              text={isEdit ? getString('save') : getString('add')}
               data-testid="command-unit-form-submit"
             />
             &nbsp; &nbsp;

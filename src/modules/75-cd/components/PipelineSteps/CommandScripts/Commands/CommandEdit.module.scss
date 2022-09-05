@@ -6,7 +6,6 @@
  */
 
 .commandUnitForm {
-  height: 636px;
   overflow: auto;
   margin-left: var(--spacing-xsmall);
 
@@ -47,5 +46,6 @@
 }
 
 .footerContainer {
+  padding-top: 20px !important;
   position: sticky;
 }

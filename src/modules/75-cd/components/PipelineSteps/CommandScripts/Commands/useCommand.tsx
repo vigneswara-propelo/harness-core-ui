@@ -115,7 +115,7 @@ export default function useCommands(props: UseImportResourceProps): UseImportRes
           width: '668px',
           background: 'var(--form-bg)',
           paddingTop: '60px',
-          minHeight: '775px'
+          minHeight: '300px'
         }}
         enforceFocus={false}
         isOpen={true}

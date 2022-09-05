@@ -100,7 +100,7 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
       }}
     >
       <MonacoEditor
-        height={isFullScreen ? '70vh' : 300}
+        height={isFullScreen ? '70vh' : 200}
         value={value}
         name={name}
         language={langMap[scriptType] as string}
