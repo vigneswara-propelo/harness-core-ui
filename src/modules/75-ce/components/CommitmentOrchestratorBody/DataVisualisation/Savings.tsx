@@ -13,12 +13,14 @@ import { Column, RenderCostCell, RenderNameCell } from '@ce/components/Perspecti
 import { getStaticSchedulePeriodTime } from '@ce/utils/momentUtils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFetchSavings } from 'services/lw-co'
+import { useStrings } from 'framework/strings'
+import type { StringsMap } from 'stringTypes'
 import GridWithChartVisualiser from './GridWithChartVisualiser'
 import { getFilterBody, useFilterContext } from '../FilterContext'
 
 export const DEFAULT_COLS: Column[] = [
   {
-    Header: 'Name',
+    Header: 'name',
     accessor: 'name',
     className: 'name',
     width: 250,
@@ -26,7 +28,7 @@ export const DEFAULT_COLS: Column[] = [
     Cell: RenderNameCell
   },
   {
-    Header: 'Total cost',
+    Header: 'ce.co.ruleDetails.totalSavings',
     accessor: 'total',
     width: 200,
     hideable: false,
@@ -53,6 +55,7 @@ enum GROUP_BY {
 
 const Savings: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
+  const { getString } = useStrings()
   const { timeRange, ...restFilterOpts } = useFilterContext()
   const [cols] = useState(DEFAULT_COLS)
   const [data, setData] = useState<SavingsData[]>([])
@@ -101,7 +104,9 @@ const Savings: React.FC = () => {
   return (
     <Container>
       <GridWithChartVisualiser
-        columns={cols as TableColumn<SavingsData>[]}
+        columns={
+          cols.map(col => ({ ...col, Header: getString(col.Header as keyof StringsMap) })) as TableColumn<SavingsData>[]
+        }
         data={data}
         chartData={chart}
         chartLoading={loading}
