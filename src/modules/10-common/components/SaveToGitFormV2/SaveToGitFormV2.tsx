@@ -58,7 +58,7 @@ const getInitialValues = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
 ): SaveToGitFormV2Interface => ({
   isNewBranch: false,
-  branch: defaultTo(resource.gitDetails?.branch, ''),
+  branch: defaultTo(resource.gitDetails?.branch, resource.storeMetadata?.branch || ''),
   commitMsg: getString(isEditing ? 'common.gitSync.updateResource' : 'common.gitSync.createResource', {
     name: resource.name,
     type: getEntityNameFromType(resource.type)
@@ -87,14 +87,16 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
 
   const initialValues: SaveToGitFormV2Interface = getInitialValues(resource, isEditing, getString)
 
+  const branch = defaultTo(resource.gitDetails?.branch, resource.storeMetadata?.branch)
+
   const handleBranchTypeChange = (isNew: boolean, formik: FormikContextType<SaveToGitFormV2Interface>): void => {
     formik.resetForm()
     if (isNewBranch !== isNew) {
       setIsNewBranch(isNew)
-      formik.setFieldValue('branch', isNew ? `${resource.gitDetails?.branch}-patch` : initialValues.branch)
+      formik.setFieldValue('branch', isNew ? `${branch}-patch` : initialValues.branch)
       formik.setFieldTouched('branch', false)
     }
-    formik.setFieldValue('targetBranch', isNew ? defaultTo(resource.gitDetails?.branch, '') : '')
+    formik.setFieldValue('targetBranch', isNew ? defaultTo(branch, '') : '')
     formik.setFieldTouched('targetBranch', false)
     formik.setFieldValue('createPr', false)
     formik.setFieldTouched('createPr', false)

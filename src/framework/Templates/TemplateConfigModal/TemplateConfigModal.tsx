@@ -246,7 +246,7 @@ const BasicTemplateDetails = (
       const updateTemplate = omit(values, 'repo', 'branch', 'comment', 'connectorRef', 'storeType', 'filePath')
       promise(updateTemplate, {
         isEdit: intent === Intent.EDIT,
-        ...(!isEmpty(values.repo) && {
+        ...(isGitSyncEnabled && {
           updatedGitDetails: { ...gitDetails, repoIdentifier: values.repo, branch: values.branch }
         }),
         ...(supportingTemplatesGitx ? { storeMetadata: storeMetadataValues } : {}),
@@ -304,7 +304,22 @@ const BasicTemplateDetails = (
   }
 
   const onInlineRemoteChange = (item: CardInterface): void => {
-    formikRef.current?.setFieldValue('storeType', item.type)
+    formikRef.current?.setValues(
+      produce(formikRef.current?.values, draft => {
+        draft.storeType = item.type as GitStoreType
+        if (item.type === GitStoreType.INLINE) {
+          unset(draft, 'connectorRef')
+          unset(draft, 'repo')
+          unset(draft, 'branch')
+          unset(draft, 'filePath')
+        } else {
+          draft.connectorRef = formInitialValues.connectorRef
+          draft.repo = formInitialValues.repo
+          draft.branch = formInitialValues.branch
+          draft.filePath = formInitialValues.filePath
+        }
+      })
+    )
     if (item.type === GitStoreType.REMOTE) {
       setTimeout(() => {
         const elem = document.getElementsByClassName(css.gitFormWrapper)[0]

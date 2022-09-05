@@ -54,9 +54,11 @@ export function TemplateCard(props: TemplateCardProps): JSX.Element {
   const repoIdentifier =
     (template as TemplateSummaryResponse)?.gitDetails?.repoIdentifier ||
     (template as NGTemplateInfoConfigWithGitDetails)?.repo
-  const branch =
-    (template as TemplateSummaryResponse)?.gitDetails?.branch ||
-    (template as NGTemplateInfoConfigWithGitDetails)?.branch
+
+  const branch = isTemplateRemote
+    ? ''
+    : (template as TemplateSummaryResponse)?.gitDetails?.branch ||
+      (template as NGTemplateInfoConfigWithGitDetails)?.branch
 
   const templateIcon = getIconForTemplate(getString, template)
 
