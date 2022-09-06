@@ -82,7 +82,7 @@ connectivityMode:
   connectToProvider: 'Connect to the provider'
   selectText: 'Select how you would like to connect to the provider'
 title:
-  customSecretManager: 'Custom Secret Manager'
+  customSecretManager: 'Custom Secrets Manager'
   k8sCluster: 'Kubernetes Cluster'
   gcpConnector: 'Google Cloud Provider'
   pdcConnector: 'Physical Data Center'
@@ -916,7 +916,7 @@ gitProviderURLs:
   bitbucket: 'https://bitbucket.org'
   azureRepos: 'https://dev.azure.com'
 customSM:
-  details: Custom Secret Manager Details
+  details: Custom Secrets Manager Details
   selectTemplate: Select Template
   executeOnDelegate: Execute on Delegate
   templateRef: Template Reference

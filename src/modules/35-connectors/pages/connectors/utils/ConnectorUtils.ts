@@ -206,7 +206,7 @@ export const buildCustomSMPayload = (formData: FormData) => {
       template: {
         templateRef: formData.template.templateRef,
         versionLabel: formData.template.versionLabel,
-        templateInputs: formData.templateInputs
+        templateInputs: { environmentVariables: formData.templateInputs?.environmentVariables }
       }
     }
   }
@@ -2099,8 +2099,6 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'HashiCorp Vault'
     case Connectors.GCP_KMS:
       return 'GCP KMS'
-    case Connectors.SECRET_MANAGER:
-      return 'Custom Secret Manager'
     case Connectors.AZUREVAULT:
       return 'Azure Vault'
     case Connectors.HttpHelmRepo:
@@ -2130,7 +2128,7 @@ export const getConnectorDisplayName = (type: string): string => {
     case Connectors.ERROR_TRACKING:
       return 'Error Tracking'
     case Connectors.CUSTOM_SECRET_MANAGER:
-      return 'Custom Secret Manager'
+      return 'Custom Secrets Manager'
     default:
       return ''
   }
