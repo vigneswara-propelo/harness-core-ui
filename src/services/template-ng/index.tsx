@@ -1412,8 +1412,6 @@ export interface ResourceDTO {
     | 'STO_TARGET'
     | 'STO_EXEMPTION'
     | 'CHAOS_GITOPS'
-    | 'STO_TARGET'
-    | 'STO_EXEMPTION'
     | 'SERVICE_LEVEL_OBJECTIVE'
     | 'PERSPECTIVE'
     | 'PERSPECTIVE_BUDGET'
@@ -2525,6 +2523,9 @@ export interface RefreshAndUpdateTemplateInputsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type RefreshAndUpdateTemplateInputsProps = Omit<
@@ -2585,6 +2586,9 @@ export interface RefreshAllQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type RefreshAllProps = Omit<
@@ -2643,6 +2647,9 @@ export interface GetRefreshedYamlQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetRefreshedYamlProps = Omit<
@@ -2709,6 +2716,9 @@ export interface GetYamlDiffQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetYamlDiffProps = Omit<
@@ -2766,6 +2776,9 @@ export interface ValidateTemplateInputsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type ValidateTemplateInputsProps = Omit<
@@ -2831,7 +2844,6 @@ export interface CreateTemplateQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   repoName?: string
-  parentEntityScope?: 'account' | 'org' | 'project' | 'unknown'
   setDefaultTemplate?: boolean
   comments?: string
 }
@@ -2918,6 +2930,9 @@ export interface GetYamlWithTemplateRefsResolvedQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetYamlWithTemplateRefsResolvedProps = Omit<
@@ -3053,6 +3068,9 @@ export interface GetTemplateListQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -3356,6 +3374,9 @@ export interface GetTemplateInputSetYamlQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export interface GetTemplateInputSetYamlPathParams {
@@ -3425,6 +3446,9 @@ export interface GetTemplateReferencesQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetTemplateReferencesProps = Omit<
@@ -3625,6 +3649,9 @@ export interface UpdateStableTemplateQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   comments?: string
 }
 
@@ -3717,6 +3744,9 @@ export interface UpdateTemplateSettingsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -3810,6 +3840,9 @@ export interface GetYamlWithTemplateRefsResolvedV2QueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetYamlWithTemplateRefsResolvedV2Props = Omit<
@@ -4132,6 +4165,9 @@ export interface GetTemplateQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export interface GetTemplatePathParams {

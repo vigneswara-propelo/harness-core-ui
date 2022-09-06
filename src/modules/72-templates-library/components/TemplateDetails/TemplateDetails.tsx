@@ -113,13 +113,19 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const [selectedTemplate, setSelectedTemplate] = React.useState<TemplateSummaryResponse | TemplateResponse>()
   const [selectedParentTab, setSelectedParentTab] = React.useState<ParentTemplateTabs>(ParentTemplateTabs.BASIC)
   const [selectedTab, setSelectedTab] = React.useState<TemplateTabs>(TemplateTabs.INPUTS)
-  const { accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>()
 
   const stableVersion = React.useMemo(() => {
     return (templates as TemplateSummaryResponse[])?.find(item => item.stableTemplate && !isEmpty(item.versionLabel))
       ?.versionLabel
   }, [templates])
+
+  const parentEntityIds = {
+    parentEntityAccountIdentifier: accountId,
+    parentEntityOrgIdentifier: orgIdentifier,
+    parentEntityProjectIdentifier: projectIdentifier
+  }
 
   const {
     data: templateYamlData,
@@ -135,7 +141,8 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       versionLabel: selectedTemplate?.versionLabel,
       parentEntityConnectorRef: storeMetadata?.connectorRef,
       parentEntityRepoName: storeMetadata?.repoName,
-      branch: storeMetadata?.branch
+      branch: storeMetadata?.branch,
+      ...(!isEmpty(storeMetadata?.connectorRef) ? parentEntityIds : {})
     },
     lazy: true
   })
