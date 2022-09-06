@@ -209,11 +209,14 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     ).stage?.stage?.spec as DeploymentStageConfig
 
     if (!selectedStageSpec) {
-      selectedStageSpec = props.formik.values.stages?.find(
+      const selectedStage = props.formik.values.stages?.find(
         (currStage: StageElementWrapper) => currStage.stage?.identifier === props.stageIdentifier
-      ).stage.spec as DeploymentStageConfig
+      ).stage
+      selectedStageSpec = defaultTo(
+        get(selectedStage, 'spec'),
+        get(selectedStage, 'template.templateInputs.spec')
+      ) as DeploymentStageConfig
     }
-
     return isNewServiceEnvEntity(path as string)
       ? (get(selectedStageSpec, 'service.serviceInputs.serviceDefinition.type') as ServiceDeploymentType)
       : (get(selectedStageSpec, 'serviceConfig.serviceDefinition.type') as ServiceDeploymentType)
