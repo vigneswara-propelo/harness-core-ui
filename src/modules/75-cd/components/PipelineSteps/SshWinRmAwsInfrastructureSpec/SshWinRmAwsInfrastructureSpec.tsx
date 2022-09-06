@@ -21,7 +21,7 @@ import type { AllowedTypes } from '@harness/uicore'
 import { parse } from 'yaml'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { noop, isEmpty, get, debounce, set, defaultTo } from 'lodash-es'
+import { noop, isEmpty, get, debounce, set } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { loggerFor } from 'framework/logging/logging'
@@ -40,7 +40,6 @@ import { Connectors } from '@connectors/constants'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import MultiTypeSecretInput, {
   getMultiTypeSecretInputType
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
@@ -56,8 +55,8 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { getConnectorSchema, InfraDeploymentType } from '../PipelineStepsUtil'
-import { SshWimRmAwsInfrastructureSpecInputForm } from './SshWimRmAwsInfrastructureSpecInputForm'
+import { InfraDeploymentType } from '../PipelineStepsUtil'
+import { SshWimRmAwsInfrastructureSpecInputForm, validateAndParseTags } from './SshWimRmAwsInfrastructureSpecInputForm'
 import { getValue } from '../SshWinRmAzureInfrastructureSpec/SshWinRmAzureInfrastructureInterface'
 import css from './SshWinRmAwsInfrastructureSpec.module.scss'
 
@@ -69,10 +68,9 @@ export type SshWinRmAwsInfrastructureTemplate = { [key in keyof SshWinRmAwsInfra
 
 function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
-    sshKey: Yup.string().required(getString('fieldRequired', { field: getString('cd.credentialsRef') })),
-    connectorRef: getConnectorSchema(getString),
-    region: Yup.string().required()
-    // tags: Yup.string().required() // commenting for now
+    credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('cd.credentialsRef') })),
+    connectorRef: Yup.string().required(getString('validation.password')),
+    region: Yup.string().required(getString('validation.regionRequired'))
   })
 }
 interface SshWinRmAwsInfrastructureSpecEditableProps {
@@ -87,10 +85,6 @@ interface SshWinRmAwsInfrastructureSpecEditableProps {
   allowableTypes: AllowedTypes
 }
 
-interface SshWinRmAwsInfrastructureUI extends SshWinRmAwsInfrastructure {
-  sshKey: SecretReferenceInterface
-}
-
 const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureSpecEditableProps> = ({
   initialValues,
   onUpdate,
@@ -101,7 +95,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     orgIdentifier: string
     accountId: string
   }>()
-  const formikRef = React.useRef<FormikProps<unknown> | null>(null)
+  const formikRef = useRef<FormikProps<unknown> | null>(null)
   const delayedOnUpdate = useRef(debounce(onUpdate || noop, 300)).current
 
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
@@ -117,6 +111,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   const [regions, setRegions] = useState<SelectOption[]>([])
 
   const [tags, setTags] = useState<SelectOption[]>([])
+  // allow tags to be fixed inputs only if dependant fields are fixed also
   const [canTagsHaveFixedValue, setCanTagsHaveFixedValue] = useState(
     getMultiTypeFromValue(initialValues.region) === MultiTypeInputType.FIXED &&
       getMultiTypeFromValue(initialValues.connectorRef) === MultiTypeInputType.FIXED
@@ -126,10 +121,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     const initials = {
       ...initialValues
     }
-    if (initialValues.credentialsRef) {
-      set(initials, 'sshKey', get(initialValues, 'credentialsRef', ''))
-      set(initials, 'credentialsRef', get(initialValues, 'credentialsRef', ''))
-    }
     if (initialValues.region) {
       if (getMultiTypeFromValue(initialValues.region) === MultiTypeInputType.FIXED) {
         set(initials, 'region', { label: initialValues.region, value: initialValues.region })
@@ -138,21 +129,17 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       }
     }
     const initialTags = get(initialValues, 'awsInstanceFilter.tags', false)
-    if (canTagsHaveFixedValue && initialTags) {
-      if (getMultiTypeFromValue(initialTags) === MultiTypeInputType.FIXED) {
+    if (canTagsHaveFixedValue && initialTags && getMultiTypeFromValue(initialTags) === MultiTypeInputType.FIXED) {
+      if (!Array.isArray(initialTags)) {
         set(
           initials,
-          'tags',
+          'awsInstanceFilter.tags',
           Object.entries(initialTags).map(entry => ({
             value: entry[0],
             label: entry[1]
           }))
         )
-      } else {
-        set(initials, 'tags', initialTags)
       }
-    } else {
-      set(initials, 'tags', '<+input>')
     }
     return initials
   }, [
@@ -200,10 +187,9 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       values.region &&
       getMultiTypeFromValue(values.region) === MultiTypeInputType.FIXED &&
       values.connectorRef &&
-      getMultiTypeFromValue(getValue(values.connectorRef)) === MultiTypeInputType.FIXED
+      getMultiTypeFromValue(getValue(values.connectorRef)) === MultiTypeInputType.FIXED &&
+      getMultiTypeFromValue(get(values, 'awsInstanceFilter.tags', '')) === MultiTypeInputType.FIXED
     ) {
-      if (getMultiTypeFromValue(values.tags) === MultiTypeInputType.FIXED)
-        formikRef.current?.setFieldValue('tags', [], false)
       refetchTags({
         queryParams: {
           accountIdentifier: accountId,
@@ -216,42 +202,29 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     }
   }
 
-  useEffect(() => {
-    refetchTagsValues(initialValues)
-  }, [])
-
   return (
     <Layout.Vertical spacing="medium">
       <>
-        <Formik<SshWinRmAwsInfrastructureUI>
+        <Formik<SshWinRmAwsInfrastructure>
           formName="sshWinRmAWSInfra"
-          initialValues={parsedInitialValues as SshWinRmAwsInfrastructureUI}
-          validationSchema={getValidationSchema(getString) as Partial<SshWinRmAwsInfrastructureUI>}
+          initialValues={parsedInitialValues as SshWinRmAwsInfrastructure}
+          validationSchema={getValidationSchema(getString) as Partial<SshWinRmAwsInfrastructure>}
           validate={value => {
             const data: Partial<SshWinRmAwsInfrastructure> = {
               connectorRef:
                 typeof value.connectorRef === 'string' ? value.connectorRef : get(value, 'connectorRef.value', ''),
               credentialsRef:
-                typeof get(value, 'sshKey', '') === 'string'
-                  ? get(value, 'sshKey', defaultTo(value.credentialsRef, ''))
-                  : get(value, 'sshKey.referenceString', defaultTo(value.credentialsRef, '')),
-              region: typeof value.region === 'string' ? value.region : get(value, 'region.value', ''),
-              tags: value.tags
+                typeof get(value, 'credentialsRef', '') === 'string'
+                  ? get(value, 'credentialsRef', '')
+                  : get(value, 'credentialsRef.referenceString', ''),
+              region: typeof value.region === 'string' ? value.region : get(value, 'region.value', '')
             }
-            if (value.tags && getMultiTypeFromValue(value.tags) === MultiTypeInputType.FIXED) {
-              const awsTags = (value.tags || value.awsInstanceFilter.tags).reduce(
-                (prevValue: object, tag: { label: string; value: string }) => {
-                  return {
-                    ...prevValue,
-                    [tag.value]: tag.label
-                  }
-                },
-                {}
-              )
-              set(data, 'awsInstanceFilter.tags', awsTags)
-            } else if (getMultiTypeFromValue(value.tags) === MultiTypeInputType.RUNTIME) {
-              set(data, 'awsInstanceFilter.tags', value.tags)
+            const selectedTags = get(value, 'awsInstanceFilter.tags', [])
+            let parsedTags = value.awsInstanceFilter.tags
+            if (getMultiTypeFromValue(selectedTags) === MultiTypeInputType.FIXED) {
+              parsedTags = validateAndParseTags(selectedTags)
             }
+            set(data, 'awsInstanceFilter.tags', parsedTags)
 
             delayedOnUpdate(data as SshWinRmAwsInfrastructure)
           }}
@@ -265,7 +238,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                 <Layout.Vertical className={css.formRow} spacing="medium" margin={{ bottom: 'large' }}>
                   <div className={css.inputWidth}>
                     <MultiTypeSecretInput
-                      name="sshKey"
+                      name="credentialsRef"
                       type={getMultiTypeSecretInputType(initialValues.serviceType)}
                       label={getString('cd.steps.common.specifyCredentials')}
                       onSuccess={secret => {
@@ -299,7 +272,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                                 : get(item, 'record.identifier', '')
                             /* istanbul ignore next */
                             formik.setFieldValue('connectorRef', connectorRef)
-                            refetchTagsValues(formik.values)
                           }
                           setCanTagsHaveFixedValue(
                             getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.FIXED &&
@@ -309,45 +281,43 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       }
                     />
                   </Layout.Vertical>
-                </Layout.Vertical>
-                <Layout.Vertical>
-                  <FormInput.MultiTypeInput
-                    name="region"
-                    className={`regionId-select ${css.inputWidth}`}
-                    selectItems={regions}
-                    placeholder={isRegionsLoading ? getString('loading') : getString('pipeline.regionPlaceholder')}
-                    label={getString('regionLabel')}
-                    multiTypeInputProps={{
-                      allowableTypes,
-                      expressions,
-                      onChange: /* istanbul ignore next */ option => {
-                        const { value } = option as SelectOption
-                        if (value) {
-                          formik.setFieldValue('region', option)
-                          refetchTagsValues(formik.values)
+                  <Layout.Vertical>
+                    <FormInput.MultiTypeInput
+                      name="region"
+                      className={`${css.inputWidth}`}
+                      selectItems={regions}
+                      placeholder={isRegionsLoading ? getString('loading') : getString('pipeline.regionPlaceholder')}
+                      label={getString('regionLabel')}
+                      multiTypeInputProps={{
+                        allowableTypes,
+                        expressions,
+                        className: `regionId-select ${css.regionInput}`,
+                        onChange: /* istanbul ignore next */ option => {
+                          const { value } = option as SelectOption
+                          if (value) {
+                            formik.setFieldValue('region', option)
+                          }
+                          setCanTagsHaveFixedValue(
+                            getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED &&
+                              getMultiTypeFromValue(getValue(formik.values.connectorRef)) === MultiTypeInputType.FIXED
+                          )
+                        },
+                        selectProps: {
+                          items: regions,
+                          noResults: (
+                            <Text padding={'small'}>
+                              {isRegionsLoading
+                                ? getString('loading')
+                                : get(regionsError, errorMessage, null) || getString('pipeline.ACR.subscriptionError')}
+                            </Text>
+                          )
                         }
-                        setCanTagsHaveFixedValue(
-                          getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED &&
-                            getMultiTypeFromValue(getValue(formik.values.connectorRef)) === MultiTypeInputType.FIXED
-                        )
-                      },
-                      selectProps: {
-                        items: regions,
-                        noResults: (
-                          <Text padding={'small'}>
-                            {isRegionsLoading
-                              ? getString('loading')
-                              : get(regionsError, errorMessage, null) || getString('pipeline.ACR.subscriptionError')}
-                          </Text>
-                        )
-                      }
-                    }}
-                  />
-                </Layout.Vertical>
-                <>
+                      }}
+                    />
+                  </Layout.Vertical>
                   <Layout.Horizontal>
                     <FormInput.MultiSelectTypeInput
-                      name="tags"
+                      name="awsInstanceFilter.tags"
                       label={getString('tagLabel')}
                       selectItems={tags}
                       className={`tags-select ${css.inputWidth}`}
@@ -359,27 +329,17 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                             getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.FIXED &&
                             getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.FIXED
                           ) {
-                            const queryParams = {
-                              accountIdentifier: accountId,
-                              projectIdentifier,
-                              orgIdentifier,
-                              region: getValue(formik.values.region),
-                              awsConnectorRef: getValue(formik.values.connectorRef)
-                            }
-                            refetchTags({ queryParams })
+                            refetchTagsValues(formik.values)
                           }
                         },
                         allowableTypes: canTagsHaveFixedValue
                           ? [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
                           : [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
-                        expressions,
-                        onChange: /* istanbul ignore next */ selectedOptions => {
-                          formik.setFieldValue('tags', selectedOptions)
-                        }
+                        expressions
                       }}
                     />
                   </Layout.Horizontal>
-                </>
+                </Layout.Vertical>
               </FormikForm>
             )
           }}
@@ -410,7 +370,7 @@ interface SshWinRmAwsInfrastructureStep extends SshWinRmAwsInfrastructure {
 }
 
 export const ConnectorRefRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
-export const SshKeyRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.sshKeyRef$/
+export const CredentialsRefRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.credentialsRef$/
 export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfrastructureStep> {
   /* istanbul ignore next */
   protected type = StepType.SshWinRmAws
@@ -437,7 +397,7 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
   constructor() {
     super()
     this.invocationMap.set(ConnectorRefRegex, this.getConnectorsListForYaml.bind(this))
-    this.invocationMap.set(SshKeyRegex, this.getSshKeyListForYaml.bind(this))
+    this.invocationMap.set(CredentialsRefRegex, this.getCredentialsRefListForYaml.bind(this))
 
     this._hasStepVariables = true
   }
@@ -485,7 +445,7 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
     })
   }
 
-  protected getSshKeyListForYaml(
+  protected getCredentialsRefListForYaml(
     path: string,
     yaml: string,
     params: Record<string, unknown>
@@ -500,7 +460,7 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
       accountId: string
     }
     if (pipelineObj) {
-      const obj = get(pipelineObj, path.replace('.spec.sshKey', ''))
+      const obj = get(pipelineObj, path.replace('.spec.credentialsRef', ''))
       if (obj.type === InfraDeploymentType.SshWinRmAws) {
         /* istanbul ignore next */
         return listSecretsV2Promise({
@@ -572,7 +532,6 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
           readonly={get(inputSetData, 'readonly', undefined)}
           template={get(inputSetData, 'template', undefined) as SshWinRmAwsInfrastructureTemplate}
           allValues={get(inputSetData, 'allValues', undefined)}
-          path={get(inputSetData, 'path', '')}
           allowableTypes={allowableTypes}
         />
       )

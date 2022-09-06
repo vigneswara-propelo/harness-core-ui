@@ -12,7 +12,7 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import * as CDNG from 'services/cd-ng'
-import { SshWinRmAwsInfrastructureSpec, ConnectorRefRegex, SshKeyRegex } from '../SshWinRmAwsInfrastructureSpec'
+import { SshWinRmAwsInfrastructureSpec, ConnectorRefRegex, CredentialsRefRegex } from '../SshWinRmAwsInfrastructureSpec'
 import { ConnectorsResponse } from './mock/ConnectorsResponse.mock'
 import { ConnectorResponse } from './mock/ConnectorResponse.mock'
 import { mockListSecrets, mockSecret } from './mock/Secrets.mock'
@@ -136,7 +136,7 @@ describe('Test SshWinRmAwsEdit form', () => {
       />
     )
 
-    const tagsSelect = queryByAttribute('name', container, 'tags')
+    const tagsSelect = queryByAttribute('name', container, 'awsInstanceFilter.tags')
     tagsSelect!.focus()
     await waitFor(() => expect(tagsResponse.refetch).toBeCalled())
   })
@@ -179,7 +179,7 @@ describe('invocation map test', () => {
     const invocationMap = factory.getStep(StepType.SshWinRmAws)?.getInvocationMap?.()
     invocationMap?.get(ConnectorRefRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
-    invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
+    invocationMap?.get(CredentialsRefRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.listSecretsV2Promise).not.toBeCalled()
   })
 
@@ -188,7 +188,7 @@ describe('invocation map test', () => {
     const invocationMap = factory.getStep(StepType.SshWinRmAws)?.getInvocationMap?.()
     invocationMap?.get(ConnectorRefRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
-    invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
+    invocationMap?.get(CredentialsRefRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.listSecretsV2Promise).not.toBeCalled()
   })
 
@@ -203,7 +203,7 @@ describe('invocation map test', () => {
     const invocationMap = factory.getStep(StepType.SshWinRmAws)?.getInvocationMap?.()
     invocationMap?.get(ConnectorRefRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getConnectorListV2Promise).toBeCalled()
-    invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
+    invocationMap?.get(CredentialsRefRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.listSecretsV2Promise).toBeCalled()
   })
 })

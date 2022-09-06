@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useRef } from 'react'
 import {
   Layout,
   FormInput,
@@ -13,10 +13,11 @@ import {
   SelectOption,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  AllowedTypes
+  AllowedTypes,
+  Formik
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
-import { get, defaultTo } from 'lodash-es'
+import { get, set, defaultTo, noop, debounce } from 'lodash-es'
 import cx from 'classnames'
 import { SshWinRmAwsInfrastructure, useRegionsForAws, useTagsV2 } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -25,7 +26,9 @@ import { Connectors } from '@connectors/constants'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import MultiTypeSecretInput, {
+  getMultiTypeSecretInputType
+} from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { SshWinRmAwsInfrastructureTemplate } from './SshWinRmAwsInfrastructureSpec'
@@ -41,16 +44,30 @@ interface AwsInfrastructureSpecEditableProps {
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: SshWinRmAwsInfrastructure
   allowableTypes: AllowedTypes
-  path: string
 }
 
 const errorMessage = 'data.message'
 
+const preventEnter = (e: React.KeyboardEvent) => {
+  if (e.key === 'Enter') {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+}
+
+export const validateAndParseTags = (tagsForValidation: SelectOption[]) => {
+  return tagsForValidation.reduce((prevValue: object, tag: SelectOption) => {
+    return {
+      ...prevValue,
+      [tag.value]: tag.label
+    }
+  }, {})
+}
+
 export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureSpecEditableProps> = ({
   initialValues,
   template,
-  path,
-  // onUpdate,
+  onUpdate,
   allowableTypes,
   allValues,
   readonly
@@ -65,19 +82,9 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
   const [tags, setTags] = useState<SelectOption[]>([])
   const { expressions } = useVariablesExpression()
 
-  // const [renderCount, setRenderCount] = useState<number>(0)
+  const delayedOnUpdate = useRef(debounce(onUpdate || noop, 300)).current
 
   const { getString } = useStrings()
-
-  // const connectorRef = useMemo(
-  //   () => defaultTo(get(initialValues, 'connectorRef', ''), get(allValues, 'connectorRef', '')),
-  //   [initialValues.connectorRef, allValues?.connectorRef]
-  // )
-
-  // const credentialsRef = useMemo(
-  //   () => defaultTo(get(initialValues, 'credentialsRef', ''), get(allValues, 'credentialsRef', '')),
-  //   [initialValues.credentialsRef, allValues?.credentialsRef]
-  // )
 
   const environmentRef = useMemo(
     () => defaultTo(initialValues.environmentRef, allValues?.environmentRef),
@@ -89,22 +96,7 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
     [initialValues.infrastructureRef, allValues?.infrastructureRef]
   )
 
-  // React.useEffect(() => {
-  //   if (renderCount) {
-  //     // set(initialValues, 'region', '')
-  //     set(initialValues, 'tags', [])
-  //     onUpdate?.(initialValues)
-  //   }
-  // }, [connectorRef, credentialsRef])
-
-  const {
-    data: regionsData,
-    loading: loadingRegions,
-    refetch: refetchRegions,
-    error: regionsError
-  } = useRegionsForAws({
-    lazy: true
-  })
+  const { data: regionsData, loading: loadingRegions, error: regionsError } = useRegionsForAws({})
 
   useEffect(() => {
     const regionOptions = Object.entries(get(regionsData, 'data', {})).map(regEntry => ({
@@ -123,8 +115,8 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      region: get(initialValues, 'region', ''),
-      awsConnectorRef: get(initialValues, 'connectorRef', ''),
+      region: get(initialValues, 'region', undefined),
+      awsConnectorRef: get(initialValues, 'connectorRef', undefined),
       envId: environmentRef,
       infraDefinitionId: infrastructureRef
     },
@@ -139,119 +131,153 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
     setTags(tagOptions)
   }, [tagsData])
 
-  // useEffect(() => {
-  //   const connRef = get(initialValues, 'connectorRef', '')
-  //   const reg = get(initialValues, 'region', '')
-  //   if (
-  //     reg &&
-  //     getMultiTypeFromValue(reg) === MultiTypeInputType.FIXED &&
-  //     connRef &&
-  //     getMultiTypeFromValue(connRef) === MultiTypeInputType.FIXED
-  //   ) {
-  //     /* istanbul ignore else */
-  //     refetchTags()
-  //   }
-  //   setRenderCount(renderCount + 1)
-  // }, [])
-
-  // console.log(template, get(template, 'tags', ''), get(template, 'awsInstanceFilter.tags', ''))
+  const parsedInitialValues = useMemo(() => {
+    const initials = { ...initialValues }
+    if (getMultiTypeFromValue(get(template, 'awsInstanceFilter.tags', '')) === MultiTypeInputType.RUNTIME) {
+      const initialTags = get(initialValues, 'awsInstanceFilter.tags', [])
+      set(
+        initials,
+        'awsInstanceFilter.tags',
+        Object.entries(initialTags).map(entry => ({
+          value: entry[0],
+          label: entry[1]
+        }))
+      )
+    }
+    return initials
+  }, [])
 
   return (
     <Layout.Vertical spacing="small">
-      {getMultiTypeFromValue(get(template, 'credentialsRef', '')) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <MultiTypeSecretInput
-            name={`${path}.credentialsRef`}
-            type="SSHKey"
-            label={getString('cd.steps.common.specifyCredentials')}
-            expressions={expressions}
-          />
-        </div>
-      )}
-      {getMultiTypeFromValue(get(template, 'connectorRef', '')) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeConnectorField
-            accountIdentifier={accountId}
-            projectIdentifier={projectIdentifier}
-            orgIdentifier={orgIdentifier}
-            name={`${path}.connectorRef`}
-            tooltipProps={{
-              dataTooltipId: 'awsInfraConnector'
-            }}
-            label={getString('connector')}
-            enableConfigureOptions={false}
-            placeholder={getString('connectors.selectConnector')}
-            disabled={readonly}
-            multiTypeProps={{ allowableTypes, expressions }}
-            type={Connectors.AWS}
-            setRefValue
-            gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
-          />
-        </div>
-      )}
-      {getMultiTypeFromValue(get(template, 'region', '')) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTypeInput
-            name={`${path}.region`}
-            tooltipProps={{
-              dataTooltipId: 'awsInfraRegion'
-            }}
-            disabled={readonly}
-            placeholder={
-              loadingRegions ? /* istanbul ignore next */ getString('loading') : getString('pipeline.regionPlaceholder')
-            }
-            useValue
-            selectItems={regions}
-            label={getString('regionLabel')}
-            multiTypeInputProps={{
-              onFocus: () => {
-                refetchRegions()
-              },
-              selectProps: {
-                items: regions,
-                allowCreatingNewItems: true,
-                addClearBtn: !(loadingRegions || readonly),
-                noResults: (
-                  <Text padding={'small'}>
-                    {loadingRegions
-                      ? getString('loading')
-                      : defaultTo(
-                          get(regionsError, errorMessage, get(regionsError, 'message', '')),
-                          getString('cd.steps.awsInfraStep.regionError')
-                        )}
-                  </Text>
-                )
-              },
-              expressions,
-              allowableTypes
-            }}
-          />
-        </div>
-      )}
-      {getMultiTypeFromValue(get(template, 'tags', '')) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiSelectTypeInput
-            name={`${path}.tags`}
-            tooltipProps={{
-              dataTooltipId: 'awsInfraTags'
-            }}
-            disabled={readonly}
-            placeholder={loadingTags ? /* istanbul ignore next */ getString('loading') : getString('tagsLabel')}
-            useValue
-            selectItems={tags}
-            label={getString('tagsLabel')}
-            multiSelectTypeInputProps={{
-              onFocus: () => {
-                if (get(initialValues, 'connectorRef', false) && get(initialValues, 'region', false)) {
+      <Formik<SshWinRmAwsInfrastructure>
+        formName="sshWinRmAWSInfra"
+        initialValues={parsedInitialValues as SshWinRmAwsInfrastructure}
+        validate={value => {
+          const data: Partial<SshWinRmAwsInfrastructure> = {}
+          if (value.connectorRef) {
+            set(
+              data,
+              'connectorRef',
+              typeof value.connectorRef === 'string' ? value.connectorRef : get(value, 'connectorRef.value', '')
+            )
+          }
+          if (value.credentialsRef) {
+            set(
+              data,
+              'credentialsRef',
+              typeof get(value, 'credentialsRef', '') === 'string'
+                ? get(value, 'credentialsRef', '')
+                : get(value, 'credentialsRef.referenceString', '')
+            )
+          }
+          if (value.region) {
+            set(data, 'region', typeof value.region === 'string' ? value.region : get(value, 'region.value', ''))
+          }
+          const selectedTags = get(value, 'awsInstanceFilter.tags', [])
+          if (getMultiTypeFromValue(selectedTags) === MultiTypeInputType.FIXED) {
+            const awsTags = validateAndParseTags(selectedTags)
+            set(data, 'awsInstanceFilter.tags', awsTags)
+          } else {
+            set(data, 'awsInstanceFilter.tags', value.awsInstanceFilter.tags)
+          }
+
+          delayedOnUpdate(data as SshWinRmAwsInfrastructure)
+        }}
+        onSubmit={noop}
+      >
+        {getMultiTypeFromValue(get(template, 'credentialsRef', '')) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md)}>
+            <MultiTypeSecretInput
+              name={'credentialsRef'}
+              type={getMultiTypeSecretInputType(initialValues.serviceType)}
+              label={getString('cd.steps.common.specifyCredentials')}
+              expressions={expressions}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(get(template, 'connectorRef', '')) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md)}>
+            <FormMultiTypeConnectorField
+              accountIdentifier={accountId}
+              projectIdentifier={projectIdentifier}
+              orgIdentifier={orgIdentifier}
+              name={'connectorRef'}
+              tooltipProps={{
+                dataTooltipId: 'awsInfraConnector'
+              }}
+              label={getString('connector')}
+              enableConfigureOptions={false}
+              placeholder={getString('connectors.selectConnector')}
+              disabled={readonly}
+              multiTypeProps={{ allowableTypes, expressions }}
+              type={Connectors.AWS}
+              setRefValue
+              gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(get(template, 'region', '')) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md)}>
+            <FormInput.MultiTypeInput
+              name={'region'}
+              tooltipProps={{
+                dataTooltipId: 'awsInfraRegion'
+              }}
+              disabled={readonly}
+              placeholder={
+                loadingRegions
+                  ? /* istanbul ignore next */ getString('loading')
+                  : getString('pipeline.regionPlaceholder')
+              }
+              useValue
+              selectItems={regions}
+              label={getString('regionLabel')}
+              multiTypeInputProps={{
+                selectProps: {
+                  items: regions,
+                  allowCreatingNewItems: true,
+                  addClearBtn: !(loadingRegions || readonly),
+                  noResults: (
+                    <Text padding={'small'}>
+                      {loadingRegions
+                        ? getString('loading')
+                        : defaultTo(
+                            get(regionsError, errorMessage, get(regionsError, 'message', '')),
+                            getString('cd.steps.awsInfraStep.regionError')
+                          )}
+                    </Text>
+                  )
+                },
+                expressions,
+                allowableTypes
+              }}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(get(template, 'awsInstanceFilter.tags', '')) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md)}>
+            <FormInput.MultiSelectTypeInput
+              name={'awsInstanceFilter.tags'}
+              tooltipProps={{
+                dataTooltipId: 'awsInfraTags'
+              }}
+              disabled={readonly}
+              placeholder={loadingTags ? /* istanbul ignore next */ getString('loading') : getString('tagsLabel')}
+              selectItems={tags}
+              label={getString('tagsLabel')}
+              multiSelectTypeInputProps={{
+                placeholder: loadingTags ? /* istanbul ignore next */ getString('loading') : getString('tagsLabel'),
+                onKeyDown: preventEnter,
+                onFocus: () => {
                   refetchTags()
-                }
-              },
-              expressions,
-              allowableTypes
-            }}
-          />
-        </div>
-      )}
+                },
+                expressions,
+                allowableTypes
+              }}
+            />
+          </div>
+        )}
+      </Formik>
     </Layout.Vertical>
   )
 }
