@@ -84,6 +84,13 @@ export enum InvitationStatus {
   FAIL = 'FAIL'
 }
 
+export enum ScopeFilterItems {
+  ALL = 'ALL',
+  ACCOUNT_ONLY = 'ACCOUNT_ONLY',
+  ORG_ONLY = 'ORG_ONLY',
+  ORG_WITH_PROJECTS = 'ORG_WITH_PROJECTS',
+  PROJECT_ONLY = 'PROJECT_ONLY'
+}
 interface HandleInvitationResponse {
   responseType: InvitationStatus
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
@@ -490,5 +497,18 @@ export const getUserGroupQueryParams = (
       }
     default:
       return params
+  }
+}
+
+export const getDefaultSelectedFilter = (scope: Scope): ScopeFilterItems => {
+  switch (scope) {
+    case Scope.ACCOUNT:
+      return ScopeFilterItems.ACCOUNT_ONLY
+    case Scope.ORG:
+      return ScopeFilterItems.ORG_ONLY
+    case Scope.PROJECT:
+      return ScopeFilterItems.PROJECT_ONLY
+    default:
+      return ScopeFilterItems.ALL
   }
 }

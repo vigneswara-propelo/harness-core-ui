@@ -56,6 +56,8 @@ export interface StringsMap {
   'common.apply': string
   'common.approve': string
   'common.artifactTag': string
+  'common.assignedAt': string
+  'common.assignedThrough': string
   'common.at': string
   'common.auditTrail': string
   'common.aws': string
@@ -202,6 +204,7 @@ export interface StringsMap {
   'common.deleteServiceFailure': string
   'common.deleteServiceMessage': string
   'common.descriptionPlaceholder': string
+  'common.directly': string
   'common.disable': string
   'common.discard': string
   'common.download': string
@@ -1085,6 +1088,7 @@ export interface StringsMap {
   'rbac.roleAssignment.deleteSuccess': string
   'rbac.roleAssignment.userPlaceHolder': string
   'rbac.roleBinding': string
+  'rbac.roleBindings': string
   'rbac.roleCard.confirmDelete': string
   'rbac.roleCard.confirmDeleteTitle': string
   'rbac.roleCard.successMessage': string
@@ -1100,10 +1104,12 @@ export interface StringsMap {
   'rbac.scopeItems.noProjects': string
   'rbac.scopeItems.orgAll': string
   'rbac.scopeItems.orgOnly': string
+  'rbac.scopeItems.orgWithProjects': string
   'rbac.scopeItems.orgsAndProjects': string
   'rbac.scopeItems.projectOnly': string
   'rbac.scopeItems.specificOrgsAndProjects': string
   'rbac.scopeItems.specificProjects': string
+  'rbac.scopeLabel': string
   'rbac.serviceAccounts.confirmDelete': string
   'rbac.serviceAccounts.confirmDeleteTitle': string
   'rbac.serviceAccounts.email': string
@@ -1139,6 +1145,8 @@ export interface StringsMap {
   'rbac.unableToEditInheritedMembershipDetailed': string
   'rbac.unableToEditSCIMMembership': string
   'rbac.updateNotificationSuccess': string
+  'rbac.userDetails.groupMemberships': string
+  'rbac.userDetails.invalidScopeText': string
   'rbac.userDetails.linkToSSOProviderModal.btnDisabledTooltipText': string
   'rbac.userDetails.linkToSSOProviderModal.delinkLabel': string
   'rbac.userDetails.linkToSSOProviderModal.delinkText': string
@@ -1154,6 +1162,8 @@ export interface StringsMap {
   'rbac.userDetails.linkToSSOProviderModal.validation.groupNameRequired': string
   'rbac.userDetails.linkToSSOProviderModal.validation.ssoIdRequired': string
   'rbac.userDetails.noMembersMessage': string
+  'rbac.userDetails.noUserGroups': string
+  'rbac.userDetails.scopeAll': string
   'rbac.userDetails.userGroup.addSuccessMessage': string
   'rbac.userDetails.userGroup.addToGroup': string
   'rbac.userDetails.userGroup.addingToGroups': string

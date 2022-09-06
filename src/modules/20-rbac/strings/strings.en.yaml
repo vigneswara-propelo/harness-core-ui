@@ -57,6 +57,7 @@ permissionLabels:
   approveReject: Approve / Reject
 categoryLabels:
   sharedResources: Shared Resources
+roleBindings: Role Bindings
 roleBinding: Role Bindings (Role - Resource Group)
 noRoleBinding: No Role Bindings
 activeUsers: Active Users
@@ -138,12 +139,16 @@ usersPage:
   unlockSuccessMessage: User '{{name}}' unlocked successfully
   lockedOutLabel: (Locked out)
 userDetails:
+  invalidScopeText: 'You are in the scope: {{scope}}. Please select the organization for which you want to view results. or'
+  scopeAll: 'Switch to Scope: All'
+  groupMemberships: Group Memberships
   noMembersMessage: There are no members added to this User Group
+  noUserGroups: There are no user groups found for this user. Click on the button below to add the user to a group
   userGroup:
     deleteTitle: Remove from User Group
     deleteSuccessMessage: User is removed from the User Group '{{name}}'
     confirmDeleteText: Are you sure you want to remove this user from the User Group '{{name}}'
-    addToGroup: Add to Group
+    addToGroup: Add to a new User Group
     addingToGroups: Adding Groups
     addSuccessMessage: User is successfully added to the UserGroups '{{Groups}}'.
   linkToSSOProviderModal:
@@ -238,6 +243,7 @@ scopeItems:
   accountOnly: Account only
   orgOnly: Organization only
   projectOnly: Project only
+  orgWithProjects: Organization with Projects
   accountAll: All (including all Organizations and Projects)
   orgAll: All (including all Projects)
   orgsAndProjects: Organizations (and its Projects)
@@ -265,3 +271,4 @@ inheritedScope:
   projectOrg: '(Organization: {{orgName}})'
   accountScopeNoData: No Organization or Project is using this Group
   orgScopeNoData: No Project is using this Group
+scopeLabel: 'Scope:'

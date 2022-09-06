@@ -11496,6 +11496,13 @@ export interface ScopeName {
   projectName?: string
 }
 
+export interface ScopeSelector {
+  accountIdentifier?: string
+  filter: 'EXCLUDING_CHILD_SCOPES' | 'INCLUDING_CHILD_SCOPES'
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
 export interface ScopingRuleDetailsNg {
   description?: string
   environmentIds?: string[]
@@ -12857,6 +12864,10 @@ export interface UserGroupAggregateDTO {
   roleAssignmentsMetadataDTO?: RoleAssignmentMetadataDTO[]
   userGroupDTO: UserGroupDTO
   users?: UserMetadataDTO[]
+}
+
+export interface UserGroupAggregateFilter {
+  scopeFilter?: ScopeSelector[]
 }
 
 export interface UserGroupDTO {
@@ -14808,6 +14819,104 @@ export const getAccountResourcesCountPromise = (
     props,
     signal
   )
+
+export interface GetUserGroupAggregateListByUserQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  searchTerm?: string
+  userSize?: number
+}
+
+export interface GetUserGroupAggregateListByUserPathParams {
+  userId: string
+}
+
+export type GetUserGroupAggregateListByUserProps = Omit<
+  MutateProps<
+    ResponsePageUserGroupAggregateDTO,
+    Failure | Error,
+    GetUserGroupAggregateListByUserQueryParams,
+    UserGroupAggregateFilter,
+    GetUserGroupAggregateListByUserPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetUserGroupAggregateListByUserPathParams
+
+/**
+ * Get User Groups by User Id
+ */
+export const GetUserGroupAggregateListByUser = ({ userId, ...props }: GetUserGroupAggregateListByUserProps) => (
+  <Mutate<
+    ResponsePageUserGroupAggregateDTO,
+    Failure | Error,
+    GetUserGroupAggregateListByUserQueryParams,
+    UserGroupAggregateFilter,
+    GetUserGroupAggregateListByUserPathParams
+  >
+    verb="POST"
+    path={`/aggregate/acl/user/${userId}/usergroups`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetUserGroupAggregateListByUserProps = Omit<
+  UseMutateProps<
+    ResponsePageUserGroupAggregateDTO,
+    Failure | Error,
+    GetUserGroupAggregateListByUserQueryParams,
+    UserGroupAggregateFilter,
+    GetUserGroupAggregateListByUserPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetUserGroupAggregateListByUserPathParams
+
+/**
+ * Get User Groups by User Id
+ */
+export const useGetUserGroupAggregateListByUser = ({ userId, ...props }: UseGetUserGroupAggregateListByUserProps) =>
+  useMutate<
+    ResponsePageUserGroupAggregateDTO,
+    Failure | Error,
+    GetUserGroupAggregateListByUserQueryParams,
+    UserGroupAggregateFilter,
+    GetUserGroupAggregateListByUserPathParams
+  >(
+    'POST',
+    (paramsInPath: GetUserGroupAggregateListByUserPathParams) =>
+      `/aggregate/acl/user/${paramsInPath.userId}/usergroups`,
+    { base: getConfig('ng/api'), pathParams: { userId }, ...props }
+  )
+
+/**
+ * Get User Groups by User Id
+ */
+export const getUserGroupAggregateListByUserPromise = (
+  {
+    userId,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponsePageUserGroupAggregateDTO,
+    Failure | Error,
+    GetUserGroupAggregateListByUserQueryParams,
+    UserGroupAggregateFilter,
+    GetUserGroupAggregateListByUserPathParams
+  > & { userId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageUserGroupAggregateDTO,
+    Failure | Error,
+    GetUserGroupAggregateListByUserQueryParams,
+    UserGroupAggregateFilter,
+    GetUserGroupAggregateListByUserPathParams
+  >('POST', getConfig('ng/api'), `/aggregate/acl/user/${userId}/usergroups`, props, signal)
 
 export interface GetUserGroupAggregateListQueryParams {
   accountIdentifier: string

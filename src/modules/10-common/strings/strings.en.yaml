@@ -999,3 +999,6 @@ moduleTitles:
 ignore: Ignore
 serviceDetails: Service Details
 serviceName: Service Name
+assignedAt: Assigned at
+assignedThrough: Assigned Through
+directly: Directly

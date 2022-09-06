@@ -1093,6 +1093,16 @@ export interface Page {
   totalPages?: number
 }
 
+export interface PageRoleAssignmentAggregate {
+  content?: RoleAssignmentAggregate[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageRoleAssignmentResponse {
   content?: RoleAssignmentResponse[]
   empty?: boolean
@@ -1140,6 +1150,13 @@ export interface PermissionResponse {
 export interface Principal {
   identifier?: string
   scopeLevel?: 'organization' | 'project' | 'account'
+  type?: 'USER' | 'USER_GROUP' | 'SERVICE' | 'API_KEY' | 'SERVICE_ACCOUNT'
+}
+
+export interface PrincipalV2 {
+  identifier?: string
+  name?: string
+  scopeLevel?: string
   type?: 'USER' | 'USER_GROUP' | 'SERVICE' | 'API_KEY' | 'SERVICE_ACCOUNT'
 }
 
@@ -1540,6 +1557,13 @@ export interface ResponseMessage {
   message?: string
 }
 
+export interface ResponsePageRoleAssignmentAggregate {
+  correlationId?: string
+  data?: PageRoleAssignmentAggregate
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponsePageRoleAssignmentResponse {
   correlationId?: string
   data?: PageRoleAssignmentResponse
@@ -1609,6 +1633,18 @@ export interface RoleAssignment {
   roleIdentifier?: string
 }
 
+export interface RoleAssignmentAggregate {
+  createdAt?: number
+  disabled?: boolean
+  harnessManaged?: boolean
+  identifier?: string
+  lastModifiedAt?: number
+  principal?: PrincipalV2
+  resourceGroup?: ResourceGroup
+  role?: RoleResponse
+  scope?: ScopeResponse
+}
+
 export interface RoleAssignmentAggregateResponse {
   resourceGroups?: ResourceGroup[]
   roleAssignments?: RoleAssignment[]
@@ -1628,6 +1664,13 @@ export interface RoleAssignmentFilter {
   principalTypeFilter?: ('USER' | 'USER_GROUP' | 'SERVICE' | 'API_KEY' | 'SERVICE_ACCOUNT')[]
   resourceGroupFilter?: string[]
   roleFilter?: string[]
+}
+
+export interface RoleAssignmentFilterV2 {
+  principalFilter?: Principal
+  resourceGroupFilter?: string[]
+  roleFilter?: string[]
+  scopeFilters?: ScopeSelector[]
 }
 
 export interface RoleAssignmentResponse {
@@ -1661,6 +1704,22 @@ export interface RoleResponse {
 
 export interface Scope {
   accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface ScopeResponse {
+  accountIdentifier?: string
+  accountName?: string
+  orgIdentifier?: string
+  orgName?: string
+  projectIdentifier?: string
+  projectName?: string
+}
+
+export interface ScopeSelector {
+  accountIdentifier?: string
+  filter: 'EXCLUDING_CHILD_SCOPES' | 'INCLUDING_CHILD_SCOPES'
   orgIdentifier?: string
   projectIdentifier?: string
 }
@@ -2241,6 +2300,88 @@ export const postRoleAssignmentsPromise = (
     RoleAssignmentCreateRequest,
     void
   >('POST', getConfig('authz/api'), `/roleassignments/multi`, props, signal)
+
+export interface GetFilteredRoleAssignmentByScopeListQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetFilteredRoleAssignmentByScopeListProps = Omit<
+  MutateProps<
+    ResponsePageRoleAssignmentAggregate,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentByScopeListQueryParams,
+    RoleAssignmentFilterV2,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Filtered Role Assignments By Scopes
+ */
+export const GetFilteredRoleAssignmentByScopeList = (props: GetFilteredRoleAssignmentByScopeListProps) => (
+  <Mutate<
+    ResponsePageRoleAssignmentAggregate,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentByScopeListQueryParams,
+    RoleAssignmentFilterV2,
+    void
+  >
+    verb="POST"
+    path={`/roleassignments/v2/filter`}
+    base={getConfig('authz/api')}
+    {...props}
+  />
+)
+
+export type UseGetFilteredRoleAssignmentByScopeListProps = Omit<
+  UseMutateProps<
+    ResponsePageRoleAssignmentAggregate,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentByScopeListQueryParams,
+    RoleAssignmentFilterV2,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Filtered Role Assignments By Scopes
+ */
+export const useGetFilteredRoleAssignmentByScopeList = (props: UseGetFilteredRoleAssignmentByScopeListProps) =>
+  useMutate<
+    ResponsePageRoleAssignmentAggregate,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentByScopeListQueryParams,
+    RoleAssignmentFilterV2,
+    void
+  >('POST', `/roleassignments/v2/filter`, { base: getConfig('authz/api'), ...props })
+
+/**
+ * Get Filtered Role Assignments By Scopes
+ */
+export const getFilteredRoleAssignmentByScopeListPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePageRoleAssignmentAggregate,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentByScopeListQueryParams,
+    RoleAssignmentFilterV2,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageRoleAssignmentAggregate,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentByScopeListQueryParams,
+    RoleAssignmentFilterV2,
+    void
+  >('POST', getConfig('authz/api'), `/roleassignments/v2/filter`, props, signal)
 
 export interface ValidateRoleAssignmentQueryParams {
   accountIdentifier?: string
