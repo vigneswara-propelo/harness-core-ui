@@ -7,7 +7,7 @@
 
 import React, { Dispatch, SetStateAction, useContext, useRef, useState } from 'react'
 import * as Yup from 'yup'
-import { defaultTo, isEmpty, isEqual, omit, unset } from 'lodash-es'
+import { defaultTo, isEmpty, isEqual, omit, pick, unset } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import {
   Button,
@@ -246,7 +246,7 @@ const BasicTemplateDetails = (
       const updateTemplate = omit(values, 'repo', 'branch', 'comment', 'connectorRef', 'storeType', 'filePath')
       promise(updateTemplate, {
         isEdit: intent === Intent.EDIT,
-        ...(isGitSyncEnabled && {
+        ...(!isEmpty(values.repo) && {
           updatedGitDetails: { ...gitDetails, repoIdentifier: values.repo, branch: values.branch }
         }),
         ...(supportingTemplatesGitx ? { storeMetadata: storeMetadataValues } : {}),
@@ -283,14 +283,9 @@ const BasicTemplateDetails = (
             unset(draft, 'branch')
           }
         }
-
         if (!isTemplateGitxAccountEnabled) {
           if (value === Scope.PROJECT) {
-            draft.connectorRef = formInitialValues.connectorRef
-            draft.repo = formInitialValues.repo
-            draft.branch = formInitialValues.branch
-            draft.storeType = formInitialValues.storeType
-            draft.filePath = formInitialValues.filePath
+            Object.assign(draft, pick(formInitialValues, 'connectorRef', 'repo', 'branch', 'storeType', 'filePath'))
           } else {
             draft.storeType = GitStoreType.INLINE
             unset(draft, 'connectorRef')
@@ -313,10 +308,7 @@ const BasicTemplateDetails = (
           unset(draft, 'branch')
           unset(draft, 'filePath')
         } else {
-          draft.connectorRef = formInitialValues.connectorRef
-          draft.repo = formInitialValues.repo
-          draft.branch = formInitialValues.branch
-          draft.filePath = formInitialValues.filePath
+          Object.assign(draft, pick(formInitialValues, 'connectorRef', 'repo', 'branch', 'filePath'))
         }
       })
     )

@@ -30,6 +30,7 @@ import { useQueryParams } from '@common/hooks'
 import type { PromiseExtraArgs } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { Pipeline } from './types'
 
 export interface FetchTemplateUnboundProps {
@@ -70,6 +71,8 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
   const { templateIdentifier, templateType, projectIdentifier, orgIdentifier, accountId, module } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
@@ -127,8 +130,10 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
         comments,
         ...(updatedGitDetails ?? {}),
         ...(lastObject?.lastObjectId ? lastObject : {}),
-        ...(updatedGitDetails && updatedGitDetails.isNewBranch ? { baseBranch: branch } : {}),
-        ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {})
+        ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {}),
+        ...(updatedGitDetails && updatedGitDetails.isNewBranch
+          ? { baseBranch: defaultTo(branch, storeMetadata?.branch), branch: updatedGitDetails.branch }
+          : {})
       },
       requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
     })
@@ -255,7 +260,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     const { isEdit, comment, updatedGitDetails, storeMetadata } = extraInfo
 
     // if Git sync enabled then display modal
-    if ((updatedGitDetails && !isEmpty(updatedGitDetails)) || storeMetadata?.storeType === StoreType.REMOTE) {
+    if ((isGitSyncEnabled && !isEmpty(updatedGitDetails)) || storeMetadata?.storeType === StoreType.REMOTE) {
       openSaveToGitDialog({
         isEditing: defaultTo(isEdit, false),
         resource: {

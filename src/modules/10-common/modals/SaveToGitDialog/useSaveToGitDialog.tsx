@@ -281,7 +281,7 @@ export function useSaveToGitDialog<T = Record<string, string>>(
             orgIdentifier,
             projectIdentifier,
             connectorRef: resource?.storeMetadata?.connectorRef,
-            repoName: resource?.gitDetails?.repoName,
+            repoName: defaultTo(resource?.gitDetails?.repoName, resource?.storeMetadata?.repoName),
             sourceBranch: defaultTo(data?.branch, ''),
             targetBranch: defaultTo(data?.targetBranch, ''),
             sourceBranchName: defaultTo(data?.branch, ''),
