@@ -403,7 +403,7 @@ describe('Create SLO', () => {
     cy.contains('span', 'SLO with identifier SLO1 is already exist.').should('be.visible')
   })
 
-  it('should be able to edit the SLO in monitored service details page', () => {
+  it.skip('should be able to edit the SLO in monitored service details page', () => {
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse).as('getListMonitoredServices')
     cy.intercept('GET', getSLODetails, responseSLODashboardDetail)
 

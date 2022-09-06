@@ -6350,6 +6350,9 @@ export interface StringsMap {
   'chaos.homepage.chaosHomePageTitle': string
   'chaos.homepage.learnMore': string
   'chaos.homepage.slogan': string
+  'chaos.navLabels.chaosDelegates': string
+  'chaos.navLabels.chaosHubs': string
+  'chaos.navLabels.chaosScenarios': string
   'ci.advancedLabel': string
   'ci.annotations': string
   'ci.artifactoryConnectorLabel': string
