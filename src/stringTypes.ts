@@ -5187,7 +5187,9 @@ export interface StringsMap {
   'ce.co.ruleDetails.costGraphHeader': string
   'ce.co.ruleDetails.detailsTab.label.delayInSec': string
   'ce.co.ruleDetails.detailsTab.label.dependantRule': string
+  'ce.co.ruleDetails.detailsTab.label.ecsClusterName': string
   'ce.co.ruleDetails.detailsTab.label.ruleId': string
+  'ce.co.ruleDetails.detailsTab.label.serviceManaged': string
   'ce.co.ruleDetails.detailsTab.label.vmsManaged': string
   'ce.co.ruleDetails.detailsTab.managedVmTableHeaders.ip': string
   'ce.co.ruleDetails.detailsTab.managedVmTableHeaders.name': string
