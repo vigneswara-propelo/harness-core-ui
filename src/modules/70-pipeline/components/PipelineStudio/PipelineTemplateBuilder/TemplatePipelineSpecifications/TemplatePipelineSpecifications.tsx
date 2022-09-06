@@ -5,16 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, debounce, defaultTo, isEqual, merge, noop, set } from 'lodash-es'
+import { debounce, defaultTo, isEmpty, isEqual, noop, set, unset } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import React, { useRef } from 'react'
-import { Container, Formik, FormikForm, Heading, Layout, PageError } from '@wings-software/uicore'
+import { Container, Formik, FormikForm, Heading, Layout, PageError, Text } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
 import type { FormikProps, FormikErrors } from 'formik'
-import { useToaster } from '@common/exports'
-import { setTemplateInputs, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetTemplateInputSetYaml, useGetYamlWithTemplateRefsResolved } from 'services/template-ng'
+import {
+  getsMergedTemplateInputYamlPromise,
+  useGetTemplateInputSetYaml,
+  useGetYamlWithTemplateRefsResolved
+} from 'services/template-ng'
 import {
   getIdentifierFromValue,
   getScopeBasedProjectPathParams,
@@ -29,9 +32,12 @@ import { useStrings } from 'framework/strings'
 import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
 import { useMutateAsGet } from '@common/hooks'
-import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, stringify, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { Pipeline } from '@pipeline/utils/types'
 import css from './TemplatePipelineSpecifications.module.scss'
+
+const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any }): number =>
+  (JSON.stringify(templateInfo || {}).match(/<\+input>/g) || []).length
 
 export function TemplatePipelineSpecifications(): JSX.Element {
   const {
@@ -43,17 +49,15 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   const queryParams = useParams<ProjectPathProps>()
   const templateRef = getIdentifierFromValue(defaultTo(pipeline.template?.templateRef, ''))
   const scope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
-  const { showError } = useToaster()
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const formRefDom = React.useRef<HTMLElement | undefined>()
-  const [inputsTemplate, setInputsTemplate] = React.useState<PipelineInfoConfig>()
-  const [allValues, setAllValues] = React.useState<PipelineInfoConfig>()
-  const [initialValues, setInitialValues] = React.useState<PipelineInfoConfig>()
   const [formikErrors, setFormikErrors] = React.useState<FormikErrors<PipelineInfoConfig>>()
   const [showFormError, setShowFormError] = React.useState<boolean>()
   const dummyPipeline = useRef(pipeline)
   const viewTypeMetadata = { isTemplateBuilder: true }
+  const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
+
   const onChange = React.useCallback(
     debounce(async (values: PipelineInfoConfig): Promise<void> => {
       await updatePipeline({ ...pipeline, ...values })
@@ -79,6 +83,11 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     }
   })
 
+  const allValues = React.useMemo(
+    () => parse<Pipeline>(defaultTo(pipelineResponse?.data?.mergedPipelineYaml, ''))?.pipeline,
+    [pipelineResponse?.data?.mergedPipelineYaml]
+  )
+
   const {
     data: templateInputSetYaml,
     error: templateInputSetError,
@@ -95,35 +104,44 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     }
   })
 
+  const templateInputs: PipelineInfoConfig = React.useMemo(
+    () => parse(defaultTo(templateInputSetYaml?.data, '')),
+    [templateInputSetYaml?.data]
+  )
+
+  const templateInputsCount = React.useMemo(() => getTemplateRuntimeInputsCount(templateInputs), [templateInputs])
+
   React.useEffect(() => {
-    if (!templateInputSetLoading) {
+    if (!isEmpty(templateInputs)) {
+      setLoadingMergedTemplateInputs(true)
       try {
-        const templateInputs = parse<PipelineInfoConfig>(defaultTo(templateInputSetYaml?.data, ''))
-        setInputsTemplate(templateInputs)
+        getsMergedTemplateInputYamlPromise({
+          body: {
+            oldTemplateInputs: stringify(defaultTo(pipeline?.template?.templateInputs, '')),
+            newTemplateInputs: stringify(templateInputs)
+          },
+          queryParams: {
+            accountIdentifier: queryParams.accountId
+          }
+        }).then(response => {
+          if (response && response.status === 'SUCCESS') {
+            const mergedTemplateInputs = parse(defaultTo(response.data?.mergedTemplateInputs, ''))
+            set(pipeline, TEMPLATE_INPUT_PATH, mergedTemplateInputs)
+            updatePipeline(pipeline)
+          } else {
+            throw response
+          }
+        })
       } catch (error) {
-        showError(error.message, undefined, 'template.parse.inputSet.error')
-      }
-    }
-  }, [templateInputSetLoading, templateInputSetYaml?.data])
-
-  React.useEffect(() => {
-    if (pipelineResponse?.data?.mergedPipelineYaml) {
-      setAllValues(parse<Pipeline>(pipelineResponse.data.mergedPipelineYaml).pipeline)
-    }
-  }, [pipelineResponse?.data?.mergedPipelineYaml])
-
-  React.useEffect(() => {
-    if (inputsTemplate !== undefined) {
-      try {
-        const mergedTemplateInputs = merge({}, inputsTemplate, pipeline.template?.templateInputs)
-        setTemplateInputs(pipeline, mergedTemplateInputs)
+        set(pipeline, TEMPLATE_INPUT_PATH, templateInputs)
         updatePipeline(pipeline)
-        setInitialValues(cloneDeep(pipeline))
-      } catch (error) {
-        showError(error.message, undefined, 'template.parse.inputSet.error')
       }
+      setLoadingMergedTemplateInputs(false)
+    } else if (!templateInputSetLoading) {
+      unset(pipeline, TEMPLATE_INPUT_PATH)
+      updatePipeline(pipeline)
     }
-  }, [inputsTemplate])
+  }, [templateInputs])
 
   React.useEffect(() => {
     dummyPipeline.current = pipeline
@@ -141,12 +159,12 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     if (
       isEqual(values.template?.templateRef, pipeline.template?.templateRef) &&
       isEqual(values.template?.versionLabel, pipeline.template?.versionLabel) &&
-      inputsTemplate
+      templateInputs
     ) {
       onChange?.(values)
       const errorsResponse = validatePipeline({
         pipeline: values.template?.templateInputs as PipelineInfoConfig,
-        template: inputsTemplate,
+        template: templateInputs,
         originalPipeline: allValues,
         getString,
         viewType: StepViewType.DeploymentForm,
@@ -166,66 +184,61 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     refetchTemplateInputSet()
   }
 
+  const isLoading = pipelineLoading || templateInputSetLoading || loadingMergedTemplateInputs
+
+  const error = defaultTo(templateInputSetError, pipelineError)
+
   return (
     <Container className={css.contentSection} height={'100%'} background={Color.FORM_BG}>
-      {(pipelineLoading || templateInputSetLoading) && <PageSpinner />}
-      {!pipelineLoading && !templateInputSetLoading && (pipelineError || templateInputSetError) && (
-        <PageError
-          message={
-            defaultTo((pipelineError?.data as Error)?.message, pipelineError?.message) ||
-            defaultTo((templateInputSetError?.data as Error)?.message, templateInputSetError?.message)
-          }
-          onClick={() => refetch()}
-        />
+      {isLoading && <PageSpinner />}
+      {!isLoading && error && (
+        <PageError message={defaultTo((error?.data as Error)?.message, error?.message)} onClick={() => refetch()} />
       )}
-      {!pipelineLoading &&
-        !templateInputSetLoading &&
-        !pipelineError &&
-        !templateInputSetError &&
-        inputsTemplate &&
-        allValues &&
-        initialValues && (
-          <>
-            {showFormError && formikErrors && <ErrorsStrip formErrors={formikErrors} domRef={formRefDom} />}
-            <Formik<PipelineInfoConfig>
-              initialValues={initialValues}
-              formName="templateStageOverview"
-              onSubmit={noop}
-              validate={validateForm}
-            >
-              {(formik: FormikProps<PipelineInfoConfig>) => {
-                formikRef.current = formik as FormikProps<unknown> | null
-                return (
-                  <FormikForm>
-                    <Container
-                      className={css.inputsContainer}
-                      ref={ref => {
-                        formRefDom.current = ref as HTMLElement
-                      }}
-                    >
-                      <Layout.Vertical padding={{ bottom: 'large' }} spacing={'xlarge'}>
+      {!isLoading && !error && templateInputs && allValues && pipeline && (
+        <>
+          {showFormError && formikErrors && <ErrorsStrip formErrors={formikErrors} domRef={formRefDom} />}
+          <Formik<PipelineInfoConfig>
+            initialValues={pipeline}
+            formName="templateStageOverview"
+            onSubmit={noop}
+            validate={validateForm}
+          >
+            {(formik: FormikProps<PipelineInfoConfig>) => {
+              formikRef.current = formik as FormikProps<unknown> | null
+              return (
+                <FormikForm>
+                  <Container
+                    className={css.inputsContainer}
+                    ref={ref => {
+                      formRefDom.current = ref as HTMLElement
+                    }}
+                  >
+                    <Layout.Vertical padding={{ bottom: 'large' }} spacing={'xlarge'}>
+                      <Layout.Horizontal flex={{ distribution: 'space-between' }}>
                         <Heading level={5} color={Color.BLACK}>
-                          Template Inputs
+                          {getString('pipeline.templateInputs')}
                         </Heading>
-                        <Container>
-                          <PipelineInputSetFormInternal
-                            template={inputsTemplate}
-                            originalPipeline={allValues}
-                            path={TEMPLATE_INPUT_PATH}
-                            readonly={isReadonly}
-                            viewType={StepViewType.InputSet}
-                            allowableTypes={allowableTypes}
-                            viewTypeMetadata={viewTypeMetadata}
-                          />
-                        </Container>
-                      </Layout.Vertical>
-                    </Container>
-                  </FormikForm>
-                )
-              }}
-            </Formik>
-          </>
-        )}
+                        <Text font={{ size: 'normal' }}>{`Total Inputs: ${templateInputsCount}`}</Text>
+                      </Layout.Horizontal>
+                      <Container>
+                        <PipelineInputSetFormInternal
+                          template={templateInputs}
+                          originalPipeline={allValues}
+                          path={TEMPLATE_INPUT_PATH}
+                          readonly={isReadonly}
+                          viewType={StepViewType.InputSet}
+                          allowableTypes={allowableTypes}
+                          viewTypeMetadata={viewTypeMetadata}
+                        />
+                      </Container>
+                    </Layout.Vertical>
+                  </Container>
+                </FormikForm>
+              )
+            }}
+          </Formik>
+        </>
+      )}
     </Container>
   )
 }

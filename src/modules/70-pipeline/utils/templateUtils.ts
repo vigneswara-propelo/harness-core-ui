@@ -86,6 +86,7 @@ export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig
       if (template.versionLabel) {
         set(draft, 'template.versionLabel', template.versionLabel)
       }
+      set(draft, 'template.templateInputs', get(data, 'template.templateInputs'))
     }
   })
 }

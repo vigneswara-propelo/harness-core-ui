@@ -55,7 +55,13 @@ jest.mock('services/template-ng', () => ({
   })),
   useGetTemplate: jest
     .fn()
-    .mockImplementation(() => ({ data: stageTemplateVersion1, refetch: jest.fn(), error: null, loading: false }))
+    .mockImplementation(() => ({ data: stageTemplateVersion1, refetch: jest.fn(), error: null, loading: false })),
+  getsMergedTemplateInputYamlPromise: jest.fn().mockImplementation(() => ({
+    status: 'SUCCESS',
+    data: {
+      mergedTemplateInputs: stageMockTemplateVersion1InputYaml
+    }
+  }))
 }))
 
 jest.mock('services/cd-ng', () => ({
