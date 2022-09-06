@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react'
-import { useFormikContext } from 'formik'
+import React from 'react'
 import { FormInput, SelectOption } from '@harness/uicore'
-import type { AppDynamicsFomikFormInterface } from '@cv/pages/health-source/connectors/AppDynamics/AppDHealthSource.types'
 import ThresholdSelect from './ThresholdSelect'
 import { getGroupDropdownOptions, isGroupTransationTextField } from '../MetricThresholds.utils'
 import { MetricTypeValues } from '../MetricThresholds.constants'
@@ -16,12 +14,6 @@ export default function ThresholdGroup({
   replaceFn,
   groupedCreatedMetrics
 }: ThresholdGroupType): JSX.Element {
-  const { setFieldTouched } = useFormikContext<AppDynamicsFomikFormInterface>()
-
-  useEffect(() => {
-    setFieldTouched(name, true)
-  }, [name, setFieldTouched])
-
   return isGroupTransationTextField(metricType) ? (
     <FormInput.Text
       placeholder={placeholder}

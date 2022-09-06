@@ -299,6 +299,10 @@ export function checkDuplicate(
   })
 }
 
+const getTheValuesExistsAndItIsValid = (value?: number): boolean => {
+  return typeof value !== 'undefined' && value < 1
+}
+
 /**
  *  Common validation for thresholds
  *
@@ -320,18 +324,18 @@ export function validateCommonFieldsForMetricThreshold(
   if (Array.isArray(thresholdValues) && thresholdValues.length) {
     thresholdValues.forEach((value: MetricThresholdType, index: number) => {
       if (!value.metricType) {
-        errors[`${thresholdName}.${index}.metricType`] = getString('cv.metricThresholds.validations.metricType')
+        errors[`${thresholdName}.${index}.metricType`] = getString('cv.required')
       }
       if (!value.metricName) {
-        errors[`${thresholdName}.${index}.metricName`] = getString('cv.metricThresholds.validations.metricName')
+        errors[`${thresholdName}.${index}.metricName`] = getString('cv.required')
       }
 
       if (isValidateGroup && !value.groupName) {
-        errors[`${thresholdName}.${index}.groupName`] = getString('cv.metricThresholds.validations.groupTransaction')
+        errors[`${thresholdName}.${index}.groupName`] = getString('cv.required')
       }
 
       if (!value.criteria?.type) {
-        errors[`${thresholdName}.${index}.criteria.type`] = getString('cv.metricThresholds.validations.criteria')
+        errors[`${thresholdName}.${index}.criteria.type`] = getString('cv.required')
       }
 
       // For absolute type, greaterThan or lessThan any one of the field is mandatory.
@@ -341,6 +345,15 @@ export function validateCommonFieldsForMetricThreshold(
         !value.criteria?.spec?.lessThan
       ) {
         errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString('cv.required')
+        errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('cv.required')
+      }
+
+      // Greater than and less than should have value greater than 0
+      if (getTheValuesExistsAndItIsValid(value.criteria?.spec?.greaterThan)) {
+        errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString('cv.required')
+      }
+
+      if (getTheValuesExistsAndItIsValid(value.criteria?.spec?.lessThan)) {
         errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('cv.required')
       }
 

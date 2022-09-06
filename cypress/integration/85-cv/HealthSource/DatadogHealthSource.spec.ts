@@ -400,8 +400,7 @@ describe('Datadog metric thresholds', () => {
 
     // validations
     cy.findByRole('button', { name: /Submit/i }).click()
-    cy.findByText('Metric name is required').should('be.visible')
-    cy.findAllByText('Required').should('have.length', 2)
+    cy.findAllByText('Required').should('have.length', 3)
 
     cy.get("input[name='ignoreThresholds.0.metricName']").click()
 

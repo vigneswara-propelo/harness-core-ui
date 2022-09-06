@@ -144,17 +144,17 @@ describe('Test Util funcitons', () => {
         isMetricThresholdEnabled: true
       })
     ).toEqual({
+      completeMetricPath: 'cv.healthSource.connectors.AppDynamics.validation.fullPath',
       'failFastThresholds.0.criteria.spec.greaterThan': 'cv.required',
       'failFastThresholds.0.criteria.spec.lessThan': 'cv.required',
-      'failFastThresholds.0.groupName': 'cv.metricThresholds.validations.groupTransaction',
-      'failFastThresholds.0.metricName': 'cv.metricThresholds.validations.metricName',
-      'failFastThresholds.0.metricType': 'cv.metricThresholds.validations.metricType',
-      completeMetricPath: 'cv.healthSource.connectors.AppDynamics.validation.fullPath',
+      'failFastThresholds.0.groupName': 'cv.required',
+      'failFastThresholds.0.metricName': 'cv.required',
+      'failFastThresholds.0.metricType': 'cv.required',
       'ignoreThresholds.0.criteria.spec.greaterThan': 'cv.required',
       'ignoreThresholds.0.criteria.spec.lessThan': 'cv.required',
-      'ignoreThresholds.0.groupName': 'cv.metricThresholds.validations.groupTransaction',
-      'ignoreThresholds.0.metricName': 'cv.metricThresholds.validations.metricName',
-      'ignoreThresholds.0.metricType': 'cv.metricThresholds.validations.metricType'
+      'ignoreThresholds.0.groupName': 'cv.required',
+      'ignoreThresholds.0.metricName': 'cv.required',
+      'ignoreThresholds.0.metricType': 'cv.required'
     })
   })
 

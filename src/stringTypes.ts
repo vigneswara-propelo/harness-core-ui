@@ -6769,13 +6769,7 @@ export interface StringsMap {
   'cv.metricThresholds.deletePromptTitle': string
   'cv.metricThresholds.metricPacksDeletePromptContent': string
   'cv.metricThresholds.validations.countValue': string
-  'cv.metricThresholds.validations.criteria': string
   'cv.metricThresholds.validations.duplicateThreshold': string
-  'cv.metricThresholds.validations.greaterThanSmaller': string
-  'cv.metricThresholds.validations.groupTransaction': string
-  'cv.metricThresholds.validations.lessThanBigger': string
-  'cv.metricThresholds.validations.metricName': string
-  'cv.metricThresholds.validations.metricType': string
   'cv.metricThresholds.validations.percentageValidation': string
   'cv.metricVerificationModal.modalTitle': string
   'cv.metricVerificationModal.viewCalls': string

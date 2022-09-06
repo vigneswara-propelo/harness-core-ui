@@ -27,7 +27,7 @@ import css from './MetricThreshold.module.scss'
 export default function ThresholdCriteria(props: ThresholdCriteriaPropsType): JSX.Element {
   const { index, thresholdTypeName, criteriaType, criteriaPercentageType, replaceFn } = props
 
-  const { values: formValues, setFieldTouched, setFieldValue } = useFormikContext<AppDynamicsFomikFormInterface>()
+  const { values: formValues, setFieldValue } = useFormikContext<AppDynamicsFomikFormInterface>()
 
   const { getString } = useStrings()
 
@@ -46,9 +46,6 @@ export default function ThresholdCriteria(props: ThresholdCriteriaPropsType): JS
   )
 
   useEffect(() => {
-    setFieldTouched(`${thresholdTypeName}.${index}.criteria.spec.${FieldName.METRIC_THRESHOLD_GREATER_THAN}`, true)
-    setFieldTouched(`${thresholdTypeName}.${index}.criteria.spec.${FieldName.METRIC_THRESHOLD_LESS_THAN}`, true)
-
     // This is to set criteriaPercentageType during edit
     if (!isAbsoluteSelected && !criteriaPercentageType) {
       setFieldValue(
@@ -56,15 +53,7 @@ export default function ThresholdCriteria(props: ThresholdCriteriaPropsType): JS
         showGreaterThan ? PercentageType.GreaterThan : PercentageType.LessThan
       )
     }
-  }, [
-    index,
-    setFieldTouched,
-    thresholdTypeName,
-    isAbsoluteSelected,
-    criteriaPercentageType,
-    setFieldValue,
-    showGreaterThan
-  ])
+  }, [index, thresholdTypeName, isAbsoluteSelected, criteriaPercentageType, setFieldValue, showGreaterThan])
 
   const handleCriteriaUpdate = (selectedValue: MetricThresholdCriteria['type']): void => {
     if (selectedValue === MetricCriteriaValues.Absolute) {

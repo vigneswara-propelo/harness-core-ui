@@ -263,9 +263,7 @@ describe('Create empty monitored service', () => {
 
       // validations
       cy.findByRole('button', { name: /Submit/i }).click()
-      cy.findByText('Group/Transaction is required').should('be.visible')
-      cy.findByText('Metric name is required').should('be.visible')
-      cy.findAllByText('Required').should('have.length', 2)
+      cy.findAllByText('Required').should('have.length', 4)
 
       cy.get("input[name='ignoreThresholds.0.groupName']").type('*')
       cy.get("input[name='ignoreThresholds.0.metricName']").click()
