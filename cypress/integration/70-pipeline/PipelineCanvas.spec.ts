@@ -35,7 +35,7 @@ import {
   strategiesYamlSnippets,
   executionStrategies,
   pageHeaderClassName,
-  pipelineSaveCallWithGitxEnabled
+  pipelineSaveCallWithStoreType
 } from '../../support/70-pipeline/constants'
 import { connectorsListAPI } from '../../support/35-connectors/constants'
 import { getIdentifierFromName } from '../../utils/stringHelpers'
@@ -69,8 +69,8 @@ describe('GIT SYNC DISABLED', () => {
   })
 
   it('should display the error returned by pipeline save API', () => {
-    cy.intercept('POST', pipelineSaveCallWithGitxEnabled, { fixture: 'pipeline/api/pipelines.post' }).as(
-      'pipelineSaveCallWithGitxEnabled'
+    cy.intercept('POST', pipelineSaveCallWithStoreType, { fixture: 'pipeline/api/pipelines.post' }).as(
+      'pipelineSaveCallWithStoreType'
     )
     cy.intercept('GET', strategiesYamlSnippets, { fixture: 'ng/api/pipelines/kubernetesYamlSnippet' }).as(
       'kubernetesYamlSnippet'
@@ -116,7 +116,7 @@ describe('GIT SYNC DISABLED', () => {
     // try to save the pipleine, the mock data has error
     cy.contains('span', 'Save').click({ force: true })
 
-    cy.wait('@pipelineSaveCallWithGitxEnabled')
+    cy.wait('@pipelineSaveCallWithStoreType')
     cy.wait(500)
     cy.contains(
       'span',
@@ -125,11 +125,11 @@ describe('GIT SYNC DISABLED', () => {
   })
 
   it('should display the success message if pipeline save is success', () => {
-    cy.intercept('POST', pipelineSaveCallWithGitxEnabled, { fixture: 'pipeline/api/pipelines.postsuccess' }).as(
-      'pipelineSaveCallWithGitxEnabled'
+    cy.intercept('POST', pipelineSaveCallWithStoreType, { fixture: 'pipeline/api/pipelines.postsuccess' }).as(
+      'pipelineSaveCallWithStoreType'
     )
     cy.contains('span', 'Save').click({ force: true })
-    cy.wait('@pipelineSaveCallWithGitxEnabled')
+    cy.wait('@pipelineSaveCallWithStoreType')
     cy.wait(500)
     cy.contains('span', 'Pipeline published successfully').should('be.visible')
   })

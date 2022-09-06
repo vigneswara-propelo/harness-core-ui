@@ -8,7 +8,7 @@
 import {
   cdFailureStrategiesYaml,
   invalidYAMLErrorMsgOnEmptyStageSave,
-  pipelineSaveCallWithGitxEnabled
+  pipelineSaveCallWithStoreType
 } from '../../support/70-pipeline/constants'
 
 describe('RUN PIPELINE MODAL - deploy stage', () => {
@@ -65,7 +65,7 @@ describe('RUN PIPELINE MODAL - deploy stage', () => {
   })
 
   it('error validations on pipeline save from API', () => {
-    cy.intercept('POST', pipelineSaveCallWithGitxEnabled, { fixture: 'pipeline/api/pipelines.post.emptyPipeline' }).as(
+    cy.intercept('POST', pipelineSaveCallWithStoreType, { fixture: 'pipeline/api/pipelines.post.emptyPipeline' }).as(
       'pipelineSave'
     )
     cy.wait(1000)
@@ -74,7 +74,7 @@ describe('RUN PIPELINE MODAL - deploy stage', () => {
     cy.wait('@pipelineSave')
 
     cy.contains('span', 'Invalid request: Field for key [stages] does not exist').should('be.visible')
-    cy.intercept('POST', pipelineSaveCallWithGitxEnabled, { fixture: 'pipeline/api/pipelines.post.emptyStage' }).as(
+    cy.intercept('POST', pipelineSaveCallWithStoreType, { fixture: 'pipeline/api/pipelines.post.emptyStage' }).as(
       'pipelineSaveStage'
     )
     cy.createDeploymentStage()
