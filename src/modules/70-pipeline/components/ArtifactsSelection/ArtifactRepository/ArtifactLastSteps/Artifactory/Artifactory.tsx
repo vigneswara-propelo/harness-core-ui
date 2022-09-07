@@ -53,7 +53,7 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import ServerlessArtifactoryRepository from './ServerlessArtifactoryRepository'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -84,7 +84,8 @@ function Artifactory({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact,
-  selectedDeploymentType
+  selectedDeploymentType,
+  isMultiArtifactSource
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
@@ -294,6 +295,7 @@ function Artifactory({
         {formik => (
           <Form>
             <div className={css.connectorForm}>
+              {isMultiArtifactSource && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               {isAzureWebAppOrSshWinrmDeploymentTypeSelected && (
                 <div className={css.imagePathContainer}>

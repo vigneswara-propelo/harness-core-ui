@@ -68,36 +68,32 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
           class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
         >
           <div
-            class="Layout--vertical StyledProps--main"
+            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
           >
             <section />
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+              id="add-artifact"
+              type="button"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                pipelineSteps.serviceTab.artifactList.addPrimary
+              </span>
+            </button>
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+              id="add-artifact"
+              type="button"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                pipelineSteps.serviceTab.artifactList.addSidecar
+              </span>
+            </button>
           </div>
-        </div>
-        <div
-          class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-        >
-          <button
-            class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-            id="add-artifact"
-            type="button"
-          >
-            <span
-              class="bp3-button-text"
-            >
-              pipelineSteps.serviceTab.artifactList.addPrimary
-            </span>
-          </button>
-          <button
-            class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-            id="add-artifact"
-            type="button"
-          >
-            <span
-              class="bp3-button-text"
-            >
-              pipelineSteps.serviceTab.artifactList.addSidecar
-            </span>
-          </button>
         </div>
       </div>
     </div>

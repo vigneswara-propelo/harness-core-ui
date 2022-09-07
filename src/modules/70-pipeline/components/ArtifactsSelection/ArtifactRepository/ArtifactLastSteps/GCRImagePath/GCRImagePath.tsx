@@ -46,7 +46,7 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
 export const gcrUrlList: SelectOption[] = Object.values(RegistryHostNames).map(item => ({ label: item, value: item }))
@@ -60,7 +60,8 @@ export function GCRImagePath({
   previousStep,
   artifactIdentifiers,
   isReadonly = false,
-  selectedArtifact
+  selectedArtifact,
+  isMultiArtifactSource
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
 
@@ -188,6 +189,7 @@ export function GCRImagePath({
         {formik => (
           <Form>
             <div className={css.connectorForm}>
+              {isMultiArtifactSource && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
                 <FormInput.MultiTypeInput

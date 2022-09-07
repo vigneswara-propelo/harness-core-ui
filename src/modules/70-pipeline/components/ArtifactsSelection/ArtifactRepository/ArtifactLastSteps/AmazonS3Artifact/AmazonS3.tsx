@@ -45,7 +45,7 @@ import {
   getConnectorIdValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useListAwsRegions } from 'services/portal'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
 export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3ArtifactProps): React.ReactElement {
@@ -59,7 +59,8 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     previousStep,
     artifactIdentifiers,
     isReadonly = false,
-    selectedArtifact
+    selectedArtifact,
+    isMultiArtifactSource
   } = props
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -300,6 +301,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
         {formik => (
           <Form>
             <div className={css.connectorForm}>
+              {isMultiArtifactSource && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
                 <FormInput.MultiTypeInput

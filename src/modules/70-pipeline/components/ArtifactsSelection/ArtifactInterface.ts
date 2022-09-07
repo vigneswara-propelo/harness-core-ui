@@ -19,23 +19,26 @@ import type {
   Failure,
   Error,
   ArtifactoryBuildDetailsDTO,
-  ServiceDefinition
+  ServiceDefinition,
+  ArtifactSource
 } from 'services/cd-ng'
+import type { ModalViewFor } from './ArtifactHelper'
 
 export interface ArtifactListViewProps {
   stage: StageElementWrapper<DeploymentStageElementConfig> | undefined
-  primaryArtifact: PrimaryArtifact
+  primaryArtifact: PrimaryArtifact | ArtifactSource[]
   sideCarArtifact: SidecarArtifactWrapper[] | undefined
-  addNewArtifact: (view: number) => void
-  editArtifact: (view: number, type: ArtifactType, index?: number) => void
-  removePrimary: () => void
+  addNewArtifact: (view: ModalViewFor) => void
+  editArtifact: (view: ModalViewFor, type: ArtifactType, index?: number) => void
   removeSidecar: (index: number) => void
   fetchedConnectorResponse: PageConnectorResponse | undefined
   accountId: string
   refetchConnectors: () => void
   isReadonly: boolean
-  isAdditionAllowed: boolean
+  removePrimary?: () => void
+  removeArtifactSource?: (index: number) => void
   isSidecarAllowed?: boolean
+  isMultiArtifactSource?: boolean
 }
 export interface ArtifactsSelectionProps {
   isPropagating?: boolean
@@ -112,6 +115,7 @@ export interface ImagePathProps<T> {
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
   selectedDeploymentType: string
+  isMultiArtifactSource?: boolean
 }
 
 export interface AmazonS3ArtifactProps {
@@ -125,6 +129,7 @@ export interface AmazonS3ArtifactProps {
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
 }
 
 export interface ACRArtifactProps {
@@ -138,6 +143,7 @@ export interface ACRArtifactProps {
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
 }
 
 export interface JenkinsArtifactProps {
@@ -179,6 +185,7 @@ export interface GoogleArtifactRegistryProps {
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
 }
 
 export interface JenkinsArtifactType {

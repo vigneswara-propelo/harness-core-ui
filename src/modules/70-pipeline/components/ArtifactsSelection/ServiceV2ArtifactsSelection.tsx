@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { shouldShowError, StepWizard, useToaster } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
@@ -18,20 +18,22 @@ import set from 'lodash-es/set'
 
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
-import { merge } from 'lodash-es'
+import { defaultTo, isEmpty, merge } from 'lodash-es'
 import {
   useGetConnectorListV2,
   PageConnectorResponse,
   ConnectorInfoDTO,
   SidecarArtifactWrapper,
   PrimaryArtifact,
-  StageElementConfig,
   ArtifactConfig,
   SidecarArtifact,
-  ServiceDefinition
+  ServiceDefinition,
+  ArtifactListConfig,
+  ArtifactSource
 } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { useStrings } from 'framework/strings'
@@ -54,12 +56,13 @@ import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ArtifactActions } from '@common/constants/TrackingConstants'
-import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import StepNexusAuthentication from '@connectors/components/CreateConnector/NexusConnector/StepAuth/StepNexusAuthentication'
 import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AzureAuthentication from '@connectors/components/CreateConnector/AzureConnector/StepAuth/AzureAuthentication'
 import { useCache } from '@common/hooks/useCache'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import { DockerRegistryArtifact } from './ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
@@ -97,8 +100,7 @@ import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsA
 import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
 import css from './ArtifactsSelection.module.scss'
 
-export default function ArtifactsSelection({
-  isPropagating = false,
+export default function ServiceV2ArtifactsSelection({
   deploymentType,
   isReadonlyServiceMode,
   readonly
@@ -116,8 +118,8 @@ export default function ArtifactsSelection({
   const [isEditMode, setIsEditMode] = useState(false)
   const [selectedArtifact, setSelectedArtifact] = useState<ArtifactType | null>(null)
   const [connectorView, setConnectorView] = useState(false)
-  const [context, setModalContext] = useState(ModalViewFor.PRIMARY)
-  const [sidecarIndex, setEditIndex] = useState(0)
+  const [artifactContext, setArtifactContext] = useState(ModalViewFor.PRIMARY)
+  const [artifactIndex, setEditIndex] = useState(0)
   const [fetchedConnectorResponse, setFetchedConnectorResponse] = useState<PageConnectorResponse | undefined>()
 
   const { showError } = useToaster()
@@ -141,7 +143,7 @@ export default function ArtifactsSelection({
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
     }
     if (
-      deploymentType === 'Kubernetes' &&
+      deploymentType === ServiceDeploymentType.Kubernetes &&
       NG_GOOGLE_ARTIFACT_REGISTRY &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     ) {
@@ -171,45 +173,30 @@ export default function ArtifactsSelection({
     queryParams: defaultQueryParams
   })
 
-  const getArtifactsPath = useCallback((): any => {
+  const artifacts = useMemo((): ArtifactListConfig => {
     if (isReadonlyServiceMode) {
       const serviceData = getCache(getServiceCacheId) as ServiceDefinition
-      return serviceData?.spec?.artifacts
-    }
-
-    if (isPropagating) {
-      return get(stage, 'stage.spec.serviceConfig.stageOverrides.artifacts', [])
+      return serviceData?.spec?.artifacts as ArtifactListConfig
     }
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts', {})
-  }, [isPropagating, isReadonlyServiceMode, stage])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isReadonlyServiceMode, stage])
 
-  const getPrimaryArtifactPath = useCallback((): PrimaryArtifact => {
-    if (isReadonlyServiceMode) {
-      const serviceData = getCache(getServiceCacheId)
-      return get(serviceData, 'spec.artifacts.primary', null)
+  const artifactsList = useMemo(() => {
+    if (!isEmpty(artifacts)) {
+      if (artifactContext === ModalViewFor.PRIMARY) {
+        return artifacts.primary?.sources
+      }
+      return artifacts.sidecars
     }
-    if (isPropagating) {
-      return get(stage, 'stage.spec.serviceConfig.stageOverrides.artifacts.primary', null)
+  }, [artifactContext, artifacts])
+
+  const getArtifactsPath = useCallback((type: ModalViewFor) => {
+    if (type === ModalViewFor.PRIMARY) {
+      return 'primary.sources'
     }
-
-    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts.primary', null)
-  }, [isPropagating, isReadonlyServiceMode, stage])
-
-  const getSidecarPath = useCallback((): SidecarArtifactWrapper[] => {
-    if (isReadonlyServiceMode) {
-      const serviceData = getCache(getServiceCacheId)
-      return get(serviceData, 'spec.artifacts.sidecars', null) || []
-    }
-    if (isPropagating) {
-      return get(stage, 'stage.spec.serviceConfig.stageOverrides.artifacts.sidecars', [])
-    }
-    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars', [])
-  }, [isPropagating, isReadonlyServiceMode, stage])
-
-  const artifacts = getArtifactsPath()
-
-  const primaryArtifact = getPrimaryArtifactPath()
-  const sideCarArtifact = getSidecarPath()
+    return 'sidecars'
+  }, [])
 
   const DIALOG_PROPS: IDialogProps = {
     isOpen: true,
@@ -237,28 +224,28 @@ export default function ArtifactsSelection({
         {renderExistingArtifact()}
       </Dialog>
     ),
-    [context, selectedArtifact, connectorView, primaryArtifact, sidecarIndex, expressions, allowableTypes, isEditMode]
+    [artifactContext, selectedArtifact, connectorView, artifactIndex, expressions, allowableTypes, isEditMode]
   )
 
   const getPrimaryConnectorList = useCallback((): Array<{ scope: Scope; identifier: string }> => {
-    return primaryArtifact?.type
-      ? [
-          {
-            scope: getScopeFromValue(primaryArtifact?.spec?.connectorRef),
-            identifier: getIdentifierFromValue(primaryArtifact?.spec?.connectorRef)
-          }
-        ]
-      : []
-  }, [primaryArtifact?.spec?.connectorRef, primaryArtifact?.type])
+    return defaultTo(
+      artifacts?.primary?.sources?.map((data: ArtifactSource) => ({
+        scope: getScopeFromValue(data?.spec?.connectorRef),
+        identifier: getIdentifierFromValue(data?.spec?.connectorRef)
+      })),
+      []
+    )
+  }, [artifacts?.primary?.sources])
 
   const getSidecarConnectorList = useCallback((): Array<{ scope: Scope; identifier: string }> => {
-    return sideCarArtifact?.length
-      ? sideCarArtifact.map((data: SidecarArtifactWrapper) => ({
-          scope: getScopeFromValue(data?.sidecar?.spec?.connectorRef),
-          identifier: getIdentifierFromValue(data?.sidecar?.spec?.connectorRef)
-        }))
-      : []
-  }, [sideCarArtifact])
+    return defaultTo(
+      artifacts?.sidecars?.map((data: SidecarArtifactWrapper) => ({
+        scope: getScopeFromValue(data?.sidecar?.spec?.connectorRef),
+        identifier: getIdentifierFromValue(data?.sidecar?.spec?.connectorRef)
+      })),
+      []
+    )
+  }, [artifacts?.sidecars])
 
   const refetchConnectorList = useCallback(async (): Promise<void> => {
     try {
@@ -276,118 +263,113 @@ export default function ArtifactsSelection({
         showError(getRBACErrorMessage(e))
       }
     }
-  }, [fetchConnectors, getPrimaryConnectorList, getSidecarConnectorList, showError])
+  }, [fetchConnectors, getPrimaryConnectorList, getRBACErrorMessage, getSidecarConnectorList, showError])
 
   useDeepCompareEffect(() => {
     refetchConnectorList()
   }, [stage])
 
   const setTelemetryEvent = useCallback((): void => {
-    const isCreateMode = context === ModalViewFor.PRIMARY ? !primaryArtifact : sidecarIndex === sideCarArtifact.length
+    const isCreateMode = artifactIndex === artifactsList?.length
 
     let telemetryEventName
     if (isCreateMode) {
       telemetryEventName =
-        context === ModalViewFor.PRIMARY
+        artifactContext === ModalViewFor.PRIMARY
           ? ArtifactActions.SavePrimaryArtifactOnPipelinePage
           : ArtifactActions.SaveSidecarArtifactOnPipelinePage
     } else {
       telemetryEventName =
-        context === ModalViewFor.PRIMARY
+        artifactContext === ModalViewFor.PRIMARY
           ? ArtifactActions.UpdatePrimaryArtifactOnPipelinePage
           : ArtifactActions.UpdateSidecarArtifactOnPipelinePage
     }
     trackEvent(telemetryEventName, {})
-  }, [context, primaryArtifact, sideCarArtifact?.length, sidecarIndex, trackEvent])
+  }, [artifactIndex, artifactsList?.length, trackEvent, artifactContext])
 
   const setPrimaryArtifactData = useCallback(
     (artifactObj: PrimaryArtifact): void => {
-      if (isPropagating) {
-        artifacts['primary'] = { ...artifactObj }
+      const artifactObject = get(artifacts, getArtifactsPath(artifactContext))
+      if (artifactObject?.length) {
+        artifactObject.splice(artifactIndex, 1, artifactObj)
       } else {
-        artifacts['primary'] = { ...artifactObj }
+        set(artifacts, 'primary.sources', [artifactObj])
       }
     },
-    [artifacts, isPropagating]
+    [artifactContext, artifactIndex, artifacts, getArtifactsPath]
   )
 
   const setSidecarArtifactData = useCallback(
-    (artifactObj: SidecarArtifact): void => {
-      if (sideCarArtifact?.length) {
-        sideCarArtifact.splice(sidecarIndex, 1, { sidecar: artifactObj })
+    (artifactObj: PrimaryArtifact): void => {
+      const artifactObject = get(artifacts, getArtifactsPath(artifactContext))
+      if (artifactObject?.length) {
+        artifactObject.splice(artifactIndex, 1, { sidecar: artifactObj })
       } else {
-        sideCarArtifact.push({ sidecar: artifactObj })
+        set(artifacts, 'sidecars', [artifactObj])
       }
     },
-    [sideCarArtifact, sidecarIndex]
+    [artifactContext, artifactIndex, artifacts, getArtifactsPath]
   )
-
-  const updateStageData = useCallback((): StageElementWrapper<DeploymentStageElementConfig> | undefined => {
-    return produce(stage, draft => {
-      if (context === ModalViewFor.PRIMARY) {
-        if (isPropagating && draft?.stage?.spec?.serviceConfig?.stageOverrides?.artifacts) {
-          set(draft, 'stage.spec.serviceConfig.stageOverrides.artifacts', artifacts)
-        } else {
-          set(draft!, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts', artifacts)
-        }
-      }
-      if (context === ModalViewFor.SIDECAR) {
-        if (isPropagating && draft?.stage?.spec?.serviceConfig?.stageOverrides?.artifacts) {
-          set(draft, 'stage.spec.serviceConfig.stageOverrides.artifacts.sidecars', sideCarArtifact)
-        } else {
-          set(draft!, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars', sideCarArtifact)
-        }
-      }
-    })
-  }, [artifacts, context, isPropagating, sideCarArtifact, stage])
 
   const addArtifact = useCallback(
     (artifactObj: ArtifactConfig): void => {
       merge(artifactObj, { type: ENABLED_ARTIFACT_TYPES[selectedArtifact as ArtifactType] })
 
-      if (context === ModalViewFor.PRIMARY) {
-        setPrimaryArtifactData(artifactObj as PrimaryArtifact)
+      if (artifactContext === ModalViewFor.PRIMARY) {
+        setPrimaryArtifactData(artifactObj as ArtifactSource)
       } else {
         setSidecarArtifactData(artifactObj as SidecarArtifact)
       }
-      const updatedStage = updateStageData()
-
+      if (stage) {
+        const newStage = produce(stage, draft => {
+          set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts', artifacts)
+        }).stage
+        if (newStage) {
+          updateStage(newStage)
+        }
+      }
       setTelemetryEvent()
-      updateStage(updatedStage?.stage as StageElementConfig)
       hideConnectorModal()
       setSelectedArtifact(null)
       refetchConnectorList()
     },
-    [
-      context,
-      hideConnectorModal,
-      refetchConnectorList,
-      selectedArtifact,
-      setPrimaryArtifactData,
-      setSidecarArtifactData,
-      setTelemetryEvent,
-      updateStage,
-      updateStageData
-    ]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [artifactContext, artifacts, refetchConnectorList, selectedArtifact, stage]
   )
 
-  const getLastStepInitialData = useCallback((): any => {
-    if (context === ModalViewFor.PRIMARY) {
-      return primaryArtifact
-    } else {
-      return sideCarArtifact?.[sidecarIndex]?.sidecar
-    }
-  }, [context, primaryArtifact, sideCarArtifact, sidecarIndex])
+  const removeArtifactObject = (type: ModalViewFor, index: number): void => {
+    const artifactObject = get(artifacts, getArtifactsPath(type))
+    artifactObject.splice(index, 1)
 
-  const getArtifactInitialValues = useCallback((): InitialArtifactDataType => {
-    let spec, artifactType
-    if (context === ModalViewFor.PRIMARY) {
-      artifactType = primaryArtifact?.type
-      spec = primaryArtifact?.spec
-    } else {
-      artifactType = sideCarArtifact?.[sidecarIndex]?.sidecar?.type
-      spec = sideCarArtifact?.[sidecarIndex]?.sidecar?.spec
+    setSelectedArtifact(null)
+    if (stage) {
+      const newStage = produce(stage, draft => {
+        set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts', artifactObject)
+      }).stage
+      if (newStage) {
+        updateStage(newStage)
+      }
     }
+  }
+
+  const getLastStepInitialData = useCallback((): any => {
+    if (artifactContext === ModalViewFor.PRIMARY) {
+      return (artifactsList as ArtifactSource[])?.[artifactIndex]
+    } else {
+      return (artifactsList as SidecarArtifactWrapper[])?.[artifactIndex]?.sidecar
+    }
+  }, [artifactContext, artifactsList, artifactIndex])
+
+  const getArtifactInitialValues = useMemo((): InitialArtifactDataType => {
+    let spec, artifactType
+    if (artifactContext === ModalViewFor.PRIMARY) {
+      artifactType = (artifactsList as ArtifactSource[])?.[artifactIndex]?.type
+      spec = (artifactsList as ArtifactSource[])?.[artifactIndex]?.spec
+    } else {
+      artifactType = (artifactsList as SidecarArtifactWrapper[])?.[artifactIndex]?.sidecar?.type
+      spec = (artifactsList as SidecarArtifactWrapper[])?.[artifactIndex]?.sidecar?.spec
+    }
+
     if (!spec) {
       return {
         submittedArtifact: selectedArtifact,
@@ -398,58 +380,27 @@ export default function ArtifactsSelection({
       submittedArtifact: artifactType,
       connectorId: spec?.connectorRef
     }
-  }, [context, primaryArtifact?.spec, primaryArtifact?.type, selectedArtifact, sideCarArtifact, sidecarIndex])
+  }, [artifactContext, artifactsList, artifactIndex, selectedArtifact])
 
-  const addNewArtifact = (viewType: number): void => {
-    setModalContext(viewType)
+  const addNewArtifact = (viewType: ModalViewFor): void => {
+    setArtifactContext(viewType)
     setConnectorView(false)
-
-    if (viewType === ModalViewFor.SIDECAR) {
-      setEditIndex(sideCarArtifact?.length || 0)
-    }
+    const artifactObject = get(artifacts, getArtifactsPath(viewType))
+    setEditIndex(defaultTo(artifactObject?.length, 0))
     showConnectorModal()
     refetchConnectorList()
   }
 
-  const editArtifact = (viewType: number, type: ArtifactType, index?: number): void => {
-    setModalContext(viewType)
+  const editArtifact = (viewType: ModalViewFor, type: ArtifactType, index?: number): void => {
+    setArtifactContext(viewType)
     setConnectorView(false)
     setSelectedArtifact(type as ArtifactType)
-
-    if (viewType === ModalViewFor.SIDECAR && index !== undefined) {
-      setEditIndex(index)
-    }
+    setEditIndex(index as number)
     showConnectorModal()
     refetchConnectorList()
   }
 
-  const removePrimary = (): void => {
-    delete artifacts.primary
-    primaryArtifact.spec = {}
-    setSelectedArtifact(null)
-    const updatedStage = produce(stage, draft => {
-      if (isPropagating && draft?.stage?.spec?.serviceConfig?.stageOverrides?.artifacts) {
-        draft.stage.spec.serviceConfig.stageOverrides.artifacts = artifacts
-      } else if (draft?.stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts) {
-        draft.stage.spec.serviceConfig.serviceDefinition.spec.artifacts = artifacts
-      }
-    })
-    updateStage(updatedStage?.stage as StageElementConfig)
-  }
-
-  const removeSidecar = (index: number): void => {
-    sideCarArtifact.splice(index, 1)
-    const updatedStage = produce(stage, draft => {
-      if (isPropagating && draft?.stage?.spec?.serviceConfig?.stageOverrides?.artifacts) {
-        draft.stage.spec.serviceConfig.stageOverrides.artifacts.sidecars = sideCarArtifact
-      } else if (draft?.stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts?.sidecars) {
-        draft.stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars = sideCarArtifact
-      }
-    })
-    updateStage(updatedStage?.stage as StageElementConfig)
-  }
-
-  const getIconProps = useCallback((): IconProps | undefined => {
+  const getIconProps = useMemo((): IconProps | undefined => {
     if (selectedArtifact) {
       const iconProps: IconProps = {
         name: ArtifactIconByType[selectedArtifact]
@@ -465,45 +416,54 @@ export default function ArtifactsSelection({
     }
   }, [selectedArtifact])
 
-  const artifactLastStepProps = useCallback((): ImagePathProps<
+  const artifactLastStepProps = useMemo((): ImagePathProps<
     ImagePathTypes & AmazonS3InitialValuesType & JenkinsArtifactType & GoogleArtifactRegistryInitialValuesType
   > => {
     return {
       key: getString('connectors.stepFourName'),
       name: getString('connectors.stepFourName'),
-      context,
+      context: artifactContext,
       expressions,
       allowableTypes,
       initialValues: getLastStepInitialData(),
       handleSubmit: (data: any) => {
         addArtifact(data)
       },
-      artifactIdentifiers: sideCarArtifact?.map((item: SidecarArtifactWrapper) => item.sidecar?.identifier as string),
+      artifactIdentifiers: defaultTo(
+        artifactsList?.map((item: ArtifactSource | SidecarArtifactWrapper) =>
+          artifactContext === ModalViewFor.PRIMARY
+            ? (item as ArtifactSource).identifier
+            : ((item as SidecarArtifactWrapper).sidecar?.identifier as string)
+        ),
+        ['']
+      ),
       isReadonly: readonly,
       selectedArtifact,
-      selectedDeploymentType: deploymentType
+      selectedDeploymentType: deploymentType,
+      isMultiArtifactSource: true
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    addArtifact,
-    allowableTypes,
-    context,
+    artifactContext,
     expressions,
+    allowableTypes,
     getLastStepInitialData,
-    readonly,
+    artifactsList,
     selectedArtifact,
-    sideCarArtifact,
-    getString
+    deploymentType
   ])
 
-  const getLabels = useCallback((): ConnectorRefLabelType => {
+  const getLabels = useMemo((): ConnectorRefLabelType => {
     return {
       firstStepName: getString('connectors.specifyArtifactRepoType'),
       secondStepName: `${selectedArtifact && getString(ArtifactTitleIdByType[selectedArtifact])} ${getString(
         'repository'
       )}`
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedArtifact])
 
+  /******************************************************************Connector Steps************************************************************** */
   const connectorDetailStepProps = {
     name: getString('overview'),
     isEditMode,
@@ -601,35 +561,36 @@ export default function ArtifactsSelection({
             />
           </StepWizard>
         )
-
       default:
         return <></>
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectorView, selectedArtifact, isEditMode])
+  /******************************************************************Connector Steps************************************************************** */
 
   const getLastSteps = useCallback((): JSX.Element => {
     switch (selectedArtifact) {
       case ENABLED_ARTIFACT_TYPES.Gcr:
-        return <GCRImagePath {...artifactLastStepProps()} />
+        return <GCRImagePath {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.Ecr:
-        return <ECRArtifact {...artifactLastStepProps()} />
+        return <ECRArtifact {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
-        return <NexusArtifact {...artifactLastStepProps()} />
+        return <NexusArtifact {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
-        return <Artifactory {...artifactLastStepProps()} />
+        return <Artifactory {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.AmazonS3:
-        return <AmazonS3 {...artifactLastStepProps()} />
+        return <AmazonS3 {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.CustomArtifact:
-        return <CustomArtifact {...artifactLastStepProps()} />
+        return <CustomArtifact {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.Acr:
-        return <ACRArtifact {...artifactLastStepProps()} />
+        return <ACRArtifact {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.Jenkins:
-        return <JenkinsArtifact {...artifactLastStepProps()} />
+        return <JenkinsArtifact {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
-        return <GoogleArtifactRegistry {...artifactLastStepProps()} />
+        return <GoogleArtifactRegistry {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       default:
-        return <DockerRegistryArtifact {...artifactLastStepProps()} />
+        return <DockerRegistryArtifact {...artifactLastStepProps} />
     }
   }, [artifactLastStepProps, selectedArtifact])
 
@@ -644,41 +605,40 @@ export default function ArtifactsSelection({
 
   const renderExistingArtifact = (): JSX.Element => {
     return (
-      <div>
-        <ArtifactWizard
-          artifactInitialValue={getArtifactInitialValues()}
-          iconsProps={getIconProps()}
-          types={allowedArtifactTypes[deploymentType]}
-          expressions={expressions}
-          allowableTypes={allowableTypes}
-          lastSteps={getLastSteps()}
-          labels={getLabels()}
-          isReadonly={readonly}
-          selectedArtifact={selectedArtifact}
-          changeArtifactType={changeArtifactType}
-          newConnectorView={connectorView}
-          newConnectorSteps={getNewConnectorSteps()}
-          handleViewChange={handleConnectorViewChange}
-          showConnectorStep={showConnectorStep(selectedArtifact as ArtifactType)}
-        />
-      </div>
+      <ArtifactWizard
+        artifactInitialValue={getArtifactInitialValues}
+        iconsProps={getIconProps}
+        types={allowedArtifactTypes[deploymentType]}
+        expressions={expressions}
+        allowableTypes={allowableTypes}
+        lastSteps={getLastSteps()}
+        labels={getLabels}
+        isReadonly={readonly}
+        selectedArtifact={selectedArtifact}
+        changeArtifactType={changeArtifactType}
+        newConnectorView={connectorView}
+        newConnectorSteps={getNewConnectorSteps()}
+        handleViewChange={handleConnectorViewChange}
+        showConnectorStep={showConnectorStep(selectedArtifact as ArtifactType)}
+      />
     )
   }
 
   return (
     <ArtifactListView
       stage={stage}
-      primaryArtifact={primaryArtifact}
-      sideCarArtifact={sideCarArtifact}
+      primaryArtifact={artifacts.primary?.sources as ArtifactSource[]}
+      sideCarArtifact={artifacts.sidecars}
       addNewArtifact={addNewArtifact}
       editArtifact={editArtifact}
-      removePrimary={removePrimary}
-      removeSidecar={removeSidecar}
+      removeArtifactSource={index => removeArtifactObject(ModalViewFor.PRIMARY, index)}
+      removeSidecar={index => removeArtifactObject(ModalViewFor.SIDECAR, index)}
       fetchedConnectorResponse={fetchedConnectorResponse}
       accountId={accountId}
       refetchConnectors={refetchConnectorList}
       isReadonly={readonly}
       isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
+      isMultiArtifactSource
     />
   )
 }

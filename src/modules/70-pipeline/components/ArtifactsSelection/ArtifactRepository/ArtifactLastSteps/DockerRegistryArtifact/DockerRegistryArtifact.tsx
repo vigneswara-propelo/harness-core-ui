@@ -31,7 +31,7 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
 export function DockerRegistryArtifact({
@@ -44,7 +44,8 @@ export function DockerRegistryArtifact({
   previousStep,
   artifactIdentifiers,
   isReadonly = false,
-  selectedArtifact
+  selectedArtifact,
+  isMultiArtifactSource
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
   const [lastImagePath, setLastImagePath] = useState('')
@@ -158,7 +159,9 @@ export function DockerRegistryArtifact({
         {formik => (
           <Form>
             <div className={css.connectorForm}>
+              {isMultiArtifactSource && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
+
               <ArtifactImagePathTagView
                 selectedArtifact={selectedArtifact as ArtifactType}
                 formik={formik}

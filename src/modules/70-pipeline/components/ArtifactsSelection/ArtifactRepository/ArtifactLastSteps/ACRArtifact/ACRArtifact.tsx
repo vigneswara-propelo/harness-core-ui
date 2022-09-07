@@ -55,7 +55,7 @@ import type {
   ACRArtifactProps
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
 export function ACRArtifact({
@@ -68,7 +68,8 @@ export function ACRArtifact({
   previousStep,
   artifactIdentifiers,
   isReadonly = false,
-  selectedArtifact
+  selectedArtifact,
+  isMultiArtifactSource
 }: StepProps<ConnectorConfigDTO> & ACRArtifactProps): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -473,6 +474,7 @@ export function ACRArtifact({
           return (
             <Form>
               <div className={css.connectorForm}>
+                {isMultiArtifactSource && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 <div className={css.imagePathContainer}>
                   <FormInput.MultiTypeInput

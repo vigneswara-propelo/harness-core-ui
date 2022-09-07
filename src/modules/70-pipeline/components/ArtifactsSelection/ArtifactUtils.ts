@@ -8,7 +8,7 @@
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, merge } from 'lodash-es'
-import type { ArtifactConfig, ConnectorConfigDTO } from 'services/cd-ng'
+import type { ArtifactConfig, ConnectorConfigDTO, PrimaryArtifact, SidecarArtifact } from 'services/cd-ng'
 import { ENABLED_ARTIFACT_TYPES } from './ArtifactHelper'
 import {
   ArtifactTagHelperText,
@@ -379,4 +379,15 @@ export const showConnectorStep = (selectedArtifact: ArtifactType): boolean => {
 
 export const isFieldFixed = (field: string): boolean => {
   return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED
+}
+export const getArtifactLocation = (artifact: PrimaryArtifact | SidecarArtifact): string => {
+  if (artifact.type === 'AmazonS3') {
+    return artifact.spec.filePath ?? artifact.spec.filePathRegex
+  }
+  return (
+    artifact.spec.imagePath ??
+    artifact.spec.artifactPath ??
+    artifact.spec.artifactPathFilter ??
+    artifact.spec.repository
+  )
 }

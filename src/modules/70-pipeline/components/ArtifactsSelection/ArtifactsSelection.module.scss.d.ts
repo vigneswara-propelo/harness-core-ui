@@ -22,6 +22,7 @@ declare const styles: {
   readonly paddingVertical: string
   readonly rowItem: string
   readonly sideCarBtn: string
+  readonly sidecarList: string
   readonly type: string
 }
 export default styles

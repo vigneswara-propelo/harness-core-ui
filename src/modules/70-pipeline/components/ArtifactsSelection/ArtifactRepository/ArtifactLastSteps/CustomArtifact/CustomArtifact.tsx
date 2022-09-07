@@ -33,7 +33,7 @@ import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { getArtifactFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
 export function CustomArtifact({
@@ -46,7 +46,8 @@ export function CustomArtifact({
   previousStep,
   artifactIdentifiers,
   isReadonly = false,
-  selectedArtifact
+  selectedArtifact,
+  isMultiArtifactSource
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
 
@@ -102,6 +103,7 @@ export function CustomArtifact({
         {formik => (
           <Form>
             <div className={css.connectorForm}>
+              {isMultiArtifactSource && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
 
               <div className={css.imagePathContainer}>

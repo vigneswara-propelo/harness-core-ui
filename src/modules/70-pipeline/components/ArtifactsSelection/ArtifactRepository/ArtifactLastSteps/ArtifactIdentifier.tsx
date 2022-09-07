@@ -23,4 +23,17 @@ function SideCarArtifactIdentifier(): React.ReactElement {
   )
 }
 
-export default SideCarArtifactIdentifier
+function ArtifactSourceIdentifier(): React.ReactElement {
+  const { getString } = useStrings()
+  return (
+    <div className={css.dockerSideCard}>
+      <FormInput.Text
+        label={getString('identifier')}
+        placeholder={getString('pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder')}
+        name="identifier"
+      />
+    </div>
+  )
+}
+
+export { ArtifactSourceIdentifier, SideCarArtifactIdentifier }

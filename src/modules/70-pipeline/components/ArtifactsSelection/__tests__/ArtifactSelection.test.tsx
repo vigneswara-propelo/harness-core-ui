@@ -198,8 +198,7 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: undefined,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false,
-      isAdditionAllowed: true
+      isReadonly: false
     }
 
     const { container } = render(
@@ -225,8 +224,7 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false,
-      isAdditionAllowed: true
+      isReadonly: false
     }
     const { container } = render(
       <TestWrapper>
@@ -268,8 +266,7 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false,
-      isAdditionAllowed: true
+      isReadonly: false
     }
     const { container } = render(
       <TestWrapper>
@@ -301,8 +298,7 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false,
-      isAdditionAllowed: true
+      isReadonly: false
     }
     const { container } = render(
       <TestWrapper>
@@ -334,8 +330,7 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false,
-      isAdditionAllowed: true
+      isReadonly: false
     }
     const { container } = render(
       <TestWrapper>

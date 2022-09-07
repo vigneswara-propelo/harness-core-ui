@@ -44,7 +44,7 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { ArtifactIdentifierValidation, ModalViewFor, regions, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -63,7 +63,7 @@ export const repositoryType: SelectOption[] = [
 function FormComponent(
   props: StepProps<ConnectorConfigDTO> &
     GoogleArtifactRegistryProps & { formik: FormikProps<GoogleArtifactRegistryInitialValuesType> }
-) {
+): React.ReactElement {
   const {
     context,
     expressions,
@@ -73,7 +73,8 @@ function FormComponent(
     initialValues,
     isReadonly = false,
     formik,
-    selectedArtifact
+    selectedArtifact,
+    isMultiArtifactSource
   } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -153,6 +154,7 @@ function FormComponent(
   return (
     <Form>
       <div className={css.artifactForm}>
+        {isMultiArtifactSource && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.jenkinsFieldContainer}>
           <div className={cx(stepCss.formGroup, stepCss.sm)}>

@@ -8,13 +8,13 @@
 import type { Schema } from 'yup'
 import type { IconName } from '@wings-software/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
+import { isEmpty } from 'lodash-es'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { Connectors } from '@connectors/constants'
-import type { ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
+import type { ArtifactSource, ConnectorInfoDTO, PrimaryArtifact, ServiceDefinition } from 'services/cd-ng'
 import type { StringKeys } from 'framework/strings'
 import { useStrings } from 'framework/strings'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-
 import type { ArtifactType } from './ArtifactInterface'
 
 export enum ModalViewFor {
@@ -40,9 +40,14 @@ export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isRe
     )
   )
 }
-
-export const isAdditionAllowed = (isReadOnly: boolean): boolean => {
-  return !isReadOnly
+export const isPrimaryAdditionAllowed = (
+  primaryArtifact: ArtifactSource[] | PrimaryArtifact,
+  isMultiArtifactSource?: boolean
+): boolean => {
+  if (isMultiArtifactSource) {
+    return true
+  }
+  return isEmpty(primaryArtifact)
 }
 
 export const ArtifactIconByType: Record<ArtifactType, IconName> = {

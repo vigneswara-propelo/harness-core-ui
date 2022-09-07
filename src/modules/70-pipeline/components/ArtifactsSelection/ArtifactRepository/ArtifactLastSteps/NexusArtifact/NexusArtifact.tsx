@@ -40,7 +40,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { ArtifactType, ImagePathProps, ImagePathTypes, RepositoryPortOrServer } from '../../../ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor, repositoryPortOrServer } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
 export function NexusArtifact({
@@ -53,7 +53,8 @@ export function NexusArtifact({
   previousStep,
   artifactIdentifiers,
   isReadonly = false,
-  selectedArtifact
+  selectedArtifact,
+  isMultiArtifactSource
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
@@ -207,6 +208,7 @@ export function NexusArtifact({
         {formik => (
           <Form>
             <div className={css.connectorForm}>
+              {isMultiArtifactSource && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
 
               <div className={css.tagGroup}>

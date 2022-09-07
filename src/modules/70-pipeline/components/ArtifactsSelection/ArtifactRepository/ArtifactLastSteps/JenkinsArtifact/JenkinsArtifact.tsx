@@ -48,7 +48,7 @@ import type { SubmenuSelectOption } from '@pipeline/components/PipelineSteps/Ste
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
 function FormComponent({
@@ -59,7 +59,8 @@ function FormComponent({
   initialValues,
   previousStep,
   isReadonly = false,
-  formik
+  formik,
+  isMultiArtifactSource
 }: any): React.ReactElement {
   const { getString } = useStrings()
   const lastOpenedJob = useRef<any>(null)
@@ -238,6 +239,7 @@ function FormComponent({
   return (
     <Form>
       <div className={css.connectorForm}>
+        {isMultiArtifactSource && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.jenkinsFieldContainer}>
           <FormInput.SelectWithSubmenuTypeInput
