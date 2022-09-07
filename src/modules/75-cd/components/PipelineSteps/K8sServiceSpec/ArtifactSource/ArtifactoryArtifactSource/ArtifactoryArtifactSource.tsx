@@ -40,6 +40,7 @@ import ServerlessArtifactoryRepository from '@pipeline/components/ArtifactsSelec
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getConnectorRefFqnPath,
@@ -208,10 +209,18 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       props.formik.values.pipeline ?? props.formik.values
     ).stage?.stage?.spec as DeploymentStageConfig
 
+    const stageArray: StageElementWrapperConfig[] = []
+    props.formik.values.stages?.forEach((stage: StageElementWrapperConfig) => {
+      if (get(stage, 'parallel')) {
+        stage.parallel?.forEach((parallelStage: StageElementWrapperConfig) => {
+          stageArray.push(parallelStage)
+        })
+      } else stageArray.push(stage)
+    })
     if (!selectedStageSpec) {
-      const selectedStage = props.formik.values.stages?.find(
+      const selectedStage = stageArray.find(
         (currStage: StageElementWrapper) => currStage.stage?.identifier === props.stageIdentifier
-      ).stage
+      )?.stage
       selectedStageSpec = defaultTo(
         get(selectedStage, 'spec'),
         get(selectedStage, 'template.templateInputs.spec')
