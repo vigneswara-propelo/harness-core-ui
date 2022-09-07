@@ -156,7 +156,7 @@ const checkValidTriggerConfiguration = ({
 }): boolean => {
   const sourceRepo = formikValues['sourceRepo']
   const identifier = formikValues['identifier']
-  const connectorURLType = formikValues.connectorRef?.connector?.spec?.type
+  const connectorType = formikValues.connectorRef?.connector?.spec?.type
 
   if (isIdentifierIllegal(identifier)) {
     return false
@@ -167,8 +167,8 @@ const checkValidTriggerConfiguration = ({
     // onEdit case, waiting for api response
     else if (formikValues['connectorRef']?.value && !formikValues['connectorRef'].connector) return true
     else if (
-      !connectorURLType ||
-      !!([connectorURLType.ACCOUNT, connectorURLType.PROJECT].includes(connectorURLType) && !formikValues.repoName)
+      !connectorType ||
+      !!([connectorUrlType.ACCOUNT, connectorUrlType.PROJECT].includes(connectorType) && !formikValues.repoName)
     )
       return false
   }
@@ -361,13 +361,13 @@ export const getValidationSchema = (
           getString('triggers.validation.repoName'),
           getString('triggers.validation.repoName'),
           function (repoName) {
-            const connectorURLType = this.parent.connectorRef?.connector?.spec?.type
+            const connectorType = this.parent.connectorRef?.connector?.spec?.type
             return (
-              !connectorURLType ||
-              (connectorURLType === connectorUrlType.ACCOUNT && repoName?.trim()) ||
-              (connectorURLType === connectorUrlType.REGION && repoName?.trim()) ||
-              (connectorURLType === connectorUrlType.PROJECT && repoName?.trim()) ||
-              connectorURLType === connectorUrlType.REPO
+              !connectorType ||
+              (connectorType === connectorUrlType.ACCOUNT && repoName?.trim()) ||
+              (connectorType === connectorUrlType.REGION && repoName?.trim()) ||
+              (connectorType === connectorUrlType.PROJECT && repoName?.trim()) ||
+              connectorType === connectorUrlType.REPO
             )
           }
         ),
