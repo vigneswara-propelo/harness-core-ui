@@ -17,8 +17,11 @@ import {
   Formik,
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType
+  MultiTypeInputType,
+  Text
 } from '@wings-software/uicore'
+
+import { Color } from '@harness/design-system'
 
 import {
   FormMultiTypeDurationField,
@@ -60,7 +63,12 @@ function CommandScriptsEditWidget(
 
   const validationSchema = Yup.object().shape({
     timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
-    ...getNameAndIdentifierSchema(getString, stepViewType)
+    ...getNameAndIdentifierSchema(getString, stepViewType),
+    spec: Yup.object().shape({
+      commandUnits: Yup.lazy(() => {
+        return Yup.array().required(getString('common.validation.fieldIsRequired', { name: getString('commandLabel') }))
+      })
+    })
   })
 
   const values: CommandScriptsFormData = {
@@ -131,6 +139,11 @@ function CommandScriptsEditWidget(
             </div>
             <div className={stepCss.divider} />
             <CommandList allowableTypes={allowableTypes} readonly={readonly} />
+            {formik.errors.spec?.commandUnits && formik.submitCount !== 0 && (
+              <Text icon="circle-cross" iconProps={{ size: 10, color: Color.RED_600 }} color={Color.RED_600}>
+                {formik.errors.spec.commandUnits}
+              </Text>
+            )}
             <Accordion className={stepCss.accordion}>
               <Accordion.Panel
                 id="optional-config"
