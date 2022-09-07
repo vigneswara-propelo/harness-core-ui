@@ -74,6 +74,7 @@ export interface PromiseExtraArgs {
   updatedGitDetails?: EntityGitDetails
   comment?: string
   storeMetadata?: StoreMetadata
+  disableCreatingNewBranch?: boolean
 }
 
 export enum Intent {
@@ -92,6 +93,7 @@ export interface ModalProps {
   disabledFields?: Fields[]
   allowScopeChange?: boolean
   lastPublishedVersion?: string
+  disableCreatingNewBranch?: boolean
   onFailure?: (error: any, latestTemplate: NGTemplateInfoConfig) => void
 }
 
@@ -141,7 +143,8 @@ const BasicTemplateDetails = (
     disabledFields = [],
     promise,
     lastPublishedVersion,
-    onFailure
+    onFailure,
+    disableCreatingNewBranch
   } = props
   const pathParams = useParams<TemplateStudioPathProps>()
   const { orgIdentifier, projectIdentifier } = pathParams
@@ -171,10 +174,21 @@ const BasicTemplateDetails = (
   const cardDisabledStatus = React.useMemo(
     () =>
       intent === Intent.EDIT ||
-      !!props.disabledFields?.includes(Fields.StoreType) ||
+      !!disabledFields?.includes(Fields.StoreType) ||
       !templateFactory.getTemplateIsRemoteEnabled(initialValues.type) ||
       (!isTemplateGitxAccountEnabled && selectedScope !== Scope.PROJECT),
-    [initialValues.type, intent, isTemplateGitxAccountEnabled, props.disabledFields, selectedScope]
+    [initialValues.type, intent, isTemplateGitxAccountEnabled, disabledFields, selectedScope]
+  )
+
+  const gitDisabledFields = pick(
+    disabledFields?.reduce((fields: Record<string, boolean>, field: string) => {
+      fields[field] = true
+      return fields
+    }, {}),
+    Fields.ConnectorRef,
+    Fields.RepoName,
+    Fields.Branch,
+    Fields.FilePath
   )
 
   React.useImperativeHandle(
@@ -246,6 +260,7 @@ const BasicTemplateDetails = (
       const updateTemplate = omit(values, 'repo', 'branch', 'comment', 'connectorRef', 'storeType', 'filePath')
       promise(updateTemplate, {
         isEdit: intent === Intent.EDIT,
+        disableCreatingNewBranch,
         ...(!isEmpty(values.repo) && {
           updatedGitDetails: { ...gitDetails, repoIdentifier: values.repo, branch: values.branch }
         }),
@@ -477,6 +492,7 @@ const BasicTemplateDetails = (
                             isEdit={intent === Intent.EDIT}
                             initialValues={formInitialValues}
                             entityScope={getScopeFromDTO(formik.values)}
+                            disableFields={gitDisabledFields}
                           />
                         )}
                       </>

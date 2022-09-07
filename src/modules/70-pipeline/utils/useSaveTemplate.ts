@@ -257,12 +257,13 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     updatedTemplate: NGTemplateInfoConfig,
     extraInfo: PromiseExtraArgs
   ): Promise<UseSaveSuccessResponse> => {
-    const { isEdit, comment, updatedGitDetails, storeMetadata } = extraInfo
+    const { isEdit, comment, updatedGitDetails, storeMetadata, disableCreatingNewBranch } = extraInfo
 
     // if Git sync enabled then display modal
     if ((isGitSyncEnabled && !isEmpty(updatedGitDetails)) || storeMetadata?.storeType === StoreType.REMOTE) {
       openSaveToGitDialog({
         isEditing: defaultTo(isEdit, false),
+        disableCreatingNewBranch,
         resource: {
           type: 'Template',
           name: updatedTemplate.name,
