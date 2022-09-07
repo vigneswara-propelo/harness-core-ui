@@ -582,10 +582,10 @@ describe('ManifestSelection tests for ECS', () => {
     expect(getAllByText('common.headerWithOptionalText')).toHaveLength(2)
 
     // Check if + Add Primary Artifact button is disabled
-    const addPrimaryArtifactBtn = getByText('pipelineSteps.serviceTab.artifactList.addPrimary')
+    const addPrimaryArtifactBtn = getByText('pipeline.artifactsSelection.addPrimaryArtifact')
     expect(addPrimaryArtifactBtn).toBeInTheDocument()
     // Check if + Add Sidecar button is disabled
-    const addSidecarBtn = getByText('pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addSidecarBtn = getByText('pipeline.artifactsSelection.addSidecar')
     expect(addSidecarBtn).toBeInTheDocument()
 
     // Check if Variable section is rendered

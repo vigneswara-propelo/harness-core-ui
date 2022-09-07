@@ -57,6 +57,8 @@ export function NexusArtifact({
   isMultiArtifactSource
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -158,11 +160,7 @@ export function NexusArtifact({
   }, [])
 
   const getInitialValues = useCallback((): ImagePathTypes => {
-    const values = getArtifactFormData(
-      initialValues,
-      selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR
-    )
+    const values = getArtifactFormData(initialValues, selectedArtifact as ArtifactType, isIdentifierAllowed)
 
     merge(values, {
       repositoryPortorRepositoryURL: !isEmpty(values?.repositoryPort)
@@ -170,7 +168,7 @@ export function NexusArtifact({
         : RepositoryPortOrServer.RepositoryUrl
     })
     return values
-  }, [context, initialValues, selectedArtifact])
+  }, [initialValues, isIdentifierAllowed, selectedArtifact])
 
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
     const repositoryPortOrServerData =
@@ -178,7 +176,7 @@ export function NexusArtifact({
         ? { repositoryPort: formData?.repositoryPort }
         : { repositoryUrl: formData?.repositoryUrl }
 
-    const artifactObj = getFinalArtifactFormObj(formData, context === ModalViewFor.SIDECAR)
+    const artifactObj = getFinalArtifactFormObj(formData, isIdentifierAllowed)
     merge(artifactObj.spec, {
       repository: formData?.repository,
       repositoryFormat,
@@ -208,7 +206,7 @@ export function NexusArtifact({
         {formik => (
           <Form>
             <div className={css.connectorForm}>
-              {isMultiArtifactSource && <ArtifactSourceIdentifier />}
+              {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
 
               <div className={css.tagGroup}>

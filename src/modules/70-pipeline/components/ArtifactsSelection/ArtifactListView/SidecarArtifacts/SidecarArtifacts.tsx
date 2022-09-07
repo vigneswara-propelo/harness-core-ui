@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Icon } from '@harness/icons'
-import { Button, Color, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { Button, Color, FontVariation, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useStrings } from 'framework/strings'
@@ -25,6 +25,7 @@ interface SidecarArtifactsProps {
   removeSidecar: (index: number) => void
   editArtifact: (view: ModalViewFor, type: ArtifactType, index: number) => void
   sideCarArtifact?: SidecarArtifactWrapper[]
+  isMultiArtifactSource?: boolean
 }
 
 function SidecarArtifacts({
@@ -33,7 +34,8 @@ function SidecarArtifacts({
   isReadonly,
   fetchedConnectorResponse,
   editArtifact,
-  removeSidecar
+  removeSidecar,
+  isMultiArtifactSource
 }: SidecarArtifactsProps): React.ReactElement | null {
   const { getString } = useStrings()
 
@@ -42,8 +44,23 @@ function SidecarArtifacts({
   }
   return (
     <section className={css.sidecarList}>
-      {sideCarArtifact?.map((data: SidecarArtifactWrapper, index: number) => {
-        const { sidecar } = data
+      {isMultiArtifactSource && (
+        <div>
+          <Text margin={{ bottom: 'xlarge' }} color={Color.GREY_800} font={{ weight: 'semi-bold', size: 'normal' }}>
+            {getString('sidecarsText')}
+          </Text>
+          <div className={cx(css.artifactList, css.listHeader)}>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.ID')}</Text>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+              {getString('pipeline.artifactsSelection.artifactType')}
+            </Text>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('artifactRepository')}</Text>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
+            <span></span>
+          </div>
+        </div>
+      )}
+      {sideCarArtifact?.map(({ sidecar }: SidecarArtifactWrapper, index: number) => {
         const { color: sideCarConnectionColor } = getStatus(
           sidecar?.spec?.connectorRef,
           fetchedConnectorResponse,

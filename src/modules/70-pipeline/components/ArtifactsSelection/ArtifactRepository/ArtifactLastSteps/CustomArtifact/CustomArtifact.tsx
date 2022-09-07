@@ -63,12 +63,13 @@ function FormContent({
   isMultiArtifactSource
 }: any): React.ReactElement {
   const { getString } = useStrings()
+
   const scriptType: ScriptType =
     formik.values?.spec?.scripts.fetchAllArtifacts?.spec?.shell || (getString('common.bash') as ScriptType)
   return (
     <Form>
       <div className={css.artifactForm}>
-        {isMultiArtifactSource && <ArtifactSourceIdentifier />}
+        {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.customArtifactContainer}>
           <FormInput.Select
@@ -248,6 +249,8 @@ export function CustomArtifact(
 ): React.ReactElement {
   const { context, initialValues, artifactIdentifiers, selectedArtifact, nextStep, prevStepData } = props
   const { getString } = useStrings()
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
+
   const schemaObject = {
     spec: Yup.object().shape({
       version: Yup.string().trim().required(getString('validation.nexusVersion'))
@@ -268,11 +271,7 @@ export function CustomArtifact(
     if (prevStepData?.spec) {
       currentValue = { ...prevStepData, type: 'CustomArtifact' }
     }
-    return getCustomArtifactFormData(
-      currentValue || {},
-      selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR
-    )
+    return getCustomArtifactFormData(currentValue || {}, selectedArtifact as ArtifactType, isIdentifierAllowed)
   }
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
@@ -297,7 +296,7 @@ export function CustomArtifactOptionalConfiguration(
   props: StepProps<CustomArtifactSource> & ImagePathProps<CustomArtifactSource>
 ): React.ReactElement {
   const { context, handleSubmit, prevStepData, initialValues, selectedArtifact } = props
-
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
   const { getString } = useStrings()
 
   const submitFormData = (formData: CustomArtifactSource): void => {
@@ -315,7 +314,7 @@ export function CustomArtifactOptionalConfiguration(
           )
         : formData?.spec?.delegateSelectors
     set(artifactObj, 'spec.delegateSelectors', delegateSelectorsStrings)
-    if (context === ModalViewFor.SIDECAR) {
+    if (isIdentifierAllowed) {
       merge(artifactObj, { identifier: formData?.identifier })
     }
     handleSubmit(artifactObj)
@@ -338,7 +337,7 @@ export function CustomArtifactOptionalConfiguration(
     return getCustomArtifactFormData(
       initialValuesWithDelegates,
       selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR
+      isIdentifierAllowed
     ) as CustomArtifactSource
   }
 

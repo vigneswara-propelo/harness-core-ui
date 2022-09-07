@@ -74,6 +74,8 @@ export function ACRArtifact({
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+
   const [tagList, setTagList] = React.useState([])
   const [subscriptions, setSubscriptions] = React.useState<SelectOption[]>([])
   const [registries, setRegistries] = React.useState<SelectOption[]>([])
@@ -237,7 +239,7 @@ export function ACRArtifact({
     const values = getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR
+      isIdentifierAllowed
     ) as ACRArtifactType
 
     formikRef?.current?.setFieldValue('subscriptionId', getSubscription(values))
@@ -381,7 +383,7 @@ export function ACRArtifact({
     const values = getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR
+      isIdentifierAllowed
     ) as ACRArtifactType
 
     /* istanbul ignore else */
@@ -414,7 +416,8 @@ export function ACRArtifact({
   }, [context, initialValues, selectedArtifact])
 
   const submitFormData = (formData: ACRArtifactType & { connectorId?: string }): void => {
-    const artifactObj = getFinalArtifactObj(formData, context === ModalViewFor.SIDECAR)
+    const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)
+
     merge(artifactObj.spec, {
       subscriptionId: formData?.subscriptionId,
       registry: formData?.registry,
@@ -474,7 +477,7 @@ export function ACRArtifact({
           return (
             <Form>
               <div className={css.connectorForm}>
-                {isMultiArtifactSource && <ArtifactSourceIdentifier />}
+                {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 <div className={css.imagePathContainer}>
                   <FormInput.MultiTypeInput

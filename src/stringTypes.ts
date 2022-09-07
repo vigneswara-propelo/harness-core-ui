@@ -2949,6 +2949,9 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.selectAManifest': string
   'pipeline.artifactTriggerConfigPanel.selectAnArtifact': string
   'pipeline.artifactTriggerConfigPanel.tagArtifactPathBuild': string
+  'pipeline.artifactsSelection.addArtifactSource': string
+  'pipeline.artifactsSelection.addPrimaryArtifact': string
+  'pipeline.artifactsSelection.addSidecar': string
   'pipeline.artifactsSelection.amazonS3Title': string
   'pipeline.artifactsSelection.artifactDetails': string
   'pipeline.artifactsSelection.artifactDirectory': string
@@ -9871,14 +9874,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   'pipelineSteps.resourceNameValue': string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  'pipelineSteps.serviceTab.artifactList.addPrimary': string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  'pipelineSteps.serviceTab.artifactList.addSidecar': string
   /**
    * @deprecated migrate this string to module level file
    */

@@ -133,7 +133,7 @@ export const shouldFetchTags = (
 
 export const getFinalArtifactObj = (
   formData: ImagePathTypes & { connectorId?: string },
-  isSideCar: boolean
+  isIdentifierAllowed: boolean
 ): ArtifactConfig => {
   const tagData =
     formData?.tagType === TagTypes.Value
@@ -147,7 +147,7 @@ export const getFinalArtifactObj = (
       ...tagData
     }
   }
-  if (isSideCar) {
+  if (isIdentifierAllowed) {
     merge(artifactObj, { identifier: formData?.identifier })
   }
   return artifactObj
@@ -172,7 +172,7 @@ const getServerlessArtifactFromObj = (formData: ImagePathTypes & { connectorId?:
 
 export const getFinalArtifactFormObj = (
   formData: ImagePathTypes & { connectorId?: string },
-  isSideCar: boolean,
+  isIdentifierAllowed: boolean,
   isServerlessDeploymentTypeSelected = false
 ): ArtifactConfig => {
   let artifactObj: ArtifactConfig = {}
@@ -194,7 +194,7 @@ export const getFinalArtifactFormObj = (
     }
   }
 
-  if (isSideCar) {
+  if (isIdentifierAllowed) {
     merge(artifactObj, { identifier: formData?.identifier })
   }
   return artifactObj
@@ -229,7 +229,7 @@ const getTagValues = (specValues: any, isServerlessDeploymentTypeSelected = fals
 export const getArtifactFormData = (
   initialValues: ImagePathTypes,
   selectedArtifact: ArtifactType,
-  isSideCar: boolean,
+  isIdentifierAllowed: boolean,
   isServerlessDeploymentTypeSelected = false
 ): ImagePathTypes => {
   const specValues = get(initialValues, 'spec', null)
@@ -239,7 +239,7 @@ export const getArtifactFormData = (
   }
   const values = getTagValues(specValues, isServerlessDeploymentTypeSelected)
 
-  if (isSideCar && initialValues?.identifier) {
+  if (isIdentifierAllowed && initialValues?.identifier) {
     merge(values, { identifier: initialValues?.identifier })
   }
   return values
@@ -248,14 +248,14 @@ export const getArtifactFormData = (
 export const getCustomArtifactFormData = (
   initialValues: CustomArtifactSource,
   selectedArtifact: ArtifactType,
-  isSideCar: boolean
+  isIdentifierAllowed: boolean
 ): CustomArtifactSource => {
   const specValues = get(initialValues, 'spec', null)
   if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
     return defaultArtifactInitialValues(selectedArtifact)
   }
 
-  if (isSideCar && initialValues?.identifier) {
+  if (isIdentifierAllowed && initialValues?.identifier) {
     merge(initialValues, { identifier: initialValues?.identifier })
   }
   return initialValues
@@ -264,7 +264,7 @@ export const getCustomArtifactFormData = (
 export const getJenkinsFormData = (
   initialValues: JenkinsArtifactType,
   selectedArtifact: ArtifactType,
-  isSideCar: boolean
+  isIdentifierAllowed: boolean
 ): JenkinsArtifactType => {
   const specValues = get(initialValues, 'spec', null)
 
@@ -272,7 +272,7 @@ export const getJenkinsFormData = (
     return defaultArtifactInitialValues(selectedArtifact)
   }
 
-  if (isSideCar && initialValues?.identifier) {
+  if (isIdentifierAllowed && initialValues?.identifier) {
     merge(initialValues, { identifier: initialValues?.identifier })
   }
   return initialValues
@@ -293,7 +293,7 @@ const getVersionValues = (specValues: any): GoogleArtifactRegistryInitialValuesT
 export const getGoogleArtifactRegistryFormData = (
   initialValues: GoogleArtifactRegistryInitialValuesType,
   selectedArtifact: ArtifactType,
-  isSideCar: boolean
+  isIdentifierAllowed: boolean
 ): GoogleArtifactRegistryInitialValuesType => {
   const specValues = get(initialValues, 'spec', null)
 
@@ -303,7 +303,7 @@ export const getGoogleArtifactRegistryFormData = (
 
   const values = getVersionValues(specValues)
 
-  if (isSideCar && initialValues?.identifier) {
+  if (isIdentifierAllowed && initialValues?.identifier) {
     merge(values, { identifier: initialValues?.identifier })
   }
   return values

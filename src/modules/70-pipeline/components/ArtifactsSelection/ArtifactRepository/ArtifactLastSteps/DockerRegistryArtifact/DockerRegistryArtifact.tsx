@@ -52,6 +52,7 @@ export function DockerRegistryArtifact({
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
 
   const schemaObject = {
     imagePath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.imagePath')),
@@ -131,10 +132,10 @@ export function DockerRegistryArtifact({
   }, [])
 
   const getInitialValues = (): ImagePathTypes => {
-    return getArtifactFormData(initialValues, selectedArtifact as ArtifactType, context === ModalViewFor.SIDECAR)
+    return getArtifactFormData(initialValues, selectedArtifact as ArtifactType, isIdentifierAllowed)
   }
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
-    const artifactObj = getFinalArtifactObj(formData, context === ModalViewFor.SIDECAR)
+    const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)
     handleSubmit(artifactObj)
   }
 
@@ -159,7 +160,7 @@ export function DockerRegistryArtifact({
         {formik => (
           <Form>
             <div className={css.connectorForm}>
-              {isMultiArtifactSource && <ArtifactSourceIdentifier />}
+              {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
 
               <ArtifactImagePathTagView

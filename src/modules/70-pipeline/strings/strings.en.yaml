@@ -789,6 +789,9 @@ artifactPathLabel: Artifact Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
+  addPrimaryArtifact: Add Primary Artifact
+  addArtifactSource: Add Artifact Source
+  addSidecar: Add Sidecar
   projectPlaceholder: Enter Project
   repositoryTypePlaceholder: Select Repository Type
   delegateselectionPlaceholder: Add specific selectors or leave empty to target any delegate

@@ -32,6 +32,9 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
+import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { setupMode } from '../PipelineStepsUtil'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
@@ -56,6 +59,7 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
 }) => {
   const { getString } = useStrings()
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
+  const isMultiArtifactSourceEnabled = useFeatureFlag(FeatureFlag.NG_ARTIFACT_SOURCES)
 
   const {
     state: {
@@ -371,12 +375,20 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
               <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            <ArtifactsSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-            />
+            {isMultiArtifactSourceEnabled ? (
+              <ServiceV2ArtifactsSelection
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            ) : (
+              <ArtifactsSelection
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            )}
           </Card>
         </>
       )}

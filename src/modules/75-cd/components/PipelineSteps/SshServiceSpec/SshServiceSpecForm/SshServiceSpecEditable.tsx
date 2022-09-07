@@ -19,6 +19,9 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { setupMode } from '../../PipelineStepsUtil'
 import type { SshWinRmServiceInputFormProps } from '../SshServiceSpecInterface'
 import css from '../SshServiceSpec.module.scss'
@@ -30,6 +33,7 @@ const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
 }) => {
   const { getString } = useStrings()
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
+  const isMultiArtifactSourceEnabled = useFeatureFlag(FeatureFlag.NG_ARTIFACT_SOURCES)
 
   const {
     state: {
@@ -56,12 +60,20 @@ const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
               <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            <ArtifactsSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-            />
+            {isMultiArtifactSourceEnabled ? (
+              <ServiceV2ArtifactsSelection
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            ) : (
+              <ArtifactsSelection
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            )}
           </Card>
           <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
             <div

@@ -64,6 +64,8 @@ export function ECRArtifact({
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+
   const [tagList, setTagList] = React.useState([])
   const [regions, setRegions] = React.useState<SelectOption[]>([])
   const [lastQueryData, setLastQueryData] = React.useState<{ imagePath: string; region: any }>({
@@ -163,20 +165,17 @@ export function ECRArtifact({
   }, [])
 
   const getInitialValues = useCallback((): ImagePathTypes => {
-    const values = getArtifactFormData(
-      initialValues,
-      selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR
-    )
+    const values = getArtifactFormData(initialValues, selectedArtifact as ArtifactType, isIdentifierAllowed)
     const specValues = get(initialValues, 'spec', null)
     if (getMultiTypeFromValue(specValues?.region) === MultiTypeInputType.FIXED) {
       values.region = regions.find(regionData => regionData.value === specValues?.region)
     }
     return values
-  }, [context, initialValues, regions, selectedArtifact])
+  }, [initialValues, isIdentifierAllowed, regions, selectedArtifact])
 
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
-    const artifactObj = getFinalArtifactObj(formData, context === ModalViewFor.SIDECAR)
+    const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)
+
     merge(artifactObj.spec, { region: formData?.region?.value ? formData?.region?.value : formData?.region })
     handleSubmit(artifactObj)
   }
@@ -202,7 +201,7 @@ export function ECRArtifact({
         {formik => (
           <Form>
             <div className={css.connectorForm}>
-              {isMultiArtifactSource && <ArtifactSourceIdentifier />}
+              {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
                 <FormInput.MultiTypeInput

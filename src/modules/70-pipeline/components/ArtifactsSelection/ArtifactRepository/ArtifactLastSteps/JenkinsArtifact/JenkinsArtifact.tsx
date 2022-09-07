@@ -239,7 +239,7 @@ function FormComponent({
   return (
     <Form>
       <div className={css.connectorForm}>
-        {isMultiArtifactSource && <ArtifactSourceIdentifier />}
+        {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.jenkinsFieldContainer}>
           <FormInput.SelectWithSubmenuTypeInput
@@ -439,12 +439,13 @@ function FormComponent({
 export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsArtifactProps): React.ReactElement {
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
 
   const getInitialValues = (): JenkinsArtifactType => {
     return getJenkinsFormData(
       initialValues,
       selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR
+      isIdentifierAllowed
     ) as JenkinsArtifactType
   }
 

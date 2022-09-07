@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
-import { Color, Text } from '@harness/uicore'
-import type { ArtifactSource, PageConnectorResponse, PrimaryArtifact } from 'services/cd-ng'
+import { Color, FontVariation, Text } from '@harness/uicore'
+import cx from 'classnames'
 import { useStrings } from 'framework/strings'
+import type { ArtifactSource, PageConnectorResponse, PrimaryArtifact } from 'services/cd-ng'
 import type { ModalViewFor } from '../../ArtifactHelper'
 import type { ArtifactType } from '../../ArtifactInterface'
 import PrimaryArtifactView from '../PrimaryArtifact/PrimaryArtifactView'
@@ -30,10 +31,7 @@ function PrimaryArtifactSources(props: PrimaryArtifactSourcesProps): React.React
     return (
       <div>
         <Text width={200} className={css.type} color={Color.BLACK} lineClamp={1}>
-          {getString('sidecar')}
-          <Text lineClamp={1} className={css.artifactId}>
-            ({getString('common.ID')}: {identifier})
-          </Text>
+          {identifier}
         </Text>
       </div>
     )
@@ -43,6 +41,21 @@ function PrimaryArtifactSources(props: PrimaryArtifactSourcesProps): React.React
   }
   return (
     <>
+      <div className={css.sidecarList}>
+        <Text margin={{ bottom: 'xlarge' }} color={Color.GREY_800} font={{ weight: 'semi-bold', size: 'normal' }}>
+          {getString('primary')}
+        </Text>
+        <div className={cx(css.artifactList, css.listHeader)}>
+          <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.ID')}</Text>
+          <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+            {getString('pipeline.artifactsSelection.artifactType')}
+          </Text>
+          <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('artifactRepository')}</Text>
+          <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
+          <span></span>
+        </div>
+      </div>
+
       {artifactSources?.map((artifactSource, index) => (
         <PrimaryArtifactView
           key={artifactSource.identifier}

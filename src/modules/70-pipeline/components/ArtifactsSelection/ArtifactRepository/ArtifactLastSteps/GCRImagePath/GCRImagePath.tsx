@@ -92,6 +92,8 @@ export function GCRImagePath({
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+
   const [tagList, setTagList] = useState([])
   const [lastQueryData, setLastQueryData] = useState({ imagePath: '', registryHostname: '' })
   const {
@@ -130,8 +132,8 @@ export function GCRImagePath({
   }, [lastQueryData, refetch])
 
   const getInitialValues = useCallback((): ImagePathTypes => {
-    return getArtifactFormData(initialValues, selectedArtifact as ArtifactType, context === ModalViewFor.SIDECAR)
-  }, [context, initialValues, selectedArtifact])
+    return getArtifactFormData(initialValues, selectedArtifact as ArtifactType, isIdentifierAllowed)
+  }, [initialValues, isIdentifierAllowed, selectedArtifact])
 
   const fetchTags = (imagePath = '', registryHostname = ''): void => {
     if (canFetchTags(imagePath, registryHostname)) {
@@ -149,7 +151,8 @@ export function GCRImagePath({
   }, [])
 
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
-    const artifactObj = getFinalArtifactObj(formData, context === ModalViewFor.SIDECAR)
+    const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)
+
     merge(artifactObj.spec, { registryHostname: formData?.registryHostname })
     handleSubmit(artifactObj)
   }
@@ -189,7 +192,7 @@ export function GCRImagePath({
         {formik => (
           <Form>
             <div className={css.connectorForm}>
-              {isMultiArtifactSource && <ArtifactSourceIdentifier />}
+              {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
                 <FormInput.MultiTypeInput

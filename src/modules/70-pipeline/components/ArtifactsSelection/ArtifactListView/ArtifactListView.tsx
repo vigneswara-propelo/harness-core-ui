@@ -43,12 +43,7 @@ function ArtifactListView({
   return (
     <Layout.Vertical style={{ width: '100%' }}>
       <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }}>
-        {!!(
-          sideCarArtifact?.length ||
-          (isMultiArtifactSource
-            ? (primaryArtifact as ArtifactSource[])?.length
-            : (primaryArtifact as PrimaryArtifact)?.type)
-        ) && (
+        {!isMultiArtifactSource && (sideCarArtifact?.length || (primaryArtifact as PrimaryArtifact)?.type) && (
           <div className={cx(css.artifactList, css.listHeader)}>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.ID')}</Text>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
@@ -80,14 +75,21 @@ function ArtifactListView({
                 className={css.addArtifact}
                 id="add-artifact"
                 size={ButtonSize.SMALL}
+                icon="plus"
                 variation={ButtonVariation.LINK}
+                margin={isMultiArtifactSource && { bottom: 'xxlarge' }}
                 onClick={() => addNewArtifact(ModalViewFor.PRIMARY)}
-                text={getString('pipelineSteps.serviceTab.artifactList.addPrimary')}
+                text={
+                  isMultiArtifactSource
+                    ? getString('pipeline.artifactsSelection.addArtifactSource')
+                    : getString('pipeline.artifactsSelection.addPrimaryArtifact')
+                }
               />
             )}
           </>
           <>
             <SidecarArtifacts
+              isMultiArtifactSource={isMultiArtifactSource}
               sideCarArtifact={sideCarArtifact}
               removeSidecar={removeSidecar}
               {...commonArtifactProps}
@@ -96,10 +98,11 @@ function ArtifactListView({
               <Button
                 className={css.addArtifact}
                 id="add-artifact"
+                icon="plus"
                 size={ButtonSize.SMALL}
                 variation={ButtonVariation.LINK}
                 onClick={() => addNewArtifact(ModalViewFor.SIDECAR)}
-                text={getString('pipelineSteps.serviceTab.artifactList.addSidecar')}
+                text={getString('pipeline.artifactsSelection.addSidecar')}
               />
             )}
           </>

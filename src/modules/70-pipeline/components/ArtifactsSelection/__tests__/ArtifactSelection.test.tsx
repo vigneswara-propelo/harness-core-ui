@@ -105,7 +105,7 @@ describe('ArtifactsSelection tests', () => {
       </TestWrapper>
     )
 
-    const addPrimaryArtifact = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    const addPrimaryArtifact = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
     expect(addPrimaryArtifact).toBeDefined()
   })
 
@@ -133,7 +133,7 @@ describe('ArtifactsSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addFileButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -153,7 +153,7 @@ describe('ArtifactsSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addFileButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -373,7 +373,7 @@ describe('ArtifactsSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addFileButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -401,7 +401,7 @@ describe('ArtifactsSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addSidecarButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addSidecarButton).toBeDefined()
     fireEvent.click(addSidecarButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -429,7 +429,7 @@ describe('ArtifactsSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addSidecarButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addSidecarButton).toBeDefined()
     fireEvent.click(addSidecarButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -463,7 +463,7 @@ describe('ArtifactsSelection tests', () => {
       </TestWrapper>
     )
 
-    const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    const addPrimaryButton = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
     expect(addPrimaryButton).toBeDefined()
     fireEvent.click(addPrimaryButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -505,7 +505,7 @@ describe('ArtifactsSelection tests', () => {
       </TestWrapper>
     )
 
-    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addSidecarButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addSidecarButton).toBeDefined()
     fireEvent.click(addSidecarButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -547,7 +547,7 @@ describe('ArtifactsSelection tests', () => {
       </TestWrapper>
     )
 
-    const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    const addPrimaryButton = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
     expect(addPrimaryButton).toBeInTheDocument()
     fireEvent.click(addPrimaryButton)
 
@@ -595,7 +595,7 @@ describe('ArtifactsSelection tests', () => {
       </TestWrapper>
     )
 
-    const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    const addPrimaryButton = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
     expect(addPrimaryButton).toBeInTheDocument()
     fireEvent.click(addPrimaryButton)
     await testArtifactTypeList()
@@ -625,7 +625,7 @@ describe('ArtifactsSelection tests', () => {
       </TestWrapper>
     )
 
-    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addSidecarButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addSidecarButton).toBeInTheDocument()
     fireEvent.click(addSidecarButton)
     await testArtifactTypeList()

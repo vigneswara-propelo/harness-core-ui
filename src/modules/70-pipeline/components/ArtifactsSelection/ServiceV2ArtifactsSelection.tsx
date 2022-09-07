@@ -306,7 +306,7 @@ export default function ServiceV2ArtifactsSelection({
       if (artifactObject?.length) {
         artifactObject.splice(artifactIndex, 1, { sidecar: artifactObj })
       } else {
-        set(artifacts, 'sidecars', [artifactObj])
+        set(artifacts, 'sidecars', [{ sidecar: artifactObj }])
       }
     },
     [artifactContext, artifactIndex, artifacts, getArtifactsPath]

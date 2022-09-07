@@ -600,11 +600,12 @@ function ManifestListView({
           <Button
             className={css.addManifest}
             id="add-manifest"
+            icon="plus"
             size={ButtonSize.SMALL}
             variation={ButtonVariation.LINK}
             data-test-id="addManifest"
             onClick={addNewManifest}
-            text={addManifestBtnText ?? getString('pipelineSteps.serviceTab.manifestList.addManifest')}
+            text={addManifestBtnText ?? getString('pipeline.manifestType.addManifestLabel')}
           />
         )}
       </Layout.Vertical>

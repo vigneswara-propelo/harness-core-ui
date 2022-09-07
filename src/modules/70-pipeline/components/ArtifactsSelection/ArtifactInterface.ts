@@ -188,6 +188,7 @@ export interface JenkinsArtifactProps {
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
 }
 
 export interface GoogleArtifactRegistryInitialValuesType {

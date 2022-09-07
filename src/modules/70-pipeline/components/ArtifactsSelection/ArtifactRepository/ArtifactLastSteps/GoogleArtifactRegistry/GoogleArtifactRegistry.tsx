@@ -399,12 +399,13 @@ export function GoogleArtifactRegistry(
 ): React.ReactElement {
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
 
   const getInitialValues = (): GoogleArtifactRegistryInitialValuesType => {
     return getGoogleArtifactRegistryFormData(
       initialValues,
       selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR
+      isIdentifierAllowed
     ) as GoogleArtifactRegistryInitialValuesType
   }
 
@@ -417,12 +418,11 @@ export function GoogleArtifactRegistry(
         : {
             versionRegex: defaultTo(formData.spec.versionRegex, '')
           }
-    const identifierData =
-      context === ModalViewFor.SIDECAR
-        ? {
-            identifier: formData.identifier
-          }
-        : {}
+    const identifierData = isIdentifierAllowed
+      ? {
+          identifier: formData.identifier
+        }
+      : {}
     handleSubmit({
       ...identifierData,
       spec: {
