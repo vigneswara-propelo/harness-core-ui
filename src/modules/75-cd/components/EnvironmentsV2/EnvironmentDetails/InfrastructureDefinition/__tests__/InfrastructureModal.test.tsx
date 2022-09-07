@@ -15,6 +15,7 @@ import routes from '@common/RouteDefinitions'
 import { environmentPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
 
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import InfrastructureModal from '../InfrastructureModal'
 
 import yamlSchema from './__mocks__/infrastructureYamlSchema.json'
@@ -160,5 +161,34 @@ describe('Infrastructure Modal Test', () => {
     await waitFor(() => {
       expect(screen.getByText('K8s_Direct_Id')).toBeInTheDocument()
     })
+  })
+
+  test('disable deployment type(if present) while creating new infra', async () => {
+    render(
+      <TestWrapper
+        path={routes.toEnvironmentDetails({
+          accountId: 'dummy',
+          orgIdentifier: 'dummy',
+          projectIdentifier: 'dummy',
+          module: 'cd',
+          environmentIdentifier: 'test_env'
+        })}
+        pathParams={{ ...projectPathProps, ...environmentPathProps }}
+        defaultFeatureFlagValues={{
+          SSH_NG: true,
+          AZURE_WEBAPP_NG: true
+        }}
+      >
+        <InfrastructureModal
+          environmentIdentifier="test_env"
+          hideModal={jest.fn()}
+          refetch={jest.fn()}
+          stageDeploymentType={ServiceDeploymentType['Kubernetes']}
+        />
+      </TestWrapper>
+    )
+
+    expect(await screen.findByText('pipelineSteps.deploy.infrastructure.viaCloudProvider')).toBeInTheDocument()
+    expect(screen.queryByText('pipeline.serviceDeploymentTypes.serverlessAwsLambda')).not.toBeInTheDocument()
   })
 })

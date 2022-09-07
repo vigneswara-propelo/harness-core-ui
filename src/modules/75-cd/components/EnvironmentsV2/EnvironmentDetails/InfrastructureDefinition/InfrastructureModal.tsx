@@ -83,13 +83,15 @@ export default function InfrastructureModal({
   hideModal,
   refetch,
   selectedInfrastructure,
-  environmentIdentifier
+  environmentIdentifier,
+  stageDeploymentType
 }: {
   hideModal: () => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   refetch: any
   selectedInfrastructure?: string
   environmentIdentifier: string
+  stageDeploymentType?: ServiceDeploymentType
 }): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
@@ -147,6 +149,7 @@ export default function InfrastructureModal({
             refetch={refetch}
             infrastructureDefinition={infrastructureDefinition}
             environmentIdentifier={environmentIdentifier}
+            stageDeploymentType={stageDeploymentType}
           />
         </DeployStageErrorProvider>
       </PipelineVariablesContextProvider>
@@ -158,12 +161,14 @@ function BootstrapDeployInfraDefinition({
   hideModal,
   refetch,
   infrastructureDefinition,
-  environmentIdentifier
+  environmentIdentifier,
+  stageDeploymentType
 }: {
   hideModal: () => void
   refetch: (infrastructure?: InfrastructureResponseDTO) => void
   infrastructureDefinition?: InfrastructureDefinitionConfig
   environmentIdentifier: string
+  stageDeploymentType?: ServiceDeploymentType
 }): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const {
@@ -204,6 +209,13 @@ function BootstrapDeployInfraDefinition({
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (selectedStageId && stageDeploymentType) {
+      handleDeploymentTypeChange(stageDeploymentType)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedStageId])
 
   const { data: infrastructureDefinitionSchema } = useGetYamlSchema({
     queryParams: {
@@ -390,7 +402,7 @@ function BootstrapDeployInfraDefinition({
                 <SelectDeploymentType
                   viewContext="setup"
                   selectedDeploymentType={selectedDeploymentType}
-                  isReadonly={false}
+                  isReadonly={!!stageDeploymentType}
                   handleDeploymentTypeChange={handleDeploymentTypeChange}
                   shouldShowGitops={false}
                 />
