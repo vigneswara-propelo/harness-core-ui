@@ -221,6 +221,7 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
             summary={getString('cv.monitoringSources.assign')}
             details={
               <SelectHealthSourceServices
+                key={metricValues.identifier}
                 values={{
                   sli: !!metricValues.sli,
                   healthScore: !!metricValues.healthScore,

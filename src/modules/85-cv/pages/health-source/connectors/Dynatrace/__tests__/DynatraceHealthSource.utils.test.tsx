@@ -269,7 +269,7 @@ describe('Validate DynatraceHealthSource Utils', () => {
       ...MockDynatraceMetricData,
       aggregator: 'avg',
       serviceInstanceIdentifierTag: 'host',
-      identifier: 'mapped_metric_1',
+      identifier: 'mockMetricName',
       isCustomCreatedMetric: false,
       continuousVerification: true,
       metric: 'system.cpu.user',

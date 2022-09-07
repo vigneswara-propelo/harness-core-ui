@@ -158,11 +158,11 @@ export default function MonitoredServiceInputSetsTemplate({
     if (selectedTemplateVersionLabel && selectedTemplateIdentifier) {
       updateQueryParams({
         templateRef: JSON.stringify({
-          selectedTemplateIdentifier,
-          selectedTemplateVersionLabel,
-          selectedTemplateAccountId,
-          selectedTemplateOrgIdentifier,
-          selectedTemplateProjectIdentifier
+          identifier: selectedTemplateIdentifier,
+          versionLabel: selectedTemplateVersionLabel,
+          accountId: selectedTemplateAccountId,
+          orgIdentifier: selectedTemplateOrgIdentifier,
+          projectIdentifier: selectedTemplateProjectIdentifier
         })
       })
     }

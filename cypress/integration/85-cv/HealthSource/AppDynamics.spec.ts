@@ -67,10 +67,10 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('be.visible')
+    cy.contains('span', 'Please select atleast one metric pack').should('be.visible')
     cy.get('input[name="Errors"]').check({ force: true })
     cy.get('input[name="Performance"]').check({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('not.exist')
+    cy.contains('span', 'Please select atleast one metric pack').should('not.exist')
 
     cy.get('input[name="appdApplication"]').click()
     cy.contains('p', 'cv-app').click({ force: true })
@@ -127,9 +127,9 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('be.visible')
+    cy.contains('span', 'Please select atleast one metric pack').should('be.visible')
     cy.contains('span', 'Add Metric').click()
-    cy.contains('span', 'Plese select metric packs').should('not.exist')
+    cy.contains('span', 'Please select atleast one metric pack').should('not.exist')
 
     cy.contains('div', 'Assign').click({ force: true })
 
@@ -202,9 +202,9 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('be.visible')
+    cy.contains('span', 'Please select atleast one metric pack').should('be.visible')
     cy.contains('span', 'Add Metric').click()
-    cy.contains('span', 'Plese select metric packs').should('not.exist')
+    cy.contains('span', 'Please select atleast one metric pack').should('not.exist')
 
     cy.contains('div', 'Assign').click({ force: true })
 
