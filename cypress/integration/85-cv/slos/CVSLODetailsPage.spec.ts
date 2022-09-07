@@ -134,7 +134,7 @@ describe('CVSLODetailsPage', () => {
     cy.contains('p', 'Service Details').should('be.visible')
 
     cy.contains('p', 'SLI Type').next().should('contain.text', 'Latency')
-    cy.contains('p', 'Health Score').next().should('contain.text', 'appd_cvng_prod')
+    cy.contains('p', 'Health Source').next().should('contain.text', 'appd_cvng_prod')
     cy.contains('p', 'Period Type').next().should('contain.text', 'Calendar')
 
     cy.contains('p', 'Error Budget Remaining').next().should('contain.text', '100.00%')

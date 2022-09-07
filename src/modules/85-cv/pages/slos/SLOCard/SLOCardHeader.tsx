@@ -260,7 +260,7 @@ const SLOCardHeader: React.FC<SLOCardHeaderProps> = ({
               color={Color.GREY_400}
               tooltipProps={{ dataTooltipId: 'slosHealthSource' }}
             >
-              {getString('cv.slos.healthSource')}:
+              {getString('pipeline.verification.healthSourceLabel')}:
             </Text>
             <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_700}>
               {serviceLevelObjective.healthSourceName}
