@@ -77,7 +77,8 @@ import type {
   ImagePathTypes,
   AmazonS3InitialValuesType,
   JenkinsArtifactType,
-  GoogleArtifactRegistryInitialValuesType
+  GoogleArtifactRegistryInitialValuesType,
+  CustomArtifactSource
 } from './ArtifactInterface'
 import {
   ArtifactToConnectorMap,
@@ -417,7 +418,11 @@ export default function ServiceV2ArtifactsSelection({
   }, [selectedArtifact])
 
   const artifactLastStepProps = useMemo((): ImagePathProps<
-    ImagePathTypes & AmazonS3InitialValuesType & JenkinsArtifactType & GoogleArtifactRegistryInitialValuesType
+    ImagePathTypes &
+      AmazonS3InitialValuesType &
+      JenkinsArtifactType &
+      GoogleArtifactRegistryInitialValuesType &
+      CustomArtifactSource
   > => {
     return {
       key: getString('connectors.stepFourName'),

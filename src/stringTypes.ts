@@ -40,8 +40,10 @@ export interface StringsMap {
   'common.accountSettings': string
   'common.accountSetup': string
   'common.addAccountName': string
+  'common.addAttribute': string
   'common.addName': string
   'common.addVariable': string
+  'common.additionalAttributes': string
   'common.advanced': string
   'common.agent': string
   'common.agents': string
@@ -2954,6 +2956,8 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactPathPlaceholder': string
   'pipeline.artifactsSelection.artifactType': string
   'pipeline.artifactsSelection.artifactTyperequired': string
+  'pipeline.artifactsSelection.artifactsArrayPath': string
+  'pipeline.artifactsSelection.delegateselectionPlaceholder': string
   'pipeline.artifactsSelection.errors.noRepositories': string
   'pipeline.artifactsSelection.existingDocker.enterTagRegex': string
   'pipeline.artifactsSelection.existingDocker.imageNamePlaceholder': string
@@ -2984,6 +2988,8 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.tagRegex': string
   'pipeline.artifactsSelection.validation.versionRegex': string
   'pipeline.artifactsSelection.versionDetails': string
+  'pipeline.artifactsSelection.versionPath': string
+  'pipeline.artifactsSelection.versionPathPlaceholder': string
   'pipeline.artifactsSelection.versionPlaceholder': string
   'pipeline.artifactsSelection.versionRegex': string
   'pipeline.artifactsSelection.versionRegexPlaceholder': string

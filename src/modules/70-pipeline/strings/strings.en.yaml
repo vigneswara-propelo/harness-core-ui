@@ -791,7 +791,11 @@ artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
   projectPlaceholder: Enter Project
   repositoryTypePlaceholder: Select Repository Type
+  delegateselectionPlaceholder: Add specific selectors or leave empty to target any delegate
   repositoryPort: Repository Port
+  artifactsArrayPath: Artifacts Array Path
+  versionPath: Version Path
+  versionPathPlaceholder: Enter Version Path
   repositoryPortPlaceholder: Enter Repository Port
   repositoryPlaceholder: Enter Repository
   artifactType: Artifact Type

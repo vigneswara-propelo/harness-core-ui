@@ -74,7 +74,8 @@ import type {
   ImagePathTypes,
   AmazonS3InitialValuesType,
   JenkinsArtifactType,
-  GoogleArtifactRegistryInitialValuesType
+  GoogleArtifactRegistryInitialValuesType,
+  CustomArtifactSource
 } from './ArtifactInterface'
 import {
   ArtifactToConnectorMap,
@@ -89,7 +90,10 @@ import {
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import NexusArtifact from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
 import Artifactory from './ArtifactRepository/ArtifactLastSteps/Artifactory/Artifactory'
-import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
+import {
+  CustomArtifact,
+  CustomArtifactOptionalConfiguration
+} from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
 import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/ACRArtifact'
 import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
@@ -465,12 +469,30 @@ export default function ArtifactsSelection({
     }
   }, [selectedArtifact])
 
+  const getLastStepName = () => {
+    switch (selectedArtifact) {
+      case ENABLED_ARTIFACT_TYPES.CustomArtifact:
+        return {
+          key: getString('pipeline.artifactsSelection.artifactDetails'),
+          name: getString('pipeline.artifactsSelection.artifactDetails')
+        }
+      default:
+        return {
+          key: getString('connectors.stepFourName'),
+          name: getString('connectors.stepFourName')
+        }
+    }
+  }
+
   const artifactLastStepProps = useCallback((): ImagePathProps<
-    ImagePathTypes & AmazonS3InitialValuesType & JenkinsArtifactType & GoogleArtifactRegistryInitialValuesType
+    ImagePathTypes &
+      AmazonS3InitialValuesType &
+      JenkinsArtifactType &
+      GoogleArtifactRegistryInitialValuesType &
+      CustomArtifactSource
   > => {
     return {
-      key: getString('connectors.stepFourName'),
-      name: getString('connectors.stepFourName'),
+      ...getLastStepName(),
       context,
       expressions,
       allowableTypes,
@@ -483,6 +505,7 @@ export default function ArtifactsSelection({
       selectedArtifact,
       selectedDeploymentType: deploymentType
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     addArtifact,
     allowableTypes,
@@ -633,6 +656,21 @@ export default function ArtifactsSelection({
     }
   }, [artifactLastStepProps, selectedArtifact])
 
+  const getOptionalConfigurationSteps = useCallback((): JSX.Element | null => {
+    switch (selectedArtifact) {
+      case ENABLED_ARTIFACT_TYPES.CustomArtifact:
+        return (
+          <CustomArtifactOptionalConfiguration
+            {...artifactLastStepProps()}
+            name={'Optional Configuration'}
+            key={'Optional_Configuration'}
+          />
+        )
+      default:
+        return null
+    }
+  }, [artifactLastStepProps, selectedArtifact])
+
   const changeArtifactType = useCallback((selected: ArtifactType | null): void => {
     setSelectedArtifact(selected)
   }, [])
@@ -652,6 +690,7 @@ export default function ArtifactsSelection({
           expressions={expressions}
           allowableTypes={allowableTypes}
           lastSteps={getLastSteps()}
+          getOptionalConfigurationSteps={getOptionalConfigurationSteps()}
           labels={getLabels()}
           isReadonly={readonly}
           selectedArtifact={selectedArtifact}

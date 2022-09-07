@@ -22,6 +22,7 @@ import type {
   ServiceDefinition,
   ArtifactSource
 } from 'services/cd-ng'
+import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import type { ModalViewFor } from './ArtifactHelper'
 
 export interface ArtifactListViewProps {
@@ -90,8 +91,38 @@ export interface ImagePathTypes {
   repositoryFormat?: string
 }
 
-export interface CustomArtifactSource extends ImagePathTypes {
-  version: string
+export interface VariableInterface {
+  value: number | string
+  id: string
+  name?: string
+  type?: 'String' | 'Number'
+}
+
+export interface CustomArtifactSource {
+  type?: string
+  identifier?: string
+  spec?: {
+    version: string
+    delegateSelectors?: string[] | string
+    inputs?: VariableInterface[]
+    timeout?: string
+    scripts: {
+      fetchAllArtifacts?: {
+        artifactsArrayPath?: string
+        attributes?: VariableInterface[]
+        versionPath?: string
+        spec: {
+          shell?: ScriptType
+          source: {
+            spec: {
+              script?: string
+            }
+            type?: string
+          }
+        }
+      }
+    }
+  }
 }
 
 export interface AmazonS3InitialValuesType {
