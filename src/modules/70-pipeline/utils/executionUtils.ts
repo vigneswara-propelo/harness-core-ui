@@ -1002,7 +1002,15 @@ export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSumma
           type: nodedata.nodeType as string,
           name: nodedata.name as string,
           icon: 'cross',
-          data: nodedata as any,
+          data: {
+            ...(nodedata as any),
+            ...(isNodeTypeMatrixOrFor(nodedata?.nodeType) && {
+              children: getChildNodeDataForMatrix(nodedata, layoutNodeMap),
+              graphType: PipelineGraphType.STAGE_GRAPH,
+              id: nodedata?.nodeUuid,
+              maxParallelism: nodedata?.moduleInfo?.maxConcurrency?.value
+            })
+          },
           children: []
         })
         nodeDetails = layoutNodeMap[nodeDetails.edgeLayoutList?.nextIds?.[0] || '']

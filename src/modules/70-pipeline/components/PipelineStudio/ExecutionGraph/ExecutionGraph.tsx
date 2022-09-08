@@ -697,7 +697,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
             parentIdentifier: event?.parentIdentifier // (event.entity.getParent().getOptions() as StepGroupNodeLayerOptions).identifier
           })
         } else {
-          handleAdd(false, nodeRender, !event?.parentIdentifier, { entity: { ...event } })
+          handleAdd(false, nodeRender, true, { entity: { ...event } })
         }
       } else if (stepState && stepState.isStepGroupCollapsed) {
         const stepStates = state.states.set(event?.identifier, {
@@ -805,7 +805,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           isRollback: state.isRollback
         }).node
         if (node) {
-          handleAdd(true, event.target, false, { entity: { ...event } }, event.callback)
+          handleAdd(true, event.target, true, { entity: { ...event } }, event.callback)
         }
       } else {
         /* istanbul ignore else */ if (event.target) {
@@ -875,10 +875,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       dynamicPopoverHandler?.hide()
       const targetEl = event?.target
       const linkRender = targetEl || document.querySelector(`[data-linkid="${event.identifier}"]`)
-      // check if the link is under step group then directly show add Step
-      if (event?.node?.parentIdentifier && linkRender) {
-        handleAdd(false, linkRender, false, { entity: { ...event } })
-      } else if (linkRender) {
+      if (linkRender) {
         handleAdd(false, linkRender, true, { entity: { ...event } })
       }
     },
@@ -986,7 +983,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     })
   }, [engine])
 
-  const onRollbackToggleSwitchClick = (type: StepsType) => {
+  const onRollbackToggleSwitchClick = (type: StepsType): void => {
     const isRollbackToggled = type === StepsType.Rollback
     setState(prev => ({ ...prev, isRollback: isRollbackToggled }))
     updatePipelineView({ ...pipelineView, isRollbackToggled })
@@ -1087,7 +1084,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     }
   }, [ref, stepGroupUpdated])
 
-  const canvasClick = () => {
+  const canvasClick = (): void => {
     dynamicPopoverHandler?.hide()
   }
 
