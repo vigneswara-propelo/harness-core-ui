@@ -594,6 +594,9 @@ describe('AppDIgnoreThresholdTabContent', () => {
     result = getDefaultMetricTypeValue({ Performance: true, Errors: false }, metricPacksMock)
     expect(result).toBe('Performance')
 
+    result = getDefaultMetricTypeValue({ Infrastructure: true, Errors: false }, metricPacksMock)
+    expect(result).toBe('Infrastructure')
+
     result = getDefaultMetricTypeValue({ Performance: false, Errors: false }, metricPacksMock)
     expect(result).toBe(undefined)
   })
@@ -648,8 +651,14 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(result).toBe(true)
   })
 
-  test('getIsMetricPacksSelected returns true if atleast one metric pack is selected', () => {
+  test('getIsMetricPacksSelected returns false if none of the metric pack is selected', () => {
     const result = getIsMetricPacksSelected({ Performance: false, Errors: false })
+
+    expect(result).toBe(false)
+  })
+
+  test('getIsMetricPacksSelected returns false if only Custom metric data is enabled', () => {
+    const result = getIsMetricPacksSelected({ Performance: false, Errors: false, Custom: true })
 
     expect(result).toBe(false)
   })

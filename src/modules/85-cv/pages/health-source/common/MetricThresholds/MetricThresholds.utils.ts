@@ -396,7 +396,9 @@ export function validateCommonFieldsForMetricThreshold(
 export const getIsMetricPacksSelected = (metricData: { [key: string]: boolean }): boolean => {
   if (!metricData) return false
 
-  return Object.keys(metricData).some(metricPackKey => metricData[metricPackKey])
+  return Object.keys(metricData).some(
+    metricPackKey => metricPackKey !== MetricTypeValues.Custom && metricData[metricPackKey]
+  )
 }
 
 export function getMetricTypeItems(
@@ -495,6 +497,8 @@ export function getDefaultMetricTypeValue(
     return MetricTypeValues.Performance
   } else if (metricData[MetricTypeValues.Errors]) {
     return MetricTypeValues.Errors
+  } else if (metricData[MetricTypeValues.Infrastructure]) {
+    return MetricTypeValues.Infrastructure
   }
 
   return undefined

@@ -338,9 +338,8 @@ describe('Datadog metric thresholds', () => {
 
     cy.contains('span', 'Continuous Verification').click({ force: true })
 
-    cy.get('input[name="serviceInstance"]').click({ force: true })
+    cy.get('input[name="serviceInstance"]').scrollIntoView().click({ force: true })
 
-    cy.contains('p', 'host').should('be.visible')
     cy.contains('p', 'host').click()
 
     cy.contains('.Accordion--label', 'Advanced (Optional)').scrollIntoView().should('exist')
@@ -386,7 +385,7 @@ describe('Datadog metric thresholds', () => {
 
     cy.get('input[name="serviceInstance"]').click({ force: true })
 
-    cy.contains('p', 'host').should('be.visible')
+    cy.contains('p', 'host').should('exist')
     cy.contains('p', 'host').click()
 
     cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')

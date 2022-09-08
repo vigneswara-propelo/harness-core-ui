@@ -746,6 +746,10 @@ exports[`Validate DynatraceHealthSource should render DynatraceMetricPacksToServ
           </div>
         </div>
         <div
+          class="StyledProps--font StyledProps--main"
+          style="margin-bottom: 120px;"
+        />
+        <div
           class="StyledProps--font StyledProps--main footerCta footer"
         >
           <button

@@ -27,6 +27,7 @@ import { mapServiceListToOptions } from '@cv/pages/health-source/connectors/Dyna
 import {
   createMetricDataFormik,
   getInputGroupProps,
+  getUpdatedNonCustomFields,
   validateMetrics
 } from '@cv/pages/health-source/connectors/MonitoredServiceConnector.utils'
 import ValidationStatus from '@cv/pages/components/ValidationStatus/ValidationStatus'
@@ -44,6 +45,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { DynatraceMetricPacksToServiceProps } from './DynatraceMetricPacksToService.types'
 import { extractServiceMethods } from './DynatraceMetricPacksToService.utils'
 import { getTypeOfInput } from '../../../AppDynamics/AppDHealthSource.utils'
+import type { DynatraceMetricData } from '../../DynatraceHealthSource.types'
 import css from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.module.scss'
 
 export default function DynatraceMetricPacksToService(props: DynatraceMetricPacksToServiceProps): JSX.Element {
@@ -54,7 +56,8 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
     metricValues,
     isTemplate,
     expressions,
-    metricErrors
+    metricErrors,
+    isMetricThresholdEnabled
   } = props
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -178,18 +181,20 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
 
   const onChangeMetricPack = useCallback(
     async (metricPackIdentifier: string, updatedValue: boolean) => {
-      const updatedMetricData = {
-        ...metricValues.metricData,
-        [metricPackIdentifier]: updatedValue
-      }
+      if (typeof metricPackIdentifier === 'string') {
+        const updatedNonCustomFields = getUpdatedNonCustomFields<DynatraceMetricData>(
+          isMetricThresholdEnabled,
+          dynatraceMetricData,
+          metricPackIdentifier,
+          updatedValue
+        )
 
-      setDynatraceMetricData({
-        ...metricValues,
-        metricData: updatedMetricData
-      })
-      await onValidate(metricValues.serviceMethods || [], updatedMetricData)
+        setDynatraceMetricData(updatedNonCustomFields)
+
+        await onValidate(metricValues.serviceMethods || [], updatedNonCustomFields.metricData)
+      }
     },
-    [metricValues, onValidate, setDynatraceMetricData]
+    [dynatraceMetricData, isMetricThresholdEnabled, metricValues.serviceMethods]
   )
 
   return (
@@ -284,7 +289,7 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
               }
               connector={HealthSoureSupportedConnectorTypes.DYNATRACE}
               onChange={onChangeMetricPack}
-              isMetricThresholdEnabled={false}
+              isMetricThresholdEnabled={isMetricThresholdEnabled}
             />
             {validationResultData && (
               <MetricsVerificationModal
