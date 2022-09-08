@@ -9,6 +9,7 @@ import React, { useState } from 'react'
 import { Button, Text, Card, Icon, Layout } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
+import cx from 'classnames'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { useStrings } from 'framework/strings'
@@ -101,7 +102,13 @@ const useCreateConnectorMultiTypeModal = (
             </div>
           ))}
         </Layout.Horizontal>
-        <Button className={wizardCss.crossIcon} minimal icon="cross" iconProps={{ size: 18 }} onClick={handleClose} />
+        <Button
+          className={cx(wizardCss.crossIcon, css.white)}
+          minimal
+          icon="cross"
+          iconProps={{ size: 18 }}
+          onClick={handleClose}
+        />
       </Dialog>
     ),
     [props.types]

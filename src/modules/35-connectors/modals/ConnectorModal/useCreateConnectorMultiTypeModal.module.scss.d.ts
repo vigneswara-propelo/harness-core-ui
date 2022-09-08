@@ -9,5 +9,6 @@
 declare const styles: {
   readonly card: string
   readonly modal: string
+  readonly white: string
 }
 export default styles
