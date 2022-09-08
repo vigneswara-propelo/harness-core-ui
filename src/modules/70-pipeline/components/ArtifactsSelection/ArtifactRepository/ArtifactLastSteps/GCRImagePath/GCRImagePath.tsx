@@ -81,7 +81,7 @@ export function GCRImagePath({
 
   const primarySchema = Yup.object().shape(schemaObject)
 
-  const sidecarSchema = Yup.object().shape({
+  const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
       artifactIdentifiers,
@@ -178,7 +178,7 @@ export function GCRImagePath({
 
       <Formik
         initialValues={getInitialValues()}
-        validationSchema={context === ModalViewFor.SIDECAR ? sidecarSchema : primarySchema}
+        validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         formName="gcrImagePath"
         onSubmit={formData => {
           submitFormData({

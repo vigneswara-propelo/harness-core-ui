@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { shouldShowError, StepWizard, useToaster } from '@harness/uicore'
+import { RUNTIME_INPUT_VALUE, shouldShowError, StepWizard, useToaster } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -18,7 +18,7 @@ import set from 'lodash-es/set'
 
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
-import { defaultTo, isEmpty, merge } from 'lodash-es'
+import { defaultTo, isEmpty, merge, unset } from 'lodash-es'
 import {
   useGetConnectorListV2,
   PageConnectorResponse,
@@ -294,6 +294,7 @@ export default function ServiceV2ArtifactsSelection({
       if (artifactObject?.length) {
         artifactObject.splice(artifactIndex, 1, artifactObj)
       } else {
+        set(artifacts, 'primary.primaryArtifactRef', RUNTIME_INPUT_VALUE)
         set(artifacts, 'primary.sources', [artifactObj])
       }
     },
@@ -345,7 +346,14 @@ export default function ServiceV2ArtifactsSelection({
     setSelectedArtifact(null)
     if (stage) {
       const newStage = produce(stage, draft => {
-        set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts', artifactObject)
+        set(
+          draft,
+          `stage.spec.serviceConfig.serviceDefinition.spec.artifacts.${getArtifactsPath(type)}`,
+          artifactObject
+        )
+        if (type === ModalViewFor.PRIMARY && !artifactObject.length) {
+          unset(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts.primary.primaryArtifactRef')
+        }
       }).stage
       if (newStage) {
         updateStage(newStage)

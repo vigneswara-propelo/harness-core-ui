@@ -88,7 +88,7 @@ export function NexusArtifact({
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
-  const sidecarSchema = Yup.object().shape({
+  const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
       artifactIdentifiers,
@@ -193,7 +193,7 @@ export function NexusArtifact({
       <Formik
         initialValues={getInitialValues()}
         formName="nexusArtifact"
-        validationSchema={context === ModalViewFor.SIDECAR ? sidecarSchema : primarySchema}
+        validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,

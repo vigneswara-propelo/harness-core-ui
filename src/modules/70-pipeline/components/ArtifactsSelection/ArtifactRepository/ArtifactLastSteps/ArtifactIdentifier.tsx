@@ -28,7 +28,7 @@ function ArtifactSourceIdentifier(): React.ReactElement {
   return (
     <div className={css.dockerSideCard}>
       <FormInput.Text
-        label={getString('identifier')}
+        label={getString('pipeline.artifactsSelection.artifactSourceName')}
         placeholder={getString('pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder')}
         name="identifier"
       />

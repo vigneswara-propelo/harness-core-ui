@@ -153,7 +153,7 @@ export function ACRArtifact({
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
-  const sideCarSchema = Yup.object().shape({
+  const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
       artifactIdentifiers,
@@ -458,7 +458,7 @@ export function ACRArtifact({
       </Text>
       <Formik
         initialValues={getInitialValues()}
-        validationSchema={context === ModalViewFor.SIDECAR ? sideCarSchema : primarySchema}
+        validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         formName="acrArtifact"
         onSubmit={formData => {
           submitFormData({

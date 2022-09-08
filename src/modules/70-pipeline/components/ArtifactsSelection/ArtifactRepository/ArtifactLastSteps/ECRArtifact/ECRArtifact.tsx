@@ -88,7 +88,7 @@ export function ECRArtifact({
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
-  const sideCarSchema = Yup.object().shape({
+  const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
       artifactIdentifiers,
@@ -187,7 +187,7 @@ export function ECRArtifact({
       </Text>
       <Formik
         initialValues={getInitialValues()}
-        validationSchema={context === ModalViewFor.SIDECAR ? sideCarSchema : primarySchema}
+        validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         formName="ecrArtifact"
         onSubmit={formData => {
           submitFormData({

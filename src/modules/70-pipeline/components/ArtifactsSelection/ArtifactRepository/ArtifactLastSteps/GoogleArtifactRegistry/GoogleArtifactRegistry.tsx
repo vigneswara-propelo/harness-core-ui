@@ -457,7 +457,7 @@ export function GoogleArtifactRegistry(
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
-  const sidecarSchema = Yup.object().shape({
+  const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
       artifactIdentifiers,
@@ -474,7 +474,7 @@ export function GoogleArtifactRegistry(
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"
-        validationSchema={context === ModalViewFor.SIDECAR ? sidecarSchema : primarySchema}
+        validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         onSubmit={formData => {
           submitFormData(
             {

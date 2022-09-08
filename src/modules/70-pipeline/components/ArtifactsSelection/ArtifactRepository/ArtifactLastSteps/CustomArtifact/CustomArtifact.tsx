@@ -258,7 +258,7 @@ export function CustomArtifact(
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
-  const sidecarSchema = Yup.object().shape({
+  const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
       artifactIdentifiers,
@@ -281,7 +281,7 @@ export function CustomArtifact(
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"
-        validationSchema={context === ModalViewFor.SIDECAR ? sidecarSchema : primarySchema}
+        validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         onSubmit={formData => {
           nextStep?.({ ...formData })
         }}

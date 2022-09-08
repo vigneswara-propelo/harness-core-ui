@@ -9,11 +9,10 @@ import type { Schema } from 'yup'
 import type { IconName } from '@wings-software/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
 import { isEmpty } from 'lodash-es'
-import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
+import { NameSchema } from '@common/utils/Validation'
 import { Connectors } from '@connectors/constants'
 import type { ArtifactSource, ConnectorInfoDTO, PrimaryArtifact, ServiceDefinition } from 'services/cd-ng'
 import type { StringKeys } from 'framework/strings'
-import { useStrings } from 'framework/strings'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { ArtifactType } from './ArtifactInterface'
 
@@ -182,15 +181,13 @@ export const ArtifactIdentifierValidation = (
   id: string | undefined,
   validationMsg: string
 ): { identifier: Schema<unknown> } => {
-  const { getString } = useStrings()
-
   if (!id) {
     return {
-      identifier: IdentifierSchemaWithOutName(getString).notOneOf(artifactIdentifiers, validationMsg)
+      identifier: NameSchema().notOneOf(artifactIdentifiers, validationMsg)
     }
   }
   return {
-    identifier: IdentifierSchemaWithOutName(getString)
+    identifier: NameSchema()
   }
 }
 

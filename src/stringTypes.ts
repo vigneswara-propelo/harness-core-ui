@@ -2957,6 +2957,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactDirectory': string
   'pipeline.artifactsSelection.artifactDirectoryPlaceholder': string
   'pipeline.artifactsSelection.artifactPathPlaceholder': string
+  'pipeline.artifactsSelection.artifactSourceName': string
   'pipeline.artifactsSelection.artifactType': string
   'pipeline.artifactsSelection.artifactTyperequired': string
   'pipeline.artifactsSelection.artifactsArrayPath': string

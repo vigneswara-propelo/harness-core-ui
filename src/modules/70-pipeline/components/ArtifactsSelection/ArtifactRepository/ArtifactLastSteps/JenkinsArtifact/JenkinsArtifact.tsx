@@ -477,7 +477,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
-  const sidecarSchema = Yup.object().shape({
+  const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
       artifactIdentifiers,
@@ -494,7 +494,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"
-        validationSchema={context === ModalViewFor.SIDECAR ? sidecarSchema : primarySchema}
+        validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         onSubmit={formData => {
           submitFormData(
             {

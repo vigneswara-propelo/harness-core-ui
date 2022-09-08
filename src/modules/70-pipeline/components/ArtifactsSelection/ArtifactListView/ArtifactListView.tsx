@@ -77,7 +77,7 @@ function ArtifactListView({
                 size={ButtonSize.SMALL}
                 icon="plus"
                 variation={ButtonVariation.LINK}
-                margin={isMultiArtifactSource && { bottom: 'xxlarge' }}
+                margin={isMultiArtifactSource && sideCarArtifact?.length && { bottom: 'xxlarge' }}
                 onClick={() => addNewArtifact(ModalViewFor.PRIMARY)}
                 text={
                   isMultiArtifactSource

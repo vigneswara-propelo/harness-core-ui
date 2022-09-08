@@ -792,6 +792,7 @@ artifactsSelection:
   addPrimaryArtifact: Add Primary Artifact
   addArtifactSource: Add Artifact Source
   addSidecar: Add Sidecar
+  artifactSourceName: Artifact Source Name
   projectPlaceholder: Enter Project
   repositoryTypePlaceholder: Select Repository Type
   delegateselectionPlaceholder: Add specific selectors or leave empty to target any delegate
@@ -818,8 +819,8 @@ artifactsSelection:
   amazonS3Title: Amazon S3
   googleArtifactRegistryTitle: Google Artifact Registry
   existingDocker:
-    sidecarId: Sidecar Identifier
-    sidecarIdPlaceholder: Enter Artifact Identifier
+    sidecarId: Sidecar Name
+    sidecarIdPlaceholder: Enter Artifact Name
     imageNamePlaceholder: Enter Image Path
     enterTagRegex: Enter Tag Regex
   validation:
