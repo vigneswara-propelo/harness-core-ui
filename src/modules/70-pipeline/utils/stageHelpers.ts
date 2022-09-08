@@ -268,6 +268,9 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
 export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.WinRm || deploymentType === ServiceDeploymentType.Ssh
 }
+export const isWinRmDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.WinRm
+}
 
 export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.AzureWebApp
