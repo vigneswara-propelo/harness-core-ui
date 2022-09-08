@@ -8,6 +8,7 @@
 import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep } from 'lodash-es'
 import { string, array, object, ObjectSchema } from 'yup'
 import { parse } from 'yaml'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -1927,13 +1928,17 @@ export const getOrderedPipelineVariableValues = ({
   originalPipelineVariables?: NGVariable[]
   currentPipelineVariables: NGVariable[]
 }): NGVariable[] => {
+  const runtimeVariables = originalPipelineVariables?.filter(
+    pipelineVariable => getMultiTypeFromValue(get(pipelineVariable, 'value')) === MultiTypeInputType.RUNTIME
+  )
+
   if (
-    originalPipelineVariables &&
+    runtimeVariables &&
     currentPipelineVariables.some(
-      (variable: NGVariable, index: number) => variable.name !== originalPipelineVariables[index].name
+      (variable: NGVariable, index: number) => variable.name !== runtimeVariables[index].name
     )
   ) {
-    return originalPipelineVariables.map(
+    return runtimeVariables.map(
       variable =>
         currentPipelineVariables.find(currentVariable => currentVariable.name === variable.name) ||
         Object.assign(variable, { value: '' })
