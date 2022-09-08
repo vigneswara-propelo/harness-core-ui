@@ -1281,7 +1281,6 @@ codeSource: 'Code Source'
 recentExecutions: 'Recent Executions'
 mostRecentDirection: 'Latest one on right side'
 lastExecution: 'Last Execution'
-lastModified: 'Last Modified'
 executionId: Execution Id
 imageTag: 'image: {{image}}'
 fileSource: 'File Source'

@@ -25,6 +25,9 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import NoResultsView from './views/NoResultsView/NoResultsView'
+import { NewFreezeWindowButton } from './views/NewFreezeWindowButton/NewFreezeWindowButton'
+import FreezeWindowsView from './views/FreezeWindowsView/FreezeWindowsView'
+import ResultsViewHeader from './views/ResultsViewHeader/ResultsViewHeader'
 // import { useUpdateQueryParams } from '@common/hooks'
 import css from './FreezeWindowsPage.module.scss'
 
@@ -49,6 +52,9 @@ export default function FreezeWindowsPage(): React.ReactElement {
     setGitFilter(null)
   }, [searchRef.current, setGitFilter]) // updateQueryParams,
 
+  const loading = false
+  const hasListContent = true
+
   return (
     <>
       <Page.Header
@@ -68,6 +74,7 @@ export default function FreezeWindowsPage(): React.ReactElement {
       <Page.SubHeader className={css.freeeWindowsPageSubHeader}>
         <Layout.Horizontal spacing={'medium'}>
           {/*<NewTemplatePopover />*/}
+          <NewFreezeWindowButton />
           <DropDown
             onChange={() => {
               // todo
@@ -109,12 +116,19 @@ export default function FreezeWindowsPage(): React.ReactElement {
         </Layout.Horizontal>
       </Page.SubHeader>
 
-      <Page.Body>
-        <NoResultsView
-          hasSearchParam={!!searchParam} //  || !!templateType
-          onReset={reset}
-          text={getString('freezeWindows.freezeWindowsPage.noFreezeWindows', { scope })}
-        />
+      <Page.Body loading={loading}>
+        {!loading && hasListContent ? (
+          <>
+            <ResultsViewHeader />
+            <FreezeWindowsView data={[]} />
+          </>
+        ) : (
+          <NoResultsView
+            hasSearchParam={!!searchParam} //  || !!quick filter
+            onReset={reset}
+            text={getString('freezeWindows.freezeWindowsPage.noFreezeWindows', { scope })}
+          />
+        )}
       </Page.Body>
     </>
   )

@@ -449,6 +449,7 @@ export interface StringsMap {
   'common.last7days': string
   'common.lastConnected': string
   'common.lastConnectedOn': string
+  'common.lastModified': string
   'common.lastModifiedTime': string
   'common.latest': string
   'common.launchFirstGen': string
@@ -3465,7 +3466,6 @@ export interface StringsMap {
   'pipeline.keyPlaceholder': string
   'pipeline.kubernetesStep.workload': string
   'pipeline.lastExecution': string
-  'pipeline.lastModified': string
   'pipeline.lastSevenDays': string
   'pipeline.linuxOnly': string
   'pipeline.logs.errorText': string
@@ -4020,6 +4020,7 @@ export interface StringsMap {
   'pipeline.viewLatestExecution': string
   'pipeline.viewPipeline': string
   'pipeline.warningForInvalidYAMLDiscard': string
+  'freezeWindows.freezeWindowsPage.newFreezeWindow': string
   'freezeWindows.freezeWindowsPage.noFreezeWindows': string
   'templatesLibrary.addNewTemplate': string
   'templatesLibrary.alwaysUseStableVersion': string

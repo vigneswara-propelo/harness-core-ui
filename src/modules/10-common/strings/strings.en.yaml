@@ -89,6 +89,7 @@ copyFqn: Copy fully qualified name
 selectType: Select Type
 timeframe: Timeframe
 selectTimeFrame: Select Timeframe
+lastModified: 'Last Modified'
 accountSetting:
   connector:
     loading: 'Loading settings...'
