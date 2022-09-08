@@ -1,6 +1,7 @@
 verificationResult: 'Verification result:'
 estimatedTimeRemaining: 'Estimated time remaining:'
 progressPercentage: 'Progress percentage:'
+piplineDiffTitle: pipeline.yaml (saved) ↔ pipeline.yaml (updated)
 clone: Clone Pipeline
 discard: '{{ $.common.discard }}'
 serviceDependencyText: Service Dependency

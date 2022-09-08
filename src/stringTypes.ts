@@ -3649,6 +3649,7 @@ export interface StringsMap {
   'pipeline.pipelineSteps.templateStageDescription': string
   'pipeline.pipelineTimeoutHelpText': string
   'pipeline.pipelineTimeoutSettings': string
+  'pipeline.piplineDiffTitle': string
   'pipeline.policyEvaluations.emptyPolicySet': string
   'pipeline.policyEvaluations.evaluatedTime': string
   'pipeline.policyEvaluations.evaluations': string

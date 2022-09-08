@@ -19,13 +19,15 @@ import {
   Text,
   useConfirmationDialog,
   useToaster,
+  useToggleOpen,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
+import type { MonacoEditorProps } from 'react-monaco-editor'
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
@@ -76,6 +78,7 @@ import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHa
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { Pipeline } from '@pipeline/utils/types'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -86,6 +89,15 @@ import usePipelineErrors from './PipelineErrors/usePipelineErrors'
 import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
 import css from './PipelineCanvas.module.scss'
 
+const DIFF_EDITOR_OPTIONS: MonacoEditorProps['options'] = {
+  fontFamily: "'Roboto Mono', monospace",
+  fontSize: 13,
+  minimap: {
+    enabled: false
+  },
+  readOnly: true,
+  scrollBeyondLastLine: false
+}
 interface OtherModalProps {
   onSubmit?: (values: PipelineInfoConfig) => void
   initialValues?: PipelineInfoConfig
@@ -237,6 +249,7 @@ export function PipelineCanvas({
   const [selectedBranch, setSelectedBranch] = React.useState(branch || '')
   const [disableVisualView, setDisableVisualView] = React.useState(entityValidityDetails?.valid === false)
   const [useTemplate, setUseTemplate] = React.useState<boolean>(false)
+  const { isOpen: isDiffModalOpen, open: openDiffModal, close: closeDiffModal } = useToggleOpen()
 
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
@@ -245,6 +258,7 @@ export function PipelineCanvas({
     if (isGitSyncEnabled || isPipelineRemote) {
       openPipelineErrorsModal(yamlSchemaErrorWrapper?.schemaErrors)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yamlSchemaErrorWrapper, isGitSyncEnabled, isPipelineRemote])
 
   const [canExecute] = usePermission(
@@ -327,7 +341,7 @@ export function PipelineCanvas({
 
   useSaveTemplateListener()
 
-  const getDialogWidth = () => {
+  const getDialogWidth = (): string => {
     if (supportingGitSimplification) {
       return '800px'
     } else {
@@ -932,7 +946,16 @@ export function PipelineCanvas({
                     <div className={css.readonlyAccessText}>{permissionText}</div>
                   </div>
                 )}
-                {isUpdated && !isReadonly && <div className={css.tagRender}>{getString('unsavedChanges')}</div>}
+                {isUpdated && !isReadonly && (
+                  <Button
+                    variation={ButtonVariation.LINK}
+                    intent="warning"
+                    className={css.unsavedChanges}
+                    onClick={openDiffModal}
+                  >
+                    {getString('unsavedChanges')}
+                  </Button>
+                )}
                 <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
                 {pipelineIdentifier !== DefaultNewPipelineId && !isReadonly && (
                   <Button
@@ -1002,6 +1025,22 @@ export function PipelineCanvas({
         </Layout.Vertical>
       </div>
       <RightBar />
+      <Dialog
+        style={{ width: '90vw', height: '90vh' }}
+        isOpen={isDiffModalOpen}
+        enforceFocus={false}
+        onClose={closeDiffModal}
+        title={getString('pipeline.piplineDiffTitle')}
+      >
+        <div className={Classes.DIALOG_BODY}>
+          <MonacoDiffEditor
+            original={yamlStringify(originalPipeline)}
+            value={yamlStringify(pipeline)}
+            language="yaml"
+            options={DIFF_EDITOR_OPTIONS}
+          />
+        </div>
+      </Dialog>
     </PipelineVariablesContextProvider>
   )
 }
