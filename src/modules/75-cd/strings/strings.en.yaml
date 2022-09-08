@@ -317,6 +317,7 @@ configFileStoreTitle: 'Config File'
 selectRepository: Select a repository
 selectArtifact: Select an artifact
 artifactName: Artifact Name
+selectArtifactSource: Select Artifact Source
 artifactFormErrors:
   artifactFilePath: Enter the artifact path. You can use wildcards such as `todo/*/*`
   repositoryName: Repository name is required

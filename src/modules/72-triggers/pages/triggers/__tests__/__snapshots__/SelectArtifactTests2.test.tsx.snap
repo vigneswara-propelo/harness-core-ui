@@ -348,6 +348,10 @@ exports[`Select Artifact - For Artifact tests on click of apply button 1`] = `
       class="nopadLeft accordionSummary"
       id="Stage.stagea.Service.Artifacts.Sidecars"
     />
+    <div
+      class="nopadLeft accordionSummary"
+      id="Stage.stagea.Service.Artifacts.Sidecars"
+    />
   </div>
   <footer
     class="ModalDialog--footer"

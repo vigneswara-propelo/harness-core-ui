@@ -4502,6 +4502,7 @@ export interface StringsMap {
   'cd.searchPlaceholder': string
   'cd.secretManagerRequired': string
   'cd.selectArtifact': string
+  'cd.selectArtifactSource': string
   'cd.selectClusterLabel': string
   'cd.selectGitopsCluster': string
   'cd.selectRepository': string

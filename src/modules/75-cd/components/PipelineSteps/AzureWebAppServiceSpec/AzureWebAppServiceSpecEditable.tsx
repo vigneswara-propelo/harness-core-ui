@@ -29,7 +29,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import type { AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
 import AzureWebAppConfigSelection from './AzureWebAppServiceConfiguration/AzureWebAppServiceConfigSelection'
-import { setupMode } from '../PipelineStepsUtil'
+import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const getStartupScriptHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
@@ -64,6 +64,10 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
   const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
+  const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
+    !!NG_ARTIFACT_SOURCES,
+    stage?.stage as DeploymentStageElementConfig
+  )
 
   const updateStageData = async (newStage: any): Promise<void> => {
     setLoading(true)
@@ -126,7 +130,7 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
               <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            {NG_ARTIFACT_SOURCES ? (
+            {isPrimaryArtifactSources ? (
               <ServiceV2ArtifactsSelection
                 deploymentType={selectedDeploymentType}
                 isReadonlyServiceMode={isReadonlyServiceMode as boolean}

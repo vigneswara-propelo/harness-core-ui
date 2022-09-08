@@ -22,7 +22,7 @@ import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesS
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import { setupMode } from '../../PipelineStepsUtil'
+import { isMultiArtifactSourceEnabled, setupMode } from '../../PipelineStepsUtil'
 import type { SshWinRmServiceInputFormProps } from '../SshServiceSpecInterface'
 import css from '../SshServiceSpec.module.scss'
 
@@ -33,7 +33,6 @@ const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
 }) => {
   const { getString } = useStrings()
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
-  const isMultiArtifactSourceEnabled = useFeatureFlag(FeatureFlag.NG_ARTIFACT_SOURCES)
 
   const {
     state: {
@@ -44,7 +43,11 @@ const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType = deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating)
-
+  const isMultiArtifactSourceFeatureFlag = useFeatureFlag(FeatureFlag.NG_ARTIFACT_SOURCES)
+  const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
+    !!isMultiArtifactSourceFeatureFlag,
+    stage?.stage as DeploymentStageElementConfig
+  )
   return (
     <div className={css.serviceDefinition}>
       {!!selectedDeploymentType && (
@@ -60,7 +63,7 @@ const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
               <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            {isMultiArtifactSourceEnabled ? (
+            {isPrimaryArtifactSources ? (
               <ServiceV2ArtifactsSelection
                 deploymentType={selectedDeploymentType}
                 isReadonlyServiceMode={isReadonlyServiceMode as boolean}

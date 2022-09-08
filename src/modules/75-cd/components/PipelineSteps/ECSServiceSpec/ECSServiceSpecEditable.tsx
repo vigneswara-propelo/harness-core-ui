@@ -35,7 +35,7 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { setupMode } from '../PipelineStepsUtil'
+import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface ECSServiceSpecInitialValues extends ServiceSpec {
@@ -59,8 +59,6 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
 }) => {
   const { getString } = useStrings()
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
-  const isMultiArtifactSourceEnabled = useFeatureFlag(FeatureFlag.NG_ARTIFACT_SOURCES)
-
   const {
     state: {
       pipeline,
@@ -78,6 +76,11 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
   const { getCache } = useCache([getServiceCacheId])
   const serviceInfo = getCache<ServiceDefinition>(getServiceCacheId)
+  const isMultiArtifactSourceFeatureFlag = useFeatureFlag(FeatureFlag.NG_ARTIFACT_SOURCES)
+  const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
+    !!isMultiArtifactSourceFeatureFlag,
+    stage?.stage as DeploymentStageElementConfig
+  )
 
   const listOfManifests: ManifestConfigWrapper[] = useMemo(() => {
     /* istanbul ignore next */
@@ -375,7 +378,7 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
               <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            {isMultiArtifactSourceEnabled ? (
+            {isPrimaryArtifactSources ? (
               <ServiceV2ArtifactsSelection
                 deploymentType={selectedDeploymentType}
                 isReadonlyServiceMode={isReadonlyServiceMode as boolean}
