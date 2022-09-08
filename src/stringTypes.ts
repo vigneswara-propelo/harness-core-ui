@@ -1328,6 +1328,7 @@ export interface StringsMap {
   'delegates.downloadYAMLFile': string
   'delegates.harnessDocs': string
   'delegates.infoForDeleteDelegate': string
+  'delegates.instanceStatus': string
   'delegates.lastUpdated': string
   'delegates.newDelegate': string
   'delegates.newDelegateConfigWizard.overviewTitle': string
