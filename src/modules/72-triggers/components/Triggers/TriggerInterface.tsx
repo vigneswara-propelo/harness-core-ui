@@ -13,5 +13,6 @@ export enum SourceRepo {
   Github = 'Github',
   Gitlab = 'Gitlab',
   Bitbucket = 'Bitbucket',
+  AzureRepo = 'AzureRepo',
   Custom = 'Custom'
 }
