@@ -70,6 +70,7 @@ export default function CDSideNav(): React.ReactElement {
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const isCommunity = useGetCommunity()
   const { showGetStartedTabInMainMenu, setShowGetStartedTabInMainMenu } = useSideNavContext()
+
   const {
     data: fetchPipelinesData,
     loading: fetchingPipelines,
@@ -93,25 +94,17 @@ export default function CDSideNav(): React.ReactElement {
   React.useEffect(() => {
     if (!fetchingPipelines && fetchPipelinesData) {
       const { data, status } = fetchPipelinesData
-      setShowGetStartedTabInMainMenu(
+      const isGettingStartedEnabled =
         status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0
-      )
+      setShowGetStartedTabInMainMenu(isGettingStartedEnabled)
+      if (isGettingStartedEnabled) {
+        history.replace(routes.toGetStartedWithCD({ ...params, module }))
+      } else {
+        history.replace(routes.toProjectOverview({ ...params, module }))
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchPipelinesData])
-
-  React.useEffect(() => {
-    if (showGetStartedTabInMainMenu) {
-      history.replace(
-        routes.toGetStartedWithCD({
-          projectIdentifier,
-          orgIdentifier,
-          accountId,
-          module
-        })
-      )
-    }
-  }, [showGetStartedTabInMainMenu, history, module, accountId, orgIdentifier, projectIdentifier])
 
   return (
     <Layout.Vertical spacing="small">
@@ -217,10 +210,10 @@ export default function CDSideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier ? (
         <React.Fragment>
-          {showGetStartedTabInMainMenu && (
-            <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
+          {showGetStartedTabInMainMenu && CD_ONBOARDING_ENABLED && (
+            <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
           )}
-          {!isCommunity && !showGetStartedTabInMainMenu && (
+          {!isCommunity && (!CD_ONBOARDING_ENABLED || !showGetStartedTabInMainMenu) && (
             <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module })} />
           )}
           <SidebarLink label="Deployments" to={routes.toDeployments({ ...params, module })} />
