@@ -250,7 +250,7 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
           {!isConnectorRuntimeOrExpression && (
             <Container width={'300px'} color={Color.BLACK}>
               {typeof metricValues.selectedService === 'string'
-                ? metricValues.selectedService
+                ? null
                 : metricValues.selectedService?.value && (
                     <ValidationStatus
                       validationStatus={dynatraceValidation?.status as StatusOfValidation}

@@ -342,7 +342,8 @@ export default function AppDMonitoredSource({
           selectedMetric,
           nonCustomFeilds,
           formikValues: formik.values,
-          setMappedMetrics
+          setMappedMetrics,
+          isTemplate
         })
         return (
           <FormikForm className={css.formFullheight}>

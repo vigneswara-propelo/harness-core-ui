@@ -331,6 +331,7 @@ monitoringSources:
       mappedMetrics: '{{metricCount}} metric(s) mapped to {{serviceCount}} service(s)'
       gcoMetrics: Google Cloud Operation metrics
   datadog:
+    noQueryAdded: 'Please add query manually or pick from dashboard'
     noMetricsWidgets: 'No metrics'
     manualInputQueryModal:
       modalTitle: 'Add your Datadog query'

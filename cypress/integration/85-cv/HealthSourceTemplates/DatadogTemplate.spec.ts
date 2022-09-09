@@ -102,9 +102,8 @@ describe('Configure Datadog health source', () => {
 
     // Selecting metric name
     cy.get('input[name="metric"]').should('be.disabled')
-    cy.get('[data-id="metric-2"] input').should('be.disabled')
-    cy.get('[data-id="aggregator-3"] input').should('be.disabled')
-    cy.get('[data-id="metricTags-4"] input').should('be.disabled')
+    cy.get('input[name="aggregator"]').should('be.disabled')
+    cy.get('input[name="metricTags"]').should('be.disabled')
     cy.get('div[class="view-lines"]').type('datadog.agent.python.version{*}.rollup(avg, 60)')
     cy.contains('span', 'Fetch records').click()
     cy.wait(1000)

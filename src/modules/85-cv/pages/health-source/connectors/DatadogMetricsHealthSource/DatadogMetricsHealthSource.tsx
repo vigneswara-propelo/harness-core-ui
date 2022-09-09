@@ -405,6 +405,7 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
                   isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
                 />
               }
+              showMetricDetailsContent={Boolean(metricHealthDetailsData?.size)}
             />
             {isMetricThresholdEnabled && Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
               <MetricThresholdProvider

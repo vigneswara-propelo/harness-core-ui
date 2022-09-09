@@ -6963,6 +6963,7 @@ export interface StringsMap {
   'cv.monitoringSources.datadog.manualInputQueryModal.modalTitle': string
   'cv.monitoringSources.datadog.newDatadogGroupName': string
   'cv.monitoringSources.datadog.noMetricsWidgets': string
+  'cv.monitoringSources.datadog.noQueryAdded': string
   'cv.monitoringSources.datadog.selectDashboardsPage.dashboardColumnName': string
   'cv.monitoringSources.datadog.selectDashboardsPage.noDataText': string
   'cv.monitoringSources.datadog.validation.queryContains': string
