@@ -6,6 +6,8 @@
  */
 
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
-import { SecretManagerTemplate } from './SecretManagerTemplate'
+import { SecretManagerTemplate } from '@cd/components/Templates/SecretManagerTemplate/SecretManagerTemplate'
+import { DeploymentTemplate } from '@cd/components/Templates/DeploymentTemplate/DeploymentTemplate'
 
+templateFactory.registerTemplate(new DeploymentTemplate())
 templateFactory.registerTemplate(new SecretManagerTemplate())

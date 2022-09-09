@@ -3111,6 +3111,17 @@ export interface StringsMap {
   'pipeline.customApprovalStep.validation.minimumRetryIntervalIs10Secs': string
   'pipeline.customApprovalStep.validation.minimumScriptTimeoutIs10Secs': string
   'pipeline.customApprovalStep.validation.outputVariable': string
+  'pipeline.customDeployment.errors.fetchScriptBodyRequired': string
+  'pipeline.customDeployment.errors.fetchScriptRequired': string
+  'pipeline.customDeployment.fetchInstanceScriptHeader': string
+  'pipeline.customDeployment.fetchInstancesScript': string
+  'pipeline.customDeployment.fieldNameLabel': string
+  'pipeline.customDeployment.fieldNamePlaceholder': string
+  'pipeline.customDeployment.hostAttributes': string
+  'pipeline.customDeployment.hostObjectArrayPath': string
+  'pipeline.customDeployment.infraVariablesTitle': string
+  'pipeline.customDeployment.jsonPathRelativeLabel': string
+  'pipeline.customDeployment.newAttribute': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.plural': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.singular': string
   'pipeline.dashboardDeploymentsWidget.pendingApproval.plural': string
@@ -4215,6 +4226,7 @@ export interface StringsMap {
   'cd.addInline': string
   'cd.addRemote': string
   'cd.addService': string
+  'cd.addStepsForYourDeploymentType': string
   'cd.addTFVarFileLabel': string
   'cd.allowSimultaneousDeployments': string
   'cd.amazonElasticCmd': string
@@ -4335,6 +4347,7 @@ export interface StringsMap {
   'cd.deleteSourceBranch': string
   'cd.deletedGitOpsServerSuccessfully': string
   'cd.deletedSuccessfully': string
+  'cd.deploymentSteps': string
   'cd.downloadYAML': string
   'cd.duplicateGitOpsServerIdError': string
   'cd.duplicateIdError': string
@@ -4497,6 +4510,9 @@ export interface StringsMap {
   'cd.preProductionType': string
   'cd.previewYAML': string
   'cd.releaseNameValidation': string
+  'cd.removeStepTemplate': string
+  'cd.removeStepTemplateConfirmationLabel': string
+  'cd.removeStepTemplateSuccess': string
   'cd.requiredPermissions': string
   'cd.resourceCannotBeEmpty': string
   'cd.runDelegate': string

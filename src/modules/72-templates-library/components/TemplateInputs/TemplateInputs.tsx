@@ -31,7 +31,9 @@ import type { StageElementConfig, StepElementConfig, PipelineInfoConfig } from '
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
+import { DeploymentConfigRuntimeInputs } from '@pipeline/components/DeploymentConfigRuntimeInputs/DeploymentConfigRuntimeInputs'
 import { PipelineInputSetFormInternal, StageForm } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
+import type { DeploymentConfig } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import { getTemplateRuntimeInputsCount, TemplateType } from '@templates-library/utils/templatesUtils'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
@@ -47,7 +49,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template }) => {
     parse((template as TemplateSummaryResponse).yaml || '')?.template?.spec ||
     (template as NGTemplateInfoConfigWithGitDetails).spec
   const [inputSetTemplate, setInputSetTemplate] = React.useState<
-    StepElementConfig | StageElementConfig | PipelineInfoConfig
+    StepElementConfig | StageElementConfig | PipelineInfoConfig | DeploymentConfig
   >()
   const [count, setCount] = React.useState<number>(0)
   const { showError } = useToaster()
@@ -196,6 +198,21 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template }) => {
                           enabledExecutionDetails
                           path={'data'}
                         />
+                      )}
+                      {templateEntityType === TemplateType.CustomDeployment && (
+                        <Container
+                          className={css.inputsCard}
+                          background={Color.WHITE}
+                          padding={'large'}
+                          margin={{ bottom: 'xxlarge' }}
+                        >
+                          <DeploymentConfigRuntimeInputs
+                            template={inputSetTemplate as DeploymentConfig}
+                            allowableTypes={allowableTypes}
+                            readonly
+                            path={'data'}
+                          />
+                        </Container>
                       )}
                     </>
                   )
