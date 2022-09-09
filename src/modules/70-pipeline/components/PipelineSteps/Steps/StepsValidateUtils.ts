@@ -336,6 +336,8 @@ function generateSchemaForOutputVariables(
 }
 
 export function generateSchemaForLimitMemory({ getString, isRequired = false }: GenerateSchemaDependencies): Lazy {
+  // requires suffix
+  const pattern = /^(([0-9]*[.])?[0-9]+)([GM]i?)|^$/
   return yup.lazy(value => {
     if (isRequired) {
       return getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED
@@ -343,22 +345,14 @@ export function generateSchemaForLimitMemory({ getString, isRequired = false }: 
             .string()
             .required()
             // ^$ in the end is to pass empty string because otherwise it will fail
-            // .matches(/^\d+$|^\d+(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$|^$/, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
-            .matches(
-              /^\d+(\.\d+)?$|^\d+(\.\d+)?(G|M|Gi|Mi)$|^$/,
-              getString('pipeline.stepCommonFields.validation.invalidLimitMemory')
-            )
+            .matches(pattern, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
         : yup.string().required()
     }
     return getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED
       ? yup
           .string()
           // ^$ in the end is to pass empty string because otherwise it will fail
-          // .matches(/^\d+$|^\d+(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$|^$/, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
-          .matches(
-            /^\d+(\.\d+)?$|^\d+(\.\d+)?(G|M|Gi|Mi)$|^$/,
-            getString('pipeline.stepCommonFields.validation.invalidLimitMemory')
-          )
+          .matches(pattern, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
       : yup.string()
   })
 }
