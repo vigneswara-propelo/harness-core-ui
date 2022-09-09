@@ -46,6 +46,7 @@ import MultiTypeSecretInput, {
   getMultiTypeSecretInputType
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import {
   AzureInfrastructureSpecEditableProps,
   subscriptionLabel,
@@ -336,7 +337,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
         )}
         {getMultiTypeFromValue(template?.subscriptionId) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
               name={`${path}.subscriptionId`}
               tooltipProps={{
                 dataTooltipId: 'azureInfraSubscription'
@@ -380,12 +381,14 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                 expressions,
                 allowableTypes
               }}
+              fieldPath="subscriptionId"
+              template={template}
             />
           </div>
         )}
         {getMultiTypeFromValue(template?.resourceGroup) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
               name={`${path}.resourceGroup`}
               tooltipProps={{
                 dataTooltipId: 'azureInfraResourceGroup'
@@ -454,6 +457,8 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                 expressions,
                 allowableTypes
               }}
+              fieldPath="resourceGroup"
+              template={template}
             />
           </div>
         )}

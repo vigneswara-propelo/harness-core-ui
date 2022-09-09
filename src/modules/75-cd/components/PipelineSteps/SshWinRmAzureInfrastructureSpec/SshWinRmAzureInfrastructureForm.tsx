@@ -53,6 +53,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import {
   AzureInfrastructureSpecEditableProps,
   getValue,
@@ -435,8 +436,8 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                   />
                   {getMultiTypeFromValue(getValue(formik.values?.subscriptionId)) === MultiTypeInputType.RUNTIME &&
                     !readonly && (
-                      <ConfigureOptions
-                        value={!loadingSubscriptions && formik.values?.subscriptionId}
+                      <SelectConfigureOptions
+                        value={getValue(formik.values?.subscriptionId)}
                         type="String"
                         variableName="subscriptionId"
                         showRequiredField={false}
@@ -449,6 +450,8 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                         }
                         isReadonly={readonly}
                         className={css.marginTop}
+                        loading={loadingSubscriptions}
+                        options={subscriptions}
                       />
                     )}
                 </Layout.Horizontal>
@@ -517,8 +520,8 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                   />
                   {getMultiTypeFromValue(getValue(formik.values?.resourceGroup)) === MultiTypeInputType.RUNTIME &&
                     !readonly && (
-                      <ConfigureOptions
-                        value={!loadingResourceGroups && formik.values?.resourceGroup}
+                      <SelectConfigureOptions
+                        value={getValue(formik.values?.resourceGroup)}
                         type="String"
                         variableName="resourceGroup"
                         showRequiredField={false}
@@ -531,6 +534,8 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                         }
                         isReadonly={readonly}
                         className={css.marginTop}
+                        loading={loadingResourceGroups}
+                        options={resourceGroups}
                       />
                     )}
                 </Layout.Horizontal>
