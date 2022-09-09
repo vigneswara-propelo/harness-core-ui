@@ -730,6 +730,7 @@ module:
   templateService: TEMPLATESERVICE
   sto: STO
   governance: POLICY ENGINE
+templateServiceLabel: Template Service
 customPricing: for Custom Pricing
 specified: Specified
 byType: By Type

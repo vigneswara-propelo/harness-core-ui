@@ -834,6 +834,7 @@ export interface StringsMap {
   'common.template.saveTemplate.publishTemplate': string
   'common.template.updateTemplate.errorWhileUpdating': string
   'common.template.updateTemplate.templateUpdated': string
+  'common.templateServiceLabel': string
   'common.templateStartLabel': string
   'common.templates': string
   'common.test.connectionFailed': string
