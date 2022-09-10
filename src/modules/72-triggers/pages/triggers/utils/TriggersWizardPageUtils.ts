@@ -150,7 +150,8 @@ const isIdentifierIllegal = (identifier: string): boolean =>
   regexIdentifier.test(identifier) && illegalIdentifiers.includes(identifier)
 
 const checkValidTriggerConfiguration = ({
-  formikValues
+  formikValues,
+  formikErrors
 }: {
   formikValues: { [key: string]: any }
   formikErrors: { [key: string]: any }
@@ -160,6 +161,10 @@ const checkValidTriggerConfiguration = ({
   const connectorType = formikValues.connectorRef?.connector?.spec?.type
 
   if (isIdentifierIllegal(identifier)) {
+    return false
+  }
+
+  if (formikErrors.pollInterval) {
     return false
   }
 
@@ -330,7 +335,8 @@ export const getWizardMap = ({
 // requiredFields and checkValidPanel in getPanels() above to render warning icons related to this schema
 export const getValidationSchema = (
   triggerType: NGTriggerSourceV2['type'],
-  getString: (key: StringKeys, params?: any) => string
+  getString: (key: StringKeys, params?: any) => string,
+  isGitWebhookPollingEnabled?: boolean
 ): ObjectSchema<Record<string, any> | undefined> => {
   if (triggerType === TriggerTypes.WEBHOOK) {
     return object().shape({
@@ -343,10 +349,16 @@ export const getValidationSchema = (
           return this.parent.sourceRepo === CUSTOM || event
         }
       ),
-      pollInterval: getDurationValidationSchema({
-        minimum: '2m',
-        maximum: '60m',
-        explicitAllowedValues: ['0']
+      ...(isGitWebhookPollingEnabled && {
+        pollInterval: getDurationValidationSchema({
+          minimum: '2m',
+          maximum: '60m',
+          explicitAllowedValues: ['0']
+        }).required(
+          getString('common.validation.fieldIsRequired', {
+            name: getString('triggers.triggerConfigurationPanel.pollingFrequency')
+          })
+        )
       }),
       connectorRef: object().test(
         getString('triggers.validation.connector'),

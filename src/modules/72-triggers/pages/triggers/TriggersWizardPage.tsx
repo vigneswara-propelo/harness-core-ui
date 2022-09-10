@@ -1794,7 +1794,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           onSubmit: (val: FlatValidWebhookFormikValuesInterface) => handleWebhookSubmit(val),
           validationSchema: getValidationSchema(
             TriggerTypes.WEBHOOK as unknown as NGTriggerSourceV2['type'],
-            getString
+            getString,
+            isGitWebhookPollingEnabled && sourceRepoOnNew === GitSourceProviders.GITHUB.value
           ),
           validate: validateTriggerPipeline,
           validateOnChange: true,
