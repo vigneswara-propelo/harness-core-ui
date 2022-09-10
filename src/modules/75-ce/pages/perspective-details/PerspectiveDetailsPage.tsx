@@ -77,7 +77,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { getToolTip } from '@ce/components/PerspectiveViews/PerspectiveMenuItems'
 import css from './PerspectiveDetailsPage.module.scss'
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 15
 interface PerspectiveParams {
   perspectiveId: string
   perspectiveName: string
@@ -582,7 +582,12 @@ const PerspectiveDetailsPage: React.FC = () => {
             }}
             allowExportAsCSV={true}
             openDownloadCSVModal={openDownloadCSVModal}
-            setGridSearchParam={setGridSearchParam}
+            setGridSearchParam={text => {
+              setPageIndex(0)
+              setGridPageOffset(0)
+              setGridSearchParam(text)
+            }}
+            gridSearchParam={gridSearchParam}
             isPerspectiveDetailsPage
           />
         </Container>
