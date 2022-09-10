@@ -11,7 +11,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Menu, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isUndefined } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 import {
@@ -172,6 +172,7 @@ const ViewCostsCell: CustomCloudCell = ({ row, column }) => {
 
   return (
     <Button
+      disabled={isUndefined(route)}
       variation={ButtonVariation.LINK}
       rightIcon="launch"
       iconProps={{ size: 12, color: Color.PRIMARY_7 }}
