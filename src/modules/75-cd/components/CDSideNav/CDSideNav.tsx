@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
+import { useParams, useHistory, useRouteMatch, matchPath, useLocation } from 'react-router-dom'
 import { Layout } from '@wings-software/uicore'
 import { compile } from 'path-to-regexp'
 
@@ -63,6 +63,7 @@ export default function CDSideNav(): React.ReactElement {
   } = params
   const routeMatch = useRouteMatch()
   const history = useHistory()
+  const location = useLocation()
   const module = 'cd'
   const { updateAppStore, selectedProject } = useAppStore()
   const { CD_ONBOARDING_ENABLED } = useFeatureFlags()
@@ -70,7 +71,9 @@ export default function CDSideNav(): React.ReactElement {
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const isCommunity = useGetCommunity()
   const { showGetStartedTabInMainMenu, setShowGetStartedTabInMainMenu } = useSideNavContext()
-
+  const isOverviewPage = !!matchPath(location.pathname, {
+    path: routes.toProjectOverview({ ...params, module })
+  })
   const {
     data: fetchPipelinesData,
     loading: fetchingPipelines,
@@ -98,9 +101,7 @@ export default function CDSideNav(): React.ReactElement {
         status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0
       setShowGetStartedTabInMainMenu(isGettingStartedEnabled)
       if (isGettingStartedEnabled) {
-        history.replace(routes.toGetStartedWithCD({ ...params, module }))
-      } else {
-        history.replace(routes.toProjectOverview({ ...params, module }))
+        isOverviewPage && history.replace(routes.toGetStartedWithCD({ ...params, module }))
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
