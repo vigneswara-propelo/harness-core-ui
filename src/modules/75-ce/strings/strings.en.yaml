@@ -24,6 +24,11 @@ common:
   hoverWarningHeader: 'WARNING {{message}}'
   interval: 'Interval'
   protocol: 'Protocol'
+  targetProtocol: 'Target Protocol'
+  targetPort: 'Target Port'
+  redirectUrl: 'Redirect url'
+  serverName: 'Server name'
+  pathMatch: 'Path match'
 allRegions: 'All Regions'
 allClusters: 'All Clusters'
 enforcementMessage:

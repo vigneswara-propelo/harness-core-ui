@@ -5349,10 +5349,15 @@ export interface StringsMap {
   'ce.common.interval': string
   'ce.common.newBudget': string
   'ce.common.or': string
+  'ce.common.pathMatch': string
   'ce.common.protocol': string
+  'ce.common.redirectUrl': string
   'ce.common.refresh': string
   'ce.common.rule': string
+  'ce.common.serverName': string
   'ce.common.spendTillDate': string
+  'ce.common.targetPort': string
+  'ce.common.targetProtocol': string
   'ce.common.toggleLabel': string
   'ce.common.totalCount': string
   'ce.connector.AWS.crossAccountRole.arn': string
