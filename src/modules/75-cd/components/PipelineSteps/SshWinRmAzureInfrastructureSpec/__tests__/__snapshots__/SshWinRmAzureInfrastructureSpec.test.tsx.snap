@@ -373,7 +373,7 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
               </div>
             </div>
             <div
-              class="Layout--vertical Layout--layout-spacing-large StyledProps--main tags-select inputWidth"
+              class="Layout--vertical StyledProps--main inputWidth"
             >
               <div
                 class="bp3-form-group"
@@ -391,7 +391,7 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
                       class="Tooltip--acenter"
                       data-tooltip-id="sshWinRmAzureInfra_tags"
                     >
-                      Tags
+                      tagLabel
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -1017,7 +1017,7 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
               </div>
             </div>
             <div
-              class="Layout--vertical Layout--layout-spacing-large StyledProps--main tags-select inputWidth"
+              class="Layout--vertical StyledProps--main inputWidth"
             >
               <div
                 class="bp3-form-group"
@@ -1035,7 +1035,7 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
                       class="Tooltip--acenter"
                       data-tooltip-id="sshWinRmAzureInfra_tags"
                     >
-                      Tags
+                      tagLabel
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -2763,7 +2763,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
               </div>
             </div>
             <div
-              class="Layout--vertical Layout--layout-spacing-large StyledProps--main tags-select inputWidth"
+              class="Layout--vertical StyledProps--main inputWidth"
             >
               <div
                 class="bp3-form-group"
@@ -2781,7 +2781,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
                       class="Tooltip--acenter"
                       data-tooltip-id="sshWinRmAzureInfra_tags"
                     >
-                      Tags
+                      tagLabel
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -3284,7 +3284,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
               </span>
             </div>
             <div
-              class="Layout--vertical Layout--layout-spacing-large StyledProps--main tags-select inputWidth"
+              class="Layout--vertical StyledProps--main inputWidth"
             >
               <div
                 class="bp3-form-group formGroup"
@@ -3302,7 +3302,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
                       class="Tooltip--acenter"
                       data-tooltip-id="sshWinRmAzureInfra_tags"
                     >
-                      Tags
+                      tagLabel
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -3808,7 +3808,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
               </div>
             </div>
             <div
-              class="Layout--vertical Layout--layout-spacing-large StyledProps--main tags-select inputWidth"
+              class="Layout--vertical StyledProps--main inputWidth"
             >
               <div
                 class="bp3-form-group"
@@ -3826,7 +3826,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
                       class="Tooltip--acenter"
                       data-tooltip-id="sshWinRmAzureInfra_tags"
                     >
-                      Tags
+                      tagLabel
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"

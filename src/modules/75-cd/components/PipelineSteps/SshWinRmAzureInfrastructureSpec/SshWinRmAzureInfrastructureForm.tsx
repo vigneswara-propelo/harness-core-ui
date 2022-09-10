@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useRef, useMemo } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   Layout,
   FormInput,
@@ -14,18 +14,13 @@ import {
   FormikForm,
   MultiTypeInputType,
   getMultiTypeFromValue,
-  ExpressionInput,
-  Button,
-  ButtonSize,
-  ButtonVariation,
-  Select,
   Text,
   Icon
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import { debounce, noop, get, set } from 'lodash-es'
+import { debounce, noop, get } from 'lodash-es'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import {
   AzureTagDTO,
@@ -40,7 +35,6 @@ import { Connectors } from '@connectors/constants'
 import MultiTypeSecretInput, {
   getMultiTypeSecretInputType
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
-import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
@@ -51,6 +45,7 @@ import { useQueryParams } from '@common/hooks'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
@@ -68,11 +63,6 @@ const errorMessage = 'data.message'
 interface AzureInfrastructureUI extends Omit<SshWinRmAzureInfrastructure, 'subscriptionId' | 'resourceGroup'> {
   subscriptionId?: any
   resourceGroup?: any
-}
-
-interface SelectedTagsType {
-  key: string
-  value: string
 }
 
 export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditableProps> = ({
@@ -93,7 +83,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
   const { expressions } = useVariablesExpression()
 
   const [azureTags, setAzureTags] = useState([])
-  const [selectedTags, setSelectedTags] = useState([] as SelectedTagsType[])
 
   const delayedOnUpdate = useRef(debounce(onUpdate || noop, 300)).current
   const { getString } = useStrings()
@@ -228,13 +217,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
         }
       })
     }
-    if (typeof initialValues?.tags === 'object') {
-      const tags = Object.entries(initialValues?.tags || {}).map(entry => ({ key: entry[0], value: entry[1] }))
-      tags.forEach(tag => {
-        formikRef.current?.setFieldValue(`tags:${tag.key}`, tag.value)
-      })
-      setSelectedTags(tags)
-    }
     return () =>
       unSubscribeForm({
         tab: DeployTabs.INFRASTRUCTURE,
@@ -244,19 +226,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
   }, [])
 
   const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-
-  const usedTagKeys = useMemo(
-    () =>
-      selectedTags.reduce((map, tag) => {
-        tag.key && set(map, tag.key, true)
-        return map
-      }, {}),
-    [selectedTags]
-  )
-  const availableTags = useMemo(
-    () => azureTags.filter(tag => !get(usedTagKeys, get(tag, 'value', ''), false)),
-    [azureTags, usedTagKeys]
-  )
 
   return (
     <Layout.Vertical spacing="medium">
@@ -344,11 +313,10 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                           formik.setFieldValue('resourceGroup', '')
                         getMultiTypeFromValue(formik.values?.tags) === MultiTypeInputType.FIXED &&
                           formik.values?.tags?.value &&
-                          formik.setFieldValue('tags', [])
+                          formik.setFieldValue('tags', {})
                         setSubscriptions([])
                         setResourceGroups([])
                         setAzureTags([])
-                        setSelectedTags([] as SelectedTagsType[])
                       }
                     }
                   />
@@ -393,11 +361,10 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                           formik.setFieldValue('resourceGroup', '')
                         getMultiTypeFromValue(formik.values?.tags) === MultiTypeInputType.FIXED &&
                           formik.values?.tags?.value &&
-                          formik.setFieldValue('tags', [])
+                          formik.setFieldValue('tags', {})
 
                         setResourceGroups([])
                         setAzureTags([])
-                        setSelectedTags([] as SelectedTagsType[])
                       },
                       expressions,
                       disabled: readonly,
@@ -539,95 +506,20 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                       />
                     )}
                 </Layout.Horizontal>
-                <Layout.Vertical className={`tags-select ${css.inputWidth}`} spacing={'large'}>
-                  <MultiTypeFieldSelector
+                <Layout.Vertical className={css.inputWidth}>
+                  <MultiTypeTagSelector
                     name={'tags'}
-                    label={'Tags'}
-                    defaultValueToReset={['']}
-                    skipRenderValueInExpressionLabel
-                    allowedTypes={allowableTypes}
-                    supportListOfExpressions={true}
-                    disableMultiSelectBtn={false}
                     formik={formik}
-                    style={{ flexGrow: 1, marginBottom: 0 }}
-                    expressionRender={() => (
-                      <ExpressionInput
-                        name="tags"
-                        value={formik.values.tags}
-                        onChange={express => formik.setFieldValue('tags', express)}
-                        inputProps={{
-                          placeholder: '<+expression>'
-                        }}
-                      />
-                    )}
-                  >
-                    {selectedTags.map((tag, index) => (
-                      <Layout.Horizontal spacing="small" key={index}>
-                        <Layout.Vertical spacing="small">
-                          <Text className={css.textStyles}>{index === 0 ? getString('keyLabel') : null}</Text>
-                          <Select
-                            name={`tagslabel${index + 1}`}
-                            value={{ label: tag.key, value: tag.key }}
-                            items={availableTags}
-                            className={css.tagsSelect}
-                            allowCreatingNewItems={true}
-                            noResults={
-                              <Text padding={'small'}>
-                                {loadingSubscriptionTags
-                                  ? getString('loading')
-                                  : get(subscriptionTagsError, errorMessage, null) ||
-                                    getString('cd.infrastructure.sshWinRmAzure.noTagsAzure')}
-                              </Text>
-                            }
-                            onChange={option => {
-                              const newSelTags = [...selectedTags]
-                              newSelTags[index].key = option.value as string
-                              setSelectedTags(newSelTags)
-                            }}
-                          />
-                        </Layout.Vertical>
-                        <Layout.Vertical spacing="small">
-                          <Text className={css.textStyles}>{index === 0 ? 'Value' : null}</Text>
-                          <FormInput.Text
-                            name={`tags.${tag.key}`}
-                            onChange={event => {
-                              const newSelTags = [...selectedTags]
-                              newSelTags[index].value = get(event.target, 'value', '')
-                              setSelectedTags(newSelTags)
-                            }}
-                          />
-                        </Layout.Vertical>
-                        <Layout.Horizontal className={css.removeTagBtn}>
-                          <Button
-                            icon="trash"
-                            iconProps={{ size: 12, margin: { right: 8 } }}
-                            onClick={() => {
-                              const newSelTags = [...selectedTags]
-                              newSelTags.splice(index, 1)
-                              setSelectedTags(newSelTags)
-                              formik.setFieldValue(`tags.${tag.key}`, undefined)
-                            }}
-                            size={ButtonSize.SMALL}
-                            variation={ButtonVariation.LINK}
-                          />
-                        </Layout.Horizontal>
-                      </Layout.Horizontal>
-                    ))}
-                    <Button
-                      intent="primary"
-                      icon="add"
-                      iconProps={{ size: 12, margin: { right: 8 } }}
-                      className={css.addBtn}
-                      onClick={() => {
-                        const newTagPair: SelectedTagsType = { key: '', value: '' }
-                        setSelectedTags(selTags => [...selTags, newTagPair])
-                      }}
-                      size={ButtonSize.SMALL}
-                      variation={ButtonVariation.LINK}
-                    >
-                      {getString('tagLabel')}
-                    </Button>
-                  </MultiTypeFieldSelector>
+                    allowableTypes={allowableTypes}
+                    tags={azureTags}
+                    isLoadingTags={loadingSubscriptionTags}
+                    initialTags={initialValues?.tags}
+                    className="tags-select"
+                    errorMessage={
+                      get(subscriptionTagsError, errorMessage, '') ||
+                      getString('cd.infrastructure.sshWinRmAzure.noTagsAzure')
+                    }
+                  />
                 </Layout.Vertical>
                 <FormInput.CheckBox
                   className={css.simultaneousDeployment}

@@ -48,7 +48,12 @@ jest.mock('services/portal', () => ({
 }))
 
 const getRuntimeInputsValues = () => ({
-  credentialsRef: RUNTIME_INPUT_VALUE
+  credentialsRef: RUNTIME_INPUT_VALUE,
+  region: RUNTIME_INPUT_VALUE,
+  awsInstanceFilter: {
+    vpcs: [],
+    tags: RUNTIME_INPUT_VALUE
+  }
 })
 
 const getInitialValues = () => ({
@@ -57,7 +62,9 @@ const getInitialValues = () => ({
   region: 'region1',
   awsInstanceFilter: {
     vpcs: [],
-    tags: {}
+    tags: {
+      tagKey1: 'tagValue1'
+    }
   }
 })
 
@@ -123,7 +130,7 @@ describe('Test SshWinRmAwsEdit form', () => {
     factory.registerStep(new SshWinRmAwsInfrastructureSpec())
   })
 
-  test('Render and basic flow on edit form', async () => {
+  test('Render and check for initial tag', async () => {
     const onUpdateHandler = jest.fn()
     const { container } = render(
       <TestStepWidget
@@ -136,9 +143,8 @@ describe('Test SshWinRmAwsEdit form', () => {
       />
     )
 
-    const tagsSelect = queryByAttribute('name', container, 'awsInstanceFilter.tags')
-    tagsSelect!.focus()
-    await waitFor(() => expect(tagsResponse.refetch).toBeCalled())
+    const tagValue1Input = queryByAttribute('value', container, 'tagValue1')
+    await waitFor(() => expect(tagValue1Input).toBeDefined())
   })
 })
 
