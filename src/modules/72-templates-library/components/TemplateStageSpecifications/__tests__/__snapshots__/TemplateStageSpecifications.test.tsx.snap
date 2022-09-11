@@ -515,7 +515,6 @@ exports[`<TemplateStageSpecifications /> tests snapshot test with template input
                           >
                             <div
                               class="bp3-form-group"
-                              data-id="template.templateInputs.spec.infrastructure.infrastructureDefinition.spec.namespace-2"
                             >
                               <label
                                 class="bp3-label"

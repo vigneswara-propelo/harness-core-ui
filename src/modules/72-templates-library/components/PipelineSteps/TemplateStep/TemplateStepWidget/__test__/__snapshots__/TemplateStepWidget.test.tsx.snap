@@ -150,7 +150,6 @@ exports[`<TemplateStepWidgetWithRef /> tests snapshot test 1`] = `
                   >
                     <div
                       class="bp3-form-group"
-                      data-id="template.templateInputs.spec.url-1"
                     >
                       <label
                         class="bp3-label"
@@ -226,7 +225,6 @@ exports[`<TemplateStepWidgetWithRef /> tests snapshot test 1`] = `
                   >
                     <div
                       class="bp3-form-group"
-                      data-id="template.templateInputs.spec.requestBody-2"
                     >
                       <label
                         class="bp3-label"
