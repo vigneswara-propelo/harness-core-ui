@@ -139,7 +139,12 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
     childProjectIdentifier,
     data.userGroupDTO
   )
-  const disabled = data.userGroupDTO.ssoLinked || data.userGroupDTO.externallyManaged || userGroupInherited
+  const disabled =
+    data.userGroupDTO.ssoLinked ||
+    data.userGroupDTO.externallyManaged ||
+    userGroupInherited ||
+    data.userGroupDTO.harnessManaged
+
   const disableTooltipText = getUserGroupActionTooltipText(
     accountIdentifier,
     childOrgIdentifier,
@@ -320,7 +325,9 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
     return <RbacMenuItem icon={icon} text={text} onClick={clickHandler} permission={permissionRequest} />
   }
 
-  return (
+  return row.original.userGroupDTO.harnessManaged ? (
+    <></>
+  ) : (
     <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
       <Popover
         isOpen={menuOpen}
