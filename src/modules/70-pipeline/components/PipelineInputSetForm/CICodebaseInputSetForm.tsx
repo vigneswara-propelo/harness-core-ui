@@ -53,6 +53,7 @@ import {
   CodebaseTypes,
   getCodebaseRepoNameFromConnector,
   getConnectorRefWidth,
+  GIT_EXTENSION,
   isCodebaseFieldsRuntimeInputs,
   isRuntimeInput
 } from '@pipeline/utils/CIUtils'
@@ -374,7 +375,7 @@ function CICodebaseInputSetFormInternal({
                 accountIdentifier: accountId,
                 orgIdentifier,
                 projectIdentifier,
-                repoName: encodeURI(repoName),
+                repoName: encodeURI(repoName.endsWith(GIT_EXTENSION) ? repoName.replace(/\.[^/.]+$/, '') : repoName),
                 size: 1
               }
             })

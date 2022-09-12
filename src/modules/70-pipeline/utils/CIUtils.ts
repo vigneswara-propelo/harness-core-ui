@@ -197,3 +197,5 @@ export const getIsFailureStrategyDisabled = ({
   stageType?: StageType
   stepType?: StepType
 }): boolean => stageType === StageType.BUILD && stepType === StepType.Background
+
+export const GIT_EXTENSION = '.git'
