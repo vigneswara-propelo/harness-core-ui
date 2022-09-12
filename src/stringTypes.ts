@@ -5825,6 +5825,7 @@ export interface StringsMap {
   'cf.auditLogs.events.addPrerequisite': string
   'cf.auditLogs.events.addRule': string
   'cf.auditLogs.events.addSegmentToVariationTargetMap': string
+  'cf.auditLogs.events.addService': string
   'cf.auditLogs.events.addTargetsToVariationTargetMap': string
   'cf.auditLogs.events.addVariation': string
   'cf.auditLogs.events.clearVariationTargetMapping': string
@@ -5832,6 +5833,7 @@ export interface StringsMap {
   'cf.auditLogs.events.removeClause': string
   'cf.auditLogs.events.removePrerequisite': string
   'cf.auditLogs.events.removeRule': string
+  'cf.auditLogs.events.removeService': string
   'cf.auditLogs.events.removeTargetsToVariationTargetMap': string
   'cf.auditLogs.events.reorderRules': string
   'cf.auditLogs.events.setDefaultOffVariation': string
