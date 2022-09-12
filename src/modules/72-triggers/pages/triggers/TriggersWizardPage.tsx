@@ -1207,6 +1207,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
 
   // TriggerConfigDTO is NGTriggerConfigV2 with optional identifier
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
+    setErrorToasterMessage('')
+
     if (gitAwareForTriggerEnabled) {
       delete triggerYaml.inputYaml
 
@@ -1795,7 +1797,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           validationSchema: getValidationSchema(
             TriggerTypes.WEBHOOK as unknown as NGTriggerSourceV2['type'],
             getString,
-            isGitWebhookPollingEnabled && sourceRepoOnNew === GitSourceProviders.GITHUB.value
+            isGitWebhookPollingEnabled &&
+              (sourceRepoOnNew === GitSourceProviders.GITHUB.value ||
+                (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value)
           ),
           validate: validateTriggerPipeline,
           validateOnChange: true,
