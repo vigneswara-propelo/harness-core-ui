@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { validations } from '../../../support/85-cv/monitoredService/constants'
 import {
   getSLOMetrics,
   getUserJourneysCall,
@@ -231,7 +232,7 @@ describe('Create SLO', () => {
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
     cy.get('input[name="validRequestMetric"]').click()
     cy.contains('p', 'number_of_slow_calls').click({ force: true })
-    cy.findAllByText('Metric is required').should('have.length', 0)
+    cy.findAllByText(validations.metric).should('have.length', 0)
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
     cy.findAllByText('Required').should('have.length', 2)
@@ -276,10 +277,10 @@ describe('Create SLO', () => {
     cy.contains('p', 'Good').click({ force: true })
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
-    cy.findAllByText('Metric is required').should('have.length', 1)
+    cy.findAllByText(validations.metric).should('have.length', 1)
     cy.get('input[name="goodRequestMetric"]').click()
     cy.contains('p', 'number_of_slow_calls').click({ force: true })
-    cy.findAllByText('Metric is required').should('have.length', 0)
+    cy.findAllByText(validations.metric).should('have.length', 0)
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
     cy.contains('span', 'Metric for good/bad and valid requests should be different').should('be.visible')

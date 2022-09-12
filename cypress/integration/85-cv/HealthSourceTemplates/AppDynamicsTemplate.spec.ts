@@ -8,6 +8,7 @@
 import { templatesListCall } from '../../../support/70-pipeline/constants'
 import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
+  validations,
   countOfServiceAPI,
   monitoredServiceListCall,
   monitoredServiceListResponse
@@ -110,10 +111,10 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Please select atleast one metric pack').should('be.visible')
+    cy.contains('span', validations.metricPack).should('be.visible')
     cy.get('input[name="Errors"]').check({ force: true })
     cy.get('input[name="Performance"]').check({ force: true })
-    cy.contains('span', 'Please select atleast one metric pack').should('not.exist')
+    cy.contains('span', validations.metricPack).should('not.exist')
 
     cy.get('[data-testid="appdApplication"] span[data-icon="fixed-input"]').should('be.visible').click()
     cy.get('a.bp3-menu-item').should('have.length', 3).as('valueList')
@@ -202,10 +203,10 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Please select atleast one metric pack').should('be.visible')
+    cy.contains('span', validations.metricPack).should('be.visible')
     cy.get('input[name="Errors"]').check({ force: true })
     cy.get('input[name="Performance"]').check({ force: true })
-    cy.contains('span', 'Please select atleast one metric pack').should('not.exist')
+    cy.contains('span', validations.metricPack).should('not.exist')
 
     cy.get('[data-testid="appdApplication"] input').click()
     cy.get('.bp3-popover-content').within(() => {
@@ -276,17 +277,17 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Please select atleast one metric pack').should('be.visible')
+    cy.contains('span', validations.metricPack).should('be.visible')
     cy.contains('span', 'Add Metric').click()
-    cy.contains('span', 'Please select atleast one metric pack').should('not.exist')
+    cy.contains('span', validations.metricPack).should('not.exist')
 
     cy.contains('div', 'Assign').click({ force: true })
 
     // Custom validation
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Group Name is required').should('be.visible')
+    cy.contains('span', validations.groupName).should('be.visible')
     cy.contains('span', 'Please provide complete metric path').scrollIntoView().should('be.visible')
-    cy.contains('span', 'One selection is required.').scrollIntoView().should('be.visible')
+    cy.contains('span', validations.assign).scrollIntoView().should('be.visible')
 
     cy.get('input[name="groupName"]').click()
     cy.contains('p', '+ Add New').click({ force: true })
@@ -349,8 +350,8 @@ describe('Create empty monitored service', () => {
 
     // Custom validation
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Group Name is required').should('be.visible')
-    cy.contains('span', 'One selection is required.').scrollIntoView().should('be.visible')
+    cy.contains('span', validations.groupName).should('be.visible')
+    cy.contains('span', validations.assign).scrollIntoView().should('be.visible')
 
     cy.get('input[name="groupName"]').click()
     cy.contains('p', '+ Add New').click({ force: true })

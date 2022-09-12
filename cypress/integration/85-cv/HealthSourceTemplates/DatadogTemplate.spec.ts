@@ -8,6 +8,7 @@
 import { templatesListCall } from '../../../support/70-pipeline/constants'
 import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
+  validations,
   countOfServiceAPI,
   monitoredServiceListCall,
   monitoredServiceListResponse
@@ -93,9 +94,9 @@ describe('Configure Datadog health source', () => {
     cy.findByRole('button', { name: /Submit/i }).click()
     cy.wait(1000)
     // Check for form validations
-    cy.contains('span', 'Group Name is required.').should('be.visible')
-    cy.contains('span', 'Metric is required.').should('be.visible')
-    cy.contains('span', 'One selection is required.').should('be.visible')
+    cy.contains('span', validations.groupName).should('be.visible')
+    cy.contains('span', validations.metric).should('be.visible')
+    cy.contains('span', validations.assign).should('be.visible')
 
     // Adding group name
     cy.addingGroupName('group-1')
@@ -138,12 +139,12 @@ describe('Configure Datadog health source', () => {
 
     //triggering validations
     cy.findByRole('button', { name: /Submit/i }).click()
-    cy.contains('span', 'Query is required.').should('be.visible')
-    cy.contains('span', 'Service Instance is required.').should('be.visible')
+    cy.contains('span', validations.query).should('be.visible')
+    cy.contains('span', validations.serviceInstance).should('be.visible')
     cy.contains('p', 'Submit query to see records from Datadog Logs').should('be.visible')
 
     cy.get('div[class="view-lines"]').type('source:browser')
-    cy.contains('span', 'Query is required.').should('not.exist')
+    cy.contains('span', validations.query).should('not.exist')
 
     //Fetching records
     cy.contains('span', 'Fetch records').click()

@@ -1,4 +1,5 @@
 import { featureFlagsCall } from '../../support/70-pipeline/constants'
+import { validations } from '../../support/85-cv/monitoredService/constants'
 import {
   applicationCall,
   applicationsResponse,
@@ -226,10 +227,10 @@ describe('Verify Step Addition', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Please select atleast one metric pack').should('be.visible')
+    cy.contains('span', validations.metricPack).should('be.visible')
     cy.get('input[name="Errors"]').check({ force: true })
     cy.get('input[name="Performance"]').check({ force: true })
-    cy.contains('span', 'Please select atleast one metric pack').should('not.exist')
+    cy.contains('span', validations.metricPack).should('not.exist')
 
     cy.get('input[name="appdApplication"]').click()
     cy.contains('p', 'cv-app').click({ force: true })
