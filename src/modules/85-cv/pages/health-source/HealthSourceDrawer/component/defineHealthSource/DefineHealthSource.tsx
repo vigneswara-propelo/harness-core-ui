@@ -67,6 +67,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const isDynatraceAPMEnabled = useFeatureFlag(FeatureFlag.DYNATRACE_APM_ENABLED)
   const isCustomMetricEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH)
   const isCustomLogEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH_LOGS)
+  const isElkEnabled = useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
+
   const disabledByFF: string[] = useMemo(() => {
     const disabledConnectorsList = []
     if (!isDynatraceAPMEnabled) {
@@ -78,8 +80,12 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
     if (!isCustomLogEnabled && !isCustomMetricEnabled) {
       disabledConnectorsList.push(HealthSourceTypes.CustomHealth)
     }
+    if (!isElkEnabled) {
+      disabledConnectorsList.push(HealthSourceTypes.Elk)
+    }
+
     return disabledConnectorsList
-  }, [isDynatraceAPMEnabled, isErrorTrackingEnabled])
+  }, [isDynatraceAPMEnabled, isErrorTrackingEnabled, isCustomLogEnabled, isCustomMetricEnabled, isElkEnabled])
 
   const initialValues = useMemo(() => {
     return getInitialValues(sourceData, getString)
