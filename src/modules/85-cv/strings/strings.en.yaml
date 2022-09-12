@@ -503,6 +503,7 @@ monitoredServices:
   changeMonitoredServiceTypeMessage: Changing monitored service type will reset change sources
   searchMonitoredServices: Search Monitored Services
   sloErrorBudget: SLO / Error Budget
+  searchMonitoresService: 'Search monitored services'
   serviceHealth:
     last4Hrs: Last 4 hours
     last24Hrs: Last 24 hours

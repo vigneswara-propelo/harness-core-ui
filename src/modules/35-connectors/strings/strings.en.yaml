@@ -344,6 +344,15 @@ newRelic:
   accountIdTooltip: For steps to get New Relic Account Id
   products:
     fullStackObservability: 'Full Stack Observability: APM'
+elk:
+  elkConnectorDetails: 'ELK Connector Details'
+  testConnectionStepValidation: 'Validating ELK authentication and permissions'
+  elkLabel: Elk
+  apiId: API ID
+  noAuthentication: No Authentication
+  validation:
+    apiKeyId: API ID is a required field
+    apiKeyRef: API KEY is a required field
 prometheus:
   urlValidation: Prometheus URL is required.
 datadog:

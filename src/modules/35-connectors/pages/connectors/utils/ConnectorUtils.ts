@@ -7,7 +7,7 @@
 
 import { pick, isString, get } from 'lodash-es'
 import type { IconName, StepProps } from '@wings-software/uicore'
-import { Connectors, EntityTypes } from '@connectors/constants'
+import { Connectors, ElkAuthType, EntityTypes } from '@connectors/constants'
 import type {
   ConnectorInfoDTO,
   GetSecretV2QueryParams,
@@ -25,7 +25,8 @@ import type {
   VaultConnectorDTO,
   AzureKeyVaultConnectorDTO,
   GcpKmsConnectorDTO,
-  ErrorTrackingConnectorDTO
+  ErrorTrackingConnectorDTO,
+  ELKConnectorDTO
 } from 'services/cd-ng'
 import { FormData, CredTypeValues, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
@@ -1615,6 +1616,30 @@ export const buildAppDynamicsPayload = (formData: FormData): Connector => {
   return payload
 }
 
+export const buildELKPayload = (formData: FormData): Connector => {
+  const payload: Connector = {
+    connector: {
+      ...pick(formData, ['name', 'identifier', 'orgIdentifier', 'projectIdentifier', 'description', 'tags']),
+      type: Connectors.ELK,
+      spec: {
+        delegateSelectors: formData.delegateSelectors ?? {},
+        authType: formData.authType,
+        url: formData.url
+      } as ELKConnectorDTO
+    }
+  }
+
+  if (formData.authType === ElkAuthType.USERNAME_PASSWORD) {
+    payload.connector!.spec.username = formData.username
+    payload.connector!.spec.passwordRef = formData.password.referenceString
+  } else if (formData.authType === ElkAuthType.API_CLIENT_TOKEN) {
+    payload.connector!.spec.apiKeyId = formData.apiKeyId
+    payload.connector!.spec.apiKeyRef = formData.apiKeyRef.referenceString
+  }
+
+  return payload
+}
+
 export const buildNewRelicPayload = (formData: FormData) => ({
   connector: {
     name: formData.name,
@@ -2046,6 +2071,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'service-servicenow'
     case Connectors.CUSTOM_HEALTH:
       return 'service-custom-connector'
+    case Connectors.ELK:
+      return 'service-elk'
     case Connectors.ERROR_TRACKING:
       return 'error-tracking'
     case Connectors.AZURE:
@@ -2192,6 +2219,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.gcr')
     case Connectors.APP_DYNAMICS:
       return getString('connectors.testConnectionStep.validationText.appD')
+    case Connectors.ELK:
+      return getString('connectors.elk.testConnectionStepValidation')
     case Connectors.SPLUNK:
       return getString('connectors.testConnectionStep.validationText.splunk')
     case Connectors.VAULT:

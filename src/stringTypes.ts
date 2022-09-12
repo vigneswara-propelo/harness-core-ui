@@ -2298,6 +2298,13 @@ export interface StringsMap {
   'connectors.dynatraceConnectorDetails': string
   'connectors.dynatraceLabel': string
   'connectors.editConnector': string
+  'connectors.elk.apiId': string
+  'connectors.elk.elkConnectorDetails': string
+  'connectors.elk.elkLabel': string
+  'connectors.elk.noAuthentication': string
+  'connectors.elk.testConnectionStepValidation': string
+  'connectors.elk.validation.apiKeyId': string
+  'connectors.elk.validation.apiKeyRef': string
   'connectors.encryptedAPIKeyLabel': string
   'connectors.encryptedAPIKeyValidation': string
   'connectors.errorTracking.urlValidation': string
@@ -6856,6 +6863,7 @@ export interface StringsMap {
   'cv.monitoredServices.noAvailableLogData': string
   'cv.monitoredServices.noMatchingData': string
   'cv.monitoredServices.searchMonitoredServices': string
+  'cv.monitoredServices.searchMonitoresService': string
   'cv.monitoredServices.serviceAndEnvironment': string
   'cv.monitoredServices.serviceDependencies.noData': string
   'cv.monitoredServices.serviceHealth.anamolies': string

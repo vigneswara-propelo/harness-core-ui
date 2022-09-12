@@ -21,7 +21,8 @@ export enum HealthSourceTypes {
   Datadog = 'Datadog',
   CustomHealth = 'CustomHealth',
   ErrorTracking = 'ErrorTracking',
-  Dynatrace = 'Dynatrace'
+  Dynatrace = 'Dynatrace',
+  Elk = 'ELK'
 }
 
 export type CommonNonCustomMetricFieldsType = {
