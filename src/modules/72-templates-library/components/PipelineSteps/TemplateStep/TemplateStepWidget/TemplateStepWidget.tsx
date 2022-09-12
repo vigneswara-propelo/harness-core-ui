@@ -45,6 +45,8 @@ import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
 import { useQueryParams } from '@common/hooks'
 import { stringify } from '@common/utils/YamlHelperMethods'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { createParentEntityQueryParams } from '@common/utils/gitSyncUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TemplateStepWidget.module.scss'
 
@@ -63,6 +65,9 @@ function TemplateStepWidget(
   props: TemplateStepWidgetProps,
   formikRef: StepFormikFowardRef<TemplateStepNode>
 ): React.ReactElement {
+  const {
+    state: { storeMetadata }
+  } = usePipelineContext()
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes } = props
   const { getString } = useStrings()
   const queryParams = useParams<ProjectPathProps>()
@@ -85,8 +90,8 @@ function TemplateStepWidget(
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
       repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
+      getDefaultFromOtherRepo: true,
+      ...createParentEntityQueryParams(storeMetadata, queryParams, branch)
     }
   })
 

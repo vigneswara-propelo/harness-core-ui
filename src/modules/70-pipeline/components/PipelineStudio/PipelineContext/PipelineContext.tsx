@@ -53,7 +53,7 @@ import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getTemplateTypesByRef, TemplateServiceDataType } from '@pipeline/utils/templateUtils'
-import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { Pipeline } from '@pipeline/utils/types'
 import {
   ActionReturnType,
@@ -606,7 +606,9 @@ const _updateStoreMetadata = async (
   // We need all 5 properties in storeMetadata for use in templates, Other 3 are coming from gitDetails
   const newStoreMetadata: StoreMetadata = {
     ...storeMetadata,
-    ...pick(gitDetails, 'repoName', 'branch', 'filePath')
+    ...(storeMetadata.storeType === StoreType.REMOTE
+      ? pick(gitDetails, 'repoName', 'branch', 'filePath')
+      : { connectorRef: undefined })
   }
 
   try {

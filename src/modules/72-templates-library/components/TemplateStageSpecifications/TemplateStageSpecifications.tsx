@@ -39,6 +39,7 @@ import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/Tem
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
 import { stringify } from '@common/utils/YamlHelperMethods'
+import { createParentEntityQueryParams } from '@common/utils/gitSyncUtils'
 import css from './TemplateStageSpecifications.module.scss'
 
 declare global {
@@ -50,7 +51,8 @@ declare global {
 export const TemplateStageSpecifications = (): JSX.Element => {
   const {
     state: {
-      selectionState: { selectedStageId = '' }
+      selectionState: { selectedStageId = '' },
+      storeMetadata
     },
     allowableTypes,
     updateStage,
@@ -89,8 +91,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: templateVersionLabel,
       repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
+      getDefaultFromOtherRepo: true,
+      ...createParentEntityQueryParams(storeMetadata, queryParams, branch)
     }
   })
 

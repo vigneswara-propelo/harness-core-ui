@@ -62,6 +62,7 @@ import {
 } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
+import { createParentEntityQueryParams } from '@common/utils/gitSyncUtils'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
@@ -113,19 +114,14 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const [selectedTemplate, setSelectedTemplate] = React.useState<TemplateSummaryResponse | TemplateResponse>()
   const [selectedParentTab, setSelectedParentTab] = React.useState<ParentTemplateTabs>(ParentTemplateTabs.BASIC)
   const [selectedTab, setSelectedTab] = React.useState<TemplateTabs>(TemplateTabs.INPUTS)
-  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const params = useParams<ProjectPathProps & ModulePathParams>()
+  const { accountId, module } = params
   const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>()
 
   const stableVersion = React.useMemo(() => {
     return (templates as TemplateSummaryResponse[])?.find(item => item.stableTemplate && !isEmpty(item.versionLabel))
       ?.versionLabel
   }, [templates])
-
-  const parentEntityIds = {
-    parentEntityAccountIdentifier: accountId,
-    parentEntityOrgIdentifier: orgIdentifier,
-    parentEntityProjectIdentifier: projectIdentifier
-  }
 
   const {
     data: templateYamlData,
@@ -139,10 +135,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       orgIdentifier: selectedTemplate?.orgIdentifier,
       projectIdentifier: selectedTemplate?.projectIdentifier,
       versionLabel: selectedTemplate?.versionLabel,
-      parentEntityConnectorRef: storeMetadata?.connectorRef,
-      parentEntityRepoName: storeMetadata?.repoName,
-      branch: storeMetadata?.branch,
-      ...(!isEmpty(storeMetadata?.connectorRef) ? parentEntityIds : {})
+      ...createParentEntityQueryParams(storeMetadata, params)
     },
     lazy: true
   })
