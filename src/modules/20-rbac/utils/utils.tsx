@@ -7,7 +7,7 @@
 
 import React, { ReactNode } from 'react'
 import type { IconName, ModalErrorHandlerBinding, SelectOption } from '@wings-software/uicore'
-import { pick } from 'lodash-es'
+import { defaultTo, pick } from 'lodash-es'
 import type { StringsMap } from 'stringTypes'
 import type {
   AccessControlCheckError,
@@ -272,24 +272,28 @@ export interface ErrorHandlerProps {
 }
 
 export const getAssignments = (roleBindings: RoleAssignmentMetadataDTO[]): Assignment[] => {
-  return (
-    roleBindings?.map(roleAssignment => {
-      return {
-        role: {
-          label: roleAssignment.roleName,
-          value: roleAssignment.roleIdentifier,
-          managed: roleAssignment.managedRole,
-          assignmentIdentifier: roleAssignment.identifier,
-          managedRoleAssignment: roleAssignment.managedRoleAssignment
-        },
-        resourceGroup: {
-          label: roleAssignment.resourceGroupName || '',
-          value: roleAssignment.resourceGroupIdentifier || '',
-          managedRoleAssignment: roleAssignment.managedRoleAssignment,
-          assignmentIdentifier: roleAssignment.identifier
-        }
+  return defaultTo(
+    roleBindings?.reduce((acc: Assignment[], roleAssignment) => {
+      if (!isAccountBasicRole(roleAssignment.roleIdentifier)) {
+        acc.push({
+          role: {
+            label: roleAssignment.roleName,
+            value: roleAssignment.roleIdentifier,
+            managed: roleAssignment.managedRole,
+            managedRoleAssignment: roleAssignment.managedRoleAssignment,
+            assignmentIdentifier: roleAssignment.identifier
+          },
+          resourceGroup: {
+            label: defaultTo(roleAssignment.resourceGroupName, ''),
+            value: defaultTo(roleAssignment.resourceGroupIdentifier, ''),
+            managedRoleAssignment: roleAssignment.managedRoleAssignment,
+            assignmentIdentifier: roleAssignment.identifier
+          }
+        })
       }
-    }) || []
+      return acc
+    }, []),
+    []
   )
 }
 
