@@ -8,6 +8,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import {
+  AllowedTypes,
   ButtonSize,
   ButtonVariation,
   Dialog,
@@ -18,8 +19,8 @@ import {
   useToaster
 } from '@harness/uicore'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import type { FormikContextType, FormikValues } from 'formik'
-import { connect } from 'formik'
+import type { FormikValues } from 'formik'
+import { useFormikContext } from 'formik'
 import { useModalHook } from '@harness/use-modal'
 import type { IDialogProps } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -43,23 +44,34 @@ import type { ServiceInputsConfig } from '@pipeline/utils/DeployStageInterface'
 import ServiceEntityEditModal from '@cd/components/Services/ServiceEntityEditModal/ServiceEntityEditModal'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
-import { isEditService } from './DeployServiceUtils'
-import type { DeployServiceProps } from './DeployServiceInterface'
-import css from './DeployServiceStep.module.scss'
+import { isEditService, DeployServiceEntityData, DeployServiceEntityCustomProps } from './DeployServiceEntityUtils'
+import css from './DeployServiceEntityStep.module.scss'
 
-function DeployServiceEntityInputStep({
+export interface DeployServiceEntityInputStepProps extends DeployServiceEntityCustomProps {
+  initialValues: DeployServiceEntityData
+  readonly: boolean
+  inputSetData?: {
+    template?: DeployServiceEntityData
+    path?: string
+    readonly?: boolean
+  }
+  allowableTypes: AllowedTypes
+}
+
+export function DeployServiceEntityInputStep({
   initialValues,
   inputSetData,
-  formik,
   allowableTypes,
-  customStepProps
-}: DeployServiceProps & { formik?: FormikContextType<unknown> }): React.ReactElement | null {
+  deploymentType,
+  gitOpsEnabled
+}: DeployServiceEntityInputStepProps): React.ReactElement | null {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { template: getTemplate, updateTemplate } = useRunPipelineFormContext()
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith('template.templateInputs')
+  const formik = useFormikContext()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<
     PipelineType<{
       orgIdentifier: string
@@ -85,8 +97,8 @@ function DeployServiceEntityInputStep({
   } = useGetServiceAccessList({
     queryParams: {
       ...queryParams,
-      type: customStepProps?.deploymentType as ServiceDefinition['type'],
-      gitOpsEnabled: defaultTo(customStepProps?.gitOpsEnabled, false)
+      type: deploymentType as ServiceDefinition['type'],
+      gitOpsEnabled: defaultTo(gitOpsEnabled, false)
     }
   })
 
@@ -112,7 +124,7 @@ function DeployServiceEntityInputStep({
   }))
 
   useEffect(() => {
-    if (initialValues.serviceRef && inputSetData?.path) {
+    if (initialValues.service?.serviceRef && inputSetData?.path) {
       const serviceInputsTemplate = getTemplate(`${inputSetData?.path}.serviceInputs`)
       const serviceInputsFormikValue = get(formik?.values, `${inputSetData?.path}.serviceInputs`)
       if (
@@ -122,14 +134,14 @@ function DeployServiceEntityInputStep({
       ) {
         refetchServiceInputs({
           pathParams: {
-            serviceIdentifier: initialValues.serviceRef
+            serviceIdentifier: initialValues.service?.serviceRef
           },
           queryParams
         })
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialValues.serviceRef]) // This dependency is added to update the template on switching from yaml to visual view and when input set is selected
+  }, [initialValues.service?.serviceRef]) // This dependency is added to update the template on switching from yaml to visual view and when input set is selected
 
   useEffect(() => {
     if (serviceInputsResponse?.data) {
@@ -151,7 +163,7 @@ function DeployServiceEntityInputStep({
         }
       } else {
         updateTemplate({}, `${inputSetData?.path}.serviceInputs`)
-        formik?.setFieldValue(`${inputSetData?.path}`, { serviceRef: initialValues.serviceRef })
+        formik?.setFieldValue(`${inputSetData?.path}`, { serviceRef: initialValues.service?.serviceRef })
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -241,7 +253,7 @@ function DeployServiceEntityInputStep({
 
   return (
     <>
-      {getMultiTypeFromValue(inputSetData?.template?.serviceRef) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(inputSetData?.template?.service?.serviceRef) === MultiTypeInputType.RUNTIME && (
         <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
           <ExperimentalInput
             tooltipProps={{ dataTooltipId: 'specifyYourService' }}
@@ -263,7 +275,7 @@ function DeployServiceEntityInputStep({
             className={css.inputWidth}
             formik={formik}
           />
-          {getMultiTypeFromValue(initialValues.serviceRef) === MultiTypeInputType.FIXED && (
+          {getMultiTypeFromValue(initialValues.service?.serviceRef) === MultiTypeInputType.FIXED && (
             <>
               {isEditService(initialValues) && !serviceListLoading && (
                 <RbacButton
@@ -292,5 +304,3 @@ function DeployServiceEntityInputStep({
     </>
   )
 }
-
-export const DeployServiceEntityInputStepFormik = connect(DeployServiceEntityInputStep)

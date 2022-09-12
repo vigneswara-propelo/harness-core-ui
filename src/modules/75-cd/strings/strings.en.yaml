@@ -170,8 +170,10 @@ pipelineSteps:
     deploymentTypeRequired: Deployment type selection is required
     propagateFrom: Propagate from
     differentService: Deploy different Service
-    specifyYourService: Select Service
+    specifyYourService: '{{$.common.selectService}}'
+    specifyYourServices: '{{$.common.selectServices}}'
     selectService: '- Select Service -'
+    selectServices: '- Select Services -'
     newService: '{{$.newService}}'
     plusNewService: '+ {{$.newService}}'
     serviceIsRequired: Service is required
@@ -182,6 +184,13 @@ pipelineSteps:
       scallingPolicy: Scalling Policy
       scalableTarget: Scalable Target
     newServiceOverride: New configuration overrides
+    multiServicesText: Deploy to multiple Services
+    multiServicesTitleText: Deploy to multiple services?
+    multiServicesConfirmationText: Are you sure you want to switch to deploying multiple services?. If you choose to proceed, your existing service will be migrated automatically.
+    singleServicesTitleText: Deploy to single service?
+    singleServicesConfirmationText: Are you sure you want to switch to deploying to a single services?. If you choose to proceed, your existing services will be lost.
+    deleteServiceFromListTitleText: Remove service from list?
+    deleteServiceFromListText: Are you sure you want to remove {{name}} service from the list?
   infraTab:
     deploymentType: Infrastructure type selection is required
     clusterError: No cluster found with given Connector

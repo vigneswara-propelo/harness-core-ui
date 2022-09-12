@@ -1175,6 +1175,7 @@ serviceDeploymentTypes:
   awsLambda: AWS Lambda
   pcf: TAS
   ssh: Secure Shell
+  custom: Custom Deployment
   deployDifferentLabel: Deploy different service
   serverlessAwsLambda: Serverless Lambda
   serverlessAzureFunctions: Serverless Azure Functions

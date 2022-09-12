@@ -84,7 +84,7 @@ import {
 } from '../deployInfraHelper'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
 
-export const deploymentTypeInfraTypeMap = {
+export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
   Kubernetes: InfraDeploymentType.KubernetesDirect,
   NativeHelm: InfraDeploymentType.KubernetesDirect,
   amazonEcs: InfraDeploymentType.KubernetesDirect,

@@ -20,7 +20,7 @@ interface PrimaryArtifactSourcesProps {
   isReadonly: boolean
   accountId: string
   fetchedConnectorResponse: PageConnectorResponse | undefined
-  editArtifact: (view: ModalViewFor, type: ArtifactType, index: number) => void
+  editArtifact: (view: ModalViewFor, type?: ArtifactType, index?: number) => void
   removeArtifactSource?: (index: number) => void
 }
 function PrimaryArtifactSources(props: PrimaryArtifactSourcesProps): React.ReactElement | null {

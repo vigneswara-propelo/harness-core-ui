@@ -435,7 +435,7 @@ activitySources:
     select: 'Select your Change Source'
     selectApplication: 'Select Applications'
     selectEnvironment: 'Select Environments'
-    selectService: 'Select Services'
+    selectService: '{{ $.common.selectServices }}'
     iconLabel: 'Harness FirstGen'
     harnessApps: 'HARNESS FIRSTGEN APPLICATION'
     application:

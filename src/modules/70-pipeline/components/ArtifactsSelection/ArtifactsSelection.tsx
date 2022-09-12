@@ -415,7 +415,7 @@ export default function ArtifactsSelection({
     refetchConnectorList()
   }
 
-  const editArtifact = (viewType: number, type: ArtifactType, index?: number): void => {
+  const editArtifact = (viewType: number, type?: ArtifactType, index?: number): void => {
     setModalContext(viewType)
     setConnectorView(false)
     setSelectedArtifact(type as ArtifactType)

@@ -23,7 +23,7 @@ interface PrimaryArtifactViewProps {
   isReadonly: boolean
   accountId: string
   fetchedConnectorResponse: PageConnectorResponse | undefined
-  editArtifact: (view: ModalViewFor, type: ArtifactType, index?: number) => void
+  editArtifact: (view: ModalViewFor, type?: ArtifactType, index?: number) => void
   removePrimary?: () => void
   identifierElement?: JSX.Element
 }
@@ -70,29 +70,34 @@ function PrimaryArtifactView({
               </Text>
             </div>
           )}
-          <div>{getString(ArtifactTitleIdByType[primaryArtifact?.type])}</div>
-          <div className={css.connectorNameField}>
-            <Icon padding={{ right: 'small' }} name={ArtifactIconByType[primaryArtifact.type]} size={18} />
-            <Text
-              tooltip={
-                <ArtifactRepositoryTooltip
-                  artifactConnectorName={primaryConnectorName}
-                  artifactConnectorRef={primaryArtifact.spec?.connectorRef}
-                  artifactType={primaryArtifact.type}
-                />
-              }
-              tooltipProps={{ isDark: true }}
-              alwaysShowTooltip={showConnectorStep(primaryArtifact.type)}
-              className={css.connectorName}
-              lineClamp={1}
-            >
-              {getPrimaryArtifactRepository(primaryArtifact.type)}
-            </Text>
+          {primaryArtifact.type ? (
+            <>
+              <div>{getString(ArtifactTitleIdByType[primaryArtifact.type])}</div>
+              <div className={css.connectorNameField}>
+                <Icon padding={{ right: 'small' }} name={ArtifactIconByType[primaryArtifact.type]} size={18} />
+                <Text
+                  tooltip={
+                    <ArtifactRepositoryTooltip
+                      artifactConnectorName={primaryConnectorName}
+                      artifactConnectorRef={primaryArtifact.spec?.connectorRef}
+                      artifactType={primaryArtifact.type}
+                    />
+                  }
+                  tooltipProps={{ isDark: true }}
+                  alwaysShowTooltip={showConnectorStep(primaryArtifact.type)}
+                  className={css.connectorName}
+                  lineClamp={1}
+                >
+                  {getPrimaryArtifactRepository(primaryArtifact.type)}
+                </Text>
 
-            {getMultiTypeFromValue(primaryArtifact.spec?.connectorRef) === MultiTypeInputType.FIXED && (
-              <Icon name="full-circle" size={8} color={primaryConnectorColor} />
-            )}
-          </div>
+                {getMultiTypeFromValue(primaryArtifact.spec?.connectorRef) === MultiTypeInputType.FIXED && (
+                  <Icon name="full-circle" size={8} color={primaryConnectorColor} />
+                )}
+              </div>
+            </>
+          ) : null}
+
           <div>
             <Text width={200} lineClamp={1} color={Color.GREY_500}>
               <span className={css.noWrap}>{getArtifactLocation(primaryArtifact)}</span>

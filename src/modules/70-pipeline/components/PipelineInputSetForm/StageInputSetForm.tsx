@@ -20,7 +20,7 @@ import {
 } from '@harness/uicore'
 import { connect, FormikProps } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, get, identity, isEmpty, isNil, pickBy, set, unset } from 'lodash-es'
+import { defaultTo, get, identity, isEmpty, isNil, pick, pickBy, set, unset } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -79,6 +79,7 @@ import { OsTypes } from '../../utils/constants'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
+export type DeployServiceEntityData = Pick<DeploymentStageConfig, 'service' | 'services'>
 const harnessImageConnectorRef = 'connectors.title.harnessImageConnectorRef'
 const osLabel = 'pipeline.infraSpecifications.os'
 
@@ -822,16 +823,17 @@ export function StageInputSetFormInternal({
           </div>
         </div>
       )}
-      {isSvcEnvEntityEnabled && deploymentStageTemplate.service && (
+      {isSvcEnvEntityEnabled && (deploymentStageTemplate.service || deploymentStageTemplate.services) && (
         <div id={`Stage.${stageIdentifier}.Service`} className={cx(css.accordionSummary)}>
           <div className={css.inputheader}>{getString('service')}</div>
           <div className={css.nestedAccordions}>
-            {deploymentStageTemplate.service?.serviceRef && (
-              /* istanbul ignore next */ <StepWidget<ServiceConfig>
+            {(deploymentStageTemplate.service?.serviceRef ||
+              Array.isArray(deploymentStageTemplate.services?.values)) && (
+              <StepWidget<DeployServiceEntityData>
                 factory={factory}
-                initialValues={deploymentStageInputSet.service || {}}
-                template={deploymentStageTemplate.service || {}}
-                type={StepType.DeployService}
+                initialValues={pick(deploymentStageInputSet, ['service', 'services'])}
+                template={pick(deploymentStageTemplate, ['service', 'services'])}
+                type={StepType.DeployServiceEntity}
                 stepViewType={viewType}
                 path={`${path}.service`}
                 allowableTypes={
@@ -844,7 +846,6 @@ export function StageInputSetFormInternal({
                 readonly={readonly}
                 customStepProps={{
                   stageIdentifier,
-                  isNewServiceEntity: true,
                   deploymentType: deploymentStage?.deploymentType,
                   gitOpsEnabled: deploymentStage?.gitOpsEnabled
                 }}

@@ -159,7 +159,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Acr
-  ]
+  ],
+  CustomDeployment: []
 }
 
 export const tagOptions: IOptionProps[] = [

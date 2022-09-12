@@ -425,12 +425,12 @@ export const isFieldFixed = (field: string): boolean => {
 }
 export const getArtifactLocation = (artifact: PrimaryArtifact | SidecarArtifact): string => {
   if (artifact.type === 'AmazonS3') {
-    return artifact.spec.filePath ?? artifact.spec.filePathRegex
+    return artifact.spec?.filePath ?? artifact.spec?.filePathRegex
   }
   return (
-    artifact.spec.imagePath ??
-    artifact.spec.artifactPath ??
-    artifact.spec.artifactPathFilter ??
-    artifact.spec.repository
+    artifact.spec?.imagePath ??
+    artifact.spec?.artifactPath ??
+    artifact.spec?.artifactPathFilter ??
+    artifact.spec?.repository
   )
 }

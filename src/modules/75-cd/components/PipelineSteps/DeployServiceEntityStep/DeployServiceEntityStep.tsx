@@ -1,31 +1,31 @@
-/*
- * Copyright 2021 Harness Inc. All rights reserved.
- * Use of this source code is governed by the PolyForm Shield 1.0.0 license
- * that can be found in the licenses directory at the root of this repository, also available at
- * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
- */
-
 import React from 'react'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
-import { get, isEmpty } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
+import { get, isEmpty } from 'lodash-es'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+
 import type { FormikErrors } from 'formik'
+import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { getServiceListPromise } from 'services/cd-ng'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
-import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
-import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
-import type { DeployServiceCustomStepPropType, DeployServiceData } from './DeployServiceInterface'
-import { ServiceRegex } from './DeployServiceUtils'
-import { DeployServiceInputStepFormik } from './DeployServiceInputStep'
-import DeployServiceWidget from './DeployServiceWidget'
+
+import { DeployServiceEntityCustomProps, DeployServiceEntityData, ServiceRegex } from './DeployServiceEntityUtils'
+import { DeployServiceEntityInputStep } from './DeployServiceEntityInputStep'
+import DeployServiceEntityWidget from './DeployServiceEntityWidget'
 
 const logger = loggerFor(ModuleName.CD)
 
-export class DeployServiceStep extends Step<DeployServiceData> {
+export class DeployServiceEntityStep extends Step<DeployServiceEntityData> {
+  protected type = StepType.DeployServiceEntity
+  protected stepPaletteVisible = false
+  protected stepName = 'Deploy Service'
+  protected stepIcon: IconName = 'service'
+
+  protected defaultValues: DeployServiceEntityData = {}
   lastFetched: number
   protected invocationMap: Map<
     RegExp,
@@ -37,7 +37,7 @@ export class DeployServiceStep extends Step<DeployServiceData> {
     this.invocationMap.set(ServiceRegex, this.getServiceListForYaml.bind(this))
   }
 
-  protected getServiceListForYaml(
+  protected async getServiceListForYaml(
     path: string,
     yaml: string,
     params: Record<string, unknown>
@@ -74,11 +74,10 @@ export class DeployServiceStep extends Step<DeployServiceData> {
       }
     }
 
-    return new Promise(resolve => {
-      resolve([])
-    })
+    return Promise.resolve([])
   }
-  renderStep(props: StepProps<DeployServiceData, DeployServiceCustomStepPropType>): JSX.Element {
+
+  renderStep(props: StepProps<DeployServiceEntityData, DeployServiceEntityCustomProps>): React.ReactElement {
     const {
       initialValues,
       onUpdate,
@@ -90,48 +89,43 @@ export class DeployServiceStep extends Step<DeployServiceData> {
     } = props
     if (isTemplatizedView(stepViewType)) {
       return (
-        <DeployServiceInputStepFormik
+        <DeployServiceEntityInputStep
           initialValues={initialValues}
           readonly={readonly}
-          onUpdate={onUpdate}
-          stepViewType={stepViewType}
           inputSetData={inputSetData}
           allowableTypes={allowableTypes}
-          customStepProps={customStepProps as DeployServiceCustomStepPropType}
+          {...(customStepProps as DeployServiceEntityCustomProps)}
         />
       )
     }
+
     return (
-      <DeployServiceWidget
-        readonly={readonly}
+      <DeployServiceEntityWidget
         initialValues={initialValues}
-        onUpdate={onUpdate}
-        stepViewType={stepViewType}
+        readonly={readonly}
         allowableTypes={allowableTypes}
+        customStepProps={customStepProps}
+        onUpdate={onUpdate}
+        {...(customStepProps as DeployServiceEntityCustomProps)}
       />
     )
   }
+
   validateInputSet({
     data,
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<DeployServiceData>): FormikErrors<DeployServiceData> {
+  }: ValidateInputSetProps<DeployServiceEntityData>): FormikErrors<DeployServiceEntityData> {
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (
-      isEmpty(data?.serviceRef) &&
+      isEmpty(data?.service?.serviceRef) &&
       isRequired &&
-      getMultiTypeFromValue(template?.serviceRef) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue(template?.service?.serviceRef) === MultiTypeInputType.RUNTIME
     ) {
       errors.serviceRef = getString?.('cd.pipelineSteps.serviceTab.serviceIsRequired')
     }
     return errors
   }
-  protected stepPaletteVisible = false
-  protected type = StepType.DeployService
-  protected stepName = 'Deploy Service'
-  protected stepIcon: IconName = 'service'
-
-  protected defaultValues: DeployServiceData = {}
 }

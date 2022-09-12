@@ -30,7 +30,7 @@ export interface ArtifactListViewProps {
   primaryArtifact: PrimaryArtifact | ArtifactSource[]
   sideCarArtifact: SidecarArtifactWrapper[] | undefined
   addNewArtifact: (view: ModalViewFor) => void
-  editArtifact: (view: ModalViewFor, type: ArtifactType, index?: number) => void
+  editArtifact: (view: ModalViewFor, type?: ArtifactType, index?: number) => void
   removeSidecar: (index: number) => void
   fetchedConnectorResponse: PageConnectorResponse | undefined
   accountId: string
@@ -48,17 +48,8 @@ export interface ArtifactsSelectionProps {
   readonly: boolean
 }
 
-export type ArtifactType =
-  | 'DockerRegistry'
-  | 'Gcr'
-  | 'Ecr'
-  | 'Nexus3Registry'
-  | 'ArtifactoryRegistry'
-  | 'CustomArtifact'
-  | 'Acr'
-  | 'Jenkins'
-  | 'AmazonS3'
-  | 'GoogleArtifactRegistry'
+export type ArtifactType = Required<PrimaryArtifact>['type']
+
 export interface OrganizationCreationType {
   type: ArtifactType
 }

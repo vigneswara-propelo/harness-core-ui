@@ -400,7 +400,7 @@ export default function ServiceV2ArtifactsSelection({
     refetchConnectorList()
   }
 
-  const editArtifact = (viewType: ModalViewFor, type: ArtifactType, index?: number): void => {
+  const editArtifact = (viewType: ModalViewFor, type?: ArtifactType, index?: number): void => {
     setArtifactContext(viewType)
     setConnectorView(false)
     setSelectedArtifact(type as ArtifactType)
