@@ -115,7 +115,11 @@ describe('CD Pipeline List Page', () => {
       })
     ).toHaveAttribute(
       'href',
-      routes.toPipelineStudio({ ...getModuleParams(), pipelineIdentifier: 'Sonar_Develop', storeType: 'INLINE' } as any)
+      routes.toPipelineDeploymentList({
+        ...getModuleParams(),
+        pipelineIdentifier: 'Sonar_Develop',
+        storeType: 'INLINE'
+      } as any)
     )
 
     expect(
@@ -261,7 +265,7 @@ describe('CI Pipeline List Page', () => {
       })
     ).toHaveAttribute(
       'href',
-      routes.toPipelineStudio({
+      routes.toPipelineDeploymentList({
         ...getModuleParams('ci'),
         pipelineIdentifier: 'Sonar_Develop',
         storeType: 'INLINE'
@@ -350,7 +354,7 @@ describe('Pipeline List Page with git details', () => {
       })
     ).toHaveAttribute(
       'href',
-      routes.toPipelineStudio({
+      routes.toPipelineDeploymentList({
         ...getModuleParams('ci'),
         pipelineIdentifier: 'mbghworkabcd',
         repoName: 'Repo1',
