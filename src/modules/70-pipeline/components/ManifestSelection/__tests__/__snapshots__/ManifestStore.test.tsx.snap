@@ -36,7 +36,7 @@ exports[`ManifestSelection tests renders K8 Manifest Store 1`] = `
                     class="bp3-form-content"
                   >
                     <div
-                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                     >
                       <label
                         class="Thumbnail--squareCardContainer"
@@ -420,7 +420,7 @@ exports[`ManifestSelection tests renders without crashing 1`] = `
                     class="bp3-form-content"
                   >
                     <div
-                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                     >
                       <label
                         class="Thumbnail--squareCardContainer"
