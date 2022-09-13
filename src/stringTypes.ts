@@ -4258,6 +4258,20 @@ export interface StringsMap {
   'cd.artifactRepoTooltip': string
   'cd.attributeFilters': string
   'cd.awsCli': string
+  'cd.azureArm.description': string
+  'cd.azureArm.location': string
+  'cd.azureArm.managementGroup': string
+  'cd.azureArm.paramFile': string
+  'cd.azureArm.paramFilePath': string
+  'cd.azureArm.paramFileSource': string
+  'cd.azureArm.required': string
+  'cd.azureArm.specifyParameterFile': string
+  'cd.azureArm.specifyTemplateFile': string
+  'cd.azureArm.specifyTemplateFileSource': string
+  'cd.azureArm.templateFile': string
+  'cd.azureArm.templateFileDetails': string
+  'cd.azureArm.templateFileSource': string
+  'cd.azureArm.tenant': string
   'cd.azureArmRollback.description': string
   'cd.azureBlueprint.assignmentName': string
   'cd.azureBlueprint.assignmentNameError': string

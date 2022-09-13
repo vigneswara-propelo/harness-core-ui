@@ -526,4 +526,19 @@ deploymentSteps: Deployment Steps
 addStepsForYourDeploymentType: Add steps for your deployment type here
 removeStepTemplate: Remove Step Template
 removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
-removeStepTemplateSuccess: Step Template has been successfully removed
+removeStepTemplateSuccess: Step Template has been successfully remove
+azureArm:
+  description: Deploy resources using Azure Resource Manager (ARM).
+  location: Location
+  templateFile: ARM Template File
+  templateFileSource: '{{ $.cd.azureBlueprint.templateFileSource }}'
+  templateFileDetails: '{{ $.cd.azureBlueprint.templateFileDetails }}'
+  paramFileSource: Parameter File Source
+  specifyTemplateFile: Specify ARM Template File
+  specifyTemplateFileSource: Specify Template File Source
+  paramFile: ARM Parameter File
+  paramFilePath: Parameter File Path
+  specifyParameterFile: Specify ARM Parameter File
+  managementGroup: '{{ $.cd.azureBlueprint.managementGroup }}'
+  tenant: Tenant
+  required: '{{name}} is Required'
