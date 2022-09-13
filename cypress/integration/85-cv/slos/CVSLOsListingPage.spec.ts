@@ -54,7 +54,7 @@ describe('CVSLOsListingPage', () => {
     cy.contains('p', '99%').should('be.visible')
     cy.contains('p', '138.44%').should('be.visible')
 
-    cy.contains('p', 'prod').click()
+    cy.contains('p', 'prod').click({ force: true })
 
     cy.contains('div', 'Service Health').should('be.visible')
     cy.contains('p', 'SLOs').click()
