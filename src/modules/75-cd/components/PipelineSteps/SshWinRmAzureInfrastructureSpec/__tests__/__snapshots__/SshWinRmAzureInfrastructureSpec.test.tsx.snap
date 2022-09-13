@@ -36,7 +36,12 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
                   class="bp3-label"
                   for="credentialsRef"
                 >
-                  cd.steps.common.specifyCredentials
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="sshWinRmAzureInfra_credentialsRef"
+                  >
+                    cd.steps.common.specifyCredentials
+                  </span>
                    
                   <span
                     class="bp3-text-muted"
@@ -680,7 +685,12 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
                   class="bp3-label"
                   for="credentialsRef"
                 >
-                  cd.steps.common.specifyCredentials
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="sshWinRmAzureInfra_credentialsRef"
+                  >
+                    cd.steps.common.specifyCredentials
+                  </span>
                    
                   <span
                     class="bp3-text-muted"
@@ -1309,7 +1319,12 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
             class="bp3-label"
             for=".credentialsRef"
           >
-            cd.steps.common.specifyCredentials
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="stepTestUtilForm_.credentialsRef"
+            >
+              cd.steps.common.specifyCredentials
+            </span>
              
             <span
               class="bp3-text-muted"
@@ -1890,7 +1905,12 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
             class="bp3-label"
             for=".credentialsRef"
           >
-            cd.steps.common.specifyCredentials
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="stepTestUtilForm_.credentialsRef"
+            >
+              cd.steps.common.specifyCredentials
+            </span>
              
             <span
               class="bp3-text-muted"
@@ -2458,7 +2478,12 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
                   class="bp3-label"
                   for="credentialsRef"
                 >
-                  cd.steps.common.specifyCredentials
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="sshWinRmAzureInfra_credentialsRef"
+                  >
+                    cd.steps.common.specifyCredentials
+                  </span>
                    
                   <span
                     class="bp3-text-muted"
@@ -2957,7 +2982,12 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
                   class="bp3-label"
                   for="credentialsRef"
                 >
-                  cd.steps.common.specifyCredentials
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="sshWinRmAzureInfra_credentialsRef"
+                  >
+                    cd.steps.common.specifyCredentials
+                  </span>
                    
                   <span
                     class="bp3-text-muted"
@@ -3471,7 +3501,12 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
                   class="bp3-label"
                   for="credentialsRef"
                 >
-                  cd.steps.common.specifyCredentials
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="sshWinRmAzureInfra_credentialsRef"
+                  >
+                    cd.steps.common.specifyCredentials
+                  </span>
                    
                   <span
                     class="bp3-text-muted"
