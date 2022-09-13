@@ -23,7 +23,6 @@ const initialValues = {
   identifier: 'test_identifier',
   timeout: '10m',
   spec: {
-    provisionerIdentifier: '',
     configuration: {
       connectorRef: '',
       assignmentName: '',
@@ -65,7 +64,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: '',
       timeout: '10m',
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: '',
           assignmentName: '',
@@ -85,7 +83,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: 'testID',
       timeout: RUNTIME_INPUT_VALUE,
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: 'testRef',
           assignmentName: '',
@@ -105,7 +102,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: 'testID',
       timeout: RUNTIME_INPUT_VALUE,
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: '',
           assignmentName: '',
@@ -128,7 +124,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: 'testID',
       timeout: '10m',
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: RUNTIME_INPUT_VALUE,
           assignmentName: '',
@@ -148,7 +143,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: 'testID',
       timeout: '10m',
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: '',
           assignmentName: RUNTIME_INPUT_VALUE,
@@ -168,7 +162,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: 'testID',
       timeout: '10m',
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: '',
           assignmentName: RUNTIME_INPUT_VALUE,
@@ -191,7 +184,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: 'testID',
       timeout: '10m',
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: '',
           assignmentName: '',

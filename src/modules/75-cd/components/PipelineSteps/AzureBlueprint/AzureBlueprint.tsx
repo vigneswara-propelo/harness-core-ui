@@ -33,7 +33,6 @@ export class AzureBlueprintStep extends PipelineStep<AzureBlueprintStepInfo> {
   protected stepIcon: IconName = 'azure-blueprints'
   protected stepName = 'Azure Blueprint Create'
   protected stepDescription: keyof StringsMap = 'cd.azureBlueprint.description'
-  protected stepIconSize = 32
 
   protected defaultValues = {
     type: StepType.AzureBlueprint,
@@ -41,7 +40,6 @@ export class AzureBlueprintStep extends PipelineStep<AzureBlueprintStepInfo> {
     identifier: '',
     timeout: '10m',
     spec: {
-      provisionerIdentifier: '',
       configuration: {
         connectorRef: '',
         assignmentName: '',
@@ -59,13 +57,6 @@ export class AzureBlueprintStep extends PipelineStep<AzureBlueprintStepInfo> {
   }: ValidateInputSetProps<AzureBlueprintData>): FormikErrors<AzureBlueprintStepInfo> {
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    if (
-      isValueRuntimeInput(template?.spec?.provisionerIdentifier as string) &&
-      isRequired &&
-      isEmpty(data?.spec?.provisionerIdentifier?.trim())
-    ) {
-      set(errors, 'spec.provisionerIdentifier', getString?.('common.validation.provisionerIdentifierIsRequired'))
-    }
 
     if (
       isValueRuntimeInput(template?.spec?.configuration?.connectorRef as string) &&

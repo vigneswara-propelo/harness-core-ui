@@ -62,7 +62,6 @@ const propWizard = {
     identifier: 'azure_blueprint',
     timeout: '10m',
     spec: {
-      provisionerIdentifier: '',
       configuration: {
         connectorRef: 'testRef',
         assignmentName: '',
@@ -152,7 +151,6 @@ describe('ScriptWizard & stepOne', () => {
         identifier: 'azure_blueprint',
         timeout: '10m',
         spec: {
-          provisionerIdentifier: 'azureBlueprint',
           configuration: {
             connectorRef: '',
             assignmentName: 'azureBlueprint',

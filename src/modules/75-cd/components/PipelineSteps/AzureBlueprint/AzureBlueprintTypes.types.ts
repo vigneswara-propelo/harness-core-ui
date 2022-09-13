@@ -38,7 +38,6 @@ export interface AzureBlueprintData {
   identifier: string
   timeout: string
   spec: {
-    provisionerIdentifier: string
     configuration: {
       connectorRef: string
       scope: string

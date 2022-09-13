@@ -28,7 +28,6 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useQueryParams } from '@common/hooks'
-import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -83,17 +82,6 @@ export const AzureBlueprintRef = (
         ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
-          provisionerIdentifier: Yup.lazy((value): Yup.Schema<unknown> => {
-            /* istanbul ignore next */
-            if (getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED) {
-              return IdentifierSchemaWithOutName(getString, {
-                requiredErrorMsg: getString('common.validation.provisionerIdentifierIsRequired'),
-                regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
-              })
-            }
-            /* istanbul ignore next */
-            return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
-          }),
           configuration: Yup.object().shape({
             connectorRef: Yup.string().required(getString('pipelineSteps.build.create.connectorRequiredError')),
             assignmentName: Yup.string().required(getString('cd.azureBlueprint.assignmentNameError')),
@@ -160,33 +148,6 @@ export const AzureBlueprintRef = (
               )}
             </div>
             <div className={css.divider} />
-            <div className={cx(stepCss.formGroup, stepCss.lg)}>
-              <FormInput.MultiTextInput
-                name="spec.provisionerIdentifier"
-                label={getString('pipelineSteps.provisionerIdentifier')}
-                multiTextInputProps={{ expressions, allowableTypes }}
-                disabled={readonly}
-              />
-              {
-                /* istanbul ignore next */
-                isValueRuntimeInput(values.spec?.provisionerIdentifier) && (
-                  <ConfigureOptions
-                    value={values.spec?.provisionerIdentifier as string}
-                    type="String"
-                    variableName="spec.provisionerIdentifier"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    /* istanbul ignore next */
-                    onChange={value => {
-                      setFieldValue('spec.provisionerIdentifier', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-                  />
-                )
-              }
-            </div>
             <Label className={cx(stepCss.bottomMargin4, stepCss.topMargin4, css.azureBlueprintTitle)}>
               {getString('cd.azureBlueprint.configuration')}
             </Label>
