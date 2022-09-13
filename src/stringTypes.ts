@@ -2981,9 +2981,12 @@ export interface StringsMap {
   'pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder': string
   'pipeline.artifactsSelection.filePathRegexLabel': string
   'pipeline.artifactsSelection.filePathRegexPlaceholder': string
+  'pipeline.artifactsSelection.githubPackageRegistryTitle': string
   'pipeline.artifactsSelection.googleArtifactRegistryTitle': string
   'pipeline.artifactsSelection.loadingArtifactPaths': string
   'pipeline.artifactsSelection.loadingTags': string
+  'pipeline.artifactsSelection.orgNamePlaceholder': string
+  'pipeline.artifactsSelection.packageName': string
   'pipeline.artifactsSelection.projectPlaceholder': string
   'pipeline.artifactsSelection.repositoryPlaceholder': string
   'pipeline.artifactsSelection.repositoryPort': string
@@ -2995,6 +2998,8 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.filePathRegex': string
   'pipeline.artifactsSelection.validation.imagePath': string
   'pipeline.artifactsSelection.validation.noBuild': string
+  'pipeline.artifactsSelection.validation.packageName': string
+  'pipeline.artifactsSelection.validation.packageType': string
   'pipeline.artifactsSelection.validation.region': string
   'pipeline.artifactsSelection.validation.repositoryPort': string
   'pipeline.artifactsSelection.validation.repositoryType': string
@@ -3634,6 +3639,8 @@ export interface StringsMap {
   'pipeline.overrideSets.overrideSetError': string
   'pipeline.overrideSets.overrideSetInfo': string
   'pipeline.overrideSets.overrideSetPlaceholder': string
+  'pipeline.packageType': string
+  'pipeline.packageTypePlaceholder': string
   'pipeline.parallelSelectedStages': string
   'pipeline.parallelStages': string
   'pipeline.parentStageDeleteWarning': string
@@ -3642,7 +3649,6 @@ export interface StringsMap {
   'pipeline.phasesForm.errors.limitError': string
   'pipeline.phasesForm.errors.prevLimitError': string
   'pipeline.phasesForm.errors.wrongPercentageFormat': string
-  'pipeline.phasesForm.packageType': string
   'pipeline.phasesForm.packageTypes.jar': string
   'pipeline.phasesForm.packageTypes.rpm': string
   'pipeline.phasesForm.packageTypes.tar': string

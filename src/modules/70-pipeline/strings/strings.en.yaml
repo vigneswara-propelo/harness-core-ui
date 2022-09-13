@@ -592,6 +592,8 @@ releaseRepo: Release Repo
 addReleaseRepo: + Add Release Repo Manifest
 releaseRepoStore: Release Repo Store
 runtimeInputsSubmittedMsg: Inputs have been submitted successfully
+packageType: Package Type
+packageTypePlaceholder: Select Package Type
 pipelineInputPanel:
   noRuntimeInputs: 'No Runtime Inputs'
   automaticallyExtractedFromText: Automatically extracted from event payload
@@ -797,6 +799,7 @@ artifactsSelection:
   projectPlaceholder: Enter Project
   repositoryTypePlaceholder: Select Repository Type
   delegateselectionPlaceholder: Add specific selectors or leave empty to target any delegate
+  packageName: Package Name
   repositoryPort: Repository Port
   artifactsArrayPath: Artifacts Array Path
   versionPath: Version Path
@@ -805,6 +808,7 @@ artifactsSelection:
   repositoryPlaceholder: Enter Repository
   artifactType: Artifact Type
   artifactDetails: Artifact Details
+  orgNamePlaceholder: Enter Organization Name
   versionDetails: Version Details
   versionPlaceholder: Enter Version
   versionRegex: Version Regex
@@ -819,6 +823,7 @@ artifactsSelection:
   filePathRegexPlaceholder: Enter File Path Regex
   amazonS3Title: Amazon S3
   googleArtifactRegistryTitle: Google Artifact Registry
+  githubPackageRegistryTitle: Github Package Registry
   existingDocker:
     sidecarId: Sidecar Name
     sidecarIdPlaceholder: Enter Artifact Name
@@ -826,7 +831,9 @@ artifactsSelection:
     enterTagRegex: Enter Tag Regex
   validation:
     noBuild: No build found with given details
+    packageType: Package Type is required
     versionRegex: Version Regex is required
+    packageName: Package Name is required
     imagePath: Image Path is required
     artifactPath: Artifact Path is required
     region: '{{$.validation.regionRequired}}'
@@ -1314,7 +1321,6 @@ triggerInfo: 'Trigger Info'
 phasesForm:
   phases: 'Phases'
   phase: 'Phase'
-  packageType: 'Package Type'
   addPhase: '+ Add Phase'
   useVerification: 'Use Verification'
   errors:

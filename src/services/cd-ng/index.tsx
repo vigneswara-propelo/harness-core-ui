@@ -8570,6 +8570,7 @@ export interface PrimaryArtifact {
     | 'Jenkins'
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
+    | 'GithubPackageRegistry'
 }
 
 export interface Principal {

@@ -75,7 +75,8 @@ import type {
   AmazonS3InitialValuesType,
   JenkinsArtifactType,
   GoogleArtifactRegistryInitialValuesType,
-  CustomArtifactSource
+  CustomArtifactSource,
+  GithubPackageRegistryInitialValuesType
 } from './ArtifactInterface'
 import {
   ArtifactToConnectorMap,
@@ -99,6 +100,7 @@ import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/
 import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
 import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
 import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
+import { GithubPackageRegistry } from './ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
 import css from './ArtifactsSelection.module.scss'
 
 export default function ArtifactsSelection({
@@ -131,7 +133,7 @@ export default function ArtifactsSelection({
   const { expressions } = useVariablesExpression()
 
   const stepWizardTitle = getString('connectors.createNewConnector')
-  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
   const { getCache } = useCache([getServiceCacheId])
@@ -143,6 +145,13 @@ export default function ArtifactsSelection({
       isAllowedCustomArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
+    }
+    if (
+      deploymentType === 'Kubernetes' &&
+      GITHUB_PACKAGES &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     }
     if (
       deploymentType === 'Kubernetes' &&
@@ -489,7 +498,8 @@ export default function ArtifactsSelection({
       AmazonS3InitialValuesType &
       JenkinsArtifactType &
       GoogleArtifactRegistryInitialValuesType &
-      CustomArtifactSource
+      CustomArtifactSource &
+      GithubPackageRegistryInitialValuesType
   > => {
     return {
       ...getLastStepName(),
@@ -650,6 +660,8 @@ export default function ArtifactsSelection({
         return <JenkinsArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
         return <GoogleArtifactRegistry {...artifactLastStepProps()} />
+      case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+        return <GithubPackageRegistry {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       default:
         return <DockerRegistryArtifact {...artifactLastStepProps()} />

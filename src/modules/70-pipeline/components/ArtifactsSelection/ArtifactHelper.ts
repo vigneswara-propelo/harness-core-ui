@@ -59,7 +59,8 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   Acr: 'service-azure',
   Jenkins: 'service-jenkins',
   AmazonS3: 'service-service-s3',
-  GoogleArtifactRegistry: 'service-gar'
+  GoogleArtifactRegistry: 'service-gar',
+  GithubPackageRegistry: 'service-github'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -72,7 +73,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   Acr: 'pipeline.ACR.name',
   Jenkins: 'connectors.jenkins.jenkins',
   AmazonS3: 'pipeline.artifactsSelection.amazonS3Title',
-  GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle'
+  GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle',
+  GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -85,7 +87,8 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   Acr: 'Acr',
   Jenkins: 'Jenkins',
   AmazonS3: 'AmazonS3',
-  GoogleArtifactRegistry: 'GoogleArtifactRegistry'
+  GoogleArtifactRegistry: 'GoogleArtifactRegistry',
+  GithubPackageRegistry: 'GithubPackageRegistry'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -97,7 +100,8 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   Acr: Connectors.AZURE,
   Jenkins: Connectors.JENKINS,
   AmazonS3: Connectors.AWS,
-  GoogleArtifactRegistry: Connectors.GCP
+  GoogleArtifactRegistry: Connectors.GCP,
+  GithubPackageRegistry: Connectors.GITHUB
 }
 
 export const ArtifactConnectorLabelMap: Record<string, string> = {
@@ -109,7 +113,8 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   Acr: 'Azure',
   Jenkins: 'Jenkins',
   AmazonS3: 'AWS',
-  GoogleArtifactRegistry: 'GCP'
+  GoogleArtifactRegistry: 'GCP',
+  GithubPackageRegistry: 'Github'
 }
 
 export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<ArtifactType>> = {
