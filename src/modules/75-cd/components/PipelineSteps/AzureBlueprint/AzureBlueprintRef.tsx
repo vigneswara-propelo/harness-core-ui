@@ -118,7 +118,7 @@ export const AzureBlueprintRef = (
         const { values, setFieldValue, errors } = formik
         const config = values.spec.configuration
         const templateType = config?.template?.store?.type
-        let templatePath = config?.template?.store?.spec?.paths
+        let templatePath = config?.template?.store?.spec?.folderPath
         if (templateType === 'Harness') {
           templatePath = config?.template?.store?.spec?.files || config?.template?.store?.spec?.secretFiles
         }
@@ -268,8 +268,8 @@ export const AzureBlueprintRef = (
                       /* istanbul ignore next */
                       getMultiTypeFromValue(templatePath) === MultiTypeInputType.RUNTIME
                         ? `/${templatePath}`
-                        : templatePath?.[0]
-                        ? templatePath?.[0]
+                        : templatePath
+                        ? templatePath
                         : getString('cd.azureBlueprint.specifyTemplateFileSource')
                     }
                   </a>

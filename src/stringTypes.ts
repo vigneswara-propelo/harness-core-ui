@@ -4267,6 +4267,7 @@ export interface StringsMap {
   'cd.azureBlueprint.specifyTemplateFileSource': string
   'cd.azureBlueprint.templateFileDetails': string
   'cd.azureBlueprint.templateFileSource': string
+  'cd.azureBlueprint.templateFolderPath': string
   'cd.azureCli': string
   'cd.azureCliCmd': string
   'cd.azureCmd': string

@@ -112,11 +112,15 @@ export class AzureBlueprintStep extends PipelineStep<AzureBlueprintStepInfo> {
     }
 
     if (
-      isValueRuntimeInput(template?.spec?.configuration?.template?.store?.spec?.paths as string) &&
+      isValueRuntimeInput(template?.spec?.configuration?.template?.store?.spec?.folderPath as string) &&
       isRequired &&
-      isEmpty(data?.spec?.configuration?.template?.store?.spec?.paths)
+      isEmpty(data?.spec?.configuration?.template?.store?.spec?.folderPath)
     ) {
-      set(errors, 'spec.configuration.template.store.spec.paths', getString?.('pipeline.startupCommand.scriptFilePath'))
+      set(
+        errors,
+        'spec.configuration.template.store.spec.folderPath',
+        getString?.('cd.azureBlueprint.templateFolderPath')
+      )
     }
 
     if (isValueRuntimeInput(template?.timeout as string) && isRequired) {

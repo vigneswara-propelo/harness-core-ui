@@ -475,6 +475,7 @@ azureBlueprint:
   assignmentNameError: Assignment Name Required
   configuration: Azure Blueprint Configuration
   managementGroup: Management Group
+  templateFolderPath: Template Folder Path
 validation:
   specifyFilter: Specify the filter condition
 welcomeMessage: Welcome to Harness

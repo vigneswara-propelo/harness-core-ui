@@ -41,7 +41,7 @@ const defaultStore = {
     spec: {
       connectorRef: 'Github2',
       gitFetchType: 'Branch',
-      paths: ['filePath'],
+      folderPath: 'filePath',
       branch: 'branch'
     }
   }
@@ -163,7 +163,7 @@ describe('ScriptWizard & stepOne', () => {
                 spec: {
                   connectorRef: RUNTIME_INPUT_VALUE,
                   gitFetchType: 'Branch',
-                  paths: ['filePath'],
+                  paths: 'filePath',
                   branch: 'branch'
                 }
               }

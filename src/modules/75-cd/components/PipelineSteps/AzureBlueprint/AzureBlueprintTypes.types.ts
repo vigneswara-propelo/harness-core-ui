@@ -53,7 +53,7 @@ export interface AzureBlueprintData {
             repoName?: string
             files?: string
             secretFiles?: string
-            paths?: string
+            folderPath?: string
           }
         }
       }
