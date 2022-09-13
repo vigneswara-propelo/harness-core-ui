@@ -7280,6 +7280,7 @@ export interface StringsMap {
   'cv.sloGraphUserHint': string
   'cv.sloRecalculationInProgress': string
   'cv.slos.backToSLI': string
+  'cv.slos.burnRate': string
   'cv.slos.configureSLIQueries': string
   'cv.slos.confirmDeleteSLO': string
   'cv.slos.contextualHelp.sli.availabilityDescription': string
@@ -7307,6 +7308,7 @@ export interface StringsMap {
   'cv.slos.healthSource': string
   'cv.slos.healthSourceForSLI': string
   'cv.slos.latencySLI': string
+  'cv.slos.monitoredService': string
   'cv.slos.monitoredServiceText': string
   'cv.slos.noData': string
   'cv.slos.noDataMS': string
@@ -7342,6 +7344,8 @@ export interface StringsMap {
   'cv.slos.sloTargetAndBudget.setSLOTarget': string
   'cv.slos.sloTargetAndBudgetPolicy': string
   'cv.slos.sloUpdated': string
+  'cv.slos.status': string
+  'cv.slos.target': string
   'cv.slos.title': string
   'cv.slos.totalServices': string
   'cv.slos.userJourney': string

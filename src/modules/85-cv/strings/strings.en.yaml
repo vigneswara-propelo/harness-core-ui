@@ -691,6 +691,10 @@ templates:
 sensitivityValidation: Sensitivity should be high, medium or low
 slos:
   title: SLOs
+  monitoredService: MONITORED SERVICE
+  status: STATUS
+  target: TARGET
+  burnRate: BURN RATE/DAY
   deleteSLO: Delete SLO
   createSLO: Create SLO
   healthSource: Health source
