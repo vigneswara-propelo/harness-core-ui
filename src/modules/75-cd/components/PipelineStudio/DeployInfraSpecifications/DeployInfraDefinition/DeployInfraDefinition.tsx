@@ -76,6 +76,7 @@ import type { ECSInfraSpec } from '@cd/components/PipelineSteps/ECSInfraSpec/ECS
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
+  getInfraDefinitionMethodTooltipId,
   getInfraGroups,
   getInfrastructureDefaultValue,
   InfrastructureGroup,
@@ -684,7 +685,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           ) && (
             <Text margin={{ bottom: 'medium' }} className={stageCss.info}>
               <StringWithTooltip
-                tooltipId="pipelineStep.infrastructureDefinitionMethod"
+                tooltipId={getInfraDefinitionMethodTooltipId(selectedDeploymentType)}
                 stringId="cd.pipelineSteps.environmentTab.selectInfrastructureType"
               />
             </Text>

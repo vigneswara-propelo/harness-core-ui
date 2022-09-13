@@ -375,3 +375,7 @@ export const isAzureWebAppInfrastructureType = (infrastructureType?: string): bo
 export const getInfraDefinitionDetailsHeaderTooltipId = (selectedInfrastructureType: string): string => {
   return `${selectedInfrastructureType}InfraDefinitionDetails`
 }
+
+export const getInfraDefinitionMethodTooltipId = (selectedDeploymentType: string): string => {
+  return `${selectedDeploymentType}InfrastructureDefinitionMethod`
+}
