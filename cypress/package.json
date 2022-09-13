@@ -21,6 +21,7 @@
     "express": "^4.17.1",
     "istanbul-lib-coverage": "^3.0.0",
     "nyc": "^15.1.0",
-    "source-map-support": "^0.5.20"
+    "source-map-support": "^0.5.20",
+    "yaml": "^1.10.0"
   }
 }
