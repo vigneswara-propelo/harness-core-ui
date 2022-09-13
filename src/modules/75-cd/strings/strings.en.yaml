@@ -181,7 +181,7 @@ pipelineSteps:
     manifest:
       taskDefinition: Task Definition
       serviceDefinition: Service Definition
-      scallingPolicy: Scalling Policy
+      scalingPolicy: Scaling Policy
       scalableTarget: Scalable Target
     newServiceOverride: New configuration overrides
     multiServicesText: Deploy to multiple Services

@@ -4512,7 +4512,7 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.deploymentTypeRequired': string
   'cd.pipelineSteps.serviceTab.differentService': string
   'cd.pipelineSteps.serviceTab.manifest.scalableTarget': string
-  'cd.pipelineSteps.serviceTab.manifest.scallingPolicy': string
+  'cd.pipelineSteps.serviceTab.manifest.scalingPolicy': string
   'cd.pipelineSteps.serviceTab.manifest.serviceDefinition': string
   'cd.pipelineSteps.serviceTab.manifest.taskDefinition': string
   'cd.pipelineSteps.serviceTab.multiServicesConfirmationText': string
