@@ -76,6 +76,7 @@ remove: Remove
 member: Member
 showMore: Show More
 showLess: Show Less
+showSelected: Show Selected
 hideAll: Hide All
 moreInfo: More Info
 moreOptions: More options

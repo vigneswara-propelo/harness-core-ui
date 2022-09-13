@@ -729,6 +729,7 @@ export interface StringsMap {
   'common.showHarnessManagedError': string
   'common.showLess': string
   'common.showMore': string
+  'common.showSelected': string
   'common.sidecarArtifactsText': string
   'common.skip': string
   'common.slack': string
