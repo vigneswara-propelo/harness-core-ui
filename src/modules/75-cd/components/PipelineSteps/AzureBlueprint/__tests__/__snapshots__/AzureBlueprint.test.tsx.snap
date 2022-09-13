@@ -206,7 +206,7 @@ exports[`Test Azure Blueprint step should render azure blueprint view as new ste
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
             >
-              pipelineSteps.awsConnectorLabel
+              common.azureConnector
             </p>
           </span>
         </div>

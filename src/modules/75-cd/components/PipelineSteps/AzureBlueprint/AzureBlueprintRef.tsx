@@ -153,8 +153,8 @@ export const AzureBlueprintRef = (
             </Label>
             <div className={cx(stepCss.formGroup, stepCss.lg)}>
               <FormMultiTypeConnectorField
-                label={<Text color={Color.GREY_900}>{getString('pipelineSteps.awsConnectorLabel')}</Text>}
-                type={Connectors.AWS}
+                label={<Text color={Color.GREY_900}>{getString('common.azureConnector')}</Text>}
+                type={Connectors.AZURE}
                 name="spec.configuration.connectorRef"
                 placeholder={getString('select')}
                 accountIdentifier={accountId}
