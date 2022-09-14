@@ -3657,6 +3657,7 @@ export interface StringsMap {
   'pipeline.phasesForm.packageTypes.tar': string
   'pipeline.phasesForm.packageTypes.war': string
   'pipeline.phasesForm.packageTypes.zip': string
+  'pipeline.phasesForm.packageTypesWinrm.application': string
   'pipeline.phasesForm.packageTypesWinrm.virtualDir': string
   'pipeline.phasesForm.packageTypesWinrm.website': string
   'pipeline.phasesForm.phase': string

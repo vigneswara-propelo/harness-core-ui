@@ -1336,8 +1336,9 @@ phasesForm:
     rpm: 'Rpm'
     zip: 'Zip'
   packageTypesWinrm:
-    website: 'Website'
-    virtualDir: 'Virtual directory'
+    application: 'IIS Application'
+    website: 'IIS Website'
+    virtualDir: 'IIS Virtual directory'
 draft: 'Draft'
 duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always
