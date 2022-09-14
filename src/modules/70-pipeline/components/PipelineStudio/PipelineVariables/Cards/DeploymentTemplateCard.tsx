@@ -25,6 +25,7 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import { VariableType } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableUtils'
 import { useStrings } from 'framework/strings'
 import type { StoreConfigWrapper } from 'services/cd-ng'
+import { Connectors } from '@connectors/constants'
 import VariableAccordionSummary from '../VariableAccordionSummary'
 import type { DeploymentInfra, DeploymentTemplateConfig, PipelineVariablesData } from '../types'
 import css from '../PipelineVariables.module.scss'
@@ -61,9 +62,9 @@ export default function DeploymentTemplateCard(props: DeploymentTemplateCardProp
 
   const headerComponent: JSX.Element = (
     <div className={moduleCss.infraVarHeader}>
-      <div className={moduleCss.label}>{getString('name')}</div>
-      <div className={moduleCss.label}>{getString('description')}</div>
-      <div className={moduleCss.label}>{getString('common.configureOptions.defaultValue')}</div>
+      <div>{getString('name')}</div>
+      <div>{getString('description')}</div>
+      <div>{getString('common.configureOptions.defaultValue')}</div>
     </div>
   )
   const onUpdateInfrastructureVariables = React.useCallback(
@@ -151,7 +152,8 @@ export default function DeploymentTemplateCard(props: DeploymentTemplateCardProp
                         VariableType.Connector
                       ],
                       isDescriptionEnabled: true,
-                      headerComponent: headerComponent
+                      headerComponent: headerComponent,
+                      allowedConnectorTypes: Object.values(Connectors)
                     }}
                   />
                 ) : /* istanbul ignore next */ null}

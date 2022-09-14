@@ -18,12 +18,16 @@ import {
   MultiTypeInputType,
   SelectOption,
   Select,
-  Text
+  Text,
+  AllowedTypesWithRunTime,
+  ButtonSize
 } from '@wings-software/uicore'
 import { v4 as uuid } from 'uuid'
+import { FontVariation } from '@harness/design-system'
+import cx from 'classnames'
 
 import { defaultTo, get } from 'lodash-es'
-import { useStrings } from 'framework/strings'
+import { String as StringGlobal, useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
@@ -36,6 +40,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
+import { Connectors } from '@connectors/constants'
 import css from './DeploymentInfraSpecifications.module.scss'
 
 enum VariableType {
@@ -55,6 +60,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
   const { values: formValues, setFieldValue } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const infraAllowableTypes: AllowedTypesWithRunTime[] = [MultiTypeInputType.FIXED]
 
   const scriptType: ScriptType = 'Bash'
   const instanceScriptTypes = React.useMemo(
@@ -99,7 +105,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                 variables: defaultTo(formValues?.variables, []) as AllNGVariables[],
                 canAddVariable: true
               }}
-              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+              allowableTypes={allowableTypes}
               readonly={isReadOnly}
               onUpdate={values => {
                 setFieldValue('variables', values.variables)
@@ -112,6 +118,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
               ]}
               isDescriptionEnabled={true}
               enableValidation={true}
+              allowedConnectorTypes={Object.values(Connectors)}
             />
           </Layout.Horizontal>
         </Layout.Vertical>
@@ -131,7 +138,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                   label={fetchScriptWidgetTitle}
                   defaultValueToReset=""
                   disabled={isReadOnly}
-                  allowedTypes={[MultiTypeInputType.FIXED]}
+                  allowedTypes={infraAllowableTypes}
                   disableTypeSelection={isReadOnly}
                   skipRenderValueInExpressionLabel
                   expressionRender={() => {
@@ -173,11 +180,11 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
             {fetchInstanceScriptType === InstanceScriptTypes.FileStore && (
               <MultiConfigSelectField
                 name="fetchInstancesScript.store.spec.files"
-                allowableTypes={[MultiTypeInputType.FIXED]}
+                allowableTypes={infraAllowableTypes}
                 fileType={FILE_TYPE_VALUES.FILE_STORE}
                 formik={formik}
                 expressions={expressions}
-                fileUsage={FileUsage.MANIFEST_FILE}
+                fileUsage={FileUsage.SCRIPT}
                 values={formValues?.fetchInstancesScript?.store?.spec?.files || ['']}
                 multiTypeFieldSelectorProps={{
                   disableTypeSelection: false,
@@ -205,13 +212,13 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
         className={css.infraSections}
         headerClassName={css.headerText}
       >
-        <Layout.Vertical width={'50%'}>
+        <Layout.Vertical width={'50%'} margin={{ bottom: 0 }}>
           <FormInput.MultiTextInput
             name="instancesListPath"
             className={css.halfWidth}
             placeholder={getString('cd.specifyTargetHost')}
             label=""
-            multiTextInputProps={{ expressions, disabled: isReadOnly, allowableTypes }}
+            multiTextInputProps={{ expressions, disabled: isReadOnly, allowableTypes: infraAllowableTypes }}
             disabled={isReadOnly}
           />
         </Layout.Vertical>
@@ -219,7 +226,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
 
       <CardWithOuterTitle
         title={getString('pipeline.customDeployment.hostAttributes')}
-        className={css.infraSections}
+        className={css.instanceAttributes}
         headerClassName={css.headerText}
       >
         <MultiTypeFieldSelector
@@ -232,49 +239,61 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
             name="instanceAttributes"
             render={({ push, remove }) => {
               return (
-                <div className={css.panel}>
-                  <div className={css.headerRow}>
-                    <span className={css.label}>{getString('pipeline.customDeployment.fieldNameLabel')}</span>
-                    <span className={css.label}>{getString('pipeline.customDeployment.jsonPathRelativeLabel')}</span>
-                    <span className={css.label}>
+                <div className={cx(css.instanceAttributesVariables)}>
+                  <div className={cx(css.tableRow, css.headerRow, 'variablesTableRow')}>
+                    <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+                      {getString('pipeline.customDeployment.fieldNameLabel')}
+                    </Text>
+                    <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+                      {getString('pipeline.customDeployment.jsonPathRelativeLabel')}
+                    </Text>
+                    <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
                       {getString('description')}
                       {getString('common.optionalLabel')}
-                    </span>
+                    </Text>
                   </div>
-                  {formValues.instanceAttributes?.map(({ id }: { id: string }, i: number) => (
-                    <div className={css.headerRow} key={id}>
-                      <FormInput.Text
-                        name={`instanceAttributes[${i}].name`}
-                        placeholder={getString('pipeline.customDeployment.fieldNamePlaceholder')}
-                        disabled={isReadOnly || i === 0}
-                      />
-                      <FormInput.MultiTextInput
-                        name={`instanceAttributes[${i}].jsonPath`}
-                        placeholder={getString('common.valuePlaceholder')}
-                        disabled={isReadOnly}
-                        multiTextInputProps={{
-                          allowableTypes: allowableTypes,
-                          expressions,
-                          disabled: isReadOnly
-                        }}
-                        label=""
-                      />
-                      <FormInput.Text
-                        name={`instanceAttributes[${i}].description`}
-                        placeholder={getString('common.descriptionPlaceholder')}
-                        disabled={isReadOnly}
-                      />
-                      {i > 0 && (
-                        <Button
-                          variation={ButtonVariation.ICON}
-                          icon="main-trash"
-                          data-testid={`remove-instanceAttriburteVar-${i}`}
-                          onClick={() => remove(i)}
+
+                  {formValues.instanceAttributes?.map?.(({ id }: { id: string }, index: number) => {
+                    return (
+                      <div key={id} className={cx(css.tableRow, 'variablesTableRow')}>
+                        <FormInput.Text
+                          name={`instanceAttributes[${index}].name`}
+                          placeholder={getString('pipeline.customDeployment.fieldNamePlaceholder')}
+                          disabled={isReadOnly || index === 0}
+                        />
+                        <FormInput.MultiTextInput
+                          name={`instanceAttributes[${index}].jsonPath`}
+                          placeholder={getString('common.valuePlaceholder')}
+                          disabled={isReadOnly}
+                          multiTextInputProps={{
+                            allowableTypes: infraAllowableTypes,
+                            expressions,
+                            disabled: isReadOnly
+                          }}
+                          label=""
+                        />
+                        <FormInput.Text
+                          name={`instanceAttributes[${index}].description`}
+                          placeholder={getString('common.descriptionPlaceholder')}
                           disabled={isReadOnly}
                         />
-                      )}
-                    </div>
-                  ))}
+
+                        <div className={css.actionButtons}>
+                          {!isReadOnly && index > 0 ? (
+                            <Button
+                              variation={ButtonVariation.ICON}
+                              icon="main-trash"
+                              data-testid={`remove-instanceAttriburteVar-${index}`}
+                              tooltip={<StringGlobal className={css.tooltip} stringID="common.removeThisVariable" />}
+                              onClick={() => remove(index)}
+                              minimal
+                            />
+                          ) : /* istanbul ignore next */ null}
+                        </div>
+                      </div>
+                    )
+                  })}
+
                   <Button
                     icon="plus"
                     variation={ButtonVariation.LINK}
@@ -282,9 +301,9 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                     onClick={() => push({ name: '', jsonPath: '', description: '', id: uuid() })}
                     disabled={isReadOnly}
                     className={css.addButton}
-                  >
-                    {getString('pipeline.customDeployment.newAttribute')}
-                  </Button>
+                    size={ButtonSize.SMALL}
+                    text={getString('pipeline.customDeployment.newAttribute')}
+                  />
                 </div>
               )
             }}

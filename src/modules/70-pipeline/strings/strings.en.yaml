@@ -1182,7 +1182,6 @@ serviceDeploymentTypes:
   awsLambda: AWS Lambda
   pcf: TAS
   ssh: Secure Shell
-  custom: Custom Deployment
   deployDifferentLabel: Deploy different service
   serverlessAwsLambda: Serverless Lambda
   serverlessAzureFunctions: Serverless Azure Functions
@@ -1190,6 +1189,7 @@ serviceDeploymentTypes:
   awsSAM: AWS SAM
   azureFunctions: Azure Functions
   azureWebApp: Azure Web Apps
+  customDeployment: Deployment Template
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1363,3 +1363,5 @@ customDeployment:
   errors:
     fetchScriptRequired: 'Fetch Instances Script is required'
     fetchScriptBodyRequired: 'Fetch Instances Script body is required'
+  validations:
+    nameUnique: Field Name should be unique

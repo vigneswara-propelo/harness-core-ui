@@ -197,7 +197,7 @@ exports[`Test Azure Blueprint step should render azure blueprint view as new ste
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"

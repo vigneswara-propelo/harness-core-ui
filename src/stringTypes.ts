@@ -3137,6 +3137,7 @@ export interface StringsMap {
   'pipeline.customDeployment.infraVariablesTitle': string
   'pipeline.customDeployment.jsonPathRelativeLabel': string
   'pipeline.customDeployment.newAttribute': string
+  'pipeline.customDeployment.validations.nameUnique': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.plural': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.singular': string
   'pipeline.dashboardDeploymentsWidget.pendingApproval.plural': string
@@ -3763,7 +3764,7 @@ export interface StringsMap {
   'pipeline.serviceDeploymentTypes.awsSAM': string
   'pipeline.serviceDeploymentTypes.azureFunctions': string
   'pipeline.serviceDeploymentTypes.azureWebApp': string
-  'pipeline.serviceDeploymentTypes.custom': string
+  'pipeline.serviceDeploymentTypes.customDeployment': string
   'pipeline.serviceDeploymentTypes.deployDifferentLabel': string
   'pipeline.serviceDeploymentTypes.kubernetes': string
   'pipeline.serviceDeploymentTypes.pcf': string

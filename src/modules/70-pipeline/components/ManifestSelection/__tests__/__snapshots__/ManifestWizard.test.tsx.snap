@@ -1008,7 +1008,7 @@ exports[`ManifestSelection tests new connector view works correctly 1`] = `
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
-                        style="margin-bottom: 5px;"
+                        data-test-id="connectorTooltip"
                       >
                         <span
                           class="Tooltip--acenter bp3-label"
@@ -1453,7 +1453,7 @@ exports[`ManifestSelection tests new connector view works inside select dialog c
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
-                        style="margin-bottom: 5px;"
+                        data-test-id="connectorTooltip"
                       >
                         <span
                           class="Tooltip--acenter bp3-label"

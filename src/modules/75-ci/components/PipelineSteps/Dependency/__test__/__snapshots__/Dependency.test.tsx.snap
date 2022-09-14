@@ -205,7 +205,7 @@ exports[`Dependency Edit view edit mode fails when cpu present but memory is not
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -678,7 +678,7 @@ exports[`Dependency Edit view edit mode works 1`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -1151,7 +1151,7 @@ exports[`Dependency Edit view edit mode works when memory present but cpu is not
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -1669,7 +1669,7 @@ exports[`Dependency Edit view renders runtime inputs 1`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -2141,7 +2141,7 @@ exports[`Dependency Edit view should render properly 1`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -2490,7 +2490,7 @@ exports[`Dependency InputSet View should render all fields 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
