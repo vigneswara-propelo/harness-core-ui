@@ -60,6 +60,7 @@ import StepArtifactoryAuthentication from '@connectors/components/CreateConnecto
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AzureAuthentication from '@connectors/components/CreateConnector/AzureConnector/StepAuth/AzureAuthentication'
 import { useCache } from '@common/hooks/useCache'
+import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import { DockerRegistryArtifact } from './ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
@@ -628,6 +629,18 @@ export default function ArtifactsSelection({
             <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
             <AzureAuthentication name={getString('details')} {...authenticationStepProps} />
             <DelegateSelectorStep buildPayload={buildAzurePayload} {...delegateStepProps} />
+            <VerifyOutOfClusterDelegate
+              type={ArtifactToConnectorMap[selectedArtifact]}
+              {...verifyOutofClusterDelegateProps}
+            />
+          </StepWizard>
+        )
+      case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
+        return (
+          <StepWizard title={stepWizardTitle}>
+            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
+            <GcpAuthentication name={getString('details')} {...authenticationStepProps} />
+            <DelegateSelectorStep buildPayload={buildGcpPayload} {...delegateStepProps} />
             <VerifyOutOfClusterDelegate
               type={ArtifactToConnectorMap[selectedArtifact]}
               {...verifyOutofClusterDelegateProps}
