@@ -186,7 +186,7 @@ const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterPr
               },
               permission: PermissionIdentifier.VIEW_DELEGATE
             }}
-            icon="edit"
+            icon="info-sign"
             text={getString('details')}
           />
           <RbacMenuItem
