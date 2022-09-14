@@ -4245,7 +4245,8 @@ export interface StringsMap {
   'cd.addInline': string
   'cd.addRemote': string
   'cd.addService': string
-  'cd.addStepsForYourDeploymentType': string
+  'cd.addStepTemplate': string
+  'cd.addStepTemplatesForYourDeploymentType': string
   'cd.addTFVarFileLabel': string
   'cd.allowSimultaneousDeployments': string
   'cd.amazonElasticCmd': string
@@ -4723,6 +4724,7 @@ export interface StringsMap {
   'cd.updating': string
   'cd.updatingGitOpsServer': string
   'cd.useConnectorCredentials': string
+  'cd.useStepTemplate': string
   'cd.validation.specifyFilter': string
   'cd.varFile': string
   'cd.varFileDetails': string
