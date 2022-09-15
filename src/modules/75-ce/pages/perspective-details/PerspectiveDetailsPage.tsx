@@ -305,14 +305,25 @@ const PerspectiveDetailsPage: React.FC = () => {
   }, [groupBy])
 
   const setFilterUsingChartClick: (value: string) => void = value => {
-    setFilters([
-      ...filters,
-      {
-        field: { ...groupBy },
-        operator: QlceViewFilterOperator.In,
-        values: [value]
-      }
-    ])
+    if (value.split('No ')[1] === groupBy.fieldName) {
+      setFilters([
+        ...filters,
+        {
+          field: { ...groupBy },
+          operator: QlceViewFilterOperator.Null,
+          values: [' ']
+        }
+      ])
+    } else {
+      setFilters([
+        ...filters,
+        {
+          field: { ...groupBy },
+          operator: QlceViewFilterOperator.In,
+          values: [value]
+        }
+      ])
+    }
   }
 
   const queryFilters = useMemo(
