@@ -718,6 +718,7 @@ export interface StringsMap {
   'common.serviceDetails': string
   'common.serviceName': string
   'common.serviceOverrides': string
+  'common.servicePrefix': string
   'common.serviceReliabilityManagement': string
   'common.serviceType': string
   'common.serviceUpdated': string

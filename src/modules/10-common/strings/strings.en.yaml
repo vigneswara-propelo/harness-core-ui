@@ -93,6 +93,7 @@ selectType: Select Type
 timeframe: Timeframe
 selectTimeFrame: Select Timeframe
 lastModified: 'Last Modified'
+servicePrefix: 'Service: {{ name }}'
 accountSetting:
   connector:
     loading: 'Loading settings...'

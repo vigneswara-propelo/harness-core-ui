@@ -823,12 +823,11 @@ export function StageInputSetFormInternal({
           </div>
         </div>
       )}
-      {isSvcEnvEntityEnabled && (deploymentStageTemplate.service || deploymentStageTemplate.services) && (
+      {isSvcEnvEntityEnabled && deploymentStageTemplate.service && (
         <div id={`Stage.${stageIdentifier}.Service`} className={cx(css.accordionSummary)}>
           <div className={css.inputheader}>{getString('service')}</div>
           <div className={css.nestedAccordions}>
-            {(deploymentStageTemplate.service?.serviceRef ||
-              Array.isArray(deploymentStageTemplate.services?.values)) && (
+            {deploymentStageTemplate.service?.serviceRef && (
               <StepWidget<DeployServiceEntityData>
                 factory={factory}
                 initialValues={pick(deploymentStageInputSet, ['service', 'services'])}
@@ -847,12 +846,13 @@ export function StageInputSetFormInternal({
                 customStepProps={{
                   stageIdentifier,
                   deploymentType: deploymentStage?.deploymentType,
-                  gitOpsEnabled: deploymentStage?.gitOpsEnabled
+                  gitOpsEnabled: deploymentStage?.gitOpsEnabled,
+                  allValues: pick(deploymentStage, ['service', 'services'])
                 }}
               />
             )}
             {!isNil(deploymentStage?.deploymentType) && (
-              /* istanbul ignore next */ <StepWidget<ServiceSpec>
+              <StepWidget<ServiceSpec>
                 factory={factory}
                 initialValues={deploymentStageInputSet?.service?.serviceInputs?.serviceDefinition?.spec || {}}
                 allowableTypes={allowableTypes}
@@ -881,6 +881,58 @@ export function StageInputSetFormInternal({
           </div>
         </div>
       )}
+
+      {isSvcEnvEntityEnabled && deploymentStageTemplate.services ? (
+        <div id={`Stage.${stageIdentifier}.Service`} className={cx(css.accordionSummary)}>
+          <div className={css.inputheader}>{getString('services')}</div>
+          <div className={css.nestedAccordions}>
+            {Array.isArray(deploymentStageTemplate.services.values) ? (
+              <>
+                {deploymentStageTemplate.services.values.map((service, i) => {
+                  const deploymentType = service.serviceInputs?.serviceDefinition?.type
+                  if (deploymentType) {
+                    return (
+                      <>
+                        <Text
+                          font={{ size: 'normal', weight: 'bold' }}
+                          margin={{ top: 'medium', bottom: 'medium' }}
+                          color={Color.GREY_800}
+                        >
+                          {getString('common.servicePrefix', { name: service.serviceRef })}
+                        </Text>
+                        <StepWidget<ServiceSpec>
+                          factory={factory}
+                          initialValues={get(
+                            deploymentStageInputSet,
+                            `services.values[${i}].serviceInputs.serviceDefinition.spec`,
+                            {}
+                          )}
+                          allowableTypes={allowableTypes}
+                          template={service?.serviceInputs?.serviceDefinition?.spec || {}}
+                          type={getStepTypeByDeploymentType(deploymentType)}
+                          stepViewType={viewType}
+                          path={`${path}.services.values[${i}].serviceInputs.serviceDefinition.spec`}
+                          readonly={readonly}
+                          customStepProps={{
+                            stageIdentifier,
+                            serviceIdentifier: defaultTo(
+                              service.serviceRef,
+                              get(deploymentStage, `services.values[${i}].serviceRef`)
+                            ),
+                            allValues: deploymentStage?.service?.serviceInputs?.serviceDefinition?.spec
+                          }}
+                        />
+                      </>
+                    )
+                  }
+
+                  return null
+                })}
+              </>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
 
       {deploymentStageTemplate?.environmentGroup?.envGroupRef && (
         <div id={`Stage.${stageIdentifier}.EnvironmentGroup`} className={cx(css.accordionSummary)}>
