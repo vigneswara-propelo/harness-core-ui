@@ -48,7 +48,7 @@ parallelSelectedStages: '{{selected}}, +{{total}} Stages'
 parallelStages: '+{{total}} Stages'
 runAPipeline: Run a Pipeline
 regionPlaceholder: Select Region
-repositoryPlaceholder: <repo-name>.azurecr.io/<image>
+repositoryPlaceholder: <container-registry-name>.azurecr.io/<image>
 repositoryUrlPlaceholder: Enter Repository URL
 lastSevenDays: In Last 7 days
 neverRan: This pipeline never ran
