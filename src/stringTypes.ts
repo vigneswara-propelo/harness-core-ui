@@ -3390,12 +3390,17 @@ export interface StringsMap {
   'pipeline.imageTag': string
   'pipeline.imageVersionDeprecated': string
   'pipeline.importSuccessMessage': string
+  'pipeline.infraSpecifications.architecture': string
+  'pipeline.infraSpecifications.architectureTypes.amd64': string
+  'pipeline.infraSpecifications.architectureTypes.arm64': string
   'pipeline.infraSpecifications.initTimeout': string
   'pipeline.infraSpecifications.initTimeoutPlaceholder': string
   'pipeline.infraSpecifications.namespacePlaceholder': string
   'pipeline.infraSpecifications.os': string
   'pipeline.infraSpecifications.osTypes.macos': string
   'pipeline.infraSpecifications.osTypes.windows': string
+  'pipeline.infraSpecifications.selectArchitecture': string
+  'pipeline.infraSpecifications.selectOs': string
   'pipeline.infraSpecifications.serviceAccountName': string
   'pipeline.infraSpecifications.serviceAccountNamePlaceholder': string
   'pipeline.infraSpecifications.validation.requiredExistingStage': string
@@ -6451,6 +6456,7 @@ export interface StringsMap {
   'ci.buildInfra.awsVM.architecture': string
   'ci.buildInfra.awsVM.isRequiredWhen': string
   'ci.buildInfra.awsVM.os': string
+  'ci.buildInfra.cloud': string
   'ci.buildInfra.infrastructureTypesLabel': string
   'ci.buildInfra.k8sLabel': string
   'ci.buildInfra.kubernetesHelpText': string
