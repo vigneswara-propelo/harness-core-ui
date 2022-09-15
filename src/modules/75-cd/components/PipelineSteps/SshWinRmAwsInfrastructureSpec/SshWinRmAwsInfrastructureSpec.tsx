@@ -318,7 +318,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       }
                       tags={tags}
                       isLoadingTags={isTagsLoading}
-                      initialTags={initialValues?.awsInstanceFilter?.tags}
+                      initialTags={formik.values?.awsInstanceFilter?.tags}
                       errorMessage={get(tagsError, 'data.message', '')}
                     />
                   </Layout.Vertical>
