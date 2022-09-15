@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { queryByAttribute, render } from '@testing-library/react'
 import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -295,5 +295,62 @@ describe('Test Azure ARM template input set', () => {
     expect(getByText('useGetAzureResourceGroupsBySubscription error')).toBeTruthy()
     expect(getByText('useGetLocationsBySubscription error')).toBeTruthy()
     expect(getByText('useGetManagementGroups error')).toBeTruthy()
+  })
+
+  test('should render harness files', () => {
+    const data = {
+      type: StepType.CreateAzureARMResource,
+      name: 'testCreate',
+      identifier: 'testID',
+      timeout: '10m',
+      spec: {
+        provisionerIdentifier: '',
+        configuration: {
+          connectorRef: '',
+          scope: {},
+          parameters: {
+            store: {
+              type: 'Harness',
+              spec: {
+                files: RUNTIME_INPUT_VALUE
+              }
+            }
+          }
+        }
+      }
+    }
+    const { container } = renderComponent(data)
+    const toolTipId = queryByAttribute(
+      'data-tooltip-id',
+      container,
+      'wrapperComponentTestForm_test.spec.configuration.parameters.store.spec.files[0]'
+    )
+    expect(toolTipId).toBeInTheDocument()
+  })
+
+  test('should render harness secret files', () => {
+    const data = {
+      type: StepType.CreateAzureARMResource,
+      name: 'testCreate',
+      identifier: 'testID',
+      timeout: '10m',
+      spec: {
+        provisionerIdentifier: '',
+        configuration: {
+          connectorRef: '',
+          scope: {},
+          parameters: {
+            store: {
+              type: 'Harness',
+              spec: {
+                secretFiles: RUNTIME_INPUT_VALUE
+              }
+            }
+          }
+        }
+      }
+    }
+    const { getByText } = renderComponent(data)
+    expect(getByText('secrets.secret.configureSecret')).toBeInTheDocument()
   })
 })

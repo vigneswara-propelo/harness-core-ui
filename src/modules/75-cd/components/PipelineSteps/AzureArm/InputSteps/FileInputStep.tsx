@@ -10,9 +10,10 @@ import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikContextType } from 'formik'
-import { Text, Color, Container } from '@harness/uicore'
+import { Text, Color, Container, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isValueRuntimeInput } from '@common/utils/utils'
@@ -23,23 +24,20 @@ import {
   ConnectorMap
 } from '../../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
 import type { AzureArmProps } from '../AzureArm.types'
-
+import css from './FileInputStep.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextType<any> }): JSX.Element => {
-  const { inputSetData, readonly, path, allowableTypes, isParam = false } = props
+  const { inputSetData, readonly, path, allowableTypes, isParam = false, formik } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const connectorType = get(
-    inputSetData,
-    `template.spec.configuration.${isParam ? 'parameters' : 'template'}.store.type`
-  )
+  const type = isParam ? 'parameters' : 'template'
+  const connectorType = get(inputSetData, `template.spec.configuration.${type}.store.type`)
   const newConnectorLabel = `${
     !!connectorType && getString(ConnectorLabelMap[connectorType as ConnectorTypes])
   } ${getString('connector')}`
-
-  const inputSet = get(inputSetData, `template.spec.configuration.${isParam ? 'parameters' : 'template'}`)
+  const inputSet = get(inputSetData, `template.spec.configuration.${type}`)
   return (
     <>
       <Container flex width={120} padding={{ bottom: 'small' }}>
@@ -52,7 +50,7 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
           <FormMultiTypeConnectorField
             label={<Text color={Color.GREY_900}>{newConnectorLabel}</Text>}
             type={ConnectorMap[connectorType as string]}
-            name={`${path}.spec.configuration.${isParam ? 'parameters' : 'template'}.store.spec.connectorRef`}
+            name={`${path}.spec.configuration.${type}.store.spec.connectorRef`}
             placeholder={getString('select')}
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
@@ -67,14 +65,14 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
       {isValueRuntimeInput(inputSet?.store?.spec?.repoName as string) && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TextFieldInputSetView
-            name={`${path}.spec.configuration.${isParam ? 'parameters' : 'template'}.store.spec.repoName`}
+            name={`${path}.spec.configuration.${type}.store.spec.repoName`}
             label={getString('pipelineSteps.repoName')}
             disabled={readonly}
             multiTextInputProps={{
               expressions,
               allowableTypes
             }}
-            fieldPath={`spec.configuration.${isParam ? 'parameters' : 'template'}.store.spec.repoName`}
+            fieldPath={`spec.configuration.${type}.store.spec.repoName`}
             template={undefined}
           />
         </div>
@@ -82,14 +80,14 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
       {isValueRuntimeInput(inputSet?.store?.spec?.branch as string) && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TextFieldInputSetView
-            name={`${path}.spec.configuration.${isParam ? 'parameters' : 'template'}.store.spec.branch`}
+            name={`${path}.spec.configuration.${type}.store.spec.branch`}
             label={getString('pipelineSteps.deploy.inputSet.branch')}
             disabled={readonly}
             multiTextInputProps={{
               expressions,
               allowableTypes
             }}
-            fieldPath={`spec.configuration.${isParam ? 'parameters' : 'template'}.store.spec.branch`}
+            fieldPath={`spec.configuration.${type}.store.spec.branch`}
             template={undefined}
           />
         </div>
@@ -97,14 +95,14 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
       {isValueRuntimeInput(inputSet?.store?.spec?.commitId as string) && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TextFieldInputSetView
-            name={`${path}.spec.configuration.${isParam ? 'parameters' : 'template'}.store.spec.commitId`}
+            name={`${path}.spec.configuration.${type}.store.spec.commitId`}
             label={getString('pipeline.manifestType.commitId')}
             disabled={readonly}
             multiTextInputProps={{
               expressions,
               allowableTypes
             }}
-            fieldPath={`spec.configuration.${isParam ? 'parameters' : 'template'}.store.spec.commitId`}
+            fieldPath={`spec.configuration.${type}.store.spec.commitId`}
             template={undefined}
           />
         </div>
@@ -112,17 +110,37 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
       {isValueRuntimeInput(inputSet?.store?.spec?.paths as string) && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TextFieldInputSetView
-            name={`${path}.spec.configuration.${isParam ? 'parameters' : 'template'}.store.spec.paths[0]`}
+            name={`${path}.spec.configuration.${type}.store.spec.paths[0]`}
             label={getString('common.git.filePath')}
             disabled={readonly}
             multiTextInputProps={{
               expressions,
               allowableTypes
             }}
-            fieldPath={`spec.configuration.${isParam ? 'parameters' : 'template'}.store.spec.paths[0]`}
+            fieldPath={`spec.configuration.${type}.store.spec.paths[0]`}
             template={undefined}
           />
         </div>
+      )}
+      {inputSet?.store?.type === 'Harness' && isValueRuntimeInput(inputSet?.store?.spec?.files as string) && (
+        <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
+          <FileStoreList
+            name={`${path}.spec.configuration.${type}.store.spec.files`}
+            type={'fileStore'}
+            allowOnlyOne={true}
+            formik={formik}
+          />
+        </Layout.Vertical>
+      )}
+      {inputSet?.store?.type === 'Harness' && isValueRuntimeInput(inputSet?.store?.spec?.secretFiles as string) && (
+        <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
+          <FileStoreList
+            name={`${path}.spec.configuration.${type}.store.spec.secretFiles`}
+            type={'encrypted'}
+            allowOnlyOne={true}
+            formik={formik}
+          />
+        </Layout.Vertical>
       )}
     </>
   )
