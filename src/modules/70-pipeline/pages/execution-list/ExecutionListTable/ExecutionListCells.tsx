@@ -9,7 +9,7 @@
 import { Checkbox, Classes } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Avatar, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
-import { get, isEmpty, omit } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 import defaultTo from 'lodash-es/defaultTo'
 import React, { useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -48,7 +48,6 @@ import executionFactory from '@pipeline/factories/ExecutionFactory'
 import { AUTO_TRIGGERS, CardVariant } from '@pipeline/utils/constants'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { getRouteProps } from '@pipeline/pages/pipeline-list/PipelineListUtils'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
 
@@ -100,20 +99,9 @@ export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<PipelineEx
 export const PipelineNameCell: CellType = ({ row }) => {
   const data = row.original
   const { runSequence, planExecutionId = '', name, pipelineIdentifier: rowDataPipelineIdentifier = '' } = data
-  const { getString } = useStrings()
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
   const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } = pathParams
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
-
-  const toPipelineStudio = routes.toPipelineStudio(
-    getRouteProps(
-      { ...pathParams, source },
-      {
-        ...omit(data, 'tags'),
-        identifier: pipelineIdentifier || rowDataPipelineIdentifier
-      }
-    )
-  )
 
   const toExecutionPipelineView = routes.toExecutionPipelineView({
     orgIdentifier,
@@ -126,31 +114,24 @@ export const PipelineNameCell: CellType = ({ row }) => {
   })
 
   return (
-    <Layout.Vertical spacing="xsmall">
-      <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
-        <Link to={toPipelineStudio}>
-          <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
-            {name}
-          </Text>
-        </Link>
-        {!isEmpty(data?.tags) && (
-          <TagsPopover
-            iconProps={{ size: 12, color: Color.GREY_600 }}
-            popoverProps={{ className: Classes.DARK }}
-            className={css.tags}
-            tags={defaultTo(data?.tags, []).reduce((_tags, tag) => {
-              _tags[tag.key] = tag.value
-              return _tags
-            }, {} as { [key: string]: string })}
-          />
-        )}
-      </Layout.Horizontal>
+    <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
       <Link to={toExecutionPipelineView}>
-        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.PRIMARY_7} lineClamp={1}>
-          {`${getString('pipeline.executionId')}: ${runSequence}`}
+        <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={2}>
+          {name}: {runSequence}
         </Text>
       </Link>
-    </Layout.Vertical>
+      {!isEmpty(data?.tags) && (
+        <TagsPopover
+          iconProps={{ size: 12, color: Color.GREY_600 }}
+          popoverProps={{ className: Classes.DARK }}
+          className={css.tags}
+          tags={defaultTo(data?.tags, []).reduce((_tags, tag) => {
+            _tags[tag.key] = tag.value
+            return _tags
+          }, {} as { [key: string]: string })}
+        />
+      )}
+    </Layout.Horizontal>
   )
 }
 

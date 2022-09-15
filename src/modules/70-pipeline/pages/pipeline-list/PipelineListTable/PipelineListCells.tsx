@@ -231,7 +231,6 @@ export const LastModifiedCell: CellType = ({ row }) => {
 export const MenuCell: CellType = ({ row, column }) => {
   const data = row.original
   const pathParams = useParams<PipelineListPagePathParams>()
-  const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<{
     projectIdentifier: string
@@ -274,16 +273,9 @@ export const MenuCell: CellType = ({ row, column }) => {
 
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }}>
-      <Popover
-        isOpen={menuOpen}
-        onInteraction={nextOpenState => {
-          setMenuOpen(nextOpenState)
-        }}
-        className={Classes.DARK}
-        position={Position.LEFT}
-      >
-        <Button minimal icon="Options" onClick={() => setMenuOpen(true)} />
-        <Menu style={{ minWidth: 'unset', backgroundColor: 'unset' }}>
+      <Popover className={Classes.DARK} position={Position.LEFT}>
+        <Button minimal icon="Options" aria-label="pipeline menu actions" />
+        <Menu style={{ backgroundColor: 'unset' }}>
           <RbacMenuItem
             icon="play"
             text={getString('runPipelineText')}
@@ -316,7 +308,6 @@ export const MenuCell: CellType = ({ row, column }) => {
             disabled={isGitSyncEnabled}
             onClick={() => {
               column.onClonePipeline(data)
-              setMenuOpen(false)
             }}
           />
           <Menu.Item
@@ -325,7 +316,6 @@ export const MenuCell: CellType = ({ row, column }) => {
             disabled={!canDelete}
             onClick={() => {
               confirmDelete()
-              setMenuOpen(false)
             }}
           />
         </Menu>

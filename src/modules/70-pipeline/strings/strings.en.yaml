@@ -1286,6 +1286,7 @@ fieldPlaceholders:
 traffic: Traffic
 trafficPercentage: '{{$.pipeline.traffic}} %'
 viewPipeline: View Pipeline
+viewExecution: View Execution
 codeSource: 'Code Source'
 recentExecutions: 'Recent Executions'
 mostRecentDirection: 'Latest one on right side'

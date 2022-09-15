@@ -4050,6 +4050,7 @@ export interface StringsMap {
   'pipeline.verification.toGetLatest': string
   'pipeline.verification.waitForAnalysis': string
   'pipeline.verificationResult': string
+  'pipeline.viewExecution': string
   'pipeline.viewLatestExecution': string
   'pipeline.viewPipeline': string
   'pipeline.warningForInvalidYAMLDiscard': string

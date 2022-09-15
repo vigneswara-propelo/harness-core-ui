@@ -140,11 +140,11 @@ describe('CIPipelineDeploymentList', () => {
     )
 
     const pipeline = await screen.findByRole('link', {
-      name: 'Sonar PR CI webhook PR'
+      name: 'Sonar PR CI webhook PR : 6'
     })
     expect(pipeline).toHaveAttribute(
       'href',
-      '/account/accountId/ci/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/pipeline-studio/'
+      '/account/accountId/ci/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/fP7dMHs9SP6375wqLc9bkA/pipeline'
     )
   })
 

@@ -25,7 +25,7 @@ describe('RETRY FAILED PIPELINE', () => {
   it('should be able to retry failed/aborted execution', () => {
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineExecutionSummary')
-    cy.get('[data-icon="more"]').eq(3).click()
+    cy.get('[data-icon="Options"]').eq(3).click()
     cy.contains('div', 'Retry Failed Pipeline').click()
 
     // Modal header for retry failed pipeline dialog should be Retry Failed Pipeline
@@ -42,7 +42,7 @@ describe('RETRY FAILED PIPELINE', () => {
   it('should not have retry option on successful execution', () => {
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineExecutionSummary')
-    cy.get('[data-icon="more"]').eq(0).click()
+    cy.get('[data-icon="Options"]').eq(0).click()
     cy.get('div[data-testid="retry-pipeline-menu"]').should('not.exist')
   })
 })

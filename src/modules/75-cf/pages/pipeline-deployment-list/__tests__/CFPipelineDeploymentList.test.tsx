@@ -140,11 +140,11 @@ describe('CFPipelineDeploymentList', () => {
     )
 
     const pipeline = await screen.findByRole('link', {
-      name: 'PR Harness Env - CD Selective Stage'
+      name: 'PR Harness Env - CD Selective Stage : 3'
     })
     expect(pipeline).toHaveAttribute(
       'href',
-      '/account/accountId/cf/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/pipeline-studio/?branch=feat%2FCDS-41594-gitops&repoIdentifier=ng-pr-manifests&repoName=ng-pr-manifests&connectorRef=account.PRenvHarnessYamlGithub&storeType=REMOTE'
+      '/account/accountId/cf/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/PO4Dd7pnSiOmyCjHkoNeMQ/pipeline'
     )
   })
 

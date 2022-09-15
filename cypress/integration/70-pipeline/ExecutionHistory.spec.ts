@@ -241,7 +241,7 @@ describe('Pipeline Execution History', () => {
     cy.visitPageAssertion()
     cy.wait('@executionListSummary')
     cy.findAllByRole('button', {
-      name: /more/i
+      name: /execution menu actions/i
     })
       .first()
       .click()

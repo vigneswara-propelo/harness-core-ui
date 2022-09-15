@@ -140,11 +140,11 @@ describe('CDPipelineDeploymentList', () => {
     )
 
     const pipeline = await screen.findByRole('link', {
-      name: 'Multi-ServiceWithMatrix CD Success'
+      name: 'Multi-ServiceWithMatrix CD Success : 1'
     })
     expect(pipeline).toHaveAttribute(
       'href',
-      '/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/pipeline-studio/?storeType=INLINE'
+      '/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/NgFnOCXUTNm5D9eNovvILg/pipeline'
     )
   })
 
