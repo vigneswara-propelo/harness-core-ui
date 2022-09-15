@@ -144,12 +144,14 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
   Ssh: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Jenkins,
-    ENABLED_ARTIFACT_TYPES.CustomArtifact
+    ENABLED_ARTIFACT_TYPES.CustomArtifact,
+    ENABLED_ARTIFACT_TYPES.Nexus3Registry
   ],
   WinRm: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Jenkins,
-    ENABLED_ARTIFACT_TYPES.CustomArtifact
+    ENABLED_ARTIFACT_TYPES.CustomArtifact,
+    ENABLED_ARTIFACT_TYPES.Nexus3Registry
   ],
   AzureWebApp: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
