@@ -355,7 +355,8 @@ const PerspectiveDetailsPage: React.FC = () => {
         { operationType: QlceViewAggregateOperation.Max, columnName: 'startTime' },
         { operationType: QlceViewAggregateOperation.Min, columnName: 'startTime' }
       ],
-      filters: queryFilters
+      filters: queryFilters,
+      groupBy: [getGroupByFilter(groupBy)]
     },
     pause: !isPageReady
   })
