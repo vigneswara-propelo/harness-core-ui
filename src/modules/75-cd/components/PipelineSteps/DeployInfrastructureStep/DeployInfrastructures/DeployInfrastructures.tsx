@@ -102,7 +102,8 @@ function DeployInfrastructures({
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      environmentIdentifier
+      environmentIdentifier,
+      deploymentType: (stage?.stage?.spec as DeployStageConfig)?.deploymentType
     },
     lazy: getMultiTypeFromValue(environmentIdentifier) === MultiTypeInputType.RUNTIME
   })

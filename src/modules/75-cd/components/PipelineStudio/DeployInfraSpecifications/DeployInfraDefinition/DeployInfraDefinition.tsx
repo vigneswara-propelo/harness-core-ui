@@ -154,7 +154,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
   >(getServiceDefinitionType(stage, getStageFromPipeline, isNewServiceEnvEntity, isSvcEnvEnabled, templateServiceData))
 
   const [infraGroups, setInfraGroups] = React.useState<InfrastructureGroup[]>(
-    getInfraGroups(selectedDeploymentType, getString, {}, selectedInfrastructureType)
+    getInfraGroups(selectedDeploymentType, getString)
   )
 
   useEffect(() => {
@@ -228,7 +228,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       infraReset = true
     }
 
-    const initialInfraGroups = getInfraGroups(newDeploymentType, getString, {}, selectedInfrastructureType)
+    const initialInfraGroups = getInfraGroups(newDeploymentType, getString)
 
     const filteredInfraGroups = initialInfraGroups.map(group => ({
       ...group,
@@ -242,7 +242,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
         : deploymentTypeInfraTypeMap[newDeploymentType])
 
     setSelectedInfrastructureType(infrastructureType)
-    setInfraGroups(getInfraGroups(newDeploymentType, getString, {}, infrastructureType))
+    setInfraGroups(getInfraGroups(newDeploymentType, getString))
 
     const initialInfraDefValues = getInfrastructureDefaultValue(stage, infrastructureType)
     setInitialInfrastructureDefinitionValues(initialInfraDefValues)
