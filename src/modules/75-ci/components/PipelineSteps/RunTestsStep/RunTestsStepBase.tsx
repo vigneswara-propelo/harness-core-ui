@@ -96,7 +96,10 @@ const ET_COMMANDS =
   'cd /opt\n' +
   'arch=`uname -m`\n' +
   'if [ $arch = "x86_64" ]; then\n' +
-  '  wget -qO- https://get.et.harness.io/releases/latest/nix/harness-et-agent.tar.gz | tar -xz\n' +
+  '  if cat /etc/os-release | grep -iq alpine ; then\n' +
+  '    wget -qO- https://get.et.harness.io/releases/latest/alpine/harness-et-agent.tar.gz | tar -xz\n' +
+  '  else\n' +
+  '    wget -qO- https://get.et.harness.io/releases/latest/nix/harness-et-agent.tar.gz | tar -xz\n' +
   'elif [ $arch = "aarch64" ]; then\n' +
   '  wget -qO- https://get.et.harness.io/releases/latest/arm/harness-et-agent.tar.gz | tar -xz\n' +
   'fi\n' +
