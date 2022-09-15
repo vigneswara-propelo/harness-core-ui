@@ -1763,7 +1763,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     }
   }, [buildInfraType, currentMode])
 
-  const renderPropogationSection = (formik: FormikProps<BuildInfraFormValues>): JSX.Element => {
+  const renderPropagationSection = (formik: FormikProps<BuildInfraFormValues>): JSX.Element => {
     const { setFieldValue } = formik
     return (
       <>
@@ -2185,8 +2185,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           </Layout.Horizontal>
           {showThumbnailSelect && currentMode === Modes.NewConfiguration ? (
             <>
-              {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted ? <Separator topSeparation={30} /> : null}
-              <Container margin={{ top: 'large' }}>{renderPlatformInfraSection()}</Container>
+              {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted && <Separator topSeparation={30} />}
+              {CIE_HOSTED_VMS && <Container margin={{ top: 'large' }}>{renderPlatformInfraSection()}</Container>}
               <Container margin={{ top: 'large' }}>{renderBuildInfraMainSection()}</Container>
             </>
           ) : null}
@@ -2233,7 +2233,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     <Layout.Horizontal spacing="xxlarge">
                       <Layout.Vertical>
                         {otherBuildStagesWithInfraConfigurationOptions.length ? (
-                          renderPropogationSection(formik)
+                          renderPropagationSection(formik)
                         ) : (
                           <>
                             <Card disabled={isReadonly} className={cx(css.sectionCard)}>
@@ -2380,7 +2380,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               return (
                 <Layout.Vertical>
                   {otherBuildStagesWithInfraConfigurationOptions.length ? (
-                    renderPropogationSection(formik)
+                    renderPropagationSection(formik)
                   ) : (
                     <FormikForm>
                       <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">

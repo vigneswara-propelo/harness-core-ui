@@ -69,8 +69,11 @@ export const BackgroundStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
-  const isBuildInfrastructureTypeVM = buildInfrastructureType === CIBuildInfrastructureType.VM
+  const buildInfrastructureType: CIBuildInfrastructureType =
+    get(currentStage, 'stage.spec.infrastructure.type') || get(currentStage, 'stage.spec.runtime.type')
+  const isBuildInfrastructureTypeVM = [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
+    buildInfrastructureType
+  )
   const pathnameParams = useLocation()?.pathname?.split('/') || []
 
   const isTemplateStudio = pathnameParams.includes(PathnameParams.TEMPLATE_STUDIO)
@@ -135,7 +138,7 @@ export const BackgroundStepBase = (
                 description: {}
               }}
             />
-            {buildInfrastructureType !== CIBuildInfrastructureType.VM ? (
+            {![CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType) ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -268,6 +271,7 @@ export const BackgroundStepBase = (
                       enableFields={{
                         'spec.privileged': {
                           shouldHide: [
+                            CIBuildInfrastructureType.Cloud,
                             CIBuildInfrastructureType.VM,
                             CIBuildInfrastructureType.KubernetesHosted
                           ].includes(buildInfrastructureType)

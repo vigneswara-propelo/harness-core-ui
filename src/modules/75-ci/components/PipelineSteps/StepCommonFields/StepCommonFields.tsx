@@ -16,7 +16,7 @@ import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTy
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { PullOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
-import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { AllMultiTypeInputTypesForStep } from '../CIStep/StepUtils'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -64,7 +64,9 @@ const StepCommonFields = ({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const isVMBuildInfraType = buildInfrastructureType === 'VM'
+  const isVMBuildInfraType = [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
+    buildInfrastructureType
+  )
 
   return (
     <>

@@ -122,6 +122,7 @@ export const PluginStepBase = (
                       enableFields={{
                         'spec.privileged': {
                           shouldHide: [
+                            CIBuildInfrastructureType.Cloud,
                             CIBuildInfrastructureType.VM,
                             CIBuildInfrastructureType.KubernetesHosted
                           ].includes(buildInfrastructureType)
