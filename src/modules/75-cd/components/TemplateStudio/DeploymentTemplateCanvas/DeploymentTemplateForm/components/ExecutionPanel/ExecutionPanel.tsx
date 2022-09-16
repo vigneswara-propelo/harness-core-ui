@@ -188,7 +188,7 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
                   <Button
                     minimal
                     variation={ButtonVariation.PRIMARY}
-                    icon="Edit"
+                    icon="plus"
                     text={getString('cd.addStepTemplate')}
                     onClick={handleAddStepClick}
                   />
