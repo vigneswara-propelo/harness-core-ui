@@ -959,6 +959,7 @@ export function StageInputSetFormInternal({
             factory={factory}
             initialValues={deploymentStageInputSet}
             allowableTypes={allowableTypes}
+            allValues={deploymentStage}
             template={deploymentStageTemplate}
             type={StepType.DeployInfrastructure}
             stepViewType={viewType}
@@ -975,7 +976,9 @@ export function StageInputSetFormInternal({
               // load infrastructure runtime inputs
               infrastructureRef: deploymentStage.environment?.infrastructureDefinitions?.[0].identifier,
               // load cluster runtime inputs
-              clusterRef: deploymentStage.environment?.gitOpsClusters?.[0].identifier
+              clusterRef: deploymentStage.environment?.gitOpsClusters?.[0].identifier,
+              // required for artifact manifest inputs
+              stageIdentifier
             }}
             onUpdate={values => {
               if (deploymentStageInputSet?.environment) {

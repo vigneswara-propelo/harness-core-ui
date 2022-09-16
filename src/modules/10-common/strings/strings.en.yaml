@@ -951,6 +951,7 @@ freezeWindows: Freeze Windows
 oAuthLabel: OAuth
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git
+environmentOverrides: Environment Overrides
 serviceOverrides: Service Overrides
 invalidIdentifiers: 'Identifier must not be one of the following values: {{identifiers}}'
 repositoryFormat: Repository Format

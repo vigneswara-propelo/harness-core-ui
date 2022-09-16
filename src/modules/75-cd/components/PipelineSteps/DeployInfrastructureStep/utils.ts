@@ -43,6 +43,7 @@ export interface DeployInfrastructureProps {
 
 export interface CustomStepProps extends DeployStageConfig {
   getString: (key: keyof StringsMap) => string
+  stageIdentifier: string
   serviceRef?: string
   environmentRef?: string
   infrastructureRef?: string

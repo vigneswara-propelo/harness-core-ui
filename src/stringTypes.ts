@@ -242,6 +242,7 @@ export interface StringsMap {
   'common.environmentGroups.noEnvironmentGroups.label': string
   'common.environmentGroups.noEnvironmentGroups.message': string
   'common.environmentList': string
+  'common.environmentOverrides': string
   'common.environmentUpdated': string
   'common.errorCount': string
   'common.errorHandler.communityForum': string
