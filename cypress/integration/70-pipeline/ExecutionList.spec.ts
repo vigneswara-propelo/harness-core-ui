@@ -13,7 +13,7 @@ describe('RETRY FAILED PIPELINE', () => {
     cy.initializeRoute()
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
 
-    cy.visit(executionListRoute, {
+    cy.visit(`${executionListRoute}?listview=true`, {
       timeout: 30000
     })
     cy.intercept('POST', executionSummaryAPI, {

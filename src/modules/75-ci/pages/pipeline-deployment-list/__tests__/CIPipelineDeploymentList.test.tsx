@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, RenderResult, screen } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import pipelineList from '@pipeline/pages/execution-list/__tests__/mocks/pipeline-list.json'
 import executionList from '@pipeline/pages/execution-list/__tests__/mocks/execution-list.json'
@@ -114,6 +114,24 @@ jest.mock('services/template-ng', () => ({
   useGetYamlWithTemplateRefsResolved: jest.fn(() => ({}))
 }))
 
+const renderExecutionPage = (): RenderResult =>
+  render(
+    <TestWrapper
+      path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
+      pathParams={{
+        accountId: 'accountId',
+        orgIdentifier: 'orgIdentifier',
+        projectIdentifier: 'projectIdentifier',
+        pipelineIdentifier: 'pipelineIdentifier',
+        module: 'ci'
+      }}
+      defaultAppStoreValues={defaultAppStoreValues}
+      queryParams={{ listview: true }}
+    >
+      <CIPipelineDeploymentList />
+    </TestWrapper>
+  )
+
 describe('CIPipelineDeploymentList', () => {
   beforeAll(() => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
@@ -123,22 +141,7 @@ describe('CIPipelineDeploymentList', () => {
   })
 
   test('should render pipelines', async () => {
-    render(
-      <TestWrapper
-        path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
-        pathParams={{
-          accountId: 'accountId',
-          orgIdentifier: 'orgIdentifier',
-          projectIdentifier: 'projectIdentifier',
-          pipelineIdentifier: 'pipelineIdentifier',
-          module: 'ci'
-        }}
-        defaultAppStoreValues={defaultAppStoreValues}
-      >
-        <CIPipelineDeploymentList />
-      </TestWrapper>
-    )
-
+    renderExecutionPage()
     const pipeline = await screen.findByRole('link', {
       name: 'Sonar PR CI webhook PR : 6'
     })
@@ -149,21 +152,7 @@ describe('CIPipelineDeploymentList', () => {
   })
 
   test('should be able to show any pipeline`s executions', async () => {
-    render(
-      <TestWrapper
-        path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
-        pathParams={{
-          accountId: 'accountId',
-          orgIdentifier: 'orgIdentifier',
-          projectIdentifier: 'projectIdentifier',
-          pipelineIdentifier: 'pipelineIdentifier',
-          module: 'ci'
-        }}
-        defaultAppStoreValues={defaultAppStoreValues}
-      >
-        <CIPipelineDeploymentList />
-      </TestWrapper>
-    )
+    renderExecutionPage()
     expect(useGetListOfExecutions).toHaveBeenCalled()
     // In pipeline execution history avoid module filter since we show all pipelines in any module and execution history also should be shown for any pipeline
     expect(useGetListOfExecutions).not.toHaveBeenLastCalledWith(

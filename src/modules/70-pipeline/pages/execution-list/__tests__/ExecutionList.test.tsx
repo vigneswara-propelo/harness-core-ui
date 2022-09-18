@@ -126,7 +126,12 @@ const TEST_PATH = routes.toDeployments({ ...accountPathProps, ...pipelinePathPro
 
 const renderExecutionPage = (module = 'cd'): RenderResult =>
   render(
-    <TestWrapper path={TEST_PATH} pathParams={getModuleParams(module)} defaultAppStoreValues={defaultAppStoreValues}>
+    <TestWrapper
+      path={TEST_PATH}
+      pathParams={getModuleParams(module)}
+      defaultAppStoreValues={defaultAppStoreValues}
+      queryParams={{ listview: true }}
+    >
       <ExecutionList onRunPipeline={jest.fn()} />
     </TestWrapper>
   )

@@ -26,7 +26,7 @@ describe('Pipeline Execution History', () => {
       return false
     })
     cy.initializeRoute()
-    cy.visit(executionHistoryRoute, {
+    cy.visit(`${executionHistoryRoute}?listview=true`, {
       timeout: 30000
     })
   })

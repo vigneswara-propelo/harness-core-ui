@@ -12,7 +12,8 @@ import {
   ButtonProps,
   useConfirmationDialog,
   getErrorInfoFromErrorObject,
-  Layout
+  Layout,
+  ButtonSize
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Classes, Dialog, IDialogProps, Intent, Menu, MenuItem, Position } from '@blueprintjs/core'
@@ -322,49 +323,48 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
 
   return (
     <Layout.Horizontal onClick={killEvent}>
-      {isExecutionDetailsView && (
-        <>
-          {canResume && (
-            <Button
-              icon="play"
-              tooltip={getString(resumeText)}
-              onClick={resumePipeline}
-              {...commonButtonProps}
-              disabled={!canExecute}
-            />
-          )}
+      {canResume && (
+        <Button
+          size={ButtonSize.SMALL}
+          icon="play"
+          tooltip={getString(resumeText)}
+          onClick={resumePipeline}
+          {...commonButtonProps}
+          disabled={!canExecute}
+        />
+      )}
 
-          {!stageId && canRerun && (
-            <RbacButton
-              icon="repeat"
-              tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : getString(rerunText)}
-              onClick={reRunPipeline}
-              {...commonButtonProps}
-              disabled={!canExecute || isPipelineInvalid}
-              featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
-            />
-          )}
+      {!stageId && canRerun && (
+        <RbacButton
+          icon="repeat"
+          tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : getString(rerunText)}
+          onClick={reRunPipeline}
+          {...commonButtonProps}
+          disabled={!canExecute || isPipelineInvalid}
+          featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
+        />
+      )}
 
-          {canPause && (
-            <Button
-              icon="pause"
-              tooltip={getString(pauseText)}
-              onClick={pausePipeline}
-              {...commonButtonProps}
-              disabled={!canExecute}
-            />
-          )}
+      {canPause && (
+        <Button
+          size={ButtonSize.SMALL}
+          icon="pause"
+          tooltip={getString(pauseText)}
+          onClick={pausePipeline}
+          {...commonButtonProps}
+          disabled={!canExecute}
+        />
+      )}
 
-          {canAbort && (
-            <Button
-              icon="stop"
-              tooltip={getString(abortText)}
-              onClick={openAbortDialog}
-              {...commonButtonProps}
-              disabled={!canExecute}
-            />
-          )}
-        </>
+      {canAbort && (
+        <Button
+          size={ButtonSize.SMALL}
+          icon="stop"
+          tooltip={getString(abortText)}
+          onClick={openAbortDialog}
+          {...commonButtonProps}
+          disabled={!canExecute}
+        />
       )}
 
       {!noMenu && (
