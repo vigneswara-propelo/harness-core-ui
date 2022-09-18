@@ -16,7 +16,8 @@ import {
   processNonGitOpsFormValues,
   processGitOpsEnvironmentFormValues,
   processGitOpsEnvGroupFormValues,
-  processInputSetInitialValues
+  processInputSetInitialValues,
+  CustomStepProps
 } from '../utils'
 
 const getString = (key: any): any => {
@@ -570,16 +571,15 @@ describe('deploy environment or group form values utils', () => {
   })
 })
 
+const getCustomStepProps = (gitOpsEnabled = false): CustomStepProps => ({
+  getString,
+  stageIdentifier: 'stage_1',
+  gitOpsEnabled
+})
+
 describe('deploy environment or group input set initial values utils', () => {
   test('processInputSetInitialValues returns the right values', () => {
-    expect(
-      processInputSetInitialValues(
-        {},
-        {
-          getString
-        }
-      )
-    ).toEqual({ environment: {}, infrastructureRef: '' })
+    expect(processInputSetInitialValues({}, getCustomStepProps())).toEqual({ environment: {}, infrastructureRef: '' })
 
     expect(
       processInputSetInitialValues(
@@ -604,9 +604,7 @@ describe('deploy environment or group input set initial values utils', () => {
             ]
           }
         },
-        {
-          getString
-        }
+        getCustomStepProps()
       )
     ).toEqual({
       environment: {
@@ -637,9 +635,7 @@ describe('deploy environment or group input set initial values utils', () => {
             infrastructureDefinitions: RUNTIME_INPUT_VALUE as any
           }
         },
-        {
-          getString
-        }
+        getCustomStepProps()
       )
     ).toEqual({
       environment: {
@@ -676,10 +672,7 @@ describe('deploy environment or group input set initial values utils', () => {
             ]
           }
         },
-        {
-          getString,
-          gitOpsEnabled: true
-        }
+        getCustomStepProps(true)
       )
     ).toEqual({
       clusterRef: [
@@ -712,10 +705,7 @@ describe('deploy environment or group input set initial values utils', () => {
             serviceOverrideInputs: { variables: [{ name: 'test', type: 'String', value: 'test' }] }
           }
         },
-        {
-          getString,
-          gitOpsEnabled: true
-        }
+        getCustomStepProps(true)
       )
     ).toEqual({
       clusterRef: [{ label: 'cd.pipelineSteps.environmentTab.allClustersSelected', value: 'all' }],
@@ -745,10 +735,7 @@ describe('deploy environment or group input set initial values utils', () => {
             gitOpsClusters: RUNTIME_INPUT_VALUE as any
           }
         },
-        {
-          getString,
-          gitOpsEnabled: true
-        }
+        getCustomStepProps(true)
       )
     ).toEqual({
       clusterRef: '<+input>',
