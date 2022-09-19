@@ -49,22 +49,3 @@
     }
   }
 }
-
-.table {
-  max-width: 1000px;
-}
-
-.serviceNameIconWrapper {
-  display: flex;
-  align-items: center;
-  column-gap: var(--spacing-4);
-
-  .serviceIcon {
-    display: block;
-  }
-
-  .serviceNameWrapper {
-    display: flex;
-    flex-flow: column;
-  }
-}

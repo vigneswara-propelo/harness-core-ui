@@ -94,6 +94,7 @@ timeframe: Timeframe
 selectTimeFrame: Select Timeframe
 lastModified: 'Last Modified'
 servicePrefix: 'Service: {{ name }}'
+serviceInputs: Service inputs
 accountSetting:
   connector:
     loading: 'Loading settings...'

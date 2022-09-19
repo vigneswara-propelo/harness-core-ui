@@ -7,11 +7,12 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly editServiceDialog: string
-  readonly editor: string
-  readonly formRow: string
-  readonly inputWidth: string
-  readonly serviceActionWrapper: string
-  readonly yamlToggle: string
+  readonly card: string
+  readonly row: string
+  readonly serviceIcon: string
+  readonly serviceInputs: string
+  readonly serviceNameIconWrapper: string
+  readonly serviceNameWrapper: string
+  readonly toggleWrapper: string
 }
 export default styles

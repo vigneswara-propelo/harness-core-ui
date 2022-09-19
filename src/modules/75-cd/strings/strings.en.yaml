@@ -192,6 +192,8 @@ pipelineSteps:
     singleServicesConfirmationText: Are you sure you want to switch to deploying to a single services?. If you choose to proceed, your existing services will be lost.
     deleteServiceFromListTitleText: Remove service from list?
     deleteServiceFromListText: Are you sure you want to remove {{name}} service from the list?
+    viewServiceInputs: View service inputs
+    hideServiceInputs: Hide service inputs
   infraTab:
     deploymentType: Infrastructure type selection is required
     clusterError: No cluster found with given Connector

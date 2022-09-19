@@ -717,6 +717,7 @@ export interface StringsMap {
   'common.selected': string
   'common.serviceCreated': string
   'common.serviceDetails': string
+  'common.serviceInputs': string
   'common.serviceName': string
   'common.serviceOverrides': string
   'common.servicePrefix': string
@@ -4539,6 +4540,7 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.deleteServiceFromListTitleText': string
   'cd.pipelineSteps.serviceTab.deploymentTypeRequired': string
   'cd.pipelineSteps.serviceTab.differentService': string
+  'cd.pipelineSteps.serviceTab.hideServiceInputs': string
   'cd.pipelineSteps.serviceTab.manifest.scalableTarget': string
   'cd.pipelineSteps.serviceTab.manifest.scalingPolicy': string
   'cd.pipelineSteps.serviceTab.manifest.serviceDefinition': string
@@ -4560,6 +4562,7 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.specifyYourService': string
   'cd.pipelineSteps.serviceTab.specifyYourServices': string
   'cd.pipelineSteps.serviceTab.stageOverrides': string
+  'cd.pipelineSteps.serviceTab.viewServiceInputs': string
   'cd.pluginVersion': string
   'cd.preProduction': string
   'cd.preProductionType': string
