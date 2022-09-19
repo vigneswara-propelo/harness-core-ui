@@ -268,7 +268,8 @@ function RunPipelineFormBasic({
       orgIdentifier,
       moduleType: module,
       repoIdentifier,
-      branch
+      branch,
+      notifyOnlyUser: notifyOnlyMe
     },
     identifier: pipelineIdentifier,
     requestOptions: {
@@ -440,7 +441,7 @@ function RunPipelineFormBasic({
         />
       </Dialog>
     )
-  }, [])
+  }, [notifyOnlyMe])
 
   const handleRunPipeline = useCallback(
     async (valuesPipeline?: PipelineInfoConfig, forceSkipFlightCheck = false): Promise<PipelineInfoConfig> => {
@@ -540,7 +541,8 @@ function RunPipelineFormBasic({
       accountId,
       skipPreFlightCheck,
       formErrors,
-      selectedStageData
+      selectedStageData,
+      notifyOnlyMe
     ]
   )
 
