@@ -360,7 +360,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                           formik.values?.resourceGroup?.value &&
                           formik.setFieldValue('resourceGroup', '')
                         getMultiTypeFromValue(formik.values?.tags) === MultiTypeInputType.FIXED &&
-                          formik.values?.tags &&
+                          formik.values?.tags?.value &&
                           formik.setFieldValue('tags', {})
 
                         setResourceGroups([])
@@ -513,7 +513,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                     allowableTypes={allowableTypes}
                     tags={azureTags}
                     isLoadingTags={loadingSubscriptionTags}
-                    initialTags={formik.values?.tags}
+                    initialTags={initialValues?.tags}
                     className="tags-select"
                     errorMessage={
                       get(subscriptionTagsError, errorMessage, '') ||

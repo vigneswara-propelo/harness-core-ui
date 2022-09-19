@@ -74,12 +74,6 @@ const MultiTypeTagSelector = ({
     }
   }, [])
 
-  useEffect(() => {
-    if (typeof initialTags === 'object' && Object.keys(initialTags).length === 0) {
-      setSelectedTags([])
-    }
-  }, [initialTags])
-
   const usedTagKeys = useMemo(
     () =>
       selectedTags.reduce((map, tag) => {

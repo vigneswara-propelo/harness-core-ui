@@ -207,7 +207,7 @@ describe('Test Azure Infrastructure Spec behavior', () => {
     expect(container).toMatchSnapshot()
     const tagEl = getByPlaceholderText('- Select -') as HTMLElement
     fireEvent.change(tagEl!, { target: { value: 'newKey' } })
-    const tagValEl = container.querySelector('[name="tags."]') as HTMLElement
+    const tagValEl = container.querySelector('[name=".tags."]') as HTMLElement
     fireEvent.change(tagValEl!, { target: { value: 'newValue' } })
     const deleteTag = container.querySelector('[data-icon="trash"]') as HTMLElement
     fireEvent.click(deleteTag!)
