@@ -21,7 +21,7 @@ import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { useHistory } from 'react-router-dom'
-import { isEmpty, defaultTo, keyBy } from 'lodash-es'
+import { isEmpty, defaultTo, keyBy, omitBy } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
@@ -798,7 +798,7 @@ function RunPipelineFormBasic({
                     <Layout.Vertical className={css.content} padding="xlarge">
                       <YamlBuilderMemo
                         {...yamlBuilderReadOnlyModeProps}
-                        existingJSON={{ pipeline: values }}
+                        existingJSON={{ pipeline: omitBy(values, (_val, key) => key.startsWith('_')) }}
                         bind={setYamlHandler}
                         schema={{}}
                         invocationMap={factory.getInvocationMap()}

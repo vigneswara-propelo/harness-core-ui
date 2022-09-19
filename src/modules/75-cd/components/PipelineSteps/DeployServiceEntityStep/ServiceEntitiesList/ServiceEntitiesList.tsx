@@ -19,6 +19,7 @@ import type { ServiceYaml } from 'services/cd-ng'
 
 import type { ServiceData } from '../DeployServiceEntityUtils'
 import { ServiceEntityCard } from './ServiceEntityCard'
+import css from './ServiceEntitiesList.module.scss'
 
 const DIALOG_PROPS: Omit<IDialogProps, 'isOpen'> = {
   usePortal: true,
@@ -95,22 +96,24 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
 
   return (
     <>
-      {servicesData.map(row => {
-        return (
-          <ServiceEntityCard
-            key={row.service.identifier}
-            service={row.service}
-            serviceInputs={row.serviceInputs}
-            onDeleteClick={setServiceToDelete}
-            onEditClick={setServiceToEdit}
-            stageIdentifier={stageIdentifier}
-            allowableTypes={allowableTypes}
-            readonly={readonly}
-            deploymentType={selectedDeploymentType}
-            defaultExpanded={servicesData.length === 1}
-          />
-        )
-      })}
+      <div className={css.cardsContainer}>
+        {servicesData.map(row => {
+          return (
+            <ServiceEntityCard
+              key={row.service.identifier}
+              service={row.service}
+              serviceInputs={row.serviceInputs}
+              onDeleteClick={setServiceToDelete}
+              onEditClick={setServiceToEdit}
+              stageIdentifier={stageIdentifier}
+              allowableTypes={allowableTypes}
+              readonly={readonly}
+              deploymentType={selectedDeploymentType}
+              defaultExpanded={servicesData.length === 1}
+            />
+          )
+        })}
+      </div>
       <Dialog isOpen={!!serviceToEdit} onClose={onCloseEditModal} title={getString('editService')} {...DIALOG_PROPS}>
         <ServiceEntityEditModal
           selectedDeploymentType={defaultTo(

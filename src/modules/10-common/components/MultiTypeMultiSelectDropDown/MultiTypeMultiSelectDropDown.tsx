@@ -18,7 +18,8 @@ import {
   MultiSelectDropDown,
   MultiTypeInputType,
   MultiSelectDropDownProps,
-  getFormFieldLabel
+  getFormFieldLabel,
+  SelectOption
 } from '@harness/uicore'
 import { get } from 'lodash-es'
 import cx from 'classnames'
@@ -36,6 +37,7 @@ export interface FormMultiTypeMultiSelectDropDownProps extends Omit<IFormGroupPr
   tooltipProps?: DataTooltipInterface
   enableConfigureOptions?: boolean
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'name' | 'type' | 'value' | 'onChange'>
+  onChange?: (value: SelectOption[]) => void
 }
 
 export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelectDropDownProps): React.ReactElement {
@@ -48,6 +50,7 @@ export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelect
     tooltipProps,
     enableConfigureOptions,
     configureOptionsProps,
+    onChange,
     ...restProps
   } = props
   const { getString } = useStrings()
@@ -63,8 +66,9 @@ export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelect
     ...rest
   } = restProps
 
-  const handleChange: ExpressionAndRuntimeTypeProps['onChange'] = (val, _, valueType) => {
+  const handleChange: ExpressionAndRuntimeTypeProps['onChange'] = (val, _mutliType, valueType) => {
     formik.setFieldValue(name, valueType === MultiTypeInputType.EXPRESSION ? '' : val)
+    onChange?.(val as SelectOption[])
     setType(valueType)
   }
 
