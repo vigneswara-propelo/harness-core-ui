@@ -18,7 +18,6 @@ declare const styles: {
   readonly marginAuto: string
   readonly name: string
   readonly stepError: string
-  readonly subHeading: string
   readonly submitBtn: string
   readonly validateError: string
   readonly veiwPermission: string

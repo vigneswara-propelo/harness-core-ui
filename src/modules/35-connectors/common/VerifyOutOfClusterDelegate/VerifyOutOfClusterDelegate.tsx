@@ -157,10 +157,10 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
 
   return value ? (
     <Layout.Horizontal padding={{ top: 'xsmall' }} spacing="xsmall">
-      <Text color={Color.GREY_400} font={{ size: 'small' }} className={css.subHeading}>
+      <Text color={Color.GREY_400} font={{ size: 'small' }} style={{ whiteSpace: 'nowrap' }}>
         {getLabel()}
       </Text>
-      <Text color={Color.GREY_600} font={{ size: 'small' }} className={css.subHeading} lineClamp={1} width={'600px'}>
+      <Text color={Color.GREY_600} font={{ size: 'small' }} lineClamp={1}>
         {value}
       </Text>
     </Layout.Horizontal>
