@@ -53,7 +53,7 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import { getVersionLabelText } from '@templates-library/utils/templatesUtils'
 import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
-import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
+import NoEntityFound, { ErrorPlacement } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopover'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
@@ -117,6 +117,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const params = useParams<ProjectPathProps & ModulePathParams>()
   const { accountId, module } = params
   const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>()
+  const gitPopoverBranch = isStandAlone ? storeMetadata?.branch : selectedBranch
 
   const stableVersion = React.useMemo(() => {
     return (templates as TemplateSummaryResponse[])?.find(item => item.stableTemplate && !isEmpty(item.versionLabel))
@@ -278,6 +279,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
     <Container className={css.errorPanel}>
       {!isStandAlone ? (
         <NoEntityFound
+          errorPlacement={ErrorPlacement.BOTTOM}
           identifier={selectedTemplate?.identifier as string}
           entityType={'template'}
           errorObj={templateYamlError?.data as Error}
@@ -346,9 +348,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                       gitDetails={defaultTo(
                         {
                           ...selectedTemplate.gitDetails,
-                          branch: !isStandAlone
-                            ? selectedTemplate.gitDetails?.branch || selectedBranch
-                            : storeMetadata?.branch
+                          branch: defaultTo(gitPopoverBranch, selectedTemplate.gitDetails?.branch)
                         },
                         {}
                       )}
