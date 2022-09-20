@@ -6,20 +6,17 @@
  */
 
 .listenToEventContainer {
-  padding: var(--spacing-xlarge) !important;
+  padding: var(--spacing-huge) !important;
   overflow: auto !important;
+  align-items: flex-start;
 }
 
-.listenToEvenHeading {
-  font-weight: 600 !important;
-  font-size: var(--font-size-medium) !important;
-  line-height: var(--spacing-xxlarge) !important;
-  color: var(--grey-800) !important;
+.listenToEventHeading {
   padding-bottom: var(--spacing-medium) !important;
 }
 
-.toggleLabel {
-  color: var(--grey-800) !important;
+.listenToEventInfo {
+  padding-top: var(--spacing-small) !important;
 }
 
 .toggleContainer {
@@ -38,10 +35,10 @@
 }
 
 .flagInfoName {
-  font-weight: 600 !important;
-  font-size: var(--font-size-small) !important;
-  line-height: var(--spacing-large) !important;
-  color: var(--grey-900) !important;
+  align-self: baseline !important;
+}
+
+.flagInfoId {
   align-self: baseline !important;
 }
 
@@ -56,14 +53,10 @@
 
 .listeningToEvent {
   padding-left: var(--spacing-medium) !important;
-  font-size: var(--font-size-normal) !important;
 }
 
-.allSet {
-  font-weight: 600;
-  font-size: var(--font-size-medium) !important;
-  line-height: var(--spacing-xlarge) !important;
-  color: var(--grey-900) !important;
+.errorListeningToEvent {
+  padding-left: var(--spacing-medium) !important;
 }
 
 .containerMain {
@@ -85,4 +78,8 @@
 
 .pendingConnection {
   margin: 0 !important;
+}
+
+.contactSupport {
+  align-items: flex-end;
 }

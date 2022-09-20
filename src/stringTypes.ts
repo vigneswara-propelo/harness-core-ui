@@ -669,6 +669,7 @@ export interface StringsMap {
   'common.resourceCenter.communityLevelUp': string
   'common.resourceCenter.communitySlack': string
   'common.resourceCenter.feedback.submit': string
+  'common.resourceCenter.link': string
   'common.resourceCenter.productUpdates.earlyAcess': string
   'common.resourceCenter.productUpdates.title': string
   'common.resourceCenter.productUpdates.whatsnew': string
@@ -6168,7 +6169,11 @@ export interface StringsMap {
   'cf.onboarding.createAFlag': string
   'cf.onboarding.createEnv': string
   'cf.onboarding.createEnvAndSdk': string
+  'cf.onboarding.createdAndValidated': string
   'cf.onboarding.envCreated': string
+  'cf.onboarding.errorReceivingEvent': string
+  'cf.onboarding.eventWeReceived': string
+  'cf.onboarding.furtherAssistance': string
   'cf.onboarding.help.getStarted': string
   'cf.onboarding.help.heading1': string
   'cf.onboarding.help.heading2': string
@@ -6204,14 +6209,17 @@ export interface StringsMap {
   'cf.onboarding.setupLabel': string
   'cf.onboarding.simpliestFlag': string
   'cf.onboarding.simpliestFlagDescription': string
-  'cf.onboarding.subtitle': string
+  'cf.onboarding.subTitle': string
   'cf.onboarding.successLabel': string
   'cf.onboarding.testYourFlag': string
   'cf.onboarding.title': string
+  'cf.onboarding.toggleError': string
   'cf.onboarding.toggleLabel': string
   'cf.onboarding.tryItOut': string
   'cf.onboarding.tryTarget': string
   'cf.onboarding.upAndRunning': string
+  'cf.onboarding.validatingFlagInfo': string
+  'cf.onboarding.validatingYourFlag': string
   'cf.onboarding.waitForConnect': string
   'cf.percentageRollout.bucketBy': string
   'cf.percentageRollout.invalidTotalError': string

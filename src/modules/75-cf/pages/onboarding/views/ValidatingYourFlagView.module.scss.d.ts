@@ -7,18 +7,20 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly allSet: string
+  readonly contactSupport: string
   readonly containerMain: string
   readonly containerSub: string
+  readonly errorListeningToEvent: string
+  readonly flagInfoId: string
   readonly flagInfoName: string
   readonly flagInfoNameContainer: string
   readonly flagToggle: string
-  readonly listenToEvenHeading: string
   readonly listenToEventContainer: string
+  readonly listenToEventHeading: string
+  readonly listenToEventInfo: string
   readonly listeningToEvent: string
   readonly pendingConnection: string
   readonly testDoneLayout: string
   readonly toggleContainer: string
-  readonly toggleLabel: string
 }
 export default styles

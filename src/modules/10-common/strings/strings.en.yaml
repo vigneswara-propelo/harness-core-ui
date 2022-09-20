@@ -860,6 +860,7 @@ scope: '{{ $.delegate.Scope }}'
 community: Community
 resourceCenter:
   title: 'RESOURCE CENTER'
+  link: 'contact our support'
   productUpdates:
     title: Product Updates
     whatsnew: 'What’s New'
