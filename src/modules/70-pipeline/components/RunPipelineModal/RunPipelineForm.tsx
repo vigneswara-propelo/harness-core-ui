@@ -165,7 +165,7 @@ function RunPipelineFormBasic({
     selectedStages: [getAllStageData(getString)],
     selectedStageItems: [getAllStageItem(getString)]
   })
-  const { setPipeline: updatePipelineInVaribalesContext } = usePipelineVariables()
+  const { setPipeline: updatePipelineInVaribalesContext, setSelectedInputSetsContext } = usePipelineVariables()
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
 
@@ -374,6 +374,7 @@ function RunPipelineFormBasic({
 
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
+    setSelectedInputSetsContext?.(inputSetSelected)
   }, [inputSetSelected])
 
   useEffect(() => {
