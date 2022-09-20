@@ -691,6 +691,8 @@ templates:
 sensitivityValidation: Sensitivity should be high, medium or low
 slos:
   title: SLOs
+  subTitle: Review the status and error budget of all your defined service level objectives
+  completeTitle: Service Level Objectives (SLOs)
   monitoredService: MONITORED SERVICE
   status: STATUS
   target: TARGET

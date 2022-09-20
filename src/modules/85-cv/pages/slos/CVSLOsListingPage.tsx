@@ -299,10 +299,10 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     return (
       <Text
         className={css.titleInSloTable}
-        title={`${defaultTo(Number(burnRate?.currentRatePercentage), 0).toFixed(2)}%`}
+        title={`${defaultTo(Number(burnRate), 0).toFixed(2)}%`}
         font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
       >
-        {defaultTo(Number(burnRate?.currentRatePercentage), 0).toFixed(2)}%
+        {defaultTo(Number(burnRate), 0).toFixed(2)}%
       </Text>
     )
   }
@@ -345,6 +345,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         title={errorBudgetRisk}
         style={{ backgroundColor: getRiskColorValue(errorBudgetRisk), color: Color.WHITE }}
         font={{ align: 'left', size: 'normal' }}
+        iconProps={{ color: Color.WHITE, padding: { right: 'small' } }}
         icon={riskCategory}
       >
         {errorBudgetRisk}
@@ -367,7 +368,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         </Text>
         <Container className={css.errorBudgetRemainingContainer}>
           <Text font={{ variation: FontVariation.SMALL }} className={css.errorBudgetRemaining}>
-            {`${errorBudgetRemaining}m`}
+            {`${errorBudgetRemaining} m`}
           </Text>
         </Container>
       </Layout.Horizontal>
@@ -386,10 +387,15 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           <Page.Header
             breadcrumbs={<NGBreadcrumbs />}
             title={
-              <Heading level={3} font={{ variation: FontVariation.H4 }}>
-                {getString('cv.slos.title')}
-                <HarnessDocTooltip tooltipId={'sloDashboardTitle'} useStandAlone />
-              </Heading>
+              <Layout.Vertical>
+                <Heading level={3} font={{ variation: FontVariation.H4 }}>
+                  {getString('cv.slos.completeTitle')}
+                  <HarnessDocTooltip tooltipId={'sloDashboardTitle'} useStandAlone />
+                </Heading>
+                <Text title={getString('cv.slos.subTitle')} font={{ align: 'left', size: 'small' }}>
+                  {getString('cv.slos.subTitle')}
+                </Text>
+              </Layout.Vertical>
             }
           />
           <Page.Header title={getAddSLOButton()} />

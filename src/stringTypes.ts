@@ -7314,6 +7314,7 @@ export interface StringsMap {
   'cv.sloRecalculationInProgress': string
   'cv.slos.backToSLI': string
   'cv.slos.burnRate': string
+  'cv.slos.completeTitle': string
   'cv.slos.configureSLIQueries': string
   'cv.slos.confirmDeleteSLO': string
   'cv.slos.contextualHelp.sli.availabilityDescription': string
@@ -7378,6 +7379,7 @@ export interface StringsMap {
   'cv.slos.sloTargetAndBudgetPolicy': string
   'cv.slos.sloUpdated': string
   'cv.slos.status': string
+  'cv.slos.subTitle': string
   'cv.slos.target': string
   'cv.slos.title': string
   'cv.slos.totalServices': string

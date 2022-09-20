@@ -96,7 +96,7 @@ describe('CVSLOsListingPage', () => {
   test('Without monitoredServiceIdentifier it should render the page headers', () => {
     render(<ComponentWrapper />)
 
-    expect(screen.queryByText('cv.slos.title')).toBeInTheDocument()
+    expect(screen.queryByText('cv.slos.completeTitle')).toBeInTheDocument()
     expect(screen.getByText('cv.slos.createSLO')).toBeInTheDocument()
     expect(document.title).toBe('cv.srmTitle | cv.slos.title | harness')
   })
@@ -104,7 +104,7 @@ describe('CVSLOsListingPage', () => {
   test('With monitoredServiceIdentifier it should not render with the page headers', () => {
     render(<ComponentWrapper />)
 
-    expect(screen.queryByText('cv.slos.title')).toBeInTheDocument()
+    expect(screen.queryByText('cv.slos.completeTitle')).toBeInTheDocument()
     expect(screen.getByText('cv.slos.createSLO')).toBeInTheDocument()
   })
 
@@ -278,15 +278,15 @@ describe('CVSLOsListingPage', () => {
 
     expect(container).toMatchSnapshot()
 
-    expect(container.querySelector('div[data-test-id="HEALTHY_tooltip"]')?.parentElement).not.toHaveClass(
+    expect(container.querySelector('div[data-test-id="Healthy_tooltip"]')?.parentElement).not.toHaveClass(
       'Card--selected'
     )
 
     userEvent.click(screen.getByText('Healthy'))
-    expect(container.querySelector('div[data-test-id="HEALTHY_tooltip"]')?.parentElement).toHaveClass('Card--selected')
+    expect(container.querySelector('div[data-test-id="Healthy_tooltip"]')?.parentElement).toHaveClass('Card--selected')
 
     userEvent.click(screen.getByText('Healthy'))
-    expect(container.querySelector('div[data-test-id="HEALTHY_tooltip"]')?.parentElement).not.toHaveClass(
+    expect(container.querySelector('div[data-test-id="Healthy_tooltip"]')?.parentElement).not.toHaveClass(
       'Card--selected'
     )
   })
