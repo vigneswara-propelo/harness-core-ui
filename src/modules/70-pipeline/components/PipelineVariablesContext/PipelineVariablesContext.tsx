@@ -22,6 +22,8 @@ import { useCreateVariablesV2 } from 'services/pipeline-ng'
 import type { GitQueryParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useGetYamlWithTemplateRefsResolved } from 'services/template-ng'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { getRegexForSearch } from '../LogsContent/LogsState/utils'
 import type { InputSetValue } from '../InputSetSelector/utils'
 
@@ -101,9 +103,13 @@ export type VaribalesState = Pick<
 >
 
 export function PipelineVariablesContextProvider(
-  props: React.PropsWithChildren<{ pipeline?: PipelineInfoConfig; enablePipelineTemplatesResolution?: boolean }>
+  props: React.PropsWithChildren<{
+    pipeline?: PipelineInfoConfig
+    enablePipelineTemplatesResolution?: boolean
+    storeMetadata?: StoreMetadata
+  }>
 ): React.ReactElement {
-  const { pipeline: pipelineFromProps, enablePipelineTemplatesResolution } = props
+  const { pipeline: pipelineFromProps, enablePipelineTemplatesResolution, storeMetadata = {} } = props
   const [originalPipeline, setOriginalPipeline] = React.useState<PipelineInfoConfig>(
     defaultTo(pipelineFromProps, {} as PipelineInfoConfig)
   )
@@ -113,7 +119,8 @@ export function PipelineVariablesContextProvider(
       metadataMap: {},
       serviceExpressionPropertiesList: []
     })
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelinePathProps>()
+  const params = useParams<PipelinePathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = params
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig>(originalPipeline)
   const [selectedInputSetsContext, setSelectedInputSetsContext] = React.useState<InputSetValue[]>()
@@ -140,7 +147,15 @@ export function PipelineVariablesContextProvider(
         'content-type': 'application/yaml'
       }
     },
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch },
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      repoIdentifier,
+      branch,
+      parentEntityConnectorRef: storeMetadata.connectorRef,
+      parentEntityRepoName: storeMetadata.repoName
+    },
     debounce: 1300
   })
 
@@ -154,9 +169,7 @@ export function PipelineVariablesContextProvider(
       orgIdentifier,
       pipelineIdentifier: originalPipeline.identifier,
       projectIdentifier,
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, params, repoIdentifier, branch)
     },
     body: {
       originalEntityYaml: enablePipelineTemplatesResolution ? yamlStringify(originalPipeline) : ''

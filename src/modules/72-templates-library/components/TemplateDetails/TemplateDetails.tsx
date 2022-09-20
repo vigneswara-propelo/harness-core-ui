@@ -63,7 +63,7 @@ import {
 } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
-import { createParentEntityQueryParams } from '@common/utils/gitSyncUtils'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
@@ -135,7 +135,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       orgIdentifier: selectedTemplate?.orgIdentifier,
       projectIdentifier: selectedTemplate?.projectIdentifier,
       versionLabel: selectedTemplate?.versionLabel,
-      ...createParentEntityQueryParams(storeMetadata, params)
+      ...getGitQueryParamsWithParentScope(storeMetadata, params)
     },
     lazy: true
   })
@@ -246,8 +246,6 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
           orgIdentifier: selectedTemplate?.orgIdentifier,
           projectIdentifier: selectedTemplate?.projectIdentifier,
           versionLabel: selectedTemplate?.versionLabel,
-          parentEntityConnectorRef: storeMetadata?.connectorRef,
-          parentEntityRepoName: storeMetadata?.repoName,
           branch
         }
       })
@@ -304,7 +302,8 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   ) : !isEmpty(selectedTemplate?.yaml) && selectedTemplate ? (
     templateFactory.getTemplate(selectedTemplate.templateEntityType || '')?.renderTemplateInputsForm({
       template: selectedTemplate,
-      accountId: defaultTo(template.accountId, '')
+      accountId: defaultTo(template.accountId, ''),
+      storeMetadata
     })
   ) : (
     <PageBody className={css.yamlLoader} loading />

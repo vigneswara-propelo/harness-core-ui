@@ -73,7 +73,7 @@ import {
   getPipelineWithoutCodebaseInputs
 } from '@pipeline/utils/CIUtils'
 import { useDeepCompareEffect } from '@common/hooks/useDeepCompareEffect'
-import { StoreType } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
@@ -109,6 +109,7 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
   stagesExecuted?: string[]
   executionIdentifier?: string
   source: ExecutionPathProps['source']
+  storeMetadata?: StoreMetadata
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -206,7 +207,9 @@ function RunPipelineFormBasic({
       projectIdentifier,
       repoIdentifier,
       branch,
-      getTemplatesResolvedPipeline: true
+      getTemplatesResolvedPipeline: true,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     }
   })
 
@@ -253,6 +256,7 @@ function RunPipelineFormBasic({
     rerunInputSetYaml: inputSetYAML,
     branch,
     repoIdentifier,
+    connectorRef,
     executionIdentifier,
     inputSetSelected: selectedInputSets,
     resolvedPipeline,
@@ -269,7 +273,9 @@ function RunPipelineFormBasic({
       moduleType: module,
       repoIdentifier,
       branch,
-      notifyOnlyUser: notifyOnlyMe
+      notifyOnlyUser: notifyOnlyMe,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     },
     identifier: pipelineIdentifier,
     requestOptions: {
@@ -286,7 +292,9 @@ function RunPipelineFormBasic({
       orgIdentifier,
       moduleType: module,
       repoIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     },
     identifier: pipelineIdentifier
   })
@@ -299,7 +307,9 @@ function RunPipelineFormBasic({
       orgIdentifier,
       moduleType: module,
       repoIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     },
     identifier: pipelineIdentifier,
     originalExecutionId: defaultTo(pipelineExecutionId, ''),
@@ -316,7 +326,9 @@ function RunPipelineFormBasic({
       orgIdentifier,
       moduleType: module,
       repoIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     },
     identifier: pipelineIdentifier,
     originalExecutionId: defaultTo(pipelineExecutionId, '')
@@ -329,7 +341,9 @@ function RunPipelineFormBasic({
       projectIdentifier,
       pipelineIdentifier,
       branch,
-      repoIdentifier
+      repoIdentifier,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     }
   })
 
@@ -947,7 +961,7 @@ export function RunPipelineFormWrapper(props: RunPipelineFormWrapperProps): Reac
 export function RunPipelineForm(props: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
   return (
     <NestedAccordionProvider>
-      <PipelineVariablesContextProvider>
+      <PipelineVariablesContextProvider storeMetadata={props.storeMetadata}>
         <RunPipelineFormBasic {...props} />
       </PipelineVariablesContextProvider>
     </NestedAccordionProvider>
