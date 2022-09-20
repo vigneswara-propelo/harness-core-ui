@@ -22,6 +22,15 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import { DeploymentInfraWrapperWithRef } from '../DeploymentInfraWrapper'
 import { initialValues, defaultInitialValues, defaultInitialValuesWithFileStore } from './mocks'
 
+jest.mock('@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook', () => ({
+  useGetConnectorsListHook: jest.fn().mockReturnValue({
+    loading: false,
+    categoriesMap: {},
+    connectorsList: ['K8sCluster'],
+    connectorCatalogueOrder: ['CLOUD_PROVIDER']
+  })
+}))
+
 const DeploymentContextWrapper = ({
   initialValue,
   children
