@@ -10,7 +10,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
-import VerifyOutOfClusterDelegate from '../VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '../ConnectorTestConnection'
 import delegateNameresponse from './mockData/delegate-name-response-error.json'
 import testConnectionSuccess from './mockData/test-connection-success.json'
 import { K8WithInheritFromDelegate, ManualK8s, Docker, Nexus, Artifactory, GCP, AWS } from './mockData/connectorsMock'
@@ -27,11 +27,11 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 describe('Verification step for out of cluster delegate', () => {
-  test('render VerifyOutOfClusterDelegate for K8s in edit screen', async () => {
+  test('render ConnectorTestConnection for K8s in edit screen', async () => {
     const { container, findByText } = render(
       <MemoryRouter>
         <TestWrapper>
-          <VerifyOutOfClusterDelegate
+          <ConnectorTestConnection
             type="K8sCluster"
             name="sample-name"
             connectorInfo={ManualK8s as ConnectorInfoDTO}
@@ -45,11 +45,11 @@ describe('Verification step for out of cluster delegate', () => {
 
     expect(container).toMatchSnapshot()
   }),
-    test('render VerifyOutOfClusterDelegate for K8s and last step', () => {
+    test('render ConnectorTestConnection for K8s and last step', () => {
       const { container } = render(
         <MemoryRouter>
           <TestWrapper>
-            <VerifyOutOfClusterDelegate
+            <ConnectorTestConnection
               type="K8sCluster"
               name="sample-name"
               connectorInfo={K8WithInheritFromDelegate as ConnectorInfoDTO}
@@ -61,11 +61,11 @@ describe('Verification step for out of cluster delegate', () => {
 
       expect(container).toMatchSnapshot()
     }),
-    test('render VerifyOutOfClusterDelegate for Docker', () => {
+    test('render ConnectorTestConnection for Docker', () => {
       const { container } = render(
         <MemoryRouter>
           <TestWrapper>
-            <VerifyOutOfClusterDelegate
+            <ConnectorTestConnection
               type="DockerRegistry"
               name="sample-name"
               connectorInfo={Docker as ConnectorInfoDTO}
@@ -77,11 +77,11 @@ describe('Verification step for out of cluster delegate', () => {
 
       expect(container).toMatchSnapshot()
     }),
-    test('render VerifyOutOfClusterDelegate for Nexus', () => {
+    test('render ConnectorTestConnection for Nexus', () => {
       const { container } = render(
         <MemoryRouter>
           <TestWrapper>
-            <VerifyOutOfClusterDelegate
+            <ConnectorTestConnection
               type="Nexus"
               name="sample-name"
               connectorInfo={Nexus as ConnectorInfoDTO}
@@ -94,11 +94,11 @@ describe('Verification step for out of cluster delegate', () => {
       expect(container).toMatchSnapshot()
     }),
     // eslint-disable-next-line jest/no-disabled-tests
-    test.skip('render VerifyOutOfClusterDelegate for GCP', () => {
+    test.skip('render ConnectorTestConnection for GCP', () => {
       const { container } = render(
         <MemoryRouter>
           <TestWrapper>
-            <VerifyOutOfClusterDelegate
+            <ConnectorTestConnection
               type="Gcp"
               name="sample-name"
               connectorInfo={GCP as ConnectorInfoDTO}
@@ -111,11 +111,11 @@ describe('Verification step for out of cluster delegate', () => {
       expect(container).toMatchSnapshot()
     }),
     // eslint-disable-next-line jest/no-disabled-tests
-    test.skip('render VerifyOutOfClusterDelegate for AWS', () => {
+    test.skip('render ConnectorTestConnection for AWS', () => {
       const { container } = render(
         <MemoryRouter>
           <TestWrapper>
-            <VerifyOutOfClusterDelegate
+            <ConnectorTestConnection
               type="Aws"
               name="sample-name"
               connectorInfo={AWS as ConnectorInfoDTO}
@@ -128,11 +128,11 @@ describe('Verification step for out of cluster delegate', () => {
       expect(container).toMatchSnapshot()
     }),
     // eslint-disable-next-line jest/no-disabled-tests
-    test.skip('render VerifyOutOfClusterDelegate for Artifactory', () => {
+    test.skip('render ConnectorTestConnection for Artifactory', () => {
       const { container } = render(
         <MemoryRouter>
           <TestWrapper>
-            <VerifyOutOfClusterDelegate
+            <ConnectorTestConnection
               type="Artifactory"
               name="sample-name"
               connectorInfo={Artifactory as ConnectorInfoDTO}

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Verification step for out of cluster delegate render VerifyOutOfClusterDelegate for AWS 1`] = `
+exports[`Verification step for out of cluster delegate render ConnectorTestConnection for AWS 1`] = `
 <div>
   <div
     class="Layout--vertical StyledProps--main"
@@ -100,7 +100,7 @@ exports[`Verification step for out of cluster delegate render VerifyOutOfCluster
 </div>
 `;
 
-exports[`Verification step for out of cluster delegate render VerifyOutOfClusterDelegate for Artifactory 1`] = `
+exports[`Verification step for out of cluster delegate render ConnectorTestConnection for Artifactory 1`] = `
 <div>
   <div
     class="Layout--vertical StyledProps--main"
@@ -200,7 +200,7 @@ exports[`Verification step for out of cluster delegate render VerifyOutOfCluster
 </div>
 `;
 
-exports[`Verification step for out of cluster delegate render VerifyOutOfClusterDelegate for Docker 1`] = `
+exports[`Verification step for out of cluster delegate render ConnectorTestConnection for Docker 1`] = `
 <div>
   <div
     class="Layout--vertical StyledProps--main"
@@ -337,7 +337,7 @@ exports[`Verification step for out of cluster delegate render VerifyOutOfCluster
 </div>
 `;
 
-exports[`Verification step for out of cluster delegate render VerifyOutOfClusterDelegate for GCP 1`] = `
+exports[`Verification step for out of cluster delegate render ConnectorTestConnection for GCP 1`] = `
 <div>
   <div
     class="Layout--vertical StyledProps--main"
@@ -437,7 +437,7 @@ exports[`Verification step for out of cluster delegate render VerifyOutOfCluster
 </div>
 `;
 
-exports[`Verification step for out of cluster delegate render VerifyOutOfClusterDelegate for K8s and last step 1`] = `
+exports[`Verification step for out of cluster delegate render ConnectorTestConnection for K8s and last step 1`] = `
 <div>
   <div
     class="Layout--vertical StyledProps--main"
@@ -574,7 +574,7 @@ exports[`Verification step for out of cluster delegate render VerifyOutOfCluster
 </div>
 `;
 
-exports[`Verification step for out of cluster delegate render VerifyOutOfClusterDelegate for K8s in edit screen 1`] = `
+exports[`Verification step for out of cluster delegate render ConnectorTestConnection for K8s in edit screen 1`] = `
 <div>
   <div
     class="Layout--vertical StyledProps--main"
@@ -660,7 +660,7 @@ exports[`Verification step for out of cluster delegate render VerifyOutOfCluster
 </div>
 `;
 
-exports[`Verification step for out of cluster delegate render VerifyOutOfClusterDelegate for Nexus 1`] = `
+exports[`Verification step for out of cluster delegate render ConnectorTestConnection for Nexus 1`] = `
 <div>
   <div
     class="Layout--vertical StyledProps--main"

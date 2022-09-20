@@ -48,14 +48,14 @@ import { connectorsTrackEventMap } from '@connectors/utils/connectorEvents'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import Suggestions from '../ErrorSuggestions/ErrorSuggestionsCe'
-import css from './VerifyOutOfClusterDelegate.module.scss'
+import css from './ConnectorTestConnection.module.scss'
 
 interface RenderUrlInfo {
   type: string
   url?: string
 }
 
-interface VerifyOutOfClusterDelegateProps {
+interface ConnectorTestConnectionProps {
   type: string
   isStep: boolean
   onClose?: () => void
@@ -169,7 +169,7 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
   )
 }
 
-const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps> & VerifyOutOfClusterDelegateProps> =
+const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> & ConnectorTestConnectionProps> =
   props => {
     const { prevStepData, nextStep, isLastStep = false, connectorInfo } = props
     const branch = props.isStep ? prevStepData?.branch : props.gitDetails?.branch
@@ -516,4 +516,4 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
     )
   }
 
-export default VerifyOutOfClusterDelegate
+export default ConnectorTestConnection
