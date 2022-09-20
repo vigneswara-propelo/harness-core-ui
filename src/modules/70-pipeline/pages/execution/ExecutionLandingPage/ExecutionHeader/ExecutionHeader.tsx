@@ -177,7 +177,7 @@ export function ExecutionHeader(): React.ReactElement {
             }}
             isPipelineInvalid={isPipelineInvalid}
             canEdit={canEdit}
-            showEditButton={false}
+            showEditButton={true}
             canExecute={canExecute}
             canRetry={pipelineExecutionSummary.canRetry}
             modules={pipelineExecutionSummary.modules}
