@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import {
@@ -19,7 +19,10 @@ import {
   MultiTypeInputType,
   MultiSelectDropDownProps,
   getFormFieldLabel,
-  SelectOption
+  SelectOption,
+  FixedTypeComponentProps,
+  MultiSelectOption,
+  MultiTypeInputValue
 } from '@harness/uicore'
 import { get } from 'lodash-es'
 import cx from 'classnames'
@@ -28,6 +31,38 @@ import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/Conf
 import { useStrings } from 'framework/strings'
 
 import css from './MultiTypeMultiSelectDropDown.module.scss'
+
+export type MultiSelectDropDownFixedProps = FixedTypeComponentProps & MultiSelectDropDownProps
+
+export function MultiSelectDropDownFixed(props: MultiSelectDropDownFixedProps): React.ReactElement {
+  const { onChange, value, disabled, ...rest } = props
+  const [localValue, setLocalValue] = useState<MultiSelectOption[]>([])
+
+  useEffect(() => {
+    if (Array.isArray(value)) {
+      setLocalValue(value)
+    }
+  }, [value])
+
+  function handleChangeNoop(opts: MultiSelectOption[]): void {
+    setLocalValue(opts)
+  }
+
+  function handleChange(opts: MultiSelectOption[]): void {
+    onChange?.(opts as SelectOption[], MultiTypeInputValue.MULTI_SELECT_OPTION, MultiTypeInputType.FIXED)
+    rest.onPopoverClose?.(opts)
+  }
+
+  return (
+    <MultiSelectDropDown
+      {...rest}
+      value={localValue}
+      disabled={disabled}
+      onChange={handleChangeNoop}
+      onPopoverClose={handleChange}
+    />
+  )
+}
 
 export interface FormMultiTypeMultiSelectDropDownProps extends Omit<IFormGroupProps, 'label'> {
   label: string
@@ -72,6 +107,10 @@ export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelect
     setType(valueType)
   }
 
+  function handleConfigChange(cvalue: string): void {
+    formik.setFieldValue(name, cvalue)
+  }
+
   return (
     <FormGroup
       {...rest}
@@ -89,11 +128,22 @@ export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelect
         onChange={handleChange}
         multitypeInputValue={type}
         className={cx(css.multitype, multiTypeProps?.className, { [css.hasError]: hasError })}
-        fixedTypeComponent={MultiSelectDropDown}
-        fixedTypeComponentProps={{ ...dropdownProps, value, className: cx(css.dropdown, dropdownProps.className) }}
+        fixedTypeComponent={MultiSelectDropDownFixed}
+        fixedTypeComponentProps={{
+          usePortal: true,
+          ...dropdownProps,
+          value,
+          className: cx(css.dropdown, dropdownProps.className)
+        }}
       />
       {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME ? (
-        <ConfigureOptions value={value} variableName={name} type={getString('service')} {...configureOptionsProps} />
+        <ConfigureOptions
+          value={value}
+          variableName={name}
+          type={getString('service')}
+          onChange={handleConfigChange}
+          {...configureOptionsProps}
+        />
       ) : null}
     </FormGroup>
   )

@@ -398,6 +398,7 @@ export default function DeployServiceEntityWidget({
                           expressions,
                           allowableTypes
                         }}
+                        enableConfigureOptions
                       />
                     ) : (
                       <FormInput.MultiTypeInput

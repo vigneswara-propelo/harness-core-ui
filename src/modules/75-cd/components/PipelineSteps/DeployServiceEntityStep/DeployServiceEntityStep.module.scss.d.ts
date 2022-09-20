@@ -10,6 +10,7 @@ declare const styles: {
   readonly editServiceDialog: string
   readonly editor: string
   readonly formRow: string
+  readonly inputSetSpinner: string
   readonly inputWidth: string
   readonly serviceActionWrapper: string
   readonly yamlToggle: string

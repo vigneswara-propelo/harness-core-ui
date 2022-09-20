@@ -15,6 +15,7 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
+import { Spinner } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
@@ -70,7 +71,7 @@ export function DeployServiceEntityInputStep({
     return []
   }, [serviceValue, servicesValue])
   const uniquePath = React.useRef(`_pseudo_field_${uuid()}`)
-  const { servicesData, servicesList, loadingServicesData, loadingServicesList } = useGetServicesData({
+  const { servicesData, servicesList, loadingServicesData, loadingServicesList, updatingData } = useGetServicesData({
     gitOpsEnabled,
     deploymentType: deploymentType as ServiceDefinition['type'],
     serviceIdentifiers
@@ -104,8 +105,19 @@ export function DeployServiceEntityInputStep({
   }, [servicesList])
 
   useDeepCompareEffect(() => {
-    if (serviceIdentifiers.length === 0) return
+    // if no value is selected, clear the inputs and template
+    if (serviceIdentifiers.length === 0) {
+      if (isMultiSvcTemplate) {
+        updateTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}values`)
+        formik.setFieldValue(`${pathPrefix}values`, [])
+      } else {
+        updateTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}serviceInputs`)
+        formik.setFieldValue(`${pathPrefix}serviceInputs`, {})
+      }
+      return
+    }
 
+    // updated template data based on selected services
     const newServicesTemplate: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
       return {
         serviceRef: RUNTIME_INPUT_VALUE,
@@ -113,6 +125,7 @@ export function DeployServiceEntityInputStep({
       }
     })
 
+    // updated values based on selected services
     const newServicesValues: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
       const svcTemplate = servicesData.find(svcTpl => svcTpl.service.identifier === svcId)?.serviceInputs
       return {
@@ -143,11 +156,6 @@ export function DeployServiceEntityInputStep({
       })
       return
     }
-
-    if (isEmpty(value?.value)) {
-      formik?.setFieldValue(`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}serviceInputs`, {})
-      updateTemplate({}, `${inputSetData?.path}.serviceInputs`)
-    }
   }
 
   function handleServicesChange(values: SelectOption[]): void {
@@ -159,12 +167,12 @@ export function DeployServiceEntityInputStep({
     formik.setFieldValue(`${pathPrefix}values`, newValues)
   }
 
-  const loading = loadingServicesList || loadingServicesData
+  const loading = loadingServicesList || loadingServicesData || updatingData
 
   return (
     <>
-      {getMultiTypeFromValue(serviceTemplate) === MultiTypeInputType.RUNTIME && (
-        <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+      <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
+        {getMultiTypeFromValue(serviceTemplate) === MultiTypeInputType.RUNTIME ? (
           <ExperimentalInput
             tooltipProps={{ dataTooltipId: 'specifyYourService' }}
             label={getString('cd.pipelineSteps.serviceTab.specifyYourService')}
@@ -185,27 +193,28 @@ export function DeployServiceEntityInputStep({
             className={css.inputWidth}
             formik={formik}
           />
-        </Layout.Horizontal>
-      )}
-      {isMultiSvcTemplate ? (
-        <FormMultiTypeMultiSelectDropDown
-          tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-          label={getString('cd.pipelineSteps.serviceTab.specifyYourServices')}
-          name={uniquePath.current}
-          disabled={inputSetData?.readonly || loading}
-          dropdownProps={{
-            items: selectOptions,
-            placeholder: getString('services'),
-            disabled: loading || inputSetData?.readonly
-          }}
-          onChange={handleServicesChange}
-          multiTypeProps={{
-            width: 300,
-            expressions,
-            allowableTypes
-          }}
-        />
-      ) : null}
+        ) : null}
+        {isMultiSvcTemplate ? (
+          <FormMultiTypeMultiSelectDropDown
+            tooltipProps={{ dataTooltipId: 'specifyYourService' }}
+            label={getString('cd.pipelineSteps.serviceTab.specifyYourServices')}
+            name={uniquePath.current}
+            disabled={inputSetData?.readonly || loading}
+            dropdownProps={{
+              items: selectOptions,
+              placeholder: getString('services'),
+              disabled: loading || inputSetData?.readonly
+            }}
+            onChange={handleServicesChange}
+            multiTypeProps={{
+              width: 300,
+              expressions,
+              allowableTypes
+            }}
+          />
+        ) : null}
+        {loading ? <Spinner className={css.inputSetSpinner} size={16} /> : null}
+      </Layout.Horizontal>
     </>
   )
 }

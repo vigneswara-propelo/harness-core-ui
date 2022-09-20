@@ -73,6 +73,8 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
     const svc1 = await findByTextGlobal(menu, 'Service 1')
     userEvent.click(svc1)
 
+    userEvent.click(multi)
+
     await waitFor(() => {
       expect(onUpdate).toHaveBeenLastCalledWith({
         services: {
