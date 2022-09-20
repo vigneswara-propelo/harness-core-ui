@@ -28,6 +28,8 @@ steps:
     fileToTail: File to Tail
     patternToSearch: Pattern to Search
     fileToTailPlaceholder: Enter File to Tail
+    selectScriptLocation: Select script location
+    locationFileStore: Harness File Store
     patternToSearchPlaceholder: Enter Pattern to Search
     runOnDelegate: Run on Delegate
     validation:

@@ -4693,11 +4693,13 @@ export interface StringsMap {
   'cd.steps.commands.fileToTail': string
   'cd.steps.commands.fileToTailPlaceholder': string
   'cd.steps.commands.filesAndPatterns': string
+  'cd.steps.commands.locationFileStore': string
   'cd.steps.commands.patternToSearch': string
   'cd.steps.commands.patternToSearchPlaceholder': string
   'cd.steps.commands.runOnDelegate': string
   'cd.steps.commands.runTheCommands': string
   'cd.steps.commands.scriptTypePlaceholder': string
+  'cd.steps.commands.selectScriptLocation': string
   'cd.steps.commands.sourceTypeLabel': string
   'cd.steps.commands.validation.destinationPathRequired': string
   'cd.steps.commands.validation.sourceTypeRequired': string
