@@ -8,7 +8,7 @@
 
 import { Checkbox, Classes } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Avatar, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
+import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
 import { get, isEmpty } from 'lodash-es'
 import defaultTo from 'lodash-es/defaultTo'
 import React, { useRef } from 'react'
@@ -30,14 +30,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
-import {
-  hasCDStage,
-  hasCIStage,
-  hasOverviewDetail,
-  hasServiceDetail,
-  hasSTOStage,
-  StageType
-} from '@pipeline/utils/stageHelpers'
+import { hasCDStage, hasCIStage, hasOverviewDetail, hasServiceDetail, StageType } from '@pipeline/utils/stageHelpers'
 import {
   ServiceExecutionsCard,
   DashboardSelected
@@ -46,8 +39,6 @@ import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactor
 import type { EnvironmentDeploymentsInfo, ServiceDeploymentInfo } from 'services/cd-ng'
 import executionFactory from '@pipeline/factories/ExecutionFactory'
 import { AUTO_TRIGGERS, CardVariant } from '@pipeline/utils/constants'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
 
@@ -91,7 +82,13 @@ export const RowSelectCell: CellType = ({ row }) => {
 export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<PipelineExecutionSummary> }> = ({ row }) => {
   return (
     <Layout.Horizontal>
-      <Icon name={row.isExpanded ? 'chevron-down' : 'chevron-right'} {...row.getToggleRowExpandedProps()} />
+      <Button
+        {...row.getToggleRowExpandedProps()}
+        color={Color.GREY_600}
+        icon={row.isExpanded ? 'chevron-down' : 'chevron-right'}
+        variation={ButtonVariation.ICON}
+        iconProps={{ size: 19 }}
+      />
     </Layout.Horizontal>
   )
 }
@@ -273,6 +270,7 @@ export const MenuCell: CellType = ({ row, column }) => {
         canExecute={canExecute}
         canRetry={data.canRetry}
         modules={data.modules}
+        menuOnlyActions
       />
     </div>
   )
@@ -285,13 +283,10 @@ export const TriggerInfoCell: CellType = ({ row }) => {
   const IS_OVERVIEWPAGE = hasOverviewDetail(data)
   const cdInfo = executionFactory.getCardInfo(StageType.DEPLOY)
   const ciInfo = executionFactory.getCardInfo(StageType.BUILD)
-  const stoInfo = executionFactory.getCardInfo(StageType.SECURITY)
   const variant = CardVariant.Default
-  const SECURITY = useFeatureFlag(FeatureFlag.SECURITY)
 
   const showCI = !!(ciInfo && hasCIStage(data))
   const showCD = !!(cdInfo && hasCDStage(data))
-  const showSTO = !!(SECURITY && stoInfo && hasSTOStage(data))
 
   return (
     <Layout.Vertical spacing="small" className={css.triggerInfoCell}>
@@ -323,15 +318,6 @@ export const TriggerInfoCell: CellType = ({ row }) => {
             caller={IS_SERVICEDETAIL ? DashboardSelected.SERVICEDETAIL : DashboardSelected.OVERVIEW}
           />
         ))}
-
-      {showSTO &&
-        stoInfo?.component &&
-        React.createElement<ExecutionCardInfoProps<PipelineExecutionSummary>>(stoInfo.component, {
-          data: defaultTo(data, {}),
-          nodeMap: defaultTo(data?.layoutNodeMap, {}),
-          startingNodeId: defaultTo(data?.startingNodeId, ''),
-          variant
-        })}
     </Layout.Vertical>
   )
 }

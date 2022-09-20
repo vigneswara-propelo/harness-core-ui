@@ -13,7 +13,8 @@ import {
   useConfirmationDialog,
   getErrorInfoFromErrorObject,
   Layout,
-  ButtonSize
+  ButtonSize,
+  ButtonVariation
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Classes, Dialog, IDialogProps, Intent, Menu, MenuItem, Position } from '@blueprintjs/core'
@@ -44,12 +45,10 @@ import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCom
 import css from './ExecutionActions.module.scss'
 
 const commonButtonProps: ButtonProps = {
-  minimal: true,
-  small: true,
+  variation: ButtonVariation.ICON,
   tooltipProps: {
     isDark: true
-  },
-  withoutBoxShadow: true
+  }
 }
 
 export interface ExecutionActionsProps {
@@ -76,6 +75,7 @@ export interface ExecutionActionsProps {
   source: ExecutionPathProps['source']
   onViewCompiledYaml?: () => void
   onCompareExecutions?: () => void
+  menuOnlyActions?: boolean
 }
 
 function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
@@ -152,7 +152,8 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     showEditButton = true,
     isPipelineInvalid,
     onViewCompiledYaml,
-    onCompareExecutions
+    onCompareExecutions,
+    menuOnlyActions
   } = props
   const {
     orgIdentifier,
@@ -323,53 +324,57 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
 
   return (
     <Layout.Horizontal onClick={killEvent}>
-      {canResume && (
-        <Button
-          size={ButtonSize.SMALL}
-          icon="play"
-          tooltip={getString(resumeText)}
-          onClick={resumePipeline}
-          {...commonButtonProps}
-          disabled={!canExecute}
-        />
-      )}
+      {!menuOnlyActions && (
+        <>
+          {canResume && (
+            <Button
+              size={ButtonSize.SMALL}
+              icon="play"
+              tooltip={getString(resumeText)}
+              onClick={resumePipeline}
+              {...commonButtonProps}
+              disabled={!canExecute}
+            />
+          )}
 
-      {!stageId && canRerun && (
-        <RbacButton
-          icon="repeat"
-          tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : getString(rerunText)}
-          onClick={reRunPipeline}
-          {...commonButtonProps}
-          disabled={!canExecute || isPipelineInvalid}
-          featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
-        />
-      )}
+          {!stageId && canRerun && (
+            <RbacButton
+              icon="repeat"
+              tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : getString(rerunText)}
+              onClick={reRunPipeline}
+              {...commonButtonProps}
+              disabled={!canExecute || isPipelineInvalid}
+              featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
+            />
+          )}
 
-      {canPause && (
-        <Button
-          size={ButtonSize.SMALL}
-          icon="pause"
-          tooltip={getString(pauseText)}
-          onClick={pausePipeline}
-          {...commonButtonProps}
-          disabled={!canExecute}
-        />
-      )}
+          {canPause && (
+            <Button
+              size={ButtonSize.SMALL}
+              icon="pause"
+              tooltip={getString(pauseText)}
+              onClick={pausePipeline}
+              {...commonButtonProps}
+              disabled={!canExecute}
+            />
+          )}
 
-      {canAbort && (
-        <Button
-          size={ButtonSize.SMALL}
-          icon="stop"
-          tooltip={getString(abortText)}
-          onClick={openAbortDialog}
-          {...commonButtonProps}
-          disabled={!canExecute}
-        />
+          {canAbort && (
+            <Button
+              size={ButtonSize.SMALL}
+              icon="stop"
+              tooltip={getString(abortText)}
+              onClick={openAbortDialog}
+              {...commonButtonProps}
+              disabled={!canExecute}
+            />
+          )}
+        </>
       )}
 
       {!noMenu && (
         <Popover className={Classes.DARK} position={Position.LEFT}>
-          <Button minimal icon="Options" {...commonButtonProps} aria-label="execution menu actions" />
+          <Button icon="Options" {...commonButtonProps} aria-label="execution menu actions" />
           <Menu style={{ backgroundColor: 'unset' }}>
             {showRetryPipelineOption && (
               <RbacMenuItem

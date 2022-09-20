@@ -76,28 +76,17 @@ export function ExecutionListTable({
     }
 
     return [
-      ...(isCompareMode
-        ? [
-            {
-              Header: '',
-              id: 'rowSelect',
-              width: '2%',
-              Cell: RowSelectCell,
-              disableSortBy: true
-            }
-          ]
-        : []),
       {
         Header: '',
-        id: 'expander',
-        width: '2%',
-        Cell: ToggleAccordionCell,
+        id: 'rowSelectOrExpander',
+        width: '3%',
+        Cell: isCompareMode ? RowSelectCell : ToggleAccordionCell,
         disableSortBy: true
       },
       {
         Header: getString('filters.executions.pipelineName'),
         accessor: 'pipelineIdentifier',
-        width: isCompareMode ? '16%' : '19%',
+        width: '19%',
         Cell: PipelineNameCell,
         serverSortProps: getServerSortProps('name')
       },
@@ -111,7 +100,7 @@ export function ExecutionListTable({
       {
         Header: '',
         accessor: 'moduleInfo',
-        width: '45%',
+        width: '43%',
         Cell: TriggerInfoCell,
         disableSortBy: true
       },

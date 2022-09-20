@@ -8,7 +8,7 @@
 
 import { Classes, Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Button, Icon, Layout, Popover, Text, Container, TagsPopover } from '@harness/uicore'
+import { Button, Icon, Layout, Popover, Text, Container, TagsPopover, ButtonVariation } from '@harness/uicore'
 import defaultTo from 'lodash-es/defaultTo'
 import { useParams, Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
@@ -40,7 +40,7 @@ import type { PipelineListPagePathParams } from '../types'
 import type { PipelineListColumnActions } from './PipelineListTable'
 import css from './PipelineListTable.module.scss'
 
-const LabeValue = ({ label, value }: { label: string; value: ReactNode }) => {
+export const LabeValue = ({ label, value }: { label: string; value: ReactNode }) => {
   return (
     <Layout.Horizontal spacing="xsmall">
       <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }}>
@@ -69,8 +69,8 @@ export const PipelineNameCell: CellType = ({ row }) => {
 
   return (
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
-      <Layout.Vertical spacing="xsmall" data-testid={data.identifier}>
-        <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'center' }}>
+      <div data-testid={data.identifier}>
+        <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'center' }} margin={{ bottom: 'small' }}>
           <Link to={routes.toPipelineDeploymentList(getRouteProps(pathParams, data))}>
             <Text
               font={{ variation: FontVariation.LEAD }}
@@ -83,6 +83,7 @@ export const PipelineNameCell: CellType = ({ row }) => {
                   {data.description && <LabeValue label={getString('description')} value={data.description} />}
                 </Layout.Vertical>
               }
+              lineClamp={1}
             >
               {data.name}
             </Text>
@@ -96,10 +97,10 @@ export const PipelineNameCell: CellType = ({ row }) => {
             />
           ) : null}
         </Layout.Horizontal>
-        <Text color={Color.GREY_600} font="xsmall">
+        <Text color={Color.GREY_600} font="xsmall" lineClamp={1}>
           {getString('idLabel', { id: data.identifier })}
         </Text>
-      </Layout.Vertical>
+      </div>
       {data?.entityValidityDetails?.valid === false && (
         <Container margin={{ left: 'large' }}>
           <Badge
@@ -274,7 +275,7 @@ export const MenuCell: CellType = ({ row, column }) => {
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }}>
       <Popover className={Classes.DARK} position={Position.LEFT}>
-        <Button minimal icon="Options" aria-label="pipeline menu actions" />
+        <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
         <Menu style={{ backgroundColor: 'unset' }}>
           <RbacMenuItem
             icon="play"
