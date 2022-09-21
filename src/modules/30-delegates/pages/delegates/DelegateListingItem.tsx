@@ -55,7 +55,7 @@ export const DelegateListingHeader = () => {
         tags: '15%',
         version: '12%',
         instanceStatus: '18%',
-        heartbeat: '15%',
+        heartbeat: '14%',
         status: '12%',
         actions: '2%'
       }
@@ -78,22 +78,22 @@ export const DelegateListingHeader = () => {
         key="tags"
         style={{
           width: columnWidths.tags,
-          paddingLeft: 'var(--spacing-large)'
+          paddingLeft: 'var(--spacing-xlarge)'
         }}
       >
         {getString('tagsLabel')}
       </div>
-      <div key="version" style={{ width: columnWidths.version, paddingLeft: 'var(--spacing-large)' }}>
+      <div key="version" style={{ width: columnWidths.version, paddingLeft: 'var(--spacing-medium)' }}>
         {getString('version')}
       </div>
       {USE_IMMUTABLE_DELEGATE ? (
-        <div key="instanceStatus" style={{ width: columnWidths.instanceStatus, paddingLeft: 'var(--spacing-large)' }}>
+        <div key="instanceStatus" style={{ width: columnWidths.instanceStatus, paddingLeft: 'var(--spacing-4)' }}>
           {getString('delegates.instanceStatus')}
         </div>
       ) : null}
       <div
         key="heartbeat"
-        style={{ width: columnWidths.heartbeat, paddingLeft: USE_IMMUTABLE_DELEGATE ? 'var(--spacing-large)' : '' }}
+        style={{ width: columnWidths.heartbeat, paddingLeft: USE_IMMUTABLE_DELEGATE ? 'var(--spacing-small)' : '' }}
       >
         {getString('delegate.LastHeartBeat')}
       </div>
@@ -364,7 +364,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
           )}
         </Container>
 
-        <Layout.Horizontal width={columnWidths.version} padding={{ left: USE_IMMUTABLE_DELEGATE ? 'xlarge' : '' }}>
+        <Layout.Horizontal width={columnWidths.version} padding={{ left: USE_IMMUTABLE_DELEGATE ? 'xxlarge' : '' }}>
           {delegate?.delegateGroupExpirationTime !== undefined
             ? delegate.delegateGroupExpirationTime <= 0
               ? getString('na')
@@ -399,7 +399,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
           </Layout.Horizontal>
         ) : null}
 
-        <Layout.Horizontal width={columnWidths.heartbeat} style={{ paddingLeft: USE_IMMUTABLE_DELEGATE ? '38px' : '' }}>
+        <Layout.Horizontal width={columnWidths.heartbeat} style={{ paddingLeft: USE_IMMUTABLE_DELEGATE ? '40px' : '' }}>
           {delegate.lastHeartBeat ? <ReactTimeago date={delegate.lastHeartBeat} live /> : getString('na')}
         </Layout.Horizontal>
 
@@ -478,7 +478,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                 <Layout.Horizontal
                   width={columnWidths.version}
                   className={css.marginLeft}
-                  style={{ paddingLeft: !USE_IMMUTABLE_DELEGATE ? '6px' : '' }}
+                  style={{ paddingLeft: !USE_IMMUTABLE_DELEGATE ? '6px' : '9px' }}
                 >
                   <Text>{instanceDetails.version?.startsWith('1.0') ? getString('na') : instanceDetails.version}</Text>
                 </Layout.Horizontal>
@@ -510,7 +510,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                 ) : null}
                 <Layout.Horizontal
                   width={USE_IMMUTABLE_DELEGATE ? columnWidths.status : '14%'}
-                  padding={{ left: USE_IMMUTABLE_DELEGATE ? 'medium' : '' }}
+                  className={USE_IMMUTABLE_DELEGATE ? css.statusPadding : ''}
                 >
                   <Text>
                     {instanceDetails.lastHeartbeat ? (
