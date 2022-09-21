@@ -5864,15 +5864,20 @@ export interface StringsMap {
   'cf.auditLogs.createdMessageFFUpdate': string
   'cf.auditLogs.createdMessageSegment': string
   'cf.auditLogs.empty': string
+  'cf.auditLogs.events.addClause': string
   'cf.auditLogs.events.addPrerequisite': string
   'cf.auditLogs.events.addRule': string
   'cf.auditLogs.events.addSegmentToVariationTargetMap': string
   'cf.auditLogs.events.addService': string
   'cf.auditLogs.events.addTargetsToVariationTargetMap': string
+  'cf.auditLogs.events.addToExcludeList': string
+  'cf.auditLogs.events.addToIncludeList': string
   'cf.auditLogs.events.addVariation': string
   'cf.auditLogs.events.clearVariationTargetMapping': string
   'cf.auditLogs.events.deleteVariation': string
   'cf.auditLogs.events.removeClause': string
+  'cf.auditLogs.events.removeFromExcludeList': string
+  'cf.auditLogs.events.removeFromIncludeList': string
   'cf.auditLogs.events.removePrerequisite': string
   'cf.auditLogs.events.removeRule': string
   'cf.auditLogs.events.removeService': string

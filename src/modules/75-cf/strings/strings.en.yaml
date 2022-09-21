@@ -432,6 +432,12 @@ auditLogs:
   changeDetails: Change details
   events:
     updateClause: A clause was updated for a rule
+    removeClause: A clause was removed
+    addClause: A clause was added
+    addToIncludeList: '{{target}} added to included Targets'
+    removeFromIncludeList: '{{target}} removed from included Targets'
+    addToExcludeList: '{{target}} added to excluded Targets'
+    removeFromExcludeList: '{{target}} removed from excluded Targets'
     reorderRules: Rules reordered
     updateDefaultServe:
       bucketBy: Default serve updated for bucket by '{{bucketBy}}'
@@ -458,7 +464,6 @@ auditLogs:
     removeTargetsToVariationTargetMap: Variation '{{variation}}' removed for targets '{{targets}}'
     clearVariationTargetMapping: Variation target mapping removed
     updateOffVariation: Off variation updated to '{{variation}}'
-    removeClause: A clause was removed
     addService: Service {{name}} added
     removeService: Service {{name}} removed
 noEnvironment:
