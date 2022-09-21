@@ -153,7 +153,7 @@ export const getInfrastructureDefaultValue = (
       }
     }
     case InfraDeploymentType.SshWinRmAzure: {
-      const { credentialsRef, connectorRef, resourceGroup, tags, usePublicDns, subscriptionId } =
+      const { credentialsRef, connectorRef, resourceGroup, tags, hostConnectionType, subscriptionId } =
         infrastructure?.spec || {}
       return {
         credentialsRef,
@@ -161,19 +161,20 @@ export const getInfrastructureDefaultValue = (
         resourceGroup,
         subscriptionId,
         tags,
-        usePublicDns,
+        hostConnectionType,
         allowSimultaneousDeployments,
         serviceType
       }
     }
     case InfraDeploymentType.SshWinRmAws: {
-      const { credentialsRef, connectorRef, region, awsInstanceFilter } = infrastructure?.spec || {}
+      const { credentialsRef, connectorRef, region, awsInstanceFilter, hostConnectionType } = infrastructure?.spec || {}
       return {
         credentialsRef,
         connectorRef,
         region,
         awsInstanceFilter,
-        serviceType
+        serviceType,
+        hostConnectionType
       }
     }
     case InfraDeploymentType.ECS: {

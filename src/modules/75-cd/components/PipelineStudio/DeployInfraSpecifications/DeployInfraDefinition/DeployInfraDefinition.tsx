@@ -554,7 +554,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   credentialsRef: value.credentialsRef,
                   connectorRef: value.connectorRef,
                   region: value.region,
-                  awsInstanceFilter: value.awsInstanceFilter
+                  awsInstanceFilter: value.awsInstanceFilter,
+                  hostConnectionType: value.hostConnectionType
                 },
                 InfraDeploymentType.SshWinRmAws
               )
@@ -580,7 +581,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   subscriptionId: value.subscriptionId,
                   resourceGroup: value.resourceGroup,
                   tags: value.tags,
-                  usePublicDns: value.usePublicDns,
+                  hostConnectionType: value.hostConnectionType,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.SshWinRmAzure

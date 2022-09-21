@@ -375,7 +375,7 @@ infrastructure:
   sshWinRmAzure:
     cloudProvider: Cloud Provider
     hostConnectionAttributes: Host Connection Attributes
-    usePublicDns: Use Public DNS connection
+    hostConnectionType: Host Connection Type
     noTagsAzure: No Tags found with given Connector and Subscription Id
 cloudFormation:
   createDescription: Provision resources using a CloudFormation template.
