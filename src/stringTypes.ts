@@ -1509,6 +1509,7 @@ export interface StringsMap {
   'variables.defaultValue': string
   'variables.editVar': string
   'variables.editVariable': string
+  'variables.fixedValue': string
   'variables.inputValidation': string
   'variables.newVariable': string
   'variables.noVariableExist': string
