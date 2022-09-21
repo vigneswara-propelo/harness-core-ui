@@ -502,7 +502,7 @@ exports[`Switch Account set as default 1`] = `
     class="Layout--horizontal StyledProps--main ConfirmationDialog--header StyledProps--padding-left-xsmall"
   >
     <span
-      class="bp3-icon StyledProps--main StyledProps--margin-right-small"
+      class="bp3-icon StyledProps--main StyledProps--margin-right-small StyledProps--intent-warning"
       data-icon="warning-icon"
     >
       <svg
