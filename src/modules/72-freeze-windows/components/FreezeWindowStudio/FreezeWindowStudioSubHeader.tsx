@@ -21,17 +21,22 @@ import { Color } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
+import { FreezeWindowStudioSubHeaderRightView } from './FreezeWindowStudioSubHeaderRightView'
 
 interface WindowPathProps {
   windowIdentifier: string
 }
 
-export const FreezeWindowStudioSubHeader = () => {
+interface FreezeWindowStudioSubHeaderProps {
+  onViewChange(newView: SelectedView): boolean
+}
+
+export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderProps> = ({ onViewChange }) => {
   const { accountId, projectIdentifier, orgIdentifier, module, windowIdentifier } = useParams<
     ProjectPathProps & ModulePathParams & WindowPathProps
   >()
   const history = useHistory()
-  const { view, setView } = React.useContext(FreezeWindowContext)
+  const { view } = React.useContext(FreezeWindowContext)
   const isYaml = view === SelectedView.YAML
   const isVisualViewDisabled = false
   const navigateToFreezeWindlows = React.useCallback(() => {
@@ -70,7 +75,7 @@ export const FreezeWindowStudioSubHeader = () => {
   React.useEffect(() => {
     if (windowIdentifier === '-1') {
       hideConfigModal()
-      showConfigModal()
+      // showConfigModal()
     }
   }, [windowIdentifier, showConfigModal]) // windowIdentifier
 
@@ -88,13 +93,12 @@ export const FreezeWindowStudioSubHeader = () => {
             // className={css.visualYamlToggle}
             selectedView={isYaml || isVisualViewDisabled ? SelectedView.YAML : SelectedView.VISUAL}
             onChange={nextMode => {
-              setView(nextMode)
-              // onViewChange(nextMode)
+              onViewChange(nextMode)
             }}
             disableToggle={isVisualViewDisabled}
           />
         </Container>
-        <div>3</div>
+        <FreezeWindowStudioSubHeaderRightView />
       </Layout.Horizontal>
     </Container>
   )
