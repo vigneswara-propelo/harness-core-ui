@@ -20,7 +20,8 @@ import {
   SelectOption,
   TableV2,
   Text,
-  IconName
+  IconName,
+  ExpandingSearchInput
 } from '@wings-software/uicore'
 
 import { Color, FontVariation } from '@harness/design-system'
@@ -37,10 +38,10 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import {
   useDeleteSLOData,
   useGetAllJourneys,
-  useGetAllMonitoredServicesWithTimeSeriesHealthSources,
   useGetServiceLevelObjectivesRiskCount,
   RiskCount,
-  useGetSLOHealthListView
+  useGetSLOHealthListView,
+  useGetSLOAssociatedMonitoredServices
 } from 'services/cv'
 import RbacButton from '@rbac/components/Button/Button'
 import { getErrorMessage, getRiskColorLogo, getRiskColorValue, getSearchString } from '@cv/utils/CommonUtils'
@@ -82,6 +83,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     getInitialFilterStateLazy(passedInitialState, monitoredService)
   )
   const [pageNumber, setPageNumber] = useState(0)
+  const [search, setSearch] = useState<string>('')
 
   useEffect(() => {
     if (monitoredService && monitoredServiceIdentifier) {
@@ -101,12 +103,16 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     }
   }, [accountId, orgIdentifier, projectIdentifier])
 
+  const sloDashboardWidgetsParams = useMemo(() => {
+    return getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber, search)
+  }, [pathParams, filterState, pageNumber, search])
+
   const {
     data: dashboardWidgetsResponse,
     loading: dashboardWidgetsLoading,
     refetch: refetchDashboardWidgets,
     error: dashboardWidgetsError
-  } = useGetSLOHealthListView(getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber))
+  } = useGetSLOHealthListView(sloDashboardWidgetsParams)
 
   const {
     data: riskCountResponse,
@@ -122,7 +128,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     loading: monitoredServicesLoading,
     error: monitoredServicesDataError,
     refetch: refetchMonitoredServicesData
-  } = useGetAllMonitoredServicesWithTimeSeriesHealthSources({
+  } = useGetSLOAssociatedMonitoredServices({
     queryParams: pathParams
   })
 
@@ -442,6 +448,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             {monitoredServiceIdentifier && getAddSLOButton()}
             {hasSloFilterApplied && (
               <Container
+                flex
                 className={getClassNameForMonitoredServicePage(css.sloDropdownFilters, monitoredServiceIdentifier)}
               >
                 <SLODashbordFilters
@@ -449,6 +456,12 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                   dispatch={dispatch}
                   filterItemsData={filterItemsData}
                   hideMonitoresServicesFilter={Boolean(monitoredService)}
+                />
+                <ExpandingSearchInput
+                  width={250}
+                  throttle={500}
+                  onChange={setSearch}
+                  placeholder={getString('cv.slos.searchSLO')}
                 />
               </Container>
             )}

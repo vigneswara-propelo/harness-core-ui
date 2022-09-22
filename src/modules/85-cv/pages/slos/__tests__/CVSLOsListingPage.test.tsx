@@ -61,7 +61,7 @@ describe('CVSLOsListingPage', () => {
       refetch: refetchDashboardWidgets
     } as any)
 
-    jest.spyOn(cvServices, 'useGetAllMonitoredServicesWithTimeSeriesHealthSources').mockReturnValue({
+    jest.spyOn(cvServices, 'useGetSLOAssociatedMonitoredServices').mockReturnValue({
       data: [],
       loading: false,
       error: null,

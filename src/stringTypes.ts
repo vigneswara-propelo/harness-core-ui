@@ -7366,6 +7366,7 @@ export interface StringsMap {
   'cv.slos.noSLOsStateMessage': string
   'cv.slos.pickMetricsSLI': string
   'cv.slos.reviewChanges': string
+  'cv.slos.searchSLO': string
   'cv.slos.selectHealthsource': string
   'cv.slos.selectMonitoredService': string
   'cv.slos.selectMonitoredServiceForSlo': string
