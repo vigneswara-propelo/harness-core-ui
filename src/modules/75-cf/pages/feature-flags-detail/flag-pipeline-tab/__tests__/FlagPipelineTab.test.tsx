@@ -484,5 +484,19 @@ describe('FlagPipelineTab', () => {
       expect(screen.getAllByText('warning-sign')).toHaveLength(2)
       expect(screen.getByTestId('stage-count')).toHaveTextContent('1')
     })
+
+    test('it should link to Flag Executions page', async () => {
+      setupExecutionMocks([mockExecutionHistory[1]])
+      renderComponent()
+
+      const openPipelineExecutionBtn = document.querySelectorAll("[data-icon='Options']")[1] as HTMLElement
+      userEvent.click(openPipelineExecutionBtn)
+
+      userEvent.click(screen.getByText('cf.featureFlags.flagPipeline.openExecution'))
+
+      expect(screen.getByTestId('location')).toHaveTextContent(
+        '/account/dummy/cf/orgs/dummy/projects/dummy/pipelines/pipeline5/executions/1997/pipeline'
+      )
+    })
   })
 })
