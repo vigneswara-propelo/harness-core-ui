@@ -395,7 +395,11 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
               hidden={!showEditButton}
               disabled={!canEdit}
               className={css.link}
-              text={<Link to={pipelineDetailsView}>{getString('pipeline.viewPipeline')}</Link>}
+              text={
+                <Link to={pipelineDetailsView}>
+                  {canEdit ? getString('editPipeline') : getString('pipeline.viewPipeline')}
+                </Link>
+              }
             />
             {!stageId && (
               <RbacMenuItem

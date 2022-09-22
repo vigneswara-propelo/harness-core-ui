@@ -311,7 +311,7 @@ describe('Execution List', () => {
       name: 'pipeline.viewExecution'
     })
     const viewPipelineFromMenu = within(menuContent).getByRole('link', {
-      name: 'pipeline.viewPipeline'
+      name: 'editPipeline'
     })
 
     expect(viewExecutionFromMenu).toHaveAttribute(
