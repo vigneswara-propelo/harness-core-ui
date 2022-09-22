@@ -91,10 +91,6 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     }
   }, [monitoredService])
 
-  useEffect(() => {
-    setPageNumber(0)
-  }, [projectIdentifier])
-
   const pathParams = useMemo(() => {
     return {
       accountId,
@@ -543,7 +539,6 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                   itemCount: totalItems,
                   gotoPage: nextPage => {
                     setPageNumber(nextPage)
-                    refetchDashboardWidgets()
                   }
                 }}
               />
