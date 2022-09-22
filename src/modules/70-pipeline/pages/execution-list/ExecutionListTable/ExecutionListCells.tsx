@@ -39,8 +39,28 @@ import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactor
 import type { EnvironmentDeploymentsInfo, ServiceDeploymentInfo } from 'services/cd-ng'
 import executionFactory from '@pipeline/factories/ExecutionFactory'
 import { AUTO_TRIGGERS, CardVariant } from '@pipeline/utils/constants'
+import { killEvent } from '@common/utils/eventUtils'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
+
+export const getExecutionPipelineViewLink = (
+  pipelineExecutionSummary: PipelineExecutionSummary,
+  pathParams: PipelineType<PipelinePathProps>
+): string => {
+  const { planExecutionId, pipelineIdentifier: rowDataPipelineIdentifier } = pipelineExecutionSummary
+  const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } = pathParams
+  const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
+
+  return routes.toExecutionPipelineView({
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier: pipelineIdentifier || rowDataPipelineIdentifier || '-1',
+    accountId,
+    module,
+    executionIdentifier: planExecutionId || '-1',
+    source
+  })
+}
 
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
   column: ColumnInstance<D> & ExecutionListColumnActions
@@ -68,7 +88,7 @@ export const RowSelectCell: CellType = ({ row }) => {
   }
 
   return (
-    <div ref={checkboxRef} className={css.checkbox}>
+    <div ref={checkboxRef} className={css.checkbox} onClick={killEvent}>
       <Checkbox
         size={12}
         checked={isCompareItem}
@@ -81,7 +101,7 @@ export const RowSelectCell: CellType = ({ row }) => {
 
 export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<PipelineExecutionSummary> }> = ({ row }) => {
   return (
-    <Layout.Horizontal>
+    <Layout.Horizontal onClick={killEvent}>
       <Button
         {...row.getToggleRowExpandedProps()}
         color={Color.GREY_600}
@@ -95,26 +115,14 @@ export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<PipelineEx
 
 export const PipelineNameCell: CellType = ({ row }) => {
   const data = row.original
-  const { runSequence, planExecutionId = '', name, pipelineIdentifier: rowDataPipelineIdentifier = '' } = data
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
-  const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } = pathParams
-  const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
-
-  const toExecutionPipelineView = routes.toExecutionPipelineView({
-    orgIdentifier,
-    projectIdentifier,
-    pipelineIdentifier: pipelineIdentifier || rowDataPipelineIdentifier,
-    accountId,
-    module,
-    executionIdentifier: planExecutionId,
-    source
-  })
+  const toExecutionPipelineView = getExecutionPipelineViewLink(data, pathParams)
 
   return (
     <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
       <Link to={toExecutionPipelineView}>
         <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={2}>
-          {name}: {runSequence}
+          {data.name}: {data.runSequence}
         </Text>
       </Link>
       {!isEmpty(data?.tags) && (
@@ -170,25 +178,27 @@ export const ExecutionCell: CellType = ({ row }) => {
           color={Color.PRIMARY_7}
         />
       ) : (
-        <Link
-          to={routes.toTriggersDetailPage({
-            projectIdentifier: pathParams.projectIdentifier,
-            orgIdentifier: pathParams.orgIdentifier,
-            accountId: pathParams.accountId,
-            module: pathParams.module,
-            pipelineIdentifier: data.pipelineIdentifier || '',
-            triggerIdentifier: get(data, 'executionTriggerInfo.triggeredBy.identifier') || '',
-            triggerType
-          })}
-          className={css.iconWrapper}
-        >
-          <Icon
-            size={10}
-            name={triggerType === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'}
-            aria-label="trigger"
-            className={css.icon}
-          />
-        </Link>
+        <div onClick={killEvent}>
+          <Link
+            to={routes.toTriggersDetailPage({
+              projectIdentifier: pathParams.projectIdentifier,
+              orgIdentifier: pathParams.orgIdentifier,
+              accountId: pathParams.accountId,
+              module: pathParams.module,
+              pipelineIdentifier: data.pipelineIdentifier || '',
+              triggerIdentifier: get(data, 'executionTriggerInfo.triggeredBy.identifier') || '',
+              triggerType
+            })}
+            className={css.iconWrapper}
+          >
+            <Icon
+              size={10}
+              name={triggerType === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'}
+              aria-label="trigger"
+              className={css.icon}
+            />
+          </Link>
+        </div>
       )}
       <div>
         <Layout.Horizontal>
@@ -245,7 +255,7 @@ export const MenuCell: CellType = ({ row, column }) => {
   )
 
   return (
-    <div className={css.menu}>
+    <div className={css.menu} onClick={killEvent}>
       <ExecutionActions
         executionStatus={data.status as ExecutionStatus}
         params={{
