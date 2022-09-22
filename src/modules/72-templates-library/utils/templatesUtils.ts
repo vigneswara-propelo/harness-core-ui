@@ -25,6 +25,11 @@ export enum TemplateType {
   Execution = 'Execution'
 }
 
+export enum TemplateUsage {
+  USE = 'Use',
+  COPY = 'Copy'
+}
+
 interface AllowedTemplate {
   label: string
   value: string
