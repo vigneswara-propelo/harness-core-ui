@@ -7,7 +7,7 @@
 
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, merge, noop, omit, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, merge, noop, omit, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import produce from 'immer'
@@ -238,11 +238,18 @@ function BootstrapDeployInfraDefinition({
 
     const stageData = produce(stage, draft => {
       const infraDefinition = get(draft, 'stage.spec.infrastructure', {})
-      infraDefinition.infrastructureDefinition.spec = infrastructureDefinitionConfig.spec
-      infraDefinition.allowSimultaneousDeployments = infrastructureDefinitionConfig.allowSimultaneousDeployments
+      if (infrastructureDefinitionConfig.spec) {
+        infraDefinition.infrastructureDefinition.spec = infrastructureDefinitionConfig.spec
+      }
+      if (infrastructureDefinitionConfig.allowSimultaneousDeployments) {
+        infraDefinition.allowSimultaneousDeployments = infrastructureDefinitionConfig.allowSimultaneousDeployments
+      }
 
       const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
-      serviceDefinition.type = infrastructureDefinitionConfig.deploymentType
+
+      if (infrastructureDefinitionConfig.deploymentType) {
+        serviceDefinition.type = infrastructureDefinitionConfig.deploymentType
+      }
     })
     updateStage(stageData?.stage as StageElementConfig)
   }
@@ -358,7 +365,13 @@ function BootstrapDeployInfraDefinition({
       checkErrorsForTab(DeployTabs.SERVICE),
       checkErrorsForTab(DeployTabs.INFRASTRUCTURE)
     ]).then(responses => {
-      if (responses.map(response => response.status).filter(status => status === 'rejected').length > 0) {
+      if (
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        !isEmpty((responses[0] as any).value) ||
+        // custom condition added above to accommodate below issue. Else, next condition is enough
+        // https://github.com/jaredpalmer/formik/issues/3151 - validateForm does not reject on formik validation errors
+        responses.map(response => response.status).filter(status => status === 'rejected').length > 0
+      ) {
         return Promise.reject()
       } else {
         return Promise.resolve()
