@@ -2017,6 +2017,7 @@ export interface StringsMap {
   'connectors.ceAws.overview.alreadyExistInfo': string
   'connectors.ceAws.overview.awsAccountId': string
   'connectors.ceAws.overview.editConnector': string
+  'connectors.ceAws.overview.govCloudHeader': string
   'connectors.ceAws.overview.heading': string
   'connectors.ceAws.overview.ifReq': string
   'connectors.ceAws.overview.trySuggestion': string

@@ -554,6 +554,7 @@ ceAws:
     trySuggestion: '{{ $.common.errorHandler.tryTheseSuggestions }}'
     editConnector: '{{ $.connectors.editConnector }}'
     ifReq: '{{ $.connectors.ifReq }}'
+    govCloudHeader: 'Is this an AWS GovCloud account?'
     validation:
       numeric: 'AWS Account Id must be numeric'
       positive: 'AWS Account Id must be a positive number'
