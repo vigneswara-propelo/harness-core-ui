@@ -206,11 +206,17 @@ ldap:
   groupQueries: Group Queries
   scheduledSyncs: Scheduled Syncs
   baseDN: Base DN
+  baseDNRequired: Base DN is required
   searchFilter: Search Filter
+  searchFilterRequired: Search Filter is required
   nameAttributes: Name Attribute
+  nameAttributesRequired: Name Attribute is required
   emailAttributes: Email Attribute
+  emailAttributesRequired: Email Attribute is required
   descriptionAttributes: Description Attribute
+  descriptionAttributesRequired: Description Attribute is required
   groupMembershipAttributes: Group Membership Attribute
+  groupMembershipAttributesRequired: Group Membership Attribute is required
   userQueryTitle: User Query {{index}}
   groupQueryTitle: Group Query {{index}}
   setScopeForUserQuery: Set the scope of any searches for LDAP users

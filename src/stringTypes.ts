@@ -1666,6 +1666,7 @@ export interface StringsMap {
   'authSettings.ldap.addUserQueryHeading': string
   'authSettings.ldap.authChangeSuccessful': string
   'authSettings.ldap.baseDN': string
+  'authSettings.ldap.baseDNRequired': string
   'authSettings.ldap.connSettings.bindDN': string
   'authSettings.ldap.connSettings.bindDNPlaceholder': string
   'authSettings.ldap.connSettings.connectionTimeout': string
@@ -1688,20 +1689,25 @@ export interface StringsMap {
   'authSettings.ldap.connSettings.validateResponseTime.required': string
   'authSettings.ldap.connectionSettings': string
   'authSettings.ldap.descriptionAttributes': string
+  'authSettings.ldap.descriptionAttributesRequired': string
   'authSettings.ldap.discardChanges': string
   'authSettings.ldap.editLdapConfiguration': string
   'authSettings.ldap.emailAttributes': string
+  'authSettings.ldap.emailAttributesRequired': string
   'authSettings.ldap.groupMembershipAttributes': string
+  'authSettings.ldap.groupMembershipAttributesRequired': string
   'authSettings.ldap.groupQueries': string
   'authSettings.ldap.groupQueryTitle': string
   'authSettings.ldap.ldapTestSuccessful': string
   'authSettings.ldap.nameAttributes': string
+  'authSettings.ldap.nameAttributesRequired': string
   'authSettings.ldap.newGroupQuery': string
   'authSettings.ldap.newUserQuery': string
   'authSettings.ldap.queryTestFail': string
   'authSettings.ldap.queryTestSuccessful': string
   'authSettings.ldap.scheduledSyncs': string
   'authSettings.ldap.searchFilter': string
+  'authSettings.ldap.searchFilterRequired': string
   'authSettings.ldap.setScopeForGroupQuery': string
   'authSettings.ldap.setScopeForUserQuery': string
   'authSettings.ldap.syncUserGroups': string
