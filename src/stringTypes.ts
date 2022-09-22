@@ -3507,6 +3507,7 @@ export interface StringsMap {
   'pipeline.lastExecution': string
   'pipeline.lastSevenDays': string
   'pipeline.linuxOnly': string
+  'pipeline.loadBalancer': string
   'pipeline.logs.errorText': string
   'pipeline.logs.retry': string
   'pipeline.logs.sectionName': string
@@ -4710,6 +4711,12 @@ export interface StringsMap {
   'cd.steps.common.selectOrEnterClusterPlaceholder': string
   'cd.steps.common.specifyCredentials': string
   'cd.steps.common.undefinedType': string
+  'cd.steps.ecsBGCreateServiceStep.labels.prodListener': string
+  'cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN': string
+  'cd.steps.ecsBGCreateServiceStep.labels.stageListener': string
+  'cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN': string
+  'cd.steps.ecsBGCreateServiceStep.sectionHeaders.configureProductionService': string
+  'cd.steps.ecsBGCreateServiceStep.sectionHeaders.configureStageService': string
   'cd.steps.kubernetesGcpStep.stepName': string
   'cd.steps.pdcStep.attributesPlaceholder': string
   'cd.steps.pdcStep.filterHostAttributes': string
@@ -4970,7 +4977,6 @@ export interface StringsMap {
   'ce.co.accessPoint.hostedZone.noResult': string
   'ce.co.accessPoint.landingPageTitle': string
   'ce.co.accessPoint.lastActivity': string
-  'ce.co.accessPoint.loadbalancer': string
   'ce.co.accessPoint.loadbalancers': string
   'ce.co.accessPoint.machineType': string
   'ce.co.accessPoint.mapDomain': string

@@ -64,6 +64,9 @@ import { ECSCanaryDeployStep } from './ECSCanaryDeployStep/ECSCanaryDeployStep'
 import { ECSCanaryDeleteStep } from './ECSCanaryDeleteStep/ECSCanaryDeleteStep'
 import { AzureArmRollback } from './AzureArmRollback/AzureArmRollback'
 import { AzureBlueprintStep } from './AzureBlueprint/AzureBlueprint'
+import { ECSBlueGreenCreateServiceStep } from './ECSBlueGreenCreateServiceStep/ECSBlueGreenCreateServiceStep'
+import { ECSBlueGreenSwapTargetGroupsStep } from './ECSBlueGreenSwapTargetGroupsStep/ECSBlueGreenSwapTargetGroupsStep'
+import { ECSBlueGreenRollbackStep } from './ECSBlueGreenRollbackStep/ECSBlueGreenRollbackStep'
 import { DeployServiceEntityStep } from './DeployServiceEntityStep/DeployServiceEntityStep'
 import { AzureArmStep } from './AzureArm/AzureArm'
 
@@ -125,4 +128,7 @@ factory.registerStep(new ECSCanaryDeployStep())
 factory.registerStep(new ECSCanaryDeleteStep())
 factory.registerStep(new AzureArmRollback())
 factory.registerStep(new AzureBlueprintStep())
+factory.registerStep(new ECSBlueGreenCreateServiceStep())
+factory.registerStep(new ECSBlueGreenSwapTargetGroupsStep())
+factory.registerStep(new ECSBlueGreenRollbackStep())
 factory.registerStep(new AzureArmStep())

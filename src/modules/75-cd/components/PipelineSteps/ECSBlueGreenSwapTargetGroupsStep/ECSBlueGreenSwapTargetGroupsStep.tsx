@@ -18,11 +18,11 @@ import { VariablesListTable } from '@pipeline/components/VariablesListTable/Vari
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { validateGenericFields } from '../Common/GenericExecutionStep/utils'
-import { ECSRollingDeployStepEditRef } from './ECSRollingDeployStepEdit'
-import { ECSRollingDeployStepInputSet } from './ECSRollingDeployStepInputSet'
+import { GenericExecutionStepInputSet } from '../Common/GenericExecutionStep/GenericExecutionStepInputSet'
+import { GenericExecutionStepEditRef } from '../Common/GenericExecutionStep/GenericExecutionStepEdit'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
-interface ECSRollingDeployVariableStepProps {
+interface ECSBlueGreenCreateServiceVariableStepProps {
   initialValues: StepElementConfig
   stageIdentifier: string
   onUpdate?(data: StepElementConfig): void
@@ -30,18 +30,17 @@ interface ECSRollingDeployVariableStepProps {
   variablesData: StepElementConfig
 }
 
-export class ECSRollingDeployStep extends PipelineStep<StepElementConfig> {
-  protected type = StepType.EcsRollingDeploy
-  protected stepName = 'ECS Rolling Deploy'
-  protected stepIcon: IconName = 'rolling'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ECSRollingDeploy'
+export class ECSBlueGreenSwapTargetGroupsStep extends PipelineStep<StepElementConfig> {
+  protected type = StepType.EcsBlueGreenSwapTargetGroups
+  protected stepName = 'Configure Swap Target Groups'
+  protected stepIcon: IconName = 'bluegreen'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sBGSwapServices'
   protected isHarnessSpecific = true
   protected defaultValues: StepElementConfig = {
     identifier: '',
     name: '',
-    type: StepType.EcsRollingDeploy,
-    timeout: '10m',
-    spec: {}
+    type: StepType.EcsBlueGreenSwapTargetGroups,
+    timeout: '10m'
   }
 
   constructor() {
@@ -66,16 +65,13 @@ export class ECSRollingDeployStep extends PipelineStep<StepElementConfig> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <ECSRollingDeployStepInputSet
-          initialValues={initialValues}
-          onUpdate={onUpdate}
+        <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
-          stepViewType={stepViewType}
           inputSetData={inputSetData as InputSetData<StepElementConfig>}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
-      const { variablesData, metadataMap } = customStepProps as ECSRollingDeployVariableStepProps
+      const { variablesData, metadataMap } = customStepProps as ECSBlueGreenCreateServiceVariableStepProps
       return (
         <VariablesListTable
           className={pipelineVariableCss.variablePaddingL3}
@@ -87,7 +83,7 @@ export class ECSRollingDeployStep extends PipelineStep<StepElementConfig> {
     }
 
     return (
-      <ECSRollingDeployStepEditRef
+      <GenericExecutionStepEditRef
         initialValues={initialValues}
         onUpdate={onUpdate}
         isNewStep={isNewStep}
