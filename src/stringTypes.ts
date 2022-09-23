@@ -4110,6 +4110,7 @@ export interface StringsMap {
   'templatesLibrary.referencedBy': string
   'templatesLibrary.sampleTemplateAuditComment': string
   'templatesLibrary.saveAsNewLabelModal.heading': string
+  'templatesLibrary.seeLinkedTemplate': string
   'templatesLibrary.selectTemplateToPreview': string
   'templatesLibrary.setAsStableText': string
   'templatesLibrary.setAsStableTitle': string
