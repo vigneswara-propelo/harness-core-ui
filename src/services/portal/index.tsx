@@ -25535,6 +25535,47 @@ export const getUserPromise = (
   signal?: RequestInit['signal']
 ) => getUsingFetch<RestResponseUser, unknown, void, void>(getConfig('api'), `/users/user`, props, signal)
 
+export interface GetUserAccountsQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  searchTerm?: string
+}
+
+export type GetUserAccountsProps = Omit<
+  GetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  'path'
+>
+
+export const GetUserAccounts = (props: GetUserAccountsProps) => (
+  <Get<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>
+    path={`/users/userAccounts`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetUserAccountsProps = Omit<
+  UseGetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  'path'
+>
+
+export const useGetUserAccounts = (props: UseGetUserAccountsProps) =>
+  useGet<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(`/users/userAccounts`, {
+    base: getConfig('api'),
+    ...props
+  })
+
+export const getUserAccountsPromise = (
+  props: GetUsingFetchProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(
+    getConfig('api'),
+    `/users/userAccounts`,
+    props,
+    signal
+  )
+
 export interface Logout1PathParams {
   userId: string
 }
