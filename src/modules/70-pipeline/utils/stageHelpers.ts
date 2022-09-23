@@ -533,6 +533,7 @@ export const deleteStageInfo = (stage?: DeploymentStageElementConfig): void => {
     delete stage?.spec?.service
     delete stage?.spec?.environment
     delete stage?.spec?.environmentGroup
+    delete stage?.spec?.customDeploymentRef
     if (stage?.spec?.execution?.steps) {
       stage.spec.execution.steps.splice(0)
     }

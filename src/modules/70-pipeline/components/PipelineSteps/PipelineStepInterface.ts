@@ -108,7 +108,8 @@ export enum StepType {
   EcsBlueGreenRollback = 'EcsBlueGreenRollback',
   CreateAzureARMResource = 'AzureCreateARMResource',
   CustomDeploymentServiceSpec = 'CustomDeploymentServiceSpec',
-  CustomDeployment = 'CustomDeployment'
+  CustomDeployment = 'CustomDeployment',
+  FetchInstanceScript = 'FetchInstanceScript'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {
