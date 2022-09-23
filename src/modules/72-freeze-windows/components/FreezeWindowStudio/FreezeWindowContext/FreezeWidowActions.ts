@@ -17,7 +17,7 @@ export enum FreezeWindowActions {
 export interface ActionResponse {
   isYamlEditable?: boolean
   isUpdated?: boolean
-  freeze?: Record<string, unknown>
+  freezeObj?: Record<string, unknown>
   yamlHandler?: YamlBuilderHandlerBinding
 }
 

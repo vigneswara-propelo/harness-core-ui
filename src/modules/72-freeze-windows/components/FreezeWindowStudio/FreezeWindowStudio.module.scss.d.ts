@@ -10,6 +10,8 @@ declare const styles: {
   readonly buttonsWrapper: string
   readonly canvasContainer: string
   readonly canvasWrapper: string
+  readonly stepTabs: string
+  readonly tabIcon: string
   readonly yamlBuilder: string
 }
 export default styles

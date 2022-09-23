@@ -40,7 +40,6 @@ export const FreezeWindowStudio = () => {
       return false
     }
 
-    //todo: fix isValidYaml
     if (
       newView === SelectedView.VISUAL &&
       isYamlEditable &&

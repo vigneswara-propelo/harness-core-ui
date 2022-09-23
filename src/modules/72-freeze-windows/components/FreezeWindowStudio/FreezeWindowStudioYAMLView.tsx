@@ -30,7 +30,7 @@ export const FreezeWindowStudioYAMLView = () => {
   const [yamlFileName] = React.useState<string>(defaultFileName)
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const {
-    state: { isYamlEditable, freeze },
+    state: { isYamlEditable, freezeObj },
     isReadonly,
     updateYamlView,
     updateFreeze,
@@ -54,11 +54,11 @@ export const FreezeWindowStudioYAMLView = () => {
     if (yamlHandler) {
       Interval = window.setInterval(() => {
         try {
-          const freezeFromYaml = parse(yamlHandler.getLatestYaml())
+          const freezeFromYaml = parse(yamlHandler.getLatestYaml())?.freeze
           const schemaValidationErrorMap = yamlHandler.getYAMLValidationErrorMap()
           const areSchemaValidationErrorsAbsent = !(schemaValidationErrorMap && schemaValidationErrorMap.size > 0)
           if (
-            !isEqual(freeze, freezeFromYaml) &&
+            !isEqual(freezeObj, freezeFromYaml) &&
             !isEmpty(freezeFromYaml) &&
             areSchemaValidationErrorsAbsent // Don't update for Invalid Yaml
           ) {
@@ -72,7 +72,7 @@ export const FreezeWindowStudioYAMLView = () => {
         window.clearInterval(Interval)
       }
     }
-  }, [yamlHandler, freeze])
+  }, [yamlHandler, freezeObj])
 
   return (
     <div className={css.yamlBuilder}>
@@ -81,7 +81,7 @@ export const FreezeWindowStudioYAMLView = () => {
         fileName={defaultTo(yamlFileName, defaultFileName)}
         entityType="CreatePR" // should be Freeze Window
         isReadOnlyMode={isReadonly || !isYamlEditable}
-        existingJSON={{ freeze }}
+        existingJSON={{ freeze: freezeObj }}
         // existingYaml
         bind={setYamlHandler}
         showSnippetSection={false}

@@ -37,3 +37,24 @@
     align-items: center;
   }
 }
+
+.stepTabs {
+  height: 100%;
+  width: 100%;
+  :global(.bp3-tab-list) {
+    border-bottom: 1px solid var(--grey-300);
+    background-color: var(--white);
+    padding: 0 var(--spacing-5);
+    align-items: center;
+  }
+  :global(.bp3-tab-panel) {
+    padding: var(--spacing-7);
+    margin-top: 0;
+    background-color: var(--form-bg);
+    height: calc(100% - 60px);
+  }
+}
+
+.tabIcon {
+  margin-right: var(--spacing-small) !important;
+}

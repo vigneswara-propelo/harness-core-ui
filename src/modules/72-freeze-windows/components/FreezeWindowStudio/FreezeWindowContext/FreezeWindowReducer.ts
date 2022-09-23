@@ -18,13 +18,13 @@ export const DefaultFreeze = {
 
 export interface FreezeWindowReducerState {
   isYamlEditable: boolean
-  freeze: Record<string, unknown>
+  freezeObj: Record<string, unknown>
   isUpdated: boolean | undefined
   yamlHandler?: YamlBuilderHandlerBinding
 }
 export const initialState: FreezeWindowReducerState = {
   isYamlEditable: false,
-  freeze: { ...DefaultFreeze },
+  freezeObj: { ...DefaultFreeze },
   isUpdated: false
 }
 
@@ -41,7 +41,7 @@ export const FreezeReducer = (state: FreezeWindowReducerState, data: ActionRetur
       return {
         ...state,
         isUpdated: isUndefined(response?.isUpdated) ? true : (response?.isUpdated as boolean),
-        freeze: (response?.freeze ? clone(response) : state.freeze) as Record<string, unknown>
+        freezeObj: (response ? clone(response) : state.freezeObj) as Record<string, unknown>
       }
     }
     case FreezeWindowActions.Success: {
@@ -51,7 +51,7 @@ export const FreezeReducer = (state: FreezeWindowReducerState, data: ActionRetur
       return {
         ...state,
         yamlHandler: data.response?.yamlHandler
-      } as FreezeWindowReducerState
+      }
     }
     default:
       return state

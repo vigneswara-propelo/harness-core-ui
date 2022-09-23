@@ -689,6 +689,7 @@ export interface StringsMap {
   'common.saveAsTemplate': string
   'common.savedSuccessfully': string
   'common.saving': string
+  'common.schedule': string
   'common.scope': string
   'common.script': string
   'common.scriptRequired': string
@@ -4073,6 +4074,7 @@ export interface StringsMap {
   'pipeline.viewLatestExecution': string
   'pipeline.viewPipeline': string
   'pipeline.warningForInvalidYAMLDiscard': string
+  'freezeWindows.freezeWindowsPage.freezeConfiguration': string
   'freezeWindows.freezeWindowsPage.newFreezeWindow': string
   'freezeWindows.freezeWindowsPage.noFreezeWindows': string
   'templatesLibrary.addNewTemplate': string
@@ -4211,7 +4213,6 @@ export interface StringsMap {
   'triggers.schedulePanel.runOnSpecificDay': string
   'triggers.schedulePanel.runOnSpecificDayMonth': string
   'triggers.schedulePanel.startingWith': string
-  'triggers.schedulePanel.title': string
   'triggers.schedulePanel.weeklyTabTitle': string
   'triggers.schedulePanel.yearlyTabTitle': string
   'triggers.scheduledLabel': string

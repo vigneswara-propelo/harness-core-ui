@@ -1,3 +1,4 @@
 freezeWindowsPage:
   noFreezeWindows: There are no freeze windows in your {{scope}}.
   newFreezeWindow: New Freeze Window
+  freezeConfiguration: Freeze Configuration
