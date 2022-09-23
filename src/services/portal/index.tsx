@@ -25303,6 +25303,54 @@ export const getDelegateFromIdPromise = (
     signal
   )
 
+export interface GetIterationsFromCronQueryParams {
+  accountId?: string
+}
+
+export type GetIterationsFromCronProps = Omit<
+  MutateProps<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>,
+  'path' | 'verb'
+>
+
+export const GetIterationsFromCron = (props: GetIterationsFromCronProps) => (
+  <Mutate<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>
+    verb="POST"
+    path={`/sso/ldap/iterations`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetIterationsFromCronProps = Omit<
+  UseMutateProps<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>,
+  'path' | 'verb'
+>
+
+export const useGetIterationsFromCron = (props: UseGetIterationsFromCronProps) =>
+  useMutate<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>(
+    'POST',
+    `/sso/ldap/iterations`,
+    { base: getConfig('api'), ...props }
+  )
+
+export const getIterationsFromCronPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseListLong,
+    unknown,
+    GetIterationsFromCronQueryParams,
+    CronExpressionRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>(
+    'POST',
+    getConfig('api'),
+    `/sso/ldap/iterations`,
+    props,
+    signal
+  )
+
 export interface GetFeatureFlagsPathParams {
   accountId: string
 }
