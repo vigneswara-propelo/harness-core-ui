@@ -262,7 +262,8 @@ featureFlags:
     drawerButtonText: Set as Flag Pipeline
     envText: 'Set all Flags in {{ env }}'
     saveSuccess: Flag Pipeline updated
-    noAvailablePipelines: No available pipelines found
+    noAvailablePipelinesMessage: There are no Pipelines available
+    noAvailablePipelinesDescription: You can create a Flag Pipeline in Pipeline Studio to automate your workflow
     noExecutionMessage: There are no pipeline executions yet
     noExecutionDescription: Once a pipeline has been triggered, the execution details will appear here
     triggerDetails: Trigger Details

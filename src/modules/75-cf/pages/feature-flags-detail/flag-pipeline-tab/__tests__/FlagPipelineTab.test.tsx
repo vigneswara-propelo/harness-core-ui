@@ -252,7 +252,7 @@ describe('FlagPipelineTab', () => {
         userEvent.click(addFlagPipelineButton)
 
         await waitFor(() =>
-          expect(screen.getByText('cf.featureFlags.flagPipeline.noAvailablePipelines')).toBeInTheDocument()
+          expect(screen.getByText('cf.featureFlags.flagPipeline.noAvailablePipelinesMessage')).toBeInTheDocument()
         )
       }
     )
