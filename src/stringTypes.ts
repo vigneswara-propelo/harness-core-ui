@@ -2950,6 +2950,7 @@ export interface StringsMap {
   'pipeline.approvalStep.validation.userGroups': string
   'pipeline.approvalTypeRequired': string
   'pipeline.approveOrReject': string
+  'pipeline.artifactImagePathLabel': string
   'pipeline.artifactImageTag': string
   'pipeline.artifactPathDependencyRequired': string
   'pipeline.artifactPathFilterLabel': string

@@ -795,6 +795,7 @@ infraSpecifications:
     arm64: ARM64
 imagePathLabel: Image Path
 artifactPathLabel: Artifact Path
+artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:

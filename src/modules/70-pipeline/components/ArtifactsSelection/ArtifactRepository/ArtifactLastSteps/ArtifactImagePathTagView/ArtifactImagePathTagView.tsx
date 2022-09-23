@@ -48,9 +48,9 @@ export function NoTagResults({
   }, [isServerlessDeploymentTypeSelected, getString])
 
   return (
-    <span className={css.padSmall}>
-      <Text lineClamp={1}>{get(tagError, 'data.message', null) || getErrorText()}</Text>
-    </span>
+    <Text className={css.padSmall} lineClamp={1}>
+      {get(tagError, 'data.message', null) || getErrorText()}
+    </Text>
   )
 }
 

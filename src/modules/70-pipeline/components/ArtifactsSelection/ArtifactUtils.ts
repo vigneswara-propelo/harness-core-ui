@@ -56,7 +56,7 @@ export const getConnectorIdValue = (prevStepData: ConnectorConfigDTO | undefined
 }
 
 export const helperTextData = (
-  selectedArtifact: ArtifactType,
+  selectedArtifact: ArtifactType | null,
   formik: FormikValues,
   connectorIdValue: string
 ): ArtifactTagHelperText => {
