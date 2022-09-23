@@ -43,6 +43,7 @@ import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
+import { useConnectorWizard } from '../../CreateConnectorWizard/ConnectorWizardContext'
 import css from '../commonSteps/ConnectorCommonStyles.module.scss'
 
 interface AWSCCAuthStepProps extends StepProps<ConnectorConfigDTO> {
@@ -50,6 +51,7 @@ interface AWSCCAuthStepProps extends StepProps<ConnectorConfigDTO> {
   connectorInfo?: ConnectorInfoDTO
   onSuccess?: (data?: ConnectorRequestBody) => void | Promise<void>
   setIsEditMode: (val: boolean) => void
+  helpPanelReferenceId?: string
 }
 
 export default function AWSCCAuthStep(props: AWSCCAuthStepProps) {
@@ -67,6 +69,11 @@ export default function AWSCCAuthStep(props: AWSCCAuthStepProps) {
   const { mutate: createConnector } = useCreateConnector({ queryParams: { accountIdentifier: accountId } })
   const { mutate: updateConnector } = useUpdateConnector({ queryParams: { accountIdentifier: accountId } })
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
+
+  useConnectorWizard({
+    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+  })
+
   useEffect(() => {
     ;(async () => {
       if (props.isEditMode) {
