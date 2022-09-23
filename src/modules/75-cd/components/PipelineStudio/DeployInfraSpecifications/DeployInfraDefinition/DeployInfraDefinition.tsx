@@ -19,6 +19,7 @@ import {
 } from '@wings-software/uicore'
 import { debounce, defaultTo, get, isEmpty, isNil, omit, set } from 'lodash-es'
 import produce from 'immer'
+import { useParams } from 'react-router-dom'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   getProvisionerExecutionStrategyYamlPromise,
@@ -144,6 +145,10 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
   )
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+
+  const { accountId } = useParams<{
+    accountId: string
+  }>()
 
   const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
@@ -277,7 +282,11 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
   useEffect(() => {
     if (stage && isProvisionerEmpty(stage) && provisionerEnabled) {
       setProvisionerSnippetLoading(true)
-      getProvisionerExecutionStrategyYamlPromise({ queryParams: { provisionerType: provisionerType } }).then(res => {
+      getProvisionerExecutionStrategyYamlPromise({
+        // eslint-disable-next-line
+        // @ts-ignore
+        queryParams: { provisionerType: provisionerType, routingId: accountId }
+      }).then(res => {
         const provisionerSnippet = YAML.parse(defaultTo(res?.data, ''))
         if (stage && isProvisionerEmpty(stage) && provisionerSnippet) {
           const stageData = produce(stage, draft => {
