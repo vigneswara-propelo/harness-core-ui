@@ -6071,7 +6071,6 @@ export interface StringsMap {
   'cf.featureFlags.flagPipeline.flagState': string
   'cf.featureFlags.flagPipeline.noAvailablePipelinesDescription': string
   'cf.featureFlags.flagPipeline.noAvailablePipelinesMessage': string
-  'cf.featureFlags.flagPipeline.noDataButtonText': string
   'cf.featureFlags.flagPipeline.noDataDescription': string
   'cf.featureFlags.flagPipeline.noDataMessage': string
   'cf.featureFlags.flagPipeline.noExecutionDescription': string

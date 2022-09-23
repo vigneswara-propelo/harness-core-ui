@@ -19,7 +19,7 @@ import {
 } from '@harness/uicore'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 import {
   FeatureAvailablePipeline,
   FeaturePipeline,
@@ -158,8 +158,8 @@ const AvailablePipelinesDrawer: React.FC<AvailablePipelinesDrawerProps> = ({
             aria-label={getString('close')}
           />
         </Container>
-        <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_500}>
-          {getString('cf.featureFlags.flagPipeline.drawerDescription')}
+        <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_500} tag="div">
+          <String stringID="cf.featureFlags.flagPipeline.drawerDescription" useRichText />
         </Text>
         {pipelinesAvailable && (
           <Container flex={{ justifyContent: 'space-between' }}>
