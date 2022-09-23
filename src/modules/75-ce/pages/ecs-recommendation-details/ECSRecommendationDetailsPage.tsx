@@ -151,7 +151,6 @@ const ECSRecommendationDetailsPage: React.FC = () => {
                 recommendationStats={recommendationStats}
                 recommendationDetails={recommendationDetails}
                 timeRange={timeRange}
-                timeRangeFilter={timeRangeFilter}
                 buffer={buffer}
               />
               <Container padding="xlarge">
