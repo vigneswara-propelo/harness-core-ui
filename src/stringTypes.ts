@@ -1012,6 +1012,8 @@ export interface StringsMap {
   'rbac.account': string
   'rbac.accountScope': string
   'rbac.activeUsers': string
+  'rbac.addResourceModal.modalCtaLabelPlural': string
+  'rbac.addResourceModal.modalCtaLabelSingular': string
   'rbac.addResourceModal.selectedText': string
   'rbac.addRole': string
   'rbac.addUser': string
