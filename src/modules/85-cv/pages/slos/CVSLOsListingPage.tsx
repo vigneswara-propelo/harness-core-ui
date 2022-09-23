@@ -15,8 +15,6 @@ import {
   Layout,
   FlexExpander,
   Container,
-  Heading,
-  HarnessDocTooltip,
   SelectOption,
   TableV2,
   Text,
@@ -390,10 +388,9 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             breadcrumbs={<NGBreadcrumbs />}
             title={
               <Layout.Vertical>
-                <Heading level={3} font={{ variation: FontVariation.H4 }}>
+                <Text font={{ variation: FontVariation.H4 }} tooltipProps={{ dataTooltipId: 'sloHeader' }}>
                   {getString('cv.slos.completeTitle')}
-                  <HarnessDocTooltip tooltipId={'sloDashboardTitle'} useStandAlone />
-                </Heading>
+                </Text>
                 <Text title={getString('cv.slos.subTitle')} font={{ align: 'left', size: 'small' }}>
                   {getString('cv.slos.subTitle')}
                 </Text>
