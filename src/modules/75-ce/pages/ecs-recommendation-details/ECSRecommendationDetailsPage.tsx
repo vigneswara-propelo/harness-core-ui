@@ -28,7 +28,12 @@ import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { TimeRangeValue, TimeRange, TimeRangeType } from '@ce/types'
 import { ViewTimeRange } from '@ce/components/RecommendationDetails/constants'
-import { ResourceType, useFetchRecommendationQuery, RecommendationOverviewStats } from 'services/ce/services'
+import {
+  ResourceType,
+  useFetchRecommendationQuery,
+  RecommendationOverviewStats,
+  LaunchType
+} from 'services/ce/services'
 import { GET_DATE_RANGE } from '@ce/utils/momentUtils'
 import routes from '@common/RouteDefinitions'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -157,6 +162,7 @@ const ECSRecommendationDetailsPage: React.FC = () => {
                 <ECSRecommendationMetadata
                   clusterName={defaultTo(recommendationDetails.clusterName, '')}
                   serviceName={defaultTo(recommendationDetails.serviceName, '')}
+                  launchType={recommendationDetails.launchType}
                   goToServiceDetails={goToServiceDetails}
                 />
                 <Text font={{ variation: FontVariation.H5 }} margin={{ top: 'xxlarge', bottom: 'medium' }}>
@@ -178,12 +184,14 @@ export default ECSRecommendationDetailsPage
 interface ECSRecommendationMetadataProps {
   clusterName: string
   serviceName: string
+  launchType: LaunchType | null
   goToServiceDetails: () => void
 }
 
 const ECSRecommendationMetadata: React.FC<ECSRecommendationMetadataProps> = ({
   clusterName,
   serviceName,
+  launchType,
   goToServiceDetails
 }) => {
   const { getString } = useStrings()
@@ -211,6 +219,16 @@ const ECSRecommendationMetadata: React.FC<ECSRecommendationMetadataProps> = ({
       <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_800}>
         {serviceName}
       </Text>
+      {launchType ? (
+        <>
+          <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_500} margin={{ top: 'medium' }}>
+            {getString('ce.serviceDetails.launchType')}
+          </Text>
+          <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_800}>
+            {launchType}
+          </Text>
+        </>
+      ) : null}
     </Container>
   )
 }
