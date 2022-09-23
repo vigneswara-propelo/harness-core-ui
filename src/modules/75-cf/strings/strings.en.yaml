@@ -472,7 +472,7 @@ noEnvironment:
   message: <a href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_2_create_an_environment" target="_blank" rel="noreferrer">Environments</a> are the different places you run your application where you can configure Flags - i.e. your dev server, your QA server and your production server
 pipeline:
   listing: Pipeline Listing
-  rollloutStrategy:
+  rolloutStrategy:
     title: Rollout Strategy
   advanced:
     title: '{{ $.advancedTitle }}'

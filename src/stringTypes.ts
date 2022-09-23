@@ -6305,7 +6305,7 @@ export interface StringsMap {
   'cf.pipeline.flagConfiguration.whenTheFlagIsOffServe': string
   'cf.pipeline.flagConfiguration.whenTheFlagIsOnServe': string
   'cf.pipeline.listing': string
-  'cf.pipeline.rollloutStrategy.title': string
+  'cf.pipeline.rolloutStrategy.title': string
   'cf.planEnforcement.freePlan.approachingLimit': string
   'cf.planEnforcement.freePlan.upgradeRequired': string
   'cf.planEnforcement.teamEnterprisePlan.approachingLimit': string
