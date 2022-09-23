@@ -43,8 +43,6 @@ import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import css from '../commonSteps/ConnectorCommonStyles.module.scss'
 
 interface AWSCCAuthStepProps extends StepProps<ConnectorConfigDTO> {
@@ -68,7 +66,6 @@ export default function AWSCCAuthStep(props: AWSCCAuthStepProps) {
   })
   const { mutate: createConnector } = useCreateConnector({ queryParams: { accountIdentifier: accountId } })
   const { mutate: updateConnector } = useUpdateConnector({ queryParams: { accountIdentifier: accountId } })
-  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   useEffect(() => {
     ;(async () => {
@@ -110,7 +107,7 @@ export default function AWSCCAuthStep(props: AWSCCAuthStepProps) {
         props.onSuccess?.(response.data)
         props.nextStep?.({ ...props.prevStepData, ...formData })
       }
-      if (opaFlagEnabled && response.data?.governanceMetadata) {
+      if (response.data?.governanceMetadata) {
         conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, onSucessCreateOrUpdateNextStep)
       } else {
         onSucessCreateOrUpdateNextStep()
