@@ -38,6 +38,7 @@ import {
   useGetYamlSchema,
   useUpdateInfrastructure
 } from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
 
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
@@ -47,23 +48,25 @@ import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interf
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 
+import RbacButton from '@rbac/components/Button/Button'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+
 import { DefaultPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
-import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
+import { DeployStageErrorProvider, StageErrorContext } from '@pipeline/context/StageErrorContext'
 
 import DeployInfraDefinition from '@cd/components/PipelineStudio/DeployInfraSpecifications/DeployInfraDefinition/DeployInfraDefinition'
-import { DefaultNewStageId, DefaultNewStageName } from '@cd/components/Services/utils/ServiceUtils'
 import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpecifications/SelectDeploymentType'
-import { InfrastructurePipelineProvider } from '@cd/context/InfrastructurePipelineContext'
+import { DefaultNewStageId, DefaultNewStageName } from '@cd/components/Services/utils/ServiceUtils'
 import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
-import RbacButton from '@rbac/components/Button/Button'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { DeployStageErrorProvider, StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import { InfrastructurePipelineProvider } from '@cd/context/InfrastructurePipelineContext'
+
 import css from './InfrastructureDefinition.module.scss'
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -100,7 +103,7 @@ export default function InfrastructureModal({
       ?.infrastructureDefinition
   }, [selectedInfrastructure])
 
-  const { type, spec, allowSimultaneousDeployments, deploymentType } = defaultTo(
+  const { type, spec, allowSimultaneousDeployments, deploymentType, identifier } = defaultTo(
     infrastructureDefinition,
     {}
   ) as InfrastructureDefinitionConfig
@@ -136,11 +139,22 @@ export default function InfrastructureModal({
     []
   )
 
+  const [canEditInfrastructure] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.ENVIRONMENT,
+        resourceIdentifier: identifier
+      },
+      permissions: [PermissionIdentifier.EDIT_ENVIRONMENT]
+    },
+    [identifier]
+  )
+
   return (
     <InfrastructurePipelineProvider
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
       initialValue={pipeline as PipelineInfoConfig}
-      isReadOnly={false}
+      isReadOnly={!canEditInfrastructure}
     >
       <PipelineVariablesContextProvider pipeline={pipeline}>
         <DeployStageErrorProvider>
@@ -150,6 +164,7 @@ export default function InfrastructureModal({
             infrastructureDefinition={infrastructureDefinition}
             environmentIdentifier={environmentIdentifier}
             stageDeploymentType={(deploymentType as Partial<ServiceDeploymentType>) || stageDeploymentType}
+            isReadOnly={!canEditInfrastructure}
           />
         </DeployStageErrorProvider>
       </PipelineVariablesContextProvider>
@@ -162,12 +177,14 @@ function BootstrapDeployInfraDefinition({
   refetch,
   infrastructureDefinition,
   environmentIdentifier,
+  isReadOnly = false,
   stageDeploymentType
 }: {
   hideModal: () => void
   refetch: (infrastructure?: InfrastructureResponseDTO) => void
   infrastructureDefinition?: InfrastructureDefinitionConfig
   environmentIdentifier: string
+  isReadOnly: boolean
   stageDeploymentType?: ServiceDeploymentType
 }): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -413,7 +430,16 @@ function BootstrapDeployInfraDefinition({
                       <NameIdDescriptionTags
                         formikProps={formikProps}
                         identifierProps={{
-                          isIdentifierEditable: !infrastructureDefinition
+                          isIdentifierEditable: isReadOnly ? false : !infrastructureDefinition
+                        }}
+                        descriptionProps={{
+                          disabled: isReadOnly
+                        }}
+                        inputGroupProps={{
+                          disabled: isReadOnly
+                        }}
+                        tagsProps={{
+                          disabled: isReadOnly
                         }}
                       />
                     )
@@ -423,7 +449,7 @@ function BootstrapDeployInfraDefinition({
               <SelectDeploymentType
                 viewContext="setup"
                 selectedDeploymentType={selectedDeploymentType}
-                isReadonly={!!stageDeploymentType}
+                isReadonly={!!stageDeploymentType || isReadOnly}
                 handleDeploymentTypeChange={handleDeploymentTypeChange}
                 shouldShowGitops={false}
               />
@@ -455,6 +481,7 @@ function BootstrapDeployInfraDefinition({
                 showSnippetSection={false}
                 isReadOnlyMode={!isYamlEditable}
                 onEnableEditMode={handleEditMode}
+                isEditModeSupported={!isReadOnly}
               />
               {!isYamlEditable ? (
                 <div className={css.buttonWrapper}>
@@ -481,7 +508,7 @@ function BootstrapDeployInfraDefinition({
         padding={{ top: 'xlarge', left: 'huge', bottom: 'large' }}
         className={css.modalFooter}
       >
-        <Button
+        <RbacButton
           text={getString('save')}
           variation={ButtonVariation.PRIMARY}
           onClick={() => {
@@ -516,6 +543,12 @@ function BootstrapDeployInfraDefinition({
           }}
           disabled={isSavingInfrastructure}
           loading={isSavingInfrastructure}
+          permission={{
+            resource: {
+              resourceType: ResourceType.ENVIRONMENT
+            },
+            permission: PermissionIdentifier.EDIT_ENVIRONMENT
+          }}
         />
         <Button
           text={getString('cancel')}
