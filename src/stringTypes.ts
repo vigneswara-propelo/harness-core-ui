@@ -1532,6 +1532,7 @@ export interface StringsMap {
   'authSettings.allowUsersWithEmails': string
   'authSettings.atLeastNChars': string
   'authSettings.authenticationSettings': string
+  'authSettings.authorizationEnabled': string
   'authSettings.authorizationEnabledFor': string
   'authSettings.authorizationNotEnabled': string
   'authSettings.autoRenewal': string

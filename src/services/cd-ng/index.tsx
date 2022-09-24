@@ -7320,6 +7320,7 @@ export interface LDAPSettings {
   nextIterations?: number[]
   settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
+  disabled?: boolean
 }
 
 export interface LandingDashboardRequestCD {
@@ -7464,6 +7465,7 @@ export type LdapSettings = SSOSettings & {
   groupSettingsList?: LdapGroupSettings[]
   userSettings?: LdapUserSettings
   userSettingsList?: LdapUserSettings[]
+  disabled?: boolean
 }
 
 export interface LdapTestResponse {

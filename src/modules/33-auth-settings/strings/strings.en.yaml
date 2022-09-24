@@ -22,6 +22,7 @@ oneLogin: OneLogin
 samlProviderAddedSuccessfully: SAML provider added successfully
 samlProviderUpdatedSuccessfully: SAML provider updated successfully
 authorizationEnabledFor: 'Authorization enabled for: '
+authorizationEnabled: Authorization is enabled
 authorizationNotEnabled: Authorization not enabled
 plusSAMLProvider: + SAML Provider
 loginViaSAML: Login via SAML
