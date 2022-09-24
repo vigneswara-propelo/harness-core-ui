@@ -254,7 +254,8 @@ hashiCorpVault:
   serviceAccountRequired: Service Account Token Path Required
   preventDefaultWhenReadOnly: Read only secret manager cannot be set as default
 nexus:
-  nexusLabel: Nexus
+  nexusLabel: Nexus3
+  nexus2Label: Nexus2
   nexusServerUrl: 'Nexus Repository URL'
 artifactory:
   artifactoryLabel: Artifactory

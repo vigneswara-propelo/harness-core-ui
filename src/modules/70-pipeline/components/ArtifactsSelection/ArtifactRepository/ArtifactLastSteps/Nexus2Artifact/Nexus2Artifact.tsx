@@ -29,45 +29,25 @@ import { useQueryParams } from '@common/hooks'
 import { ConnectorConfigDTO, DockerBuildDetailsDTO, useGetBuildDetailsForNexusArtifact } from 'services/cd-ng'
 import {
   checkIfQueryParamsisNotEmpty,
-  getArtifactFormData,
   getConnectorIdValue,
+  getArtifactFormData,
   shouldFetchTags
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import {
+import type {
   ArtifactType,
   ImagePathProps,
-  Nexus2InitialValuesType,
-  RepositoryPortOrServer
+  Nexus2InitialValuesType
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import {
-  k8sRepositoryFormatTypes,
-  nonK8sRepositoryFormatTypes,
-  RepositoryFormatTypes
-} from '@pipeline/utils/stageHelpers'
+import { nexus2RepositoryFormatTypes, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { ArtifactIdentifierValidation, ModalViewFor, repositoryPortOrServer } from '../../../ArtifactHelper'
+import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
+import type { queryInterface } from '../NexusArtifact/NexusArtifact'
 import css from '../../ArtifactConnector.module.scss'
 
-export interface specInterface {
-  artifactId?: string
-  groupId?: string
-  extension?: string
-  classifier?: string
-  packageName?: string
-  repositoryUrl?: string
-  repositoryPort?: string
-  artifactPath?: string
-}
-export interface queryInterface extends specInterface {
-  repository: string
-  repositoryFormat: string
-  connectorRef?: string
-}
-
-export function Nexus3Artifact({
+export function Nexus2Artifact({
   context,
   handleSubmit,
   expressions,
@@ -78,52 +58,39 @@ export function Nexus3Artifact({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact,
-  selectedDeploymentType,
   isMultiArtifactSource
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2InitialValuesType>): React.ReactElement {
   const { getString } = useStrings()
-  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const [lastQueryData, setLastQueryData] = useState<queryInterface>({ repositoryFormat: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   const schemaObject = {
-    tagType: Yup.string(),
-    tagRegex: Yup.string().when('tagType', {
-      is: val => val === 'regex',
+    tagRegex: Yup.string().when('spec.tagType', {
+      is: 'regex',
       then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.tagRegex'))
     }),
-    tag: Yup.string().when('tagType', {
-      is: val => val === 'value',
-      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.tag'))
+    tag: Yup.mixed().when('spec.tagType', {
+      is: 'value',
+      then: Yup.mixed().required(getString('pipeline.artifactsSelection.validation.tag'))
     }),
     repository: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-    repositoryFormat: Yup.string().required(getString('pipeline.artifactsSelection.validation.repositoryFormat')),
+    repositoryFormat: Yup.string()
+      .trim()
+      .required(getString('pipeline.artifactsSelection.validation.repositoryFormat')),
     spec: Yup.object().shape({
       artifactId: Yup.string().when('repositoryFormat', {
-        is: val => val === RepositoryFormatTypes.Maven,
+        is: RepositoryFormatTypes.Maven,
         then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactId'))
       }),
       groupId: Yup.string().when('repositoryFormat', {
-        is: val => val === RepositoryFormatTypes.Maven,
+        is: RepositoryFormatTypes.Maven,
         then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.groupId'))
       }),
       packageName: Yup.string().when('repositoryFormat', {
         is: RepositoryFormatTypes.NPM || RepositoryFormatTypes.NuGet,
         then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.packageName'))
-      }),
-      repositoryUrl: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.Docker,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryUrl'))
-      }),
-      repositoryPort: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.Docker,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryPort'))
-      }),
-      artifactPath: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.Docker,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath'))
       })
     })
   }
@@ -149,7 +116,7 @@ export function Nexus3Artifact({
     error: nexusTagError
   } = useGetBuildDetailsForNexusArtifact({
     queryParams: {
-      // artifactId: lastQueryData.artifactId,
+      // artifactPath: lastQueryData.artifactPath,
       ...lastQueryData,
       repository: lastQueryData.repository,
       connectorRef: getConnectorRefQueryData(),
@@ -194,19 +161,6 @@ export function Nexus3Artifact({
             formikValues.spec.extension || '',
             formikValues.spec.classifier || ''
           ])
-        : formikValues.repositoryFormat === RepositoryFormatTypes.Docker
-        ? lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
-          lastQueryData.repository !== formikValues.repository ||
-          lastQueryData.artifactPath !== formikValues.spec.artifactPath ||
-          lastQueryData.repositoryUrl !== formikValues.spec.repositoryUrl ||
-          lastQueryData.repositoryPort !== formikValues.spec.repositoryPort ||
-          shouldFetchTags(prevStepData, [
-            formikValues.repositoryFormat,
-            formikValues.repository,
-            formikValues.spec.artifactPath || '',
-            formikValues.spec.repositoryUrl || '',
-            formikValues.spec.repositoryPort || ''
-          ])
         : lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
           lastQueryData.repository !== formikValues.repository ||
           lastQueryData.packageName !== formikValues.spec.packageName ||
@@ -218,13 +172,12 @@ export function Nexus3Artifact({
     },
     [lastQueryData, prevStepData]
   )
-
   const fetchTags = useCallback(
     (formikValues: Nexus2InitialValuesType): void => {
       if (canFetchTags(formikValues)) {
-        let repositoryDependentFields = {}
-        const optionalFields: specInterface = {}
+        let repositoryDependentFields: any = {}
         if (formikValues.repositoryFormat === RepositoryFormatTypes.Maven) {
+          const optionalFields: any = {}
           if (formikValues.spec.extension) optionalFields.extension = formikValues.spec.extension
 
           if (formikValues.spec.classifier) optionalFields.classifier = formikValues.spec.classifier
@@ -232,14 +185,6 @@ export function Nexus3Artifact({
           repositoryDependentFields = {
             artifactId: formikValues.spec.artifactId,
             groupId: formikValues.spec.groupId,
-            ...optionalFields
-          }
-        } else if (formikValues.repositoryFormat === RepositoryFormatTypes.Docker) {
-          if (formikValues.spec.extension) optionalFields.repositoryUrl = formikValues.spec.repositoryUrl
-          if (formikValues.spec.classifier) optionalFields.repositoryPort = formikValues.spec.repositoryPort
-
-          repositoryDependentFields = {
-            artifactPath: formikValues.spec.artifactPath,
             ...optionalFields
           }
         } else {
@@ -264,12 +209,6 @@ export function Nexus3Artifact({
           formikValue.spec.artifactId,
           formikValue.spec.groupId
         ])
-      : formikValue.repositoryFormat === RepositoryFormatTypes.Docker
-      ? !checkIfQueryParamsisNotEmpty([
-          formikValue.repositoryFormat,
-          formikValue.repository,
-          formikValue.spec.artifactPath
-        ])
       : !checkIfQueryParamsisNotEmpty([
           formikValue.repositoryFormat,
           formikValue.repository,
@@ -281,14 +220,12 @@ export function Nexus3Artifact({
     return getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
-      isIdentifierAllowed,
-      false,
-      selectedDeploymentType
+      context === ModalViewFor.SIDECAR
     ) as Nexus2InitialValuesType
   }
   const submitFormData = (formData: Nexus2InitialValuesType & { connectorId?: string }): void => {
     // const artifactObj = getFinalArtifactObj(formData, context === ModalViewFor.SIDECAR)
-    let specData: specInterface =
+    const specData =
       formData.repositoryFormat === RepositoryFormatTypes.Maven
         ? {
             artifactId: formData.spec.artifactId,
@@ -296,25 +233,9 @@ export function Nexus3Artifact({
             extension: formData.spec.extension,
             classifier: formData.spec.classifier
           }
-        : formData.repositoryFormat === RepositoryFormatTypes.Docker
-        ? {
-            artifactPath: formData.spec.artifactPath
-          }
         : {
             packageName: formData.spec.packageName
           }
-    if (formData.repositoryFormat === RepositoryFormatTypes.Docker) {
-      specData =
-        formData.spec?.repositoryPortorRepositoryURL === 'repositoryUrl'
-          ? {
-              ...specData,
-              repositoryUrl: formData.spec.repositoryUrl
-            }
-          : {
-              ...specData,
-              repositoryPort: formData.spec.repositoryPort
-            }
-    }
     const tagData =
       formData.tagType === 'value'
         ? {
@@ -334,8 +255,7 @@ export function Nexus3Artifact({
         }
       }
     }
-
-    if (isIdentifierAllowed) {
+    if (context === ModalViewFor.SIDECAR) {
       merge(formatedFormData, { identifier: formData?.identifier })
     }
     handleSubmit(formatedFormData)
@@ -367,9 +287,7 @@ export function Nexus3Artifact({
                 <FormInput.Select
                   name="repositoryFormat"
                   label={getString('common.repositoryFormat')}
-                  items={
-                    selectedDeploymentType === 'Kubernetes' ? k8sRepositoryFormatTypes : nonK8sRepositoryFormatTypes
-                  }
+                  items={nexus2RepositoryFormatTypes}
                   onChange={value => {
                     if (value.value === RepositoryFormatTypes.Maven) {
                       const optionalValues: { extension?: string; classifier?: string } = {}
@@ -523,105 +441,6 @@ export function Nexus3Artifact({
                       </div>
                     )}
                   </div>
-                </>
-              ) : formik.values?.repositoryFormat === RepositoryFormatTypes.Docker ? (
-                <>
-                  <div className={css.imagePathContainer}>
-                    <FormInput.MultiTextInput
-                      label={getString('pipeline.artifactPathLabel')}
-                      name="spec.artifactPath"
-                      placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
-                    />
-                    {getMultiTypeFromValue(formik.values?.spec?.artifactPath) === MultiTypeInputType.RUNTIME && (
-                      <div className={css.configureOptions}>
-                        <ConfigureOptions
-                          value={formik.values?.spec?.artifactPath || ''}
-                          type="String"
-                          variableName="spec.artifactPath"
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          showAdvanced={true}
-                          onChange={value => {
-                            formik.setFieldValue('spec.artifactPath', value)
-                          }}
-                          isReadonly={isReadonly}
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <div className={css.tagGroup}>
-                    <FormInput.RadioGroup
-                      name="spec.repositoryPortorRepositoryURL"
-                      radioGroup={{ inline: true }}
-                      items={repositoryPortOrServer}
-                      className={css.radioGroup}
-                    />
-                  </div>
-
-                  {formik.values?.spec?.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryUrl && (
-                    <div className={css.imagePathContainer}>
-                      <FormInput.MultiTextInput
-                        label={getString('repositoryUrlLabel')}
-                        name="spec.repositoryUrl"
-                        placeholder={getString('pipeline.repositoryUrlPlaceholder')}
-                        multiTextInputProps={{
-                          expressions,
-                          allowableTypes
-                        }}
-                      />
-
-                      {getMultiTypeFromValue(formik.values.spec?.repositoryUrl) === MultiTypeInputType.RUNTIME && (
-                        <div className={css.configureOptions}>
-                          <ConfigureOptions
-                            style={{ alignSelf: 'center' }}
-                            value={formik.values?.spec?.repositoryUrl as string}
-                            type={getString('string')}
-                            variableName="repositoryUrl"
-                            showRequiredField={false}
-                            showDefaultField={false}
-                            showAdvanced={true}
-                            onChange={value => {
-                              formik.setFieldValue('spec.repositoryUrl', value)
-                            }}
-                            isReadonly={isReadonly}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {formik.values?.spec?.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryPort && (
-                    <div className={css.imagePathContainer}>
-                      <FormInput.MultiTextInput
-                        label={getString('pipeline.artifactsSelection.repositoryPort')}
-                        name="spec.repositoryPort"
-                        placeholder={getString('pipeline.artifactsSelection.repositoryPortPlaceholder')}
-                        multiTextInputProps={{
-                          expressions,
-                          allowableTypes
-                        }}
-                      />
-
-                      {getMultiTypeFromValue(formik.values.spec?.repositoryPort) === MultiTypeInputType.RUNTIME && (
-                        <div className={css.configureOptions}>
-                          <ConfigureOptions
-                            style={{ alignSelf: 'center' }}
-                            value={formik.values?.spec?.repositoryPort as unknown as string}
-                            type={getString('string')}
-                            variableName="repositoryPort"
-                            showRequiredField={false}
-                            showDefaultField={false}
-                            showAdvanced={true}
-                            onChange={value => {
-                              formik.setFieldValue('spec.repositoryPort', value)
-                            }}
-                            isReadonly={isReadonly}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  )}
                 </>
               ) : (
                 <div className={css.imagePathContainer}>

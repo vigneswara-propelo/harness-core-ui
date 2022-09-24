@@ -259,7 +259,7 @@ function Artifactory({
       selectedArtifact as ArtifactType,
       isIdentifierAllowed,
       isGenericArtifactory
-    )
+    ) as ImagePathTypes
   }, [initialValues, selectedArtifact, isIdentifierAllowed, isGenericArtifactory])
 
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {

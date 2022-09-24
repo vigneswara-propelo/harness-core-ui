@@ -7795,6 +7795,16 @@ export interface NextActionDetailDTO {
   }
 }
 
+export type Nexus2RegistryArtifactConfig = ArtifactConfig & {
+  connectorRef: string
+  metadata?: string
+  repository: string
+  repositoryFormat: 'maven' | 'npm' | 'nuget'
+  spec?: NexusRegistryConfigSpec
+  tag?: string
+  tagRegex?: string
+}
+
 export type NexusArtifactSummary = ArtifactSummary & {
   artifactPath?: string
   tag?: string
@@ -7829,15 +7839,38 @@ export type NexusConnector = ConnectorConfigDTO & {
 }
 
 export type NexusRegistryArtifactConfig = ArtifactConfig & {
-  artifactPath: string
   connectorRef: string
   metadata?: string
   repository: string
-  repositoryFormat: 'docker'
-  repositoryPort?: string
-  repositoryUrl?: string
+  repositoryFormat: 'docker' | 'maven' | 'npm' | 'nuget'
+  spec?: NexusRegistryConfigSpec
   tag?: string
   tagRegex?: string
+}
+
+export interface NexusRegistryConfigSpec {
+  [key: string]: any
+}
+
+export type NexusRegistryDockerConfig = NexusRegistryConfigSpec & {
+  artifactPath: string
+  repositoryPort?: string
+  repositoryUrl?: string
+}
+
+export type NexusRegistryMavenConfig = NexusRegistryConfigSpec & {
+  artifactId: string
+  classifier?: string
+  extension?: string
+  groupId: string
+}
+
+export type NexusRegistryNpmConfig = NexusRegistryConfigSpec & {
+  packageName: string
+}
+
+export type NexusRegistryNugetConfig = NexusRegistryConfigSpec & {
+  packageName: string
 }
 
 export interface NexusRequestDTO {
@@ -8758,6 +8791,7 @@ export interface PrimaryArtifact {
     | 'Gcr'
     | 'Ecr'
     | 'Nexus3Registry'
+    | 'Nexus2Registry'
     | 'ArtifactoryRegistry'
     | 'CustomArtifact'
     | 'Acr'
@@ -8849,6 +8883,13 @@ export type RateLimitRestrictionMetadataDTO = RestrictionMetadataDTO & {
   allowedIfEqual?: boolean
   limit?: number
   timeUnit?: TimeUnit
+}
+
+export interface RecommendationParams {
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  usage?: {
+    [key: string]: number
+  }
 }
 
 export interface ReferenceDTO {
@@ -12498,7 +12539,7 @@ export interface ServicesYamlMetadataApiInput {
 export interface SettingDTO {
   allowOverrides: boolean
   allowedValues?: string[]
-  category: 'CD' | 'CI' | 'CE' | 'CV' | 'CF' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  category: 'CD' | 'CI' | 'CCM' | 'CV' | 'CORE'
   defaultValue?: string
   groupIdentifier: string
   identifier: string
@@ -12561,6 +12602,7 @@ export interface SidecarArtifact {
     | 'Gcr'
     | 'Ecr'
     | 'Nexus3Registry'
+    | 'Nexus2Registry'
     | 'ArtifactoryRegistry'
     | 'CustomArtifact'
     | 'Acr'
@@ -19066,6 +19108,11 @@ export interface GetBuildDetailsForNexusArtifactQueryParams {
   repositoryUrl?: string
   artifactPath?: string
   connectorRef?: string
+  groupId?: string
+  artifactId?: string
+  extension?: string
+  classifier?: string
+  packageName?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
@@ -41916,7 +41963,7 @@ export interface GetSettingsListQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  category: 'CD' | 'CI' | 'CE' | 'CV' | 'CF' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  category: 'CD' | 'CI' | 'CCM' | 'CV' | 'CORE'
   group?: string
 }
 

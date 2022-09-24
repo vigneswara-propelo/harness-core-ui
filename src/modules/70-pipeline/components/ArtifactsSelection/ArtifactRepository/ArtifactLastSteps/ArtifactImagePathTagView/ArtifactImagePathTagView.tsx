@@ -94,6 +94,7 @@ function ArtifactImagePathTagView({
   tagError,
   tagDisabled,
   isArtifactPath,
+  isImagePath = true,
   isServerlessDeploymentTypeSelected
 }: ArtifactImagePathTagViewProps): React.ReactElement {
   const { getString } = useStrings()
@@ -168,31 +169,33 @@ function ArtifactImagePathTagView({
           )}
         </div>
       ) : (
-        <div className={css.imagePathContainer}>
-          <FormInput.MultiTextInput
-            label={getString('pipeline.imagePathLabel')}
-            name="imagePath"
-            placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
-            multiTextInputProps={{ expressions, allowableTypes }}
-            onChange={onChangeImageArtifactPath}
-          />
-          {getMultiTypeFromValue(formik.values?.imagePath) === MultiTypeInputType.RUNTIME && (
-            <div className={css.configureOptions}>
-              <ConfigureOptions
-                value={formik.values?.imagePath}
-                type="String"
-                variableName="imagePath"
-                showRequiredField={false}
-                showDefaultField={false}
-                showAdvanced={true}
-                onChange={value => {
-                  formik.setFieldValue('imagePath', value)
-                }}
-                isReadonly={isReadonly}
-              />
-            </div>
-          )}
-        </div>
+        isImagePath && (
+          <div className={css.imagePathContainer}>
+            <FormInput.MultiTextInput
+              label={getString('pipeline.imagePathLabel')}
+              name="imagePath"
+              placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
+              multiTextInputProps={{ expressions, allowableTypes }}
+              onChange={onChangeImageArtifactPath}
+            />
+            {getMultiTypeFromValue(formik.values?.imagePath) === MultiTypeInputType.RUNTIME && (
+              <div className={css.configureOptions}>
+                <ConfigureOptions
+                  value={formik.values?.imagePath}
+                  type="String"
+                  variableName="imagePath"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  showAdvanced={true}
+                  onChange={value => {
+                    formik.setFieldValue('imagePath', value)
+                  }}
+                  isReadonly={isReadonly}
+                />
+              </div>
+            )}
+          </div>
+        )
       )}
 
       <div className={css.tagGroup}>

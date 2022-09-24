@@ -21,11 +21,7 @@ import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/Triggers
 import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { checkIfQueryParamsisNotEmpty } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
-import type {
-  queryInterface,
-  specInterface
-} from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
+import type { queryInterface } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import {
   getDefaultQueryParam,
@@ -116,18 +112,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     artifact?.spec?.spec?.packageName,
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.packageName`, '')
   )
-  const repositoryPortValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.repositoryPort,
-    get(initialValues?.artifacts, `${artifactPath}.spec.spec.repositoryPort`, '')
-  )
-  const repositoryUrlValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.repositoryUrl,
-    get(initialValues?.artifacts, `${artifactPath}.spec.spec.repositoryUrl`, '')
-  )
-  const artifactPathValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.artifactPath,
-    get(initialValues?.artifacts, `${artifactPath}.spec.spec.artifactPath`, '')
-  )
 
   const {
     data,
@@ -152,9 +136,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       extension: getFinalQueryParamValue(extensionValue),
       classifier: getFinalQueryParamValue(classifierValue),
       packageName: getFinalQueryParamValue(packageNameValue),
-      repositoryPort: getFinalQueryParamValue(repositoryPortValue),
-      repositoryUrl: getFinalQueryParamValue(repositoryUrlValue),
-      artifactPath: getFinalQueryParamValue(artifactPathValue),
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
@@ -162,17 +143,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       branch,
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
-      fqnPath: getFqnPath(
-        path as string,
-        !!isPropagatedStage,
-        stageIdentifier,
-        defaultTo(
-          isSidecar
-            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
-            : artifactPath,
-          ''
-        )
-      )
+      fqnPath: getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, defaultTo(artifactPath, ''))
     },
     lazy: true
   })
@@ -191,22 +162,15 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         lastQueryData.groupId !== groupIdValue ||
         lastQueryData.extension !== extensionValue ||
         lastQueryData.classifier !== classifierValue
-      : repositoryFormatValue === RepositoryFormatTypes.Docker
-      ? lastQueryData.repositoryFormat !== repositoryFormatValue ||
-        lastQueryData.repository !== repositoryValue ||
-        lastQueryData.artifactPath !== artifactPathValue ||
-        lastQueryData.repositoryUrl !== repositoryUrlValue ||
-        lastQueryData.repositoryPort !== repositoryPortValue
       : lastQueryData.repositoryFormat !== repositoryFormatValue ||
         lastQueryData.repository !== repositoryValue ||
         lastQueryData.packageName !== packageNameValue)
   }
-
   const fetchTags = (): void => {
     if (canFetchTags()) {
-      let repositoryDependentFields: specInterface = {}
-      const optionalFields: specInterface = {}
+      let repositoryDependentFields: any = {}
       if (repositoryFormatValue === RepositoryFormatTypes.Maven) {
+        const optionalFields: any = {}
         if (extensionValue) optionalFields.extension = extensionValue
 
         if (classifierValue) optionalFields.classifier = classifierValue
@@ -214,15 +178,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         repositoryDependentFields = {
           artifactId: artifactIdValue,
           groupId: groupIdValue,
-          ...optionalFields
-        }
-      } else if (repositoryFormatValue === RepositoryFormatTypes.Docker) {
-        if (repositoryPortValue) optionalFields.repositoryPort = repositoryPortValue
-
-        if (repositoryUrlValue) optionalFields.repositoryUrl = repositoryUrlValue
-
-        repositoryDependentFields = {
-          artifactPath: artifactPathValue,
           ...optionalFields
         }
       } else {
@@ -392,55 +347,14 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               }}
             />
           )}
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.repositoryPort`, template) && (
-            <FormInput.MultiTextInput
-              label={getString('pipeline.artifactsSelection.repositoryPort')}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.spec.repositoryPort`)}
-              placeholder={getString('pipeline.artifactsSelection.repositoryPortPlaceholder')}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              name={`${path}.artifacts.${artifactPath}.spec.spec.repositoryPort`}
-            />
-          )}
-
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.repositoryUrl`, template) && (
-            <FormInput.MultiTextInput
-              placeholder={getString('pipeline.repositoryUrlPlaceholder')}
-              label={getString('repositoryUrlLabel')}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.spec.repositoryUrl`)}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              name={`${path}.artifacts.${artifactPath}.spec.spec.repositoryUrl`}
-            />
-          )}
-
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.artifactPath`, template) && (
-            <TextFieldInputSetView
-              label={getString('pipeline.artifactPathLabel')}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.spec.artifactPath`)}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
-              name={`${path}.artifacts.${artifactPath}.spec.spec.artifactPath`}
-              onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
-              fieldPath={`artifacts.${artifactPath}.spec.spec.artifactPath`}
-              template={template}
-            />
-          )}
         </Layout.Vertical>
       )}
     </>
   )
 }
 
-export class Nexus3ArtifactSource extends ArtifactSourceBase<ArtifactSourceRenderProps> {
-  protected artifactType = ENABLED_ARTIFACT_TYPES.Nexus3Registry
+export class Nexus2ArtifactSource extends ArtifactSourceBase<ArtifactSourceRenderProps> {
+  protected artifactType = ENABLED_ARTIFACT_TYPES.Nexus2Registry
   protected isSidecar = false
 
   isTagsSelectionDisabled(props: ArtifactSourceRenderProps): boolean {

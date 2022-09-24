@@ -68,8 +68,25 @@ export enum ServiceDeploymentType {
 
 export enum RepositoryFormatTypes {
   Generic = 'generic',
-  Docker = 'docker'
+  Docker = 'docker',
+  Maven = 'maven',
+  NPM = 'npm',
+  NuGet = 'nuget'
 }
+
+export const nexus2RepositoryFormatTypes = [
+  { label: 'Maven', value: RepositoryFormatTypes.Maven },
+  { label: 'NPM', value: RepositoryFormatTypes.NPM },
+  { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
+]
+
+export const k8sRepositoryFormatTypes = [{ label: 'Docker', value: RepositoryFormatTypes.Docker }]
+
+export const nonK8sRepositoryFormatTypes = [
+  { label: 'Maven', value: RepositoryFormatTypes.Maven },
+  { label: 'NPM', value: RepositoryFormatTypes.NPM },
+  { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
+]
 
 export const repositoryFormats = [
   { label: 'Generic', value: RepositoryFormatTypes.Generic },
@@ -169,6 +186,10 @@ export const getHelpeTextForTags = (
     repositoryName?: string
     package?: string
     project?: string
+    repositoryFormat?: RepositoryFormatTypes
+    artifactId?: string
+    groupId?: string
+    packageName?: string
   },
   getString: (key: StringKeys) => string,
   isServerlessDeploymentTypeSelected = false
@@ -185,8 +206,12 @@ export const getHelpeTextForTags = (
     registry,
     subscriptionId,
     repositoryName,
-    package: packageName,
-    project
+    package: packageVal,
+    project,
+    repositoryFormat,
+    artifactId,
+    groupId,
+    packageName
   } = fields
   const invalidFields: string[] = []
   if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
@@ -202,6 +227,9 @@ export const getHelpeTextForTags = (
     packageName !== undefined &&
     (!packageName || getMultiTypeFromValue(packageName) === MultiTypeInputType.RUNTIME)
   ) {
+    invalidFields.push(getString('pipeline.testsReports.callgraphField.package'))
+  }
+  if (packageVal !== undefined && (!packageVal || getMultiTypeFromValue(packageVal) === MultiTypeInputType.RUNTIME)) {
     invalidFields.push(getString('pipeline.testsReports.callgraphField.package'))
   }
   if (project !== undefined && (!project || getMultiTypeFromValue(project) === MultiTypeInputType.RUNTIME)) {
@@ -246,6 +274,21 @@ export const getHelpeTextForTags = (
 
   if (registry !== undefined && (!registry || getMultiTypeFromValue(registry) === MultiTypeInputType.RUNTIME)) {
     invalidFields.push(getString('pipeline.ACR.registry'))
+  }
+
+  if (
+    repositoryFormat !== undefined &&
+    (!repositoryFormat || getMultiTypeFromValue(repositoryFormat) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('common.repositoryFormat'))
+  }
+
+  if (artifactId !== undefined && (!artifactId || getMultiTypeFromValue(artifactId) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('pipeline.artifactsSelection.artifactId'))
+  }
+
+  if (groupId !== undefined && (!groupId || getMultiTypeFromValue(groupId) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('pipeline.artifactsSelection.groupId'))
   }
 
   if (
