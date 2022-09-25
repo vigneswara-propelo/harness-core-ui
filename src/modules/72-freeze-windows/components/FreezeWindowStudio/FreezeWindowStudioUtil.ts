@@ -6,9 +6,10 @@
  */
 
 import { parse } from 'yaml'
-import { defaultTo, pick } from 'lodash-es'
+import { defaultTo, pick, set } from 'lodash-es'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { StringKeys } from 'framework/strings'
+import type { EntityConfig } from '@freeze-windows/types'
 
 export function isValidYaml(
   yamlHandler: YamlBuilderHandlerBinding | undefined,
@@ -37,4 +38,12 @@ export const getInitialValues = (freezeObj: any) => {
   return {
     ...pickedValues
   }
+}
+
+export const getInitialValuesForConfigSection = (entityConfigs: EntityConfig[]) => {
+  const initialValues = {}
+  entityConfigs.forEach((c: EntityConfig, i: number) => {
+    set(initialValues, `entity[${i}].entity.rule`, c.entity.rule)
+  })
+  return initialValues
 }

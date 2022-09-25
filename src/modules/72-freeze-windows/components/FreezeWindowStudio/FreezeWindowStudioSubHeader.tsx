@@ -60,6 +60,8 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
       hideConfigModal()
     }
 
+    // const onClose = React.useCallback(() => onCloseCreate(), [])
+
     return (
       <Dialog
         enforceFocus={false}
@@ -67,7 +69,7 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
         // className={classNames(css.createTemplateDialog, {
         //   [css.gitCreateTemplateDialog]: supportingTemplatesGitx
         // })}
-        onClose={onCloseCreate}
+        onClose={() => onCloseCreate()}
         title={
           <Container padding={{ left: 'xlarge', top: 'xlarge' }}>
             <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_800}>

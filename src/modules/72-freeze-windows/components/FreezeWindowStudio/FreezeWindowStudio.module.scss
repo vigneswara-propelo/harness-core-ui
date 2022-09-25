@@ -69,3 +69,11 @@
   width: 1024px;
   margin-top: var(--spacing-3);
 }
+
+.configFormContainer {
+  border: 1px solid var(--grey-200);
+  min-height: 100px;
+  &.isEditView {
+    background-color: var(--primary-1) !important;
+  }
+}

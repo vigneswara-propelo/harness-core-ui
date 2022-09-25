@@ -43,7 +43,7 @@ export const FreezeStudioOverviewSection: React.FC<FreezeStudioOverviewSectionPr
     <Formik
       key={initialValues?.identifier as string}
       onSubmit={noop}
-      formName="freezeWindowStudioVisualForm"
+      formName="freezeWindowStudioOverviewForm"
       initialValues={initialValues}
       validate={debouncedUpdate}
     >
@@ -71,6 +71,7 @@ export const FreezeStudioOverviewSection: React.FC<FreezeStudioOverviewSectionPr
                 margin={{ top: 'medium' }}
                 // type="submit"
                 // disabled={isStageCreationDisabled()}
+                rightIcon="chevron-right"
                 onClick={onNext}
                 variation={ButtonVariation.PRIMARY}
                 text={getString('continue')}

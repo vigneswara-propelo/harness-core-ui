@@ -10,7 +10,9 @@ declare const styles: {
   readonly buttonsWrapper: string
   readonly canvasContainer: string
   readonly canvasWrapper: string
+  readonly configFormContainer: string
   readonly createNewFreezeForm: string
+  readonly isEditView: string
   readonly sectionCard: string
   readonly stepTabs: string
   readonly tabIcon: string
