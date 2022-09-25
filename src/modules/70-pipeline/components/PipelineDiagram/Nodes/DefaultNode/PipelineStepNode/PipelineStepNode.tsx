@@ -27,6 +27,7 @@ const CODE_ICON: IconName = 'command-echo'
 const TEMPLATE_ICON: IconName = 'template-library'
 interface PipelineStepNodeProps extends BaseReactComponentProps {
   status: string
+  isNodeCollapsed?: boolean
 }
 
 function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
@@ -133,6 +134,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
         id={props.id}
         data-nodeid={props.id}
         draggable={!props.readonly}
+        data-collapsedNode={props?.isNodeCollapsed}
         className={cx(defaultCss.defaultCard, {
           [defaultCss.selected]: isSelectedNode(),
           [defaultCss.failed]: stepStatus === ExecutionStatusEnum.Failed,
@@ -336,7 +338,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           className={cx(
             defaultCss.addNodeIcon,
             // { [defaultCss.left]: !isPrevNodeParallel, [defaultCss.stepGroupLeft]: isPrevNodeParallel },
-            defaultCss.stepAddIcon
+            'stepAddIcon'
             // { [defaultCss.stepGroupLeftAddLink]: !!props.parentIdentifier }
           )}
         />
@@ -353,7 +355,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           isRightAddIcon={true}
           identifier={props.identifier}
           prevNodeIdentifier={props.prevNodeIdentifier as string}
-          className={cx(defaultCss.addNodeIcon, defaultCss.stepAddIcon)}
+          className={cx(defaultCss.addNodeIcon, 'stepAddIcon')}
         />
       )}
     </div>
