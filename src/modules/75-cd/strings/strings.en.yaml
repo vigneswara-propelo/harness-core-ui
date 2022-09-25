@@ -558,3 +558,5 @@ azureArm:
 removeStepTemplateSuccess: Step Template has been successfully removed
 addStepTemplate: Add step template
 useStepTemplate: Use step template
+artifactVersion: 'Version :'
+artifactPath: 'Path :'

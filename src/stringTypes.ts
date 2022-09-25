@@ -4297,8 +4297,10 @@ export interface StringsMap {
   'cd.artifactFormErrors.artifactName': string
   'cd.artifactFormErrors.repositoryName': string
   'cd.artifactName': string
+  'cd.artifactPath': string
   'cd.artifactPaths': string
   'cd.artifactRepoTooltip': string
+  'cd.artifactVersion': string
   'cd.attributeFilters': string
   'cd.awsCli': string
   'cd.azureArm.description': string
