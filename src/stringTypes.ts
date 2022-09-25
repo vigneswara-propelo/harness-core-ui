@@ -4490,6 +4490,7 @@ export interface StringsMap {
   'cd.harnessManagedGitOpsWizardTitle': string
   'cd.hostFilters': string
   'cd.hosts': string
+  'cd.ignoreReleaseHistFailStatus': string
   'cd.infrastructure.createNew': string
   'cd.infrastructure.created': string
   'cd.infrastructure.delete': string

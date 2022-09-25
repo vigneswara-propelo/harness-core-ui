@@ -356,6 +356,7 @@ export interface AccessControlCheckError {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -816,6 +817,7 @@ export interface ArtifactSource {
     | 'Gcr'
     | 'Ecr'
     | 'Nexus3Registry'
+    | 'Nexus2Registry'
     | 'ArtifactoryRegistry'
     | 'CustomArtifact'
     | 'Acr'
@@ -833,6 +835,7 @@ export interface ArtifactSourceConfig {
     | 'Gcr'
     | 'Ecr'
     | 'Nexus3Registry'
+    | 'Nexus2Registry'
     | 'ArtifactoryRegistry'
     | 'CustomArtifact'
     | 'Acr'
@@ -2556,12 +2559,12 @@ export interface DelegateGroupDetails {
       | 'PROFILE_SELECTORS'
   }
   groupName?: string
+  groupVersion?: string
   grpcActive?: boolean
   immutable?: boolean
   lastHeartBeat?: number
   tokenActive?: boolean
   upgraderLastUpdated?: number
-  versions?: string[]
 }
 
 export interface DelegateGroupListing {
@@ -2647,6 +2650,7 @@ export interface DelegateSetupDetails {
   name: string
   orgIdentifier?: string
   projectIdentifier?: string
+  runAsRoot?: boolean
   size?: 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
   tags?: string[]
   tokenName?: string
@@ -3782,6 +3786,7 @@ export interface Error {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -4137,6 +4142,7 @@ export interface ErrorMetadata {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -4549,6 +4555,7 @@ export interface Failure {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -6447,6 +6454,7 @@ export type HelmChartManifest = ManifestAttributes & {
 
 export type HelmDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  ignoreReleaseHistFailStatus?: boolean
 }
 
 export interface HelmManifestCommandFlag {
@@ -6653,7 +6661,7 @@ export interface InfrastructureDef {
 
 export interface InfrastructureDefinitionConfig {
   allowSimultaneousDeployments?: boolean
-  deploymentType?:
+  deploymentType:
     | 'Kubernetes'
     | 'NativeHelm'
     | 'Ssh'
@@ -6664,8 +6672,8 @@ export interface InfrastructureDefinitionConfig {
     | 'ECS'
   description?: string
   environmentRef?: string
-  identifier: string
-  name: string
+  identifier?: string
+  name?: string
   orgIdentifier?: string
   projectIdentifier?: string
   spec: Infrastructure
@@ -6704,7 +6712,7 @@ export interface InfrastructureRequestDTO {
   tags?: {
     [key: string]: string
   }
-  type?:
+  type:
     | 'KubernetesDirect'
     | 'KubernetesGcp'
     | 'KubernetesAzure'
@@ -7138,6 +7146,7 @@ export interface K8sBasicInfo {
 
 export type K8sBlueGreenStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  pruningEnabled?: boolean
   skipDryRun?: boolean
 }
 
@@ -7200,11 +7209,13 @@ export type K8sManifest = ManifestAttributes & {
 
 export type K8sRollingRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  pruningEnabled?: boolean
   skipDryRun?: boolean
 }
 
 export type K8sRollingStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  pruningEnabled?: boolean
   skipDryRun?: boolean
 }
 
@@ -7314,13 +7325,13 @@ export type KustomizePatchesManifest = ManifestAttributes & {
 export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
+  disabled?: boolean
   displayName: string
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
   settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
-  disabled?: boolean
 }
 
 export interface LandingDashboardRequestCD {
@@ -7461,11 +7472,11 @@ export interface LdapResponse {
 export type LdapSettings = SSOSettings & {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
+  disabled?: boolean
   groupSettings?: LdapGroupSettings
   groupSettingsList?: LdapGroupSettings[]
   userSettings?: LdapUserSettings
   userSettingsList?: LdapUserSettings[]
-  disabled?: boolean
 }
 
 export interface LdapTestResponse {
@@ -7841,10 +7852,13 @@ export type NexusConnector = ConnectorConfigDTO & {
 }
 
 export type NexusRegistryArtifactConfig = ArtifactConfig & {
+  artifactPath: string
   connectorRef: string
   metadata?: string
   repository: string
   repositoryFormat: 'docker' | 'maven' | 'npm' | 'nuget'
+  repositoryPort?: string
+  repositoryUrl?: string
   spec?: NexusRegistryConfigSpec
   tag?: string
   tagRegex?: string
@@ -8885,13 +8899,6 @@ export type RateLimitRestrictionMetadataDTO = RestrictionMetadataDTO & {
   allowedIfEqual?: boolean
   limit?: number
   timeUnit?: TimeUnit
-}
-
-export interface RecommendationParams {
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
-  usage?: {
-    [key: string]: number
-  }
 }
 
 export interface ReferenceDTO {
@@ -10622,6 +10629,7 @@ export interface ResponseMessage {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -12121,6 +12129,7 @@ export interface SecretRequestWrapper {
 
 export interface SecretResourceFilterDTO {
   identifiers?: string[]
+  includeAllSecretsAccessibleAtScope?: boolean
   includeSecretsFromEverySubScope?: boolean
   searchTerm?: string
   secretTypes?: ('SecretFile' | 'SecretText' | 'SSHKey' | 'WinRmCredentials')[]
@@ -12541,7 +12550,7 @@ export interface ServicesYamlMetadataApiInput {
 export interface SettingDTO {
   allowOverrides: boolean
   allowedValues?: string[]
-  category: 'CD' | 'CI' | 'CCM' | 'CV' | 'CORE'
+  category: 'CD' | 'CI' | 'CE' | 'CV' | 'CF' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   defaultValue?: string
   groupIdentifier: string
   identifier: string
@@ -41965,7 +41974,7 @@ export interface GetSettingsListQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  category: 'CD' | 'CI' | 'CCM' | 'CV' | 'CORE'
+  category: 'CD' | 'CI' | 'CE' | 'CV' | 'CF' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   group?: string
 }
 
@@ -47637,6 +47646,7 @@ export interface ListSecretsV2QueryParams {
     | 'MONITORING'
     | 'TICKETING'
   includeSecretsFromEverySubScope?: boolean
+  includeAllSecretsAccessibleAtScope?: boolean
   pageIndex?: number
   pageSize?: number
 }
