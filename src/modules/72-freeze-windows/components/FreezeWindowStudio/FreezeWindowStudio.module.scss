@@ -23,6 +23,11 @@
   }
 }
 
+/** Create New Freeze **/
+.createNewFreezeForm {
+  padding: var(--spacing-large) 12px 0 12px;
+}
+
 /** YAML VIEW **/
 .yamlBuilder {
   padding: var(--spacing-large);
@@ -38,6 +43,7 @@
   }
 }
 
+/** VISUAL VIEW **/
 .stepTabs {
   height: 100%;
   width: 100%;
@@ -57,4 +63,9 @@
 
 .tabIcon {
   margin-right: var(--spacing-small) !important;
+}
+
+.sectionCard {
+  width: 1024px;
+  margin-top: var(--spacing-3);
 }

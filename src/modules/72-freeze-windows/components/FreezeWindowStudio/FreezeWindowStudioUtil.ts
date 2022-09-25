@@ -6,7 +6,7 @@
  */
 
 import { parse } from 'yaml'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, pick } from 'lodash-es'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { StringKeys } from 'framework/strings'
 
@@ -14,11 +14,11 @@ export function isValidYaml(
   yamlHandler: YamlBuilderHandlerBinding | undefined,
   showInvalidYamlError: (error: string) => void,
   getString: (key: StringKeys, vars?: Record<string, any>) => string,
-  updateFreeze: (freeze: any) => void
+  updateFreeze: (freezeYAML: string) => void
 ): boolean {
   if (yamlHandler) {
     try {
-      const parsedYaml = parse(yamlHandler.getLatestYaml())
+      const parsedYaml = parse(yamlHandler.getLatestYaml())?.freeze
       if (!parsedYaml || yamlHandler.getYAMLValidationErrorMap()?.size > 0) {
         showInvalidYamlError(getString('invalidYamlText'))
         return false
@@ -30,4 +30,11 @@ export function isValidYaml(
     }
   }
   return true
+}
+
+export const getInitialValues = (freezeObj: any) => {
+  const pickedValues = pick(freezeObj, 'name', 'identifier', 'description', 'tags')
+  return {
+    ...pickedValues
+  }
 }

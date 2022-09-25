@@ -9,12 +9,13 @@ import React from 'react'
 import { Button, ButtonVariation } from '@wings-software/uicore'
 // import { useCreateFreeze } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+// import { yamlStringify } from '@common/utils/YamlHelperMethods'
 // import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 
 export const FreezeWindowStudioSubHeaderRightView = () => {
   const { getString } = useStrings()
   // const {
-  //   state: { yamlHandler } // freeze,
+  //   state: { yamlHandler, freezeObj } // freeze,
   // } = React.useContext(FreezeWindowContext)
   // const { mutate: createFreeze } = useCreateFreeze({
   //   // loading
@@ -27,13 +28,12 @@ export const FreezeWindowStudioSubHeaderRightView = () => {
   // const onSave = () => {
   //   try {
   //     // check errors
-  //     createFreeze(yamlHandler.getLatestYaml(), { headers: { 'content-type': 'application/json' } })
+  //     createFreeze(yamlStringify({ freeze: freezeObj }), { headers: { 'content-type': 'application/json' } })
   //     // const freeze =// freeze
   //   } catch (e) {
   //     // console.log(e)
-  //   }
-  // }
 
+  // }
   // onClick={onSave}
   return (
     <div>
