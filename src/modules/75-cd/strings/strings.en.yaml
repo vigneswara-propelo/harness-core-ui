@@ -494,7 +494,6 @@ validation:
   specifyFilter: Specify the filter condition
 welcomeMessage: Welcome to Harness
 delegateInstallation: Install the Delegate to deploy your cluster
-delegateInstallBtnText: Install the Delegate
 learnMoreDelegate: Learn more about Delegates
 runDelegate: How do you want to run the Delegate
 installDelegate: Install Delegate
