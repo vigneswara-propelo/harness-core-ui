@@ -19,10 +19,15 @@ import type { StoreType } from '@common/constants/GitSyncTypes'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import type { ExecutionPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import { killEvent } from '@common/utils/eventUtils'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
+import executionFactory from '@pipeline/factories/ExecutionFactory'
+import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
+import { AUTO_TRIGGERS, CardVariant } from '@pipeline/utils/constants'
+import { hasCIStage, StageType } from '@pipeline/utils/stageHelpers'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -30,16 +35,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
-import { hasCDStage, hasCIStage, hasOverviewDetail, hasServiceDetail, StageType } from '@pipeline/utils/stageHelpers'
-import {
-  ServiceExecutionsCard,
-  DashboardSelected
-} from '@pipeline/components/ServiceExecutionsCard/ServiceExecutionsCard'
-import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
-import type { EnvironmentDeploymentsInfo, ServiceDeploymentInfo } from 'services/cd-ng'
-import executionFactory from '@pipeline/factories/ExecutionFactory'
-import { AUTO_TRIGGERS, CardVariant } from '@pipeline/utils/constants'
-import { killEvent } from '@common/utils/eventUtils'
+import { getReadableDateTime } from '@common/utils/dateUtils'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
 
@@ -108,6 +104,7 @@ export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<PipelineEx
         icon={row.isExpanded ? 'chevron-down' : 'chevron-right'}
         variation={ButtonVariation.ICON}
         iconProps={{ size: 19 }}
+        className={css.toggleAccordion}
       />
     </Layout.Horizontal>
   )
@@ -115,28 +112,34 @@ export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<PipelineEx
 
 export const PipelineNameCell: CellType = ({ row }) => {
   const data = row.original
+  const { getString } = useStrings()
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
   const toExecutionPipelineView = getExecutionPipelineViewLink(data, pathParams)
 
   return (
-    <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
-      <Link to={toExecutionPipelineView}>
-        <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={2}>
-          {data.name}: {data.runSequence}
-        </Text>
-      </Link>
-      {!isEmpty(data?.tags) && (
-        <TagsPopover
-          iconProps={{ size: 12, color: Color.GREY_600 }}
-          popoverProps={{ className: Classes.DARK }}
-          className={css.tags}
-          tags={defaultTo(data?.tags, []).reduce((_tags, tag) => {
-            _tags[tag.key] = tag.value
-            return _tags
-          }, {} as { [key: string]: string })}
-        />
-      )}
-    </Layout.Horizontal>
+    <Layout.Vertical>
+      <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
+        <Link to={toExecutionPipelineView}>
+          <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
+            {data.name}
+          </Text>
+        </Link>
+        {!isEmpty(data?.tags) && (
+          <TagsPopover
+            iconProps={{ size: 12, color: Color.GREY_600 }}
+            popoverProps={{ className: Classes.DARK }}
+            className={css.tags}
+            tags={defaultTo(data?.tags, []).reduce((_tags, tag) => {
+              _tags[tag.key] = tag.value
+              return _tags
+            }, {} as { [key: string]: string })}
+          />
+        )}
+      </Layout.Horizontal>
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500} lineClamp={1}>
+        {`${getString('pipeline.executionId')}: ${data.runSequence}`}
+      </Text>
+    </Layout.Vertical>
   )
 }
 
@@ -288,19 +291,46 @@ export const MenuCell: CellType = ({ row, column }) => {
 
 export const TriggerInfoCell: CellType = ({ row }) => {
   const data = row.original
+  const triggers = ['SCHEDULER_CRON', 'WEBHOOK_CUSTOM', 'MANUAL'] as const
 
-  const IS_SERVICEDETAIL = hasServiceDetail(data)
-  const IS_OVERVIEWPAGE = hasOverviewDetail(data)
-  const cdInfo = executionFactory.getCardInfo(StageType.DEPLOY)
+  const triggerType = data.executionTriggerInfo?.triggerType
+
+  const triggerMap: Record<typeof triggers[number], any> = {
+    SCHEDULER_CRON: {
+      icon: 'stopwatch',
+      getText: (startTs: number, triggeredBy: string) =>
+        `Triggered on ${getReadableDateTime(startTs)} by cron ${triggeredBy}`
+    },
+    WEBHOOK_CUSTOM: {
+      icon: 'trigger-execution',
+      getText: () => `Triggered by a third party system`
+    },
+    MANUAL: {
+      icon: 'person',
+      getText: () => `This execution was triggered manually`
+    }
+  }
+
+  if (triggerType && triggers.includes(triggerType)) {
+    const { icon, getText } = triggerMap[triggerType as typeof triggers[number]]
+
+    return (
+      <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+        <Icon name={icon} size={12} />
+        <Text font={{ size: 'small' }} color={Color.GREY_900} lineClamp={1}>
+          {getText(data.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)}
+        </Text>
+      </Layout.Horizontal>
+    )
+  }
+
   const ciInfo = executionFactory.getCardInfo(StageType.BUILD)
   const variant = CardVariant.Default
-
   const showCI = !!(ciInfo && hasCIStage(data))
-  const showCD = !!(cdInfo && hasCDStage(data))
 
   return (
-    <Layout.Vertical spacing="small" className={css.triggerInfoCell}>
-      {showCI && (
+    showCI && (
+      <Layout.Vertical spacing="small" className={css.triggerInfoCell}>
         <div className={css.ci}>
           {ciInfo?.component &&
             React.createElement<ExecutionCardInfoProps>(ciInfo.component, {
@@ -310,24 +340,7 @@ export const TriggerInfoCell: CellType = ({ row }) => {
               variant
             })}
         </div>
-      )}
-      {!showCI &&
-        showCD &&
-        (!(IS_SERVICEDETAIL || IS_OVERVIEWPAGE) ? (
-          cdInfo?.component &&
-          React.createElement<ExecutionCardInfoProps>(cdInfo.component, {
-            data: defaultTo(data?.moduleInfo?.cd, {}),
-            nodeMap: defaultTo(data?.layoutNodeMap, {}),
-            startingNodeId: defaultTo(data?.startingNodeId, ''),
-            variant
-          })
-        ) : (
-          <ServiceExecutionsCard
-            envIdentifiers={data?.moduleInfo?.cd?.envIdentifiers as EnvironmentDeploymentsInfo[]}
-            serviceIdentifiers={data?.moduleInfo?.cd?.serviceIdentifiers as ServiceDeploymentInfo[]}
-            caller={IS_SERVICEDETAIL ? DashboardSelected.SERVICEDETAIL : DashboardSelected.OVERVIEW}
-          />
-        ))}
-    </Layout.Vertical>
+      </Layout.Vertical>
+    )
   )
 }
