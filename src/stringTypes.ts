@@ -4625,6 +4625,7 @@ export interface StringsMap {
   'cd.serviceDashboard.artifact': string
   'cd.serviceDashboard.awsRegion': string
   'cd.serviceDashboard.buildName': string
+  'cd.serviceDashboard.containerList': string
   'cd.serviceDashboard.deployedAt': string
   'cd.serviceDashboard.deployedBy': string
   'cd.serviceDashboard.deploymentDetails': string
