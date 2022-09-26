@@ -1360,6 +1360,7 @@ export interface StringsMap {
   'delegates.reviewScript.docLinkAfter': string
   'delegates.reviewScript.docLinkBefore': string
   'delegates.reviewYAML': string
+  'delegates.runAsRoot': string
   'delegates.selectors': string
   'delegates.successVerification.addHelmRepoCmd': string
   'delegates.successVerification.addHelmRepoLabel': string
