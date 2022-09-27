@@ -2352,7 +2352,6 @@ export interface StringsMap {
   'connectors.hashiCorpVault.k8sAuthEndpoint': string
   'connectors.hashiCorpVault.k8s_auth': string
   'connectors.hashiCorpVault.manuallyConfigureEngine': string
-  'connectors.hashiCorpVault.preventDefaultWhenReadOnly': string
   'connectors.hashiCorpVault.readOnly': string
   'connectors.hashiCorpVault.readOnlyVault': string
   'connectors.hashiCorpVault.renewal': string
