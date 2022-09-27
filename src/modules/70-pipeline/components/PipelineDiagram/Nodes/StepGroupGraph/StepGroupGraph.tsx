@@ -43,6 +43,7 @@ interface StepGroupGraphProps {
   readonly?: boolean
   hideLinks?: boolean
   hideAdd?: boolean
+  setVisibilityOfAdd: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface LayoutStyles extends Pick<Dimension, 'height' | 'width'> {
@@ -208,6 +209,14 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
       data-stepGroup-name={props?.identifier}
       data-stepGroup-id={props?.id}
       ref={graphRef}
+      onMouseEnter={e => {
+        e.stopPropagation()
+        props.setVisibilityOfAdd?.(false)
+      }}
+      onMouseOut={e => {
+        e.stopPropagation()
+        props.setVisibilityOfAdd?.(false)
+      }}
     >
       <SVGComponent svgPath={svgPath} className={cx(css.stepGroupSvg)} />
       {props?.data?.length ? (
