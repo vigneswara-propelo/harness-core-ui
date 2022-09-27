@@ -178,11 +178,18 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
     if (props.hideLinks) {
       return
     }
-    /* direction is required to connect internal nodes to step group terminals */
-    const SVGLinks = getSVGLinksFromPipeline(state, undefined, undefined, undefined, graphScale)
+    const SVGLinks = getSVGLinksFromPipeline({
+      states: state,
+      parentElement: undefined,
+      resultArr: undefined,
+      endNodeId: undefined,
+      scalingFactor: graphScale,
+      isStepGroup: true
+    })
     const firstNodeIdentifier = state?.[0]?.id
     const lastNodeIdentifier = state?.[state?.length - 1]?.id
     const parentElement = graphRef.current?.querySelector('#tree-container') as HTMLDivElement
+    /* direction is required to connect internal nodes to step group terminals */
     const finalPaths = [
       ...SVGLinks,
       getFinalSVGArrowPath(props?.id, firstNodeIdentifier as string, {
