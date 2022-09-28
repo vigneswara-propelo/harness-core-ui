@@ -19,7 +19,8 @@
     { "uuid": null, "name": "SERVERLESS_SUPPORT", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "AZURE_WEBAPP_NG", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "ENV_GROUP", "enabled": true, "lastUpdatedAt": 0 },
-    { "uuid": null, "name": "NG_CUSTOM_STAGE", "enabled": true, "lastUpdatedAt": 0 }
+    { "uuid": null, "name": "NG_CUSTOM_STAGE", "enabled": true, "lastUpdatedAt": 0 },
+    { "uuid": null, "name": "SSH_NG", "enabled": true, "lastUpdatedAt": 0 }
   ],
   "responseMessages": []
 }
