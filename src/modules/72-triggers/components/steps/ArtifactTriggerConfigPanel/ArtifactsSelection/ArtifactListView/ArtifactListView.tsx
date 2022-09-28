@@ -53,7 +53,7 @@ function ArtifactListView({
               size={ButtonSize.SMALL}
               variation={ButtonVariation.LINK}
               onClick={() => addNewArtifact()}
-              text={getString('pipeline.artifactTriggerConfigPanel.defineSource')}
+              text={getString('pipeline.artifactTriggerConfigPanel.defineArtifactSource')}
             />
           </>
         ) : (

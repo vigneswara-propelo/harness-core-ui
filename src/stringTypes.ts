@@ -2970,7 +2970,8 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.configureArtifactRuntimeInputs': string
   'pipeline.artifactTriggerConfigPanel.configureInput': string
   'pipeline.artifactTriggerConfigPanel.configureInputs': string
-  'pipeline.artifactTriggerConfigPanel.defineSource': string
+  'pipeline.artifactTriggerConfigPanel.defineArtifactSource': string
+  'pipeline.artifactTriggerConfigPanel.defineManifestSource': string
   'pipeline.artifactTriggerConfigPanel.hasRuntimeInputs': string
   'pipeline.artifactTriggerConfigPanel.listenOnNewArtifact': string
   'pipeline.artifactTriggerConfigPanel.locationRepoPath': string

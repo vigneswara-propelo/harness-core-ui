@@ -27,7 +27,9 @@ import type {
   ScheduleType,
   SourceRepo,
   TriggerBaseType,
-  TriggerArtifactType
+  TriggerArtifactType,
+  ManifestType,
+  TriggerSubType
 } from '@triggers/components/Triggers/TriggerInterface'
 
 export default function TriggersWizardPage(): JSX.Element {
@@ -38,11 +40,15 @@ export default function TriggersWizardPage(): JSX.Element {
     pipelineIdentifier,
     triggerIdentifier
   } = useParams<PipelinePathProps & TriggerPathProps>()
-  const { triggerType, sourceRepo, artifactType, branch, scheduleType } = useQueryParams<
+  const { triggerType, sourceRepo, artifactType, manifestType, branch, scheduleType } = useQueryParams<
     TriggerQueryParams & GitQueryParams
   >()
-  const [type, setType] = useState<SourceRepo | TriggerArtifactType>(
-    (sourceRepo as SourceRepo) || (scheduleType as ScheduleType) || (artifactType as TriggerArtifactType)
+
+  const [type, setType] = useState<TriggerSubType>(
+    (sourceRepo as SourceRepo) ||
+      (scheduleType as ScheduleType) ||
+      (artifactType as TriggerArtifactType) ||
+      (manifestType as ManifestType)
   )
   const [baseType, setBaseType] = useState<TriggerBaseType>(triggerType as TriggerBaseType)
 

@@ -25,6 +25,8 @@ import { Nexus3Registry } from '@triggers/components/Triggers/ArtifactTrigger/Ne
 // Scheduled Triggers
 import { Cron } from '@triggers/components/Triggers/ScheduledTrigger/Cron/Cron'
 
+// Manifest Triggers
+import { HelmChart } from '@triggers/components/Triggers/ManifestTrigger/HelmChart/HelmChart'
 import { AbstractTriggerFactory } from './AbstractTriggerFactory'
 
 class Factory extends AbstractTriggerFactory {
@@ -54,5 +56,8 @@ TriggerFactory.registerTrigger(new Ecr())
 TriggerFactory.registerTrigger(new Gcr())
 TriggerFactory.registerTrigger(new Jenkins())
 TriggerFactory.registerTrigger(new Nexus3Registry())
+
+// Manifest Triggers
+TriggerFactory.registerTrigger(new HelmChart())
 
 export default TriggerFactory
