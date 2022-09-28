@@ -1388,4 +1388,3 @@ customDeployment:
     fetchScriptBodyRequired: 'Fetch Instances Script body is required'
   validations:
     nameUnique: Field Name should be unique
-loadBalancer: Load Balancer

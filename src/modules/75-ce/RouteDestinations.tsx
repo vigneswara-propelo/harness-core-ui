@@ -143,7 +143,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.AUTOSTOPPINGRULE, {
 
 RbacFactory.registerResourceTypeHandler(ResourceType.LOADBALANCER, {
   icon: 'ccm-solid',
-  label: 'pipeline.loadBalancer',
+  label: 'common.loadBalancer',
   category: ResourceCategory.CLOUD_COSTS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CCM_LOADBALANCER]: <LocaleString stringID="rbac.permissionLabels.view" />,

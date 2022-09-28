@@ -877,7 +877,7 @@ export function RightDrawer(): React.ReactElement {
           onRemoveTemplate={() => removeTemplate(type, Boolean(isRollbackToggled))}
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
-          stageType={stageType as StageType}
+          selectedStage={selectedStage}
           gitDetails={gitDetails}
           storeMetadata={storeMetadata}
         />
@@ -937,7 +937,7 @@ export function RightDrawer(): React.ReactElement {
           isStepGroup={false}
           allowableTypes={allowableTypes}
           withoutTabs
-          stageType={stageType as StageType}
+          selectedStage={selectedStage}
           storeMetadata={storeMetadata}
         />
       )}
@@ -1046,7 +1046,7 @@ export function RightDrawer(): React.ReactElement {
           }
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
-          stageType={stageType as StageType}
+          selectedStage={selectedStage}
           onUseTemplate={(selectedTemplate: TemplateSummaryResponse) =>
             addOrUpdateTemplate(selectedTemplate, type, Boolean(isRollbackToggled))
           }

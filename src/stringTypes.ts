@@ -457,6 +457,7 @@ export interface StringsMap {
   'common.letsGetYouStarted': string
   'common.levelUp': string
   'common.link': string
+  'common.loadBalancer': string
   'common.loading': string
   'common.local': string
   'common.logs.delegateSelectionLogs': string
@@ -3533,7 +3534,6 @@ export interface StringsMap {
   'pipeline.lastExecution': string
   'pipeline.lastSevenDays': string
   'pipeline.linuxOnly': string
-  'pipeline.loadBalancer': string
   'pipeline.logs.errorText': string
   'pipeline.logs.retry': string
   'pipeline.logs.sectionName': string
@@ -4695,7 +4695,6 @@ export interface StringsMap {
   'cd.steps.awsInfraStep.labels.autoScallingGroup': string
   'cd.steps.awsInfraStep.labels.connectionAttribute': string
   'cd.steps.awsInfraStep.labels.hostName': string
-  'cd.steps.awsInfraStep.labels.loadBalancer': string
   'cd.steps.awsInfraStep.labels.useAutoScallingGroup': string
   'cd.steps.awsInfraStep.labels.useAwsInstanceFilter': string
   'cd.steps.awsInfraStep.labels.vpcs': string
@@ -4744,6 +4743,7 @@ export interface StringsMap {
   'cd.steps.common.selectOrEnterClusterPlaceholder': string
   'cd.steps.common.specifyCredentials': string
   'cd.steps.common.undefinedType': string
+  'cd.steps.ecsBGCreateServiceStep.labels.elasticLoadBalancer': string
   'cd.steps.ecsBGCreateServiceStep.labels.prodListener': string
   'cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN': string
   'cd.steps.ecsBGCreateServiceStep.labels.stageListener': string
