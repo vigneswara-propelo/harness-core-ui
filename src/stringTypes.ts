@@ -1453,7 +1453,6 @@ export interface StringsMap {
   'secrets.secret.validationIdentifier': string
   'secrets.secret.validationKms': string
   'secrets.secret.validationNameChars': string
-  'secrets.secret.winrmCredential': string
   'secrets.secretsTitle': string
   'secrets.selectSecret': string
   'secrets.sshAuthFormFields.labelFile': string
@@ -3803,11 +3802,13 @@ export interface StringsMap {
   'pipeline.serviceDeploymentTypes.awsSAM': string
   'pipeline.serviceDeploymentTypes.azureFunctions': string
   'pipeline.serviceDeploymentTypes.azureWebApp': string
+  'pipeline.serviceDeploymentTypes.customDeploy': string
   'pipeline.serviceDeploymentTypes.customDeployment': string
   'pipeline.serviceDeploymentTypes.deployDifferentLabel': string
   'pipeline.serviceDeploymentTypes.kubernetes': string
   'pipeline.serviceDeploymentTypes.pcf': string
   'pipeline.serviceDeploymentTypes.serverlessAwsLambda': string
+  'pipeline.serviceDeploymentTypes.serverlessAwsType': string
   'pipeline.serviceDeploymentTypes.serverlessAzureFunctions': string
   'pipeline.serviceDeploymentTypes.serverlessGoogleFunctions': string
   'pipeline.serviceDeploymentTypes.ssh': string
