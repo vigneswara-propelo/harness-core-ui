@@ -12,6 +12,16 @@ import { Bitbucket } from '@triggers/components/Triggers/WebhookTrigger/Bitbucke
 import { AzureRepo } from '@triggers/components/Triggers/WebhookTrigger/AzureRepo/AzureRepo'
 import { Custom } from '@triggers/components/Triggers/WebhookTrigger/Custom/Custom'
 
+// Artifact Triggers
+import { Acr } from '@triggers/components/Triggers/ArtifactTrigger/Acr/Acr'
+import { AmazonS3 } from '@triggers/components/Triggers/ArtifactTrigger/AmazonS3/AmazonS3'
+import { ArtifactoryRegistry } from '@triggers/components/Triggers/ArtifactTrigger/ArtifactoryRegistry/ArtifactoryRegistry'
+import { DockerRegistry } from '@triggers/components/Triggers/ArtifactTrigger/DockerRegistry/DockerRegistry'
+import { Ecr } from '@triggers/components/Triggers/ArtifactTrigger/Ecr/Ecr'
+import { Gcr } from '@triggers/components/Triggers/ArtifactTrigger/Gcr/Gcr'
+import { Jenkins } from '@triggers/components/Triggers/ArtifactTrigger/Jenkins/Jenkins'
+import { Nexus3Registry } from '@triggers/components/Triggers/ArtifactTrigger/Nexus3Registry/Nexus3Registry'
+
 // Scheduled Triggers
 import { Cron } from '@triggers/components/Triggers/ScheduledTrigger/Cron/Cron'
 
@@ -34,5 +44,15 @@ TriggerFactory.registerTrigger(new Custom())
 
 // Scheduled Triggers
 TriggerFactory.registerTrigger(new Cron())
+
+// Artifact Triggers
+TriggerFactory.registerTrigger(new Acr())
+TriggerFactory.registerTrigger(new AmazonS3())
+TriggerFactory.registerTrigger(new ArtifactoryRegistry())
+TriggerFactory.registerTrigger(new DockerRegistry())
+TriggerFactory.registerTrigger(new Ecr())
+TriggerFactory.registerTrigger(new Gcr())
+TriggerFactory.registerTrigger(new Jenkins())
+TriggerFactory.registerTrigger(new Nexus3Registry())
 
 export default TriggerFactory

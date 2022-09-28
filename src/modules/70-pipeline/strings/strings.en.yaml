@@ -609,6 +609,7 @@ artifactTriggerConfigPanel:
   configureInput: 'Configure Input'
   listenOnNewArtifact: 'Listen on New {{artifact}}'
   plusSelect: '+ Select {{artifact}}'
+  defineSource: 'Define Artifact Source'
   selectAnArtifact: 'Select an Artifact Reference'
   selectAManifest: 'Select a Manifest Reference'
   configureArtifactRuntimeInputs: 'Configure {{artifact}} Runtime Inputs'

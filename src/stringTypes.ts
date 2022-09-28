@@ -2970,6 +2970,7 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.configureArtifactRuntimeInputs': string
   'pipeline.artifactTriggerConfigPanel.configureInput': string
   'pipeline.artifactTriggerConfigPanel.configureInputs': string
+  'pipeline.artifactTriggerConfigPanel.defineSource': string
   'pipeline.artifactTriggerConfigPanel.hasRuntimeInputs': string
   'pipeline.artifactTriggerConfigPanel.listenOnNewArtifact': string
   'pipeline.artifactTriggerConfigPanel.locationRepoPath': string
@@ -4276,6 +4277,7 @@ export interface StringsMap {
   'triggers.validation.operator': string
   'triggers.validation.payloadConditions': string
   'triggers.validation.repoName': string
+  'triggers.validation.repositoryFormat': string
   'triggers.validation.selectedArtifact': string
   'triggers.validation.triggerName': string
   'cd.GitOpsServerDelete': string
