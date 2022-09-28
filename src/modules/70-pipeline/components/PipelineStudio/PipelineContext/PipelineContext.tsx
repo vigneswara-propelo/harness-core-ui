@@ -538,7 +538,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           orgIdentifier: queryParams.orgIdentifier
         }),
         originalPipeline: defaultTo(
-          cloneDeep(data?.pipeline),
+          cloneDeep(data?.originalPipeline),
           cloneDeep({
             ...DefaultPipeline,
             projectIdentifier: queryParams.projectIdentifier,
