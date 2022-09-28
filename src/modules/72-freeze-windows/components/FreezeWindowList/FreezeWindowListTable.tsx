@@ -13,7 +13,6 @@ import { useStrings } from 'framework/strings'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import type { SortBy } from '@freeze-windows/pages/FreezeWindowsPage/types'
 import { MenuCell, LastModifiedCell, FreezeNameCell, FreezeTimeCell, StatusCell } from './FreezeWindowListCells'
-import css from './FreezeWindowList.module.scss'
 
 export interface FreezeWindowListColumnActions {
   onViewFreezeWindow: (freezeWindow: PageFreezeResponse) => void
@@ -102,7 +101,6 @@ export function FreezeWindowListTable({
 
   return (
     <TableV2
-      className={css.table}
       columns={columns}
       data={content}
       pagination={

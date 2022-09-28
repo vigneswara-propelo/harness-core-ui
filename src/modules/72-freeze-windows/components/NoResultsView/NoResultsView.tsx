@@ -23,7 +23,7 @@ export interface NoResultsViewProps {
   customImgSrc?: string
 }
 
-export default function NoResultsView({
+export function NoResultsView({
   hasSearchParam = false,
   onReset,
   text,
