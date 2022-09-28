@@ -130,7 +130,7 @@ export function DeployServiceEntityInputStep({
       const svcTemplate = servicesData.find(svcTpl => svcTpl.service.identifier === svcId)?.serviceInputs
       return {
         serviceRef: svcId,
-        serviceInputs: svcTemplate ? clearRuntimeInput(svcTemplate) : {}
+        serviceInputs: svcTemplate ? clearRuntimeInput(svcTemplate) : undefined
       }
     })
 
