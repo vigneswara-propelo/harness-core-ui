@@ -8,7 +8,7 @@
 
 import { Classes, Menu, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon } from '@harness/uicore'
+import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon, Checkbox, Switch } from '@harness/uicore'
 import { Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React from 'react'
@@ -48,7 +48,7 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
 
         {data.description && (
           <Popover className={Classes.DARK} position={Position.LEFT}>
-            <Icon name="description" size={24} color={Color.GREY_600} />
+            <Icon name="description" width={16} height={20} />
             <Layout.Vertical spacing="medium" padding="large" style={{ maxWidth: 400 }}>
               <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }}>
                 Description
@@ -63,7 +63,7 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
         {data.tags && Object.keys(data.tags || {}).length ? (
           <TagsPopover
             tags={data.tags}
-            iconProps={{ size: 12, color: Color.GREY_600 }}
+            iconProps={{ size: 14, color: Color.GREY_600 }}
             popoverProps={{ className: Classes.DARK }}
             className={css.tags}
           />
@@ -124,14 +124,31 @@ export const MenuCell: CellType = ({ row, column }) => {
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }} onClick={killEvent}>
       <Popover className={Classes.DARK} position={Position.LEFT}>
         <Button variation={ButtonVariation.ICON} icon="Options" aria-label="Freeze window menu actions" />
-        <Menu style={{ backgroundColor: 'unset' }}>
-          <Menu.Item
-            className={css.link}
-            text={<Link to={column.getViewFreezeWindowLink(data)}>Edit Freeze Window</Link>}
-          />
-          <Menu.Item text="Delete Freeze Window" onClick={() => column.onDeleteFreezeWindow(data)} />
+        <Menu style={{ backgroundColor: 'unset', minWidth: 'unset' }}>
+          <Menu.Item className={css.link} text={<Link to={column.getViewFreezeWindowLink(data)}>Edit</Link>} />
+          <Menu.Item text="Delete" onClick={() => column.onDeleteFreezeWindow(data)} />
         </Menu>
       </Popover>
     </Layout.Horizontal>
+  )
+}
+
+export const RowSelectCell: CellType = ({ row, column }) => {
+  const data = row.original as any
+
+  return (
+    <div className={css.checkbox} onClick={killEvent}>
+      <Checkbox large checked={data.status === 'checked'} onChange={() => column.onRowSelectToggle(data)} />
+    </div>
+  )
+}
+
+export const FreezeToggleCell: CellType = ({ row, column }) => {
+  const data = row.original as any
+
+  return (
+    <div onClick={killEvent}>
+      <Switch large checked={data.status === 'checked'} labelElement="" onChange={() => column.onFreezeToggle(data)} />
+    </div>
   )
 }

@@ -33,3 +33,11 @@
     font-size: var(--font-size-small) !important;
   }
 }
+
+.checkbox label {
+  margin-bottom: 0 !important;
+}
+
+.table {
+  padding: 0 var(--spacing-large) var(--spacing-large);
+}

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color, HarnessDocTooltip, Page, PageSpinner, Text } from '@harness/uicore'
+import { Color, HarnessDocTooltip, Layout, Page, PageSpinner, Switch, Text } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import React from 'react'
 import { useParams } from 'react-router-dom'
@@ -25,6 +25,7 @@ import {
   ProcessedFreezeListPageQueryParams,
   queryParamOptions
 } from '@freeze-windows/components/FreezeWindowSubHeader/FreezeWindowSubHeader'
+import { BulkActions } from '@freeze-windows/components/BulkActions/BulkActions'
 import css from './FreezeWindowsPage.module.scss'
 
 export default function FreezeWindowsPage(): React.ReactElement {
@@ -53,6 +54,7 @@ export default function FreezeWindowsPage(): React.ReactElement {
 
   useDocumentTitle([getString('common.freezeWindows')])
 
+  const onGlobalFreezeToggle = noop
   return (
     <div className={css.main}>
       <Page.Header
@@ -67,6 +69,14 @@ export default function FreezeWindowsPage(): React.ReactElement {
             links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
           />
         }
+        toolbar={
+          <Switch
+            large
+            checked
+            label="Disable all deployments for this Account (all Projects)"
+            onChange={() => onGlobalFreezeToggle()}
+          />
+        }
       />
 
       <Page.SubHeader className={css.freezeWindowsPageSubHeader}>
@@ -77,13 +87,19 @@ export default function FreezeWindowsPage(): React.ReactElement {
         {loading ? (
           <PageSpinner />
         ) : data?.data?.content?.length ? (
-          <div className={css.listView}>
-            <Text color={Color.GREY_800} font={{ weight: 'bold' }} margin={{ bottom: 'large' }}>
-              {`${getString('total')}: ${data?.data?.totalItems}`}
-            </Text>
+          <>
+            <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
+              <Text color={Color.GREY_800} font={{ weight: 'bold' }} padding="large">
+                {`${getString('total')}: ${data?.data?.totalItems}`}
+              </Text>
+              <BulkActions />
+            </Layout.Horizontal>
+
             <FreezeWindowListTable
               gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
               data={data?.data}
+              onRowSelectToggle={noop}
+              onFreezeToggle={noop}
               onViewFreezeWindow={noop}
               onDeleteFreezeWindow={noop}
               getViewFreezeWindowLink={() => ''}
@@ -92,7 +108,7 @@ export default function FreezeWindowsPage(): React.ReactElement {
               }}
               sortBy={sort}
             />
-          </div>
+          </>
         ) : (
           <NoResultsView
             hasSearchParam={!!searchTerm} //  || !!quick filter

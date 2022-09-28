@@ -12,9 +12,20 @@ import type { PageFreezeResponse, ResponsePageFreezeResponse } from 'services/cd
 import { useStrings } from 'framework/strings'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import type { SortBy } from '@freeze-windows/pages/FreezeWindowsPage/types'
-import { MenuCell, LastModifiedCell, FreezeNameCell, FreezeTimeCell, StatusCell } from './FreezeWindowListCells'
+import {
+  MenuCell,
+  LastModifiedCell,
+  FreezeNameCell,
+  FreezeTimeCell,
+  StatusCell,
+  RowSelectCell,
+  FreezeToggleCell
+} from './FreezeWindowListCells'
+import css from './FreezeWindowList.module.scss'
 
 export interface FreezeWindowListColumnActions {
+  onRowSelectToggle: (freezeWindow: PageFreezeResponse) => void
+  onFreezeToggle: (freezeWindow: PageFreezeResponse) => void
   onViewFreezeWindow: (freezeWindow: PageFreezeResponse) => void
   onDeleteFreezeWindow: (freezeWindow: PageFreezeResponse) => void
   getViewFreezeWindowLink: (freezeWindow: PageFreezeResponse) => string
@@ -32,6 +43,8 @@ export function FreezeWindowListTable({
   gotoPage,
   sortBy,
   setSortBy,
+  onRowSelectToggle,
+  onFreezeToggle,
   onViewFreezeWindow,
   onDeleteFreezeWindow,
   getViewFreezeWindowLink
@@ -59,6 +72,22 @@ export function FreezeWindowListTable({
     }
     return [
       {
+        Header: '',
+        id: 'rowSelectToggle',
+        width: '3%',
+        Cell: RowSelectCell,
+        disableSortBy: true,
+        onRowSelectToggle
+      },
+      {
+        Header: '',
+        accessor: 'freezeToggle',
+        width: '3%',
+        Cell: FreezeToggleCell,
+        disableSortBy: true,
+        onFreezeToggle
+      },
+      {
         Header: 'Name',
         accessor: 'name',
         width: '25%',
@@ -69,21 +98,21 @@ export function FreezeWindowListTable({
       {
         Header: 'Freeze Time',
         accessor: 'freezeTime',
-        width: '30%',
+        width: '34%',
         Cell: FreezeTimeCell,
         disableSortBy: true
       },
       {
         Header: 'Status',
         accessor: 'status',
-        width: '20%',
+        width: '15%',
         Cell: StatusCell,
         disableSortBy: true
       },
       {
         Header: getString('common.lastModified'),
         accessor: 'lastUpdatedAt',
-        width: '20%',
+        width: '15%',
         Cell: LastModifiedCell,
         serverSortProps: getServerSortProps('lastUpdatedAt')
       },
@@ -116,6 +145,7 @@ export function FreezeWindowListTable({
       }
       sortable
       onRowClick={rowDetails => onViewFreezeWindow(rowDetails)}
+      className={css.table}
     />
   )
 }

@@ -8,9 +8,11 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly active: string
+  readonly checkbox: string
   readonly inactive: string
   readonly link: string
   readonly status: string
+  readonly table: string
   readonly tags: string
 }
 export default styles
