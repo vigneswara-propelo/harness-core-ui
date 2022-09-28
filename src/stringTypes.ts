@@ -6653,9 +6653,12 @@ export interface StringsMap {
   'ci.runTestsStep.frameworkVersion': string
   'ci.runTestsStep.gradle': string
   'ci.runTestsStep.java': string
+  'ci.runTestsStep.kotlin': string
   'ci.runTestsStep.maven': string
   'ci.runTestsStep.nUnitConsole': string
   'ci.runTestsStep.namespaces': string
+  'ci.runTestsStep.sbt': string
+  'ci.runTestsStep.scala': string
   'ci.runTestsStep.sixPointZero': string
   'ci.runTestsStep.testReportPaths': string
   'ci.runTestsStep.validation.namespacesRequiredWhenCsharp': string
