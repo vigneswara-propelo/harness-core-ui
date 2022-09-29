@@ -638,6 +638,7 @@ export interface AddUsersResponse {
       | 'USER_ADDED_SUCCESSFULLY'
       | 'USER_ALREADY_ADDED'
       | 'USER_ALREADY_INVITED'
+      | 'USER_INVITE_NOT_REQUIRED'
       | 'FAIL'
   }
 }
