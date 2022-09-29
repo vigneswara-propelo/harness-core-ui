@@ -156,8 +156,33 @@ exports[`TargetsPage TargetsPage should render data correctly 1`] = `
       <div
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
       >
+        <div
+          class="StyledProps--font StyledProps--main"
+        >
+          <div
+            class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+          >
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--variation Button--variation-primary"
+              type="button"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                cf.featureFlags.getStartedWithFF
+              </span>
+            </button>
+            <img
+              alt=""
+              data-testid="or-image"
+              height="24"
+              src="test-file-stub"
+              width="270"
+            />
+          </div>
+        </div>
         <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+          class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
           type="button"
         >
           <span

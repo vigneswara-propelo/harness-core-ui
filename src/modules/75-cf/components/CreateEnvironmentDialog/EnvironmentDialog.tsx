@@ -39,6 +39,7 @@ import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
+import GetStartedWithFF from '@cf/pages/feature-flags/components/GetStartedWithFF'
 import css from './EnvironmentDialog.module.scss'
 
 export interface EnvironmentDialogProps {
@@ -46,6 +47,7 @@ export interface EnvironmentDialogProps {
   onCreate: (response?: ResponseEnvironmentResponseDTO) => void
   buttonProps?: ButtonProps
   environments?: EnvironmentResponseDTO[]
+  isLinkVariation?: boolean
 }
 
 interface EnvironmentValues {
@@ -56,7 +58,13 @@ interface EnvironmentValues {
   type: EnvironmentType
 }
 
-const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreate, buttonProps, environments }) => {
+const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
+  disabled,
+  onCreate,
+  buttonProps,
+  environments,
+  isLinkVariation
+}) => {
   const { showError } = useToaster()
   const { getString, getEnvString } = useEnvStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
@@ -211,31 +219,34 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreat
   }, [loading])
 
   return (
-    <RbacButton
-      icon="plus"
-      disabled={disabled}
-      onClick={() => {
-        trackEvent(FeatureActions.CreateEnvClick, {
-          category: Category.FEATUREFLAG
-        })
-        openModal()
-      }}
-      text={getString('newEnvironment')}
-      intent="primary"
-      variation={ButtonVariation.PRIMARY}
-      padding={{
-        top: 'small',
-        bottom: 'small',
-        left: 'huge',
-        right: 'huge'
-      }}
-      permission={{
-        resource: { resourceType: ResourceType.ENVIRONMENT },
-        permission: PermissionIdentifier.EDIT_ENVIRONMENT
-      }}
-      {...buttonProps}
-      {...planEnforcementProps}
-    />
+    <>
+      <GetStartedWithFF hidden={!isLinkVariation} />
+      <RbacButton
+        icon="plus"
+        disabled={disabled}
+        onClick={() => {
+          trackEvent(FeatureActions.CreateEnvClick, {
+            category: Category.FEATUREFLAG
+          })
+          openModal()
+        }}
+        text={getString('newEnvironment')}
+        intent="primary"
+        variation={isLinkVariation ? ButtonVariation.LINK : ButtonVariation.PRIMARY}
+        padding={{
+          top: 'small',
+          bottom: 'small',
+          left: 'huge',
+          right: 'huge'
+        }}
+        permission={{
+          resource: { resourceType: ResourceType.ENVIRONMENT },
+          permission: PermissionIdentifier.EDIT_ENVIRONMENT
+        }}
+        {...buttonProps}
+        {...planEnforcementProps}
+      />
+    </>
   )
 }
 

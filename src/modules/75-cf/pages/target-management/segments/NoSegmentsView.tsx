@@ -33,6 +33,7 @@ export const NoSegmentsView: React.FC<NoSegmentsViewProps> = ({ onNewSegmentCrea
           orgIdentifier={orgIdentifier}
           projectIdentifier={projectIdentifier}
           onCreated={onNewSegmentCreated}
+          isLinkVariation
         />
       </NoData>
     </Container>

@@ -28,6 +28,7 @@ import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { Target } from 'services/cf'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
+import GetStartedWithFF from '@cf/pages/feature-flags/components/GetStartedWithFF'
 import uploadImageUrl from './upload.svg'
 import css from './TargetsPage.module.scss'
 
@@ -212,9 +213,15 @@ export interface CreateTargetModalProps {
   loading: boolean
   onSubmitTargets: (targets: TargetData[], hideModal: () => void) => void
   onSubmitTargetFile: (file: File, hideModal: () => void) => void
+  isLinkVariation?: boolean
 }
 
-const CreateTargetModal: React.FC<CreateTargetModalProps> = ({ loading, onSubmitTargets, onSubmitTargetFile }) => {
+const CreateTargetModal: React.FC<CreateTargetModalProps> = ({
+  loading,
+  onSubmitTargets,
+  onSubmitTargetFile,
+  isLinkVariation
+}) => {
   const LIST = 'list'
   const UPLOAD = 'upload'
   const [isList, setIsList] = useState(true)
@@ -347,18 +354,21 @@ const CreateTargetModal: React.FC<CreateTargetModalProps> = ({ loading, onSubmit
   }, [isList, targets, loading, addDisabled])
 
   return (
-    <RbacButton
-      icon="plus"
-      intent="primary"
-      variation={ButtonVariation.PRIMARY}
-      text={getString('cf.targets.create')}
-      onClick={openModal}
-      permission={{
-        resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment },
-        permission: PermissionIdentifier.EDIT_FF_TARGETGROUP
-      }}
-      {...planEnforcementProps}
-    />
+    <>
+      <GetStartedWithFF hidden={!isLinkVariation} />
+      <RbacButton
+        icon="plus"
+        intent="primary"
+        variation={isLinkVariation ? ButtonVariation.LINK : ButtonVariation.PRIMARY}
+        text={getString('cf.targets.create')}
+        onClick={openModal}
+        permission={{
+          resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment },
+          permission: PermissionIdentifier.EDIT_FF_TARGETGROUP
+        }}
+        {...planEnforcementProps}
+      />
+    </>
   )
 }
 

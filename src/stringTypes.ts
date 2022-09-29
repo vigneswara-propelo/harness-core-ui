@@ -6130,6 +6130,7 @@ export interface StringsMap {
   'cf.featureFlags.flagPipeline.triggerDetails': string
   'cf.featureFlags.flagWillTurnOff': string
   'cf.featureFlags.flagWillTurnOn': string
+  'cf.featureFlags.getStartedWithFF': string
   'cf.featureFlags.ifClause': string
   'cf.featureFlags.ifClauseServe': string
   'cf.featureFlags.ifClauseServePercentageRollout': string

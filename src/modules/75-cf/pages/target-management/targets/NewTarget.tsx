@@ -18,6 +18,7 @@ export interface NewTargetsProps {
   orgIdentifier: string
   projectIdentifier: string
   onCreated: () => void
+  isLinkVariation?: boolean
 }
 
 type SettledTarget = {
@@ -127,6 +128,7 @@ export const NewTargets: React.FC<NewTargetsProps> = ({
       loading={loadingCreateTarget || loadingBulk || loadingUploadTarget}
       onSubmitTargets={handleTargetCreation}
       onSubmitTargetFile={handleTargetFileCreation}
+      isLinkVariation
     />
   )
 }

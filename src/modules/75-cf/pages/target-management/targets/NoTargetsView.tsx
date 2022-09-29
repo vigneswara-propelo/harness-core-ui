@@ -33,6 +33,7 @@ export const NoTargetsView: React.FC<NoTargetsViewProps> = ({ onNewTargetsCreate
           orgIdentifier={orgIdentifier}
           projectIdentifier={projectIdentifier}
           onCreated={onNewTargetsCreated}
+          isLinkVariation
         />
       </NoData>
     </Container>

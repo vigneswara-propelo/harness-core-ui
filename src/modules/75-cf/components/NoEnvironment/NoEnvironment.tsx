@@ -13,6 +13,7 @@ import { NoData } from '../NoData/NoData'
 
 export interface NoEnvironmentProps {
   onCreated: EnvironmentDialogProps['onCreate']
+  isLinkVariation?: boolean
 }
 
 export const NoEnvironment: React.FC<NoEnvironmentProps> = ({ onCreated }) => {
@@ -24,7 +25,7 @@ export const NoEnvironment: React.FC<NoEnvironmentProps> = ({ onCreated }) => {
       message={getString('cf.noEnvironment.title')}
       description={<String useRichText stringID="cf.noEnvironment.message" />}
     >
-      <EnvironmentDialog onCreate={onCreated} />
+      <EnvironmentDialog onCreate={onCreated} isLinkVariation />
     </NoData>
   )
 }

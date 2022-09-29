@@ -18,6 +18,7 @@ import { useCreateSegment, Tag, CreateSegmentQueryParams } from 'services/cf'
 import { useToaster } from '@common/exports'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
+import GetStartedWithFF from '@cf/pages/feature-flags/components/GetStartedWithFF'
 import css from './NewSegmentButton.module.scss'
 
 const collapseProps = {
@@ -39,13 +40,15 @@ export interface NewSegmentButtonProps {
   orgIdentifier: string
   projectIdentifier: string
   onCreated: (segmentIdentifier: string) => void
+  isLinkVariation?: boolean
 }
 
 export const NewSegmentButton: React.FC<NewSegmentButtonProps> = ({
   accountIdentifier,
   orgIdentifier,
   projectIdentifier,
-  onCreated
+  onCreated,
+  isLinkVariation
 }) => {
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -151,16 +154,19 @@ export const NewSegmentButton: React.FC<NewSegmentButtonProps> = ({
   }, [activeEnvironment])
 
   return (
-    <RbacButton
-      icon="plus"
-      intent="primary"
-      variation={ButtonVariation.PRIMARY}
-      text={getString('cf.segments.create')}
-      onClick={openModal}
-      permission={{
-        resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment },
-        permission: PermissionIdentifier.EDIT_FF_TARGETGROUP
-      }}
-    />
+    <>
+      <GetStartedWithFF hidden={!isLinkVariation} />
+      <RbacButton
+        icon="plus"
+        intent="primary"
+        variation={isLinkVariation ? ButtonVariation.LINK : ButtonVariation.PRIMARY}
+        text={getString('cf.segments.create')}
+        onClick={openModal}
+        permission={{
+          resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment },
+          permission: PermissionIdentifier.EDIT_FF_TARGETGROUP
+        }}
+      />
+    </>
   )
 }

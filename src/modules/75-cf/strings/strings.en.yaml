@@ -127,12 +127,13 @@ clause:
     equalSensitive: 'equals (sensitive)'
     matchSegment: 'Match Target Group'
 featureFlags:
-  newFlag: New Flag
+  newFlag: New Feature Flag
   true: 'True'
   false: 'False'
   noFlagsInProject: There are no Flags in this Project
   noFlagsDescription: A Feature Flag controls what you want to release, who receives it, and how it will be delivered.
   noFlagsToGetStarted: To get started with Feature Flags, you can <a href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag" target="_blank" rel="noreferrer">create your first Flag</a>, <a href="https://docs.harness.io/category/rtce97j1wu-ff-sdks" target="_blank" rel="noreferrer">get started with our SDKs</a>, or <a href="https://docs.harness.io/category/iqgyied1c0-ff-getting-started" target="_blank" rel="noreferrer">read our getting started guide</a>.
+  getStartedWithFF: Get Started with Feature Flags
   typeOfFlag: Select the Type of Flag You Want to Create
   startVariation: Start by selecting the variation type that the flag will use
   booleanBtnText: This is a simple ON/OFF toggle
