@@ -47,7 +47,9 @@ export interface StringsMap {
   'common.advanced': string
   'common.agent': string
   'common.agents': string
+  'common.allEnvironments': string
   'common.allErrors': string
+  'common.allServices': string
   'common.and': string
   'common.andCaps': string
   'common.annually': string
@@ -573,6 +575,7 @@ export interface StringsMap {
   'common.policy.policySearch': string
   'common.policy.policysets': string
   'common.powershell': string
+  'common.preProduction': string
   'common.production': string
   'common.projectSetup': string
   'common.projectViewer': string
@@ -3730,7 +3733,6 @@ export interface StringsMap {
   'pipeline.policyEvaluations.policySetsApplied': string
   'pipeline.policyEvaluations.title': string
   'pipeline.poweredByHarness': string
-  'pipeline.preProduction': string
   'pipeline.previewTemplateLabel': string
   'pipeline.progressPercentage': string
   'pipeline.provisionerSteps': string
@@ -4097,6 +4099,8 @@ export interface StringsMap {
   'pipeline.viewPipeline': string
   'pipeline.warningForInvalidYAMLDiscard': string
   'freezeWindows.freezeStudio.defineResources': string
+  'freezeWindows.freezeStudio.excludeOrgs': string
+  'freezeWindows.freezeStudio.excludeProjects': string
   'freezeWindows.freezeStudio.freezeConfiguration': string
   'freezeWindows.freezeStudio.freezeOverview': string
   'freezeWindows.freezeWindowsPage.newFreezeWindow': string
@@ -4553,7 +4557,6 @@ export interface StringsMap {
   'cd.pathCannotBeEmpty': string
   'cd.pipelineCreation': string
   'cd.pipelineSteps.environmentTab.allClustersSelected': string
-  'cd.pipelineSteps.environmentTab.allEnvironmentsInEnvGroupSelected': string
   'cd.pipelineSteps.environmentTab.clusterIsRequired': string
   'cd.pipelineSteps.environmentTab.deployToAll': string
   'cd.pipelineSteps.environmentTab.environmentInEnvGroupIsRequired': string
@@ -6735,7 +6738,6 @@ export interface StringsMap {
   'cv.adjustTheErrorBudgetToContinueWithDeployments': string
   'cv.admin.activitySources.dialogDeleteTitle': string
   'cv.allMetrics': string
-  'cv.allServices': string
   'cv.analysisScreens.totalClusters': string
   'cv.andYouHave': string
   'cv.anomalous': string

@@ -8,27 +8,18 @@
 import React from 'react'
 import noop from 'lodash-es/noop'
 import { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { useParams } from 'react-router-dom'
 import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindowContextActions } from './FreezeWidowActions'
 import { initialState, FreezeWindowReducerState, FreezeReducer } from './FreezeWindowReducer'
 
-// interface Freeze {
-//   // todo: use from BE swagger
-//   description?: string
-//   identifier: string
-//   name: string
-//   orgIdentifier?: string
-//   projectIdentifier?: string
-//   spec?: any
-// }
-//
-// interface FreezePayload {
-//   identifier: string
-//   freeze?: Freeze
-//   originalFreeze?: Freeze
-//   isUpdated: boolean
-// }
+export enum FreezeWindowLevels {
+  ACCOUNT = 'ACCOUNT',
+  ORG = 'ORG',
+  PROJECT = 'PROJECT'
+}
 
 export interface FreezeWindowContextInterface {
   state: FreezeWindowReducerState
@@ -38,6 +29,7 @@ export interface FreezeWindowContextInterface {
   setYamlHandler: (yamlHandler: YamlBuilderHandlerBinding) => void
   updateYamlView: (isYamlEditable: boolean) => void
   updateFreeze: (response: any) => void
+  freezeWindowLevel: FreezeWindowLevels
 }
 
 export const FreezeWindowContext = React.createContext<FreezeWindowContextInterface>({
@@ -47,8 +39,15 @@ export const FreezeWindowContext = React.createContext<FreezeWindowContextInterf
   setView: noop,
   setYamlHandler: noop,
   updateYamlView: noop,
-  updateFreeze: noop
+  updateFreeze: noop,
+  freezeWindowLevel: FreezeWindowLevels.ORG
 })
+
+const getFreezeWindowLevel = ({ projectIdentifier, orgIdentifier }: ProjectPathProps) => {
+  if (projectIdentifier) return FreezeWindowLevels.PROJECT
+  if (orgIdentifier) return FreezeWindowLevels.ORG
+  return FreezeWindowLevels.ACCOUNT
+}
 
 export const FreezeWindowProvider: React.FC = ({ children }) => {
   const isInvalidYAML = false // state.entityValidityDetails.valid === false
@@ -56,6 +55,13 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
     'freeze_studio_view',
     isInvalidYAML ? SelectedView.YAML : SelectedView.VISUAL
   )
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const [freezeWindowLevel, setFreezeWindowLevel] = React.useState<FreezeWindowLevels>(FreezeWindowLevels.ORG)
+
+  React.useEffect(() => {
+    setFreezeWindowLevel(getFreezeWindowLevel({ accountId, projectIdentifier, orgIdentifier }))
+  }, [accountId, projectIdentifier, orgIdentifier])
+
   const [state, dispatch] = React.useReducer(FreezeReducer, initialState)
   const updateYamlView = React.useCallback((isYamlEditable: boolean) => {
     dispatch(FreezeWindowContextActions.updateYamlView({ isYamlEditable }))
@@ -70,7 +76,9 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
   }, [])
 
   return (
-    <FreezeWindowContext.Provider value={{ state, view, setView, updateYamlView, updateFreeze, setYamlHandler }}>
+    <FreezeWindowContext.Provider
+      value={{ state, view, setView, updateYamlView, updateFreeze, setYamlHandler, freezeWindowLevel }}
+    >
       {children}
     </FreezeWindowContext.Provider>
   )

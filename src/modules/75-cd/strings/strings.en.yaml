@@ -111,7 +111,7 @@ serviceCreated: '{{ $.common.serviceCreated }}'
 serviceUpdated: '{{ $.common.serviceUpdated }}'
 environmentCreated: '{{ $.common.environmentCreated }}'
 environmentUpdated: '{{ $.common.environmentUpdated }}'
-preProduction: '{{ $.pipeline.preProduction }}'
+preProduction: '{{ $.common.preProduction }}'
 preProductionType: 'Pre-Prod'
 environmentDelete: '{{ $.common.deleteEnvironment.title }}'
 environmentDeleteMessage: 'Are you sure you want to delete environment <strong>{{name}}</strong>?'
@@ -169,7 +169,6 @@ pipelineSteps:
     deployToAll: Deploy in parallel on all infrastructure
     environmentOrEnvGroupAsRuntime: Which of Environment or Environment Group should be marked as runtime?
     allClustersSelected: All Clusters in Environment
-    allEnvironmentsInEnvGroupSelected: All Environments
     environmentIsRequired: '{{ $.common.validation.environmentIsRequired }}'
     infrastructureIsRequired: 'Infrastructure is required'
     environmentOrEnvGroupIsRequired: 'Environment or Environment Group is required'

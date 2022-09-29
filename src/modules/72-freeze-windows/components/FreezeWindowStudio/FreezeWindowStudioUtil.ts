@@ -6,10 +6,12 @@
  */
 
 import { parse } from 'yaml'
-import { defaultTo, pick, set } from 'lodash-es'
+import { defaultTo, isEmpty, pick, set } from 'lodash-es'
+import { FreezeWindowLevels } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { StringKeys } from 'framework/strings'
-import type { EntityConfig } from '@freeze-windows/types'
+import type { EntityConfig, EntityType } from '@freeze-windows/types'
+import { ExcludeFieldKeys, FIELD_KEYS } from './FreezeStudioConfigSectionRenderers'
 
 export function isValidYaml(
   yamlHandler: YamlBuilderHandlerBinding | undefined,
@@ -40,10 +42,112 @@ export const getInitialValues = (freezeObj: any) => {
   }
 }
 
+export interface FieldVisibility {
+  showOrgField: boolean
+  showProjectField: boolean
+}
+
+export const getFieldsVisibility = (freezeWindowLevel: FreezeWindowLevels): FieldVisibility => {
+  const obj = { showOrgField: false, showProjectField: false }
+  if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
+    obj.showOrgField = true
+    obj.showProjectField = true
+  }
+  if (freezeWindowLevel === FreezeWindowLevels.ORG) {
+    obj.showProjectField = true
+  }
+  return obj
+}
+
 export const getInitialValuesForConfigSection = (entityConfigs: EntityConfig[]) => {
   const initialValues = {}
-  entityConfigs.forEach((c: EntityConfig, i: number) => {
-    set(initialValues, `entity[${i}].entity.rule`, c.entity.rule)
+  entityConfigs?.forEach((c: EntityConfig, i: number) => {
+    set(initialValues, `entity[${i}].name`, c.name)
+
+    const entities = c.entities
+    entities?.forEach(entity => {
+      const { type, filterType, entityRefs } = entity
+      if (filterType === 'All') {
+        // set filterType and entity
+        set(initialValues, `entity[${i}].${type}`, filterType)
+      } else if (filterType === 'Equals') {
+        set(initialValues, `entity[${i}].${type}`, entityRefs?.[0])
+        // equals
+      } else if (filterType === 'NotEquals') {
+        const excludeFieldKeys = ExcludeFieldKeys[type as 'Org' | 'Proj']
+        if (excludeFieldKeys) {
+          const { CheckboxKey, ExcludeFieldKey } = excludeFieldKeys
+          set(initialValues, `entity[${i}].${type}`, 'All')
+          set(initialValues, `entity[${i}].${CheckboxKey}`, true)
+          set(initialValues, `entity[${i}].${ExcludeFieldKey}`, entityRefs?.[0])
+        }
+      }
+    })
   })
   return initialValues
+}
+
+const updateEntities = (obj: any, entities: any, index: number) => {
+  if (obj.entityRefs.length === 0) {
+    delete obj.entityRefs
+  }
+  if (index >= 0) {
+    entities[index] = obj
+  } else {
+    entities.push(obj)
+  }
+}
+
+const adaptForOrgField = (newValues: any, entities: EntityType[]) => {
+  const fieldKey = FIELD_KEYS.Org
+  const orgFieldIndex = entities.findIndex((e: any) => e.type === fieldKey)
+
+  if (orgFieldIndex < 0 && !newValues[fieldKey]) {
+    return
+  }
+  const obj: EntityType = { type: fieldKey, filterType: 'All', entityRefs: [] }
+  if (newValues[fieldKey] === 'All') {
+    const hasExcludedOrgs = newValues[FIELD_KEYS.ExcludeOrgCheckbox] && !isEmpty(newValues[FIELD_KEYS.ExcludeOrg])
+    obj.filterType = hasExcludedOrgs ? 'NotEquals' : 'All'
+    if (hasExcludedOrgs) {
+      obj.entityRefs?.push(newValues[FIELD_KEYS.ExcludeOrg])
+    }
+    // exclude can be there
+    // entityRefs reqd, if exclude is true
+  } else {
+    obj.filterType = 'Equals'
+    obj.entityRefs?.push(newValues[fieldKey])
+  }
+
+  updateEntities(obj, entities, orgFieldIndex)
+}
+
+const adaptForEnvField = (newValues: any, entities: EntityType[]) => {
+  const fieldKey = FIELD_KEYS.EnvType
+  const index = entities.findIndex((e: any) => e.type === fieldKey)
+
+  if (index < 0 && newValues[fieldKey]) {
+    return
+  }
+
+  const obj: EntityType = { type: fieldKey, filterType: 'All', entityRefs: [] }
+
+  if (newValues[fieldKey] === 'All') {
+    obj.filterType = newValues[fieldKey]
+  } else {
+    obj.filterType = 'Equals'
+    obj.entityRefs = [newValues[fieldKey]]
+    // equals, not equals
+  }
+
+  updateEntities(obj, entities, index)
+}
+
+export const convertValuesToYamlObj = (currentValues: any, newValues: any) => {
+  const entities = [...(currentValues.entities || [])]
+
+  adaptForEnvField(newValues, entities as EntityType[])
+  adaptForOrgField(newValues, entities)
+
+  return { name: newValues.name, entities }
 }

@@ -8,6 +8,7 @@
 import React from 'react'
 import { Icon, Tab, Tabs } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
+import type { ResourcesInterface } from '@freeze-windows/types'
 import { FreezeStudioOverviewSection } from './FreezeStudioOverviewSection'
 import { FreezeStudioConfigSection } from './FreezeStudioConfigSection'
 import css from './FreezeWindowStudio.module.scss'
@@ -18,9 +19,9 @@ enum FreezeWindowTabs {
   SCHEDULE = 'SCHEDULE'
 }
 
-export const FreezeWindowStudioVisualView = () => {
+export const FreezeWindowStudioVisualView = ({ resources }: { resources: ResourcesInterface }) => {
   const { getString } = useStrings()
-  const [selectedTabId, setSelectedTabId] = React.useState<FreezeWindowTabs>(FreezeWindowTabs.OVERVIEW)
+  const [selectedTabId, setSelectedTabId] = React.useState<FreezeWindowTabs>(FreezeWindowTabs.FREEZE_CONFIG)
 
   const isReadOnly = false
 
@@ -53,9 +54,9 @@ export const FreezeWindowStudioVisualView = () => {
           id={FreezeWindowTabs.FREEZE_CONFIG}
           panel={
             <FreezeStudioConfigSection
-              isReadOnly={isReadOnly}
               onBack={() => setSelectedTabId(FreezeWindowTabs.OVERVIEW)}
               onNext={() => setSelectedTabId(FreezeWindowTabs.SCHEDULE)}
+              resources={resources}
             />
           }
           title={

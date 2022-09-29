@@ -22,14 +22,123 @@ import {
 import { Color } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
-import type { EntityConfig } from '@freeze-windows/types'
-import { getInitialValuesForConfigSection } from './FreezeWindowStudioUtil'
+import type { EntityConfig, ResourcesInterface, EntityType } from '@freeze-windows/types'
+import {
+  getInitialValuesForConfigSection,
+  convertValuesToYamlObj,
+  getFieldsVisibility,
+  FieldVisibility
+} from './FreezeWindowStudioUtil'
+import {
+  ServiceFieldRenderer,
+  EnvironmentTypeRenderer,
+  Organizationfield,
+  OrgFieldViewMode,
+  ProjectFieldViewMode,
+  ProjectField,
+  FIELD_KEYS
+} from './FreezeStudioConfigSectionRenderers'
 import css from './FreezeWindowStudio.module.scss'
 
-interface FreezeStudioConfigSectionProps {
-  isReadOnly: boolean
-  onBack: () => void
-  onNext: () => void
+interface ConfigViewModeRendererProps {
+  config: EntityConfig
+  getString: UseStringsReturn['getString']
+  setEditView: () => void
+  deleteConfig: () => void
+}
+
+const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
+  config,
+  getString,
+  setEditView,
+  deleteConfig
+}) => {
+  const { name, entities } = config || {}
+  const entitiesMap =
+    entities?.reduce((accum: any, item: EntityType) => {
+      if (item?.type) {
+        accum[item.type] = item as EntityType
+      }
+      return accum
+    }, {}) || {}
+  return (
+    <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'start' }}>
+      <Layout.Vertical>
+        {name}
+        <OrgFieldViewMode data={entitiesMap[FIELD_KEYS.Org]} getString={getString} />
+        <ProjectFieldViewMode data={entitiesMap[FIELD_KEYS.Proj]} getString={getString} />
+      </Layout.Vertical>
+      <Layout.Horizontal>
+        <Button icon="edit" minimal withoutCurrentColor onClick={setEditView} />
+        <Button icon="trash" minimal withoutCurrentColor onClick={deleteConfig} />
+      </Layout.Horizontal>
+    </Layout.Horizontal>
+  )
+}
+
+interface ConfigEditModeRendererProps {
+  index: number
+  getString: UseStringsReturn['getString']
+  formikProps: any
+  resources: ResourcesInterface
+  saveEntity: any
+  setVisualView: () => void
+  fieldsVisibility: any
+}
+
+const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
+  index,
+  getString,
+  formikProps,
+  resources,
+  saveEntity,
+  setVisualView,
+  fieldsVisibility
+}) => {
+  return (
+    <FormikForm>
+      <Layout.Vertical>
+        <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'start' }}>
+          <Layout.Vertical width={'400px'}>
+            <FormInput.Text name={`entity[${index}].name`} label={getString('name')} />
+            {fieldsVisibility.showOrgField ? (
+              <Organizationfield
+                getString={getString}
+                namePrefix={`entity[${index}]`}
+                values={formikProps.values?.entity?.[index]}
+                setFieldValue={formikProps.setFieldValue}
+                organizations={resources.orgs || []}
+              />
+            ) : null}
+            {fieldsVisibility.showProjectField ? (
+              <ProjectField
+                getString={getString}
+                namePrefix={`entity[${index}]`}
+                values={formikProps.values?.entity?.[index]}
+                setFieldValue={formikProps.setFieldValue}
+                projects={resources.projects || []}
+              />
+            ) : null}
+          </Layout.Vertical>
+          <Layout.Horizontal spacing="small">
+            <Button icon="tick" minimal withoutCurrentColor className={css.tickButton} onClick={saveEntity} />
+            <Button icon="cross" minimal withoutCurrentColor className={css.crossButton} onClick={setVisualView} />
+          </Layout.Horizontal>
+        </Layout.Horizontal>
+        <hr className={css.separator} />
+        <Layout.Vertical>
+          <Layout.Horizontal spacing="medium">
+            <ServiceFieldRenderer
+              getString={getString}
+              name={`entity[${index}].${FIELD_KEYS.Service}`}
+              isDisabled={true}
+            />
+            <EnvironmentTypeRenderer getString={getString} name={`entity[${index}].${FIELD_KEYS.EnvType}`} />
+          </Layout.Horizontal>
+        </Layout.Vertical>
+      </Layout.Vertical>
+    </FormikForm>
+  )
 }
 
 interface ConfigRendererProps {
@@ -39,16 +148,45 @@ interface ConfigRendererProps {
   index: number
   updateFreeze: (freeze: any) => void
   formikProps: any
+  entityConfigs: EntityConfig[]
+  resources: ResourcesInterface
+  fieldsVisibility: FieldVisibility
 }
 
-const ConfigRenderer = ({ config, isEdit, getString, index, updateFreeze, formikProps }: ConfigRendererProps) => {
+const ConfigRenderer = ({
+  config,
+  isEdit,
+  getString,
+  index,
+  updateFreeze,
+  formikProps,
+  entityConfigs,
+  resources,
+  fieldsVisibility
+}: ConfigRendererProps) => {
   const [isEditView, setEditView] = React.useState(isEdit)
-  const setVisualView = () => {
+  const saveEntity = () => {
     const values = formikProps.values.entity
-    // todo: update only current one
-    updateFreeze({ entityConfigs: values })
+
+    const updatedEntityConfigs = [...entityConfigs]
+    updatedEntityConfigs[index] = convertValuesToYamlObj(updatedEntityConfigs[index], values[index])
+
+    updateFreeze({ entityConfigs: updatedEntityConfigs })
     setEditView(false)
   }
+
+  const setVisualViewMode = React.useCallback(() => {
+    setEditView(false)
+  }, [])
+  const setEditViewMode = React.useCallback(() => {
+    setEditView(true)
+  }, [])
+
+  const deleteConfig = () => {
+    const updatedEntityConfigs = entityConfigs.filter((_, i) => index !== i)
+    updateFreeze({ entityConfigs: updatedEntityConfigs })
+  }
+
   return (
     <Container
       padding="large"
@@ -56,15 +194,22 @@ const ConfigRenderer = ({ config, isEdit, getString, index, updateFreeze, formik
       margin={{ top: 'xlarge' }}
     >
       {isEditView ? (
-        <FormikForm>
-          <FormInput.Text name={`entity[${index}].entity.rule`} label={getString('name')} />
-          <button onClick={setVisualView}>Save</button>
-        </FormikForm>
+        <ConfigEditModeRenderer
+          index={index}
+          getString={getString}
+          formikProps={formikProps}
+          resources={resources}
+          saveEntity={saveEntity}
+          setVisualView={setVisualViewMode}
+          fieldsVisibility={fieldsVisibility}
+        />
       ) : (
-        <div>
-          {config.entity?.rule}
-          <button onClick={() => setEditView(true)}>Edit</button>
-        </div>
+        <ConfigViewModeRenderer
+          config={config}
+          getString={getString}
+          setEditView={setEditViewMode}
+          deleteConfig={deleteConfig}
+        />
       )}
     </Container>
   )
@@ -74,38 +219,71 @@ interface ConfigsSectionProps {
   entityConfigs: EntityConfig[]
   getString: UseStringsReturn['getString']
   updateFreeze: (freeze: any) => void
+  resources: ResourcesInterface
+  fieldsVisibility: FieldVisibility
 }
-const ConfigsSection = ({ entityConfigs, getString, updateFreeze }: ConfigsSectionProps) => {
+const ConfigsSection = ({
+  entityConfigs,
+  getString,
+  updateFreeze,
+  resources,
+  fieldsVisibility
+}: ConfigsSectionProps) => {
   const [initialValues, setInitialValues] = React.useState(getInitialValuesForConfigSection(entityConfigs))
   React.useEffect(() => {
     setInitialValues(getInitialValuesForConfigSection(entityConfigs))
   }, [])
   return (
-    <Formik initialValues={initialValues} onSubmit={noop} formName="freezeWindowStudioConfigForm">
-      {formikProps =>
-        entityConfigs.map((config: EntityConfig, index: number) => (
-          <ConfigRenderer
-            key={index}
-            config={config}
-            isEdit={false}
-            getString={getString}
-            index={index}
-            updateFreeze={updateFreeze}
-            formikProps={formikProps}
-          />
-        ))
-      }
-    </Formik>
+    <>
+      <Formik initialValues={initialValues} onSubmit={noop} formName="freezeWindowStudioConfigForm">
+        {formikProps =>
+          entityConfigs.map((config: EntityConfig, index: number) => (
+            <ConfigRenderer
+              key={index}
+              config={config}
+              isEdit={index === 0}
+              getString={getString}
+              index={index}
+              updateFreeze={updateFreeze}
+              formikProps={formikProps}
+              entityConfigs={entityConfigs}
+              resources={resources}
+              fieldsVisibility={fieldsVisibility}
+            />
+          ))
+        }
+      </Formik>
+      <Button
+        minimal
+        withoutBoxShadow
+        intent="primary"
+        text="Add rule"
+        icon="plus"
+        // onClick={() => console.log('Hello World')}
+        className={css.addNewRuleButton}
+      />
+    </>
   )
 }
 
-export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps> = ({ onNext, onBack }) => {
+interface FreezeStudioConfigSectionProps {
+  onBack: () => void
+  onNext: () => void
+  resources: ResourcesInterface
+}
+
+export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps> = ({ onNext, onBack, resources }) => {
   const { getString } = useStrings()
   const {
     state: { freezeObj },
-    updateFreeze
+    updateFreeze,
+    freezeWindowLevel
   } = React.useContext(FreezeWindowContext)
 
+  const fieldsVisibility: FieldVisibility = React.useMemo(() => {
+    return getFieldsVisibility(freezeWindowLevel)
+  }, [freezeWindowLevel])
+  // console.log('freezeWindowLevel', freezeWindowLevel)
   const entityConfigs = freezeObj?.entityConfigs || []
 
   return (
@@ -121,6 +299,8 @@ export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps>
           entityConfigs={entityConfigs as EntityConfig[]}
           getString={getString}
           updateFreeze={updateFreeze}
+          resources={resources}
+          fieldsVisibility={fieldsVisibility}
         />
       </Card>
       <Layout.Horizontal spacing="small" margin={{ top: 'xxlarge' }}>
