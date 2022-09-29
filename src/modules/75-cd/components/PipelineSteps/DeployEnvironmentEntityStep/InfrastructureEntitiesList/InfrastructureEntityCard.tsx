@@ -20,29 +20,28 @@ import {
 } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import type { NGEnvironmentInfoConfig } from 'services/cd-ng'
+import type { InfrastructureDefinitionConfig } from 'services/cd-ng'
 
-import css from './EnvironmentEntitiesList.module.scss'
+import css from './InfrastructureEntitiesList.module.scss'
 
-export interface EnvironmentData {
-  // TODO: Change to V2
-  environment: NGEnvironmentInfoConfig & { yaml: string }
+export interface InfrastructureData {
+  infrastructure: InfrastructureDefinitionConfig & { yaml: string }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  environmentInputs?: any
+  infrastructureInputs?: any
 }
 
-export interface EnvironmentEntityCardProps extends EnvironmentData {
+export interface InfrastructureEntityCardProps extends InfrastructureData {
   defaultExpanded?: boolean
   readonly?: boolean
   stageIdentifier?: string
   deploymentType?: string
   allowableTypes?: AllowedTypes
-  onEditClick(svc: EnvironmentData): void
-  onDeleteClick(svc: EnvironmentData): void
+  onEditClick(svc: InfrastructureData): void
+  onDeleteClick(svc: InfrastructureData): void
 }
 
-export function EnvironmentEntityCard(props: EnvironmentEntityCardProps): React.ReactElement {
-  const { environment, environmentInputs, readonly, onEditClick, onDeleteClick } = props
+export function InfrastructureEntityCard(props: InfrastructureEntityCardProps): React.ReactElement {
+  const { infrastructure, infrastructureInputs, readonly, onEditClick, onDeleteClick } = props
   const { getString } = useStrings()
 
   return (
@@ -54,14 +53,14 @@ export function EnvironmentEntityCard(props: EnvironmentEntityCardProps): React.
             spacing="small"
             margin={{ bottom: 'xsmall' }}
           >
-            <Text color={Color.PRIMARY_7}>{environment.name}</Text>
-            {!isEmpty(environment.tags) && (
-              <TagsPopover iconProps={{ size: 14, color: Color.GREY_600 }} tags={defaultTo(environment.tags, {})} />
+            <Text color={Color.PRIMARY_7}>{infrastructure.name}</Text>
+            {!isEmpty(infrastructure.tags) && (
+              <TagsPopover iconProps={{ size: 14, color: Color.GREY_600 }} tags={defaultTo(infrastructure.tags, {})} />
             )}
           </Layout.Horizontal>
 
           <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
-            {getString('common.ID')}: {environment.identifier}
+            {getString('common.ID')}: {infrastructure.identifier}
           </Text>
         </Layout.Vertical>
 
@@ -69,16 +68,16 @@ export function EnvironmentEntityCard(props: EnvironmentEntityCardProps): React.
           <Button
             variation={ButtonVariation.ICON}
             icon="edit"
-            data-testid={`edit-environment-${environment.identifier}`}
+            data-testid={`edit-infrastructure-${infrastructure.identifier}`}
             disabled={readonly}
-            onClick={() => onEditClick({ environment, environmentInputs })}
+            onClick={() => onEditClick({ infrastructure, infrastructureInputs })}
           />
           <Button
             variation={ButtonVariation.ICON}
             icon="remove-minus"
-            data-testid={`delete-environment-${environment.identifier}`}
+            data-testid={`delete-infrastructure-${infrastructure.identifier}`}
             disabled={readonly}
-            onClick={() => onDeleteClick({ environment, environmentInputs })}
+            onClick={() => onDeleteClick({ infrastructure, infrastructureInputs })}
           />
         </Container>
       </Layout.Horizontal>

@@ -175,6 +175,7 @@ pipelineSteps:
     environmentOrEnvGroupIsRequired: 'Environment or Environment Group is required'
     environmentInEnvGroupIsRequired: 'Environment in Environment Group is required'
     clusterIsRequired: 'Clusters are required'
+    multiEnvInfraToggleText: 'Deploy to multiple Environments or Infrastructures'
   serviceTab:
     stageOverrides: Stage Overrides
     overrideChanges: Override artifacts, manifests, service variables for this stage

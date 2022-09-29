@@ -7,24 +7,24 @@
 
 import React from 'react'
 import { Container } from '@harness/uicore'
-import type { EnvironmentResponseDTO } from 'services/cd-ng'
-import { EnvironmentData, EnvironmentEntityCard } from './EnvironmentEntityCard'
+import type { InfrastructureResponseDTO } from 'services/cd-ng'
+import { InfrastructureData, InfrastructureEntityCard } from './InfrastructureEntityCard'
 
-export default function EnvironmentEntitiesList({
+export default function InfrastructureEntitiesList({
   data,
   onEditClick,
   onDeleteClick
 }: {
-  data?: (EnvironmentResponseDTO | undefined)[]
+  data?: (InfrastructureResponseDTO | undefined)[]
   onEditClick: any
   onDeleteClick: any
 }): React.ReactElement {
   return (
     <Container>
       {data?.map(row => (
-        <EnvironmentEntityCard
+        <InfrastructureEntityCard
           key={row?.identifier}
-          environment={row as EnvironmentData['environment']}
+          infrastructure={row as InfrastructureData['infrastructure']}
           onEditClick={onEditClick}
           onDeleteClick={onDeleteClick}
         />

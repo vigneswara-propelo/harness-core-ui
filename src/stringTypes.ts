@@ -4560,6 +4560,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.environmentOrEnvGroupAsRuntime': string
   'cd.pipelineSteps.environmentTab.environmentOrEnvGroupIsRequired': string
   'cd.pipelineSteps.environmentTab.infrastructureIsRequired': string
+  'cd.pipelineSteps.environmentTab.multiEnvInfraToggleText': string
   'cd.pipelineSteps.environmentTab.newEnvironment': string
   'cd.pipelineSteps.environmentTab.plusNewEnvironment': string
   'cd.pipelineSteps.environmentTab.selectEnvironment': string
