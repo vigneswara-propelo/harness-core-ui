@@ -38,7 +38,7 @@ import type { JsonNode } from 'services/pipeline-ng'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
-import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
+import { getDTInfraVariablesValidationField, InstanceScriptTypes } from '../DeploymentInfraUtils'
 import css from './DeploymentInfraSpecifications.module.scss'
 
 export enum VariableType {
@@ -46,10 +46,6 @@ export enum VariableType {
   Secret = 'Secret',
   Number = 'Number',
   Connector = 'Connector'
-}
-export enum InstanceScriptTypes {
-  Inline = 'Inline',
-  FileStore = 'Harness'
 }
 
 export default function DeploymentInfraSpecifications(props: { formik: FormikProps<JsonNode> }): React.ReactElement {
@@ -59,7 +55,6 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const infraAllowableTypes: AllowedTypesWithRunTime[] = [MultiTypeInputType.FIXED]
-  const { connectorsList } = useGetConnectorsListHook()
 
   const scriptType: ScriptType = 'Bash'
   const instanceScriptTypes = React.useMemo(
@@ -117,8 +112,9 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
               ]}
               isDescriptionEnabled={true}
               enableValidation={true}
-              allowedConnectorTypes={connectorsList}
               addVariableLabel={'variables.newVariable'}
+              validationSchema={getDTInfraVariablesValidationField}
+              isDrawerMode={true}
             />
           </Layout.Horizontal>
         </Layout.Vertical>
@@ -194,7 +190,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
       </CardWithOuterTitle>
 
       <CardWithOuterTitle
-        title={getString('pipeline.customDeployment.hostObjectArrayPath')}
+        title={getString('pipeline.customDeployment.instanceObjectArrayPath')}
         className={css.infraSections}
         headerClassName={css.headerText}
       >
@@ -211,7 +207,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
       </CardWithOuterTitle>
 
       <CardWithOuterTitle
-        title={getString('pipeline.customDeployment.hostAttributes')}
+        title={getString('pipeline.customDeployment.instanceAttributes')}
         className={css.instanceAttributes}
         headerClassName={css.headerText}
       >

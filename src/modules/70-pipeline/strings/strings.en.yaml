@@ -1380,8 +1380,8 @@ selectiveStageExecution: 'Selective stage execution'
 customDeployment:
   infraVariablesTitle: 'Define the variables to be used in your environment and infrastructure.'
   seeOnlyTemplatesFor: See only templates for {{name}}
-  hostObjectArrayPath: 'Host Object Array Path'
-  hostAttributes: 'Host Attributes'
+  instanceObjectArrayPath: 'Instance Object Array Path'
+  instanceAttributes: 'Instance Attributes'
   newAttribute: 'New Attribute'
   fetchInstancesScript: 'Fetch Instance Script'
   fetchInstanceScriptHeader: 'Define your script inline or from File Store.'

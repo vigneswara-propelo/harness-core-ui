@@ -3169,9 +3169,9 @@ export interface StringsMap {
   'pipeline.customDeployment.fetchInstancesScript': string
   'pipeline.customDeployment.fieldNameLabel': string
   'pipeline.customDeployment.fieldNamePlaceholder': string
-  'pipeline.customDeployment.hostAttributes': string
-  'pipeline.customDeployment.hostObjectArrayPath': string
   'pipeline.customDeployment.infraVariablesTitle': string
+  'pipeline.customDeployment.instanceAttributes': string
+  'pipeline.customDeployment.instanceObjectArrayPath': string
   'pipeline.customDeployment.jsonPathRelativeLabel': string
   'pipeline.customDeployment.newAttribute': string
   'pipeline.customDeployment.seeOnlyTemplatesFor': string
