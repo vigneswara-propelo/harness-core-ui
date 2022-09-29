@@ -28,12 +28,7 @@ import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
 import { parse, stringify, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import {
-  EntityGitDetails,
-  InputSetSummaryResponse,
-  useGetInputsetYaml,
-  useGetTemplateFromPipeline
-} from 'services/pipeline-ng'
+import { EntityGitDetails, InputSetSummaryResponse, useGetTemplateFromPipeline } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
 import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'
@@ -61,7 +56,7 @@ import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineV
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
-import { RunPipelineForm } from '@pipeline/components/RunPipelineModal/RunPipelineForm'
+import { RunPipelineFormWithInputSetData } from '@pipeline/components/RunPipelineModal/RunPipelineForm'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import StageBuilder from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilder'
 import { TemplatePipelineBuilder } from '@pipeline/components/PipelineStudio/PipelineTemplateBuilder/TemplatePipelineBuilder/TemplatePipelineBuilder'
@@ -585,23 +580,6 @@ export function PipelineCanvas({
     return true
   }
 
-  const [inputSetYaml, setInputSetYaml] = React.useState('')
-
-  const { data, refetch, loading } = useGetInputsetYaml({
-    planExecutionId: executionId ?? '',
-    queryParams: {
-      orgIdentifier,
-      projectIdentifier,
-      accountIdentifier: accountId
-    },
-    lazy: true,
-    requestOptions: {
-      headers: {
-        'content-type': 'application/yaml'
-      }
-    }
-  })
-
   const getInputSetSelected = (): InputSetValue[] => {
     if (inputSetType) {
       const inputSetSelected: InputSetValue[] = [
@@ -620,24 +598,8 @@ export function PipelineCanvas({
     return []
   }
 
-  React.useEffect(() => {
-    if (data) {
-      ;(data as unknown as Response).text().then(str => {
-        setInputSetYaml(str)
-      })
-    }
-  }, [data])
-
-  React.useEffect(() => {
-    if (executionId && executionId !== null) {
-      refetch()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [executionId])
-
   function onCloseRunPipelineModal(): void {
     closeRunPipelineModal()
-    setInputSetYaml('')
     replaceQueryParams({ repoIdentifier, branch, connectorRef, storeType, repoName }, { skipNulls: true }, true)
   }
 
@@ -655,46 +617,41 @@ export function PipelineCanvas({
   }, [isPipelineRemote, gitDetails, connectorRef, storeType])
 
   const [openRunPipelineModal, closeRunPipelineModal] = useModalHook(
-    () =>
-      loading ? (
-        <PageSpinner />
-      ) : (
-        <Dialog {...runModalProps}>
-          <Layout.Vertical className={css.modalCard}>
-            <RunPipelineForm
-              pipelineIdentifier={pipelineIdentifier}
-              orgIdentifier={orgIdentifier}
-              projectIdentifier={projectIdentifier}
-              accountId={accountId}
-              module={module}
-              inputSetYAML={inputSetYaml || ''}
-              inputSetSelected={getInputSetSelected()}
-              connectorRef={connectorRef}
-              repoIdentifier={isPipelineRemote ? repoName : repoIdentifier}
-              branch={branch}
-              source="executions"
-              onClose={() => {
-                onCloseRunPipelineModal()
-              }}
-              stagesExecuted={stagesExecuted}
-              storeType={storeType}
-              storeMetadata={storeMetadata}
-            />
-            <Button
-              aria-label="close modal"
-              icon="cross"
-              variation={ButtonVariation.ICON}
-              onClick={() => {
-                onCloseRunPipelineModal()
-              }}
-              className={css.crossIcon}
-            />
-          </Layout.Vertical>
-        </Dialog>
-      ),
+    () => (
+      <Dialog {...runModalProps}>
+        <Layout.Vertical className={css.modalCard}>
+          <RunPipelineFormWithInputSetData
+            pipelineIdentifier={pipelineIdentifier}
+            orgIdentifier={orgIdentifier}
+            projectIdentifier={projectIdentifier}
+            accountId={accountId}
+            module={module}
+            inputSetSelected={getInputSetSelected()}
+            connectorRef={connectorRef}
+            repoIdentifier={isPipelineRemote ? repoName : repoIdentifier}
+            branch={branch}
+            source="executions"
+            onClose={() => {
+              onCloseRunPipelineModal()
+            }}
+            stagesExecuted={stagesExecuted}
+            storeType={storeType}
+            storeMetadata={storeMetadata}
+            executionIdentifier={executionId}
+          />
+          <Button
+            aria-label="close modal"
+            icon="cross"
+            variation={ButtonVariation.ICON}
+            onClick={() => {
+              onCloseRunPipelineModal()
+            }}
+            className={css.crossIcon}
+          />
+        </Layout.Vertical>
+      </Dialog>
+    ),
     [
-      loading,
-      inputSetYaml,
       inputSetRepoIdentifier,
       inputSetBranch,
       branch,

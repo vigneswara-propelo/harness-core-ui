@@ -20,7 +20,7 @@ import {
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { isEmpty, defaultTo, keyBy, omitBy } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -35,7 +35,8 @@ import {
   useRunStagesWithRuntimeInputYaml,
   useRerunStagesWithRuntimeInputYaml,
   useGetStagesExecutionList,
-  useValidateTemplateInputs
+  useValidateTemplateInputs,
+  useGetInputsetYamlV2
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -955,6 +956,38 @@ export function RunPipelineFormWrapper(props: RunPipelineFormWrapperProps): Reac
     <React.Fragment>
       <div className={css.runForm}>{children}</div>
     </React.Fragment>
+  )
+}
+
+export function RunPipelineFormWithInputSetData(
+  props: RunPipelineFormProps & InputSetGitQueryParams
+): React.ReactElement {
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
+
+  const { data, loading } = useGetInputsetYamlV2({
+    planExecutionId: props.executionIdentifier ?? '',
+    queryParams: {
+      orgIdentifier,
+      resolveExpressions: true,
+      projectIdentifier,
+      accountIdentifier: accountId
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/yaml'
+      }
+    },
+    lazy: !props.executionIdentifier // don't make the call if there's no executionIdentifier
+  })
+
+  return loading ? (
+    <PageSpinner />
+  ) : (
+    <RunPipelineForm
+      {...props}
+      inputSetYAML={data?.data?.inputSetYaml}
+      executionInputSetTemplateYaml={data?.data?.inputSetTemplateYaml}
+    />
   )
 }
 
