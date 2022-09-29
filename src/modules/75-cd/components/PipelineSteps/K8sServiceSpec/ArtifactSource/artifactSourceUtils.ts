@@ -7,7 +7,7 @@
 
 import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
-import { get, isEmpty, unset } from 'lodash-es'
+import { defaultTo, get, isEmpty, unset } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 import {
   PRIMARY_ARTIFACT,
@@ -38,7 +38,9 @@ export type BuildDetailsDTO =
   | ArtifactoryBuildDetailsDTO[]
 
 export function isNewServiceEnvEntity(path: string): boolean {
-  return path?.includes('service.serviceInputs.serviceDefinition')
+  const parts = defaultTo(path, '').split('.')
+
+  return parts.includes('serviceInputs') && parts.includes('serviceDefinition')
 }
 
 export const resetTags = (formik: FormikValues, tagPath: string): void => {
