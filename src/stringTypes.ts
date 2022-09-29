@@ -1185,6 +1185,7 @@ export interface StringsMap {
   'rbac.userDetails.userGroup.confirmDeleteText': string
   'rbac.userDetails.userGroup.deleteSuccessMessage': string
   'rbac.userDetails.userGroup.deleteTitle': string
+  'rbac.userDetails.userGroup.linkedSSOLdapUsersMessage': string
   'rbac.userGroupForm.addMemberSuccess': string
   'rbac.userGroupForm.createSuccess': string
   'rbac.userGroupForm.editSuccess': string
