@@ -7853,7 +7853,7 @@ export type NexusConnector = ConnectorConfigDTO & {
 }
 
 export type NexusRegistryArtifactConfig = ArtifactConfig & {
-  artifactPath: string
+  artifactPath?: string
   connectorRef: string
   metadata?: string
   repository: string
@@ -12869,7 +12869,7 @@ export interface StepSpecType {
 
 export interface StepTemplateRef {
   templateRef: string
-  versionLabel: string
+  versionLabel?: string
 }
 
 export interface StepWhenCondition {
@@ -33614,6 +33614,8 @@ export interface GetInfrastructureListQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+  deploymentTemplateIdentifier?: string
+  versionLabel?: string
   sort?: string[]
 }
 
@@ -36687,6 +36689,9 @@ export const getModuleLicenseByIdPromise = (
 
 export interface ConfigureOauthQueryParams {
   accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  secretManagerIdentifier?: string
   provider?: string
 }
 
