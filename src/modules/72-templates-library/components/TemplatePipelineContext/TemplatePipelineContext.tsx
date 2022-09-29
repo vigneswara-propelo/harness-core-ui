@@ -55,6 +55,7 @@ export interface TemplatePipelineProviderProps {
   contextType: PipelineContextType
   isReadOnly: boolean
   renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
+  setIntermittentLoading: PipelineContextInterface['setIntermittentLoading']
 }
 
 export function TemplatePipelineProvider({
@@ -66,7 +67,8 @@ export function TemplatePipelineProvider({
   isReadOnly,
   contextType,
   renderPipelineStage,
-  children
+  children,
+  setIntermittentLoading: setTemplateIntermittentLoading
 }: React.PropsWithChildren<TemplatePipelineProviderProps>): React.ReactElement {
   const allowableTypes: AllowedTypesWithRunTime[] = [
     MultiTypeInputType.FIXED,
@@ -183,6 +185,14 @@ export function TemplatePipelineProvider({
     )
   }
 
+  const setIntermittentLoading = React.useCallback(
+    isIntermittentLoading => {
+      setTemplateIntermittentLoading(isIntermittentLoading)
+      dispatch(PipelineContextActions.setIntermittentLoading({ isIntermittentLoading }))
+    },
+    [setTemplateIntermittentLoading]
+  )
+
   const getStagePathFromPipeline = React.useCallback(
     (stageId: string, prefix = '', pipeline?: PipelineInfoConfig) => {
       const localPipeline = pipeline || state.pipeline
@@ -250,7 +260,8 @@ export function TemplatePipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes: noop,
-        setTemplateServiceData: noop
+        setTemplateServiceData: noop,
+        setIntermittentLoading
       }}
     >
       {children}

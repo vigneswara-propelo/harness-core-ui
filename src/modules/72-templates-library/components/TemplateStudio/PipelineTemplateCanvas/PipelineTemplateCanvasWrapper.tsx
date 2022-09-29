@@ -35,7 +35,8 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
     updateTemplate,
     updateTemplateView,
     isReadonly,
-    renderPipelineStage
+    renderPipelineStage,
+    setIntermittentLoading
   } = React.useContext(TemplateContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
@@ -81,6 +82,7 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
       contextType={PipelineContextType.PipelineTemplate}
       isReadOnly={isReadonly}
       renderPipelineStage={renderPipelineStage}
+      setIntermittentLoading={setIntermittentLoading}
     >
       <PipelineTemplateCanvasWithRef />
     </TemplatePipelineProvider>

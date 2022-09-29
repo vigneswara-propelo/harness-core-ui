@@ -27,7 +27,8 @@ const StageTemplateCanvasWrapper = () => {
     state: { template, isLoading, isUpdated, gitDetails, storeMetadata },
     updateTemplate,
     isReadonly,
-    renderPipelineStage
+    renderPipelineStage,
+    setIntermittentLoading
   } = React.useContext(TemplateContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
@@ -69,6 +70,7 @@ const StageTemplateCanvasWrapper = () => {
       contextType={PipelineContextType.StageTemplate}
       isReadOnly={isReadonly}
       renderPipelineStage={renderPipelineStage}
+      setIntermittentLoading={setIntermittentLoading}
     >
       <StageTemplateCanvas />
     </TemplatePipelineProvider>
