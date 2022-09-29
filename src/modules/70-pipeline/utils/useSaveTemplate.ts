@@ -154,11 +154,6 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
       }
       return { status: response.status }
     } else {
-      if (isGitSyncEnabled || storeMetadata?.storeType === StoreType.REMOTE) {
-        clear()
-        showError(getRBACErrorMessage(response as RBACError))
-      }
-
       throw response
     }
   }
@@ -203,11 +198,6 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
         }
         return { status: response.status }
       } else {
-        if (isGitSyncEnabled || storeMetadata?.storeType === StoreType.REMOTE) {
-          clear()
-          showError(getRBACErrorMessage(response as RBACError))
-        }
-
         throw response
       }
     }
