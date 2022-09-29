@@ -221,3 +221,7 @@ export const getYamlData = (formikValues: Record<string, any>, stepViewType: Ste
     pipeline:
       stepViewType === StepViewType.InputSet && path?.startsWith('pipeline') ? formikValues?.pipeline : formikValues
   })
+
+export const isExecutionTimeFieldDisabled = (viewType: StepViewType): boolean => {
+  return viewType === StepViewType.DeploymentForm
+}
