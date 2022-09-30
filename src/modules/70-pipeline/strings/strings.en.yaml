@@ -1379,7 +1379,8 @@ skipInstances:
   title: 'Skip instances with the same artifact version already deployed'
 selectiveStageExecution: 'Selective stage execution'
 customDeployment:
-  infraVariablesTitle: 'Define the variables to be used in your environment and infrastructure.'
+  infraVariablesTitle: 'Define the variables to be used in your infrastructure'
+  updateInfraVariablesTitle: ' Update values for variables defined as part of used template'
   seeOnlyTemplatesFor: See only templates for {{name}}
   instanceObjectArrayPath: 'Instance Object Array Path'
   instanceAttributes: 'Instance Attributes'

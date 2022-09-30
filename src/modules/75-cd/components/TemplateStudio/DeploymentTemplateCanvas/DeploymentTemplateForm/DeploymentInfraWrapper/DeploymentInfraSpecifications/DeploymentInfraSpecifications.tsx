@@ -19,7 +19,8 @@ import {
   Select,
   Text,
   AllowedTypesWithRunTime,
-  ButtonSize
+  ButtonSize,
+  HarnessDocTooltip
 } from '@wings-software/uicore'
 import { v4 as uuid } from 'uuid'
 import { FontVariation } from '@harness/design-system'
@@ -76,10 +77,12 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
   const fetchScriptWidgetTitle = useMemo(
     (): JSX.Element => (
       <Layout.Vertical>
-        <Label className={css.configLabel}>{getString('pipeline.customDeployment.fetchInstanceScriptHeader')}</Label>
+        <Label className={cx(css.configLabel, 'ng-tooltip-native')} data-tooltip-id="fetchInstanceScriptDT">
+          {getString('pipeline.customDeployment.fetchInstanceScriptHeader')}
+        </Label>
       </Layout.Vertical>
     ),
-    []
+    [getString]
   )
 
   return (
@@ -88,9 +91,13 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
         title={getString('common.variables')}
         className={css.infraSections}
         headerClassName={css.headerText}
+        dataTooltipId="infraVariablesTitleDT"
       >
         <Layout.Vertical>
-          <Text className={css.labelText}>{getString('pipeline.customDeployment.infraVariablesTitle')}</Text>
+          <Text className={cx(css.labelText, 'ng-tooltip-native')} inline={true} data-tooltip-id="infraVariablesDT">
+            {getString('pipeline.customDeployment.infraVariablesTitle')}
+            <HarnessDocTooltip tooltipId="infraVariablesDT" useStandAlone={true} />
+          </Text>
           <Layout.Horizontal spacing="large">
             <CustomVariablesEditableStage
               className={css.infraVariableSection}
@@ -124,6 +131,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
         title={getString('pipeline.customDeployment.fetchInstancesScript')}
         className={css.infraSections}
         headerClassName={css.headerText}
+        dataTooltipId="fetchInstancesScriptTitleDT"
       >
         <div>
           <Layout.Horizontal flex={{ alignItems: 'flex-start' }} margin={{ top: 'medium', bottom: 'medium' }}>
@@ -193,6 +201,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
         title={getString('pipeline.customDeployment.instanceObjectArrayPath')}
         className={css.infraSections}
         headerClassName={css.headerText}
+        dataTooltipId="instanceObjectArrayPathDT"
       >
         <Layout.Vertical width={'50%'} margin={{ bottom: 0 }}>
           <FormInput.MultiTextInput
@@ -210,6 +219,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
         title={getString('pipeline.customDeployment.instanceAttributes')}
         className={css.instanceAttributes}
         headerClassName={css.headerText}
+        dataTooltipId="instanceAttributesDT"
       >
         <MultiTypeFieldSelector
           name="instanceAttributes"

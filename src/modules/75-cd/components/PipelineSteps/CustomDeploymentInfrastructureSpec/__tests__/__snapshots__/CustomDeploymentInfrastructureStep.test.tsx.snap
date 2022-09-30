@@ -17,10 +17,9 @@ exports[`Test Custom Deployment Infrastructure Spec snapshot Should render edit 
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
-            >
-              
-            </p>
+              class="StyledProps--font StyledProps--main ng-tooltip-native StyledProps--font-variation-h6"
+              data-tooltip-id="updateInfraVariablesDT"
+            />
             <p
               class="StyledProps--font StyledProps--main"
             >
@@ -84,10 +83,9 @@ exports[`Test Custom Deployment Infrastructure Spec snapshot Should render edit 
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
-            >
-              
-            </p>
+              class="StyledProps--font StyledProps--main ng-tooltip-native StyledProps--font-variation-h6"
+              data-tooltip-id="updateInfraVariablesDT"
+            />
             <p
               class="StyledProps--font StyledProps--main"
             >

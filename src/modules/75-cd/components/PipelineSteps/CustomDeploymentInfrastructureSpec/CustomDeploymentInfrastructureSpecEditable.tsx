@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Layout, FormInput, Formik, FormikForm } from '@wings-software/uicore'
+import { Text, Layout, FormInput, Formik, FormikForm, HarnessDocTooltip } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
@@ -86,11 +86,20 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
           return (
             <FormikForm>
               <Layout.Vertical flex={{ alignItems: 'flex-start' }} margin={{ bottom: 'medium' }} spacing="medium">
-                <Text font={{ variation: FontVariation.H6 }}>
-                  {isSvcEnvEnabled ? getString('common.variables') : ''}
+                <Text
+                  font={{ variation: FontVariation.H6 }}
+                  className="ng-tooltip-native"
+                  data-tooltip-id="updateInfraVariablesDT"
+                >
+                  {isSvcEnvEnabled && (
+                    <>
+                      {getString('common.variables')}
+                      <HarnessDocTooltip tooltipId="updateInfraVariablesDT" useStandAlone={true} />
+                    </>
+                  )}
                 </Text>
                 <Text font={{ variation: FontVariation.BODY2_SEMI }}>
-                  {isSvcEnvEnabled ? getString('pipeline.customDeployment.infraVariablesTitle') : ''}
+                  {isSvcEnvEnabled ? getString('pipeline.customDeployment.updateInfraVariablesTitle') : ''}
                 </Text>
               </Layout.Vertical>
 
