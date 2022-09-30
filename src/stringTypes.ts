@@ -6137,6 +6137,7 @@ export interface StringsMap {
   'cf.featureFlags.flagPipeline.triggerDetails': string
   'cf.featureFlags.flagWillTurnOff': string
   'cf.featureFlags.flagWillTurnOn': string
+  'cf.featureFlags.flagsDescription': string
   'cf.featureFlags.getStartedWithFF': string
   'cf.featureFlags.ifClause': string
   'cf.featureFlags.ifClauseServe': string
@@ -6157,7 +6158,6 @@ export interface StringsMap {
   'cf.featureFlags.multiBtnText': string
   'cf.featureFlags.newFlag': string
   'cf.featureFlags.newPrerequisite': string
-  'cf.featureFlags.noFlagsDescription': string
   'cf.featureFlags.noFlagsInProject': string
   'cf.featureFlags.noFlagsToGetStarted': string
   'cf.featureFlags.percentageRollout': string
@@ -6249,10 +6249,12 @@ export interface StringsMap {
   'cf.onboarding.createAFlag': string
   'cf.onboarding.createEnv': string
   'cf.onboarding.createEnvAndSdk': string
+  'cf.onboarding.createFlag': string
   'cf.onboarding.createdAndValidated': string
   'cf.onboarding.envCreated': string
   'cf.onboarding.errorReceivingEvent': string
   'cf.onboarding.eventWeReceived': string
+  'cf.onboarding.flagInputLabel': string
   'cf.onboarding.furtherAssistance': string
   'cf.onboarding.help.getStarted': string
   'cf.onboarding.help.heading1': string
@@ -6263,10 +6265,9 @@ export interface StringsMap {
   'cf.onboarding.help.test.text2': string
   'cf.onboarding.help.text1': string
   'cf.onboarding.help.text2': string
-  'cf.onboarding.inputLabel': string
   'cf.onboarding.keyDescriptionClient': string
   'cf.onboarding.keyDescriptionServer': string
-  'cf.onboarding.letsStart': string
+  'cf.onboarding.letsGetStarted': string
   'cf.onboarding.listenToEvent': string
   'cf.onboarding.listeningToEvent': string
   'cf.onboarding.oneCreateAFlag': string
@@ -6281,8 +6282,9 @@ export interface StringsMap {
   'cf.onboarding.readme.python': string
   'cf.onboarding.sdkKeyLabel': string
   'cf.onboarding.secret': string
-  'cf.onboarding.selectEnvironment': string
   'cf.onboarding.selectLanguage': string
+  'cf.onboarding.selectOrCreateFlag': string
+  'cf.onboarding.selectYourEnvironment': string
   'cf.onboarding.setUpApp': string
   'cf.onboarding.setUpYourCode': string
   'cf.onboarding.setupCode': string
@@ -6290,7 +6292,6 @@ export interface StringsMap {
   'cf.onboarding.simpliestFlag': string
   'cf.onboarding.simpliestFlagDescription': string
   'cf.onboarding.subTitle': string
-  'cf.onboarding.successLabel': string
   'cf.onboarding.testYourFlag': string
   'cf.onboarding.title': string
   'cf.onboarding.toggleError': string
@@ -6301,6 +6302,8 @@ export interface StringsMap {
   'cf.onboarding.validatingFlagInfo': string
   'cf.onboarding.validatingYourFlag': string
   'cf.onboarding.waitForConnect': string
+  'cf.onboarding.youCreated': string
+  'cf.onboarding.youreUsing': string
   'cf.percentageRollout.bucketBy': string
   'cf.percentageRollout.invalidTotalError': string
   'cf.percentageRollout.toTargetGroup': string

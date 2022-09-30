@@ -77,7 +77,7 @@ export const NoFeatureFlags: React.FC<NoFeatureFlagsProps> = ({
       return (
         <>
           <div className={css.noFlagsDescription}>
-            <String stringID="cf.featureFlags.noFlagsDescription" />
+            <String stringID="cf.featureFlags.flagsDescription" />
           </div>
           <div className={css.noFlagsToGetStarted}>
             <String useRichText stringID="cf.featureFlags.noFlagsToGetStarted" />
