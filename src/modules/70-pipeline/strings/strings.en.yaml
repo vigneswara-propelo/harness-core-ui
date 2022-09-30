@@ -571,8 +571,8 @@ conditionalExecution:
     success: Execute this {{entity}} if the {{parentEntity}} execution is successful thus far
     all: Always execute this {{entity}}
     failure: Execute this {{entity}} only if prior {{parentEntity}} or {{entity}} failed
-  condition: And execute this {{entity}} only if the following JEXL Condition evaluates to True
-  conditionLabel: Execute only if the following JEXL Condition evaluates to True
+  condition: And execute this {{entity}} only if the following JEXL Condition evaluates to true
+  conditionLabel: Execute only if the following JEXL Condition evaluates to true
   toolTip:
     stageTitle: Conditions for stage execution
     stepTitle: Conditions for step execution
