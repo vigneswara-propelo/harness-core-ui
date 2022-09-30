@@ -21,6 +21,7 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
 import {
+  DefaultPipeline,
   initialState,
   PipelineContextActions,
   PipelineReducer,
@@ -134,18 +135,21 @@ export function TemplatePipelineProvider({
   }, [])
 
   const fetchPipeline = async () => {
-    const templateRefs = findAllByKey('templateRef', initialValue)
+    const originalPipeline = isEqual(state.originalPipeline, DefaultPipeline)
+      ? cloneDeep(initialValue)
+      : state.originalPipeline
     dispatch(
       PipelineContextActions.success({
         error: '',
         pipeline: initialValue,
-        originalPipeline: cloneDeep(initialValue),
+        originalPipeline,
         isBEPipelineUpdated: false,
-        isUpdated: false,
+        isUpdated: !isEqual(originalPipeline, initialValue),
         gitDetails,
         storeMetadata
       })
     )
+    const templateRefs = findAllByKey('templateRef', initialValue)
     if (templateRefs.length > 0) {
       const { templateTypes, templateServiceData } = await getTemplateTypesByRef(
         {
