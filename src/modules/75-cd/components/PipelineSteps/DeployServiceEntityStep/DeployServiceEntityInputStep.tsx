@@ -138,8 +138,14 @@ export function DeployServiceEntityInputStep({
       updateStageFormTemplate(newServicesTemplate, `${pathPrefix}values`)
       formik.setFieldValue(`${pathPrefix}values`, newServicesValues)
     } else {
-      updateStageFormTemplate(defaultTo(newServicesTemplate[0].serviceInputs, {}), `${pathPrefix}serviceInputs`)
-      formik.setFieldValue(`${pathPrefix}serviceInputs`, defaultTo(newServicesValues[0].serviceInputs, {}))
+      updateStageFormTemplate(
+        defaultTo(newServicesTemplate[0].serviceInputs, isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : {}),
+        `${pathPrefix}serviceInputs`
+      )
+      formik.setFieldValue(
+        `${pathPrefix}serviceInputs`,
+        defaultTo(newServicesValues[0].serviceInputs, isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : {})
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [servicesData, serviceIdentifiers])

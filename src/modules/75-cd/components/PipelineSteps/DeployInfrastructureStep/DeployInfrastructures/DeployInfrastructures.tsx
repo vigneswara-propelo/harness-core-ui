@@ -82,6 +82,7 @@ function DeployInfrastructures({
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
+  const isStageTemplateForm = path?.startsWith(TEMPLATE_INPUT_PATH)
 
   const environmentIdentifier = useMemo(() => {
     return defaultTo(environmentRef || /* istanbul ignore next */ formik?.values?.environment?.environmentRef, '')
@@ -187,7 +188,10 @@ function DeployInfrastructures({
         }
       })
     } else {
-      if (path && !(path.startsWith(TEMPLATE_INPUT_PATH) && formik?.values.infrastructureRef === RUNTIME_INPUT_VALUE)) {
+      if (
+        path &&
+        ((isStageTemplateForm && formik?.values.infrastructureRef === RUNTIME_INPUT_VALUE) || !isStageTemplateForm)
+      ) {
         updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${path}.infrastructureDefinitions`)
         formik?.setValues(
           produce(formik.values, draft => {
