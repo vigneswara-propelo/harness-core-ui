@@ -157,7 +157,8 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                       multiTextInputProps={{
                         textProps: { type: variable.type === 'Number' ? 'number' : 'text' },
                         allowableTypes,
-                        expressions
+                        expressions,
+                        defaultValueToReset: ''
                       }}
                       label=""
                       disabled={inputSetData?.readonly}
