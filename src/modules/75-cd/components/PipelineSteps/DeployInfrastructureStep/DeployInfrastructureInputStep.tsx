@@ -9,7 +9,6 @@ import React from 'react'
 import {
   Container,
   getMultiTypeFromValue,
-  Layout,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   SelectOption,
@@ -21,10 +20,6 @@ import { defaultTo, noop, set, unset } from 'lodash-es'
 import produce from 'immer'
 
 import { useStrings } from 'framework/strings'
-import {
-  CustomVariableInputSet,
-  CustomVariablesData
-} from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 
@@ -34,8 +29,6 @@ import DeployClusters from './DeployClusters/DeployClusters'
 import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
 import type { CustomStepProps, DeployInfrastructureProps } from './utils'
 import { GenericServiceSpecInputSetMode } from '../Common/GenericServiceSpec/GenericServiceSpecInputSetMode'
-
-import css from './DeployInfrastructureStep.module.scss'
 
 function DeployInfrastructureInputStepInternal({
   inputSetData,
@@ -123,6 +116,7 @@ function DeployInfrastructureInputStepInternal({
                 serviceRef={defaultTo(initialValues.service?.serviceRef, serviceRef)}
                 gitOpsEnabled={gitOpsEnabled}
                 stepViewType={stepViewType}
+                readonly={readonly}
               />
             </Container>
           )}
@@ -132,17 +126,18 @@ function DeployInfrastructureInputStepInternal({
               <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
                 {getString('environmentVariables')}
               </Text>
-              <div className={css.sectionContent}>
-                <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-                  <CustomVariableInputSet
-                    allowableTypes={allowableTypes}
-                    initialValues={initialValues.environment?.environmentInputs as unknown as CustomVariablesData}
-                    template={inputSetData.template.environment.environmentInputs as unknown as CustomVariablesData}
-                    path={'environment.environmentInputs'}
-                    className={css.fullWidth}
-                  />
-                </Layout.Horizontal>
-              </div>
+              <GenericServiceSpecInputSetMode
+                {...customStepProps}
+                serviceIdentifier={customStepProps.serviceRef}
+                initialValues={initialValues?.environment?.environmentInputs || {}}
+                allValues={inputSetData?.allValues?.environment?.environmentInputs || {}}
+                stepViewType={stepViewType}
+                template={inputSetData?.template?.environment?.environmentInputs}
+                path={`environment.environmentInputs`}
+                readonly={inputSetData?.readonly || readonly}
+                factory={factory}
+                allowableTypes={allowableTypes}
+              />
             </>
           )}
 
@@ -204,6 +199,7 @@ function DeployInfrastructureInputStepInternal({
                   allowableTypes={allowableTypes}
                   environmentRef={initialValues.environment?.environmentRef || environmentRef}
                   path={inputSetData?.path}
+                  readonly={readonly}
                 />
               </Container>
             )}
@@ -220,6 +216,7 @@ function DeployInfrastructureInputStepInternal({
                 <DeployClusters
                   allowableTypes={allowableTypes}
                   environmentIdentifier={defaultTo(initialValues.environment?.environmentRef || environmentRef, '')}
+                  readonly={readonly}
                 />
               </Container>
             )}
