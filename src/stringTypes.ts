@@ -4015,7 +4015,6 @@ export interface StringsMap {
   'pipeline.testsReports.tiCallToAction.addRunTestsStep': string
   'pipeline.testsReports.tiCallToAction.header': string
   'pipeline.testsReports.tiCallToAction.requiresEnterprisePlan': string
-  'pipeline.testsReports.tiCallToAction.upsellSubText': string
   'pipeline.testsReports.tiCallToAction.utilizeTISubText': string
   'pipeline.testsReports.timeSaved': string
   'pipeline.testsReports.totalDuration': string

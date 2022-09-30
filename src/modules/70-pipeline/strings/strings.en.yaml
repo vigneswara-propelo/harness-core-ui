@@ -726,7 +726,6 @@ testsReports:
   searchByTestName: Search by Test Name
   tiCallToAction:
     header: Did you know you can save time using Test Intelligence?
-    upsellSubText: 'Optimize your tests cycle and reduce build time by using machine learning based Test Intelligence.'
     utilizeTISubText: 'Reduce test cycle time of your Java, .NET, Scala, Kotlin applications by using machine learning based Test Intelligence.'
     addRunTestsStep: Add 'Run Tests step' to your Pipeline
     requiresEnterprisePlan: Requires Enterprise Plan to access Test Intelligence
