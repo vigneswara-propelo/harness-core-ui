@@ -671,7 +671,7 @@ export function PipelineCanvas({
   )
 
   const onGitBranchChange = React.useMemo(
-    () => (selectedFilter: GitFilterScope) => {
+    () => (selectedFilter: GitFilterScope, defaultSelected?: boolean) => {
       setSelectedBranch(selectedFilter.branch as string)
       if (isUpdated && branch !== selectedFilter.branch) {
         setBlockNavigation(true)
@@ -697,7 +697,10 @@ export function PipelineCanvas({
                   : {})
               })
             )
-            location.reload()
+            // Avoid page reload when default branch is auto selected for GitX
+            if (!defaultSelected) {
+              location.reload()
+            }
           }
         )
       }
