@@ -12,14 +12,9 @@ import { useParams } from 'react-router-dom'
 import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { FreezeWindowLevels } from '@freeze-windows/types'
 import { FreezeWindowContextActions } from './FreezeWidowActions'
 import { initialState, FreezeWindowReducerState, FreezeReducer } from './FreezeWindowReducer'
-
-export enum FreezeWindowLevels {
-  ACCOUNT = 'ACCOUNT',
-  ORG = 'ORG',
-  PROJECT = 'PROJECT'
-}
 
 export interface FreezeWindowContextInterface {
   state: FreezeWindowReducerState

@@ -47,6 +47,11 @@
 .stepTabs {
   height: 100%;
   width: 100%;
+  :global(.bp3-tabs) {
+    max-height: 100%;
+    overflow: auto;
+    padding-bottom: var(--spacing-10);
+  }
   :global(.bp3-tab-list) {
     border-bottom: 1px solid var(--grey-300);
     background-color: var(--white);
@@ -106,4 +111,18 @@
 .addNewRuleButton {
   margin-top: var(--spacing-large) !important;
   margin-left: -20px !important; // padding left of Add Button
+}
+
+.freezeNameContainer {
+  .freezeName {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: var(--grey-700) !important;
+    line-height: 28px !important;
+    margin-right: var(--spacing-small);
+  }
+}
+
+.marginRight {
+  margin-right: var(--spacing-11);
 }

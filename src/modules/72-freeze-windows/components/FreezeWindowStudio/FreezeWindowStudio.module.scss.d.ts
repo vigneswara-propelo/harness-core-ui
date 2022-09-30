@@ -14,7 +14,10 @@ declare const styles: {
   readonly configFormContainer: string
   readonly createNewFreezeForm: string
   readonly crossButton: string
+  readonly freezeName: string
+  readonly freezeNameContainer: string
   readonly isEditView: string
+  readonly marginRight: string
   readonly sectionCard: string
   readonly separator: string
   readonly stepTabs: string

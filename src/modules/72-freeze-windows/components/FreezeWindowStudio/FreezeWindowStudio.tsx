@@ -13,9 +13,11 @@ import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStud
 import { isValidYaml } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudioUtil'
 import { useFreezeStudioData } from '@freeze-windows/components/FreezeWindowStudio/useFreezeStudioData'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { RightBar } from '@freeze-windows/components/RightBar/RightBar'
 import { FreezeWindowStudioHeader } from './FreezeWindowStudioHeader'
 import { FreezeWindowStudioSubHeader } from './FreezeWindowStudioSubHeader'
 import { FreezeWindowStudioBody } from './FreezeWindowStudioBody'
+import css from './FreezeWindowStudio.module.scss'
 
 export const FreezeWindowStudio = () => {
   const {
@@ -23,11 +25,12 @@ export const FreezeWindowStudio = () => {
     setView,
     updateYamlView,
     updateFreeze,
+    freezeWindowLevel,
     state: { isYamlEditable, yamlHandler }
   } = React.useContext(FreezeWindowContext)
-  const { accountId } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
-  const resources = useFreezeStudioData({ accountId })
+  const resources = useFreezeStudioData({ accountId, freezeWindowLevel, projectIdentifier, orgIdentifier })
 
   // isYamlError
   const [, setYamlError] = React.useState(false)
@@ -59,10 +62,13 @@ export const FreezeWindowStudio = () => {
   }
 
   return (
-    <div>
-      <FreezeWindowStudioHeader />
-      <FreezeWindowStudioSubHeader onViewChange={onViewChange} />
-      <FreezeWindowStudioBody resources={resources} />
-    </div>
+    <>
+      <div className={css.marginRight}>
+        <FreezeWindowStudioHeader />
+        <FreezeWindowStudioSubHeader onViewChange={onViewChange} />
+        <FreezeWindowStudioBody resources={resources} />
+      </div>
+      <RightBar />
+    </>
   )
 }

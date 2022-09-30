@@ -7,11 +7,20 @@
 
 import React from 'react'
 import type { SelectOption } from '@wings-software/uicore'
-import { useGetOrganizationAggregateDTOList } from 'services/cd-ng'
-import type { ResourcesInterface } from '@freeze-windows/types'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { useGetOrganizationAggregateDTOList, useGetServiceList } from 'services/cd-ng'
+import { ResourcesInterface, FreezeWindowLevels } from '@freeze-windows/types'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
-export const useFreezeStudioData = ({ accountId }: AccountPathProps): ResourcesInterface => {
+interface FreezeStudioDataInterface extends ProjectPathProps {
+  freezeWindowLevel: FreezeWindowLevels
+}
+
+export const useFreezeStudioData = ({
+  accountId,
+  freezeWindowLevel,
+  projectIdentifier,
+  orgIdentifier
+}: FreezeStudioDataInterface): ResourcesInterface => {
   const {
     loading: loadingOrgs,
     data: orgsData,
@@ -22,11 +31,33 @@ export const useFreezeStudioData = ({ accountId }: AccountPathProps): ResourcesI
     lazy: true
   })
 
+  const {
+    data: serviceData,
+    // error,
+    loading: loadingServices,
+    refetch: refetchServices
+  } = useGetServiceList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: true
+  })
+
   const [orgs, setOrgs] = React.useState<SelectOption[]>([])
+  const [services, setServices] = React.useState<SelectOption[]>([])
+  const [servicesMap, setServicesMap] = React.useState<Record<string, SelectOption>>({})
   // data.content[1].organizationResponse.organization.identifier
   React.useEffect(() => {
     refetchOrgs()
   }, [accountId])
+
+  React.useEffect(() => {
+    if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
+      refetchServices()
+    }
+  }, [projectIdentifier, freezeWindowLevel])
 
   React.useEffect(() => {
     if (!loadingOrgs && orgsData?.data?.content) {
@@ -41,8 +72,29 @@ export const useFreezeStudioData = ({ accountId }: AccountPathProps): ResourcesI
     }
   }, [loadingOrgs])
 
+  React.useEffect(() => {
+    if (!loadingServices && serviceData?.data?.content) {
+      const servicesMapp: Record<string, SelectOption> = { All: { label: 'All Services', value: 'All' } }
+      const adaptedServicesData = serviceData?.data?.content.map(item => {
+        const label = item?.service?.name || ''
+        const obj = {
+          label,
+          value: item?.service?.identifier || ''
+        }
+        servicesMapp[label] = obj
+        return obj
+      })
+      // data.serviceDeploymentDetailsList[0].serviceIdentifier
+      setServices([{ label: 'All Services', value: 'All' }, ...adaptedServicesData])
+      setServicesMap(servicesMapp)
+    }
+  }, [loadingServices])
+
   return {
     orgs,
-    projects: []
+    projects: [],
+    services,
+    servicesMap,
+    freezeWindowLevel
   }
 }

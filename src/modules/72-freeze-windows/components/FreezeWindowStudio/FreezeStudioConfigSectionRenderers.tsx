@@ -9,18 +9,7 @@ import React from 'react'
 import type { SelectOption } from '@wings-software/uicore'
 import { FormInput } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
-import type { EntityType } from '@freeze-windows/types'
-
-export enum FIELD_KEYS {
-  EnvType = 'EnvType',
-  Service = 'Service',
-  Org = 'Org',
-  ExcludeOrgCheckbox = 'ExcludeOrgCheckbox',
-  ExcludeOrg = 'ExcludeOrg',
-  Proj = 'Proj',
-  ExcludeProjCheckbox = 'ExcludeProjCheckbox',
-  ExcludeProj = 'ExcludeProj'
-}
+import { EntityType, FIELD_KEYS } from '@freeze-windows/types'
 
 export const ExcludeFieldKeys = {
   [FIELD_KEYS.Org]: {
@@ -63,8 +52,14 @@ interface ServiceFieldRendererPropsInterface {
   getString: UseStringsReturn['getString']
   isDisabled: boolean
   name: string
+  services: SelectOption[]
 }
-export const ServiceFieldRenderer: React.FC<ServiceFieldRendererPropsInterface> = ({ getString, isDisabled, name }) => {
+export const ServiceFieldRenderer: React.FC<ServiceFieldRendererPropsInterface> = ({
+  getString,
+  isDisabled,
+  name,
+  services
+}) => {
   const [disabledItems] = React.useState<SelectOption[]>([{ label: getString('common.allServices'), value: All }])
   if (isDisabled) {
     return (
@@ -77,7 +72,15 @@ export const ServiceFieldRenderer: React.FC<ServiceFieldRendererPropsInterface> 
       />
     )
   }
-  return <div>null</div>
+  return (
+    <FormInput.MultiSelect
+      style={{ width: '400px' }}
+      name={name}
+      items={services}
+      label={getString('services')}
+      // onChange={(selected?: SelectOption[]) => {}}
+    />
+  )
 }
 
 const getOrgNameKeys = (namePrefix: string) => {
@@ -101,6 +104,11 @@ interface OrganizationfieldPropsInterface {
   values: any
   setFieldValue: any
 }
+
+export const isAllOptionSelected = (selected?: SelectOption[]) => {
+  return (selected || []).findIndex(item => item.value === All) >= 0
+}
+
 export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
   getString,
   namePrefix,
@@ -109,8 +117,8 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
   setFieldValue
 }) => {
   const orgValue = values[FIELD_KEYS.Org]
-  const excludeOrgValue = values[FIELD_KEYS.ExcludeOrgCheckbox]
-  const isCheckBoxEnabled = orgValue === All
+  const excludeOrgCheckboxValue = values[FIELD_KEYS.ExcludeOrgCheckbox]
+  const isCheckBoxEnabled = isAllOptionSelected(orgValue) && orgValue?.length === 1
   const { orgFieldName, orgCheckBoxName, excludeOrgName } = getOrgNameKeys(namePrefix)
   const { projFieldName, projCheckBoxName, excludeProjName } = getProjNameKeys(namePrefix)
 
@@ -122,16 +130,18 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
   }, [organizations])
   return (
     <>
-      <FormInput.Select
+      <FormInput.MultiSelect
         name={orgFieldName}
         items={allOrgs}
         label={getString('orgLabel')}
-        onChange={(selected?: SelectOption) => {
-          if (!(selected?.value === All)) {
+        onChange={(selected?: SelectOption[]) => {
+          const isAllSelected = isAllOptionSelected(selected)
+          const isMultiSelected = (selected || []).length > 1
+          if (!isAllSelected) {
             setFieldValue(orgCheckBoxName, false)
             // todo: clear exclude Orgs
           }
-          if (selected?.value === All) {
+          if (isAllSelected || isMultiSelected) {
             setFieldValue(projFieldName, All)
             setFieldValue(projCheckBoxName, false)
             setFieldValue(excludeProjName, undefined)
@@ -148,8 +158,8 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
         }}
       />
 
-      {isCheckBoxEnabled && excludeOrgValue ? (
-        <FormInput.Select name={excludeOrgName} items={organizations} style={{ marginLeft: '24px' }} />
+      {isCheckBoxEnabled && excludeOrgCheckboxValue ? (
+        <FormInput.MultiSelect name={excludeOrgName} items={organizations} style={{ marginLeft: '24px' }} />
       ) : null}
     </>
   )

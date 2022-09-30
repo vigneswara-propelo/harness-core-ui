@@ -7,8 +7,25 @@
 
 import type { SelectOption } from '@wings-software/uicore'
 
+export enum FreezeWindowLevels {
+  ACCOUNT = 'ACCOUNT',
+  ORG = 'ORG',
+  PROJECT = 'PROJECT'
+}
+
+export enum FIELD_KEYS {
+  EnvType = 'EnvType',
+  Service = 'Service',
+  Org = 'Org',
+  ExcludeOrgCheckbox = 'ExcludeOrgCheckbox',
+  ExcludeOrg = 'ExcludeOrg',
+  Proj = 'Proj',
+  ExcludeProjCheckbox = 'ExcludeProjCheckbox',
+  ExcludeProj = 'ExcludeProj'
+}
+
 export interface EntityType {
-  type: string
+  type: FIELD_KEYS
   filterType: 'All' | 'Equals' | 'NotEquals'
   entityRefs?: string[]
 }
@@ -21,4 +38,7 @@ export interface EntityConfig {
 export interface ResourcesInterface {
   orgs: SelectOption[]
   projects: SelectOption[]
+  services: SelectOption[]
+  servicesMap: Record<string, SelectOption>
+  freezeWindowLevel: FreezeWindowLevels
 }

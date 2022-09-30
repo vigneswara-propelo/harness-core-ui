@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { Button, ButtonVariation } from '@wings-software/uicore'
 import { useCreateFreeze } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 
 export const FreezeWindowStudioSubHeaderRightView = () => {
@@ -17,12 +19,13 @@ export const FreezeWindowStudioSubHeaderRightView = () => {
   const {
     state: { freezeObj } // freeze,
   } = React.useContext(FreezeWindowContext)
+  const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { mutate: createFreeze } = useCreateFreeze({
     // loading
     queryParams: {
-      accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
-      orgIdentifier: 'default',
-      projectIdentifier: 'defaultproject'
+      accountIdentifier,
+      orgIdentifier,
+      projectIdentifier
     }
   })
   const onSave = () => {

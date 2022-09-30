@@ -7,11 +7,11 @@
 
 import { parse } from 'yaml'
 import { defaultTo, isEmpty, pick, set } from 'lodash-es'
-import { FreezeWindowLevels } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
+import type { SelectOption } from '@wings-software/uicore'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import type { StringKeys } from 'framework/strings'
-import type { EntityConfig, EntityType } from '@freeze-windows/types'
-import { ExcludeFieldKeys, FIELD_KEYS } from './FreezeStudioConfigSectionRenderers'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
+import { EntityConfig, EntityType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
+import { ExcludeFieldKeys, isAllOptionSelected } from './FreezeStudioConfigSectionRenderers'
 
 export function isValidYaml(
   yamlHandler: YamlBuilderHandlerBinding | undefined,
@@ -45,10 +45,11 @@ export const getInitialValues = (freezeObj: any) => {
 export interface FieldVisibility {
   showOrgField: boolean
   showProjectField: boolean
+  freezeWindowLevel: FreezeWindowLevels
 }
 
 export const getFieldsVisibility = (freezeWindowLevel: FreezeWindowLevels): FieldVisibility => {
-  const obj = { showOrgField: false, showProjectField: false }
+  const obj = { showOrgField: false, showProjectField: false, freezeWindowLevel }
   if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
     obj.showOrgField = true
     obj.showProjectField = true
@@ -59,7 +60,37 @@ export const getFieldsVisibility = (freezeWindowLevel: FreezeWindowLevels): Fiel
   return obj
 }
 
-export const getInitialValuesForConfigSection = (entityConfigs: EntityConfig[]) => {
+const SINGLE_SELECT_FIELDS = {
+  [FIELD_KEYS.EnvType]: true
+}
+
+const selectedValueForFilterTypeAll = (type: string, getString: UseStringsReturn['getString']) => {
+  if (type === FIELD_KEYS.Org) {
+    return [{ value: 'All', label: getString('freezeWindows.freezeStudio.allOrganizations') }]
+  }
+  if (type === FIELD_KEYS.Proj) {
+    return [{ value: 'All', label: getString('rbac.scopeItems.allProjects') }]
+  }
+  if (type === FIELD_KEYS.Service) {
+    return [{ value: 'All', label: getString('common.allServices') }]
+  }
+}
+
+const makeOptions = (dataMap: Record<string, SelectOption>, keys?: string[]) => {
+  return keys?.map(key => dataMap[key])
+}
+
+const equalsOptions = (type: FIELD_KEYS, entityRefs: string[], resources: ResourcesInterface) => {
+  if (type === FIELD_KEYS.Service) {
+    return makeOptions(resources.servicesMap, entityRefs)
+  }
+}
+
+export const getInitialValuesForConfigSection = (
+  entityConfigs: EntityConfig[],
+  getString: UseStringsReturn['getString'],
+  resources: ResourcesInterface
+) => {
   const initialValues = {}
   entityConfigs?.forEach((c: EntityConfig, i: number) => {
     set(initialValues, `entity[${i}].name`, c.name)
@@ -69,9 +100,13 @@ export const getInitialValuesForConfigSection = (entityConfigs: EntityConfig[]) 
       const { type, filterType, entityRefs } = entity
       if (filterType === 'All') {
         // set filterType and entity
-        set(initialValues, `entity[${i}].${type}`, filterType)
+        set(
+          initialValues,
+          `entity[${i}].${type}`,
+          SINGLE_SELECT_FIELDS[type as FIELD_KEYS.EnvType] ? filterType : selectedValueForFilterTypeAll(type, getString)
+        )
       } else if (filterType === 'Equals') {
-        set(initialValues, `entity[${i}].${type}`, entityRefs?.[0])
+        set(initialValues, `entity[${i}].${type}`, equalsOptions(type, entityRefs || [], resources))
         // equals
       } else if (filterType === 'NotEquals') {
         const excludeFieldKeys = ExcludeFieldKeys[type as 'Org' | 'Proj']
@@ -98,25 +133,31 @@ const updateEntities = (obj: any, entities: any, index: number) => {
   }
 }
 
+const getMetaDataForField = (fieldKey: FIELD_KEYS, entities: EntityType[], newValues: any) => {
+  const index = entities.findIndex((e: any) => e.type === fieldKey)
+  const isAllSelected = isAllOptionSelected(newValues[fieldKey])
+  const obj: EntityType = { type: fieldKey, filterType: 'All', entityRefs: [] }
+
+  return { isAllSelected, obj, index }
+}
+
 const adaptForOrgField = (newValues: any, entities: EntityType[]) => {
   const fieldKey = FIELD_KEYS.Org
-  const orgFieldIndex = entities.findIndex((e: any) => e.type === fieldKey)
-
+  const { isAllSelected, obj, index: orgFieldIndex } = getMetaDataForField(fieldKey, entities, newValues)
   if (orgFieldIndex < 0 && !newValues[fieldKey]) {
     return
   }
-  const obj: EntityType = { type: fieldKey, filterType: 'All', entityRefs: [] }
-  if (newValues[fieldKey] === 'All') {
+  if (isAllSelected) {
     const hasExcludedOrgs = newValues[FIELD_KEYS.ExcludeOrgCheckbox] && !isEmpty(newValues[FIELD_KEYS.ExcludeOrg])
     obj.filterType = hasExcludedOrgs ? 'NotEquals' : 'All'
     if (hasExcludedOrgs) {
-      obj.entityRefs?.push(newValues[FIELD_KEYS.ExcludeOrg])
+      obj.entityRefs?.push(...(newValues[FIELD_KEYS.ExcludeOrg]?.map((field: SelectOption) => field.value) || []))
     }
     // exclude can be there
     // entityRefs reqd, if exclude is true
   } else {
     obj.filterType = 'Equals'
-    obj.entityRefs?.push(newValues[fieldKey])
+    obj.entityRefs?.push(...(newValues[fieldKey]?.map((field: SelectOption) => field.value) || []))
   }
 
   updateEntities(obj, entities, orgFieldIndex)
@@ -143,11 +184,56 @@ const adaptForEnvField = (newValues: any, entities: EntityType[]) => {
   updateEntities(obj, entities, index)
 }
 
-export const convertValuesToYamlObj = (currentValues: any, newValues: any) => {
+const adaptForServiceField = (newValues: any, entities: EntityType[]) => {
+  const fieldKey = FIELD_KEYS.Service
+  const { isAllSelected, obj, index } = getMetaDataForField(fieldKey, entities, newValues)
+  if (index < 0 && !newValues[fieldKey]) {
+    return
+  }
+
+  if (isAllSelected) {
+    obj.filterType = 'All'
+  } else {
+    obj.filterType = 'Equals'
+    obj.entityRefs?.push(...(newValues[fieldKey]?.map((field: SelectOption) => field.value) || []))
+  }
+
+  updateEntities(obj, entities, index)
+}
+
+export const convertValuesToYamlObj = (currentValues: any, newValues: any, fieldsVisibility: FieldVisibility) => {
   const entities = [...(currentValues.entities || [])]
 
   adaptForEnvField(newValues, entities as EntityType[])
-  adaptForOrgField(newValues, entities)
+  if (fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
+    adaptForOrgField(newValues, entities)
+  }
+
+  if (fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.PROJECT) {
+    adaptForServiceField(newValues, entities)
+  }
 
   return { name: newValues.name, entities }
+}
+
+export const getEmptyEntityConfig = (fieldsVisibility: FieldVisibility): EntityConfig => {
+  const entities = []
+  if (fieldsVisibility.showOrgField) {
+    entities.push({
+      type: FIELD_KEYS.Org,
+      filterType: 'All'
+    })
+  }
+  if (fieldsVisibility.showProjectField) {
+    entities.push({
+      type: FIELD_KEYS.Proj,
+      filterType: 'All'
+    })
+  }
+  entities.push({ type: FIELD_KEYS.Service, filterType: 'All' })
+  entities.push({ type: FIELD_KEYS.EnvType, filterType: 'All' })
+  return {
+    name: '',
+    entities: entities as EntityType[]
+  }
 }

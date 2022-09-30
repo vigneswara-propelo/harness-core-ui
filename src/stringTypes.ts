@@ -4099,11 +4099,13 @@ export interface StringsMap {
   'pipeline.viewLatestExecution': string
   'pipeline.viewPipeline': string
   'pipeline.warningForInvalidYAMLDiscard': string
+  'freezeWindows.freezeStudio.allOrganizations': string
   'freezeWindows.freezeStudio.defineResources': string
   'freezeWindows.freezeStudio.excludeOrgs': string
   'freezeWindows.freezeStudio.excludeProjects': string
   'freezeWindows.freezeStudio.freezeConfiguration': string
   'freezeWindows.freezeStudio.freezeOverview': string
+  'freezeWindows.freezeWindowsPage.editFreezeWindow': string
   'freezeWindows.freezeWindowsPage.newFreezeWindow': string
   'freezeWindows.freezeWindowsPage.noFreezeWindows': string
   'templatesLibrary.addNewTemplate': string

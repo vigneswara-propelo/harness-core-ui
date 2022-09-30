@@ -21,7 +21,7 @@ enum FreezeWindowTabs {
 
 export const FreezeWindowStudioVisualView = ({ resources }: { resources: ResourcesInterface }) => {
   const { getString } = useStrings()
-  const [selectedTabId, setSelectedTabId] = React.useState<FreezeWindowTabs>(FreezeWindowTabs.FREEZE_CONFIG)
+  const [selectedTabId, setSelectedTabId] = React.useState<FreezeWindowTabs>(FreezeWindowTabs.OVERVIEW)
 
   const isReadOnly = false
 

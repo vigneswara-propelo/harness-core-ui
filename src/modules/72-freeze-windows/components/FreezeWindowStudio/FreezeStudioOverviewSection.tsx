@@ -41,7 +41,7 @@ export const FreezeStudioOverviewSection: React.FC<FreezeStudioOverviewSectionPr
 
   return (
     <Formik
-      key={initialValues?.identifier as string}
+      enableReinitialize
       onSubmit={noop}
       formName="freezeWindowStudioOverviewForm"
       initialValues={initialValues}
@@ -59,7 +59,7 @@ export const FreezeStudioOverviewSection: React.FC<FreezeStudioOverviewSectionPr
                 identifierProps={{
                   inputLabel: getString('name'),
                   isIdentifierEditable: true, // todo: edit case, not editable
-                  inputGroupProps: { disabled: isReadOnly }
+                  inputGroupProps: { disabled: isReadOnly, inputGroup: { autoFocus: true } }
                 }}
                 descriptionProps={{ disabled: isReadOnly }}
                 tagsProps={{ disabled: isReadOnly }}
