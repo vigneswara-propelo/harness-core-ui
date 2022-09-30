@@ -3400,7 +3400,26 @@ exports[`MANIFEST renders the K8 manifest: manifest form skeleton 1`] = `
         <div
           class="Layout--vertical StyledProps--main inputWidth layoutVerticalSpacing"
           data-name="manifest"
-        />
+        >
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+        </div>
       </div>
     </div>
   </div>
