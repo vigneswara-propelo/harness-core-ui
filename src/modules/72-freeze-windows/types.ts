@@ -5,7 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
+import type { PartiallyRequired } from '@pipeline/utils/types'
+import type { FreezeFilterPropertiesDTO, GetFreezeListQueryParams } from 'services/cd-ng'
 
 export enum FreezeWindowLevels {
   ACCOUNT = 'ACCOUNT',
@@ -42,3 +44,8 @@ export interface ResourcesInterface {
   servicesMap: Record<string, SelectOption>
   freezeWindowLevel: FreezeWindowLevels
 }
+
+type OptionalFreezeListUrlQueryParams = Pick<GetFreezeListQueryParams, 'page' | 'size'> &
+  Pick<FreezeFilterPropertiesDTO, 'freezeStatus' | 'searchTerm' | 'sort'> & { startDate?: string; endDate?: string }
+
+export type FreezeListUrlQueryParams = PartiallyRequired<OptionalFreezeListUrlQueryParams, 'page' | 'size' | 'sort'>

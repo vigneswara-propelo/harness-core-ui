@@ -16,9 +16,17 @@ import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { killEvent } from '@common/utils/eventUtils'
-import type { PageFreezeResponse } from 'services/cd-ng'
-import type { FreezeWindowListColumnActions } from './FreezeWindowListTable'
+import type { FreezeSummaryResponse, UpdateFreezeStatusQueryParams } from 'services/cd-ng'
 import css from './FreezeWindowList.module.scss'
+
+export interface FreezeWindowListColumnActions {
+  onRowSelectToggle: (data: { freezeWindowId: string; checked: boolean }) => void
+  onToggleFreezeRow: (data: { freezeWindowId?: string; status: UpdateFreezeStatusQueryParams['status'] }) => void
+  onDeleteRow: (freezeWindowId?: string) => void
+  onViewFreezeRow: (freezeWindow: FreezeSummaryResponse) => void
+  getViewFreezeRowLink: (freezeWindow: FreezeSummaryResponse) => string
+  selectedItems: string[]
+}
 
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
   column: ColumnInstance<D> & FreezeWindowListColumnActions
@@ -27,10 +35,10 @@ type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance
   value: CellValue<V>
 }
 
-type CellType = Renderer<CellTypeWithActions<PageFreezeResponse>>
+type CellType = Renderer<CellTypeWithActions<FreezeSummaryResponse>>
 
 export const FreezeNameCell: CellType = ({ row, column }) => {
-  const data = row.original as any // TODO: remove once BE ready with proper swagger
+  const data = row.original
   const { getString } = useStrings()
 
   return (
@@ -40,7 +48,7 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
         flex={{ alignItems: 'center', justifyContent: 'start' }}
         margin={{ bottom: 'small' }}
       >
-        <Link to={column.getViewFreezeWindowLink(data)}>
+        <Link to={column.getViewFreezeRowLink(data)}>
           <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
             {data.name}
           </Text>
@@ -96,12 +104,12 @@ export const FreezeTimeCell: CellType = () => {
 }
 
 export const StatusCell: CellType = ({ row }) => {
-  const data = row.original as any
+  const data = row.original
   return (
     <Text
       font={{ variation: FontVariation.TINY_SEMI }}
-      color={data.status === 'ACTIVE' ? Color.PRIMARY_7 : Color.GREY_700}
-      className={cx(css.status, data.status === 'ACTIVE' ? css.active : css.inactive)}
+      color={data.status === 'Enabled' ? Color.PRIMARY_7 : Color.GREY_700}
+      className={cx(css.status, data.status === 'Enabled' ? css.active : css.inactive)}
     >
       {data.status}
     </Text>
@@ -109,7 +117,7 @@ export const StatusCell: CellType = ({ row }) => {
 }
 
 export const LastModifiedCell: CellType = ({ row }) => {
-  const data = row.original as any
+  const data = row.original
   return (
     <Text color={Color.GREY_900} font={{ size: 'small' }}>
       {getReadableDateTime(data.lastUpdatedAt)}
@@ -118,15 +126,15 @@ export const LastModifiedCell: CellType = ({ row }) => {
 }
 
 export const MenuCell: CellType = ({ row, column }) => {
-  const data = row.original as any
+  const data = row.original
 
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }} onClick={killEvent}>
       <Popover className={Classes.DARK} position={Position.LEFT}>
         <Button variation={ButtonVariation.ICON} icon="Options" aria-label="Freeze window menu actions" />
         <Menu style={{ backgroundColor: 'unset', minWidth: 'unset' }}>
-          <Menu.Item className={css.link} text={<Link to={column.getViewFreezeWindowLink(data)}>Edit</Link>} />
-          <Menu.Item text="Delete" onClick={() => column.onDeleteFreezeWindow(data)} />
+          <Menu.Item className={css.link} text={<Link to={column.getViewFreezeRowLink(data)}>Edit</Link>} />
+          <Menu.Item text="Delete" onClick={() => column.onDeleteRow(data.identifier!)} />
         </Menu>
       </Popover>
     </Layout.Horizontal>
@@ -134,21 +142,34 @@ export const MenuCell: CellType = ({ row, column }) => {
 }
 
 export const RowSelectCell: CellType = ({ row, column }) => {
-  const data = row.original as any
+  const data = row.original
 
   return (
     <div className={css.checkbox} onClick={killEvent}>
-      <Checkbox large checked={data.status === 'checked'} onChange={() => column.onRowSelectToggle(data)} />
+      <Checkbox
+        large
+        checked={column.selectedItems.includes(data.identifier!)}
+        onChange={(event: React.FormEvent<HTMLInputElement>) => {
+          column.onRowSelectToggle({ freezeWindowId: data.identifier!, checked: event.currentTarget.checked })
+        }}
+      />
     </div>
   )
 }
 
 export const FreezeToggleCell: CellType = ({ row, column }) => {
-  const data = row.original as any
+  const data = row.original
 
   return (
     <div onClick={killEvent}>
-      <Switch large checked={data.status === 'checked'} labelElement="" onChange={() => column.onFreezeToggle(data)} />
+      <Switch
+        large
+        checked={data.status === 'Enabled'}
+        labelElement=""
+        onChange={value =>
+          column.onToggleFreezeRow({ freezeWindowId: data.identifier!, status: value ? 'Enabled' : 'Disabled' })
+        }
+      />
     </div>
   )
 }

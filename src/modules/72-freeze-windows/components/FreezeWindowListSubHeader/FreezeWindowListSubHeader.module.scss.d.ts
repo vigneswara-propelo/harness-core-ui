@@ -7,7 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly dateRange: string
   readonly freezeWindowsPageSubHeader: string
   readonly main: string
+  readonly subHeaderActions: string
 }
 export default styles

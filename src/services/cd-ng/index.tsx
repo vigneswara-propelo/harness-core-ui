@@ -363,6 +363,8 @@ export interface AccessControlCheckError {
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -1960,6 +1962,7 @@ export interface ConnectorCatalogueItem {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
   )[]
 }
 
@@ -2039,6 +2042,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
   )[]
 }
 
@@ -2094,6 +2098,7 @@ export interface ConnectorInfoDTO {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
 }
 
 export interface ConnectorResponse {
@@ -2166,6 +2171,7 @@ export interface ConnectorTypeStatistics {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
 }
 
 export interface ConnectorValidationResult {
@@ -3155,6 +3161,7 @@ export interface EntityDetail {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -3433,6 +3440,16 @@ export interface EnvironmentYaml {
   type: 'PreProduction' | 'Production'
 }
 
+export interface EnvironmentYamlMetadata {
+  environmentIdentifier: string
+  environmentYaml?: string
+  inputSetTemplateYaml?: string
+}
+
+export interface EnvironmentYamlMetadataDTO {
+  environmentYamlMetadataList?: EnvironmentYamlMetadata[]
+}
+
 export interface EnvironmentYamlV2 {
   deployToAll?: boolean
   environmentInputs?: JsonNode
@@ -3450,6 +3467,10 @@ export interface EnvironmentsMetadata {
 export interface EnvironmentsYaml {
   metadata?: EnvironmentsMetadata
   values?: EnvironmentYamlV2[]
+}
+
+export interface EnvironmentsYamlMetadataInput {
+  envIdentifiers: string[]
 }
 
 export interface Error {
@@ -3794,6 +3815,8 @@ export interface Error {
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4150,6 +4173,8 @@ export interface ErrorMetadata {
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   errorMessage?: string
 }
 
@@ -4563,6 +4588,8 @@ export interface Failure {
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -5019,8 +5046,68 @@ export interface FolderNodeDTO {
   type: 'FILE' | 'FOLDER'
 }
 
+export interface FreezeErrorResponseDTO {
+  errorMessage?: string
+  id?: string
+  name?: string
+}
+
+export interface FreezeFilterPropertiesDTO {
+  freezeIdentifiers?: string[]
+  freezeStatus?: 'Enabled' | 'Disabled'
+  searchTerm?: string
+  sort?: string[]
+}
+
 export interface FreezeResponse {
-  [key: string]: any
+  accountId?: string
+  createdAt?: number
+  description?: string
+  freezeScope?: 'account' | 'org' | 'project' | 'unknown'
+  freezeWindows?: FreezeWindow[]
+  identifier?: string
+  lastUpdatedAt?: number
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  status?: 'Enabled' | 'Disabled'
+  tags?: {
+    [key: string]: string
+  }
+  type?: 'GLOBAL' | 'MANUAL'
+  yaml?: string
+}
+
+export interface FreezeResponseWrapperDTO {
+  freezeErrorResponseDTOList?: FreezeErrorResponseDTO[]
+  noOfFailed?: number
+  noOfSuccess?: number
+  successfulFreezeResponseDTOList?: FreezeResponse[]
+}
+
+export interface FreezeSummaryResponse {
+  accountId?: string
+  createdAt?: number
+  description?: string
+  freezeScope?: 'account' | 'org' | 'project' | 'unknown'
+  freezeWindows?: FreezeWindow[]
+  identifier?: string
+  lastUpdatedAt?: number
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  status?: 'Enabled' | 'Disabled'
+  tags?: {
+    [key: string]: string
+  }
+  type?: 'GLOBAL' | 'MANUAL'
+}
+
+export interface FreezeWindow {
+  endTime?: string
+  recurrence?: Recurrence
+  startTime?: string
+  timeZone?: TimeZone
 }
 
 export interface GARBuildDetailsDTO {
@@ -5083,6 +5170,12 @@ export type GcpManualDetails = GcpCredentialSpec & {
 
 export interface GcpResponseDTO {
   clusterNames?: string[]
+}
+
+export type GcpSecretManager = ConnectorConfigDTO & {
+  credentialsRef: string
+  default?: boolean
+  delegateSelectors?: string[]
 }
 
 export type GcrArtifactConfig = ArtifactConfig & {
@@ -5232,6 +5325,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -5347,6 +5441,7 @@ export interface GitEntityFilterProperties {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -5495,6 +5590,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -5618,6 +5714,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -5849,6 +5946,7 @@ export interface GitSyncEntityDTO {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -5966,6 +6064,7 @@ export interface GitSyncEntityListDTO {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -6100,6 +6199,7 @@ export interface GitSyncErrorDTO {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -6828,6 +6928,11 @@ export type InputSetReference = EntityReference & {
 export interface InputSetValidator {
   parameters?: string
   validatorType?: 'ALLOWED_VALUES' | 'REGEX'
+}
+
+export interface InputsValidationResponse {
+  childrenErrorNodes?: NodeErrorSummary[]
+  valid?: boolean
 }
 
 export interface InstanceCountDetailsByEnvTypeAndServiceId {
@@ -7938,6 +8043,12 @@ export interface NodeErrorInfo {
   type?: string
 }
 
+export interface NodeErrorSummary {
+  childrenErrorNodes?: NodeErrorSummary[]
+  nodeInfo?: NodeInfo
+  type?: 'TEMPLATE' | 'SERVICE' | 'PIPELINE' | 'UNKNOWN'
+}
+
 export interface NodeInfo {
   identifier?: string
   localFqn?: string
@@ -8294,8 +8405,8 @@ export interface PageFilterDTO {
   totalPages?: number
 }
 
-export interface PageFreezeResponse {
-  content?: FreezeResponse[]
+export interface PageFreezeSummaryResponse {
+  content?: FreezeSummaryResponse[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -8902,6 +9013,16 @@ export type RateLimitRestrictionMetadataDTO = RestrictionMetadataDTO & {
   timeUnit?: TimeUnit
 }
 
+export interface Recurrence {
+  spec?: RecurrenceSpec
+  type?: 'Daily' | 'Weekly' | 'Monthly' | 'Yearly'
+}
+
+export interface RecurrenceSpec {
+  count?: number
+  until?: string
+}
+
 export interface ReferenceDTO {
   accountIdentifier?: string
   count?: number
@@ -8970,6 +9091,7 @@ export interface ReferencedByDTO {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -9027,6 +9149,10 @@ export interface ReferencedByDTO {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+}
+
+export interface RefreshRequest {
+  yaml: string
 }
 
 export interface RegionGar {
@@ -9574,6 +9700,13 @@ export interface ResponseEnvironmentResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseEnvironmentYamlMetadataDTO {
+  correlationId?: string
+  data?: EnvironmentYamlMetadataDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseExecutionDeploymentInfo {
   correlationId?: string
   data?: ExecutionDeploymentInfo
@@ -9626,6 +9759,13 @@ export interface ResponseFolderNodeDTO {
 export interface ResponseFreezeResponse {
   correlationId?: string
   data?: FreezeResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseFreezeResponseWrapperDTO {
+  correlationId?: string
+  data?: FreezeResponseWrapperDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9745,6 +9885,13 @@ export interface ResponseInfrastructureConfig {
 export interface ResponseInfrastructureResponse {
   correlationId?: string
   data?: InfrastructureResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInputsValidationResponse {
+  correlationId?: string
+  data?: InputsValidationResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9943,6 +10090,7 @@ export interface ResponseListEntityType {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -10031,6 +10179,7 @@ export interface ResponseListExecutionStatus {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -10637,6 +10786,8 @@ export interface ResponseMessage {
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -10829,9 +10980,9 @@ export interface ResponsePageFilterDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponsePageFreezeResponse {
+export interface ResponsePageFreezeSummaryResponse {
   correlationId?: string
-  data?: PageFreezeResponse
+  data?: PageFreezeSummaryResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -12869,7 +13020,7 @@ export interface StepSpecType {
 
 export interface StepTemplateRef {
   templateRef: string
-  versionLabel?: string
+  versionLabel: string
 }
 
 export interface StepWhenCondition {
@@ -13250,6 +13401,13 @@ export interface TimeValuePairListDTOInteger {
 export interface TimeValuePairObject {
   timestamp?: number
   value?: { [key: string]: any }
+}
+
+export interface TimeZone {
+  displayName?: string
+  dstsavings?: number
+  id?: string
+  rawOffset?: number
 }
 
 export interface TokenAggregateDTO {
@@ -13832,9 +13990,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = void
+export type SecretRequestWrapperRequestBody = SecretRequestWrapper
 
-export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
+export type SecretRequestWrapper2RequestBody = void
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -13863,6 +14021,8 @@ export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -14394,6 +14554,7 @@ export interface ListActivitiesQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -14503,6 +14664,7 @@ export interface ListActivitiesQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -14716,6 +14878,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -14825,6 +14988,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -20590,7 +20754,7 @@ export const clustersPromise = (
   )
 
 export interface ElasticLoadBalancersQueryParams {
-  awsConnectorRef: string
+  awsConnectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
@@ -20744,7 +20908,7 @@ export const getIamRolesForAwsPromise = (
   )
 
 export interface ListenerRulesQueryParams {
-  awsConnectorRef: string
+  awsConnectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
@@ -20800,7 +20964,7 @@ export const listenerRulesPromise = (
   )
 
 export interface ListenersQueryParams {
-  awsConnectorRef: string
+  awsConnectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
@@ -22073,6 +22237,7 @@ export interface GetConnectorListQueryParams {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
   category?:
     | 'CLOUD_PROVIDER'
     | 'SECRET_MANAGER'
@@ -22468,6 +22633,7 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
 }
 
 export type GetAllAllowedFieldValuesProps = Omit<
@@ -26656,6 +26822,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -26825,6 +26992,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -28071,6 +28239,85 @@ export const dummyNGServiceOverrideConfigPromise = (
     props,
     signal
   )
+
+export interface GetEnvironmentsYamlAndRuntimeInputsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetEnvironmentsYamlAndRuntimeInputsProps = Omit<
+  MutateProps<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsYamlAndRuntimeInputsQueryParams,
+    EnvironmentsYamlMetadataInput,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns environment YAML and runtime input YAML
+ */
+export const GetEnvironmentsYamlAndRuntimeInputs = (props: GetEnvironmentsYamlAndRuntimeInputsProps) => (
+  <Mutate<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsYamlAndRuntimeInputsQueryParams,
+    EnvironmentsYamlMetadataInput,
+    void
+  >
+    verb="POST"
+    path={`/environmentsV2/environmentsYamlMetadata`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetEnvironmentsYamlAndRuntimeInputsProps = Omit<
+  UseMutateProps<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsYamlAndRuntimeInputsQueryParams,
+    EnvironmentsYamlMetadataInput,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns environment YAML and runtime input YAML
+ */
+export const useGetEnvironmentsYamlAndRuntimeInputs = (props: UseGetEnvironmentsYamlAndRuntimeInputsProps) =>
+  useMutate<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsYamlAndRuntimeInputsQueryParams,
+    EnvironmentsYamlMetadataInput,
+    void
+  >('POST', `/environmentsV2/environmentsYamlMetadata`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * This api returns environment YAML and runtime input YAML
+ */
+export const getEnvironmentsYamlAndRuntimeInputsPromise = (
+  props: MutateUsingFetchProps<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsYamlAndRuntimeInputsQueryParams,
+    EnvironmentsYamlMetadataInput,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsYamlAndRuntimeInputsQueryParams,
+    EnvironmentsYamlMetadataInput,
+    void
+  >('POST', getConfig('ng/api'), `/environmentsV2/environmentsYamlMetadata`, props, signal)
 
 export interface GetEnvironmentAccessListQueryParams {
   page?: number
@@ -29754,6 +30001,7 @@ export interface GetReferencedByQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -30180,63 +30428,6 @@ export const getFilterPromise = (
     signal
   )
 
-export interface GetFreezeListQueryParams {
-  page?: number
-  size?: number
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  searchTerm?: string
-  serviceIdentifiers?: string[]
-  sort?: string[]
-  type?: 'GLOBAL' | 'MANUAL'
-  status?: 'ACTIVE' | 'IN_ACTIVE'
-}
-
-export type GetFreezeListProps = Omit<
-  GetProps<ResponsePageFreezeResponse, Failure | Error, GetFreezeListQueryParams, void>,
-  'path'
->
-
-/**
- * Gets Freeze Configs list
- */
-export const GetFreezeList = (props: GetFreezeListProps) => (
-  <Get<ResponsePageFreezeResponse, Failure | Error, GetFreezeListQueryParams, void>
-    path={`/freeze`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetFreezeListProps = Omit<
-  UseGetProps<ResponsePageFreezeResponse, Failure | Error, GetFreezeListQueryParams, void>,
-  'path'
->
-
-/**
- * Gets Freeze Configs list
- */
-export const useGetFreezeList = (props: UseGetFreezeListProps) =>
-  useGet<ResponsePageFreezeResponse, Failure | Error, GetFreezeListQueryParams, void>(`/freeze`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
-
-/**
- * Gets Freeze Configs list
- */
-export const getFreezeListPromise = (
-  props: GetUsingFetchProps<ResponsePageFreezeResponse, Failure | Error, GetFreezeListQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponsePageFreezeResponse, Failure | Error, GetFreezeListQueryParams, void>(
-    getConfig('ng/api'),
-    `/freeze`,
-    props,
-    signal
-  )
-
 export interface CreateFreezeQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -30324,10 +30515,10 @@ export interface DeleteManyFreezesQueryParams {
 
 export type DeleteManyFreezesProps = Omit<
   MutateProps<
-    ResponseFreezeResponse,
+    ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -30338,10 +30529,10 @@ export type DeleteManyFreezesProps = Omit<
  */
 export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
   <Mutate<
-    ResponseFreezeResponse,
+    ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -30353,10 +30544,10 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
 
 export type UseDeleteManyFreezesProps = Omit<
   UseMutateProps<
-    ResponseFreezeResponse,
+    ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -30367,10 +30558,10 @@ export type UseDeleteManyFreezesProps = Omit<
  */
 export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
   useMutate<
-    ResponseFreezeResponse,
+    ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -30379,31 +30570,112 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
  */
 export const deleteManyFreezesPromise = (
   props: MutateUsingFetchProps<
-    ResponseFreezeResponse,
+    ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
   mutateUsingFetch<
-    ResponseFreezeResponse,
+    ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
+
+export interface GetFreezeListQueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetFreezeListProps = Omit<
+  MutateProps<
+    ResponsePageFreezeSummaryResponse,
+    Failure | Error,
+    GetFreezeListQueryParams,
+    FreezeFilterPropertiesDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Freeze Configs list
+ */
+export const GetFreezeList = (props: GetFreezeListProps) => (
+  <Mutate<ResponsePageFreezeSummaryResponse, Failure | Error, GetFreezeListQueryParams, FreezeFilterPropertiesDTO, void>
+    verb="POST"
+    path={`/freeze/list`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetFreezeListProps = Omit<
+  UseMutateProps<
+    ResponsePageFreezeSummaryResponse,
+    Failure | Error,
+    GetFreezeListQueryParams,
+    FreezeFilterPropertiesDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Freeze Configs list
+ */
+export const useGetFreezeList = (props: UseGetFreezeListProps) =>
+  useMutate<
+    ResponsePageFreezeSummaryResponse,
+    Failure | Error,
+    GetFreezeListQueryParams,
+    FreezeFilterPropertiesDTO,
+    void
+  >('POST', `/freeze/list`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets Freeze Configs list
+ */
+export const getFreezeListPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePageFreezeSummaryResponse,
+    Failure | Error,
+    GetFreezeListQueryParams,
+    FreezeFilterPropertiesDTO,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageFreezeSummaryResponse,
+    Failure | Error,
+    GetFreezeListQueryParams,
+    FreezeFilterPropertiesDTO,
+    void
+  >('POST', getConfig('ng/api'), `/freeze/list`, props, signal)
 
 export interface UpdateFreezeStatusQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  status: 'ACTIVE' | 'IN_ACTIVE'
+  status: 'Enabled' | 'Disabled'
 }
 
 export type UpdateFreezeStatusProps = Omit<
-  MutateProps<ResponseFreezeResponse, Failure | Error, UpdateFreezeStatusQueryParams, string[], void>,
+  MutateProps<
+    ResponseFreezeResponseWrapperDTO,
+    Failure | Error,
+    UpdateFreezeStatusQueryParams,
+    UpdateFreezeStatusBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -30411,7 +30683,13 @@ export type UpdateFreezeStatusProps = Omit<
  * Update the status of Freeze to active or inactive
  */
 export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
-  <Mutate<ResponseFreezeResponse, Failure | Error, UpdateFreezeStatusQueryParams, string[], void>
+  <Mutate<
+    ResponseFreezeResponseWrapperDTO,
+    Failure | Error,
+    UpdateFreezeStatusQueryParams,
+    UpdateFreezeStatusBodyRequestBody,
+    void
+  >
     verb="POST"
     path={`/freeze/updateFreezeStatus`}
     base={getConfig('ng/api')}
@@ -30420,7 +30698,13 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
 )
 
 export type UseUpdateFreezeStatusProps = Omit<
-  UseMutateProps<ResponseFreezeResponse, Failure | Error, UpdateFreezeStatusQueryParams, string[], void>,
+  UseMutateProps<
+    ResponseFreezeResponseWrapperDTO,
+    Failure | Error,
+    UpdateFreezeStatusQueryParams,
+    UpdateFreezeStatusBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -30428,26 +30712,34 @@ export type UseUpdateFreezeStatusProps = Omit<
  * Update the status of Freeze to active or inactive
  */
 export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
-  useMutate<ResponseFreezeResponse, Failure | Error, UpdateFreezeStatusQueryParams, string[], void>(
-    'POST',
-    `/freeze/updateFreezeStatus`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<
+    ResponseFreezeResponseWrapperDTO,
+    Failure | Error,
+    UpdateFreezeStatusQueryParams,
+    UpdateFreezeStatusBodyRequestBody,
+    void
+  >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Update the status of Freeze to active or inactive
  */
 export const updateFreezeStatusPromise = (
-  props: MutateUsingFetchProps<ResponseFreezeResponse, Failure | Error, UpdateFreezeStatusQueryParams, string[], void>,
+  props: MutateUsingFetchProps<
+    ResponseFreezeResponseWrapperDTO,
+    Failure | Error,
+    UpdateFreezeStatusQueryParams,
+    UpdateFreezeStatusBodyRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseFreezeResponse, Failure | Error, UpdateFreezeStatusQueryParams, string[], void>(
-    'POST',
-    getConfig('ng/api'),
-    `/freeze/updateFreezeStatus`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseFreezeResponseWrapperDTO,
+    Failure | Error,
+    UpdateFreezeStatusQueryParams,
+    UpdateFreezeStatusBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
 export interface DeleteFreezeQueryParams {
   accountIdentifier: string
@@ -30456,7 +30748,7 @@ export interface DeleteFreezeQueryParams {
 }
 
 export type DeleteFreezeProps = Omit<
-  MutateProps<ResponseString, Failure | Error, DeleteFreezeQueryParams, string, void>,
+  MutateProps<ResponseVoid, Failure | Error, DeleteFreezeQueryParams, string, void>,
   'path' | 'verb'
 >
 
@@ -30464,7 +30756,7 @@ export type DeleteFreezeProps = Omit<
  * Delete a Freeze
  */
 export const DeleteFreeze = (props: DeleteFreezeProps) => (
-  <Mutate<ResponseString, Failure | Error, DeleteFreezeQueryParams, string, void>
+  <Mutate<ResponseVoid, Failure | Error, DeleteFreezeQueryParams, string, void>
     verb="DELETE"
     path={`/freeze`}
     base={getConfig('ng/api')}
@@ -30473,7 +30765,7 @@ export const DeleteFreeze = (props: DeleteFreezeProps) => (
 )
 
 export type UseDeleteFreezeProps = Omit<
-  UseMutateProps<ResponseString, Failure | Error, DeleteFreezeQueryParams, string, void>,
+  UseMutateProps<ResponseVoid, Failure | Error, DeleteFreezeQueryParams, string, void>,
   'path' | 'verb'
 >
 
@@ -30481,7 +30773,7 @@ export type UseDeleteFreezeProps = Omit<
  * Delete a Freeze
  */
 export const useDeleteFreeze = (props: UseDeleteFreezeProps) =>
-  useMutate<ResponseString, Failure | Error, DeleteFreezeQueryParams, string, void>('DELETE', `/freeze`, {
+  useMutate<ResponseVoid, Failure | Error, DeleteFreezeQueryParams, string, void>('DELETE', `/freeze`, {
     base: getConfig('ng/api'),
     ...props
   })
@@ -30490,10 +30782,10 @@ export const useDeleteFreeze = (props: UseDeleteFreezeProps) =>
  * Delete a Freeze
  */
 export const deleteFreezePromise = (
-  props: MutateUsingFetchProps<ResponseString, Failure | Error, DeleteFreezeQueryParams, string, void>,
+  props: MutateUsingFetchProps<ResponseVoid, Failure | Error, DeleteFreezeQueryParams, string, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseString, Failure | Error, DeleteFreezeQueryParams, string, void>(
+  mutateUsingFetch<ResponseVoid, Failure | Error, DeleteFreezeQueryParams, string, void>(
     'DELETE',
     getConfig('ng/api'),
     `/freeze`,
@@ -31600,6 +31892,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -31777,6 +32070,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'DeploymentSteps'
       | 'DeploymentStage'
       | 'ApprovalStage'
+      | 'PipelineStage'
       | 'FeatureFlagStage'
       | 'Template'
       | 'TemplateStage'
@@ -33614,8 +33908,6 @@ export interface GetInfrastructureListQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
-  deploymentTemplateIdentifier?: string
-  versionLabel?: string
   sort?: string[]
 }
 
@@ -37208,6 +37500,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -37445,6 +37738,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -38394,6 +38688,56 @@ export const putProjectPromise = (
     ProjectRequestRequestBody,
     PutProjectPathParams
   >('PUT', getConfig('ng/api'), `/projects/${identifier}`, props, signal)
+
+export interface ValidateInputsForYamlQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type ValidateInputsForYamlProps = Omit<
+  GetProps<ResponseInputsValidationResponse, Failure | Error, ValidateInputsForYamlQueryParams, void>,
+  'path'
+>
+
+/**
+ * This validates whether inputs provided to different references in yaml is valid or not
+ */
+export const ValidateInputsForYaml = (props: ValidateInputsForYamlProps) => (
+  <Get<ResponseInputsValidationResponse, Failure | Error, ValidateInputsForYamlQueryParams, void>
+    path={`/refresh-inputs/validate-inputs-yaml`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseValidateInputsForYamlProps = Omit<
+  UseGetProps<ResponseInputsValidationResponse, Failure | Error, ValidateInputsForYamlQueryParams, void>,
+  'path'
+>
+
+/**
+ * This validates whether inputs provided to different references in yaml is valid or not
+ */
+export const useValidateInputsForYaml = (props: UseValidateInputsForYamlProps) =>
+  useGet<ResponseInputsValidationResponse, Failure | Error, ValidateInputsForYamlQueryParams, void>(
+    `/refresh-inputs/validate-inputs-yaml`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * This validates whether inputs provided to different references in yaml is valid or not
+ */
+export const validateInputsForYamlPromise = (
+  props: GetUsingFetchProps<ResponseInputsValidationResponse, Failure | Error, ValidateInputsForYamlQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseInputsValidationResponse, Failure | Error, ValidateInputsForYamlQueryParams, void>(
+    getConfig('ng/api'),
+    `/refresh-inputs/validate-inputs-yaml`,
+    props,
+    signal
+  )
 
 export interface CreateRoleAssignmentQueryParams {
   accountIdentifier: string
@@ -47878,7 +48222,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -47888,7 +48232,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -47901,7 +48245,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -47915,7 +48259,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -47927,7 +48271,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -47936,7 +48280,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -48329,7 +48673,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -48343,7 +48687,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >
     verb="POST"
@@ -48358,7 +48702,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -48372,7 +48716,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -48384,7 +48728,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -48393,7 +48737,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -48528,7 +48872,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -48543,7 +48887,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -48558,7 +48902,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -48573,7 +48917,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -48592,7 +48936,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -48601,7 +48945,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -48620,7 +48964,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -48635,7 +48979,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -48650,7 +48994,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -48665,7 +49009,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -48684,7 +49028,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -48693,7 +49037,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -49258,6 +49602,7 @@ export interface GetYamlSchemaQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -49357,6 +49702,7 @@ export interface GetYamlSchemaQueryParams {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'

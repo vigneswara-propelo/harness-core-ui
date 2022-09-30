@@ -5,10 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.freezeWindowsPageSubHeader {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
 .dateRange {
   border: 1px solid var(--primary-5) !important;
 }
 
 .subHeaderActions {
   width: 100% !important;
+}
+
+.main {
+  --page-header-height: 138px;
 }
