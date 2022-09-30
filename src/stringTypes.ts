@@ -4753,6 +4753,7 @@ export interface StringsMap {
   'cd.steps.commands.validation.destinationPathRequired': string
   'cd.steps.commands.validation.sourceTypeRequired': string
   'cd.steps.common.clusterDetails': string
+  'cd.steps.common.enableKubernetesPruning': string
   'cd.steps.common.releaseNamePlaceholder': string
   'cd.steps.common.selectOrEnterClusterPlaceholder': string
   'cd.steps.common.specifyCredentials': string

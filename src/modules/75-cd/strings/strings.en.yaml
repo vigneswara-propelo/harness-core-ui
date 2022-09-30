@@ -16,6 +16,7 @@ steps:
     releaseNamePlaceholder: Enter Release Name
     specifyCredentials: Specify Credentials
     undefinedType: Undefined deployment type
+    enableKubernetesPruning: 'Enable Kubernetes Pruning'
   commands:
     runTheCommands: Run the following commands
     addCommand: Add Command
