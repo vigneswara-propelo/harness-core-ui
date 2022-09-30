@@ -75,6 +75,7 @@ import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineV
 import { InfrastructurePipelineProvider } from '@cd/context/InfrastructurePipelineContext'
 import { useGetTemplate } from 'services/template-ng'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import { isEditInfrastructure } from '@cd/components/PipelineSteps/DeployInfrastructureStep/utils'
 import type {
   GetTemplateProps,
@@ -381,7 +382,10 @@ function BootstrapDeployInfraDefinition({
 
   const addOrUpdateTemplate = async (): Promise<void> => {
     if (getTemplate) {
-      const { template } = await getTemplate({ templateType: 'CustomDeployment' })
+      const { template } = await getTemplate({
+        templateType: TemplateType.CustomDeployment,
+        allowedUsages: [TemplateUsage.USE]
+      })
       const templateJSON = parse(template.yaml || '').template
       setCustomDeploymentMetaData({
         templateMetaData: getTemplateRefVersionLabelObject(template),
@@ -498,7 +502,10 @@ function BootstrapDeployInfraDefinition({
   const onCustomDeploymentSelection = async (): Promise<void> => {
     if (getTemplate && !stageCustomDeploymentData) {
       try {
-        const { template } = await getTemplate({ templateType: 'CustomDeployment' })
+        const { template } = await getTemplate({
+          templateType: TemplateType.CustomDeployment,
+          allowedUsages: [TemplateUsage.USE]
+        })
         const templateRefObj = getTemplateRefVersionLabelObject(template)
         const templateJSON = parse(template.yaml || '').template
         setCustomDeploymentMetaData({

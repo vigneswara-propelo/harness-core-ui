@@ -40,7 +40,9 @@ function TemplateDetailsWrapper() {
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const templateDetailsToView = drawerData.data?.templateDetails
 
-  const templateDetailsComponent = <TemplateDetails template={templateDetailsToView as TemplateSummaryResponse} />
+  const templateDetailsComponent = (
+    <TemplateDetails disableVersionChange={true} template={templateDetailsToView as TemplateSummaryResponse} />
+  )
 
   if (isEmpty(templateDetailsToView)) {
     return null
