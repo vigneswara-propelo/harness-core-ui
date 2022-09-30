@@ -18,7 +18,6 @@ import { useCreateSegment, Tag, CreateSegmentQueryParams } from 'services/cf'
 import { useToaster } from '@common/exports'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
-import GetStartedWithFF from '@cf/pages/feature-flags/components/GetStartedWithFF'
 import css from './NewSegmentButton.module.scss'
 
 const collapseProps = {
@@ -154,19 +153,16 @@ export const NewSegmentButton: React.FC<NewSegmentButtonProps> = ({
   }, [activeEnvironment])
 
   return (
-    <>
-      <GetStartedWithFF hidden={!isLinkVariation} />
-      <RbacButton
-        icon="plus"
-        intent="primary"
-        variation={isLinkVariation ? ButtonVariation.LINK : ButtonVariation.PRIMARY}
-        text={getString('cf.segments.create')}
-        onClick={openModal}
-        permission={{
-          resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment },
-          permission: PermissionIdentifier.EDIT_FF_TARGETGROUP
-        }}
-      />
-    </>
+    <RbacButton
+      icon="plus"
+      intent="primary"
+      variation={isLinkVariation ? ButtonVariation.LINK : ButtonVariation.PRIMARY}
+      text={getString('cf.segments.create')}
+      onClick={openModal}
+      permission={{
+        resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment },
+        permission: PermissionIdentifier.EDIT_FF_TARGETGROUP
+      }}
+    />
   )
 }

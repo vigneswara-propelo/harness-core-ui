@@ -12,7 +12,7 @@ import { NoData } from '@cf/components/NoData/NoData'
 import { useStrings, String } from 'framework/strings'
 import noFlagsImg from '@cf/images/Feature_Flags_Teepee.svg'
 import noResultsImg from '@cf/images/EmptySearchResults.svg'
-import GetStartedWithFF from './GetStartedWithFF'
+import GetStartedWithFF from '@cf/components/GetStartedWithFF/GetStartedWithFF'
 import css from './NoFeatureFlags.module.scss'
 
 export interface NoFeatureFlagsProps {

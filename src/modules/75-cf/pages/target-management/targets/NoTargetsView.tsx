@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Container } from '@harness/uicore'
 import { NoData } from '@cf/components/NoData/NoData'
 import { String, useStrings } from 'framework/strings'
+import GetStartedWithFF from '@cf/components/GetStartedWithFF/GetStartedWithFF'
 import { NewTargets } from './NewTarget'
 import imageURL from './target.svg'
 
@@ -28,6 +29,7 @@ export const NoTargetsView: React.FC<NoTargetsViewProps> = ({ onNewTargetsCreate
         message={getString('cf.targets.noTargetForEnv')}
         description={<String useRichText stringID="cf.targets.noTargetDescription" />}
       >
+        <GetStartedWithFF />
         <NewTargets
           accountIdentifier={accountIdentifier}
           orgIdentifier={orgIdentifier}

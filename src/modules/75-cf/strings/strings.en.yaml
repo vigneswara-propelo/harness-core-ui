@@ -302,6 +302,8 @@ targets:
   upload: Upload a list of targets (CSV files only)
   enterName: 'Enter target name'
   enterValue: 'Enter target identifier'
+  addRow: Add row
+  removeRow: Remove row
   addTargetsLabel: Add Target(s)
   addTargets: + Add Target(s)
   noTargetFound: 'No target found in this environment. Click the button above to create target(s).'

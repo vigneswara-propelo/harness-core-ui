@@ -6493,6 +6493,7 @@ export interface StringsMap {
   'cf.targetManagementFlagConfiguration.removeFlag': string
   'cf.targetManagementFlagConfiguration.selectVariation': string
   'cf.targets.ID': string
+  'cf.targets.addRow': string
   'cf.targets.addTargets': string
   'cf.targets.addTargetsLabel': string
   'cf.targets.create': string
@@ -6511,6 +6512,7 @@ export interface StringsMap {
   'cf.targets.noTargetFound': string
   'cf.targets.noneDefined': string
   'cf.targets.pageDescription': string
+  'cf.targets.removeRow': string
   'cf.targets.targetSegment': string
   'cf.targets.upload': string
   'cf.targets.uploadError': string

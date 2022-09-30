@@ -7,13 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly collapse: string
-  readonly content: string
-  readonly header: string
-  readonly modal: string
-  readonly pageBody: string
-  readonly table: string
-  readonly upload: string
-  readonly uploadTargetContainer: string
+  readonly uploadButton: string
+  readonly uploadResults: string
 }
 export default styles
