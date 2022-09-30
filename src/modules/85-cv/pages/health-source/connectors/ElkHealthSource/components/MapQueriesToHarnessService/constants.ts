@@ -5,19 +5,24 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const MapGCPLogsToServiceFieldNames = {
+import type { MapElkQueryToService } from './ElkQueryBuilder.types'
+
+export const MapElkToServiceFieldNames = {
   METRIC_NAME: 'metricName',
   QUERY: 'query',
+  TIMESTAMP_FORMAT: 'timeStampFormat',
   SERVICE_INSTANCE: 'serviceInstance',
-  MESSAGE_IDENTIFIER: 'messageIdentifier',
-  IDENTIFY_TIMESTAMP: 'identifyTimestamp',
-  RECORD_COUNT: 'recordCount'
+  LOG_INDEXES: 'logIndexes',
+  IDENTIFY_TIMESTAMP: 'identify_timestamp',
+  MESSAGE_IDENTIFIER: 'messageIdentifier'
 }
 
-export const initialFormData = {
-  metricName: 'GCO Logs Query',
+export const initialFormData: MapElkQueryToService = {
+  metricName: 'ELK Logs Query',
   query: '',
-  recordCount: 0,
+  timeStampFormat: '',
   serviceInstance: '',
+  logIndexes: '',
+  identify_timestamp: '',
   messageIdentifier: ''
 }

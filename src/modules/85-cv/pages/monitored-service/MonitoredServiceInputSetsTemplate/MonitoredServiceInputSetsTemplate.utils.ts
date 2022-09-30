@@ -132,6 +132,17 @@ export const healthSourceTypeMapping = (type: ConnectorInfoDTO['type']): Connect
     case HealthSourceTypes.StackdriverLog as ConnectorInfoDTO['type']:
     case HealthSourceTypes.StackdriverMetrics as ConnectorInfoDTO['type']:
       return Connectors.GCP
+    case HealthSourceTypes.Elk as ConnectorInfoDTO['type']:
+      return Connectors.ELK
+    default:
+      return type
+  }
+}
+
+export const healthSourceTypeMappingForReferenceField = (type: ConnectorInfoDTO['type']): ConnectorInfoDTO['type'] => {
+  switch (type) {
+    case HealthSourceTypes.Elk as ConnectorInfoDTO['type']:
+      return Connectors.ELK
     default:
       return type
   }

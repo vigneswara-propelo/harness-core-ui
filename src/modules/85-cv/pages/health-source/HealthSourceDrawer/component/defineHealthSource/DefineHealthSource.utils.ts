@@ -19,7 +19,8 @@ import {
   NewRelicProductNames,
   ConnectorRefFieldName,
   SplunkProduct,
-  DynatraceProductNames
+  DynatraceProductNames,
+  ElkProduct
 } from './DefineHealthSource.constant'
 import type { DefineHealthSourceFormInterface } from './DefineHealthSource.types'
 
@@ -121,6 +122,14 @@ export const getFeatureOption = (
           label: getString('cv.monitoringSources.gco.product.logs')
         },
         ...optionalFeature
+      ]
+    }
+    case HealthSourceTypes.Elk: {
+      return [
+        {
+          value: ElkProduct.ELK_LOGS,
+          label: ElkProduct.ELK_LOGS
+        }
       ]
     }
     case Connectors.CUSTOM_HEALTH:
