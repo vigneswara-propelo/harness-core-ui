@@ -45,15 +45,15 @@ export function FreezeWindowListSubHeader(): ReactElement {
           className={css.dateRange}
           initialButtonText={getString('common.last7days')}
           dateRangePickerProps={{ defaultValue: defaultDateRangeValue }}
-          onChange={([startDate, endDate]) => {
+          onChange={([startTime, endTime]) => {
             updateQueryParams({
-              startDate: startDate.toLocaleDateString(),
-              endDate: endDate.toLocaleDateString(),
+              startTime: startTime.toLocaleDateString(),
+              endTime: endTime.toLocaleDateString(),
               page: DEFAULT_PAGE_INDEX
             }) // TODO: convert to proper type
           }}
-          renderButtonText={([selectedStartDate, selectedEndDate]) =>
-            `${selectedStartDate.toLocaleDateString()} - ${selectedEndDate.toLocaleDateString()}`
+          renderButtonText={([selectedstartTime, selectedendTime]) =>
+            `${selectedstartTime.toLocaleDateString()} - ${selectedendTime.toLocaleDateString()}`
           }
         />
         <FlexExpander />

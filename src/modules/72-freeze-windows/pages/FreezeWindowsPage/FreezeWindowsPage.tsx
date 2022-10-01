@@ -37,23 +37,34 @@ function _FreezeWindowsPage(): React.ReactElement {
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountId })
   const { replaceQueryParams } = useUpdateQueryParams<Partial<GetFreezeListQueryParams>>()
   const queryParams = useQueryParams<FreezeListUrlQueryParams>(getQueryParamOptions())
-  const { searchTerm, page, size, sort, freezeStatus, startDate, endDate } = queryParams
-  const { selectedItems } = useFreezeWindowListContext()
+  const { searchTerm, page, size, sort, freezeStatus, startTime, endTime } = queryParams
+  const { selectedItems, clearSelectedItems } = useFreezeWindowListContext()
   const resetFilter = (): void => {
     replaceQueryParams({})
   }
 
   useDocumentTitle([getString('common.freezeWindows')])
 
-  const { data, error, loading, refetch } = useMutateAsGet(useGetFreezeList, {
+  const {
+    data,
+    error,
+    loading: freezeListLoading,
+    refetch,
+    initLoading
+  } = useMutateAsGet(useGetFreezeList, {
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
       page,
-      size,
+      size
+    },
+    body: {
+      freezeStatus,
       searchTerm,
-      sort: sort.join(',')
+      sort
+      // startTime,
+      // endTime
     }
   })
 
@@ -69,18 +80,20 @@ function _FreezeWindowsPage(): React.ReactElement {
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
 
-  const handleDelete = (freezeWindowId?: string) => {
-    if (freezeWindowId) {
-      deleteFreeze(freezeWindowId)
-    }
+  const handleDelete = async (freezeWindowId?: string) => {
+    await deleteFreeze(freezeWindowId || selectedItems[0]) //TODO: change after multi delete API is ready
+    clearSelectedItems()
+    refetch()
   }
 
-  const handleFreezeToggle: FreezeWindowListColumnActions['onToggleFreezeRow'] = ({ freezeWindowId, status }) => {
+  const handleFreezeToggle: FreezeWindowListColumnActions['onToggleFreezeRow'] = async ({ freezeWindowId, status }) => {
     if (freezeWindowId) {
-      updateFreezeStatus([freezeWindowId], { queryParams: { status } } as UseUpdateFreezeStatusProps)
+      await updateFreezeStatus([freezeWindowId], { queryParams: { status } } as UseUpdateFreezeStatusProps)
     } else {
-      updateFreezeStatus(selectedItems, { queryParams: { status } } as UseUpdateFreezeStatusProps)
+      await updateFreezeStatus(selectedItems, { queryParams: { status } } as UseUpdateFreezeStatusProps)
     }
+    clearSelectedItems()
+    refetch()
   }
 
   const pageFreezeSummaryResponse = data?.data
@@ -88,12 +101,12 @@ function _FreezeWindowsPage(): React.ReactElement {
     <div className={css.main}>
       <FreezeWindowListHeader />
       <FreezeWindowListSubHeader />
-      <Page.Body loading={loading} error={error?.message} retryOnError={() => refetch()}>
-        {loading ? (
+      <Page.Body error={error?.message} retryOnError={refetch}>
+        {initLoading ? (
           <PageSpinner />
         ) : pageFreezeSummaryResponse && pageFreezeSummaryResponse.content?.length ? (
           <>
-            {(deleteFreezeLoading || updateFreezeStatusLoading) && <PageSpinner />}
+            {(freezeListLoading || deleteFreezeLoading || updateFreezeStatusLoading) && <PageSpinner />}
             <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
               <Text color={Color.GREY_800} font={{ weight: 'bold' }} padding="large">
                 {`${getString('total')}: ${data?.data?.totalItems}`}
@@ -108,7 +121,7 @@ function _FreezeWindowsPage(): React.ReactElement {
           </>
         ) : (
           <NoResultsView
-            hasSearchParam={!!(searchTerm || freezeStatus || startDate || endDate)}
+            hasSearchParam={!!(searchTerm || freezeStatus || startTime || endTime)}
             onReset={resetFilter}
             text={getString('freezeWindows.freezeWindowsPage.noFreezeWindows', { scope })}
           />

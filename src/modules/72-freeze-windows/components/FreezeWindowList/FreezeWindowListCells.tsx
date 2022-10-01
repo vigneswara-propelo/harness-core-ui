@@ -135,6 +135,17 @@ export const MenuCell: CellType = ({ row, column }) => {
         <Menu style={{ backgroundColor: 'unset', minWidth: 'unset' }}>
           <Menu.Item className={css.link} text={<Link to={column.getViewFreezeRowLink(data)}>Edit</Link>} />
           <Menu.Item text="Delete" onClick={() => column.onDeleteRow(data.identifier!)} />
+          {data.status === 'Disabled' ? (
+            <Menu.Item
+              text="Enable"
+              onClick={() => column.onToggleFreezeRow({ freezeWindowId: data.identifier!, status: 'Enabled' })}
+            />
+          ) : (
+            <Menu.Item
+              text="Disable"
+              onClick={() => column.onToggleFreezeRow({ freezeWindowId: data.identifier!, status: 'Disabled' })}
+            />
+          )}
         </Menu>
       </Popover>
     </Layout.Horizontal>
@@ -149,7 +160,7 @@ export const RowSelectCell: CellType = ({ row, column }) => {
       <Checkbox
         large
         checked={column.selectedItems.includes(data.identifier!)}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => {
+        onChange={event => {
           column.onRowSelectToggle({ freezeWindowId: data.identifier!, checked: event.currentTarget.checked })
         }}
       />
@@ -166,8 +177,11 @@ export const FreezeToggleCell: CellType = ({ row, column }) => {
         large
         checked={data.status === 'Enabled'}
         labelElement=""
-        onChange={value =>
-          column.onToggleFreezeRow({ freezeWindowId: data.identifier!, status: value ? 'Enabled' : 'Disabled' })
+        onChange={event =>
+          column.onToggleFreezeRow({
+            freezeWindowId: data.identifier!,
+            status: event.currentTarget.checked ? 'Enabled' : 'Disabled'
+          })
         }
       />
     </div>

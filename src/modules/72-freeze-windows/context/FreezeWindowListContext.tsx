@@ -7,12 +7,13 @@
 
 import React, { createContext, ReactNode, useContext, ReactElement, useState, useCallback } from 'react'
 
-interface FreezeWindowListContext {
+interface FreezeWindowListContextProps {
   toggleRowSelect: (id: string, select: boolean) => void
   selectedItems: string[]
+  clearSelectedItems: () => void
 }
 
-const FreezeWindowListContext = createContext({} as FreezeWindowListContext)
+const FreezeWindowListContext = createContext({} as FreezeWindowListContextProps)
 
 export function FreezeWindowListProvider({ children }: { children: ReactNode }): ReactElement {
   const [selectedItems, setSelectedItems] = useState<string[]>([])
@@ -29,8 +30,10 @@ export function FreezeWindowListProvider({ children }: { children: ReactNode }):
     [selectedItems]
   )
 
+  const clearSelectedItems = useCallback(() => setSelectedItems([]), [])
+
   return (
-    <FreezeWindowListContext.Provider value={{ toggleRowSelect, selectedItems }}>
+    <FreezeWindowListContext.Provider value={{ toggleRowSelect, selectedItems, clearSelectedItems }}>
       {children}
     </FreezeWindowListContext.Provider>
   )

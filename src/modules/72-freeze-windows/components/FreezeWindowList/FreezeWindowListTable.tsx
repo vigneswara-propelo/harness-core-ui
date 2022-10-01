@@ -8,10 +8,10 @@
 import React from 'react'
 import type { Column } from 'react-table'
 import { TableV2 } from '@harness/uicore'
+import type { SortBy } from '@freeze-windows/types'
 import type { FreezeSummaryResponse, PageFreezeSummaryResponse } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
-import type { SortBy } from '@freeze-windows/pages/FreezeWindowsPage/types'
 import {
   MenuCell,
   LastModifiedCell,
@@ -118,10 +118,11 @@ export function FreezeWindowListTable({
         Cell: MenuCell,
         disableSortBy: true,
         getViewFreezeRowLink,
-        onDeleteRow
+        onDeleteRow,
+        onToggleFreezeRow
       }
     ] as unknown as Column<FreezeSummaryResponse>[]
-  }, [currentOrder, currentSort])
+  }, [currentOrder, currentSort, selectedItems])
 
   return (
     <TableV2

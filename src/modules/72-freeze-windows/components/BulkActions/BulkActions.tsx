@@ -8,6 +8,7 @@
 import { Button, ButtonVariation, Layout } from '@wings-software/uicore'
 import React, { FC } from 'react'
 import { useStrings } from 'framework/strings'
+import { useFreezeWindowListContext } from '@freeze-windows/context/FreezeWindowListContext'
 import type { FreezeWindowListColumnActions } from '../FreezeWindowList/FreezeWindowListCells'
 
 interface BulkActionsProps {
@@ -17,7 +18,9 @@ interface BulkActionsProps {
 
 export const BulkActions: FC<BulkActionsProps> = ({ onDelete, onToggleFreeze }) => {
   const { getString } = useStrings()
-  return (
+  const { selectedItems } = useFreezeWindowListContext()
+
+  return selectedItems.length > 0 ? (
     <Layout.Horizontal spacing={'small'} flex={{ align: 'center-center' }}>
       <Button
         variation={ButtonVariation.SECONDARY}
@@ -31,5 +34,5 @@ export const BulkActions: FC<BulkActionsProps> = ({ onDelete, onToggleFreeze }) 
       />
       <Button variation={ButtonVariation.SECONDARY} onClick={() => onDelete()} text={getString('delete')} />
     </Layout.Horizontal>
-  )
+  ) : null
 }

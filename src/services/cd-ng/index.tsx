@@ -357,6 +357,7 @@ export interface AccessControlCheckError {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -2282,6 +2283,11 @@ export interface CrossAccountAccess {
   externalId?: string
 }
 
+export interface CurrentOrUpcomingActiveWindow {
+  endTime?: number
+  startTime?: number
+}
+
 export type CustomArtifactConfig = ArtifactConfig & {
   delegateSelectors?: string[]
   inputs?: NGVariable[]
@@ -2430,7 +2436,7 @@ export type CustomSecretManager = ConnectorConfigDTO & {
   default?: boolean
   delegateSelectors?: string[]
   host?: string
-  onDelegate: boolean
+  onDelegate?: boolean
   template: TemplateLinkConfigForCustomSecretManager
   workingDirectory?: string
 }
@@ -3219,6 +3225,8 @@ export interface EntityDetail {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
 }
 
 export interface EntityDetailProtoDTO {
@@ -3809,6 +3817,7 @@ export interface Error {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -4167,6 +4176,7 @@ export interface ErrorMetadata {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -4582,6 +4592,7 @@ export interface Failure {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -4674,6 +4685,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'AZURE_CREATE_ARM_RESOURCE'
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
+    | 'SHELL_SCRIPT_PROVISION'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -4745,6 +4757,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'AZURE_CREATE_ARM_RESOURCE'
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
+    | 'SHELL_SCRIPT_PROVISION'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -4818,6 +4831,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'AZURE_CREATE_ARM_RESOURCE'
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
+    | 'SHELL_SCRIPT_PROVISION'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -4899,6 +4913,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'AZURE_CREATE_ARM_RESOURCE'
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
+    | 'SHELL_SCRIPT_PROVISION'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5053,10 +5068,12 @@ export interface FreezeErrorResponseDTO {
 }
 
 export interface FreezeFilterPropertiesDTO {
+  endTime?: number
   freezeIdentifiers?: string[]
   freezeStatus?: 'Enabled' | 'Disabled'
   searchTerm?: string
   sort?: string[]
+  startTime?: number
 }
 
 export interface FreezeResponse {
@@ -5088,6 +5105,7 @@ export interface FreezeResponseWrapperDTO {
 export interface FreezeSummaryResponse {
   accountId?: string
   createdAt?: number
+  currentOrUpcomingActiveWindow?: CurrentOrUpcomingActiveWindow
   description?: string
   freezeScope?: 'account' | 'org' | 'project' | 'unknown'
   freezeWindows?: FreezeWindow[]
@@ -5107,7 +5125,7 @@ export interface FreezeWindow {
   endTime?: string
   recurrence?: Recurrence
   startTime?: string
-  timeZone?: TimeZone
+  timeZone?: string
 }
 
 export interface GARBuildDetailsDTO {
@@ -5383,6 +5401,8 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   searchTerm?: string
@@ -5499,6 +5519,8 @@ export interface GitEntityFilterProperties {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
@@ -5648,6 +5670,8 @@ export interface GitFullSyncEntityInfoDTO {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -5772,6 +5796,8 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -6004,6 +6030,8 @@ export interface GitSyncEntityDTO {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -6122,6 +6150,8 @@ export interface GitSyncEntityListDTO {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -6257,6 +6287,8 @@ export interface GitSyncErrorDTO {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -6865,6 +6897,20 @@ export interface InfrastructureResponseDTO {
     | 'CustomDeployment'
     | 'ECS'
   yaml?: string
+}
+
+export interface InfrastructureYamlMetadata {
+  infrastructureIdentifier: string
+  infrastructureYaml?: string
+  inputSetTemplateYaml?: string
+}
+
+export interface InfrastructureYamlMetadataApiInput {
+  infrastructureIdentifiers: string[]
+}
+
+export interface InfrastructureYamlMetadataDTO {
+  infrastructureYamlMetadataList?: InfrastructureYamlMetadata[]
 }
 
 export type InheritFromManifestStoreConfig = StoreConfig & {
@@ -9149,6 +9195,8 @@ export interface ReferencedByDTO {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
 }
 
 export interface RefreshRequest {
@@ -9889,6 +9937,13 @@ export interface ResponseInfrastructureResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseInfrastructureYamlMetadataDTO {
+  correlationId?: string
+  data?: InfrastructureYamlMetadataDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseInputsValidationResponse {
   correlationId?: string
   data?: InputsValidationResponse
@@ -10148,6 +10203,8 @@ export interface ResponseListEntityType {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -10780,6 +10837,7 @@ export interface ResponseMessage {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -11312,6 +11370,13 @@ export interface ResponseServiceInstanceUsageDTO {
 export interface ResponseServiceOverrideResponseDTO {
   correlationId?: string
   data?: ServiceOverrideResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseServiceOverridesInputYamlMetadataDTO {
+  correlationId?: string
+  data?: ServiceOverridesInputYamlMetadataDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -12579,6 +12644,25 @@ export interface ServiceOverrides {
   name?: string
 }
 
+export interface ServiceOverridesInput {
+  envIdentifier: string
+  serviceIdentifier: string
+}
+
+export interface ServiceOverridesInputYamlMetadataApiInput {
+  serviceOverridesInputs: ServiceOverridesInput[]
+}
+
+export interface ServiceOverridesInputYamlMetadataDTO {
+  serviceOverridesInputYamlMetadataList?: ServiceOverridesYamlMetadata[]
+}
+
+export interface ServiceOverridesYamlMetadata {
+  envIdentifier: string
+  inputSetYaml?: string
+  serviceIdentifier: string
+}
+
 export interface ServicePipelineInfo {
   deployedById?: string
   deployedByName?: string
@@ -12750,6 +12834,12 @@ export interface ShellScriptBaseSource {
 
 export type ShellScriptInlineSource = ShellScriptBaseSource & {
   script?: string
+}
+
+export type ShellScriptProvisionStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  environmentVariables?: NGVariable[]
+  source: ShellScriptSourceWrapper
 }
 
 export interface ShellScriptSourceWrapper {
@@ -13020,7 +13110,7 @@ export interface StepSpecType {
 
 export interface StepTemplateRef {
   templateRef: string
-  versionLabel: string
+  versionLabel?: string
 }
 
 export interface StepWhenCondition {
@@ -13401,13 +13491,6 @@ export interface TimeValuePairListDTOInteger {
 export interface TimeValuePairObject {
   timestamp?: number
   value?: { [key: string]: any }
-}
-
-export interface TimeZone {
-  displayName?: string
-  dstsavings?: number
-  id?: string
-  rawOffset?: number
 }
 
 export interface TokenAggregateDTO {
@@ -13990,9 +14073,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -14612,6 +14695,8 @@ export interface ListActivitiesQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -14722,6 +14807,8 @@ export interface ListActivitiesQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -14936,6 +15023,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15046,6 +15135,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -26605,6 +26696,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'AZURE_CREATE_ARM_RESOURCE'
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
+    | 'SHELL_SCRIPT_PROVISION'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -26746,6 +26838,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'AZURE_CREATE_ARM_RESOURCE'
       | 'AZURE_CREATE_BP_RESOURCE'
       | 'AZURE_ROLLBACK_ARM_RESOURCE'
+      | 'SHELL_SCRIPT_PROVISION'
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
@@ -26880,6 +26973,8 @@ export interface ListReferredByEntitiesQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -27050,6 +27145,8 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   searchTerm?: string
 }
 
@@ -28769,6 +28866,85 @@ export const getServiceOverrideInputsPromise = (
     signal
   )
 
+export interface GetServiceOverridesInputYamlsQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetServiceOverridesInputYamlsProps = Omit<
+  MutateProps<
+    ResponseServiceOverridesInputYamlMetadataDTO,
+    Failure | Error,
+    GetServiceOverridesInputYamlsQueryParams,
+    ServiceOverridesInputYamlMetadataApiInput,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns service overrides input YAML
+ */
+export const GetServiceOverridesInputYamls = (props: GetServiceOverridesInputYamlsProps) => (
+  <Mutate<
+    ResponseServiceOverridesInputYamlMetadataDTO,
+    Failure | Error,
+    GetServiceOverridesInputYamlsQueryParams,
+    ServiceOverridesInputYamlMetadataApiInput,
+    void
+  >
+    verb="POST"
+    path={`/environmentsV2/serviceOverridesInputYamlMetadata`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceOverridesInputYamlsProps = Omit<
+  UseMutateProps<
+    ResponseServiceOverridesInputYamlMetadataDTO,
+    Failure | Error,
+    GetServiceOverridesInputYamlsQueryParams,
+    ServiceOverridesInputYamlMetadataApiInput,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns service overrides input YAML
+ */
+export const useGetServiceOverridesInputYamls = (props: UseGetServiceOverridesInputYamlsProps) =>
+  useMutate<
+    ResponseServiceOverridesInputYamlMetadataDTO,
+    Failure | Error,
+    GetServiceOverridesInputYamlsQueryParams,
+    ServiceOverridesInputYamlMetadataApiInput,
+    void
+  >('POST', `/environmentsV2/serviceOverridesInputYamlMetadata`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * This api returns service overrides input YAML
+ */
+export const getServiceOverridesInputYamlsPromise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceOverridesInputYamlMetadataDTO,
+    Failure | Error,
+    GetServiceOverridesInputYamlsQueryParams,
+    ServiceOverridesInputYamlMetadataApiInput,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceOverridesInputYamlMetadataDTO,
+    Failure | Error,
+    GetServiceOverridesInputYamlsQueryParams,
+    ServiceOverridesInputYamlMetadataApiInput,
+    void
+  >('POST', getConfig('ng/api'), `/environmentsV2/serviceOverridesInputYamlMetadata`, props, signal)
+
 export interface UpsertEnvironmentV2QueryParams {
   accountIdentifier: string
 }
@@ -30059,6 +30235,8 @@ export interface GetReferencedByQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   searchTerm?: string
 }
 
@@ -31950,6 +32128,8 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -32128,6 +32308,8 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'EcsBlueGreenCreateService'
       | 'EcsBlueGreenSwapTargetGroups'
       | 'EcsBlueGreenRollback'
+      | 'ShellScriptProvision'
+      | 'Freeze'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -33908,6 +34090,8 @@ export interface GetInfrastructureListQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+  deploymentTemplateIdentifier?: string
+  versionLabel?: string
   sort?: string[]
 }
 
@@ -34231,6 +34415,86 @@ export const dummyInfraConfigApiPromise = (
     props,
     signal
   )
+
+export interface GetInfrastructureYamlAndRuntimeInputsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  environmentIdentifier: string
+}
+
+export type GetInfrastructureYamlAndRuntimeInputsProps = Omit<
+  MutateProps<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsQueryParams,
+    InfrastructureYamlMetadataApiInput,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns infrastructure YAML and runtime input YAML
+ */
+export const GetInfrastructureYamlAndRuntimeInputs = (props: GetInfrastructureYamlAndRuntimeInputsProps) => (
+  <Mutate<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsQueryParams,
+    InfrastructureYamlMetadataApiInput,
+    void
+  >
+    verb="POST"
+    path={`/infrastructures/infrastructureYamlMetadata`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetInfrastructureYamlAndRuntimeInputsProps = Omit<
+  UseMutateProps<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsQueryParams,
+    InfrastructureYamlMetadataApiInput,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns infrastructure YAML and runtime input YAML
+ */
+export const useGetInfrastructureYamlAndRuntimeInputs = (props: UseGetInfrastructureYamlAndRuntimeInputsProps) =>
+  useMutate<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsQueryParams,
+    InfrastructureYamlMetadataApiInput,
+    void
+  >('POST', `/infrastructures/infrastructureYamlMetadata`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * This api returns infrastructure YAML and runtime input YAML
+ */
+export const getInfrastructureYamlAndRuntimeInputsPromise = (
+  props: MutateUsingFetchProps<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsQueryParams,
+    InfrastructureYamlMetadataApiInput,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsQueryParams,
+    InfrastructureYamlMetadataApiInput,
+    void
+  >('POST', getConfig('ng/api'), `/infrastructures/infrastructureYamlMetadata`, props, signal)
 
 export interface GetInfrastructureInputsQueryParams {
   accountIdentifier: string
@@ -37558,6 +37822,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   yamlGroup?: string
 }
 
@@ -37796,6 +38062,8 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -48222,7 +48490,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -48232,7 +48500,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -48245,7 +48513,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -48259,7 +48527,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -48271,7 +48539,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -48280,7 +48548,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -48673,7 +48941,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -48687,7 +48955,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -48702,7 +48970,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -48716,7 +48984,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -48728,7 +48996,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -48737,7 +49005,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -48872,7 +49140,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -48887,7 +49155,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -48902,7 +49170,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -48917,7 +49185,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -48936,7 +49204,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -48945,7 +49213,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -48964,7 +49232,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -48979,7 +49247,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -48994,7 +49262,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -49009,7 +49277,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -49028,7 +49296,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -49037,7 +49305,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -49660,6 +49928,8 @@ export interface GetYamlSchemaQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   subtype?:
     | 'K8sCluster'
     | 'Git'
