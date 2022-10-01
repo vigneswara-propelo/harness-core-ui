@@ -9,14 +9,41 @@ import { parse } from 'yaml'
 import { defaultTo, isEmpty, pick, set } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import type { StringKeys, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings'
 import { EntityConfig, EntityType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
-import { ExcludeFieldKeys, isAllOptionSelected } from './FreezeStudioConfigSectionRenderers'
+
+export const isAllOptionSelected = (selected?: SelectOption[]) => {
+  return (selected || []).findIndex(item => item.value === 'All') >= 0
+}
+
+export const allOrgsObj = (getString: UseStringsReturn['getString']) => ({
+  label: getString('freezeWindows.freezeStudio.allOrganizations'),
+  value: 'All'
+})
+export const allProjectsObj = (getString: UseStringsReturn['getString']) => ({
+  label: getString('rbac.scopeItems.allProjects'),
+  value: 'All'
+})
+export const allServicesObj = (getString: UseStringsReturn['getString']) => ({
+  label: getString('common.allServices'),
+  value: 'All'
+})
+
+export const ExcludeFieldKeys = {
+  [FIELD_KEYS.Org]: {
+    CheckboxKey: FIELD_KEYS.ExcludeOrgCheckbox,
+    ExcludeFieldKey: FIELD_KEYS.ExcludeOrg
+  },
+  [FIELD_KEYS.Proj]: {
+    CheckboxKey: FIELD_KEYS.ExcludeProjCheckbox,
+    ExcludeFieldKey: FIELD_KEYS.ExcludeProj
+  }
+}
 
 export function isValidYaml(
   yamlHandler: YamlBuilderHandlerBinding | undefined,
   showInvalidYamlError: (error: string) => void,
-  getString: (key: StringKeys, vars?: Record<string, any>) => string,
+  getString: UseStringsReturn['getString'],
   updateFreeze: (freezeYAML: string) => void
 ): boolean {
   if (yamlHandler) {
@@ -66,13 +93,13 @@ const SINGLE_SELECT_FIELDS = {
 
 const selectedValueForFilterTypeAll = (type: string, getString: UseStringsReturn['getString']) => {
   if (type === FIELD_KEYS.Org) {
-    return [{ value: 'All', label: getString('freezeWindows.freezeStudio.allOrganizations') }]
+    return [allOrgsObj(getString)]
   }
   if (type === FIELD_KEYS.Proj) {
-    return [{ value: 'All', label: getString('rbac.scopeItems.allProjects') }]
+    return [allProjectsObj(getString)]
   }
   if (type === FIELD_KEYS.Service) {
-    return [{ value: 'All', label: getString('common.allServices') }]
+    return [allServicesObj(getString)]
   }
 }
 
@@ -83,6 +110,14 @@ const makeOptions = (dataMap: Record<string, SelectOption>, keys?: string[]) => 
 const equalsOptions = (type: FIELD_KEYS, entityRefs: string[], resources: ResourcesInterface) => {
   if (type === FIELD_KEYS.Service) {
     return makeOptions(resources.servicesMap, entityRefs)
+  }
+  if (type === FIELD_KEYS.Proj) {
+    return makeOptions(resources.projectsMap, entityRefs)
+  }
+
+  // Single Select Field
+  if (type === FIELD_KEYS.EnvType) {
+    return entityRefs[0]
   }
 }
 
@@ -109,12 +144,12 @@ export const getInitialValuesForConfigSection = (
         set(initialValues, `entity[${i}].${type}`, equalsOptions(type, entityRefs || [], resources))
         // equals
       } else if (filterType === 'NotEquals') {
-        const excludeFieldKeys = ExcludeFieldKeys[type as 'Org' | 'Proj']
+        const excludeFieldKeys = ExcludeFieldKeys[type as 'Org' | 'Project']
         if (excludeFieldKeys) {
           const { CheckboxKey, ExcludeFieldKey } = excludeFieldKeys
-          set(initialValues, `entity[${i}].${type}`, 'All')
+          set(initialValues, `entity[${i}].${type}`, selectedValueForFilterTypeAll(type, getString))
           set(initialValues, `entity[${i}].${CheckboxKey}`, true)
-          set(initialValues, `entity[${i}].${ExcludeFieldKey}`, entityRefs?.[0])
+          set(initialValues, `entity[${i}].${ExcludeFieldKey}`, equalsOptions(type, entityRefs || [], resources))
         }
       }
     })
@@ -184,6 +219,27 @@ const adaptForEnvField = (newValues: any, entities: EntityType[]) => {
   updateEntities(obj, entities, index)
 }
 
+const adaptForProjectField = (newValues: any, entities: EntityType[]) => {
+  const fieldKey = FIELD_KEYS.Proj
+  const { isAllSelected, obj, index } = getMetaDataForField(fieldKey, entities, newValues)
+
+  if (index < 0 && newValues[fieldKey]) {
+    return
+  }
+
+  if (isAllSelected) {
+    const hasExcludedProj = newValues[FIELD_KEYS.ExcludeProjCheckbox] && !isEmpty(newValues[FIELD_KEYS.ExcludeProj])
+    obj.filterType = hasExcludedProj ? 'NotEquals' : 'All'
+    if (hasExcludedProj) {
+      obj.entityRefs?.push(...(newValues[FIELD_KEYS.ExcludeProj]?.map((field: SelectOption) => field.value) || []))
+    }
+  } else {
+    obj.filterType = 'Equals'
+    obj.entityRefs?.push(...(newValues[fieldKey]?.map((field: SelectOption) => field.value) || []))
+  }
+  updateEntities(obj, entities, index)
+}
+
 const adaptForServiceField = (newValues: any, entities: EntityType[]) => {
   const fieldKey = FIELD_KEYS.Service
   const { isAllSelected, obj, index } = getMetaDataForField(fieldKey, entities, newValues)
@@ -211,6 +267,10 @@ export const convertValuesToYamlObj = (currentValues: any, newValues: any, field
 
   if (fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.PROJECT) {
     adaptForServiceField(newValues, entities)
+  }
+
+  if (fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.ORG) {
+    adaptForProjectField(newValues, entities)
   }
 
   return { name: newValues.name, entities }

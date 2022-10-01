@@ -7,12 +7,10 @@
 
 import React from 'react'
 import { useToaster, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
-import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import { isValidYaml } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudioUtil'
 import { useFreezeStudioData } from '@freeze-windows/components/FreezeWindowStudio/useFreezeStudioData'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { RightBar } from '@freeze-windows/components/RightBar/RightBar'
 import { FreezeWindowStudioHeader } from './FreezeWindowStudioHeader'
 import { FreezeWindowStudioSubHeader } from './FreezeWindowStudioSubHeader'
@@ -25,12 +23,11 @@ export const FreezeWindowStudio = () => {
     setView,
     updateYamlView,
     updateFreeze,
-    freezeWindowLevel,
+
     state: { isYamlEditable, yamlHandler }
   } = React.useContext(FreezeWindowContext)
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
-  const resources = useFreezeStudioData({ accountId, freezeWindowLevel, projectIdentifier, orgIdentifier })
+  const resources = useFreezeStudioData()
 
   // isYamlError
   const [, setYamlError] = React.useState(false)

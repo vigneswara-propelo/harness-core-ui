@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
+import * as Yup from 'yup'
 import noop from 'lodash-es/noop'
-import debounce from 'lodash-es/debounce'
+import isEmpty from 'lodash-es/isEmpty'
 import { Card, Container, Heading, FormikForm, ButtonVariation, Button, Formik } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
+import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { DefaultFreezeId } from './FreezeWindowContext/FreezeWindowReducer'
 import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
 import { getInitialValues } from './FreezeWindowStudioUtil'
@@ -30,10 +32,7 @@ export const FreezeStudioOverviewSection: React.FC<FreezeStudioOverviewSectionPr
   } = React.useContext(FreezeWindowContext)
 
   const [initialValues, setInitialValues] = React.useState({ identifier: DefaultFreezeId })
-  const debouncedUpdate = React.useCallback(
-    debounce((formData: any) => updateFreeze({ ...freezeObj, ...formData }), 300),
-    []
-  )
+  const validate = React.useCallback((formData: any) => updateFreeze({ ...freezeObj, ...formData }), [])
 
   React.useEffect(() => {
     setInitialValues(getInitialValues(freezeObj))
@@ -45,7 +44,11 @@ export const FreezeStudioOverviewSection: React.FC<FreezeStudioOverviewSectionPr
       onSubmit={noop}
       formName="freezeWindowStudioOverviewForm"
       initialValues={initialValues}
-      validate={debouncedUpdate}
+      validate={validate}
+      validationSchema={Yup.object().shape({
+        name: NameSchema(),
+        identifier: IdentifierSchema()
+      })}
     >
       {formikProps => (
         <FormikForm>
@@ -72,7 +75,12 @@ export const FreezeStudioOverviewSection: React.FC<FreezeStudioOverviewSectionPr
                 // type="submit"
                 // disabled={isStageCreationDisabled()}
                 rightIcon="chevron-right"
-                onClick={onNext}
+                onClick={async () => {
+                  const formErrors = await formikProps.validateForm(formikProps.values)
+                  if (isEmpty(formErrors)) {
+                    onNext()
+                  }
+                }}
                 variation={ButtonVariation.PRIMARY}
                 text={getString('continue')}
               />

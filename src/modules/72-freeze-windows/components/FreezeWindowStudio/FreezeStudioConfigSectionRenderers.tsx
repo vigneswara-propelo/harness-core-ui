@@ -8,19 +8,9 @@
 import React from 'react'
 import type { SelectOption } from '@wings-software/uicore'
 import { FormInput } from '@harness/uicore'
+import { EntityType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
 import type { UseStringsReturn } from 'framework/strings'
-import { EntityType, FIELD_KEYS } from '@freeze-windows/types'
-
-export const ExcludeFieldKeys = {
-  [FIELD_KEYS.Org]: {
-    CheckboxKey: FIELD_KEYS.ExcludeOrgCheckbox,
-    ExcludeFieldKey: FIELD_KEYS.ExcludeOrg
-  },
-  [FIELD_KEYS.Proj]: {
-    CheckboxKey: FIELD_KEYS.ExcludeOrgCheckbox,
-    ExcludeFieldKey: FIELD_KEYS.ExcludeProj
-  }
-}
+import { allProjectsObj, isAllOptionSelected } from './FreezeWindowStudioUtil'
 
 const All = 'All'
 const Equals = 'Equals'
@@ -67,6 +57,7 @@ export const ServiceFieldRenderer: React.FC<ServiceFieldRendererPropsInterface> 
         name={name}
         items={disabledItems}
         disabled={isDisabled}
+        placeholder={disabledItems[0].label}
         label={getString('services')}
         style={{ width: '400px' }}
       />
@@ -103,10 +94,6 @@ interface OrganizationfieldPropsInterface {
   organizations: SelectOption[]
   values: any
   setFieldValue: any
-}
-
-export const isAllOptionSelected = (selected?: SelectOption[]) => {
-  return (selected || []).findIndex(item => item.value === All) >= 0
 }
 
 export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
@@ -168,44 +155,47 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
 interface ProjectFieldPropsInterface {
   getString: UseStringsReturn['getString']
   namePrefix: string
-  projects: SelectOption[]
+  resources: ResourcesInterface
   values: any
   setFieldValue: any
 }
 export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   getString,
   namePrefix,
-  projects,
+  resources,
   values,
   setFieldValue
 }) => {
-  // If one organization, show projects, else show all projects
-  const orgValue = values[FIELD_KEYS.Org]
-  const isOrgValueAll = orgValue === All
+  const { projects, freezeWindowLevel } = resources
+  const isOrgValueAll =
+    freezeWindowLevel === FreezeWindowLevels.ORG ? isAllOptionSelected(values[FIELD_KEYS.Org]) : false
   const projValue = values[FIELD_KEYS.Proj]
   const excludeProjValue = values[FIELD_KEYS.ExcludeProjCheckbox]
-  const isCheckBoxEnabled = projValue === All
+  const isCheckBoxEnabled = isAllOptionSelected(projValue) && projValue?.length === 1
   const { projFieldName, projCheckBoxName, excludeProjName } = getProjNameKeys(namePrefix)
   const [allProj, setAllProj] = React.useState<SelectOption[]>([])
 
   React.useEffect(() => {
     if (isOrgValueAll) {
-      setAllProj([{ label: 'All Projects', value: All }])
+      setAllProj([allProjectsObj(getString)])
     } else if (projects.length) {
-      setAllProj([{ label: 'All Projects', value: All }, ...projects])
+      setAllProj([allProjectsObj(getString), ...projects])
     }
   }, [projects, isOrgValueAll])
   return (
     <>
-      <FormInput.Select
+      <FormInput.MultiSelect
         name={projFieldName}
         items={allProj}
         label={getString('projectsText')}
         disabled={isOrgValueAll}
-        onChange={(selected?: SelectOption) => {
-          if (!(selected?.value === All)) {
+        // placeholder="All Projects"
+        onChange={(selected?: SelectOption[]) => {
+          const isAllSelected = isAllOptionSelected(selected)
+          const isMultiSelected = (selected || []).length > 1
+          if (!isAllSelected || isMultiSelected) {
             setFieldValue(projCheckBoxName, false)
-            // todo: clear exclude Proj also
+            setFieldValue(excludeProjName, undefined)
           }
         }}
       />
@@ -220,7 +210,7 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
       />
 
       {isCheckBoxEnabled && excludeProjValue ? (
-        <FormInput.Select
+        <FormInput.MultiSelect
           disabled={isOrgValueAll}
           name={excludeProjName}
           items={projects}

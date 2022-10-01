@@ -6,21 +6,20 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import type { SelectOption } from '@wings-software/uicore'
-import { useGetOrganizationAggregateDTOList, useGetServiceList } from 'services/cd-ng'
+import { useStrings } from 'framework/strings'
+import { useGetOrganizationAggregateDTOList, useGetProjectList, useGetServiceList } from 'services/cd-ng'
 import { ResourcesInterface, FreezeWindowLevels } from '@freeze-windows/types'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
+import { allProjectsObj, allServicesObj } from './FreezeWindowStudioUtil'
 
-interface FreezeStudioDataInterface extends ProjectPathProps {
-  freezeWindowLevel: FreezeWindowLevels
-}
+export const useFreezeStudioData = (): ResourcesInterface => {
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { freezeWindowLevel } = React.useContext(FreezeWindowContext)
+  const { getString } = useStrings()
 
-export const useFreezeStudioData = ({
-  accountId,
-  freezeWindowLevel,
-  projectIdentifier,
-  orgIdentifier
-}: FreezeStudioDataInterface): ResourcesInterface => {
   const {
     loading: loadingOrgs,
     data: orgsData,
@@ -45,16 +44,34 @@ export const useFreezeStudioData = ({
     lazy: true
   })
 
+  const {
+    data: projectsData,
+    loading: loadingProjects,
+    refetch: refetchProjects
+  } = useGetProjectList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier
+    },
+    lazy: true
+  })
+
   const [orgs, setOrgs] = React.useState<SelectOption[]>([])
-  const [services, setServices] = React.useState<SelectOption[]>([])
-  const [servicesMap, setServicesMap] = React.useState<Record<string, SelectOption>>({})
+  const [projects, setProjects] = React.useState<SelectOption[]>([allProjectsObj(getString)])
+  const [projectsMap, setProjectsMap] = React.useState<Record<string, SelectOption>>({
+    All: allProjectsObj(getString)
+  })
+  const [services, setServices] = React.useState<SelectOption[]>([allServicesObj(getString)])
+  const [servicesMap, setServicesMap] = React.useState<Record<string, SelectOption>>({
+    All: allServicesObj(getString)
+  })
   // data.content[1].organizationResponse.organization.identifier
   React.useEffect(() => {
     refetchOrgs()
   }, [accountId])
 
   React.useEffect(() => {
-    if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
+    if (freezeWindowLevel === FreezeWindowLevels.PROJECT && projectIdentifier) {
       refetchServices()
     }
   }, [projectIdentifier, freezeWindowLevel])
@@ -74,7 +91,7 @@ export const useFreezeStudioData = ({
 
   React.useEffect(() => {
     if (!loadingServices && serviceData?.data?.content) {
-      const servicesMapp: Record<string, SelectOption> = { All: { label: 'All Services', value: 'All' } }
+      const servicesMapp: Record<string, SelectOption> = { All: allServicesObj(getString) }
       const adaptedServicesData = serviceData?.data?.content.map(item => {
         const label = item?.service?.name || ''
         const obj = {
@@ -84,15 +101,40 @@ export const useFreezeStudioData = ({
         servicesMapp[label] = obj
         return obj
       })
-      // data.serviceDeploymentDetailsList[0].serviceIdentifier
-      setServices([{ label: 'All Services', value: 'All' }, ...adaptedServicesData])
+      setServices([allServicesObj(getString), ...adaptedServicesData])
       setServicesMap(servicesMapp)
     }
   }, [loadingServices])
 
+  React.useEffect(() => {
+    if (!loadingProjects && projectsData?.data?.content) {
+      const projectsMapp: Record<string, SelectOption> = { All: allProjectsObj(getString) }
+
+      const adaptedProjectsData = projectsData.data.content.map(datum => {
+        const project = datum.project || {}
+        const label = project?.name
+        const obj = {
+          label,
+          value: project?.identifier
+        }
+        projectsMapp[label] = obj
+        return obj
+      })
+      setProjects(adaptedProjectsData)
+      setProjectsMap(projectsMapp)
+    }
+  }, [loadingProjects])
+
+  React.useEffect(() => {
+    if (freezeWindowLevel === FreezeWindowLevels.ORG && orgIdentifier) {
+      refetchProjects()
+    }
+  }, [orgIdentifier, freezeWindowLevel])
+
   return {
     orgs,
-    projects: [],
+    projects,
+    projectsMap,
     services,
     servicesMap,
     freezeWindowLevel

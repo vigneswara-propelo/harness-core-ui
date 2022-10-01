@@ -8,6 +8,7 @@
 import type { SelectOption } from '@harness/uicore'
 import type { PartiallyRequired } from '@pipeline/utils/types'
 import type { FreezeFilterPropertiesDTO, GetFreezeListQueryParams } from 'services/cd-ng'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 export enum FreezeWindowLevels {
   ACCOUNT = 'ACCOUNT',
@@ -21,7 +22,7 @@ export enum FIELD_KEYS {
   Org = 'Org',
   ExcludeOrgCheckbox = 'ExcludeOrgCheckbox',
   ExcludeOrg = 'ExcludeOrg',
-  Proj = 'Proj',
+  Proj = 'Project',
   ExcludeProjCheckbox = 'ExcludeProjCheckbox',
   ExcludeProj = 'ExcludeProj'
 }
@@ -37,9 +38,14 @@ export interface EntityConfig {
   entities: EntityType[]
 }
 
+export interface WindowPathProps extends ProjectPathProps {
+  windowIdentifier: string
+}
+
 export interface ResourcesInterface {
   orgs: SelectOption[]
   projects: SelectOption[]
+  projectsMap: Record<string, SelectOption>
   services: SelectOption[]
   servicesMap: Record<string, SelectOption>
   freezeWindowLevel: FreezeWindowLevels

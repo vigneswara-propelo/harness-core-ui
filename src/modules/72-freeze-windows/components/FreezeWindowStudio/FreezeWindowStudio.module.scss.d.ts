@@ -21,8 +21,10 @@ declare const styles: {
   readonly sectionCard: string
   readonly separator: string
   readonly stepTabs: string
+  readonly subHeader: string
   readonly tabIcon: string
   readonly tickButton: string
+  readonly visualYamlToggle: string
   readonly yamlBuilder: string
 }
 export default styles

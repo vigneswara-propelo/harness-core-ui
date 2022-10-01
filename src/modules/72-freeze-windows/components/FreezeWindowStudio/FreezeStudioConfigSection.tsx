@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { noop } from 'lodash-es'
+import * as Yup from 'yup'
+import { noop, isEmpty } from 'lodash-es'
 import classnames from 'classnames'
 import {
   Button,
@@ -116,7 +117,7 @@ const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
                 namePrefix={`entity[${index}]`}
                 values={formikProps.values?.entity?.[index] || {}}
                 setFieldValue={formikProps.setFieldValue}
-                projects={resources.projects || []}
+                resources={resources}
               />
             ) : null}
           </Layout.Vertical>
@@ -152,6 +153,7 @@ interface ConfigRendererProps {
   entityConfigs: EntityConfig[]
   resources: ResourcesInterface
   fieldsVisibility: FieldVisibility
+  updateInitialValues: (entityonfigs: EntityConfig[]) => void
 }
 
 const ConfigRenderer = ({
@@ -163,10 +165,15 @@ const ConfigRenderer = ({
   formikProps,
   entityConfigs,
   resources,
-  fieldsVisibility
+  fieldsVisibility,
+  updateInitialValues
 }: ConfigRendererProps) => {
   const [isEditView, setEditView] = React.useState(isEdit)
-  const saveEntity = () => {
+  const saveEntity = async () => {
+    const formErrors = await formikProps.validateForm()
+    if (!isEmpty(formErrors?.entity?.[index])) {
+      return
+    }
     const values = formikProps.values.entity
 
     const updatedEntityConfigs = [...entityConfigs]
@@ -186,6 +193,7 @@ const ConfigRenderer = ({
   const deleteConfig = () => {
     const updatedEntityConfigs = entityConfigs.filter((_, i) => index !== i)
     updateFreeze({ entityConfigs: updatedEntityConfigs })
+    updateInitialValues(updatedEntityConfigs)
   }
 
   return (
@@ -236,6 +244,11 @@ const ConfigsSection = ({
   React.useEffect(() => {
     setInitialValues(getInitialValuesForConfigSection(entityConfigs, getString, resources))
   }, [])
+
+  const updateInitialValues = React.useCallback((configs: EntityConfig[]) => {
+    setInitialValues(getInitialValuesForConfigSection(configs, getString, resources))
+  }, [])
+
   const onAddRule = () => {
     const updatedEntityConfigs = [...(entityConfigs || []), getEmptyEntityConfig(fieldsVisibility)]
     setInitialValues(getInitialValuesForConfigSection(updatedEntityConfigs, getString, resources))
@@ -244,14 +257,23 @@ const ConfigsSection = ({
   return (
     <>
       <Formik
-        key={entityConfigs?.length}
+        // key={entityConfigs?.length}
         initialValues={initialValues}
+        enableReinitialize
         onSubmit={noop}
         formName="freezeWindowStudioConfigForm"
+        validationSchema={Yup.object().shape({
+          entity: Yup.array().of(
+            Yup.object().shape({
+              name: Yup.string().required('Name is required')
+            })
+          )
+        })}
       >
         {formikProps =>
           entityConfigs.map((config: EntityConfig, index: number) => (
             <ConfigRenderer
+              // key={config.uuid}
               key={index}
               config={config}
               isEdit={false}
@@ -262,6 +284,7 @@ const ConfigsSection = ({
               entityConfigs={entityConfigs}
               resources={resources}
               fieldsVisibility={fieldsVisibility}
+              updateInitialValues={updateInitialValues}
             />
           ))
         }
@@ -297,7 +320,7 @@ export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps>
   const fieldsVisibility: FieldVisibility = React.useMemo(() => {
     return getFieldsVisibility(freezeWindowLevel)
   }, [freezeWindowLevel])
-  // console.log('freezeWindowLevel', freezeWindowLevel)
+
   const entityConfigs = freezeObj?.entityConfigs || []
 
   return (

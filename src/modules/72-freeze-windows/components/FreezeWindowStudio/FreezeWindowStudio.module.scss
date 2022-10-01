@@ -48,7 +48,7 @@
   height: 100%;
   width: 100%;
   :global(.bp3-tabs) {
-    max-height: 100%;
+    height: 100%;
     overflow: auto;
     padding-bottom: var(--spacing-10);
   }
@@ -120,9 +120,24 @@
     color: var(--grey-700) !important;
     line-height: 28px !important;
     margin-right: var(--spacing-small);
+    text-overflow: ellipsis;
+    max-width: 240px;
+    overflow: hidden;
   }
 }
 
 .marginRight {
   margin-right: var(--spacing-11);
+}
+
+.subHeader {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.visualYamlToggle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }

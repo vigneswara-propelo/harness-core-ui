@@ -7,14 +7,17 @@
 
 import React from 'react'
 import noop from 'lodash-es/noop'
+import { parse } from 'yaml'
+
 import { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FreezeWindowLevels } from '@freeze-windows/types'
+import { useGetFreeze } from 'services/cd-ng'
+import { FreezeWindowLevels, WindowPathProps } from '@freeze-windows/types'
 import { FreezeWindowContextActions } from './FreezeWidowActions'
-import { initialState, FreezeWindowReducerState, FreezeReducer } from './FreezeWindowReducer'
+import { initialState, FreezeWindowReducerState, FreezeReducer, DefaultFreezeId } from './FreezeWindowReducer'
 
 export interface FreezeWindowContextInterface {
   state: FreezeWindowReducerState
@@ -50,7 +53,7 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
     'freeze_studio_view',
     isInvalidYAML ? SelectedView.YAML : SelectedView.VISUAL
   )
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier, windowIdentifier } = useParams<WindowPathProps>()
   const [freezeWindowLevel, setFreezeWindowLevel] = React.useState<FreezeWindowLevels>(FreezeWindowLevels.ORG)
 
   React.useEffect(() => {
@@ -69,6 +72,30 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
   const setYamlHandler = React.useCallback((yamlHandler: YamlBuilderHandlerBinding) => {
     dispatch(FreezeWindowContextActions.setYamlHandler({ yamlHandler }))
   }, [])
+
+  const {
+    data: freezeObjData,
+    error: freezeObjError,
+    loading: loadingFreezeObj,
+    refetch: refetchFreezeObj
+  } = useGetFreeze({
+    freezeIdentifier: windowIdentifier,
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
+    lazy: true
+  })
+
+  React.useEffect(() => {
+    if (windowIdentifier !== DefaultFreezeId && state.freezeObj.identifier === DefaultFreezeId) {
+      refetchFreezeObj()
+    }
+  }, [windowIdentifier, state.freezeObj.identifier])
+
+  React.useEffect(() => {
+    if (!loadingFreezeObj && !freezeObjError && freezeObjData?.data?.yaml) {
+      const abc = parse(freezeObjData?.data?.yaml)?.freeze
+      updateFreeze(abc)
+    }
+  }, [loadingFreezeObj])
 
   return (
     <FreezeWindowContext.Provider

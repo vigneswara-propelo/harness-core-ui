@@ -95,6 +95,7 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
 
   return (
     <Container
+      className={css.subHeader}
       height={49}
       padding={{ right: 'xlarge', left: 'xlarge' }}
       border={{ bottom: true, color: Color.GREY_200 }}
@@ -111,7 +112,7 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
         </Layout.Horizontal>
         <Container>
           <VisualYamlToggle
-            // className={css.visualYamlToggle}
+            className={css.visualYamlToggle}
             selectedView={isYaml || isVisualViewDisabled ? SelectedView.YAML : SelectedView.VISUAL}
             onChange={nextMode => {
               onViewChange(nextMode)

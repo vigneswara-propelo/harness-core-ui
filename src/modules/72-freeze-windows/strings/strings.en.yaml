@@ -5,6 +5,7 @@ freezeWindowsPage:
 freezeStudio:
   freezeConfiguration: Freeze Configuration
   freezeOverview: Freeze Overview
+  freezeSchedule: Freeze Schedule
   defineResources: Define which resources you want to include in this freeze window
   excludeOrgs: Exclude specific Organizations
   excludeProjects: Exclude specific Projects

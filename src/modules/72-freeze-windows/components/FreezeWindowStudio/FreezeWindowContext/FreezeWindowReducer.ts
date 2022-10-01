@@ -14,27 +14,7 @@ export const DefaultFreezeId = '-1'
 export const DefaultFreeze = {
   name: '',
   identifier: DefaultFreezeId,
-  entityConfigs: [
-    {
-      name: 'Rule 1 - Weekend Freeze',
-      entities: [
-        {
-          filterType: 'All',
-          type: 'Service'
-        },
-        {
-          filterType: 'Equals',
-          type: 'EnvType',
-          entityRefs: ['PROD']
-        }
-      ]
-    },
-    { name: 'Rule 2 - Diwali Freeze', entities: [] },
-    { name: 'Rule 3 - Black Friday', entities: [] }
-    // { entity: { rule: 'Rule 1 - Weekend Freeze' } },
-    // { entity: { rule: 'Rule 2 - Diwali Freeze' } },
-    // { entity: { rule: 'Rule 3 - Black Friday' } }
-  ]
+  entityConfigs: []
 }
 
 export interface FreezeWindowReducerState {

@@ -11,6 +11,7 @@ import { useStrings } from 'framework/strings'
 import type { ResourcesInterface } from '@freeze-windows/types'
 import { FreezeStudioOverviewSection } from './FreezeStudioOverviewSection'
 import { FreezeStudioConfigSection } from './FreezeStudioConfigSection'
+import { FreezeWindowScheduleSection } from './FreezeWindowScheduleSection'
 import css from './FreezeWindowStudio.module.scss'
 
 enum FreezeWindowTabs {
@@ -68,7 +69,12 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
         />
         <Tab
           id={FreezeWindowTabs.SCHEDULE}
-          panel={<div>Schedule</div>}
+          panel={
+            <FreezeWindowScheduleSection
+              onBack={() => setSelectedTabId(FreezeWindowTabs.FREEZE_CONFIG)}
+              isReadOnly={isReadOnly}
+            />
+          }
           title={
             <span>
               <Icon name="waiting" height={20} size={20} className={css.tabIcon} />
