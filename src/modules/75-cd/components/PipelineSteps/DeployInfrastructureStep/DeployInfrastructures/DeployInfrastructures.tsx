@@ -142,10 +142,12 @@ function DeployInfrastructures({
         if (infrastructureInputsResponse?.data?.inputSetTemplateYaml) {
           const parsedInfrastructureDefinitionYaml = parse(infrastructureInputsResponse?.data?.inputSetTemplateYaml)
           if (path) {
+            const infraDefinitionObject = formik?.values?.environment?.infrastructureDefinitions?.[0]
             formik?.setFieldValue(
-              `${path}.infrastructureDefinitions[0]`,
-              formik?.values?.environment?.infrastructureDefinitions?.[0] ||
-                clearRuntimeInput(parsedInfrastructureDefinitionYaml.infrastructureDefinitions[0])
+              `environment.infrastructureDefinitions[0]`,
+              typeof infraDefinitionObject !== 'string'
+                ? infraDefinitionObject
+                : clearRuntimeInput(parsedInfrastructureDefinitionYaml.infrastructureDefinitions[0])
             )
             updateStageFormTemplate(
               parsedInfrastructureDefinitionYaml.infrastructureDefinitions[0],
