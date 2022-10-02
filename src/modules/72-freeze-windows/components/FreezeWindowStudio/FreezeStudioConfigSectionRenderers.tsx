@@ -7,32 +7,27 @@
 
 import React from 'react'
 import type { SelectOption } from '@wings-software/uicore'
-import { FormInput } from '@harness/uicore'
-import { EntityType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
+import { FormInput, Heading } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
-import { allProjectsObj, isAllOptionSelected } from './FreezeWindowStudioUtil'
+import { EntityType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface, EnvironmentType } from '@freeze-windows/types'
+import { allProjectsObj, getEnvTypeMap, isAllOptionSelected } from './FreezeWindowStudioUtil'
 
 const All = 'All'
 const Equals = 'Equals'
 const NotEquals = 'NotEquals'
-export enum EnvironmentType {
-  PROD = 'PROD',
-  NON_PROD = 'NON_PROD'
-}
-
-// All Environments
-// Production
-// Pre-Production
 
 interface EnvTypeRendererProps {
   getString: UseStringsReturn['getString']
   name: string
 }
+
 export const EnvironmentTypeRenderer = ({ getString, name }: EnvTypeRendererProps) => {
+  const envTypeMap = getEnvTypeMap(getString)
   const [envTypes] = React.useState<SelectOption[]>([
-    { label: getString('common.allEnvironments'), value: All },
-    { label: getString('production'), value: EnvironmentType.PROD },
-    { label: getString('common.preProduction'), value: EnvironmentType.NON_PROD }
+    { label: envTypeMap[EnvironmentType.All], value: All },
+    { label: envTypeMap[EnvironmentType.PROD], value: EnvironmentType.PROD },
+    { label: envTypeMap[EnvironmentType.NON_PROD], value: EnvironmentType.NON_PROD }
   ])
 
   return <FormInput.Select name={name} items={envTypes} label={getString('envType')} style={{ width: '400px' }} />
@@ -124,12 +119,21 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
         onChange={(selected?: SelectOption[]) => {
           const isAllSelected = isAllOptionSelected(selected)
           const isMultiSelected = (selected || []).length > 1
-          if (!isAllSelected) {
-            setFieldValue(orgCheckBoxName, false)
-            // todo: clear exclude Orgs
+
+          // Only All Orgs is selected
+          if (isAllSelected && !isMultiSelected) {
+            // set projects fields
+            setFieldValue(projFieldName, [allProjectsObj(getString)])
+            setFieldValue(projCheckBoxName, false)
+            setFieldValue(excludeProjName, undefined)
           }
-          if (isAllSelected || isMultiSelected) {
-            setFieldValue(projFieldName, All)
+
+          if (isMultiSelected) {
+            // Set org field
+            setFieldValue(orgCheckBoxName, false)
+            setFieldValue(excludeOrgName, undefined)
+            // Set Project field
+            setFieldValue(projFieldName, [allProjectsObj(getString)])
             setFieldValue(projCheckBoxName, false)
             setFieldValue(excludeProjName, undefined)
           }
@@ -167,8 +171,10 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   setFieldValue
 }) => {
   const { projects, freezeWindowLevel } = resources
-  const isOrgValueAll =
-    freezeWindowLevel === FreezeWindowLevels.ORG ? isAllOptionSelected(values[FIELD_KEYS.Org]) : false
+  const orgValue = values[FIELD_KEYS.Org]
+  const isAccLevel = freezeWindowLevel === FreezeWindowLevels.ACCOUNT
+  const isOrgValueMultiselected = isAccLevel ? orgValue?.length > 1 : false
+  const isOrgValueAll = isAccLevel ? isAllOptionSelected(orgValue) : false
   const projValue = values[FIELD_KEYS.Proj]
   const excludeProjValue = values[FIELD_KEYS.ExcludeProjCheckbox]
   const isCheckBoxEnabled = isAllOptionSelected(projValue) && projValue?.length === 1
@@ -176,9 +182,9 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   const [allProj, setAllProj] = React.useState<SelectOption[]>([])
 
   React.useEffect(() => {
-    if (isOrgValueAll) {
+    if (isOrgValueAll || isOrgValueMultiselected || projects?.length === 0) {
       setAllProj([allProjectsObj(getString)])
-    } else if (projects.length) {
+    } else if (projects?.length) {
       setAllProj([allProjectsObj(getString), ...projects])
     }
   }, [projects, isOrgValueAll])
@@ -265,42 +271,25 @@ export const ProjectFieldViewMode: React.FC<ProjectFieldViewModePropsInterface> 
   return renderKeyValue(getString('projectsText'), value)
 }
 
-/***
- *
- *
+export const ServicesAndEnvRenderer: React.FC<{
+  freezeWindowLevel: FreezeWindowLevels
+  envType: EnvironmentType
+  getString: UseStringsReturn['getString']
+}> = ({ freezeWindowLevel, getString, envType }) => {
+  const envTypeMap = getEnvTypeMap(getString)
 
- <Button icon="edit" minimal withoutCurrentColor className={css.editButton} />
- <Button icon="trash" minimal withoutCurrentColor />
-
- entityConfigs:
-   - name: "rule1"
-     entities:
-       - filterType: "All"
-         type: "Service"
-       - filterType: "Equals"
-         type: "Project"
-       entityRefs:
-         - "pip1"
-         - "pip2"
-       - filterType: "Equals"
-         type: "Org"
-         entityRefs:
-           - "pip1"
-           - "pip2"
-       - filterType: "Equals"
-         type: "EnvType"
-         entityRefs:
-           - PROD
-       - filterType: "Equals"
-         type: "Environment"
-         entityRefs:
-         - "pip1"
-         - "pip2"
-         - name: "rule2"
-     entities:
-       - filterType: "All"
-         type: "Service"
-       -filterType: "All"
-         type: "EnvType"
- *
- */
+  return (
+    <Heading
+      level={3}
+      style={{ fontWeight: 600, fontSize: '12px', lineHeight: '18px', marginTop: '12px' }}
+      color={Color.GREY_600}
+    >
+      {freezeWindowLevel === FreezeWindowLevels.PROJECT ? (
+        <span style={{ marginRight: '8px', paddingRight: '8px', borderRight: '0.5px solid' }}>
+          {getString('common.allServices')}
+        </span>
+      ) : null}
+      {`${getString('envType')}: ${envTypeMap[envType as EnvironmentType]}`}
+    </Heading>
+  )
+}

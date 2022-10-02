@@ -6,14 +6,24 @@
  */
 
 import { parse } from 'yaml'
-import { defaultTo, isEmpty, pick, set } from 'lodash-es'
+import { defaultTo, isEmpty, pick, set, once } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { UseStringsReturn } from 'framework/strings'
-import { EntityConfig, EntityType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
+import {
+  EntityConfig,
+  EntityType,
+  FIELD_KEYS,
+  FreezeWindowLevels,
+  ResourcesInterface,
+  EnvironmentType
+} from '@freeze-windows/types'
 
 export const isAllOptionSelected = (selected?: SelectOption[]) => {
-  return (selected || []).findIndex(item => item.value === 'All') >= 0
+  if (Array.isArray(selected)) {
+    return selected.findIndex(item => item.value === 'All') >= 0
+  }
+  return false
 }
 
 export const allOrgsObj = (getString: UseStringsReturn['getString']) => ({
@@ -27,6 +37,14 @@ export const allProjectsObj = (getString: UseStringsReturn['getString']) => ({
 export const allServicesObj = (getString: UseStringsReturn['getString']) => ({
   label: getString('common.allServices'),
   value: 'All'
+})
+
+export const getEnvTypeMap = once((getString: UseStringsReturn['getString']) => {
+  return {
+    [EnvironmentType.PROD]: getString('production'),
+    [EnvironmentType.NON_PROD]: getString('common.preProduction'),
+    All: getString('common.allEnvironments')
+  }
 })
 
 export const ExcludeFieldKeys = {

@@ -38,6 +38,12 @@ export interface EntityConfig {
   entities: EntityType[]
 }
 
+export enum EnvironmentType {
+  All = 'All',
+  PROD = 'PROD',
+  NON_PROD = 'NON_PROD'
+}
+
 export interface WindowPathProps extends ProjectPathProps {
   windowIdentifier: string
 }

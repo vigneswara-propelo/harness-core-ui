@@ -57,7 +57,7 @@ export const useFreezeStudioData = (): ResourcesInterface => {
   })
 
   const [orgs, setOrgs] = React.useState<SelectOption[]>([])
-  const [projects, setProjects] = React.useState<SelectOption[]>([allProjectsObj(getString)])
+  const [projects, setProjects] = React.useState<SelectOption[]>([])
   const [projectsMap, setProjectsMap] = React.useState<Record<string, SelectOption>>({
     All: allProjectsObj(getString)
   })
@@ -94,11 +94,12 @@ export const useFreezeStudioData = (): ResourcesInterface => {
       const servicesMapp: Record<string, SelectOption> = { All: allServicesObj(getString) }
       const adaptedServicesData = serviceData?.data?.content.map(item => {
         const label = item?.service?.name || ''
+        const value = item?.service?.identifier || ''
         const obj = {
           label,
-          value: item?.service?.identifier || ''
+          value
         }
-        servicesMapp[label] = obj
+        servicesMapp[value] = obj
         return obj
       })
       setServices([allServicesObj(getString), ...adaptedServicesData])
@@ -113,11 +114,12 @@ export const useFreezeStudioData = (): ResourcesInterface => {
       const adaptedProjectsData = projectsData.data.content.map(datum => {
         const project = datum.project || {}
         const label = project?.name
+        const value = project?.identifier
         const obj = {
           label,
-          value: project?.identifier
+          value
         }
-        projectsMapp[label] = obj
+        projectsMapp[value] = obj
         return obj
       })
       setProjects(adaptedProjectsData)

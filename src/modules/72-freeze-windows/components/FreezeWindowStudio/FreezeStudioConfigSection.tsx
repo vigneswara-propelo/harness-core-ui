@@ -7,7 +7,7 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { noop, isEmpty } from 'lodash-es'
+import { isEmpty, noop } from 'lodash-es'
 import classnames from 'classnames'
 import {
   Button,
@@ -23,21 +23,29 @@ import {
 import { Color } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
-import { EntityConfig, ResourcesInterface, EntityType, FIELD_KEYS, FreezeWindowLevels } from '@freeze-windows/types'
 import {
-  getInitialValuesForConfigSection,
+  EntityConfig,
+  EntityType,
+  EnvironmentType,
+  FIELD_KEYS,
+  FreezeWindowLevels,
+  ResourcesInterface
+} from '@freeze-windows/types'
+import {
   convertValuesToYamlObj,
-  getFieldsVisibility,
   FieldVisibility,
-  getEmptyEntityConfig
+  getEmptyEntityConfig,
+  getFieldsVisibility,
+  getInitialValuesForConfigSection
 } from './FreezeWindowStudioUtil'
 import {
-  ServiceFieldRenderer,
   EnvironmentTypeRenderer,
   Organizationfield,
   OrgFieldViewMode,
+  ProjectField,
   ProjectFieldViewMode,
-  ProjectField
+  ServiceFieldRenderer,
+  ServicesAndEnvRenderer
 } from './FreezeStudioConfigSectionRenderers'
 import css from './FreezeWindowStudio.module.scss'
 
@@ -46,13 +54,15 @@ interface ConfigViewModeRendererProps {
   getString: UseStringsReturn['getString']
   setEditView: () => void
   deleteConfig: () => void
+  fieldsVisibility: FieldVisibility
 }
 
 const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
   config,
   getString,
   setEditView,
-  deleteConfig
+  deleteConfig,
+  fieldsVisibility
 }) => {
   const { name, entities } = config || {}
   const entitiesMap =
@@ -65,9 +75,24 @@ const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
   return (
     <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'start' }}>
       <Layout.Vertical>
-        {name}
+        <Heading
+          color={Color.GREY_800}
+          level={3}
+          style={{ fontWeight: 700, fontSize: '12px', lineHeight: '18px', marginBottom: '12px' }}
+        >
+          {name}
+        </Heading>
+
+        <Layout.Horizontal>
+          {fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.PROJECT ? 'env' : ''}
+        </Layout.Horizontal>
         <OrgFieldViewMode data={entitiesMap[FIELD_KEYS.Org]} getString={getString} />
         <ProjectFieldViewMode data={entitiesMap[FIELD_KEYS.Proj]} getString={getString} />
+        <ServicesAndEnvRenderer
+          freezeWindowLevel={fieldsVisibility.freezeWindowLevel}
+          getString={getString}
+          envType={entitiesMap[FIELD_KEYS.EnvType]?.entityRefs?.[0] || EnvironmentType.All}
+        />
       </Layout.Vertical>
       <Layout.Horizontal>
         <Button icon="edit" minimal withoutCurrentColor onClick={setEditView} />
@@ -84,7 +109,7 @@ interface ConfigEditModeRendererProps {
   resources: ResourcesInterface
   saveEntity: any
   setVisualView: () => void
-  fieldsVisibility: any
+  fieldsVisibility: FieldVisibility
 }
 
 const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
@@ -218,6 +243,7 @@ const ConfigRenderer = ({
           getString={getString}
           setEditView={setEditViewMode}
           deleteConfig={deleteConfig}
+          fieldsVisibility={fieldsVisibility}
         />
       )}
     </Container>

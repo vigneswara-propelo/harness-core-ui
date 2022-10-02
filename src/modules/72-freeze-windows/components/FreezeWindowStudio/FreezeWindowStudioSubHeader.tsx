@@ -21,24 +21,21 @@ import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import { DefaultFreezeId } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowReducer'
+import type { WindowPathProps } from '@freeze-windows/types'
 import { FreezeWindowStudioSubHeaderRightView } from './FreezeWindowStudioSubHeaderRightView'
 import { CreateNewFreezeWindow } from './CreateNewFreezeWindow'
 import css from './FreezeWindowStudio.module.scss'
-
-interface WindowPathProps {
-  freezeIdentifier: string
-}
 
 interface FreezeWindowStudioSubHeaderProps {
   onViewChange(newView: SelectedView): boolean
 }
 
 export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderProps> = ({ onViewChange }) => {
-  const { accountId, projectIdentifier, orgIdentifier, module } = useParams<
-    ProjectPathProps & ModulePathParams & WindowPathProps
+  const { accountId, projectIdentifier, orgIdentifier, module, windowIdentifier } = useParams<
+    ModulePathParams & WindowPathProps
   >()
   const { getString } = useStrings()
   const {
@@ -46,7 +43,6 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
     updateFreeze,
     isReadonly
   } = React.useContext(FreezeWindowContext)
-  const freezeIdentifier = freezeObj.identifier
   const history = useHistory()
   const { view } = React.useContext(FreezeWindowContext)
   const isYaml = view === SelectedView.YAML
@@ -56,15 +52,13 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
   }, [history, routes.toFreezeWindows, orgIdentifier, projectIdentifier, accountId, module])
 
   const [showConfigModal, hideConfigModal] = useModalHook(() => {
-    const onCloseCreate = (identifier = freezeIdentifier) => {
+    const onCloseCreate = (identifier = windowIdentifier) => {
       if (identifier === DefaultFreezeId) {
         navigateToFreezeWindlows()
       }
 
       hideConfigModal()
     }
-
-    // const onClose = React.useCallback(() => onCloseCreate(), [])
 
     return (
       <Dialog
@@ -74,7 +68,7 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
         title={
           <Container padding={{ left: 'xlarge', top: 'xlarge' }}>
             <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_800}>
-              {freezeIdentifier === DefaultFreezeId
+              {windowIdentifier === DefaultFreezeId
                 ? getString('freezeWindows.freezeWindowsPage.newFreezeWindow')
                 : getString('freezeWindows.freezeWindowsPage.editFreezeWindow')}
             </Text>
@@ -84,14 +78,14 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
         <CreateNewFreezeWindow onClose={onCloseCreate} updateFreeze={updateFreeze} freezeObj={freezeObj} />
       </Dialog>
     )
-  }, [freezeIdentifier, freezeObj.name])
+  }, [windowIdentifier, freezeObj.name])
 
   React.useEffect(() => {
-    if (freezeIdentifier === DefaultFreezeId) {
+    if (windowIdentifier === DefaultFreezeId) {
       hideConfigModal()
       showConfigModal()
     }
-  }, [freezeIdentifier, showConfigModal]) // freezeIdentifier
+  }, [windowIdentifier, showConfigModal])
 
   return (
     <Container
