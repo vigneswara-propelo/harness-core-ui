@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color, Layout, Page, PageSpinner, Text } from '@harness/uicore'
+import { Color, Layout, Page, PageSpinner, Text, useToaster } from '@harness/uicore'
 import React, { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useUpdateQueryParams, useQueryParams, useMutateAsGet } from '@common/hooks'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -17,8 +18,8 @@ import {
   GetFreezeListQueryParams,
   useGetFreezeList,
   useUpdateFreezeStatus,
-  useDeleteFreeze,
-  UseUpdateFreezeStatusProps
+  UseUpdateFreezeStatusProps,
+  useDeleteManyFreezes
 } from 'services/cd-ng'
 import { NoResultsView } from '@freeze-windows/components/NoResultsView/NoResultsView'
 import { FreezeWindowListSubHeader } from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader'
@@ -29,20 +30,21 @@ import { FreezeWindowList } from '@freeze-windows/components/FreezeWindowList/Fr
 import { FreezeWindowListProvider, useFreezeWindowListContext } from '@freeze-windows/context/FreezeWindowListContext'
 import { getQueryParamOptions } from '@freeze-windows/utils/queryUtils'
 import type { FreezeWindowListColumnActions } from '@freeze-windows/components/FreezeWindowList/FreezeWindowListCells'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import css from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader.module.scss'
 
 function _FreezeWindowsPage(): React.ReactElement {
   const { getString } = useStrings()
-  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
+  const { showSuccess, showWarning } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
+  const { projectIdentifier = 'defaultproject', orgIdentifier = 'default', accountId } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountId })
   const { replaceQueryParams } = useUpdateQueryParams<Partial<GetFreezeListQueryParams>>()
   const queryParams = useQueryParams<FreezeListUrlQueryParams>(getQueryParamOptions())
   const { searchTerm, page, size, sort, freezeStatus, startTime, endTime } = queryParams
   const { selectedItems, clearSelectedItems } = useFreezeWindowListContext()
-  const resetFilter = (): void => {
-    replaceQueryParams({})
-  }
 
+  const resetFilter = () => replaceQueryParams({})
   useDocumentTitle([getString('common.freezeWindows')])
 
   const {
@@ -62,9 +64,9 @@ function _FreezeWindowsPage(): React.ReactElement {
     body: {
       freezeStatus,
       searchTerm,
-      sort
-      // startTime,
-      // endTime
+      sort,
+      startTime,
+      endTime
     }
   })
 
@@ -76,21 +78,35 @@ function _FreezeWindowsPage(): React.ReactElement {
     }
   } as UseUpdateFreezeStatusProps)
 
-  const { mutate: deleteFreeze, loading: deleteFreezeLoading } = useDeleteFreeze({
+  const { mutate: deleteFreeze, loading: deleteFreezeLoading } = useDeleteManyFreezes({
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
 
   const handleDelete = async (freezeWindowId?: string) => {
-    await deleteFreeze(freezeWindowId || selectedItems[0]) //TODO: change after multi delete API is ready
+    try {
+      if (freezeWindowId) {
+        await deleteFreeze([freezeWindowId])
+      } else {
+        await deleteFreeze(selectedItems)
+      }
+      showSuccess(`Deleted successfully`)
+    } catch (err: any) {
+      showWarning(defaultTo(getRBACErrorMessage(err), `Failed to delete`))
+    }
     clearSelectedItems()
     refetch()
   }
 
   const handleFreezeToggle: FreezeWindowListColumnActions['onToggleFreezeRow'] = async ({ freezeWindowId, status }) => {
-    if (freezeWindowId) {
-      await updateFreezeStatus([freezeWindowId], { queryParams: { status } } as UseUpdateFreezeStatusProps)
-    } else {
-      await updateFreezeStatus(selectedItems, { queryParams: { status } } as UseUpdateFreezeStatusProps)
+    try {
+      if (freezeWindowId) {
+        await updateFreezeStatus([freezeWindowId], { queryParams: { status } } as UseUpdateFreezeStatusProps)
+      } else {
+        await updateFreezeStatus(selectedItems, { queryParams: { status } } as UseUpdateFreezeStatusProps)
+      }
+      showSuccess(`${status} successfully`)
+    } catch (err: any) {
+      showWarning(defaultTo(getRBACErrorMessage(err), `Failed to update status`))
     }
     clearSelectedItems()
     refetch()

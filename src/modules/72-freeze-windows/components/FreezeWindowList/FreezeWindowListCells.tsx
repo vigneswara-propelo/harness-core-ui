@@ -134,18 +134,16 @@ export const MenuCell: CellType = ({ row, column }) => {
         <Button variation={ButtonVariation.ICON} icon="Options" aria-label="Freeze window menu actions" />
         <Menu style={{ backgroundColor: 'unset', minWidth: 'unset' }}>
           <Menu.Item className={css.link} text={<Link to={column.getViewFreezeRowLink(data)}>Edit</Link>} />
+          <Menu.Item
+            text={data.status === 'Disabled' ? 'Enable' : 'Disable'}
+            onClick={() => {
+              column.onToggleFreezeRow({
+                freezeWindowId: data.identifier!,
+                status: data.status === 'Disabled' ? 'Enabled' : 'Disabled'
+              })
+            }}
+          />
           <Menu.Item text="Delete" onClick={() => column.onDeleteRow(data.identifier!)} />
-          {data.status === 'Disabled' ? (
-            <Menu.Item
-              text="Enable"
-              onClick={() => column.onToggleFreezeRow({ freezeWindowId: data.identifier!, status: 'Enabled' })}
-            />
-          ) : (
-            <Menu.Item
-              text="Disable"
-              onClick={() => column.onToggleFreezeRow({ freezeWindowId: data.identifier!, status: 'Disabled' })}
-            />
-          )}
         </Menu>
       </Popover>
     </Layout.Horizontal>

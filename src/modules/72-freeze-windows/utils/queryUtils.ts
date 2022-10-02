@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import type { SelectOption } from '@harness/uicore'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import type { FreezeListUrlQueryParams } from '@freeze-windows/types'
@@ -7,11 +14,14 @@ export const getQueryParamOptions = () => ({
   parseArrays: true,
   decoder: queryParamDecodeAll(),
   processQueryParams(params: FreezeListUrlQueryParams): FreezeListUrlQueryParams {
+    const [start, end] = getDefaultCalenderFilter()
     return {
       ...params,
       page: params.page ?? DEFAULT_PAGE_INDEX,
       size: params.size ?? DEFAULT_PAGE_SIZE,
-      sort: params.sort ?? DEFAULT_PIPELINE_LIST_TABLE_SORT
+      sort: params.sort ?? DEFAULT_PIPELINE_LIST_TABLE_SORT,
+      startTime: params.startTime || start.getTime(),
+      endTime: params.endTime || end.getTime()
     }
   }
 })
