@@ -41,11 +41,12 @@ import {
 import {
   EnvironmentTypeRenderer,
   Organizationfield,
-  OrgFieldViewMode,
+  // OrgFieldViewMode,
   ProjectField,
-  ProjectFieldViewMode,
+  // ProjectFieldViewMode,
   ServiceFieldRenderer,
-  ServicesAndEnvRenderer
+  ServicesAndEnvRenderer,
+  OrgProjAndServiceRenderer
 } from './FreezeStudioConfigSectionRenderers'
 import css from './FreezeWindowStudio.module.scss'
 
@@ -55,6 +56,7 @@ interface ConfigViewModeRendererProps {
   setEditView: () => void
   deleteConfig: () => void
   fieldsVisibility: FieldVisibility
+  resources: ResourcesInterface
 }
 
 const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
@@ -62,10 +64,11 @@ const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
   getString,
   setEditView,
   deleteConfig,
-  fieldsVisibility
+  fieldsVisibility,
+  resources
 }) => {
   const { name, entities } = config || {}
-  const entitiesMap =
+  const entitiesMap: Record<FIELD_KEYS, EntityType> =
     entities?.reduce((accum: any, item: EntityType) => {
       if (item?.type) {
         accum[item.type] = item as EntityType
@@ -83,15 +86,21 @@ const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
           {name}
         </Heading>
 
-        <Layout.Horizontal>
-          {fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.PROJECT ? 'env' : ''}
-        </Layout.Horizontal>
-        <OrgFieldViewMode data={entitiesMap[FIELD_KEYS.Org]} getString={getString} />
-        <ProjectFieldViewMode data={entitiesMap[FIELD_KEYS.Proj]} getString={getString} />
+        {/*<Layout.Horizontal>*/}
+        {/*{fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.PROJECT ? 'env' : ''}*/}
+        {/*</Layout.Horizontal>*/}
+        {/*<OrgFieldViewMode data={entitiesMap[FIELD_KEYS.Org]} getString={getString} />*/}
+        {/*<ProjectFieldViewMode data={entitiesMap[FIELD_KEYS.Proj]} getString={getString} />*/}
+        <OrgProjAndServiceRenderer
+          entitiesMap={entitiesMap}
+          freezeWindowLevel={fieldsVisibility.freezeWindowLevel}
+          resources={resources}
+          getString={getString}
+        />
         <ServicesAndEnvRenderer
           freezeWindowLevel={fieldsVisibility.freezeWindowLevel}
           getString={getString}
-          envType={entitiesMap[FIELD_KEYS.EnvType]?.entityRefs?.[0] || EnvironmentType.All}
+          envType={(entitiesMap[FIELD_KEYS.EnvType]?.entityRefs?.[0] || EnvironmentType.All) as EnvironmentType}
         />
       </Layout.Vertical>
       <Layout.Horizontal>
@@ -244,6 +253,7 @@ const ConfigRenderer = ({
           setEditView={setEditViewMode}
           deleteConfig={deleteConfig}
           fieldsVisibility={fieldsVisibility}
+          resources={resources}
         />
       )}
     </Container>

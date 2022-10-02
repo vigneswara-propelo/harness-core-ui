@@ -4102,6 +4102,8 @@ export interface StringsMap {
   'freezeWindows.disableAllDeployments': string
   'freezeWindows.freezeStudio.allOrganizations': string
   'freezeWindows.freezeStudio.defineResources': string
+  'freezeWindows.freezeStudio.excludeFollowingProject': string
+  'freezeWindows.freezeStudio.excludeFollowingProjects': string
   'freezeWindows.freezeStudio.excludeOrgs': string
   'freezeWindows.freezeStudio.excludeProjects': string
   'freezeWindows.freezeStudio.freezeConfiguration': string

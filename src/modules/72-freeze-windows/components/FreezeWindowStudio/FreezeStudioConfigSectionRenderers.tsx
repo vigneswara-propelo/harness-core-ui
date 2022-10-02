@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
+import classnames from 'classnames'
 import type { SelectOption } from '@wings-software/uicore'
 import { FormInput, Heading } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
-import { EntityType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface, EnvironmentType } from '@freeze-windows/types'
+import { EntityType, EnvironmentType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
 import { allProjectsObj, getEnvTypeMap, isAllOptionSelected } from './FreezeWindowStudioUtil'
+import css from './FreezeWindowStudio.module.scss'
 
 const All = 'All'
 const Equals = 'Equals'
@@ -279,12 +281,8 @@ export const ServicesAndEnvRenderer: React.FC<{
   const envTypeMap = getEnvTypeMap(getString)
 
   return (
-    <Heading
-      level={3}
-      style={{ fontWeight: 600, fontSize: '12px', lineHeight: '18px', marginTop: '12px' }}
-      color={Color.GREY_600}
-    >
-      {freezeWindowLevel === FreezeWindowLevels.PROJECT ? (
+    <Heading level={3} style={{ fontWeight: 600, fontSize: '12px', lineHeight: '18px' }} color={Color.GREY_600}>
+      {freezeWindowLevel !== FreezeWindowLevels.PROJECT ? (
         <span style={{ marginRight: '8px', paddingRight: '8px', borderRight: '0.5px solid' }}>
           {getString('common.allServices')}
         </span>
@@ -292,4 +290,128 @@ export const ServicesAndEnvRenderer: React.FC<{
       {`${getString('envType')}: ${envTypeMap[envType as EnvironmentType]}`}
     </Heading>
   )
+}
+
+interface OrgProjAndServiceRendererPropsInterface {
+  entitiesMap: Record<FIELD_KEYS, EntityType>
+  freezeWindowLevel: FreezeWindowLevels
+  resources: ResourcesInterface
+  getString: UseStringsReturn['getString']
+}
+
+const ProjectLevelRender: React.FC<OrgProjAndServiceRendererPropsInterface> = ({
+  entitiesMap,
+  resources,
+  getString
+}) => {
+  const serviceEntityMap = entitiesMap[FIELD_KEYS.Service]
+  const filterType = serviceEntityMap?.filterType || All
+  const serviceMap = resources.servicesMap
+  const selectedServiceIds = serviceEntityMap?.entityRefs || []
+  let serviceNodes = null
+  if (filterType === All || selectedServiceIds.length === 0) {
+    serviceNodes = <span className={css.badge}>{serviceMap[All]?.label}</span>
+  } else {
+    serviceNodes = selectedServiceIds.map(svcId => {
+      return (
+        <span key={svcId} className={css.badge}>
+          {serviceMap[svcId]?.label}
+        </span>
+      )
+    })
+  }
+
+  return (
+    <div className={css.viewRowNode}>
+      <span>{getString('services')}:</span> {serviceNodes}
+    </div>
+  )
+}
+
+const OrgLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = ({ entitiesMap, resources, getString }) => {
+  const entityMap = entitiesMap[FIELD_KEYS.Proj]
+  const filterType = entityMap?.filterType || All
+  const resourcesMap = resources.projectsMap
+  const selectedItemIds = entityMap?.entityRefs || []
+  let nodesEl = null
+  if (filterType === All || selectedItemIds.length === 0) {
+    const nodes = <span className={css.badge}>{resourcesMap[All]?.label}</span>
+    nodesEl = (
+      <>
+        <span>{getString('projectsText')}:</span> {nodes}
+      </>
+    )
+  } else if (filterType === NotEquals) {
+    const nodes = selectedItemIds.map(itemId => {
+      return (
+        <span key={itemId} className={css.badge}>
+          {resourcesMap[itemId]?.label}
+        </span>
+      )
+    })
+
+    return (
+      <>
+        <div className={classnames(css.viewRowNode, css.marginSmaller)}>
+          <span>{getString('projectsText')}:</span> <span className={css.badge}>{resourcesMap[All]?.label}</span>
+        </div>
+        <div className={css.viewRowNode}>
+          <span>
+            {getString(
+              selectedItemIds.length === 1
+                ? 'freezeWindows.freezeStudio.excludeFollowingProject'
+                : 'freezeWindows.freezeStudio.excludeFollowingProjects'
+            )}
+            :
+          </span>{' '}
+          {nodes}
+          <span className={css.badge}>{resourcesMap[All]?.label}</span>
+        </div>
+      </>
+    )
+  } else if (filterType === Equals) {
+    const nodes = selectedItemIds.map(itemId => {
+      return (
+        <span key={itemId} className={css.badge}>
+          {resourcesMap[itemId]?.label}
+        </span>
+      )
+    })
+    nodesEl = (
+      <>
+        <span>{getString('projectsText')}:</span> {nodes}
+      </>
+    )
+  }
+
+  return <div className={css.viewRowNode}>{nodesEl}</div>
+}
+
+export const OrgProjAndServiceRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = ({
+  entitiesMap,
+  freezeWindowLevel,
+  resources,
+  getString
+}) => {
+  if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
+    return (
+      <ProjectLevelRender
+        entitiesMap={entitiesMap}
+        resources={resources}
+        getString={getString}
+        freezeWindowLevel={freezeWindowLevel}
+      />
+    )
+  }
+  if (freezeWindowLevel === FreezeWindowLevels.ORG) {
+    return (
+      <OrgLevelRenderer
+        entitiesMap={entitiesMap}
+        resources={resources}
+        getString={getString}
+        freezeWindowLevel={freezeWindowLevel}
+      />
+    )
+  }
+  return <div></div>
 }

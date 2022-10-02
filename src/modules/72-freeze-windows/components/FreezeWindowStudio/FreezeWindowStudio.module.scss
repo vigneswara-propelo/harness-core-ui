@@ -141,3 +141,27 @@
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
 }
+
+.badge {
+  background-color: var(--primary-2);
+  border-radius: 4px;
+  color: var(--grey-1000);
+  font-size: var(--font-size-small);
+  font-weight: 400;
+  height: 24px;
+  line-height: 20px;
+  padding: 2px var(--spacing-3);
+  margin-left: var(--spacing-3);
+}
+
+.viewRowNode {
+  display: flex;
+  align-items: center;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  line-height: 18px;
+  margin-bottom: var(--spacing-4);
+  &.marginSmaller {
+    margin-bottom: var(--spacing-2);
+  }
+}

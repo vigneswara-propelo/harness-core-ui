@@ -90,6 +90,7 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
   })
 
   React.useEffect(() => {
+    // url doesnt have -1 && state has -1 -> means edit case
     if (windowIdentifier !== DefaultFreezeId && state.freezeObj.identifier === DefaultFreezeId) {
       refetchFreezeObj()
     }

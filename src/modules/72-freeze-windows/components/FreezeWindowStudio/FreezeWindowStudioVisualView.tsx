@@ -8,6 +8,7 @@
 import React from 'react'
 import { Icon, Tab, Tabs } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { ResourcesInterface } from '@freeze-windows/types'
 import { FreezeStudioOverviewSection } from './FreezeStudioOverviewSection'
 import { FreezeStudioConfigSection } from './FreezeStudioConfigSection'
@@ -22,9 +23,20 @@ enum FreezeWindowTabs {
 
 export const FreezeWindowStudioVisualView = ({ resources }: { resources: ResourcesInterface }) => {
   const { getString } = useStrings()
-  const [selectedTabId, setSelectedTabId] = React.useState<FreezeWindowTabs>(FreezeWindowTabs.OVERVIEW)
+  const { updateQueryParams } = useUpdateQueryParams<{ sectionId?: string | null }>()
+  const { sectionId } = useQueryParams<{ sectionId?: string | null }>()
 
   const isReadOnly = false
+
+  React.useEffect(() => {
+    if (!sectionId) {
+      updateQueryParams({ sectionId: FreezeWindowTabs.OVERVIEW })
+    }
+  }, [])
+
+  const setSelectedTabId = (tabId: FreezeWindowTabs) => {
+    updateQueryParams({ sectionId: tabId })
+  }
 
   return (
     <section className={css.stepTabs}>
@@ -33,8 +45,8 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
         onChange={(tabId: FreezeWindowTabs) => {
           setSelectedTabId(tabId)
         }}
-        selectedTabId={selectedTabId}
-        data-tabId={selectedTabId}
+        selectedTabId={sectionId as FreezeWindowTabs}
+        data-tabId={sectionId}
       >
         <Tab
           id={FreezeWindowTabs.OVERVIEW}

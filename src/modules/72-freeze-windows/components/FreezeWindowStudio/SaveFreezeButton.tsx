@@ -7,21 +7,32 @@
 
 import React from 'react'
 import { Spinner } from '@blueprintjs/core'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Button, ButtonVariation, Container, getErrorInfoFromErrorObject, useToaster } from '@wings-software/uicore'
 import { useCreateFreeze } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
+import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import { DefaultFreezeId } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowReducer'
+import type { WindowPathProps } from '@freeze-windows/types'
 
 export const SaveFreezeButton = () => {
   const { getString } = useStrings()
+  const history = useHistory()
   const { showError, clear } = useToaster()
   const {
     state: { freezeObj }
+    // refetchFreezeObj
   } = React.useContext(FreezeWindowContext)
-  const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const {
+    accountId: accountIdentifier,
+    projectIdentifier,
+    orgIdentifier,
+    // windowIdentifier,
+    module
+  } = useParams<WindowPathProps & ModulePathParams>()
   const {
     mutate: createFreeze,
     loading,
@@ -40,6 +51,24 @@ export const SaveFreezeButton = () => {
     if (errorMessage) {
       clear()
       showError(errorMessage)
+    }
+    if (!errorMessage && !loading && freezeObj.identifier !== DefaultFreezeId) {
+      history.push(
+        routes.toFreezeWindowStudio({
+          projectIdentifier,
+          orgIdentifier,
+          accountId: accountIdentifier,
+          module,
+          windowIdentifier: freezeObj.identifier as string
+        })
+      )
+
+      // if (windowIdentifier !== DefaultFreezeId && freezeObj.identifier !== windowIdentifier) {
+      //   refetchFreezeObj()
+      // }
+
+      // todo: change it
+      location.reload()
     }
   }, [loading])
 
