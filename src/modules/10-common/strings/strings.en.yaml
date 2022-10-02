@@ -27,7 +27,7 @@ confirmAction: Confirm action
 accountSetup: Account Setup
 projectSetup: Project Setup
 additionalAttributes: Additional Attributes
-addAttribute: + Add Attribute
+addAttribute: Add Attribute
 orgSetup: Org Setup
 delegateForTask: '{{delegate}} for {{taskName}}'
 defineDelegateSelector: 'Define Delegate Selector'
