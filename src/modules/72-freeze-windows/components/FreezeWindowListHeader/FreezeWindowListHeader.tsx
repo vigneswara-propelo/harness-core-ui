@@ -36,7 +36,7 @@ export function FreezeWindowListHeader(): ReactElement {
         <Switch
           large
           checked
-          label="Disable all deployments for this Account (all Projects)"
+          label={getString('freezeWindows.disableAllDeployments')}
           onChange={() => onGlobalFreezeToggle()}
         />
       }

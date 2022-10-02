@@ -17,6 +17,7 @@ import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { killEvent } from '@common/utils/eventUtils'
 import type { FreezeSummaryResponse, UpdateFreezeStatusQueryParams } from 'services/cd-ng'
+import { useCurrentActiveTime } from '@freeze-windows/hooks/useCurrentActiveTime'
 import css from './FreezeWindowList.module.scss'
 
 export interface FreezeWindowListColumnActions {
@@ -85,18 +86,21 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
   )
 }
 
-export const FreezeTimeCell: CellType = () => {
+export const FreezeTimeCell: CellType = ({ row }) => {
+  const data = row.original
+  const freezeWindow = data.freezeWindows?.[0]
   return (
     <Layout.Vertical spacing="small">
       <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
-        Every Saturday and Sunday
+        {freezeWindow?.recurrence?.type}
+        {freezeWindow?.recurrence?.spec?.until && ` until ${freezeWindow?.recurrence?.spec?.until}`}
       </Text>
       <Layout.Horizontal spacing="small">
         <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
-          12:00 am - 12:00 pm
+          {freezeWindow?.startTime} - {freezeWindow?.endTime}
         </Text>
         <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
-          (GMT+00:00)UTC
+          {freezeWindow?.timeZone}
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>
@@ -104,14 +108,18 @@ export const FreezeTimeCell: CellType = () => {
 }
 
 export const StatusCell: CellType = ({ row }) => {
+  const { getString } = useStrings()
   const data = row.original
+  const { startTime, endTime } = data.currentOrUpcomingActiveWindow || {}
+  const isActive = useCurrentActiveTime(startTime, endTime, data.status === 'Enabled')
+
   return (
     <Text
       font={{ variation: FontVariation.TINY_SEMI }}
-      color={data.status === 'Enabled' ? Color.PRIMARY_7 : Color.GREY_700}
-      className={cx(css.status, data.status === 'Enabled' ? css.active : css.inactive)}
+      color={isActive ? Color.PRIMARY_7 : Color.GREY_700}
+      className={cx(css.status, isActive ? css.active : css.inactive)}
     >
-      {data.status}
+      {isActive ? getString('active') : getString('inactive')}
     </Text>
   )
 }

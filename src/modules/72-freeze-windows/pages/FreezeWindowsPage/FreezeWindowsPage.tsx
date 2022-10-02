@@ -31,6 +31,7 @@ import { FreezeWindowListProvider, useFreezeWindowListContext } from '@freeze-wi
 import { getQueryParamOptions } from '@freeze-windows/utils/queryUtils'
 import type { FreezeWindowListColumnActions } from '@freeze-windows/components/FreezeWindowList/FreezeWindowListCells'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useConfirmFreezeDelete } from '@freeze-windows/hooks/useConfirmFreezeDelete'
 import css from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader.module.scss'
 
 function _FreezeWindowsPage(): React.ReactElement {
@@ -89,9 +90,9 @@ function _FreezeWindowsPage(): React.ReactElement {
       } else {
         await deleteFreeze(selectedItems)
       }
-      showSuccess(`Deleted successfully`)
+      showSuccess(getString('freezeWindows.freezeWindowsPage.deleteSuccess'))
     } catch (err: any) {
-      showWarning(defaultTo(getRBACErrorMessage(err), `Failed to delete`))
+      showWarning(defaultTo(getRBACErrorMessage(err), getString('freezeWindows.freezeWindowsPage.deleteFailure')))
     }
     clearSelectedItems()
     refetch()
@@ -104,13 +105,22 @@ function _FreezeWindowsPage(): React.ReactElement {
       } else {
         await updateFreezeStatus(selectedItems, { queryParams: { status } } as UseUpdateFreezeStatusProps)
       }
+      showSuccess(getString('freezeWindows.freezeWindowsPage.updateStatusSuccess', { value: status }))
+
       showSuccess(`${status} successfully`)
     } catch (err: any) {
-      showWarning(defaultTo(getRBACErrorMessage(err), `Failed to update status`))
+      showWarning(
+        defaultTo(
+          getRBACErrorMessage(err),
+          getString('freezeWindows.freezeWindowsPage.updateStatusFailure', { value: status })
+        )
+      )
     }
     clearSelectedItems()
     refetch()
   }
+
+  const confirmFreezeDelete = useConfirmFreezeDelete(handleDelete)
 
   const pageFreezeSummaryResponse = data?.data
   return (
@@ -127,11 +137,11 @@ function _FreezeWindowsPage(): React.ReactElement {
               <Text color={Color.GREY_800} font={{ weight: 'bold' }} padding="large">
                 {`${getString('total')}: ${data?.data?.totalItems}`}
               </Text>
-              <BulkActions onDelete={handleDelete} onToggleFreeze={handleFreezeToggle} />
+              <BulkActions onDelete={confirmFreezeDelete} onToggleFreeze={handleFreezeToggle} />
             </Layout.Horizontal>
             <FreezeWindowList
               data={pageFreezeSummaryResponse}
-              onDeleteRow={handleDelete}
+              onDeleteRow={confirmFreezeDelete}
               onToggleFreezeRow={handleFreezeToggle}
             />
           </>

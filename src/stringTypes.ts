@@ -4099,6 +4099,7 @@ export interface StringsMap {
   'pipeline.viewLatestExecution': string
   'pipeline.viewPipeline': string
   'pipeline.warningForInvalidYAMLDiscard': string
+  'freezeWindows.disableAllDeployments': string
   'freezeWindows.freezeStudio.allOrganizations': string
   'freezeWindows.freezeStudio.defineResources': string
   'freezeWindows.freezeStudio.excludeOrgs': string
@@ -4106,9 +4107,15 @@ export interface StringsMap {
   'freezeWindows.freezeStudio.freezeConfiguration': string
   'freezeWindows.freezeStudio.freezeOverview': string
   'freezeWindows.freezeStudio.freezeSchedule': string
+  'freezeWindows.freezeWindowsPage.confirmDeleteText': string
+  'freezeWindows.freezeWindowsPage.confirmDeleteTitle': string
+  'freezeWindows.freezeWindowsPage.deleteFailure': string
+  'freezeWindows.freezeWindowsPage.deleteSuccess': string
   'freezeWindows.freezeWindowsPage.editFreezeWindow': string
   'freezeWindows.freezeWindowsPage.newFreezeWindow': string
   'freezeWindows.freezeWindowsPage.noFreezeWindows': string
+  'freezeWindows.freezeWindowsPage.updateStatusFailure': string
+  'freezeWindows.freezeWindowsPage.updateStatusSuccess': string
   'templatesLibrary.addNewTemplate': string
   'templatesLibrary.alwaysUseStableVersion': string
   'templatesLibrary.changeGitBranch': string

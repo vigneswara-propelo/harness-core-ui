@@ -25,7 +25,7 @@ export function FreezeWindowListSubHeader(): ReactElement {
   const defaultDateRangeValue = useMemo(() => getDefaultCalenderFilter(), [])
 
   return (
-    <Page.SubHeader>
+    <Page.SubHeader className={css.subHeader}>
       <Layout.Horizontal spacing={'medium'} className={css.subHeaderActions}>
         <NewFreezeWindowButton />
         <DropDown
