@@ -389,6 +389,7 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                 >
                                   <div
                                     class="StyledProps--font StyledProps--main seletedAppContainer"
+                                    data-testid="sideNav-appdMetric1"
                                   >
                                     <p
                                       class="StyledProps--font Text--lineclamp StyledProps--main selectedApp isSelected"
