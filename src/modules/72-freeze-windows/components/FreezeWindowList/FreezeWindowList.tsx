@@ -27,12 +27,7 @@ export const FreezeWindowList: FC<FreezeWindowList> = ({ data, onToggleFreezeRow
   const history = useHistory()
   const { toggleRowSelect, selectedItems } = useFreezeWindowListContext()
 
-  const {
-    projectIdentifier = 'defaultproject',
-    orgIdentifier = 'default',
-    accountId,
-    module
-  } = useParams<ProjectPathProps & ModulePathParams>()
+  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { updateQueryParams } = useUpdateQueryParams<Partial<FreezeListUrlQueryParams>>()
   const queryParams = useQueryParams<FreezeListUrlQueryParams>(getQueryParamOptions())
   const { sort } = queryParams

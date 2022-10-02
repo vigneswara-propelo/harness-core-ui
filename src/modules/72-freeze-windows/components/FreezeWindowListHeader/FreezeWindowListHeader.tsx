@@ -16,7 +16,7 @@ import { useStrings } from 'framework/strings'
 
 export function FreezeWindowListHeader(): ReactElement {
   const { getString } = useStrings()
-  const { projectIdentifier = 'defaultproject', orgIdentifier = 'default', accountId } = useParams<ProjectPathProps>()
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
 
   // TODO: integrate global toggle handling here
   const onGlobalFreezeToggle = noop

@@ -190,8 +190,9 @@ const getMetaDataForField = (fieldKey: FIELD_KEYS, entities: EntityType[], newVa
   const index = entities.findIndex((e: any) => e.type === fieldKey)
   const isAllSelected = isAllOptionSelected(newValues[fieldKey])
   const obj: EntityType = { type: fieldKey, filterType: 'All', entityRefs: [] }
+  const isNewValueEmpty = isEmpty(newValues[fieldKey])
 
-  return { isAllSelected, obj, index }
+  return { isAllSelected, obj, index, isNewValueEmpty }
 }
 
 const adaptForOrgField = (newValues: any, entities: EntityType[]) => {
@@ -239,7 +240,7 @@ const adaptForEnvField = (newValues: any, entities: EntityType[]) => {
 
 const adaptForProjectField = (newValues: any, entities: EntityType[]) => {
   const fieldKey = FIELD_KEYS.Proj
-  const { isAllSelected, obj, index } = getMetaDataForField(fieldKey, entities, newValues)
+  const { isAllSelected, obj, index, isNewValueEmpty } = getMetaDataForField(fieldKey, entities, newValues)
 
   if (index < 0 && newValues[fieldKey]) {
     return
@@ -251,6 +252,8 @@ const adaptForProjectField = (newValues: any, entities: EntityType[]) => {
     if (hasExcludedProj) {
       obj.entityRefs?.push(...(newValues[FIELD_KEYS.ExcludeProj]?.map((field: SelectOption) => field.value) || []))
     }
+  } else if (isNewValueEmpty) {
+    // Do Nothing here
   } else {
     obj.filterType = 'Equals'
     obj.entityRefs?.push(...(newValues[fieldKey]?.map((field: SelectOption) => field.value) || []))

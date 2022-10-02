@@ -28,6 +28,9 @@ export interface FreezeWindowContextInterface {
   updateYamlView: (isYamlEditable: boolean) => void
   updateFreeze: (response: any) => void
   freezeWindowLevel: FreezeWindowLevels
+  loadingFreezeObj: boolean
+  refetchFreezeObj: () => void
+  freezeObjError?: any
 }
 
 export const FreezeWindowContext = React.createContext<FreezeWindowContextInterface>({
@@ -38,7 +41,9 @@ export const FreezeWindowContext = React.createContext<FreezeWindowContextInterf
   setYamlHandler: noop,
   updateYamlView: noop,
   updateFreeze: noop,
-  freezeWindowLevel: FreezeWindowLevels.ORG
+  freezeWindowLevel: FreezeWindowLevels.ACCOUNT,
+  loadingFreezeObj: false,
+  refetchFreezeObj: noop
 })
 
 const getFreezeWindowLevel = ({ projectIdentifier, orgIdentifier }: ProjectPathProps) => {
@@ -92,14 +97,25 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
 
   React.useEffect(() => {
     if (!loadingFreezeObj && !freezeObjError && freezeObjData?.data?.yaml) {
-      const abc = parse(freezeObjData?.data?.yaml)?.freeze
-      updateFreeze(abc)
+      const freezeObj = parse(freezeObjData?.data?.yaml)?.freeze
+      updateFreeze(freezeObj)
     }
   }, [loadingFreezeObj])
 
   return (
     <FreezeWindowContext.Provider
-      value={{ state, view, setView, updateYamlView, updateFreeze, setYamlHandler, freezeWindowLevel }}
+      value={{
+        state,
+        view,
+        setView,
+        updateYamlView,
+        updateFreeze,
+        setYamlHandler,
+        freezeWindowLevel,
+        loadingFreezeObj,
+        freezeObjError,
+        refetchFreezeObj
+      }}
     >
       {children}
     </FreezeWindowContext.Provider>

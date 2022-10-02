@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { useToaster, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { Page, useToaster, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
+import type { Error } from 'services/cd-ng'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import { isValidYaml } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudioUtil'
 import { useFreezeStudioData } from '@freeze-windows/components/FreezeWindowStudio/useFreezeStudioData'
@@ -23,7 +24,9 @@ export const FreezeWindowStudio = () => {
     setView,
     updateYamlView,
     updateFreeze,
-
+    loadingFreezeObj,
+    freezeObjError,
+    refetchFreezeObj,
     state: { isYamlEditable, yamlHandler }
   } = React.useContext(FreezeWindowContext)
 
@@ -59,13 +62,17 @@ export const FreezeWindowStudio = () => {
   }
 
   return (
-    <>
+    <Page.Body
+      loading={loadingFreezeObj}
+      error={(freezeObjError?.data as Error)?.message || freezeObjError?.message}
+      retryOnError={refetchFreezeObj}
+    >
       <div className={css.marginRight}>
         <FreezeWindowStudioHeader />
         <FreezeWindowStudioSubHeader onViewChange={onViewChange} />
         <FreezeWindowStudioBody resources={resources} />
       </div>
       <RightBar />
-    </>
+    </Page.Body>
   )
 }

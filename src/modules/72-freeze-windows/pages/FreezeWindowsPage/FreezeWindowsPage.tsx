@@ -33,7 +33,7 @@ import css from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWind
 
 function _FreezeWindowsPage(): React.ReactElement {
   const { getString } = useStrings()
-  const { projectIdentifier = 'defaultproject', orgIdentifier = 'default', accountId } = useParams<ProjectPathProps>()
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountId })
   const { replaceQueryParams } = useUpdateQueryParams<Partial<GetFreezeListQueryParams>>()
   const queryParams = useQueryParams<FreezeListUrlQueryParams>(getQueryParamOptions())

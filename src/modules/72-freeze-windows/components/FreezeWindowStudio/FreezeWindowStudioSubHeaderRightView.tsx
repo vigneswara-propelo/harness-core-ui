@@ -6,40 +6,12 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
-import { Button, ButtonVariation } from '@wings-software/uicore'
-import { useCreateFreeze } from 'services/cd-ng'
-import { useStrings } from 'framework/strings'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
+import { SaveFreezeButton } from './SaveFreezeButton'
 
 export const FreezeWindowStudioSubHeaderRightView = () => {
-  const { getString } = useStrings()
-  const {
-    state: { freezeObj } // freeze,
-  } = React.useContext(FreezeWindowContext)
-  const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const { mutate: createFreeze } = useCreateFreeze({
-    // loading
-    queryParams: {
-      accountIdentifier,
-      orgIdentifier,
-      projectIdentifier
-    }
-  })
-  const onSave = () => {
-    try {
-      // check errors
-      createFreeze(yamlStringify({ freeze: freezeObj }), { headers: { 'content-type': 'application/json' } })
-      // const freeze =// freeze
-    } catch (e) {
-      // console.log(e)
-    }
-  }
   return (
     <div>
-      <Button variation={ButtonVariation.PRIMARY} text={getString('save')} icon="send-data" onClick={onSave} />
+      <SaveFreezeButton />
     </div>
   )
 }
