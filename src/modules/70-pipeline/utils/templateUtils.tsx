@@ -7,13 +7,17 @@
 
 import { defaultTo, get, isEmpty, isEqual, set, trim, unset, map } from 'lodash-es'
 import produce from 'immer'
+import type { GetDataError } from 'restful-react'
+import React from 'react'
 import { parse } from '@common/utils/YamlHelperMethods'
 import type {
   PipelineInfoConfig,
   StageElementConfig,
   StepElementConfig,
   TemplateLinkConfig,
-  TemplateStepNode
+  TemplateStepNode,
+  Failure,
+  Error
 } from 'services/pipeline-ng'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import {
@@ -34,6 +38,7 @@ import {
 import { Category } from '@common/constants/TrackingConstants'
 import type { ServiceDefinition } from 'services/cd-ng'
 import { INPUT_EXPRESSION_REGEX_STRING, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 
 export const TEMPLATE_INPUT_PATH = 'template.templateInputs'
 export interface TemplateServiceDataType {
@@ -274,5 +279,16 @@ export function replaceDefaultValues<T>(template: T): T {
         return value
       }
     )
+  )
+}
+
+export const getTemplateErrorMessage = (
+  error: GetDataError<Failure | Error> | null,
+  className?: string
+): string | JSX.Element | undefined => {
+  return isEmpty((error?.data as Error)?.responseMessages) ? (
+    defaultTo((error?.data as Error)?.message, error?.message)
+  ) : (
+    <ErrorHandler responseMessages={(error?.data as Error).responseMessages!} className={className} />
   )
 }

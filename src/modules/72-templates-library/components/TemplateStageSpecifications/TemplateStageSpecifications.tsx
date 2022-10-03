@@ -36,7 +36,7 @@ import { useGlobalEventListener, useQueryParams } from '@common/hooks'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { useStageTemplateActions } from '@pipeline/utils/useStageTemplateActions'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
-import { replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
 import { stringify } from '@common/utils/YamlHelperMethods'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
@@ -272,11 +272,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
                 <Container className={css.inputsContainer}>
                   {isLoading && <PageSpinner />}
                   {!isLoading && error && (
-                    <Container height={300}>
-                      <PageError
-                        message={defaultTo((error?.data as Error)?.message, error?.message)}
-                        onClick={() => refetch()}
-                      />
+                    <Container height={isEmpty((error?.data as Error)?.responseMessages) ? 300 : 600}>
+                      <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
                     </Container>
                   )}
                   {!isLoading && !error && templateInputs && allValues && (
