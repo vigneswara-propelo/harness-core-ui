@@ -2975,6 +2975,7 @@ export type EcsBlueGreenRollbackStepInfo = StepSpecType & {
 
 export type EcsBlueGreenSwapTargetGroupsStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  doNotDownsizeOldService?: boolean
 }
 
 export type EcsCanaryDeleteStepInfo = StepSpecType & {
@@ -3402,6 +3403,11 @@ export interface EnvironmentInfoByServiceId {
   tag?: string
 }
 
+export interface EnvironmentInputsetYamlAndServiceOverridesMetadataInput {
+  envIdentifiers: string[]
+  serviceIdentifiers: string[]
+}
+
 export interface EnvironmentRequestDTO {
   color?: string
   description?: string
@@ -3449,13 +3455,16 @@ export interface EnvironmentYaml {
 }
 
 export interface EnvironmentYamlMetadata {
-  environmentIdentifier: string
-  environmentYaml?: string
-  inputSetTemplateYaml?: string
+  runtimeInputYaml?: string
+  serviceOverridesYaml?: {
+    [key: string]: string
+  }
 }
 
 export interface EnvironmentYamlMetadataDTO {
-  environmentYamlMetadataList?: EnvironmentYamlMetadata[]
+  environmentsInputYamlAndServiceOverrides?: {
+    [key: string]: EnvironmentYamlMetadata
+  }
 }
 
 export interface EnvironmentYamlV2 {
@@ -9197,6 +9206,10 @@ export interface ReferencedByDTO {
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
     | 'Freeze'
+}
+
+export interface RefreshRequest {
+  yaml: string
 }
 
 export interface RefreshRequest {
@@ -20799,11 +20812,13 @@ export const cFStatesForAwsPromise = (
   )
 
 export interface ClustersQueryParams {
-  awsConnectorRef: string
+  awsConnectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  region: string
+  region?: string
+  envId?: string
+  infraDefinitionId?: string
 }
 
 export type ClustersProps = Omit<GetProps<ResponseListString, Failure | Error, ClustersQueryParams, void>, 'path'>
@@ -28337,73 +28352,77 @@ export const dummyNGServiceOverrideConfigPromise = (
     signal
   )
 
-export interface GetEnvironmentsYamlAndRuntimeInputsQueryParams {
+export interface GetEnvironmentsInputYamlAndServiceOverridesQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
 }
 
-export type GetEnvironmentsYamlAndRuntimeInputsProps = Omit<
+export type GetEnvironmentsInputYamlAndServiceOverridesProps = Omit<
   MutateProps<
     ResponseEnvironmentYamlMetadataDTO,
     Failure | Error,
-    GetEnvironmentsYamlAndRuntimeInputsQueryParams,
-    EnvironmentsYamlMetadataInput,
+    GetEnvironmentsInputYamlAndServiceOverridesQueryParams,
+    EnvironmentInputsetYamlAndServiceOverridesMetadataInput,
     void
   >,
   'path' | 'verb'
 >
 
 /**
- * This api returns environment YAML and runtime input YAML
+ * This api returns environments runtime input YAML and serviceOverrides Yaml
  */
-export const GetEnvironmentsYamlAndRuntimeInputs = (props: GetEnvironmentsYamlAndRuntimeInputsProps) => (
+export const GetEnvironmentsInputYamlAndServiceOverrides = (
+  props: GetEnvironmentsInputYamlAndServiceOverridesProps
+) => (
   <Mutate<
     ResponseEnvironmentYamlMetadataDTO,
     Failure | Error,
-    GetEnvironmentsYamlAndRuntimeInputsQueryParams,
-    EnvironmentsYamlMetadataInput,
+    GetEnvironmentsInputYamlAndServiceOverridesQueryParams,
+    EnvironmentInputsetYamlAndServiceOverridesMetadataInput,
     void
   >
     verb="POST"
-    path={`/environmentsV2/environmentsYamlMetadata`}
+    path={`/environmentsV2/environmentInputYamlAndServiceOverridesMetadata`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
-export type UseGetEnvironmentsYamlAndRuntimeInputsProps = Omit<
+export type UseGetEnvironmentsInputYamlAndServiceOverridesProps = Omit<
   UseMutateProps<
     ResponseEnvironmentYamlMetadataDTO,
     Failure | Error,
-    GetEnvironmentsYamlAndRuntimeInputsQueryParams,
-    EnvironmentsYamlMetadataInput,
+    GetEnvironmentsInputYamlAndServiceOverridesQueryParams,
+    EnvironmentInputsetYamlAndServiceOverridesMetadataInput,
     void
   >,
   'path' | 'verb'
 >
 
 /**
- * This api returns environment YAML and runtime input YAML
+ * This api returns environments runtime input YAML and serviceOverrides Yaml
  */
-export const useGetEnvironmentsYamlAndRuntimeInputs = (props: UseGetEnvironmentsYamlAndRuntimeInputsProps) =>
+export const useGetEnvironmentsInputYamlAndServiceOverrides = (
+  props: UseGetEnvironmentsInputYamlAndServiceOverridesProps
+) =>
   useMutate<
     ResponseEnvironmentYamlMetadataDTO,
     Failure | Error,
-    GetEnvironmentsYamlAndRuntimeInputsQueryParams,
-    EnvironmentsYamlMetadataInput,
+    GetEnvironmentsInputYamlAndServiceOverridesQueryParams,
+    EnvironmentInputsetYamlAndServiceOverridesMetadataInput,
     void
-  >('POST', `/environmentsV2/environmentsYamlMetadata`, { base: getConfig('ng/api'), ...props })
+  >('POST', `/environmentsV2/environmentInputYamlAndServiceOverridesMetadata`, { base: getConfig('ng/api'), ...props })
 
 /**
- * This api returns environment YAML and runtime input YAML
+ * This api returns environments runtime input YAML and serviceOverrides Yaml
  */
-export const getEnvironmentsYamlAndRuntimeInputsPromise = (
+export const getEnvironmentsInputYamlAndServiceOverridesPromise = (
   props: MutateUsingFetchProps<
     ResponseEnvironmentYamlMetadataDTO,
     Failure | Error,
-    GetEnvironmentsYamlAndRuntimeInputsQueryParams,
-    EnvironmentsYamlMetadataInput,
+    GetEnvironmentsInputYamlAndServiceOverridesQueryParams,
+    EnvironmentInputsetYamlAndServiceOverridesMetadataInput,
     void
   >,
   signal?: RequestInit['signal']
@@ -28411,10 +28430,10 @@ export const getEnvironmentsYamlAndRuntimeInputsPromise = (
   mutateUsingFetch<
     ResponseEnvironmentYamlMetadataDTO,
     Failure | Error,
-    GetEnvironmentsYamlAndRuntimeInputsQueryParams,
-    EnvironmentsYamlMetadataInput,
+    GetEnvironmentsInputYamlAndServiceOverridesQueryParams,
+    EnvironmentInputsetYamlAndServiceOverridesMetadataInput,
     void
-  >('POST', getConfig('ng/api'), `/environmentsV2/environmentsYamlMetadata`, props, signal)
+  >('POST', getConfig('ng/api'), `/environmentsV2/environmentInputYamlAndServiceOverridesMetadata`, props, signal)
 
 export interface GetEnvironmentAccessListQueryParams {
   page?: number

@@ -1087,10 +1087,12 @@ export function StageInputSetFormInternal({
                           path={`${path}.environment.infrastructureDefinitions.${index}.inputs.spec`}
                           readonly={readonly}
                           stepViewType={viewType}
-                          customStepProps={getCustomStepProps(
-                            (deploymentStage?.deploymentType as StepType) || '',
-                            getString
-                          )}
+                          customStepProps={{
+                            ...getCustomStepProps((deploymentStage?.deploymentType as StepType) || '', getString),
+                            serviceRef: deploymentStage.service?.serviceRef,
+                            environmentRef: deploymentStage.environment?.environmentRef,
+                            infrastructureRef: deploymentStage.environment?.infrastructureDefinitions?.[0].identifier
+                          }}
                           onUpdate={data => {
                             /* istanbul ignore next */
                             if (

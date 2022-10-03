@@ -4459,6 +4459,7 @@ export interface StringsMap {
   'cd.duplicateGitOpsServerIdError': string
   'cd.duplicateIdError': string
   'cd.dynamicProvisioning': string
+  'cd.ecsBGSwapTargetGroupsStep.doNotDownsizeOldService': string
   'cd.ecsRollingDeployStep.forceNewDeployment': string
   'cd.ecsRollingDeployStep.sameAsAlreadyRunningInstances': string
   'cd.editIdError': string

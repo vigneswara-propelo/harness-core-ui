@@ -10,22 +10,34 @@ import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-libr
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType } from '@harness/uicore'
 
-import type { StepElementConfig } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { ECSRollingDeployStepEditRef } from '../ECSRollingDeployStepEdit'
+import { ECSBlueGreenSwapTargetGroupsStepEditRef } from '../ECSBlueGreenSwapTargetGroupsStepEdit'
+import type { ECSBlueGreenSwapTargetGroupsStepValues } from '../ECSBlueGreenSwapTargetGroupsStep'
 
-const emptyInitialValues: StepElementConfig = { identifier: '', name: '', timeout: '', type: StepType.EcsRollingDeploy }
-const existingInitialValues: StepElementConfig = {
+// type is not used in the component anywhere, just need to pass it as prop for typecheck to pass
+const emptyInitialValues: ECSBlueGreenSwapTargetGroupsStepValues = {
+  identifier: '',
+  name: '',
+  timeout: '',
+  type: StepType.EcsBlueGreenSwapTargetGroups,
+  spec: {
+    doNotDownsizeOldService: false
+  }
+}
+const existingInitialValues: ECSBlueGreenSwapTargetGroupsStepValues = {
   identifier: 'Existing_Name',
   name: 'Existing Name',
   timeout: '30m',
-  type: StepType.EcsRollingDeploy
+  type: StepType.EcsBlueGreenSwapTargetGroups,
+  spec: {
+    doNotDownsizeOldService: true
+  }
 }
 const onUpdate = jest.fn()
 const onChange = jest.fn()
-const formikRef = React.createRef<StepFormikRef<StepElementConfig>>()
+const formikRef = React.createRef<StepFormikRef<ECSBlueGreenSwapTargetGroupsStepValues>>()
 
 describe('GenericExecutionStepEdit tests', () => {
   beforeEach(() => {
@@ -35,7 +47,7 @@ describe('GenericExecutionStepEdit tests', () => {
   test(`renders fine for empty values and values can be changed`, async () => {
     const { container } = render(
       <TestWrapper>
-        <ECSRollingDeployStepEditRef
+        <ECSBlueGreenSwapTargetGroupsStepEditRef
           initialValues={emptyInitialValues}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           readonly={false}
@@ -64,7 +76,10 @@ describe('GenericExecutionStepEdit tests', () => {
         identifier: 'Test_Name',
         name: 'Test Name',
         timeout: '',
-        type: StepType.EcsRollingDeploy
+        type: StepType.EcsBlueGreenSwapTargetGroups,
+        spec: {
+          doNotDownsizeOldService: false
+        }
       })
     )
 
@@ -76,13 +91,8 @@ describe('GenericExecutionStepEdit tests', () => {
     })
     expect(timeoutInput.value).toBe('20m')
 
-    const sameAsAlreadyRunningInstancesCheckbox = queryByNameAttribute(
-      'spec.sameAsAlreadyRunningInstances'
-    ) as HTMLInputElement
-    userEvent.click(sameAsAlreadyRunningInstancesCheckbox)
-
-    const forceNewDeploymentCheckbox = queryByNameAttribute('spec.forceNewDeployment') as HTMLInputElement
-    userEvent.click(forceNewDeploymentCheckbox)
+    const doNotDownsizeOldServiceCheckbox = queryByNameAttribute('spec.doNotDownsizeOldService') as HTMLInputElement
+    userEvent.click(doNotDownsizeOldServiceCheckbox)
 
     act(() => {
       formikRef.current?.submitForm()
@@ -93,10 +103,9 @@ describe('GenericExecutionStepEdit tests', () => {
         name: 'Test Name',
         timeout: '20m',
         spec: {
-          sameAsAlreadyRunningInstances: true,
-          forceNewDeployment: true
+          doNotDownsizeOldService: true
         },
-        type: StepType.EcsRollingDeploy
+        type: StepType.EcsBlueGreenSwapTargetGroups
       })
     )
   })
@@ -104,7 +113,7 @@ describe('GenericExecutionStepEdit tests', () => {
   test('identifier should not be editable when isNewStep is false', () => {
     const { container } = render(
       <TestWrapper>
-        <ECSRollingDeployStepEditRef
+        <ECSBlueGreenSwapTargetGroupsStepEditRef
           initialValues={emptyInitialValues}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           isNewStep={false}
@@ -123,7 +132,7 @@ describe('GenericExecutionStepEdit tests', () => {
   test('onUpdate should not be called if it is not passed as prop', async () => {
     render(
       <TestWrapper>
-        <ECSRollingDeployStepEditRef
+        <ECSBlueGreenSwapTargetGroupsStepEditRef
           initialValues={existingInitialValues}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           isNewStep={false}

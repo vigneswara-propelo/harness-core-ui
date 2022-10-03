@@ -471,6 +471,8 @@ getStartedWithCD:
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment
+ecsBGSwapTargetGroupsStep:
+  doNotDownsizeOldService: Do not downsize old service
 serviceName: '{{ $.common.serviceName }}'
 skipRendering: Skip K8s Manifest(s) Rendering
 credentialsRef: credentialsRef

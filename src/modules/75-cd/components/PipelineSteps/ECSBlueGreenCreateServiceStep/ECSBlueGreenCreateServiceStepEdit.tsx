@@ -14,6 +14,7 @@ import type { FormikProps } from 'formik'
 import {
   AllowedTypes,
   Formik,
+  FormikForm,
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
@@ -279,7 +280,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
           setFormikRef(formikRef, formik)
           const { values, setFieldValue } = formik
           return (
-            <>
+            <FormikForm>
               <NameTimeoutField
                 values={{ name: values.name, timeout: values.timeout }}
                 setFieldValue={setFieldValue}
@@ -485,7 +486,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   />
                 )}
               </div>
-            </>
+            </FormikForm>
           )
         }}
       </Formik>
