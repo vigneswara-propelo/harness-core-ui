@@ -3,7 +3,7 @@ export const pipelineTemplateName = 'New Pipeline Template Name'
 export const pipelineMadeFromTemplate = 'Pipeline From Template Test'
 export const templateUsedForPipeline = 'testPipelineTemplate'
 
-export const incompletePipelineCreationResponse = {
+export const incompleteTemplateCreationResponse = {
   status: 'ERROR',
   code: 'TEMPLATE_EXCEPTION',
   message: 'yamlNode provided doesn not have root yaml field: pipeline',
@@ -113,6 +113,79 @@ export const selectedTemplateListFromPipeline = {
   },
   metaData: null,
   correlationId: 'cefe0619-9a2c-486d-ae5a-fa1f033a75e1'
+}
+export const stepTemplateListCallAfterSelectionResponse = {
+  status: 'SUCCESS',
+  data: {
+    content: [
+      {
+        accountId: 'accountId',
+        orgIdentifier: 'default',
+        projectIdentifier: 'project1',
+        identifier: 'testStepTemplate_Cypress',
+        name: 'testStepTemplate_Cypress',
+        description: '',
+        tags: {},
+        yaml: 'template:\n  name: testStepTemplate_Cypress\n  type: Step\n  projectIdentifier: samarthproject\n  orgIdentifier: samarth_org\n  spec:\n    type: Http\n    timeout: 10s\n    spec:\n      url: <+input>\n      method: GET\n      headers: []\n      outputVariables: []\n  identifier: http_project_level\n  versionLabel: "212"\n',
+        versionLabel: '212',
+        templateEntityType: 'Step',
+        childType: 'Http',
+        templateScope: 'project',
+        version: 0,
+        gitDetails: {
+          objectId: null,
+          branch: null,
+          repoIdentifier: null,
+          rootFolder: null,
+          filePath: null,
+          repoName: null,
+          commitId: null,
+          fileUrl: null,
+          repoUrl: null
+        },
+        entityValidityDetails: {
+          valid: true,
+          invalidYaml: null
+        },
+        lastUpdatedAt: 1664047838696,
+        createdAt: 1664047838696,
+        stableTemplate: true
+      }
+    ],
+    pageable: {
+      sort: {
+        sorted: true,
+        unsorted: false,
+        empty: false
+      },
+      pageSize: 25,
+      pageNumber: 0,
+      offset: 0,
+      paged: true,
+      unpaged: false
+    },
+    totalPages: 1,
+    last: true,
+    totalElements: 1,
+    sort: {
+      sorted: true,
+      unsorted: false,
+      empty: false
+    },
+    number: 0,
+    first: true,
+    numberOfElements: 1,
+    size: 25,
+    empty: false
+  },
+  metaData: null,
+  correlationId: '6634a9fa-bbdc-4ed3-9405-a34d5fc5c446'
+}
+export const deploymentTemplateInputCallAfterSelectionResponse = {
+  status: 'SUCCESS',
+  data: 'type: "Http"\nspec:\n  url: "<+input>"\n',
+  metaData: null,
+  correlationId: 'c53ebaa8-b420-4c94-82c9-9bf128dfcf62'
 }
 export const templateListCallAfterSelectionResponse = {
   status: 'SUCCESS',
