@@ -422,6 +422,7 @@ monitoringSources:
     submitQueryToSeeRecords: Submit query to see records from Splunk
     staleRecordsWarning: Records not upated with latest query. Please fetch records
     defaultSplunkMetricName: Splunk Metric
+    addSplunkGroupName: add Splunk group name
   gcoLogs:
     query: QUERY
     gcoLogsServiceInstance: Add service instance

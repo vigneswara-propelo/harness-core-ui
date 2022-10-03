@@ -21,7 +21,7 @@ export function GroupName(props: GroupNameProps): JSX.Element {
 
   const dropdownOptions: SelectOption[] = groupNames
 
-  // Adding "+ Add New" option based on "allowAddGroup" prop
+  // Adding "+ Add New" option based on  "allowAddGroup" prop
   if (allowAddGroup) {
     const isAddNewOptionPresent = groupNames.find(groupName => groupName.label === addNewOption.label)
     if (!isAddNewOptionPresent) {

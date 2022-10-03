@@ -7305,6 +7305,7 @@ export interface StringsMap {
   'cv.monitoringSources.riskProfile': string
   'cv.monitoringSources.serviceInstanceIdentifier': string
   'cv.monitoringSources.serviceValidation': string
+  'cv.monitoringSources.splunk.addSplunkGroupName': string
   'cv.monitoringSources.splunk.defaultSplunkMetricName': string
   'cv.monitoringSources.splunk.savedSearchQuery': string
   'cv.monitoringSources.splunk.splunkLogsQuery': string

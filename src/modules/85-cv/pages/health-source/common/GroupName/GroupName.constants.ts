@@ -9,8 +9,8 @@ import type { IDialogProps } from '@blueprintjs/core'
 
 export const DialogProps: IDialogProps = {
   isOpen: true,
-  usePortal: true,
   autoFocus: true,
+  usePortal: true,
   canEscapeKeyClose: true,
   canOutsideClickClose: true,
   enforceFocus: false,
