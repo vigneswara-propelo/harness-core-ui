@@ -59,6 +59,7 @@ import { ConnectorWizardContextProvider } from './ConnectorWizardContext'
 import CreateJenkinsConnector from '../CreateConnector/JenkinsConnector/CreateJenkinsConnector'
 import OCIHelmConnector from '../CreateConnector/OCIHelmConnector.tsx/OCIHelmConnector'
 import CreateCustomSMConnector from '../CreateConnector/CustomSecretManagerConnector/CreateCustomSMConnector'
+import CreateGCPSecretManager from '../CreateConnector/GCPSecretManager/CreateGCPSecretManager'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -107,7 +108,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { ERROR_TRACKING_ENABLED } = useFeatureFlags()
+  const { ERROR_TRACKING_ENABLED, PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
@@ -196,6 +197,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return <CreateJenkinsConnector {...commonProps} />
     case Connectors.CUSTOM_SECRET_MANAGER:
       return <CreateCustomSMConnector {...commonProps} />
+    case Connectors.GcpSecretManager:
+      return PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG ? <CreateGCPSecretManager {...commonProps} /> : null
     default:
       return null
   }

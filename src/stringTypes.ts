@@ -2339,6 +2339,8 @@ export interface StringsMap {
   'connectors.gcpKms.keyNameRequired': string
   'connectors.gcpKms.keyRing': string
   'connectors.gcpKms.keyRingRequired': string
+  'connectors.gcpSecretManager.gcpSMSecretFile': string
+  'connectors.gcpSecretManager.validation.credFileRequired': string
   'connectors.gcrConnectorDetails': string
   'connectors.gitProviderURLs.azureRepos': string
   'connectors.gitProviderURLs.bitbucket': string
@@ -2569,6 +2571,7 @@ export interface StringsMap {
   'connectors.title.delegateSelection': string
   'connectors.title.gcpConnector': string
   'connectors.title.gcpKms': string
+  'connectors.title.gcpSecretManager': string
   'connectors.title.gitConnector': string
   'connectors.title.githubConnector': string
   'connectors.title.gitlabConnector': string

@@ -13506,6 +13506,13 @@ export interface TimeValuePairObject {
   value?: { [key: string]: any }
 }
 
+export interface TimeZone {
+  displayName?: string
+  dstsavings?: number
+  id?: string
+  rawOffset?: number
+}
+
 export interface TokenAggregateDTO {
   createdAt: number
   expiryAt: number
