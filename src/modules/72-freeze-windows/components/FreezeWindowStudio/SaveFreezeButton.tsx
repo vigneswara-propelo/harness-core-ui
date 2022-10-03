@@ -9,7 +9,7 @@ import React from 'react'
 import { Spinner } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { Button, ButtonVariation, Container, getErrorInfoFromErrorObject, useToaster } from '@wings-software/uicore'
-import { useCreateFreeze } from 'services/cd-ng'
+import { useCreateFreeze, useUpdateFreeze } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import routes from '@common/RouteDefinitions'
@@ -21,7 +21,7 @@ import type { WindowPathProps } from '@freeze-windows/types'
 export const SaveFreezeButton = () => {
   const { getString } = useStrings()
   const history = useHistory()
-  const { showError, clear } = useToaster()
+  const { showSuccess, showError, clear } = useToaster()
   const [isMounted, setIsMounted] = React.useState<boolean>(false)
   const {
     state: { freezeObj }
@@ -31,13 +31,14 @@ export const SaveFreezeButton = () => {
     accountId: accountIdentifier,
     projectIdentifier,
     orgIdentifier,
-    // windowIdentifier,
+    windowIdentifier,
     module
   } = useParams<WindowPathProps & ModulePathParams>()
+  const isCreateMode = windowIdentifier === DefaultFreezeId
   const {
     mutate: createFreeze,
-    loading,
-    error
+    loading: createLoading,
+    error: createError
   } = useCreateFreeze({
     // loading
     queryParams: {
@@ -46,6 +47,21 @@ export const SaveFreezeButton = () => {
       projectIdentifier
     }
   })
+  const {
+    mutate: updateFreeze,
+    loading: updateLoading,
+    error: updateError
+  } = useUpdateFreeze({
+    freezeIdentifier: windowIdentifier,
+    queryParams: {
+      accountIdentifier,
+      orgIdentifier,
+      projectIdentifier
+    }
+  })
+
+  const error = isCreateMode ? createError : updateError
+  const loading = isCreateMode ? createLoading : updateLoading
 
   React.useEffect(() => {
     if (!isMounted) {
@@ -58,6 +74,14 @@ export const SaveFreezeButton = () => {
       showError(errorMessage)
     }
     if (!errorMessage && !loading && freezeObj.identifier !== DefaultFreezeId) {
+      showSuccess(
+        getString(
+          isCreateMode
+            ? 'freezeWindows.freezeStudio.freezeCreatedSuccessfully'
+            : 'freezeWindows.freezeStudio.freezeUpdatedSuccessfully'
+        ),
+        1000
+      )
       history.push(
         routes.toFreezeWindowStudio({
           projectIdentifier,
@@ -73,7 +97,9 @@ export const SaveFreezeButton = () => {
   const onSave = () => {
     try {
       // check errors
-      createFreeze(yamlStringify({ freeze: freezeObj }), { headers: { 'content-type': 'application/json' } })
+      const params = yamlStringify({ freeze: freezeObj })
+      const headers = { headers: { 'content-type': 'application/json' } }
+      isCreateMode ? createFreeze(params, headers) : updateFreeze(params, headers)
     } catch (e) {
       // console.log(e)
     }

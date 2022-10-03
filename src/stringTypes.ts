@@ -4111,8 +4111,10 @@ export interface StringsMap {
   'freezeWindows.freezeStudio.excludeOrgs': string
   'freezeWindows.freezeStudio.excludeProjects': string
   'freezeWindows.freezeStudio.freezeConfiguration': string
+  'freezeWindows.freezeStudio.freezeCreatedSuccessfully': string
   'freezeWindows.freezeStudio.freezeOverview': string
   'freezeWindows.freezeStudio.freezeSchedule': string
+  'freezeWindows.freezeStudio.freezeUpdatedSuccessfully': string
   'freezeWindows.freezeWindowsPage.confirmDeleteText': string
   'freezeWindows.freezeWindowsPage.confirmDeleteTitle': string
   'freezeWindows.freezeWindowsPage.deleteFailure': string
