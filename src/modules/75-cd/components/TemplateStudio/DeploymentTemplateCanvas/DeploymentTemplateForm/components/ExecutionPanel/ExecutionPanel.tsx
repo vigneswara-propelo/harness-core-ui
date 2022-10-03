@@ -137,7 +137,7 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
     <Container className={css.executionWidgetWrapper}>
       <CardWithOuterTitle
         title={getString('cd.deploymentSteps')}
-        className={cx(css.deploymentStepsCard, 'ng-tooltip-native')}
+        className={css.deploymentStepsCard}
         headerClassName={css.headerText}
         dataTooltipId="deploymentStepsDT"
       >
