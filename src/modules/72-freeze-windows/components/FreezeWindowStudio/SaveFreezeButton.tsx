@@ -22,6 +22,7 @@ export const SaveFreezeButton = () => {
   const { getString } = useStrings()
   const history = useHistory()
   const { showError, clear } = useToaster()
+  const [isMounted, setIsMounted] = React.useState<boolean>(false)
   const {
     state: { freezeObj }
     // refetchFreezeObj
@@ -47,6 +48,10 @@ export const SaveFreezeButton = () => {
   })
 
   React.useEffect(() => {
+    if (!isMounted) {
+      setIsMounted(true)
+      return
+    }
     const errorMessage = loading ? '' : error ? getErrorInfoFromErrorObject(error) : ''
     if (errorMessage) {
       clear()
@@ -62,13 +67,6 @@ export const SaveFreezeButton = () => {
           windowIdentifier: freezeObj.identifier as string
         })
       )
-
-      // if (windowIdentifier !== DefaultFreezeId && freezeObj.identifier !== windowIdentifier) {
-      //   refetchFreezeObj()
-      // }
-
-      // todo: change it
-      location.reload()
     }
   }, [loading])
 

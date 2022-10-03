@@ -14,6 +14,7 @@ import {
   Container,
   Layout,
   Text,
+  Toggle,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle
 } from '@wings-software/uicore'
@@ -47,14 +48,14 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
   const { view } = React.useContext(FreezeWindowContext)
   const isYaml = view === SelectedView.YAML
   const isVisualViewDisabled = false
-  const navigateToFreezeWindlows = React.useCallback(() => {
+  const navigateToFreezeWindows = React.useCallback(() => {
     history.push(routes.toFreezeWindows({ orgIdentifier, projectIdentifier, accountId, module }))
   }, [history, routes.toFreezeWindows, orgIdentifier, projectIdentifier, accountId, module])
 
   const [showConfigModal, hideConfigModal] = useModalHook(() => {
-    const onCloseCreate = (identifier = windowIdentifier) => {
+    const onCloseCreate = (identifier = freezeObj.identifier) => {
       if (identifier === DefaultFreezeId) {
-        navigateToFreezeWindlows()
+        navigateToFreezeWindows()
       }
 
       hideConfigModal()
@@ -68,7 +69,7 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
         title={
           <Container padding={{ left: 'xlarge', top: 'xlarge' }}>
             <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_800}>
-              {windowIdentifier === DefaultFreezeId
+              {freezeObj.identifier === DefaultFreezeId
                 ? getString('freezeWindows.freezeWindowsPage.newFreezeWindow')
                 : getString('freezeWindows.freezeWindowsPage.editFreezeWindow')}
             </Text>
@@ -78,7 +79,7 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
         <CreateNewFreezeWindow onClose={onCloseCreate} updateFreeze={updateFreeze} freezeObj={freezeObj} />
       </Dialog>
     )
-  }, [windowIdentifier, freezeObj.name])
+  }, [windowIdentifier, freezeObj.name, freezeObj.identifier])
 
   React.useEffect(() => {
     if (windowIdentifier === DefaultFreezeId) {
@@ -97,6 +98,16 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
     >
       <Layout.Horizontal height={'100%'} flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
         <Layout.Horizontal className={css.freezeNameContainer} flex={{ alignItems: 'center' }}>
+          {isYaml || isReadonly ? null : (
+            <Toggle
+              className={css.freezeToggler}
+              checked={freezeObj?.status === 'Enabled'}
+              onToggle={checked => {
+                updateFreeze({ status: checked ? 'Enabled' : 'Disabled' })
+              }}
+            />
+          )}
+
           <Text lineClamp={1} className={css.freezeName}>
             {freezeObj.name as string}
           </Text>

@@ -13,6 +13,7 @@ import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { getInitialValues } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudioUtil'
+import { DefaultFreezeId } from './FreezeWindowContext/FreezeWindowReducer'
 import css from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudio.module.scss'
 
 interface CreateNewFreezeWindowProps {
@@ -63,7 +64,13 @@ export const CreateNewFreezeWindow: React.FC<CreateNewFreezeWindowProps> = ({ on
                 }}
               />
               <Layout.Horizontal spacing="small" margin={{ top: 'xxlarge' }}>
-                <Button type="submit" variation={ButtonVariation.PRIMARY} text={getString('start')} />
+                <Button
+                  type="submit"
+                  variation={ButtonVariation.PRIMARY}
+                  text={getString(
+                    freezeObj?.identifier && freezeObj.identifier !== DefaultFreezeId ? 'continue' : 'start'
+                  )}
+                />
                 <Button onClick={onCancel} variation={ButtonVariation.SECONDARY} text={getString('cancel')} />
               </Layout.Horizontal>
             </Container>

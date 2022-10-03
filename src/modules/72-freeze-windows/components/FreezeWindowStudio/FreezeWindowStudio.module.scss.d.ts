@@ -17,9 +17,11 @@ declare const styles: {
   readonly crossButton: string
   readonly freezeName: string
   readonly freezeNameContainer: string
+  readonly freezeToggler: string
   readonly isEditView: string
   readonly marginRight: string
   readonly marginSmaller: string
+  readonly scheduleTabSaveBtnContainer: string
   readonly sectionCard: string
   readonly separator: string
   readonly stepTabs: string

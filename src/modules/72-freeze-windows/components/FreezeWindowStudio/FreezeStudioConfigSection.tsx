@@ -180,6 +180,7 @@ const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
 interface ConfigRendererProps {
   config: EntityConfig
   isEdit: boolean
+  setEditView: (index: number, isEdit: boolean) => void
   getString: UseStringsReturn['getString']
   index: number
   updateFreeze: (freeze: any) => void
@@ -187,12 +188,13 @@ interface ConfigRendererProps {
   entityConfigs: EntityConfig[]
   resources: ResourcesInterface
   fieldsVisibility: FieldVisibility
-  updateInitialValues: (entityonfigs: EntityConfig[]) => void
+  onDeleteRule: (entityonfigs: EntityConfig[], index: number) => void
 }
 
 const ConfigRenderer = ({
   config,
   isEdit,
+  setEditView,
   getString,
   index,
   updateFreeze,
@@ -200,9 +202,8 @@ const ConfigRenderer = ({
   entityConfigs,
   resources,
   fieldsVisibility,
-  updateInitialValues
+  onDeleteRule
 }: ConfigRendererProps) => {
-  const [isEditView, setEditView] = React.useState(isEdit)
   const saveEntity = async () => {
     const formErrors = await formikProps.validateForm()
     if (!isEmpty(formErrors?.entity?.[index])) {
@@ -214,29 +215,29 @@ const ConfigRenderer = ({
     updatedEntityConfigs[index] = convertValuesToYamlObj(updatedEntityConfigs[index], values[index], fieldsVisibility)
 
     updateFreeze({ entityConfigs: updatedEntityConfigs })
-    setEditView(false)
+    setEditView(index, false)
   }
 
   const setVisualViewMode = React.useCallback(() => {
-    setEditView(false)
+    setEditView(index, false)
   }, [])
   const setEditViewMode = React.useCallback(() => {
-    setEditView(true)
+    setEditView(index, true)
   }, [])
 
   const deleteConfig = () => {
     const updatedEntityConfigs = entityConfigs.filter((_, i) => index !== i)
     updateFreeze({ entityConfigs: updatedEntityConfigs })
-    updateInitialValues(updatedEntityConfigs)
+    onDeleteRule(updatedEntityConfigs, index)
   }
 
   return (
     <Container
       padding="large"
-      className={classnames(css.configFormContainer, { [css.isEditView]: isEditView })}
+      className={classnames(css.configFormContainer, { [css.isEditView]: isEdit })}
       margin={{ top: 'xlarge' }}
     >
-      {isEditView ? (
+      {isEdit ? (
         <ConfigEditModeRenderer
           index={index}
           getString={getString}
@@ -274,6 +275,7 @@ const ConfigsSection = ({
   resources,
   fieldsVisibility
 }: ConfigsSectionProps) => {
+  const [editViews, setEditViews] = React.useState<boolean[]>(Array(entityConfigs?.length).fill(false))
   const [initialValues, setInitialValues] = React.useState(
     getInitialValuesForConfigSection(entityConfigs, getString, resources)
   )
@@ -281,15 +283,36 @@ const ConfigsSection = ({
     setInitialValues(getInitialValuesForConfigSection(entityConfigs, getString, resources))
   }, [])
 
-  const updateInitialValues = React.useCallback((configs: EntityConfig[]) => {
+  React.useEffect(() => {
+    if (editViews.length === 0 && entityConfigs.length > 0) {
+      setEditViews(Array(entityConfigs?.length).fill(false))
+    }
+  }, [entityConfigs.length])
+
+  const onDeleteRule = React.useCallback((configs: EntityConfig[], index) => {
     setInitialValues(getInitialValuesForConfigSection(configs, getString, resources))
+    setEditViews(_editViews => {
+      const newEditViews = [..._editViews]
+      newEditViews.splice(index, 1)
+      return newEditViews
+    })
   }, [])
 
   const onAddRule = () => {
     const updatedEntityConfigs = [...(entityConfigs || []), getEmptyEntityConfig(fieldsVisibility)]
     setInitialValues(getInitialValuesForConfigSection(updatedEntityConfigs, getString, resources))
     updateFreeze({ entityConfigs: updatedEntityConfigs })
+    setEditViews(_editViews => [..._editViews, true])
   }
+
+  const setEditView = (index: number, isEdit: boolean) => {
+    setEditViews(_editViews => {
+      const newEditViews = [..._editViews]
+      newEditViews[index] = isEdit
+      return newEditViews
+    })
+  }
+
   return (
     <>
       <Formik
@@ -312,7 +335,8 @@ const ConfigsSection = ({
               // key={config.uuid}
               key={index}
               config={config}
-              isEdit={false}
+              isEdit={editViews[index]}
+              setEditView={setEditView}
               getString={getString}
               index={index}
               updateFreeze={updateFreeze}
@@ -320,7 +344,7 @@ const ConfigsSection = ({
               entityConfigs={entityConfigs}
               resources={resources}
               fieldsVisibility={fieldsVisibility}
-              updateInitialValues={updateInitialValues}
+              onDeleteRule={onDeleteRule}
             />
           ))
         }
@@ -332,7 +356,6 @@ const ConfigsSection = ({
         text="Add rule"
         icon="plus"
         onClick={onAddRule}
-        // onClick={() => console.log('Hello World')}
         className={css.addNewRuleButton}
       />
     </>

@@ -20,6 +20,7 @@ import {
 } from '@wings-software/uicore'
 import { DateInput, Color } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import { SaveFreezeButton } from './SaveFreezeButton'
 import css from './FreezeWindowStudio.module.scss'
 
 interface FreezeStudioOverviewSectionProps {
@@ -96,7 +97,11 @@ export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionPr
           }}
         </Formik>
       </Card>
-      <Layout.Horizontal spacing="small" margin={{ top: 'xxlarge' }}>
+      <Layout.Horizontal
+        spacing="small"
+        margin={{ top: 'xxlarge' }}
+        flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+      >
         <Button
           margin={{ top: 'medium' }}
           icon="chevron-left"
@@ -104,13 +109,9 @@ export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionPr
           variation={ButtonVariation.SECONDARY}
           text={getString('back')}
         />
-        <Button
-          margin={{ top: 'medium' }}
-          rightIcon="chevron-right"
-          // onClick={onNext}
-          variation={ButtonVariation.PRIMARY}
-          text={getString('continue')}
-        />
+        <div className={css.scheduleTabSaveBtnContainer}>
+          <SaveFreezeButton />
+        </div>
       </Layout.Horizontal>
     </Container>
   )

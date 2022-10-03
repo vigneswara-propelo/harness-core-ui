@@ -122,7 +122,7 @@ const selectedValueForFilterTypeAll = (type: string, getString: UseStringsReturn
 }
 
 const makeOptions = (dataMap: Record<string, SelectOption>, keys?: string[]) => {
-  return keys?.map(key => dataMap[key])
+  return keys?.map(key => dataMap[key]).filter(optn => optn)
 }
 
 const equalsOptions = (type: FIELD_KEYS, entityRefs: string[], resources: ResourcesInterface) => {

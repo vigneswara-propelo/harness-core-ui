@@ -113,6 +113,14 @@
   margin-left: -20px !important; // padding left of Add Button
 }
 
+.freezeToggler {
+  span {
+    width: 30px;
+    height: 16px;
+    outline: none !important;
+  }
+}
+
 .freezeNameContainer {
   .freezeName {
     font-size: 20px !important;
@@ -164,4 +172,13 @@
   &.marginSmaller {
     margin-bottom: var(--spacing-2);
   }
+}
+
+.scheduleTabSaveBtnContainer {
+  margin-top: var(--spacing-5);
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
 }

@@ -90,11 +90,10 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
   })
 
   React.useEffect(() => {
-    // url doesnt have -1 && state has -1 -> means edit case
-    if (windowIdentifier !== DefaultFreezeId && state.freezeObj.identifier === DefaultFreezeId) {
+    if (windowIdentifier !== DefaultFreezeId) {
       refetchFreezeObj()
     }
-  }, [windowIdentifier, state.freezeObj.identifier])
+  }, [windowIdentifier, accountId, orgIdentifier, projectIdentifier])
 
   React.useEffect(() => {
     if (!loadingFreezeObj && !freezeObjError && freezeObjData?.data?.yaml) {

@@ -315,7 +315,7 @@ const ProjectLevelRender: React.FC<OrgProjAndServiceRendererPropsInterface> = ({
     serviceNodes = selectedServiceIds.map(svcId => {
       return (
         <span key={svcId} className={css.badge}>
-          {serviceMap[svcId]?.label}
+          {serviceMap[svcId]?.label || svcId}
         </span>
       )
     })
@@ -345,7 +345,7 @@ const OrgLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = ({ e
     const nodes = selectedItemIds.map(itemId => {
       return (
         <span key={itemId} className={css.badge}>
-          {resourcesMap[itemId]?.label}
+          {resourcesMap[itemId]?.label || itemId}
         </span>
       )
     })
@@ -365,7 +365,6 @@ const OrgLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = ({ e
             :
           </span>{' '}
           {nodes}
-          <span className={css.badge}>{resourcesMap[All]?.label}</span>
         </div>
       </>
     )
@@ -373,7 +372,7 @@ const OrgLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = ({ e
     const nodes = selectedItemIds.map(itemId => {
       return (
         <span key={itemId} className={css.badge}>
-          {resourcesMap[itemId]?.label}
+          {resourcesMap[itemId]?.label || itemId}
         </span>
       )
     })
