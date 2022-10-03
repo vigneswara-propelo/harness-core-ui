@@ -20,7 +20,7 @@ export function FreezeWindowListHeader(): ReactElement {
 
   // TODO: integrate global toggle handling here
   const onGlobalFreezeToggle = noop
-
+  const GLOBAL_FREEZE = false
   return (
     <Page.Header
       title={
@@ -33,12 +33,14 @@ export function FreezeWindowListHeader(): ReactElement {
         <NGBreadcrumbs links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })} />
       }
       toolbar={
-        <Switch
-          large
-          checked
-          label={getString('freezeWindows.disableAllDeployments')}
-          onChange={() => onGlobalFreezeToggle()}
-        />
+        GLOBAL_FREEZE && (
+          <Switch
+            large
+            checked
+            label={getString('freezeWindows.disableAllDeployments')}
+            onChange={() => onGlobalFreezeToggle()}
+          />
+        )
       }
     />
   )

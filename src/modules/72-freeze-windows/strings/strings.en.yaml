@@ -2,12 +2,12 @@ freezeWindowsPage:
   noFreezeWindows: There are no freeze windows in your {{scope}}.
   newFreezeWindow: New Freeze Window
   editFreezeWindow: Edit Freeze Window
-  confirmDeleteTitle: Delete Freeze Window
-  confirmDeleteText: Are you sure you want to delete the freeze window {{name}}?
-  deleteSuccess: Deleted freeze window(s) successfully
+  confirmDeleteTitle: Delete Freeze Window(s)
+  confirmDeleteText: Are you sure you want to delete the freeze window(s)? This action cannot be undone.
+  deleteSuccess: Freeze window(s) deleted
   deleteFailure: Failed to delete freeze window(s)
-  updateStatusSuccess: Freeze Window(s) {{value}} successfully
-  updateStatusFailure: Failed to {{value}} Freeze Window(s)
+  updateStatusSuccess: Freeze Window(s) {{value}}
+  updateStatusFailure: Failed to update Freeze Window(s)
 
 freezeStudio:
   freezeConfiguration: Freeze Configuration

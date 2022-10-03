@@ -106,15 +106,8 @@ function _FreezeWindowsPage(): React.ReactElement {
         await updateFreezeStatus(selectedItems, { queryParams: { status } } as UseUpdateFreezeStatusProps)
       }
       showSuccess(getString('freezeWindows.freezeWindowsPage.updateStatusSuccess', { value: status }))
-
-      showSuccess(`${status} successfully`)
     } catch (err: any) {
-      showWarning(
-        defaultTo(
-          getRBACErrorMessage(err),
-          getString('freezeWindows.freezeWindowsPage.updateStatusFailure', { value: status })
-        )
-      )
+      showWarning(defaultTo(getRBACErrorMessage(err), getString('freezeWindows.freezeWindowsPage.updateStatusFailure')))
     }
     clearSelectedItems()
     refetch()

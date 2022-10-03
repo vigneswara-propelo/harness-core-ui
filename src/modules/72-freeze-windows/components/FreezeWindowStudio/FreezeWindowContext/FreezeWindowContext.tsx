@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useContext } from 'react'
 import noop from 'lodash-es/noop'
 import { parse } from 'yaml'
 
@@ -121,3 +121,5 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
     </FreezeWindowContext.Provider>
   )
 }
+
+export const useFreezeWindowContext = () => useContext(FreezeWindowContext)
