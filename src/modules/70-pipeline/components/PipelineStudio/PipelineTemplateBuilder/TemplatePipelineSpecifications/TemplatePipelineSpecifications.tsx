@@ -158,10 +158,12 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   }, [templateInputs])
 
   React.useEffect(() => {
-    setFormikErrors({})
-    setAllValues(undefined)
-    setFormValues(undefined)
-  }, [templateRef, templateVersionLabel])
+    if (templateInputSetLoading) {
+      setFormikErrors({})
+      setAllValues(undefined)
+      setFormValues(undefined)
+    }
+  }, [templateInputSetLoading])
 
   React.useEffect(() => {
     if (schemaErrors) {

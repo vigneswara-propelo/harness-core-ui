@@ -95,10 +95,6 @@ function TemplateStepWidget(
   })
 
   React.useEffect(() => {
-    setAllValues(undefined)
-  }, [stepTemplateRef, stepTemplateVersionLabel])
-
-  React.useEffect(() => {
     setAllValues(parse(defaultTo(stepTemplateResponse?.data?.yaml, ''))?.template.spec)
   }, [stepTemplateResponse?.data?.yaml])
 
@@ -159,6 +155,12 @@ function TemplateStepWidget(
       updateFormValues(undefined)
     }
   }, [templateInputs])
+
+  React.useEffect(() => {
+    if (stepTemplateInputSetLoading) {
+      setAllValues(undefined)
+    }
+  }, [stepTemplateInputSetLoading])
 
   const validateForm = (values: TemplateStepNode) => {
     const errorsResponse = validateStep({

@@ -96,10 +96,6 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   })
 
   React.useEffect(() => {
-    setAllValues(undefined)
-  }, [templateRef, templateVersionLabel])
-
-  React.useEffect(() => {
     setAllValues({
       ...parse(defaultTo(templateResponse?.data?.yaml, ''))?.template.spec,
       identifier: stage?.stage?.identifier
@@ -163,6 +159,12 @@ export const TemplateStageSpecifications = (): JSX.Element => {
       updateFormValues(undefined)
     }
   }, [templateInputs])
+
+  React.useEffect(() => {
+    if (templateInputSetLoading) {
+      setAllValues(undefined)
+    }
+  }, [templateInputSetLoading])
 
   React.useEffect(() => {
     subscribeForm({ tab: TemplateTabs.OVERVIEW, form: formikRef })
