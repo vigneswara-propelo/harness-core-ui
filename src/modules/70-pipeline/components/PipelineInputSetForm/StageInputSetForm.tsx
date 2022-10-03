@@ -1089,9 +1089,9 @@ export function StageInputSetFormInternal({
                           stepViewType={viewType}
                           customStepProps={{
                             ...getCustomStepProps((deploymentStage?.deploymentType as StepType) || '', getString),
-                            serviceRef: deploymentStage.service?.serviceRef,
-                            environmentRef: deploymentStage.environment?.environmentRef,
-                            infrastructureRef: deploymentStage.environment?.infrastructureDefinitions?.[0].identifier
+                            serviceRef: deploymentStage?.service?.serviceRef,
+                            environmentRef: deploymentStage?.environment?.environmentRef,
+                            infrastructureRef: deploymentStage?.environment?.infrastructureDefinitions?.[0].identifier
                           }}
                           onUpdate={data => {
                             /* istanbul ignore next */

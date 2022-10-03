@@ -197,7 +197,7 @@ export class ECSInfraSpec extends PipelineStep<EcsInfrastructureStep> {
         <VariablesListTable
           data={(customStepProps as ECSInfraSpecCustomStepProps)?.variablesData?.infrastructureDefinition?.spec}
           originalData={initialValues.infrastructureDefinition?.spec || initialValues}
-          metadataMap={(customStepProps as ECSInfraSpecCustomStepProps).metadataMap}
+          metadataMap={(customStepProps as ECSInfraSpecCustomStepProps)?.metadataMap}
         />
       )
     }
