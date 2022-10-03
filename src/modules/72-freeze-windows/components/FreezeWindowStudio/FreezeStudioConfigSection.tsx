@@ -188,7 +188,7 @@ interface ConfigRendererProps {
   entityConfigs: EntityConfig[]
   resources: ResourcesInterface
   fieldsVisibility: FieldVisibility
-  onDeleteRule: (entityonfigs: EntityConfig[], index: number) => void
+  onDeleteRule: (index: number) => void
 }
 
 const ConfigRenderer = ({
@@ -228,7 +228,7 @@ const ConfigRenderer = ({
   const deleteConfig = () => {
     const updatedEntityConfigs = entityConfigs.filter((_, i) => index !== i)
     updateFreeze({ entityConfigs: updatedEntityConfigs })
-    onDeleteRule(updatedEntityConfigs, index)
+    onDeleteRule(index)
   }
 
   return (
@@ -275,6 +275,7 @@ const ConfigsSection = ({
   resources,
   fieldsVisibility
 }: ConfigsSectionProps) => {
+  const formikRef = React.useRef()
   const [editViews, setEditViews] = React.useState<boolean[]>(Array(entityConfigs?.length).fill(false))
   const [initialValues, setInitialValues] = React.useState(
     getInitialValuesForConfigSection(entityConfigs, getString, resources)
@@ -289,8 +290,13 @@ const ConfigsSection = ({
     }
   }, [entityConfigs.length])
 
-  const onDeleteRule = React.useCallback((configs: EntityConfig[], index) => {
-    setInitialValues(getInitialValuesForConfigSection(configs, getString, resources))
+  const onDeleteRule = React.useCallback(index => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const currentValues = formikRef.current?.values
+    const updatedValues = [...(currentValues?.entity || [])]
+    updatedValues.splice(index, 1)
+    setInitialValues({ entity: updatedValues })
     setEditViews(_editViews => {
       const newEditViews = [..._editViews]
       newEditViews.splice(index, 1)
@@ -299,8 +305,16 @@ const ConfigsSection = ({
   }, [])
 
   const onAddRule = () => {
-    const updatedEntityConfigs = [...(entityConfigs || []), getEmptyEntityConfig(fieldsVisibility)]
-    setInitialValues(getInitialValuesForConfigSection(updatedEntityConfigs, getString, resources))
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const currentValues = formikRef.current?.values
+    const addedConfig = getEmptyEntityConfig(fieldsVisibility)
+    const updatedEntityConfigs = [...(entityConfigs || []), addedConfig]
+    const initValuesForAddedConfig = getInitialValuesForConfigSection([addedConfig], getString, resources)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const updatedValues = [...(currentValues?.entity || []), ...(initValuesForAddedConfig?.entity || [])]
+    setInitialValues({ entity: updatedValues })
     updateFreeze({ entityConfigs: updatedEntityConfigs })
     setEditViews(_editViews => [..._editViews, true])
   }
@@ -329,8 +343,9 @@ const ConfigsSection = ({
           )
         })}
       >
-        {formikProps =>
-          entityConfigs.map((config: EntityConfig, index: number) => (
+        {formikProps => {
+          formikRef.current = formikProps as any
+          return entityConfigs.map((config: EntityConfig, index: number) => (
             <ConfigRenderer
               // key={config.uuid}
               key={index}
@@ -347,7 +362,7 @@ const ConfigsSection = ({
               onDeleteRule={onDeleteRule}
             />
           ))
-        }
+        }}
       </Formik>
       <Button
         minimal

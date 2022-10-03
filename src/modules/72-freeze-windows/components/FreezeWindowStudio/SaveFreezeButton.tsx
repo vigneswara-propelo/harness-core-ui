@@ -24,8 +24,8 @@ export const SaveFreezeButton = () => {
   const { showSuccess, showError, clear } = useToaster()
   const [isMounted, setIsMounted] = React.useState<boolean>(false)
   const {
-    state: { freezeObj }
-    // refetchFreezeObj
+    state: { freezeObj },
+    refetchFreezeObj
   } = React.useContext(FreezeWindowContext)
   const {
     accountId: accountIdentifier,
@@ -91,6 +91,9 @@ export const SaveFreezeButton = () => {
           windowIdentifier: freezeObj.identifier as string
         })
       )
+      if (!isCreateMode) {
+        refetchFreezeObj()
+      }
     }
   }, [loading])
 
