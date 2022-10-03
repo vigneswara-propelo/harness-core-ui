@@ -87,7 +87,7 @@ describe('Deployment Template creation and assertion', () => {
     cy.contains('p', 'Fetch Instance Script').should('be.visible')
     cy.contains('p', 'Instance Object Array Path').should('be.visible')
     cy.contains('p', 'Instance Attributes').should('be.visible')
-    cy.contains('p', 'Define the variables to be used in your environment and infrastructure.').should('be.visible')
+    cy.contains('span', 'Define the variables to be used in your infrastructure').should('be.visible')
 
     //adding String variable
     cy.contains('span', 'New Variable').should('be.visible')
