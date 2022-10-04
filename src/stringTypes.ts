@@ -4118,13 +4118,16 @@ export interface StringsMap {
   'freezeWindows.freezeStudio.freezeOverview': string
   'freezeWindows.freezeStudio.freezeSchedule': string
   'freezeWindows.freezeStudio.freezeUpdatedSuccessfully': string
+  'freezeWindows.freezeWindowsPage.aboutFeezeWindows': string
   'freezeWindows.freezeWindowsPage.confirmDeleteText': string
   'freezeWindows.freezeWindowsPage.confirmDeleteTitle': string
+  'freezeWindows.freezeWindowsPage.createFreezeWindow': string
   'freezeWindows.freezeWindowsPage.deleteFailure': string
   'freezeWindows.freezeWindowsPage.deleteSuccess': string
   'freezeWindows.freezeWindowsPage.editFreezeWindow': string
   'freezeWindows.freezeWindowsPage.newFreezeWindow': string
-  'freezeWindows.freezeWindowsPage.noFreezeWindows': string
+  'freezeWindows.freezeWindowsPage.noFreezeWindowsText': string
+  'freezeWindows.freezeWindowsPage.noFreezeWindowsTitle': string
   'freezeWindows.freezeWindowsPage.updateStatusFailure': string
   'freezeWindows.freezeWindowsPage.updateStatusSuccess': string
   'templatesLibrary.addNewTemplate': string

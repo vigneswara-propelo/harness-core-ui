@@ -21,7 +21,7 @@ import {
   UseUpdateFreezeStatusProps,
   useDeleteManyFreezes
 } from 'services/cd-ng'
-import { NoResultsView } from '@freeze-windows/components/NoResultsView/NoResultsView'
+import { FreezeWindowListEmpty } from '@freeze-windows/components/FreezeWindowListEmpty/FreezeWindowListEmpty'
 import { FreezeWindowListSubHeader } from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader'
 import { BulkActions } from '@freeze-windows/components/BulkActions/BulkActions'
 import type { FreezeListUrlQueryParams } from '@freeze-windows/types'
@@ -32,6 +32,7 @@ import { getQueryParamOptions } from '@freeze-windows/utils/queryUtils'
 import type { FreezeWindowListColumnActions } from '@freeze-windows/components/FreezeWindowList/FreezeWindowListCells'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useConfirmFreezeDelete } from '@freeze-windows/hooks/useConfirmFreezeDelete'
+import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import css from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader.module.scss'
 
 function _FreezeWindowsPage(): React.ReactElement {
@@ -40,7 +41,7 @@ function _FreezeWindowsPage(): React.ReactElement {
   const { getRBACErrorMessage } = useRBACError()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountId })
-  const { replaceQueryParams } = useUpdateQueryParams<Partial<GetFreezeListQueryParams>>()
+  const { replaceQueryParams, updateQueryParams } = useUpdateQueryParams<Partial<GetFreezeListQueryParams>>()
   const queryParams = useQueryParams<FreezeListUrlQueryParams>(getQueryParamOptions())
   const { searchTerm, page, size, sort, freezeStatus, startTime, endTime } = queryParams
   const { selectedItems, clearSelectedItems } = useFreezeWindowListContext()
@@ -95,6 +96,7 @@ function _FreezeWindowsPage(): React.ReactElement {
       showWarning(defaultTo(getRBACErrorMessage(err), getString('freezeWindows.freezeWindowsPage.deleteFailure')))
     }
     clearSelectedItems()
+    updateQueryParams({ page: DEFAULT_PAGE_INDEX }) // scenario where the page number is invalid with elements in the page being deleted
     refetch()
   }
 
@@ -139,10 +141,10 @@ function _FreezeWindowsPage(): React.ReactElement {
             />
           </>
         ) : (
-          <NoResultsView
-            hasSearchParam={!!(searchTerm || freezeStatus || startTime || endTime)}
-            onReset={resetFilter}
-            text={getString('freezeWindows.freezeWindowsPage.noFreezeWindows', { scope })}
+          <FreezeWindowListEmpty
+            hasFilter={!!(searchTerm || freezeStatus || startTime || endTime)}
+            resetFilter={resetFilter}
+            scope={scope}
           />
         )}
       </Page.Body>

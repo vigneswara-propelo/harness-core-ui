@@ -6,9 +6,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Classes, Menu, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon, Checkbox, Switch } from '@harness/uicore'
+import { Classes, Switch, Menu, Position } from '@blueprintjs/core'
+import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon, Checkbox } from '@harness/uicore'
 import { Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React from 'react'
@@ -180,15 +180,16 @@ export const FreezeToggleCell: CellType = ({ row, column }) => {
   return (
     <div onClick={killEvent}>
       <Switch
-        large
-        checked={data.status === 'Enabled'}
         labelElement=""
+        aria-label="Toggle freeze"
         onChange={event =>
           column.onToggleFreezeRow({
             freezeWindowId: data.identifier!,
             status: event.currentTarget.checked ? 'Enabled' : 'Disabled'
           })
         }
+        className={cx(Classes.LARGE, css.switch)}
+        checked={data.status === 'Enabled'}
       />
     </div>
   )

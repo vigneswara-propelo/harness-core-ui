@@ -568,7 +568,7 @@ clientId: Client Id
 filters:
   saveNewFilter: Save New Filter
   unsavedFilter: Unsaved Filter
-  noMatchingFilterData: No Results found matching the Filter criteria
+  noMatchingFilterData: No results found matching the filter criteria
   noResultsFound: No results found
   clearFilters: Clear Filters
   noFilterSaved: No Filter Saved

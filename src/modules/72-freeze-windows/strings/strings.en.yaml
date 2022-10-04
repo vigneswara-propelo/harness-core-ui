@@ -1,6 +1,9 @@
 freezeWindowsPage:
-  noFreezeWindows: There are no freeze windows in your {{scope}}.
+  noFreezeWindowsTitle: No Freeze Windows
+  noFreezeWindowsText: There are no freeze windows in your {{scope}}
+  aboutFeezeWindows: Freeze Window is a Harness Governance feature that stops deployment based on the configuration. This helps ensure stability during periods of low engineering and support activity, such as holidays, trade shows, or company events.
   newFreezeWindow: New Freeze Window
+  createFreezeWindow: Create a Freeze Window
   editFreezeWindow: Edit Freeze Window
   confirmDeleteTitle: Delete Freeze Window(s)
   confirmDeleteText: Are you sure you want to delete the freeze window(s)? This action cannot be undone.
