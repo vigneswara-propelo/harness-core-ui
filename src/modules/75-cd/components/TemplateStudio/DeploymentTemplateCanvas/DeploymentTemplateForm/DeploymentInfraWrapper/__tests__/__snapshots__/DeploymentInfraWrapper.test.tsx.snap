@@ -508,6 +508,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="0"
                           data-rbd-draggable-id="0"
+                          data-testid="fetchInstancesScript.store.spec.files[0]"
                           draggable="false"
                           role="button"
                           tabindex="0"
@@ -583,9 +584,11 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                                           >
                                             <div
                                               class="Layout--vertical StyledProps--main"
+                                              data-testid="file-store-select"
                                             >
                                               <div
                                                 class="StyledProps--font StyledProps--main container StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+                                                data-testid="container-fs"
                                               >
                                                 <div
                                                   class="StyledProps--font StyledProps--main pathWrapper StyledProps--flex"
@@ -598,7 +601,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                                                   </p>
                                                 </div>
                                                 <div
-                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
+                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-medium"
                                                 >
                                                   <span
                                                     class="Tag--main"
