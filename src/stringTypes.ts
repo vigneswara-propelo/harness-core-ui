@@ -4106,6 +4106,7 @@ export interface StringsMap {
   'pipeline.viewExecution': string
   'pipeline.viewLatestExecution': string
   'pipeline.viewPipeline': string
+  'pipeline.waitStep.validation.duration10SecMinimum': string
   'pipeline.warningForInvalidYAMLDiscard': string
   'freezeWindows.disableAllDeployments': string
   'freezeWindows.freezeStudio.allOrganizations': string

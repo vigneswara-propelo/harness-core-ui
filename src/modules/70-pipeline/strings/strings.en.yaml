@@ -89,6 +89,9 @@ terraformStep:
   workspace: Enter Workspace
 kubernetesStep:
   workload: Enter Workload
+waitStep:
+  validation:
+    duration10SecMinimum: 'Minimum Duration is 10 seconds'
 approvalStep:
   message: 'Approval Message'
   approvers: 'Approver(s)'
