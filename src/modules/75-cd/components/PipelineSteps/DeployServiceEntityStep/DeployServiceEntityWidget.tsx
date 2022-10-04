@@ -146,7 +146,7 @@ export default function DeployServiceEntityWidget({
   const { templateRef: deploymentTemplateIdentifier, versionLabel } =
     (get(stage, 'stage.spec.customDeploymentRef') as TemplateLinkConfig) || {}
   const shouldAddCustomDeploymentData =
-    deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier && versionLabel
+    deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier
 
   const {
     servicesData,

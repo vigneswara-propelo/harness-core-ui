@@ -899,7 +899,8 @@ export function StageInputSetFormInternal({
                   stageIdentifier,
                   deploymentType: deploymentStage?.deploymentType,
                   gitOpsEnabled: deploymentStage?.gitOpsEnabled,
-                  allValues: pick(deploymentStage, ['service'])
+                  allValues: pick(deploymentStage, ['service']),
+                  customDeploymentData: deploymentStage?.customDeploymentRef
                 }}
               />
             )}
@@ -963,7 +964,8 @@ export function StageInputSetFormInternal({
                   stageIdentifier,
                   deploymentType: deploymentStage?.deploymentType,
                   gitOpsEnabled: deploymentStage?.gitOpsEnabled,
-                  allValues: pick(deploymentStage, ['services'])
+                  allValues: pick(deploymentStage, ['services']),
+                  customDeploymentData: deploymentStage?.customDeploymentRef
                 }}
               />
             ) : null}
@@ -1053,7 +1055,10 @@ export function StageInputSetFormInternal({
               // load cluster runtime inputs
               clusterRef: deploymentStage.environment?.gitOpsClusters?.[0].identifier,
               // required for artifact manifest inputs
-              stageIdentifier
+              stageIdentifier,
+              // required for filtering infrastructures
+              deploymentType: deploymentStage?.deploymentType,
+              customDeploymentData: deploymentStage?.customDeploymentRef
             }}
             onUpdate={values => {
               if (deploymentStageInputSet?.environment) {
