@@ -89,6 +89,7 @@ export const FreezeWindowStudioYAMLView = () => {
         // schema
         // onExpressionTrigger
         // yamlSanityConfig
+        yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
         height={'calc(100vh - 200px)'}
         width="calc(100vw - 400px)"
         // invocationMap

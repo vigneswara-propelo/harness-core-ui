@@ -24,7 +24,7 @@ export const SaveFreezeButton = () => {
   const { showSuccess, showError, clear } = useToaster()
   const [isMounted, setIsMounted] = React.useState<boolean>(false)
   const {
-    state: { freezeObj },
+    state: { freezeObj, isUpdated },
     refetchFreezeObj
   } = React.useContext(FreezeWindowContext)
   const {
@@ -118,7 +118,13 @@ export const SaveFreezeButton = () => {
 
   return (
     <div>
-      <Button variation={ButtonVariation.PRIMARY} text={getString('save')} icon="send-data" onClick={onSave} />
+      <Button
+        disabled={!isUpdated}
+        variation={ButtonVariation.PRIMARY}
+        text={getString('save')}
+        icon="send-data"
+        onClick={onSave}
+      />
     </div>
   )
 }
