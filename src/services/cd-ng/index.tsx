@@ -829,7 +829,7 @@ export interface ArtifactSource {
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
-    | 'AzureArtifactsRegistry'
+    | 'AzureArtifacts'
 }
 
 export interface ArtifactSourceConfig {
@@ -847,7 +847,7 @@ export interface ArtifactSourceConfig {
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
-    | 'AzureArtifactsRegistry'
+    | 'AzureArtifacts'
 }
 
 export interface ArtifactSourcesResponseDTO {
@@ -8969,7 +8969,7 @@ export interface PrimaryArtifact {
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
-    | 'AzureArtifactsRegistry'
+    | 'AzureArtifacts'
 }
 
 export interface Principal {
@@ -12856,7 +12856,7 @@ export interface SidecarArtifact {
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
-    | 'AzureArtifactsRegistry'
+    | 'AzureArtifacts'
 }
 
 export interface SidecarArtifactWrapper {
