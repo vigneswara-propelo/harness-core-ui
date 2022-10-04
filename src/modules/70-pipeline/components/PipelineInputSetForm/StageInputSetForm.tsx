@@ -1081,7 +1081,8 @@ export function StageInputSetFormInternal({
                           initialValues={{
                             ...deploymentStageInputSet?.environment?.infrastructureDefinitions?.[index]?.inputs?.spec,
                             environmentRef: deploymentStage?.environment?.environmentRef,
-                            infrastructureRef: infrastructureDefinition.identifier
+                            infrastructureRef: infrastructureDefinition.identifier,
+                            deploymentType: deploymentStage?.deploymentType
                           }}
                           allowableTypes={allowableTypes}
                           allValues={{
