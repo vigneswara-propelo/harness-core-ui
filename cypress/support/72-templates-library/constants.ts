@@ -1,7 +1,21 @@
+// Variables
 export const versionLabel = '1122'
 export const pipelineTemplateName = 'New Pipeline Template Name'
 export const pipelineMadeFromTemplate = 'Pipeline From Template Test'
 export const templateUsedForPipeline = 'testPipelineTemplate'
+
+//Endpoints
+export const deploymentTemplatesListCall =
+  '/template/api/templates/list?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&searchTerm=&page=0&size=20&includeAllTemplatesAvailableAtScope=true'
+export const useTemplateCall =
+  '/template/api/templates/dep_temp_test?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&versionLabel=1&getDefaultFromOtherRepo=true'
+export const afterUseTemplateListCall =
+  '/template/api/templates/list?accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&getDefaultFromOtherRepo=true'
+export const afterSaveServiceEndpointPOST = '/ng/api/servicesV2?routingId=accountId&accountIdentifier=accountId'
+export const afterSaveServiceNameEndpoint =
+  '/ng/api/servicesV2/testServiceV2?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
+export const afterSaveServiceHeaderEndpoint =
+  '/ng/api/dashboard/getServiceHeaderInfo?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&serviceId=testServiceV2'
 
 export const incompleteTemplateCreationResponse = {
   status: 'ERROR',
@@ -21,6 +35,7 @@ export const incompleteTemplateCreationResponse = {
   metadata: null
 }
 
+//API Responses
 export const pipelineTemplatePublishResponse = {
   status: 'SUCCESS',
   data: {
@@ -334,4 +349,108 @@ export const afterUseTemplatePipelineTemplateInputsResponse = {
   data: 'stages:\n- stage:\n    identifier: "teststage"\n    type: "Deployment"\n    spec:\n      infrastructure:\n        environmentRef: "<+input>"\n        infrastructureDefinition:\n          type: "ServerlessAwsLambda"\n          spec:\n            connectorRef: "<+input>"\n            stage: "<+input>"\n            region: "<+input>"\n',
   metaData: null,
   correlationId: 'e097de1b-9135-4a16-82ef-344d8049c4fa'
+}
+
+export const useTemplateResponse = {
+  status: 'SUCCESS',
+  data: {
+    accountId: 'accountId',
+    orgIdentifier: 'default',
+    projectIdentifier: 'project1',
+    identifier: 'dep_temp_test',
+    name: 'dep temp test',
+    description: '',
+    tags: {},
+    yaml: 'template:\n  name: dep temp test\n  identifier: dep_temp_test\n  versionLabel: "1"\n  type: CustomDeployment\n  projectIdentifier: project1\n  orgIdentifier: default\n  tags: {}\n  spec:\n    infrastructure:\n      variables:\n        - name: string\n          type: String\n          description: ""\n          value: Hi\n        - name: secret\n          type: Secret\n          description: ""\n          value: account.jenkinssecret1\n        - name: number\n          type: Number\n          description: ""\n          value: 10\n        - name: connector\n          type: Connector\n          description: ""\n          value: gitConnector\n        - name: string1\n          type: String\n          description: ""\n          value: Hi\n        - name: secret1\n          type: Secret\n          description: ""\n          value: account.JenkinsPassword\n        - name: number1\n          type: Number\n          description: ""\n          value: 10\n        - name: connector1\n          type: Connector\n          description: ""\n          value: testArtifactory\n        - name: stringRuntime\n          type: String\n          description: ""\n          value: <+input>\n        - name: secretRuntime\n          type: Secret\n          description: ""\n          value: <+input>\n        - name: numberRuntime\n          type: Number\n          description: ""\n          value: <+input>\n        - name: connectorRuntime\n          type: Connector\n          description: ""\n          value: <+input>\n        - name: stringExpression\n          type: String\n          description: ""\n          value: <+stage.spec.infrastructure.output.variables.string>\n        - name: secretExpression\n          type: Secret\n          description: ""\n          value: <+stage.spec.infrastructure.output.variables.secret>\n        - name: numberExpression\n          type: Number\n          description: ""\n          value: <+stage.spec.infrastructure.output.variables.number>\n        - name: connectorExpression\n          type: Connector\n          description: ""\n          value: test\n      fetchInstancesScript:\n        store:\n          type: Inline\n          spec:\n            content: fsdfdsf\n      instanceAttributes:\n        - name: hostname\n          jsonPath: dsf\n          description: dfsf\n      instancesListPath: dfdsf\n    execution:\n      stepTemplateRefs:\n        - templateRef: org.new_org_http\n          versionLabel: "1"\n        - templateRef: new_http_temp\n          versionLabel: "1"\n        - templateRef: new_shell_temp\n          versionLabel: "1"\n        - templateRef: account.accountSetup\n          versionLabel: "1"\n        - templateRef: custom_shell\n          versionLabel: "1"\n',
+    versionLabel: '1',
+    templateEntityType: 'CustomDeployment',
+    templateScope: 'project',
+    version: 6,
+    gitDetails: {
+      objectId: null,
+      branch: null,
+      repoIdentifier: null,
+      rootFolder: null,
+      filePath: null,
+      repoName: null,
+      commitId: null,
+      fileUrl: null,
+      repoUrl: null
+    },
+    entityValidityDetails: {
+      valid: true,
+      invalidYaml: null
+    },
+    lastUpdatedAt: 1664279690633,
+    storeType: 'INLINE',
+    stableTemplate: true
+  },
+  metaData: null,
+  correlationId: '36190130-22f4-4f93-a2b8-c7dd3a1926bd'
+}
+export const afterUseTemplateListResponse = {
+  status: 'SUCCESS',
+  data: {
+    content: [
+      {
+        accountId: 'accountId',
+        orgIdentifier: 'default',
+        projectIdentifier: 'project1',
+        identifier: 'dep_temp_test',
+        name: 'dep temp test',
+        description: '',
+        tags: {},
+        yaml: 'template:\n  name: dep temp test\n  identifier: dep_temp_test\n  versionLabel: "1"\n  type: CustomDeployment\n  projectIdentifier: project1\n  orgIdentifier: default\n  tags: {}\n  spec:\n    infrastructure:\n      variables:\n        - name: string\n          type: String\n          description: ""\n          value: Hi\n        - name: secret\n          type: Secret\n          description: ""\n          value: account.jenkinssecret1\n        - name: number\n          type: Number\n          description: ""\n          value: 10\n        - name: connector\n          type: Connector\n          description: ""\n          value: gitConnector\n        - name: string1\n          type: String\n          description: ""\n          value: Hi\n        - name: secret1\n          type: Secret\n          description: ""\n          value: account.JenkinsPassword\n        - name: number1\n          type: Number\n          description: ""\n          value: 10\n        - name: connector1\n          type: Connector\n          description: ""\n          value: testArtifactory\n        - name: stringRuntime\n          type: String\n          description: ""\n          value: <+input>\n        - name: secretRuntime\n          type: Secret\n          description: ""\n          value: <+input>\n        - name: numberRuntime\n          type: Number\n          description: ""\n          value: <+input>\n        - name: connectorRuntime\n          type: Connector\n          description: ""\n          value: <+input>\n        - name: stringExpression\n          type: String\n          description: ""\n          value: <+stage.spec.infrastructure.output.variables.string>\n        - name: secretExpression\n          type: Secret\n          description: ""\n          value: <+stage.spec.infrastructure.output.variables.secret>\n        - name: numberExpression\n          type: Number\n          description: ""\n          value: <+stage.spec.infrastructure.output.variables.number>\n        - name: connectorExpression\n          type: Connector\n          description: ""\n          value: test\n      fetchInstancesScript:\n        store:\n          type: Inline\n          spec:\n            content: fsdfdsf\n      instanceAttributes:\n        - name: hostname\n          jsonPath: dsf\n          description: dfsf\n      instancesListPath: dfdsf\n    execution:\n      stepTemplateRefs:\n        - templateRef: org.new_org_http\n          versionLabel: "1"\n        - templateRef: new_http_temp\n          versionLabel: "1"\n        - templateRef: new_shell_temp\n          versionLabel: "1"\n        - templateRef: account.accountSetup\n          versionLabel: "1"\n        - templateRef: custom_shell\n          versionLabel: "1"\n',
+        versionLabel: '1',
+        templateEntityType: 'CustomDeployment',
+        templateScope: 'project',
+        version: 6,
+        gitDetails: {
+          objectId: null,
+          branch: null,
+          repoIdentifier: null,
+          rootFolder: null,
+          filePath: null,
+          repoName: null,
+          commitId: null,
+          fileUrl: null,
+          repoUrl: null
+        },
+        entityValidityDetails: {
+          valid: true,
+          invalidYaml: null
+        },
+        lastUpdatedAt: 1664279690633,
+        createdAt: 1663786495503,
+        stableTemplate: true
+      }
+    ],
+    pageable: {
+      sort: {
+        sorted: true,
+        unsorted: false,
+        empty: false
+      },
+      pageSize: 25,
+      pageNumber: 0,
+      offset: 0,
+      paged: true,
+      unpaged: false
+    },
+    totalPages: 1,
+    totalElements: 1,
+    last: true,
+    sort: {
+      sorted: true,
+      unsorted: false,
+      empty: false
+    },
+    number: 0,
+    first: true,
+    numberOfElements: 1,
+    size: 25,
+    empty: false
+  },
+  metaData: null,
+  correlationId: '6c46fbb4-80f1-4b34-8690-05e8e06e4e07'
 }
