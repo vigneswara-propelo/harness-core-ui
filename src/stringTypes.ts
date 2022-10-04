@@ -3958,6 +3958,7 @@ export interface StringsMap {
   'pipeline.stepDescription.createPR': string
   'pipeline.stepDescription.fetchInstanceScript': string
   'pipeline.stepDescription.mergePR': string
+  'pipeline.stepDescription.updateReleaseRepo': string
   'pipeline.stepDetails': string
   'pipeline.stepLabel': string
   'pipeline.stepNamePlaceholder': string
