@@ -93,10 +93,6 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
           }
 
           /* istanbul ignore else */
-          if (value.services) {
-            return true
-          }
-
           return this.createError({ message, path: 'services' })
         }
 

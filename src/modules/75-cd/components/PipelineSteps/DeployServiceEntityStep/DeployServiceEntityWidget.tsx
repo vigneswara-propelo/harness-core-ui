@@ -476,7 +476,7 @@ export default function DeployServiceEntityWidget({
                   />
                 ) : null}
 
-                {isFixed ? (
+                {isFixed && formik?.values?.serviceInputs ? (
                   <ServiceEntitiesList
                     loading={loading || updatingData}
                     servicesData={allServices.length > 0 ? servicesData : []}
