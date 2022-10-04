@@ -33,7 +33,7 @@ export const CreateNewFreezeWindow: React.FC<CreateNewFreezeWindowProps> = ({ on
 
   React.useEffect(() => {
     setInitialValues(getInitialValues(freezeObj))
-  }, [freezeObj?.identifier, freezeObj?.name])
+  }, [freezeObj.identifier, freezeObj.name, freezeObj.description, freezeObj.tags])
 
   const onSubmit = (values: any) => {
     updateFreeze({ ...values })

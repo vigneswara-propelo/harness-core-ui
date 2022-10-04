@@ -79,7 +79,7 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
         <CreateNewFreezeWindow onClose={onCloseCreate} updateFreeze={updateFreeze} freezeObj={freezeObj} />
       </Dialog>
     )
-  }, [windowIdentifier, freezeObj.name, freezeObj.identifier])
+  }, [windowIdentifier, freezeObj.identifier, freezeObj.name, freezeObj.description, freezeObj.tags])
 
   React.useEffect(() => {
     if (windowIdentifier === DefaultFreezeId) {

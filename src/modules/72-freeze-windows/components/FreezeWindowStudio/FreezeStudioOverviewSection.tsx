@@ -39,12 +39,12 @@ export const FreezeStudioOverviewSection: React.FC<FreezeStudioOverviewSectionPr
     (formData: any) => {
       updateFreeze({ ...freezeObj, ...formData })
     },
-    [freezeObj]
+    [freezeObj.identifier, freezeObj.name, freezeObj.description, freezeObj.tags]
   )
 
   React.useEffect(() => {
     setInitialValues(getInitialValues(freezeObj))
-  }, [freezeObj.identifier])
+  }, [freezeObj.identifier, freezeObj.name, freezeObj.description, freezeObj.tags])
 
   return (
     <Formik
