@@ -417,7 +417,7 @@ failureStrategies:
     DelegateProvisioning: Delegate Provisioning Errors
     Unknown: Unknown Errors
     PolicyEvaluationFailure: Policy Evaluation Failures
-    ExecutionInputTimeoutError: Execution-time Inputs Timeout Errors
+    InputTimeoutError: Execution-time Inputs Timeout Errors
   validation:
     arrayOrUndefined: Value must be an array if defined.
     strategyRequired: 'At least 1 strategy is required'

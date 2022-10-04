@@ -38,7 +38,7 @@ export const ErrorType: Record<FailureErrorType, FailureErrorType> = {
   DelegateProvisioning: 'DelegateProvisioning',
   Unknown: 'Unknown',
   PolicyEvaluationFailure: 'PolicyEvaluationFailure',
-  ExecutionInputTimeoutError: 'ExecutionInputTimeoutError'
+  InputTimeoutError: 'InputTimeoutError'
 }
 
 export const strategyIconMap: Record<Strategy, IconName> = {

@@ -110,7 +110,7 @@ export const FreezeTimeCell: CellType = ({ row }) => {
 export const StatusCell: CellType = ({ row }) => {
   const { getString } = useStrings()
   const data = row.original
-  const { startTime, endTime } = data.currentOrUpcomingActiveWindow || {}
+  const { startTime, endTime } = (data as any).currentOrUpcomingActiveWindow || {}
   const isActive = useCurrentActiveTime(startTime, endTime, data.status === 'Enabled')
 
   return (
