@@ -98,7 +98,7 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
   React.useEffect(() => {
     if (!loadingFreezeObj && !freezeObjError && freezeObjData?.data?.yaml) {
       const freezeObj = parse(freezeObjData?.data?.yaml)?.freeze
-      updateFreeze(freezeObj)
+      updateFreeze({ ...freezeObj, oldFreezeObj: { ...freezeObj } })
     }
   }, [loadingFreezeObj])
 

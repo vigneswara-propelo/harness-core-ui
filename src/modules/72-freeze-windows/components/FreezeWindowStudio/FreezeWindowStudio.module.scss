@@ -182,3 +182,32 @@
   justify-content: center;
   width: 84px;
 }
+
+.unsavedChanges {
+  & > :global(.bp3-button-text) {
+    color: var(--orange-600) !important;
+    font-size: var(--font-size-small) !important;
+  }
+
+  cursor: default;
+  margin-right: var(--spacing-5) !important;
+  padding: 0 !important;
+
+  &::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background: var(--orange-600);
+    display: inline-block;
+    margin: 0 4px;
+  }
+}
+
+.discardBtn {
+  margin-left: var(--spacing-3) !important;
+}
+
+.headerSaveBtnWrapper {
+  width: 84px;
+}

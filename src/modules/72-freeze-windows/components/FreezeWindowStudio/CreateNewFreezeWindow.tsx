@@ -7,12 +7,14 @@
 
 import React from 'react'
 import * as Yup from 'yup'
+import { useParams } from 'react-router-dom'
 import isEmpty from 'lodash-es/isEmpty'
 import { Button, ButtonVariation, Container, Formik, FormikForm, Layout } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { getInitialValues } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudioUtil'
+import type { WindowPathProps } from '@freeze-windows/types'
 import { DefaultFreezeId } from './FreezeWindowContext/FreezeWindowReducer'
 import css from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudio.module.scss'
 
@@ -24,7 +26,7 @@ interface CreateNewFreezeWindowProps {
 
 export const CreateNewFreezeWindow: React.FC<CreateNewFreezeWindowProps> = ({ onClose, updateFreeze, freezeObj }) => {
   const { getString } = useStrings()
-
+  const { windowIdentifier } = useParams<WindowPathProps>()
   const [initialValues, setInitialValues] = React.useState(
     isEmpty(freezeObj) ? { identifier: '' } : getInitialValues(freezeObj)
   )
@@ -59,7 +61,7 @@ export const CreateNewFreezeWindow: React.FC<CreateNewFreezeWindowProps> = ({ on
                 formikProps={formikProps}
                 identifierProps={{
                   inputLabel: getString('name'),
-                  isIdentifierEditable: true,
+                  isIdentifierEditable: windowIdentifier === DefaultFreezeId,
                   inputGroupProps: { inputGroup: { autoFocus: true } }
                 }}
               />
