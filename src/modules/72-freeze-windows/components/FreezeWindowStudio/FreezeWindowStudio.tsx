@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Page, PageSpinner, useToaster, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { Page, useToaster, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import type { Error } from 'services/cd-ng'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
@@ -66,14 +66,14 @@ export const FreezeWindowStudio = () => {
 
   return (
     <Page.Body
-      loading={loadingFreezeObj}
+      loading={loadingFreezeObj || isUpdatingFreeze}
       error={(freezeObjError?.data as Error)?.message || freezeObjError?.message}
       retryOnError={refetchFreezeObj}
     >
       <div className={css.marginRight}>
         <FreezeWindowStudioHeader />
         <FreezeWindowStudioSubHeader onViewChange={onViewChange} />
-        {loadingFreezeObj || isUpdatingFreeze ? <PageSpinner /> : <FreezeWindowStudioBody resources={resources} />}
+        {loadingFreezeObj || isUpdatingFreeze ? null : <FreezeWindowStudioBody resources={resources} />}
       </div>
       <RightBar />
     </Page.Body>
