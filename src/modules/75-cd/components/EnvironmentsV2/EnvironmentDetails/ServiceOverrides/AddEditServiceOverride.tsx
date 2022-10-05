@@ -42,6 +42,9 @@ import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { EnvironmentPathProps, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import RbacButton from '@rbac/components/Button/Button'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import ServiceVariableOverride from './ServiceVariableOverride'
 import ServiceManifestOverride from './ServiceManifestOverride/ServiceManifestOverride'
 import { ServiceOverrideTab } from './ServiceOverridesUtils'
@@ -374,7 +377,7 @@ export default function AddEditServiceOverride({
               />
             )}
             <Layout.Horizontal spacing="medium" padding={{ top: 'xxlarge' }}>
-              <Button
+              <RbacButton
                 variation={ButtonVariation.PRIMARY}
                 text={getString('save')}
                 onClick={
@@ -389,6 +392,17 @@ export default function AddEditServiceOverride({
                 }
                 data-testid="addVariableSave"
                 disabled={isSubmitBtnDisabled()}
+                permission={
+                  formikRef.current.values.serviceRef
+                    ? {
+                        resource: {
+                          resourceType: ResourceType.SERVICE,
+                          resourceIdentifier: formikRef.current.values.serviceRef as string
+                        },
+                        permission: PermissionIdentifier.EDIT_SERVICE
+                      }
+                    : undefined
+                }
               />
               <Button
                 variation={ButtonVariation.TERTIARY}
