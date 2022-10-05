@@ -50,6 +50,7 @@ export interface WindowPathProps extends ProjectPathProps {
 
 export interface ResourcesInterface {
   orgs: SelectOption[]
+  orgsMap: Record<string, SelectOption>
   projects: SelectOption[]
   projectsMap: Record<string, SelectOption>
   services: SelectOption[]

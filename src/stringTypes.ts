@@ -4115,6 +4115,8 @@ export interface StringsMap {
   'pipeline.warningForInvalidYAMLDiscard': string
   'freezeWindows.freezeStudio.allOrganizations': string
   'freezeWindows.freezeStudio.defineResources': string
+  'freezeWindows.freezeStudio.excludeFollowingOrg': string
+  'freezeWindows.freezeStudio.excludeFollowingOrgs': string
   'freezeWindows.freezeStudio.excludeFollowingProject': string
   'freezeWindows.freezeStudio.excludeFollowingProjects': string
   'freezeWindows.freezeStudio.excludeOrgs': string

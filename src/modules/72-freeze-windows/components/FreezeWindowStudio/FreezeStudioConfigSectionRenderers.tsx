@@ -175,8 +175,8 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   const { projects, freezeWindowLevel } = resources
   const orgValue = values[FIELD_KEYS.Org]
   const isAccLevel = freezeWindowLevel === FreezeWindowLevels.ACCOUNT
-  const isOrgValueMultiselected = isAccLevel ? orgValue?.length > 1 : false
   const isOrgValueAll = isAccLevel ? isAllOptionSelected(orgValue) : false
+  const isSingleOrgValue = isAccLevel ? orgValue?.length === 1 && !isOrgValueAll : false
   const projValue = values[FIELD_KEYS.Proj]
   const excludeProjValue = values[FIELD_KEYS.ExcludeProjCheckbox]
   const isCheckBoxEnabled = isAllOptionSelected(projValue) && projValue?.length === 1
@@ -184,7 +184,7 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   const [allProj, setAllProj] = React.useState<SelectOption[]>([])
 
   React.useEffect(() => {
-    if (isOrgValueAll || isOrgValueMultiselected || projects?.length === 0) {
+    if (!isSingleOrgValue || projects?.length === 0) {
       setAllProj([allProjectsObj(getString)])
     } else if (projects?.length) {
       setAllProj([allProjectsObj(getString), ...projects])
@@ -196,8 +196,8 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
         name={projFieldName}
         items={allProj}
         label={getString('projectsText')}
-        disabled={isOrgValueAll}
-        // placeholder="All Projects"
+        // enabled only if org value is single select, and not All Organizations
+        disabled={!isSingleOrgValue}
         onChange={(selected?: SelectOption[]) => {
           const isAllSelected = isAllOptionSelected(selected)
           const isMultiSelected = (selected || []).length > 1
@@ -211,7 +211,7 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
       <FormInput.CheckBox
         name={projCheckBoxName}
         label={getString('freezeWindows.freezeStudio.excludeProjects')}
-        disabled={!isCheckBoxEnabled || isOrgValueAll}
+        disabled={!isCheckBoxEnabled || !isSingleOrgValue}
         onChange={() => {
           setFieldValue(excludeProjName, undefined)
         }}
@@ -328,6 +328,96 @@ const ProjectLevelRender: React.FC<OrgProjAndServiceRendererPropsInterface> = ({
   )
 }
 
+const AccountLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = ({
+  entitiesMap,
+  resources,
+  getString
+}) => {
+  const entityMap = entitiesMap[FIELD_KEYS.Org]
+  const filterType = entityMap?.filterType || All
+  const resourcesMap = resources.orgsMap
+  const projResourcesMap = resources.projectsMap
+  const selectedItemIds = entityMap?.entityRefs || []
+  // let nodesEl = null
+
+  if (filterType === All || selectedItemIds.length === 0) {
+    return (
+      <>
+        <div className={css.viewRowNode}>
+          <span>{getString('orgsText')}:</span> <span className={css.badge}>{resourcesMap[All]?.label}</span>
+        </div>
+        <div className={css.viewRowNode}>
+          <span>{getString('projectsText')}:</span> <span className={css.badge}>{projResourcesMap[All]?.label}</span>
+        </div>
+      </>
+    )
+  } else if (filterType === NotEquals) {
+    const nodes = selectedItemIds.map(itemId => {
+      return (
+        <span key={itemId} className={css.badge}>
+          {resourcesMap[itemId]?.label || itemId}
+        </span>
+      )
+    })
+
+    return (
+      <>
+        <div className={classnames(css.viewRowNode, css.marginSmaller)}>
+          <span>{getString('orgsText')}:</span> <span className={css.badge}>{resourcesMap[All]?.label}</span>
+        </div>
+        <div className={css.viewRowNode}>
+          <span>
+            {getString(
+              selectedItemIds.length === 1
+                ? 'freezeWindows.freezeStudio.excludeFollowingOrg'
+                : 'freezeWindows.freezeStudio.excludeFollowingOrgs'
+            )}
+            :
+          </span>{' '}
+          {nodes}
+        </div>
+        <div className={css.viewRowNode}>
+          <span>{getString('projectsText')}:</span> <span className={css.badge}>{projResourcesMap[All]?.label}</span>
+        </div>
+      </>
+    )
+  } else if (filterType === Equals) {
+    const isOrgMultiSelected = selectedItemIds.length > 1
+    const nodes = selectedItemIds.map(itemId => {
+      return (
+        <span key={itemId} className={css.badge}>
+          {resourcesMap[itemId]?.label || itemId}
+        </span>
+      )
+    })
+    // Render selected orgs and render "All Projects" test
+    if (isOrgMultiSelected) {
+      return (
+        <>
+          <div className={css.viewRowNode}>
+            <span>{getString('orgsText')}:</span> {nodes}
+          </div>
+          <div className={css.viewRowNode}>
+            <span>{getString('projectsText')}:</span> <span className={css.badge}>{projResourcesMap[All]?.label}</span>
+          </div>
+        </>
+      )
+    } else {
+      return (
+        <>
+          <div className={css.viewRowNode}>
+            <span>{getString('orgsText')}:</span> {nodes}
+          </div>
+          <div className={css.viewRowNode}> Projects will come here</div>
+        </>
+      )
+    }
+
+    // Is single selected
+  }
+  return <div></div>
+}
+
 const OrgLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = ({ entitiesMap, resources, getString }) => {
   const entityMap = entitiesMap[FIELD_KEYS.Proj]
   const filterType = entityMap?.filterType || All
@@ -405,6 +495,16 @@ export const OrgProjAndServiceRenderer: React.FC<OrgProjAndServiceRendererPropsI
   if (freezeWindowLevel === FreezeWindowLevels.ORG) {
     return (
       <OrgLevelRenderer
+        entitiesMap={entitiesMap}
+        resources={resources}
+        getString={getString}
+        freezeWindowLevel={freezeWindowLevel}
+      />
+    )
+  }
+  if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
+    return (
+      <AccountLevelRenderer
         entitiesMap={entitiesMap}
         resources={resources}
         getString={getString}

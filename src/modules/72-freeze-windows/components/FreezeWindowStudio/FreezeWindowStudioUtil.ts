@@ -6,17 +6,18 @@
  */
 
 import { parse } from 'yaml'
-import { defaultTo, isEmpty, pick, set, once } from 'lodash-es'
+import * as Yup from 'yup'
+import { defaultTo, isEmpty, once, pick, set } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { UseStringsReturn } from 'framework/strings'
 import {
   EntityConfig,
   EntityType,
+  EnvironmentType,
   FIELD_KEYS,
   FreezeWindowLevels,
-  ResourcesInterface,
-  EnvironmentType
+  ResourcesInterface
 } from '@freeze-windows/types'
 
 export const isAllOptionSelected = (selected?: SelectOption[]) => {
@@ -242,7 +243,8 @@ const adaptForProjectField = (newValues: any, entities: EntityType[]) => {
   const fieldKey = FIELD_KEYS.Proj
   const { isAllSelected, obj, index, isNewValueEmpty } = getMetaDataForField(fieldKey, entities, newValues)
 
-  if (index < 0 && newValues[fieldKey]) {
+  // Value is empty initially and later also
+  if (index < 0 && !newValues[fieldKey]) {
     return
   }
 
@@ -317,4 +319,19 @@ export const getEmptyEntityConfig = (fieldsVisibility: FieldVisibility): EntityC
     name: '',
     entities: entities as EntityType[]
   }
+}
+
+export const getValidationSchema = (freezeWindowLevel: FreezeWindowLevels) => {
+  if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
+    // service and env type reqd
+    return {
+      [FIELD_KEYS.Service]: Yup.string().required('Service is required')
+    }
+  }
+  if (freezeWindowLevel === FreezeWindowLevels.ORG) {
+    return {
+      [FIELD_KEYS.Proj]: Yup.string().required('Project is required')
+    }
+  }
+  return {}
 }

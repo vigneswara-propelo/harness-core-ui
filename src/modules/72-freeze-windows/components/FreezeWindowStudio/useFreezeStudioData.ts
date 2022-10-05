@@ -13,7 +13,7 @@ import { useGetOrganizationAggregateDTOList, useGetProjectList, useGetServiceLis
 import { ResourcesInterface, FreezeWindowLevels } from '@freeze-windows/types'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
-import { allProjectsObj, allServicesObj } from './FreezeWindowStudioUtil'
+import { allProjectsObj, allOrgsObj, allServicesObj } from './FreezeWindowStudioUtil'
 
 export const useFreezeStudioData = (): ResourcesInterface => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -57,6 +57,10 @@ export const useFreezeStudioData = (): ResourcesInterface => {
   })
 
   const [orgs, setOrgs] = React.useState<SelectOption[]>([])
+  const [orgsMap, setOrgsMap] = React.useState<Record<string, SelectOption>>({
+    All: allOrgsObj(getString)
+  })
+
   const [projects, setProjects] = React.useState<SelectOption[]>([])
   const [projectsMap, setProjectsMap] = React.useState<Record<string, SelectOption>>({
     All: allProjectsObj(getString)
@@ -78,14 +82,20 @@ export const useFreezeStudioData = (): ResourcesInterface => {
 
   React.useEffect(() => {
     if (!loadingOrgs && orgsData?.data?.content) {
+      const orgsMapp: Record<string, SelectOption> = { All: allOrgsObj(getString) }
       const adaptedOrgsData = orgsData.data.content.map(org => {
         const organization = org?.organizationResponse?.organization
-        return {
-          label: organization?.name,
-          value: organization?.identifier
+        const label = organization?.name
+        const value = organization?.identifier
+        const obj = {
+          label,
+          value
         }
+        orgsMapp[value] = obj
+        return obj
       })
       setOrgs(adaptedOrgsData)
+      setOrgsMap(orgsMapp)
     }
   }, [loadingOrgs])
 
@@ -135,6 +145,7 @@ export const useFreezeStudioData = (): ResourcesInterface => {
 
   return {
     orgs,
+    orgsMap,
     projects,
     projectsMap,
     services,
