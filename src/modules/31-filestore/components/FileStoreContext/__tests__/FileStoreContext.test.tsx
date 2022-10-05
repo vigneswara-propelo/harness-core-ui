@@ -12,7 +12,12 @@ import { Button } from '@wings-software/uicore'
 import { FileStoreContext, FileStoreContextProvider } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
 import { FILE_STORE_ROOT } from '@filestore/utils/constants'
+import { FileStore } from '@filestore/pages/filestore/FileStorePage'
 import { TestWrapper } from '@common/utils/testUtils'
+import {
+  useGetCreatedByListMock,
+  entityTypeResponseMock
+} from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/__tests__/mock'
 import { getDummyFileStoreContextValue, responseGetFoldersNodesMock, newNodeMock } from './mock'
 
 jest.mock('services/cd-ng', () => ({
@@ -22,9 +27,30 @@ jest.mock('services/cd-ng', () => ({
     loading: false,
     mutate: jest.fn().mockImplementation(() => Promise.resolve(responseGetFoldersNodesMock))
   })),
-  useCreate: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
-  useUpdate: jest.fn().mockImplementation(() => ({ mutate: jest.fn(), loading: false })),
-  getFolderNodes: jest.fn()
+  useGetCreatedByList: jest.fn().mockImplementation(() => {
+    return {
+      data: useGetCreatedByListMock,
+      loading: false,
+      error: null
+    }
+  }),
+  useGetEntityTypes: jest.fn().mockImplementation(() => {
+    return {
+      data: entityTypeResponseMock
+    }
+  }),
+  setCurrentNodeState: jest.fn(),
+  useListFilesWithFilter: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetFilterList: jest.fn().mockImplementation(() => {
+    return { mutate: jest.fn(), loading: false }
+  }),
+  usePostFilter: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useUpdateFilter: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useDeleteFilter: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  fileStoreValue: jest.fn().mockReturnValue('account:/test'),
+  prepareFileStoreValue: jest.fn().mockReturnValue('account:/test'),
+  useDownloadFile: jest.fn().mockImplementation(() => ({ data: null })),
+  useCreate: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
 
 jest.useFakeTimers()
@@ -47,8 +73,15 @@ const TEST_ACTION_FS = {
 }
 const TestComponent = (props: TestComponentProps): JSX.Element => {
   const { handlerName, config } = props
-  const { setCurrentNode, updateCurrentNode, updateFileStore, updateTempNodes, getNode, addDeletedNode } =
-    React.useContext(FileStoreContext)
+  const {
+    setCurrentNode,
+    updateCurrentNode,
+    updateFileStore,
+    updateTempNodes,
+    getNode,
+    addDeletedNode,
+    removeFromTempNodes
+  } = React.useContext(FileStoreContext)
   const { currentNode } = getDummyFileStoreContextValue()
 
   const rootProps = {
@@ -66,6 +99,7 @@ const TestComponent = (props: TestComponentProps): JSX.Element => {
           updateTempNodes(currentNode, true)
           updateTempNodes({ ...currentNode, identifier: 'asdqwe' })
           addDeletedNode('testid')
+          removeFromTempNodes('testid')
         }
       case TEST_ACTION_FS.GET_FOLDER_NODES:
         return () => {
@@ -138,5 +172,13 @@ describe('Define File store context', () => {
       fireEvent.click(btn!)
     })
     expect(btn).toBeDefined()
+  })
+  test('Get folder nodes with configs file store component', async () => {
+    const { container } = render(
+      <WrapperComponent>
+        <FileStore />
+      </WrapperComponent>
+    )
+    expect(container).toBeTruthy()
   })
 })
