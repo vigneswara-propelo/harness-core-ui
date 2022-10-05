@@ -1214,36 +1214,40 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         }}
         useValue
       />
-      <MultiTypeSelectField
-        label={
-          <Text
-            tooltipProps={{ dataTooltipId: 'arch' }}
-            font={{ variation: FontVariation.FORM_LABEL }}
-            margin={{ bottom: 'xsmall' }}
-          >
-            {getString('pipeline.infraSpecifications.selectArchitecture')}
-          </Text>
-        }
-        name={'arch'}
-        style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
-        multiTypeInputProps={{
-          selectItems: [
-            {
-              label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
-              value: ArchTypes.Amd64
-            },
-            {
-              label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
-              value: ArchTypes.Arm64
-            }
-          ],
-          multiTypeInputProps: {
-            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
-            disabled: isReadonly
+      {[CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
+        buildInfraType as CIBuildInfrastructureType
+      ) && (
+        <MultiTypeSelectField
+          label={
+            <Text
+              tooltipProps={{ dataTooltipId: 'arch' }}
+              font={{ variation: FontVariation.FORM_LABEL }}
+              margin={{ bottom: 'xsmall' }}
+            >
+              {getString('pipeline.infraSpecifications.selectArchitecture')}
+            </Text>
           }
-        }}
-        useValue
-      />
+          name={'arch'}
+          style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
+          multiTypeInputProps={{
+            selectItems: [
+              {
+                label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
+                value: ArchTypes.Amd64
+              },
+              {
+                label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
+                value: ArchTypes.Arm64
+              }
+            ],
+            multiTypeInputProps: {
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+              disabled: isReadonly
+            }
+          }}
+          useValue
+        />
+      )}
     </>
   )
 
@@ -1340,7 +1344,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             }}
           />
         </div>
-        {!CIE_HOSTED_VMS && (
+        {!CIE_HOSTED_VMS && !CI_DOCKER_INFRASTRUCTURE && (
           <div className={cx(css.fieldsGroup, css.withoutSpacing)}>
             <MultiTypeSelectField
               label={
@@ -1414,7 +1418,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             }}
           />
         </div>
-        {!CIE_HOSTED_VMS && (
+        {!CIE_HOSTED_VMS && !CI_DOCKER_INFRASTRUCTURE && (
           <div className={cx(css.fieldsGroup, css.withoutSpacing)}>
             <MultiTypeSelectField
               label={
@@ -2400,12 +2404,6 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                   ) : (
                     <FormikForm>
                       <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">
-                        {getString('auditTrail.Platform')}
-                      </Text>
-                      <Card disabled={isReadonly} className={cx(css.sectionCard)}>
-                        {renderPlatformInfraSection()}
-                      </Card>
-                      <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">
                         {getString('infrastructureText')}
                       </Text>
                       <Card disabled={isReadonly} className={cx(css.sectionCard)}>
@@ -2422,6 +2420,19 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                           }}
                           expandAllByDefault
                         />
+                      </Card>
+                      <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">
+                        {getString('auditTrail.Platform')}
+                      </Text>
+                      <Card disabled={isReadonly} className={cx(css.sectionCard)}>
+                        {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted && renderPlatformInfraSection()}
+                        {![
+                          CIBuildInfrastructureType.Cloud,
+                          CIBuildInfrastructureType.Docker,
+                          CIBuildInfrastructureType.KubernetesHosted
+                        ].includes(buildInfraType as CIBuildInfrastructureType) ? (
+                          <Separator topSeparation={10} bottomSeparation={0} />
+                        ) : null}
                         <Container margin={{ top: 'large' }}>{renderBuildInfraMainSection()}</Container>
                       </Card>
                       {buildInfraType === CIBuildInfrastructureType.KubernetesDirect
