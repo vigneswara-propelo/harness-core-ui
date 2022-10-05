@@ -42,7 +42,7 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
   const {
     state: { freezeObj },
     updateFreeze,
-    isReadonly
+    isReadOnly
   } = React.useContext(FreezeWindowContext)
   const history = useHistory()
   const { view } = React.useContext(FreezeWindowContext)
@@ -98,7 +98,7 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
     >
       <Layout.Horizontal height={'100%'} flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
         <Layout.Horizontal className={css.freezeNameContainer} flex={{ alignItems: 'center' }}>
-          {isYaml || isReadonly ? null : (
+          {isYaml || isReadOnly ? null : (
             <Toggle
               className={css.freezeToggler}
               checked={freezeObj?.status === 'Enabled'}
@@ -111,7 +111,7 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
           <Text lineClamp={1} className={css.freezeName}>
             {freezeObj.name as string}
           </Text>
-          {isYaml || isReadonly ? null : (
+          {isYaml || isReadOnly ? null : (
             <Button variation={ButtonVariation.ICON} icon="Edit" onClick={showConfigModal} />
           )}
         </Layout.Horizontal>

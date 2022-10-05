@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Page, useToaster, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { Page, PageSpinner, useToaster, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import type { Error } from 'services/cd-ng'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
@@ -25,6 +25,7 @@ export const FreezeWindowStudio = () => {
     updateYamlView,
     updateFreeze,
     loadingFreezeObj,
+    isUpdatingFreeze,
     freezeObjError,
     refetchFreezeObj,
     state: { isYamlEditable, yamlHandler }
@@ -61,6 +62,8 @@ export const FreezeWindowStudio = () => {
     return true
   }
 
+  // console.log(loadingFreezeObj, isUpdatingFreeze, freezeObj?.entityConfigs?.[0]?.name)
+
   return (
     <Page.Body
       loading={loadingFreezeObj}
@@ -70,7 +73,7 @@ export const FreezeWindowStudio = () => {
       <div className={css.marginRight}>
         <FreezeWindowStudioHeader />
         <FreezeWindowStudioSubHeader onViewChange={onViewChange} />
-        <FreezeWindowStudioBody resources={resources} />
+        {loadingFreezeObj || isUpdatingFreeze ? <PageSpinner /> : <FreezeWindowStudioBody resources={resources} />}
       </div>
       <RightBar />
     </Page.Body>

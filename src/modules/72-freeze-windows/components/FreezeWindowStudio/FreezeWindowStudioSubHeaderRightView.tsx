@@ -19,14 +19,14 @@ export const FreezeWindowStudioSubHeaderRightView = () => {
   const { getString } = useStrings()
   const {
     state: { isUpdated },
-    isReadonly,
+    isReadOnly,
     refetchFreezeObj
   } = React.useContext(FreezeWindowContext)
   const { windowIdentifier } = useParams<WindowPathProps>()
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      {isUpdated && !isReadonly && (
+      {isUpdated && !isReadOnly && (
         <Button
           variation={ButtonVariation.LINK}
           intent="warning"
@@ -39,7 +39,7 @@ export const FreezeWindowStudioSubHeaderRightView = () => {
       <div className={css.headerSaveBtnWrapper}>
         <SaveFreezeButton />
       </div>
-      {windowIdentifier !== DefaultFreezeId && !isReadonly && (
+      {windowIdentifier !== DefaultFreezeId && !isReadOnly && (
         <Button
           disabled={!isUpdated}
           className={css.discardBtn}

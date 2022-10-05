@@ -10,6 +10,7 @@ import { Icon, Tab, Tabs } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { ResourcesInterface } from '@freeze-windows/types'
+import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
 import { FreezeStudioOverviewSection } from './FreezeStudioOverviewSection'
 import { FreezeStudioConfigSection } from './FreezeStudioConfigSection'
 import { FreezeWindowScheduleSection } from './FreezeWindowScheduleSection'
@@ -25,8 +26,7 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
   const { getString } = useStrings()
   const { updateQueryParams } = useUpdateQueryParams<{ sectionId?: string | null }>()
   const { sectionId } = useQueryParams<{ sectionId?: string | null }>()
-
-  const isReadOnly = false
+  const { isReadOnly } = React.useContext(FreezeWindowContext)
 
   React.useEffect(() => {
     if (!sectionId) {

@@ -32,7 +32,7 @@ export const FreezeWindowStudioYAMLView = () => {
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const {
     state: { isYamlEditable, freezeObj },
-    isReadonly,
+    isReadOnly,
     updateYamlView,
     updateFreeze,
     setYamlHandler: setYamlHandlerContext
@@ -81,7 +81,7 @@ export const FreezeWindowStudioYAMLView = () => {
         key={`${isYamlEditable.toString()}_${freezeObj.identifier}`}
         fileName={defaultTo(yamlFileName, defaultFileName)}
         entityType={entityType} // should be Freeze Window
-        isReadOnlyMode={isReadonly || !isYamlEditable}
+        isReadOnlyMode={isReadOnly || !isYamlEditable}
         existingJSON={{ freeze: freezeObj }}
         // existingYaml
         bind={setYamlHandler}
@@ -96,11 +96,11 @@ export const FreezeWindowStudioYAMLView = () => {
         onEnableEditMode={() => {
           updateYamlView(true)
         }}
-        isEditModeSupported={!isReadonly}
+        isEditModeSupported={!isReadOnly}
       />
-      {isReadonly || !isYamlEditable ? (
+      {isReadOnly || !isYamlEditable ? (
         <div className={css.buttonsWrapper}>
-          {isReadonly ? <Tag>{getString('common.readOnly')}</Tag> : null}
+          {isReadOnly ? <Tag>{getString('common.readOnly')}</Tag> : null}
           <RbacButton
             permission={{
               resourceScope: {
@@ -109,10 +109,10 @@ export const FreezeWindowStudioYAMLView = () => {
                 projectIdentifier
               },
               resource: {
-                resourceType: ResourceType.TEMPLATE,
-                resourceIdentifier: '-1'
+                resourceType: ResourceType.DEPLOYMENTFREEZE,
+                resourceIdentifier: freezeObj.identifier as string
               },
-              permission: PermissionIdentifier.EDIT_TEMPLATE
+              permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE
             }}
             variation={ButtonVariation.SECONDARY}
             text={getString('common.editYaml')}

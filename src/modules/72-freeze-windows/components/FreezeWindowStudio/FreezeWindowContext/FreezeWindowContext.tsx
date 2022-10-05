@@ -22,20 +22,21 @@ import { initialState, FreezeWindowReducerState, FreezeReducer, DefaultFreezeId 
 export interface FreezeWindowContextInterface {
   state: FreezeWindowReducerState
   view: string
-  isReadonly?: boolean
+  isReadOnly: boolean
   setView: (view: SelectedView) => void
   setYamlHandler: (yamlHandler: YamlBuilderHandlerBinding) => void
   updateYamlView: (isYamlEditable: boolean) => void
   updateFreeze: (response: any) => void
   freezeWindowLevel: FreezeWindowLevels
   loadingFreezeObj: boolean
+  isUpdatingFreeze: boolean
   refetchFreezeObj: () => void
   freezeObjError?: any
 }
 
 export const FreezeWindowContext = React.createContext<FreezeWindowContextInterface>({
   state: initialState,
-  isReadonly: false,
+  isReadOnly: false,
   view: SelectedView.VISUAL,
   setView: noop,
   setYamlHandler: noop,
@@ -43,6 +44,7 @@ export const FreezeWindowContext = React.createContext<FreezeWindowContextInterf
   updateFreeze: noop,
   freezeWindowLevel: FreezeWindowLevels.ACCOUNT,
   loadingFreezeObj: false,
+  isUpdatingFreeze: false,
   refetchFreezeObj: noop
 })
 
@@ -60,6 +62,7 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
   )
   const { accountId, projectIdentifier, orgIdentifier, windowIdentifier } = useParams<WindowPathProps>()
   const [freezeWindowLevel, setFreezeWindowLevel] = React.useState<FreezeWindowLevels>(FreezeWindowLevels.ORG)
+  const [isUpdatingFreeze, setIsUpdatingFreeze] = React.useState<boolean>(false)
 
   React.useEffect(() => {
     setFreezeWindowLevel(getFreezeWindowLevel({ accountId, projectIdentifier, orgIdentifier }))
@@ -96,9 +99,13 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
   }, [windowIdentifier, accountId, orgIdentifier, projectIdentifier])
 
   React.useEffect(() => {
+    if (loadingFreezeObj) {
+      setIsUpdatingFreeze(true)
+    }
     if (!loadingFreezeObj && !freezeObjError && freezeObjData?.data?.yaml) {
       const freezeObj = parse(freezeObjData?.data?.yaml)?.freeze
       updateFreeze({ ...freezeObj, oldFreezeObj: { ...freezeObj } })
+      setIsUpdatingFreeze(false)
     }
   }, [loadingFreezeObj])
 
@@ -113,8 +120,10 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
         setYamlHandler,
         freezeWindowLevel,
         loadingFreezeObj,
+        isUpdatingFreeze,
         freezeObjError,
-        refetchFreezeObj
+        refetchFreezeObj,
+        isReadOnly: false
       }}
     >
       {children}
