@@ -28,6 +28,7 @@ import type { GitOpsCustomMicroFrontendProps } from '@cd/interfaces/GitOps.types
 import type { STOAppCustomProps } from '@pipeline/interfaces/STOApp'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import type { ChaosCustomMicroFrontendProps } from '@chaos/interfaces/Chaos.types'
+import type { FFCustomMicroFrontendProps } from '@cf/FFCustomMicroFrontendProps.types'
 import type { RbacErrorReturn } from '@rbac/utils/useRBACError/useRBACError'
 import type {
   UseCreateConnectorModalReturn,
@@ -97,5 +98,6 @@ export {
   GitOpsCustomMicroFrontendProps,
   STOAppCustomProps,
   CCMUIAppCustomProps,
-  ChaosCustomMicroFrontendProps
+  ChaosCustomMicroFrontendProps,
+  FFCustomMicroFrontendProps
 }
