@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 // Variables
 export const versionLabel = '1122'
 export const pipelineTemplateName = 'New Pipeline Template Name'
@@ -17,6 +24,21 @@ export const afterSaveServiceNameEndpoint =
 export const afterSaveServiceHeaderEndpoint =
   '/ng/api/dashboard/getServiceHeaderInfo?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&serviceId=testServiceV2'
 
+export const selectedDeploymentTemplateDetailsCall =
+  '/template/api/templates/list?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&module=cd&templateListType=All'
+export const deploymentTemplateInputsCall =
+  '/template/api/templates/templateInputs/dep_temp_test?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&versionLabel=1&getDefaultFromOtherRepo=true'
+export const afterUseTemplateServiceV2Call =
+  '/ng/api/servicesV2/list/access?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&type=CustomDeployment&gitOpsEnabled=false&deploymentTemplateIdentifier=dep_temp_test&versionLabel=1'
+export const failureCall =
+  '/ng/api/pipelines/configuration/strategies/yaml-snippets?routingId=accountId&serviceDefinitionType=CustomDeployment&strategyType=Default'
+export const serviceYamlDataCall =
+  '/ng/api/servicesV2/servicesYamlMetadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
+export const environmentListCall =
+  '/ng/api/environmentsV2/listV2?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
+
+//API Responses
+
 export const incompleteTemplateCreationResponse = {
   status: 'ERROR',
   code: 'TEMPLATE_EXCEPTION',
@@ -35,7 +57,6 @@ export const incompleteTemplateCreationResponse = {
   metadata: null
 }
 
-//API Responses
 export const pipelineTemplatePublishResponse = {
   status: 'SUCCESS',
   data: {
@@ -351,6 +372,78 @@ export const afterUseTemplatePipelineTemplateInputsResponse = {
   correlationId: 'e097de1b-9135-4a16-82ef-344d8049c4fa'
 }
 
+export const deploymentTemplateDetailsResponse = {
+  status: 'SUCCESS',
+  data: {
+    content: [
+      {
+        accountId: 'accountId',
+        orgIdentifier: 'default',
+        projectIdentifier: 'project1',
+        identifier: 'dep_temp_test',
+        name: 'dep temp test',
+        description: '',
+        tags: {},
+        yaml: 'template:\n  name: dep temp test\n  identifier: dep_temp_test\n  versionLabel: "1"\n  type: CustomDeployment\n  projectIdentifier: project1\n  orgIdentifier: default\n  tags: {}\n  spec:\n    infrastructure:\n      variables:\n        - name: string\n          type: String\n          description: ""\n          value: Hi\n        - name: secret\n          type: Secret\n          description: ""\n          value: account.jenkinssecret1\n        - name: number\n          type: Number\n          description: ""\n          value: 10\n        - name: connector\n          type: Connector\n          description: ""\n          value: gitConnector\n        - name: string1\n          type: String\n          description: ""\n          value: Hi\n        - name: secret1\n          type: Secret\n          description: ""\n          value: account.JenkinsPassword\n        - name: number1\n          type: Number\n          description: ""\n          value: 10\n        - name: connector1\n          type: Connector\n          description: ""\n          value: testArtifactory\n        - name: stringRuntime\n          type: String\n          description: ""\n          value: <+input>\n        - name: secretRuntime\n          type: Secret\n          description: ""\n          value: <+input>\n        - name: numberRuntime\n          type: Number\n          description: ""\n          value: <+input>\n        - name: connectorRuntime\n          type: Connector\n          description: ""\n          value: <+input>\n        - name: stringExpression\n          type: String\n          description: ""\n          value: <+stage.spec.infrastructure.output.variables.string>\n        - name: secretExpression\n          type: Secret\n          description: ""\n          value: <+stage.spec.infrastructure.output.variables.secret>\n        - name: numberExpression\n          type: Number\n          description: ""\n          value: <+stage.spec.infrastructure.output.variables.number>\n        - name: connectorExpression\n          type: Connector\n          description: ""\n          value: test\n      fetchInstancesScript:\n        store:\n          type: Inline\n          spec:\n            content: fsdfdsf\n      instanceAttributes:\n        - name: hostname\n          jsonPath: dsf\n          description: dfsf\n      instancesListPath: dfdsf\n    execution:\n      stepTemplateRefs:\n        - templateRef: org.new_org_http\n          versionLabel: "1"\n        - templateRef: new_http_temp\n          versionLabel: "1"\n        - templateRef: new_shell_temp\n          versionLabel: "1"\n        - templateRef: account.accountSetup\n          versionLabel: "1"\n        - templateRef: custom_shell\n          versionLabel: "1"\n',
+        versionLabel: '1',
+        templateEntityType: 'CustomDeployment',
+        templateScope: 'project',
+        version: 6,
+        gitDetails: {
+          objectId: null,
+          branch: null,
+          repoIdentifier: null,
+          rootFolder: null,
+          filePath: null,
+          repoName: null,
+          commitId: null,
+          fileUrl: null,
+          repoUrl: null
+        },
+        entityValidityDetails: {
+          valid: true,
+          invalidYaml: null
+        },
+        lastUpdatedAt: 1664279690633,
+        createdAt: 1663786495503,
+        stableTemplate: true
+      }
+    ],
+    pageable: {
+      sort: {
+        sorted: true,
+        unsorted: false,
+        empty: false
+      },
+      pageSize: 25,
+      pageNumber: 0,
+      offset: 0,
+      paged: true,
+      unpaged: false
+    },
+    totalPages: 1,
+    totalElements: 1,
+    last: true,
+    sort: {
+      sorted: true,
+      unsorted: false,
+      empty: false
+    },
+    number: 0,
+    first: true,
+    numberOfElements: 1,
+    size: 25,
+    empty: false
+  },
+  metaData: null,
+  correlationId: 'ae9e0a40-d2a8-42ec-90ee-b90cd450621c'
+}
+export const deploymentTemplateInputsResponse = {
+  status: 'SUCCESS',
+  data: 'infrastructure:\n  variables:\n  - name: "stringRuntime"\n    type: "String"\n    value: "<+input>"\n  - name: "secretRuntime"\n    type: "Secret"\n    value: "<+input>"\n  - name: "numberRuntime"\n    type: "Number"\n    value: "<+input>"\n  - name: "connectorRuntime"\n    type: "Connector"\n    value: "<+input>"\n',
+  metaData: null,
+  correlationId: '9e85fee6-95c1-48b5-afe1-2a9767012d27'
+}
 export const useTemplateResponse = {
   status: 'SUCCESS',
   data: {
@@ -453,4 +546,46 @@ export const afterUseTemplateListResponse = {
   },
   metaData: null,
   correlationId: '6c46fbb4-80f1-4b34-8690-05e8e06e4e07'
+}
+export const afterUseTemplateServiceV2Response = {
+  status: 'SUCCESS',
+  data: [
+    {
+      service: {
+        accountId: 'accountId',
+        identifier: 'testService1',
+        orgIdentifier: 'default',
+        projectIdentifier: 'project1',
+        name: 'testService1',
+        description: null,
+        deleted: false,
+        tags: {},
+        yaml: null
+      },
+      createdAt: 1663829932526,
+      lastModifiedAt: 1663829932526
+    }
+  ],
+  metaData: null,
+  correlationId: '833f681c-64fa-4c5b-829b-51d4ca0d8ebb'
+}
+export const failureResponse = {
+  status: 'SUCCESS',
+  data: 'failureStrategies:\n  - onFailure:\n      errors:\n        - AllErrors\n      action:\n        type: StageRollback\nspec:\n  execution:\n    steps:\n      - step:\n          name: "Fetch Instances"\n          identifier: fetchInstances\n          type: FetchInstanceScript\n          timeout: 10m\n          spec: {}\n',
+  metaData: null,
+  correlationId: '4f318720-e80c-4785-9c98-f424f7efd572'
+}
+export const serviceYamlDataResponse = {
+  status: 'SUCCESS',
+  data: {
+    serviceV2YamlMetadataList: [
+      {
+        serviceIdentifier: 'testService1',
+        serviceYaml:
+          'service:\n  name: testService1\n  identifier: testService1\n  serviceDefinition:\n    type: CustomDeployment\n    spec:\n      customDeploymentRef:\n        templateRef: dep_temp_test\n        versionLabel: "1"\n  gitOpsEnabled: false\n'
+      }
+    ]
+  },
+  metaData: null,
+  correlationId: '2ca96851-9483-4cb3-8fc8-8b9bc2f4a4d9'
 }
