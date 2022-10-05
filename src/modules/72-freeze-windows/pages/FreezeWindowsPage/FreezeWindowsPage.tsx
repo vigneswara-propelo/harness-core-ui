@@ -53,8 +53,7 @@ function _FreezeWindowsPage(): React.ReactElement {
     data,
     error,
     loading: freezeListLoading,
-    refetch,
-    initLoading
+    refetch
   } = useMutateAsGet(useGetFreezeList, {
     queryParams: {
       accountIdentifier: accountId,
@@ -120,14 +119,14 @@ function _FreezeWindowsPage(): React.ReactElement {
   const pageFreezeSummaryResponse = data?.data
   return (
     <div className={css.main}>
-      <FreezeWindowListHeader />
+      <FreezeWindowListHeader refetch={refetch} />
       <FreezeWindowListSubHeader />
       <Page.Body error={error?.message} retryOnError={refetch}>
-        {initLoading ? (
+        {freezeListLoading ? (
           <PageSpinner />
         ) : pageFreezeSummaryResponse && pageFreezeSummaryResponse.content?.length ? (
           <>
-            {(freezeListLoading || deleteFreezeLoading || updateFreezeStatusLoading) && <PageSpinner />}
+            {(deleteFreezeLoading || updateFreezeStatusLoading) && <PageSpinner />}
             <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
               <Text color={Color.GREY_800} font={{ weight: 'bold' }} padding="large">
                 {`${getString('total')}: ${data?.data?.totalItems}`}

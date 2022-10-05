@@ -180,7 +180,6 @@ export const FreezeToggleCell: CellType = ({ row, column }) => {
   return (
     <div onClick={killEvent}>
       <Switch
-        labelElement=""
         aria-label="Toggle freeze"
         onChange={event =>
           column.onToggleFreezeRow({
@@ -188,7 +187,7 @@ export const FreezeToggleCell: CellType = ({ row, column }) => {
             status: event.currentTarget.checked ? 'Enabled' : 'Disabled'
           })
         }
-        className={cx(Classes.LARGE, css.switch)}
+        className={css.switch}
         checked={data.status === 'Enabled'}
       />
     </div>

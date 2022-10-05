@@ -4110,7 +4110,6 @@ export interface StringsMap {
   'pipeline.viewPipeline': string
   'pipeline.waitStep.validation.duration10SecMinimum': string
   'pipeline.warningForInvalidYAMLDiscard': string
-  'freezeWindows.disableAllDeployments': string
   'freezeWindows.freezeStudio.allOrganizations': string
   'freezeWindows.freezeStudio.defineResources': string
   'freezeWindows.freezeStudio.excludeFollowingProject': string
@@ -4134,6 +4133,13 @@ export interface StringsMap {
   'freezeWindows.freezeWindowsPage.noFreezeWindowsTitle': string
   'freezeWindows.freezeWindowsPage.updateStatusFailure': string
   'freezeWindows.freezeWindowsPage.updateStatusSuccess': string
+  'freezeWindows.globalFreeze.disableFreeze': string
+  'freezeWindows.globalFreeze.disableFreezeFailure': string
+  'freezeWindows.globalFreeze.disableFreezeSuccess': string
+  'freezeWindows.globalFreeze.disableFreezeText': string
+  'freezeWindows.globalFreeze.enableFreeze': string
+  'freezeWindows.globalFreeze.enableFreezeFailure': string
+  'freezeWindows.globalFreeze.enableFreezeSuccess': string
   'templatesLibrary.addNewTemplate': string
   'templatesLibrary.alwaysUseStableVersion': string
   'templatesLibrary.changeGitBranch': string

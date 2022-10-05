@@ -68,7 +68,7 @@ export function FreezeWindowListTable({
       {
         Header: '',
         id: 'rowSelectToggle',
-        width: '3%',
+        width: '2.5%',
         Cell: RowSelectCell,
         disableSortBy: true,
         onRowSelectToggle,
@@ -77,7 +77,7 @@ export function FreezeWindowListTable({
       {
         Header: '',
         accessor: 'freezeToggle',
-        width: '3%',
+        width: '3.5%',
         Cell: FreezeToggleCell,
         disableSortBy: true,
         onToggleFreezeRow
