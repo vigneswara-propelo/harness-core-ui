@@ -5,13 +5,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useRef, useState } from 'react'
-import { isEmpty, noop } from 'lodash-es'
+import React, { BaseSyntheticEvent, useEffect, useRef, useState } from 'react'
+import { isEmpty, isNil, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import { Divider } from '@blueprintjs/core'
 import produce from 'immer'
+import { Divider, RadioGroup } from '@blueprintjs/core'
 
-import { AllowedTypes, Container, Formik, FormikForm, Layout, Toggle } from '@harness/uicore'
+import {
+  AllowedTypes,
+  ConfirmationDialog,
+  Formik,
+  FormikForm,
+  Intent,
+  Layout,
+  Toggle,
+  useToggleOpen
+} from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 
@@ -20,19 +29,19 @@ import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/Depl
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import { getEnvironmentTabV2Schema } from '../PipelineStepsUtil'
+import type { DeployEnvironmentEntityCustomStepProps, DeployEnvironmentEntityFormState } from './types'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
-import DeploySingleInfrastructure from './DeploySingleInfrastructure/DeploySingleInfrastructure'
-import type { DeployEnvironmentEntityFormState } from './utils'
+import DeployInfrastructure from './DeployInfrastructure/DeployInfrastructure'
+import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
 
 import css from './DeployEnvironmentEntityWidget.module.scss'
 
-export interface DeployEnvironmentEntityWidgetProps {
+export interface DeployEnvironmentEntityWidgetProps extends Required<DeployEnvironmentEntityCustomStepProps> {
   initialValues: DeployEnvironmentEntityFormState
   readonly: boolean
   allowableTypes: AllowedTypes
   onUpdate?: (data: DeployEnvironmentEntityFormState) => void
   stepViewType?: StepViewType
-  serviceRef?: string
 }
 
 export default function DeployEnvironmentEntityWidget({
@@ -41,14 +50,30 @@ export default function DeployEnvironmentEntityWidget({
   allowableTypes,
   onUpdate,
   stepViewType,
-  serviceRef
+  stageIdentifier,
+  deploymentType,
+  gitOpsEnabled
 }: DeployEnvironmentEntityWidgetProps): JSX.Element {
   const { getString } = useStrings()
+  const [radioValue, setRadioValue] = useState<string>(getString('environments'))
 
   const formikRef = useRef<FormikProps<DeployEnvironmentEntityFormState> | null>(null)
-  // TODO: uncomment below line
-  // const [isMultiEnvInfra, setIsMultiEnvInfra] = useState(!!initialValues.environments)
-  const [isMultiEnvInfra, setIsMultiEnvInfra] = useState(true)
+
+  const {
+    isOpen: isSwitchToMultiEnvironmentDialogOpen,
+    open: openSwitchToMultiEnvironmentDialog,
+    close: closeSwitchToMultiEnvironmentDialog
+  } = useToggleOpen()
+  const {
+    isOpen: isSwitchToSingleEnvironmentDialogOpen,
+    open: openSwitchToSingleEnvironmentDialog,
+    close: closeSwitchToSingleEnvironmentDialog
+  } = useToggleOpen()
+  const {
+    isOpen: isSwitchToEnvironmentGroupDialogOpen,
+    open: openSwitchToEnvironmentGroupDialog,
+    close: closeSwitchToEnvironmentGroupDialog
+  } = useToggleOpen()
 
   const { subscribeForm, unSubscribeForm } = useStageErrorContext<DeployEnvironmentEntityFormState>()
   useEffect(() => {
@@ -57,104 +82,212 @@ export default function DeployEnvironmentEntityWidget({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleMultiEnvInfraToggle = (values: DeployEnvironmentEntityFormState) => {
-    return (checked: boolean) => {
-      if (formikRef.current?.values) {
-        setIsMultiEnvInfra(checked)
-        let newValues = {}
-        if (checked) {
-          if (values.environment) {
-            // TODO: show dialog here
-            newValues = produce(formikRef.current.values, draft => {
-              draft.environments = {
-                values: []
-              }
-              delete draft.environment
-            })
-          } else {
-            newValues = produce(formikRef.current.values, draft => {
-              draft.environments = {
-                values: []
-              }
-              delete draft.environment
-            })
-          }
-        } else {
-          // TODO: Add env group condition here
-          if (!isEmpty(values.environments)) {
-            newValues = produce(formikRef.current.values, draft => {
-              draft.environment = {
-                environmentRef: ''
-              }
-              delete draft.environments
-            })
-          } else {
-            // move to confirmation directly
-            newValues = produce(formikRef.current.values, draft => {
-              draft.environment = {
-                environmentRef: ''
-              }
-              delete draft.environments
-            })
-          }
-        }
+  function updateValuesInFormikAndPropogate(values: DeployEnvironmentEntityFormState): void {
+    /* istanbul ignore else */
+    if (formikRef.current) {
+      formikRef.current.setTouched({ environment: true, environments: true, environmentGroup: true })
+      formikRef.current.setValues(values)
+    }
+  }
 
-        formikRef.current.setTouched({ environment: true })
-        formikRef.current.setValues(newValues)
+  function handleSwitchToMultiEnvironmentConfirmation(confirmed: boolean): void {
+    /* istanbul ignore else */
+    if (formikRef.current && confirmed) {
+      const environment = formikRef.current.values.environment
+      const newValues = produce(formikRef.current.values, draft => {
+        draft.environments = environment ? [{ label: environment, value: environment }] : []
+        delete draft.environment
+        delete draft.environmentGroup
+      })
+      updateValuesInFormikAndPropogate(newValues)
+    }
+
+    closeSwitchToMultiEnvironmentDialog()
+  }
+
+  function handleSwitchToSingleEnvironmentConfirmation(confirmed: boolean): void {
+    /* istanbul ignore else */
+    if (formikRef.current && confirmed) {
+      const newValues = produce(formikRef.current.values, draft => {
+        draft.environment = ''
+        delete draft.environments
+        delete draft.environmentGroup
+      })
+      updateValuesInFormikAndPropogate(newValues)
+    }
+
+    closeSwitchToSingleEnvironmentDialog()
+  }
+
+  function handleSwitchToEnvironmentGroupConfirmation(confirmed: boolean): void {
+    /* istanbul ignore else */
+    if (formikRef.current && confirmed) {
+      const newValues = produce(formikRef.current.values, draft => {
+        draft.environmentGroup = ''
+        delete draft.environment
+        delete draft.environments
+      })
+      updateValuesInFormikAndPropogate(newValues)
+    }
+
+    closeSwitchToEnvironmentGroupDialog()
+  }
+
+  function handleMultiEnvInfraToggle(checked: boolean): void {
+    // istanbul ignore else
+    if (formikRef.current) {
+      const formValues = formikRef.current.values
+      if (checked) {
+        if (formValues.environment) {
+          openSwitchToMultiEnvironmentDialog()
+        } else {
+          handleSwitchToMultiEnvironmentConfirmation(true)
+        }
+      } else {
+        if (!isEmpty(formValues.environments) || !isEmpty(formValues.environmentGroup)) {
+          openSwitchToSingleEnvironmentDialog()
+        } else {
+          handleSwitchToSingleEnvironmentConfirmation(true)
+        }
+      }
+    }
+  }
+
+  function handleEnvironmentGroupToggle(event: BaseSyntheticEvent): void {
+    setRadioValue(event?.target.value)
+    if (event.target.value === getString('environments')) {
+      if (formikRef.current?.values.environmentGroup) {
+        openSwitchToMultiEnvironmentDialog()
+      } else {
+        handleSwitchToMultiEnvironmentConfirmation(true)
+      }
+    } else {
+      if (formikRef.current?.values.environments) {
+        openSwitchToEnvironmentGroupDialog()
+      } else {
+        handleSwitchToEnvironmentGroupConfirmation(true)
       }
     }
   }
 
   return (
-    <Formik<DeployEnvironmentEntityFormState>
-      formName="deployEnvironmentEntityWidgetForm"
-      onSubmit={noop}
-      validate={(values: DeployEnvironmentEntityFormState) => {
-        onUpdate?.({ ...values })
-      }}
-      initialValues={initialValues}
-      validationSchema={getEnvironmentTabV2Schema(getString)}
-    >
-      {formik => {
-        window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.ENVIRONMENT }))
-        formikRef.current = formik
+    <>
+      <Formik<DeployEnvironmentEntityFormState>
+        formName="deployEnvironmentEntityWidgetForm"
+        onSubmit={noop}
+        validate={(values: DeployEnvironmentEntityFormState) => {
+          onUpdate?.({ ...values })
+        }}
+        initialValues={initialValues}
+        validationSchema={getEnvironmentTabV2Schema(getString)}
+      >
+        {formik => {
+          window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.ENVIRONMENT }))
+          formikRef.current = formik
 
-        return (
-          <FormikForm>
-            <Layout.Vertical spacing="medium" width={'1000px'}>
-              <Container className={css.toggle} flex={{ justifyContent: 'flex-end' }}>
-                <Toggle
-                  checked={isMultiEnvInfra}
-                  onToggle={handleMultiEnvInfraToggle(formik.values)}
-                  label={getString('cd.pipelineSteps.environmentTab.multiEnvInfraToggleText')}
-                />
-              </Container>
-              <>
-                <DeployEnvironment
-                  initialValues={initialValues}
-                  readonly={readonly}
-                  allowableTypes={allowableTypes}
-                  stepViewType={stepViewType}
-                  serviceRef={serviceRef}
-                  isMultiEnv={!formik.values.environments}
-                />
-                {formik.values.environment?.environmentRef && (
-                  <>
-                    <Divider />
-                    <DeploySingleInfrastructure
+          const isMultiEnvironment = !isNil(formik.values.environments)
+          const isEnvironmentGroup = !isNil(formik.values.environmentGroup)
+
+          return (
+            <FormikForm>
+              <Layout.Vertical spacing="medium" width={'1000px'}>
+                <Layout.Vertical className={css.toggle} flex={{ alignItems: 'flex-end' }}>
+                  <Toggle
+                    checked={isMultiEnvironment || isEnvironmentGroup}
+                    onToggle={handleMultiEnvInfraToggle}
+                    label={getString('cd.pipelineSteps.environmentTab.multiEnvInfraToggleText')}
+                  />
+                  {(isMultiEnvironment || isEnvironmentGroup) && (
+                    <RadioGroup
+                      onChange={handleEnvironmentGroupToggle}
+                      options={[
+                        {
+                          label: getString('environments'),
+                          value: getString('environments')
+                        },
+                        {
+                          label: getString('common.environmentGroup.label'),
+                          value: getString('common.environmentGroup.label')
+                        }
+                      ]}
+                      selectedValue={radioValue}
+                      disabled={readonly}
+                      inline
+                    />
+                  )}
+                </Layout.Vertical>
+                <>
+                  {isEnvironmentGroup ? (
+                    <DeployEnvironmentGroup
                       initialValues={initialValues}
                       readonly={readonly}
                       allowableTypes={allowableTypes}
-                      environmentRef={formik.values.environment?.environmentRef}
-                      stepViewType={stepViewType}
+                      stageIdentifier={stageIdentifier}
+                      deploymentType={deploymentType}
+                      gitOpsEnabled={gitOpsEnabled}
                     />
-                  </>
-                )}
-              </>
-            </Layout.Vertical>
-          </FormikForm>
-        )
-      }}
-    </Formik>
+                  ) : (
+                    <DeployEnvironment
+                      initialValues={initialValues}
+                      readonly={readonly}
+                      allowableTypes={allowableTypes}
+                      stepViewType={stepViewType}
+                      isMultiEnvironment={isMultiEnvironment}
+                      stageIdentifier={stageIdentifier}
+                      deploymentType={deploymentType}
+                      gitOpsEnabled={gitOpsEnabled}
+                    />
+                  )}
+                  {formik.values.environment && (
+                    <>
+                      <Divider />
+                      <DeployInfrastructure
+                        initialValues={initialValues}
+                        readonly={readonly}
+                        allowableTypes={allowableTypes}
+                        environmentIdentifier={formik.values.environment}
+                        stepViewType={stepViewType}
+                        stageIdentifier={stageIdentifier}
+                        deploymentType={deploymentType}
+                      />
+                    </>
+                  )}
+                </>
+              </Layout.Vertical>
+            </FormikForm>
+          )
+        }}
+      </Formik>
+
+      <ConfirmationDialog
+        isOpen={isSwitchToMultiEnvironmentDialogOpen}
+        titleText={getString('cd.pipelineSteps.environmentTab.multiEnvironmentsDialogTitleText')}
+        contentText={getString('cd.pipelineSteps.environmentTab.multiEnvironmentsConfirmationText')}
+        confirmButtonText={getString('applyChanges')}
+        cancelButtonText={getString('cancel')}
+        onClose={handleSwitchToMultiEnvironmentConfirmation}
+        intent={Intent.WARNING}
+      />
+
+      <ConfirmationDialog
+        isOpen={isSwitchToSingleEnvironmentDialogOpen}
+        titleText={getString('cd.pipelineSteps.environmentTab.singleEnvironmentDialogTitleText')}
+        contentText={getString('cd.pipelineSteps.environmentTab.singleEnvironmentConfirmationText')}
+        confirmButtonText={getString('applyChanges')}
+        cancelButtonText={getString('cancel')}
+        onClose={handleSwitchToSingleEnvironmentConfirmation}
+        intent={Intent.WARNING}
+      />
+
+      <ConfirmationDialog
+        isOpen={isSwitchToEnvironmentGroupDialogOpen}
+        titleText={getString('cd.pipelineSteps.environmentTab.environmentGroupDialogTitleText')}
+        contentText={getString('cd.pipelineSteps.environmentTab.environmentGroupConfirmationText')}
+        confirmButtonText={getString('applyChanges')}
+        cancelButtonText={getString('cancel')}
+        onClose={handleSwitchToEnvironmentGroupConfirmation}
+        intent={Intent.WARNING}
+      />
+    </>
   )
 }

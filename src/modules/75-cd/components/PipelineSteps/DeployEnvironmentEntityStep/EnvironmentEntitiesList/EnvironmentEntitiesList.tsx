@@ -5,30 +5,70 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Container } from '@harness/uicore'
-import type { EnvironmentResponseDTO } from 'services/cd-ng'
-import { EnvironmentData, EnvironmentEntityCard } from './EnvironmentEntityCard'
+import React, { useEffect } from 'react'
+import { Spinner } from '@blueprintjs/core'
+
+import { AllowedTypes, Container } from '@harness/uicore'
+
+import type { EnvironmentYaml } from 'services/cd-ng'
+
+import type {
+  DeployEnvironmentEntityCustomStepProps,
+  DeployEnvironmentEntityFormState,
+  EnvironmentData
+} from '../types'
+import { EnvironmentEntityCard } from './EnvironmentEntityCard'
+
+export interface EnvironmentEntitiesListProps extends Required<DeployEnvironmentEntityCustomStepProps> {
+  loading: boolean
+  environmentsData: EnvironmentData[]
+  readonly: boolean
+  allowableTypes: AllowedTypes
+  onEnvironmentEntityUpdate?: (id: string) => void
+  onRemoveEnvironmentFromList?: (val: EnvironmentYaml) => void
+  initialValues: DeployEnvironmentEntityFormState
+}
 
 export default function EnvironmentEntitiesList({
-  data,
-  onEditClick,
-  onDeleteClick
-}: {
-  data?: (EnvironmentResponseDTO | undefined)[]
-  onEditClick: any
-  onDeleteClick: any
-}): React.ReactElement {
+  loading,
+  environmentsData,
+  readonly,
+  allowableTypes,
+  stageIdentifier,
+  deploymentType,
+  gitOpsEnabled,
+  initialValues
+}: EnvironmentEntitiesListProps): React.ReactElement {
+  const [environmentToEdit, setEnvironmentToEdit] = React.useState<EnvironmentData | null>(null)
+  const [environmentToDelete, setEnvironmentToDelete] = React.useState<EnvironmentData | null>(null)
+
+  useEffect(() => {
+    return
+  }, [environmentToEdit, environmentToDelete])
+
+  if (loading) {
+    return <Spinner />
+  }
+
   return (
     <Container>
-      {data?.map(row => (
-        <EnvironmentEntityCard
-          key={row?.identifier}
-          environment={row as EnvironmentData['environment']}
-          onEditClick={onEditClick}
-          onDeleteClick={onDeleteClick}
-        />
-      ))}
+      {environmentsData.map(row => {
+        return (
+          <EnvironmentEntityCard
+            key={row.environment.identifier}
+            environment={row.environment}
+            environmentInputs={row.environmentInputs}
+            onDeleteClick={setEnvironmentToDelete}
+            onEditClick={setEnvironmentToEdit}
+            allowableTypes={allowableTypes}
+            readonly={readonly}
+            stageIdentifier={stageIdentifier}
+            gitOpsEnabled={gitOpsEnabled}
+            deploymentType={deploymentType}
+            initialValues={initialValues}
+          />
+        )
+      })}
     </Container>
   )
 }

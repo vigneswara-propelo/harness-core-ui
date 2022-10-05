@@ -1018,3 +1018,6 @@ assignedAt: Assigned at
 assignedThrough: Assigned Through
 directly: Directly
 loadBalancer: Load Balancer
+environmentInputs: Environment inputs
+infrastructures: Infrastructures
+infrastructureInputs: Infrastructure inputs

@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MutableRefObject, PropsWithChildren, useCallback, useContext, useEffect, useRef } from 'react'
-import { debounce, get, isEmpty, set } from 'lodash-es'
+import React, { MutableRefObject, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
+import { debounce, defaultTo, get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
 
@@ -78,9 +78,9 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   )
 
   useEffect(() => {
-    // TODO: MULTI_SERVICE_INFRA add support
     if (
       isEmpty(stage?.stage?.spec?.environment) &&
+      isEmpty(stage?.stage?.spec?.environments) &&
       isEmpty(stage?.stage?.spec?.environmentGroup) &&
       stage?.stage?.type === StageType.DEPLOY
     ) {
@@ -124,27 +124,36 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     [stage, debounceUpdateStage]
   )
 
+  const initialValues = useMemo(() => {
+    if (stage?.stage?.spec?.environments) {
+      return {
+        environments: stage?.stage?.spec?.environments
+      }
+    } else if (stage?.stage?.spec?.environmentGroup) {
+      return {
+        environmentGroup: stage?.stage?.spec?.environmentGroup
+      }
+    } else if (stage?.stage?.spec?.environment) {
+      return {
+        environment: stage?.stage?.spec?.environment
+      }
+    } else {
+      return {
+        environment: { environmentRef: '' }
+      }
+    }
+  }, [stage?.stage?.spec])
+
   return (
     <div className={stageCss.deployStage} key="1">
       <ErrorsStripBinded domRef={scrollRef as MutableRefObject<HTMLElement | undefined>} />
       <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
         {isMultiInfra && isMultiInfraVisible === 'true' ? (
+          // TODO: Add type<StepWidget<DeployEnvironmentEntityConfig>
           <StepWidget
             type={StepType.DeployEnvironmentEntity}
             readonly={isReadonly}
-            initialValues={{
-              // TODO: MULTI_SERVICE_INFRA add support
-              gitOpsEnabled: get(stage, 'stage.spec.gitOpsEnabled', false),
-              ...(get(stage, 'stage.spec.environment', false) && {
-                environment: get(stage, 'stage.spec.environment')
-              }),
-              ...(scope !== Scope.PROJECT && {
-                environment: { environmentRef: RUNTIME_INPUT_VALUE }
-              }),
-              ...(get(stage, 'stage.spec.environmentGroup', false) && {
-                environmentGroup: get(stage, 'stage.spec.environmentGroup')
-              })
-            }}
+            initialValues={initialValues}
             allowableTypes={
               [MultiTypeInputType.FIXED]
               // (scope === Scope.PROJECT
@@ -157,9 +166,9 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
             factory={factory}
             stepViewType={StepViewType.Edit}
             customStepProps={{
-              getString: getString,
-              // TODO: is serviceRef required?
-              serviceRef: stage?.stage?.spec?.service?.serviceRef
+              stageIdentifier: defaultTo(stage?.stage?.identifier, ''),
+              deploymentType: stage?.stage?.spec?.deploymentType,
+              gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false)
             }}
           />
         ) : (

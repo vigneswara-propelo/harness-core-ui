@@ -5,90 +5,145 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@harness/uicore'
-import { defaultTo, isEmpty } from 'lodash-es'
-import type { DeploymentStageConfig } from 'services/cd-ng'
-import type { StringsMap } from 'stringTypes'
-
-export interface DeployEnvironmentEntityCustomStepProps {
-  getString: (key: keyof StringsMap) => string
-  stageIdentifier: string
-  serviceRef?: string
-  environmentRef?: string
-  infrastructureRef?: string
-  clusterRef?: string
-}
-export interface DeployEnvironmentEntityConfig {
-  environment?: DeploymentStageConfig['environment']
-  environments?: DeploymentStageConfig['environments']
-  gitOpsEnabled?: DeploymentStageConfig['gitOpsEnabled']
-}
-
-export interface DeployEnvironmentEntityFormState {
-  environment?: DeploymentStageConfig['environment'] & {
-    infrastructureRef?: string
-  }
-  environments?: Omit<DeploymentStageConfig['environments'], 'values'> & {
-    values: SelectOption[]
-  }
-  gitOpsEnabled?: DeploymentStageConfig['gitOpsEnabled']
-}
+import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
+import type { EnvironmentYamlV2 } from 'services/cd-ng'
+import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from './types'
 
 export function processInitialValues(initialValues: DeployEnvironmentEntityConfig): DeployEnvironmentEntityFormState {
-  if (initialValues.environments) {
+  const formState = {}
+
+  if (initialValues.environment && initialValues.environment.environmentRef) {
+    const infrastructureDefinition = initialValues.environment.infrastructureDefinitions?.[0]
     return {
-      environments: {
-        values: defaultTo(initialValues.environments?.values, []).map(value => ({
-          label: value.environmentRef,
-          value: value.environmentRef
-        }))
-      }
+      environment: initialValues.environment.environmentRef,
+      environmentInputs:
+        getMultiTypeFromValue(initialValues.environment.environmentRef) === MultiTypeInputType.FIXED
+          ? { [initialValues.environment.environmentRef]: initialValues.environment?.environmentInputs }
+          : {},
+      infrastructure: infrastructureDefinition?.identifier,
+      // ? Can there be a better condition to identify?
+      ...(!!infrastructureDefinition?.identifier && {
+        infrastructureInputs: !isEmpty(infrastructureDefinition?.identifier)
+          ? {
+              [initialValues.environment.environmentRef]: {
+                [infrastructureDefinition.identifier]: infrastructureDefinition?.inputs
+              }
+            }
+          : {}
+      })
     }
-  } else {
-    return {
-      environment: {
-        environmentRef: defaultTo(initialValues.environment?.environmentRef, ''),
-        deployToAll: initialValues.environment?.deployToAll,
-        infrastructureRef: defaultTo(initialValues.environment?.infrastructureDefinition?.identifier, '')
+  } else if (initialValues.environments) {
+    defaultTo(initialValues.environments?.values, []).map((environment: EnvironmentYamlV2, index: number) => {
+      set(formState, `environments.${index}`, {
+        label: environment.environmentRef,
+        value: environment.environmentRef
+      })
+      set(formState, `environmentInputs.${environment.environmentRef}`, environment.environmentInputs)
+      set(formState, `serviceOverrideInputs.${environment.environmentRef}`, environment.serviceOverrideInputs)
+      if (Array.isArray(environment.infrastructureDefinitions)) {
+        environment.infrastructureDefinitions.map((infrastructure, infrastructureIndex) => {
+          set(formState, `infrastructures.${environment.environmentRef}.${infrastructureIndex}`, {
+            label: infrastructure.identifier,
+            value: infrastructure.identifier
+          })
+          set(
+            formState,
+            `infrastructureInputs.${environment.environmentRef}.${infrastructure.identifier}`,
+            infrastructure.inputs
+          )
+        })
       }
-    }
+    })
+  } else if (initialValues.environmentGroup && initialValues.environmentGroup.envGroupRef) {
+    set(formState, `environmentGroup`, initialValues.environmentGroup.envGroupRef)
+
+    // This section is same as multi env. Move to function
+    defaultTo(initialValues.environmentGroup.environments, []).map((environment: EnvironmentYamlV2, index: number) => {
+      set(formState, `environments.${index}`, {
+        label: environment.environmentRef,
+        value: environment.environmentRef
+      })
+      set(formState, `environmentInputs.${environment.environmentRef}`, environment.environmentInputs)
+      set(formState, `serviceOverrideInputs.${environment.environmentRef}`, environment.serviceOverrideInputs)
+      if (Array.isArray(environment.infrastructureDefinitions)) {
+        environment.infrastructureDefinitions.map((infrastructure, infrastructureIndex) => {
+          set(formState, `infrastructures.${environment.environmentRef}.${infrastructureIndex}`, {
+            label: infrastructure.identifier,
+            value: infrastructure.identifier
+          })
+          set(
+            formState,
+            `infrastructureInputs.${environment.environmentRef}.${infrastructure.identifier}`,
+            infrastructure.inputs
+          )
+        })
+      }
+    })
   }
+
+  set(formState, `parallel`, defaultTo(initialValues.environments?.metadata?.parallel, true))
+
+  return formState
 }
 
-export function processFormValues(
-  data: DeployEnvironmentEntityFormState,
-  initialValues: DeployEnvironmentEntityConfig
-): DeployEnvironmentEntityConfig {
-  if (!isEmpty(data.environments?.values)) {
+export function processFormValues(data: DeployEnvironmentEntityFormState): DeployEnvironmentEntityConfig {
+  if (!isNil(data.environment)) {
     return {
-      environments: {
-        values: data.environments?.values.map(value => ({
-          environmentRef: value.value as string
+      environment: {
+        environmentRef: data.environment,
+        ...(!!data.environmentInputs?.[data.environment] && {
+          environmentInputs: data.environmentInputs[data.environment]
+        }),
+        deployToAll: false,
+        ...(!!data.infrastructure && {
+          infrastructureDefinitions: [
+            {
+              identifier: data.infrastructure,
+              inputs: get(data, `infrastructureInputs.${data.environment}.${data.infrastructure}`)
+            }
+          ]
+        })
+      }
+    }
+  } else if (!isNil(data.environmentGroup)) {
+    return {
+      environmentGroup: {
+        envGroupRef: data.environmentGroup,
+        deployToAll: isEmpty(data.environments),
+        environments: (data.environments as unknown as SelectOption[])?.map(environment => ({
+          environmentRef: environment.value as string,
+          ...(!!data.environmentInputs?.[environment.value as string] && {
+            environmentInputs: data.environmentInputs[environment.value as string]
+          }),
+          deployToAll: !data.infrastructures?.[environment.value as string],
+          ...(!!data.infrastructures?.[environment.value as string] && {
+            infrastructureDefinitions: data.infrastructures[environment.value as string].map(infrastructure => ({
+              identifier: infrastructure.value as string,
+              inputs: data.infrastructureInputs?.[environment.value as string][infrastructure.value as string]
+            }))
+          })
         }))
       }
     }
-  } else if (data.environment) {
-    if (data.environment?.environmentRef === '' || initialValues.environment?.environmentRef === '') {
-      return {
-        environment: {
-          environmentRef: defaultTo(data.environment?.environmentRef, ''),
-          deployToAll: false
-        }
-      }
-    }
-
+  } else if (!isNil(data.environments)) {
     return {
-      // ...data,
-      environment: {
-        environmentRef: defaultTo(data.environment?.environmentRef, ''),
-        deployToAll: false,
-        infrastructureDefinition: {
-          identifier: defaultTo(data.environment?.infrastructureRef, '')
-        }
+      environments: {
+        values: data.environments?.map(environment => ({
+          environmentRef: environment.value as string,
+          ...(!!data.environmentInputs?.[environment.value as string] && {
+            environmentInputs: data.environmentInputs[environment.value as string]
+          }),
+          deployToAll: !data.infrastructures?.[environment.value as string],
+          ...(!!data.infrastructures?.[environment.value as string] && {
+            infrastructureDefinitions: data.infrastructures[environment.value as string].map(infrastructure => ({
+              identifier: infrastructure.value as string,
+              inputs: data.infrastructureInputs?.[environment.value as string][infrastructure.value as string]
+            }))
+          })
+        }))
       }
     }
-  } else {
-    // TODO: Add default conversions
-    return {}
   }
+  return {}
 }

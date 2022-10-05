@@ -13,12 +13,8 @@ import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import DeployEnvironmentEntityWidget from './DeployEnvironmentEntityWidget'
-import {
-  DeployEnvironmentEntityConfig,
-  DeployEnvironmentEntityCustomStepProps,
-  processFormValues,
-  processInitialValues
-} from './utils'
+import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityCustomStepProps } from './types'
+import { processInitialValues, processFormValues } from './utils'
 
 export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityConfig> {
   protected type = StepType.DeployEnvironmentEntity
@@ -40,9 +36,9 @@ export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityCon
         initialValues={processInitialValues(initialValues)}
         readonly={readonly}
         allowableTypes={allowableTypes}
-        onUpdate={values => onUpdate?.(processFormValues(values, initialValues))}
+        onUpdate={values => onUpdate?.(processFormValues(values))}
         stepViewType={stepViewType}
-        {...(customStepProps as DeployEnvironmentEntityCustomStepProps)}
+        {...(customStepProps as Required<DeployEnvironmentEntityCustomStepProps>)}
       />
     )
   }
