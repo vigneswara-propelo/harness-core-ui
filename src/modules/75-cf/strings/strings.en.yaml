@@ -104,6 +104,11 @@ featureFlags:
   noFlagsInProject: There are no Flags in this Project
   flagsDescription: A Feature Flag controls what you want to release, who receives it, and how it will be delivered.
   noFlagsToGetStarted: To get started with Feature Flags, you can <a href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag" target="_blank" rel="noreferrer">create your first Flag</a>, <a href="https://docs.harness.io/category/rtce97j1wu-ff-sdks" target="_blank" rel="noreferrer">get started with our SDKs</a>, or <a href="https://docs.harness.io/category/iqgyied1c0-ff-getting-started" target="_blank" rel="noreferrer">read our getting started guide</a>.
+  noFeatureFlagsDescription: Use Feature Flags to turn changes on or off for everyone, for a subset of your users, or for specific audiences.
+  rampUpChanges: Ramp changes up across your traffic
+  targetUsers: Target a subset of beta users with new features
+  testChanges: Test changes on internal accounts first
+  rollbackChanges: Turn off problematic changes in production with a rollback
   getStartedWithFF: Get Started with Feature Flags
   typeOfFlag: Select the Type of Flag You Want to Create
   startVariation: Start by selecting the variation type that the flag will use

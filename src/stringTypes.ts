@@ -6164,12 +6164,15 @@ export interface StringsMap {
   'cf.featureFlags.multiBtnText': string
   'cf.featureFlags.newFlag': string
   'cf.featureFlags.newPrerequisite': string
+  'cf.featureFlags.noFeatureFlagsDescription': string
   'cf.featureFlags.noFlagsInProject': string
   'cf.featureFlags.noFlagsToGetStarted': string
   'cf.featureFlags.percentageRollout': string
   'cf.featureFlags.prerequisitesDesc': string
+  'cf.featureFlags.rampUpChanges': string
   'cf.featureFlags.resetFilters': string
   'cf.featureFlags.results': string
+  'cf.featureFlags.rollbackChanges': string
   'cf.featureFlags.rules.addTargeting': string
   'cf.featureFlags.rules.customRules': string
   'cf.featureFlags.rules.defaultRule': string
@@ -6191,7 +6194,9 @@ export interface StringsMap {
   'cf.featureFlags.serveVariationToTarget': string
   'cf.featureFlags.serveVariationToTargetLabel': string
   'cf.featureFlags.startVariation': string
+  'cf.featureFlags.targetUsers': string
   'cf.featureFlags.targeting': string
+  'cf.featureFlags.testChanges': string
   'cf.featureFlags.toTarget': string
   'cf.featureFlags.true': string
   'cf.featureFlags.turnOffHeading': string
