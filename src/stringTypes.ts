@@ -4520,6 +4520,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.codeRepos': string
   'cd.getStartedWithCD.configureRepo': string
   'cd.getStartedWithCD.delegateInfo': string
+  'cd.getStartedWithCD.delegateRequiredWarning': string
   'cd.getStartedWithCD.directK8s': string
   'cd.getStartedWithCD.envName': string
   'cd.getStartedWithCD.googleK8s': string
