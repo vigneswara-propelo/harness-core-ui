@@ -147,6 +147,7 @@ export interface StringsMap {
   'common.community': string
   'common.confictOccured': string
   'common.config': string
+  'common.configureModuleList': string
   'common.configureOptions.advancedHelp': string
   'common.configureOptions.askDuringExecution': string
   'common.configureOptions.configureOptions': string
@@ -482,7 +483,18 @@ export interface StringsMap {
   'common.module.pms': string
   'common.module.sto': string
   'common.module.templateService': string
+  'common.moduleConfig.autoSaved': string
+  'common.moduleConfig.customize': string
+  'common.moduleConfig.navigation': string
+  'common.moduleConfig.restoreDefault': string
+  'common.moduleConfig.selectModules': string
+  'common.moduleConfig.your': string
   'common.moduleLabel': string
+  'common.moduleList.buildAndTest': string
+  'common.moduleList.deployChanges': string
+  'common.moduleList.manageImpact': string
+  'common.moduleList.optimize': string
+  'common.moduleList.title': string
   'common.moduleTitles.cd': string
   'common.moduleTitles.cf': string
   'common.monitoredServices': string
@@ -714,6 +726,7 @@ export interface StringsMap {
   'common.selectAVersion.title': string
   'common.selectBranch': string
   'common.selectDefaultExperience': string
+  'common.selectModules': string
   'common.selectName': string
   'common.selectService': string
   'common.selectServices': string
