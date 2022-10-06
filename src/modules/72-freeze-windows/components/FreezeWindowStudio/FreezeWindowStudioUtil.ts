@@ -133,6 +133,9 @@ const equalsOptions = (type: FIELD_KEYS, entityRefs: string[], resources: Resour
   if (type === FIELD_KEYS.Proj) {
     return makeOptions(resources.projectsMap, entityRefs)
   }
+  if (type === FIELD_KEYS.Org) {
+    return makeOptions(resources.orgsMap, entityRefs)
+  }
 
   // Single Select Field
   if (type === FIELD_KEYS.EnvType) {

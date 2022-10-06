@@ -176,7 +176,7 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   const orgValue = values[FIELD_KEYS.Org]
   const isAccLevel = freezeWindowLevel === FreezeWindowLevels.ACCOUNT
   const isOrgValueAll = isAccLevel ? isAllOptionSelected(orgValue) : false
-  const isSingleOrgValue = isAccLevel ? orgValue?.length === 1 && !isOrgValueAll : false
+  const isSingleOrgValue = isAccLevel ? orgValue?.length === 1 && !isOrgValueAll : true
   const projValue = values[FIELD_KEYS.Proj]
   const excludeProjValue = values[FIELD_KEYS.ExcludeProjCheckbox]
   const isCheckBoxEnabled = isAllOptionSelected(projValue) && projValue?.length === 1
