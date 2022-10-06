@@ -2331,7 +2331,7 @@ export interface StringsMap {
   'connectors.docker.dockerProvideType': string
   'connectors.docker.dockerRegistryURL': string
   'connectors.docker.dockerRepository': string
-  'connectors.docker.harbour': string
+  'connectors.docker.harbor': string
   'connectors.docker.other': string
   'connectors.docker.quay': string
   'connectors.dynatrace.apiToken': string
