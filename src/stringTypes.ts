@@ -4152,13 +4152,15 @@ export interface StringsMap {
   'freezeWindows.freezeWindowsPage.noFreezeWindowsTitle': string
   'freezeWindows.freezeWindowsPage.updateStatusFailure': string
   'freezeWindows.freezeWindowsPage.updateStatusSuccess': string
-  'freezeWindows.globalFreeze.disableFreeze': string
   'freezeWindows.globalFreeze.disableFreezeFailure': string
   'freezeWindows.globalFreeze.disableFreezeSuccess': string
   'freezeWindows.globalFreeze.disableFreezeText': string
-  'freezeWindows.globalFreeze.enableFreeze': string
+  'freezeWindows.globalFreeze.disableFreezeTitle': string
+  'freezeWindows.globalFreeze.disabled': string
   'freezeWindows.globalFreeze.enableFreezeFailure': string
   'freezeWindows.globalFreeze.enableFreezeSuccess': string
+  'freezeWindows.globalFreeze.enableFreezeTitle': string
+  'freezeWindows.globalFreeze.enabled': string
   'templatesLibrary.addNewTemplate': string
   'templatesLibrary.alwaysUseStableVersion': string
   'templatesLibrary.changeGitBranch': string
