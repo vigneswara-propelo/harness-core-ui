@@ -33,12 +33,8 @@ function useSaveStepTemplateListener(): void {
 
   const updateViewForSavedStepTemplate = (savedTemplate: TemplateSummaryResponse) => {
     const templateRef = getScopeBasedTemplateRef(savedTemplate as TemplateSummaryResponse)
-    const templateRefObj = {
-      templateRef,
-      versionLabel: savedTemplate?.versionLabel as string
-    }
 
-    const updatedDeploymentConfig = getUpdatedDeploymentConfig({ templateRefObj, deploymentConfig })
+    const updatedDeploymentConfig = getUpdatedDeploymentConfig({ templateRef, deploymentConfig })
     const updatedTemplateDetailsByRef = getUpdatedTemplateDetailsByRef({
       templateDetailsObj: savedTemplate as TemplateSummaryResponse,
       templateDetailsByRef,
