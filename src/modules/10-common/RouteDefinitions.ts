@@ -1795,9 +1795,19 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs/${identifier}`
   ),
-  toChaosInfrastructures: withAccountId(
+
+  // chaos enviroments
+  toChaosEnvironments: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-delegate`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments`
+  ),
+  toChaosEnvironmentDetails: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      environmentIdentifier
+    }: Partial<ProjectPathProps> & { environmentIdentifier: string }) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments/${environmentIdentifier}`
   )
 }
 

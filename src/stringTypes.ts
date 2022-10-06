@@ -6479,12 +6479,21 @@ export interface StringsMap {
   'chaos.chaosGameday': string
   'chaos.chaosHub': string
   'chaos.chaosInfrastructure': string
+  'chaos.environments.create.description': string
+  'chaos.environments.create.duplicateName': string
+  'chaos.environments.create.envTypeLabel': string
+  'chaos.environments.create.title': string
+  'chaos.environments.delete.message': string
+  'chaos.environments.delete.title': string
+  'chaos.environments.delete.toastMessage': string
+  'chaos.environments.pageTitle': string
   'chaos.homepage.chaosHomePageTitle': string
   'chaos.homepage.learnMore': string
   'chaos.homepage.slogan': string
   'chaos.navLabels.chaosExperiments': string
   'chaos.navLabels.chaosHubs': string
-  'chaos.navLabels.chaosInfrastructures': string
+  'chaos.noEnvironment.message': string
+  'chaos.noEnvironment.title': string
   'ci.advancedLabel': string
   'ci.annotations': string
   'ci.artifactoryConnectorLabel': string
