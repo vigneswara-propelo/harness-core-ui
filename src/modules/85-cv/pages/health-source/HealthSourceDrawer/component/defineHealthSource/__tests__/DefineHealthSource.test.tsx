@@ -114,7 +114,7 @@ describe('DefineHealthSource', () => {
       </TestWrapper>
     )
 
-    await waitFor(() => expect(getByText('CloudWatch Metrics')).not.toBeNull())
+    await waitFor(() => expect(getByText('CloudWatch')).not.toBeNull())
 
     act(() => {
       userEvent.click(container.querySelector('[data-icon="service-aws"]')!)

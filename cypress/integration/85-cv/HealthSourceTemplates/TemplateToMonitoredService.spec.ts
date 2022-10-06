@@ -65,7 +65,7 @@ describe('Create empty monitored service', () => {
     cy.visitSRMTemplate()
   })
 
-  it('Add new AppDynamics monitored service with custom metric and all Runtime values and use it to create Monitored Service', () => {
+  it.skip('Add new AppDynamics monitored service with custom metric and all Runtime values and use it to create Monitored Service', () => {
     // Template Creation
     cy.addNewSRMTemplate()
     cy.populateTemplateDetails(HealthSourceDetails.template.name, HealthSourceDetails.template.version)
