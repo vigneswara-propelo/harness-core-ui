@@ -15,14 +15,14 @@ import { TrialModalTemplate } from '@pipeline/components/TrialModalTemplate/Tria
 import { useGetCommunity } from '@common/utils/utils'
 import type { UseTrialModalProps, UseTrialModalReturns } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
 import { useGetFormPropsByTrialType } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
-import cdImage from '../images/cd.png'
+import cdImage from './cd.png'
 import css from './useCDTrialModal.module.scss'
 
 interface CDTrialTemplateData {
   children: React.ReactElement
 }
 
-const CDTrialTemplate: React.FC<CDTrialTemplateData> = ({ children }) => {
+function CDTrialTemplate({ children }: CDTrialTemplateData): React.ReactElement {
   return (
     <TrialModalTemplate imgSrc={cdImage} hideTrialBadge={useGetCommunity()}>
       {children}
@@ -30,7 +30,7 @@ const CDTrialTemplate: React.FC<CDTrialTemplateData> = ({ children }) => {
   )
 }
 
-const CDTrial: React.FC<UseTrialModalProps> = ({ trialType, actionProps, onCloseModal }) => {
+function CDTrial({ trialType, actionProps, onCloseModal }: UseTrialModalProps): React.ReactElement {
   const { child } = useGetFormPropsByTrialType({
     trialType,
     actionProps,
@@ -41,7 +41,7 @@ const CDTrial: React.FC<UseTrialModalProps> = ({ trialType, actionProps, onClose
   return <CDTrialTemplate>{child}</CDTrialTemplate>
 }
 
-const CDTrialDialog = ({ actionProps, trialType, onCloseModal }: UseTrialModalProps): React.ReactElement => {
+function CDTrialDialog({ actionProps, trialType, onCloseModal }: UseTrialModalProps): React.ReactElement {
   return (
     <Dialog isOpen={true} enforceFocus={false} onClose={onCloseModal} className={cx(css.dialog, css.cdTrial)}>
       <CDTrial trialType={trialType} actionProps={actionProps} onCloseModal={onCloseModal} />

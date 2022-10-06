@@ -9,7 +9,7 @@ import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { TrialType } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
-import { useCDTrialModal, getCDTrialDialog } from '../CDTrial/useCDTrialModal'
+import { useCDTrialModal, getCDTrialDialog } from '../useCDTrialModal'
 
 jest.mock('services/pipeline-ng', () => ({
   useGetPipelineList: jest.fn().mockImplementation(() => {
@@ -35,7 +35,7 @@ jest.mock('services/pipeline-ng', () => ({
 }))
 
 const onCloseModal = jest.fn()
-const TestComponent = ({ trialType = TrialType.SET_UP_PIPELINE }: { trialType?: TrialType }): React.ReactElement => {
+function TestComponent({ trialType = TrialType.SET_UP_PIPELINE }: { trialType?: TrialType }): React.ReactElement {
   const { openTrialModal } = useCDTrialModal({
     actionProps: {
       onSuccess: jest.fn(),

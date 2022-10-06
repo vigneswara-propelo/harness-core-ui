@@ -8,7 +8,7 @@
 import React from 'react'
 import { set } from 'lodash-es'
 import produce from 'immer'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
 import { useGlobalEventListener } from '@common/hooks'
 import type { TemplateSummaryResponse } from 'services/template-ng'

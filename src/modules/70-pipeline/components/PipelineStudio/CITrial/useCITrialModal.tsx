@@ -15,11 +15,11 @@ import { Category, TrialActions, PageNames } from '@common/constants/TrackingCon
 import { TrialModalTemplate } from '@pipeline/components/TrialModalTemplate/TrialModalTemplate'
 import type { UseTrialModalProps, UseTrialModalReturns } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
 import { useGetFormPropsByTrialType } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
-import ciImage from '../images/ci.png'
+import ciImage from './ci.png'
 
 import css from './useCITrialModal.module.scss'
 
-const CITrial: React.FC<UseTrialModalProps> = ({ trialType, actionProps, onCloseModal }) => {
+function CITrial({ trialType, actionProps, onCloseModal }: UseTrialModalProps): React.ReactElement {
   const { child } = useGetFormPropsByTrialType({
     trialType,
     actionProps,
@@ -30,7 +30,7 @@ const CITrial: React.FC<UseTrialModalProps> = ({ trialType, actionProps, onClose
   return <TrialModalTemplate imgSrc={ciImage}>{child}</TrialModalTemplate>
 }
 
-const CITrialDialog = ({ actionProps, trialType, onCloseModal }: UseTrialModalProps): React.ReactElement => {
+function CITrialDialog({ actionProps, trialType, onCloseModal }: UseTrialModalProps): React.ReactElement {
   const { trackEvent } = useTelemetry()
   const handleClose = (): void => {
     onCloseModal?.()
