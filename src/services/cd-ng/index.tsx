@@ -1721,8 +1721,8 @@ export interface CeLicenseInfo {
 }
 
 export type ChaosModuleLicenseDTO = ModuleLicenseDTO & {
-  totalChaosDelegates?: number
-  totalChaosScenarioRun?: number
+  totalChaosInfrastructures?: number
+  totalChaosExperimentRun?: number
 }
 
 export interface CloudformationCreateStackStepConfiguration {
@@ -4693,8 +4693,8 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
-    | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
-    | 'MAX_CHAOS_DELEGATES'
+    | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
+    | 'MAX_CHAOS_INFRASTRUCTURES'
   )[]
 }
 
@@ -4765,8 +4765,8 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
-    | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
-    | 'MAX_CHAOS_DELEGATES'
+    | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
+    | 'MAX_CHAOS_INFRASTRUCTURES'
 }
 
 export interface FeatureRestrictionDetailsDTO {
@@ -4839,8 +4839,8 @@ export interface FeatureRestrictionDetailsDTO {
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
-    | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
-    | 'MAX_CHAOS_DELEGATES'
+    | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
+    | 'MAX_CHAOS_INFRASTRUCTURES'
   restriction?: RestrictionDTO
   restrictionType?:
     | 'AVAILABILITY'
@@ -4921,8 +4921,8 @@ export interface FeatureRestrictionMetadataDTO {
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
-    | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
-    | 'MAX_CHAOS_DELEGATES'
+    | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
+    | 'MAX_CHAOS_INFRASTRUCTURES'
   restrictionMetadata?: {
     [key: string]: RestrictionMetadataDTO
   }
@@ -9269,11 +9269,11 @@ export interface ResourceDTO {
     | 'VARIABLE'
     | 'CHAOS_HUB'
     | 'MONITORED_SERVICE'
-    | 'CHAOS_DELEGATE'
-    | 'CHAOS_SCENARIO'
+    | 'CHAOS_INFRASTRUCTURE'
+    | 'CHAOS_EXPERIMENT'
     | 'STO_TARGET'
     | 'STO_EXEMPTION'
-    | 'CHAOS_GITOPS'
+    | 'CHAOS_GAMEDAY'
     | 'SERVICE_LEVEL_OBJECTIVE'
     | 'PERSPECTIVE'
     | 'PERSPECTIVE_BUDGET'
@@ -26710,8 +26710,8 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
-    | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
-    | 'MAX_CHAOS_DELEGATES'
+    | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
+    | 'MAX_CHAOS_INFRASTRUCTURES'
 }
 
 export type FetchFeatureRestrictionMetadataProps = Omit<
@@ -26852,8 +26852,8 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'MONTHLY_ACTIVE_USERS'
       | 'JENKINS_ARTIFACT'
       | 'STRATEGY_MAX_CONCURRENT'
-      | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
-      | 'MAX_CHAOS_DELEGATES'
+      | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
+      | 'MAX_CHAOS_INFRASTRUCTURES'
   },
   signal?: RequestInit['signal']
 ) =>

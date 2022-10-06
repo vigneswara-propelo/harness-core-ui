@@ -6458,10 +6458,10 @@ export interface StringsMap {
   'cf.targets.uploadHelp': string
   'cf.targets.uploadStats': string
   'cf.targets.uploadYourFile': string
-  'chaos.chaosGitops': string
+  'chaos.chaosExperiment': string
+  'chaos.chaosGameday': string
   'chaos.chaosHub': string
   'chaos.chaosInfrastructure': string
-  'chaos.chaosScenario': string
   'chaos.homepage.chaosHomePageTitle': string
   'chaos.homepage.learnMore': string
   'chaos.homepage.slogan': string
