@@ -3685,6 +3685,7 @@ export interface StringsMap {
   'pipeline.onlyPositiveInteger': string
   'pipeline.openInNewTab': string
   'pipeline.openInPipelineStudio': string
+  'pipeline.openPipelineInNewTab': string
   'pipeline.openTemplateInNewTabLabel': string
   'pipeline.operatorPlaceholder': string
   'pipeline.outOf': string
