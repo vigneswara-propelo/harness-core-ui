@@ -71,6 +71,7 @@ export interface ParentContext {
   appStoreContext: React.Context<AppStoreContextProps>
   permissionsContext: React.Context<PermissionsContextProps>
   licenseStoreProvider: React.Context<LicenseStoreContextProps>
+  tooltipContext?: React.Context<Record<string, any>>
 }
 
 export interface ChildAppProps {
