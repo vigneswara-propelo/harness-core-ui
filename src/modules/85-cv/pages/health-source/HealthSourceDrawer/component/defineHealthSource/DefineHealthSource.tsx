@@ -212,9 +212,9 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                     render={() => {
                       return (
                         <Layout.Horizontal
-                          className={cx(isEdit && css.disabled)}
-                          height={120}
-                          margin={{ left: 'xxxlarge', right: 'xxxlarge' }}
+                          className={cx(css.healthSourceListContainer, {
+                            [css.disabled]: isEdit
+                          })}
                         >
                           {HEALTHSOURCE_LIST.filter(({ name }) => !disabledByFF.includes(name)).map(
                             ({ name, icon }) => {
