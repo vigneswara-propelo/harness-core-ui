@@ -113,7 +113,8 @@ export enum StepType {
   CustomDeploymentServiceSpec = 'CustomDeploymentServiceSpec',
   CustomDeployment = 'CustomDeployment',
   FetchInstanceScript = 'FetchInstanceScript',
-  Wait = 'Wait'
+  Wait = 'Wait',
+  ShellScriptProvision = 'ShellScriptProvision'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

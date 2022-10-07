@@ -3972,6 +3972,7 @@ export interface StringsMap {
   'pipeline.stepDescription.ServerlessLambdaDeploy': string
   'pipeline.stepDescription.ServerlessLambdaRollback': string
   'pipeline.stepDescription.ServiceNowApproval': string
+  'pipeline.stepDescription.ShellScriptProvision': string
   'pipeline.stepDescription.TerraformApply': string
   'pipeline.stepDescription.TerraformDestroy': string
   'pipeline.stepDescription.TerraformPlan': string

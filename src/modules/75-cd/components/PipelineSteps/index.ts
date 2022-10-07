@@ -75,6 +75,7 @@ import { AzureArmStep } from './AzureArm/AzureArm'
 import { CustomDeploymentServiceSpec } from './CustomDeploymentServiceSpec/CustomDeploymentServiceSpec'
 import { CustomDeploymentInfrastructureSpec } from './CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
 import { UpdateReleaseRepo } from '../UpdateReleaseRepo/UpdateReleaseRepo'
+import { ShellScriptProvisionStep } from './ShellScriptProvision/ShellScriptProvisionStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new HttpStep())
@@ -144,3 +145,4 @@ factory.registerStep(new ECSBlueGreenRollbackStep())
 factory.registerStep(new AzureArmStep())
 factory.registerStep(new CustomDeploymentServiceSpec())
 factory.registerStep(new CustomDeploymentInfrastructureSpec())
+factory.registerStep(new ShellScriptProvisionStep())

@@ -15,7 +15,8 @@ import {
   DataTooltipInterface,
   FormikTooltipContext,
   HarnessDocTooltip,
-  Tag
+  Tag,
+  FormError
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { get, isPlainObject, defaultTo } from 'lodash-es'
@@ -102,7 +103,7 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
 
   return (
     <FormGroup
-      helperText={errorCheck() ? get(formik?.errors, name) : null}
+      helperText={errorCheck() ? <FormError name={name} errorMessage={get(formik?.errors, name)} /> : null}
       intent={errorCheck() ? Intent.DANGER : Intent.NONE}
       style={{ width: '100%' }}
     >
