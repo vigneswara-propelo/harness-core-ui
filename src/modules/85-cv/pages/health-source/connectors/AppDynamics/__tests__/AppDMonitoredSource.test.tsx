@@ -93,7 +93,7 @@ describe('Unit tests for createAppd monitoring source', () => {
         () => ({ loading: false, error: null, data: { data: ['overall performane'] }, refetch: refetchMock } as any)
       )
     jest
-      .spyOn(cvServices, 'useGetServiceInstanceMetricPath')
+      .spyOn(cvServices, 'useGetCompleteServiceInstanceMetricPath')
       .mockImplementation(() => ({ loading: false, error: null, data: {}, refetch: refetchMock } as any))
     jest
       .spyOn(cvServices, 'useGetAppdynamicsMetricDataByPath')
