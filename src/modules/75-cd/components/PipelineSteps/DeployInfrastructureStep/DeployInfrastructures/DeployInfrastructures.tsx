@@ -153,7 +153,7 @@ function DeployInfrastructures({
             const infraDefinitionObject = formik?.values?.environment?.infrastructureDefinitions?.[0]
             formik?.setFieldValue(
               `environment.infrastructureDefinitions[0]`,
-              typeof infraDefinitionObject !== 'string'
+              infraDefinitionObject && typeof infraDefinitionObject !== 'string'
                 ? infraDefinitionObject
                 : clearRuntimeInput(parsedInfrastructureDefinitionYaml.infrastructureDefinitions[0])
             )
