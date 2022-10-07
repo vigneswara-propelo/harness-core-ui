@@ -208,6 +208,7 @@ validation:
   subscription: 'Subscription is required'
   repository: 'Repository is required'
   projectIsRequired: Project is required
+  onlyDigitsAllowed: Only digits are allowed
 specify: Specify
 role: Role
 projectViewer: Project Viewer

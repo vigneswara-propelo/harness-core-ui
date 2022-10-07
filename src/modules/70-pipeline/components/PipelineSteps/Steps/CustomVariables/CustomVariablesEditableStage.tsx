@@ -28,7 +28,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { CustomDeploymentNGVariable, NGVariable } from 'services/cd-ng'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -236,6 +236,9 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                                 setFieldValue(`variables[${index}].default`, defaultValue)
                               }}
                               isReadonly={readonly}
+                              allowedValuesType={
+                                variable.type === VariableType.Number ? ALLOWED_VALUES_TYPE.NUMBER : undefined
+                              }
                             />
                           ) : null}
                           <div className={css.actionButtons}>

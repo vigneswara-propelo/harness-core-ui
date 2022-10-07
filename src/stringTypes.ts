@@ -912,6 +912,7 @@ export interface StringsMap {
   'common.validation.keyIsRequired': string
   'common.validation.nameIsRequired': string
   'common.validation.namePatternIsNotValid': string
+  'common.validation.onlyDigitsAllowed': string
   'common.validation.package': string
   'common.validation.projectIsRequired': string
   'common.validation.provisionerIdentifierIsRequired': string
