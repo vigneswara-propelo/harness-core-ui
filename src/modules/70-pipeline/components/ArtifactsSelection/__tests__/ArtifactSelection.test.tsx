@@ -36,6 +36,13 @@ const getContextValue = (): PipelineContextInterface => {
 const fetchConnectors = (): Promise<unknown> => Promise.resolve({})
 
 jest.mock('services/cd-ng', () => ({
+  useGetImagePathsForArtifactory: jest.fn().mockImplementation(() => {
+    return {
+      data: {},
+      error: null,
+      loading: false
+    }
+  }),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
   useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
   useGetConnector: jest.fn().mockImplementation(() => {

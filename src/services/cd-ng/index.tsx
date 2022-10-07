@@ -941,6 +941,14 @@ export type ArtifactoryGenericArtifactSummary = ArtifactSummary & {
   artifactPath?: string
 }
 
+export interface ArtifactoryImagePath {
+  imagePath?: string
+}
+
+export interface ArtifactoryImagePathsDTO {
+  imagePaths?: ArtifactoryImagePath[]
+}
+
 export type ArtifactoryRegistryArtifactConfig = ArtifactConfig & {
   artifactDirectory?: string
   artifactPath?: string
@@ -9539,6 +9547,13 @@ export interface ResponseArtifactoryBuildDetailsDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseArtifactoryImagePathsDTO {
+  correlationId?: string
+  data?: ArtifactoryImagePathsDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseArtifactoryRepoDetailsDTO {
   correlationId?: string
   data?: ArtifactoryRepoDetailsDTO
@@ -17431,12 +17446,72 @@ export const getLastSuccessfulBuildForArtifactoryArtifactPromise = (
     void
   >('POST', getConfig('ng/api'), `/artifacts/artifactory/getLastSuccessfulBuild`, props, signal)
 
+export interface GetImagePathsForArtifactoryQueryParams {
+  connectorRef?: string
+  repositoryType?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  repository: string
+  fqnPath?: string
+  serviceId?: string
+}
+
+export type GetImagePathsForArtifactoryProps = Omit<
+  GetProps<ResponseArtifactoryImagePathsDTO, Failure | Error, GetImagePathsForArtifactoryQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Image Paths details
+ */
+export const GetImagePathsForArtifactory = (props: GetImagePathsForArtifactoryProps) => (
+  <Get<ResponseArtifactoryImagePathsDTO, Failure | Error, GetImagePathsForArtifactoryQueryParams, void>
+    path={`/artifacts/artifactory/imagePaths`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetImagePathsForArtifactoryProps = Omit<
+  UseGetProps<ResponseArtifactoryImagePathsDTO, Failure | Error, GetImagePathsForArtifactoryQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Image Paths details
+ */
+export const useGetImagePathsForArtifactory = (props: UseGetImagePathsForArtifactoryProps) =>
+  useGet<ResponseArtifactoryImagePathsDTO, Failure | Error, GetImagePathsForArtifactoryQueryParams, void>(
+    `/artifacts/artifactory/imagePaths`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets Image Paths details
+ */
+export const getImagePathsForArtifactoryPromise = (
+  props: GetUsingFetchProps<
+    ResponseArtifactoryImagePathsDTO,
+    Failure | Error,
+    GetImagePathsForArtifactoryQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseArtifactoryImagePathsDTO, Failure | Error, GetImagePathsForArtifactoryQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/artifactory/imagePaths`,
+    props,
+    signal
+  )
+
 export interface GetRepositoriesDetailsForArtifactoryQueryParams {
   connectorRef?: string
   repositoryType?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   fqnPath?: string
   serviceId?: string
 }
