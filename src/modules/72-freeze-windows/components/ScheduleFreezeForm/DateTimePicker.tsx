@@ -9,8 +9,8 @@ import React, { ReactElement } from 'react'
 import { connect, FormikContextType } from 'formik'
 import { get } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
-import { DataTooltipInterface, DateInput, FormError, getFormFieldLabel } from '@harness/uicore'
-import { errorCheck } from '@common/utils/formikHelpers'
+import { DataTooltipInterface, DateInput, errorCheck, FormError, getFormFieldLabel } from '@harness/uicore'
+import type { DateInputProps } from '@harness/uicore/dist/components/DateInput/DateInput'
 
 export interface FormikExtended<T> extends FormikContextType<T> {
   disabled?: boolean
@@ -27,6 +27,7 @@ interface FormikDateTimePickerProps extends IFormGroupProps {
   name: string
   placeholder?: string
   disabled?: boolean
+  dateInputProps?: DateInputProps
 }
 
 function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<any>): ReactElement {
@@ -40,6 +41,7 @@ function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<a
     tooltipProps,
     placeholder,
     onChange,
+    dateInputProps,
     ...rest
   } = restProps
 
@@ -53,7 +55,6 @@ function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<a
       {...rest}
     >
       <DateInput
-        // popoverProps={{ usePortal: false, boundary: 'window', position: 'left' }}
         value={formik?.values[name]}
         onChange={value => {
           formik?.setFieldValue(name, value)
@@ -62,10 +63,19 @@ function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<a
         name={name}
         contentEditable={false}
         timePrecision="minute"
-        dateTimeFormat={'LLLL'}
+        dateProps={{
+          timePickerProps: { useAmPm: true },
+          highlightCurrentDay: true,
+          minDate: new Date()
+        }}
+        popoverProps={{
+          disabled,
+          usePortal: true
+        }}
+        dateTimeFormat={'YYYY-MM-DD hh:mm a'}
         autoComplete="off"
-        placeholder={placeholder}
         disabled={disabled}
+        {...dateInputProps}
       />
     </FormGroup>
   )

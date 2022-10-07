@@ -174,15 +174,6 @@
   }
 }
 
-.scheduleTabSaveBtnContainer {
-  margin-top: var(--spacing-5);
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 84px;
-}
-
 .unsavedChanges {
   & > :global(.bp3-button-text) {
     color: var(--orange-600) !important;

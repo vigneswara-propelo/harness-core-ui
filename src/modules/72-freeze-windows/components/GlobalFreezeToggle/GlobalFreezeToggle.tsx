@@ -16,7 +16,7 @@ import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FreezeSummaryResponse, FreezeWindow, useGetGlobalFreeze, useGlobalFreeze } from 'services/cd-ng'
+import { FreezeWindow, useGetGlobalFreeze, useGlobalFreeze } from 'services/cd-ng'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { GlobalFreezeScheduleForm } from './GlobalFreezeScheduleForm'
 import css from './GlobalFreezeToggle.module.scss'
@@ -52,8 +52,8 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
     }
   })
 
-  const freeze = yamlParse<FreezeSummaryResponse>(defaultTo(getGlobalFreezeData?.data?.yaml, ''))
-  const freezeWindow = freeze?.freezeWindows?.[0] || {}
+  const freeze = yamlParse<any>(defaultTo(getGlobalFreezeData?.data?.yaml, ''))
+  const freezeWindow = freeze?.windows?.[0] || ({} as FreezeWindow)
   const { endTime, timeZone } = freezeWindow
 
   const { openDialog: openDisableFreezeDialog } = useConfirmationDialog({
@@ -104,7 +104,7 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
   const handleEnableGlobalFreeze = async (scheduledFreezeWindow: FreezeWindow): Promise<void> => {
     try {
       freeze.status = 'Enabled'
-      freeze.freezeWindows = [scheduledFreezeWindow]
+      freeze.windows = [scheduledFreezeWindow]
       const body = yamlStringify({ freeze })
       await updateGlobalFreeze(body)
       refetchGetGlobalFreeze()

@@ -22,6 +22,7 @@ export const GlobalFreezeScheduleForm: FC<GlobalFreezeScheduleFormProps> = ({ on
 
   return (
     <ScheduleFreezeForm
+      isGlobalFreezeForm
       freezeWindow={freezeWindow}
       onSubmit={onSave}
       formActions={

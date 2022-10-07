@@ -10,9 +10,12 @@ import { useParams } from 'react-router-dom'
 import { Button, ButtonVariation } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import type { WindowPathProps } from '@freeze-windows/types'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { DefaultFreezeId } from './FreezeWindowContext/FreezeWindowReducer'
 import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
-import { SaveFreezeButton } from './SaveFreezeButton'
+import { useSaveFreeze } from './useSaveFreeze'
 import css from './FreezeWindowStudio.module.scss'
 
 export const FreezeWindowStudioSubHeaderRightView = () => {
@@ -22,7 +25,13 @@ export const FreezeWindowStudioSubHeaderRightView = () => {
     isReadOnly,
     refetchFreezeObj
   } = React.useContext(FreezeWindowContext)
-  const { windowIdentifier } = useParams<WindowPathProps>()
+  const {
+    accountId: accountIdentifier,
+    projectIdentifier,
+    orgIdentifier,
+    windowIdentifier
+  } = useParams<WindowPathProps>()
+  const { onSave, isSaveDisabled, isSaveInProgress } = useSaveFreeze()
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -37,7 +46,25 @@ export const FreezeWindowStudioSubHeaderRightView = () => {
         </Button>
       )}
       <div className={css.headerSaveBtnWrapper}>
-        <SaveFreezeButton />
+        <RbacButton
+          onClick={onSave}
+          disabled={isSaveDisabled}
+          variation={ButtonVariation.PRIMARY}
+          text={getString('save')}
+          icon="send-data"
+          loading={isSaveInProgress}
+          permission={{
+            permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
+            resource: {
+              resourceType: ResourceType.DEPLOYMENTFREEZE
+            },
+            resourceScope: {
+              accountIdentifier,
+              orgIdentifier,
+              projectIdentifier
+            }
+          }}
+        />
       </div>
       {windowIdentifier !== DefaultFreezeId && !isReadOnly && (
         <Button
@@ -46,7 +73,6 @@ export const FreezeWindowStudioSubHeaderRightView = () => {
           variation={ButtonVariation.SECONDARY}
           text={getString('pipeline.discard')}
           onClick={() => {
-            // updateFreeze({ freezeObj: oldFreezeObj })
             refetchFreezeObj()
           }}
         />

@@ -6,12 +6,8 @@
  */
 
 import React from 'react'
-import { Spinner } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
-import { ButtonVariation, Container, getErrorInfoFromErrorObject, useToaster } from '@wings-software/uicore'
-import RbacButton from '@rbac/components/Button/Button'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { getErrorInfoFromErrorObject, useToaster } from '@wings-software/uicore'
 import { useCreateFreeze, useUpdateFreeze } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -21,7 +17,7 @@ import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { DefaultFreezeId } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowReducer'
 import type { WindowPathProps } from '@freeze-windows/types'
 
-export const SaveFreezeButton = () => {
+export const useSaveFreeze = () => {
   const { getString } = useStrings()
   const history = useHistory()
   const { showSuccess, showError, clear } = useToaster()
@@ -111,34 +107,9 @@ export const SaveFreezeButton = () => {
     }
   }
 
-  if (loading) {
-    return (
-      <Container padding={'medium'}>
-        <Spinner size={Spinner.SIZE_SMALL} />
-      </Container>
-    )
+  return {
+    onSave,
+    isSaveInProgress: loading,
+    isSaveDisabled: !isUpdated
   }
-
-  return (
-    <div>
-      <RbacButton
-        disabled={!isUpdated}
-        variation={ButtonVariation.PRIMARY}
-        text={getString('save')}
-        icon="send-data"
-        onClick={onSave}
-        permission={{
-          permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
-          resource: {
-            resourceType: ResourceType.DEPLOYMENTFREEZE
-          },
-          resourceScope: {
-            accountIdentifier,
-            orgIdentifier,
-            projectIdentifier
-          }
-        }}
-      />
-    </div>
-  )
 }

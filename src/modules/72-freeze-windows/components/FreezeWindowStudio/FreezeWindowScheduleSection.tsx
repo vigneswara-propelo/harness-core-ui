@@ -7,11 +7,16 @@
 
 import React, { useCallback } from 'react'
 import { Card, Container, Heading, ButtonVariation, Button, Layout, Color } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { FreezeWindow } from 'services/cd-ng'
-import { SaveFreezeButton } from './SaveFreezeButton'
-import { useFreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type { WindowPathProps } from '@freeze-windows/types'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { ScheduleFreezeForm } from '../ScheduleFreezeForm/ScheduleFreezeForm'
+import { useFreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
+import { useSaveFreeze } from './useSaveFreeze'
 import css from './FreezeWindowStudio.module.scss'
 
 interface FreezeStudioOverviewSectionProps {
@@ -25,8 +30,11 @@ export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionPr
     state: { freezeObj },
     updateFreeze
   } = useFreezeWindowContext()
-
-  const validate = useCallback((formData: any) => updateFreeze({ ...freezeObj, window: formData }), [])
+  const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<WindowPathProps>()
+  const { onSave, isSaveDisabled, isSaveInProgress } = useSaveFreeze()
+  const validate = useCallback((formData: any) => {
+    updateFreeze({ ...freezeObj, windows: [formData] })
+  }, [])
 
   return (
     <Container padding={{ top: 'small', right: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge' }}>
@@ -34,25 +42,45 @@ export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionPr
         {getString('freezeWindows.freezeStudio.freezeSchedule')}
       </Heading>
       <Card className={css.sectionCard}>
-        <ScheduleFreezeForm freezeWindow={freezeObj.window as FreezeWindow} onChange={validate} />
-      </Card>
-
-      <Layout.Horizontal
-        spacing="small"
-        margin={{ top: 'xxlarge' }}
-        flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-      >
-        <Button
-          margin={{ top: 'medium' }}
-          icon="chevron-left"
-          onClick={onBack}
-          variation={ButtonVariation.SECONDARY}
-          text={getString('back')}
+        <ScheduleFreezeForm
+          freezeWindow={(freezeObj?.windows as FreezeWindow[])?.[0]}
+          onSubmit={onSave}
+          onChange={validate}
+          formActions={
+            <Layout.Horizontal
+              spacing="small"
+              margin={{ top: 'xxlarge' }}
+              flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+            >
+              <Button
+                icon="chevron-left"
+                onClick={onBack}
+                variation={ButtonVariation.SECONDARY}
+                text={getString('back')}
+              />
+              <RbacButton
+                type="submit"
+                disabled={isSaveDisabled}
+                variation={ButtonVariation.PRIMARY}
+                text={getString('save')}
+                icon="send-data"
+                loading={isSaveInProgress}
+                permission={{
+                  permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
+                  resource: {
+                    resourceType: ResourceType.DEPLOYMENTFREEZE
+                  },
+                  resourceScope: {
+                    accountIdentifier,
+                    orgIdentifier,
+                    projectIdentifier
+                  }
+                }}
+              />
+            </Layout.Horizontal>
+          }
         />
-        <div className={css.scheduleTabSaveBtnContainer}>
-          <SaveFreezeButton />
-        </div>
-      </Layout.Horizontal>
+      </Card>
     </Container>
   )
 }

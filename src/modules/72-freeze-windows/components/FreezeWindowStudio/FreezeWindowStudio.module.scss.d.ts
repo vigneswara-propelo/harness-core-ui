@@ -23,7 +23,6 @@ declare const styles: {
   readonly isEditView: string
   readonly marginRight: string
   readonly marginSmaller: string
-  readonly scheduleTabSaveBtnContainer: string
   readonly sectionCard: string
   readonly separator: string
   readonly stepTabs: string

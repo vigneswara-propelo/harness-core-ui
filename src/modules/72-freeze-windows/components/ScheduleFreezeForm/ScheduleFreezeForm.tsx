@@ -21,6 +21,7 @@ interface ScheduleFreezeFormProps {
   onSubmit?: (freezeWindow: FreezeWindow) => void
   onChange?: (freezeWindow: FreezeWindow) => void
   formActions?: ReactNode
+  isGlobalFreezeForm?: boolean
 }
 
 export type FreezeWindowFormData = FreezeWindow & {
@@ -84,7 +85,8 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
   freezeWindow = {},
   onSubmit,
   onChange,
-  formActions
+  formActions,
+  isGlobalFreezeForm
 }) => {
   return (
     <Formik<FreezeWindowFormData>
@@ -98,7 +100,7 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
       {formikProps => {
         return (
           <FormikForm>
-            <Layout.Vertical width={'300px'}>
+            <Layout.Vertical width={'350px'} className={css.scheduleFreezeForm}>
               <FormInput.DropDown
                 label="Timezone"
                 name="timeZone"
@@ -106,50 +108,42 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
                 dropDownProps={{
                   minWidth: 200
                 }}
+                usePortal
               />
-              <DateTimePicker name="startTime" label="Start time" />
+              <DateTimePicker name="startTime" label="Start Time" />
               <FormInput.RadioGroup
-                radioGroup={{
-                  className: css.radioGroup
-                }}
                 name="endTimeMode"
                 label="End Time"
                 items={[
                   {
                     label: (
-                      <FormInput.DurationInput
-                        name="duration"
-                        label=""
-                        disabled={formikProps.values?.endTimeMode === '1'}
-                        style={{ width: '100% !important' }}
-                      />
+                      <Layout.Horizontal spacing="small" flex={{ alignItems: 'baseline' }}>
+                        <FormInput.DurationInput name="duration" disabled={formikProps.values?.endTimeMode === '1'} />
+                        <span>from start time</span>
+                      </Layout.Horizontal>
                     ),
                     value: '0'
                   },
                   {
-                    label: (
-                      <DateTimePicker
-                        name="endTime"
-                        label=""
-                        disabled={formikProps.values?.endTimeMode === '0'}
-                        style={{ width: '100% !important' }}
-                      />
-                    ),
+                    label: <DateTimePicker name="endTime" disabled={formikProps.values?.endTimeMode === '0'} />,
                     value: '1'
                   }
                 ]}
               />
 
-              <FormInput.DropDown
-                placeholder="Does not repeat"
-                label="Recurrence"
-                name="recurrence.type"
-                items={recurrenceList}
-                dropDownProps={{
-                  filterable: false,
-                  minWidth: 200
-                }}
-              />
+              {!isGlobalFreezeForm && (
+                <FormInput.DropDown
+                  placeholder="Does not repeat"
+                  label="Recurrence"
+                  name="recurrence.type"
+                  items={recurrenceList}
+                  dropDownProps={{
+                    filterable: false,
+                    minWidth: 200
+                  }}
+                  usePortal
+                />
+              )}
 
               {formikProps.values?.recurrence?.type && (
                 <FormInput.RadioGroup
@@ -161,7 +155,6 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
                       label: (
                         <DateTimePicker
                           name="recurrence.spec.until"
-                          label=""
                           disabled={formikProps.values?.recurrence?.spec.recurrenceEndMode === '0'}
                         />
                       ),

@@ -7,7 +7,7 @@
  */
 
 import { Color, FontVariation } from '@harness/design-system'
-import { Classes, Switch, Menu, Position } from '@blueprintjs/core'
+import { Classes, Switch, Menu, Position, PopoverInteractionKind } from '@blueprintjs/core'
 import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon, Checkbox } from '@harness/uicore'
 import { Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
@@ -56,9 +56,9 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
         </Link>
 
         {data.description && (
-          <Popover className={Classes.DARK} position={Position.LEFT}>
+          <Popover className={Classes.DARK} position={Position.LEFT} interactionKind={PopoverInteractionKind.HOVER}>
             <Icon name="description" width={16} height={20} />
-            <Layout.Vertical spacing="medium" padding="large" style={{ maxWidth: 400 }}>
+            <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
               <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }}>
                 Description
               </Text>
