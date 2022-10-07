@@ -26,6 +26,7 @@ import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMu
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import type { DeployServiceEntityData, DeployServiceEntityCustomProps } from './DeployServiceEntityUtils'
 import { useGetServicesData } from './useGetServicesData'
@@ -136,9 +137,18 @@ export function DeployServiceEntityInputStep({
     // updated values based on selected services
     const newServicesValues: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
       const svcTemplate = servicesData.find(svcTpl => svcTpl.service.identifier === svcId)?.serviceInputs
+      let serviceInputs = isMultiSvcTemplate
+        ? get(formik.values, `${pathPrefix}values`)?.find((svc: ServiceYamlV2) => svc.serviceRef === svcId)
+            ?.serviceInputs
+        : get(formik.values, `${pathPrefix}serviceInputs`)
+
+      if (isValueRuntimeInput(serviceInputs)) {
+        serviceInputs = svcTemplate ? clearRuntimeInput(svcTemplate) : undefined
+      }
+
       return {
         serviceRef: svcId,
-        serviceInputs: svcTemplate ? clearRuntimeInput(svcTemplate) : undefined
+        serviceInputs
       }
     })
 
@@ -168,18 +178,8 @@ export function DeployServiceEntityInputStep({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [servicesData, serviceIdentifiers])
 
-  const onServiceRefChange = (value: SelectOption): void => {
-    if (
-      isStageTemplateInputSetForm &&
-      getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME &&
-      inputSetData?.path
-    ) {
-      formik.setFieldValue(inputSetData.path, {
-        serviceRef: RUNTIME_INPUT_VALUE,
-        serviceInputs: RUNTIME_INPUT_VALUE
-      })
-      return
-    }
+  const onServiceRefChange = (): void => {
+    formik.setFieldValue(`${pathPrefix}serviceInputs`, RUNTIME_INPUT_VALUE)
   }
 
   function handleServicesChange(values: SelectOption[]): void {
@@ -208,7 +208,7 @@ export function DeployServiceEntityInputStep({
               expressions,
               allowableTypes: allowableTypes,
               selectProps: {
-                addClearBtn: true && !inputSetData?.readonly,
+                addClearBtn: !inputSetData?.readonly,
                 items: selectOptions
               },
               onChange: onServiceRefChange
