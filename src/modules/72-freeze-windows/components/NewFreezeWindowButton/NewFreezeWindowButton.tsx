@@ -6,11 +6,15 @@
  */
 
 import React, { FC } from 'react'
-import { Button, ButtonVariation } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
+import { ButtonVariation } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { DefaultFreezeId } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowReducer'
 
 interface NewFreezeWindowButtonProps {
   text?: string
@@ -29,19 +33,28 @@ export const NewFreezeWindowButton: FC<NewFreezeWindowButtonProps> = ({ text }) 
         orgIdentifier,
         accountId,
         module,
-        windowIdentifier: '-1'
+        windowIdentifier: DefaultFreezeId
       })
     )
   }, [projectIdentifier, orgIdentifier, accountId, module])
 
   return (
-    <Button
+    <RbacButton
       variation={ButtonVariation.PRIMARY}
       icon="plus"
       text={text || getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
       onClick={goToFreezeWindowStudio}
-      // disabled={!canEdit || !templatesEnabled}
-      // tooltip={tooltipBtn()}
+      permission={{
+        permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
+        resource: {
+          resourceType: ResourceType.DEPLOYMENTFREEZE
+        },
+        resourceScope: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier
+        }
+      }}
     />
   )
 }

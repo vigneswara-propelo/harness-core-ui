@@ -25,6 +25,7 @@ export interface ActionResponse {
   freezeObj?: Record<string, unknown>
   oldFreezeObj?: Record<string, unknown>
   yamlHandler?: YamlBuilderHandlerBinding
+  status?: string
 }
 
 export interface ActionReturnType {

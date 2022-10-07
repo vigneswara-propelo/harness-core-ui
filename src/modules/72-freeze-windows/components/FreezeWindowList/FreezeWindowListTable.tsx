@@ -41,7 +41,8 @@ export function FreezeWindowListTable({
   onDeleteRow,
   onViewFreezeRow,
   getViewFreezeRowLink,
-  selectedItems
+  selectedItems,
+  disabled
 }: FreezeWindowListTableProps): React.ReactElement {
   const { getString } = useStrings()
   const {
@@ -72,7 +73,8 @@ export function FreezeWindowListTable({
         Cell: RowSelectCell,
         disableSortBy: true,
         onRowSelectToggle,
-        selectedItems
+        selectedItems,
+        disabled
       },
       {
         Header: '',
@@ -80,7 +82,8 @@ export function FreezeWindowListTable({
         width: '3.5%',
         Cell: FreezeToggleCell,
         disableSortBy: true,
-        onToggleFreezeRow
+        onToggleFreezeRow,
+        disabled
       },
       {
         Header: 'Name',
@@ -119,10 +122,11 @@ export function FreezeWindowListTable({
         disableSortBy: true,
         getViewFreezeRowLink,
         onDeleteRow,
-        onToggleFreezeRow
+        onToggleFreezeRow,
+        disabled
       }
     ] as unknown as Column<FreezeSummaryResponse>[]
-  }, [currentOrder, currentSort, selectedItems])
+  }, [currentOrder, currentSort, selectedItems, disabled])
 
   return (
     <TableV2

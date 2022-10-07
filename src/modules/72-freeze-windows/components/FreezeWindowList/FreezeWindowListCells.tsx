@@ -27,6 +27,7 @@ export interface FreezeWindowListColumnActions {
   onViewFreezeRow: (freezeWindow: FreezeSummaryResponse) => void
   getViewFreezeRowLink: (freezeWindow: FreezeSummaryResponse) => string
   selectedItems: string[]
+  disabled: boolean
 }
 
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
@@ -135,14 +136,19 @@ export const LastModifiedCell: CellType = ({ row }) => {
 
 export const MenuCell: CellType = ({ row, column }) => {
   const data = row.original
+  const disabled = column.disabled
 
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }} onClick={killEvent}>
       <Popover className={Classes.DARK} position={Position.LEFT}>
         <Button variation={ButtonVariation.ICON} icon="Options" aria-label="Freeze window menu actions" />
         <Menu style={{ backgroundColor: 'unset', minWidth: 'unset' }}>
-          <Menu.Item className={css.link} text={<Link to={column.getViewFreezeRowLink(data)}>Edit</Link>} />
           <Menu.Item
+            className={css.link}
+            text={<Link to={column.getViewFreezeRowLink(data)}>{disabled ? 'View' : 'Edit'}</Link>}
+          />
+          <Menu.Item
+            disabled={disabled}
             text={data.status === 'Disabled' ? 'Enable' : 'Disable'}
             onClick={() => {
               column.onToggleFreezeRow({
@@ -151,7 +157,7 @@ export const MenuCell: CellType = ({ row, column }) => {
               })
             }}
           />
-          <Menu.Item text="Delete" onClick={() => column.onDeleteRow(data.identifier!)} />
+          <Menu.Item disabled={disabled} text="Delete" onClick={() => column.onDeleteRow(data.identifier!)} />
         </Menu>
       </Popover>
     </Layout.Horizontal>
@@ -164,6 +170,7 @@ export const RowSelectCell: CellType = ({ row, column }) => {
   return (
     <div className={css.checkbox} onClick={killEvent}>
       <Checkbox
+        disabled={column.disabled}
         large
         checked={column.selectedItems.includes(data.identifier!)}
         onChange={event => {
@@ -180,6 +187,7 @@ export const FreezeToggleCell: CellType = ({ row, column }) => {
   return (
     <div onClick={killEvent}>
       <Switch
+        disabled={column.disabled}
         aria-label="Toggle freeze"
         onChange={event =>
           column.onToggleFreezeRow({

@@ -49,7 +49,7 @@ export const FreezeReducer = (state: FreezeWindowReducerState, data: ActionRetur
           : !isEqual(state.oldFreezeObj, { ...state.freezeObj, ...omit(response, 'oldFreezeObj') }),
         oldFreezeObj: response?.oldFreezeObj ? response.oldFreezeObj : state.oldFreezeObj,
         freezeObj: (response
-          ? clone({ ...state.freezeObj, ...omit(response, 'oldFreezeObj') })
+          ? clone({ ...state.freezeObj, ...omit(response, 'oldFreezeObj'), status: response?.status })
           : state.freezeObj) as Record<string, unknown>
       }
     }
