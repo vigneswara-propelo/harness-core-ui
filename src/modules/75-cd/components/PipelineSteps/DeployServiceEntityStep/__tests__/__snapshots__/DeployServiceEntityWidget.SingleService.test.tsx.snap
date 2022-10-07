@@ -1411,6 +1411,9 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
             </button>
           </div>
         </div>
+        <div
+          class="cardsContainer"
+        />
       </div>
     </form>
   </div>
