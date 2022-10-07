@@ -22,7 +22,7 @@ import {
   afterUseTemplatePipelineTemplateInputsResponse
 } from '../../support/72-templates-library/constants'
 
-describe('Pipeline Template creation and assertion', () => {
+describe.skip('Pipeline Template creation and assertion', () => {
   const templateDetailsCall =
     '/template/api/templates/templateInputs/testPipelineTemplate?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&versionLabel=v1.0&getDefaultFromOtherRepo=true'
   const pipelineTemplatePublishCall =

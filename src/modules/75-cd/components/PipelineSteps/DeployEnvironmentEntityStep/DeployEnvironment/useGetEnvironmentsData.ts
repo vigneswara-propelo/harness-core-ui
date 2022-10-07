@@ -27,7 +27,7 @@ import type { EnvironmentData } from '../types'
 
 export interface UseGetEnvironmentsDataProps {
   envIdentifiers: string[]
-  loadSpecificIdentifiers: boolean
+  loadSpecificIdentifiers?: boolean
 }
 
 export interface UseGetEnvironmentsDataReturn {

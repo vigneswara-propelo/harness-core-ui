@@ -11,10 +11,12 @@ import type { IconName } from '@harness/uicore'
 
 import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 
 import DeployEnvironmentEntityWidget from './DeployEnvironmentEntityWidget'
 import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityCustomStepProps } from './types'
 import { processInitialValues, processFormValues } from './utils'
+import DeployEnvironmentEntityInputStep from './DeployEnvironmentEntityInputStep'
 
 export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityConfig> {
   protected type = StepType.DeployEnvironmentEntity
@@ -29,7 +31,28 @@ export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityCon
   }
 
   renderStep(props: StepProps<DeployEnvironmentEntityConfig>): JSX.Element {
-    const { initialValues, readonly = false, allowableTypes, onUpdate, stepViewType, customStepProps } = props
+    const {
+      initialValues,
+      readonly = false,
+      allowableTypes,
+      onUpdate,
+      inputSetData,
+      stepViewType,
+      customStepProps
+    } = props
+
+    if (isTemplatizedView(stepViewType)) {
+      return (
+        <DeployEnvironmentEntityInputStep
+          initialValues={initialValues}
+          readonly={readonly}
+          inputSetData={inputSetData}
+          allowableTypes={allowableTypes}
+          stepViewType={stepViewType}
+          {...(customStepProps as Required<DeployEnvironmentEntityCustomStepProps>)}
+        />
+      )
+    }
 
     return (
       <DeployEnvironmentEntityWidget

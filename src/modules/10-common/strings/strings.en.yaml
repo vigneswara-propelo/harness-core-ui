@@ -1036,3 +1036,5 @@ loadBalancer: Load Balancer
 environmentInputs: Environment inputs
 infrastructures: Infrastructures
 infrastructureInputs: Infrastructure inputs
+environmentPrefix: 'Environment: {{ name }}'
+infrastructurePrefix: 'Infrastructure: {{ name }}'

@@ -247,6 +247,7 @@ export interface StringsMap {
   'common.environmentInputs': string
   'common.environmentList': string
   'common.environmentOverrides': string
+  'common.environmentPrefix': string
   'common.environmentUpdated': string
   'common.errorCount': string
   'common.errorHandler.communityForum': string
@@ -439,6 +440,7 @@ export interface StringsMap {
   'common.importFromGit': string
   'common.in': string
   'common.infrastructureInputs': string
+  'common.infrastructurePrefix': string
   'common.infrastructures': string
   'common.input': string
   'common.inputVariables': string

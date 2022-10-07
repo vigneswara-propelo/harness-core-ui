@@ -5,7 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.toggle {
-  position: relative;
-  margin-bottom: calc(-1 * var(--spacing-9)) !important;
+import type { ServiceDefinition } from 'services/cd-ng'
+
+export interface DeployInfrastructureEntityCustomStepProps {
+  deploymentType?: ServiceDefinition['type']
+  environmentIdentifier?: string
+  isMultipleInfrastructure?: boolean
 }

@@ -26,6 +26,7 @@ import { useParams } from 'react-router-dom'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type {
   DeploymentStageConfig,
+  EnvironmentYamlV2,
   ExecutionWrapperConfig,
   Infrastructure,
   PipelineInfrastructure,
@@ -81,6 +82,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
 export type DeployServiceEntityData = Pick<DeploymentStageConfig, 'service' | 'services'>
+export type DeployEnvironmentEntityData = Pick<DeploymentStageConfig, 'environment' | 'environments'>
 const harnessImageConnectorRef = 'connectors.title.harnessImageConnectorRef'
 const osLabel = 'pipeline.infraSpecifications.os'
 const archLabel = 'pipeline.infraSpecifications.architecture'
@@ -802,6 +804,7 @@ export function StageInputSetFormInternal({
       }
     }
   }, [])
+
   return (
     <>
       {deploymentStageTemplate.serviceConfig && (
@@ -1011,6 +1014,125 @@ export function StageInputSetFormInternal({
           </div>
         </div>
       ) : null}
+
+      {!isSvcEnvEntityEnabled && deploymentStageTemplate.environment && (
+        <div id={`Stage.${stageIdentifier}.Environment`} className={cx(css.accordionSummary)}>
+          <div className={css.inputheader}>{getString('environment')}</div>
+          <div className={css.nestedAccordions}>
+            {/* if environment is marked as runtime, the below check handles everything */}
+            {deploymentStageTemplate.environment?.environmentRef ? (
+              <StepWidget<DeployEnvironmentEntityData>
+                factory={factory}
+                initialValues={pick(deploymentStageInputSet, 'environment')}
+                template={pick(deploymentStageTemplate, ['environment'])}
+                type={StepType.DeployEnvironmentEntity}
+                stepViewType={viewType}
+                path={path}
+                allowableTypes={allowableTypes}
+                readonly={readonly}
+                customStepProps={{
+                  stageIdentifier,
+                  deploymentType: deploymentStage?.deploymentType,
+                  gitOpsEnabled: deploymentStage?.gitOpsEnabled
+                }}
+              />
+            ) : // if infrastructure is marked as runtime and environment is selected, the below check handles everything
+            deploymentStageTemplate.environment?.infrastructureDefinitions &&
+              deploymentStage?.deploymentType &&
+              deploymentStage?.environment?.environmentRef ? (
+              <StepWidget
+                factory={factory}
+                initialValues={get(deploymentStageInputSet, 'environment')}
+                template={get(deploymentStageTemplate, ['environment'])}
+                type={StepType.DeployInfrastructureEntity}
+                stepViewType={viewType}
+                path={`${path}.environment`}
+                allowableTypes={allowableTypes}
+                readonly={readonly}
+                customStepProps={{
+                  deploymentType: deploymentStage.deploymentType,
+                  environmentIdentifier: deploymentStage.environment.environmentRef
+                }}
+              />
+            ) : null}
+          </div>
+        </div>
+      )}
+
+      {!isSvcEnvEntityEnabled && deploymentStageTemplate.environments && (
+        <div id={`Stage.${stageIdentifier}.Environment`} className={cx(css.accordionSummary)}>
+          <div className={css.inputheader}>{getString('environments')}</div>
+          <div className={css.nestedAccordions}>
+            {/* // if environments.values is marked as runtime, the below check handles everything */}
+            {getMultiTypeFromValue(deploymentStageTemplate.environments.values as unknown as string) ===
+              MultiTypeInputType.RUNTIME ||
+            (Array.isArray(deploymentStageTemplate.environments.values) &&
+              deploymentStageTemplate.environments.values.some(
+                env => getMultiTypeFromValue(env.environmentRef) === MultiTypeInputType.RUNTIME
+              )) ? (
+              <StepWidget
+                factory={factory}
+                initialValues={pick(deploymentStageInputSet, 'environments')}
+                template={pick(deploymentStageTemplate, ['environments'])}
+                type={StepType.DeployEnvironmentEntity}
+                stepViewType={viewType}
+                path={path}
+                allowableTypes={allowableTypes}
+                readonly={readonly}
+                customStepProps={{
+                  stageIdentifier,
+                  deploymentType: deploymentStage?.deploymentType,
+                  gitOpsEnabled: deploymentStage?.gitOpsEnabled
+                }}
+              />
+            ) : null}
+            {Array.isArray(deploymentStageTemplate.environments.values) ? (
+              <>
+                {/* // this is for infrastructures */}
+                {deploymentStageTemplate.environments.values.map((environmentTemplate, index) => {
+                  const deploymentType = deploymentStage?.deploymentType
+                  const environment: EnvironmentYamlV2 = get(
+                    deploymentStageInputSet,
+                    `environments.values[${index}]`,
+                    {}
+                  )
+
+                  if (deploymentType && environment.environmentRef) {
+                    return (
+                      <React.Fragment key={`${environment.environmentRef}_${index}`}>
+                        <Text
+                          font={{ size: 'normal', weight: 'bold' }}
+                          margin={{ top: 'medium', bottom: 'medium' }}
+                          color={Color.GREY_800}
+                        >
+                          {getString('common.environmentPrefix', { name: environment.environmentRef })}
+                        </Text>
+                        <StepWidget
+                          factory={factory}
+                          initialValues={environment}
+                          template={environmentTemplate}
+                          type={StepType.DeployInfrastructureEntity}
+                          stepViewType={viewType}
+                          path={`${path}.environments.values[${index}]`}
+                          allowableTypes={allowableTypes}
+                          readonly={readonly}
+                          customStepProps={{
+                            deploymentType,
+                            environmentIdentifier: environment.environmentRef,
+                            isMultipleInfrastructure: true
+                          }}
+                        />
+                      </React.Fragment>
+                    )
+                  }
+
+                  return null
+                })}
+              </>
+            ) : null}
+          </div>
+        </div>
+      )}
 
       {deploymentStageTemplate?.environmentGroup?.envGroupRef && (
         <div id={`Stage.${stageIdentifier}.EnvironmentGroup`} className={cx(css.accordionSummary)}>

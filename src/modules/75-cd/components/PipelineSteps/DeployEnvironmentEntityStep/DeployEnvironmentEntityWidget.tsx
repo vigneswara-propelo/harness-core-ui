@@ -34,7 +34,7 @@ import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeployInfrastructure from './DeployInfrastructure/DeployInfrastructure'
 import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
 
-import css from './DeployEnvironmentEntityWidget.module.scss'
+import css from './DeployEnvironmentEntityStep.module.scss'
 
 export interface DeployEnvironmentEntityWidgetProps extends Required<DeployEnvironmentEntityCustomStepProps> {
   initialValues: DeployEnvironmentEntityFormState
