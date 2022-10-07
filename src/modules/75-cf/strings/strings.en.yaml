@@ -324,6 +324,11 @@ environments:
     noKeysFoundMessage: Create an <a href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key" target="_blank" rel="noreferrer"> SDK key</a> for this Environment so that your application can connect to our FF client. We support SDK keys for multiple programming languages.
     redactionWarning: Your secret will be redacted once you leave the page. Please make sure to copy and store your secret.
     lastUsed: 'Last Used'
+  noEnvironmentSection:
+    message: 'Change flags, manage access and see history per environment.'
+    configurations: 'Different configurations on Dev vs Prod environments'
+    limitation: 'Limit who can access Prod'
+    auditTrails: 'Audit trails to see what changes in each environment'
 auditLogs:
   summaryHeading: 'Module: Feature Flags • Project: {{project}} • Environment: {{environment}}'
   searchPlaceholder: Search Activity

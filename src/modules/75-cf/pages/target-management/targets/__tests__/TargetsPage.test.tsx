@@ -155,9 +155,9 @@ describe('TargetsPage', () => {
 
     renderComponent()
 
-    expect(screen.getByTestId('nodata-image')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'plus newEnvironment' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'cf.noEnvironment.title' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'environments' })).toBeInTheDocument()
+    expect(screen.getByText('cf.environments.noEnvironmentSection.message')).toBeInTheDocument()
   })
 
   test('Targets Page should render Target empty state when there are environments but no targets', () => {

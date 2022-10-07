@@ -6117,6 +6117,10 @@ export interface StringsMap {
   'cf.environments.delete.message': string
   'cf.environments.delete.title': string
   'cf.environments.environmentID': string
+  'cf.environments.noEnvironmentSection.auditTrails': string
+  'cf.environments.noEnvironmentSection.configurations': string
+  'cf.environments.noEnvironmentSection.limitation': string
+  'cf.environments.noEnvironmentSection.message': string
   'cf.featureFlagDetail.noServices': string
   'cf.featureFlagDetail.searchService': string
   'cf.featureFlagDetail.serviceDescription': string

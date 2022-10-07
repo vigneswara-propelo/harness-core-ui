@@ -25,7 +25,7 @@ const SectionNoData: FC<PropsWithChildren<SectionNoDataProps>> = ({ message, des
           key={panel.description}
         >
           <Layout.Vertical flex={{ alignItems: 'center' }} spacing="huge" padding={{ bottom: 'huge', top: 'small' }}>
-            <img src={panel.imageURL} alt="" width={110} height={110} />
+            <img src={panel.imageURL} alt="" width={150} height={150} />
             <Text width={160} font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
               {panel.description}
             </Text>

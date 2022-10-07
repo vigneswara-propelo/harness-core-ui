@@ -42,7 +42,13 @@ export const NoData: React.FC<NoDataProps> = ({
 
       <Container>
         <Layout.Vertical spacing="medium">
-          <Heading className={css.centerAlign} level={2} font={{ variation: FontVariation.H4 }} color={Color.GREY_600}>
+          <Heading
+            data-testid="nodata-heading"
+            className={css.centerAlign}
+            level={2}
+            font={{ variation: FontVariation.H3 }}
+            color={Color.GREY_600}
+          >
             {message}
           </Heading>
 
