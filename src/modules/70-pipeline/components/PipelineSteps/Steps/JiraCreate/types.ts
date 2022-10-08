@@ -63,6 +63,7 @@ export interface JiraCreateFormContentInterface {
   refetchProjects: (props: UseGetJiraProjectsProps) => Promise<void>
   stepViewType: StepViewType
   refetchProjectMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
+  refetchIssueMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
   fetchingProjects: boolean
   fetchingProjectMetadata: boolean
   projectsResponse: ResponseListJiraProjectBasicNG | null
@@ -70,6 +71,8 @@ export interface JiraCreateFormContentInterface {
   projectMetaResponse: ResponseJiraIssueCreateMetadataNG | null
   projectsFetchError?: GetDataError<Failure | Error> | null
   projectMetadataFetchError?: GetDataError<Failure | Error> | null
+  issueMetadataFetchError?: GetDataError<Failure | Error> | null
+  issueMetaResponse: ResponseJiraIssueCreateMetadataNG | null
   isNewStep?: boolean
   readonly?: boolean
 }
@@ -104,6 +107,10 @@ export interface JiraDynamicFieldsSelectorContentInterface extends JiraDynamicFi
   fetchingProjectMetadata: boolean
   projectMetaResponse: ResponseJiraIssueCreateMetadataNG | null
   projectMetadataFetchError?: GetDataError<Failure | Error> | null
+  refetchIssueMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
+  fetchingIssueMetadata: boolean
+  issueMetadataFetchError?: GetDataError<Failure | Error> | null
+  issueMetaResponse: ResponseJiraIssueCreateMetadataNG | null
 }
 
 export interface JiraCreateDeploymentModeProps {
