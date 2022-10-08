@@ -108,20 +108,20 @@ describe('Test DeploymentInfraWrapperWithRef', () => {
     const plusButton = await waitFor(() => container.querySelector('[icon="plus"]'))
     fireEvent.click(plusButton!)
 
-    const addStepTemplateBtn = await screen.getByText('cd.addStepTemplate')
-    expect(addStepTemplateBtn).toBeInTheDocument()
+    const createAndUseTemplateBtn = await screen.getByText('cd.createAndUseTemplate')
+    expect(createAndUseTemplateBtn).toBeInTheDocument()
     await act(async () => {
-      fireEvent.click(addStepTemplateBtn)
+      fireEvent.click(createAndUseTemplateBtn)
     })
 
     await act(async () => {
       fireEvent.click(plusButton!)
     })
 
-    const useStepTemplateBtn = await screen.getByText('cd.useStepTemplate')
-    expect(useStepTemplateBtn).toBeInTheDocument()
+    const useTemplateBtn = await screen.getByText('templatesLibrary.useTemplateLabel')
+    expect(useTemplateBtn).toBeInTheDocument()
     await act(async () => {
-      fireEvent.click(useStepTemplateBtn)
+      fireEvent.click(useTemplateBtn)
     })
 
     const stepCardViewButton = await waitFor(() =>

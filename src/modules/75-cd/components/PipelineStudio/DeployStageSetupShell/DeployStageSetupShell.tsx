@@ -359,6 +359,11 @@ export default function DeployStageSetupShell(): JSX.Element {
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
   const { addTemplate } = useAddStepTemplate({ executionRef: executionRef.current })
 
+  const addLinkedTemplatesLabel = React.useMemo(() => {
+    const isCustomDeploymentConfigPresent = !isEmpty(get(selectedStage, 'stage.spec.customDeploymentRef'))
+    return isCustomDeploymentConfigPresent ? getString('common.deploymentTemplateSteps') : ''
+  }, [selectedStage, getString])
+
   const navBtns = (
     <Layout.Horizontal className={css.navigationBtns}>
       {selectedTabId !== DeployTabs.OVERVIEW && (
@@ -468,6 +473,7 @@ export default function DeployStageSetupShell(): JSX.Element {
               hasRollback={true}
               isReadonly={isReadonly}
               hasDependencies={false}
+              addLinkedTemplatesLabel={addLinkedTemplatesLabel}
               stepsFactory={stepsFactory}
               originalStage={originalStage}
               ref={executionRef}

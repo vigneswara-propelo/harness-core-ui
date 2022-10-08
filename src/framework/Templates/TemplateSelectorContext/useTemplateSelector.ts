@@ -23,6 +23,7 @@ export interface GetTemplateProps {
   linkedTemplate?: {
     identifiers: string[]
     checkboxLabel?: string
+    showCheckbox?: boolean
   }
   disableVersionChange?: boolean
   allowedUsages?: TemplateUsage[]

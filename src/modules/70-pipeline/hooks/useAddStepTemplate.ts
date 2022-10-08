@@ -100,7 +100,9 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
         allChildTypes,
         gitDetails,
         storeMetadata,
-        ...getLinkedTemplateFromResolvedCustomDeploymentDetails({ resolvedCustomDeploymentDetails, getString })
+        ...(event.isLinkedTemplate
+          ? getLinkedTemplateFromResolvedCustomDeploymentDetails({ resolvedCustomDeploymentDetails, getString })
+          : {})
       })
       const newStepData = { step: createStepNodeFromTemplate(template, isCopied) }
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))

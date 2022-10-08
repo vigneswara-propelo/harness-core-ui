@@ -552,7 +552,7 @@ miniKubeCmd2: sudo install minikube-linux-amd64 /usr/local/bin/minikube
 miniKubeCmd3: minikube start
 miniKubeCmd4: kubectl get pods -A
 deploymentSteps: Deployment Steps
-addStepTemplatesForYourDeploymentType: Add step templates for your deployment type here
+useStepTemplatesForYourDeploymentType: Use step templates for your deployment type here
 removeStepTemplate: Remove Step Template
 removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
 azureArm:
@@ -571,8 +571,7 @@ azureArm:
   tenant: Tenant
   required: '{{name}} is Required'
 removeStepTemplateSuccess: Step Template has been successfully removed
-addStepTemplate: Add step template
-useStepTemplate: Use step template
+createAndUseTemplate: Create and Use Template
 ignoreReleaseHistFailStatus: 'Ignore Release History Failed Status'
 artifactVersion: 'Version :'
 artifactPath: 'Path :'

@@ -208,6 +208,7 @@ export interface StringsMap {
   'common.deleteServiceConfirmation': string
   'common.deleteServiceFailure': string
   'common.deleteServiceMessage': string
+  'common.deploymentTemplateSteps': string
   'common.descriptionPlaceholder': string
   'common.directly': string
   'common.disable': string
@@ -4364,8 +4365,6 @@ export interface StringsMap {
   'cd.addInline': string
   'cd.addRemote': string
   'cd.addService': string
-  'cd.addStepTemplate': string
-  'cd.addStepTemplatesForYourDeploymentType': string
   'cd.addTFVarFileLabel': string
   'cd.allowSimultaneousDeployments': string
   'cd.amazonElasticCmd': string
@@ -4483,6 +4482,7 @@ export interface StringsMap {
   'cd.connectionIssueSuggestion': string
   'cd.connectorRefText': string
   'cd.continuous': string
+  'cd.createAndUseTemplate': string
   'cd.createdGitOpsServerSuccessfully': string
   'cd.createdSuccessfully': string
   'cd.creating': string
@@ -4871,7 +4871,7 @@ export interface StringsMap {
   'cd.updating': string
   'cd.updatingGitOpsServer': string
   'cd.useConnectorCredentials': string
-  'cd.useStepTemplate': string
+  'cd.useStepTemplatesForYourDeploymentType': string
   'cd.validation.specifyFilter': string
   'cd.varFile': string
   'cd.varFileDetails': string

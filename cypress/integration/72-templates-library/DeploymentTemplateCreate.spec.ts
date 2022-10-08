@@ -149,7 +149,7 @@ describe('Deployment Template creation and assertion', () => {
     cy.contains('span', 'Continue').click()
 
     cy.get('span[icon="plus"]').click()
-    cy.contains('span', 'Use step template').click()
+    cy.contains('span', 'Use Template').click()
     cy.wait(500)
     cy.get('p[data-testid="testStepTemplate_Cypress"]').click()
     cy.wait(500)

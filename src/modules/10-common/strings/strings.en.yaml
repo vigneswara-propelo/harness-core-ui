@@ -721,6 +721,7 @@ plans:
   subscription: Subscription
   manageSubscription: Manage Subscription
 useTemplate: Use template
+deploymentTemplateSteps: Deployment Template Steps
 saveAsTemplate: Save as Template
 comingSoon: Coming Soon
 comingSoon2: Coming Soon!

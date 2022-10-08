@@ -28,7 +28,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render - with step template 
           <p
             class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
           >
-            cd.addStepTemplatesForYourDeploymentType
+            cd.useStepTemplatesForYourDeploymentType
           </p>
           <div
             class="StyledProps--font StyledProps--main stepsContainer"
@@ -182,7 +182,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render - without step templa
           <p
             class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
           >
-            cd.addStepTemplatesForYourDeploymentType
+            cd.useStepTemplatesForYourDeploymentType
           </p>
           <div
             class="StyledProps--font StyledProps--main stepsContainer"

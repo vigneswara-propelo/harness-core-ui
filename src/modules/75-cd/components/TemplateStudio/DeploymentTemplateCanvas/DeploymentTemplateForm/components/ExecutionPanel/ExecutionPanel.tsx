@@ -134,7 +134,7 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
       >
         <Layout.Vertical spacing="medium" width={'100%'}>
           <Text color={Color.GREY_500} font={{ size: 'small', weight: 'semi-bold' }}>
-            {getString('cd.addStepTemplatesForYourDeploymentType')}
+            {getString('cd.useStepTemplatesForYourDeploymentType')}
           </Text>
           <Container className={css.stepsContainer}>
             <Popover
@@ -150,14 +150,14 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
                     minimal
                     variation={ButtonVariation.PRIMARY}
                     icon="plus"
-                    text={getString('cd.addStepTemplate')}
+                    text={getString('cd.createAndUseTemplate')}
                     onClick={handleAddStepClick}
                   />
                   <Button
                     minimal
                     variation={ButtonVariation.PRIMARY}
                     icon="template-library"
-                    text={getString('cd.useStepTemplate')}
+                    text={getString('templatesLibrary.useTemplateLabel')}
                     onClick={handleUseTemplateClick}
                   />
                 </Layout.Vertical>

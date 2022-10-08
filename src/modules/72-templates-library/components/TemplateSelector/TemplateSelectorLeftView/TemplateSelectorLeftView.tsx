@@ -61,7 +61,11 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   } = selectorData || {}
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>()
   const { getString } = useStrings()
-  const { identifiers, checkboxLabel = getString('templatesLibrary.seeLinkedTemplate') } = linkedTemplate || {}
+  const {
+    identifiers,
+    checkboxLabel = getString('templatesLibrary.seeLinkedTemplate'),
+    showCheckbox = false
+  } = linkedTemplate || {}
   const [page, setPage] = useState(0)
   const [view, setView] = useState<Views>(Views.GRID)
   const [searchParam, setSearchParam] = useState('')
@@ -255,7 +259,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                 </Text>
                 <Container>
                   <Layout.Horizontal flex={{ alignItems: 'center' }} spacing={'medium'}>
-                    {!isEmpty(identifiers) && (
+                    {!isEmpty(identifiers) && showCheckbox && (
                       <Checkbox
                         checked={!isEmpty(selectedTemplateRefs)}
                         labelElement={

@@ -123,6 +123,7 @@ interface Labels {
   addStep?: string
   addStepGroup?: string
   useTemplate?: string
+  addLinkedTemplates?: string
 }
 
 interface PopoverData {
@@ -133,7 +134,8 @@ interface PopoverData {
     isStepGroup: boolean,
     isParallelNodeClicked: boolean,
     event?: DefaultNodeEvent,
-    isTemplate?: boolean
+    isTemplate?: boolean,
+    isLinkedTemplate?: boolean
   ) => void
   isHoverView?: boolean
   data?: ExecutionWrapper
@@ -161,6 +163,20 @@ const renderPopover = ({
     return (
       <>
         <Layout.Vertical className={css.addPopover} spacing="small" padding="small">
+          {labels.addLinkedTemplates && (
+            <RbacButton
+              minimal
+              variation={ButtonVariation.PRIMARY}
+              icon="plus"
+              text={labels.addLinkedTemplates}
+              onClick={() => onPopoverSelection?.(false, isParallelNodeClicked, event, true, true)}
+              featuresProps={{
+                featuresRequest: {
+                  featureNames: [FeatureIdentifier.TEMPLATE_SERVICE]
+                }
+              }}
+            />
+          )}
           {labels.addStep && (
             <Button
               minimal
@@ -209,6 +225,7 @@ export interface ExecutionGraphAddStepEvent {
   isRollback: boolean
   parentIdentifier?: string
   isTemplate?: boolean
+  isLinkedTemplate?: boolean
 }
 
 export interface ExecutionGraphEditStepEvent {
@@ -244,6 +261,7 @@ export interface ExecutionGraphProp<T extends StageElementConfig> {
   canvasButtonsTooltipPosition?: 'top' | 'left'
   pathToStage: string
   templateTypes: { [key: string]: string }
+  addLinkedTemplatesLabel?: string
 }
 
 function ExecutionGraphRef<T extends StageElementConfig>(
@@ -268,7 +286,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     rollBackBannerStyle = {},
     canvasButtonsLayout,
     pathToStage,
-    templateTypes
+    templateTypes,
+    addLinkedTemplatesLabel
   } = props
   const {
     state: { pipelineView },
@@ -324,7 +343,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     isStepGroup: boolean,
     isParallelNodeClicked: boolean,
     event?: DefaultNodeEvent,
-    isTemplate = false
+    isTemplate = false,
+    isLinkedTemplate = false
   ): void => {
     if (!isStepGroup && event) {
       addStep({
@@ -332,7 +352,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         isRollback: state.isRollback,
         stepsMap: state.states,
         isParallel: isParallelNodeClicked,
-        isTemplate: isTemplate
+        isTemplate: isTemplate,
+        isLinkedTemplate
       })
     } else if (event?.entity) {
       const node = {
@@ -374,6 +395,9 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       options.addStepGroup = getString('addStepGroup')
     }
     options.useTemplate = getString('common.useTemplate')
+    if (!isEmpty(addLinkedTemplatesLabel)) {
+      options.addLinkedTemplates = addLinkedTemplatesLabel
+    }
     if (Object.keys(options).length === 1 && options.addStep) {
       onPopoverSelection(false, isParallel, event)
     } else {
