@@ -24,6 +24,7 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import type { CellProps, Renderer } from 'react-table'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import slosEmptyState from '@cv/assets/slosEmptyState.svg'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -382,6 +383,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   }
   return (
     <>
+      <HelpPanel referenceId="sloDetails" type={HelpPanelType.FLOATING_CONTAINER} />
       {!monitoredServiceIdentifier && hasSloFilterApplied && (
         <>
           <Page.Header
