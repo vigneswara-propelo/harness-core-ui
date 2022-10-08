@@ -182,6 +182,10 @@ function DeployInfrastructures({
   }, [infrastructureInputsLoading])
 
   useEffect(() => {
+    setInfrastructures([])
+  }, [environmentIdentifier])
+
+  useEffect(() => {
     // istanbul ignore else
     if (selectedInfrastructure) {
       const parsedInfraYaml = parse(defaultTo(selectedInfrastructure, '{}'))
