@@ -27,7 +27,7 @@ const onUpdate = jest.fn()
 const onChange = jest.fn()
 const formikRef = React.createRef<StepFormikRef<StepElementConfig>>()
 
-describe('GenericExecutionStepEdit tests', () => {
+describe('ECSRollingDeployStepEdit tests', () => {
   beforeEach(() => {
     onUpdate.mockReset()
     onChange.mockReset()

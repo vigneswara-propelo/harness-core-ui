@@ -93,6 +93,12 @@ steps:
       useAwsInstanceFilter: Use AWS Instance Filter
       hostName: Host Name Convention
       vpcs: VPCs
+  ecsRunTaskStep:
+    ecsRunTaskDefinition: ECS Run Task Definition
+    runTaskDefinition: Run Task Definition
+    ecsRunTaskRequestDefinition: ECS Run Task Request Definition
+    runTaskRequestDefinition: Run Task Request Definition
+    skipSteadyStateCheck: Skip Steady-State Check
   ecsBGCreateServiceStep:
     sectionHeaders:
       configureProductionService: Configure your Production Service

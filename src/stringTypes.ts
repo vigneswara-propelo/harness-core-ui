@@ -4886,6 +4886,11 @@ export interface StringsMap {
   'cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN': string
   'cd.steps.ecsBGCreateServiceStep.sectionHeaders.configureProductionService': string
   'cd.steps.ecsBGCreateServiceStep.sectionHeaders.configureStageService': string
+  'cd.steps.ecsRunTaskStep.ecsRunTaskDefinition': string
+  'cd.steps.ecsRunTaskStep.ecsRunTaskRequestDefinition': string
+  'cd.steps.ecsRunTaskStep.runTaskDefinition': string
+  'cd.steps.ecsRunTaskStep.runTaskRequestDefinition': string
+  'cd.steps.ecsRunTaskStep.skipSteadyStateCheck': string
   'cd.steps.kubernetesGcpStep.stepName': string
   'cd.steps.pdcStep.attributesPlaceholder': string
   'cd.steps.pdcStep.filterHostAttributes': string

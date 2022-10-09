@@ -44,6 +44,7 @@ interface HarnessFileStorePropType {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
+  showIdentifierField?: boolean
 }
 
 const showValuesPaths = (selectedManifest: ManifestTypes): boolean => {
@@ -67,7 +68,8 @@ function HarnessFileStore({
   prevStepData,
   previousStep,
   manifestIdsList,
-  isReadonly
+  isReadonly,
+  showIdentifierField = true
 }: StepProps<ConnectorConfigDTO> & HarnessFileStorePropType): React.ReactElement {
   const { getString } = useStrings()
 
@@ -134,7 +136,9 @@ function HarnessFileStore({
         initialValues={getInitialValues()}
         formName="harnessFileStore"
         validationSchema={Yup.object().shape({
-          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+          ...(showIdentifierField
+            ? ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName'))
+            : {}),
           files: Yup.lazy((value): Yup.Schema<unknown> => {
             if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {
               return Yup.array().of(Yup.string().required(getString('pipeline.manifestType.pathRequired')))
@@ -157,19 +161,15 @@ function HarnessFileStore({
                 className={css.manifestForm}
               >
                 <div className={css.manifestStepWidth}>
-                  <div className={css.halfWidth}>
-                    <Text
-                      margin={{ bottom: 'xsmall' }}
-                      font={{ size: 'small', weight: 'semi-bold' }}
-                      color={Color.GREY_600}
-                    >
-                      {getString('pipeline.manifestType.manifestIdentifier')}
-                    </Text>
-                    <FormInput.Text
-                      name="identifier"
-                      placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
-                    />
-                  </div>
+                  {showIdentifierField && (
+                    <div className={css.halfWidth}>
+                      <FormInput.Text
+                        name="identifier"
+                        label={getString('pipeline.manifestType.manifestIdentifier')}
+                        placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
+                      />
+                    </div>
+                  )}
                   <div className={css.halfWidth}>
                     <MultiConfigSelectField
                       name="files"

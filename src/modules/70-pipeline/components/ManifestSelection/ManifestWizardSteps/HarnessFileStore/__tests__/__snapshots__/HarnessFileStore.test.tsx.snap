@@ -28,15 +28,25 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
               <div
                 class="halfWidth"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
-                >
-                  pipeline.manifestType.manifestIdentifier
-                </p>
                 <div
                   class="bp3-form-group"
                   data-id="identifier-0"
                 >
+                  <label
+                    class="bp3-label"
+                    for="identifier"
+                  >
+                    <span
+                      class="Tooltip--acenter"
+                      data-tooltip-id="harnessFileStore_identifier"
+                    >
+                      pipeline.manifestType.manifestIdentifier
+                    </span>
+                     
+                    <span
+                      class="bp3-text-muted"
+                    />
+                  </label>
                   <div
                     class="bp3-form-content"
                   >
@@ -789,15 +799,25 @@ exports[`Harness File Store tests initial rendering 1`] = `
               <div
                 class="halfWidth"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
-                >
-                  pipeline.manifestType.manifestIdentifier
-                </p>
                 <div
                   class="bp3-form-group"
                   data-id="identifier-0"
                 >
+                  <label
+                    class="bp3-label"
+                    for="identifier"
+                  >
+                    <span
+                      class="Tooltip--acenter"
+                      data-tooltip-id="harnessFileStore_identifier"
+                    >
+                      pipeline.manifestType.manifestIdentifier
+                    </span>
+                     
+                    <span
+                      class="bp3-text-muted"
+                    />
+                  </label>
                   <div
                     class="bp3-form-content"
                   >
@@ -1550,15 +1570,25 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
               <div
                 class="halfWidth"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
-                >
-                  pipeline.manifestType.manifestIdentifier
-                </p>
                 <div
                   class="bp3-form-group"
                   data-id="identifier-0"
                 >
+                  <label
+                    class="bp3-label"
+                    for="identifier"
+                  >
+                    <span
+                      class="Tooltip--acenter"
+                      data-tooltip-id="harnessFileStore_identifier"
+                    >
+                      pipeline.manifestType.manifestIdentifier
+                    </span>
+                     
+                    <span
+                      class="bp3-text-muted"
+                    />
+                  </label>
                   <div
                     class="bp3-form-content"
                   >
