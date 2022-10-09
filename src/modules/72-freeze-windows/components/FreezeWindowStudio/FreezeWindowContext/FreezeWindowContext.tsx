@@ -16,12 +16,14 @@ import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderPr
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetFreeze } from 'services/cd-ng'
 import { FreezeWindowLevels, WindowPathProps } from '@freeze-windows/types'
-import { FreezeWindowContextActions } from './FreezeWidowActions'
+import { FreezeWindowContextActions, DrawerTypes } from './FreezeWidowActions'
 import { initialState, FreezeWindowReducerState, FreezeReducer, DefaultFreezeId } from './FreezeWindowReducer'
 
 export interface FreezeWindowContextInterface {
   state: FreezeWindowReducerState
   view: string
+  drawerType?: string
+  setDrawerType: (drawerType?: DrawerTypes) => void
   isReadOnly: boolean
   setView: (view: SelectedView) => void
   setYamlHandler: (yamlHandler: YamlBuilderHandlerBinding) => void
@@ -38,6 +40,8 @@ export const FreezeWindowContext = React.createContext<FreezeWindowContextInterf
   state: initialState,
   isReadOnly: false,
   view: SelectedView.VISUAL,
+  drawerType: '',
+  setDrawerType: noop,
   setView: noop,
   setYamlHandler: noop,
   updateYamlView: noop,
@@ -60,6 +64,7 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
     'freeze_studio_view',
     isInvalidYAML ? SelectedView.YAML : SelectedView.VISUAL
   )
+  const [drawerType, setDrawerType] = React.useState<DrawerTypes>()
   const { accountId, projectIdentifier, orgIdentifier, windowIdentifier } = useParams<WindowPathProps>()
   const [freezeWindowLevel, setFreezeWindowLevel] = React.useState<FreezeWindowLevels>(FreezeWindowLevels.ORG)
   const [isUpdatingFreeze, setIsUpdatingFreeze] = React.useState<boolean>(false)
@@ -124,6 +129,8 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
         isUpdatingFreeze,
         freezeObjError,
         refetchFreezeObj,
+        drawerType,
+        setDrawerType,
         isReadOnly: false
       }}
     >
