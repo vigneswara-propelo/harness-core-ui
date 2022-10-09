@@ -24,7 +24,7 @@ import { FieldArray, Form, FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { cloneDeep, get, merge, set } from 'lodash-es'
+import { cloneDeep, get, set } from 'lodash-es'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import type {
@@ -319,9 +319,6 @@ export function CustomArtifactOptionalConfiguration(
           )
         : formData?.spec?.delegateSelectors
     set(artifactObj, 'spec.delegateSelectors', delegateSelectorsStrings)
-    if (isIdentifierAllowed) {
-      merge(artifactObj, { identifier: formData?.identifier })
-    }
     handleSubmit(artifactObj)
   }
 
