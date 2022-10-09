@@ -6,16 +6,19 @@
  */
 
 import React, { useState } from 'react'
-import { noop } from 'lodash-es'
+import type { CellProps, Renderer } from 'react-table'
+import { useStrings } from 'framework/strings'
 import { NotificationsHeader } from '@pipeline/components/Notifications/NotificationHeader'
 import NotificationTable, {
-  NotificationRulesItem as _NotificationRulesItem
+  NotificationRulesItem as _NotificationRulesItem,
+  RenderColumnEventsContent
 } from '@pipeline/components/Notifications/NotificationTable'
 import { Actions } from '@pipeline/components/Notifications/NotificationUtils'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import type { FreezeNotificationRules } from '@freeze-windows/types'
 import { FreezeEvents } from './FreezeEvents'
 import css from '@pipeline/components/PipelineStudio/PipelineNotifications/PipelineNotifications.module.scss'
+import notificationCss from '@pipeline/components/Notifications/NotificationTable.module.scss'
 
 const PAGE_SIZE = 10
 
@@ -24,24 +27,40 @@ export interface NotificationRulesItem {
   notificationRules: FreezeNotificationRules
 }
 
+const RenderColumnEvents: Renderer<CellProps<NotificationRulesItem>> = ({ row }) => {
+  const data = row.original.notificationRules.events?.map(event => event.type)
+  return <RenderColumnEventsContent data={data as any} />
+}
+
 export const FreezeNotifications = () => {
+  const { getString } = useStrings()
   const {
     isReadOnly,
-    state: { freezeObj }
+    state: { freezeObj },
+    updateFreeze: updateFreezeInContext,
+    setDrawerType
   } = React.useContext(FreezeWindowContext)
   const [selectedNotificationTypeFilter, setSelectedNotificationTypeFilter] = useState<string | undefined>(undefined)
   const [page, setPage] = React.useState(0)
-  // Freeze Object Notification rules
-  const [initialNotificationRules, setInitialNotificationRules] = React.useState<FreezeNotificationRules[]>([])
   // Notification component rules
   const [notificationRulesInState, setNotificationRulesInState] = React.useState<FreezeNotificationRules[]>(
-    initialNotificationRules || []
+    (freezeObj.notificationRules || []) as FreezeNotificationRules[]
   )
 
-  React.useEffect(() => {
-    setInitialNotificationRules((freezeObj.notificationRules || []) as FreezeNotificationRules[])
-    setNotificationRulesInState((freezeObj.notificationRules || []) as FreezeNotificationRules[])
-  }, [freezeObj.notificationRules])
+  const eventsColumnConfig = {
+    Header: getString('conditions').toUpperCase(),
+    id: 'events',
+    className: notificationCss.notificationTableHeader,
+    accessor: (row: NotificationRulesItem) => row.notificationRules.events,
+    width: '35%',
+    Cell: RenderColumnEvents,
+    disableSortBy: true
+  }
+
+  const applyChanges = async () => {
+    await updateFreezeInContext({ notificationRules: notificationRulesInState })
+    setDrawerType()
+  }
 
   const allRowsData: NotificationRulesItem[] = (notificationRulesInState || []).map(
     (notificationRules: FreezeNotificationRules, index: number) => ({
@@ -62,10 +81,10 @@ export const FreezeNotifications = () => {
     <>
       <NotificationsHeader
         isReadonly={isReadOnly}
-        applyChanges={noop}
-        discardChanges={noop}
+        applyChanges={applyChanges}
+        discardChanges={() => setDrawerType()}
         name={freezeObj.name as string}
-        isUpdated={false} // todo implement
+        isUpdated={true} // todo implement
       />
       <div className={css.pipelineNotifications}>
         <NotificationTable
@@ -108,6 +127,7 @@ export const FreezeNotifications = () => {
           pageIndex={page}
           isReadonly={isReadOnly}
           EventsTabComponent={FreezeEvents}
+          eventsColumnConfig={eventsColumnConfig as any}
         />
       </div>
     </>

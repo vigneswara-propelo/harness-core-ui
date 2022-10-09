@@ -55,6 +55,7 @@ export interface NotificationTableProps {
   getExistingNotificationNames?: (skipIndex?: number) => string[]
   isReadonly?: boolean
   EventsTabComponent?: React.FC
+  eventsColumnConfig?: CustomColumn<NotificationRulesItem>
 }
 
 type CustomColumn<T extends Record<string, any>> = Column<T> & {
@@ -110,8 +111,7 @@ const RenderColumnName: Renderer<CellProps<NotificationRulesItem>> = ({ row }) =
 }
 
 // eslint-disable-next-line react/function-component-definition
-const RenderColumnEvents: Renderer<CellProps<NotificationRulesItem>> = ({ row }) => {
-  const data = row.original.notificationRules.pipelineEvents?.map(event => event.type)
+export const RenderColumnEventsContent: React.FC<{ data: PipelineEvent['type'][] }> = ({ data }) => {
   const baseData = data?.slice(0, 3)
   const popoverData = data?.slice(3, data.length)
   return (
@@ -137,6 +137,12 @@ const RenderColumnEvents: Renderer<CellProps<NotificationRulesItem>> = ({ row })
       ) : null}
     </Layout.Horizontal>
   )
+}
+
+// eslint-disable-next-line react/function-component-definition
+const RenderColumnEvents: Renderer<CellProps<NotificationRulesItem>> = ({ row }) => {
+  const data = row.original.notificationRules.pipelineEvents?.map(event => event.type)
+  return <RenderColumnEventsContent data={data as PipelineEvent['type'][]} />
 }
 
 // eslint-disable-next-line react/function-component-definition
@@ -213,7 +219,8 @@ function NotificationTable(props: NotificationTableProps): React.ReactElement {
     stagesOptions = [],
     getExistingNotificationNames = (_skipIndex?: number) => [],
     isReadonly = false,
-    EventsTabComponent
+    EventsTabComponent,
+    eventsColumnConfig
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -250,15 +257,17 @@ function NotificationTable(props: NotificationTableProps): React.ReactElement {
         Cell: RenderColumnName,
         disableSortBy: true
       },
-      {
-        Header: getString('notifications.pipelineEvents').toUpperCase(),
-        id: 'events',
-        className: css.notificationTableHeader,
-        accessor: row => row.notificationRules.pipelineEvents,
-        width: '35%',
-        Cell: RenderColumnEvents,
-        disableSortBy: true
-      },
+      eventsColumnConfig
+        ? eventsColumnConfig
+        : {
+            Header: getString('notifications.pipelineEvents').toUpperCase(),
+            id: 'events',
+            className: css.notificationTableHeader,
+            accessor: row => row.notificationRules.pipelineEvents,
+            width: '35%',
+            Cell: RenderColumnEvents,
+            disableSortBy: true
+          },
       {
         Header: getString('notifications.notificationMethod').toUpperCase(),
         id: 'methods',
