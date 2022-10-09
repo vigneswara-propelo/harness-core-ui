@@ -8,8 +8,9 @@
 import React, { useState } from 'react'
 import { noop } from 'lodash-es'
 import { NotificationsHeader } from '@pipeline/components/Notifications/NotificationHeader'
-import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import NotificationTable from '@pipeline/components/Notifications/NotificationTable'
+import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
+import { FreezeEvents } from './FreezeEvents'
 import css from '@pipeline/components/PipelineStudio/PipelineNotifications/PipelineNotifications.module.scss'
 
 const PAGE_SIZE = 10
@@ -47,6 +48,7 @@ export const FreezeNotifications = () => {
           pageSize={PAGE_SIZE}
           pageIndex={page}
           isReadonly={isReadOnly}
+          EventsTabComponent={FreezeEvents}
         />
       </div>
     </>

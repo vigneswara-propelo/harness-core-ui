@@ -37,3 +37,8 @@ globalFreeze:
   enableFreezeTitle: Enable Freeze on all deployments for this {{scope}}
   enableFreezeSuccess: Freeze enabled on all deployments for this {{scope}}
   enableFreezeFailure: Failed to enable freeze
+
+freezeNotifications:
+  windowEnabled: Freeze window is enabled
+  rejectedDeployments: Deployments are rejected due to freeze window
+  rejectedInvocations: Trigger invocations are rejected due to freeze window

@@ -54,6 +54,7 @@ export interface NotificationTableProps {
   stagesOptions?: MultiSelectOption[]
   getExistingNotificationNames?: (skipIndex?: number) => string[]
   isReadonly?: boolean
+  EventsTabComponent?: React.FC
 }
 
 type CustomColumn<T extends Record<string, any>> = Column<T> & {
@@ -211,7 +212,8 @@ function NotificationTable(props: NotificationTableProps): React.ReactElement {
     pageIndex,
     stagesOptions = [],
     getExistingNotificationNames = (_skipIndex?: number) => [],
-    isReadonly = false
+    isReadonly = false,
+    EventsTabComponent
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -222,7 +224,8 @@ function NotificationTable(props: NotificationTableProps): React.ReactElement {
     },
     stagesOptions,
     getExistingNotificationNames,
-    expressions
+    expressions,
+    EventsTabComponent
   })
 
   const columns: CustomColumn<NotificationRulesItem>[] = useMemo(

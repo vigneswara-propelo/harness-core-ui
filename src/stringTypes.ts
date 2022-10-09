@@ -984,6 +984,7 @@ export interface StringsMap {
   'common.yearly': string
   'common.zipCode': string
   'notifications.buttonSend': string
+  'notifications.configureConditions': string
   'notifications.emailOrAlias': string
   'notifications.emailRecipients': string
   'notifications.emailTestSuccess': string
@@ -4179,6 +4180,9 @@ export interface StringsMap {
   'pipeline.viewPipeline': string
   'pipeline.waitStep.validation.duration10SecMinimum': string
   'pipeline.warningForInvalidYAMLDiscard': string
+  'freezeWindows.freezeNotifications.rejectedDeployments': string
+  'freezeWindows.freezeNotifications.rejectedInvocations': string
+  'freezeWindows.freezeNotifications.windowEnabled': string
   'freezeWindows.freezeStudio.allOrganizations': string
   'freezeWindows.freezeStudio.defineResources': string
   'freezeWindows.freezeStudio.excludeFollowingOrg': string
@@ -7312,7 +7316,6 @@ export interface StringsMap {
   'cv.nonAnomalous': string
   'cv.notifications.changeType': string
   'cv.notifications.condition': string
-  'cv.notifications.configureAlertConditions': string
   'cv.notifications.deleteNotification': string
   'cv.notifications.deleteNotificationWarning': string
   'cv.notifications.errorBudgetPolicies': string
