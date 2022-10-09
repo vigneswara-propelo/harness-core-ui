@@ -64,6 +64,7 @@ export enum StepType {
   ServiceNowApproval = 'ServiceNowApproval',
   ServiceNowCreate = 'ServiceNowCreate',
   ServiceNowUpdate = 'ServiceNowUpdate',
+  ServiceNowImportSet = 'ServiceNowImportSet',
   Verify = 'Verify',
   JiraCreate = 'JiraCreate',
   JiraUpdate = 'JiraUpdate',

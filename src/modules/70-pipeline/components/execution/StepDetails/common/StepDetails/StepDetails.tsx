@@ -9,6 +9,7 @@ import React from 'react'
 import { Text, Layout, Icon } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useParams, Link } from 'react-router-dom'
+import { isArray, isEmpty, isNil } from 'lodash-es'
 import { Duration } from '@common/exports'
 import { useDelegateSelectionLogsModal } from '@common/components/DelegateSelectionLogs/DelegateSelectionLogs'
 import type { DelegateInfo, ExecutableResponse, ExecutionNode } from 'services/pipeline-ng'
@@ -96,7 +97,15 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
         {labels.map((label, index) => (
           <tr key={index}>
             <th>{label.label}</th>
-            <td>{label.value}</td>
+            <td>
+              {isArray(label.value)
+                ? label.value.map((outcome, idx) => {
+                    if (!isNil(outcome) && !isEmpty(outcome)) {
+                      return <div key={idx}>{outcome}</div>
+                    }
+                  })
+                : label.value}
+            </td>
           </tr>
         ))}
         {showDelegateRow(step.delegateInfoList, taskList) && (

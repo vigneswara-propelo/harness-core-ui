@@ -3900,6 +3900,12 @@ export interface StringsMap {
   'pipeline.serviceNowCreateStep.validations.shortDescription': string
   'pipeline.serviceNowCreateStep.validations.templateName': string
   'pipeline.serviceNowCreateStep.validations.validTemplateName': string
+  'pipeline.serviceNowImportSetStep.fetchingStagingTableNamePlaceholder': string
+  'pipeline.serviceNowImportSetStep.jsonBody': string
+  'pipeline.serviceNowImportSetStep.stagingTable': string
+  'pipeline.serviceNowImportSetStep.validations.invalidJson': string
+  'pipeline.serviceNowImportSetStep.validations.jsonRequired': string
+  'pipeline.serviceNowImportSetStep.validations.stagingTableRequired': string
   'pipeline.serviceNowUpdateStep.fieldType.applyFromTemplate': string
   'pipeline.serviceNowUpdateStep.fieldType.updateFields': string
   'pipeline.singleStageExecution': string

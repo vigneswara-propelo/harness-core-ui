@@ -270,6 +270,14 @@ serviceNowUpdateStep:
   fieldType:
     applyFromTemplate: Apply from template
     updateFields: Update Fields
+serviceNowImportSetStep:
+  stagingTable: Staging Table
+  jsonBody: JSON Body
+  validations:
+    stagingTableRequired: Staging Table is required
+    jsonRequired: JSON is required
+    invalidJson: JSON is not valid
+  fetchingStagingTableNamePlaceholder: Fetching Staging Table Name...
 commonApprovalStep:
   execution:
     allConditionsMsg: 'If all of the following conditions are met:'

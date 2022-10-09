@@ -69,6 +69,7 @@ import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTr
 import routes from '@common/RouteDefinitions'
 import { ServiceNowCreateUpdateView } from '@pipeline/components/execution/StepDetails/views/ServiceNowCreateUpdateView/ServiceNowCreateUpdateView'
 import { ModuleName } from 'framework/types/ModuleName'
+import { ServiceNowImportSetView } from '@pipeline/components/execution/StepDetails/views/ServiceNowImportSetView/ServiceNowImportSetView'
 import PipelineResourceRenderer from './components/RbacResourceModals/PipelineResourceRenderer/PipelineResourceRenderer'
 import { JiraCreateUpdateView } from './components/execution/StepDetails/views/JiraCreateUpdateView/JiraCreateUpdateView'
 import ExecutionErrorTrackingView from './pages/execution/ExecutionErrorTrackingView/ExecutionErrorTrackingView'
@@ -175,6 +176,10 @@ ExecFactory.registerStepDetails(StepType.ServiceNowCreate, {
 })
 ExecFactory.registerStepDetails(StepType.ServiceNowUpdate, {
   component: ServiceNowCreateUpdateView
+})
+
+ExecFactory.registerStepDetails(StepType.ServiceNowImportSet, {
+  component: ServiceNowImportSetView
 })
 
 ExecFactory.registerStepDetails(StepType.Policy, {
