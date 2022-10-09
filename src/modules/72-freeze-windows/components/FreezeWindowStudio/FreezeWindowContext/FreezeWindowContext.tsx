@@ -15,7 +15,7 @@ import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetFreeze } from 'services/cd-ng'
-import { FreezeWindowLevels, WindowPathProps } from '@freeze-windows/types'
+import { FreezeWindowLevels, WindowPathProps, FreezeNotificationRules } from '@freeze-windows/types'
 import { FreezeWindowContextActions, DrawerTypes } from './FreezeWidowActions'
 import { initialState, FreezeWindowReducerState, FreezeReducer, DefaultFreezeId } from './FreezeWindowReducer'
 
@@ -24,6 +24,7 @@ export interface FreezeWindowContextInterface {
   view: string
   drawerType?: string
   setDrawerType: (drawerType?: DrawerTypes) => void
+  notificationRules?: FreezeNotificationRules[]
   isReadOnly: boolean
   setView: (view: SelectedView) => void
   setYamlHandler: (yamlHandler: YamlBuilderHandlerBinding) => void
@@ -42,6 +43,7 @@ export const FreezeWindowContext = React.createContext<FreezeWindowContextInterf
   view: SelectedView.VISUAL,
   drawerType: '',
   setDrawerType: noop,
+  notificationRules: [],
   setView: noop,
   setYamlHandler: noop,
   updateYamlView: noop,

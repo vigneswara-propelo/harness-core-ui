@@ -8,6 +8,7 @@
 import type { SelectOption } from '@harness/uicore'
 import type { PartiallyRequired } from '@pipeline/utils/types'
 import type { FreezeFilterPropertiesDTO, GetFreezeListQueryParams } from 'services/cd-ng'
+import type { NotificationRules } from 'services/pipeline-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 export enum FreezeWindowLevels {
@@ -46,6 +47,16 @@ export enum EnvironmentType {
 
 export interface WindowPathProps extends ProjectPathProps {
   windowIdentifier: string
+}
+
+// This should come from BE
+export interface FreezeEvent {
+  type?: 'WINDOW_ENABLED' | 'REJECTED_DEPLOYENTS' | 'TRIGGER_INVOCATIONS_REJECTED'
+}
+
+// This should come from BE
+export interface FreezeNotificationRules extends NotificationRules {
+  events: FreezeEvent[]
 }
 
 export type ProjctsByOrgId = { projects: SelectOption[]; projectsMap: Record<string, SelectOption> }

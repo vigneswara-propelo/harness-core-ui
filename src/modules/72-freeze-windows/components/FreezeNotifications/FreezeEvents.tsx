@@ -10,23 +10,13 @@ import { isEmpty, noop } from 'lodash-es'
 import { Button, ButtonVariation, Formik, FormikForm, FormInput, Layout, StepProps, Text } from '@wings-software/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import type { NotificationRules } from 'services/pipeline-ng'
+import type { FreezeNotificationRules, FreezeEvent } from '@freeze-windows/types'
 import css from '@pipeline/components/Notifications/useNotificationModal.module.scss'
 
 export enum EventType {
   WINDOW_ENABLED = 'WINDOW_ENABLED',
   REJECTED_DEPLOYENTS = 'REJECTED_DEPLOYENTS',
   TRIGGER_INVOCATIONS_REJECTED = 'TRIGGER_INVOCATIONS_REJECTED'
-}
-
-// This should come from BE
-interface FreezeEvent {
-  type?: 'WINDOW_ENABLED' | 'REJECTED_DEPLOYENTS' | 'TRIGGER_INVOCATIONS_REJECTED'
-}
-
-// This should come from BE
-interface FreezeNotificationRules extends NotificationRules {
-  events: FreezeEvent[]
 }
 
 const getEventItems = (getString: UseStringsReturn['getString']) => [
@@ -53,13 +43,22 @@ export const FreezeEvents = ({ nextStep, prevStepData }: StepProps<FreezeNotific
   const { getString } = useStrings()
   const [eventItems] = React.useState(getEventItems(getString))
   const initialValues: EventsFormData = { types: {} }
+  const types: Required<EventsFormData>['types'] = {}
+
+  prevStepData?.events?.map(event => {
+    const type = event.type
+    if (type) {
+      types[type] = true
+    }
+  })
+
   return (
     <Layout.Vertical spacing="xxlarge" padding="small">
       <Text font="medium" color={Color.BLACK}>
         {getString('notifications.configureConditions')}
       </Text>
       <Formik<EventsFormData>
-        initialValues={initialValues}
+        initialValues={{ ...initialValues, types }}
         formName="freezeEvents"
         validateOnChange={false}
         onSubmit={values => {
