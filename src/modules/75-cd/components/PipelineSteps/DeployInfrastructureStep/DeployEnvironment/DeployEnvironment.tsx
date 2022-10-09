@@ -274,6 +274,16 @@ function DeployEnvironment({
       }
     } else if (path && !firstRender) {
       updateStageFormTemplate({ environmentRef: RUNTIME_INPUT_VALUE }, `${path}`)
+      formik?.setValues(
+        produce(formik?.values, draft => {
+          set(draft, 'environment', {
+            environmentRef: RUNTIME_INPUT_VALUE,
+            environmentInputs: RUNTIME_INPUT_VALUE,
+            serviceOverrideInputs: RUNTIME_INPUT_VALUE,
+            infrastructureDefinitions: RUNTIME_INPUT_VALUE
+          })
+        })
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEnvironment])
