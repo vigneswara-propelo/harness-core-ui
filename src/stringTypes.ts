@@ -712,6 +712,40 @@ export interface StringsMap {
   'common.savedSuccessfully': string
   'common.saving': string
   'common.schedule': string
+  'common.schedulePanel.FRI': string
+  'common.schedulePanel.MON': string
+  'common.schedulePanel.SAT': string
+  'common.schedulePanel.SUN': string
+  'common.schedulePanel.THU': string
+  'common.schedulePanel.TUE': string
+  'common.schedulePanel.WED': string
+  'common.schedulePanel.cronExpression': string
+  'common.schedulePanel.cronExpressionRequired': string
+  'common.schedulePanel.dailyTabTitle': string
+  'common.schedulePanel.dayOfMonthLabel': string
+  'common.schedulePanel.dayOfWeekLabel': string
+  'common.schedulePanel.enterCustomCron': string
+  'common.schedulePanel.expressionBreakdown': string
+  'common.schedulePanel.hourlyTabTitle': string
+  'common.schedulePanel.hoursAnd': string
+  'common.schedulePanel.hoursLabel': string
+  'common.schedulePanel.minutesAfterTheHour': string
+  'common.schedulePanel.minutesLabel': string
+  'common.schedulePanel.minutesParentheses': string
+  'common.schedulePanel.monthLabel': string
+  'common.schedulePanel.monthlyTabTitle': string
+  'common.schedulePanel.monthsParentheses': string
+  'common.schedulePanel.ofEvery': string
+  'common.schedulePanel.onThe': string
+  'common.schedulePanel.runAt': string
+  'common.schedulePanel.runDailyAt': string
+  'common.schedulePanel.runEvery': string
+  'common.schedulePanel.runOn': string
+  'common.schedulePanel.runOnSpecificDay': string
+  'common.schedulePanel.runOnSpecificDayMonth': string
+  'common.schedulePanel.startingWith': string
+  'common.schedulePanel.weeklyTabTitle': string
+  'common.schedulePanel.yearlyTabTitle': string
   'common.scope': string
   'common.script': string
   'common.scriptRequired': string
@@ -1735,8 +1769,10 @@ export interface StringsMap {
   'authSettings.ldap.nameAttributesRequired': string
   'authSettings.ldap.newGroupQuery': string
   'authSettings.ldap.newUserQuery': string
+  'authSettings.ldap.nextIterations': string
   'authSettings.ldap.queryTestFail': string
   'authSettings.ldap.queryTestSuccessful': string
+  'authSettings.ldap.reviewLdapSyncExpression': string
   'authSettings.ldap.scheduledSyncs': string
   'authSettings.ldap.searchFilter': string
   'authSettings.ldap.searchFilterRequired': string
@@ -1748,6 +1784,7 @@ export interface StringsMap {
   'authSettings.ldap.updateStepFailMessage': string
   'authSettings.ldap.userQueries': string
   'authSettings.ldap.userQueryTitle': string
+  'authSettings.ldap.userSyncSchedule': string
   'authSettings.ldap.verifyAndEnableConfig': string
   'authSettings.ldapProviderDeleted': string
   'authSettings.lockoutDuration': string
