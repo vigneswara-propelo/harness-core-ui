@@ -84,7 +84,9 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
     try {
       const { template } = await getTemplate({
         templateType: 'Step',
-        allChildTypes: ALLOWED_STEP_TEMPLATE_TYPES,
+        filterProperties: {
+          childTypes: ALLOWED_STEP_TEMPLATE_TYPES
+        },
         disableVersionChange: true,
         allowedUsages: [TemplateUsage.USE]
       })

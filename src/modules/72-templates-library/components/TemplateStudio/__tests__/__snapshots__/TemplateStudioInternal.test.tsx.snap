@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<TemplateStudio /> tests snapshot test for new template with git sync 1`] = `
+exports[`<TemplateStudioInternal /> tests snapshot test for new template with git sync 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--small rightMargin StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
@@ -382,7 +382,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template with git sync 1
 </div>
 `;
 
-exports[`<TemplateStudio /> tests snapshot test for new template without git sync 1`] = `
+exports[`<TemplateStudioInternal /> tests snapshot test for new template without git sync 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--small rightMargin StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
@@ -764,7 +764,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template without git syn
 </div>
 `;
 
-exports[`<TemplateStudio /> tests snapshot test for template studio in visual view 1`] = `
+exports[`<TemplateStudioInternal /> tests snapshot test for template studio in visual view 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--small rightMargin StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
