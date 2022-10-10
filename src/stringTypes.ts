@@ -6627,9 +6627,15 @@ export interface StringsMap {
   'ci.getStartedWithCI.carousel.labels.useCaching': string
   'ci.getStartedWithCI.carousel.labels.usePlugins': string
   'ci.getStartedWithCI.chooseDiffInfra': string
+  'ci.getStartedWithCI.chooseExistingYAML': string
+  'ci.getStartedWithCI.chooseExistingYAMLHelptext': string
+  'ci.getStartedWithCI.chooseStarterConfig': string
   'ci.getStartedWithCI.cloneCodebaseHelpText': string
   'ci.getStartedWithCI.codeRepo': string
   'ci.getStartedWithCI.configInfra': string
+  'ci.getStartedWithCI.configurationOption': string
+  'ci.getStartedWithCI.configurePipeline': string
+  'ci.getStartedWithCI.configureYourPipeline': string
   'ci.getStartedWithCI.connectRepo': string
   'ci.getStartedWithCI.createPipeline': string
   'ci.getStartedWithCI.createPipelineWithOtherOption': string
@@ -6660,7 +6666,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.parallelizationHelpText': string
   'ci.getStartedWithCI.parameterization': string
   'ci.getStartedWithCI.parameterizationHelpText': string
-  'ci.getStartedWithCI.plsChoose': string
+  'ci.getStartedWithCI.pleaseChoose': string
   'ci.getStartedWithCI.provisionSecureEnv': string
   'ci.getStartedWithCI.provisioningFailed': string
   'ci.getStartedWithCI.provisioningHelpText': string
@@ -6672,10 +6678,13 @@ export interface StringsMap {
   'ci.getStartedWithCI.setUpAuth': string
   'ci.getStartedWithCI.settingUpCIPipeline': string
   'ci.getStartedWithCI.startProvisioning': string
+  'ci.getStartedWithCI.starterPipeline': string
+  'ci.getStartedWithCI.starterPipelineHelptext': string
   'ci.getStartedWithCI.takeToTheNextLevel': string
   'ci.getStartedWithCI.ti': string
   'ci.getStartedWithCI.tiHelpText': string
   'ci.getStartedWithCI.troubleShootFailedProvisioning': string
+  'ci.getStartedWithCI.validYAMLFile': string
   'ci.gradleNote1': string
   'ci.gradleNote2': string
   'ci.gradleNotesTitle': string
