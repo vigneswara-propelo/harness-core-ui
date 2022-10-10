@@ -32,7 +32,6 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
 import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
@@ -54,7 +53,6 @@ interface DeployInfrastructureProps extends Required<Omit<DeployEnvironmentEntit
   allowableTypes: AllowedTypes
   environmentIdentifier: string
   isMultiInfrastructure?: boolean
-  stepViewType?: StepViewType
 }
 
 export function getAllFixedInfrastructures(
@@ -103,9 +101,10 @@ export default function DeployInfrastructure({
   )
 
   // Constants
-  const isFixed = isMultiInfrastructure
-    ? Array.isArray(values.infrastructures?.[environmentIdentifier])
-    : getMultiTypeFromValue(values.infrastructure) === MultiTypeInputType.FIXED
+  const isFixed =
+    getMultiTypeFromValue(
+      isMultiInfrastructure ? values.infrastructures?.[environmentIdentifier] : values.infrastructure
+    ) === MultiTypeInputType.FIXED
 
   const shouldAddCustomDeploymentData =
     deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier
@@ -285,8 +284,8 @@ export default function DeployInfrastructure({
       <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         {isMultiInfrastructure ? (
           <FormMultiTypeMultiSelectDropDown
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructure')}
-            tooltipProps={{ dataTooltipId: 'specifyYourInfrastructure' }}
+            label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructures')}
+            tooltipProps={{ dataTooltipId: 'specifyYourInfrastructures' }}
             name={`infrastructures.${environmentIdentifier}`}
             // Form group disabled
             disabled={disabled}
@@ -306,8 +305,8 @@ export default function DeployInfrastructure({
           />
         ) : (
           <FormInput.MultiTypeInput
-            tooltipProps={{ dataTooltipId: 'specifyYourInfrastructures' }}
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructures')}
+            tooltipProps={{ dataTooltipId: 'specifyYourInfrastructure' }}
+            label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructure')}
             name="infrastructure"
             useValue
             disabled={disabled}

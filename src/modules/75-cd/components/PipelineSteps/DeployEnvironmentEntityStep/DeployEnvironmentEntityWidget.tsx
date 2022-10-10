@@ -9,7 +9,7 @@ import React, { BaseSyntheticEvent, useEffect, useRef, useState } from 'react'
 import { isEmpty, isNil, noop, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import produce from 'immer'
-import { Divider, RadioGroup } from '@blueprintjs/core'
+import { RadioGroup } from '@blueprintjs/core'
 import cx from 'classnames'
 
 import {
@@ -30,12 +30,10 @@ import { StringKeys, useStrings } from 'framework/strings'
 
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import { getEnvironmentTabV2Schema } from '../PipelineStepsUtil'
 import type { DeployEnvironmentEntityCustomStepProps, DeployEnvironmentEntityFormState } from './types'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
-import DeployInfrastructure from './DeployInfrastructure/DeployInfrastructure'
 import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
 
 import css from './DeployEnvironmentEntityStep.module.scss'
@@ -45,7 +43,6 @@ export interface DeployEnvironmentEntityWidgetProps extends Required<DeployEnvir
   readonly: boolean
   allowableTypes: AllowedTypes
   onUpdate?: (data: DeployEnvironmentEntityFormState) => void
-  stepViewType?: StepViewType
 }
 
 function getRadioValueFromInitialValues(initialValues: DeployEnvironmentEntityFormState): StringKeys {
@@ -61,7 +58,6 @@ export default function DeployEnvironmentEntityWidget({
   readonly,
   allowableTypes,
   onUpdate,
-  stepViewType,
   stageIdentifier,
   deploymentType,
   customDeploymentRef,
@@ -219,7 +215,6 @@ export default function DeployEnvironmentEntityWidget({
 
           const isMultiEnvironment = !isNil(values.environments)
           const isEnvironmentGroup = !isNil(values.environmentGroup)
-          const isEnvironmentFixed = getMultiTypeFromValue(values.environment) === MultiTypeInputType.FIXED
 
           return (
             <FormikForm>
@@ -269,28 +264,12 @@ export default function DeployEnvironmentEntityWidget({
                       initialValues={initialValues}
                       readonly={readonly}
                       allowableTypes={allowableTypes}
-                      stepViewType={stepViewType}
                       isMultiEnvironment={isMultiEnvironment}
                       stageIdentifier={stageIdentifier}
                       deploymentType={deploymentType}
                       customDeploymentRef={customDeploymentRef}
                       gitOpsEnabled={gitOpsEnabled}
                     />
-                  )}
-                  {isEnvironmentFixed && values.environment && (
-                    <>
-                      <Divider />
-                      <DeployInfrastructure
-                        initialValues={initialValues}
-                        readonly={readonly}
-                        allowableTypes={allowableTypes}
-                        environmentIdentifier={values.environment}
-                        stepViewType={stepViewType}
-                        stageIdentifier={stageIdentifier}
-                        deploymentType={deploymentType}
-                        customDeploymentRef={customDeploymentRef}
-                      />
-                    </>
                   )}
                 </>
               </Layout.Vertical>

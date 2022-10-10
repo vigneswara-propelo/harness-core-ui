@@ -60,7 +60,6 @@ export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityCon
         readonly={readonly}
         allowableTypes={allowableTypes}
         onUpdate={values => onUpdate?.(processFormValues(values))}
-        stepViewType={stepViewType}
         {...(customStepProps as Required<DeployEnvironmentEntityCustomStepProps>)}
       />
     )

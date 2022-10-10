@@ -9,6 +9,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
+import { Divider } from '@blueprintjs/core'
 
 import {
   AllowedTypes,
@@ -32,8 +33,6 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -42,6 +41,7 @@ import type {
 } from '../types'
 import { useGetEnvironmentsData } from './useGetEnvironmentsData'
 import AddEditEnvironmentModal from '../../DeployInfrastructureStep/AddEditEnvironmentModal'
+import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
 
 import css from './DeployEnvironment.module.scss'
 
@@ -50,7 +50,6 @@ interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomS
   readonly: boolean
   allowableTypes: AllowedTypes
   isMultiEnvironment: boolean
-  stepViewType?: StepViewType
   identifiersToLoad?: string[]
   /** env group specific props */
   isUnderEnvGroup?: boolean
@@ -95,12 +94,11 @@ export default function DeployEnvironment({
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
 
   // State
-  const [selectedEnvironments, setSelectedEnvironments] = useState(getAllFixedEnvironments(initialValues))
+  const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(getAllFixedEnvironments(initialValues))
 
   // Constants
-  const isFixed = isMultiEnvironment
-    ? Array.isArray(values.environments)
-    : getMultiTypeFromValue(values.environment) === MultiTypeInputType.FIXED
+  const isFixed =
+    getMultiTypeFromValue(isMultiEnvironment ? values.environments : values.environment) === MultiTypeInputType.FIXED
 
   // API
   const {
@@ -318,19 +316,36 @@ export default function DeployEnvironment({
         />
       ) : null}
       {isFixed && !isEmpty(selectedEnvironments) && (
-        <EnvironmentEntitiesList
-          loading={loading || updatingEnvironmentsData}
-          environmentsData={environmentsData}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
-          onEnvironmentEntityUpdate={onEnvironmentEntityUpdate}
-          onRemoveEnvironmentFromList={onRemoveEnvironmentFromList}
-          initialValues={initialValues}
-          stageIdentifier={stageIdentifier}
-          deploymentType={deploymentType}
-          customDeploymentRef={customDeploymentRef}
-          gitOpsEnabled={gitOpsEnabled}
-        />
+        <>
+          <EnvironmentEntitiesList
+            loading={loading || updatingEnvironmentsData}
+            environmentsData={environmentsData}
+            readonly={readonly}
+            allowableTypes={allowableTypes}
+            onEnvironmentEntityUpdate={onEnvironmentEntityUpdate}
+            onRemoveEnvironmentFromList={onRemoveEnvironmentFromList}
+            initialValues={initialValues}
+            stageIdentifier={stageIdentifier}
+            deploymentType={deploymentType}
+            customDeploymentRef={customDeploymentRef}
+            gitOpsEnabled={gitOpsEnabled}
+          />
+
+          {!loading && !isMultiEnvironment && (
+            <>
+              <Divider />
+              <DeployInfrastructure
+                initialValues={initialValues}
+                readonly={readonly}
+                allowableTypes={allowableTypes}
+                environmentIdentifier={selectedEnvironments[0]}
+                stageIdentifier={stageIdentifier}
+                deploymentType={deploymentType}
+                customDeploymentRef={customDeploymentRef}
+              />
+            </>
+          )}
+        </>
       )}
 
       <ModalDialog
