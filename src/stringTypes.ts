@@ -3965,6 +3965,7 @@ export interface StringsMap {
   'pipeline.startupCommand.plainText': string
   'pipeline.startupCommand.scriptFilePath': string
   'pipeline.startupCommand.subtitle': string
+  'pipeline.step.validation.namePatternIsNotValid': string
   'pipeline.stepCommonFields.ifNotPresent': string
   'pipeline.stepCommonFields.runAsUser': string
   'pipeline.stepCommonFields.validation.invalidLimitCPU': string

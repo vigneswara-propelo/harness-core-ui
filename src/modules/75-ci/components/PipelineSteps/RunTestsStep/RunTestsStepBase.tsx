@@ -21,8 +21,9 @@ import {
   AllowedTypes
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import type { FormikProps } from 'formik'
+import type { FormikErrors, FormikProps } from 'formik'
 import get from 'lodash/get'
+import merge from 'lodash/merge'
 import cx from 'classnames'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -465,12 +466,13 @@ export const RunTestsStepBase = (
       )}
       formName="ciRunTests"
       validate={valuesToValidate => {
+        let errors: FormikErrors<any> = {}
         if (
           [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
             buildInfrastructureType
           )
         ) {
-          return validateConnectorRefAndImageDepdendency(
+          errors = validateConnectorRefAndImageDepdendency(
             get(valuesToValidate, 'spec.connectorRef', ''),
             get(valuesToValidate, 'spec.image', ''),
             getString
@@ -481,20 +483,24 @@ export const RunTestsStepBase = (
           transformValuesFieldsConfig
         )
         onChange?.(schemaValues)
-        return validate(
-          valuesToValidate,
-          getEditViewValidateFieldsConfig(
-            buildInfrastructureType,
-            (valuesToValidate?.spec?.language as any)?.value === Language.Csharp
-          ),
-          {
-            initialValues,
-            steps: currentStage?.stage?.spec?.execution?.steps || {},
-            serviceDependencies: currentStage?.stage?.spec?.serviceDependencies || {},
-            getString
-          },
-          stepViewType
+        errors = merge(
+          errors,
+          validate(
+            valuesToValidate,
+            getEditViewValidateFieldsConfig(
+              buildInfrastructureType,
+              (valuesToValidate?.spec?.language as any)?.value === Language.Csharp
+            ),
+            {
+              initialValues,
+              steps: currentStage?.stage?.spec?.execution?.steps || {},
+              serviceDependencies: currentStage?.stage?.spec?.serviceDependencies || {},
+              getString
+            },
+            stepViewType
+          )
         )
+        return errors
       }}
       onSubmit={(_values: RunTestsStepDataUI) => {
         const schemaValues = getFormValuesInCorrectFormat<RunTestsStepDataUI, RunTestsStepData>(

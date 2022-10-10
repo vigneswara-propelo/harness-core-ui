@@ -1417,3 +1417,6 @@ customDeployment:
     fetchScriptBodyRequired: 'Fetch Instances Script body is required'
   validations:
     nameUnique: Field Name should be unique
+step:
+  validation:
+    namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
