@@ -97,6 +97,12 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
     }
   }, [templateInputYaml?.data])
 
+  React.useEffect(() => {
+    if (loading) {
+      setInputSetTemplate(undefined)
+    }
+  }, [loading])
+
   return (
     <Container
       style={{ overflow: 'auto' }}
