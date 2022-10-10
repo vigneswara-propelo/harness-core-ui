@@ -1460,6 +1460,11 @@ const routes = {
     }
   ),
 
+  toCVCodeErrors: withAccountId(
+    ({ projectIdentifier, orgIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/CodeErrors`
+  ),
+
   toCVMonitoringServicesInputSets: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservicesinputset`
