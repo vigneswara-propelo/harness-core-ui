@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
@@ -31,13 +31,18 @@ export interface UseGetEnvironmentsDataProps {
 }
 
 export interface UseGetEnvironmentsDataReturn {
+  /** Contains list of environment config objects */
   environmentsList: EnvironmentYaml[]
+  /** Contains list of environment objects with inputs */
   environmentsData: EnvironmentData[]
   loadingEnvironmentsList: boolean
   loadingEnvironmentsData: boolean
+  /** Used only for loading state while updating data */
   updatingEnvironmentsData: boolean
   refetchEnvironmentsList(): void
   refetchEnvironmentsData(): void
+  /** Used to prepend data to `environmentsList` */
+  prependEnvironmentToEnvironmentList(newEnvironmentInfo: EnvironmentYaml): void
 }
 
 export function useGetEnvironmentsData({
@@ -111,6 +116,7 @@ export function useGetEnvironmentsData({
           environmentYaml: (_environmentsList.find(env => env.identifier === environmentInResponse) as any)?.yaml
         }
       })
+
       // environmentsInResponse.map(environmentInResponse => {
       //   return {}
       // })
@@ -169,6 +175,10 @@ export function useGetEnvironmentsData({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environmentsDataError])
 
+  const prependEnvironmentToEnvironmentList = useCallback((newEnvironmentInfo: EnvironmentYaml) => {
+    setEnvironmentsList(previousEnvironmentsList => [newEnvironmentInfo, ...(previousEnvironmentsList || [])])
+  }, [])
+
   return {
     environmentsList,
     environmentsData,
@@ -176,6 +186,7 @@ export function useGetEnvironmentsData({
     loadingEnvironmentsData,
     updatingEnvironmentsData,
     refetchEnvironmentsList,
-    refetchEnvironmentsData
+    refetchEnvironmentsData,
+    prependEnvironmentToEnvironmentList
   }
 }

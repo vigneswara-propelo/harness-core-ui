@@ -9,8 +9,10 @@ import type { SelectOption } from '@harness/uicore'
 import type {
   DeploymentStageConfig,
   EnvironmentGroupResponseDTO,
+  InfrastructureDefinitionConfig,
   NGEnvironmentInfoConfig,
-  ServiceDefinition
+  ServiceDefinition,
+  TemplateLinkConfig
 } from 'services/cd-ng'
 
 export interface DeployEnvironmentEntityConfig extends Omit<DeploymentStageConfig, 'execution'> {
@@ -40,6 +42,7 @@ export interface DeployEnvironmentEntityCustomStepProps {
   stageIdentifier?: string
   deploymentType?: ServiceDefinition['type']
   gitOpsEnabled?: boolean
+  customDeploymentRef?: TemplateLinkConfig
 }
 // Environments
 
@@ -66,6 +69,7 @@ export interface InfrastructureYaml {
   tags?: {
     [key: string]: string
   }
+  deploymentType: InfrastructureDefinitionConfig['deploymentType']
 }
 
 export interface InfrastructureData {

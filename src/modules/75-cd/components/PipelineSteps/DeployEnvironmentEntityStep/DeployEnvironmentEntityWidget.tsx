@@ -6,23 +6,27 @@
  */
 
 import React, { BaseSyntheticEvent, useEffect, useRef, useState } from 'react'
-import { isEmpty, isNil, noop } from 'lodash-es'
+import { isEmpty, isNil, noop, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import produce from 'immer'
 import { Divider, RadioGroup } from '@blueprintjs/core'
+import cx from 'classnames'
 
 import {
   AllowedTypes,
   ConfirmationDialog,
   Formik,
   FormikForm,
+  getMultiTypeFromValue,
   Intent,
   Layout,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
   Toggle,
   useToggleOpen
 } from '@harness/uicore'
 
-import { useStrings } from 'framework/strings'
+import { StringKeys, useStrings } from 'framework/strings'
 
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -44,6 +48,14 @@ export interface DeployEnvironmentEntityWidgetProps extends Required<DeployEnvir
   stepViewType?: StepViewType
 }
 
+function getRadioValueFromInitialValues(initialValues: DeployEnvironmentEntityFormState): StringKeys {
+  if (initialValues.environmentGroup) {
+    return 'common.environmentGroup.label'
+  } else {
+    return 'environments'
+  }
+}
+
 export default function DeployEnvironmentEntityWidget({
   initialValues,
   readonly,
@@ -52,10 +64,11 @@ export default function DeployEnvironmentEntityWidget({
   stepViewType,
   stageIdentifier,
   deploymentType,
+  customDeploymentRef,
   gitOpsEnabled
 }: DeployEnvironmentEntityWidgetProps): JSX.Element {
   const { getString } = useStrings()
-  const [radioValue, setRadioValue] = useState<string>(getString('environments'))
+  const [radioValue, setRadioValue] = useState<string>(getString(getRadioValueFromInitialValues(initialValues)))
 
   const formikRef = useRef<FormikProps<DeployEnvironmentEntityFormState> | null>(null)
 
@@ -64,11 +77,13 @@ export default function DeployEnvironmentEntityWidget({
     open: openSwitchToMultiEnvironmentDialog,
     close: closeSwitchToMultiEnvironmentDialog
   } = useToggleOpen()
+
   const {
     isOpen: isSwitchToSingleEnvironmentDialogOpen,
     open: openSwitchToSingleEnvironmentDialog,
     close: closeSwitchToSingleEnvironmentDialog
   } = useToggleOpen()
+
   const {
     isOpen: isSwitchToEnvironmentGroupDialogOpen,
     open: openSwitchToEnvironmentGroupDialog,
@@ -94,8 +109,24 @@ export default function DeployEnvironmentEntityWidget({
     /* istanbul ignore else */
     if (formikRef.current && confirmed) {
       const environment = formikRef.current.values.environment
+      const infrastructure = formikRef.current.values.infrastructure
       const newValues = produce(formikRef.current.values, draft => {
-        draft.environments = environment ? [{ label: environment, value: environment }] : []
+        draft.environments = environment
+          ? getMultiTypeFromValue(environment) === MultiTypeInputType.RUNTIME
+            ? (RUNTIME_INPUT_VALUE as any)
+            : [{ label: environment, value: environment }]
+          : []
+        if (environment) {
+          set(
+            draft,
+            `infrastructures.${environment}`,
+            infrastructure
+              ? getMultiTypeFromValue(infrastructure) === MultiTypeInputType.RUNTIME
+                ? RUNTIME_INPUT_VALUE
+                : [{ label: infrastructure, value: infrastructure }]
+              : []
+          )
+        }
         delete draft.environment
         delete draft.environmentGroup
       })
@@ -184,14 +215,19 @@ export default function DeployEnvironmentEntityWidget({
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.ENVIRONMENT }))
           formikRef.current = formik
+          const { values } = formik
 
-          const isMultiEnvironment = !isNil(formik.values.environments)
-          const isEnvironmentGroup = !isNil(formik.values.environmentGroup)
+          const isMultiEnvironment = !isNil(values.environments)
+          const isEnvironmentGroup = !isNil(values.environmentGroup)
+          const isEnvironmentFixed = getMultiTypeFromValue(values.environment) === MultiTypeInputType.FIXED
 
           return (
             <FormikForm>
-              <Layout.Vertical spacing="medium" width={'1000px'}>
-                <Layout.Vertical className={css.toggle} flex={{ alignItems: 'flex-end' }}>
+              <Layout.Vertical spacing="medium" width={'1000px'} className={css.environmentEntityWidget}>
+                <Layout.Vertical
+                  className={cx(css.toggle, { [css.toggleMargin]: isMultiEnvironment || isEnvironmentGroup })}
+                  flex={{ alignItems: 'flex-end', justifyContent: 'center' }}
+                >
                   <Toggle
                     checked={isMultiEnvironment || isEnvironmentGroup}
                     onToggle={handleMultiEnvInfraToggle}
@@ -212,6 +248,7 @@ export default function DeployEnvironmentEntityWidget({
                       ]}
                       selectedValue={radioValue}
                       disabled={readonly}
+                      className={css.radioGroup}
                       inline
                     />
                   )}
@@ -224,6 +261,7 @@ export default function DeployEnvironmentEntityWidget({
                       allowableTypes={allowableTypes}
                       stageIdentifier={stageIdentifier}
                       deploymentType={deploymentType}
+                      customDeploymentRef={customDeploymentRef}
                       gitOpsEnabled={gitOpsEnabled}
                     />
                   ) : (
@@ -235,20 +273,22 @@ export default function DeployEnvironmentEntityWidget({
                       isMultiEnvironment={isMultiEnvironment}
                       stageIdentifier={stageIdentifier}
                       deploymentType={deploymentType}
+                      customDeploymentRef={customDeploymentRef}
                       gitOpsEnabled={gitOpsEnabled}
                     />
                   )}
-                  {formik.values.environment && (
+                  {isEnvironmentFixed && values.environment && (
                     <>
                       <Divider />
                       <DeployInfrastructure
                         initialValues={initialValues}
                         readonly={readonly}
                         allowableTypes={allowableTypes}
-                        environmentIdentifier={formik.values.environment}
+                        environmentIdentifier={values.environment}
                         stepViewType={stepViewType}
                         stageIdentifier={stageIdentifier}
                         deploymentType={deploymentType}
+                        customDeploymentRef={customDeploymentRef}
                       />
                     </>
                   )}

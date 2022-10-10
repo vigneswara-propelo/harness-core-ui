@@ -59,7 +59,8 @@ export function EnvironmentEntityCard({
   onDeleteClick,
   initialValues,
   stageIdentifier,
-  deploymentType
+  deploymentType,
+  customDeploymentRef
 }: EnvironmentEntityCardProps): React.ReactElement {
   const { getString } = useStrings()
   const { values } = useFormikContext<DeployEnvironmentEntityFormState>()
@@ -122,6 +123,7 @@ export function EnvironmentEntityCard({
           />
         </Container>
       </Layout.Horizontal>
+
       {environmentInputs ? (
         <>
           <Container flex={{ justifyContent: 'center' }}>
@@ -144,12 +146,9 @@ export function EnvironmentEntityCard({
                 {getString('common.environmentInputs')}
               </Text>
               <GenericServiceSpecInputSetMode
-                // {...customStepProps}
                 factory={factory}
                 stageIdentifier={stageIdentifier}
-                // serviceIdentifier={customStepProps.serviceRef}
                 initialValues={values.environmentInputs?.[identifier] || {}}
-                // allValues={inputSetData?.allValues?.environment?.environmentInputs || {}}
                 stepViewType={StepViewType.TemplateUsage}
                 template={environmentInputs}
                 path={`environmentInputs.${identifier}`}
@@ -163,7 +162,9 @@ export function EnvironmentEntityCard({
 
       {!values.environment && (
         <>
-          <Divider />
+          <Container margin={{ top: 'medium', bottom: 'medium' }}>
+            <Divider />
+          </Container>
           <DeployInfrastructure
             initialValues={initialValues}
             readonly={readonly}
@@ -172,6 +173,7 @@ export function EnvironmentEntityCard({
             isMultiInfrastructure
             stageIdentifier={stageIdentifier}
             deploymentType={deploymentType}
+            customDeploymentRef={customDeploymentRef}
           />
         </>
       )}

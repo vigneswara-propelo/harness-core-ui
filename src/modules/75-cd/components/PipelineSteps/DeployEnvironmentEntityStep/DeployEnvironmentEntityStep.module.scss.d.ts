@@ -7,8 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly environmentEntityWidget: string
   readonly inputSetSpinner: string
   readonly inputWidth: string
+  readonly radioGroup: string
   readonly toggle: string
+  readonly toggleMargin: string
 }
 export default styles

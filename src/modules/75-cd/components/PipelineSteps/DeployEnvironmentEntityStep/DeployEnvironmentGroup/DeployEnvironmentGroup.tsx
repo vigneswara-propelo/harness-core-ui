@@ -52,6 +52,7 @@ export default function DeployEnvironmentGroup({
   allowableTypes,
   stageIdentifier,
   deploymentType,
+  customDeploymentRef,
   gitOpsEnabled
 }: DeployEnvironmentGroupProps): JSX.Element {
   const { values } = useFormikContext<DeployEnvironmentEntityFormState>()
@@ -148,6 +149,7 @@ export default function DeployEnvironmentGroup({
           initialValues={initialValues}
           stageIdentifier={stageIdentifier}
           deploymentType={deploymentType}
+          customDeploymentRef={customDeploymentRef}
           gitOpsEnabled={gitOpsEnabled}
         />
       )}

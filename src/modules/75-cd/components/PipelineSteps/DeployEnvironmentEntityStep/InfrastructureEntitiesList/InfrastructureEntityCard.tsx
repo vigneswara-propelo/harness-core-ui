@@ -8,6 +8,7 @@
 import React, { useState } from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Collapse } from '@blueprintjs/core'
+import { useFormikContext } from 'formik'
 
 import {
   ButtonVariation,
@@ -23,12 +24,19 @@ import {
 } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
+import type { Infrastructure } from 'services/cd-ng'
 
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 
-import type { InfrastructureData } from '../types'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { infraDefinitionTypeMapping } from '@pipeline/utils/stageHelpers'
+
+import type { DeployEnvironmentEntityFormState, InfrastructureData } from '../types'
 import type { DeployServiceEntityCustomProps } from '../../DeployServiceEntityStep/DeployServiceEntityUtils'
 
 import css from './InfrastructureEntitiesList.module.scss'
@@ -45,10 +53,13 @@ export function InfrastructureEntityCard({
   infrastructureDefinition,
   infrastructureInputs,
   readonly,
+  allowableTypes,
   onEditClick,
-  onDeleteClick
+  onDeleteClick,
+  environmentIdentifier
 }: InfrastructureEntityCardProps): React.ReactElement {
   const { getString } = useStrings()
+  const { values } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { name, identifier, tags } = infrastructureDefinition
 
   const [showInputs, setShowInputs] = useState(false)
@@ -108,7 +119,7 @@ export function InfrastructureEntityCard({
           />
         </Container>
       </Layout.Horizontal>
-      {infrastructureInputs ? (
+      {infrastructureInputs && values.infrastructureInputs?.[environmentIdentifier]?.[identifier] ? (
         <>
           <Container flex={{ justifyContent: 'center' }}>
             <Button
@@ -125,11 +136,37 @@ export function InfrastructureEntityCard({
             />
           </Container>
           <Collapse keepChildrenMounted={false} isOpen={showInputs}>
-            <Container border={{ top: true }}>
+            <Container border={{ top: true }} margin={{ top: 'medium' }} padding={{ top: 'large' }}>
               <Text color={Color.GREY_800} font={{ size: 'normal', weight: 'bold' }} margin={{ bottom: 'medium' }}>
-                {getString('common.infrastructureInputs')} Please ask Ashwin to update infra inputs, if he is not
-                already on it
+                {getString('common.infrastructureInputs')}
               </Text>
+              <StepWidget<Infrastructure>
+                key={`${environmentIdentifier}_${identifier}`}
+                factory={factory}
+                template={infrastructureInputs.spec}
+                initialValues={{
+                  ...(values.infrastructureInputs?.[environmentIdentifier]?.[identifier]?.spec || {}),
+                  environmentRef: environmentIdentifier,
+                  infrastructureRef: identifier
+                }}
+                allowableTypes={allowableTypes}
+                allValues={{
+                  environmentRef: environmentIdentifier,
+                  infrastructureRef: identifier
+                }}
+                type={
+                  (infraDefinitionTypeMapping[infrastructureInputs.type as StepType] ||
+                    infrastructureInputs?.type) as StepType
+                }
+                path={`infrastructureInputs.${environmentIdentifier}.${identifier}.spec`}
+                readonly={readonly}
+                stepViewType={StepViewType.TemplateUsage}
+                customStepProps={{
+                  // serviceRef: deploymentStage?.service?.serviceRef,
+                  environmentRef: environmentIdentifier,
+                  infrastructureRef: identifier
+                }}
+              />
             </Container>
           </Collapse>
         </>

@@ -35,6 +35,7 @@ export default function EnvironmentGroupsList({
   initialValues,
   stageIdentifier,
   deploymentType,
+  customDeploymentRef,
   gitOpsEnabled
 }: EnvironmentGroupsListProps): React.ReactElement {
   const [environmentGroupToEdit, setEnvironmentGroupToEdit] = React.useState<EnvironmentGroupData | null>(null)
@@ -62,6 +63,7 @@ export default function EnvironmentGroupsList({
             readonly={readonly}
             stageIdentifier={stageIdentifier}
             deploymentType={deploymentType}
+            customDeploymentRef={customDeploymentRef}
             gitOpsEnabled={gitOpsEnabled}
           />
         )

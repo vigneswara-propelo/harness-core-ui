@@ -4672,16 +4672,23 @@ export interface StringsMap {
   'cd.pipelineCreation': string
   'cd.pipelineSteps.environmentTab.allClustersSelected': string
   'cd.pipelineSteps.environmentTab.clusterIsRequired': string
+  'cd.pipelineSteps.environmentTab.deleteEnvironmentFromListConfirmationText': string
+  'cd.pipelineSteps.environmentTab.deleteEnvironmentFromListDialogTitleText': string
+  'cd.pipelineSteps.environmentTab.deleteInfrastructureFromListConfirmationText': string
+  'cd.pipelineSteps.environmentTab.deleteInfrastructureFromListDialogTitleText': string
   'cd.pipelineSteps.environmentTab.deployToAll': string
   'cd.pipelineSteps.environmentTab.environmentGroupConfirmationText': string
   'cd.pipelineSteps.environmentTab.environmentGroupDialogTitleText': string
+  'cd.pipelineSteps.environmentTab.environmentGroupIsRequired': string
   'cd.pipelineSteps.environmentTab.environmentInEnvGroupIsRequired': string
   'cd.pipelineSteps.environmentTab.environmentIsRequired': string
   'cd.pipelineSteps.environmentTab.environmentOrEnvGroupAsRuntime': string
   'cd.pipelineSteps.environmentTab.environmentOrEnvGroupIsRequired': string
+  'cd.pipelineSteps.environmentTab.environmentsAreRequired': string
   'cd.pipelineSteps.environmentTab.hideEnvironmentInputs': string
   'cd.pipelineSteps.environmentTab.hideInfrastructureInputs': string
   'cd.pipelineSteps.environmentTab.infrastructureIsRequired': string
+  'cd.pipelineSteps.environmentTab.infrastructuresAreRequired': string
   'cd.pipelineSteps.environmentTab.multiEnvInfraToggleText': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsConfirmationText': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsDialogTitleText': string
@@ -4690,15 +4697,19 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.plusNewEnvironment': string
   'cd.pipelineSteps.environmentTab.selectEnvironment': string
   'cd.pipelineSteps.environmentTab.selectEnvironmentGroup': string
+  'cd.pipelineSteps.environmentTab.selectEnvironments': string
   'cd.pipelineSteps.environmentTab.selectInfrastructure': string
   'cd.pipelineSteps.environmentTab.selectInfrastructureType': string
+  'cd.pipelineSteps.environmentTab.selectInfrastructures': string
   'cd.pipelineSteps.environmentTab.singleEnvironmentConfirmationText': string
   'cd.pipelineSteps.environmentTab.singleEnvironmentDialogTitleText': string
   'cd.pipelineSteps.environmentTab.specifyEnvironmentOrGroup': string
   'cd.pipelineSteps.environmentTab.specifyGitOpsClusters': string
   'cd.pipelineSteps.environmentTab.specifyYourEnvironment': string
   'cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup': string
+  'cd.pipelineSteps.environmentTab.specifyYourEnvironments': string
   'cd.pipelineSteps.environmentTab.specifyYourInfrastructure': string
+  'cd.pipelineSteps.environmentTab.specifyYourInfrastructures': string
   'cd.pipelineSteps.environmentTab.viewEnvironmentInputs': string
   'cd.pipelineSteps.environmentTab.viewInfrastructureInputs': string
   'cd.pipelineSteps.executionTab.stepsCount': string

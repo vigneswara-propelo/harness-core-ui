@@ -1,4 +1,11 @@
-import { useEffect, useState } from 'react'
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
@@ -10,7 +17,12 @@ import { yamlParse } from '@common/utils/YamlHelperMethods'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
-import { ServiceDefinition, useGetInfrastructureList, useGetInfrastructureYamlAndRuntimeInputs } from 'services/cd-ng'
+import {
+  ServiceDefinition,
+  TemplateLinkConfig,
+  useGetInfrastructureList,
+  useGetInfrastructureYamlAndRuntimeInputs
+} from 'services/cd-ng'
 
 import type { InfrastructureData, InfrastructureYaml } from '../types'
 
@@ -18,22 +30,31 @@ export interface UseGetInfrastructuresDataProps {
   environmentIdentifier: string
   infrastructureIdentifiers: string[]
   deploymentType: ServiceDefinition['type']
+  deploymentTemplateIdentifier?: TemplateLinkConfig['templateRef']
+  versionLabel?: TemplateLinkConfig['versionLabel']
 }
 
 export interface UseGetInfrastructuresDataReturn {
+  /** Contains list of infrastructure config objects */
   infrastructuresList: InfrastructureYaml[]
+  /** Contains list of infrastructure objects with inputs */
   infrastructuresData: InfrastructureData[]
   loadingInfrastructuresList: boolean
   loadingInfrastructuresData: boolean
+  /** Used only for loading state while updating data */
   updatingInfrastructuresData: boolean
   refetchInfrastructuresList(): void
   refetchInfrastructuresData(): void
+  /** Used to prepend data to `environmentsList` */
+  prependInfrastructureToInfrastructureList(newInfrastructureInfo: InfrastructureYaml): void
 }
 
 export function useGetInfrastructuresData({
   environmentIdentifier,
   infrastructureIdentifiers,
-  deploymentType
+  deploymentType,
+  deploymentTemplateIdentifier,
+  versionLabel
 }: UseGetInfrastructuresDataProps): UseGetInfrastructuresDataReturn {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { showError } = useToaster()
@@ -54,7 +75,11 @@ export function useGetInfrastructuresData({
       orgIdentifier,
       projectIdentifier,
       environmentIdentifier,
-      deploymentType
+      deploymentType,
+      ...(deploymentTemplateIdentifier && {
+        deploymentTemplateIdentifier,
+        versionLabel
+      })
     }
   })
 
@@ -152,6 +177,13 @@ export function useGetInfrastructuresData({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [infrastructuresDataError])
 
+  const prependInfrastructureToInfrastructureList = useCallback((newInfrastructureInfo: InfrastructureYaml) => {
+    setInfrastructuresList(previousInfrastructuresList => [
+      newInfrastructureInfo,
+      ...(previousInfrastructuresList || [])
+    ])
+  }, [])
+
   return {
     infrastructuresList,
     infrastructuresData,
@@ -159,6 +191,7 @@ export function useGetInfrastructuresData({
     loadingInfrastructuresData,
     updatingInfrastructuresData,
     refetchInfrastructuresList,
-    refetchInfrastructuresData
+    refetchInfrastructuresData,
+    prependInfrastructureToInfrastructureList
   }
 }

@@ -34,6 +34,7 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 
 import ErrorsStripBinded from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
+import type { DeployEnvironmentEntityConfig } from '@cd/components/PipelineSteps/DeployEnvironmentEntityStep/types'
 
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
@@ -78,6 +79,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   )
 
   useEffect(() => {
+    // istanbul ignore else
     if (
       isEmpty(stage?.stage?.spec?.environment) &&
       isEmpty(stage?.stage?.spec?.environments) &&
@@ -102,7 +104,9 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
       const stageData = produce(stage, draft => {
         const specObject: DeployStageConfig = get(draft, 'stage.spec', {})
 
+        // istanbul ignore else
         if (specObject) {
+          // istanbul ignore else
           if (value.environment) {
             specObject.environment = value.environment
             delete specObject.environments
@@ -125,50 +129,58 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   )
 
   const initialValues = useMemo(() => {
-    if (stage?.stage?.spec?.environments) {
-      return {
-        environments: stage?.stage?.spec?.environments
-      }
-    } else if (stage?.stage?.spec?.environmentGroup) {
-      return {
-        environmentGroup: stage?.stage?.spec?.environmentGroup
-      }
-    } else if (stage?.stage?.spec?.environment) {
-      return {
-        environment: stage?.stage?.spec?.environment
-      }
-    } else {
-      return {
-        environment: { environmentRef: '' }
+    const stageSpec = get(stage, 'stage.spec', {})
+    // istanbul ignore else
+    if (stageSpec) {
+      const { environments, environmentGroup, environment } = stageSpec
+      // istanbul ignore else
+      if (environments) {
+        return {
+          environments
+        }
+      } else if (environmentGroup) {
+        return {
+          environmentGroup
+        }
+      } else if (environment) {
+        return {
+          environment
+        }
       }
     }
+
+    return {
+      environment: { environmentRef: '' }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage?.stage?.spec])
+
+  const filteredAllowableTypes = useMemo(() => {
+    return (
+      scope === Scope.PROJECT
+        ? allowableTypes
+        : (allowableTypes as MultiTypeInputType[]).filter(item => item !== MultiTypeInputType.FIXED)
+    ) as AllowedTypes
+  }, [scope, allowableTypes])
 
   return (
     <div className={stageCss.deployStage} key="1">
       <ErrorsStripBinded domRef={scrollRef as MutableRefObject<HTMLElement | undefined>} />
       <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
         {isMultiInfra && isMultiInfraVisible === 'true' ? (
-          // TODO: Add type<StepWidget<DeployEnvironmentEntityConfig>
-          <StepWidget
+          <StepWidget<DeployEnvironmentEntityConfig>
             type={StepType.DeployEnvironmentEntity}
             readonly={isReadonly}
             initialValues={initialValues}
-            allowableTypes={
-              [MultiTypeInputType.FIXED]
-              // (scope === Scope.PROJECT
-              //   ? (allowableTypes as MultiTypeInputType[]).filter(item => item !== MultiTypeInputType.EXPRESSION)
-              //   : (allowableTypes as MultiTypeInputType[]).filter(
-              //       item => item !== MultiTypeInputType.FIXED && item !== MultiTypeInputType.EXPRESSION
-              //     )) as AllowedTypes
-            }
+            allowableTypes={filteredAllowableTypes}
             onUpdate={updateEnvStep}
             factory={factory}
             stepViewType={StepViewType.Edit}
             customStepProps={{
               stageIdentifier: defaultTo(stage?.stage?.identifier, ''),
               deploymentType: stage?.stage?.spec?.deploymentType,
-              gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false)
+              gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false),
+              customDeploymentRef: stage?.stage?.spec?.customDeploymentRef
             }}
           />
         ) : (

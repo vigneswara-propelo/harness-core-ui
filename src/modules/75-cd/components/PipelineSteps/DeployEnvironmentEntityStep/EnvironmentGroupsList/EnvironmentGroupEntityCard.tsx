@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
+import { Divider } from '@blueprintjs/core'
 
 import { ButtonVariation, Card, Text, Color, AllowedTypes, Container, Layout, TagsPopover } from '@harness/uicore'
 
@@ -45,6 +46,7 @@ export function EnvironmentGroupCard({
   initialValues,
   stageIdentifier,
   deploymentType,
+  customDeploymentRef,
   gitOpsEnabled
 }: EnvironmentGroupCardProps): React.ReactElement {
   const { getString } = useStrings()
@@ -102,16 +104,24 @@ export function EnvironmentGroupCard({
         </Container>
       </Layout.Horizontal>
 
-      <DeployEnvironment
-        initialValues={initialValues}
-        readonly={readonly}
-        allowableTypes={allowableTypes}
-        isMultiEnvironment
-        stageIdentifier={stageIdentifier}
-        deploymentType={deploymentType}
-        gitOpsEnabled={gitOpsEnabled}
-        identifiersToLoad={envIdentifiers}
-      />
+      <>
+        <Container margin={{ top: 'medium', bottom: 'medium' }}>
+          <Divider />
+        </Container>
+
+        <DeployEnvironment
+          initialValues={initialValues}
+          readonly={readonly}
+          allowableTypes={allowableTypes}
+          isMultiEnvironment
+          isUnderEnvGroup
+          stageIdentifier={stageIdentifier}
+          deploymentType={deploymentType}
+          customDeploymentRef={customDeploymentRef}
+          gitOpsEnabled={gitOpsEnabled}
+          identifiersToLoad={envIdentifiers}
+        />
+      </>
     </Card>
   )
 }

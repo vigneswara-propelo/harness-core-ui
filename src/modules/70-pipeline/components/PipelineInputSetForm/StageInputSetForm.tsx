@@ -1033,7 +1033,8 @@ export function StageInputSetFormInternal({
                 customStepProps={{
                   stageIdentifier,
                   deploymentType: deploymentStage?.deploymentType,
-                  gitOpsEnabled: deploymentStage?.gitOpsEnabled
+                  gitOpsEnabled: deploymentStage?.gitOpsEnabled,
+                  customDeploymentRef: deploymentStage?.customDeploymentRef
                 }}
               />
             ) : // if infrastructure is marked as runtime and environment is selected, the below check handles everything
@@ -1051,7 +1052,8 @@ export function StageInputSetFormInternal({
                 readonly={readonly}
                 customStepProps={{
                   deploymentType: deploymentStage.deploymentType,
-                  environmentIdentifier: deploymentStage.environment.environmentRef
+                  environmentIdentifier: deploymentStage.environment.environmentRef,
+                  customDeploymentRef: deploymentStage?.customDeploymentRef
                 }}
               />
             ) : null}
@@ -1082,7 +1084,8 @@ export function StageInputSetFormInternal({
                 customStepProps={{
                   stageIdentifier,
                   deploymentType: deploymentStage?.deploymentType,
-                  gitOpsEnabled: deploymentStage?.gitOpsEnabled
+                  gitOpsEnabled: deploymentStage?.gitOpsEnabled,
+                  customDeploymentRef: deploymentStage?.customDeploymentRef
                 }}
               />
             ) : null}
@@ -1119,7 +1122,8 @@ export function StageInputSetFormInternal({
                           customStepProps={{
                             deploymentType,
                             environmentIdentifier: environment.environmentRef,
-                            isMultipleInfrastructure: true
+                            isMultipleInfrastructure: true,
+                            customDeploymentRef: deploymentStage?.customDeploymentRef
                           }}
                         />
                       </React.Fragment>
