@@ -51,7 +51,7 @@ export interface WindowPathProps extends ProjectPathProps {
 
 // This should come from BE
 export interface FreezeEvent {
-  type?: 'WINDOW_ENABLED' | 'REJECTED_DEPLOYENTS' | 'TRIGGER_INVOCATIONS_REJECTED'
+  type?: 'FreezeWindowEnabled' | 'DeploymentRejectedDueToFreeze' | 'TriggerInvocationRejectedDueToFreeze'
 }
 
 // This should come from BE
