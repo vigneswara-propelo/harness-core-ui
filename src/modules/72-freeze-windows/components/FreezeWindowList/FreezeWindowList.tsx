@@ -35,6 +35,11 @@ export const FreezeWindowList: FC<FreezeWindowList> = ({ data, onToggleFreezeRow
   const queryParams = useQueryParams<FreezeListUrlQueryParams>(getQueryParamOptions())
   const { sort } = queryParams
   const [canEdit] = usePermission({
+    resourceScope: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
     resource: {
       resourceType: ResourceType.DEPLOYMENTFREEZE
     },

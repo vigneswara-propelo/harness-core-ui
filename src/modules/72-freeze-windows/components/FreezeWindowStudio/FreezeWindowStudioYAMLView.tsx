@@ -35,10 +35,12 @@ export const FreezeWindowStudioYAMLView = () => {
     isReadOnly,
     updateYamlView,
     updateFreeze,
+    drawerType,
     setYamlHandler: setYamlHandlerContext
   } = React.useContext(FreezeWindowContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
+  const isDrawerOpened = !!drawerType
 
   React.useEffect(() => {
     // Edit mode
@@ -52,7 +54,7 @@ export const FreezeWindowStudioYAMLView = () => {
   }, [yamlHandler, setYamlHandlerContext])
 
   React.useEffect(() => {
-    if (yamlHandler) {
+    if (yamlHandler && !isDrawerOpened) {
       Interval = window.setInterval(() => {
         try {
           const freezeFromYaml = parse(yamlHandler.getLatestYaml())?.freeze
@@ -75,7 +77,7 @@ export const FreezeWindowStudioYAMLView = () => {
     }
   }, [yamlHandler, freezeObj])
   const entityType = 'FreezeWindow' as GetYamlSchemaQueryParams['entityType']
-  return (
+  return isDrawerOpened ? null : (
     <div className={css.yamlBuilder}>
       <YamlBuilderMemo
         key={`${isYamlEditable.toString()}_${freezeObj.identifier}`}

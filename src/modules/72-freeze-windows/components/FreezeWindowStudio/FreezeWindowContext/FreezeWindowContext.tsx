@@ -14,6 +14,9 @@ import { useParams } from 'react-router-dom'
 import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useGetFreeze } from 'services/cd-ng'
 import { FreezeWindowLevels, WindowPathProps, FreezeNotificationRules } from '@freeze-windows/types'
 import { FreezeWindowContextActions, DrawerTypes } from './FreezeWidowActions'
@@ -117,6 +120,19 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
     }
   }, [loadingFreezeObj])
 
+  const [canEdit] = usePermission({
+    resourceScope: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+
+    resource: {
+      resourceType: ResourceType.DEPLOYMENTFREEZE
+    },
+    permissions: [PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE]
+  })
+
   return (
     <FreezeWindowContext.Provider
       value={{
@@ -133,7 +149,7 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
         refetchFreezeObj,
         drawerType,
         setDrawerType,
-        isReadOnly: false
+        isReadOnly: !canEdit
       }}
     >
       {children}

@@ -42,3 +42,8 @@ freezeNotifications:
   windowEnabled: Freeze window is enabled
   rejectedDeployments: Deployments are rejected due to freeze window
   rejectedInvocations: Trigger invocations are rejected due to freeze window
+
+deploymentFreeze: Deployment Freeze
+
+rbac:
+  global: Global
