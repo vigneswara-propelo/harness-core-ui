@@ -9,8 +9,8 @@ import React from 'react'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import SeverityPill from '@sto-steps/components/SeverityPill/SeverityPill'
-import { SeverityCode } from '@sto-steps/types'
+import SeverityPill from '@sto/components/SeverityPill/SeverityPill'
+import { SeverityCode } from '@sto/types'
 
 describe('SeverityPill', () => {
   test('renders correctly', () => {
@@ -28,8 +28,8 @@ describe('SeverityPill', () => {
         <SeverityPill severity={SeverityCode.High} value={7.5} />
       </TestWrapper>
     )
-    expect(screen.getByText('connectors.cdng.verificationSensitivityLabel.high'))
-    expect(screen.getByText('7.5'))
+    expect(screen.getByText('connectors.cdng.verificationSensitivityLabel.high')).toBeTruthy()
+    expect(screen.getByText('7.5')).toBeTruthy()
   })
 
   test('renders Medium', () => {
@@ -38,8 +38,8 @@ describe('SeverityPill', () => {
         <SeverityPill severity={SeverityCode.Medium} value={5.5} />
       </TestWrapper>
     )
-    expect(screen.getByText('connectors.cdng.verificationSensitivityLabel.medium'))
-    expect(screen.getByText('5.5'))
+    expect(screen.getByText('connectors.cdng.verificationSensitivityLabel.medium')).toBeTruthy()
+    expect(screen.getByText('5.5')).toBeTruthy()
   })
 
   test('renders Low', () => {
@@ -48,8 +48,8 @@ describe('SeverityPill', () => {
         <SeverityPill severity={SeverityCode.Low} value={3.3} />
       </TestWrapper>
     )
-    expect(screen.getByText('connectors.cdng.verificationSensitivityLabel.low'))
-    expect(screen.getByText('3.3'))
+    expect(screen.getByText('connectors.cdng.verificationSensitivityLabel.low')).toBeTruthy()
+    expect(screen.getByText('3.3')).toBeTruthy()
   })
 
   test('renders Info', () => {
@@ -58,8 +58,8 @@ describe('SeverityPill', () => {
         <SeverityPill severity={SeverityCode.Info} value={1.0} />
       </TestWrapper>
     )
-    expect(screen.getByText('stoSteps.Info'))
-    expect(screen.getByText('1'))
+    expect(screen.getByText('sto.Info')).toBeTruthy()
+    expect(screen.getByText('1')).toBeTruthy()
   })
 
   test('renders Unassigned', () => {
@@ -68,7 +68,7 @@ describe('SeverityPill', () => {
         <SeverityPill severity={SeverityCode.Unassigned} value={5.0} />
       </TestWrapper>
     )
-    expect(screen.getByText('stoSteps.Unassigned'))
-    expect(screen.getByText('5'))
+    expect(screen.getByText('sto.Unassigned')).toBeTruthy()
+    expect(screen.getByText('5')).toBeTruthy()
   })
 })

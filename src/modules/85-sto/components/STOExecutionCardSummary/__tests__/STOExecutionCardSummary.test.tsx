@@ -13,10 +13,10 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { CardVariant } from '@pipeline/utils/constants'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import * as stoService from 'services/sto'
-import type { SeverityPillProps } from '@sto-steps/components/SeverityPill/SeverityPill'
-import STOExecutionCardSummary from '@sto-steps/components/STOExecutionCardSummary/STOExecutionCardSummary'
+import type { SeverityPillProps } from '@sto/components/SeverityPill/SeverityPill'
+import STOExecutionCardSummary from '@sto/components/STOExecutionCardSummary/STOExecutionCardSummary'
 
-jest.mock('@sto-steps/components/SeverityPill/SeverityPill', () => ({ severity, value }: SeverityPillProps) => (
+jest.mock('@sto/components/SeverityPill/SeverityPill', () => ({ severity, value }: SeverityPillProps) => (
   <div data-testid={severity} data-value={value} />
 ))
 
@@ -170,7 +170,7 @@ describe('STOExecutionCardSummary', () => {
         />
       </TestWrapper>
     )
-    expect(screen.getByText('stoSteps.failedToGetIssueCounts'))
+    expect(screen.getByText('sto.failedToGetIssueCounts')).toBeTruthy()
   })
 
   test('shows no security tests message', () => {
@@ -191,7 +191,7 @@ describe('STOExecutionCardSummary', () => {
         />
       </TestWrapper>
     )
-    expect(screen.getByText('stoSteps.noSecurityResults'))
+    expect(screen.getByText('sto.noSecurityResults')).toBeTruthy()
   })
 
   test('shows issues on pipeline failure', () => {
@@ -233,6 +233,6 @@ describe('STOExecutionCardSummary', () => {
         />
       </TestWrapper>
     )
-    expect(screen.getByText('stoSteps.noSecurityIssues'))
+    expect(screen.getByText('sto.noSecurityIssues')).toBeTruthy()
   })
 })

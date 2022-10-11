@@ -7602,24 +7602,24 @@ export interface StringsMap {
   'cv.windowsEndIsRequired': string
   'cv.yourExistingErrorBudgetIs': string
   'cv.zoom': string
-  'stoSteps.Critical': string
-  'stoSteps.Info': string
-  'stoSteps.Unassigned': string
-  'stoSteps.continuous': string
-  'stoSteps.exemptions': string
-  'stoSteps.failedToGetIssueCounts': string
-  'stoSteps.issues': string
-  'stoSteps.noScansRunPipelineText': string
-  'stoSteps.noScansText': string
-  'stoSteps.noSecurityIssues': string
-  'stoSteps.noSecurityResults': string
-  'stoSteps.scans': string
-  'stoSteps.securityReview': string
-  'stoSteps.securityStage.description': string
-  'stoSteps.stepDescription.ZeroNorth': string
-  'stoSteps.stoExemption': string
-  'stoSteps.targets.testTargets': string
-  'stoSteps.zeroNorthImagePlaceholder': string
+  'sto.Critical': string
+  'sto.Info': string
+  'sto.Unassigned': string
+  'sto.continuous': string
+  'sto.exemptions': string
+  'sto.failedToGetIssueCounts': string
+  'sto.issues': string
+  'sto.noScansRunPipelineText': string
+  'sto.noScansText': string
+  'sto.noSecurityIssues': string
+  'sto.noSecurityResults': string
+  'sto.scans': string
+  'sto.securityReview': string
+  'sto.securityStage.description': string
+  'sto.stepDescription.ZeroNorth': string
+  'sto.stoExemption': string
+  'sto.targets.testTargets': string
+  'sto.zeroNorthImagePlaceholder': string
   /**
    * @deprecated migrate this string to module level file
    */

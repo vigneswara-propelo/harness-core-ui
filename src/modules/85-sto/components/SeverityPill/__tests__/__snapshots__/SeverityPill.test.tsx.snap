@@ -8,7 +8,7 @@ exports[`SeverityPill renders correctly 1`] = `
     <div
       class="label"
     >
-      stoSteps.Critical
+      sto.Critical
     </div>
     <div
       class="value critical"

@@ -9,7 +9,7 @@ import React from 'react'
 import classNames from 'classnames'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
-import { SeverityCode } from '@sto-steps/types'
+import { SeverityCode } from '@sto/types'
 import css from './SeverityPill.module.scss'
 
 export interface SeverityPillProps {
@@ -20,7 +20,7 @@ export interface SeverityPillProps {
 export function severityString(severity: SeverityCode): keyof StringsMap {
   switch (severity) {
     case SeverityCode.Critical:
-      return 'stoSteps.Critical'
+      return 'sto.Critical'
     case SeverityCode.High:
       return 'connectors.cdng.verificationSensitivityLabel.high'
     case SeverityCode.Medium:
@@ -28,9 +28,9 @@ export function severityString(severity: SeverityCode): keyof StringsMap {
     case SeverityCode.Low:
       return 'connectors.cdng.verificationSensitivityLabel.low'
     case SeverityCode.Info:
-      return 'stoSteps.Info'
+      return 'sto.Info'
   }
-  return 'stoSteps.Unassigned'
+  return 'sto.Unassigned'
 }
 
 const SeverityPill: React.FC<SeverityPillProps> = ({ severity, value }) => {

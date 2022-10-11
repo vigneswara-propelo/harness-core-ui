@@ -58,7 +58,7 @@ exports[`STO side nav tests renders project path 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        stoSteps.targets.testTargets
+        sto.targets.testTargets
       </p>
     </a>
     <a
@@ -68,7 +68,7 @@ exports[`STO side nav tests renders project path 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        stoSteps.securityReview
+        sto.securityReview
       </p>
     </a>
     <div>

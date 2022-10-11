@@ -9,8 +9,8 @@ import React from 'react'
 import { Spinner } from '@blueprintjs/core'
 import { Color, Text } from '@harness/uicore'
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
-import SeverityPill from '@sto-steps/components/SeverityPill/SeverityPill'
-import { SeverityCode } from '@sto-steps/types'
+import SeverityPill from '@sto/components/SeverityPill/SeverityPill'
+import { SeverityCode } from '@sto/types'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import { useIssueCounts } from 'services/sto'
@@ -59,7 +59,7 @@ export default function STOExecutionCardSummary(
         return (
           <div className={css.main}>
             <Text icon="error" intent="danger" font={{ size: 'small' }} color={Color.RED_800} iconProps={{ size: 12 }}>
-              {getString('stoSteps.failedToGetIssueCounts')}
+              {getString('sto.failedToGetIssueCounts')}
             </Text>
           </div>
         )
@@ -68,7 +68,7 @@ export default function STOExecutionCardSummary(
       if (issueCounts && Object.keys(issueCounts).length === 0) {
         return (
           <div className={css.main}>
-            <Text font={{ size: 'small' }}>{getString(`stoSteps.noSecurityResults`)}</Text>
+            <Text font={{ size: 'small' }}>{getString(`sto.noSecurityResults`)}</Text>
           </div>
         )
       } else if (
@@ -77,7 +77,7 @@ export default function STOExecutionCardSummary(
         return (
           <div className={css.main}>
             <Text icon={'tick-circle'} iconProps={{ intent: 'success' }} font={{ size: 'small' }}>
-              {getString('stoSteps.noSecurityIssues')}
+              {getString('sto.noSecurityIssues')}
             </Text>
           </div>
         )

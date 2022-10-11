@@ -33,9 +33,9 @@ import executionFactory from '@pipeline/factories/ExecutionFactory'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
-import STOSideNav from '@sto-steps/components/STOSideNav/STOSideNav'
-import STOExecutionCardSummary from '@sto-steps/components/STOExecutionCardSummary/STOExecutionCardSummary'
-import '@sto-steps/components/PipelineStages/SecurityTestsStage'
+import STOSideNav from '@sto/components/STOSideNav/STOSideNav'
+import STOExecutionCardSummary from '@sto/components/STOExecutionCardSummary/STOExecutionCardSummary'
+import '@sto/components/PipelineStages/SecurityTestsStage'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -60,7 +60,7 @@ RbacFactory.registerResourceCategory(ResourceCategory.STO, {
 
 RbacFactory.registerResourceTypeHandler(ResourceType.STO_TESTTARGET, {
   icon: 'sto-color-filled',
-  label: 'stoSteps.targets.testTargets',
+  label: 'sto.targets.testTargets',
   category: ResourceCategory.STO,
   permissionLabels: {
     [PermissionIdentifier.VIEW_STO_TESTTARGET]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -69,7 +69,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_TESTTARGET, {
 })
 RbacFactory.registerResourceTypeHandler(ResourceType.STO_EXEMPTION, {
   icon: 'sto-color-filled',
-  label: 'stoSteps.exemptions',
+  label: 'sto.exemptions',
   category: ResourceCategory.STO,
   permissionLabels: {
     [PermissionIdentifier.VIEW_STO_EXEMPTION]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -79,7 +79,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_EXEMPTION, {
 })
 RbacFactory.registerResourceTypeHandler(ResourceType.STO_SCAN, {
   icon: 'sto-color-filled',
-  label: 'stoSteps.scans',
+  label: 'sto.scans',
   category: ResourceCategory.STO,
   permissionLabels: {
     [PermissionIdentifier.VIEW_STO_SCAN]: <LocaleString stringID="rbac.permissionLabels.view" />
@@ -87,7 +87,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_SCAN, {
 })
 RbacFactory.registerResourceTypeHandler(ResourceType.STO_ISSUE, {
   icon: 'sto-color-filled',
-  label: 'stoSteps.issues',
+  label: 'sto.issues',
   category: ResourceCategory.STO,
   permissionLabels: {
     [PermissionIdentifier.VIEW_STO_ISSUE]: <LocaleString stringID="rbac.permissionLabels.view" />
@@ -108,7 +108,7 @@ AuditTrailFactory.registerResourceHandler('STO_EXEMPTION', {
     name: 'sto-grey'
   },
   moduleLabel: 'common.module.sto',
-  resourceLabel: 'stoSteps.stoExemption'
+  resourceLabel: 'sto.stoExemption'
 })
 
 executionFactory.registerCardInfo(StageType.SECURITY, {
