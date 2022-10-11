@@ -244,7 +244,7 @@ export const RunTestsStepBase = (
       selectionState: { selectedStageId }
     }
   } = usePipelineContext()
-  const { TI_DOTNET, ERROR_TRACKING_ENABLED } = useFeatureFlags()
+  const { TI_DOTNET, CVNG_ENABLED } = useFeatureFlags()
   // temporary enable in QA for docs
   const isQAEnvironment = window.location.origin === qaLocation
   const [mavenSetupQuestionAnswer, setMavenSetupQuestionAnswer] = React.useState('yes')
@@ -569,7 +569,7 @@ export const RunTestsStepBase = (
                 allowableTypes: [MultiTypeInputType.FIXED]
               })}
             </Container>
-            {ERROR_TRACKING_ENABLED && selectedLanguageValue === Language.Java && (
+            {CVNG_ENABLED && selectedLanguageValue === Language.Java && (
               <>
                 <Text tooltipProps={{ dataTooltipId: 'runTestErrorTracking' }} font={{ size: 'small' }}>
                   {getString('ci.runTestsErrorTrackingSetupText')}
