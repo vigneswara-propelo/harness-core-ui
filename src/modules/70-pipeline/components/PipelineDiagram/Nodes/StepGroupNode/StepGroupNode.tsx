@@ -34,7 +34,7 @@ export function StepGroupNode(props: any): JSX.Element {
   const stepsData = stepGroupData?.steps
   const isParentMatrix = defaultTo(props?.isParentMatrix, false)
 
-  const isExecutionView = Boolean(props?.data?.status)
+  const isExecutionView = Boolean(defaultTo(props?.data?.status, props?.status))
 
   const { updateDimensions } = useNodeDimensionContext()
   const isNestedStepGroup = Boolean(
@@ -55,9 +55,7 @@ export function StepGroupNode(props: any): JSX.Element {
 
   React.useEffect(() => {
     // collapse stepGroup in execution view till data loads
-    if (stepsData?.length === 0 && isExecutionView) {
-      setNodeCollapsed(true)
-    }
+    setNodeCollapsed(stepsData?.length === 0 && isExecutionView)
   }, [stepsData])
 
   const debounceHideVisibility = debounce(() => {
