@@ -2548,6 +2548,7 @@ export interface StringsMap {
   'connectors.selectConnectivityMode': string
   'connectors.selectConnector': string
   'connectors.selectConnectorLabel': string
+  'connectors.selectConnectors': string
   'connectors.serviceNow.serviceNowUrl': string
   'connectors.showInstructions': string
   'connectors.specifyArtifactRepo': string
