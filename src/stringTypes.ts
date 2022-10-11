@@ -3627,6 +3627,7 @@ export interface StringsMap {
   'pipeline.loopingStrategy.subTitle': string
   'pipeline.loopingStrategy.title': string
   'pipeline.loopingStrategy.toggleTypeModal.content': string
+  'pipeline.loopingStrategy.toggleTypeModal.switch': string
   'pipeline.loopingStrategy.toggleTypeModal.title': string
   'pipeline.loopingStrategy.warningText': string
   'pipeline.manifestToConnectorLabelMap.AWSLabel': string

@@ -32,6 +32,7 @@ export function StepGroupNode(props: any): JSX.Element {
   const DefaultNode: React.FC<any> | undefined = props?.getDefaultNode()?.component
   const stepGroupData = defaultTo(props?.data?.stepGroup, props?.data?.step?.data?.stepGroup) || props?.data?.step
   const stepsData = stepGroupData?.steps
+  const isParentMatrix = defaultTo(props?.isParentMatrix, false)
 
   const isExecutionView = Boolean(props?.data?.status)
 
@@ -87,13 +88,12 @@ export function StepGroupNode(props: any): JSX.Element {
             }}
             onDragLeave={() => allowAdd && debounceHideVisibility()}
             style={stepGroupData?.containerCss ? stepGroupData?.containerCss : undefined}
-            className={cx(css.stepGroup, {
+            className={cx(css.stepGroup, css.marginBottom, {
               [css.firstnode]: !props?.isParallelNode,
               [css.parallelNodes]: props?.isParallelNode,
-              [css.marginBottom]: props?.isParallelNode,
               [css.nestedGroup]: isNestedStepGroup,
-              // [css.stepGroupParent]: hasStepGroupChild,
-              [css.stepGroupNormal]: !isNestedStepGroup //&& !hasStepGroupChild
+              [css.stepGroupNormal]: !isNestedStepGroup,
+              parentMatrix: isParentMatrix
             })}
           >
             <div
