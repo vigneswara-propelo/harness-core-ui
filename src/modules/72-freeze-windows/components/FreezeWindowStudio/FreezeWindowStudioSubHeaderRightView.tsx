@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, ButtonVariation } from '@wings-software/uicore'
+import { Button, ButtonVariation, Icon } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import type { WindowPathProps } from '@freeze-windows/types'
 import RbacButton from '@rbac/components/Button/Button'
@@ -35,13 +35,15 @@ export const FreezeWindowStudioSubHeaderRightView = () => {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
+      {isReadOnly && (
+        <div className={css.readonlyAccessTag}>
+          <Icon name="eye-open" size={16} />
+          <div className={css.readonlyAccessText}>{getString('common.readonlyPermissions')}</div>
+        </div>
+      )}
+
       {isUpdated && !isReadOnly && (
-        <Button
-          variation={ButtonVariation.LINK}
-          intent="warning"
-          className={css.unsavedChanges}
-          // onClick={openDiffModal}
-        >
+        <Button variation={ButtonVariation.LINK} intent="warning" className={css.unsavedChanges}>
           {getString('unsavedChanges')}
         </Button>
       )}
