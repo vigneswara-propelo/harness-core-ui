@@ -54,6 +54,7 @@ export interface AddKeyDialogProps {
   buttonProps?: ButtonProps
   keyType?: EnvironmentSDKKeyType
   apiKeys?: ApiKey[]
+  isLinkVariation?: boolean
 }
 
 interface KeyValues {
@@ -68,7 +69,8 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
   onCreate,
   buttonProps,
   keyType,
-  apiKeys = []
+  apiKeys = [],
+  isLinkVariation
 }) => {
   const { showError } = useToaster()
   const { getString } = useStrings()
@@ -238,7 +240,7 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
     <RbacButton
       icon="plus"
       disabled={disabled}
-      variation={ButtonVariation.PRIMARY}
+      variation={isLinkVariation ? ButtonVariation.LINK : ButtonVariation.PRIMARY}
       onClick={() => {
         trackEvent(FeatureActions.CreateSDKKeyClick, {
           category: Category.FEATUREFLAG

@@ -6174,14 +6174,18 @@ export interface StringsMap {
   'cf.environments.apiKeys.deleteMessage': string
   'cf.environments.apiKeys.deleteSuccess': string
   'cf.environments.apiKeys.deleteTitle': string
+  'cf.environments.apiKeys.description': string
   'cf.environments.apiKeys.duplicateKey': string
   'cf.environments.apiKeys.emptyName': string
   'cf.environments.apiKeys.keyType': string
+  'cf.environments.apiKeys.keysForEnvironment': string
+  'cf.environments.apiKeys.keysForLanguages': string
   'cf.environments.apiKeys.lastUsed': string
   'cf.environments.apiKeys.message': string
   'cf.environments.apiKeys.noKeysFoundMessage': string
   'cf.environments.apiKeys.noKeysFoundTitle': string
   'cf.environments.apiKeys.redactionWarning': string
+  'cf.environments.apiKeys.rotateAndMonitor': string
   'cf.environments.apiKeys.serverDescription': string
   'cf.environments.apiKeys.serverType': string
   'cf.environments.apiKeys.title': string
@@ -6509,6 +6513,7 @@ export interface StringsMap {
   'cf.shared.targets': string
   'cf.shared.variation': string
   'cf.shared.variations': string
+  'cf.targetDetail.accountLevelTargets': string
   'cf.targetDetail.addFlagToTarget': string
   'cf.targetDetail.addTargetToSegment': string
   'cf.targetDetail.addTargetToTargetGroup': string
@@ -6520,15 +6525,22 @@ export interface StringsMap {
   'cf.targetDetail.exclusionList': string
   'cf.targetDetail.flagDisabled': string
   'cf.targetDetail.flagSetting': string
+  'cf.targetDetail.groupsForLocations': string
   'cf.targetDetail.manuallyAdded': string
   'cf.targetDetail.noFlagConfigured': string
   'cf.targetDetail.noSegmentAdded': string
   'cf.targetDetail.noSegmentExcluded': string
   'cf.targetDetail.noTargetGroupsAvailable': string
+  'cf.targetDetail.regions': string
   'cf.targetDetail.removeFromIncludeList': string
   'cf.targetDetail.removeSegment': string
   'cf.targetDetail.searchPlaceholder': string
+  'cf.targetDetail.targetByGeo': string
+  'cf.targetDetail.targetDescription': string
+  'cf.targetDetail.targetGroupDescription': string
   'cf.targetDetail.targetSetting': string
+  'cf.targetDetail.targetsForUsers': string
+  'cf.targetDetail.vipTargets': string
   'cf.targetManagementFlagConfiguration.addFlag': string
   'cf.targetManagementFlagConfiguration.addFlags': string
   'cf.targetManagementFlagConfiguration.allFlagsRemoved': string
@@ -6545,6 +6557,7 @@ export interface StringsMap {
   'cf.targets.enterName': string
   'cf.targets.enterValue': string
   'cf.targets.list': string
+  'cf.targets.newEnvironmentTarget': string
   'cf.targets.noTargetDescription': string
   'cf.targets.noTargetForEnv': string
   'cf.targets.noneDefined': string

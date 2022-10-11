@@ -249,6 +249,7 @@ targets:
   deleteTargetSuccess: Target <strong>{{name}}</strong> deleted.
   pageDescription: This list displays targets manually added or impacted by flags.
   uploadError: CSV processing failed
+  newEnvironmentTarget: New Environment for setting up a target
   noTargetForEnv: There are no Targets in this Environment
   noTargetDescription: <a href="https://docs.harness.io/article/dbk9uoaid3-add-targets#step_add_a_target" target="_blank" rel="noreferrer">Targets</a> are individual evaluations of Flags based on attributes you define in our SDKs. For instance, a Target can be a single customer or account that toggle a Flag.
 targetDetail:
@@ -261,6 +262,14 @@ targetDetail:
   exclusionList: EXCLUSION LIST
   excludeFromSegment: Exclude from {{count}} Target Groups
   removeSegment: Remove from list
+  targetDescription: 'Define Targets to decide who flag changes will impact.'
+  targetGroupDescription: 'Create reusable cohorts of Targets based on any criteria you like.'
+  targetsForUsers: 'Use Targets for your users to flag changes for individual end users'
+  accountLevelTargets: 'Account-level targeting lets you change Flags for all users in an account'
+  targetByGeo: 'Target by geo, tenant or any other account property'
+  vipTargets: 'Include or exclude VIP Targets in groups'
+  groupsForLocations: 'Create groups for locations, instances, account plans or any other attribute'
+  regions: 'Perfect for regions, beta users or any other custom combination'
   noSegmentAdded: No Target Group added
   noSegmentExcluded: No Target Group excluded
   addTargetToSegment: Add Target to Target Group
@@ -308,6 +317,10 @@ environments:
     addKeyTitle: Create SDK Key
     message: 'Secrets are only visible right after creation and redacted once you leave the page. Please make sure to copy and store your secret somewhere safe'
     title: 'SDK Keys'
+    description: 'SDK Keys authenticate the SDK and connect to a specific environment.'
+    keysForEnvironment: 'Create different keys for each environment'
+    keysForLanguages: 'Create different keys for different languages'
+    rotateAndMonitor: 'Easy to rotate and monitor keys'
     emptyName: 'SDK Key name is required'
     addKey: 'New SDK Key'
     duplicateKey: 'A SDK key with this name already exists. Try another name'
