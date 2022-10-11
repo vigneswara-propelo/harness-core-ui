@@ -4211,8 +4211,7 @@ export interface StringsMap {
   'freezeWindows.freezeWindowsPage.deleteSuccess': string
   'freezeWindows.freezeWindowsPage.editFreezeWindow': string
   'freezeWindows.freezeWindowsPage.newFreezeWindow': string
-  'freezeWindows.freezeWindowsPage.noFreezeWindowsText': string
-  'freezeWindows.freezeWindowsPage.noFreezeWindowsTitle': string
+  'freezeWindows.freezeWindowsPage.noFreezeWindows': string
   'freezeWindows.freezeWindowsPage.updateStatusFailure': string
   'freezeWindows.freezeWindowsPage.updateStatusSuccess': string
   'freezeWindows.globalFreeze.disableFreezeFailure': string
