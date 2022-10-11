@@ -889,6 +889,7 @@ export interface StringsMap {
   'common.tagName': string
   'common.targetBranch': string
   'common.targetBranchPlaceholder': string
+  'common.template.createNewModal.versionPlaceholder': string
   'common.template.deleteTemplate.errorWhileDeletingTemplate': string
   'common.template.deleteTemplate.errorWhileDeletingTemplates': string
   'common.template.deleteTemplate.templateDeleted': string
@@ -3287,6 +3288,7 @@ export interface StringsMap {
   'pipeline.duplicateImport': string
   'pipeline.duplicateImportInputset': string
   'pipeline.duplicateImportPipeline': string
+  'pipeline.duplicateImportTemplate': string
   'pipeline.duplicateStepIdentifiers': string
   'pipeline.duration': string
   'pipeline.enableVerificationHelpText': string
@@ -4238,7 +4240,6 @@ export interface StringsMap {
   'templatesLibrary.createNewModal.lastPublishedVersion': string
   'templatesLibrary.createNewModal.nameError': string
   'templatesLibrary.createNewModal.namePlaceholder': string
-  'templatesLibrary.createNewModal.versionPlaceholder': string
   'templatesLibrary.created': string
   'templatesLibrary.default': string
   'templatesLibrary.deleteTemplate': string

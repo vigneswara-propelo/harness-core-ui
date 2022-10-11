@@ -1322,6 +1322,7 @@ importSuccessMessage: '{{resourceType}} has been imported successfully'
 duplicateImport: This file is already in use. Do you still want to proceed?
 duplicateImportPipeline: This file is already in use by another pipeline. Do you still want to proceed?
 duplicateImportInputset: This file is already in use by another pipeline or input set. Do you still want to proceed?
+duplicateImportTemplate: This file is already in use by another Template. Do you still want to proceed?
 MatrixNode:
   maxConcurrency: 'Max Concurrency:'
 fieldLabels:

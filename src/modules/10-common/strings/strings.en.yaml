@@ -801,6 +801,8 @@ template:
     templateDeleted: 'Template "{{ name }}" Deleted'
     errorWhileDeletingTemplates: Error occurred deleting Templates
     errorWhileDeletingTemplate: Error occurred deleting Template
+  createNewModal:
+    versionPlaceholder: 'Ex: Version1'
 viewLatest: View latest
 viewUsage: View Usage
 selected: 'Selected:'
