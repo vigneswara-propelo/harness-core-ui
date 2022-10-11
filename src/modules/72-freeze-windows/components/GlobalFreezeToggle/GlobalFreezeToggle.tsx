@@ -16,8 +16,8 @@ import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FreezeWindow, useGetGlobalFreezeStatus, useGlobalFreeze } from 'services/cd-ng'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { FreezeWindow, useGetGlobalFreeze, useGlobalFreeze } from 'services/cd-ng'
+import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { GlobalFreezeScheduleForm } from './GlobalFreezeScheduleForm'
 import css from './GlobalFreezeToggle.module.scss'
 
@@ -34,9 +34,9 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
 
   const {
     loading: getGlobalFreezeLoading,
-    // data: getGlobalFreezeData,
+    data: getGlobalFreezeData,
     refetch: refetchGetGlobalFreeze
-  } = useGetGlobalFreezeStatus({
+  } = useGetGlobalFreeze({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
@@ -52,8 +52,7 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
     }
   })
 
-  // const freeze = yamlParse<any>(defaultTo(getGlobalFreezeData?.data?.yaml, ''))
-  const freeze = {} as any
+  const freeze = yamlParse<any>(defaultTo(getGlobalFreezeData?.data?.yaml, ''))
   const freezeWindow = freeze?.windows?.[0] || ({} as FreezeWindow)
   const { endTime, timeZone } = freezeWindow
 
@@ -131,7 +130,7 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
         }
         onChange={event => (event.currentTarget.checked ? openEnableFreezeDialog() : openDisableFreezeDialog())}
         className={css.switch}
-        // checked={getGlobalFreezeData?.data?.status === 'Enabled'}
+        checked={getGlobalFreezeData?.data?.status === 'Enabled'}
       />
     </>
   )

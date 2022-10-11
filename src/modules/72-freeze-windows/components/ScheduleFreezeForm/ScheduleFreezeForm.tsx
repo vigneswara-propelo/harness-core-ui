@@ -63,7 +63,7 @@ const recurrenceList: SelectOption[] = [
   ...RECURRENCE.map(item => ({ value: item, label: item }))
 ]
 
-const processInitialvalues = (freezeWindow: FreezeWindow): FreezeWindowFormData => {
+const processInitialvalues = (freezeWindow: FreezeWindow): any => {
   return {
     ...freezeWindow,
     endTimeMode: freezeWindow?.endTime ? '1' : '0',
@@ -78,11 +78,11 @@ const processInitialvalues = (freezeWindow: FreezeWindow): FreezeWindowFormData 
 }
 
 const processFormData = (form: FreezeWindowFormData): FreezeWindow => {
-  return omit(form, ['endTimeMode', 'recurrence.spec.recurrenceEndMode'])
+  return omit(form, ['endTimeMode', 'recurrence.spec.recurrenceEndMode']) as FreezeWindow
 }
 
 export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
-  freezeWindow = {},
+  freezeWindow = {} as FreezeWindow,
   onSubmit,
   onChange,
   formActions,
