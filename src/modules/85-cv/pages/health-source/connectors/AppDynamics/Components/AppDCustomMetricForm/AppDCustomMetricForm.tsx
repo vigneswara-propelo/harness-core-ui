@@ -53,8 +53,16 @@ import css from '../../AppDHealthSource.module.scss'
 import basePathStyle from '../BasePath/BasePath.module.scss'
 
 export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterface) {
-  const { formikValues, formikSetField, mappedMetrics, selectedMetric, connectorIdentifier, isTemplate, expressions } =
-    props
+  const {
+    formikValues,
+    formikSetField,
+    mappedMetrics,
+    selectedMetric,
+    connectorIdentifier,
+    isTemplate,
+    expressions,
+    appdMultiType
+  } = props
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -77,7 +85,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
 
   const debounceRefetch = useCallback(debounce(refetchcompleteServiceInsance, 500), [])
   useEffect(() => {
-    const hasRuntimeField = checkRuntimeFields(formikValues)
+    const hasRuntimeField = checkRuntimeFields(formikValues, appdMultiType)
     const shouldRefetch = isTemplate
       ? !hasRuntimeField && formikValues?.continuousVerification
       : formikValues?.continuousVerification
@@ -105,6 +113,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
       formikSetField('serviceInstanceMetricPath', RUNTIME_INPUT_VALUE)
     }
   }, [
+    appdMultiType,
     formikValues?.continuousVerification,
     formikValues.appdApplication,
     formikValues?.basePath,

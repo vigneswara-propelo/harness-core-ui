@@ -677,10 +677,11 @@ export const setCustomFieldAndValidation = (
   >,
   validate = false
 ): void => {
+  const isTierExpression = getTypeOfInput(nonCustomFeilds.appDTier) === MultiTypeInputType.EXPRESSION
   const updatedNonCustomValue = {
     ...nonCustomFeilds,
     appdApplication: value,
-    appDTier: getTypeOfInput(value) !== MultiTypeInputType.FIXED ? RUNTIME_INPUT_VALUE : ''
+    appDTier: getTierValue(value, isTierExpression, nonCustomFeilds)
   }
   setNonCustomFeilds(updatedNonCustomValue)
   if (validate) {
@@ -773,4 +774,12 @@ export const deriveBaseAndMetricPath = (
   const basePathObj = convertStringBasePathToObject(baseFolder || '')
   const metricPathObj = convertStringMetricPathToObject(metricPath || '')
   return { metricPathObj, basePathObj }
+}
+
+const getTierValue = (value: string, isTierExpression: boolean, nonCustomFeilds: NonCustomFeildsInterface) => {
+  return getTypeOfInput(value) !== MultiTypeInputType.FIXED
+    ? isTierExpression
+      ? nonCustomFeilds.appDTier
+      : RUNTIME_INPUT_VALUE
+    : ''
 }
