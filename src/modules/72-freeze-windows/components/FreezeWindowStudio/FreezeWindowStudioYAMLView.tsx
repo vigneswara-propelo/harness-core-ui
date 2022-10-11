@@ -11,7 +11,6 @@ import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import { ButtonVariation, Tag } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
-import type { GetYamlSchemaQueryParams } from 'services/cd-ng'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import RbacButton from '@rbac/components/Button/Button'
@@ -76,13 +75,12 @@ export const FreezeWindowStudioYAMLView = () => {
       }
     }
   }, [yamlHandler, freezeObj])
-  const entityType = 'FreezeWindow' as GetYamlSchemaQueryParams['entityType']
   return isDrawerOpened ? null : (
     <div className={css.yamlBuilder}>
       <YamlBuilderMemo
         key={`${isYamlEditable.toString()}_${freezeObj.identifier}`}
         fileName={defaultTo(yamlFileName, defaultFileName)}
-        entityType={entityType} // should be Freeze Window
+        entityType={'Freeze'}
         isReadOnlyMode={isReadOnly || !isYamlEditable}
         existingJSON={{ freeze: freezeObj }}
         // existingYaml

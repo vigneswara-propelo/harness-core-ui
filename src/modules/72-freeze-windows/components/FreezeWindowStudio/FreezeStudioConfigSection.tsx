@@ -42,9 +42,7 @@ import {
 import {
   EnvironmentTypeRenderer,
   Organizationfield,
-  // OrgFieldViewMode,
   ProjectField,
-  // ProjectFieldViewMode,
   ServiceFieldRenderer,
   ServicesAndEnvRenderer,
   OrgProjAndServiceRenderer
@@ -86,12 +84,6 @@ const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
         >
           {name}
         </Heading>
-
-        {/*<Layout.Horizontal>*/}
-        {/*{fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.PROJECT ? 'env' : ''}*/}
-        {/*</Layout.Horizontal>*/}
-        {/*<OrgFieldViewMode data={entitiesMap[FIELD_KEYS.Org]} getString={getString} />*/}
-        {/*<ProjectFieldViewMode data={entitiesMap[FIELD_KEYS.Proj]} getString={getString} />*/}
         <OrgProjAndServiceRenderer
           entitiesMap={entitiesMap}
           freezeWindowLevel={fieldsVisibility.freezeWindowLevel}

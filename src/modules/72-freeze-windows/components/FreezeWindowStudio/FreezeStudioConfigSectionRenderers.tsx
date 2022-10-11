@@ -60,15 +60,7 @@ export const ServiceFieldRenderer: React.FC<ServiceFieldRendererPropsInterface> 
       />
     )
   }
-  return (
-    <FormInput.MultiSelect
-      style={{ width: '400px' }}
-      name={name}
-      items={services}
-      label={getString('services')}
-      // onChange={(selected?: SelectOption[]) => {}}
-    />
-  )
+  return <FormInput.MultiSelect style={{ width: '400px' }} name={name} items={services} label={getString('services')} />
 }
 
 const getOrgNameKeys = (namePrefix: string) => {
@@ -245,50 +237,6 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   )
 }
 
-const renderKeyValue = (key: string, value?: string) => {
-  return (
-    <div>
-      <span>{key}</span>: <span>{value}</span>
-    </div>
-  )
-}
-
-interface OrgFieldViewModePropsInterface {
-  data?: EntityType
-  getString: UseStringsReturn['getString']
-}
-export const OrgFieldViewMode: React.FC<OrgFieldViewModePropsInterface> = ({ data, getString }) => {
-  if (!data) return null
-  const { filterType, entityRefs } = data
-  let value = 'All Organizations'
-  if (filterType === All) {
-    value = 'All Organizations'
-  } else if (filterType === Equals) {
-    value = (entityRefs as string[])?.join(', ')
-  } else if (filterType === NotEquals) {
-    value = `All Organizations except ${entityRefs?.join(', ')}`
-  }
-  return renderKeyValue(getString('orgLabel'), value)
-}
-
-interface ProjectFieldViewModePropsInterface {
-  data?: EntityType
-  getString: UseStringsReturn['getString']
-}
-export const ProjectFieldViewMode: React.FC<ProjectFieldViewModePropsInterface> = ({ data, getString }) => {
-  if (!data) return null
-  const { filterType, entityRefs } = data
-  let value = 'All Projects'
-  if (filterType === All) {
-    value = 'All Projects'
-  } else if (filterType === Equals) {
-    value = (entityRefs as string[])?.join(', ')
-  } else if (filterType === NotEquals) {
-    value = `All Projects except ${entityRefs?.join(', ')}`
-  }
-  return renderKeyValue(getString('projectsText'), value)
-}
-
 export const ServicesAndEnvRenderer: React.FC<{
   freezeWindowLevel: FreezeWindowLevels
   envType: EnvironmentType
@@ -354,8 +302,6 @@ const AccountLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = 
   const resourcesMap = resources.orgsMap
   const projResourcesMap = resources.projectsMap
   const selectedItemIds = entityMap?.entityRefs || []
-  // let nodesEl = null
-
   if (filterType === All || selectedItemIds.length === 0) {
     return (
       <>
@@ -375,7 +321,6 @@ const AccountLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = 
         </span>
       )
     })
-
     return (
       <>
         <div className={classnames(css.viewRowNode, css.marginSmaller)}>
@@ -432,8 +377,6 @@ const AccountLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = 
         </>
       )
     }
-
-    // Is single selected
   }
   return <div></div>
 }
