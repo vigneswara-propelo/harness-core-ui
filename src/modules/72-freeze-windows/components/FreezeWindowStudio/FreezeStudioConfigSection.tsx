@@ -138,6 +138,7 @@ const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
                 values={formikProps.values?.entity?.[index] || {}}
                 setFieldValue={formikProps.setFieldValue}
                 organizations={resources.orgs || []}
+                fetchProjectsForOrgId={resources.fetchProjectsForOrgId}
               />
             ) : null}
             {fieldsVisibility.showProjectField ? (
