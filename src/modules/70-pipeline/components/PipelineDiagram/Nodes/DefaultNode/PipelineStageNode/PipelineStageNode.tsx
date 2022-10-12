@@ -282,7 +282,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               isDark: true
             }}
           >
-            <Icon size={26} name={'conditional-skip-new'} color="white" />
+            <Icon size={26} name={'conditional-skip-new'} />
           </Text>
         </div>
       )}
