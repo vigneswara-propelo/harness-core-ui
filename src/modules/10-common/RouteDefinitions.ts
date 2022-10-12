@@ -56,6 +56,7 @@ import type {
 const CV_HOME = `/cv/home`
 
 const routes = {
+  toMainDashboard: withAccountId(() => '/main-dashboard'),
   toHome: withAccountId(() => '/home'),
   toGenericError: withAccountId(() => '/error'),
   toSetup: withAccountId(
@@ -1595,6 +1596,7 @@ const routes = {
       `/home/orgs/${orgIdentifier}/projects/${projectIdentifier}/details`
   ),
   toProjects: withAccountId(() => '/home/projects'),
+  toAllProjects: withAccountId(() => '/home/projects/all'),
   toLandingDashboard: withAccountId(() => '/home/get-started'),
   /********************************************************************************************************************/
   toCE: withAccountId(() => `/ce`),

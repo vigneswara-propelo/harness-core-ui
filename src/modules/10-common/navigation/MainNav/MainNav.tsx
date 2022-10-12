@@ -103,17 +103,38 @@ export default function L1Nav(): React.ReactElement {
     <>
       <nav className={cx(css.main, { [css.recessed]: isModuleListOpen })}>
         <ul className={css.navList}>
+          {NEW_LEFT_NAVBAR_SETTINGS && (
+            <li className={css.navItem}>
+              <Link {...commonLinkProps} to={paths.toMainDashboard(params)}>
+                <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                  <Icon name={'harness'} size={30} />
+                  <Text
+                    font={{ weight: 'semi-bold', align: 'center' }}
+                    padding={{ bottom: 'xsmall' }}
+                    color={Color.WHITE}
+                    className={css.text}
+                  >
+                    <String stringID={'common.home'} />
+                  </Text>
+                </Layout.Vertical>
+              </Link>
+            </li>
+          )}
           <li className={css.navItem}>
             <Link {...commonLinkProps} to={paths.toHome(params)}>
               <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                <Icon name="harness" size={30} />
+                {NEW_LEFT_NAVBAR_SETTINGS ? (
+                  <Icon name={'nav-project'} size={30} color={Color.PRIMARY_4} />
+                ) : (
+                  <Icon name={'harness'} size={30} />
+                )}
                 <Text
                   font={{ weight: 'semi-bold', align: 'center' }}
                   padding={{ bottom: 'xsmall' }}
                   color={Color.WHITE}
                   className={css.text}
                 >
-                  <String stringID="common.home" />
+                  <String stringID={NEW_LEFT_NAVBAR_SETTINGS ? 'projectsText' : 'common.home'} />
                 </Text>
               </Layout.Vertical>
             </Link>
