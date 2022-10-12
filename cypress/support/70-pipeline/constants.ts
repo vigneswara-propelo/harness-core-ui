@@ -100,7 +100,10 @@ export const getArtifactPaths = `/ng/api/artifacts/jenkins/job/AutomationQA/path
 export const azureSubscriptions = `/ng/api/azure/subscriptions?routingId=${accountId}&connectorRef=${connectorRef}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const azureResourceGroups = `/ng/api/azure/subscriptions/1111-1111-1111-1111-1111/resourceGroups?routingId=${accountId}&connectorRef=${connectorRef}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const stepTemplateSchemaEndpoint = `/template/api/templates/schema/templateSchema?routingId=${accountId}&templateEntityType=Step&entityType=ShellScript&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&accountIdentifier=${accountId}&scope=project`
-
+export const canvasExecutionPipelineCall =
+  '/pipeline/api/pipelines/execution/v2/testParallelNodesPipeline?routingId=accountId&orgIdentifier=default&projectIdentifier=project1&accountIdentifier=accountId'
+export const canvasExecutionStageNodeCall =
+  '/pipeline/api/pipelines/execution/v2/testParallelNodesPipeline?routingId=accountId&orgIdentifier=default&projectIdentifier=project1&accountIdentifier=accountId&stageNodeId=irowXCLESvK1hLHWKeobEw'
 // Routes
 
 export const updatedPipelineExecutionEndpoint = `/pipeline/api/pipeline/execute/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&moduleType=cd&notifyOnlyUser=false`
@@ -115,7 +118,7 @@ export const servicesRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/pr
 export const pipelinesRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines`
 export const triggersRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers`
 export const templatesListRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/templates`
-
+export const testParallelNodesPipelineRoute = `#/account/accountId/cd/orgs/default/projects/project1/pipelines/sad/executions/testParallelNodesPipeline/pipeline`
 export interface ValidObject {
   resourceName: StepResourceObject[]
   warningCheck?: boolean
