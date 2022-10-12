@@ -1268,13 +1268,13 @@ cannotEditTriggerInvalidPipeline: Cannot edit the trigger because pipeline is in
 parentStageDeleteWarning: "Warning: this Stage's settings are propagated to another Stage(s) in this Pipeline ({{propagatingStages}}). If you delete this Stage, you must update the other Stages' settings or the Pipeline will fail."
 outOfSyncErrorStrip:
   reconcile: Reconcile
-  unsyncedTemplateInfo: Some template(s) referenced in this {{entity}} have gone out of sync.
-  updatedTemplateInfo: Some template(s) referenced in this {{entity}} have been updated.
+  unsyncedTemplateInfo: Some of the entities referenced in this {{entity}} have gone out of sync.
+  updatedTemplateInfo: Some of the entities referenced in this {{entity}} have been updated.
 reconcileDialog:
   title: Template Error Inspection
   subtitle: Error Trace
-  unsyncedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from unsynced templates.
-  updatedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from updated templates.
+  unsyncedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from unsynced entities.
+  updatedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from updated entities.
   originalYamlLabel: Original
   refreshedYamlLabel: Refreshed
   updateAllLabel: Update all unsynced entities
