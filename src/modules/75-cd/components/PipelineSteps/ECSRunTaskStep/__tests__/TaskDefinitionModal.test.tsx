@@ -13,8 +13,7 @@ import {
   waitFor,
   findByText,
   findByTestId,
-  getByText,
-  getByTestId
+  getByText
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType } from '@harness/uicore'
@@ -261,8 +260,6 @@ describe('TaskDefinitionModal tests', () => {
 
     // Check if last step is rendered file with + Add adding file select field properly
     await waitFor(() => expect(getByText(portal, 'fileFolderPathText')).toBeInTheDocument())
-    const addFilesBtn = getByTestId(portal, 'add-files').parentElement
-    userEvent.click(addFilesBtn!)
-    await waitFor(() => expect(portal.querySelector('[data-icon="chevron-down"]')).toBeInTheDocument())
+    expect(portal.querySelector('[data-icon="chevron-down"]')).toBeInTheDocument()
   })
 })
