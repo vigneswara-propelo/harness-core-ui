@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, ButtonVariation, Icon } from '@wings-software/uicore'
+import { Spinner } from '@blueprintjs/core'
+import { Button, ButtonVariation, Icon, Container } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import type { WindowPathProps } from '@freeze-windows/types'
 import RbacButton from '@rbac/components/Button/Button'
@@ -48,25 +49,31 @@ export const FreezeWindowStudioSubHeaderRightView = () => {
         </Button>
       )}
       <div className={css.headerSaveBtnWrapper}>
-        <RbacButton
-          onClick={onSave}
-          disabled={isSaveDisabled}
-          variation={ButtonVariation.PRIMARY}
-          text={getString('save')}
-          icon="send-data"
-          loading={isSaveInProgress}
-          permission={{
-            permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
-            resource: {
-              resourceType: ResourceType.DEPLOYMENTFREEZE
-            },
-            resourceScope: {
-              accountIdentifier,
-              orgIdentifier,
-              projectIdentifier
-            }
-          }}
-        />
+        {isSaveInProgress ? (
+          <Container padding={'medium'}>
+            <Spinner size={Spinner.SIZE_SMALL} />
+          </Container>
+        ) : (
+          <RbacButton
+            onClick={onSave}
+            disabled={isSaveDisabled}
+            variation={ButtonVariation.PRIMARY}
+            text={getString('save')}
+            icon="send-data"
+            loading={isSaveInProgress}
+            permission={{
+              permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
+              resource: {
+                resourceType: ResourceType.DEPLOYMENTFREEZE
+              },
+              resourceScope: {
+                accountIdentifier,
+                orgIdentifier,
+                projectIdentifier
+              }
+            }}
+          />
+        )}
       </div>
       {windowIdentifier !== DefaultFreezeId && !isReadOnly && (
         <Button
