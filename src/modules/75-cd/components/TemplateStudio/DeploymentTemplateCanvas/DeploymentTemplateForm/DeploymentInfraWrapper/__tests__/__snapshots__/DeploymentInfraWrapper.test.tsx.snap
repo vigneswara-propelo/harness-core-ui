@@ -270,7 +270,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
                             name="instanceAttributes[0].name"
                             placeholder="pipeline.customDeployment.fieldNamePlaceholder"
                             type="text"
-                            value="hostname"
+                            value="instancename"
                           />
                         </div>
                       </div>
@@ -837,7 +837,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                             name="instanceAttributes[0].name"
                             placeholder="pipeline.customDeployment.fieldNamePlaceholder"
                             type="text"
-                            value="hostname"
+                            value="instancename"
                           />
                         </div>
                       </div>
@@ -1516,7 +1516,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                             name="instanceAttributes[0].name"
                             placeholder="pipeline.customDeployment.fieldNamePlaceholder"
                             type="text"
-                            value="hostName"
+                            value="instancename"
                           />
                         </div>
                       </div>
@@ -2195,7 +2195,7 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                             name="instanceAttributes[0].name"
                             placeholder="pipeline.customDeployment.fieldNamePlaceholder"
                             type="text"
-                            value="hostName"
+                            value="instancename"
                           />
                         </div>
                       </div>
