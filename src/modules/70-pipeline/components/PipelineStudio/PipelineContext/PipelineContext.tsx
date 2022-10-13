@@ -256,7 +256,7 @@ export interface PipelineContextInterface {
   setYamlHandler: (yamlHandler: YamlBuilderHandlerBinding) => void
   setTemplateTypes: (data: { [key: string]: string }) => void
   setTemplateServiceData: (data: TemplateServiceDataType) => void
-  updatePipeline: (pipeline: PipelineInfoConfig) => Promise<void>
+  updatePipeline: (pipeline: PipelineInfoConfig, viewType?: SelectedView) => Promise<void>
   updatePipelineStoreMetadata: (storeMetadata: StoreMetadata, gitDetails: EntityGitDetails) => Promise<void>
   updateGitDetails: (gitDetails: EntityGitDetails) => Promise<void>
   updateEntityValidityDetails: (entityValidityDetails: EntityValidityDetails) => Promise<void>
