@@ -1835,6 +1835,11 @@ export type ChaosModuleLicenseDTO = ModuleLicenseDTO & {
   totalChaosInfrastructures?: number
 }
 
+export type ChaosStepInfo = StepSpecType & {
+  expectedResilienceScore: number
+  experimentRef: string
+}
+
 export interface CloudformationCreateStackStepConfiguration {
   capabilities?: string[]
   connectorRef: string
@@ -2052,6 +2057,7 @@ export interface ConnectorCatalogueItem {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
+    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -2133,6 +2139,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
+    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -2190,6 +2197,7 @@ export interface ConnectorInfoDTO {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
+    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -2264,6 +2272,7 @@ export interface ConnectorTypeStatistics {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
+    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -3361,6 +3370,7 @@ export interface EntityDetail {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
 }
 
 export interface EntityDetailProtoDTO {
@@ -3536,8 +3546,16 @@ export interface EnvironmentInfoByServiceId {
   tag?: string
 }
 
+export interface EnvironmentInputsetYamlAndServiceOverridesMetadata {
+  envRef?: string
+  envRuntimeInputYaml?: string
+  envYaml?: string
+  servicesOverrides?: ServiceOverridesMetadata[]
+}
+
 export interface EnvironmentInputsetYamlAndServiceOverridesMetadataInput {
-  envIdentifiers: string[]
+  envGroupIdentifier?: string
+  envIdentifiers?: string[]
   serviceIdentifiers: string[]
 }
 
@@ -3587,17 +3605,8 @@ export interface EnvironmentYaml {
   type: 'PreProduction' | 'Production'
 }
 
-export interface EnvironmentYamlMetadata {
-  runtimeInputYaml?: string
-  serviceOverridesYaml?: {
-    [key: string]: string
-  }
-}
-
 export interface EnvironmentYamlMetadataDTO {
-  environmentsInputYamlAndServiceOverrides?: {
-    [key: string]: EnvironmentYamlMetadata
-  }
+  environmentsInputYamlAndServiceOverrides?: EnvironmentInputsetYamlAndServiceOverridesMetadata[]
 }
 
 export interface EnvironmentYamlV2 {
@@ -5084,10 +5093,12 @@ export interface FfSubscriptionDTO {
   accountId?: string
   customer?: CustomerDTO
   edition?: string
+  monthly?: boolean
   numberOfDevelopers?: number
   numberOfMau?: number
   paymentFreq?: string
   premiumSupport?: boolean
+  yearly?: boolean
 }
 
 export interface FieldValues {
@@ -5542,6 +5553,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   searchTerm?: string
@@ -5663,6 +5675,7 @@ export interface GitEntityFilterProperties {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
@@ -5817,6 +5830,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -5946,6 +5960,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -6183,6 +6198,7 @@ export interface GitSyncEntityDTO {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -6306,6 +6322,7 @@ export interface GitSyncEntityListDTO {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -6446,6 +6463,7 @@ export interface GitSyncErrorDTO {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -7632,7 +7650,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -7640,6 +7658,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -8291,9 +8310,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -9361,6 +9381,7 @@ export interface ReferencedByDTO {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
 }
 
 export interface RefreshResponse {
@@ -10407,6 +10428,7 @@ export interface ResponseListEntityType {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12857,6 +12879,13 @@ export interface ServiceOverrides {
   name?: string
 }
 
+export interface ServiceOverridesMetadata {
+  serviceOverridesYaml?: string
+  serviceRef?: string
+  serviceRuntimeInputYaml?: string
+  serviceYaml?: string
+}
+
 export interface ServicePipelineInfo {
   deployedById?: string
   deployedByName?: string
@@ -13127,6 +13156,27 @@ export type SplunkConnectorDTO = ConnectorConfigDTO & {
   passwordRef: string
   splunkUrl: string
   username?: string
+}
+
+export type SpotConnector = ConnectorConfigDTO & {
+  credential: SpotCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+}
+
+export interface SpotCredential {
+  spec?: SpotCredentialSpec
+  type: 'ManualConfig'
+}
+
+export interface SpotCredentialSpec {
+  [key: string]: any
+}
+
+export type SpotManualConfigSpec = SpotCredentialSpec & {
+  accountId?: string
+  accountIdRef?: string
+  apiTokenRef: string
 }
 
 export type SshServiceSpec = ServiceSpec & {}
@@ -14909,6 +14959,7 @@ export interface ListActivitiesQueryParams {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15024,6 +15075,7 @@ export interface ListActivitiesQueryParams {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -15243,6 +15295,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15358,6 +15411,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -18496,7 +18550,7 @@ export interface GetJobDetailsForCustomQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  pipelineIdentifier: string
+  pipelineIdentifier?: string
   versionPath: string
   arrayPath: string
   branch?: string
@@ -24035,6 +24089,7 @@ export interface GetConnectorListQueryParams {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
+    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -24432,6 +24487,7 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
+    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -28712,6 +28768,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -28887,6 +28944,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   searchTerm?: string
 }
 
@@ -30168,6 +30226,7 @@ export interface GetEnvironmentAccessListQueryParams {
   projectIdentifier?: string
   searchTerm?: string
   envIdentifiers?: string[]
+  envGroupIdentifier?: string
   sort?: string[]
 }
 
@@ -31905,6 +31964,7 @@ export interface GetReferencedByQueryParams {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   searchTerm?: string
 }
 
@@ -34081,6 +34141,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -34264,6 +34325,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'Freeze'
       | 'GitOpsUpdateReleaseRepo'
       | 'EcsRunTask'
+      | 'Chaos'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -39872,6 +39934,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   yamlGroup?: string
 }
 
@@ -40115,6 +40178,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -52320,6 +52384,7 @@ export interface GetYamlSchemaQueryParams {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
   subtype?:
     | 'K8sCluster'
     | 'Git'
@@ -52337,6 +52402,7 @@ export interface GetYamlSchemaQueryParams {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
+    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'

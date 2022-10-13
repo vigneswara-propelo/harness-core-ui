@@ -141,7 +141,7 @@ export function EnvironmentEntityCard({
             />
           </Container>
           <Collapse keepChildrenMounted={false} isOpen={showInputs}>
-            <Container border={{ top: true }}>
+            <Container border={{ top: true }} margin={{ top: 'medium' }} padding={{ top: 'large' }}>
               <Text color={Color.GREY_800} font={{ size: 'normal', weight: 'bold' }} margin={{ bottom: 'medium' }}>
                 {getString('common.environmentInputs')}
               </Text>

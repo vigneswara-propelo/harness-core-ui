@@ -12,3 +12,7 @@ export interface DeployInfrastructureEntityCustomStepProps {
   environmentIdentifier?: string
   isMultipleInfrastructure?: boolean
 }
+
+export interface DeployInfrastructureEntityCustomInputStepProps extends DeployInfrastructureEntityCustomStepProps {
+  deployToAllInfrastructures?: boolean
+}

@@ -29,6 +29,7 @@ export enum StepType {
   DeployServiceEntity = 'DeployServiceEntity',
   DeployService = 'DeployService',
   DeployEnvironment = 'DeployEnvironment',
+  DeployEnvironmentGroup = 'DeployEnvironmentGroup',
   DeployEnvironmentEntity = 'DeployEnvironmentEntity',
   DeployInfrastructure = 'DeployInfrastructure',
   DeployInfrastructureEntity = 'DeployInfrastructureEntity',

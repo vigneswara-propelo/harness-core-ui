@@ -4677,6 +4677,7 @@ export interface StringsMap {
   'cd.pathCannotBeEmpty': string
   'cd.pipelineCreation': string
   'cd.pipelineSteps.environmentTab.allClustersSelected': string
+  'cd.pipelineSteps.environmentTab.allInfrastructures': string
   'cd.pipelineSteps.environmentTab.clusterIsRequired': string
   'cd.pipelineSteps.environmentTab.deleteEnvironmentFromListConfirmationText': string
   'cd.pipelineSteps.environmentTab.deleteEnvironmentFromListDialogTitleText': string

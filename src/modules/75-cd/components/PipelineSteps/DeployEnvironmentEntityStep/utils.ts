@@ -120,11 +120,16 @@ function processSingleEnvironmentFormValues(data: DeployEnvironmentEntityFormSta
   return {}
 }
 
-function getEnvironmentsStateFromFormValues(environments?: EnvironmentYamlV2[]): DeployEnvironmentEntityFormState {
+function getEnvironmentsStateFromFormValues(
+  environments?: EnvironmentYamlV2[],
+  deployToAll?: boolean
+): DeployEnvironmentEntityFormState {
   const formState = {}
 
   if (getMultiTypeFromValue(environments as unknown as string) !== MultiTypeInputType.FIXED) {
-    set(formState, 'environments', environments)
+    if (deployToAll !== true) {
+      set(formState, 'environments', environments)
+    }
     set(formState, 'environmentInputs', {})
     set(formState, 'infrastructures', [])
     set(formState, 'infrastructureInputs', {})
@@ -220,7 +225,13 @@ function processEnvironmentGroupInitialValues(
       getMultiTypeFromValue(initialValues.environmentGroup?.envGroupRef as unknown as string) ===
       MultiTypeInputType.FIXED
     ) {
-      formState = { ...formState, ...getEnvironmentsStateFromFormValues(initialValues.environmentGroup.environments) }
+      formState = {
+        ...formState,
+        ...getEnvironmentsStateFromFormValues(
+          initialValues.environmentGroup.environments,
+          initialValues.environmentGroup.deployToAll
+        )
+      }
     }
   }
 
@@ -239,14 +250,17 @@ function processEnvironmentGroupFormValues(data: DeployEnvironmentEntityFormStat
       }
     }
 
+    const deployToAll =
+      getMultiTypeFromValue(data.environments) === MultiTypeInputType.RUNTIME
+        ? (RUNTIME_INPUT_VALUE as any)
+        : isEmpty(data.environments)
+
     return {
       environmentGroup: {
         envGroupRef: data.environmentGroup,
-        deployToAll:
-          getMultiTypeFromValue(data.environments) === MultiTypeInputType.RUNTIME
-            ? (RUNTIME_INPUT_VALUE as any)
-            : isEmpty(data.environments),
-        environments: getEnvironmentsFormValuesFromState(data)
+        deployToAll,
+        ...(deployToAll === true && { environments: RUNTIME_INPUT_VALUE as any }),
+        ...(!isEmpty(data.environments) && { environments: getEnvironmentsFormValuesFromState(data) })
       }
     }
   }

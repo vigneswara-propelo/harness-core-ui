@@ -10,6 +10,7 @@ import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
 import { Divider } from '@blueprintjs/core'
+import { v4 as uuid } from 'uuid'
 
 import {
   AllowedTypes,
@@ -28,6 +29,7 @@ import type { EnvironmentYaml } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
+import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -53,6 +55,7 @@ interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomS
   identifiersToLoad?: string[]
   /** env group specific props */
   isUnderEnvGroup?: boolean
+  envGroupIdentifier?: string
 }
 
 export function getAllFixedEnvironments(data: DeployEnvironmentEntityFormState): string[] {
@@ -82,15 +85,16 @@ export default function DeployEnvironment({
   readonly,
   allowableTypes,
   isMultiEnvironment,
-  identifiersToLoad,
+  envGroupIdentifier,
   isUnderEnvGroup,
   stageIdentifier,
   deploymentType,
   customDeploymentRef,
   gitOpsEnabled
 }: DeployEnvironmentProps): JSX.Element {
-  const { values, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
+  const { values, setFieldValue, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
+  const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
 
   // State
@@ -112,8 +116,8 @@ export default function DeployEnvironment({
     refetchEnvironmentsData,
     prependEnvironmentToEnvironmentList
   } = useGetEnvironmentsData({
-    envIdentifiers: defaultTo(identifiersToLoad, selectedEnvironments),
-    loadSpecificIdentifiers: !isEmpty(identifiersToLoad)
+    envIdentifiers: selectedEnvironments,
+    envGroupIdentifier
   })
 
   const selectOptions = useMemo(() => {
@@ -178,8 +182,27 @@ export default function DeployEnvironment({
             { environments: [], environmentInputs: {}, parallel: values.parallel }
           )
 
-          setValues({ ...values, ...updatedEnvironments })
+          setValues({
+            ...values,
+            ...updatedEnvironments,
+            // set value of unique path created to handle environments if some environments are already selected, else select All
+            [uniquePathForEnvironments.current]: selectedEnvironments.map(envId => ({
+              label: defaultTo(
+                environmentsList.find(environmentInList => environmentInList.identifier === envId)?.name,
+                envId
+              ),
+              value: envId
+            }))
+          })
         }
+      } else if (isMultiEnvironment && isEmpty(selectedEnvironments)) {
+        // set value of unique path to All in case no environments are selected or runtime if environments is set to runtime
+        // This is specifically used for on load
+        const envIdentifierValue =
+          getMultiTypeFromValue(values.environments) === MultiTypeInputType.RUNTIME
+            ? values.environments
+            : [SELECT_ALL_OPTION]
+        setFieldValue(`${uniquePathForEnvironments.current}`, envIdentifierValue)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -190,6 +213,8 @@ export default function DeployEnvironment({
   let placeHolderForEnvironments =
     Array.isArray(values.environments) && values.environments
       ? getString('environments')
+      : isUnderEnvGroup
+      ? getString('common.allEnvironments')
       : getString('cd.pipelineSteps.environmentTab.selectEnvironments')
 
   if (loading) {
@@ -212,14 +237,14 @@ export default function DeployEnvironment({
     closeAddNewModal()
 
     const newFormValues = produce(values, draft => {
-      if (draft.environment) {
-        draft.environment = newEnvironmentInfo.identifier
-        draft.infrastructure = ''
-      } else if (Array.isArray(draft.environments)) {
+      if (draft.environments && Array.isArray(draft.environments)) {
         draft.environments.push({ label: newEnvironmentInfo.name, value: newEnvironmentInfo.identifier })
         if (draft.infrastructures) {
           draft.infrastructures[newEnvironmentInfo.identifier] = []
         }
+      } else {
+        draft.environment = newEnvironmentInfo.identifier
+        draft.infrastructure = ''
       }
     })
 
@@ -255,17 +280,24 @@ export default function DeployEnvironment({
           <FormMultiTypeMultiSelectDropDown
             label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironments')}
             tooltipProps={{ dataTooltipId: 'specifyYourEnvironments' }}
-            name={'environments'}
+            name={uniquePathForEnvironments.current}
             // Form group disabled
             disabled={disabled}
             dropdownProps={{
               placeholder: placeHolderForEnvironments,
               items: selectOptions,
               // Field disabled
-              disabled
+              disabled,
+              isAllSelectionSupported: isUnderEnvGroup
             }}
             onChange={items => {
-              setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
+              if (items?.at(0)?.value === 'All') {
+                setFieldValue(`environments`, undefined)
+                setSelectedEnvironments([])
+              } else {
+                setFieldValue(`environments`, items)
+                setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
+              }
             }}
             multiTypeProps={{
               width: 280,

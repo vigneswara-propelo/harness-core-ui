@@ -27,7 +27,8 @@ import type { EnvironmentData } from '../types'
 
 export interface UseGetEnvironmentsDataProps {
   envIdentifiers: string[]
-  loadSpecificIdentifiers?: boolean
+  specificIdentifiers?: string[]
+  envGroupIdentifier?: string
 }
 
 export interface UseGetEnvironmentsDataReturn {
@@ -47,7 +48,8 @@ export interface UseGetEnvironmentsDataReturn {
 
 export function useGetEnvironmentsData({
   envIdentifiers,
-  loadSpecificIdentifiers
+  envGroupIdentifier,
+  specificIdentifiers
 }: UseGetEnvironmentsDataProps): UseGetEnvironmentsDataReturn {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { showError } = useToaster()
@@ -67,7 +69,8 @@ export function useGetEnvironmentsData({
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      ...(loadSpecificIdentifiers && { envIdentifiers })
+      ...(Boolean(envGroupIdentifier) && { envGroupIdentifier }),
+      ...(Boolean(specificIdentifiers) && { envIdentifiers: specificIdentifiers })
     }
   })
 
@@ -83,8 +86,11 @@ export function useGetEnvironmentsData({
       orgIdentifier,
       projectIdentifier
     },
-    body: { envIdentifiers, serviceIdentifiers: ['svc2one'] },
-    lazy: envIdentifiers.length === 0
+    body: {
+      ...(envIdentifiers ? { envIdentifiers } : { ...(envGroupIdentifier && { envGroupIdentifier }) }),
+      serviceIdentifiers: []
+    },
+    lazy: !(envGroupIdentifier || envIdentifiers.length)
   })
 
   const loading = loadingEnvironmentsList || loadingEnvironmentsData
@@ -106,28 +112,26 @@ export function useGetEnvironmentsData({
         }))
       }
 
-      const environmentsInResponse = Object.keys(
-        defaultTo(environmentsDataResponse?.data?.environmentsInputYamlAndServiceOverrides, {})
+      const environmentsAndServiceOverridesInResponse = defaultTo(
+        environmentsDataResponse?.data?.environmentsInputYamlAndServiceOverrides,
+        []
       )
 
-      const yamlMetadataList = environmentsInResponse.map(environmentInResponse => {
+      const yamlMetadataList = environmentsAndServiceOverridesInResponse.map(environmentInResponse => {
         return {
-          environmentIdentifier: environmentInResponse,
-          environmentYaml: (_environmentsList.find(env => env.identifier === environmentInResponse) as any)?.yaml
+          environmentIdentifier: environmentInResponse.envRef,
+          environmentYaml: environmentInResponse.envYaml,
+          environmentRuntimeTemplateYaml: environmentInResponse.envRuntimeInputYaml
         }
       })
 
-      // environmentsInResponse.map(environmentInResponse => {
-      //   return {}
-      // })
-      /* istanbul ignore else */
       if (yamlMetadataList?.length) {
         _environmentsData = yamlMetadataList.map(row => {
           const environmentYaml = defaultTo(row.environmentYaml, '{}')
           const environment = yamlParse<Pick<EnvironmentData, 'environment'>>(environmentYaml).environment
           environment.yaml = environmentYaml
           const environmentInputs = yamlParse<Pick<EnvironmentData, 'environmentInputs'>>(
-            defaultTo((row as any).inputSetTemplateYaml, '{}')
+            defaultTo(row.environmentRuntimeTemplateYaml, '{}')
           ).environmentInputs
 
           /* istanbul ignore else */

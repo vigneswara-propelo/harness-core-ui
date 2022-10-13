@@ -112,6 +112,15 @@ export default function DeployEnvironmentEntityWidget({
             ? (RUNTIME_INPUT_VALUE as any)
             : [{ label: environment, value: environment }]
           : []
+
+        delete draft.infrastructure
+        delete draft.infrastructures
+
+        delete draft.environment
+        delete draft.environmentGroup
+
+        draft.parallel = true
+
         if (environment) {
           set(
             draft,
@@ -123,8 +132,6 @@ export default function DeployEnvironmentEntityWidget({
               : []
           )
         }
-        delete draft.environment
-        delete draft.environmentGroup
       })
       updateValuesInFormikAndPropogate(newValues)
     }
@@ -138,6 +145,7 @@ export default function DeployEnvironmentEntityWidget({
       const newValues = produce(formikRef.current.values, draft => {
         draft.environment = ''
         delete draft.environments
+        delete draft.infrastructures
         delete draft.environmentGroup
       })
       updateValuesInFormikAndPropogate(newValues)

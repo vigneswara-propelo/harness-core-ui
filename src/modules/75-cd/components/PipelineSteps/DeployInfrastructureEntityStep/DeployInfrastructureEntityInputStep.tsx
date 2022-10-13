@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
-import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
+import React, { useCallback, useMemo, useState } from 'react'
+import { defaultTo, get, isEmpty, isEqual, isNil, merge } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { Spinner } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
@@ -21,28 +21,25 @@ import {
 } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import type { Infrastructure } from 'services/cd-ng'
 
 import { useDeepCompareEffect } from '@common/hooks'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
+import { isValueRuntimeInput } from '@common/utils/utils'
 
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
-import { infraDefinitionTypeMapping } from '@pipeline/utils/stageHelpers'
-import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import { useGetInfrastructuresData } from '../DeployEnvironmentEntityStep/DeployInfrastructure/useGetInfrastructuresData'
-import type { DeployEnvironmentEntityConfig } from '../DeployEnvironmentEntityStep/types'
-import type { DeployInfrastructureEntityCustomStepProps } from './types'
+import type { DeployEnvironmentEntityConfig, InfrastructureYaml } from '../DeployEnvironmentEntityStep/types'
+import type { DeployInfrastructureEntityCustomInputStepProps } from './types'
 
 import css from './DeployInfrastructureEntityStep.module.scss'
 
-export interface DeployInfrastructureEntityInputStepProps extends Required<DeployInfrastructureEntityCustomStepProps> {
+export interface DeployInfrastructureEntityInputStepProps
+  extends Required<DeployInfrastructureEntityCustomInputStepProps> {
   initialValues: DeployEnvironmentEntityConfig['environment']
   readonly: boolean
   allowableTypes: AllowedTypes
@@ -59,9 +56,9 @@ export default function DeployInfrastructureEntityInputStep({
   allowableTypes,
   inputSetData,
   deploymentType,
-  stepViewType,
   environmentIdentifier,
-  isMultipleInfrastructure
+  isMultipleInfrastructure,
+  deployToAllInfrastructures
 }: DeployInfrastructureEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const formik = useFormikContext<DeployEnvironmentEntityConfig>()
@@ -72,10 +69,9 @@ export default function DeployInfrastructureEntityInputStep({
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith(TEMPLATE_INPUT_PATH)
 
   const infrastructureValue = get(initialValues, `infrastructureDefinitions.[0].identifier`)
-
   const infrastructureValues = get(initialValues, 'infrastructureDefinitions')
 
-  const infrastructureIdentifiers: string[] = useMemo(() => {
+  const getInfrastructureIdentifiers = useCallback(() => {
     if (!isMultipleInfrastructure && infrastructureValue) {
       return [infrastructureValue]
     }
@@ -86,6 +82,8 @@ export default function DeployInfrastructureEntityInputStep({
 
     return []
   }, [isMultipleInfrastructure, infrastructureValue, infrastructureValues])
+
+  const [infrastructureIdentifiers, setInfrastructureIdentifiers] = useState<string[]>(getInfrastructureIdentifiers())
 
   const {
     infrastructuresList,
@@ -126,6 +124,14 @@ export default function DeployInfrastructureEntityInputStep({
         }))
       )
     }
+
+    // update identifiers in state when deployToAll is true. This sets the infrastructuresData
+    if (infrastructuresList.length && deployToAllInfrastructures) {
+      const newIdentifiers = infrastructuresList.map(infrastructureInList => infrastructureInList.identifier)
+      if (!isEqual(newIdentifiers, infrastructureIdentifiers)) {
+        setInfrastructureIdentifiers(newIdentifiers)
+      }
+    }
   }, [infrastructuresList])
 
   useDeepCompareEffect(() => {
@@ -163,12 +169,31 @@ export default function DeployInfrastructureEntityInputStep({
     // updated values based on selected infrastructures
     const newInfrastructuresValues = infrastructureIdentifiers.map(infraId => {
       const infraTemplateValue = infrastructuresData.find(
-        envTemplate => envTemplate.infrastructureDefinition.identifier === infraId
+        infraTemplate => infraTemplate.infrastructureDefinition.identifier === infraId
       )?.infrastructureInputs
+
+      // Start - Retain form values
+
+      let infrastructureInputs = isMultipleInfrastructure
+        ? get(formik.values, `${pathPrefix}infrastructureDefinitions`)?.find(
+            (infra: InfrastructureYaml) => infra.identifier === infraId
+          )?.inputs
+        : get(formik.values, `${pathPrefix}infrastructureDefinitions`)
+
+      if (!infrastructureInputs || isValueRuntimeInput(infrastructureInputs)) {
+        infrastructureInputs = infraTemplateValue ? clearRuntimeInput(infraTemplateValue) : undefined
+      } else {
+        infrastructureInputs = merge(
+          infraTemplateValue ? clearRuntimeInput(infraTemplateValue) : undefined,
+          infrastructureInputs
+        )
+      }
+
+      // End - Retain form values
 
       return {
         identifier: infraId,
-        inputs: infraTemplateValue ? clearRuntimeInput(infraTemplateValue) : undefined
+        inputs: infrastructureInputs
       }
     })
 
@@ -194,6 +219,7 @@ export default function DeployInfrastructureEntityInputStep({
     ) {
       return
     }
+    setInfrastructureIdentifiers(getInfrastructureIdentifiers())
   }
 
   function handleInfrastructuresChange(values: SelectOption[]): void {
@@ -203,10 +229,11 @@ export default function DeployInfrastructureEntityInputStep({
     }))
 
     formik.setFieldValue(`${pathPrefix}infrastructureDefinitions`, newValues)
+    if (!deployToAllInfrastructures) {
+      formik.setFieldValue(`${pathPrefix}deployToAll`, false)
+    }
+    setInfrastructureIdentifiers(getInfrastructureIdentifiers())
   }
-
-  const deploymentStageInputSet = get(formik?.values, pathPrefix, {})
-  const infrastructureDefinitionsTemplate = inputSetData?.template?.infrastructureDefinitions
 
   return (
     <>
@@ -232,10 +259,10 @@ export default function DeployInfrastructureEntityInputStep({
             formik={formik}
           />
         )}
-        {isMultipleInfrastructure && (
+        {isMultipleInfrastructure && !deployToAllInfrastructures && (
           <FormMultiTypeMultiSelectDropDown
-            tooltipProps={{ dataTooltipId: 'specifyYourInfrastructure' }}
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructure')}
+            tooltipProps={{ dataTooltipId: 'specifyYourInfrastructures' }}
+            label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructures')}
             name={uniquePath.current}
             disabled={inputSetData?.readonly || loading}
             dropdownProps={{
@@ -252,47 +279,6 @@ export default function DeployInfrastructureEntityInputStep({
         )}
         {loading ? <Spinner className={css.inputSetSpinner} size={16} /> : null}
       </Layout.Horizontal>
-      {Array.isArray(infrastructureDefinitionsTemplate)
-        ? infrastructureDefinitionsTemplate.map((infrastructureDefinitionTemplate, index) => {
-            const infraInputs = infrastructureDefinitionTemplate.inputs
-
-            return infraInputs?.identifier ? (
-              <StepWidget<Infrastructure>
-                key={infraInputs.identifier}
-                factory={factory}
-                template={infraInputs?.spec}
-                initialValues={{
-                  ...deploymentStageInputSet?.infrastructureDefinitions?.[index]?.inputs?.spec,
-                  environmentRef: environmentIdentifier,
-                  infrastructureRef: infraInputs.identifier
-                }}
-                allowableTypes={allowableTypes}
-                allValues={{
-                  // ...deploymentStage?.environment?.infrastructureDefinitions?.[0]?.inputs?.spec,
-                  environmentRef: environmentIdentifier,
-                  infrastructureRef: infraInputs.identifier
-                }}
-                type={(infraDefinitionTypeMapping[infraInputs.type as StepType] || infraInputs?.type) as StepType}
-                path={`${pathPrefix}infrastructureDefinitions.${index}.inputs.spec`}
-                readonly={inputSetData?.readonly}
-                stepViewType={stepViewType}
-                customStepProps={{
-                  // ...getCustomStepProps((deploymentStage?.deploymentType as StepType) || '', getString),
-                  // serviceRef: deploymentStage?.service?.serviceRef,
-                  environmentRef: environmentIdentifier,
-                  infrastructureRef: infraInputs.identifier
-                }}
-                onUpdate={data => {
-                  /* istanbul ignore next */
-                  if (deploymentStageInputSet?.infrastructureDefinitions?.[index]?.inputs?.spec) {
-                    deploymentStageInputSet.infrastructureDefinitions[index].inputs.spec = data
-                    formik.setValues(set(formik.values, pathPrefix, deploymentStageInputSet))
-                  }
-                }}
-              />
-            ) : null
-          })
-        : null}
     </>
   )
 }

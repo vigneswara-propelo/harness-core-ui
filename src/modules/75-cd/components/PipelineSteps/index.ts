@@ -24,6 +24,7 @@ import { K8sApplyStep } from './K8sApply/K8sApplyStep'
 import { K8sDeleteStep } from './K8sDelete/K8sDeleteStep'
 import { DeployEnvironmentStep } from './DeployEnvStep/DeployEnvStep'
 import { DeployEnvironmentEntityStep } from './DeployEnvironmentEntityStep/DeployEnvironmentEntityStep'
+import { DeployEnvironmentGroupStep } from './DeployEnvironmentGroupStep/DeployEnvironmentGroupStep'
 import { DeployInfrastructureStep } from './DeployInfrastructureStep/DeployInfrastructureStep'
 import { DeployInfrastructureEntityStep } from './DeployInfrastructureEntityStep/DeployInfrastructureEntityStep'
 import { DeployServiceStep } from './DeployServiceStep/DeployServiceStep'
@@ -100,6 +101,7 @@ factory.registerStep(new ServerlessAzureSpec())
 factory.registerStep(new ServerlessGCPSpec())
 factory.registerStep(new DeployEnvironmentStep())
 factory.registerStep(new DeployEnvironmentEntityStep())
+factory.registerStep(new DeployEnvironmentGroupStep())
 factory.registerStep(new DeployInfrastructureStep())
 factory.registerStep(new DeployInfrastructureEntityStep())
 factory.registerStep(new DeployServiceStep())

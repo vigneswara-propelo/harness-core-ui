@@ -139,7 +139,11 @@ export default function DeployEnvironmentGroup({
       {isFixed && !isEmpty(selectedEnvironmentGroups) && (
         <EnvironmentGroupsList
           loading={loadingEnvironmentGroupsList || updatingEnvironmentGroupsList}
-          environmentGroupsList={environmentGroupsList}
+          environmentGroupsList={environmentGroupsList.filter(envGroupInList =>
+            envGroupInList.envGroup?.identifier
+              ? selectedEnvironmentGroups.includes(envGroupInList.envGroup.identifier)
+              : false
+          )}
           readonly={readonly}
           allowableTypes={allowableTypes}
           // onEnvironmentEntityUpdate={onEnvironmentEntityUpdate}

@@ -44,6 +44,14 @@ export interface DeployEnvironmentEntityCustomStepProps {
   gitOpsEnabled?: boolean
   customDeploymentRef?: TemplateLinkConfig
 }
+
+export interface DeployEnvironmentEntityCustomInputStepProps extends DeployEnvironmentEntityCustomStepProps {
+  pathSuffix?: string
+  envGroupIdentifier?: string
+  isMultiEnvironment?: boolean
+  deployToAllEnvironments?: boolean
+}
+
 // Environments
 
 export interface EnvironmentData {
