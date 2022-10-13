@@ -116,6 +116,14 @@ function PrimaryArtifactRef({
           })
         )
       }
+    } else {
+      updateStageFormTemplate(undefined, `${path}.artifacts.primary.sources`)
+      formik?.setValues(
+        produce(formik?.values, (draft: any) => {
+          set(draft, `${path}.artifacts.primary.primaryArtifactRef`, value?.value)
+          set(draft, `${path}.artifacts.primary.sources`, undefined)
+        })
+      )
     }
   }
 
