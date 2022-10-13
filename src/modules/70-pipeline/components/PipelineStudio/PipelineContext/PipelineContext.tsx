@@ -33,6 +33,7 @@ import {
   ErrorNodeSummary,
   EntityValidityDetails,
   Failure,
+  getPipelineSummaryPromise,
   getPipelinePromise,
   GetPipelineQueryParams,
   putPipelinePromise,
@@ -41,7 +42,8 @@ import {
   ResponsePMSPipelineResponseDTO,
   validateTemplateInputsPromise,
   ValidateTemplateInputsQueryParams,
-  YamlSchemaErrorWrapperDTO
+  YamlSchemaErrorWrapperDTO,
+  ResponsePMSPipelineSummaryResponse
 } from 'services/pipeline-ng'
 import { useGlobalEventListener, useLocalStorage, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -83,11 +85,13 @@ export interface PipelineInfoConfigWithGitDetails extends Partial<PipelineInfoCo
   gitDetails?: EntityGitDetails
   entityValidityDetails?: EntityValidityDetails
   templateError?: GetDataError<Failure | Error> | null
+  remoteFetchError?: GetDataError<Failure | Error> | null
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
 
-export interface TemplateError {
-  templateError: GetDataError<Failure | Error>
+interface FetchError {
+  templateError?: GetDataError<Failure | Error>
+  remoteFetchError?: GetDataError<Failure | Error>
 }
 
 const logger = loggerFor(ModuleName.CD)
@@ -97,7 +101,7 @@ export const getPipelineByIdentifier = (
   params: GetPipelineQueryParams & GitQueryParams,
   identifier: string,
   signal?: AbortSignal
-): Promise<PipelineInfoConfigWithGitDetails | TemplateError> => {
+): Promise<PipelineInfoConfigWithGitDetails | FetchError> => {
   return getPipelinePromise(
     {
       pipelineIdentifier: identifier,
@@ -138,6 +142,8 @@ export const getPipelineByIdentifier = (
         entityValidityDetails: obj.data.entityValidityDetails ?? {},
         yamlSchemaErrorWrapper: obj.data.yamlSchemaErrorWrapper ?? {}
       }
+    } else if (response?.status === 'ERROR' && params?.storeType === StoreType.REMOTE) {
+      return { remoteFetchError: response } as FetchError // handling remote pipeline not found
     } else {
       const message = defaultTo(response?.message, '')
       return {
@@ -150,6 +156,36 @@ export const getPipelineByIdentifier = (
         }
       }
     }
+  })
+}
+
+export const getPipelineMetadataByIdentifier = (
+  params: GetPipelineQueryParams & GitQueryParams,
+  identifier: string,
+  signal?: AbortSignal
+): Promise<ResponsePMSPipelineSummaryResponse | FetchError> => {
+  return getPipelineSummaryPromise(
+    {
+      pipelineIdentifier: identifier,
+      queryParams: {
+        accountIdentifier: params.accountIdentifier,
+        orgIdentifier: params.orgIdentifier,
+        projectIdentifier: params.projectIdentifier,
+        ...(params.branch ? { branch: params.branch } : {}),
+        ...(params.repoIdentifier ? { repoIdentifier: params.repoIdentifier } : {}),
+        parentEntityConnectorRef: params.connectorRef,
+        parentEntityRepoName: params.repoName,
+        getMetadataOnly: true
+      },
+      requestOptions: {
+        headers: {
+          'content-type': 'application/json'
+        }
+      }
+    },
+    signal
+  ).then((response: ResponsePMSPipelineSummaryResponse) => {
+    return response
   })
 }
 
@@ -401,16 +437,46 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       getDefaultFromOtherRepo: true
     })
 
-    const pipelineById = await getPipelineByIdentifier(
+    const pipelineByIdPromise = getPipelineByIdentifier(
       { ...queryParams, ...(repoIdentifier ? { repoIdentifier } : {}), ...(branch ? { branch } : {}) },
       pipelineId,
       signal
     )
+
+    const pipelineMetaDataPromise = getPipelineMetadataByIdentifier(
+      { ...queryParams, ...(repoIdentifier ? { repoIdentifier } : {}), ...(branch ? { branch } : {}) },
+      pipelineId,
+      signal
+    )
+
+    const pipelineAPIResponses = await Promise.allSettled([pipelineByIdPromise, pipelineMetaDataPromise])
+
+    const getResponseFromPromise = (response: PromiseSettledResult<any>) => {
+      if (response?.status === 'fulfilled') {
+        return response?.value
+      } else {
+        // For aborted request reason comes with stack trace which we have to ignore else Abort error will be set as pipeline in IDB
+        return response?.reason?.stack ? undefined : response?.reason
+      }
+    }
+
+    const pipelineById = getResponseFromPromise(pipelineAPIResponses[0])
+    const pipelineMetaData = getResponseFromPromise(pipelineAPIResponses[1])
+
     if (pipelineById?.templateError) {
       dispatch(PipelineContextActions.error({ templateError: pipelineById.templateError }))
       return
-    } else {
-      delete pipelineById.templateError
+    }
+
+    if (pipelineById?.remoteFetchError) {
+      dispatch(
+        PipelineContextActions.error({
+          remoteFetchError: pipelineById.remoteFetchError,
+          pipeline: { ...pick(pipelineMetaData?.data, ['name', 'identifier', 'description', 'tags']) },
+          gitDetails: pipelineMetaData?.data?.gitDetails ?? {}
+        })
+      )
+      return
     }
 
     const pipelineWithGitDetails = pipelineById as PipelineInfoConfigWithGitDetails
@@ -478,6 +544,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       dispatch(
         PipelineContextActions.success({
           error: '',
+          remoteFetchError: undefined,
           pipeline: data.pipeline,
           originalPipeline: cloneDeep(pipeline),
           isBEPipelineUpdated: !isEqual(pipeline, data.originalPipeline),
