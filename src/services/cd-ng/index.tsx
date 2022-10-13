@@ -5207,6 +5207,26 @@ export interface FolderNodeDTO {
   type: 'FILE' | 'FOLDER'
 }
 
+export interface FreezeDetailedResponse {
+  accountId?: string
+  createdAt?: number
+  currentOrUpcomingActiveWindow?: CurrentOrUpcomingActiveWindow
+  description?: string
+  freezeScope?: 'account' | 'org' | 'project' | 'unknown'
+  identifier?: string
+  lastUpdatedAt?: number
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  status?: 'Enabled' | 'Disabled'
+  tags?: {
+    [key: string]: string
+  }
+  type?: 'GLOBAL' | 'MANUAL'
+  windows?: FreezeWindow[]
+  yaml?: string
+}
+
 export interface FreezeErrorResponseDTO {
   errorMessage?: string
   id?: string
@@ -5227,7 +5247,6 @@ export interface FreezeResponse {
   createdAt?: number
   description?: string
   freezeScope?: 'account' | 'org' | 'project' | 'unknown'
-  freezeWindows?: FreezeWindow[]
   identifier?: string
   lastUpdatedAt?: number
   name: string
@@ -5238,6 +5257,7 @@ export interface FreezeResponse {
     [key: string]: string
   }
   type?: 'GLOBAL' | 'MANUAL'
+  windows?: FreezeWindow[]
   yaml?: string
 }
 
@@ -5254,7 +5274,6 @@ export interface FreezeSummaryResponse {
   currentOrUpcomingActiveWindow?: CurrentOrUpcomingActiveWindow
   description?: string
   freezeScope?: 'account' | 'org' | 'project' | 'unknown'
-  freezeWindows?: FreezeWindow[]
   identifier?: string
   lastUpdatedAt?: number
   name: string
@@ -5265,6 +5284,7 @@ export interface FreezeSummaryResponse {
     [key: string]: string
   }
   type?: 'GLOBAL' | 'MANUAL'
+  windows?: FreezeWindow[]
 }
 
 export interface FreezeWindow {
@@ -10003,6 +10023,13 @@ export interface ResponseFolderNodeDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseFreezeDetailedResponse {
+  correlationId?: string
+  data?: FreezeDetailedResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseFreezeResponse {
   correlationId?: string
   data?: FreezeResponse
@@ -10472,6 +10499,7 @@ export interface ResponseListExecutionStatus {
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
     | 'WAITING'
+    | 'ABORTED_DUE_TO_FREEZE'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -32599,7 +32627,7 @@ export interface GetGlobalFreezeQueryParams {
 }
 
 export type GetGlobalFreezeProps = Omit<
-  GetProps<ResponseFreezeResponse, Failure | Error, GetGlobalFreezeQueryParams, void>,
+  GetProps<ResponseFreezeDetailedResponse, Failure | Error, GetGlobalFreezeQueryParams, void>,
   'path'
 >
 
@@ -32607,7 +32635,7 @@ export type GetGlobalFreezeProps = Omit<
  * Get Global Freeze Yaml
  */
 export const GetGlobalFreeze = (props: GetGlobalFreezeProps) => (
-  <Get<ResponseFreezeResponse, Failure | Error, GetGlobalFreezeQueryParams, void>
+  <Get<ResponseFreezeDetailedResponse, Failure | Error, GetGlobalFreezeQueryParams, void>
     path={`/freeze/getGlobalFreeze`}
     base={getConfig('ng/api')}
     {...props}
@@ -32615,7 +32643,7 @@ export const GetGlobalFreeze = (props: GetGlobalFreezeProps) => (
 )
 
 export type UseGetGlobalFreezeProps = Omit<
-  UseGetProps<ResponseFreezeResponse, Failure | Error, GetGlobalFreezeQueryParams, void>,
+  UseGetProps<ResponseFreezeDetailedResponse, Failure | Error, GetGlobalFreezeQueryParams, void>,
   'path'
 >
 
@@ -32623,7 +32651,7 @@ export type UseGetGlobalFreezeProps = Omit<
  * Get Global Freeze Yaml
  */
 export const useGetGlobalFreeze = (props: UseGetGlobalFreezeProps) =>
-  useGet<ResponseFreezeResponse, Failure | Error, GetGlobalFreezeQueryParams, void>(`/freeze/getGlobalFreeze`, {
+  useGet<ResponseFreezeDetailedResponse, Failure | Error, GetGlobalFreezeQueryParams, void>(`/freeze/getGlobalFreeze`, {
     base: getConfig('ng/api'),
     ...props
   })
@@ -32632,10 +32660,10 @@ export const useGetGlobalFreeze = (props: UseGetGlobalFreezeProps) =>
  * Get Global Freeze Yaml
  */
 export const getGlobalFreezePromise = (
-  props: GetUsingFetchProps<ResponseFreezeResponse, Failure | Error, GetGlobalFreezeQueryParams, void>,
+  props: GetUsingFetchProps<ResponseFreezeDetailedResponse, Failure | Error, GetGlobalFreezeQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseFreezeResponse, Failure | Error, GetGlobalFreezeQueryParams, void>(
+  getUsingFetch<ResponseFreezeDetailedResponse, Failure | Error, GetGlobalFreezeQueryParams, void>(
     getConfig('ng/api'),
     `/freeze/getGlobalFreeze`,
     props,

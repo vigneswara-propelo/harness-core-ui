@@ -144,7 +144,7 @@ export function FreezeWindowListTable({
           : undefined
       }
       sortable
-      onRowClick={rowDetails => onViewFreezeRow(rowDetails as any)}
+      onRowClick={rowDetails => onViewFreezeRow(rowDetails)}
       className={css.table}
     />
   )

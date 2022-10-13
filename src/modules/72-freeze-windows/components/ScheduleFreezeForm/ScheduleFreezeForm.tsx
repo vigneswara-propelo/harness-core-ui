@@ -8,7 +8,7 @@
 import React, { ReactNode } from 'react'
 import { FormikForm, Formik, Layout, FormInput, SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
-import { isEmpty, omit } from 'lodash-es'
+import { omit } from 'lodash-es'
 import moment from 'moment'
 import { ALL_TIME_ZONES } from '@common/utils/dateUtils'
 import { DOES_NOT_REPEAT, RECURRENCE } from '@freeze-windows/utils/freezeWindowUtils'
@@ -40,15 +40,19 @@ const validationSchema = Yup.object().shape({
   endTimeMode: Yup.string().oneOf(['duration', 'date']),
   duration: Yup.string().when('endTimeMode', {
     is: 'duration',
-    then: getDurationValidationSchema({ minimum: '30m' }).required('Minimum duration is 30 minutes')
+    then: getDurationValidationSchema({ minimum: '30m' })
   }),
   endTime: Yup.string().when('endTimeMode', {
     is: 'date',
     then: Yup.string()
       .required('End Time is required')
-      .test('isMinimum30MinutesWindow', 'A minimum 30 minutes window is required', function (endTimevalue) {
-        return moment(endTimevalue).diff(this.parent.startTime, 'minutes') >= 30
-      })
+      .test(
+        'isMinimum30MinutesWindow',
+        'Start Time and End time should be at least 30 minutes apart',
+        function (value) {
+          return moment(value).diff(this.parent.startTime, 'minutes') >= 30
+        }
+      )
   }),
   recurrence: Yup.object().shape({
     type: Yup.string(),
@@ -94,13 +98,10 @@ const processFormData = (form: FreezeWindowFormData): FreezeWindow => {
     ...processedForm,
     duration: form.endTimeMode === 'duration' ? processedForm.duration : undefined,
     endTime: form.endTimeMode === 'date' ? processedForm.endTime : undefined,
-    recurrence: !isEmpty(processedForm.recurrence)
+    recurrence: processedForm.recurrence?.type
       ? {
-          ...processedForm.recurrence,
-          spec:
-            processedForm?.recurrence?.type && form.recurrence.spec.recurrenceEndMode === 'date'
-              ? processedForm.recurrence.spec
-              : undefined
+          type: processedForm.recurrence?.type,
+          spec: form.recurrence.spec.recurrenceEndMode === 'date' ? processedForm.recurrence.spec : undefined
         }
       : undefined
   } as FreezeWindow

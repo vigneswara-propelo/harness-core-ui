@@ -75,7 +75,8 @@ function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<a
         dateProps={{
           timePickerProps: { useAmPm: true },
           highlightCurrentDay: true,
-          minDate: new Date()
+          minDate: new Date(),
+          maxDate: moment().add(5, 'year').toDate()
         }}
         popoverProps={{
           disabled,

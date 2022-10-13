@@ -13,10 +13,11 @@ import { Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React from 'react'
 import cx from 'classnames'
+import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { killEvent } from '@common/utils/eventUtils'
-import type { FreezeSummaryResponse, UpdateFreezeStatusQueryParams } from 'services/cd-ng'
+import type { FreezeSummaryResponse, FreezeWindow, UpdateFreezeStatusQueryParams } from 'services/cd-ng'
 import { useCurrentActiveTime } from '@freeze-windows/hooks/useCurrentActiveTime'
 import css from './FreezeWindowList.module.scss'
 
@@ -89,23 +90,31 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
 
 export const FreezeTimeCell: CellType = ({ row }) => {
   const data = row.original
-  const freezeWindow = (data as any).windows?.[0]
+  const freezeWindow = data.windows?.[0] || ({} as FreezeWindow)
+  const { startTime, duration, endTime, timeZone, recurrence } = freezeWindow
   return (
     <Layout.Vertical spacing="small">
-      {freezeWindow?.recurrence && (
-        <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
-          {freezeWindow?.recurrence?.type}
+      <Layout.Horizontal>
+        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
+          {moment(startTime).format('lll')}
+        </Text>
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_900}>
+          &nbsp;{duration ? 'for' : 'to'}
+        </Text>
+        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
+          &nbsp;{duration || moment(endTime).format('lll')}
+        </Text>
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+          &nbsp;{timeZone}
+        </Text>
+      </Layout.Horizontal>
+
+      {recurrence && (
+        <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
+          {recurrence?.type}
           {freezeWindow?.recurrence?.spec?.until && ` until ${freezeWindow?.recurrence?.spec?.until}`}
         </Text>
       )}
-      <Layout.Horizontal spacing="small">
-        <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
-          {freezeWindow?.startTime} - {freezeWindow?.endTime || freezeWindow?.duration}
-        </Text>
-        <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
-          {freezeWindow?.timeZone}
-        </Text>
-      </Layout.Horizontal>
     </Layout.Vertical>
   )
 }
@@ -113,7 +122,7 @@ export const FreezeTimeCell: CellType = ({ row }) => {
 export const StatusCell: CellType = ({ row }) => {
   const { getString } = useStrings()
   const data = row.original
-  const { startTime, endTime } = (data as any).currentOrUpcomingActiveWindow || {}
+  const { startTime, endTime } = data.currentOrUpcomingActiveWindow || {}
   const isActive = useCurrentActiveTime(startTime, endTime, data.status === 'Enabled')
 
   return (
