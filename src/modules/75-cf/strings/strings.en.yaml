@@ -155,6 +155,7 @@ featureFlags:
   changeOrReset: Change your filter criteria or reset
   resetFilters: Reset Filters
   clearSearch: Clear Search
+  setupGitSync: Set Up Git Sync
   rules:
     whenFlagEnabled: When the Flag is Enabled
     whenFlagDisabled: When the Flag is Disabled

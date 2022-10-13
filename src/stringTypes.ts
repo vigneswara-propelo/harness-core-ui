@@ -6299,6 +6299,7 @@ export interface StringsMap {
   'cf.featureFlags.servePercentageRollout': string
   'cf.featureFlags.serveVariationToTarget': string
   'cf.featureFlags.serveVariationToTargetLabel': string
+  'cf.featureFlags.setupGitSync': string
   'cf.featureFlags.startVariation': string
   'cf.featureFlags.targetUsers': string
   'cf.featureFlags.targeting': string

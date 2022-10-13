@@ -6,30 +6,14 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor, RenderResult, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, fireEvent, getByText, waitFor, RenderResult, screen } from '@testing-library/react'
 import { cloneDeep } from 'lodash-es'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
-import mockGitSync from '@cf/utils/testData/data/mockGitSync'
-import mockGovernance from '@cf/utils/testData/data/mockGovernance'
-import FeatureFlagsPage, { RenderColumnFlag } from '../FeatureFlagsPage'
-import type { RenderColumnFlagProps } from '../FeatureFlagsPage'
+import FeatureFlagsPage from '../FeatureFlagsPage'
 import mockFeatureFlags from './mockFeatureFlags'
-import cellMock from './data/cellMock'
-
-jest.mock('@cf/hooks/useGitSync', () => ({
-  useGitSync: jest.fn(() => ({
-    getGitSyncFormMeta: jest.fn().mockReturnValue({
-      gitSyncInitialValues: {},
-      gitSyncValidationSchema: {}
-    }),
-    isAutoCommitEnabled: false,
-    isGitSyncEnabled: false,
-    handleAutoCommit: jest.fn()
-  }))
-}))
 
 const renderComponent = (): RenderResult =>
   render(
@@ -69,23 +53,70 @@ const mockEnvs = (includeEnvs = true): void => {
 
 describe('FeatureFlagsPage', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
-
     mockImport('services/cf', {
       useGetAllFeatures: () => ({ data: mockFeatureFlags, refetch: jest.fn() })
     })
 
     mockEnvs()
+
+    jest.mock('@cf/hooks/useGitSync', () => ({
+      useGitSync: jest.fn(() => ({
+        getGitSyncFormMeta: jest.fn().mockReturnValue({
+          gitSyncInitialValues: {},
+          gitSyncValidationSchema: {}
+        }),
+        isAutoCommitEnabled: false,
+        isGitSyncEnabled: true,
+        handleAutoCommit: jest.fn()
+      }))
+    }))
   })
 
-  test('FeatureFlagsPage should render data correctly', async () => {
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
+
+  test('It should render loading correctly', async () => {
+    mockImport('services/cd-ng', {
+      useGetEnvironmentListForProject: () => ({ loading: true, refetch: jest.fn() })
+    })
+    mockImport('services/cf', {
+      useGetAllFeatures: () => ({ loading: true, refetch: jest.fn() })
+    })
+
+    renderComponent()
+
+    expect(document.querySelector('[data-icon="steps-spinner"]')).toBeDefined()
+  })
+
+  test('It should render data correctly', async () => {
     renderComponent()
 
     expect(screen.getAllByText(mockFeatureFlags.features[0].name)).toBeDefined()
     expect(screen.getAllByText(mockFeatureFlags.features[1].name)).toBeDefined()
+    expect(screen.getByTestId('gitSyncSetupRedirect')).toBeVisible()
   })
 
-  test('Should go to edit page by clicking a row', async () => {
+  test('It should redirect to Git Management on click of "Setup Git Sync" button', async () => {
+    renderComponent()
+
+    const setupGitBtn = screen.getByTestId('gitSyncSetupRedirect')
+
+    expect(setupGitBtn).toBeVisible()
+    expect(screen.getByText('featureFlagsText')).toBeVisible()
+    expect(screen.getByTestId('create-flag-button')).toBeVisible()
+
+    userEvent.click(setupGitBtn)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location')).toHaveTextContent(
+        '/account/dummy/cf/orgs/dummy/projects/dummy/setup/git-sync'
+      )
+      expect(screen.queryByTestId('create-flag-button')).not.toBeInTheDocument()
+    })
+  })
+
+  test('It should go to edit page by clicking a row', async () => {
     renderComponent()
 
     fireEvent.click(document.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0] as HTMLElement)
@@ -110,13 +141,12 @@ describe('FeatureFlagsPage', () => {
     ).toBeDefined()
   })
 
-  test('Should allow deleting', async () => {
+  test('It should allow deleting', async () => {
     const mutate = jest.fn(() => {
       return Promise.resolve({ data: {} })
     })
 
     mockImport('services/cf', {
-      useGetAllFeatures: () => ({ data: mockFeatureFlags, refetch: jest.fn() }),
       useDeleteFeatureFlag: () => ({ mutate })
     })
 
@@ -129,6 +159,26 @@ describe('FeatureFlagsPage', () => {
     await waitFor(() => expect(mutate).toBeCalledTimes(1))
   })
 
+  test('It should render error correctly', async () => {
+    const message = 'ERROR OCCURS'
+
+    // Mock setTimeout
+    const localGlobal = global as Record<string, any>
+    localGlobal.window = Object.create(window)
+    localGlobal.window.setTimeout = jest.fn()
+
+    mockImport('services/cd-ng', {
+      useGetEnvironmentListForProject: () => ({ error: { message }, refetch: jest.fn() })
+    })
+    mockImport('services/cf', {
+      useGetAllFeatures: () => ({ data: undefined, refetch: jest.fn() })
+    })
+
+    renderComponent()
+
+    expect(getByText(document.body, message)).toBeDefined()
+  })
+
   describe('FilterCards', () => {
     test('should not render if there is no active Environment', async () => {
       mockEnvs(false)
@@ -138,75 +188,20 @@ describe('FeatureFlagsPage', () => {
     })
 
     test('should render when Feature Flags exist and there is an active Environment', async () => {
-      mockEnvs(true)
+      mockEnvs()
       renderComponent()
 
       expect(screen.queryAllByTestId('filter-card')).toHaveLength(6)
     })
 
     test('should not render if there is an active Environment but no flags', async () => {
-      mockEnvs(true)
+      mockEnvs()
       mockImport('services/cf', {
         useGetAllFeatures: () => ({ data: undefined, refetch: jest.fn() })
       })
       renderComponent()
 
       expect(screen.queryAllByTestId('filter-card')).toHaveLength(0)
-    })
-  })
-
-  describe('RenderColumnFlag', () => {
-    const toggleFeatureFlag = {
-      on: jest.fn(),
-      off: jest.fn(),
-      loading: false,
-      error: undefined
-    }
-
-    const refetchFlags = jest.fn()
-
-    const renderFlagComponent = (props: Partial<RenderColumnFlagProps> = {}): RenderResult =>
-      render(
-        <TestWrapper
-          path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
-          pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-        >
-          <RenderColumnFlag
-            gitSync={{ ...mockGitSync, isGitSyncEnabled: true }}
-            update={jest.fn()}
-            toggleFeatureFlag={toggleFeatureFlag}
-            cell={cellMock}
-            governance={mockGovernance}
-            refetchFlags={refetchFlags}
-            {...props}
-          />
-        </TestWrapper>
-      )
-
-    test('disables FF switch tooltip when there are no environments', async () => {
-      renderFlagComponent({ numberOfEnvs: 0 })
-      const switchToggle = screen.getByRole('checkbox')
-
-      fireEvent.mouseOver(switchToggle)
-      await waitFor(() => {
-        const warningTooltip = screen.queryByText('cf.noEnvironment.title')
-        expect(warningTooltip).toBeInTheDocument()
-        expect(switchToggle).toBeDisabled()
-      })
-    })
-
-    test('switch tooltip appear when there are environments', async () => {
-      renderFlagComponent({ numberOfEnvs: 2 })
-      const switchToggle = screen.getByRole('checkbox')
-      userEvent.click(switchToggle)
-
-      const toggleFlagPopover = screen.getByRole('heading', { name: 'cf.featureFlags.turnOnHeading' })
-
-      await waitFor(() => {
-        const warningToolTip = screen.queryByText('cf.noEnvironment.message')
-        expect(toggleFlagPopover).toBeInTheDocument()
-        expect(warningToolTip).not.toBeInTheDocument()
-      })
     })
   })
 })
