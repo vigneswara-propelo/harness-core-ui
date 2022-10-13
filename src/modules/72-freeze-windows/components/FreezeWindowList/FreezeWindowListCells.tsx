@@ -89,16 +89,18 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
 
 export const FreezeTimeCell: CellType = ({ row }) => {
   const data = row.original
-  const freezeWindow = data.freezeWindows?.[0]
+  const freezeWindow = (data as any).windows?.[0]
   return (
     <Layout.Vertical spacing="small">
-      <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
-        {freezeWindow?.recurrence?.type}
-        {freezeWindow?.recurrence?.spec?.until && ` until ${freezeWindow?.recurrence?.spec?.until}`}
-      </Text>
+      {freezeWindow?.recurrence && (
+        <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
+          {freezeWindow?.recurrence?.type}
+          {freezeWindow?.recurrence?.spec?.until && ` until ${freezeWindow?.recurrence?.spec?.until}`}
+        </Text>
+      )}
       <Layout.Horizontal spacing="small">
         <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
-          {freezeWindow?.startTime} - {freezeWindow?.endTime}
+          {freezeWindow?.startTime} - {freezeWindow?.endTime || freezeWindow?.duration}
         </Text>
         <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
           {freezeWindow?.timeZone}
