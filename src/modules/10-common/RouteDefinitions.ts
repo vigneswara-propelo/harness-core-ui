@@ -107,7 +107,7 @@ const routes = {
       accountId: _accountId,
       windowIdentifier,
       ...rest
-    }: Partial<{ windowIdentifier: string } & ProjectPathProps & ModulePathParams>) => {
+    }: Partial<{ windowIdentifier: string; sectionId?: string } & ProjectPathProps & ModulePathParams>) => {
       // TemplateStudioPathProps
       const queryString = qs.stringify(rest, { skipNulls: true })
       let path
