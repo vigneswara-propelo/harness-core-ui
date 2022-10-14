@@ -13,3 +13,6 @@ export const newProjectLevelFreezeRoute = `#/account/accountId/cd/orgs/default/p
 export const featureFlagsCall = `/api/users/feature-flags/accountId?routingId=${accountId}`
 export const postFreezeCall = `ng/api/freeze?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgId}&projectIdentifier=${projectId}`
 export const getFreezeCall = `ng/api/freeze/${projLevelFreezeId}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgId}&projectIdentifier=${projectId}`
+export const overviewPage = `#/account/${accountId}/settings/overview`
+export const orgOverviewPage = `#/account/${accountId}/settings/organizations/${orgId}/details`
+export const getOrgCall = `ng/api/aggregate/organizations/${orgId}?routingId=${accountId}&accountIdentifier=${accountId}`
