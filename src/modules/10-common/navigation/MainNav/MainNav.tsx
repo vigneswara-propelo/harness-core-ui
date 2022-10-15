@@ -210,7 +210,14 @@ export default function L1Nav(): React.ReactElement {
         </ul>
       </nav>
       {NEW_LEFT_NAVBAR_SETTINGS ? (
-        <ModuleList isOpen={isModuleListOpen} close={closeModuleList} onConfigIconClick={toggleModuleConfig} />
+        <ModuleList
+          isOpen={isModuleListOpen}
+          close={() => {
+            closeModuleList()
+            closeModuleConfig()
+          }}
+          onConfigIconClick={toggleModuleConfig}
+        />
       ) : null}
       {isModuleConfigOpen ? (
         <ModuleConfigurationScreen
