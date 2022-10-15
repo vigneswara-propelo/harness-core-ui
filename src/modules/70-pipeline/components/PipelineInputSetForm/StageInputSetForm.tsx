@@ -1998,10 +1998,11 @@ function EnvironmentsOnlyRuntimeWrapper({
                       </>
                     )}
                     {/* If infrastructureDefinitions is marked as runtime in the template, then we need to show the field for selecting infrastructures.
-                        AC333 - The only scenario when we won't need to show the field is when deployToAll is marked as true for environments or infra. See `isDeployToAll` below
+                        AC333 - The only scenario when we won't need to show the field is when deployToAll is marked as true for environments or infra. See `deployToAllInfrastructures` below
                         The first check below handles the visibility of the widget when infrastructureDefinitions is runtime
                         The second check handles it when the field contains the selected infrastructureDefinitions value */}
-                    {((environmentTemplate.infrastructureDefinitions as unknown as string) === RUNTIME_INPUT_VALUE ||
+                    {(getMultiTypeFromValue(environmentTemplate.infrastructureDefinitions as unknown as string) ===
+                      MultiTypeInputType.RUNTIME ||
                       Array.isArray(environmentTemplate.infrastructureDefinitions)) && (
                       <StepWidget
                         factory={factory}
@@ -2018,6 +2019,32 @@ function EnvironmentsOnlyRuntimeWrapper({
                           isMultipleInfrastructure: true,
                           customDeploymentRef: deploymentStage?.customDeploymentRef,
                           deployToAllInfrastructures:
+                            environmentTemplate.deployToAll === true ||
+                            deploymentStage?.environmentGroup?.deployToAll === true
+                        }}
+                      />
+                    )}
+
+                    {/* If gitOpsCluster is marked as runtime in the template, then we need to show the field for selecting clusters.
+                        AC333 - The only scenario when we won't need to show the field is when deployToAll is marked as true for environments or infra. See `deployToAllClusters` below
+                        The first check below handles the visibility of the widget when gitOpsCluster is runtime
+                        The second check handles it when the field contains the selected gitOpsCluster value */}
+                    {(getMultiTypeFromValue(environmentTemplate.gitOpsClusters as unknown as string) ===
+                      MultiTypeInputType.RUNTIME ||
+                      Array.isArray(environmentTemplate.gitOpsClusters)) && (
+                      <StepWidget
+                        factory={factory}
+                        initialValues={environment}
+                        template={environmentTemplate}
+                        type={StepType.DeployClusterEntity}
+                        stepViewType={viewType}
+                        path={`${path}.${pathToEnvironments}[${index}]`}
+                        allowableTypes={allowableTypes}
+                        readonly={readonly}
+                        customStepProps={{
+                          environmentIdentifier: environment.environmentRef,
+                          isMultipleCluster: true,
+                          deployToAllClusters:
                             environmentTemplate.deployToAll === true ||
                             deploymentStage?.environmentGroup?.deployToAll === true
                         }}

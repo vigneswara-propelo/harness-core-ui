@@ -58,10 +58,15 @@ export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityCon
 
     return (
       <DeployEnvironmentEntityWidget
-        initialValues={processInitialValues(initialValues)}
+        initialValues={processInitialValues(
+          initialValues,
+          customStepProps as DeployEnvironmentEntityCustomInputStepProps
+        )}
         readonly={readonly}
         allowableTypes={allowableTypes}
-        onUpdate={values => onUpdate?.(processFormValues(values))}
+        onUpdate={values =>
+          onUpdate?.(processFormValues(values, customStepProps as DeployEnvironmentEntityCustomInputStepProps))
+        }
         {...(customStepProps as Required<DeployEnvironmentEntityCustomStepProps>)}
       />
     )

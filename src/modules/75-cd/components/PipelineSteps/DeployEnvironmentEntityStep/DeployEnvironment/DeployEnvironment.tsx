@@ -44,6 +44,7 @@ import type {
 import { useGetEnvironmentsData } from './useGetEnvironmentsData'
 import AddEditEnvironmentModal from '../../DeployInfrastructureStep/AddEditEnvironmentModal'
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
+import DeployCluster from '../DeployCluster/DeployCluster'
 
 import css from './DeployEnvironment.module.scss'
 
@@ -239,12 +240,24 @@ export default function DeployEnvironment({
     const newFormValues = produce(values, draft => {
       if (draft.environments && Array.isArray(draft.environments)) {
         draft.environments.push({ label: newEnvironmentInfo.name, value: newEnvironmentInfo.identifier })
-        if (draft.infrastructures) {
+        if (gitOpsEnabled && draft.clusters) {
+          draft.clusters[newEnvironmentInfo.identifier] = []
+          if (draft.infrastructures) {
+            delete draft.infrastructures
+          }
+        } else if (!gitOpsEnabled && draft.infrastructures) {
           draft.infrastructures[newEnvironmentInfo.identifier] = []
+          if (draft.clusters) {
+            delete draft.clusters
+          }
         }
       } else {
         draft.environment = newEnvironmentInfo.identifier
-        draft.infrastructure = ''
+        if (gitOpsEnabled) {
+          draft.cluster = ''
+        } else {
+          draft.infrastructure = ''
+        }
       }
     })
 
@@ -260,11 +273,28 @@ export default function DeployEnvironment({
     const newFormValues = produce(values, draft => {
       if (draft.environment) {
         draft.environment = ''
-        draft.infrastructure = ''
+
+        if (gitOpsEnabled) {
+          draft.cluster = ''
+        } else {
+          draft.infrastructure = ''
+        }
+
         delete draft.environments
       } else if (Array.isArray(draft.environments)) {
         draft.environments = draft.environments.filter(env => env.value !== environmentToDelete)
-        if (draft.infrastructures?.[environmentToDelete] && Array.isArray(draft.infrastructures[environmentToDelete])) {
+
+        if (
+          gitOpsEnabled &&
+          draft.clusters?.[environmentToDelete] &&
+          Array.isArray(draft.clusters[environmentToDelete])
+        ) {
+          delete draft.clusters[environmentToDelete]
+        } else if (
+          !gitOpsEnabled &&
+          draft.infrastructures?.[environmentToDelete] &&
+          Array.isArray(draft.infrastructures[environmentToDelete])
+        ) {
           delete draft.infrastructures[environmentToDelete]
         }
       }
@@ -366,15 +396,23 @@ export default function DeployEnvironment({
           {!loading && !isMultiEnvironment && (
             <>
               <Divider />
-              <DeployInfrastructure
-                initialValues={initialValues}
-                readonly={readonly}
-                allowableTypes={allowableTypes}
-                environmentIdentifier={selectedEnvironments[0]}
-                stageIdentifier={stageIdentifier}
-                deploymentType={deploymentType}
-                customDeploymentRef={customDeploymentRef}
-              />
+              {gitOpsEnabled ? (
+                <DeployCluster
+                  initialValues={initialValues}
+                  readonly={readonly}
+                  allowableTypes={allowableTypes}
+                  environmentIdentifier={selectedEnvironments[0]}
+                />
+              ) : (
+                <DeployInfrastructure
+                  initialValues={initialValues}
+                  readonly={readonly}
+                  allowableTypes={allowableTypes}
+                  environmentIdentifier={selectedEnvironments[0]}
+                  deploymentType={deploymentType}
+                  customDeploymentRef={customDeploymentRef}
+                />
+              )}
             </>
           )}
         </>

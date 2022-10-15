@@ -168,6 +168,7 @@ pipelineSteps:
     specifyYourInfrastructure: Specify Infrastructure
     specifyYourInfrastructures: Specify Infrastructures
     specifyEnvironmentOrGroup: Specify environment or environment group
+    specifyGitOpsCluster: Specify GitOps Cluster
     specifyGitOpsClusters: Specify GitOps Clusters
     selectEnvironment: '- Select Environment -'
     selectEnvironments: '- Select Environments -'
@@ -189,7 +190,7 @@ pipelineSteps:
     environmentInEnvGroupIsRequired: 'Environment in Environment Group is required'
     environmentGroupIsRequired: 'Environment Group is required'
     clusterIsRequired: 'Clusters are required'
-    multiEnvInfraToggleText: 'Deploy to multiple Environments or Infrastructures'
+    multiEnvToggleText: 'Deploy to multiple Environments or {{name}}'
     viewEnvironmentInputs: View environment inputs
     hideEnvironmentInputs: Hide environment inputs
     viewInfrastructureInputs: View infrastructure inputs
@@ -205,6 +206,8 @@ pipelineSteps:
     deleteEnvironmentFromListConfirmationText: Are you sure you want to remove {{name}} environment from the list?
     deleteInfrastructureFromListDialogTitleText: Remove infrastructure from list?
     deleteInfrastructureFromListConfirmationText: Are you sure you want to remove {{name}} infrastructure from the list?
+    deleteClusterFromListDialogTitleText: Remove cluster from list?
+    deleteClusterFromListConfirmationText: Are you sure you want to remove {{name}} cluster from the list?
   serviceTab:
     stageOverrides: Stage Overrides
     overrideChanges: Override artifacts, manifests, service variables for this stage

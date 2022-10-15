@@ -42,6 +42,10 @@
         background-color: var(--primary-7) !important;
       }
     }
+
+    > :last-child {
+      margin-right: 0 !important;
+    }
   }
 }
 

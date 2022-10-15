@@ -54,7 +54,8 @@ export default function DeployEnvironmentEntityInputStep({
   pathSuffix,
   envGroupIdentifier,
   isMultiEnvironment,
-  deployToAllEnvironments
+  deployToAllEnvironments,
+  gitOpsEnabled
 }: DeployEnvironmentEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
@@ -122,7 +123,7 @@ export default function DeployEnvironmentEntityInputStep({
       )
     }
 
-    // update identifiers in state when deployToAll is true. This sets the infrastructuresData
+    // update identifiers in state when deployToAll is true. This sets the environmentsData
     if (environmentsList.length && deployToAllEnvironments) {
       const newIdentifiers = environmentsList.map(environmentInList => environmentInList.identifier)
       if (!isEqual(newIdentifiers, environmentIdentifiers)) {
@@ -143,14 +144,18 @@ export default function DeployEnvironmentEntityInputStep({
         const stageTemplate = getStageFormTemplate<DeployEnvironmentEntityConfig>(`${pathPrefix}environment`)
 
         set(stageTemplate, 'environmentInputs', RUNTIME_INPUT_VALUE)
-        set(stageTemplate, 'infrastructureDefinitions', RUNTIME_INPUT_VALUE)
+        if (gitOpsEnabled) {
+          set(stageTemplate, 'gitOpsClusters', RUNTIME_INPUT_VALUE)
+        } else {
+          set(stageTemplate, 'infrastructureDefinitions', RUNTIME_INPUT_VALUE)
+        }
 
         updateStageFormTemplate(stageTemplate, `${pathPrefix}environment`)
 
         formik.setFieldValue(`${pathPrefix}environment`, {
           ...get(formik.values, `${pathPrefix}environment`),
           environmentInputs: {},
-          infrastructureDefinitions: []
+          ...(gitOpsEnabled ? { gitOpsClusters: [] } : { infrastructureDefinitions: [] })
         })
       }
       return
@@ -162,7 +167,11 @@ export default function DeployEnvironmentEntityInputStep({
         environmentRef: RUNTIME_INPUT_VALUE,
         environmentInputs: environmentsData.find(envTemplate => envTemplate.environment.identifier === envId)
           ?.environmentInputs,
-        ...(isMultiEnvironment && { infrastructureDefinitions: RUNTIME_INPUT_VALUE as any })
+        ...(isMultiEnvironment
+          ? gitOpsEnabled
+            ? { gitOpsClusters: RUNTIME_INPUT_VALUE as any }
+            : { infrastructureDefinitions: RUNTIME_INPUT_VALUE as any }
+          : {})
       }
     })
 
@@ -198,12 +207,24 @@ export default function DeployEnvironmentEntityInputStep({
       if (!infrastructureDefinitions || isValueRuntimeInput(infrastructureDefinitions)) {
         infrastructureDefinitions = envTemplateValue ? clearRuntimeInput(envTemplateValue) : undefined
       }
+
+      let gitOpsClusters = isMultiEnvironment
+        ? Array.isArray(get(formik.values, `${pathPrefix}${pathSuffix}`))
+          ? get(formik.values, `${pathPrefix}${pathSuffix}`)?.find(
+              (env: EnvironmentYamlV2) => env.environmentRef === envId
+            )?.gitOpsClusters
+          : undefined
+        : get(formik.values, `${pathPrefix}gitOpsClusters`)
+
+      if (!gitOpsClusters || isValueRuntimeInput(gitOpsClusters)) {
+        gitOpsClusters = envTemplateValue ? clearRuntimeInput(envTemplateValue) : undefined
+      }
       // End - Retain form values
 
       return {
         environmentRef: envId,
         environmentInputs,
-        ...(isMultiEnvironment && { infrastructureDefinitions })
+        ...(isMultiEnvironment ? (gitOpsEnabled ? { gitOpsClusters } : { infrastructureDefinitions }) : {})
       }
     })
 
@@ -221,9 +242,9 @@ export default function DeployEnvironmentEntityInputStep({
 
       set(
         stageTemplate,
-        'infrastructureDefinitions',
+        gitOpsEnabled ? 'gitOpsClusters' : 'infrastructureDefinitions',
         defaultTo(
-          newEnvironmentsTemplate[0].infrastructureDefinitions,
+          newEnvironmentsTemplate[0][gitOpsEnabled ? 'gitOpsClusters' : 'infrastructureDefinitions'],
           isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : []
         )
       )
@@ -236,10 +257,19 @@ export default function DeployEnvironmentEntityInputStep({
           newEnvironmentsValues[0].environmentInputs,
           isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : {}
         ),
-        infrastructureDefinitions: defaultTo(
-          newEnvironmentsValues[0].infrastructureDefinitions,
-          isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : []
-        )
+        ...(gitOpsEnabled
+          ? {
+              infrastructureDefinitions: defaultTo(
+                newEnvironmentsValues[0].infrastructureDefinitions,
+                isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : []
+              )
+            }
+          : {
+              gitOpsClusters: defaultTo(
+                newEnvironmentsValues[0].gitOpsClusters,
+                isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : []
+              )
+            })
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -255,7 +285,9 @@ export default function DeployEnvironmentEntityInputStep({
       formik.setFieldValue(`${pathPrefix}environment`, {
         environmentRef: RUNTIME_INPUT_VALUE,
         environmentInputs: RUNTIME_INPUT_VALUE,
-        infrastructureDefinitions: RUNTIME_INPUT_VALUE
+        ...(gitOpsEnabled
+          ? { gitOpsClusters: RUNTIME_INPUT_VALUE }
+          : { infrastructureDefinitions: RUNTIME_INPUT_VALUE })
       })
     }
     setEnvironmentIdentifiers(getEnvironmentIdentifiers())
@@ -266,7 +298,7 @@ export default function DeployEnvironmentEntityInputStep({
     const newValues = values.map(val => ({
       environmentRef: val.value as string,
       environmentInputs: RUNTIME_INPUT_VALUE,
-      infrastructureDefinitions: RUNTIME_INPUT_VALUE
+      ...(gitOpsEnabled ? { gitOpsClusters: RUNTIME_INPUT_VALUE } : { infrastructureDefinitions: RUNTIME_INPUT_VALUE })
     }))
 
     formik.setFieldValue(`${pathPrefix}${pathSuffix}`, newValues)

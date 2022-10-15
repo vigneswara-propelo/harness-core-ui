@@ -49,7 +49,8 @@ import { useGetInfrastructuresData } from './useGetInfrastructuresData'
 
 import css from './DeployInfrastructure.module.scss'
 
-interface DeployInfrastructureProps extends Required<Omit<DeployEnvironmentEntityCustomStepProps, 'gitOpsEnabled'>> {
+interface DeployInfrastructureProps
+  extends Required<Omit<DeployEnvironmentEntityCustomStepProps, 'gitOpsEnabled' | 'stageIdentifier'>> {
   initialValues: DeployEnvironmentEntityFormState
   readonly: boolean
   allowableTypes: AllowedTypes
@@ -87,7 +88,6 @@ export default function DeployInfrastructure({
   allowableTypes,
   environmentIdentifier,
   isMultiInfrastructure,
-  stageIdentifier,
   deploymentType,
   customDeploymentRef
 }: DeployInfrastructureProps): JSX.Element {
@@ -206,8 +206,7 @@ export default function DeployInfrastructure({
             },
             {
               infrastructures: {},
-              infrastructureInputs: {},
-              deployToAllInfrastructures: values.deployToAllInfrastructures
+              infrastructureInputs: {}
             }
           )
 
@@ -375,7 +374,6 @@ export default function DeployInfrastructure({
           onInfrastructureEntityUpdate={onInfrastructureEntityUpdate}
           onRemoveInfrastructureFromList={onRemoveInfrastructureFromList}
           environmentIdentifier={environmentIdentifier}
-          stageIdentifier={stageIdentifier}
           customDeploymentRef={customDeploymentRef}
         />
       )}

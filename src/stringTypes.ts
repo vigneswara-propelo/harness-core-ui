@@ -47,6 +47,7 @@ export interface StringsMap {
   'common.advanced': string
   'common.agent': string
   'common.agents': string
+  'common.allClusters': string
   'common.allEnvironments': string
   'common.allErrors': string
   'common.allServices': string
@@ -4679,6 +4680,8 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.allClustersSelected': string
   'cd.pipelineSteps.environmentTab.allInfrastructures': string
   'cd.pipelineSteps.environmentTab.clusterIsRequired': string
+  'cd.pipelineSteps.environmentTab.deleteClusterFromListConfirmationText': string
+  'cd.pipelineSteps.environmentTab.deleteClusterFromListDialogTitleText': string
   'cd.pipelineSteps.environmentTab.deleteEnvironmentFromListConfirmationText': string
   'cd.pipelineSteps.environmentTab.deleteEnvironmentFromListDialogTitleText': string
   'cd.pipelineSteps.environmentTab.deleteInfrastructureFromListConfirmationText': string
@@ -4696,7 +4699,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.hideInfrastructureInputs': string
   'cd.pipelineSteps.environmentTab.infrastructureIsRequired': string
   'cd.pipelineSteps.environmentTab.infrastructuresAreRequired': string
-  'cd.pipelineSteps.environmentTab.multiEnvInfraToggleText': string
+  'cd.pipelineSteps.environmentTab.multiEnvToggleText': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsConfirmationText': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsDialogTitleText': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployLabel': string
@@ -4711,6 +4714,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.singleEnvironmentConfirmationText': string
   'cd.pipelineSteps.environmentTab.singleEnvironmentDialogTitleText': string
   'cd.pipelineSteps.environmentTab.specifyEnvironmentOrGroup': string
+  'cd.pipelineSteps.environmentTab.specifyGitOpsCluster': string
   'cd.pipelineSteps.environmentTab.specifyGitOpsClusters': string
   'cd.pipelineSteps.environmentTab.specifyYourEnvironment': string
   'cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup': string
@@ -4949,7 +4953,6 @@ export interface StringsMap {
   'cd.whatIsHarnessAdapter': string
   'cd.whatIsHarnessManagedGitOpsServer': string
   'cd.workloadRequired': string
-  'ce.allClusters': string
   'ce.allRegions': string
   'ce.anomalyDetection.addAnoamlyAlertDesc': string
   'ce.anomalyDetection.addNewAnomalyAlert': string
