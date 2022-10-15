@@ -9,10 +9,13 @@ export const accountId = 'accountId'
 export const projectId = 'project1'
 export const orgId = 'default'
 export const projLevelFreezeId = 'project_level_freeze'
-export const newProjectLevelFreezeRoute = `#/account/accountId/cd/orgs/default/projects/${projectId}/setup/freeze-window-studio/window/-1`
+export const newProjectLevelFreezeRoute = `#/account/${accountId}/cd/orgs/${orgId}/projects/${projectId}/setup/freeze-window-studio/window/-1`
+export const existingProjectLevelFreezeRoute = `#/account/${accountId}/cd/orgs/${orgId}/projects/${projectId}/setup/freeze-window-studio/window/${projLevelFreezeId}/?sectionId=FREEZE_CONFIG`
 export const featureFlagsCall = `/api/users/feature-flags/accountId?routingId=${accountId}`
 export const postFreezeCall = `ng/api/freeze?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgId}&projectIdentifier=${projectId}`
+export const putFreezeCall = `ng/api/freeze/${projLevelFreezeId}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgId}&projectIdentifier=${projectId}`
 export const getFreezeCall = `ng/api/freeze/${projLevelFreezeId}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgId}&projectIdentifier=${projectId}`
 export const overviewPage = `#/account/${accountId}/settings/overview`
 export const orgOverviewPage = `#/account/${accountId}/settings/organizations/${orgId}/details`
+export const projectOverviewPage = `#/account/${accountId}/cd/orgs/${orgId}/projects/${projectId}/dashboard`
 export const getOrgCall = `ng/api/aggregate/organizations/${orgId}?routingId=${accountId}&accountIdentifier=${accountId}`

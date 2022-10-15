@@ -5,7 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { newProjectLevelFreezeRoute, featureFlagsCall, postFreezeCall, getFreezeCall } from './constants'
+import {
+  newProjectLevelFreezeRoute,
+  existingProjectLevelFreezeRoute,
+  featureFlagsCall,
+  postFreezeCall,
+  putFreezeCall,
+  getFreezeCall
+} from './constants'
 
 describe('Project Level Freeze Creation', () => {
   beforeEach(() => {
@@ -29,6 +36,7 @@ describe('Project Level Freeze Creation', () => {
     })
     cy.initializeRoute()
     cy.intercept('POST', postFreezeCall, { fixture: 'pipeline/api/freeze/createFreeze' }).as('createFreezeCall')
+    cy.intercept('PUT', putFreezeCall).as('updateFreezeCall')
     cy.intercept('GET', getFreezeCall, { fixture: 'pipeline/api/freeze/getProjectLevelFreeze' }).as(
       'getProjectLevelFreezeCall'
     )
@@ -155,5 +163,75 @@ describe('Project Level Freeze Creation', () => {
 
     // Hit Save Button
     cy.get('button span.bp3-button-text').contains('Save').click()
+
+    // Check Save API Payload
+    cy.get('@createFreezeCall').should(req => {
+      expect(req.request.method).to.equal('POST')
+      expect(req.request.body).to.equal(`freeze:
+  name: project level freeze
+  identifier: project_level_freeze
+  entityConfigs:
+    - name: Rule Number 1
+      entities:
+        - type: Service
+          filterType: Equals
+          entityRefs:
+            - testService
+        - type: EnvType
+          filterType: Equals
+          entityRefs:
+            - PROD
+    - name: Rule Number 2
+      entities:
+        - type: Service
+          filterType: All
+        - type: EnvType
+          filterType: All
+  status: Enabled
+`)
+    })
+  })
+
+  it('should go render in Edit View, update fields, and submit successfully', () => {
+    // should go to existing freeze studio page in Project Level
+    cy.visit(existingProjectLevelFreezeRoute, { timeout: 30000 })
+    cy.visitPageAssertion('.PillToggle--item')
+
+    // save and Discard buttons should be disabled by default
+    cy.get('button').contains('span', 'Save').parent().should('be.disabled')
+    cy.get('button').contains('span', 'Discard').parent().should('be.disabled')
+
+    // Should land on Config Tab
+    cy.get('h4').contains('Define which resources you want to include in this freeze window')
+    cy.get('[data-testid="config-view-mode_0"]').should('have.length', 1)
+    cy.get('[data-testid="config-view-mode_1"]').should('have.length', 1)
+
+    // Delete Rule 2
+    cy.get('[data-testid="config-view-mode_1"] button span.bp3-icon-trash').click()
+    cy.get('button').contains('span', 'Save').parent().should('not.be.disabled')
+    cy.get('button').contains('span', 'Discard').parent().should('not.be.disabled')
+
+    cy.get('button span').contains('Unsaved changes')
+    cy.get('button span.bp3-button-text').contains('Save').click()
+
+    cy.get('@updateFreezeCall').should(req => {
+      expect(req.request.method).to.equal('PUT')
+      expect(req.request.body).to.equal(`freeze:
+  name: project level freeze
+  identifier: project_level_freeze
+  entityConfigs:
+    - name: Rule Number 1
+      entities:
+        - type: Service
+          filterType: Equals
+          entityRefs:
+            - testService
+        - type: EnvType
+          filterType: Equals
+          entityRefs:
+            - PROD
+  status: Enabled
+`)
+    })
   })
 })
