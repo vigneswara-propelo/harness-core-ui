@@ -359,12 +359,12 @@ function Artifactory({
 
   const getValidationSchema = useCallback(() => {
     if (isGenericArtifactory) {
-      if (context === ModalViewFor.SIDECAR) {
+      if (isIdentifierAllowed) {
         return serverlessSidecarSchema
       }
       return serverlessPrimarySchema
     }
-    if (context === ModalViewFor.SIDECAR) {
+    if (isIdentifierAllowed) {
       return sidecarSchema
     }
     return primarySchema
