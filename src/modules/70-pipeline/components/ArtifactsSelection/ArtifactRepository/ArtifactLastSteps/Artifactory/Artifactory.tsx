@@ -391,7 +391,21 @@ function Artifactory({
             <Text>{item.label}</Text>
           </Layout.Horizontal>
         }
-        disabled={artifactoryBuildDetailsLoading || imagePathLoading}
+        disabled={artifactoryBuildDetailsLoading}
+        onClick={handleClick}
+      />
+    </div>
+  ))
+
+  const imagePathItemRenderer = memoize((item: { label: string }, { handleClick }) => (
+    <div key={item.label.toString()}>
+      <Menu.Item
+        text={
+          <Layout.Horizontal spacing="small">
+            <Text>{item.label}</Text>
+          </Layout.Horizontal>
+        }
+        disabled={imagePathLoading}
         onClick={handleClick}
       />
     </div>
@@ -522,7 +536,7 @@ function Artifactory({
                           ),
                           items: artifactPaths,
                           addClearBtn: true,
-                          itemRenderer: itemRenderer,
+                          itemRenderer: imagePathItemRenderer,
                           allowCreatingNewItems: true,
                           addTooltip: true
                         },

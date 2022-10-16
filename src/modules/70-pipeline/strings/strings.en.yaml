@@ -134,8 +134,8 @@ jenkinsStep:
     jobName: Jobname is a required field
   jobNamePlaceholder: Select Job Name
   jobParameter: Job Parameters
-  unstableStatusAsSuccess: Treat unstable Jenkins status as success
-  useConnectorUrlForJobExecution: Use this URL for job execution
+  unstableStatusAsSuccess: Treat unstable Job status as success
+  useConnectorUrlForJobExecution: Use Connector URL for job execution
   captureEnvironmentVariable: Capture environment variables from Jenkins build
 jiraApprovalStep:
   connectToJira: Connect to Jira

@@ -76,7 +76,7 @@ addParameter: Add Parameter
 baseURL: Base URL
 requestMethod: Request Method
 optionalAuthentication: Authentication (optional)
-bearerToken: Bearer Token(HTTP Header)
+bearerToken: Bearer Token (HTTP Header)
 connectivityMode:
   title: 'Connectivity Mode'
   validation: 'Please select connectivity mode'
