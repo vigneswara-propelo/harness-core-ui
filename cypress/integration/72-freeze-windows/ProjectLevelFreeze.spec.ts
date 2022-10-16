@@ -9,9 +9,9 @@ import {
   newProjectLevelFreezeRoute,
   existingProjectLevelFreezeRoute,
   featureFlagsCall,
-  postFreezeCall,
-  putFreezeCall,
-  getFreezeCall
+  projLevelPostFreezeCall,
+  projLevelPutFreezeCall,
+  projLevelGetFreezeCall
 } from './constants'
 
 describe('Project Level Freeze', () => {
@@ -35,9 +35,9 @@ describe('Project Level Freeze', () => {
       })
     })
     cy.initializeRoute()
-    cy.intercept('POST', postFreezeCall, { fixture: 'pipeline/api/freeze/createFreeze' }).as('createFreezeCall')
-    cy.intercept('PUT', putFreezeCall).as('updateFreezeCall')
-    cy.intercept('GET', getFreezeCall, { fixture: 'pipeline/api/freeze/getProjectLevelFreeze' })
+    cy.intercept('POST', projLevelPostFreezeCall, { fixture: 'pipeline/api/freeze/createFreeze' }).as('createFreezeCall')
+    cy.intercept('PUT', projLevelPutFreezeCall).as('updateFreezeCall')
+    cy.intercept('GET', projLevelGetFreezeCall, { fixture: 'pipeline/api/freeze/getProjectLevelFreeze' })
   })
 
   it('should go to freeze creation page in Project Level and init config, and add a rule in Config Section', () => {

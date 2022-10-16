@@ -10,7 +10,9 @@ import {
   newOrgLevelFreezeRoute,
   projectsAPI,
   orgLevelPostFreezeCall,
-  orgLevelGetFreezeCall
+  orgLevelGetFreezeCall,
+  existingOrgLevelFreezeRoute,
+  orgLevelPutFreezeCall
 } from './constants'
 
 describe('Org Level Freeze', () => {
@@ -36,7 +38,7 @@ describe('Org Level Freeze', () => {
     cy.initializeRoute()
     cy.intercept('GET', projectsAPI, { fixture: 'ng/api/projects/projects' }).as('projectsData')
     cy.intercept('POST', orgLevelPostFreezeCall).as('createFreezeCall')
-    // cy.intercept('PUT', putFreezeCall).as('updateFreezeCall')
+    cy.intercept('PUT', orgLevelPutFreezeCall).as('updateFreezeCall')
     cy.intercept('GET', orgLevelGetFreezeCall, { fixture: 'pipeline/api/freeze/getOrgLevelFreeze' })
   })
   it('should go to freeze creation page in Org Level and init config, and add a rule in Config Section', () => {
@@ -208,5 +210,62 @@ describe('Org Level Freeze', () => {
     // save and Discard buttons should be disabled by default
     cy.get('button').contains('span', 'Save').parent().should('be.disabled')
     cy.get('button').contains('span', 'Discard').parent().should('be.disabled')
+  })
+
+  it('should go render in Edit View, update fields, and submit successfully', () => {
+    cy.visit(existingOrgLevelFreezeRoute, { timeout: 30000 })
+    cy.visitPageAssertion('.PillToggle--item')
+
+    // save and Discard buttons should be disabled by default
+    cy.get('button').contains('span', 'Save').parent().should('be.disabled')
+    cy.get('button').contains('span', 'Discard').parent().should('be.disabled')
+
+    // Should land on Overview Tab
+    cy.get('#bp3-tab-title_freezeWindowStudio_FREEZE_CONFIG').should('be.visible').click()
+    cy.get('h4').contains('Define which resources you want to include in this freeze window')
+    cy.get('[data-testid="config-view-mode_0"]').should('have.length', 1)
+    cy.get('[data-testid="config-view-mode_1"]').should('have.length', 1)
+    cy.get('[data-testid="config-view-mode_2"]').should('have.length', 1)
+
+    // Delete Rule 2
+    cy.get('[data-testid="config-view-mode_1"] button span.bp3-icon-trash').click()
+    cy.get('button').contains('span', 'Save').parent().should('not.be.disabled')
+    cy.get('button').contains('span', 'Discard').parent().should('not.be.disabled')
+    cy.get('button span').contains('Unsaved changes')
+
+    // click save
+    cy.get('button span.bp3-button-text').contains('Save').click()
+
+    cy.get('@updateFreezeCall').should(req => {
+      cy.contains('.bp3-toast span.bp3-toast-message', 'Freeze window updated successfully').should('be.visible')
+      // cy.contains('p', 'Loading, please wait...').should('be.visible')
+      expect(req.request.method).to.equal('PUT')
+
+      expect(req.request.body).to.equal(`freeze:
+  name: org level freeze
+  identifier: org_level_freeze
+  entityConfigs:
+    - name: Org Level Rule Number 1
+      entities:
+        - type: Project
+          filterType: All
+        - type: Service
+          filterType: All
+        - type: EnvType
+          filterType: All
+    - name: Rule Number 3
+      entities:
+        - type: Project
+          filterType: NotEquals
+          entityRefs:
+            - default_org_project
+            - freeze_windows_2
+        - type: Service
+          filterType: All
+        - type: EnvType
+          filterType: All
+  status: Enabled
+`)
+    })
   })
 })
