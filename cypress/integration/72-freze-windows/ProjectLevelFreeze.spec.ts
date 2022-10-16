@@ -14,7 +14,7 @@ import {
   getFreezeCall
 } from './constants'
 
-describe('Project Level Freeze Creation', () => {
+describe('Project Level Freeze', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       return false
@@ -37,9 +37,7 @@ describe('Project Level Freeze Creation', () => {
     cy.initializeRoute()
     cy.intercept('POST', postFreezeCall, { fixture: 'pipeline/api/freeze/createFreeze' }).as('createFreezeCall')
     cy.intercept('PUT', putFreezeCall).as('updateFreezeCall')
-    cy.intercept('GET', getFreezeCall, { fixture: 'pipeline/api/freeze/getProjectLevelFreeze' }).as(
-      'getProjectLevelFreezeCall'
-    )
+    cy.intercept('GET', getFreezeCall, { fixture: 'pipeline/api/freeze/getProjectLevelFreeze' })
   })
 
   it('should go to freeze creation page in Project Level and init config, and add a rule in Config Section', () => {
@@ -166,6 +164,8 @@ describe('Project Level Freeze Creation', () => {
 
     // Check Save API Payload
     cy.get('@createFreezeCall').should(req => {
+      cy.contains('.bp3-toast span.bp3-toast-message', 'Freeze window created successfully').should('be.visible')
+      cy.contains('p', 'Loading, please wait...').should('be.visible')
       expect(req.request.method).to.equal('POST')
       expect(req.request.body).to.equal(`freeze:
   name: project level freeze
@@ -190,6 +190,10 @@ describe('Project Level Freeze Creation', () => {
   status: Enabled
 `)
     })
+
+    // save and Discard buttons should be disabled by default
+    cy.get('button').contains('span', 'Save').parent().should('be.disabled')
+    cy.get('button').contains('span', 'Discard').parent().should('be.disabled')
   })
 
   it('should go render in Edit View, update fields, and submit successfully', () => {
@@ -215,6 +219,8 @@ describe('Project Level Freeze Creation', () => {
     cy.get('button span.bp3-button-text').contains('Save').click()
 
     cy.get('@updateFreezeCall').should(req => {
+      cy.contains('.bp3-toast span.bp3-toast-message', 'Freeze window updated successfully').should('be.visible')
+      cy.contains('p', 'Loading, please wait...').should('be.visible')
       expect(req.request.method).to.equal('PUT')
       expect(req.request.body).to.equal(`freeze:
   name: project level freeze
