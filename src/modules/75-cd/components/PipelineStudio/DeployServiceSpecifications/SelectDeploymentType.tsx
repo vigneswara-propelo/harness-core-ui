@@ -161,6 +161,7 @@ export default function SelectDeploymentType({
                   templateLinkConfig={customDeploymentData}
                   onOpenTemplateSelector={addOrUpdateTemplate}
                   className={cx(deployServiceCsss.templateBar, templateBarOverrideClassName)}
+                  isReadonly={isReadonly}
                 />
               </Layout.Vertical>
             ) : null}
