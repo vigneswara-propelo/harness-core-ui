@@ -2152,6 +2152,7 @@ export interface StringsMap {
   'connectors.ceAzure.billing.subscriptionId': string
   'connectors.ceAzure.billing.tooltipBtn': string
   'connectors.ceAzure.billing.tooltipInstruction': string
+  'connectors.ceAzure.chooseRequirements.atleastOneError': string
   'connectors.ceAzure.chooseRequirements.billing.feat1': string
   'connectors.ceAzure.chooseRequirements.billing.feat2': string
   'connectors.ceAzure.chooseRequirements.billing.feat3': string
