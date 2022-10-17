@@ -1792,6 +1792,19 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/${identifier}`
   ),
+  toNewChaosExperiment: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/new`
+  ),
+  toChaosExperimentRun: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      expIdentifier,
+      expRunIdentifier
+    }: Partial<ProjectPathProps> & { expIdentifier: string; expRunIdentifier: string }) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/${expIdentifier}/runs/${expRunIdentifier}`
+  ),
   toChaosHubs: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs`

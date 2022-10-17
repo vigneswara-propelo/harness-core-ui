@@ -6592,6 +6592,11 @@ export interface StringsMap {
   'chaos.navLabels.chaosHubs': string
   'chaos.noEnvironment.message': string
   'chaos.noEnvironment.title': string
+  'chaos.pipelineStep.description': string
+  'chaos.pipelineStep.expectedResiliencyScoreLabel': string
+  'chaos.pipelineStep.experimentRefLabel': string
+  'chaos.selectChaosExperiment': string
+  'chaos.viewDetailedExecution': string
   'ci.advancedLabel': string
   'ci.annotations': string
   'ci.artifactoryConnectorLabel': string

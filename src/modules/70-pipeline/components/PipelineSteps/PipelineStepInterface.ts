@@ -118,7 +118,8 @@ export enum StepType {
   CustomDeployment = 'CustomDeployment',
   FetchInstanceScript = 'FetchInstanceScript',
   Wait = 'Wait',
-  ShellScriptProvision = 'ShellScriptProvision'
+  ShellScriptProvision = 'ShellScriptProvision',
+  ChaosExperiment = 'Chaos' //todoChaos
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {
