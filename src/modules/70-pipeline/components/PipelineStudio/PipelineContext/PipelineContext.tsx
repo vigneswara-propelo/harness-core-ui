@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map, omitBy } from 'lodash-es'
 import {
   AllowedTypes,
   AllowedTypesWithRunTime,
@@ -1260,7 +1260,8 @@ export function PipelineProvider({
       function _updateStages(stages: StageElementWrapperConfig[]): StageElementWrapperConfig[] {
         return stages.map(node => {
           if (node.stage?.identifier === newStage.identifier) {
-            return { stage: newStage }
+            // This omitBy condition is required to remove any pseudo fields used in the stage
+            return { stage: omitBy(newStage, (_val, key) => key.startsWith('_')) as StageElementConfig }
           } else if (node.parallel) {
             return {
               parallel: _updateStages(node.parallel)

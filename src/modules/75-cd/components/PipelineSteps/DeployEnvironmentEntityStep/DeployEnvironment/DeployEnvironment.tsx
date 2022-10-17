@@ -137,6 +137,11 @@ export default function DeployEnvironment({
     if (!isMultiEnvironment && !values.environment && selectedEnvironments.length) {
       setSelectedEnvironments([])
     }
+
+    // This condition sets the unique path when switching from single env to multi env after the component has loaded with single env view
+    if (isMultiEnvironment && values.environments?.length && selectedEnvironments.length) {
+      setFieldValue(uniquePathForEnvironments.current, values.environments)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMultiEnvironment])
 
@@ -203,6 +208,7 @@ export default function DeployEnvironment({
           getMultiTypeFromValue(values.environments) === MultiTypeInputType.RUNTIME
             ? values.environments
             : [SELECT_ALL_OPTION]
+
         setFieldValue(`${uniquePathForEnvironments.current}`, envIdentifierValue)
       }
     }
@@ -305,7 +311,11 @@ export default function DeployEnvironment({
 
   return (
     <>
-      <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+      <Layout.Horizontal
+        spacing="medium"
+        flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
+        className={css.inputField}
+      >
         {isMultiEnvironment ? (
           <FormMultiTypeMultiSelectDropDown
             label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironments')}
@@ -371,72 +381,76 @@ export default function DeployEnvironment({
           />
         )}
       </Layout.Horizontal>
-      {isMultiEnvironment && !isUnderEnvGroup ? (
-        <FormInput.CheckBox
-          label={getString('cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployLabel')}
-          name="parallel"
-        />
-      ) : null}
-      {isFixed && !isEmpty(selectedEnvironments) && (
-        <>
-          <EnvironmentEntitiesList
-            loading={loading || updatingEnvironmentsData}
-            environmentsData={environmentsData}
-            readonly={readonly}
-            allowableTypes={allowableTypes}
-            onEnvironmentEntityUpdate={onEnvironmentEntityUpdate}
-            onRemoveEnvironmentFromList={onRemoveEnvironmentFromList}
-            initialValues={initialValues}
-            stageIdentifier={stageIdentifier}
-            deploymentType={deploymentType}
-            customDeploymentRef={customDeploymentRef}
-            gitOpsEnabled={gitOpsEnabled}
+
+      <Layout.Vertical className={css.mainContent} spacing="medium">
+        {isMultiEnvironment && !isUnderEnvGroup ? (
+          <FormInput.CheckBox
+            label={getString('cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployLabel')}
+            name="parallel"
           />
+        ) : null}
 
-          {!loading && !isMultiEnvironment && (
-            <>
-              <Divider />
-              {gitOpsEnabled ? (
-                <DeployCluster
-                  initialValues={initialValues}
-                  readonly={readonly}
-                  allowableTypes={allowableTypes}
-                  environmentIdentifier={selectedEnvironments[0]}
-                />
-              ) : (
-                <DeployInfrastructure
-                  initialValues={initialValues}
-                  readonly={readonly}
-                  allowableTypes={allowableTypes}
-                  environmentIdentifier={selectedEnvironments[0]}
-                  deploymentType={deploymentType}
-                  customDeploymentRef={customDeploymentRef}
-                />
-              )}
-            </>
-          )}
-        </>
-      )}
+        {isFixed && !isEmpty(selectedEnvironments) && (
+          <>
+            <EnvironmentEntitiesList
+              loading={loading || updatingEnvironmentsData}
+              environmentsData={environmentsData}
+              readonly={readonly}
+              allowableTypes={allowableTypes}
+              onEnvironmentEntityUpdate={onEnvironmentEntityUpdate}
+              onRemoveEnvironmentFromList={onRemoveEnvironmentFromList}
+              initialValues={initialValues}
+              stageIdentifier={stageIdentifier}
+              deploymentType={deploymentType}
+              customDeploymentRef={customDeploymentRef}
+              gitOpsEnabled={gitOpsEnabled}
+            />
 
-      <ModalDialog
-        isOpen={isAddNewModalOpen}
-        onClose={closeAddNewModal}
-        title={getString('newEnvironment')}
-        canEscapeKeyClose={false}
-        canOutsideClickClose={false}
-        enforceFocus={false}
-        lazy
-        width={1128}
-        height={840}
-        className={css.dialogStyles}
-      >
-        <AddEditEnvironmentModal
-          data={{}}
-          onCreateOrUpdate={updateEnvironmentsList}
-          closeModal={closeAddNewModal}
-          isEdit={false}
-        />
-      </ModalDialog>
+            {!loading && !isMultiEnvironment && (
+              <>
+                <Divider />
+                {gitOpsEnabled ? (
+                  <DeployCluster
+                    initialValues={initialValues}
+                    readonly={readonly}
+                    allowableTypes={allowableTypes}
+                    environmentIdentifier={selectedEnvironments[0]}
+                  />
+                ) : (
+                  <DeployInfrastructure
+                    initialValues={initialValues}
+                    readonly={readonly}
+                    allowableTypes={allowableTypes}
+                    environmentIdentifier={selectedEnvironments[0]}
+                    deploymentType={deploymentType}
+                    customDeploymentRef={customDeploymentRef}
+                  />
+                )}
+              </>
+            )}
+          </>
+        )}
+
+        <ModalDialog
+          isOpen={isAddNewModalOpen}
+          onClose={closeAddNewModal}
+          title={getString('newEnvironment')}
+          canEscapeKeyClose={false}
+          canOutsideClickClose={false}
+          enforceFocus={false}
+          lazy
+          width={1128}
+          height={840}
+          className={css.dialogStyles}
+        >
+          <AddEditEnvironmentModal
+            data={{}}
+            onCreateOrUpdate={updateEnvironmentsList}
+            closeModal={closeAddNewModal}
+            isEdit={false}
+          />
+        </ModalDialog>
+      </Layout.Vertical>
     </>
   )
 }

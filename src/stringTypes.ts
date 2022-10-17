@@ -4684,6 +4684,8 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.deleteClusterFromListDialogTitleText': string
   'cd.pipelineSteps.environmentTab.deleteEnvironmentFromListConfirmationText': string
   'cd.pipelineSteps.environmentTab.deleteEnvironmentFromListDialogTitleText': string
+  'cd.pipelineSteps.environmentTab.deleteEnvironmentGroupFromListConfirmationText': string
+  'cd.pipelineSteps.environmentTab.deleteEnvironmentGroupFromListDialogTitleText': string
   'cd.pipelineSteps.environmentTab.deleteInfrastructureFromListConfirmationText': string
   'cd.pipelineSteps.environmentTab.deleteInfrastructureFromListDialogTitleText': string
   'cd.pipelineSteps.environmentTab.deployToAll': string
