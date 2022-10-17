@@ -3,7 +3,7 @@ kind: Component
 metadata:
   annotations:
     backstage.io/kubernetes-label-selector: 'app=next-gen-ui'
-    circleci.com/project-slug: github/sample-javascript-cfd 
+    circleci.com/project-slug: github/CircleCI-Public/sample-javascript-cfd 
     backstage.io/techdocs-ref: url:https://github.com/sandeepa-kv-jois/harness-core-ui
     accountIdentifier: vpCkHKsDSxK9_KYfjCTMKA
     orgIdentifier: default
