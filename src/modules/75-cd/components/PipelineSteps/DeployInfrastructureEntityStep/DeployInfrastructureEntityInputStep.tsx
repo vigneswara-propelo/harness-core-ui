@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
-import { defaultTo, get, isEmpty, isEqual, isNil, merge } from 'lodash-es'
+import { defaultTo, get, isBoolean, isEmpty, isEqual, isNil, merge, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { Spinner } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
@@ -29,6 +29,7 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
@@ -56,8 +57,10 @@ export default function DeployInfrastructureEntityInputStep({
   allowableTypes,
   inputSetData,
   deploymentType,
+  customDeploymentRef,
   environmentIdentifier,
   isMultipleInfrastructure,
+  deployToAllEnvironments,
   deployToAllInfrastructures
 }: DeployInfrastructureEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
@@ -66,7 +69,13 @@ export default function DeployInfrastructureEntityInputStep({
   const uniquePath = React.useRef(`_pseudo_field_${uuid()}`)
 
   const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+  const pathForDeployToAll = `${pathPrefix}deployToAll`
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith(TEMPLATE_INPUT_PATH)
+
+  const { templateRef: deploymentTemplateIdentifier, versionLabel } = customDeploymentRef || {}
+
+  const shouldAddCustomDeploymentData =
+    deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier
 
   const infrastructureValue = get(initialValues, `infrastructureDefinitions.[0].identifier`)
   const infrastructureValues = get(initialValues, 'infrastructureDefinitions')
@@ -92,7 +101,15 @@ export default function DeployInfrastructureEntityInputStep({
     loadingInfrastructuresData,
     // This is required only when updating the entities list
     updatingInfrastructuresData
-  } = useGetInfrastructuresData({ infrastructureIdentifiers, environmentIdentifier, deploymentType })
+  } = useGetInfrastructuresData({
+    infrastructureIdentifiers,
+    environmentIdentifier,
+    deploymentType,
+    ...(shouldAddCustomDeploymentData && {
+      deploymentTemplateIdentifier,
+      versionLabel
+    })
+  })
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */
@@ -109,6 +126,10 @@ export default function DeployInfrastructureEntityInputStep({
   const loading = loadingInfrastructuresList || loadingInfrastructuresData || updatingInfrastructuresData
 
   useDeepCompareEffect(() => {
+    if (!infrastructuresList.length) {
+      return
+    }
+
     // if this is a multi infrastructures, then set up a dummy field,
     // so that infrastructures can be updated in this dummy field
     if (isMultipleInfrastructure) {
@@ -126,7 +147,7 @@ export default function DeployInfrastructureEntityInputStep({
     }
 
     // update identifiers in state when deployToAll is true. This sets the infrastructuresData
-    if (infrastructuresList.length && deployToAllInfrastructures) {
+    if (deployToAllEnvironments === true || deployToAllInfrastructures === true) {
       const newIdentifiers = infrastructuresList.map(infrastructureInList => infrastructureInList.identifier)
       if (!isEqual(newIdentifiers, infrastructureIdentifiers)) {
         setInfrastructureIdentifiers(newIdentifiers)
@@ -154,6 +175,10 @@ export default function DeployInfrastructureEntityInputStep({
 
         formik.setFieldValue(`${pathPrefix}infrastructureDefinitions`, [])
       }
+      return
+    }
+
+    if (!infrastructuresData.length) {
       return
     }
 
@@ -223,16 +248,27 @@ export default function DeployInfrastructureEntityInputStep({
   }
 
   function handleInfrastructuresChange(values: SelectOption[]): void {
-    const newValues = values.map(val => ({
-      identifier: val.value as string,
-      infrastructureInputs: RUNTIME_INPUT_VALUE
-    }))
+    if (values?.at(0)?.value === 'All') {
+      const newIdentifiers = infrastructuresList.map(infrastructureInList => infrastructureInList.identifier)
+      setInfrastructureIdentifiers(newIdentifiers)
 
-    formik.setFieldValue(`${pathPrefix}infrastructureDefinitions`, newValues)
-    if (!deployToAllInfrastructures) {
-      formik.setFieldValue(`${pathPrefix}deployToAll`, false)
+      formik.setFieldValue(pathForDeployToAll, true)
+    } else {
+      const newValues = values.map(val => ({
+        identifier: val.value as string,
+        infrastructureInputs: RUNTIME_INPUT_VALUE
+      }))
+
+      const newFormikValues = { ...formik.values }
+
+      set(newFormikValues, `${pathPrefix}infrastructureDefinitions`, newValues)
+      if (!isBoolean(deployToAllInfrastructures)) {
+        set(newFormikValues, `${pathPrefix}deployToAll`, false)
+      }
+
+      setInfrastructureIdentifiers(getInfrastructureIdentifiers())
+      formik.setValues(newFormikValues)
     }
-    setInfrastructureIdentifiers(getInfrastructureIdentifiers())
   }
 
   return (
@@ -259,7 +295,12 @@ export default function DeployInfrastructureEntityInputStep({
             formik={formik}
           />
         )}
-        {isMultipleInfrastructure && !deployToAllInfrastructures && (
+        {/**
+         * Hide if:
+         * 1. if deploy to all environments is true, either by default or after selection from input field
+         * 2. if deploy to all infrastructures is true
+         */}
+        {isMultipleInfrastructure && !deployToAllEnvironments && deployToAllInfrastructures !== true && (
           <FormMultiTypeMultiSelectDropDown
             tooltipProps={{ dataTooltipId: 'specifyYourInfrastructures' }}
             label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructures')}
@@ -268,7 +309,9 @@ export default function DeployInfrastructureEntityInputStep({
             dropdownProps={{
               items: selectOptions,
               placeholder: getString('common.infrastructures'),
-              disabled: loading || inputSetData?.readonly
+              disabled: loading || inputSetData?.readonly,
+              isAllSelectionSupported: !isBoolean(deployToAllInfrastructures),
+              selectAllOptionIfAllItemsAreSelected: !isBoolean(deployToAllInfrastructures)
             }}
             onChange={handleInfrastructuresChange}
             multiTypeProps={{
