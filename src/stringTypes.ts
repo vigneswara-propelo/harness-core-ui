@@ -6594,6 +6594,7 @@ export interface StringsMap {
   'chaos.chaosGameday': string
   'chaos.chaosHub': string
   'chaos.chaosInfrastructure': string
+  'chaos.chaosTrialHomePage.description': string
   'chaos.environments.create.description': string
   'chaos.environments.create.duplicateName': string
   'chaos.environments.create.envTypeLabel': string
@@ -6613,6 +6614,9 @@ export interface StringsMap {
   'chaos.pipelineStep.expectedResiliencyScoreLabel': string
   'chaos.pipelineStep.experimentRefLabel': string
   'chaos.selectChaosExperiment': string
+  'chaos.trial.modal.description': string
+  'chaos.trial.modal.title': string
+  'chaos.trial.modal.welcome': string
   'chaos.viewDetailedExecution': string
   'ci.advancedLabel': string
   'ci.annotations': string
