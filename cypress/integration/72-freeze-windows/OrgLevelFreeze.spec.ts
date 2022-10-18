@@ -149,7 +149,7 @@ describe('Org Level Freeze', () => {
     cy.contains('div[data-name="toggle-option-two"]', 'YAML').should('be.visible').click()
     cy.wait(500)
 
-    cy.get('.view-lines div').should('have.length', 36)
+    cy.get('.view-lines div').should('have.length', 37)
     cy.contains('span', 'freeze').should('be.visible')
     cy.contains('span', 'Org Level Rule Number 1').should('be.visible')
     cy.contains('span', 'Rule Number 2').should('be.visible')
@@ -161,13 +161,15 @@ describe('Org Level Freeze', () => {
     cy.contains('span', 'default_org_project').should('be.visible')
     cy.contains('span', 'freeze_windows_2').should('be.visible')
     cy.contains('span', 'Enabled').should('be.visible')
+    cy.contains('span', 'orgIdentifier').should('be.visible')
+    cy.contains('span', 'default').should('be.visible')
 
     // Hit Save Button
     cy.get('button span.bp3-button-text').contains('Save').click()
+    cy.contains('p', 'Loading, please wait...').should('be.visible')
 
     cy.get('@createFreezeCall').should(req => {
       cy.contains('.bp3-toast span.bp3-toast-message', 'Freeze window created successfully').should('be.visible')
-      cy.contains('p', 'Loading, please wait...').should('be.visible')
       expect(req.request.method).to.equal('POST')
       expect(req.request.body).to.equal(`freeze:
   name: org level freeze
@@ -204,6 +206,7 @@ describe('Org Level Freeze', () => {
         - type: EnvType
           filterType: All
   status: Enabled
+  orgIdentifier: default
 `)
     })
 
@@ -235,10 +238,9 @@ describe('Org Level Freeze', () => {
 
     // click save
     cy.get('button span.bp3-button-text').contains('Save').click()
-
+    cy.contains('p', 'Loading, please wait...').should('be.visible')
     cy.get('@updateFreezeCall').should(req => {
       cy.contains('.bp3-toast span.bp3-toast-message', 'Freeze window updated successfully').should('be.visible')
-      // cy.contains('p', 'Loading, please wait...').should('be.visible')
       expect(req.request.method).to.equal('PUT')
 
       expect(req.request.body).to.equal(`freeze:
@@ -265,6 +267,7 @@ describe('Org Level Freeze', () => {
         - type: EnvType
           filterType: All
   status: Enabled
+  orgIdentifier: default
 `)
     })
   })
