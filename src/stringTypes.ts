@@ -6358,6 +6358,7 @@ export interface StringsMap {
   'cf.noEnvironment.message': string
   'cf.noEnvironment.title': string
   'cf.noResultMatch': string
+  'cf.onboarding.android': string
   'cf.onboarding.backToStart': string
   'cf.onboarding.clientKey': string
   'cf.onboarding.createAFlag': string
@@ -6375,6 +6376,7 @@ export interface StringsMap {
   'cf.onboarding.help.heading2': string
   'cf.onboarding.help.text1': string
   'cf.onboarding.help.text2': string
+  'cf.onboarding.ios': string
   'cf.onboarding.keyDescriptionClient': string
   'cf.onboarding.keyDescriptionServer': string
   'cf.onboarding.letsGetStarted': string
@@ -6383,12 +6385,18 @@ export interface StringsMap {
   'cf.onboarding.otherTypes': string
   'cf.onboarding.readme.android': string
   'cf.onboarding.readme.dotnet': string
+  'cf.onboarding.readme.flutter': string
   'cf.onboarding.readme.golang': string
   'cf.onboarding.readme.ios': string
   'cf.onboarding.readme.java': string
   'cf.onboarding.readme.javascript': string
   'cf.onboarding.readme.nodejs': string
+  'cf.onboarding.readme.php': string
   'cf.onboarding.readme.python': string
+  'cf.onboarding.readme.reactNative': string
+  'cf.onboarding.readme.ruby': string
+  'cf.onboarding.readme.xamarinAndroid': string
+  'cf.onboarding.readme.xamarinIOS': string
   'cf.onboarding.sdkKeyLabel': string
   'cf.onboarding.secret': string
   'cf.onboarding.selectLanguage': string
