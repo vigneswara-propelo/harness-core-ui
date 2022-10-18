@@ -148,7 +148,7 @@ HTMLCollection [
   </a>,
   <a
     class="Breadcrumbs--breadcrumb"
-    href="/account/accountId/home/orgs/default/projects/project1/setup/freeze-windows"
+    href="/account/accountId/cd/orgs/default/projects/project1/setup/freeze-windows"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"

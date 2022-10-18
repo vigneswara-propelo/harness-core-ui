@@ -6,17 +6,9 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as moduleMock from '@common/hooks/useModuleInfo'
 import { FreezeWindowStudioHeader } from '../FreezeWindowStudioHeader'
-
-// eslint-disable-next-line jest-no-mock
-jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as any),
-  useParams: jest.fn()
-}))
 
 export const accountId = 'accountId'
 export const projectIdentifier = 'project1'
@@ -24,17 +16,11 @@ export const orgIdentifier = 'default'
 
 describe('Freeze Window Studio Header', () => {
   test('should render Studio Header for Project View', () => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    useParams.mockImplementation(() => {
-      return { projectIdentifier, orgIdentifier, accountId }
-    })
-    jest.spyOn(moduleMock, 'useModuleInfo').mockReturnValue({
-      module: 'cd'
-    })
-
     const { container, getByText } = render(
-      <TestWrapper>
+      <TestWrapper
+        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
+        pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
+      >
         <FreezeWindowStudioHeader />
       </TestWrapper>
     )
@@ -43,15 +29,11 @@ describe('Freeze Window Studio Header', () => {
     expect(container.getElementsByTagName('a')).toMatchSnapshot('Project View - Studio Header')
   })
   test('should render Studio Header for Org View', () => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    useParams.mockImplementation(() => {
-      return { orgIdentifier, accountId }
-    })
-    jest.spyOn(moduleMock, 'useModuleInfo').mockReturnValue({})
-
     const { container, getByText } = render(
-      <TestWrapper>
+      <TestWrapper
+        path="/account/:accountId/settings/organizations/:orgIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
+        pathParams={{ orgIdentifier, accountId, windowIdentifier: '-1' }}
+      >
         <FreezeWindowStudioHeader />
       </TestWrapper>
     )
@@ -61,15 +43,11 @@ describe('Freeze Window Studio Header', () => {
     expect(container.getElementsByTagName('a')).toMatchSnapshot('Org View - Studio Header')
   })
   test('should render Studio Header for Account View', () => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    useParams.mockImplementation(() => {
-      return { accountId }
-    })
-    jest.spyOn(moduleMock, 'useModuleInfo').mockReturnValue({})
-
     const { container, getByText } = render(
-      <TestWrapper>
+      <TestWrapper
+        path="/account/:accountId/settings/freeze-window-studio/window/:windowIdentifier/"
+        pathParams={{ accountId, windowIdentifier: '-1' }}
+      >
         <FreezeWindowStudioHeader />
       </TestWrapper>
     )

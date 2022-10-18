@@ -6,21 +6,23 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
+import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
-import { FreezeWindowStudioSubHeader } from '../FreezeWindowStudioSubHeader'
+import { FreezeStudioOverviewSection } from '../FreezeStudioOverviewSection'
 import { defaultContext } from './helper'
 
 export const accountId = 'accountId'
 export const projectIdentifier = 'project1'
 export const orgIdentifier = 'default'
 
-describe('Freeze Window Studio Sub Header', () => {
-  test('it should render CreateNewFreezeWindow, when windowIdentifier is "-1"', () => {
-    const onViewChange = jest.fn()
+describe('Freeze Window Studio OverView Section', () => {
+  test('it should render Overview section in create mode', async () => {
     const updateFreeze = jest.fn()
-    const { container } = render(
+    const onNext = jest.fn()
+    const { getByText, container } = render(
       <TestWrapper
         path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
         pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
@@ -31,17 +33,20 @@ describe('Freeze Window Studio Sub Header', () => {
             updateFreeze
           }}
         >
-          <FreezeWindowStudioSubHeader onViewChange={onViewChange} />
+          <FreezeStudioOverviewSection isReadOnly={false} onNext={onNext} />
         </FreezeWindowContext.Provider>
       </TestWrapper>
     )
-    // check toggle, visual/yaml and right view is rendered in the sub header
-    expect(document.getElementsByClassName('Toggle--input')[0]).toBeInTheDocument()
-    expect(document.getElementsByClassName('visualYamlToggle')[0]).toBeInTheDocument()
-    expect(document.getElementsByClassName('headerSaveBtnWrapper')[0]).toBeInTheDocument()
 
-    const portal = document.getElementsByClassName('bp3-dialog')[0]
-    expect(portal).toMatchSnapshot('CreateNewFreezeWindow Modal Dialog')
-    expect(container).toMatchSnapshot('Freeze Window Sub Header')
+    expect(getByText('freezeWindows.freezeStudio.freezeOverview')).toBeInTheDocument()
+    await userEvent.click(getByText('continue'))
+    await waitFor(() => {
+      expect(getByText('common.validation.nameIsRequired')).toBeInTheDocument()
+    })
+    expect(onNext).not.toBeCalled()
+    expect(container).toMatchSnapshot('Overview Section Snapshot')
+    await fillAtForm([{ container, fieldId: 'name', type: InputTypes.TEXTFIELD, value: 'Weekend Freeze' }])
+    expect(updateFreeze).toHaveBeenCalledWith({ name: 'Weekend Freeze', identifier: 'Weekend_Freeze' })
+    await userEvent.click(getByText('continue'))
   })
 })
