@@ -116,6 +116,7 @@ import type {
   TriggerConfigDTO
 } from '../TriggerWizardInterface'
 import useGitAwareForTriggerEnabled from '../useGitAwareForTriggerEnabled'
+import useIsGithubWebhookAuthenticationEnabled from './useIsGithubWebhookAuthenticationEnabled'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
 
@@ -190,6 +191,8 @@ export default function WebhookTriggerWizard(
       })
     }
   })
+
+  const isGithubWebhookAuthenticationEnabled = useIsGithubWebhookAuthenticationEnabled()
 
   const returnToTriggersPage = (): void =>
     history.push(
@@ -325,6 +328,7 @@ export default function WebhookTriggerWizard(
       sourceRepo,
       identifier: '',
       tags: {},
+      ...(sourceRepo === GitSourceProviders.GITHUB.value && { encryptedWebhookSecretIdentifier: '' }),
       pipeline: newPipeline as PipelineInfoConfig,
       originalPipeline,
       resolvedPipeline,
@@ -566,7 +570,8 @@ export default function WebhookTriggerWizard(
                 }
               }
             },
-            pipelineBranchName = getDefaultPipelineReferenceBranch(event)
+            pipelineBranchName = getDefaultPipelineReferenceBranch(event),
+            encryptedWebhookSecretIdentifier
           }
         } = triggerResponseJson
 
@@ -612,6 +617,7 @@ export default function WebhookTriggerWizard(
           identifier,
           description,
           tags,
+          ...(sourceRepo === GitSourceProviders.GITHUB.value && { encryptedWebhookSecretIdentifier }),
           pipeline: pipelineJson,
           sourceRepo: sourceRepoForYaml,
           triggerType: TriggerBaseType.WEBHOOK,
@@ -791,7 +797,8 @@ export default function WebhookTriggerWizard(
       jexlCondition,
       secureToken,
       autoAbortPreviousExecutions = false,
-      pipelineBranchName = getDefaultPipelineReferenceBranch(event)
+      pipelineBranchName = getDefaultPipelineReferenceBranch(event),
+      encryptedWebhookSecretIdentifier: { referenceString } = { referenceString: '' }
     } = val
     const inputSetRefs = get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
 
@@ -858,6 +865,9 @@ export default function WebhookTriggerWizard(
         enabled: enabledStatus,
         description,
         tags,
+        ...(formikValueSourceRepo === GitSourceProviders.GITHUB.value && {
+          encryptedWebhookSecretIdentifier: referenceString
+        }),
         orgIdentifier,
         projectIdentifier,
         pipelineIdentifier,
@@ -1344,7 +1354,7 @@ export default function WebhookTriggerWizard(
       formikInitialProps={{
         initialValues,
         onSubmit: onSubmit,
-        validationSchema: getValidationSchema(getString),
+        validationSchema: getValidationSchema(getString, isGithubWebhookAuthenticationEnabled),
         validate: validateTriggerPipeline,
         enableReinitialize: true
       }}

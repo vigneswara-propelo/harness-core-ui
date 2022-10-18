@@ -1311,6 +1311,7 @@ export interface StringsMap {
   'defaultSettings.allowOverrides': string
   'defaultSettings.harnessDefault': string
   'defaultSettings.inheritedFrom': string
+  'defaultSettings.mandateWebhookSecretsGithubTriggers': string
   'defaultSettings.noSettingToDisplay': string
   'defaultSettings.restoreToDefault': string
   'governance.permissions.governancePolicies': string
@@ -4381,6 +4382,8 @@ export interface StringsMap {
   'triggers.triggerConfigurationPanel.autoAbortIssueComment': string
   'triggers.triggerConfigurationPanel.autoAbortPR': string
   'triggers.triggerConfigurationPanel.autoAbortPush': string
+  'triggers.triggerConfigurationPanel.copySecretDialogContent': string
+  'triggers.triggerConfigurationPanel.copySecretDialogTitle': string
   'triggers.triggerConfigurationPanel.event': string
   'triggers.triggerConfigurationPanel.eventPlaceholder': string
   'triggers.triggerConfigurationPanel.listenOnNewWebhook': string
@@ -4396,6 +4399,7 @@ export interface StringsMap {
   'triggers.updateTrigger': string
   'triggers.updateTriggerDetails': string
   'triggers.validation.actions': string
+  'triggers.validation.configureSecret': string
   'triggers.validation.connector': string
   'triggers.validation.cronExpression': string
   'triggers.validation.event': string
