@@ -517,6 +517,7 @@ export interface StringsMap {
   'common.newName': string
   'common.newVersion': string
   'common.noAPIKeys': string
+  'common.noAvailableTags': string
   'common.noConnectorAvailable': string
   'common.noDelegateForTask': string
   'common.noDeployments': string
