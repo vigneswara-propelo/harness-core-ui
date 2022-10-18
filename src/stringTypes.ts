@@ -2424,6 +2424,7 @@ export interface StringsMap {
   'connectors.hashiCorpVault.readOnly': string
   'connectors.hashiCorpVault.readOnlyVault': string
   'connectors.hashiCorpVault.renewal': string
+  'connectors.hashiCorpVault.renewalIntervalWarningMessage': string
   'connectors.hashiCorpVault.root': string
   'connectors.hashiCorpVault.saveInProgress': string
   'connectors.hashiCorpVault.secretEngine': string
