@@ -36,7 +36,7 @@ describe('Freeze Window Studio Sub Header', () => {
       </TestWrapper>
     )
     // check toggle, visual/yaml and right view is rendered in the sub header
-    expect(document.getElementsByClassName('Toggle--input')[0]).toBeInTheDocument()
+    expect(document.getElementsByClassName('bp3-switch')[0]).toBeInTheDocument()
     expect(document.getElementsByClassName('visualYamlToggle')[0]).toBeInTheDocument()
     expect(document.getElementsByClassName('headerSaveBtnWrapper')[0]).toBeInTheDocument()
 

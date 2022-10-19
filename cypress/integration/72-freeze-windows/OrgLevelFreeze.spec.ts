@@ -54,7 +54,7 @@ describe('Org Level Freeze', () => {
     })
 
     // Check if Header has required nodes
-    cy.get('.Toggle--toggle input').should('be.checked')
+    cy.get('.bp3-switch span').should('not.be.checked')
 
     // Click on Freeze Config Tab
     cy.get('#bp3-tab-title_freezeWindowStudio_FREEZE_CONFIG').should('be.visible').click()
@@ -160,7 +160,7 @@ describe('Org Level Freeze', () => {
     cy.contains('span', 'NotEquals').should('be.visible')
     cy.contains('span', 'default_org_project').should('be.visible')
     cy.contains('span', 'freeze_windows_2').should('be.visible')
-    cy.contains('span', 'Enabled').should('be.visible')
+    cy.contains('span', 'Disabled').should('be.visible')
     cy.contains('span', 'orgIdentifier').should('be.visible')
     cy.contains('span', 'default').should('be.visible')
 
@@ -205,7 +205,7 @@ describe('Org Level Freeze', () => {
           filterType: All
         - type: EnvType
           filterType: All
-  status: Enabled
+  status: Disabled
   orgIdentifier: default
 `)
     })
@@ -266,7 +266,7 @@ describe('Org Level Freeze', () => {
           filterType: All
         - type: EnvType
           filterType: All
-  status: Enabled
+  status: Disabled
   orgIdentifier: default
 `)
     })

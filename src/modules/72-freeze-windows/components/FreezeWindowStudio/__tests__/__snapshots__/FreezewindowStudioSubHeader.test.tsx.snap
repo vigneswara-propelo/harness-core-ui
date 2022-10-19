@@ -252,17 +252,15 @@ exports[`Freeze Window Studio Sub Header it should render CreateNewFreezeWindow,
         class="Layout--horizontal StyledProps--main freezeNameContainer StyledProps--flex StyledProps--flex-alignItems-center"
       >
         <label
-          class="Toggle--toggle freezeToggler StyledProps--main"
+          class="bp3-control bp3-switch freezeToggler"
         >
           <input
-            class="Toggle--input"
+            aria-label="Toggle freeze"
             type="checkbox"
-            value=""
           />
           <span
-            class="Toggle--toggleIcon"
+            class="bp3-control-indicator"
           />
-          
         </label>
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main freezeName"

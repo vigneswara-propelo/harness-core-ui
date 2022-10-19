@@ -55,7 +55,7 @@ describe('Project Level Freeze', () => {
     })
 
     // Check if Header has required nodes
-    cy.get('.Toggle--toggle input').should('be.checked')
+    cy.get('.bp3-switch span').should('not.be.checked')
     cy.get('.PillToggle--optionBtns').should('have.length', 1)
     cy.get('.PillToggle--item').should('have.length', 2)
 
@@ -157,7 +157,7 @@ describe('Project Level Freeze', () => {
     cy.contains('span', 'entityRefs').should('be.visible')
     cy.contains('span', 'testService').should('be.visible')
     cy.contains('span', 'status').should('be.visible')
-    cy.contains('span', 'Enabled').should('be.visible')
+    cy.contains('span', 'Disabled').should('be.visible')
     cy.contains('span', 'orgIdentifier').should('be.visible')
     cy.contains('span', 'default').should('be.visible')
     cy.contains('span', 'projectIdentifier').should('be.visible')
@@ -191,7 +191,7 @@ describe('Project Level Freeze', () => {
           filterType: All
         - type: EnvType
           filterType: All
-  status: Enabled
+  status: Disabled
   orgIdentifier: default
   projectIdentifier: project1
 `)
@@ -242,7 +242,7 @@ describe('Project Level Freeze', () => {
           filterType: Equals
           entityRefs:
             - PROD
-  status: Enabled
+  status: Disabled
   orgIdentifier: default
   projectIdentifier: project1
 `)
