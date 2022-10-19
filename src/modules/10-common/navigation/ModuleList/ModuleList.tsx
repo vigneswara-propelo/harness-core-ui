@@ -114,7 +114,10 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
     <>
       <Drawer
         isOpen={isOpen}
-        onClose={close}
+        onClose={() => {
+          close()
+          setActiveModuleCarousel(undefined)
+        }}
         position={Position.LEFT}
         size={Drawer.SIZE_SMALL}
         className={css.modulesList}
