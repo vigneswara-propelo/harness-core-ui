@@ -1055,7 +1055,14 @@ stepDescription:
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
   CustomApproval: Custom Approval
   AzureTrafficShift: Shift network traffic to the new Web App version in the deployment slot.
-  ECSRollingDeploy: Use a rolling update to schedule new aws instances on nodes with available resources. This step uses the number of replicas you specified in the Deployment manifest.
+  ECSRollingDeploy: Roll out a new ECS service version.
+  ECSRollingRollback: Roll back the ECS service version deployed using the ECS Rolling Deploy step.
+  ECSCanaryDeploy: Deploy a new ECS service version to one instance for validation.
+  ECSCanaryDelete: Delete the ECS service version deployed by the ECS Canary Deploy step.
+  ECSBlueGreenCreateService: Stage a new service version to a target group.
+  ECSBlueGreenSwapTargetGroups: Swap stage and prod routes for a Blue/Green deployment.
+  ECSBlueGreenRollback: Roll back the new ECS service version and upscale the old version to its previous task number.
+  ECSRunTask: Run one-time or periodic batch job tasks using placement constraints and strategies.
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
 executionStrategy:

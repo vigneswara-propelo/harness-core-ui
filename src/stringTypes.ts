@@ -3994,7 +3994,14 @@ export interface StringsMap {
   'pipeline.stepDescription.CustomApproval': string
   'pipeline.stepDescription.DockerHub': string
   'pipeline.stepDescription.ECR': string
+  'pipeline.stepDescription.ECSBlueGreenCreateService': string
+  'pipeline.stepDescription.ECSBlueGreenRollback': string
+  'pipeline.stepDescription.ECSBlueGreenSwapTargetGroups': string
+  'pipeline.stepDescription.ECSCanaryDelete': string
+  'pipeline.stepDescription.ECSCanaryDeploy': string
   'pipeline.stepDescription.ECSRollingDeploy': string
+  'pipeline.stepDescription.ECSRollingRollback': string
+  'pipeline.stepDescription.ECSRunTask': string
   'pipeline.stepDescription.FlagConfiguration': string
   'pipeline.stepDescription.GCR': string
   'pipeline.stepDescription.GCS': string
