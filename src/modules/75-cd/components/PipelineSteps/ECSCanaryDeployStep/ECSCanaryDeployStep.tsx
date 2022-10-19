@@ -35,7 +35,7 @@ export class ECSCanaryDeployStep extends PipelineStep<StepElementConfig> {
   protected stepName = 'ECS Canary Deploy'
   protected stepIcon: IconName = 'canary'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sCanaryDeploy'
-  protected isHarnessSpecific = true
+  protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {
     identifier: '',
     name: '',

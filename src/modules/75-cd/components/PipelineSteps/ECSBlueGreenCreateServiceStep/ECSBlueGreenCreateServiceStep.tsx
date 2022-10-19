@@ -44,7 +44,7 @@ export class ECSBlueGreenCreateServiceStep extends PipelineStep<ECSBlueGreenCrea
   protected stepName = 'Configure Blue Green Deployment'
   protected stepIcon: IconName = 'bluegreen'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sBlueGreenDeploy'
-  protected isHarnessSpecific = true
+  protected isHarnessSpecific = false
   protected defaultValues: ECSBlueGreenCreateServiceStepInitialValues = {
     identifier: '',
     name: '',
