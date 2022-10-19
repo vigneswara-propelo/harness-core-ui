@@ -1431,3 +1431,5 @@ customDeployment:
 step:
   validation:
     namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
+runDisabledOnFreeze: Cannot run pipeline due to an active freeze
+viewFreeze: View freeze details

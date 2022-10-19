@@ -3862,6 +3862,7 @@ export interface StringsMap {
   'pipeline.rightBar.mergeCommit': string
   'pipeline.runAPipeline': string
   'pipeline.runAllParallelstages': string
+  'pipeline.runDisabledOnFreeze': string
   'pipeline.runFailedStages': string
   'pipeline.runModalNoPipelineText': string
   'pipeline.runPipeline.ciCodebaseConfig': string
@@ -4197,6 +4198,7 @@ export interface StringsMap {
   'pipeline.verification.waitForAnalysis': string
   'pipeline.verificationResult': string
   'pipeline.viewExecution': string
+  'pipeline.viewFreeze': string
   'pipeline.viewLatestExecution': string
   'pipeline.viewPipeline': string
   'pipeline.waitStep.validation.duration10SecMinimum': string
