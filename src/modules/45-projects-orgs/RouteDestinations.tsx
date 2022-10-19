@@ -575,7 +575,11 @@ export default (
     >
       <ResourceGroupDetails />
     </RouteWithLayout>
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toDefaultSettings({ ...projectPathProps })} exact>
+    <RouteWithLayout
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toDefaultSettings({ ...projectPathProps })}
+      exact
+    >
       <SettingsList />
     </RouteWithLayout>
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toDefaultSettings({ ...orgPathProps })} exact>
