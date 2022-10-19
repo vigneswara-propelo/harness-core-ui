@@ -119,6 +119,7 @@ export interface StringsMap {
   'common.byType': string
   'common.capsAll': string
   'common.cardNumber': string
+  'common.cdAndGitops': string
   'common.ce.autostopping': string
   'common.ce.cost': string
   'common.ce.optimization': string
@@ -834,6 +835,7 @@ export interface StringsMap {
   'common.startTrial': string
   'common.state': string
   'common.stepName': string
+  'common.stoText': string
   'common.submittingRequest': string
   'common.submittingRequestToGitViaDelegate': string
   'common.subscribed': string

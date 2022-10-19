@@ -39,12 +39,12 @@ export default function ProjectsSideNav(): React.ReactElement {
         <>
           <SidebarLink
             label={getString('rbac.scopeItems.allProjects')}
-            to={routes.toAllProjects(params)}
+            to={routes.toAllProjects({ accountId: params.accountId })}
             icon="nav-project"
             style={{ marginTop: 'var(--spacing-medium)', marginBottom: 'var(--spacing-small)' }}
             className={css.iconColor}
             exact
-          ></SidebarLink>
+          />
           <div className={css.divStyle} />
         </>
       )}

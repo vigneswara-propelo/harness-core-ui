@@ -27,7 +27,11 @@ interface ProjectSetupMenuProps {
 
 const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
   const { getString } = useStrings()
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
+  const {
+    accountId,
+    orgIdentifier: orgIdentifierFromParams,
+    projectIdentifier: projectIdentifierFromParams
+  } = useParams<PipelineType<ProjectPathProps>>()
 
   const {
     OPA_PIPELINE_GOVERNANCE,
@@ -40,8 +44,15 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
   } = useFeatureFlags()
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
-  const { isGitSimplificationEnabled, isGitSyncEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
-  const params = { accountId, orgIdentifier, projectIdentifier, module }
+  const { isGitSimplificationEnabled, isGitSyncEnabled, gitSyncEnabledOnlyForFF, selectedProject } = useAppStore()
+  const { orgIdentifier = orgIdentifierFromParams, identifier: projectIdentifier = projectIdentifierFromParams } =
+    selectedProject || {}
+  const params = {
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    module
+  }
   const isCD = module === 'cd'
   const isCIorCDorSTO = module === 'ci' || isCD || module === 'sto'
   const isCIorCD = module === 'ci' || isCD
