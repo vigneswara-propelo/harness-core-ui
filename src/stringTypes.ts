@@ -3262,7 +3262,6 @@ export interface StringsMap {
   'pipeline.dashboardDeploymentsWidget.runningPipeline.singular': string
   'pipeline.dashboards.activeBuilds': string
   'pipeline.dashboards.activeDeployments': string
-  'pipeline.dashboards.baselineActivityComingSoon': string
   'pipeline.dashboards.baselineTargets': string
   'pipeline.dashboards.buildExecutions': string
   'pipeline.dashboards.buildHealth': string
@@ -3277,6 +3276,7 @@ export interface StringsMap {
   'pipeline.dashboards.noFailedDeployments': string
   'pipeline.dashboards.noPendingDeployments': string
   'pipeline.dashboards.noRepositories': string
+  'pipeline.dashboards.noTargetBaselines': string
   'pipeline.dashboards.noWorkloads': string
   'pipeline.dashboards.pendingDeployments': string
   'pipeline.dashboards.pipelineExecution': string
