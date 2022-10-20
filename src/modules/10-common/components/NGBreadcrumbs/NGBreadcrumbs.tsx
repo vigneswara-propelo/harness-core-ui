@@ -114,6 +114,10 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
         url = paths.toChaos(params)
         label = getString('common.chaosText')
         break
+      case ModuleName.STO:
+        url = paths.toSTO(params)
+        label = getString('common.purpose.sto.continuous')
+        break
     }
 
     if (projectIdentifier) {
