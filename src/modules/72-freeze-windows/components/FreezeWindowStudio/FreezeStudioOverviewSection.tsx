@@ -7,15 +7,15 @@
 
 import React from 'react'
 import * as Yup from 'yup'
+import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import noop from 'lodash-es/noop'
-import isEmpty from 'lodash-es/isEmpty'
 import { Card, Container, Heading, FormikForm, ButtonVariation, Button, Formik } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
-import type { WindowPathProps } from '@freeze-windows/types'
+import type { FreezeObj, WindowPathProps } from '@freeze-windows/types'
 import { DefaultFreezeId } from './FreezeWindowContext/FreezeWindowReducer'
 import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
 import { getInitialValues } from './FreezeWindowStudioUtil'
@@ -26,7 +26,10 @@ interface FreezeStudioOverviewSectionProps {
   onNext: () => void
 }
 
-export const FreezeStudioOverviewSection: React.FC<FreezeStudioOverviewSectionProps> = ({ isReadOnly, onNext }) => {
+export const FreezeStudioOverviewSection = (
+  { isReadOnly, onNext }: FreezeStudioOverviewSectionProps,
+  formikRef: unknown
+) => {
   const { getString } = useStrings()
   const {
     state: { freezeObj },
@@ -58,44 +61,42 @@ export const FreezeStudioOverviewSection: React.FC<FreezeStudioOverviewSectionPr
         identifier: IdentifierSchema()
       })}
     >
-      {formikProps => (
-        <FormikForm>
-          <Container padding={{ top: 'small', right: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge' }}>
-            <Heading color={Color.BLACK} level={3} style={{ fontWeight: 600, fontSize: '16px', lineHeight: '24px' }}>
-              {getString('freezeWindows.freezeStudio.freezeOverview')}
-            </Heading>
-            <Card className={css.sectionCard}>
-              <NameIdDescriptionTags
-                formikProps={formikProps}
-                identifierProps={{
-                  inputLabel: getString('name'),
-                  isIdentifierEditable: windowIdentifier === DefaultFreezeId && !isReadOnly,
-                  inputGroupProps: { disabled: isReadOnly, inputGroup: { autoFocus: true } }
-                }}
-                descriptionProps={{ disabled: isReadOnly }}
-                tagsProps={{ disabled: isReadOnly }}
-                // className={css.nameIdDescriptionTags}
-              />
-            </Card>
-            <Container margin={{ top: 'xxlarge' }}>
-              <Button
-                margin={{ top: 'medium' }}
-                // type="submit"
-                // disabled={isStageCreationDisabled()}
-                rightIcon="chevron-right"
-                onClick={async () => {
-                  const formErrors = await formikProps.validateForm(formikProps.values)
-                  if (isEmpty(formErrors)) {
-                    onNext()
-                  }
-                }}
-                variation={ButtonVariation.PRIMARY}
-                text={getString('continue')}
-              />
+      {formikProps => {
+        ;(formikRef as React.MutableRefObject<FormikProps<FreezeObj>>).current = formikProps as any
+        return (
+          <FormikForm>
+            <Container padding={{ top: 'small', right: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge' }}>
+              <Heading color={Color.BLACK} level={3} style={{ fontWeight: 600, fontSize: '16px', lineHeight: '24px' }}>
+                {getString('freezeWindows.freezeStudio.freezeOverview')}
+              </Heading>
+              <Card className={css.sectionCard}>
+                <NameIdDescriptionTags
+                  formikProps={formikProps}
+                  identifierProps={{
+                    inputLabel: getString('name'),
+                    isIdentifierEditable: windowIdentifier === DefaultFreezeId && !isReadOnly,
+                    inputGroupProps: { disabled: isReadOnly, inputGroup: { autoFocus: true } }
+                  }}
+                  descriptionProps={{ disabled: isReadOnly }}
+                  tagsProps={{ disabled: isReadOnly }}
+                  // className={css.nameIdDescriptionTags}
+                />
+              </Card>
+              <Container margin={{ top: 'xxlarge' }}>
+                <Button
+                  margin={{ top: 'medium' }}
+                  rightIcon="chevron-right"
+                  onClick={onNext}
+                  variation={ButtonVariation.PRIMARY}
+                  text={getString('continue')}
+                />
+              </Container>
             </Container>
-          </Container>
-        </FormikForm>
-      )}
+          </FormikForm>
+        )
+      }}
     </Formik>
   )
 }
+
+export const FreezeStudioOverviewSectionWithRef = React.forwardRef(FreezeStudioOverviewSection)

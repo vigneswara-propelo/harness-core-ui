@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
+import type { FormikProps } from 'formik'
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
-import { FreezeStudioOverviewSection } from '../FreezeStudioOverviewSection'
+import type { FreezeObj } from '@freeze-windows/types'
+import { FreezeStudioOverviewSectionWithRef } from '../FreezeStudioOverviewSection'
 import { defaultContext } from './helper'
 
 export const accountId = 'accountId'
@@ -20,8 +22,13 @@ export const orgIdentifier = 'default'
 
 describe('Freeze Window Studio OverView Section', () => {
   test('it should render Overview section in create mode', async () => {
+    const ref = React.createRef<FormikProps<FreezeObj>>()
     const updateFreeze = jest.fn()
-    const onNext = jest.fn()
+    const onNext = () => {
+      if (ref?.current) {
+        ref.current.validateForm(ref.current.values)
+      }
+    }
     const { getByText, container } = render(
       <TestWrapper
         path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
@@ -33,7 +40,7 @@ describe('Freeze Window Studio OverView Section', () => {
             updateFreeze
           }}
         >
-          <FreezeStudioOverviewSection isReadOnly={false} onNext={onNext} />
+          <FreezeStudioOverviewSectionWithRef isReadOnly={false} onNext={onNext} ref={ref} />
         </FreezeWindowContext.Provider>
       </TestWrapper>
     )
@@ -43,7 +50,6 @@ describe('Freeze Window Studio OverView Section', () => {
     await waitFor(() => {
       expect(getByText('common.validation.nameIsRequired')).toBeInTheDocument()
     })
-    expect(onNext).not.toBeCalled()
     expect(container).toMatchSnapshot('Overview Section Snapshot')
     await fillAtForm([{ container, fieldId: 'name', type: InputTypes.TEXTFIELD, value: 'Weekend Freeze' }])
     expect(updateFreeze).toHaveBeenCalledWith({ name: 'Weekend Freeze', identifier: 'Weekend_Freeze' })

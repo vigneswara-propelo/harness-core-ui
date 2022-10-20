@@ -365,13 +365,18 @@ export const getEmptyEntityConfig = (fieldsVisibility: FieldVisibility): EntityC
 
 export const getValidationSchema = (freezeWindowLevel: FreezeWindowLevels) => {
   if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
-    // service and env type reqd
     return {
       [FIELD_KEYS.Service]: Yup.string().required('Service is required')
     }
   }
   if (freezeWindowLevel === FreezeWindowLevels.ORG) {
     return {
+      [FIELD_KEYS.Proj]: Yup.string().required('Project is required')
+    }
+  }
+  if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
+    return {
+      [FIELD_KEYS.Org]: Yup.string().required('Organization is required'),
       [FIELD_KEYS.Proj]: Yup.string().required('Project is required')
     }
   }

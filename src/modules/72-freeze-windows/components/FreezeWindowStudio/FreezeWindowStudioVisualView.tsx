@@ -6,13 +6,15 @@
  */
 
 import React from 'react'
+import isEmpty from 'lodash-es/isEmpty'
+import type { FormikProps } from 'formik'
 import { Icon, Tab, Tabs } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
-import type { ResourcesInterface } from '@freeze-windows/types'
+import type { ResourcesInterface, FreezeObj, ValidationErrorType } from '@freeze-windows/types'
 import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
-import { FreezeStudioOverviewSection } from './FreezeStudioOverviewSection'
-import { FreezeStudioConfigSection } from './FreezeStudioConfigSection'
+import { FreezeStudioOverviewSectionWithRef } from './FreezeStudioOverviewSection'
+import { FreezeStudioConfigSectionWithRef } from './FreezeStudioConfigSection'
 import { FreezeWindowScheduleSection } from './FreezeWindowScheduleSection'
 import css from './FreezeWindowStudio.module.scss'
 
@@ -27,6 +29,8 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
   const { updateQueryParams } = useUpdateQueryParams<{ sectionId?: string | null }>()
   const { sectionId } = useQueryParams<{ sectionId?: string | null }>()
   const { isReadOnly } = React.useContext(FreezeWindowContext)
+  const formikRef = React.useRef<FormikProps<FreezeObj>>()
+  const [validationErrors, setValidationErrors] = React.useState<ValidationErrorType>({})
 
   React.useEffect(() => {
     if (!sectionId) {
@@ -34,7 +38,17 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
     }
   }, [])
 
-  const setSelectedTabId = (tabId: FreezeWindowTabs) => {
+  const setSelectedTabId = async (tabId: FreezeWindowTabs) => {
+    const formik = formikRef && formikRef.current
+    if (formik) {
+      const formErrors = await formik.validateForm(formik.values)
+      if (!isEmpty(formErrors)) {
+        setValidationErrors(formErrors as ValidationErrorType)
+        return
+      } else {
+        setValidationErrors({})
+      }
+    }
     updateQueryParams({ sectionId: tabId })
   }
 
@@ -51,9 +65,10 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
         <Tab
           id={FreezeWindowTabs.OVERVIEW}
           panel={
-            <FreezeStudioOverviewSection
+            <FreezeStudioOverviewSectionWithRef
               isReadOnly={isReadOnly}
               onNext={() => setSelectedTabId(FreezeWindowTabs.FREEZE_CONFIG)}
+              ref={formikRef}
             />
           }
           title={
@@ -66,10 +81,12 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
         <Tab
           id={FreezeWindowTabs.FREEZE_CONFIG}
           panel={
-            <FreezeStudioConfigSection
+            <FreezeStudioConfigSectionWithRef
               onBack={() => setSelectedTabId(FreezeWindowTabs.OVERVIEW)}
               onNext={() => setSelectedTabId(FreezeWindowTabs.SCHEDULE)}
               resources={resources}
+              ref={formikRef}
+              validationErrors={validationErrors}
             />
           }
           title={

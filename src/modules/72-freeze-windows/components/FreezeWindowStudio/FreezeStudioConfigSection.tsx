@@ -7,6 +7,7 @@
 
 import React from 'react'
 import * as Yup from 'yup'
+import type { FormikProps } from 'formik'
 import { isEmpty, noop } from 'lodash-es'
 import classnames from 'classnames'
 import {
@@ -28,8 +29,10 @@ import {
   EntityType,
   EnvironmentType,
   FIELD_KEYS,
+  FreezeObj,
   FreezeWindowLevels,
-  ResourcesInterface
+  ResourcesInterface,
+  ValidationErrorType
 } from '@freeze-windows/types'
 import {
   convertValuesToYamlObj,
@@ -278,15 +281,20 @@ interface ConfigsSectionProps {
   resources: ResourcesInterface
   fieldsVisibility: FieldVisibility
   isReadOnly: boolean
+  validationErrors: ValidationErrorType
 }
-const ConfigsSection = ({
-  entityConfigs,
-  getString,
-  updateFreeze,
-  resources,
-  fieldsVisibility,
-  isReadOnly
-}: ConfigsSectionProps) => {
+const ConfigsSection = (
+  {
+    entityConfigs,
+    getString,
+    updateFreeze,
+    resources,
+    fieldsVisibility,
+    isReadOnly,
+    validationErrors
+  }: ConfigsSectionProps,
+  _formikRef: unknown
+) => {
   const formikRef = React.useRef()
   const [editViews, setEditViews] = React.useState<boolean[]>(Array(entityConfigs?.length).fill(false))
   const [initialValues, setInitialValues] = React.useState(
@@ -300,6 +308,20 @@ const ConfigsSection = ({
     resources.services.length,
     Object.keys(resources.projectsByOrgId).length
   ])
+
+  React.useEffect(() => {
+    // When we change tab, we should open the invalid rules
+    if (validationErrors?.entity) {
+      const errors = validationErrors.entity || []
+      setEditViews(_editViews => {
+        const newEditViews = [..._editViews]
+        errors.forEach((val, index) => {
+          newEditViews[index] = isEmpty(val) ? newEditViews[index] : true
+        })
+        return newEditViews
+      })
+    }
+  }, [validationErrors])
 
   React.useEffect(() => {
     if (editViews.length === 0 && entityConfigs.length > 0) {
@@ -347,7 +369,6 @@ const ConfigsSection = ({
   return (
     <>
       <Formik
-        // key={entityConfigs?.length}
         initialValues={initialValues}
         enableReinitialize
         onSubmit={noop}
@@ -363,9 +384,10 @@ const ConfigsSection = ({
       >
         {formikProps => {
           formikRef.current = formikProps as any
+          ;(_formikRef as React.MutableRefObject<FormikProps<FreezeObj>>).current = formikProps as any
+
           return entityConfigs.map((config: EntityConfig, index: number) => (
             <ConfigRenderer
-              // key={config.uuid}
               key={index}
               config={config}
               isEdit={editViews[index]}
@@ -397,13 +419,19 @@ const ConfigsSection = ({
   )
 }
 
+const ConfigsSectionWithRef = React.forwardRef(ConfigsSection)
+
 interface FreezeStudioConfigSectionProps {
   onBack: () => void
   onNext: () => void
   resources: ResourcesInterface
+  validationErrors: ValidationErrorType
 }
 
-export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps> = ({ onNext, onBack, resources }) => {
+export const FreezeStudioConfigSection = (
+  { onNext, onBack, resources, validationErrors }: FreezeStudioConfigSectionProps,
+  formikRef: unknown
+) => {
   const { getString } = useStrings()
   const {
     state: { freezeObj },
@@ -427,13 +455,15 @@ export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps>
         <Heading color={Color.GREY_700} level={4} style={{ fontWeight: 600, fontSize: '14px', lineHeight: '24px' }}>
           {getString('freezeWindows.freezeStudio.defineResources')}
         </Heading>
-        <ConfigsSection
+        <ConfigsSectionWithRef
           entityConfigs={entityConfigs as EntityConfig[]}
           getString={getString}
           updateFreeze={updateFreeze}
           resources={resources}
           fieldsVisibility={fieldsVisibility}
           isReadOnly={isReadOnly}
+          ref={formikRef as React.MutableRefObject<FormikProps<FreezeObj>>}
+          validationErrors={validationErrors}
         />
       </Card>
       <Layout.Horizontal spacing="small" margin={{ top: 'xxlarge' }}>
@@ -455,3 +485,5 @@ export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps>
     </Container>
   )
 }
+
+export const FreezeStudioConfigSectionWithRef = React.forwardRef(FreezeStudioConfigSection)
