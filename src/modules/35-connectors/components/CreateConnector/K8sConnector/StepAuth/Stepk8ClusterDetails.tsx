@@ -195,15 +195,11 @@ const RenderK8AuthForm: React.FC<FormikProps<KubeFormInterface> & { isEditMode: 
           <>
             <Container flex={{ justifyContent: 'flex-start' }}>
               <Container className={css.formFieldWidth}>
-                <SecretInput
-                  name={'clientKey'}
-                  label={getString('connectors.k8.clientKey')}
-                  scope={{ orgIdentifier, projectIdentifier }}
-                />
+                <SecretInput name={'clientKey'} label={getString('connectors.k8.clientKey')} scope={scope} />
                 <SecretInput
                   name={'clientKeyCertificate'}
                   label={getString('connectors.k8.clientCertificate')}
-                  scope={{ orgIdentifier, projectIdentifier }}
+                  scope={scope}
                 />
               </Container>
 
@@ -211,7 +207,7 @@ const RenderK8AuthForm: React.FC<FormikProps<KubeFormInterface> & { isEditMode: 
                 <SecretInput
                   name={'clientKeyPassphrase'}
                   label={getString('connectors.k8.clientKeyPassphrase')}
-                  scope={{ orgIdentifier, projectIdentifier }}
+                  scope={scope}
                 />
                 <FormInput.Select
                   items={CLIENT_KEY_ALGO_OPTIONS}
@@ -237,7 +233,7 @@ const RenderK8AuthForm: React.FC<FormikProps<KubeFormInterface> & { isEditMode: 
               <SecretInput
                 name={'clientKeyCACertificate'}
                 label={getString('connectors.k8.clientKeyCACertificate')}
-                scope={{ orgIdentifier, projectIdentifier }}
+                scope={scope}
               />
             </Container>
           </>

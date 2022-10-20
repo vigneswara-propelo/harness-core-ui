@@ -1881,6 +1881,8 @@ export interface StringsMap {
   'connectors.addParameter': string
   'connectors.apiKey': string
   'connectors.apiKeyOrPassword': string
+  'connectors.apiToken': string
+  'connectors.apiTokenValidation': string
   'connectors.appD.accountName': string
   'connectors.appD.apiClient': string
   'connectors.appD.clientId': string
@@ -2383,8 +2385,6 @@ export interface StringsMap {
   'connectors.docker.harbor': string
   'connectors.docker.other': string
   'connectors.docker.quay': string
-  'connectors.dynatrace.apiToken': string
-  'connectors.dynatrace.apiTokenValidation': string
   'connectors.dynatrace.urlValidation': string
   'connectors.dynatraceConnectorDetails': string
   'connectors.dynatraceLabel': string
@@ -2503,6 +2503,7 @@ export interface StringsMap {
   'connectors.name_labels.PDC': string
   'connectors.name_labels.SecretManager': string
   'connectors.name_labels.Splunk': string
+  'connectors.name_labels.Spot': string
   'connectors.name_labels.gcpKms': string
   'connectors.newArtifactRepository': string
   'connectors.newRelic.accountIdFieldLabel': string
@@ -2654,6 +2655,7 @@ export interface StringsMap {
   'connectors.title.secretManager': string
   'connectors.title.serviceNow': string
   'connectors.title.splunk': string
+  'connectors.title.spot': string
   'connectors.title.sumologic': string
   'connectors.unableToCreateConnector': string
   'connectors.unableToUpdateConnector': string

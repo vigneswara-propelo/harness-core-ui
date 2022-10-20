@@ -64,9 +64,8 @@ const defaultInitialFormData: GitFormInterface = {
   sshKey: undefined
 }
 
-const RenderGitAuthForm: React.FC<FormikProps<GitFormInterface> & ScopedObjectDTO & { isEditMode: boolean }> =
+const RenderGitAuthForm: React.FC<FormikProps<GitFormInterface> & { isEditMode: boolean; scope?: ScopedObjectDTO }> =
   props => {
-    const { projectIdentifier, orgIdentifier } = props
     const { getString } = useStrings()
     return (
       <>
@@ -75,7 +74,7 @@ const RenderGitAuthForm: React.FC<FormikProps<GitFormInterface> & ScopedObjectDT
           stringId="username"
           type={props.values.username ? props.values.username?.type : ValueType.TEXT}
         />
-        <SecretInput name="password" label={getString('password')} scope={{ projectIdentifier, orgIdentifier }} />
+        <SecretInput name="password" label={getString('password')} scope={props.scope} />
       </>
     )
   }
@@ -85,6 +84,14 @@ const StepGitAuthentication: React.FC<StepProps<StepGitAuthenticationProps> & Gi
   const { prevStepData, nextStep, accountId } = props
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(true && props.isEditMode)
+
+  const scope: ScopedObjectDTO | undefined = props.isEditMode
+    ? {
+        orgIdentifier: prevStepData?.orgIdentifier,
+        projectIdentifier: prevStepData?.projectIdentifier
+      }
+    : undefined
+
   useConnectorWizard({
     helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
   })
@@ -147,12 +154,7 @@ const StepGitAuthentication: React.FC<StepProps<StepGitAuthenticationProps> & Gi
               {formikProps.values.connectionType === GitConnectionType.SSH ? (
                 <SSHSecretInput name="sshKey" label={getString('SSH_KEY')} />
               ) : (
-                <RenderGitAuthForm
-                  {...formikProps}
-                  orgIdentifier={prevStepData?.orgIdentifier}
-                  projectIdentifier={prevStepData?.projectIdentifier}
-                  isEditMode={props.isEditMode}
-                />
+                <RenderGitAuthForm {...formikProps} isEditMode={props.isEditMode} scope={scope} />
               )}
             </Container>
 

@@ -107,7 +107,7 @@ const defaultInitialFormData: GithubFormInterface = {
 const RenderGithubAuthForm: React.FC<{
   formikProps: FormikProps<GithubFormInterface>
   gitAuthType?: GitAuthTypes
-  scope: ScopedObjectDTO
+  scope?: ScopedObjectDTO
 }> = props => {
   const { formikProps, gitAuthType, scope } = props
   const { getString } = useStrings()
@@ -201,6 +201,13 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
     const [gitAuthType, setGitAuthType] = useState<GitAuthTypes>()
     const [forceFailOAuthTimeoutId, setForceFailOAuthTimeoutId] = useState<NodeJS.Timeout>()
     const [oAuthResponse, setOAuthResponse] = useState<OAuthEventProcessingResponse>()
+
+    const scope: ScopedObjectDTO | undefined = props.isEditMode
+      ? {
+          orgIdentifier: prevStepData?.orgIdentifier,
+          projectIdentifier: prevStepData?.projectIdentifier
+        }
+      : undefined
 
     useConnectorWizard({
       helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
@@ -432,14 +439,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
                           }}
                         />
                       </Container>
-                      <RenderGithubAuthForm
-                        formikProps={formikProps}
-                        gitAuthType={gitAuthType}
-                        scope={{
-                          orgIdentifier: prevStepData?.orgIdentifier,
-                          projectIdentifier: prevStepData?.projectIdentifier
-                        }}
-                      />
+                      <RenderGithubAuthForm formikProps={formikProps} gitAuthType={gitAuthType} scope={scope} />
                     </Container>
                   )}
 
