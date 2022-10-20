@@ -53,3 +53,10 @@
 .inputSetSpinner {
   margin-bottom: var(--spacing-6);
 }
+.inputFieldLayout {
+  display: flex;
+  .configureOptions {
+    position: relative;
+    top: 22px;
+  }
+}
