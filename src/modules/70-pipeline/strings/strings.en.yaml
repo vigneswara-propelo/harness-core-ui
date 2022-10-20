@@ -421,6 +421,9 @@ failureStrategies:
     MarkedAsSuccess: Marked As Success
     MarkAsFail: Mark As Fail
     MarkedAsFail: Marked As Fail
+    PipelineRollback: Rollback Pipeline
+    ProceedWithDefaultValues: Proceed with Default Values
+    StepGroupRollback: Rollback Step Group
   errorTypeLabels:
     Authentication: Authentication Errors
     Authorization: Authorization Errors
