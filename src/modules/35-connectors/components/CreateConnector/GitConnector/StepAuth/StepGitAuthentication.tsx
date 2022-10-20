@@ -28,6 +28,7 @@ import SSHSecretInput from '@secrets/components/SSHSecretInput/SSHSecretInput'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import css from './StepGitAuthentication.module.scss'
 import commonCss from '../../commonSteps/ConnectorCommonStyles.module.scss'
@@ -63,19 +64,21 @@ const defaultInitialFormData: GitFormInterface = {
   sshKey: undefined
 }
 
-const RenderGitAuthForm: React.FC<FormikProps<GitFormInterface>> = props => {
-  const { getString } = useStrings()
-  return (
-    <>
-      <TextReference
-        name="username"
-        stringId="username"
-        type={props.values.username ? props.values.username?.type : ValueType.TEXT}
-      />
-      <SecretInput name="password" label={getString('password')} />
-    </>
-  )
-}
+const RenderGitAuthForm: React.FC<FormikProps<GitFormInterface> & ScopedObjectDTO & { isEditMode: boolean }> =
+  props => {
+    const { projectIdentifier, orgIdentifier } = props
+    const { getString } = useStrings()
+    return (
+      <>
+        <TextReference
+          name="username"
+          stringId="username"
+          type={props.values.username ? props.values.username?.type : ValueType.TEXT}
+        />
+        <SecretInput name="password" label={getString('password')} scope={{ projectIdentifier, orgIdentifier }} />
+      </>
+    )
+  }
 
 const StepGitAuthentication: React.FC<StepProps<StepGitAuthenticationProps> & GitAuthenticationProps> = props => {
   const { getString } = useStrings()
@@ -144,7 +147,12 @@ const StepGitAuthentication: React.FC<StepProps<StepGitAuthenticationProps> & Gi
               {formikProps.values.connectionType === GitConnectionType.SSH ? (
                 <SSHSecretInput name="sshKey" label={getString('SSH_KEY')} />
               ) : (
-                <RenderGitAuthForm {...formikProps} />
+                <RenderGitAuthForm
+                  {...formikProps}
+                  orgIdentifier={prevStepData?.orgIdentifier}
+                  projectIdentifier={prevStepData?.projectIdentifier}
+                  isEditMode={props.isEditMode}
+                />
               )}
             </Container>
 
