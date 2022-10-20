@@ -448,7 +448,8 @@ export default function DeployServiceEntityWidget({
                     {isFixed ? (
                       <RbacButton
                         size={ButtonSize.SMALL}
-                        text={getString('cd.pipelineSteps.serviceTab.plusNewService')}
+                        icon={'plus'}
+                        text={getString('cd.addService')}
                         variation={ButtonVariation.LINK}
                         data-testid="add-new-service"
                         disabled={readonly}

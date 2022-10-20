@@ -144,7 +144,7 @@ describe.skip('Ssh/WinRM -E2E flow', () => {
 
     //add new service
     cy.wait('@servicesV2Call')
-    cy.contains('span', 'New Service').click()
+    cy.contains('span', 'Add Service').click()
     cy.wait(1000)
     cy.contains('div[id="serviceDefinition"]', 'Service Definition').should('be.visible')
     cy.fillName('testService_Cypress')
