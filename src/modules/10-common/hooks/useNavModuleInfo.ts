@@ -55,7 +55,7 @@ interface ModuleInfo {
 const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CD]: {
     icon: 'cd-main',
-    label: 'common.purpose.cd.continuous',
+    label: 'common.cdAndGitops',
     getHomePageUrl: (accountId: string) => routes.toCD({ accountId }),
     featureFlagName: FeatureFlag.CDNG_ENABLED
   },
@@ -79,13 +79,13 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   },
   [ModuleName.CE]: {
     icon: 'ce-main',
-    label: 'common.purpose.ce.cloudCost',
+    label: 'common.purpose.ce.continuous',
     getHomePageUrl: (accountId: string) => routes.toCE({ accountId }),
     featureFlagName: FeatureFlag.CENG_ENABLED
   },
   [ModuleName.STO]: {
     icon: 'sto-color-filled',
-    label: 'common.purpose.sto.continuous',
+    label: 'common.stoText',
     getHomePageUrl: (accountId: string) => routes.toSTO({ accountId }),
     featureFlagName: FeatureFlag.SECURITY
   },

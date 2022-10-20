@@ -17,7 +17,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current.icon).toBe('cd-main')
-    expect(result.current.label).toBe('common.purpose.cd.continuous')
+    expect(result.current.label).toBe('common.cdAndGitops')
     expect(result.current.shouldVisible).toBe(false)
   })
 
@@ -57,7 +57,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current.icon).toBe('ce-main')
-    expect(result.current.label).toBe('common.purpose.ce.cloudCost')
+    expect(result.current.label).toBe('common.purpose.ce.continuous')
     expect(result.current.shouldVisible).toBe(false)
   })
 
@@ -67,7 +67,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current.icon).toBe('sto-color-filled')
-    expect(result.current.label).toBe('common.purpose.sto.continuous')
+    expect(result.current.label).toBe('common.stoText')
     expect(result.current.shouldVisible).toBe(false)
   })
 
