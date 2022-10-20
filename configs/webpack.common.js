@@ -32,7 +32,7 @@ const enableChaosUI = process.env.ENABLE_CHAOS === 'true'
 const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
 const enableSCM = process.env.ENABLE_SCM === 'true'
-const enableFFUI = process.env.ENABLE_FF_UI === 'true'
+const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
 
 console.log('Common build flags')
 console.table({ enableGovernance, enableGitOpsUI, enableChaosUI, enableCCMUI, enableSTO, enableSCM, enableFFUI })
@@ -248,6 +248,10 @@ if (!enableSCM) {
     'scm/RepoSettings'
   ]
   scmModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
+}
+
+if (!enableFFUI) {
+  config.resolve.alias['ffui/MicroFrontendApp'] = ChildAppError
 }
 
 module.exports = config

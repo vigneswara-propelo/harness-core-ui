@@ -28,6 +28,7 @@ export enum FeatureFlag {
   FFM_1512 = 'FFM_1512',
   FFM_1513 = 'FFM_1513', // development only flag for epic https://harness.atlassian.net/browse/FFM-1513,
   FFM_1827 = 'FFM_1827',
+  FFM_3959_FF_MFE_Environment_Detail = 'FFM_3959_FF_MFE_Environment_Detail',
   FEATURE_ENFORCEMENT_ENABLED = 'FEATURE_ENFORCEMENT_ENABLED',
   FREE_PLAN_ENFORCEMENT_ENABLED = 'FREE_PLAN_ENFORCEMENT_ENABLED',
   OPA_PIPELINE_GOVERNANCE = 'OPA_PIPELINE_GOVERNANCE',
