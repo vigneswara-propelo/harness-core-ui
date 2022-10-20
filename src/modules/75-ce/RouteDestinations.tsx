@@ -623,6 +623,15 @@ const CENonMFERoutes = (
     >
       <BIDashboard />
     </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCECOAccessPoints({ ...accountPathProps, ...projectPathProps })}
+      exact
+      pageName={PAGE_NAME.CECOLoadBalancersPage}
+    >
+      <CECOLoadBalancersPage />
+    </RouteWithLayout>
   </>
 )
 
@@ -714,7 +723,8 @@ const CERoutes: React.FC = () => {
         }),
         routes.toCEDashboards({ ...accountPathProps }),
         routes.toCECORules({ ...accountPathProps, params: '' }),
-        routes.toCECOCreateGateway({ ...accountPathProps, ...projectPathProps })
+        routes.toCECOCreateGateway({ ...accountPathProps, ...projectPathProps }),
+        routes.toCECOAccessPoints({ ...accountPathProps, ...projectPathProps })
       ]
     : []
 
@@ -791,15 +801,6 @@ const CERoutes: React.FC = () => {
           exact
         >
           <CloudIntegrationPage />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCECOAccessPoints({ ...accountPathProps, ...projectPathProps })}
-          exact
-          pageName={PAGE_NAME.CECOLoadBalancersPage}
-        >
-          <CECOLoadBalancersPage />
         </RouteWithLayout>
 
         {enableMicroFrontend ? (
