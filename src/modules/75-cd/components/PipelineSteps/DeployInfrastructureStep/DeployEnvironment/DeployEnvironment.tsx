@@ -333,7 +333,11 @@ function DeployEnvironment({
             setEnvironmentsSelectOptions(options)
           }
         } else {
-          formik?.setFieldValue('environment.environmentRef', existingEnvironment?.value)
+          formik?.setValues(
+            produce(initialValues, draft => {
+              set(draft, 'environment.environmentRef', existingEnvironment?.value)
+            })
+          )
           setSelectedEnvironment(
             environments?.find(environment => environment.identifier === existingEnvironment?.value)
           )
