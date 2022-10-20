@@ -64,7 +64,10 @@ import { getReadableDateTime } from '@common/utils/dateUtils'
 import { Connectors } from '@connectors/constants'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import RbacButton from '@rbac/components/Button/Button'
-import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
+import {
+  getScopeFromDTO,
+  ScopeAndIdentifier
+} from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import ConnectorsEmptyState from './connectors-no-data.png'
 import css from './ConnectorReferenceField.module.scss'
 
@@ -643,7 +646,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     onSuccess: (data?: ConnectorConfigDTO) => {
       if (data) {
         setIsConnectorEdited(true)
-        props.onChange?.({ ...data.connector, status: data.status }, Scope.PROJECT)
+        props.onChange?.({ ...data.connector, status: data.status }, getScopeFromDTO(data.connector))
         setInlineSelection({
           selected: true,
           inlineModalClosed: false
@@ -662,7 +665,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     onSuccess: (data?: ConnectorConfigDTO) => {
       if (data) {
         setIsConnectorEdited(true)
-        props.onChange?.({ ...data.connector, status: data.status }, Scope.PROJECT)
+        props.onChange?.({ ...data.connector, status: data.status }, getScopeFromDTO(data.connector))
         setInlineSelection({
           selected: true,
           inlineModalClosed: false
