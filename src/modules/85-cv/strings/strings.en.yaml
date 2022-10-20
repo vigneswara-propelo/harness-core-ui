@@ -653,13 +653,12 @@ healthSource:
     buildChart: Build Chart
     CloudWatch:
       awsSelectorPlaceholder: Select an AWS Region
-      addNewGroupTitle: New CloudWatch Group Name
       fetchDataButtonText: Fetch data
       validationMessage:
         expression: Expression is required
         customMetrics: Add minimum one custom metric
         submitQuery: Submit query to see chart
-
+      groupModalTitle: New CloudWatch Group Name
     NewRelic:
       applicationLabel: Find an NewRelic application
       nrqlQuery: NRQL Query

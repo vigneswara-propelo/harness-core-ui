@@ -6985,9 +6985,9 @@ export interface StringsMap {
   'cv.healthSource.connectors.AppDynamics.validation.missingServiceInstanceMetricPath': string
   'cv.healthSource.connectors.AppDynamics.validation.missingTierInFullPath': string
   'cv.healthSource.connectors.AppDynamics.validation.tier': string
-  'cv.healthSource.connectors.CloudWatch.addNewGroupTitle': string
   'cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder': string
   'cv.healthSource.connectors.CloudWatch.fetchDataButtonText': string
+  'cv.healthSource.connectors.CloudWatch.groupModalTitle': string
   'cv.healthSource.connectors.CloudWatch.validationMessage.customMetrics': string
   'cv.healthSource.connectors.CloudWatch.validationMessage.expression': string
   'cv.healthSource.connectors.CloudWatch.validationMessage.submitQuery': string
