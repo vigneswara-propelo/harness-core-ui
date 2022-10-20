@@ -47,6 +47,7 @@ export interface StringsMap {
   'common.advanced': string
   'common.agent': string
   'common.agents': string
+  'common.all': string
   'common.allClusters': string
   'common.allEnvironments': string
   'common.allErrors': string
@@ -822,6 +823,7 @@ export interface StringsMap {
   'common.smtp.validationBody': string
   'common.smtp.validationSubject': string
   'common.smtp.validationTo': string
+  'common.sortedByCreatedTime': string
   'common.sourceBranch': string
   'common.sourceBranchPlaceholder': string
   'common.specified': string
@@ -1129,7 +1131,6 @@ export interface StringsMap {
   'rbac.planEnforcement.ff.teamEnterprisePlan.approachingLimit': string
   'rbac.planEnforcement.ff.teamEnterprisePlan.upgradeRequired': string
   'rbac.project': string
-  'rbac.resourceGroup.all': string
   'rbac.resourceGroup.builtInResourceGroup': string
   'rbac.resourceGroup.color': string
   'rbac.resourceGroup.confirmDelete': string

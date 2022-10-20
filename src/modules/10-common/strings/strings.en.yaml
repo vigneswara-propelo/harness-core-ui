@@ -1081,3 +1081,5 @@ schedulePanel:
   cronExpression: 'Cron Expression'
   cronExpressionRequired: 'Cron Expression required'
 allClusters: 'All Clusters'
+all: 'All {{name}}'
+sortedByCreatedTime: List sorted by created time
