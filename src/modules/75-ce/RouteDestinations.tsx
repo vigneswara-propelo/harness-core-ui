@@ -40,6 +40,7 @@ import { String as LocaleString } from 'framework/strings'
 import RecommendationFilters from '@ce/components/RecommendationFilters'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import CEHomePage from './pages/home/CEHomePage'
 import CECODashboardPage from './pages/co-dashboard/CECODashboardPage'
 import CECOCreateGatewayPage from './pages/co-create-gateway/CECOCreateGatewayPage'
@@ -500,6 +501,24 @@ const CENonMFERoutes = (
     <RouteWithLayout
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CESideNavProps}
+      path={routes.toCECOCreateGateway({ ...accountPathProps, ...projectPathProps })}
+      exact
+      pageName={PAGE_NAME.CECOCreateGatewayPage}
+    >
+      <CECOCreateGatewayPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCECORules({ ...accountPathProps, params: '' })}
+      exact
+      pageName={PAGE_NAME.CECODashboardPage}
+    >
+      <CECODashboardPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
       path={routes.toCECORuleDetails({ ...accountPathProps, id: ':ruleId' })}
       exact
       pageName={PAGE_NAME.CECORuleDetailsPage}
@@ -693,7 +712,9 @@ const CERoutes: React.FC = () => {
           clusterName: ':clusterName',
           nodeId: ':nodeId'
         }),
-        routes.toCEDashboards({ ...accountPathProps })
+        routes.toCEDashboards({ ...accountPathProps }),
+        routes.toCECORules({ ...accountPathProps, params: '' }),
+        routes.toCECOCreateGateway({ ...accountPathProps, ...projectPathProps })
       ]
     : []
 
@@ -722,25 +743,6 @@ const CERoutes: React.FC = () => {
 
         {!enableMicroFrontend && CENonMFERoutes.props.children}
 
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCECORules({ ...accountPathProps, params: '' })}
-          exact
-          pageName={PAGE_NAME.CECODashboardPage}
-        >
-          <CECODashboardPage />
-        </RouteWithLayout>
-
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCECOCreateGateway({ ...accountPathProps, ...projectPathProps })}
-          exact
-          pageName={PAGE_NAME.CECOCreateGatewayPage}
-        >
-          <CECOCreateGatewayPage />
-        </RouteWithLayout>
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CESideNavProps}
@@ -808,7 +810,8 @@ const CERoutes: React.FC = () => {
                 RecommendationFilters,
                 AnomaliesFilter,
                 ConnectorReferenceField,
-                GatewayListFilters
+                GatewayListFilters,
+                FeatureWarningBanner
               }}
               ChildApp={CcmMicroFrontendPath}
             />

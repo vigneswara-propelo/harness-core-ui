@@ -35,6 +35,7 @@ import type {
   UseCreateConnectorModalProps
 } from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import type { LevelUpBannerProps } from '@common/components/FeatureWarning/LevelUpBanner'
+import type { CheckFeatureReturn, FeatureProps } from 'framework/featureStore/featureStoreUtil'
 
 export interface Scope {
   accountId?: string
@@ -62,6 +63,7 @@ export interface Hooks {
   useRBACError?: () => RbacErrorReturn
   usePermission?: (permissionsRequest?: PermissionsRequest, deps?: Array<any>) => Array<boolean>
   useCreateConnectorModal?: (props: UseCreateConnectorModalProps) => UseCreateConnectorModalReturn
+  useFeature?: (props: FeatureProps) => CheckFeatureReturn
 }
 
 /**
