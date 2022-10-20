@@ -16,10 +16,10 @@ import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import type { FreezeObj, WindowPathProps } from '@freeze-windows/types'
-import { DefaultFreezeId } from './FreezeWindowContext/FreezeWindowReducer'
-import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
-import { getInitialValues } from './FreezeWindowStudioUtil'
-import css from './FreezeWindowStudio.module.scss'
+import { DefaultFreezeId } from '@freeze-windows/context/FreezeWindowReducer'
+import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
+import { getInitialValues } from '@freeze-windows/utils/FreezeWindowStudioUtil'
+import css from '../FreezeWindowStudioConfigSection/FreezeWindowStudioConfigSection.module.scss'
 
 interface FreezeStudioOverviewSectionProps {
   isReadOnly: boolean
@@ -79,7 +79,6 @@ export const FreezeStudioOverviewSection = (
                   }}
                   descriptionProps={{ disabled: isReadOnly }}
                   tagsProps={{ disabled: isReadOnly }}
-                  // className={css.nameIdDescriptionTags}
                 />
               </Card>
               <Container margin={{ top: 'xxlarge' }}>

@@ -34,7 +34,7 @@ import { useConfirmFreezeDelete } from '@freeze-windows/hooks/useConfirmFreezeDe
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { NewFreezeWindowButton } from '@freeze-windows/components/NewFreezeWindowButton/NewFreezeWindowButton'
 import { useComputedFreezeStatusMap } from '@freeze-windows/hooks/useComputedFreezeStatusMap'
-import freezeWindowsIllustration from '../../images/freeze-windows-illustration.svg'
+import freezeWindowsIllustration from '@freeze-windows/images/freeze-windows-illustration.svg'
 import css from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader.module.scss'
 
 function _FreezeWindowsPage(): React.ReactElement {

@@ -12,20 +12,15 @@ import { NavigationCheck } from '@common/components'
 import routes from '@common/RouteDefinitions'
 import { useStrings, StringKeys } from 'framework/strings'
 import type { Error } from 'services/cd-ng'
-import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
-import {
-  isValidYaml,
-  getContentAndTitleStringKeys,
-  PATH_PARAMS
-} from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudioUtil'
-import { useFreezeStudioData } from '@freeze-windows/components/FreezeWindowStudio/useFreezeStudioData'
+import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
+import { isValidYaml, getContentAndTitleStringKeys, PATH_PARAMS } from '@freeze-windows/utils/FreezeWindowStudioUtil'
+import { useFreezeStudioData } from '@freeze-windows/hooks/useFreezeStudioData'
 import { RightBar } from '@freeze-windows/components/RightBar/RightBar'
-import { FreezeWindowStudioHeader } from './FreezeWindowStudioHeader'
-import { FreezeWindowStudioSubHeader } from './FreezeWindowStudioSubHeader'
-import { FreezeWindowStudioBody } from './FreezeWindowStudioBody'
-import css from './FreezeWindowStudio.module.scss'
+import { FreezeWindowStudioHeader } from '@freeze-windows/components/FreezeWindowStudioHeader/FreezeWindowStudioHeader'
+import { FreezeWindowStudioSubHeader } from '@freeze-windows/components/FreezeWindowStudioSubHeader/FreezeWindowStudioSubHeader'
+import { FreezeWindowStudioBody } from '@freeze-windows/components/FreezeWindowStudioBody/FreezeWindowStudioBody'
 
-export const FreezeWindowStudio = () => {
+export const FreezeWindowStudioPage = () => {
   const {
     view,
     setView,
@@ -100,7 +95,7 @@ export const FreezeWindowStudio = () => {
         error={(freezeObjError?.data as Error)?.message || freezeObjError?.message}
         retryOnError={refetchFreezeObj}
       >
-        <div className={css.marginRight}>
+        <div style={{ marginRight: 'var(--spacing-11)' }}>
           <FreezeWindowStudioHeader />
           <FreezeWindowStudioSubHeader onViewChange={onViewChange} />
           {loadingFreezeObj || isUpdatingFreeze ? null : <FreezeWindowStudioBody resources={resources} />}

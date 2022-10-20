@@ -9,31 +9,13 @@
 declare const styles: {
   readonly addNewRuleButton: string
   readonly badge: string
-  readonly buttonsWrapper: string
-  readonly canvasContainer: string
-  readonly canvasWrapper: string
   readonly configFormContainer: string
-  readonly createNewFreezeForm: string
   readonly crossButton: string
-  readonly discardBtn: string
-  readonly freezeName: string
-  readonly freezeNameContainer: string
-  readonly freezeToggler: string
-  readonly headerSaveBtnWrapper: string
   readonly isEditView: string
-  readonly marginRight: string
   readonly marginSmaller: string
-  readonly readonlyAccessTag: string
-  readonly readonlyAccessText: string
   readonly sectionCard: string
   readonly separator: string
-  readonly stepTabs: string
-  readonly subHeader: string
-  readonly tabIcon: string
   readonly tickButton: string
-  readonly unsavedChanges: string
   readonly viewRowNode: string
-  readonly visualYamlToggle: string
-  readonly yamlBuilder: string
 }
 export default styles

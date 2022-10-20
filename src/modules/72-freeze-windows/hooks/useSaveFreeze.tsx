@@ -13,9 +13,9 @@ import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useQueryParams } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
-import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
+import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import { DefaultFreezeId } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowReducer'
+import { DefaultFreezeId } from '@freeze-windows/context/FreezeWindowReducer'
 import type { WindowPathProps } from '@freeze-windows/types'
 
 export const useSaveFreeze = () => {

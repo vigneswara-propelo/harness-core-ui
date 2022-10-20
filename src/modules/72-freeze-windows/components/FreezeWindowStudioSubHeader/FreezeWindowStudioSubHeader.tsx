@@ -22,12 +22,12 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
-import { DefaultFreezeId } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowReducer'
+import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
+import { DefaultFreezeId } from '@freeze-windows/context/FreezeWindowReducer'
 import type { WindowPathProps } from '@freeze-windows/types'
 import { FreezeWindowStudioSubHeaderRightView } from './FreezeWindowStudioSubHeaderRightView'
 import { CreateNewFreezeWindow } from './CreateNewFreezeWindow'
-import css from './FreezeWindowStudio.module.scss'
+import css from './FreezeWindowStudioSubHeader.module.scss'
 
 interface FreezeWindowStudioSubHeaderProps {
   onViewChange(newView: SelectedView): boolean

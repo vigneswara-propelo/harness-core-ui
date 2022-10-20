@@ -12,11 +12,11 @@ import { Icon, Tab, Tabs } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { ResourcesInterface, FreezeObj, ValidationErrorType } from '@freeze-windows/types'
-import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
-import { FreezeStudioOverviewSectionWithRef } from './FreezeStudioOverviewSection'
-import { FreezeStudioConfigSectionWithRef } from './FreezeStudioConfigSection'
-import { FreezeWindowScheduleSection } from './FreezeWindowScheduleSection'
-import css from './FreezeWindowStudio.module.scss'
+import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
+import { FreezeStudioOverviewSectionWithRef } from '../FreezeWindowStudioOverview/FreezeStudioOverviewSection'
+import { FreezeStudioConfigSectionWithRef } from '../FreezeWindowStudioConfigSection/FreezeStudioConfigSection'
+import { FreezeWindowScheduleSection } from '../FreezeWindowScheduleSection/FreezeWindowScheduleSection'
+import css from './FreezeWindowStudioBody.module.scss'
 
 enum FreezeWindowTabs {
   OVERVIEW = 'OVERVIEW',

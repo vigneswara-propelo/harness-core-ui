@@ -13,8 +13,8 @@ import { useStrings } from 'framework/strings'
 import { useGetOrganizationAggregateDTOList, useGetProjectList, useGetServiceList } from 'services/cd-ng'
 import { FreezeWindowLevels, ResourcesInterface, ProjctsByOrgId } from '@freeze-windows/types'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
-import { allOrgsObj, allProjectsObj, allServicesObj } from './FreezeWindowStudioUtil'
+import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
+import { allOrgsObj, allProjectsObj, allServicesObj } from '@freeze-windows/utils/FreezeWindowStudioUtil'
 
 export const useFreezeStudioData = (): ResourcesInterface => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()

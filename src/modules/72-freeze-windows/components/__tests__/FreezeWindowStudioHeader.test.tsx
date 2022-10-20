@@ -8,7 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { FreezeWindowStudioHeader } from '../FreezeWindowStudioHeader'
+import { FreezeWindowStudioHeader } from '@freeze-windows/components/FreezeWindowStudioHeader/FreezeWindowStudioHeader'
 
 export const accountId = 'accountId'
 export const projectIdentifier = 'project1'

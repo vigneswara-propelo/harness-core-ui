@@ -19,8 +19,8 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetFreezeSchema } from 'services/cd-ng'
-import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
-import css from './FreezeWindowStudio.module.scss'
+import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
+import css from './FreezeWindowStudioBody.module.scss'
 
 const defaultFileName = 'FreezeWindow.yaml'
 export const POLL_INTERVAL = 1 * 1000

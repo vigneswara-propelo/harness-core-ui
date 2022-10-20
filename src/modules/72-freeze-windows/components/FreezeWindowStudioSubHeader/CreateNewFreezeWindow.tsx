@@ -13,10 +13,10 @@ import { Button, ButtonVariation, Container, Formik, FormikForm, Layout } from '
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
-import { getInitialValues } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudioUtil'
+import { getInitialValues } from '@freeze-windows/utils/FreezeWindowStudioUtil'
 import type { WindowPathProps } from '@freeze-windows/types'
-import { DefaultFreezeId } from './FreezeWindowContext/FreezeWindowReducer'
-import css from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudio.module.scss'
+import { DefaultFreezeId } from '@freeze-windows/context/FreezeWindowReducer'
+import css from './FreezeWindowStudioSubHeader.module.scss'
 
 interface CreateNewFreezeWindowProps {
   onClose: (identifier?: string) => void

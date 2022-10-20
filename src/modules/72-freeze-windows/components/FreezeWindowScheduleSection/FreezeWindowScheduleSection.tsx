@@ -15,10 +15,10 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { WindowPathProps } from '@freeze-windows/types'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { ScheduleFreezeForm } from '../ScheduleFreezeForm/ScheduleFreezeForm'
-import { useFreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
-import { useSaveFreeze } from './useSaveFreeze'
-import css from './FreezeWindowStudio.module.scss'
+import { ScheduleFreezeForm } from '@freeze-windows/components/ScheduleFreezeForm/ScheduleFreezeForm'
+import { useFreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
+import { useSaveFreeze } from '@freeze-windows/hooks/useSaveFreeze'
+import css from '../FreezeWindowStudioConfigSection/FreezeWindowStudioConfigSection.module.scss'
 
 interface FreezeStudioOverviewSectionProps {
   isReadOnly: boolean

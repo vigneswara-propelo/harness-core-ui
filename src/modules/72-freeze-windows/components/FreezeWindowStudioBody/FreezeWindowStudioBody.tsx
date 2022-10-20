@@ -7,11 +7,11 @@
 
 import React from 'react'
 import { Container, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
-import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
+import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import type { ResourcesInterface } from '@freeze-windows/types'
 import { FreezeWindowStudioVisualView } from './FreezeWindowStudioVisualView'
 import { FreezeWindowStudioYAMLView } from './FreezeWindowStudioYAMLView'
-import css from './FreezeWindowStudio.module.scss'
+import css from './FreezeWindowStudioBody.module.scss'
 
 interface FreezeWindowStudioBodyProps {
   error?: any

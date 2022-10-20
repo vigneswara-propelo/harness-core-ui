@@ -14,10 +14,10 @@ import type { WindowPathProps } from '@freeze-windows/types'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { DefaultFreezeId } from './FreezeWindowContext/FreezeWindowReducer'
-import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
-import { useSaveFreeze } from './useSaveFreeze'
-import css from './FreezeWindowStudio.module.scss'
+import { DefaultFreezeId } from '@freeze-windows/context/FreezeWindowReducer'
+import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
+import { useSaveFreeze } from '@freeze-windows/hooks/useSaveFreeze'
+import css from './FreezeWindowStudioSubHeader.module.scss'
 
 export const FreezeWindowStudioSubHeaderRightView = () => {
   const { getString } = useStrings()
