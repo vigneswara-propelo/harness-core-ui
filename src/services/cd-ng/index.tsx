@@ -14376,6 +14376,8 @@ export type SourceCodeManagerDTORequestBody = SourceCodeManagerDTO
 
 export type StartTrialDTORequestBody = StartTrialDTO
 
+export type StrategyParametersRequestBody = StrategyParameters
+
 export type SubscriptionDTORequestBody = SubscriptionDTO
 
 export type TokenDTORequestBody = TokenDTO
@@ -14388,11 +14390,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
+export type DeleteManyFreezesBodyRequestBody = string[]
+
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
-
-export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -32452,7 +32454,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -32466,7 +32468,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -32481,7 +32483,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -32495,7 +32497,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -32507,7 +32509,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -32516,7 +32518,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -32887,7 +32889,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -32901,7 +32903,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -32916,7 +32918,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -32930,7 +32932,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -32942,7 +32944,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -32951,7 +32953,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -40550,6 +40552,73 @@ export const getExecutionStrategyListPromise = (
     signal
   )
 
+export interface PostDefaultTemplatesQueryParams {
+  accountIdentifier: string
+  serviceDefinitionType:
+    | 'Kubernetes'
+    | 'NativeHelm'
+    | 'Ssh'
+    | 'WinRm'
+    | 'ServerlessAwsLambda'
+    | 'AzureWebApp'
+    | 'CustomDeployment'
+    | 'ECS'
+  strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
+}
+
+export type PostDefaultTemplatesProps = Omit<
+  MutateProps<ResponseString, Failure | Error, PostDefaultTemplatesQueryParams, StrategyParametersRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Generates default templates for the account if they are not already created
+ */
+export const PostDefaultTemplates = (props: PostDefaultTemplatesProps) => (
+  <Mutate<ResponseString, Failure | Error, PostDefaultTemplatesQueryParams, StrategyParametersRequestBody, void>
+    verb="POST"
+    path={`/pipelines/configuration/strategies/generate-default-templates`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UsePostDefaultTemplatesProps = Omit<
+  UseMutateProps<ResponseString, Failure | Error, PostDefaultTemplatesQueryParams, StrategyParametersRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Generates default templates for the account if they are not already created
+ */
+export const usePostDefaultTemplates = (props: UsePostDefaultTemplatesProps) =>
+  useMutate<ResponseString, Failure | Error, PostDefaultTemplatesQueryParams, StrategyParametersRequestBody, void>(
+    'POST',
+    `/pipelines/configuration/strategies/generate-default-templates`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Generates default templates for the account if they are not already created
+ */
+export const postDefaultTemplatesPromise = (
+  props: MutateUsingFetchProps<
+    ResponseString,
+    Failure | Error,
+    PostDefaultTemplatesQueryParams,
+    StrategyParametersRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseString,
+    Failure | Error,
+    PostDefaultTemplatesQueryParams,
+    StrategyParametersRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/pipelines/configuration/strategies/generate-default-templates`, props, signal)
+
 export interface GetProvisionerExecutionStrategyYamlQueryParams {
   provisionerType: 'TERRAFORM' | 'CLOUD_FORMATION' | 'AZURE_ARM' | 'SHELL_SCRIPT_PROVISIONER'
 }
@@ -40657,6 +40726,7 @@ export const getExecutionStrategyYamlPromise = (
   )
 
 export interface PostExecutionStrategyYamlQueryParams {
+  accountIdentifier: string
   serviceDefinitionType:
     | 'Kubernetes'
     | 'NativeHelm'
@@ -40671,7 +40741,13 @@ export interface PostExecutionStrategyYamlQueryParams {
 }
 
 export type PostExecutionStrategyYamlProps = Omit<
-  MutateProps<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>,
+  MutateProps<
+    ResponseString,
+    Failure | Error,
+    PostExecutionStrategyYamlQueryParams,
+    StrategyParametersRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -40679,7 +40755,7 @@ export type PostExecutionStrategyYamlProps = Omit<
  * Gets generated Yaml snippet based on strategy parameters
  */
 export const PostExecutionStrategyYaml = (props: PostExecutionStrategyYamlProps) => (
-  <Mutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>
+  <Mutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParametersRequestBody, void>
     verb="POST"
     path={`/pipelines/configuration/strategies/yaml-snippets`}
     base={getConfig('ng/api')}
@@ -40688,7 +40764,13 @@ export const PostExecutionStrategyYaml = (props: PostExecutionStrategyYamlProps)
 )
 
 export type UsePostExecutionStrategyYamlProps = Omit<
-  UseMutateProps<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>,
+  UseMutateProps<
+    ResponseString,
+    Failure | Error,
+    PostExecutionStrategyYamlQueryParams,
+    StrategyParametersRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -40696,7 +40778,7 @@ export type UsePostExecutionStrategyYamlProps = Omit<
  * Gets generated Yaml snippet based on strategy parameters
  */
 export const usePostExecutionStrategyYaml = (props: UsePostExecutionStrategyYamlProps) =>
-  useMutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>(
+  useMutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParametersRequestBody, void>(
     'POST',
     `/pipelines/configuration/strategies/yaml-snippets`,
     { base: getConfig('ng/api'), ...props }
@@ -40710,18 +40792,18 @@ export const postExecutionStrategyYamlPromise = (
     ResponseString,
     Failure | Error,
     PostExecutionStrategyYamlQueryParams,
-    StrategyParameters,
+    StrategyParametersRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>(
-    'POST',
-    getConfig('ng/api'),
-    `/pipelines/configuration/strategies/yaml-snippets`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseString,
+    Failure | Error,
+    PostExecutionStrategyYamlQueryParams,
+    StrategyParametersRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/pipelines/configuration/strategies/yaml-snippets`, props, signal)
 
 export interface GetProjectListQueryParams {
   accountIdentifier: string
