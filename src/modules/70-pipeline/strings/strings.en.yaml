@@ -732,7 +732,7 @@ testsReports:
   testCasesExecution: Tests Execution
   testExecutions: Test Executions
   noFailedTestsFound: No failed tests found
-  showOnlyFailedTests: Show only failed tests
+  showAllTests: Show all tests
   hangTight: Hang tight! Report is being generated...
   noTestResults: No test results
   testsWillAppear: Tests will appear here if they were reported or uploaded to Harness.

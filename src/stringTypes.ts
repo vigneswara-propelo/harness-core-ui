@@ -4098,7 +4098,7 @@ export interface StringsMap {
   'pipeline.testsReports.searchByTestName': string
   'pipeline.testsReports.selectedTestMethods': string
   'pipeline.testsReports.selectionBreakdown': string
-  'pipeline.testsReports.showOnlyFailedTests': string
+  'pipeline.testsReports.showAllTests': string
   'pipeline.testsReports.skipped': string
   'pipeline.testsReports.skippedWithColon': string
   'pipeline.testsReports.sortBy': string
