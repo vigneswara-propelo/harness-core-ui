@@ -36,7 +36,6 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
   const {
     OPA_PIPELINE_GOVERNANCE,
     CVNG_TEMPLATE_MONITORED_SERVICE,
-    NG_FILE_STORE,
     NG_SETTINGS,
     USE_OLD_GIT_SYNC,
     CD_ONBOARDING_ENABLED,
@@ -105,9 +104,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
             to={routes.toFreezeWindows({ ...params, module: params.module || 'cd' })}
           />
         ) : null}
-        {isCIorCD && NG_FILE_STORE && (
-          <SidebarLink label={getString('resourcePage.fileStore')} to={routes.toFileStore(params)} />
-        )}
+        {isCIorCD && <SidebarLink label={getString('resourcePage.fileStore')} to={routes.toFileStore(params)} />}
         {enabledHostedBuildsForFreeUsers && !showGetStartedTabInMainMenu && module === 'ci' && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
         )}
