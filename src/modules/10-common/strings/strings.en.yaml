@@ -99,6 +99,8 @@ selectTimeFrame: Select Timeframe
 lastModified: 'Last Modified'
 servicePrefix: 'Service: {{ name }}'
 serviceInputs: Service inputs
+switchToBarChart: Switch to bar chart
+switchToLineChart: Switch to line chart
 accountSetting:
   connector:
     loading: 'Loading settings...'

@@ -887,7 +887,12 @@ export function PipelineCanvas({
                         />
                       )}
                       {isYaml || isReadonly ? null : (
-                        <Button variation={ButtonVariation.ICON} icon="Edit" onClick={showModal} />
+                        <Button
+                          variation={ButtonVariation.ICON}
+                          icon="Edit"
+                          onClick={showModal}
+                          aria-label={getString('editPipeline')}
+                        />
                       )}
                     </Layout.Horizontal>
                   </div>

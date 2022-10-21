@@ -94,12 +94,14 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
             disabled={readonly}
             onClick={() => onEditClick({ service, serviceInputs })}
             minimal
+            aria-label={getString('editService')}
           />
           <Button
             icon="main-trash"
             data-testid={`delete-service-${service.identifier}`}
             disabled={readonly}
             onClick={() => onDeleteClick({ service, serviceInputs })}
+            aria-label={getString('common.deleteService')}
             minimal
           />
         </Layout.Horizontal>

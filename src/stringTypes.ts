@@ -891,6 +891,8 @@ export interface StringsMap {
   'common.switchAccount': string
   'common.switchAccountError': string
   'common.switchAccountSearch': string
+  'common.switchToBarChart': string
+  'common.switchToLineChart': string
   'common.sync': string
   'common.tagName': string
   'common.targetBranch': string
