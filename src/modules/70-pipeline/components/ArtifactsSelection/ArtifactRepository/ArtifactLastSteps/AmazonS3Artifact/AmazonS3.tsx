@@ -194,25 +194,30 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     return primarySchema
   }, [context, primarySchema, sidecarSchema])
 
-  const getInitialValues = (): AmazonS3InitialValuesType => {
+  const getInitialValues = React.useCallback((): AmazonS3InitialValuesType => {
     // Initia specValues
     const specValues = get(initialValues, 'spec', null)
+
     // if specValues is nil or selected type is not matching with initialValues.type then assume NEW
     if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
       return defaultArtifactInitialValues(defaultTo(selectedArtifact, 'AmazonS3'))
     }
+
     // Depending upon if filePath is present or not in specValues, decide typeType
-    merge(specValues, { tagType: specValues.filePath ? TagTypes.Value : TagTypes.Regex })
-    // If sidecar then merge identifier value to specValues
-    if (isIdentifierAllowed && initialValues?.identifier) {
-      merge(specValues, { identifier: initialValues?.identifier })
+    const artifactValues = {
+      ...specValues,
+      tagType: specValues.filePath ? TagTypes.Value : TagTypes.Regex
     }
-    return specValues
-  }
+
+    if (isIdentifierAllowed && initialValues?.identifier) {
+      merge(artifactValues, { identifier: initialValues?.identifier })
+    }
+    return artifactValues
+  }, [initialValues, selectedArtifact, isIdentifierAllowed])
 
   const submitFormData = (formData: AmazonS3InitialValuesType & { connectorId?: string }): void => {
     // Initial data
-    const artifactObj = {
+    let artifactObj = {
       spec: {
         connectorRef: formData.connectorId,
         bucketName: formData.bucketName,
@@ -223,8 +228,14 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     // Merge filePath or filePathRegex field value with initial data depending upon tagType selection
     const filePathData =
       formData?.tagType === TagTypes.Value ? { filePath: formData.filePath } : { filePathRegex: formData.filePathRegex }
-    merge(artifactObj.spec, filePathData)
-    // If sidecar artifact then merge identifier value with initial value
+
+    artifactObj = {
+      spec: {
+        ...artifactObj.spec,
+        ...filePathData
+      }
+    }
+
     if (isIdentifierAllowed) {
       merge(artifactObj, { identifier: formData?.identifier })
     }
