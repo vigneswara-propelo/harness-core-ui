@@ -5,6 +5,11 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
   <div
     class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
   >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-title"
+    >
+      cd.steps.pdcStep.title
+    </p>
     <div
       class="specifyHostsRadioGroup"
     >
@@ -45,7 +50,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
       >
         <div>
           <div
-            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main formRow StyledProps--margin-bottom-large"
+            class="Layout--vertical StyledProps--main formRow"
           >
             <div
               class="bp3-form-group hostsTextArea inputWidth"
@@ -221,7 +226,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
             </div>
             <button
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-secondary Button--size Button--small"
-              style="margin-top: 0px; width: 140px;"
+              style="width: 140px;"
               type="button"
             >
               <span
@@ -232,22 +237,19 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
             </button>
           </div>
           <div
-            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
-          >
-            <hr />
-          </div>
-          <div
             class="Layout--vertical StyledProps--main simultaneousDeployment"
           >
             <div
               class="bp3-form-group"
               data-id="allowSimultaneousDeployments-2"
+              style="margin: 0px;"
             >
               <div
                 class="bp3-form-content"
               >
                 <label
                   class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                  style="margin: 0px;"
                 >
                   <input
                     checked=""
