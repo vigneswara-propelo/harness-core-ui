@@ -46,7 +46,7 @@ function _FreezeWindowsPage(): React.ReactElement {
   const { replaceQueryParams, updateQueryParams } = useUpdateQueryParams<Partial<GetFreezeListQueryParams>>()
   const queryParams = useQueryParams<FreezeListUrlQueryParams>(getQueryParamOptions())
   const { searchTerm, page, size, sort, freezeStatus, startTime, endTime } = queryParams
-  const { selectedItems, clearSelectedItems } = useFreezeWindowListContext()
+  const { selectedItems, toggleAllSelect } = useFreezeWindowListContext()
 
   const resetFilter = () => replaceQueryParams({})
   useDocumentTitle([getString('common.freezeWindows')])
@@ -96,7 +96,7 @@ function _FreezeWindowsPage(): React.ReactElement {
     } catch (err: any) {
       showWarning(defaultTo(getRBACErrorMessage(err), getString('freezeWindows.freezeWindowsPage.deleteFailure')))
     }
-    clearSelectedItems()
+    toggleAllSelect(false)
     updateQueryParams({ page: DEFAULT_PAGE_INDEX }) // scenario where the page number is invalid with elements in the page being deleted
     refetch()
   }
@@ -112,7 +112,7 @@ function _FreezeWindowsPage(): React.ReactElement {
     } catch (err: any) {
       showWarning(defaultTo(getRBACErrorMessage(err), getString('freezeWindows.freezeWindowsPage.updateStatusFailure')))
     }
-    clearSelectedItems()
+    toggleAllSelect(false)
     refetch()
   }
 

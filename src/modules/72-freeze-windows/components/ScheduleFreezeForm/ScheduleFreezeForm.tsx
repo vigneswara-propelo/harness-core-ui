@@ -46,13 +46,12 @@ const validationSchema = Yup.object().shape({
     is: 'date',
     then: Yup.string()
       .required('End Time is required')
-      .test(
-        'isMinimum30MinutesWindow',
-        'Start Time and End time should be at least 30 minutes apart',
-        function (value) {
-          return moment(value).diff(this.parent.startTime, 'minutes') >= 30
-        }
-      )
+      .test('isAfterStartTime', 'End time can not be before the start time', function (value) {
+        return moment(value).diff(this.parent.startTime, 'minutes') >= 0
+      })
+      .test('isMinimum30MinutesWindow', 'End time need to be at least "30 minutes" after start time', function (value) {
+        return moment(value).diff(this.parent.startTime, 'minutes') >= 30
+      })
   }),
   recurrence: Yup.object().shape({
     type: Yup.string(),
@@ -76,14 +75,14 @@ const processInitialvalues = (freezeWindow: FreezeWindow): FreezeWindowFormData 
   const processedValues = {
     ...freezeWindow,
     timeZone: freezeWindow?.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
-    startTime: freezeWindow?.startTime ?? moment().format(DATE_PARSE_FORMAT),
+    startTime: freezeWindow?.startTime ?? moment().add(1, 'hour').format(DATE_PARSE_FORMAT),
     endTime: freezeWindow?.endTime ?? moment(freezeWindow?.startTime).add(30, 'minutes').format(DATE_PARSE_FORMAT),
     duration: freezeWindow?.duration ?? '30m',
     endTimeMode: freezeWindow?.endTime ? 'date' : 'duration',
     recurrence: {
       ...freezeWindow.recurrence,
       spec: {
-        ...freezeWindow.recurrence?.spec,
+        until: freezeWindow?.recurrence?.spec?.until ?? moment().endOf('year').format(DATE_PARSE_FORMAT),
         recurrenceEndMode: freezeWindow?.recurrence?.type && freezeWindow?.recurrence?.spec?.until ? 'date' : 'never'
       }
     }
