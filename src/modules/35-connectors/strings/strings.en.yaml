@@ -393,6 +393,7 @@ cdng:
   baseline: Baseline
   trafficsplit: Traffic Split (OPTIONAL)
   continousVerificationStep: Verify Step Details
+  failOnNoAnalysis: Fail On No Analysis
   displayName: Display Name
   createCVJob: Please create a verification job
   loadingJobs: Loading verification jobs…

@@ -1958,6 +1958,7 @@ export interface StringsMap {
   'connectors.cdng.defineVerificationJob': string
   'connectors.cdng.displayName': string
   'connectors.cdng.error': string
+  'connectors.cdng.failOnNoAnalysis': string
   'connectors.cdng.healthSources.healthSourceDef': string
   'connectors.cdng.healthSources.label': string
   'connectors.cdng.healthSources.noHealthSourcesDefined': string
