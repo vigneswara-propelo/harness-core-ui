@@ -111,7 +111,7 @@ describe('Configure Datadog health source', () => {
     cy.mapMetricToServices(true)
     cy.contains('span', 'Fetch records').click()
     // Creating the monitored service with Datadog health source.
-    cy.findByRole('button', { name: /Submit/i }).click()
+    cy.findByRole('button', { name: /Submit/i }).click({ force: true })
   })
 
   it('Add new Datadog logs health source for a monitored service ', () => {
