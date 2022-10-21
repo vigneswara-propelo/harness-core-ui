@@ -1498,6 +1498,21 @@ const routes = {
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/CodeErrors`
   ),
 
+  toCVCodeErrorsAgents: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/codeerrors/agents`
+  ),
+
+  toCVCodeErrorsAgentsTokens: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/codeerrors/agents-tokens`
+  ),
+
+  toCVCodeErrorsAgentsControl: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/codeerrors`
+  ),
+
   toCVMonitoringServicesInputSets: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservicesinputset`
