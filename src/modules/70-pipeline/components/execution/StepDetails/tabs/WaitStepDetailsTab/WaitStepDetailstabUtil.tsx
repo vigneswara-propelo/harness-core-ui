@@ -12,10 +12,10 @@ export const msToTime = (ms: number | undefined) => {
   const minValue = minutes - hours * 60
   const secValue = seconds - minutes * 60
   if (seconds < 60) {
-    return seconds + secString
+    return seconds + ' ' + secString
   } else if (minutes < 60) {
-    return minutes + minString + secValue + secString
+    return minutes + ' ' + minString + ' ' + secValue + ' ' + secString
   } else if (hours < 24) {
-    return hours + hrsString + minValue + minString
-  } else return days + daysString + hrValue + hrsString
+    return hours + ' ' + hrsString + ' ' + minValue + ' ' + minString
+  } else return days + ' ' + daysString + ' ' + hrValue + ' ' + hrsString
 }
