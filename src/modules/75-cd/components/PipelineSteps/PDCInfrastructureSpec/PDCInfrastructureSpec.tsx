@@ -892,7 +892,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
       isRequired &&
       getMultiTypeFromValue((template?.hostFilter?.spec as HostNamesFilter)?.value) === MultiTypeInputType.RUNTIME
     ) {
-      errors.hostFilters = getString?.('common.validation.fieldIsRequired', { name: getString('cd.hostFilters') })
+      set(errors, 'hostFilter.spec.value', getString?.('cd.validation.specifyFilter'))
     }
     if (
       data.hostFilter?.type === HostScope.HOST_ATTRIBUTES &&
@@ -901,9 +901,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
       getMultiTypeFromValue((template?.hostFilter?.spec as HostAttributesFilter)?.value as any) ===
         MultiTypeInputType.RUNTIME
     ) {
-      errors.attributeFilters = getString?.('common.validation.fieldIsRequired', {
-        name: getString('cd.attributeFilters')
-      })
+      set(errors, 'hostFilter.spec.value', getString?.('cd.validation.specifyFilter'))
     }
     return errors as any
   }
