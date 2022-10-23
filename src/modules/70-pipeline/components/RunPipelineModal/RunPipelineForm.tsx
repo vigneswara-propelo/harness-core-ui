@@ -893,7 +893,7 @@ function RunPipelineFormBasic({
                             blockedStagesSelected ||
                             (getErrorsList(formErrors).errorCount > 0 && runClicked) ||
                             loadingShouldDisableDeployment ||
-                            shouldDisableDeploymentData?.data
+                            shouldDisableDeploymentData?.data?.shouldDisable
                           }
                           tooltip={
                             shouldDisableDeploymentData?.data ? (
