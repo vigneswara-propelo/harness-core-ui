@@ -468,17 +468,15 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
 
     const pipelineAPIResponses = await Promise.allSettled([pipelineByIdPromise, pipelineMetaDataPromise])
 
-    const getResponseFromPromise = (response: PromiseSettledResult<any>) => {
+    const [pipelineById, pipelineMetaData] = pipelineAPIResponses.map((response: PromiseSettledResult<any>) => {
       if (response?.status === 'fulfilled') {
         return response?.value
       } else {
-        // For aborted request reason comes with stack trace which we have to ignore else Abort error will be set as pipeline in IDB
-        return response?.reason?.stack ? undefined : response?.reason
+        // For aborted request, we have to ignore else Abort error will be set as pipeline in IDB
+        // Adding check for stack trace too to ignore other unexpected error
+        return response?.reason?.stack || response?.reason?.name === 'AbortError' ? undefined : response?.reason
       }
-    }
-
-    const pipelineById = getResponseFromPromise(pipelineAPIResponses[0])
-    const pipelineMetaData = getResponseFromPromise(pipelineAPIResponses[1])
+    })
 
     if (pipelineById?.templateError) {
       dispatch(PipelineContextActions.error({ templateError: pipelineById.templateError }))
@@ -503,7 +501,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       defaultTo(queryParams.orgIdentifier, ''),
       defaultTo(queryParams.projectIdentifier, ''),
       pipelineId,
-      defaultTo(gitDetails.repoIdentifier, getRepoIdentifierName(pipelineWithGitDetails.gitDetails)),
+      defaultTo(gitDetails.repoIdentifier, getRepoIdentifierName(pipelineWithGitDetails?.gitDetails)),
       defaultTo(gitDetails.branch, defaultTo(pipelineWithGitDetails?.gitDetails?.branch, ''))
     )
 
