@@ -725,6 +725,7 @@ function RunPipelineFormBasic({
         branch={branch}
         connectorRef={connectorRef}
         storeType={storeType}
+        onClose={onClose}
       />
     )
   } else if (inputSetsError?.message) {
