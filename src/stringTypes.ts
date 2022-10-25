@@ -4460,6 +4460,7 @@ export interface StringsMap {
   'cd.artifactPath': string
   'cd.artifactPaths': string
   'cd.artifactRepoTooltip': string
+  'cd.artifactSource.artifactRepositoryTypeIsRequired': string
   'cd.artifactVersion': string
   'cd.attributeFilters': string
   'cd.awsCli': string
