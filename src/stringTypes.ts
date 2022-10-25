@@ -4579,7 +4579,6 @@ export interface StringsMap {
   'cd.delegateFailText2': string
   'cd.delegateFailed': string
   'cd.delegateInstallCommand': string
-  'cd.delegateInstallation': string
   'cd.delegateSuccess': string
   'cd.delegateWarning': string
   'cd.deleteSourceBranch': string
@@ -4626,7 +4625,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.azureK8s': string
   'cd.getStartedWithCD.codeRepos': string
   'cd.getStartedWithCD.configureRepo': string
-  'cd.getStartedWithCD.delegateInfo': string
+  'cd.getStartedWithCD.delegateInfo1': string
+  'cd.getStartedWithCD.delegateInfo2': string
   'cd.getStartedWithCD.delegateRequiredWarning': string
   'cd.getStartedWithCD.directK8s': string
   'cd.getStartedWithCD.envName': string
@@ -4983,6 +4983,7 @@ export interface StringsMap {
   'cd.varFile': string
   'cd.varFileDetails': string
   'cd.welcomeMessage': string
+  'cd.welcomeToHarnessCD': string
   'cd.whatIsHarnessAdapter': string
   'cd.whatIsHarnessManagedGitOpsServer': string
   'cd.workloadRequired': string
