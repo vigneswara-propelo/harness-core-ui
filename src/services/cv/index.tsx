@@ -388,18 +388,6 @@ export type AwsManualConfigSpec = AwsCredentialSpec & {
   secretKeyRef: string
 }
 
-export type AwsPrometheusHealthSourceSpec = HealthSourceSpec & {
-  metricDefinitions?: PrometheusMetricDefinition[]
-  metricPacks?: TimeSeriesMetricPackDTO[]
-  region?: string
-  workspaceId?: string
-}
-
-export interface AwsPrometheusWorkspaceDTO {
-  name?: string
-  workspaceId?: string
-}
-
 export type AwsSMCredentialSpecAssumeIAM = AwsSecretManagerCredentialSpec & { [key: string]: any }
 
 export type AwsSMCredentialSpecAssumeSTS = AwsSecretManagerCredentialSpec & {
@@ -686,9 +674,8 @@ export interface CVConfig {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
   uuid?: string
   verificationTaskTags?: {
     [key: string]: string
@@ -965,7 +952,7 @@ export interface ConnectorInfoDTO {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
     | 'Spot'
@@ -1111,7 +1098,6 @@ export interface DataCollectionRequest {
     | 'CLOUDWATCH_METRIC_SAMPLE_DATA_REQUEST'
     | 'CLOUDWATCH_METRIC_DATA_REQUEST'
     | 'CLOUDWATCH_METRICS_METADATA_REQUEST'
-    | 'AWS_GENERIC_DATA_COLLECTION_REQUEST'
 }
 
 export interface DataCollectionTask {
@@ -1748,6 +1734,7 @@ export interface Error {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2162,6 +2149,7 @@ export interface Failure {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2457,7 +2445,7 @@ export interface HealthSource {
     | 'CustomHealthMetric'
     | 'CustomHealthLog'
     | 'SplunkMetric'
-    | 'ELKLog'
+    | 'ElasticSearch'
     | 'CloudWatchMetrics'
 }
 
@@ -2479,9 +2467,8 @@ export interface HealthSourceDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
 
@@ -2999,9 +2986,8 @@ export interface MetricPack {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
   identifier?: string
   lastUpdatedAt?: number
   metrics?: MetricDefinition[]
@@ -3028,9 +3014,8 @@ export interface MetricPackDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
   identifier?: string
   metrics?: MetricDefinitionDTO[]
   orgIdentifier?: string
@@ -3767,13 +3752,6 @@ export interface ResponseListAppDynamicsFileDefinition {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseListAwsPrometheusWorkspaceDTO {
-  correlationId?: string
-  data?: AwsPrometheusWorkspaceDTO[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponseListDatadogDashboardDetail {
   correlationId?: string
   data?: DatadogDashboardDetail[]
@@ -4214,6 +4192,7 @@ export interface ResponseMessage {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5450,7 +5429,7 @@ export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
 }
 
 export interface TaskInfo {
-  taskType?: 'LIVE_MONITORING' | 'DEPLOYMENT' | 'SLI'
+  taskType?: 'LIVE_MONITORING' | 'DEPLOYMENT' | 'SLI' | 'COMPOSITE_SLO'
 }
 
 export interface TemplateDTO {
@@ -5590,9 +5569,8 @@ export interface TimeSeriesMetricDataDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
   environmentIdentifier?: string
   groupName?: string
   metricDataList?: MetricData[]
@@ -5695,9 +5673,8 @@ export interface TimeSeriesThreshold {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   lastUpdatedAt?: number
   metricGroupName?: string
@@ -5738,9 +5715,8 @@ export interface TimeSeriesThresholdDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
   metricGroupName?: string
   metricName?: string
   metricPackIdentifier?: string
@@ -5799,9 +5775,8 @@ export interface TransactionMetricInfo {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
   nodeRiskCountDTO?: NodeRiskCountDTO
   nodes?: HostData[]
   transactionMetric?: TransactionMetric
@@ -5895,9 +5870,8 @@ export interface VerificationJob {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
   )[]
   defaultJob?: boolean
   duration?: Duration
@@ -8752,9 +8726,8 @@ export interface GetMetricPacksQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
 }
 
 export type GetMetricPacksProps = Omit<
@@ -8820,9 +8793,8 @@ export interface SaveMetricPacksQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
 }
 
 export type SaveMetricPacksProps = Omit<
@@ -11322,26 +11294,6 @@ export interface GetLabelNamesQueryParams {
   projectIdentifier: string
   connectorIdentifier: string
   tracingId: string
-  dataSourceType?:
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-  region?: string
-  workspaceId?: string
 }
 
 export type GetLabelNamesProps = Omit<
@@ -11395,26 +11347,6 @@ export interface GetLabeValuesQueryParams {
   connectorIdentifier: string
   labelName: string
   tracingId: string
-  dataSourceType?:
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-  region?: string
-  workspaceId?: string
 }
 
 export type GetLabeValuesProps = Omit<
@@ -11468,26 +11400,6 @@ export interface GetMetricNamesQueryParams {
   connectorIdentifier: string
   filter?: string
   tracingId: string
-  dataSourceType?:
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-  region?: string
-  workspaceId?: string
 }
 
 export type GetMetricNamesProps = Omit<
@@ -11541,26 +11453,6 @@ export interface GetSampleDataQueryParams {
   connectorIdentifier: string
   query: string
   tracingId: string
-  dataSourceType?:
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-  region?: string
-  workspaceId?: string
 }
 
 export type GetSampleDataProps = Omit<
