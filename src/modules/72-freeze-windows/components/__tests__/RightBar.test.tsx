@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import { DrawerTypes } from '@freeze-windows/context/FreezeWidowActions'
@@ -20,7 +21,8 @@ export const orgIdentifier = 'default'
 describe('Freeze Window Studio - Right Bar', () => {
   test('it should render in closed state', async () => {
     const updateFreeze = jest.fn()
-    render(
+    const setDrawerType = jest.fn()
+    const { getByRole } = render(
       <TestWrapper
         path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
         pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
@@ -29,7 +31,8 @@ describe('Freeze Window Studio - Right Bar', () => {
           value={{
             ...defaultContext,
             drawerType: '',
-            updateFreeze
+            updateFreeze,
+            setDrawerType
           }}
         >
           <RightBar />
@@ -38,6 +41,9 @@ describe('Freeze Window Studio - Right Bar', () => {
     )
 
     expect(document.body.getElementsByClassName('rightBar')[0]).toMatchSnapshot('closed state of Right Bar')
+
+    userEvent.click(getByRole('button', { name: 'notifications.pipelineName' }))
+    expect(setDrawerType).toHaveBeenCalledWith(DrawerTypes.Notification)
   })
   test('it should render in open state of Notifications', async () => {
     const updateFreeze = jest.fn()
