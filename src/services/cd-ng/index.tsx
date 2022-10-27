@@ -8335,6 +8335,11 @@ export interface Node {
   textContent?: string
 }
 
+export interface NexusRepositories {
+  repositoryId?: string
+  repositoryName?: string
+}
+
 export interface NodeErrorInfo {
   fqn?: string
   identifier?: string
@@ -10705,6 +10710,13 @@ export interface ResponseListServiceDefinitionType {
     | 'CustomDeployment'
     | 'ECS'
   )[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListNexusRepositories {
+  correlationId?: string
+  data?: NexusRepositories[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -21695,6 +21707,99 @@ export const getLastSuccessfulBuildForNexusArtifactPromise = (
     NexusRequestDTO,
     void
   >('POST', getConfig('ng/api'), `/artifacts/nexus/getLastSuccessfulBuild`, props, signal)
+
+export interface GetRepositoriesQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  repositoryFormat?: string
+  fqnPath?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  serviceId?: string
+}
+
+export type GetRepositoriesProps = Omit<
+  MutateProps<
+    ResponseListNexusRepositories,
+    Failure | Error,
+    GetRepositoriesQueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Repositories for nexus artifact server
+ */
+export const GetRepositories = (props: GetRepositoriesProps) => (
+  <Mutate<
+    ResponseListNexusRepositories,
+    Failure | Error,
+    GetRepositoriesQueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/nexus/getRepositories`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetRepositoriesProps = Omit<
+  UseMutateProps<
+    ResponseListNexusRepositories,
+    Failure | Error,
+    GetRepositoriesQueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Repositories for nexus artifact server
+ */
+export const useGetRepositories = (props: UseGetRepositoriesProps) =>
+  useMutate<
+    ResponseListNexusRepositories,
+    Failure | Error,
+    GetRepositoriesQueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >('POST', `/artifacts/nexus/getRepositories`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get Repositories for nexus artifact server
+ */
+export const getRepositoriesPromise = (
+  props: MutateUsingFetchProps<
+    ResponseListNexusRepositories,
+    Failure | Error,
+    GetRepositoriesQueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseListNexusRepositories,
+    Failure | Error,
+    GetRepositoriesQueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/nexus/getRepositories`, props, signal)
 
 export interface ValidateArtifactServerForNexusQueryParams {
   connectorRef?: string
