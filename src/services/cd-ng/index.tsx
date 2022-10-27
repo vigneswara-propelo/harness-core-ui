@@ -5272,6 +5272,19 @@ export interface FreezeErrorResponseDTO {
   name?: string
 }
 
+export interface FreezeExecutionInfo {
+  freezeType?: string
+  identifier?: string
+  name?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  yaml?: string
+}
+
+export interface FreezeExecutionSummary {
+  freezeExecutionInfoList?: FreezeExecutionInfo[]
+}
+
 export interface FreezeFilterPropertiesDTO {
   endTime?: number
   freezeIdentifiers?: string[]
@@ -5279,6 +5292,12 @@ export interface FreezeFilterPropertiesDTO {
   searchTerm?: string
   sort?: string[]
   startTime?: number
+}
+
+export interface FreezeReference {
+  freezeScope?: 'account' | 'org' | 'project' | 'unknown'
+  identifier?: string
+  type?: 'GLOBAL' | 'MANUAL'
 }
 
 export interface FreezeResponse {
@@ -5324,6 +5343,7 @@ export interface FreezeSummaryResponse {
   }
   type?: 'GLOBAL' | 'MANUAL'
   windows?: FreezeWindow[]
+  yaml?: string
 }
 
 export interface FreezeWindow {
@@ -6749,11 +6769,9 @@ export interface GitopsProviderResponse {
   }
 }
 
-export interface GlobalFreezeWithBannerDetailsResponseDTO {
-  activeOrUpcomingParentGlobalFreezes?: FreezeBannerDetails[]
-  globalFreezeResponse?: FreezeDetailedResponse
+export interface GlobalFreezeBannerDetailsResponseDTO {
+  activeOrUpcomingGlobalFreezes?: FreezeBannerDetails[]
 }
-
 export type GoogleArtifactRegistryConfig = ArtifactConfig & {
   connectorRef: string
   metadata?: string
@@ -10209,9 +10227,9 @@ export interface ResponseGitopsProviderResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseGlobalFreezeWithBannerDetailsResponseDTO {
+export interface ResponseGlobalFreezeBannerDetailsResponseDTO {
   correlationId?: string
-  data?: GlobalFreezeWithBannerDetailsResponseDTO
+  data?: GlobalFreezeBannerDetailsResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -13191,7 +13209,7 @@ export interface ShellScriptSourceWrapper {
 }
 
 export interface ShouldDisableDeploymentFreezeResponseDTO {
-  freezeReferences?: string[]
+  freezeReferences?: FreezeReference[]
   shouldDisable?: boolean
 }
 
@@ -33390,7 +33408,7 @@ export interface GetGlobalFreezeWithBannerDetailsQueryParams {
 
 export type GetGlobalFreezeWithBannerDetailsProps = Omit<
   GetProps<
-    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    ResponseGlobalFreezeBannerDetailsResponseDTO,
     Failure | Error,
     GetGlobalFreezeWithBannerDetailsQueryParams,
     void
@@ -33402,12 +33420,7 @@ export type GetGlobalFreezeWithBannerDetailsProps = Omit<
  * Get Global Freeze Yaml with Banner Details
  */
 export const GetGlobalFreezeWithBannerDetails = (props: GetGlobalFreezeWithBannerDetailsProps) => (
-  <Get<
-    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
-    Failure | Error,
-    GetGlobalFreezeWithBannerDetailsQueryParams,
-    void
-  >
+  <Get<ResponseGlobalFreezeBannerDetailsResponseDTO, Failure | Error, GetGlobalFreezeWithBannerDetailsQueryParams, void>
     path={`/freeze/getGlobalFreezeWithBannerDetails`}
     base={getConfig('ng/api')}
     {...props}
@@ -33416,7 +33429,7 @@ export const GetGlobalFreezeWithBannerDetails = (props: GetGlobalFreezeWithBanne
 
 export type UseGetGlobalFreezeWithBannerDetailsProps = Omit<
   UseGetProps<
-    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    ResponseGlobalFreezeBannerDetailsResponseDTO,
     Failure | Error,
     GetGlobalFreezeWithBannerDetailsQueryParams,
     void
@@ -33429,7 +33442,7 @@ export type UseGetGlobalFreezeWithBannerDetailsProps = Omit<
  */
 export const useGetGlobalFreezeWithBannerDetails = (props: UseGetGlobalFreezeWithBannerDetailsProps) =>
   useGet<
-    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    ResponseGlobalFreezeBannerDetailsResponseDTO,
     Failure | Error,
     GetGlobalFreezeWithBannerDetailsQueryParams,
     void
@@ -33440,7 +33453,7 @@ export const useGetGlobalFreezeWithBannerDetails = (props: UseGetGlobalFreezeWit
  */
 export const getGlobalFreezeWithBannerDetailsPromise = (
   props: GetUsingFetchProps<
-    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    ResponseGlobalFreezeBannerDetailsResponseDTO,
     Failure | Error,
     GetGlobalFreezeWithBannerDetailsQueryParams,
     void
@@ -33448,7 +33461,7 @@ export const getGlobalFreezeWithBannerDetailsPromise = (
   signal?: RequestInit['signal']
 ) =>
   getUsingFetch<
-    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    ResponseGlobalFreezeBannerDetailsResponseDTO,
     Failure | Error,
     GetGlobalFreezeWithBannerDetailsQueryParams,
     void

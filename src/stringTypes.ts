@@ -303,6 +303,9 @@ export interface StringsMap {
   'common.filters.unsavedFilter': string
   'common.findOutMore': string
   'common.firstGeneration': string
+  'common.freezeActiveBannerText': string
+  'common.freezeListActiveBannerExpandedText': string
+  'common.freezeListActiveBannerText': string
   'common.freezeWindows': string
   'common.frequency': string
   'common.friendlyMessage': string
@@ -4250,6 +4253,7 @@ export interface StringsMap {
   'freezeWindows.globalFreeze.enableFreezeSuccess': string
   'freezeWindows.globalFreeze.enableFreezeTitle': string
   'freezeWindows.globalFreeze.enabled': string
+  'freezeWindows.globalFreeze.enabledWindow': string
   'freezeWindows.rbac.global': string
   'templatesLibrary.addNewTemplate': string
   'templatesLibrary.alwaysUseStableVersion': string

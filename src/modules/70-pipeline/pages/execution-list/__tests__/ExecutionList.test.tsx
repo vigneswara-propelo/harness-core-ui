@@ -93,7 +93,8 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
-  })
+  }),
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
 }))
 
 const commonRequest = (): any =>

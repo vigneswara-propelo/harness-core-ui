@@ -6893,6 +6893,18 @@ export interface GetPrometheusWorkspacesQueryParams {
   region: string
 }
 
+export interface AwsPrometheusWorkspaceDTO {
+  name?: string
+  workspaceId?: string
+}
+
+export interface ResponseListAwsPrometheusWorkspaceDTO {
+  correlationId?: string
+  data?: AwsPrometheusWorkspaceDTO[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export type GetPrometheusWorkspacesProps = Omit<
   GetProps<ResponseListAwsPrometheusWorkspaceDTO, Failure | Error, GetPrometheusWorkspacesQueryParams, void>,
   'path'
