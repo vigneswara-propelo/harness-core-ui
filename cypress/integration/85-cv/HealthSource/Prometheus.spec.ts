@@ -5,7 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { featureFlagsCall } from '../../../support/85-cv/common'
+import {
+  awsRegionsCall,
+  awsRegionsResponse,
+  awsWorkspacesCall,
+  awsConnectorCall,
+  featureFlagsCall,
+  workspaceMock
+} from '../../../support/85-cv/common'
 import {
   validations,
   countOfServiceAPI,
@@ -479,5 +486,80 @@ describe('Prometheus metric thresholds', () => {
     cy.contains('button', 'Confirm').click()
 
     cy.contains('.Accordion--label', 'Advanced (Optional)').should('not.exist')
+  })
+})
+
+describe('AWS Prometheus', () => {
+  beforeEach(() => {
+    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+      cy.intercept('GET', featureFlagsCall, {
+        ...featureFlagsData,
+        resource: [
+          ...featureFlagsData.resource,
+          {
+            uuid: null,
+            name: 'SRM_ENABLE_HEALTHSOURCE_AWS_PROMETHEUS',
+            enabled: true,
+            lastUpdatedAt: 0
+          }
+        ]
+      })
+    })
+
+    cy.on('uncaught:exception', () => {
+      return false
+    })
+    cy.login('test', 'test')
+    cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
+    cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
+    cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
+  })
+
+  it('should render AWS Prometheus functionality correctly', () => {
+    cy.intercept('GET', awsRegionsCall, awsRegionsResponse).as('awsRegionsCall')
+    cy.intercept('GET', awsWorkspacesCall, workspaceMock).as('awsWorkspacesCall')
+    cy.intercept('GET', awsConnectorCall).as('awsConnectorCall')
+
+    cy.addNewMonitoredServiceWithServiceAndEnv()
+    cy.contains('span', 'Add New Health Source').click()
+
+    cy.contains('span', 'Next').click()
+
+    cy.contains('span', 'Source selection is required').should('be.visible')
+    cy.get(`span[data-icon=service-prometheus]`).click()
+    cy.contains('span', 'Name is required.').should('be.visible')
+    cy.get('input[name="healthSourceName"]').type('awsPrometheusTest')
+    cy.contains('span', 'Source selection is required').should('not.exist')
+    cy.contains('span', 'Name is required.').should('not.exist')
+
+    cy.findByPlaceholderText('- Select an AWS Region -').should('not.exist')
+    cy.findByPlaceholderText('- Select a Workspace Id -').should('not.exist')
+
+    cy.contains('p', 'Amazon Web services').click()
+
+    cy.wait('@awsRegionsCall')
+    cy.wait('@awsWorkspacesCall')
+
+    cy.contains('span', 'Connector Selection is required.').should('be.visible')
+    cy.get('button[data-testid="cr-field-connectorRef"]').click()
+
+    cy.wait('@awsConnectorCall')
+
+    cy.contains('p', 'testAWS').click()
+    cy.contains('span', 'Apply Selected').click()
+    cy.contains('span', 'Connector Selection is required.').should('not.exist')
+
+    cy.contains('span', 'AWS Region is required').should('exist')
+    cy.contains('span', 'Workspace Id is required').should('exist')
+
+    cy.findByPlaceholderText('- Select an AWS Region -').click()
+    cy.contains('p', 'region 1').click()
+
+    cy.findByPlaceholderText('- Select a Workspace Id -').click()
+    cy.contains('p', 'Workspace 1').click()
+
+    cy.contains('span', 'AWS Region is required').should('not.exist')
+    cy.contains('span', 'Workspace Id is required').should('not.exist')
   })
 })

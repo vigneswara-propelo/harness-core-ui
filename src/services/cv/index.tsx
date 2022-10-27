@@ -6885,6 +6885,88 @@ export const getAppDynamicsTiersPromise = (
     signal
   )
 
+export interface GetPrometheusWorkspacesQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorIdentifier: string
+  region: string
+}
+
+export type GetPrometheusWorkspacesProps = Omit<
+  GetProps<ResponseListAwsPrometheusWorkspaceDTO, Failure | Error, GetPrometheusWorkspacesQueryParams, void>,
+  'path'
+>
+
+/**
+ * get Prometheus Workspaces
+ */
+export const GetPrometheusWorkspaces = (props: GetPrometheusWorkspacesProps) => (
+  <Get<ResponseListAwsPrometheusWorkspaceDTO, Failure | Error, GetPrometheusWorkspacesQueryParams, void>
+    path={`/aws/prometheus/workspaces`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetPrometheusWorkspacesProps = Omit<
+  UseGetProps<ResponseListAwsPrometheusWorkspaceDTO, Failure | Error, GetPrometheusWorkspacesQueryParams, void>,
+  'path'
+>
+
+/**
+ * get Prometheus Workspaces
+ */
+export const useGetPrometheusWorkspaces = (props: UseGetPrometheusWorkspacesProps) =>
+  useGet<ResponseListAwsPrometheusWorkspaceDTO, Failure | Error, GetPrometheusWorkspacesQueryParams, void>(
+    `/aws/prometheus/workspaces`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get Prometheus Workspaces
+ */
+export const getPrometheusWorkspacesPromise = (
+  props: GetUsingFetchProps<
+    ResponseListAwsPrometheusWorkspaceDTO,
+    Failure | Error,
+    GetPrometheusWorkspacesQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListAwsPrometheusWorkspaceDTO, Failure | Error, GetPrometheusWorkspacesQueryParams, void>(
+    getConfig('cv/api'),
+    `/aws/prometheus/workspaces`,
+    props,
+    signal
+  )
+
+export type GetAllAwsRegionsProps = Omit<GetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+
+/**
+ * get regions
+ */
+export const GetAllAwsRegions = (props: GetAllAwsRegionsProps) => (
+  <Get<ResponseListString, Failure | Error, void, void> path={`/aws/regions`} base={getConfig('cv/api')} {...props} />
+)
+
+export type UseGetAllAwsRegionsProps = Omit<UseGetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+
+/**
+ * get regions
+ */
+export const useGetAllAwsRegions = (props: UseGetAllAwsRegionsProps) =>
+  useGet<ResponseListString, Failure | Error, void, void>(`/aws/regions`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * get regions
+ */
+export const getAllAwsRegionsPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) => getUsingFetch<ResponseListString, Failure | Error, void, void>(getConfig('cv/api'), `/aws/regions`, props, signal)
+
 export interface GetMonitoredServiceChangeEventSummaryQueryParams {
   accountId: string
   orgIdentifier: string

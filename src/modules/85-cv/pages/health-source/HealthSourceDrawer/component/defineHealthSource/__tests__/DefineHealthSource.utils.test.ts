@@ -15,4 +15,9 @@ describe('DefineHealthSource.utils.test', () => {
     const result = getConnectorPlaceholderText('Dynatrace')
     expect(result).toBe('Dynatrace')
   })
+
+  test('should return correct value, if data source type is AWS_PROMETHEUS', () => {
+    const result = getConnectorPlaceholderText('Prometheus', 'AWS_PROMETHEUS')
+    expect(result).toBe('AWS')
+  })
 })

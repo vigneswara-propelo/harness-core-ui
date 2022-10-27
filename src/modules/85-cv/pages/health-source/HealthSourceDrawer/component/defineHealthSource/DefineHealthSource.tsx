@@ -46,8 +46,12 @@ import {
   validate,
   validateDuplicateIdentifier,
   getConnectorTypeName,
-  getConnectorPlaceholderText
+  getConnectorPlaceholderText,
+  canShowDataSelector,
+  canShowDataInfoSelector
 } from './DefineHealthSource.utils'
+import DataSourceTypeSelector from './components/DataSourceTypeSelector/DataSourceTypeSelector'
+import DataInfoSelector from './components/DataInfoSelector/DataInfoSelector'
 import css from './DefineHealthSource.module.scss'
 
 interface DefineHealthSourceProps {
@@ -69,6 +73,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
 
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
   const isElkEnabled = useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
+
+  const isDataSourceTypeSelectorEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_AWS_PROMETHEUS)
 
   const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
 
@@ -140,7 +146,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
         <FormConnectorReferenceField
           width={400}
           formik={formik}
-          type={healthSourceTypeMappingForReferenceField(formik?.values?.sourceType)}
+          type={healthSourceTypeMappingForReferenceField(formik?.values?.sourceType, formik?.values?.dataSourceType)}
           name={ConnectorRefFieldName}
           label={
             <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
@@ -151,7 +157,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           placeholder={getString('cv.healthSource.connectors.selectConnector', {
-            sourceType: getConnectorPlaceholderText(formik?.values?.sourceType)
+            sourceType: getConnectorPlaceholderText(formik?.values?.sourceType, formik?.values?.dataSourceType)
           })}
           disabled={isEdit ? !!formik?.values?.connectorRef && isEdit : !formik?.values?.sourceType}
           tooltipProps={{ dataTooltipId: 'selectHealthSourceConnector' }}
@@ -170,6 +176,22 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
       default:
         return value
     }
+  }
+
+  const getDataSourceTypeSelector = (sourceType?: string): JSX.Element | null => {
+    if (canShowDataSelector(sourceType, isDataSourceTypeSelectorEnabled)) {
+      return <DataSourceTypeSelector />
+    }
+
+    return null
+  }
+
+  const getDataInfoSelector = (sourceType?: string, dataSourceType?: string): JSX.Element | null => {
+    if (canShowDataInfoSelector(sourceType, dataSourceType, isDataSourceTypeSelectorEnabled)) {
+      return <DataInfoSelector />
+    }
+
+    return null
   }
 
   return (
@@ -229,17 +251,27 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                                     cornerSelected={isCardSelected(connectorTypeName, formik)}
                                     className={css.squareCard}
                                     onClick={() => {
-                                      formik.setFieldValue('sourceType', connectorTypeName)
                                       const featureOptionConnectorType = getFeatureOption(
                                         connectorTypeName,
                                         getString,
                                         isSplunkMetricEnabled
                                       )
-                                      formik.setFieldValue(
-                                        'product',
-                                        featureOptionConnectorType.length === 1 ? featureOptionConnectorType[0] : ''
-                                      )
-                                      formik.setFieldValue(ConnectorRefFieldName, null)
+                                      formik.setValues((currentValues: any) => {
+                                        if (!currentValues) {
+                                          return {}
+                                        }
+
+                                        return {
+                                          ...currentValues,
+                                          sourceType: connectorTypeName,
+                                          dataSourceType: null,
+                                          product:
+                                            featureOptionConnectorType.length === 1
+                                              ? featureOptionConnectorType[0]
+                                              : '',
+                                          [ConnectorRefFieldName]: null
+                                        }
+                                      })
                                     }}
                                   >
                                     <Icon name={icon as IconName} size={26} height={26} />
@@ -283,6 +315,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
               </CardWithOuterTitle>
               <CardWithOuterTitle title={getString('cv.healthSource.connectHealthSource')}>
                 <>
+                  {getDataSourceTypeSelector(formik?.values?.sourceType)}
+
                   <Container margin={{ bottom: 'large' }} width={'400px'}>
                     <div className={css.connectorField}>{connectorData(formik)}</div>
                   </Container>
@@ -308,6 +342,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                       onChange={product => formik.setFieldValue('product', product)}
                     />
                   </Container>
+
+                  {getDataInfoSelector(formik?.values?.sourceType, formik?.values?.dataSourceType)}
                 </>
               </CardWithOuterTitle>
               <DrawerFooter onNext={() => formik.submitForm()} />

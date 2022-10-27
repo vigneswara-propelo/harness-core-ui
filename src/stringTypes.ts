@@ -6985,6 +6985,11 @@ export interface StringsMap {
   'cv.harnessService': string
   'cv.healthScore': string
   'cv.healthSource.addHealthSource': string
+  'cv.healthSource.awsDataSourceName': string
+  'cv.healthSource.awsRegionLabel': string
+  'cv.healthSource.awsWorkspaceIdValidation': string
+  'cv.healthSource.awsWorkspaceLabel': string
+  'cv.healthSource.awsWorkspacePlaceholderText': string
   'cv.healthSource.backtoMonitoredService': string
   'cv.healthSource.connectHealthSource': string
   'cv.healthSource.connectors.AppDynamics.applicationLabel': string
@@ -7057,6 +7062,7 @@ export interface StringsMap {
   'cv.healthSource.newHealthSource': string
   'cv.healthSource.noData': string
   'cv.healthSource.noDataPresentHealthSource': string
+  'cv.healthSource.selectConnectionTypeInfo': string
   'cv.healthSource.selectHealthSource': string
   'cv.healthSource.seriveEnvironmentNote': string
   'cv.healthSource.serviceLabel': string
