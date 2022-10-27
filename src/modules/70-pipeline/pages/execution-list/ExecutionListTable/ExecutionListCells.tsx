@@ -335,7 +335,7 @@ export const TriggerInfoCell: CellType = ({ row }) => {
   const showCI = hasCIStage(data)
   const ciData = defaultTo(data?.moduleInfo?.ci, {})
   const prOrCommitTitle =
-    ciData.ciExecutionInfoDTO?.pullRequest?.title || ciData.ciExecutionInfoDTO?.branch.commits[0]?.message
+    ciData.ciExecutionInfoDTO?.pullRequest?.title || ciData.ciExecutionInfoDTO?.branch?.commits[0]?.message
 
   return showCI ? (
     <Layout.Vertical spacing="small" className={css.triggerInfoCell}>
