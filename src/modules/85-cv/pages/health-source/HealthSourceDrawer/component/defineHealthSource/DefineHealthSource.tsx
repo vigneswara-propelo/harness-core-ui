@@ -50,7 +50,7 @@ import {
   canShowDataSelector,
   canShowDataInfoSelector
 } from './DefineHealthSource.utils'
-import DataSourceTypeSelector from './components/DataSourceTypeSelector/DataSourceTypeSelector'
+import PrometheusDataSourceTypeSelector from './components/DataSourceTypeSelector/DataSourceTypeSelector'
 import DataInfoSelector from './components/DataInfoSelector/DataInfoSelector'
 import css from './DefineHealthSource.module.scss'
 
@@ -96,7 +96,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   }, [isErrorTrackingEnabled, isElkEnabled, isCloudWatchEnabled])
 
   const initialValues = useMemo(() => {
-    return getInitialValues(sourceData, getString)
+    return getInitialValues(sourceData, getString, isDataSourceTypeSelectorEnabled)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceData?.healthSourceIdentifier])
 
@@ -180,7 +180,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
 
   const getDataSourceTypeSelector = (sourceType?: string): JSX.Element | null => {
     if (canShowDataSelector(sourceType, isDataSourceTypeSelectorEnabled)) {
-      return <DataSourceTypeSelector />
+      return <PrometheusDataSourceTypeSelector />
     }
 
     return null

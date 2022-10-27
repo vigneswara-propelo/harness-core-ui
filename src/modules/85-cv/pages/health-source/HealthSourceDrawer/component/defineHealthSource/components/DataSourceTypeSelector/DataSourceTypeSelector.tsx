@@ -4,7 +4,7 @@ import { useStrings } from 'framework/strings'
 import { getDataGroupSelectorItems } from './DataSourceTypeSelectorUtils'
 import { DataSourceTypeFieldNames } from '../../DefineHealthSource.constant'
 
-export default function DataSourceTypeSelector(): JSX.Element {
+export default function PrometheusDataSourceTypeSelector(): JSX.Element {
   const { getString } = useStrings()
 
   return (

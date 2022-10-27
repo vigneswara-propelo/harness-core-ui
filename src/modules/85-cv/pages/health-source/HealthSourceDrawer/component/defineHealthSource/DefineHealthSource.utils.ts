@@ -220,19 +220,54 @@ export function getProductBasedOnType(
   }
 }
 
-export const getInitialValues = (sourceData: any, getString: UseStringsReturn['getString']): any => {
+const getHealthSourceType = (type?: string, sourceType?: string): string | undefined => {
+  if (type === HealthSourceTypes.AwsPrometheus) {
+    return HealthSourceTypes.Prometheus
+  }
+
+  return sourceType
+}
+
+const getDataSourceType = (type?: string, isDataSourceTypeSelectorEnabled?: boolean): string | null => {
+  if (type === HealthSourceTypes.AwsPrometheus) {
+    return AWSDataSourceType
+  } else if (isDataSourceTypeSelectorEnabled) {
+    return HealthSourceTypes.Prometheus
+  }
+
+  return null
+}
+
+const PrometheusTypes = [Connectors.PROMETHEUS, HealthSourceTypes.AwsPrometheus]
+
+export const getInitialValues = (
+  sourceData: any,
+  getString: UseStringsReturn['getString'],
+  isDataSourceTypeSelectorEnabled?: boolean
+): any => {
   const currentHealthSource = sourceData?.healthSourceList?.find(
     (el: any) => el?.identifier === sourceData?.healthSourceIdentifier
   )
+
+  const { region, workspaceId } = currentHealthSource?.spec || {}
+
+  const { sourceType } = sourceData || {}
+
   // TODO: remove check for prometheus when BE changes are done
-  const selectedFeature = currentHealthSource?.type === Connectors.PROMETHEUS ? '' : currentHealthSource?.spec?.feature
+  const selectedFeature = PrometheusTypes.includes(currentHealthSource?.type) ? '' : currentHealthSource?.spec?.feature
   const initialValues = {
     [ConnectorRefFieldName]: '',
     ...sourceData,
+    type: getHealthSourceType(currentHealthSource?.type),
+    sourceType: getHealthSourceType(currentHealthSource?.type, sourceType),
+    dataSourceType: getDataSourceType(currentHealthSource?.type, isDataSourceTypeSelectorEnabled),
+    region,
+    workspaceId,
     product: selectedFeature
       ? { label: selectedFeature, value: selectedFeature }
       : getProductBasedOnType(getString, currentHealthSource?.type, sourceData?.product)
   }
+
   return initialValues
 }
 

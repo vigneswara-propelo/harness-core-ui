@@ -561,5 +561,58 @@ describe('AWS Prometheus', () => {
 
     cy.contains('span', 'AWS Region is required').should('not.exist')
     cy.contains('span', 'Workspace Id is required').should('not.exist')
+
+    cy.findByRole('button', { name: /Next/i }).click()
+
+    cy.contains('h2', 'Query Specifications and Mapping').should('be.visible')
+
+    cy.get('input[name="metricName"]').should('contain.value', 'Prometheus Metric')
+    cy.get('input[name="metricName"]').clear()
+
+    cy.contains('span', 'Metric Name is required.').should('be.visible')
+    cy.fillField('metricName', 'Prometheus Metric')
+    cy.contains('span', 'Metric Name is required.').should('not.exist')
+
+    cy.findByRole('button', { name: /Submit/i }).click()
+    cy.contains('span', validations.groupName).should('be.visible')
+    cy.addingGroupName('Group 1')
+    cy.get('input[name="groupName"]').should('contain.value', 'Group 1')
+    cy.contains('span', validations.groupName).should('not.exist')
+
+    cy.contains('div', 'Build your Query').should('be.visible')
+    cy.get('button span[data-icon="Edit"]').click()
+    cy.contains('p', 'Query Builder will not be available').should('be.visible')
+    cy.findByRole('button', { name: /Proceed to Edit/i }).click()
+
+    cy.contains('p', 'Query Builder will not be available since this mapping contains a manually edited query.').should(
+      'be.visible'
+    )
+    cy.contains('div', 'Build your Query').should('not.exist')
+
+    cy.get('textarea[name="query"]').focus().blur()
+    cy.contains('span', validations.query).should('be.visible')
+    cy.findByRole('button', { name: /Fetch records/i }).should('be.disabled')
+    cy.get('textarea[name="query"]').type(`classes	{}`)
+    cy.contains('span', validations.query).should('not.exist')
+
+    cy.contains('div', 'Assign').click()
+    cy.get('input[name="sli"]').click({ force: true })
+
+    cy.intercept('POST', '/cv/api/monitored-service?*').as('monitoredServiceCall')
+
+    cy.findByRole('button', { name: /Submit/i }).click()
+
+    cy.findByRole('button', { name: /Save/i }).click()
+
+    cy.wait('@monitoredServiceCall').then(intercept => {
+      const { sources } = intercept.request.body
+
+      // Response assertion
+      expect(sources?.healthSources?.[0]?.type).equals('AwsPrometheus')
+      expect(sources?.healthSources?.[0]?.name).equals('awsPrometheusTest')
+      expect(sources?.healthSources?.[0]?.identifier).equals('awsPrometheusTest')
+      expect(sources?.healthSources?.[0]?.spec?.region).equals('region 1')
+      expect(sources?.healthSources?.[0]?.spec?.workspaceId).equals('sjksm43455n-34x53c45vdssd-fgdfd232sdfad')
+    })
   })
 })
