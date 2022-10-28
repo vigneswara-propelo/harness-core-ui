@@ -39,6 +39,7 @@ export const FreezeStudioConfigSection = (
     return getFieldsVisibility(freezeWindowLevel)
   }, [freezeWindowLevel])
 
+  /* istanbul ignore next */
   const entityConfigs = freezeObj?.entityConfigs || []
 
   return (
