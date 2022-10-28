@@ -1500,6 +1500,7 @@ export interface StringsMap {
   'secrets.noSecrets': string
   'secrets.policyEvaluations.failedToSave': string
   'secrets.policyEvaluations.warning': string
+  'secrets.secret.configureRegion': string
   'secrets.secret.configureSecret': string
   'secrets.secret.inlineSecret': string
   'secrets.secret.labelFile': string
@@ -1516,6 +1517,8 @@ export interface StringsMap {
   'secrets.secret.placeholderSecretReference': string
   'secrets.secret.placeholderSecretValue': string
   'secrets.secret.referenceSecret': string
+  'secrets.secret.referenceSecretVersionRqrd': string
+  'secrets.secret.region': string
   'secrets.secret.secretActivity': string
   'secrets.secret.secretCreated': string
   'secrets.secret.secretNotFound': string
