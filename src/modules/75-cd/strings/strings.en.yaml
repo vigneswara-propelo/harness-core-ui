@@ -580,6 +580,7 @@ miniKubeCmd4: kubectl get pods -A
 deploymentSteps: Deployment Steps
 useStepTemplatesForYourDeploymentType: Use step templates for your deployment type here
 removeStepTemplate: Remove Step Template
+duplicateStep: Step with same name already exists
 removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
 artifactSource:
   artifactRepositoryTypeIsRequired: Artifact Repository Type is required

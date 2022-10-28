@@ -91,6 +91,7 @@ const DeploymentContext = React.createContext<DeploymentConfigValues>({
   gitDetails: {},
   templateDetailsByRef: {},
   updateDeploymentConfig: (_configValues: DeploymentConfig) => new Promise<void>(() => undefined),
+  /* istanbul ignore next */
   setTemplateDetailsByRef: (_templateDetailsByRef: TemplateDetailsByRef) => undefined,
   drawerData: { type: DrawerTypes.AddStep },
   setDrawerData: (_values: DrawerData) => undefined,

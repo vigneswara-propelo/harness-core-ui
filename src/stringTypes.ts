@@ -4596,6 +4596,7 @@ export interface StringsMap {
   'cd.downloadYAML': string
   'cd.duplicateGitOpsServerIdError': string
   'cd.duplicateIdError': string
+  'cd.duplicateStep': string
   'cd.dynamicProvisioning': string
   'cd.ecsBGSwapTargetGroupsStep.doNotDownsizeOldService': string
   'cd.ecsRollingDeployStep.forceNewDeployment': string
