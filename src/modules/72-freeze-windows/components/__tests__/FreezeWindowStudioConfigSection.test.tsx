@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, act } from '@testing-library/react'
+import { render, waitFor, act, waitForElementToBeRemoved } from '@testing-library/react'
 import userEvent, { TargetElement } from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
@@ -195,6 +195,44 @@ describe('Freeze Window Studio Config Section', () => {
     const deleteButton = secondRule.getElementsByClassName('bp3-icon-trash')[0]
     act(async () => {
       await userEvent.click(deleteButton as TargetElement)
+    })
+  })
+
+  test('it should render Config section Tabs onNext and onBack', async () => {
+    const { container, getByText, getByRole } = render(
+      <TestWrapper
+        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
+        pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
+      >
+        <FreezeStudioWrapper />
+      </TestWrapper>
+    )
+
+    fillAtForm([
+      {
+        container,
+        type: InputTypes.TEXTFIELD,
+        fieldId: 'name',
+        value: 'dummyname'
+      }
+    ])
+
+    const createNewForm = document.getElementsByClassName('createNewFreezeForm')[0]
+    await waitFor(async () => {
+      const continueBtn = createNewForm.querySelector('button')
+      await userEvent.click(continueBtn as TargetElement)
+      await waitForElementToBeRemoved(createNewForm).then(() => {
+        expect(createNewForm).not.toBeInTheDocument()
+      })
+    })
+
+    const continueButton = getByRole('button', { name: 'continue' })
+    expect(continueButton).toBeDefined()
+
+    // Move to config Tab
+    userEvent.click(continueButton)
+    await waitFor(() => {
+      expect(getByText('freezeWindows.freezeStudio.freezeConfiguration')).toBeInTheDocument()
     })
   })
 })
