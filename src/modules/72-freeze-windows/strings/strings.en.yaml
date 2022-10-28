@@ -25,6 +25,7 @@ freezeStudio:
   excludeFollowingOrgs: Exclude the following Organizations
   freezeCreatedSuccessfully: Freeze window created successfully
   freezeUpdatedSuccessfully: Freeze window updated successfully
+  activeFreeze: Freeze is in ACTIVE state
 
 globalFreeze:
   disabled: Freeze disabled on all deployments for this <b>{{scope}}</b>
