@@ -712,6 +712,7 @@ export interface StringsMap {
   'common.resourceCenter.ticketmenu.viewTicket': string
   'common.resourceCenter.title': string
   'common.resourceGroupLabel': string
+  'common.resourceIdentifier': string
   'common.resourceLabel': string
   'common.resourceTypeLabel': string
   'common.role': string

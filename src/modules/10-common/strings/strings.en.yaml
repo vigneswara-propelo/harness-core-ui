@@ -1090,3 +1090,4 @@ configDetails: 'Configuration Details'
 freezeActiveBannerText: All deployments have been disabled on the {{scope}} from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 freezeListActiveBannerText: There are {{count}} ongoing deployment freeze windows
 freezeListActiveBannerExpandedText: On the {{scope}} from <b>{{startTime}}</b> to <b>{{endTime}}</b>
+resourceIdentifier: Resource Identifier
