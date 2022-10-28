@@ -314,3 +314,14 @@ export const isMultiArtifactSourceEnabled = (
 ): boolean => {
   return isMultiArtifactSource && isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts?.primary?.type)
 }
+
+export const shouldFetchFieldData = (fieldList: string[]) => {
+  const emptyOrRuntimeFields = fieldList.filter((currField: string) => {
+    return (
+      isEmpty(currField) ||
+      getMultiTypeFromValue(currField) === MultiTypeInputType.RUNTIME ||
+      getMultiTypeFromValue(currField) === MultiTypeInputType.EXPRESSION
+    )
+  })
+  return emptyOrRuntimeFields.length === 0
+}
