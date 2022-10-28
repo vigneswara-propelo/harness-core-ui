@@ -151,6 +151,7 @@ export interface StringsMap {
   'common.community': string
   'common.confictOccured': string
   'common.config': string
+  'common.configDetails': string
   'common.configureModuleList': string
   'common.configureOptions.advancedHelp': string
   'common.configureOptions.askDuringExecution': string
@@ -3225,6 +3226,7 @@ export interface StringsMap {
   'pipeline.configFiles.selectFileType': string
   'pipeline.configFiles.source': string
   'pipeline.configFiles.title': string
+  'pipeline.configSource': string
   'pipeline.createANewPipeline': string
   'pipeline.createPipeline.choosePipelineSetupHeader': string
   'pipeline.createPipeline.learnMore': string
@@ -3911,6 +3913,7 @@ export interface StringsMap {
   'pipeline.serviceDeploymentTypes.customDeploy': string
   'pipeline.serviceDeploymentTypes.customDeployment': string
   'pipeline.serviceDeploymentTypes.deployDifferentLabel': string
+  'pipeline.serviceDeploymentTypes.elastigroup': string
   'pipeline.serviceDeploymentTypes.kubernetes': string
   'pipeline.serviceDeploymentTypes.pcf': string
   'pipeline.serviceDeploymentTypes.serverlessAwsLambda': string
@@ -4954,6 +4957,12 @@ export interface StringsMap {
   'cd.steps.ecsRunTaskStep.runTaskDefinition': string
   'cd.steps.ecsRunTaskStep.runTaskRequestDefinition': string
   'cd.steps.ecsRunTaskStep.skipSteadyStateCheck': string
+  'cd.steps.elastigroup.connectorSpot': string
+  'cd.steps.elastigroup.elastigroupConfig': string
+  'cd.steps.elastigroup.elastigroupConfigDetails': string
+  'cd.steps.elastigroup.elastigroupConfigReq': string
+  'cd.steps.elastigroup.elastigroupTitle': string
+  'cd.steps.elastigroup.infraDetailHeader': string
   'cd.steps.kubernetesGcpStep.stepName': string
   'cd.steps.pdcStep.attributesPlaceholder': string
   'cd.steps.pdcStep.filterHostAttributes': string

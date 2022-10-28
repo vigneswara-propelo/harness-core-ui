@@ -1233,6 +1233,7 @@ imageVersionDeprecated: Image version outdated
 unsupportedImagesWarning: 'You are using unsupported Harness CI images. Harness allows builds to use these images, but we cannot ensure that builds will not fail. Please update the versions of the following image(s) {{summary}}'
 invalidRequest: Invalid Request
 serviceDeploymentTypes:
+  elastigroup: Elastigroup
   kubernetes: '{{$.kubernetesText}}'
   amazonEcs: '{{$.delegate.cardData.amazonECS.name}}'
   amazonAmi: AWS AMI
@@ -1355,6 +1356,7 @@ lastExecution: 'Last Execution'
 executionId: Execution Id
 imageTag: 'image: {{image}}'
 fileSource: 'File Source'
+configSource: Configuration Source
 fileDetails: 'File Details'
 appServiceConfig:
   title: App Services Configuration

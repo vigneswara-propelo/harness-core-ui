@@ -2907,6 +2907,7 @@ export type DeploymentStageConfig = StageInfoConfig & {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   environment?: EnvironmentYamlV2
   environmentGroup?: EnvironmentGroupYaml
   environments?: EnvironmentsYaml
@@ -3223,6 +3224,21 @@ export interface EditionActionDTO {
     | 'DISABLED_BY_TEAM'
     | 'DISABLED_BY_ENTERPRISE'
   reason?: string
+}
+
+export interface ElastigroupConfiguration {
+  metadata?: string
+  store: StoreConfigWrapper
+}
+
+export type ElastigroupInfrastructure = Infrastructure & {
+  configuration: ElastigroupConfiguration
+  connectorRef: string
+  metadata?: string
+}
+
+export type ElastigroupServiceSpec = ServiceSpec & {
+  startupScript?: StartupScriptConfiguration
 }
 
 export interface Element {
@@ -7050,6 +7066,7 @@ export interface InfrastructureDef {
     | 'SshWinRmAws'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
 }
 
 export interface InfrastructureDefinitionConfig {
@@ -7063,6 +7080,7 @@ export interface InfrastructureDefinitionConfig {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -7085,6 +7103,7 @@ export interface InfrastructureDefinitionConfig {
     | 'SshWinRmAws'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
 }
 
 export interface InfrastructureDetails {
@@ -7117,6 +7136,7 @@ export interface InfrastructureRequestDTO {
     | 'SshWinRmAws'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   yaml?: string
 }
 
@@ -7137,6 +7157,7 @@ export interface InfrastructureResponseDTO {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -7157,6 +7178,7 @@ export interface InfrastructureResponseDTO {
     | 'SshWinRmAws'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   yaml?: string
 }
 
@@ -10727,6 +10749,7 @@ export interface ResponseListServiceDefinitionType {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12860,6 +12883,7 @@ export interface ServiceDefinition {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
 }
 
 export interface ServiceDeployment {
@@ -13402,6 +13426,11 @@ export interface StartTrialDTO {
 }
 
 export interface StartupCommandConfiguration {
+  metadata?: string
+  store: StoreConfigWrapper
+}
+
+export interface StartupScriptConfiguration {
   metadata?: string
   store: StoreConfigWrapper
 }
@@ -37022,6 +37051,7 @@ export interface GetInfrastructureListQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   sort?: string[]
@@ -41261,6 +41291,7 @@ export interface GetStepsQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
 }
 
 export type GetStepsProps = Omit<GetProps<ResponseStepCategory, Failure | Error, GetStepsQueryParams, void>, 'path'>
@@ -41406,6 +41437,7 @@ export interface GetExecutionStrategyYamlQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -41465,6 +41497,7 @@ export interface PostExecutionStrategyYamlQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -44993,6 +45026,7 @@ export interface GetServiceListQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -45555,6 +45589,7 @@ export interface GetServiceAccessListQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
