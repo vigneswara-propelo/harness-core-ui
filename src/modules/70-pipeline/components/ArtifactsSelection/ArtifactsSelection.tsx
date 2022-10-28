@@ -11,14 +11,10 @@ import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-
 import produce from 'immer'
-import get from 'lodash-es/get'
-import set from 'lodash-es/set'
-
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
-import { merge } from 'lodash-es'
+import { get, set, merge } from 'lodash-es'
 import {
   useGetConnectorListV2,
   PageConnectorResponse,

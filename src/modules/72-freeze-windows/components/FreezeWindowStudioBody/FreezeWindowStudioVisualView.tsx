@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import isEmpty from 'lodash-es/isEmpty'
+import { isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { Icon, Tab, Tabs } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'

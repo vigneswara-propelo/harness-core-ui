@@ -6,7 +6,7 @@
  */
 
 import React, { useContext } from 'react'
-import noop from 'lodash-es/noop'
+import { noop } from 'lodash-es'
 import { parse } from 'yaml'
 
 import { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'

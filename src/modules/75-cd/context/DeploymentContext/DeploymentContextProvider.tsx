@@ -6,9 +6,8 @@
  */
 
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import get from 'lodash/get'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
-import { compact, isEmpty, map, merge } from 'lodash-es'
+import { get, compact, isEmpty, map, merge } from 'lodash-es'
 import type { EntityGitDetails, TemplateSummaryResponse } from 'services/template-ng'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { GetPipelineQueryParams, TemplateStepNode, StepElementConfig } from 'services/pipeline-ng'
