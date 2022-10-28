@@ -646,6 +646,7 @@ healthSource:
   awsDataSourceName: Amazon Web services
   awsWorkspaceIdValidation: Workspace Id is required
   awsWorkspacePlaceholderText: Select a Workspace Id
+  dataSourceTypeValidation: Connection Type is required
   noDataPresentHealthSource: No data is present for the selected Health Source
   seriveEnvironmentNote: Service selected is {{service}} and Environment selected is {{environment}}
   table:

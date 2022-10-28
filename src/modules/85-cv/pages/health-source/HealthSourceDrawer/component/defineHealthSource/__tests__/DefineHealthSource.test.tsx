@@ -249,11 +249,21 @@ describe('DefineHealthSource', () => {
 
     expect(screen.getByTestId('dataSourceTypeSelector')).toBeInTheDocument()
 
+    act(() => {
+      userEvent.click(screen.getByText(/next/))
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText(/cv.healthSource.dataSourceTypeValidation/)).toBeInTheDocument()
+      expect(screen.getByPlaceholderText(/- cv.healthSource.featurePlaceholder -/)).toBeDisabled()
+    })
+
     await act(() => {
       userEvent.click(screen.getByText(/cv.healthSource.awsDataSourceName/))
     })
 
     await waitFor(() => {
+      expect(screen.queryByText(/cv.healthSource.dataSourceTypeValidation/)).not.toBeInTheDocument()
       expect(screen.getByText(/cv.healthSource.awsRegionLabel/)).toBeInTheDocument()
       expect(screen.getByText(/cv.healthSource.awsWorkspaceLabel/)).toBeInTheDocument()
     })

@@ -32,7 +32,8 @@ import {
   metricPackResponse,
   monitoredService,
   labelValuesAPI,
-  monitoredServiceForBuildQuery
+  monitoredServiceForBuildQuery,
+  awsPrometheusMonitoredService
 } from '../../../support/85-cv/monitoredService/health-sources/Prometheus/constant'
 import { errorResponse } from '../../../support/85-cv/slos/constants'
 import { Connectors } from '../../../utils/connctors-utils'
@@ -532,14 +533,19 @@ describe('AWS Prometheus', () => {
     cy.get('input[name="healthSourceName"]').type('awsPrometheusTest')
     cy.contains('span', 'Source selection is required').should('not.exist')
     cy.contains('span', 'Name is required.').should('not.exist')
+    cy.contains('span', 'Connection Type is required').should('exist')
 
     cy.findByPlaceholderText('- Select an AWS Region -').should('not.exist')
     cy.findByPlaceholderText('- Select a Workspace Id -').should('not.exist')
+
+    cy.get('button[data-testid="cr-field-connectorRef"]').should('be.disabled')
 
     cy.contains('p', 'Amazon Web services').click()
 
     cy.wait('@awsRegionsCall')
     cy.wait('@awsWorkspacesCall')
+
+    cy.get('button[data-testid="cr-field-connectorRef"]').should('not.be.disabled')
 
     cy.contains('span', 'Connector Selection is required.').should('be.visible')
     cy.get('button[data-testid="cr-field-connectorRef"]').click()
@@ -614,5 +620,34 @@ describe('AWS Prometheus', () => {
       expect(sources?.healthSources?.[0]?.spec?.region).equals('region 1')
       expect(sources?.healthSources?.[0]?.spec?.workspaceId).equals('sjksm43455n-34x53c45vdssd-fgdfd232sdfad')
     })
+  })
+
+  it('should perform AWS Prometheus functionality in edit scenario', () => {
+    cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', awsPrometheusMonitoredService).as(
+      'monitoredServiceCall'
+    )
+
+    cy.intercept('GET', awsRegionsCall, awsRegionsResponse).as('awsRegionsCall')
+    cy.intercept('GET', awsWorkspacesCall, workspaceMock).as('awsWorkspacesCall')
+    cy.intercept('GET', awsConnectorCall).as('awsConnectorCall')
+
+    cy.get('span[data-icon="Options"]').click()
+    cy.contains('div', 'Edit service').click()
+
+    cy.wait('@monitoredServiceCall')
+
+    // clear any cached values
+    cy.get('body').then($body => {
+      if ($body.text().includes('Unsaved changes')) {
+        cy.contains('span', 'Discard').click()
+      }
+    })
+
+    cy.contains('div', 'AwsPrometheusTest').click({ force: true })
+
+    cy.findByPlaceholderText('- Select an AWS Region -').should('be.disabled')
+    cy.findByPlaceholderText('- Select a Workspace Id -').should('be.disabled')
+
+    cy.findByTestId(/thumbnail-select-change/).should('be.disabled')
   })
 })
