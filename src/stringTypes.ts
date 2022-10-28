@@ -6171,6 +6171,19 @@ export interface StringsMap {
   'cf.auditLogs.user': string
   'cf.auditLogs.viewEventSummary': string
   'cf.boolean': string
+  'cf.cfTrialHomePage.dontCode.description': string
+  'cf.cfTrialHomePage.dontCode.inviteDeveloper': string
+  'cf.cfTrialHomePage.dontCode.title': string
+  'cf.cfTrialHomePage.featureFlagsDescription': string
+  'cf.cfTrialHomePage.forDevOps.automatedFeature': string
+  'cf.cfTrialHomePage.forDevOps.avoidRollbacks': string
+  'cf.cfTrialHomePage.forDevOps.scaleManagement': string
+  'cf.cfTrialHomePage.forDevOps.title': string
+  'cf.cfTrialHomePage.forDevelopers.createFlag': string
+  'cf.cfTrialHomePage.forDevelopers.realTime': string
+  'cf.cfTrialHomePage.forDevelopers.shipCode': string
+  'cf.cfTrialHomePage.forDevelopers.title': string
+  'cf.cfTrialHomePage.startFreePlanBtn': string
   'cf.cfTrialHomePage.startTrial.description': string
   'cf.cfTrialHomePage.startTrial.startBtn.description': string
   'cf.clause.operators.and': string
