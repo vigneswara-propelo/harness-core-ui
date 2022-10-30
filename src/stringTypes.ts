@@ -8523,6 +8523,10 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
+  'delegate.kubernetes.permissions_info3': string
+  /**
+   * @deprecated migrate this string to module level file
+   */
   'delegate.kubernetes.permissions_title': string
   /**
    * @deprecated migrate this string to module level file
@@ -8536,10 +8540,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   'delegate.kubernetes.prerequisites_info2': string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  'delegate.kubernetes.prerequisites_info3': string
   /**
    * @deprecated migrate this string to module level file
    */
