@@ -3374,6 +3374,7 @@ export interface StringsMap {
   'pipeline.execution.timePrefix': string
   'pipeline.execution.upcomingStagesPrefix': string
   'pipeline.executionFilters.labels.Aborted': string
+  'pipeline.executionFilters.labels.AbortedByFreeze': string
   'pipeline.executionFilters.labels.ApprovalRejected': string
   'pipeline.executionFilters.labels.ApprovalWaiting': string
   'pipeline.executionFilters.labels.Expired': string
@@ -3390,6 +3391,7 @@ export interface StringsMap {
   'pipeline.executionList.servicesDeployed': string
   'pipeline.executionList.servicesDeployedText': string
   'pipeline.executionStatus.Aborted': string
+  'pipeline.executionStatus.AbortedByFreeze': string
   'pipeline.executionStatus.Aborting': string
   'pipeline.executionStatus.ApprovalRejected': string
   'pipeline.executionStatus.Error': string

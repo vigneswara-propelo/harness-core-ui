@@ -10614,7 +10614,7 @@ export interface ResponseListExecutionStatus {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
-    | 'AbortedDueToFreeze'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'

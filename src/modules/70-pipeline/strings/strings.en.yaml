@@ -554,6 +554,7 @@ executionStatus:
   Failed: FAILED
   Success: SUCCESS
   Aborted: ABORTED
+  AbortedByFreeze: ABORTED BY FREEZE
   Error: ERROR
   Paused: PAUSED
   Pausing: PAUSING
@@ -571,6 +572,7 @@ executionStatus:
 executionFilters:
   labels:
     Aborted: Aborted
+    AbortedByFreeze: Aborted by Freeze
     Expired: Expired
     Failed: '{{ $.failed }}'
     Running: Running
