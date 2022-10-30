@@ -63,7 +63,7 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   Jenkins: 'service-jenkins',
   AmazonS3: 'service-service-s3',
   GoogleArtifactRegistry: 'service-gar',
-  GithubPackageRegistry: 'service-github',
+  GithubPackageRegistry: 'service-github-package',
   AzureArtifacts: 'service-github',
   AmazonMachineImage: 'service-github'
 }
