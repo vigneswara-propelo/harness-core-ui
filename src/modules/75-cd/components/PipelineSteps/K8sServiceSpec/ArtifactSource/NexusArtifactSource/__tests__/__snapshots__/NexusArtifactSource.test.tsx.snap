@@ -151,6 +151,9 @@ exports[`Nexus Artifact Source tests snapshot test for Sidecar Nexus artifact so
           class="inputFieldLayout"
         />
         <div
+          class="inputFieldLayout"
+        />
+        <div
           class="bp3-form-group"
         >
           <label

@@ -828,6 +828,7 @@ artifactsSelection:
   artifactIdPlaceholder: Enter Artifact ID
   groupId: Group ID
   groupIdPlaceholder: Enter Group ID
+  groupPlaceholder: Enter Group
   extension: Extension
   extensionPlaceholder: Enter Extension
   classifier: Classifier
@@ -879,6 +880,7 @@ artifactsSelection:
     artifactPath: Artifact Path is required
     artifactId: Artifact ID is required
     groupId: Group ID is required
+    group: Group is required
     region: '{{$.validation.regionRequired}}'
     tag: Tag is required
     tagRegex: Tag Regex is required
