@@ -886,6 +886,7 @@ export interface StringsMap {
   'common.subscriptions.usage.header': string
   'common.subscriptions.usage.last30days': string
   'common.subscriptions.usage.monthlyUsers': string
+  'common.subscriptions.usage.serviceLicenses': string
   'common.subscriptions.usage.services': string
   'common.subscriptions.usage.srvcInst': string
   'common.subtotal': string
