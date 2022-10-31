@@ -52,7 +52,14 @@ export const getExecutionPipelineViewLink = (
     accountId,
     module,
     executionIdentifier: planExecutionId || '-1',
-    source
+    source,
+    connectorRef: pipelineExecutionSummary.connectorRef,
+    repoName: defaultTo(
+      pipelineExecutionSummary.gitDetails?.repoName,
+      pipelineExecutionSummary.gitDetails?.repoIdentifier
+    ),
+    branch: pipelineExecutionSummary.gitDetails?.branch,
+    storeType: pipelineExecutionSummary.storeType
   })
 }
 

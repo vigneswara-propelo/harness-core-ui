@@ -535,6 +535,10 @@ function RunPipelineFormBasic({
                 module,
                 source
               }),
+              search:
+                supportingGitSimplification && storeType === StoreType.REMOTE
+                  ? `connectorRef=${connectorRef}&repoName=${repoIdentifier}&branch=${branch}&storeType=${storeType}`
+                  : undefined,
               state: {
                 shouldShowGovernanceEvaluations:
                   governanceMetadata?.status === 'error' || governanceMetadata?.status === 'warning',
