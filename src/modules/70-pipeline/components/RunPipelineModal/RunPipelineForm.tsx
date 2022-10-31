@@ -120,7 +120,6 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   fileName: `run-pipeline.yaml`,
   entityType: 'Pipelines',
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -835,7 +834,6 @@ function RunPipelineFormBasic({
                           invocationMap={factory.getInvocationMap()}
                           height="55vh"
                           width="100%"
-                          showSnippetSection={false}
                           isEditModeSupported={canEdit}
                         />
                       </Layout.Vertical>
