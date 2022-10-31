@@ -1089,7 +1089,6 @@ export interface StringsMap {
   'rbac.addResourceModal.modalCtaLabelPlural': string
   'rbac.addResourceModal.modalCtaLabelSingular': string
   'rbac.addResourceModal.selectedText': string
-  'rbac.addRole': string
   'rbac.addUser': string
   'rbac.allAccountResources': string
   'rbac.allOrgResources': string
@@ -1108,7 +1107,6 @@ export interface StringsMap {
   'rbac.communityErrorMessages.role': string
   'rbac.customResourceGroups': string
   'rbac.customRoles': string
-  'rbac.forUser': string
   'rbac.generateToken': string
   'rbac.group': string
   'rbac.in': string
@@ -1119,6 +1117,7 @@ export interface StringsMap {
   'rbac.inheritedScope.projectOrg': string
   'rbac.linkToOriginalUserGroup': string
   'rbac.manageInheritedGroupText': string
+  'rbac.manageRoleBindings': string
   'rbac.manageSCIMText': string
   'rbac.myApiKeys': string
   'rbac.noRoleBinding': string
@@ -1286,7 +1285,6 @@ export interface StringsMap {
   'rbac.userGroupRequired': string
   'rbac.userRequired': string
   'rbac.userUpperLimit': string
-  'rbac.usersPage.assignRoleBindings': string
   'rbac.usersPage.deleteConfirmation': string
   'rbac.usersPage.deleteLastAdminError': string
   'rbac.usersPage.deleteLastAdminOrgConfirmation': string
