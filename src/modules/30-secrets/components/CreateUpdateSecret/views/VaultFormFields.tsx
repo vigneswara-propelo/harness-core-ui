@@ -96,7 +96,7 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
           <>
             <FormInput.CheckBox name="configureRegions" label={getString('secrets.secret.configureRegion')} />
             {formik?.values['configureRegions'] ? (
-              <FormInput.DropDown name="regions" label={getString('secrets.secret.region')} items={regions} />
+              <FormInput.MultiSelect name="regions" label={getString('secrets.secret.region')} items={regions} />
             ) : null}
           </>
         ))}
