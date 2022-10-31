@@ -3926,6 +3926,7 @@ export interface StringsMap {
   'pipeline.serviceDeploymentTypes.serverlessAwsType': string
   'pipeline.serviceDeploymentTypes.serverlessAzureFunctions': string
   'pipeline.serviceDeploymentTypes.serverlessGoogleFunctions': string
+  'pipeline.serviceDeploymentTypes.spotElastigroup': string
   'pipeline.serviceDeploymentTypes.ssh': string
   'pipeline.serviceDeploymentTypes.winrm': string
   'pipeline.serviceNowApprovalStep.approvalChangeWindow': string
@@ -3994,13 +3995,17 @@ export interface StringsMap {
   'pipeline.stagetoRetryFrom': string
   'pipeline.startTime': string
   'pipeline.startedOn': string
-  'pipeline.startupCommand.fileDetails': string
-  'pipeline.startupCommand.fileSource': string
-  'pipeline.startupCommand.fileValidation': string
-  'pipeline.startupCommand.name': string
-  'pipeline.startupCommand.plainText': string
-  'pipeline.startupCommand.scriptFilePath': string
-  'pipeline.startupCommand.subtitle': string
+  'pipeline.startup.command.fileDetails': string
+  'pipeline.startup.command.fileSource': string
+  'pipeline.startup.command.name': string
+  'pipeline.startup.command.subtitle': string
+  'pipeline.startup.fileValidation': string
+  'pipeline.startup.plainText': string
+  'pipeline.startup.script.fileDetails': string
+  'pipeline.startup.script.fileSource': string
+  'pipeline.startup.script.name': string
+  'pipeline.startup.script.subtitle': string
+  'pipeline.startup.scriptFilePath': string
   'pipeline.step.validation.namePatternIsNotValid': string
   'pipeline.stepCommonFields.ifNotPresent': string
   'pipeline.stepCommonFields.runAsUser': string

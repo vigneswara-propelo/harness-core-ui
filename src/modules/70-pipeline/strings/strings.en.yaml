@@ -1256,6 +1256,7 @@ serviceDeploymentTypes:
   customDeployment: Deployment Template
   serverlessAwsType: Serverless Aws Lambda
   customDeploy: Custom Deployment
+  spotElastigroup: Spot Elastigroup
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1380,11 +1381,17 @@ appServiceConfig:
     filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
     subtitle: 'Specify {{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Type'
     overrides: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Overrides'
-startupCommand:
-  name: Startup Command
-  subtitle: 'Specify Azure Web App Startup Command Store Type'
-  fileDetails: '{{$.pipeline.startupCommand.name}} File Details'
-  fileSource: '{{$.pipeline.startupCommand.name}} File Source'
+startup:
+  script:
+    name: Startup Script
+    subtitle: 'Specify {{deploymentType}} {{$.pipeline.startup.script.name}} Store Type'
+    fileDetails: '{{$.pipeline.startup.script.name}} File Details'
+    fileSource: '{{$.pipeline.startup.script.name}} File Source'
+  command:
+    name: Startup Command
+    subtitle: 'Specify {{deploymentType}} {{$.pipeline.startup.command.name}} Store Type'
+    fileDetails: '{{$.pipeline.startup.command.name}} File Details'
+    fileSource: '{{$.pipeline.startup.command.name}} File Source'
   scriptFilePath: 'Script File Path'
   fileValidation: 'file is required'
   plainText: 'Plain Text'

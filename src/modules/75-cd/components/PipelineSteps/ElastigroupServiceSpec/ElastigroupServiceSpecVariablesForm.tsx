@@ -23,7 +23,7 @@ import type {
   CustomVariableEditableExtraProps
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import type { AllNGVariables } from '@pipeline/utils/types'
-import type { AzureWebAppServiceSpecVariablesFormProps } from './AzureWebAppServiceSpecInterface.types'
+import type { ElastigroupServiceSpecVariablesFormProps } from './ElastigroupServiceSpecInterface'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -33,17 +33,15 @@ export interface VariableRowProps {
   value: string
 }
 
-export function AzureWebAppServiceSpecVariablesForm(
-  props: AzureWebAppServiceSpecVariablesFormProps
+export function ElastigroupServiceSpecVariablesForm(
+  props: ElastigroupServiceSpecVariablesFormProps
 ): React.ReactElement {
   const { initialValues, stepsFactory, onUpdate, variablesData, metadataMap, readonly, path, allowableTypes } = props
-  const { artifacts, variables, startupCommand, applicationSettings, connectionStrings } = initialValues
+  const { artifacts, variables, startupScript } = initialValues
   const { getString } = useStrings()
 
   const primaryArtifactVariables = variablesData?.artifacts?.primary?.spec
-  const startupScriptVariables = variablesData?.startupCommand
-  const applicationSettingsVariables = variablesData?.applicationSettings
-  const connectionStringsVariables = variablesData?.connectionStrings
+  const startupScriptVariables = variablesData?.startupScript
 
   return (
     <React.Fragment>
@@ -60,7 +58,7 @@ export function AzureWebAppServiceSpecVariablesForm(
               </Text>
             </VariableAccordionSummary>
           }
-          summaryClassName={cx(pipelineVariableCss.accordianSummaryL2)}
+          summaryClassName={pipelineVariableCss.accordianSummaryL2}
           details={
             variablesData?.artifacts && (
               <>
@@ -77,7 +75,7 @@ export function AzureWebAppServiceSpecVariablesForm(
                       </Text>
                     </VariableAccordionSummary>
                   }
-                  summaryClassName={cx(pipelineVariableCss.accordianSummaryL2)}
+                  summaryClassName={pipelineVariableCss.accordianSummaryL2}
                   details={
                     <VariablesListTable
                       className={pipelineVariableCss.variablePaddingL3}
@@ -92,9 +90,7 @@ export function AzureWebAppServiceSpecVariablesForm(
           }
         />
       ) : null}
-      {startupCommand &&
-      typeof startupScriptVariables !== 'string' &&
-      !isEmpty(omit(startupScriptVariables, 'uuid')) ? (
+      {startupScript && typeof startupScriptVariables !== 'string' && !isEmpty(omit(startupScriptVariables, 'uuid')) ? (
         <NestedAccordionPanel
           isDefaultOpen
           noAutoScroll
@@ -103,78 +99,18 @@ export function AzureWebAppServiceSpecVariablesForm(
           summary={
             <VariableAccordionSummary>
               <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
-                {getString('pipeline.startup.command.name')}
+                {getString('pipeline.startup.script.name')}
               </Text>
             </VariableAccordionSummary>
           }
-          summaryClassName={cx(pipelineVariableCss.accordianSummaryL2)}
+          summaryClassName={pipelineVariableCss.accordianSummaryL2}
           details={
             !!startupScriptVariables && (
               <>
                 <VariablesListTable
                   className={cx(css.manifestVariablesTable, pipelineVariableCss.variablePaddingL3)}
                   data={startupScriptVariables?.store?.spec}
-                  originalData={initialValues?.startupCommand?.store?.spec}
-                  metadataMap={metadataMap}
-                />
-              </>
-            )
-          }
-        />
-      ) : null}
-      {applicationSettings &&
-      typeof applicationSettingsVariables !== 'string' &&
-      !isEmpty(omit(applicationSettingsVariables, 'uuid')) ? (
-        <NestedAccordionPanel
-          isDefaultOpen
-          noAutoScroll
-          addDomId
-          id={`${path}.ApplicationSettings`}
-          summary={
-            <VariableAccordionSummary>
-              <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
-                {getString('pipeline.appServiceConfig.applicationSettings.name')}
-              </Text>
-            </VariableAccordionSummary>
-          }
-          summaryClassName={cx(pipelineVariableCss.accordianSummaryL2)}
-          details={
-            !!applicationSettingsVariables && (
-              <>
-                <VariablesListTable
-                  className={cx(css.manifestVariablesTable, pipelineVariableCss.variablePaddingL3)}
-                  data={applicationSettingsVariables?.store?.spec}
-                  originalData={initialValues?.applicationSettings?.store?.spec}
-                  metadataMap={metadataMap}
-                />
-              </>
-            )
-          }
-        />
-      ) : null}
-      {connectionStrings &&
-      typeof connectionStringsVariables !== 'string' &&
-      !isEmpty(omit(connectionStringsVariables, 'uuid')) ? (
-        <NestedAccordionPanel
-          isDefaultOpen
-          noAutoScroll
-          addDomId
-          id={`${path}.ConnectionStrings`}
-          summary={
-            <VariableAccordionSummary>
-              <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
-                {getString('pipeline.appServiceConfig.connectionStrings.name')}
-              </Text>
-            </VariableAccordionSummary>
-          }
-          summaryClassName={cx(pipelineVariableCss.accordianSummaryL2)}
-          details={
-            !!connectionStringsVariables && (
-              <>
-                <VariablesListTable
-                  className={cx(css.manifestVariablesTable, pipelineVariableCss.variablePaddingL3)}
-                  data={connectionStringsVariables?.store?.spec}
-                  originalData={initialValues?.connectionStrings?.store?.spec}
+                  originalData={initialValues?.startupScript?.store?.spec}
                   metadataMap={metadataMap}
                 />
               </>
