@@ -225,7 +225,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
               </div>
             </div>
             <button
-              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-secondary Button--size Button--small"
+              class="bp3-button Button--button StyledProps--font StyledProps--main previewHostsButton Button--with-current-color Button--iconOnly Button--variation Button--variation-secondary Button--size Button--small"
               style="width: 140px;"
               type="button"
             >
