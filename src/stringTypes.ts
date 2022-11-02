@@ -2417,6 +2417,7 @@ export interface StringsMap {
   'connectors.gcpKms.keyNameRequired': string
   'connectors.gcpKms.keyRing': string
   'connectors.gcpKms.keyRingRequired': string
+  'connectors.gcpSecretManager.gcpCredentialsFile': string
   'connectors.gcpSecretManager.gcpSMSecretFile': string
   'connectors.gcpSecretManager.validation.credFileRequired': string
   'connectors.gcrConnectorDetails': string
@@ -2619,6 +2620,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.docker': string
   'connectors.testConnectionStep.validationText.gcp': string
   'connectors.testConnectionStep.validationText.gcpKms': string
+  'connectors.testConnectionStep.validationText.gcpSM': string
   'connectors.testConnectionStep.validationText.gcr': string
   'connectors.testConnectionStep.validationText.git': string
   'connectors.testConnectionStep.validationText.github': string
