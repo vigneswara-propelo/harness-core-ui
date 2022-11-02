@@ -3761,7 +3761,7 @@ export interface StringsMap {
   'pipeline.multiStageExecution': string
   'pipeline.myBuildsText': string
   'pipeline.myDeploymentsText': string
-  'pipeline.myPipelineRunsText': string
+  'pipeline.myExecutionsText': string
   'pipeline.mySecurityTestsText': string
   'pipeline.nativeHelm': string
   'pipeline.neverRan': string
@@ -3770,11 +3770,11 @@ export interface StringsMap {
   'pipeline.noArtifactPaths': string
   'pipeline.noBuckets': string
   'pipeline.noBucketsFound': string
-  'pipeline.noBuildsLabel': string
-  'pipeline.noBuildsText': string
-  'pipeline.noDeploymentText': string
-  'pipeline.noPipelineText': string
+  'pipeline.noPipelinesLabel': string
+  'pipeline.noPipelinesText': string
   'pipeline.noRegions': string
+  'pipeline.noRunsLabel': string
+  'pipeline.noRunsText': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string
   'pipeline.numOfServicesAndEnv': string
@@ -3890,7 +3890,6 @@ export interface StringsMap {
   'pipeline.runAllParallelstages': string
   'pipeline.runDisabledOnFreeze': string
   'pipeline.runFailedStages': string
-  'pipeline.runModalNoPipelineText': string
   'pipeline.runPipeline.ciCodebaseConfig': string
   'pipeline.runPipelineForm.disallowStageExecution': string
   'pipeline.runPipelineForm.notifyOnlyMe': string
@@ -7729,8 +7728,6 @@ export interface StringsMap {
   'sto.exemptions': string
   'sto.failedToGetIssueCounts': string
   'sto.issues': string
-  'sto.noScansRunPipelineText': string
-  'sto.noScansText': string
   'sto.noSecurityIssues': string
   'sto.noSecurityResults': string
   'sto.scans': string
@@ -9575,19 +9572,11 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
-  noBuildsText: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
   noConnectorFound: string
   /**
    * @deprecated migrate this string to module level file
    */
   noData: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  noDeploymentText: string
   /**
    * @deprecated migrate this string to module level file
    */

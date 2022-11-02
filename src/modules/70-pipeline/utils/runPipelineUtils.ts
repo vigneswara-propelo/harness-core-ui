@@ -6,8 +6,7 @@
  */
 
 import { cloneDeep, defaultTo, get, isEmpty, set, trim, uniqBy } from 'lodash-es'
-import type { SelectOption } from '@harness/uicore'
-
+import type { IconName, SelectOption } from '@harness/uicore'
 import type { AllowedTypes, MultiTypeInputType } from '@wings-software/uicore'
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
@@ -18,6 +17,10 @@ import type { InputSetErrorResponse, PipelineInfoConfig, StageElementWrapperConf
 import { INPUT_EXPRESSION_REGEX_STRING, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime } from '@common/utils/utils'
+import cdExecutionListIllustration from '../pages/execution-list/images/cd-execution-illustration.svg'
+import ciExecutionListIllustration from '../pages/execution-list/images/ci-execution-illustration.svg'
+import stoExecutionListIllustration from '../pages/execution-list/images/sto-execution-illustration.svg'
+import executionListIllustration from '../pages/execution-list/images/execution-illustration.svg'
 
 export interface MergeStageProps {
   stage: StageElementWrapperConfig
@@ -433,3 +436,18 @@ export function getAllowableTypesWithoutExpression(allowableTypes: MultiTypeInpu
 export const isExecutionTimeFieldDisabled = (viewType?: StepViewType): boolean => {
   return viewType === StepViewType.DeploymentForm
 }
+export const getModuleRunType = (module = '') =>
+  ({
+    [module]: 'executions',
+    ci: 'builds',
+    cd: 'deployments',
+    sto: 'security test runs'
+  }[module])
+
+export const getModuleRunTypeDetails = (module = '') =>
+  ({
+    [module]: { icon: 'cd-main' as IconName, illustration: executionListIllustration },
+    ci: { icon: 'ci-main' as IconName, illustration: ciExecutionListIllustration },
+    cd: { icon: 'cd-main' as IconName, illustration: cdExecutionListIllustration },
+    sto: { icon: 'sto-color-filled' as IconName, illustration: stoExecutionListIllustration }
+  }[module])
