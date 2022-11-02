@@ -1334,6 +1334,7 @@ configFiles:
     files: 'File(s) is required'
     file: 'This field is required'
     fileSelection: 'Select atleast one config file'
+    duplicateIdError: 'Failed to create Config File: There is already a Config File with identifier {{ configFileIdentifier }} present or soft deleted. Please provide a new unique identifier and save again.'
 OverviewEmptyStates:
   createPipelineHeaderMsg: Set up a Pipeline and run your first {{executionLabel}}!
   createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like {{pipelineOperation1}} and {{pipelineOperation2}} software.
