@@ -203,6 +203,7 @@ validation:
   email:
     required: Email is required
     format: Please input valid email address
+    someAreInvalid: Some of the email addresses entered are invalid.
   repositoryName: Repository Name is required
   package: Package is required
   invalidYamlText: 'You have provided invalid or empty YAML. Please provide a valid YAML'

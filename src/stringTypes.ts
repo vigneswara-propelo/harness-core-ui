@@ -947,6 +947,7 @@ export interface StringsMap {
   'common.validation.connectorRef': string
   'common.validation.email.format': string
   'common.validation.email.required': string
+  'common.validation.email.someAreInvalid': string
   'common.validation.entityIdIsRequired': string
   'common.validation.environmentIsRequired': string
   'common.validation.fieldCanNotHaveWhitespace': string
