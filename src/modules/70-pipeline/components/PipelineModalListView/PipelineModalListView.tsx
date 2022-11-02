@@ -57,10 +57,10 @@ export default function PipelineModalListView({ onClose, mockData }: PipelineMod
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
-      module,
       orgIdentifier,
       searchTerm: searchParam,
       page,
+      sort: ['executionSummaryInfo.lastExecutionTs', 'DESC'],
       size: 5,
       ...(gitFilter?.repo &&
         gitFilter.branch && {
@@ -68,7 +68,8 @@ export default function PipelineModalListView({ onClose, mockData }: PipelineMod
           branch: gitFilter.branch
         })
     },
-    mock: mockData
+    mock: mockData,
+    queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
   const fetchPipelines = React.useCallback(async () => {
