@@ -46,7 +46,8 @@ export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAls
         }
 
         if (parsed.default !== null) {
-          return `"${parsed.default}"`
+          // retain a number value as number instead of converting it to a string
+          return typeof parsed.default === 'number' ? `${parsed.default}` : `"${parsed.default}"`
         }
 
         return '""'
