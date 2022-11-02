@@ -429,3 +429,7 @@ export function getAllowableTypesWithoutFixedValue(allowableTypes: MultiTypeInpu
 export function getAllowableTypesWithoutExpression(allowableTypes: MultiTypeInputType[]): AllowedTypes {
   return allowableTypes.filter(type => !isMultiTypeExpression(type)) as AllowedTypes
 }
+
+export const isExecutionTimeFieldDisabled = (viewType?: StepViewType): boolean => {
+  return viewType === StepViewType.DeploymentForm
+}
