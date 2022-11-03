@@ -13,7 +13,8 @@ enableVerificationTitle: Add Continuous Verification
 enableVerificationOptions: Enable Continuous Verification
 enableVerificationHelpText: Apply verification step to a deployment to detect regressions or anomalies, and to rollback failed deployments.
 openInPipelineStudio: Open in Pipeline Studio
-closeStepConfig: Step Config
+closeStepConfig: Close step configuration?
+stepConfigContent: Changes to your step configuration will be lost if you do not apply your changes.
 stepConfigHasChanges: Form has some unsaved changes, Do you want to apply the changes?
 clickHere: Click here
 stepDetails: Step details
