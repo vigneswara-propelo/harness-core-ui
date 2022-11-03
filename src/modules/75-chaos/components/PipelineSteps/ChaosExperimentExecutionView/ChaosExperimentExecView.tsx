@@ -154,8 +154,7 @@ export function ChaosExperimentExecView(props: StepDetailProps): React.ReactElem
         {
           <ChildAppMounter<ChaosStepExecutionProps>
             ChildApp={ChaosStepExecution}
-            experimentID={(step.stepParameters?.spec.experimentRef as string) ?? ''}
-            experimentRunID={step.outcomes?.output?.experimentRunId as unknown as string}
+            notifyID={step.executableResponses?.[0].async.callbackIds[0]}
             expectedResilienceScore={step.stepParameters?.spec?.expectedResilienceScore ?? 50}
             actionButtons={
               <ActionButtons
