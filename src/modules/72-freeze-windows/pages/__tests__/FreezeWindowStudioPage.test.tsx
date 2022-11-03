@@ -10,7 +10,7 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import serviceData from '@common/modals/HarnessServiceModal/__tests__/serviceMock'
 import { getOrganizationAggregateDTOListMockData } from '@projects-orgs/pages/organizations/__tests__/OrganizationsMockData'
-import { FreezeStudioWrapper } from '../FreezeStudioWrapper'
+import FreezeWindowStudioPage from '../FreezeWindowStudioPage'
 
 export const accountId = 'accountId'
 export const projectIdentifier = 'project1'
@@ -34,7 +34,7 @@ describe('Freeze Window Studio Wrapper', () => {
         path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
         pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
       >
-        <FreezeStudioWrapper />
+        <FreezeWindowStudioPage />
       </TestWrapper>
     )
 

@@ -1089,7 +1089,7 @@ allClusters: 'All Clusters'
 all: 'All {{name}}'
 sortedByCreatedTime: List sorted by created time
 configDetails: 'Configuration Details'
-freezeActiveBannerText: All deployments have been disabled on the {{scope}} from <b>{{startTime}}</b> to <b>{{endTime}}</b>
+freezeActiveBannerText: Freeze enabled on all deployments for this <b>{{scope}}</b> from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 freezeListActiveBannerText: There are {{count}} ongoing deployment freeze windows
 freezeListActiveBannerExpandedText: On the {{scope}} from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 resourceIdentifier: Resource Identifier
