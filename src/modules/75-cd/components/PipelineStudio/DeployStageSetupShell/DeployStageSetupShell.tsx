@@ -149,12 +149,20 @@ export default function DeployStageSetupShell(): JSX.Element {
     return debounceUpdateStage(stageData?.stage)
   }, [debounceUpdateStage, scope, selectedStage, isNewService])
 
+  //this will default the tab to execution for previously configured stages -- for new stages it will still takes user to service tab only
+  const defaultExecTab = (): boolean => {
+    if (isEmpty(incompleteTabs) && !(selectedStage?.stage && isEmpty(selectedStage?.stage?.spec?.execution))) {
+      return true
+    }
+    return false
+  }
+
   React.useEffect(() => {
     const sectionId = (query as any).sectionId || ''
     if (sectionId?.length && (TabsOrder.includes(sectionId) || sectionId === DeployTabs.ENVIRONMENT)) {
       setSelectedTabId(sectionId)
     } else {
-      setSelectedSectionId(DeployTabs.SERVICE)
+      setSelectedSectionId(defaultExecTab() ? DeployTabs.EXECUTION : DeployTabs.SERVICE)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSectionId])
