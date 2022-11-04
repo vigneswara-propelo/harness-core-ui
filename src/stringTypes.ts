@@ -5762,6 +5762,36 @@ export interface StringsMap {
   'ce.enforcementMessage.usageInfo': string
   'ce.gridColumnSelector': string
   'ce.homepage.slogan': string
+  'ce.k8sQuickCreate.advanced': string
+  'ce.k8sQuickCreate.applyYaml.continue': string
+  'ce.k8sQuickCreate.applyYaml.desc': string
+  'ce.k8sQuickCreate.applyYaml.eksClusterInfo': string
+  'ce.k8sQuickCreate.applyYaml.header': string
+  'ce.k8sQuickCreate.applyYaml.step1': string
+  'ce.k8sQuickCreate.applyYaml.step2': string
+  'ce.k8sQuickCreate.applyYaml.stepsToApply': string
+  'ce.k8sQuickCreate.createAndTest': string
+  'ce.k8sQuickCreate.downloadAndApplyYaml': string
+  'ce.k8sQuickCreate.overview.nameInfo': string
+  'ce.k8sQuickCreate.quickCreate': string
+  'ce.k8sQuickCreate.testConnection.connectorSuccessful': string
+  'ce.k8sQuickCreate.testConnection.createdSuccessfully': string
+  'ce.k8sQuickCreate.testConnection.delegateError.error': string
+  'ce.k8sQuickCreate.testConnection.delegateError.info1': string
+  'ce.k8sQuickCreate.testConnection.delegateError.info2': string
+  'ce.k8sQuickCreate.testConnection.delegateError.troubleshoot1': string
+  'ce.k8sQuickCreate.testConnection.delegateError.troubleshoot2': string
+  'ce.k8sQuickCreate.testConnection.delegateError.troubleshoot3': string
+  'ce.k8sQuickCreate.testConnection.installedSuccessfully': string
+  'ce.k8sQuickCreate.testConnection.retest': string
+  'ce.k8sQuickCreate.testConnection.step0': string
+  'ce.k8sQuickCreate.testConnection.step1': string
+  'ce.k8sQuickCreate.testConnection.step1Desc': string
+  'ce.k8sQuickCreate.testConnection.step2': string
+  'ce.k8sQuickCreate.testConnection.step3': string
+  'ce.k8sQuickCreate.testConnection.verified': string
+  'ce.k8sQuickCreate.time.10mins': string
+  'ce.k8sQuickCreate.time.5mins': string
   'ce.learnMore': string
   'ce.noSavingsDataMessage': string
   'ce.nodeRecommendation.addPreferredInstanceFamilies': string
