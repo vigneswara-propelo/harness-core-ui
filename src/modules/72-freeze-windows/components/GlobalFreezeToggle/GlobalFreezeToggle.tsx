@@ -12,14 +12,13 @@ import { Dialog, OverlaySpinner, useConfirmationDialog, useToaster, Text, Layout
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import moment from 'moment'
 import { useStrings, String } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindow, useGetGlobalFreeze, useGlobalFreeze } from 'services/cd-ng'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
-import { scopeText } from '@freeze-windows/utils/freezeWindowUtils'
+import { getReadableDateFromDateString, scopeText } from '@freeze-windows/utils/freezeWindowUtils'
 import { GlobalFreezeScheduleForm } from './GlobalFreezeScheduleForm'
 import css from './GlobalFreezeToggle.module.scss'
 
@@ -153,9 +152,9 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
               stringID="freezeWindows.globalFreeze.enabledWindow"
               useRichText
               vars={{
-                startTime: moment(startTime).format('lll'),
+                startTime: getReadableDateFromDateString(startTime),
                 supportText: duration ? 'for' : 'to',
-                endTimeOrDuration: duration || moment(endTime).format('lll'),
+                endTimeOrDuration: duration || getReadableDateFromDateString(endTime),
                 timeZone
               }}
             />

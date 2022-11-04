@@ -16,8 +16,10 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { String } from 'framework/strings'
 import css from './GlobalFreezeBanner.module.scss'
-
+export const DATE_PARSE_FORMAT = 'YYYY-MM-DD hh:mm A'
 export type Scope = Exclude<FreezeDetailedResponse['freezeScope'], 'unknown' | undefined>
+
+export const getReadableDateFromEpoch = (dateTimeEpoch?: number): string => moment(dateTimeEpoch).format('LLL')
 
 export const scopeText: Record<Scope, string> = {
   account: 'Account',
@@ -68,8 +70,8 @@ export const GlobalFreezeBanner: FC = () => {
                 ? { count: freezes.length }
                 : {
                     scope: scopeText[freezes[0].freezeScope as Scope],
-                    startTime: moment(freezes[0].window?.startTime).format('LLL'),
-                    endTime: moment(freezes[0].window?.endTime).format('LLL')
+                    startTime: getReadableDateFromEpoch(freezes[0].window?.startTime),
+                    endTime: getReadableDateFromEpoch(freezes[0].window?.endTime)
                   }
             }
           />
@@ -96,8 +98,8 @@ export const GlobalFreezeBanner: FC = () => {
                   useRichText
                   vars={{
                     scope: scopeText[freeze.freezeScope as Scope],
-                    startTime: moment(freeze.window?.startTime).format('LLL'),
-                    endTime: moment(freeze.window?.endTime).format('LLL')
+                    startTime: getReadableDateFromEpoch(freeze.window?.startTime),
+                    endTime: getReadableDateFromEpoch(freeze.window?.endTime)
                   }}
                 />
               </Text>
