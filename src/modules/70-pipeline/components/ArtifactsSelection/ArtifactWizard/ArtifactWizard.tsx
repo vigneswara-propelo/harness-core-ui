@@ -19,12 +19,14 @@ import GcrAuthentication from '@connectors/components/CreateConnector/GcrConnect
 import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
 import AzureAuthentication from '@connectors/components/CreateConnector/AzureConnector/StepAuth/AzureAuthentication'
 import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
+import StepJenkinsAuthentication from '@connectors/components/CreateConnector/JenkinsConnector/StepAuth/StepJenkinsAuthentication'
 import {
   buildArtifactoryPayload,
   buildAWSPayload,
   buildAzurePayload,
   buildDockerPayload,
   buildGcpPayload,
+  buildJenkinsPayload,
   buildNexusPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import ConnectivityModeStep from '@connectors/components/CreateConnector/commonSteps/ConnectivityModeStep/ConnectivityModeStep'
@@ -107,6 +109,8 @@ function ArtifactWizard({
         return <StepDockerAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Gcr:
         return <GcrAuthentication name={getString('details')} {...newConnectorProps.auth} />
+      case ENABLED_ARTIFACT_TYPES.Jenkins:
+        return <StepJenkinsAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Ecr:
       case ENABLED_ARTIFACT_TYPES.AmazonS3:
         return <StepAWSAuthentication name={getString('credentials')} {...newConnectorProps.auth} />
@@ -141,6 +145,8 @@ function ArtifactWizard({
         return buildArtifactoryPayload
       case ENABLED_ARTIFACT_TYPES.Acr:
         return buildAzurePayload
+      case ENABLED_ARTIFACT_TYPES.Jenkins:
+        return buildJenkinsPayload
       default:
         return <></>
     }
