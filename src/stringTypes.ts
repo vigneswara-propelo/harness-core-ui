@@ -576,6 +576,7 @@ export interface StringsMap {
   'common.plans.manageSubscription': string
   'common.plans.subscription': string
   'common.plans.title': string
+  'common.platformServiceVersions': string
   'common.plusAddName': string
   'common.plusNewName': string
   'common.plusNumber': string
