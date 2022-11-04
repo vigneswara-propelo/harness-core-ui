@@ -111,6 +111,7 @@ function ArtifactWizard({
       case ENABLED_ARTIFACT_TYPES.AmazonS3:
         return <StepAWSAuthentication name={getString('credentials')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
+      case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
         return <StepNexusAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
         return <StepArtifactoryAuthentication name={getString('details')} {...newConnectorProps.auth} />
@@ -134,6 +135,7 @@ function ArtifactWizard({
       case ENABLED_ARTIFACT_TYPES.AmazonS3:
         return buildAWSPayload
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
+      case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
         return buildNexusPayload
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
         return buildArtifactoryPayload
