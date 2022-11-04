@@ -164,3 +164,5 @@ export const getGaClientID = (): string => {
     return ''
   }
 }
+
+export const isWindowsOS = (): boolean => navigator?.appVersion?.indexOf('Win') != -1
