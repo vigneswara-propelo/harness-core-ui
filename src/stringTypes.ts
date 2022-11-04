@@ -1174,10 +1174,11 @@ export interface StringsMap {
   'rbac.resourceScope.selectOrg': string
   'rbac.resourceScope.selectOrgsandProjects': string
   'rbac.resourceSelectorErrorMessage': string
+  'rbac.roleAssignment.addUsersPlaceHolder': string
   'rbac.roleAssignment.assignmentValidation': string
   'rbac.roleAssignment.deleteFailure': string
   'rbac.roleAssignment.deleteSuccess': string
-  'rbac.roleAssignment.userPlaceHolder': string
+  'rbac.roleAssignment.searchOrAddUsersPlaceHolder': string
   'rbac.roleBinding': string
   'rbac.roleBindings': string
   'rbac.roleCard.confirmDelete': string
