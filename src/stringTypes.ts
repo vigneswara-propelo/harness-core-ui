@@ -4043,6 +4043,7 @@ export interface StringsMap {
   'pipeline.stepDescription.ECSRollingDeploy': string
   'pipeline.stepDescription.ECSRollingRollback': string
   'pipeline.stepDescription.ECSRunTask': string
+  'pipeline.stepDescription.Email': string
   'pipeline.stepDescription.FlagConfiguration': string
   'pipeline.stepDescription.GCR': string
   'pipeline.stepDescription.GCS': string
@@ -4180,7 +4181,10 @@ export interface StringsMap {
   'pipeline.uniqueName': string
   'pipeline.unsupportedImagesWarning': string
   'pipeline.utilitiesStep.assertion': string
+  'pipeline.utilitiesStep.cc': string
   'pipeline.utilitiesStep.requestBody': string
+  'pipeline.utilitiesStep.subject': string
+  'pipeline.utilitiesStep.to': string
   'pipeline.utilitiesStep.url': string
   'pipeline.variable.typePlaceholder': string
   'pipeline.variable.variableNamePlaceholder': string
@@ -4995,6 +4999,8 @@ export interface StringsMap {
   'cd.steps.elastigroup.elastigroupConfigReq': string
   'cd.steps.elastigroup.elastigroupTitle': string
   'cd.steps.elastigroup.infraDetailHeader': string
+  'cd.steps.emailStep.ccOptionalLabel': string
+  'cd.steps.emailStep.timeout1DayMinimum': string
   'cd.steps.kubernetesGcpStep.stepName': string
   'cd.steps.pdcStep.attributesPlaceholder': string
   'cd.steps.pdcStep.filterHostAttributes': string
