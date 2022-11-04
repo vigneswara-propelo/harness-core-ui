@@ -2557,6 +2557,8 @@ export interface StringsMap {
   'connectors.pdc.selectLabel': string
   'connectors.pdc.testConnection.step1': string
   'connectors.pdc.uploadJson': string
+  'connectors.pdc.validateHosts': string
+  'connectors.pdc.validateHostsJson': string
   'connectors.placeholder.harnessImageConnectorRef': string
   'connectors.policyEvaluations.failedToSave': string
   'connectors.policyEvaluations.warning': string
