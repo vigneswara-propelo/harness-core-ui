@@ -4276,6 +4276,7 @@ export interface StringsMap {
   'freezeWindows.freezeWindowsPage.confirmDeleteText': string
   'freezeWindows.freezeWindowsPage.confirmDeleteTitle': string
   'freezeWindows.freezeWindowsPage.createFreezeWindow': string
+  'freezeWindows.freezeWindowsPage.dateRangeLabel': string
   'freezeWindows.freezeWindowsPage.deleteFailure': string
   'freezeWindows.freezeWindowsPage.deleteSuccess': string
   'freezeWindows.freezeWindowsPage.editFreezeWindow': string

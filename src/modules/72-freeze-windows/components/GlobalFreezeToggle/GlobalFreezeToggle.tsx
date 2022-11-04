@@ -22,11 +22,12 @@ import { getReadableDateFromDateString, scopeText } from '@freeze-windows/utils/
 import { GlobalFreezeScheduleForm } from './GlobalFreezeScheduleForm'
 import css from './GlobalFreezeToggle.module.scss'
 
-interface GlobalFreezeToggleProps {
+export interface GlobalFreezeToggleProps {
   freezeListLoading?: boolean
+  refreshGlobalFreezeBanner: () => void
 }
 
-export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoading }) => {
+export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoading, refreshGlobalFreezeBanner }) => {
   const { getString } = useStrings()
   const { showSuccess, showWarning } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -98,6 +99,7 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
       await updateGlobalFreeze(body)
       refetchGetGlobalFreeze()
       showSuccess(getString('freezeWindows.globalFreeze.disableFreezeSuccess', { scope: scopeText[scope] }))
+      refreshGlobalFreezeBanner()
     } catch (err: any) {
       showWarning(defaultTo(getRBACErrorMessage(err), getString('freezeWindows.globalFreeze.disableFreezeFailure')))
     }
@@ -113,6 +115,7 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
       refetchGetGlobalFreeze()
       hideEnableFreezeDialog()
       showSuccess(getString('freezeWindows.globalFreeze.enableFreezeSuccess', { scope: scopeText[scope] }))
+      refreshGlobalFreezeBanner()
     } catch (err: any) {
       showWarning(defaultTo(getRBACErrorMessage(err), getString('freezeWindows.globalFreeze.enableFreezeFailure')))
     }
