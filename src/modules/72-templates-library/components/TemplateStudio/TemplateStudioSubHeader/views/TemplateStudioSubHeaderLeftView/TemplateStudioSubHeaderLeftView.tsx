@@ -281,7 +281,9 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
                     initialValues: template,
                     promise: onSubmit,
                     ...(templateIdentifier !== DefaultNewTemplateId && { gitDetails }),
-                    title: getString('templatesLibrary.createNewModal.editHeading', { entity: template.type }),
+                    title: getString('templatesLibrary.createNewModal.editHeading', {
+                      entity: templateFactory.getTemplateLabel(template.type)
+                    }),
                     intent: templateIdentifier === DefaultNewTemplateId ? Intent.START : Intent.EDIT,
                     disabledFields:
                       templateIdentifier === DefaultNewTemplateId ? [] : [Fields.VersionLabel, Fields.Identifier],
