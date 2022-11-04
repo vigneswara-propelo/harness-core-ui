@@ -808,6 +808,7 @@ template:
     errorWhileDeletingTemplate: Error occurred deleting Template
   createNewModal:
     versionPlaceholder: 'Ex: Version1'
+  templateIcon: Template Icon
 viewLatest: View latest
 viewUsage: View Usage
 selected: 'Selected:'

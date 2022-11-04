@@ -914,6 +914,7 @@ export interface StringsMap {
   'common.template.saveAsNewTemplateHeading': string
   'common.template.saveTemplate.errorWhileSaving': string
   'common.template.saveTemplate.publishTemplate': string
+  'common.template.templateIcon': string
   'common.template.updateTemplate.errorWhileUpdating': string
   'common.template.updateTemplate.templateUpdated': string
   'common.templateServiceLabel': string
@@ -4297,9 +4298,14 @@ export interface StringsMap {
   'templatesLibrary.copyToNewPipeline': string
   'templatesLibrary.createNewModal.editHeading': string
   'templatesLibrary.createNewModal.heading': string
+  'templatesLibrary.createNewModal.iconDimensionsError': string
+  'templatesLibrary.createNewModal.iconSizeError': string
+  'templatesLibrary.createNewModal.iconTypeError': string
   'templatesLibrary.createNewModal.identifierPlaceholder': string
   'templatesLibrary.createNewModal.label': string
   'templatesLibrary.createNewModal.lastPublishedVersion': string
+  'templatesLibrary.createNewModal.logo': string
+  'templatesLibrary.createNewModal.logoHelpText': string
   'templatesLibrary.createNewModal.nameError': string
   'templatesLibrary.createNewModal.namePlaceholder': string
   'templatesLibrary.created': string
@@ -4620,6 +4626,7 @@ export interface StringsMap {
   'cd.deletedGitOpsServerSuccessfully': string
   'cd.deletedSuccessfully': string
   'cd.deploymentSteps': string
+  'cd.deploymentTemplates': string
   'cd.downloadYAML': string
   'cd.duplicateGitOpsServerIdError': string
   'cd.duplicateIdError': string
@@ -4715,6 +4722,7 @@ export interface StringsMap {
   'cd.learnMoreAboutHarnessAdapter': string
   'cd.learnMoreDelegate': string
   'cd.loadingDelegate': string
+  'cd.logoOfName': string
   'cd.manifestId': string
   'cd.manifestPathsCannotBeEmpty': string
   'cd.miniKube': string

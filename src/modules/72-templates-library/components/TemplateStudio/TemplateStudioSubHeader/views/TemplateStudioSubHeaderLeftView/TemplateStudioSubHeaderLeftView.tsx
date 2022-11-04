@@ -143,6 +143,7 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
       template.versionLabel = data.versionLabel
       template.orgIdentifier = data.orgIdentifier
       template.projectIdentifier = data.projectIdentifier
+      template.icon = data.icon
 
       try {
         await updateTemplate(template)

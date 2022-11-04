@@ -7,19 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly conditional: string
-  readonly diamond: string
-  readonly diamondClose: string
-  readonly diamondPortIn: string
-  readonly diamondPortOut: string
-  readonly horizontalBar: string
-  readonly iconImage: string
-  readonly inComplete: string
-  readonly loopingStrategy: string
-  readonly primaryIcon: string
-  readonly secondaryIcon: string
-  readonly template: string
-  readonly tertiaryIcon: string
-  readonly top: string
+  readonly image: string
 }
 export default styles

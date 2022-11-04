@@ -611,3 +611,5 @@ createAndUseTemplate: Create and Use Template
 ignoreReleaseHistFailStatus: 'Ignore Release History Failed Status'
 artifactVersion: 'Version :'
 artifactPath: 'Path :'
+logoOfName: 'Logo of {{name}}'
+deploymentTemplates: 'Deployment Templates'
