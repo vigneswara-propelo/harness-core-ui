@@ -121,7 +121,8 @@ export enum StepType {
   Wait = 'Wait',
   ShellScriptProvision = 'ShellScriptProvision',
   ChaosExperiment = 'Chaos',
-  Elastigroup = 'Elastigroup'
+  Elastigroup = 'Elastigroup',
+  ElastigroupService = 'ElastigroupService'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {
