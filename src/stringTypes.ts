@@ -3137,6 +3137,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.groupId': string
   'pipeline.artifactsSelection.validation.imagePath': string
   'pipeline.artifactsSelection.validation.noBuild': string
+  'pipeline.artifactsSelection.validation.noVersion': string
   'pipeline.artifactsSelection.validation.packageName': string
   'pipeline.artifactsSelection.validation.packageType': string
   'pipeline.artifactsSelection.validation.region': string

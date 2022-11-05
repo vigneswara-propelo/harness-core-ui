@@ -881,6 +881,7 @@ artifactsSelection:
     artifactsArrayPath: Artifact array path is required
     versionPath: Version path is required
     noBuild: No build found with given details
+    noVersion: No version found with given details
     packageType: Package Type is required
     versionRegex: Version Regex is required
     packageName: Package Name is required
