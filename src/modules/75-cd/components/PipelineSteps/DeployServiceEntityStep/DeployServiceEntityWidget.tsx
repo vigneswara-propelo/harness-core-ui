@@ -507,6 +507,7 @@ export default function DeployServiceEntityWidget({
                       checked={isMultiSvc}
                       onToggle={getMultiSvcToggleHandler(values)}
                       label={getString('cd.pipelineSteps.serviceTab.multiServicesText')}
+                      tooltipId={'multiServiceToggle'}
                     />
                   ) : null}
                 </Layout.Horizontal>
