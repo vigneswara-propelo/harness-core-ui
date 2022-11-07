@@ -2586,6 +2586,7 @@ export interface StringsMap {
   'connectors.splunk.connectorDetailsHeader': string
   'connectors.splunkConnectorDetails': string
   'connectors.splunkLabel': string
+  'connectors.spotAccountId': string
   'connectors.stackdriverLogsLabel': string
   'connectors.stackdriverMetricsLabel': string
   'connectors.stepFourName': string
