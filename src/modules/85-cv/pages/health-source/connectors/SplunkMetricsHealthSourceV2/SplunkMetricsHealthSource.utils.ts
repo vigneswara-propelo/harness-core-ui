@@ -273,7 +273,16 @@ export function transformPrometheusSetupSourceToHealthSource(setupSource: Promet
       groupName: groupName?.value as string,
       metricName,
       query,
-      sli: { enabled: Boolean(sli) }
+      sli: { enabled: Boolean(sli) },
+      // For splunk metric, deploymentVerification and liveMonitoring should always be disabled
+      analysis: {
+        deploymentVerification: {
+          enabled: false
+        },
+        liveMonitoring: {
+          enabled: false
+        }
+      }
     })
   }
 
