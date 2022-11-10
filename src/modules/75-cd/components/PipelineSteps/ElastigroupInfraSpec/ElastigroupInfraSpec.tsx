@@ -50,8 +50,8 @@ export class ElastigroupInfrastructureSpec extends PipelineStep<ElastigroupInfra
     }
   }
 
-  protected stepIcon: IconName = 'service-elastigroup' //todospt
-  protected stepName = 'Specify Spot Elastigroup' //todospt
+  protected stepIcon: IconName = 'elastigroup'
+  protected stepName = 'Specify Spot Elastigroup'
   protected stepPaletteVisible = false
   protected invocationMap: Map<
     RegExp,

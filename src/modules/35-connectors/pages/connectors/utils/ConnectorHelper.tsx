@@ -170,7 +170,7 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
     case Connectors.GcpSecretManager:
       return 'connectors.title.gcpSecretManager'
     case Connectors.SPOT:
-      return 'connectors.title.spot'
+      return 'cd.steps.elastigroup.connectorSpot'
     case Connectors.AZURE_ARTIFACTS:
       return 'connectors.title.azureArtifacts'
     default:
@@ -269,6 +269,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'custom-sm'
     case Connectors.GcpSecretManager:
       return 'gcp-secret-manager'
+    case Connectors.SPOT:
+      return 'spot'
     default:
       return 'placeholder'
   }

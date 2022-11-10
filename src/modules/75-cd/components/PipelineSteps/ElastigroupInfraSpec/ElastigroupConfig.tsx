@@ -26,9 +26,10 @@ export function ElastigroupConfig({ initialValues, handleSubmit }: ElastigroupCo
   return (
     <StepWizard
       className={css.elastiWizard}
-      icon={'service-elastigroup'}
+      icon={'elastigroup'}
       iconProps={{
-        size: 37
+        size: 37,
+        inverse: true
       }}
       title={getString('cd.steps.elastigroup.elastigroupTitle')}
       initialStep={2} //directly take us to 2nd step as we currently just have one option i.e. harness

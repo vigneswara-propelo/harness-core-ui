@@ -2213,6 +2213,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'custom-sm'
     case Connectors.GcpSecretManager:
       return 'gcp-secret-manager'
+    case Connectors.SPOT:
+      return 'spot'
     default:
       return 'cog'
   }
@@ -2395,6 +2397,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.customSM')
     case Connectors.GcpSecretManager:
       return getString('connectors.testConnectionStep.validationText.gcpSM')
+    case Connectors.SPOT:
+      return getString('connectors.testConnectionStep.validationText.spot')
     default:
       return ''
   }

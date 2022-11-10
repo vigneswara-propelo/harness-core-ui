@@ -31,7 +31,7 @@ const SpotConnector: React.FC<CreateConnectorModalProps> = props => {
   return (
     <StepWizard
       icon={getConnectorIconByType(Connectors.SPOT)}
-      iconProps={{ size: 37 }}
+      iconProps={{ size: 37, inverse: true }}
       title={getString(getConnectorTitleIdByType(Connectors.SPOT))}
     >
       <ConnectorDetailsStep
@@ -85,7 +85,7 @@ const SpotConnector: React.FC<CreateConnectorModalProps> = props => {
         isStep
         onClose={onClose}
         isLastStep={true}
-        type={Connectors.GcpSecretManager}
+        type={Connectors.SPOT}
         stepIndex={TESTCONNECTION_STEP_INDEX}
         helpPanelReferenceId="ConnectorTest"
       />

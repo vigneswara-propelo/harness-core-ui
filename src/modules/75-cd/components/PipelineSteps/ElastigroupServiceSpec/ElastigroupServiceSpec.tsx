@@ -44,7 +44,7 @@ export class ElastigroupServiceSpec extends Step<ServiceSpec> {
   protected type = StepType.ElastigroupService
   protected defaultValues: ServiceSpec = {}
 
-  protected stepIcon: IconName = 'service-elastigroup'
+  protected stepIcon: IconName = 'elastigroup'
   protected stepName = 'Specify Spot Elastigroup'
   protected stepPaletteVisible = false
   protected _hasStepVariables = true

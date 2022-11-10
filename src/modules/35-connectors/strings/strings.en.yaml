@@ -161,6 +161,7 @@ testConnectionStep:
     vault: 'Vault URL : '
     bitbucket: 'URL : '
     gcr: 'GCR URL : '
+    spot: 'SPOT URL : '
   validationText:
     k8s: Validating the reachability of provided URL
     docker: Validating Docker Registry authentication and permissions
@@ -189,6 +190,7 @@ testConnectionStep:
     gcpKms: Validating GCP Key Management Service authentication and permissions
     testingURLReachability: Testing reachability to the URL
     customSM: Validating Custom Secret Manager authentication and permissions
+    spot: Validating the Spot connector authentication and permissions
 validation:
   serviceNowUrl: 'ServiceNow URL is required.'
   personalAccessToken: Personal Access Token is required
