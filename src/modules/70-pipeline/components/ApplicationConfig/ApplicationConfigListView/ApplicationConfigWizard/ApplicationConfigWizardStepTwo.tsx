@@ -14,9 +14,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  ButtonVariation,
-  AllowedTypes as MultiTypeAllowedTypes,
-  StepProps
+  StepProps,
+  ButtonVariation
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -24,34 +23,25 @@ import { Form } from 'formik'
 import * as Yup from 'yup'
 
 import { get, isEmpty, isUndefined, set } from 'lodash-es'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { Connectors } from '@connectors/constants'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
+import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { Connectors } from '@connectors/constants'
+import {
+  ApplicationCofigDataType,
+  ApplicationConfigWizardStepTwoProps,
+  ConnectorTypes,
+  gitFetchTypeList,
+  GitFetchTypes
+} from '../../ApplicationConfig.types'
 
-import type { ConnectorTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
-import { HarnessOption } from '@pipeline/components/StartupScriptSelection/HarnessOption'
-
-import { gitFetchTypeList, GitFetchTypes, StartupScriptDataType } from '../AzureArm.types'
-
-import css from './ScriptWizard.module.scss'
+import { HarnessOption } from '../../../StartupScriptSelection/HarnessOption'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from '../../ApplicationConfig.module.scss'
 
-interface StartupScriptWizardStepTwoProps {
-  stepName: string
-  expressions: string[]
-  allowableTypes: MultiTypeAllowedTypes
-  initialValues: any
-  handleSubmit: (data: any) => void
-  prevStepData?: any
-  previousStep?: any
-  isReadonly: boolean
-  isParam: boolean
-}
-
-export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardStepTwoProps> = ({
-  stepName,
+function ApplicationConfigWizardStepTwo({
   expressions,
   allowableTypes,
   initialValues,
@@ -59,23 +49,22 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
   prevStepData,
   previousStep,
   isReadonly = false,
-  isParam
-}) => {
+  pathPlaceholder,
+  title
+}: StepProps<ConnectorConfigDTO> & ApplicationConfigWizardStepTwoProps): React.ReactElement {
   const { getString } = useStrings()
 
-  /* istanbul ignore next */
-  const gitConnectionType: string = prevStepData?.store === Connectors.GIT ? 'connectionType' : 'type'
-  /* istanbul ignore next */
+  const gitConnectionType: string = prevStepData?.selectedStore === Connectors.GIT ? 'connectionType' : 'type'
   const connectionType =
     prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
     prevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
-  const getInitialValues = useCallback((): StartupScriptDataType => {
-    const specValues = get(initialValues, `spec.configuration.${isParam ? 'parameters' : 'template'}.store.spec`, '')
-    /* istanbul ignore else */
-    if (specValues) {
+  const getInitialValues = useCallback((): ApplicationCofigDataType => {
+    const specValues = get(initialValues, 'store.spec', null)
+
+    if (specValues && get(initialValues, 'store.type') !== 'Harness') {
       return {
         ...specValues,
         branch: specValues.branch,
@@ -83,12 +72,9 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
         repoName: specValues.repoName,
         gitFetchType: specValues.gitFetchType,
         paths:
-          /* istanbul ignore next */ typeof specValues.paths === 'string' || isUndefined(specValues.paths)
-            ? specValues.paths
-            : specValues.paths[0]
+          typeof specValues.paths === 'string' || isUndefined(specValues.paths) ? specValues.paths : specValues.paths[0]
       }
     }
-    /* istanbul ignore next */
     return {
       branch: undefined,
       commitId: undefined,
@@ -98,46 +84,43 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
     }
   }, [])
 
-  /* istanbul ignore next */
-  const submitFormData = (formData: StartupScriptDataType & { store?: string; connectorRef?: string }): void => {
-    const remoteFileStore = {
-      type: formData?.store as ConnectorTypes,
-      spec: {
-        connectorRef: formData?.connectorRef,
-        gitFetchType: formData?.gitFetchType,
-        ...(formData?.gitFetchType === 'Branch' ? { branch: formData?.branch } : { commitId: formData?.commitId }),
-        paths:
-          getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME ? formData?.paths : [formData?.paths]
+  const submitFormData = (
+    formData: ApplicationCofigDataType & { selectedStore?: string; connectorRef?: string }
+  ): void => {
+    const applicationSettings = {
+      store: {
+        type: formData?.selectedStore as ConnectorTypes,
+        spec: {
+          connectorRef: formData?.connectorRef,
+          gitFetchType: formData?.gitFetchType,
+          paths:
+            getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME ? formData?.paths : [formData?.paths]
+        }
       }
     }
 
     if (connectionType === GitRepoName.Account) {
-      set(remoteFileStore, 'spec.repoName', formData?.repoName)
+      set(applicationSettings, 'store.spec.repoName', formData?.repoName)
     }
 
-    handleSubmit(remoteFileStore)
+    if (applicationSettings?.store?.spec) {
+      if (formData?.gitFetchType === 'Branch') {
+        set(applicationSettings, 'store.spec.branch', formData?.branch)
+      } else if (formData?.gitFetchType === 'Commit') {
+        set(applicationSettings, 'store.spec.commitId', formData?.commitId)
+      }
+    }
+
+    handleSubmit(applicationSettings)
   }
 
-  if (prevStepData?.store === 'Harness') {
-    /* istanbul ignore next */
-    const values = get(initialValues, `spec.configuration.${isParam ? 'parameters' : 'template'}.store`, '')
+  if (prevStepData?.selectedStore === 'Harness') {
     return (
       <HarnessOption
-        initialValues={values}
-        stepName={stepName}
-        handleSubmit={
-          /* istanbul ignore next */
-          data => {
-            handleSubmit({
-              ...data,
-              store: {
-                ...data?.store,
-                type: 'Harness'
-              }
-            })
-          }
-        }
-        formName={`azureArmRemote${isParam ? 'Parameters' : 'Template'}HarnessStore`}
+        initialValues={initialValues?.store?.type === 'Harness' ? initialValues?.store : undefined}
+        stepName={title as string}
+        handleSubmit={handleSubmit}
+        formName="applicationConfigDetails"
         prevStepData={prevStepData}
         previousStep={previousStep}
         expressions={expressions}
@@ -148,12 +131,12 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {stepName}
+        {title}
       </Text>
 
       <Formik
         initialValues={getInitialValues()}
-        formName={`azureArm${isParam ? 'Parameters' : 'Template'}`}
+        formName="applicationConfigDetails"
         validationSchema={Yup.object().shape({
           branch: Yup.string().when('gitFetchType', {
             is: 'Branch',
@@ -167,51 +150,42 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
             .trim()
             .required(
               getString('common.validation.fieldIsRequired', {
-                name: getString('pipeline.startup.scriptFilePath')
+                name: pathPlaceholder
               })
             ),
-          repoName: Yup.string().test(
-            'repoName',
-            getString('common.validation.repositoryName'),
-            /* istanbul ignore next */ value => {
-              if (
-                connectionType === GitRepoName.Repo ||
-                getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-              ) {
-                return true
-              }
-              return !isEmpty(value) && value?.length > 0
+          repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
+            if (
+              connectionType === GitRepoName.Repo ||
+              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+            ) {
+              return true
             }
-          )
+            return !isEmpty(value) && value?.length > 0
+          })
         })}
-        onSubmit={
-          /* istanbul ignore next */ formData => {
-            submitFormData({
-              ...prevStepData,
-              ...formData,
-              connectorRef: prevStepData?.connectorRef
-                ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                  ? prevStepData?.connectorRef
-                  : prevStepData?.connectorRef?.value
-                : /* istanbul ignore next */ prevStepData?.identifier
-                ? prevStepData?.identifier
-                : ''
-            })
-          }
-        }
+        onSubmit={formData => {
+          submitFormData({
+            ...prevStepData,
+            ...formData,
+            connectorRef: prevStepData?.connectorRef
+              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? prevStepData?.connectorRef
+                : prevStepData?.connectorRef?.value
+              : /* istanbul ignore next */ prevStepData?.identifier
+              ? prevStepData?.identifier
+              : ''
+          })
+        }}
       >
-        {({ setFieldValue, values }) => {
+        {(formik: { setFieldValue: (a: string, b: string) => void; values: ApplicationCofigDataType }) => {
           return (
             <Form>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
-                className={cx(css.startupScriptForm, css.scriptWizard)}
+                className={cx(css.serviceConfigForm, css.serviceConfigWizard)}
               >
-                <div className={css.scriptWizard}>
-                  {!!(
-                    connectionType === GitRepoName.Account &&
-                    getMultiTypeFromValue(prevStepData?.connectorRef) === MultiTypeInputType.FIXED
-                  ) && (
+                <div className={css.serviceConfigWizard}>
+                  {!!(connectionType === GitRepoName.Account) && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
                         multiTextInputProps={{ expressions, allowableTypes }}
@@ -219,18 +193,16 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                         placeholder={getString('common.repositoryName')}
                         name="repoName"
                       />
-
-                      {getMultiTypeFromValue(values?.repoName) === MultiTypeInputType.RUNTIME && (
+                      {getMultiTypeFromValue(formik.values?.repoName) === MultiTypeInputType.RUNTIME && (
                         <ConfigureOptions
-                          value={values?.repoName as string}
+                          value={formik.values?.repoName as string}
                           type="String"
                           variableName="repoName"
                           showRequiredField={false}
                           showDefaultField={false}
                           showAdvanced={true}
-                          onChange={/* istanbul ignore next */ value => setFieldValue('repoName', value)}
+                          onChange={/* istanbul ignore next */ value => formik.setFieldValue('repoName', value)}
                           isReadonly={isReadonly}
-                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                         />
                       )}
                     </div>
@@ -242,7 +214,7 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                       items={gitFetchTypeList}
                     />
                   </div>
-                  {values?.gitFetchType === GitFetchTypes.Branch && (
+                  {formik.values?.gitFetchType === GitFetchTypes.Branch && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
                         multiTextInputProps={{ expressions, allowableTypes }}
@@ -251,23 +223,22 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                         name="branch"
                       />
 
-                      {getMultiTypeFromValue(values?.branch) === MultiTypeInputType.RUNTIME && (
+                      {getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME && (
                         <ConfigureOptions
-                          value={values?.branch as string}
+                          value={formik.values?.branch as string}
                           type="String"
                           variableName="branch"
                           showRequiredField={false}
                           showDefaultField={false}
                           showAdvanced={true}
-                          onChange={/* istanbul ignore next */ value => setFieldValue('branch', value)}
+                          onChange={/* istanbul ignore next */ value => formik.setFieldValue('branch', value)}
                           isReadonly={isReadonly}
-                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                         />
                       )}
                     </div>
                   )}
 
-                  {values?.gitFetchType === GitFetchTypes.Commit && (
+                  {formik.values?.gitFetchType === GitFetchTypes.Commit && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
                         multiTextInputProps={{ expressions, allowableTypes }}
@@ -276,34 +247,31 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                         name="commitId"
                       />
 
-                      {getMultiTypeFromValue(values?.commitId) === MultiTypeInputType.RUNTIME && (
+                      {getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME && (
                         <ConfigureOptions
-                          value={values?.commitId as string}
+                          value={formik.values?.commitId as string}
                           type="String"
                           variableName="commitId"
                           showRequiredField={false}
                           showDefaultField={false}
                           showAdvanced={true}
-                          onChange={/* istanbul ignore next */ value => setFieldValue('commitId', value)}
+                          onChange={/* istanbul ignore next */ value => formik.setFieldValue('commitId', value)}
                           isReadonly={isReadonly}
-                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                         />
                       )}
                     </div>
                   )}
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.MultiTextInput
-                      label={getString(isParam ? 'cd.azureArm.paramFilePath' : 'pipeline.manifestType.osTemplatePath')}
-                      placeholder={getString(
-                        isParam ? 'cd.azureArm.paramFilePath' : 'pipeline.manifestType.osTemplatePath'
-                      )}
+                      label={pathPlaceholder}
+                      placeholder={pathPlaceholder}
                       name={'paths'}
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />
-                    {getMultiTypeFromValue(values?.paths as string) === MultiTypeInputType.RUNTIME && (
+                    {getMultiTypeFromValue(formik.values?.paths as string) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
                         style={{ alignSelf: 'center', marginTop: 1 }}
-                        value={values?.paths as string}
+                        value={formik.values?.paths as string}
                         type="String"
                         variableName={'paths'}
                         showRequiredField={false}
@@ -311,11 +279,10 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                         showAdvanced={true}
                         onChange={
                           /* istanbul ignore next */ value => {
-                            setFieldValue('paths', value)
+                            formik.setFieldValue('paths', value)
                           }
                         }
                         isReadonly={isReadonly}
-                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                       />
                     )}
                   </div>
@@ -326,14 +293,13 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={/* istanbul ignore next */ () => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(prevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}
                     type="submit"
                     text={getString('submit')}
                     rightIcon="chevron-right"
-                    data-testid="submit"
                   />
                 </Layout.Horizontal>
               </Layout.Vertical>
@@ -344,3 +310,5 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
     </Layout.Vertical>
   )
 }
+
+export default ApplicationConfigWizardStepTwo

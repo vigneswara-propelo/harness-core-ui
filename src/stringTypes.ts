@@ -3174,6 +3174,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.versionPlaceholder': string
   'pipeline.artifactsSelection.versionRegex': string
   'pipeline.artifactsSelection.versionRegexPlaceholder': string
+  'pipeline.azureWebApp.name': string
   'pipeline.azureWebApp.strategy.basic': string
   'pipeline.azureWebApp.strategy.blueGreen': string
   'pipeline.azureWebApp.strategy.canary': string

@@ -55,8 +55,8 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import ApplicationConfigSelection from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceConfiguration/AzureWebAppServiceConfigSelection'
-import { AzureWebAppSelectionTypes } from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceConfiguration/AzureWebAppServiceConfig.types'
+import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
+import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
 import ServiceManifestOverride from '../ServiceOverrides/ServiceManifestOverride/ServiceManifestOverride'
 import ServiceConfigFileOverride from '../ServiceOverrides/ServiceConfigFileOverride/ServiceConfigFileOverride'
 import css from '../EnvironmentDetails.module.scss'
@@ -405,11 +405,11 @@ export default function EnvironmentConfiguration({
                       <HarnessDocTooltip useStandAlone={true} tooltipId="applicationSettingsOverride" />
                     </Text>
                     <ApplicationConfigSelection
-                      environmentAllowableTypes={allowableTypes}
+                      allowableTypes={allowableTypes}
                       readonly={!canEdit}
                       showApplicationSettings={true}
                       data={formikProps.values.overrides?.applicationSettings}
-                      selectionType={AzureWebAppSelectionTypes.ENV_CONFIG}
+                      selectionType={ApplicationConfigSelectionTypes.ENV_CONFIG}
                       handleSubmitConfig={(config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration) =>
                         handleOverrideSubmit(config, 0, 'applicationSettings')
                       }
@@ -430,11 +430,11 @@ export default function EnvironmentConfiguration({
                       <HarnessDocTooltip useStandAlone={true} tooltipId="connectionStringsOverride" />
                     </Text>
                     <ApplicationConfigSelection
-                      environmentAllowableTypes={allowableTypes}
+                      allowableTypes={allowableTypes}
                       readonly={!canEdit}
                       showConnectionStrings={true}
                       data={formikProps.values.overrides?.connectionStrings}
-                      selectionType={AzureWebAppSelectionTypes.ENV_CONFIG}
+                      selectionType={ApplicationConfigSelectionTypes.ENV_CONFIG}
                       handleSubmitConfig={(config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration) =>
                         handleOverrideSubmit(config, 0, 'connectionStrings')
                       }

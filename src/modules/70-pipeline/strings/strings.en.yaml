@@ -1440,6 +1440,7 @@ duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always
 warningForInvalidYAMLDiscard: Enabling this sets the YAML editor in read/write mode for the Pipelines you view. You can enable/disable this setting in any Pipeline.
 azureWebApp:
+  name: Azure Web App
   strategy:
     basic: In a Basic deployment, a new Service/Artifact version is deployed to the deployment slot. Basic deployments are useful for development, learning Harness, and any non-mission critical workflows.
     canary: 'Harness performs a three phase deployment: Phase 1 deploys a new service version to the deployment slot. Phase 2 performs a Traffic Shift to that deployment slot. Phase 3 swaps the deployment slot with target slot.'

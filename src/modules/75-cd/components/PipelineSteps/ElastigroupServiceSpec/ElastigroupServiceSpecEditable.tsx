@@ -11,7 +11,7 @@ import cx from 'classnames'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import { getSelectedDeploymentType, getVariablesHeaderTooltipId } from '@pipeline/utils/stageHelpers'
-import StartupScriptSelection from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptSelection'
+import StartupScriptSelection from '@pipeline/components/StartupScriptSelection/StartupScriptSelection'
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
 import {

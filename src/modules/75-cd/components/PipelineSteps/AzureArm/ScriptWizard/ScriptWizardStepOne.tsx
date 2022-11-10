@@ -38,7 +38,7 @@ import {
   ConnectorLabelMap,
   ConnectorMap,
   ConnectorTypes
-} from '../../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
+} from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 
 import css from './ScriptWizard.module.scss'
 

@@ -19,12 +19,12 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import type { AzureBlueprintProps } from '../AzureBlueprintTypes.types'
 import {
   ConnectorLabelMap,
   ConnectorTypes,
   ConnectorMap
-} from '../../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
+} from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
+import type { AzureBlueprintProps } from '../AzureBlueprintTypes.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './Template.module.scss'
 

@@ -10,8 +10,8 @@ import { StepWizard } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ElastigroupConfiguration, StoreConfigWrapper } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { HarnessOption } from '@pipeline/components/StartupScriptSelection/HarnessOption'
 import ElastigroupConfigStepOne from './ElastigroupConfigStepOne'
-import { HarnessOption } from '../AzureWebAppServiceSpec/HarnessOption'
 import css from './ElastigroupInfra.module.scss'
 
 interface ElastigroupConfigProp {

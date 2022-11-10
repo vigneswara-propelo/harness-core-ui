@@ -23,7 +23,7 @@ import {
   ConnectorLabelMap,
   ConnectorTypes,
   ConnectorMap
-} from '../../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
+} from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { AzureArmProps } from '../AzureArm.types'
 import css from './FileInputStep.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
