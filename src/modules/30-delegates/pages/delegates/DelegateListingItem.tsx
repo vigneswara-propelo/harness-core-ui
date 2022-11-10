@@ -36,6 +36,7 @@ import { killEvent } from '@common/utils/eventUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { DelegateInstanceList } from './DelegateInstanceList'
 import { getAutoUpgradeTextColor, getInstanceStatus } from './utils/DelegateHelper'
+import DelegateConnectivityStatus from './DelegateConnectivityStatus'
 import css from './DelegatesPage.module.scss'
 
 interface DelegateProps {
@@ -122,41 +123,8 @@ const RenderHeartbeat: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => 
 }
 
 const RenderConnectivityStatus: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
-  const { getString } = useStrings()
   const delegate = row.original
-  const isConnected = delegate.activelyConnected
-  const text = isConnected ? getString('connected') : getString('delegate.notConnected')
-  const [troubleshoterOpen, setOpenTroubleshoter] = useState<{ isConnected: boolean | undefined }>()
-  return (
-    <Layout.Vertical>
-      <Text
-        icon="full-circle"
-        iconProps={{ size: 6, color: isConnected ? Color.GREEN_600 : Color.GREY_400, padding: 'small' }}
-      >
-        {text}
-      </Text>
-      <Dialog
-        isOpen={!!troubleshoterOpen}
-        enforceFocus={false}
-        style={{ width: '680px', height: '100%' }}
-        onClose={() => setOpenTroubleshoter(undefined)}
-      >
-        <DelegateInstallationError showDelegateInstalledMessage={false} delegateType={delegate?.delegateType} />
-      </Dialog>
-      {!isConnected && delegate.delegateType === 'KUBERNETES' && (
-        <div
-          className={css.troubleshootLink}
-          onClick={(e: React.MouseEvent) => {
-            /*istanbul ignore next */
-            e.stopPropagation()
-            setOpenTroubleshoter({ isConnected: delegate.activelyConnected })
-          }}
-        >
-          {getString('delegates.troubleshootOption')}
-        </div>
-      )}
-    </Layout.Vertical>
-  )
+  return <DelegateConnectivityStatus delegate={delegate} />
 }
 
 const RenderColumnMenu: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
