@@ -15,7 +15,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { String, useStrings } from 'framework/strings'
 import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
 import { ModuleLicenseType, Editions } from '@common/constants/SubscriptionTypes'
-import { PlanActions, TrialActions, Category } from '@common/constants/TrackingConstants'
+import { PlanActions, TrialActions, Category, CFOverviewActions } from '@common/constants/TrackingConstants'
 import routes from '@common/RouteDefinitions'
 import RbacButton from '@rbac/components/Button/Button'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
@@ -85,11 +85,13 @@ const CFTrialPanel: React.FC<CFTrialProps> = cfTrialProps => {
   })
 
   async function handleStartTrial(): Promise<void> {
+    //Free Plan Track
     trackEvent(clickEvent, {
       category: Category.SIGNUP,
       module,
       edition: FREE_PLAN_ENABLED ? Editions.FREE : Editions.ENTERPRISE
     })
+
     try {
       const data = await startTrial()
 
@@ -98,6 +100,13 @@ const CFTrialPanel: React.FC<CFTrialProps> = cfTrialProps => {
       history.push({
         pathname: routes.toModuleHome({ accountId, module }),
         search: `modal=${modal}&experience=${experience}`
+      })
+
+      //FF Overview Page Track
+      trackEvent(CFOverviewActions.OverviewStartFreePlan, {
+        category: Category.SIGNUP,
+        module,
+        edition: FREE_PLAN_ENABLED ? Editions.FREE : Editions.ENTERPRISE
       })
     } catch (error: any) {
       showError(error.data?.message)
@@ -166,7 +175,14 @@ const CFTrialPanel: React.FC<CFTrialProps> = cfTrialProps => {
           text={getString('cf.cfTrialHomePage.dontCode.inviteDeveloper')}
           disabled={loading}
           data-testid="invite-developer-btn"
-          onClick={() => openRoleAssignmentModal()}
+          onClick={() => {
+            trackEvent(CFOverviewActions.InviteCollaboratorsClick, {
+              category: Category.SIGNUP,
+              module: 'FF',
+              edition: FREE_PLAN_ENABLED ? Editions.FREE : Editions.ENTERPRISE
+            })
+            openRoleAssignmentModal()
+          }}
           permission={{
             resource: {
               resourceType: ResourceType.USER

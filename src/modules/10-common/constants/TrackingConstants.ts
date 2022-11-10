@@ -279,3 +279,8 @@ export enum CDOnboardingActions {
   HeartbeatVerifiedOnboardingYAML = 'HeartBeat Verified Onboarding YAML',
   HeartBeatFailedOnboardingYAML = 'HeartBeat Failed Onboarding YAML'
 }
+
+export enum CFOverviewActions {
+  OverviewStartFreePlan = 'FF Overview - Start a free plan',
+  InviteCollaboratorsClick = 'Clicked Invite Collaborators'
+}
