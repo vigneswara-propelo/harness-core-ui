@@ -6763,7 +6763,8 @@ export interface StringsMap {
   'chaos.noEnvironment.message': string
   'chaos.noEnvironment.title': string
   'chaos.pipelineStep.description': string
-  'chaos.pipelineStep.expectedResiliencyScoreLabel': string
+  'chaos.pipelineStep.expectedResilienceScoreLabel': string
+  'chaos.pipelineStep.expectedResilienceScorePlaceholder': string
   'chaos.pipelineStep.experimentRefLabel': string
   'chaos.selectChaosExperiment': string
   'chaos.trial.modal.description': string
