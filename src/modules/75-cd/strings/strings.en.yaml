@@ -209,11 +209,11 @@ pipelineSteps:
     hideInfrastructureInputs: Hide infrastructure inputs
     multiEnvironmentsParallelDeployLabel: Deploy environments in parallel?
     environmentGroupDialogTitleText: Deploy to environment group?
-    environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group?. If you choose to proceed, your existing environments will be lost.
+    environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group? If you choose to proceed, your existing environments will be lost.
     multiEnvironmentsDialogTitleText: Deploy to multiple environments or infrastructures?
-    multiEnvironmentsConfirmationText: Are you sure you want to switch to deploying multiple environments or infrastructures?. If you choose to proceed, your existing environment will be migrated automatically.
+    multiEnvironmentsConfirmationText: Are you sure you want to switch to deploying multiple environments or infrastructures? If you choose to proceed, your existing environment will be migrated automatically.
     singleEnvironmentDialogTitleText: Deploy to single environment?
-    singleEnvironmentConfirmationText: Are you sure you want to switch to deploying to a single environment?. If you choose to proceed, your existing environments will be lost.
+    singleEnvironmentConfirmationText: Are you sure you want to switch to deploying to a single environment? If you choose to proceed, your existing environments will be lost.
     deleteEnvironmentFromListDialogTitleText: Remove Environment from list?
     deleteEnvironmentFromListConfirmationText: Are you sure you want to remove Environment - {{name}} from the list?
     deleteInfrastructureFromListDialogTitleText: Remove Infrastructure from list?
