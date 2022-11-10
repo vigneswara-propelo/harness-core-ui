@@ -77,7 +77,7 @@ export default function NotificationsContainer(props: NotificationsContainerProp
       <Text tooltipProps={{ dataTooltipId: 'healthSourcesLabel' }} className={css.tableTitle}>
         {type == SRMNotificationType.SERVICE_LEVEL_OBJECTIVE
           ? getString('cv.notifications.errorBudgetPolicies')
-          : getString('notifications.name')}
+          : getString('rbac.notifications.name')}
       </Text>
       {renderContent()}
     </CardWithOuterTitle>

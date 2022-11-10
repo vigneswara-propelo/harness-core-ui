@@ -6,7 +6,7 @@
  */
 
 import type { SelectOption } from '@wings-software/uicore'
-import { NotificationType } from '@notifications/interfaces/Notifications'
+import { NotificationType } from '@rbac/interfaces/Notifications'
 
 export const getAllNotificationTypeSelectOption = (getString: any): SelectOption => ({
   label: getString('allNotificationFormat'),

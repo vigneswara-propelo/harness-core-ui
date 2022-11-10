@@ -28,7 +28,7 @@ export const RightBar = (): JSX.Element => {
         font={{ weight: 'semi-bold', size: 'xsmall' }}
         icon="pipeline-deploy"
         iconProps={{ size: 24 }}
-        text={getString('notifications.pipelineName')}
+        text={getString('rbac.notifications.pipelineName')}
         withoutCurrentColor={true}
       />
       <RightDrawer />

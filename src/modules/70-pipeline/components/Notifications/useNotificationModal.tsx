@@ -83,11 +83,11 @@ export const useNotificationModal = ({
           {EventsTabComponent ? (
             <EventsTabComponent name={getString('conditions')} />
           ) : (
-            <PipelineEvents name={getString('notifications.pipelineEvents')} stagesOptions={stagesOptions} />
+            <PipelineEvents name={getString('rbac.notifications.pipelineEvents')} stagesOptions={stagesOptions} />
           )}
 
           <NotificationMethods
-            name={getString('notifications.notificationMethod')}
+            name={getString('rbac.notifications.notificationMethod')}
             typeOptions={NotificationTypeSelectOptions}
             expressions={expressions}
           />

@@ -65,7 +65,7 @@ const UserGroupDetails: React.FC = () => {
   })
 
   const { openUserGroupModal } = useUserGroupModal({
-    onSuccess: refetch
+    onSuccess: () => refetch()
   })
 
   const { openLinkToSSOProviderModal } = useLinkToSSOProviderModal({

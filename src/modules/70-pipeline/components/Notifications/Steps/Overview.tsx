@@ -31,7 +31,7 @@ function Overview({
   return (
     <Layout.Vertical spacing="xxlarge" padding="small">
       <Text font="medium" color={Color.BLACK}>
-        {getString('notifications.nameOftheRule')}
+        {getString('rbac.notifications.nameOftheRule')}
       </Text>
       <Formik
         initialValues={{ name: '', identifier: '', ...data, ...prevStepData }}
@@ -55,7 +55,7 @@ function Overview({
               <Container height={400} width={400}>
                 <FormInput.InputWithIdentifier
                   inputName="name"
-                  inputLabel={getString('notifications.notificationName')}
+                  inputLabel={getString('rbac.notifications.notificationName')}
                   isIdentifierEditable={!isEdit}
                 />
               </Container>

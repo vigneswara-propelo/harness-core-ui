@@ -59,7 +59,7 @@ const UserGroupsPage: React.FC = () => {
   }, [data?.data])
 
   const { openUserGroupModal } = useUserGroupModal({
-    onSuccess: refetch
+    onSuccess: () => refetch()
   })
 
   const { openRoleAssignmentModal } = useRoleAssignmentModal({

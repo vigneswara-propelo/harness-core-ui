@@ -1008,54 +1008,6 @@ export interface StringsMap {
   'common.without': string
   'common.yearly': string
   'common.zipCode': string
-  'notifications.buttonSend': string
-  'notifications.configureConditions': string
-  'notifications.emailOrAlias': string
-  'notifications.emailRecipients': string
-  'notifications.emailTestSuccess': string
-  'notifications.enterMicrosoftTeamsUrl': string
-  'notifications.errors.invalidUrl': string
-  'notifications.errors.msTeamUrlRequired': string
-  'notifications.eventRequired': string
-  'notifications.helpMSTeams': string
-  'notifications.helpPagerDuty': string
-  'notifications.helpSlack': string
-  'notifications.infoPagerDuty': string
-  'notifications.infoSlack': string
-  'notifications.invalidPagerDutyKey': string
-  'notifications.invalidWebhookURL': string
-  'notifications.labelEmailUserGroups': string
-  'notifications.labelMS': string
-  'notifications.labelMSTeam': string
-  'notifications.labelMSTeamsUserGroups': string
-  'notifications.labelPDKey': string
-  'notifications.labelPDUserGroups': string
-  'notifications.labelPagerDuty': string
-  'notifications.labelSlackUserGroups': string
-  'notifications.labelWebhookUrl': string
-  'notifications.msTestSuccess': string
-  'notifications.name': string
-  'notifications.nameOftheRule': string
-  'notifications.notificationMethod': string
-  'notifications.notificationName': string
-  'notifications.pagerDutyTestSuccess': string
-  'notifications.pagerDutykey': string
-  'notifications.pagerDutyuserGroups': string
-  'notifications.pipelineEvents': string
-  'notifications.pipelineName': string
-  'notifications.placeholderMSKeys': string
-  'notifications.selectPipelineEvents': string
-  'notifications.selectStagesPlaceholder': string
-  'notifications.slackTestSuccess': string
-  'notifications.slackuserGroups': string
-  'notifications.slackwebhookUrl': string
-  'notifications.stageRequired': string
-  'notifications.titleEmail': string
-  'notifications.titlePagerDuty': string
-  'notifications.titleSlack': string
-  'notifications.userGroupsPlaceholder': string
-  'notifications.validationPDKey': string
-  'notifications.validationWebhook': string
   'auditTrail.Platform': string
   'auditTrail.actions.added_collaborator': string
   'auditTrail.actions.added_membership': string
@@ -1131,6 +1083,54 @@ export interface StringsMap {
   'rbac.manageSCIMText': string
   'rbac.myApiKeys': string
   'rbac.noRoleBinding': string
+  'rbac.notifications.buttonSend': string
+  'rbac.notifications.configureConditions': string
+  'rbac.notifications.emailOrAlias': string
+  'rbac.notifications.emailRecipients': string
+  'rbac.notifications.emailTestSuccess': string
+  'rbac.notifications.enterMicrosoftTeamsUrl': string
+  'rbac.notifications.errors.invalidUrl': string
+  'rbac.notifications.errors.msTeamUrlRequired': string
+  'rbac.notifications.eventRequired': string
+  'rbac.notifications.helpMSTeams': string
+  'rbac.notifications.helpPagerDuty': string
+  'rbac.notifications.helpSlack': string
+  'rbac.notifications.infoPagerDuty': string
+  'rbac.notifications.infoSlack': string
+  'rbac.notifications.invalidPagerDutyKey': string
+  'rbac.notifications.invalidWebhookURL': string
+  'rbac.notifications.labelEmailUserGroups': string
+  'rbac.notifications.labelMS': string
+  'rbac.notifications.labelMSTeam': string
+  'rbac.notifications.labelMSTeamsUserGroups': string
+  'rbac.notifications.labelPDKey': string
+  'rbac.notifications.labelPDUserGroups': string
+  'rbac.notifications.labelPagerDuty': string
+  'rbac.notifications.labelSlackUserGroups': string
+  'rbac.notifications.labelWebhookUrl': string
+  'rbac.notifications.msTestSuccess': string
+  'rbac.notifications.name': string
+  'rbac.notifications.nameOftheRule': string
+  'rbac.notifications.notificationMethod': string
+  'rbac.notifications.notificationName': string
+  'rbac.notifications.pagerDutyTestSuccess': string
+  'rbac.notifications.pagerDutykey': string
+  'rbac.notifications.pagerDutyuserGroups': string
+  'rbac.notifications.pipelineEvents': string
+  'rbac.notifications.pipelineName': string
+  'rbac.notifications.placeholderMSKeys': string
+  'rbac.notifications.selectPipelineEvents': string
+  'rbac.notifications.selectStagesPlaceholder': string
+  'rbac.notifications.slackTestSuccess': string
+  'rbac.notifications.slackuserGroups': string
+  'rbac.notifications.slackwebhookUrl': string
+  'rbac.notifications.stageRequired': string
+  'rbac.notifications.titleEmail': string
+  'rbac.notifications.titlePagerDuty': string
+  'rbac.notifications.titleSlack': string
+  'rbac.notifications.userGroupsPlaceholder': string
+  'rbac.notifications.validationPDKey': string
+  'rbac.notifications.validationWebhook': string
   'rbac.org': string
   'rbac.pendingUsers': string
   'rbac.permissionLabels.access': string

@@ -55,7 +55,7 @@ export const FreezeEvents = ({ nextStep, prevStepData }: StepProps<FreezeNotific
   return (
     <Layout.Vertical spacing="xxlarge" padding="small">
       <Text font="medium" color={Color.BLACK}>
-        {getString('notifications.configureConditions')}
+        {getString('rbac.notifications.configureConditions')}
       </Text>
       <Formik<EventsFormData>
         initialValues={{ ...initialValues, types }}
@@ -79,7 +79,7 @@ export const FreezeEvents = ({ nextStep, prevStepData }: StepProps<FreezeNotific
               <Layout.Vertical spacing="medium" className={css.formContent}>
                 {!isEmpty(formikProps.errors) && (
                   <Text intent={Intent.DANGER} margin={{ top: 'none', bottom: 'small' }}>
-                    {getString('notifications.eventRequired')}
+                    {getString('rbac.notifications.eventRequired')}
                   </Text>
                 )}
                 {eventItems.map(event => {

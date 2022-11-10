@@ -385,7 +385,7 @@ const Threshold = (props: ThresholdProps): JSX.Element => {
         icon: { name: 'email-inline' }
       },
       {
-        label: getString('notifications.slackwebhookUrl'),
+        label: getString('rbac.notifications.slackwebhookUrl'),
         value: BudgetAlertChannels.SLACK,
         icon: { name: 'service-slack' }
       }

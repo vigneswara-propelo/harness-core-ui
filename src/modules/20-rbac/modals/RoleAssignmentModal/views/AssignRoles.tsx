@@ -28,7 +28,7 @@ import {
   getScopeFromDTO,
   getPrincipalScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
-import UserGroupsInput from '@common/components/UserGroupsInput/UserGroupsInput'
+import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
 import { useGetCommunity } from '@common/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'

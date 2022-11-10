@@ -180,7 +180,7 @@ function PipelineNotificationsWithRef(
         />
       </div>
       <ConfirmationDialog
-        titleText={getString('notifications.name')}
+        titleText={getString('rbac.notifications.name')}
         contentText={getString('pipeline.stepConfigHasChanges')}
         isOpen={isConfirmationDialogOpen}
         confirmButtonText={getString('applyChanges')}

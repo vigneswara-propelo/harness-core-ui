@@ -21,8 +21,8 @@ import { Color } from '@harness/design-system'
 import type { CellProps, Renderer } from 'react-table'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { getIconByNotificationMethod } from '@notifications/Utils/Utils'
-import type { NotificationType } from '@notifications/interfaces/Notifications'
+import { getIconByNotificationMethod } from '@rbac/utils/NotificationUtils'
+import type { NotificationType } from '@rbac/interfaces/Notifications'
 import type { NotificationRuleResponse } from 'services/cv'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -197,7 +197,7 @@ function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElem
         disableSortBy: true
       },
       {
-        Header: getString('notifications.notificationMethod').toUpperCase(),
+        Header: getString('rbac.notifications.notificationMethod').toUpperCase(),
         id: 'methods',
         className: css.notificationTableHeader,
         accessor: row => row.notificationRule.type,
@@ -239,7 +239,7 @@ function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElem
         <Layout.Horizontal flex className={css.headerActions}>
           <Button
             variation={ButtonVariation.PRIMARY}
-            text={getString('notifications.name')}
+            text={getString('rbac.notifications.name')}
             icon="plus"
             id="newNotificationBtn"
             onClick={() => openNotificationModal()}

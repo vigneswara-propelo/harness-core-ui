@@ -37,7 +37,7 @@ import {
 import { getIdentifierFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import UserGroupsInput from '@common/components/UserGroupsInput/UserGroupsInput'
+import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
 import { useGetCommunity } from '@common/utils/utils'
 import UserItemRenderer from '@audit-trail/components/UserItemRenderer/UserItemRenderer'
 import UserTagRenderer from '@audit-trail/components/UserTagRenderer/UserTagRenderer'

@@ -657,7 +657,7 @@ describe('Right Drawer tests', () => {
         </PipelineContext.Provider>
       )
 
-      const notificationHeader = await findAllByText('notifications.name')
+      const notificationHeader = await findAllByText('rbac.notifications.name')
       expect(notificationHeader).toHaveLength(1)
     })
   })

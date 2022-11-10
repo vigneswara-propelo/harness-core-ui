@@ -28,7 +28,7 @@ export function NotificationsHeader(props: NotificationsHeaderProps): React.Reac
       border={{ bottom: true, color: Color.GREY_300 }}
     >
       <Text color={Color.BLACK} font={{ weight: 'bold', size: 'medium' }}>{`${name} : ${getString(
-        'notifications.name'
+        'rbac.notifications.name'
       )}`}</Text>
       <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center' }}>
         <Button

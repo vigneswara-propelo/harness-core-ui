@@ -125,7 +125,7 @@ export const useSRMNotificationModal = ({
                 />
                 {notificationRulesComponent}
                 <NotificationMethods
-                  name={getString('notifications.notificationMethod')}
+                  name={getString('rbac.notifications.notificationMethod')}
                   typeOptions={NotificationTypeSelectOptions}
                 />
               </StepWizard>
