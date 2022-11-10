@@ -34,7 +34,8 @@ export const httpStepType: SelectOption[] = [
   { value: 'PUT', label: 'PUT' },
   { value: 'DELETE', label: 'DELETE' },
   { value: 'HEAD', label: 'HEAD' },
-  { value: 'OPTIONS', label: 'OPTIONS' }
+  { value: 'OPTIONS', label: 'OPTIONS' },
+  { value: 'PATCH', label: 'PATCH' }
 ]
 
 export default function HttpStepBase(props: {
