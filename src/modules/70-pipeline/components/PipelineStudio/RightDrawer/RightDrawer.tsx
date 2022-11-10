@@ -708,7 +708,7 @@ export function RightDrawer(): React.ReactElement {
         step: {
           type: item.type,
           name: stepName,
-          identifier: stepName,
+          identifier: stepName.split(' ').join(''),
           spec: {}
         }
       }
@@ -1007,7 +1007,7 @@ export function RightDrawer(): React.ReactElement {
                 step: {
                   type: item.type,
                   name: stepName,
-                  identifier: stepName,
+                  identifier: stepName.split(' ').join(''),
                   spec: {}
                 }
               }
