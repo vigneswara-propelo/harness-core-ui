@@ -124,7 +124,8 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const { FREE_PLAN_ENABLED, CD_ONBOARDING_ENABLED } = useFeatureFlags()
+  const FREE_PLAN_ENABLED = !isOnPrem()
+  const { CD_ONBOARDING_ENABLED } = useFeatureFlags()
   const history = useHistory()
   const { selectedModuleName, projectData } = props
   const { accountId } = useParams<AccountPathProps>()

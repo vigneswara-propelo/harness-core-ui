@@ -16,13 +16,13 @@ import { String, useStrings } from 'framework/strings'
 import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
 import { ModuleLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { PlanActions, TrialActions, Category } from '@common/constants/TrackingConstants'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import RbacButton from '@rbac/components/Button/Button'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { isOnPrem } from '@common/utils/utils'
 import css from './CFTrialPage.module.scss'
 
 interface CFTrialProps {
@@ -70,7 +70,7 @@ const CFTrialPanel: React.FC<CFTrialProps> = cfTrialProps => {
   const { getString } = useStrings()
   const { showModal } = useStartTrialModal({ module, handleStartTrial })
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const { FREE_PLAN_ENABLED } = useFeatureFlags()
+  const FREE_PLAN_ENABLED = !isOnPrem()
   const clickEvent = FREE_PLAN_ENABLED ? PlanActions.StartFreeClick : TrialActions.StartTrialClick
   const experience = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
   const modal = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
