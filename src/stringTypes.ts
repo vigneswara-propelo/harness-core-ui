@@ -3802,6 +3802,7 @@ export interface StringsMap {
   'pipeline.noPipelinesText': string
   'pipeline.noRegions': string
   'pipeline.noRunsLabel': string
+  'pipeline.noRunsSimpleText': string
   'pipeline.noRunsText': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string

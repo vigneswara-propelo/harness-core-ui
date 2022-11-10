@@ -289,6 +289,7 @@ export const MenuCell: CellType = ({ row, column }) => {
         canRetry={data.canRetry}
         modules={data.modules}
         menuOnlyActions
+        isExecutionListView
       />
     </div>
   )

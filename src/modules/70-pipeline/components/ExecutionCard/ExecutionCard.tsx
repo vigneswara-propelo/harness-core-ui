@@ -333,6 +333,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   canExecute={canExecute}
                   canRetry={pipelineExecution.canRetry}
                   modules={pipelineExecution.modules}
+                  isExecutionListView
                 />
               ) : null}
             </div>

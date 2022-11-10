@@ -83,49 +83,42 @@ export function ExecutionListTable({
       {
         Header: '',
         id: 'rowSelectOrExpander',
-        width: '3%',
         Cell: isCompareMode ? RowSelectCell : ToggleAccordionCell,
         disableSortBy: true
       },
       {
         Header: getString('filters.executions.pipelineName'),
         accessor: 'pipelineIdentifier',
-        width: '19%',
         Cell: PipelineNameCell,
         serverSortProps: getServerSortProps('name')
       },
       {
         Header: 'status',
         accessor: 'status',
-        width: '10%',
         Cell: StatusCell,
         serverSortProps: getServerSortProps('status')
       },
       {
         Header: '',
         accessor: 'moduleInfo',
-        width: '41%',
         Cell: TriggerInfoCell,
         disableSortBy: true
       },
       {
         Header: getString('common.executedBy').toUpperCase(),
         accessor: 'startTs',
-        width: '20%',
         Cell: ExecutionCell,
         serverSortProps: getServerSortProps('startTs')
       },
       {
         Header: '',
         id: 'endTs',
-        width: '4%',
         Cell: DurationCell,
         disableSortBy: true
       },
       {
         Header: '',
         id: 'menu',
-        width: '3%',
         Cell: MenuCell,
         isPipelineInvalid,
         onViewCompiledYaml,
