@@ -17,12 +17,15 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import MetricLineChart from '@cv/pages/health-source/common/MetricLineChart/MetricLineChart'
 import { multipleRecordsError } from '@cv/pages/health-source/connectors/CloudWatch/CloudWatchConstants'
+import useCustomMetricV2HelperContext from '@cv/pages/health-source/common/CustomMetricV2/hooks/useCustomMetricV2HelperContext'
 import css from './CloudWatchQuery.module.scss'
 
 const guid = Utils.randomId()
 
 export default function CloudWatchQuery(): JSX.Element {
   const { values: formValues, setErrors, errors } = useFormikContext<CloudWatchFormType>()
+
+  const { expressions, isConnectorRuntimeOrExpression, isTemplate } = useCustomMetricV2HelperContext()
 
   const { getString } = useStrings()
 
@@ -107,16 +110,24 @@ export default function CloudWatchQuery(): JSX.Element {
 
   return (
     <>
-      <Container margin={{ bottom: 'small' }}>
-        <Text font={{ variation: FontVariation.SMALL_SEMI }} tooltipProps={{ dataTooltipId: 'cloudWatchMetricQuery' }}>
-          {getString('cv.query')}
-        </Text>
-      </Container>
+      {!isTemplate && (
+        <Container margin={{ bottom: 'small' }}>
+          <Text
+            font={{ variation: FontVariation.SMALL_SEMI }}
+            tooltipProps={{ dataTooltipId: 'cloudWatchMetricQuery' }}
+          >
+            {getString('cv.query')}
+          </Text>
+        </Container>
+      )}
       <QueryContent
         handleFetchRecords={fetchSampleDataForQuery}
         loading={loading}
         query={expression || ''}
         isAutoFetch={false}
+        isTemplate={isTemplate}
+        expressions={expressions}
+        isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
         fetchButtonText={getString('cv.healthSource.connectors.CloudWatch.fetchDataButtonText')}
         textAreaName={`customMetrics.${selectedCustomMetricIndex}.expression`}
         isFetchButtonDisabled={!expression || !expression?.trim()?.length || !region}
