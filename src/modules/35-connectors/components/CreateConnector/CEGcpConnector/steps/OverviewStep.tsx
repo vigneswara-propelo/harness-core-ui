@@ -18,7 +18,7 @@ import {
   StepProps,
   Icon,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { pick, omit, isEmpty, get } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'

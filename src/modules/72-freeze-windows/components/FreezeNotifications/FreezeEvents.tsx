@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { isEmpty, noop } from 'lodash-es'
-import { Button, ButtonVariation, Formik, FormikForm, FormInput, Layout, StepProps, Text } from '@wings-software/uicore'
+import { Button, ButtonVariation, Formik, FormikForm, FormInput, Layout, StepProps, Text } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { FreezeNotificationRules, FreezeEvent } from '@freeze-windows/types'

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { StringsMap } from 'stringTypes'
 import type { ApprovalInstanceResponse } from 'services/pipeline-ng'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, ButtonSize, ButtonVariation, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 

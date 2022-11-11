@@ -6,7 +6,8 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Intent, Layout, useConfirmationDialog } from '@harness/uicore'
+import { Layout, useConfirmationDialog } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 import { debounce, defaultTo, get, isEqual, set } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'

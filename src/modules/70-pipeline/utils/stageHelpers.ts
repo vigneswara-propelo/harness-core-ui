@@ -7,7 +7,7 @@
 
 import { defaultTo, get, isEmpty, pick, set } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import type {
   GraphLayoutNode,
   PipelineExecutionSummary,

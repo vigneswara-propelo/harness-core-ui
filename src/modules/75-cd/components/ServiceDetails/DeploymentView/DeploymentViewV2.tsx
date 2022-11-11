@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { Color } from '@harness/design-system'
-import { Container, Layout, Text, PageError } from '@wings-software/uicore'
+import { Container, Layout, Text, PageError } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import { PageSpinner, Table } from '@common/components'
 import type { InstanceGroupedByArtifact } from 'services/cd-ng'

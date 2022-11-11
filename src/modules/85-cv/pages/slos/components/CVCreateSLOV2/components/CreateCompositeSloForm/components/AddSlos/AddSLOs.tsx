@@ -12,16 +12,15 @@ import type { Column, Renderer, CellProps } from 'react-table'
 import {
   Button,
   ButtonVariation,
-  Color,
   Icon,
   Text,
   TextInput,
   TableV2,
-  Intent,
   Page,
   useConfirmationDialog,
   Container
 } from '@harness/uicore'
+import { Color, Intent } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'

@@ -10,7 +10,7 @@ import cx from 'classnames'
 
 import { useParams } from 'react-router-dom'
 import { get, map } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType, Label, SelectOption, useToaster } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, Label, SelectOption, useToaster } from '@harness/uicore'
 import { connect } from 'formik'
 import { Color } from '@harness/design-system'
 import { useQueryParams } from '@common/hooks'

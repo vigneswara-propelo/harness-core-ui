@@ -1,7 +1,6 @@
 import React, { useContext, useMemo } from 'react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm, Container, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { noop } from 'lodash-es'
-import { Container, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'

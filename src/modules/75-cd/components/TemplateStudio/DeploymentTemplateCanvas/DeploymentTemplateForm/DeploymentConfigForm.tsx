@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { Button, ButtonVariation, Container, Icon, Layout, Tab, Tabs } from '@wings-software/uicore'
+import { Button, ButtonVariation, Container, Icon, Layout, Tab, Tabs } from '@harness/uicore'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { useStrings } from 'framework/strings'
 import { ExecutionPanel } from './components/ExecutionPanel/ExecutionPanel'

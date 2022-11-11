@@ -19,7 +19,7 @@ import {
   ButtonVariation,
   MultiTypeInputType,
   getMultiTypeFromValue
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import cx from 'classnames'

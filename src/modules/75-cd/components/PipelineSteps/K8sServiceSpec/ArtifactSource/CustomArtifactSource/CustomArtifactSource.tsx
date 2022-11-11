@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { defaultTo, get, isArray, memoize } from 'lodash-es'
 import cx from 'classnames'
-import { FormInput, Layout, Text } from '@wings-software/uicore'
+import { FormInput, Layout, Text } from '@harness/uicore'
 import { FieldArray } from 'formik'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'

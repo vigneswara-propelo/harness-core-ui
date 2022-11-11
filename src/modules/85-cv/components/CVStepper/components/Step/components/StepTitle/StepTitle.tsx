@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import { Text, Layout, FontVariation, Icon } from '@harness/uicore'
+import { Text, Layout, Icon } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { StepTitleInterface } from './StepTitle.types'
 import { getStateByStatus } from './StepTitle.utils'
 import { StepStatus } from '../../Step.constants'

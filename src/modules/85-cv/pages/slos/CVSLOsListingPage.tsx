@@ -19,7 +19,7 @@ import {
   Text,
   IconName,
   ExpandingSearchInput
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'

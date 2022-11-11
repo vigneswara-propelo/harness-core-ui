@@ -6,7 +6,7 @@
  */
 
 import React, { useRef } from 'react'
-import { Card, Icon, Tag, TagsPopover, Text, Checkbox } from '@wings-software/uicore'
+import { Card, Icon, Tag, TagsPopover, Text, Checkbox } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { Popover, Position } from '@blueprintjs/core'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput, SelectOption, useToaster } from '@wings-software/uicore'
+import { FormInput, SelectOption, useToaster } from '@harness/uicore'
 import type { FormikContextType } from 'formik'
 import { ConnectorInfoDTO, SecretDTOV2, useGetGcpRegions } from 'services/cd-ng'
 

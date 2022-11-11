@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Select, SelectOption, SelectProps } from '@wings-software/uicore'
+import { Select, SelectOption, SelectProps } from '@harness/uicore'
 import { EnvironmentResponseDTO, useGetEnvironmentListForProject } from 'services/cd-ng'
 import { rewriteCurrentLocationWithActiveEnvironment } from '@cf/utils/CFUtils'
 

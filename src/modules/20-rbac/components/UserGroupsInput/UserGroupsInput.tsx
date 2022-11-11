@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { connect, FormikContextType } from 'formik'
-import { Layout, Text, FormError, DataTooltipInterface, FormikTooltipContext } from '@wings-software/uicore'
+import { Layout, Text, FormError, DataTooltipInterface, FormikTooltipContext } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 
 import { get } from 'lodash-es'

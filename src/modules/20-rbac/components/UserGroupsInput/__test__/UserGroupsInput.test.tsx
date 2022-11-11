@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, RenderResult } from '@testing-library/react'
-import { FormikTooltipContext } from '@wings-software/uicore'
+import { FormikTooltipContext } from '@harness/uicore'
 import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 

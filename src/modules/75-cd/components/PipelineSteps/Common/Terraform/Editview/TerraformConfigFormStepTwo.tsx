@@ -22,7 +22,7 @@ import {
   Checkbox,
   StepProps,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { Form } from 'formik'

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, Text, Color, Checkbox } from '@harness/uicore'
+import { Layout, Text, Checkbox } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { Renderer, CellProps, Row } from 'react-table'
 import type { ServiceLevelObjectiveDetailsDTO, SLOHealthListView } from 'services/cv'
 import css from './SLOList.module.scss'

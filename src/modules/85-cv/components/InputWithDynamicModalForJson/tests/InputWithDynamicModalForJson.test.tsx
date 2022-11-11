@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { FormikForm } from '@wings-software/uicore'
+import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
 import { act } from 'react-test-renderer'
 import { TestWrapper } from '@common/utils/testUtils'

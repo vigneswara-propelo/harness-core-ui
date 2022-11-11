@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { StepWizard } from '@wings-software/uicore'
+import { StepWizard } from '@harness/uicore'
 import ApplicationConfigWizardStepOne from './ApplicationConfigWizardStepOne'
 import type { ConnectorTypes, ApplicationConfigWizardStepsProps } from '../../ApplicationConfig.types'
 

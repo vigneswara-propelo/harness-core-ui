@@ -7,7 +7,8 @@
 
 import React from 'react'
 import type { Column } from 'react-table'
-import { Color, TableV2, Text } from '@harness/uicore'
+import { TableV2, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { SortBy } from '@freeze-windows/types'
 import type { FreezeSummaryResponse, PageFreezeSummaryResponse } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

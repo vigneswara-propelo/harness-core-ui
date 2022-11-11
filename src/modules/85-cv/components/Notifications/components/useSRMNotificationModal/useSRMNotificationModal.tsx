@@ -7,7 +7,7 @@
 
 import React, { useCallback, useMemo, useState } from 'react'
 import { isNil } from 'lodash-es'
-import { StepWizard, Button, useToaster } from '@wings-software/uicore'
+import { StepWizard, Button, useToaster } from '@harness/uicore'
 
 import { useModalHook } from '@harness/use-modal'
 

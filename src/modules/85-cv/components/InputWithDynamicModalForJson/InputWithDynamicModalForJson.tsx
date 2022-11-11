@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Formik, FormikForm, FormInput, Layout, Text, Button } from '@wings-software/uicore'
+import { Container, Formik, FormikForm, FormInput, Layout, Text, Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'

@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import { defaultTo, get, isEmpty, isEqual, set } from 'lodash-es'
 import produce from 'immer'
 import type { AllNGVariables as Variable } from '@pipeline/utils/types'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiSelectDropDown, MultiSelectOption } from '@wings-software/uicore'
+import { MultiSelectDropDown, MultiSelectOption } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { StringKeys, useStrings } from 'framework/strings'

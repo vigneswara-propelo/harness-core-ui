@@ -1,6 +1,6 @@
 import React from 'react'
-import { Color, Icon, Intent, Layout, useConfirmationDialog } from '@harness/uicore'
-import { Text } from '@wings-software/uicore'
+import { Icon, Layout, useConfirmationDialog, Text } from '@harness/uicore'
+import { Color, Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import css from './SLOActions.module.scss'
 export interface SLOActionsProps {

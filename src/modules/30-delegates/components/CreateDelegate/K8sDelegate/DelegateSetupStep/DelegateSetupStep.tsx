@@ -21,7 +21,7 @@ import {
   SelectOption,
   Tag,
   HarnessDocTooltip
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { FormikProps, FormikHelpers } from 'formik'
 import {
   DelegateSizeDetails,

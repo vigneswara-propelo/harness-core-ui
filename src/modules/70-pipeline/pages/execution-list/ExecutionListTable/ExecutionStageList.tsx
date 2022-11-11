@@ -8,7 +8,8 @@
 
 import React, { Fragment, ReactElement } from 'react'
 import type { Row } from 'react-table'
-import { Color, FontVariation, Icon, Text } from '@harness/uicore'
+import { Icon, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { processLayoutNodeMapV1 } from '@pipeline/utils/executionUtils'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'

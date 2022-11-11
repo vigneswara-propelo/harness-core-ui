@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import { get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 

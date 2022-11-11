@@ -17,7 +17,7 @@ import {
   Container,
   Text,
   FormInput
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Link, useParams } from 'react-router-dom'
 import { isEmpty, pick, get, omit } from 'lodash-es'

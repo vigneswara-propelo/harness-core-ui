@@ -7,7 +7,7 @@
 
 import React, { SyntheticEvent, useState } from 'react'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
-import { Button, ButtonSize, ButtonVariation, Container, useConfirmationDialog } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, useConfirmationDialog } from '@harness/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'

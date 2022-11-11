@@ -23,8 +23,8 @@ import {
   Icon,
   MultiTypeInputType,
   PageSpinner
-} from '@wings-software/uicore'
-import type { Item } from '@wings-software/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
+} from '@harness/uicore'
+import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import { isEmpty, isUndefined, set, uniqBy, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'

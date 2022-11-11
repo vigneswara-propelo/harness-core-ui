@@ -7,7 +7,7 @@
 
 import * as React from 'react'
 import cx from 'classnames'
-import { Icon, Layout, Text, Button, ButtonVariation, useToaster } from '@wings-software/uicore'
+import { Icon, Layout, Text, Button, ButtonVariation, useToaster } from '@harness/uicore'
 import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'

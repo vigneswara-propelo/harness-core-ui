@@ -8,16 +8,9 @@
 import React, { FC } from 'react'
 import { Classes, Intent, Spinner, Switch } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
-import {
-  Dialog,
-  OverlaySpinner,
-  useConfirmationDialog,
-  useToaster,
-  Text,
-  Layout,
-  FontVariation,
-  Icon
-} from '@harness/uicore'
+import { Dialog, OverlaySpinner, useConfirmationDialog, useToaster, Text, Layout, Icon } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
+
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'

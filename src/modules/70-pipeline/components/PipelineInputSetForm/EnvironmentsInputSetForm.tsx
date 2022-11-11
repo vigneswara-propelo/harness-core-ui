@@ -11,7 +11,8 @@ import { useFormikContext } from 'formik'
 import { get, isBoolean, isEmpty, isNil, omit, pick, set, unset } from 'lodash-es'
 import cx from 'classnames'
 
-import { Color, Container, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
+import { Container, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import type { DeploymentStageConfig, EnvironmentYamlV2, Infrastructure, ServiceSpec } from 'services/cd-ng'

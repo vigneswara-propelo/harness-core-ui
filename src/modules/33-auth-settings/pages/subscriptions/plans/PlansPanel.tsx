@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { Color } from '@harness/design-system'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { Spinner } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'

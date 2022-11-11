@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { Button, Card, Container, Icon, Layout, Text, ButtonVariation, useToaster } from '@wings-software/uicore'
+import { Button, Card, Container, Icon, Layout, Text, ButtonVariation, useToaster } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'

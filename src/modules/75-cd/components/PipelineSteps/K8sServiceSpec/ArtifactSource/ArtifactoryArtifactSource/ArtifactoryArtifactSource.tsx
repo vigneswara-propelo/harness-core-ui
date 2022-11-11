@@ -18,7 +18,7 @@ import {
   MultiTypeInputType,
   SelectOption,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'

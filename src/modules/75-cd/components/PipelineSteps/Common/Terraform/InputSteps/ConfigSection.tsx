@@ -11,14 +11,7 @@ import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get, map } from 'lodash-es'
 
-import {
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  FormInput,
-  Label,
-  useToaster,
-  SelectOption
-} from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, Label, useToaster, SelectOption } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

@@ -6,7 +6,7 @@
  */
 
 import { pick, isString, get } from 'lodash-es'
-import type { IconName, StepProps } from '@wings-software/uicore'
+import type { IconName, StepProps } from '@harness/uicore'
 import { Connectors, ElkAuthType, EntityTypes } from '@connectors/constants'
 import type {
   ConnectorInfoDTO,

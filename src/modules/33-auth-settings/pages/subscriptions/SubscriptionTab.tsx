@@ -9,7 +9,7 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import cx from 'classnames'
 
 import { useParams, useHistory } from 'react-router-dom'
-import { Button, Layout } from '@wings-software/uicore'
+import { Button, Layout } from '@harness/uicore'
 import type { Editions } from '@common/constants/SubscriptionTypes'
 import { SubscriptionTabNames, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'

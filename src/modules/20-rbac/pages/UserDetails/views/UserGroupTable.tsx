@@ -18,7 +18,7 @@ import {
   AvatarGroup,
   ButtonSize,
   Page
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Intent } from '@harness/design-system'
 import { Classes, Menu, Popover, Position, PopoverInteractionKind } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'

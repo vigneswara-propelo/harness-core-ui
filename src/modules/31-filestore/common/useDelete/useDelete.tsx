@@ -7,7 +7,7 @@
 
 import React, { useCallback, useContext, useState } from 'react'
 
-import { useConfirmationDialog, useToaster } from '@wings-software/uicore'
+import { useConfirmationDialog, useToaster } from '@harness/uicore'
 import { Intent } from '@blueprintjs/core'
 import { capitalize as _capitalize, defaultTo as _defaultTo, lowerCase as _lowerCase } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'

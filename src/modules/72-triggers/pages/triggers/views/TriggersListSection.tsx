@@ -25,7 +25,7 @@ import {
   useToaster,
   TableV2,
   HarnessDocTooltip
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import copy from 'clipboard-copy'
 import { Classes, Intent, Menu, Position } from '@blueprintjs/core'

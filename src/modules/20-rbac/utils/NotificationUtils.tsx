@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { NotificationType } from '@rbac/interfaces/Notifications'
 import type {
   EmailConfigDTO,

@@ -13,7 +13,7 @@ import {
   ExpressionAndRuntimeTypeProps,
   getMultiTypeFromValue,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ExpressionsListInput } from '@common/components/ExpressionsListInput/ExpressionsListInput'
 import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'

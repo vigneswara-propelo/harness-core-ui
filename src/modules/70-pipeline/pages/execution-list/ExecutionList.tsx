@@ -5,10 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, PageSpinner } from '@wings-software/uicore'
+import { Container, PageSpinner, Text } from '@harness/uicore'
 import React, { useState } from 'react'
-
-import { Color, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { matchPath, useLocation, useParams } from 'react-router-dom'
 import { Page } from '@common/exports'

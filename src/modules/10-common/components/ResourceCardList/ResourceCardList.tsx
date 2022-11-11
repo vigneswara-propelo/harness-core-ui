@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Button, ButtonSize, Card, Layout, Text, useToggleOpen } from '@wings-software/uicore'
+import { Button, ButtonSize, Card, Layout, Text, useToggleOpen } from '@harness/uicore'
 import { Icon, IconName } from '@harness/icons'
 import { FontVariation, Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'

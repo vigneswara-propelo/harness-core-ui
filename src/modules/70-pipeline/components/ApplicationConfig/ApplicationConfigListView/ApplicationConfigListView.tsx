@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Button, ButtonSize, ButtonVariation, StepWizard, Text, StepProps, Icon } from '@wings-software/uicore'
+import { Layout, Button, ButtonSize, ButtonVariation, StepWizard, Text, StepProps, Icon } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'

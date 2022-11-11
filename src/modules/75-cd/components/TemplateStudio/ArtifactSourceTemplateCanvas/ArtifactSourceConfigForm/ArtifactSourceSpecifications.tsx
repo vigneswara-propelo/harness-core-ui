@@ -16,7 +16,7 @@ import {
   AllowedTypesWithRunTime,
   getMultiTypeFromValue,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

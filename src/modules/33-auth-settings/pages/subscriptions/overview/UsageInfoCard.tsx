@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, Layout, Text, Icon, Popover, Container } from '@wings-software/uicore'
+import { Card, Layout, Text, Icon, Popover, Container } from '@harness/uicore'
 import { Position, PopoverInteractionKind, Classes } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

@@ -19,7 +19,7 @@ import {
   Icon,
   Text,
   Radio
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import { defaultTo, get, omit, pick } from 'lodash-es'

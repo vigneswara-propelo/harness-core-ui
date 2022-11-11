@@ -23,7 +23,7 @@ import {
   VisualYamlSelectedView as SelectedView,
   Container,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { isEmpty, get, set, unset } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'

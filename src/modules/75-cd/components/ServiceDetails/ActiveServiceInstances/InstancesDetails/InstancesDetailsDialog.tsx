@@ -7,7 +7,7 @@
 
 import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import cx from 'classnames'
-import { Collapse, Container, Dialog, ExpandingSearchInput, Layout, Text } from '@wings-software/uicore'
+import { Collapse, Container, Dialog, ExpandingSearchInput, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'

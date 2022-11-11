@@ -6,7 +6,8 @@
  */
 
 import React, { FC, useState } from 'react'
-import { Button, ButtonVariation, Color, FontVariation, Icon, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Icon, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
 import { Collapse } from '@blueprintjs/core'
 import type { FreezeBannerDetails, FreezeDetailedResponse } from 'services/cd-ng'

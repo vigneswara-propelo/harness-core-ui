@@ -18,7 +18,7 @@ import {
   Tab,
   Tabs,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, unset } from 'lodash-es'

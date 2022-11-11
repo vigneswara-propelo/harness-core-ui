@@ -17,7 +17,7 @@ import {
   Text,
   Container,
   Label
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import List from '@common/components/List/List'

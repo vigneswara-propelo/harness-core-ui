@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Icon, PageError, Text } from '@wings-software/uicore'
+import { Container, Icon, PageError, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'

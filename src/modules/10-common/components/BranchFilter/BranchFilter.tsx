@@ -7,7 +7,8 @@
 
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
-import { Color, DropDown, Icon, Layout, SelectOption, SelectProps, useToaster } from '@harness/uicore'
+import { DropDown, Icon, Layout, SelectOption, SelectProps, useToaster } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
 

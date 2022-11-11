@@ -6,7 +6,8 @@
  */
 
 import React, { useMemo } from 'react'
-import { Color, Layout, PageSpinner, TableV2, Tag, TagsPopover, Text } from '@harness/uicore'
+import { Layout, PageSpinner, TableV2, Tag, TagsPopover, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { groupBy } from 'lodash-es'

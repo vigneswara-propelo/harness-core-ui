@@ -14,7 +14,7 @@ import {
   HarnessDocTooltip,
   Layout,
   Views
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'

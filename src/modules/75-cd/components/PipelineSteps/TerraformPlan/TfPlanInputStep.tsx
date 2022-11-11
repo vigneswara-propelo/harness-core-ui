@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text } from '@harness/uicore'
 
 import { get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'

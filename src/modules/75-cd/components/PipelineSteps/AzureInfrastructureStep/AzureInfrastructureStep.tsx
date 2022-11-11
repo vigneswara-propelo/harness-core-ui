@@ -18,7 +18,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Accordion
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FormikProps, FormikErrors, yupToFormErrors } from 'formik'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'

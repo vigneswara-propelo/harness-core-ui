@@ -18,13 +18,13 @@ import {
   Formik,
   FormikForm,
   getMultiTypeFromValue,
-  Intent,
   Layout,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   Toggle,
   useToggleOpen
 } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 
 import { StringKeys, useStrings } from 'framework/strings'
 

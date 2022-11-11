@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, Text, Button, ButtonVariation, IconName } from '@wings-software/uicore'
+import { Icon, Text, Button, ButtonVariation, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'

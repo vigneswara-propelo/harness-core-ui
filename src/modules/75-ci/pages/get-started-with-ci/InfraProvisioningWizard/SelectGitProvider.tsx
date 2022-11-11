@@ -13,7 +13,6 @@ import type { FormikContextType, FormikProps } from 'formik'
 import cx from 'classnames'
 import {
   Text,
-  FontVariation,
   Layout,
   CardSelect,
   Icon,
@@ -24,10 +23,10 @@ import {
   FormInput,
   ButtonVariation,
   ButtonSize,
-  Color,
   FormError,
   PageSpinner
 } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'

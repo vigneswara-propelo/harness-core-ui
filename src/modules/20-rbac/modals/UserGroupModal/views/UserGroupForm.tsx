@@ -17,7 +17,7 @@ import {
   MultiSelectOption,
   FormInput,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { pick, cloneDeep } from 'lodash-es'

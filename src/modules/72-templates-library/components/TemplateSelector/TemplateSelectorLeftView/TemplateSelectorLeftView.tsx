@@ -17,7 +17,7 @@ import {
   SelectOption,
   Text,
   Views
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'

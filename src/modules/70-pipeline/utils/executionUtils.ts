@@ -6,7 +6,7 @@
  */
 
 import type * as React from 'react'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { defaultTo, has, isEmpty } from 'lodash-es'
 
 import {

@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { Formik } from 'formik'
-import { FormikForm } from '@wings-software/uicore'
+import { FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   initialFormData,

@@ -13,7 +13,6 @@ import {
   Button,
   Card,
   Checkbox,
-  Color,
   Container,
   FormError,
   HarnessDocTooltip,
@@ -22,6 +21,7 @@ import {
   Thumbnail,
   Utils
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'

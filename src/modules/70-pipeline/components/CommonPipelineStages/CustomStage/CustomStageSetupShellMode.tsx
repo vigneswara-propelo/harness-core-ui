@@ -7,7 +7,7 @@
 
 import React, { useRef } from 'react'
 import cx from 'classnames'
-import { Button, Icon, Layout, Tab, Tabs } from '@wings-software/uicore'
+import { Button, Icon, Layout, Tab, Tabs } from '@harness/uicore'
 import { capitalize as _capitalize, toUpper } from 'lodash-es'
 import { Expander } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'

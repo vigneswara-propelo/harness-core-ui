@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import cx from 'classnames'
-import { Layout, Container, ExpandingSearchInput, PageHeader, PageBody } from '@wings-software/uicore'
+import { Layout, Container, ExpandingSearchInput, PageHeader, PageBody } from '@harness/uicore'
 import {
   ResponsePageEntitySetupUsageDTO,
   ListReferredByEntitiesQueryParams,

@@ -13,7 +13,7 @@ import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   RUNTIME_INPUT_VALUE
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { HealthSourceServices } from './SelectHealthSourceServices.constant'

@@ -2,7 +2,8 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } 
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
 import { useFormikContext } from 'formik'
-import { Container, FontVariation, FormError, PageError, Text, Utils } from '@harness/uicore'
+import { Container, FormError, PageError, Text, Utils } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { CloudWatchFormType, SampleDataType } from '@cv/pages/health-source/connectors/CloudWatch/CloudWatch.types'
 import {
   getSampleDataHightchartPoints,

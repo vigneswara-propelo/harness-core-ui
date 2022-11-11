@@ -17,7 +17,7 @@ import {
   Icon,
   AllowedTypes,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { debounce, defaultTo, isEmpty, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'

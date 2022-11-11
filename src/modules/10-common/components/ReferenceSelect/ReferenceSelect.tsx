@@ -18,7 +18,7 @@ import {
   ButtonVariation,
   Container,
   Icon
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
 import { Classes, Dialog } from '@blueprintjs/core'

@@ -16,7 +16,7 @@ import {
   Text,
   StepProps,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'

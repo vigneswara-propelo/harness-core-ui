@@ -19,7 +19,7 @@ import {
   ButtonProps,
   ButtonVariation,
   getErrorInfoFromErrorObject
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Popover, Spinner } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'

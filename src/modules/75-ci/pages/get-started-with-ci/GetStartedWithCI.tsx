@@ -11,7 +11,6 @@ import cx from 'classnames'
 import { get } from 'lodash-es'
 import {
   Text,
-  FontVariation,
   Icon,
   Layout,
   Button,
@@ -21,6 +20,7 @@ import {
   ButtonSize,
   PageSpinner
 } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {

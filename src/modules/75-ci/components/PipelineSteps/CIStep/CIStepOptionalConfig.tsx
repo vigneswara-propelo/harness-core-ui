@@ -9,15 +9,7 @@ import React from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import { isEmpty, startCase, get, set, uniq } from 'lodash-es'
 import cx from 'classnames'
-import {
-  Container,
-  Layout,
-  MultiTypeInputType,
-  Text,
-  FormInput,
-  AllowedTypes,
-  SelectOption
-} from '@wings-software/uicore'
+import { Container, Layout, MultiTypeInputType, Text, FormInput, AllowedTypes, SelectOption } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'

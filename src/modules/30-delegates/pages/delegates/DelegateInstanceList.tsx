@@ -7,7 +7,8 @@
 
 import React, { Fragment, ReactElement } from 'react'
 import type { Row } from 'react-table'
-import { Color, Layout, Text } from '@harness/uicore'
+import { Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import ReactTimeago from 'react-timeago'
 import { killEvent } from '@common/utils/eventUtils'
 import type { DelegateGroupDetails } from 'services/cd-ng'

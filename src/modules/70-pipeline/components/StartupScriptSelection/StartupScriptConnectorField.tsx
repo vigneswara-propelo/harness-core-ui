@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Container, Text, Icon, Color, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
+import { Container, Text, Icon, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import css from './StartupScriptSelection.module.scss'
 
 interface ConnectorFieldPropType {

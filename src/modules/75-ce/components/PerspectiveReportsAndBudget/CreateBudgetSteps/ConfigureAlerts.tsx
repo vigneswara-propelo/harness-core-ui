@@ -23,7 +23,7 @@ import {
   IconName,
   Select,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { TagInput } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'

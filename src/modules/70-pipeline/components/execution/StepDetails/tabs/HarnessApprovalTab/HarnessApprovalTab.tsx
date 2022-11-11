@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, FormInput, Layout, TextInput, Text } from '@wings-software/uicore'
+import { Button, FormInput, Layout, TextInput, Text } from '@harness/uicore'
 import { Formik } from 'formik'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'

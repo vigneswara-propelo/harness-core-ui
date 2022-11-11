@@ -8,7 +8,7 @@
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { Duration } from '@common/components/Duration/Duration'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'

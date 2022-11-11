@@ -20,7 +20,7 @@ import {
   Table,
   ButtonSize,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { get } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

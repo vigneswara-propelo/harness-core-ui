@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, FormInput, Heading, Icon, Layout, Text, Container } from '@wings-software/uicore'
+import { Card, FormInput, Heading, Icon, Layout, Text, Container } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'

@@ -6,13 +6,7 @@
  */
 
 import React from 'react'
-import {
-  SelectOption,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  AllowedTypes
-} from '@wings-software/uicore'
+import { SelectOption, FormInput, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 

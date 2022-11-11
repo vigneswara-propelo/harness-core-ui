@@ -21,7 +21,7 @@ import {
   Select,
   SelectOption,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import produce from 'immer'
 import { Classes, Divider } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'

@@ -6,17 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import {
-  Text,
-  Layout,
-  Button,
-  Switch,
-  Container,
-  Icon,
-  ButtonVariation,
-  TableV2,
-  NoDataCard
-} from '@wings-software/uicore'
+import { Text, Layout, Button, Switch, Container, Icon, ButtonVariation, TableV2, NoDataCard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Renderer } from 'react-table'
 import { useParams } from 'react-router-dom'

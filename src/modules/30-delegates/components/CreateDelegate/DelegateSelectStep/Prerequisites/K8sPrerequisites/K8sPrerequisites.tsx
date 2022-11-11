@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text, Container } from '@wings-software/uicore'
+import { Layout, Text, Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './K8sPrerequisites.module.scss'

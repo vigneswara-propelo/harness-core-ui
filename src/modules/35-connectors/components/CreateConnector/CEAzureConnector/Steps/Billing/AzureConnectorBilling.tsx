@@ -18,7 +18,7 @@ import {
   Container,
   ButtonSize,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { get } from 'lodash-es'

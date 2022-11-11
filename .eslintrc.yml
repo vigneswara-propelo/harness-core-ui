@@ -35,8 +35,6 @@ settings:
   import/resolver:
     typescript:
       alwaysTryTypes: true
-    alias:
-      - ['@wings-software', '@harness']
 rules:
   # custom rules
   no-document-body-snapshot: 2
@@ -122,7 +120,7 @@ rules:
           message: 'import from "react-router-dom" instead'
         - name: microfrontends
           message: Import from 'microfrontends' is only allowed in child apps
-        - name: '@wings-software/uicore'
+        - name: '@harness/uicore'
           importNames:
             - Color
             - FontVariation

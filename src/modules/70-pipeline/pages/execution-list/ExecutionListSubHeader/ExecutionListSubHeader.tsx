@@ -7,15 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import {
-  Button,
-  ButtonVariation,
-  Checkbox,
-  ExpandingSearchInput,
-  Layout,
-  SelectOption,
-  Text
-} from '@wings-software/uicore'
+import { Button, ButtonVariation, Checkbox, ExpandingSearchInput, Layout, SelectOption, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import BranchFilter from '@common/components/BranchFilter/BranchFilter'

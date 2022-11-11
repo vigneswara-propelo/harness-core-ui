@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Color, Layout, Text } from '@harness/uicore'
+import { Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { Dialog } from '@blueprintjs/core'
 import DelegateInstallationError from '@delegates/components/CreateDelegate/components/DelegateInstallationError/DelegateInstallationError'
 import { useStrings } from 'framework/strings'

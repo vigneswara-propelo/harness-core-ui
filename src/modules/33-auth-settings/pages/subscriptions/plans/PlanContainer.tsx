@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { pick } from 'lodash-es'
-import { Layout, PageSpinner, PageError } from '@wings-software/uicore'
+import { Layout, PageSpinner, PageError } from '@harness/uicore'
 import { useToaster } from '@common/components'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, TrialActions, PlanActions } from '@common/constants/TrackingConstants'

@@ -9,15 +9,7 @@ import React, { useMemo, useState } from 'react'
 import ReactTimeago from 'react-timeago'
 import { defaultTo, set } from 'lodash-es'
 import { useParams, useHistory } from 'react-router-dom'
-import {
-  Button,
-  Text,
-  Layout,
-  Popover,
-  useToaster,
-  useConfirmationDialog,
-  ButtonVariation
-} from '@wings-software/uicore'
+import { Button, Text, Layout, Popover, useToaster, useConfirmationDialog, ButtonVariation } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Menu, MenuItem, Classes, Position, Dialog } from '@blueprintjs/core'
 import type { CellProps, Renderer, UseExpandedRowProps } from 'react-table'

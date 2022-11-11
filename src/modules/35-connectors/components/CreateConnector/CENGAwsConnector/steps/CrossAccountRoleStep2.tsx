@@ -23,7 +23,7 @@ import {
   Text,
   ButtonSize,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'

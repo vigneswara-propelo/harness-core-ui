@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption, MultiSelectOption } from '@wings-software/uicore'
+import type { SelectOption, MultiSelectOption } from '@harness/uicore'
 import { clone, isNumber } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { PrometheusFilter, PrometheusHealthSourceSpec } from 'services/cv'

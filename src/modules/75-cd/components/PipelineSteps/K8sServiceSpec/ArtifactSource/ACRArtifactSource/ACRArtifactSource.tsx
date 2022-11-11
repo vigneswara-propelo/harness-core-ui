@@ -16,7 +16,7 @@ import {
   MultiTypeInputValue,
   SelectOption,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import {

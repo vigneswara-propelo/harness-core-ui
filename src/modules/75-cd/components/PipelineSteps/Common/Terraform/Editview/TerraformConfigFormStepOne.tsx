@@ -20,7 +20,7 @@ import {
   MultiTypeInputType,
   StepProps,
   AllowedTypes as MultiTypeAllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'

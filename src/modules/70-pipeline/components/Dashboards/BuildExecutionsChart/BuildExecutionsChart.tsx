@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react'
 import { noop, merge } from 'lodash-es'
-import { Container, Text, Layout } from '@wings-software/uicore'
+import { Container, Text, Layout } from '@harness/uicore'
 import HighchartsReact from 'highcharts-react-official'
 import { FontVariation } from '@harness/design-system'
 import Highcharts from 'highcharts'

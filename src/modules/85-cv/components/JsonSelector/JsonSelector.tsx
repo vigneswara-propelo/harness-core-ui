@@ -7,7 +7,7 @@
 
 import React from 'react'
 import classnames from 'classnames'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { isUndefined } from 'lodash-es'
 import css from './JsonSelector.module.scss'
 

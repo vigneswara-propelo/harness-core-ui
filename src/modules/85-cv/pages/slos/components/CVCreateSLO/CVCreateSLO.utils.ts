@@ -7,7 +7,7 @@
 
 import { omit, isEqual } from 'lodash-es'
 import type { TabId } from '@blueprintjs/core'
-import { SelectOption, Utils } from '@wings-software/uicore'
+import { SelectOption, Utils } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn, StringKeys } from 'framework/strings'

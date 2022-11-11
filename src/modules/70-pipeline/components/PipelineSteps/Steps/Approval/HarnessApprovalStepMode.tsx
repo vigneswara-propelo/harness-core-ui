@@ -22,7 +22,7 @@ import {
   MultiTypeInputType,
   Container,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, useStrings } from 'framework/strings'
 import {

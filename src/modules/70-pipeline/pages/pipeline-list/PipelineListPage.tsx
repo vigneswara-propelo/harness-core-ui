@@ -16,7 +16,7 @@ import {
   shouldShowError,
   Text,
   useToggleOpen
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { defaultTo, pick } from 'lodash-es'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'

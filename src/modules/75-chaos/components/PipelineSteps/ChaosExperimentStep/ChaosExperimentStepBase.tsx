@@ -6,16 +6,7 @@
  */
 
 import React from 'react'
-import {
-  Formik,
-  FormikForm,
-  Container,
-  FormInput,
-  Layout,
-  Button,
-  useToggleOpen,
-  Accordion
-} from '@wings-software/uicore'
+import { Formik, FormikForm, Container, FormInput, Layout, Button, useToggleOpen, Accordion } from '@harness/uicore'
 import { Drawer, FormGroup, Label } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'

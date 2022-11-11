@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Heading, Layout, Text, Container, Button } from '@wings-software/uicore'
+import { Heading, Layout, Text, Container, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams, useHistory, Link } from 'react-router-dom'
 import { useToaster } from '@common/components'
