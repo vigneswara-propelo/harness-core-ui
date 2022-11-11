@@ -99,7 +99,7 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
         accountIdentifier: accountId,
         moduleType: upperCase(selected) as StartFreeLicenseQueryParams['moduleType'],
         ...(refererURL ? { referer: refererURL } : {}),
-        ...(gaClientID ? { gaClientID } : {})
+        ...(gaClientID ? { gaClientId: gaClientID } : {})
       }
     })
   }

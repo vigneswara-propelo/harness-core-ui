@@ -150,7 +150,7 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
       accountIdentifier: accountId,
       moduleType,
       ...(refererURL ? { referer: refererURL } : {}),
-      ...(gaClientID ? { gaClientID } : {})
+      ...(gaClientID ? { gaClientId: gaClientID } : {})
     },
     requestOptions: {
       headers: {

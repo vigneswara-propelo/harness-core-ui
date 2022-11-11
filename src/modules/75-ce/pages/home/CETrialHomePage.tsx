@@ -56,7 +56,7 @@ const CETrialHomePage: React.FC = () => {
       accountIdentifier: accountId,
       moduleType,
       ...(refererURL ? { referer: refererURL } : {}),
-      ...(gaClientID ? { gaClientID } : {})
+      ...(gaClientID ? { gaClientId: gaClientID } : {})
     },
     requestOptions: {
       headers: {

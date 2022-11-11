@@ -91,7 +91,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
       accountIdentifier: accountId,
       moduleType: moduleType,
       ...(refererURL ? { referer: refererURL } : {}),
-      ...(gaClientID ? { gaClientID } : {})
+      ...(gaClientID ? { gaClientId: gaClientID } : {})
     },
     requestOptions: {
       headers: {
