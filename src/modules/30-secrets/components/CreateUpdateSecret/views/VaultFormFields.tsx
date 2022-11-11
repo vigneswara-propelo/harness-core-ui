@@ -82,7 +82,6 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
               name="value"
               label={getString('secrets.secret.labelSecretReference')}
               placeholder={getString('secrets.secret.placeholderSecretReference')}
-              disabled={gcpSmInEditMode()}
             />
           ) : null}
         </>
