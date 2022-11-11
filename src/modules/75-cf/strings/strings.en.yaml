@@ -658,116 +658,50 @@ onboarding:
 
       # Usage
 
-      ```
-      import { initialize, Event } from '@harnessio/ff-javascript-client-sdk'
-      ```
-
-      Initialize SDK with api key and target information.
+      Create a file called `index.html` and add the following code below:
 
       ```
-      initialize(FeatureFlagSDKKey: string, target: Target, options?: Options)
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <title>Feature Flags</title>
+        </head>
+        <body>
+          <script type="module">
+
+            import {
+              initialize,
+              Event as SDKEvent,
+            } from "https://unpkg.com/@harnessio/ff-javascript-client-sdk@1.4.14/dist/sdk.client.js";
+
+            const target = {
+              identifier: "MyTargetID",
+              name: "MyTargetName",
+            };
+
+            const client = initialize("{{apiKey}}", target);
+
+            // Listen for events
+
+            // Event happens when connection to server is established
+            client.on(SDKEvent.READY, (flags) => {
+              console.log("READY", flags);
+            });
+
+            // Event happens when a changed event is pushed
+            client.on(SDKEvent.CHANGED, (changeInfo) => {
+              console.log("CHANGED", changeInfo);
+            });
+            
+          </script>
+        </body>
+      </html>
+
+          
       ```
+      # Test your application 
 
-      In which Target and Options are defined as:
-
-      ```
-      interface Target {
-        identifier: string
-        name?: string
-        anonymous?: boolean
-        attributes?: object
-      }
-
-      interface Options {
-        baseUrl?: string
-        debug?: boolean
-      }
-      ```
-
-      For example:
-
-      ```
-      const cf = initialize('{{apiKey}}', {
-        identifier: YOUR-TARGET-IDENTIFIER,      // Target identifier
-        name: YOUR-TARGET-NAME,                  // Optional target name
-        attributes: {                            // Optional target attributes
-          email: 'sample@sample.com'
-        }
-      })
-      ```
-
-      # Listening to events from the cf instance.
-
-      ```
-      cf.on(Event.READY, flags => {
-        // Event happens when connection to server is established
-        // flags contains all evaluations against SDK key
-      })
-
-      cf.on(Event.CHANGED, flagInfo => {
-        // Event happens when a changed event is pushed
-        // flagInfo contains information about the updated feature flag
-      })
-
-      cf.on(Event.DISCONNECTED, () => {
-        // Event happens when connection is disconnected
-      })
-
-      cf.on(Event.ERROR, () => {
-        // Event happens when connection some error has occurred
-      })
-      ```
-
-      # Getting value for a particular feature flag
-
-      ```
-      // second argument is default value when variation does not exist
-      const value = cf.variation('Dark_Theme', false)
-      ```
-
-      # Cleaning up
-
-      Remove a listener of an event by cf.off.
-
-      ```
-      cf.off(Event.ERROR, () => {
-        // Do something when an error occurs
-      })
-      ```
-
-      Remove all listeners:
-
-      ```
-      cf.off()
-      ```
-
-      On closing your application, call cf.close() to close the event stream.
-
-      ```
-      cf.close();
-      ```
-
-      # Import directly from unpkg
-
-      In case you want to import this library directly (without having to use npm or yarn):
-
-      ```html
-      <script type="module">
-        import { initialize, Event } from 'https://unpkg.com/@harnessio/ff-javascript-client-sdk@1.3.7/dist/sdk.client.js'
-      </script>
-      ```
-
-      If you need to support old browsers which don't support ES Module:
-
-      ```html
-      <script src="https://unpkg.com/@harnessio/ff-javascript-client-sdk@1.3.7/dist/sdk.client.js"></script>
-      <script>
-        var initialize = HarnessFFSDK.initialize
-        var Event = HarnessFFSDK.Event
-      </script>
-      ```
-
-      Remember to change the version 1.3.7 in the unpkg url accordingly.
+      Run your application by opening `index.html` in your browser. Open the browser dev tools and refresh the page.
 
     golang: |
       # Supported GO versions
