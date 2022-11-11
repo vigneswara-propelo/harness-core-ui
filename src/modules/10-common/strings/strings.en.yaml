@@ -1099,5 +1099,17 @@ freezeListActiveBannerText: There are {{count}} ongoing deployment freeze window
 freezeListActiveBannerExpandedText: On the <b>{{scope}}</b> from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 resourceIdentifier: Resource Identifier
 configureNav: Or configure your nav!
+singularLabels:
+  authenticationSetting: 'Authentication Setting'
+  defaultSetting: Default Setting
+  governancePolicy: Governance Policy
+  governancePolicySet: Governance Policy Set
+  accountSetting: Account Setting
+  repositoryCertificate: Repository Certificate
+  gnupgKey: GnuPG Key
+  autoStoppingRule: 'AutoStopping Rule'
+  testTarget: Test Target
+  scan: Scan
+  issue: Issue
 pipelineExecution: Pipeline Executions
 platformServiceVersions: Platform Service Versions

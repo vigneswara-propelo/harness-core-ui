@@ -809,6 +809,17 @@ export interface StringsMap {
   'common.showMore': string
   'common.showSelected': string
   'common.sidecarArtifactsText': string
+  'common.singularLabels.accountSetting': string
+  'common.singularLabels.authenticationSetting': string
+  'common.singularLabels.autoStoppingRule': string
+  'common.singularLabels.defaultSetting': string
+  'common.singularLabels.gnupgKey': string
+  'common.singularLabels.governancePolicy': string
+  'common.singularLabels.governancePolicySet': string
+  'common.singularLabels.issue': string
+  'common.singularLabels.repositoryCertificate': string
+  'common.singularLabels.scan': string
+  'common.singularLabels.testTarget': string
   'common.skip': string
   'common.slack': string
   'common.smtp.configured': string

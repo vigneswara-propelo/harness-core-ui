@@ -60,6 +60,7 @@ AuditTrailFactory.registerResourceHandler('SETTING', {
 RbacFactory.registerResourceTypeHandler(ResourceType.SETTING, {
   icon: 'nav-settings',
   label: 'common.defaultSettings',
+  labelSingular: 'common.singularLabels.defaultSetting',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CORE_SETTING]: <String stringID="rbac.permissionLabels.view" />,

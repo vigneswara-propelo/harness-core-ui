@@ -35,6 +35,7 @@ import './components/Templates'
 RbacFactory.registerResourceTypeHandler(ResourceType.TEMPLATE, {
   icon: 'pipeline-deployment',
   label: 'common.templates',
+  labelSingular: 'common.template.label',
   category: ResourceCategory.SHARED_RESOURCES,
   permissionLabels: {
     [PermissionIdentifier.VIEW_TEMPLATE]: <String stringID="rbac.permissionLabels.view" />,
