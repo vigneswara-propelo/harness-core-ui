@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { fireEvent, queryByAttribute, render } from '@testing-library/react'
+import { queryByAttribute, render } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
@@ -148,18 +149,14 @@ describe('Test MergePrStep', () => {
     )
 
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
-    await fireEvent.click(getByText('common.optionalConfig'))
-    await fireEvent.click(getByText('connectors.addParameter'))
-    fireEvent.change(queryByNameAttribute('spec.variables[0].name')!, { target: { value: 'bypassPolicy' } })
-    fireEvent.change(queryByNameAttribute('spec.variables[0].value')!, {
-      target: { value: 'true' }
-    })
+    await userEvent.click(getByText('common.optionalConfig'))
+    await userEvent.click(getByText('connectors.addParameter'))
+    userEvent.type(queryByNameAttribute('spec.variables[0].name')!, 'bypassPolicy')
+    userEvent.type(queryByNameAttribute('spec.variables[0].value')!, 'true')
     expect(container).toMatchSnapshot('Merge Params section')
 
-    await fireEvent.click(getByText('connectors.addParameter'))
-    fireEvent.change(queryByNameAttribute('spec.variables[1].name')!, { target: { value: 'bypassReason' } })
-    fireEvent.change(queryByNameAttribute('spec.variables[1].value')!, {
-      target: { value: 'test bypass reason' }
-    })
+    await userEvent.click(getByText('connectors.addParameter'))
+    userEvent.type(queryByNameAttribute('spec.variables[1].name')!, 'bypassReason')
+    userEvent.type(queryByNameAttribute('spec.variables[1].value')!, 'test bypass reason')
   })
 })
