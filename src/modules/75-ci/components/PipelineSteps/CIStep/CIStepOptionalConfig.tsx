@@ -76,6 +76,8 @@ const MapComponentFieldNames = {
   BUILD_ARGS: 'spec.buildArgs'
 }
 
+const FORCE_RENDERS_ALLOWED = 3
+
 export const getOptionalSubLabel = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
   tooltip?: string
@@ -225,24 +227,32 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
   const { selectedInputSetsContext } = usePipelineVariables()
   const [registeredMaps, setRegisteredMaps] = React.useState<string[]>([])
   const [registeredPrefixes, setRegisteredPrefixes] = React.useState<string[]>([])
+  const [forceRenders, setForceRenders] = React.useState<number>(0) // for renderMultiTypeMapInputSet
   const hasAppliedInputSet = typeof selectedInputSetsContext !== 'undefined' && selectedInputSetsContext?.length > 0
 
   // All optional values that have a map structure should never be defaulted with ""
   // and instead set to {} once pipeline api completes
   React.useEffect(() => {
+    // Add coverage via Cypress with CI-6101
+    /* istanbul ignore next */
     if (isInputSetsPage && !isEmpty(formik?.values?.pipeline)) {
       const newFormikValues = { ...formik.values }
       let shouldUpdate = false
+      let hasPotentiallyMissedValues = false
       const registeredMapFields: string[] = []
       Object.values(MapComponentFieldNames).forEach(fieldName => {
         const fieldNamePath = `${prefix}${fieldName}`
+        const formikNamePathValue = get(newFormikValues, fieldNamePath)
         registeredMapFields.push(fieldNamePath)
-        if (get(newFormikValues, fieldNamePath) === '') {
+        if (formikNamePathValue === '') {
           shouldUpdate = true
           set(newFormikValues, fieldNamePath, {})
-        } else if (!isEmpty(get(newFormikValues, fieldNamePath)) && !registeredMaps.includes(fieldNamePath)) {
+        } else if (!isEmpty(formikNamePathValue) && !registeredMaps.includes(fieldNamePath)) {
           // address race condition with maps
           shouldUpdate = true
+        } else if (!isEmpty(formikNamePathValue) && registeredMaps.includes(fieldNamePath)) {
+          // address race condition with inputSets/merge api
+          hasPotentiallyMissedValues = true
         }
       })
       if (!registeredPrefixes.includes(prefix)) {
@@ -254,10 +264,25 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         setRegisteredMaps(uniq([...registeredMaps, ...registeredMapFields]))
         setRegisteredPrefixes(uniq([...registeredPrefixes, prefix]))
       }
+      // Address CI-5116, not rendering existing optional map values (due to inputSets/merge api)
+      // Force re-render when isEdit, all maps and prefixes have been registered, and under force render limit
+      if (
+        !shouldUpdate &&
+        hasPotentiallyMissedValues &&
+        formik.values.identifier &&
+        registeredPrefixes.length > 0 &&
+        registeredMapFields.length > 0 &&
+        forceRenders < FORCE_RENDERS_ALLOWED
+      ) {
+        formik.setValues({ ...newFormikValues })
+        setForceRenders(forceRenders + 1)
+      }
     }
   }, [formik?.values?.pipeline])
 
   React.useEffect(() => {
+    // Add coverage via Cypress with CI-6101
+    /* istanbul ignore next */
     if (isPipelineStudio && formik?.values) {
       const newFormikValues = { ...formik.values }
       let shouldUpdate = false
@@ -375,7 +400,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         />
       </Container>
     ),
-    [expressions, readonly, formik?.setFieldValue, registeredMaps] // do not add formik?.values otherwise will re-render after every key-press
+    [expressions, readonly, formik?.setFieldValue, registeredMaps, forceRenders] // do not add formik?.values otherwise will re-render after every key-press
   )
 
   const renderMultiTypeTextField = React.useCallback(
