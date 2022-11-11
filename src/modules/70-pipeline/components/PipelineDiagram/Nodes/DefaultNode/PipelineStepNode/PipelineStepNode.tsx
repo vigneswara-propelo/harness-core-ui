@@ -20,7 +20,7 @@ import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import SVGMarker from '../../SVGMarker'
 import { BaseReactComponentProps, NodeType } from '../../../types'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
-import { getPositionOfAddIcon } from '../../utils'
+import { getPositionOfAddIcon, attachDragImageToEventHandler } from '../../utils'
 import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
 
@@ -166,6 +166,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           event.dataTransfer.setData(DiagramDrag.AllowDropOnLink, '1')
           event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
           event.dataTransfer.dropEffect = 'move'
+          attachDragImageToEventHandler(event)
         }}
         onDragEnd={event => {
           event.preventDefault()

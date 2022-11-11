@@ -19,7 +19,7 @@ import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { FireEventMethod, NodeType } from '../../../types'
-import { getPositionOfAddIcon } from '../../utils'
+import { getPositionOfAddIcon, attachDragImageToEventHandler, NodeEntity } from '../../utils'
 import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
 
@@ -186,6 +186,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             target: event.target,
             data: { ...props }
           })
+          attachDragImageToEventHandler(event, NodeEntity.STAGE)
         }}
         onDragEnd={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
           event.preventDefault()

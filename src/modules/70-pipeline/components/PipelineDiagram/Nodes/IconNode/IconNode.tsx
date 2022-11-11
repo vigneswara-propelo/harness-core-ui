@@ -12,7 +12,7 @@ import { Text, IconName, Icon, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
-import { getPositionOfAddIcon } from '../utils'
+import { getPositionOfAddIcon, attachDragImageToEventHandler } from '../utils'
 import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
@@ -114,6 +114,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
           //   event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
           // if (options.allowDropOnNode) event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
           event.dataTransfer.dropEffect = 'move'
+          attachDragImageToEventHandler(event)
         }}
         onDragEnd={event => {
           event.preventDefault()
