@@ -875,7 +875,7 @@ function RunPipelineFormBasic({
                               (!selectedInputSets || selectedInputSets.length === 0) &&
                               existingProvide === 'existing'
                             ) {
-                              setExistingProvide('provide')
+                              hasRuntimeInputs ? setExistingProvide('provide') : submitForm()
                             } else {
                               if (selectedView === SelectedView.YAML) {
                                 const parsedYaml = yamlParse<PipelineConfig>(
