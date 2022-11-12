@@ -4577,6 +4577,12 @@ export interface StringsMap {
   'cd.azureWebAppRollbackDescription': string
   'cd.azureWebAppSwapSlotDescription': string
   'cd.backEndConfig': string
+  'cd.backendConfigFileDetails': string
+  'cd.backendConfigFilePlaceHolder': string
+  'cd.backendConfigFileStepOne': string
+  'cd.backendConfigFileStore': string
+  'cd.backendConfigFileStoreTitle': string
+  'cd.backendConfigurationFile': string
   'cd.cdLaunchText': string
   'cd.cdSwitchToFirstGen.description1': string
   'cd.cdSwitchToFirstGen.description2': string

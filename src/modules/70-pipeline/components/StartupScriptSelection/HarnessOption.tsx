@@ -90,11 +90,13 @@ export function HarnessOption({
       file: ''
     }
   }
-  const submitHarnessFormData = (formData: HarnessFileStore & { selectedStore?: string }): void => {
+  const submitHarnessFormData = (
+    formData: HarnessFileStore & { selectedStore?: string; selectedType?: string }
+  ): void => {
     if (formData.fileType === 'fileStore') {
       const startupScript = {
         store: {
-          type: formData?.selectedStore as ConnectorTypes,
+          type: (formData?.selectedStore as ConnectorTypes) || (formData?.selectedType as ConnectorTypes),
           spec: {
             files: isArray(formData?.file) ? formData?.file : [formData?.file]
           }
@@ -111,7 +113,7 @@ export function HarnessOption({
     } else {
       const startupScript = {
         store: {
-          type: formData?.selectedStore as ConnectorTypes,
+          type: (formData?.selectedStore as ConnectorTypes) || (formData?.selectedType as ConnectorTypes),
           spec: {
             secretFiles: isArray(formData?.file) ? formData?.file : [formData?.file]
           }

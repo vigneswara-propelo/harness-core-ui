@@ -153,6 +153,7 @@ setUpProvisionerBtnText: Set Up Provisioner
 filePathRequired: Atleast one file path is required
 pathCannotBeEmpty: File Path cannot be empty
 configFilePlaceHolder: 'Specify Config File...'
+backendConfigFilePlaceHolder: 'Specify Backend Config File...'
 
 configIdentifer: Configuration Identifier
 addInline: Add Inline
@@ -169,6 +170,7 @@ enterTragets: Enter Targets
 exportTerraformPlanJson: Export JSON representation of Terraform Plan
 specifyTargetHost: Specify Target Host
 configurationFile: 'Configuration File Repository'
+backendConfigurationFile: 'Backend Configuration File Repository (optional)'
 terraformVarFiles: 'Terraform Var Files'
 secretManagerRequired: 'Secret Manager is required.'
 pipelineSteps:
@@ -385,6 +387,10 @@ configFileDetails: 'Config File Details'
 configFileStore: 'Specify Terraform Config File Store'
 configFileStepOne: 'Terraform Config Store'
 configFileStoreTitle: 'Config File'
+backendConfigFileDetails: 'Backend Config File Details'
+backendConfigFileStore: 'Specify Terraform Backend Config File Store'
+backendConfigFileStepOne: 'Terraform Backend Config Store'
+backendConfigFileStoreTitle: 'Backend Config File'
 selectRepository: Select a repository
 selectArtifact: Select an artifact
 artifactName: Artifact Name

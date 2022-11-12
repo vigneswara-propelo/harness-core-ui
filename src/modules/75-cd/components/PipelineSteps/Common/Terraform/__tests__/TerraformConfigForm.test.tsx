@@ -364,7 +364,7 @@ describe('TerraformConfigForm StepTwo tests', () => {
       fireEvent.click(submit)
     })
 
-    const errorMessage = screen.getByText('pipeline.manifestType.folderPathRequired')
+    const errorMessage = screen.getByText('pipeline.manifestType.pathRequired')
     expect(errorMessage).toBeInTheDocument()
     expect(screen).toMatchSnapshot()
   })

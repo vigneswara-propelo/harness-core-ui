@@ -27,13 +27,16 @@ export function ConfigVariables(props: TerraformVariableStepProps): React.ReactE
         metadataMap={metadataMap}
         className={pipelineVariableCss.variablePaddingL3}
       />
-      {variablesData?.spec?.configuration?.spec?.configFiles?.store?.spec?.gitFetchType && (
-        <VariablesListTable
-          data={variablesData?.spec?.configuration?.spec?.configFiles?.store?.spec}
-          originalData={initialValues.spec?.configuration?.spec?.configFiles?.store?.spec}
-          metadataMap={metadataMap}
-          className={pipelineVariableCss.variablePaddingL3}
-        />
+      {variablesData?.spec?.configuration?.spec?.configFiles?.store?.spec && (
+        <>
+          <Text className={css.stepTitle}>{getString('pipelineSteps.configFiles')}</Text>
+          <VariablesListTable
+            data={variablesData?.spec?.configuration?.spec?.configFiles?.store?.spec}
+            originalData={initialValues.spec?.configuration?.spec?.configFiles?.store?.spec}
+            metadataMap={metadataMap}
+            className={pipelineVariableCss.variablePaddingL3}
+          />
+        </>
       )}
       {variablesData?.spec?.configuration?.spec?.varFiles?.length && (
         <>

@@ -111,4 +111,59 @@ describe('Test terraform input set', () => {
     )
     expect(container).toMatchSnapshot()
   })
+
+  test('should render backend config when it is Remote type', () => {
+    const beConfigInitialVallues = {
+      ...initialValues,
+      spec: {
+        configuration: {
+          backendConfig: {
+            spec: {
+              store: {
+                spec: {
+                  branch: RUNTIME_INPUT_VALUE,
+                  folderPath: RUNTIME_INPUT_VALUE,
+                  connectorRef: {
+                    label: 'test',
+                    Scope: 'Account',
+                    value: 'test',
+                    connector: {
+                      type: 'GIT',
+                      spec: {
+                        val: 'test'
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    const { getByText } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { TERRAFORM_REMOTE_BACKEND_CONFIG: true }
+        }}
+      >
+        <Formik initialValues={{}} onSubmit={() => undefined} formName="wrapperComponentTestForm">
+          <FormikForm>
+            <TfPlanInputStep
+              initialValues={beConfigInitialVallues as any}
+              stepType={StepType.TerraformPlan}
+              stepViewType={StepViewType.InputSet}
+              inputSetData={{
+                template
+              }}
+              path={'test'}
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]}
+            />
+          </FormikForm>
+        </Formik>
+      </TestWrapper>
+    )
+    expect(getByText('pipelineSteps.backendConfig')).toBeInTheDocument()
+  })
 })

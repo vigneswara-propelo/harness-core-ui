@@ -1046,6 +1046,7 @@ describe('Test TerraformPlan', () => {
               command: 'Apply',
               configFiles: {
                 store: {
+                  type: 'Git',
                   spec: {
                     folderPath: 'some/path'
                   }
@@ -1147,5 +1148,65 @@ describe('Test TerraformPlan', () => {
     const closeButton = await screen.getByTestId('close-wizard')
     expect(closeButton).toBeInTheDocument()
     await fireEvent.click(closeButton)
+  })
+
+  test('renders remote backend config when TERRAFORM_REMOTE_BACKEND_CONFIG is on', async () => {
+    const { getByText } = render(
+      <TestStepWidget
+        initialValues={{
+          type: 'TerraformPlan',
+          name: 'Test A',
+          identifier: 'Test_A',
+          timeout: 'RUNTIME',
+          delegateSelectors: ['test-1', 'test-2'],
+          spec: {
+            provisionerIdentifier: 'provisionerIdentifier',
+            configuration: {
+              command: 'Apply',
+              configFiles: {
+                store: {
+                  spec: {}
+                }
+              },
+              varFiles: [
+                {
+                  varFile: {
+                    type: 'Inline',
+                    content: 'test'
+                  }
+                }
+              ],
+              backendConfig: {
+                type: 'Remote',
+                spec: {
+                  store: {
+                    type: 'Github',
+                    spec: {
+                      gitFetchType: 'Branch',
+                      repoName: '',
+                      branch: 'master',
+                      folderPath: ['test-path'],
+                      connectorRef: 'jelenaterraformtest'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }}
+        type={StepType.TerraformPlan}
+        stepViewType={StepViewType.Edit}
+        testWrapperProps={{
+          defaultAppStoreValues: {
+            featureFlags: { TERRAFORM_REMOTE_BACKEND_CONFIG: true }
+          }
+        }}
+      />
+    )
+
+    fireEvent.click(getByText('common.optionalConfig')!)
+
+    expect(getByText('cd.backendConfigurationFile')!).toBeInTheDocument()
+    expect(getByText('/test-path')!).toBeInTheDocument()
   })
 })
