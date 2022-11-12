@@ -306,8 +306,9 @@ export interface StringsMap {
   'common.filters.unsavedFilter': string
   'common.findOutMore': string
   'common.firstGeneration': string
-  'common.freezeActiveBannerText': string
-  'common.freezeListActiveBannerExpandedText': string
+  'common.freezeActiveBannerTextPrefix': string
+  'common.freezeActiveBannerTimeframe': string
+  'common.freezeListActiveBannerExpandedTextPrefix': string
   'common.freezeListActiveBannerText': string
   'common.freezeWindows': string
   'common.frequency': string

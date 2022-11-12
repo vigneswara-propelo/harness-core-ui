@@ -1094,9 +1094,10 @@ allClusters: 'All Clusters'
 all: 'All {{name}}'
 sortedByCreatedTime: List sorted by created time
 configDetails: 'Configuration Details'
-freezeActiveBannerText: Freeze enabled on all deployments for this <b>{{scope}}</b> from <b>{{startTime}}</b> to <b>{{endTime}}</b>
+freezeActiveBannerTextPrefix: Freeze enabled on all deployments for this
+freezeActiveBannerTimeframe: from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 freezeListActiveBannerText: There are {{count}} ongoing deployment freeze windows
-freezeListActiveBannerExpandedText: On the <b>{{scope}}</b> from <b>{{startTime}}</b> to <b>{{endTime}}</b>
+freezeListActiveBannerExpandedTextPrefix: On the
 resourceIdentifier: Resource Identifier
 configureNav: Or configure your nav!
 singularLabels:

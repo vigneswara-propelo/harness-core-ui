@@ -4,7 +4,7 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 
 export const getFreezeRouteLink = (
   freezeReference: FreezeReference,
-  { accountId, orgIdentifier, projectIdentifier, module }: ProjectPathProps & ModulePathParams
+  { accountId, orgIdentifier, projectIdentifier, module }: ProjectPathProps & Partial<ModulePathParams>
 ): string => {
   const freezeNavigationParams = {
     accountId: accountId,
@@ -16,7 +16,8 @@ export const getFreezeRouteLink = (
     module
   }
 
-  if (freezeReference.type === 'GLOBAL') {
+  // TODO: remove second check once backend provides type for all
+  if (freezeReference.type === 'GLOBAL' || freezeReference.identifier === '_GLOBAL_') {
     return routes.toFreezeWindows({ ...freezeNavigationParams })
   }
 

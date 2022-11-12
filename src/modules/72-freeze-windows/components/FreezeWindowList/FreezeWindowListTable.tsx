@@ -70,7 +70,7 @@ export function FreezeWindowListTable({
     }
     return [
       {
-        Header: <ToggleAllSelection data={content} />,
+        Header: <ToggleAllSelection data={content} canEdit={canEdit} />,
         id: 'rowSelectToggle',
         width: '2%',
         Cell: RowSelectCell,

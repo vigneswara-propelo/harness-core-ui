@@ -142,8 +142,6 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const { globalFreezes } = useGlobalFreezeBanner()
   return (
     <>
-      <GlobalFreezeBanner globalFreezes={globalFreezes} />
-
       <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
         {showHealthAndExecution && !isCommunityAndCDModule && (
           <Container className={css.healthAndExecutions} data-testid="health-and-executions">
@@ -162,6 +160,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
             {...rest}
           />
         )}
+        <GlobalFreezeBanner globalFreezes={globalFreezes} />
 
         <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
         {showSpinner ? (
