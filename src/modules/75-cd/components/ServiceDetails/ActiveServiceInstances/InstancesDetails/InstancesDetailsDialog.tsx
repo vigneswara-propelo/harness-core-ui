@@ -47,6 +47,13 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
                   infra.infraName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1) ||
                 (infra.lastPipelineExecutionName !== null &&
                   infra.lastPipelineExecutionName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1)
+            ).length ||
+            i.instanceGroupedByClusterList?.filter(
+              cluster =>
+                (cluster.clusterIdentifier !== null &&
+                  cluster.clusterIdentifier?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1) ||
+                (cluster.lastPipelineExecutionName !== null &&
+                  cluster.lastPipelineExecutionName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1)
             ).length
         ).length
     )

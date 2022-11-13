@@ -116,7 +116,7 @@ export const DeploymentsV2 = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (loading || error || !(data || []).length) {
+  if (loading || error || !(data || []).length || (tableType === TableType.PREVIEW && !tableDataOption.length)) {
     const component = (() => {
       if (loading) {
         return (
