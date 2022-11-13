@@ -89,14 +89,28 @@ describe('Validate  AddSLO', () => {
     })
     await waitFor(() => expect(document.querySelector('.bp3-drawer')).toBeInTheDocument())
 
+    // check select all
     act(() => {
       fireEvent.click(document.querySelectorAll('[type="checkbox"]')[0]!)
     })
+    const addSloButton = document.querySelector('[data-testid="addSloButton"]')
+    expect(document.querySelector('[data-testid="addSloButton"]')).not.toBeDisabled()
+
+    // uncheck select all
+    act(() => {
+      fireEvent.click(document.querySelectorAll('[type="checkbox"]')[0]!)
+    })
+    expect(document.querySelector('[data-testid="addSloButton"]')).toBeDisabled()
+
+    // select two slos
     act(() => {
       fireEvent.click(document.querySelectorAll('[type="checkbox"]')[1]!)
     })
-    const addSloButton = document.querySelector('[data-testid="addSloButton"]')
-    expect(addSloButton).not.toBeDisabled()
+    act(() => {
+      fireEvent.click(document.querySelectorAll('[type="checkbox"]')[2]!)
+    })
+    expect(document.querySelector('[data-testid="addSloButton"]')).not.toBeDisabled()
+
     act(() => {
       fireEvent.click(addSloButton!)
     })

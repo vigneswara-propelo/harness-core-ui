@@ -58,7 +58,6 @@ export const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({
     <Layout.Vertical padding={{ left: 'small' }}>
       <>
         <Text
-          color={Color.PRIMARY_7}
           className={css.titleInSloTable}
           title={serviceName}
           font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
@@ -67,7 +66,7 @@ export const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({
         </Text>
       </>
       <>
-        <Text color={Color.PRIMARY_7} title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
+        <Text title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
           {environmentIdentifier}
         </Text>
       </>

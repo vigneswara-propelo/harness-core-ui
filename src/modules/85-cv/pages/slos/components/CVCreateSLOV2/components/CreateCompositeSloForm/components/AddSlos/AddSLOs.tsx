@@ -16,9 +16,9 @@ import {
   Text,
   TextInput,
   TableV2,
-  Page,
   useConfirmationDialog,
-  Container
+  Container,
+  Layout
 } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
@@ -39,6 +39,7 @@ import {
   RenderUserJourney,
   resetSLOWeightage
 } from './components/SLOList.utils'
+import css from './AddSLOs.module.scss'
 
 export const AddSLOs = (): JSX.Element => {
   const formikProps = useFormikContext<SLOV2Form>()
@@ -49,7 +50,6 @@ export const AddSLOs = (): JSX.Element => {
   >()
 
   const { showDrawer, hideDrawer } = useDrawer({
-    createHeader: () => <Page.Header title={getString('cv.CompositeSLO.AddSLO')} />,
     createDrawerContent: () => {
       return (
         <SLOList
@@ -111,23 +111,25 @@ export const AddSLOs = (): JSX.Element => {
 
   const RenderWeightInput: Renderer<CellProps<ServiceLevelObjectiveDetailsDTO>> = ({ row }) => {
     return (
-      <TextInput
-        max={99}
-        min={1}
-        autoFocus={row.index === cursorIndex}
-        intent={row.original.weightagePercentage > 99 ? Intent.DANGER : Intent.PRIMARY}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onWeightChange({
-            index: row.index,
-            weight: Number(e.currentTarget.value),
-            serviceLevelObjectivesDetails,
-            setServiceLevelObjectivesDetails,
-            setCursorIndex
-          })
-        }
-        name="weightagePercentage"
-        value={row.original.weightagePercentage.toString()}
-      />
+      <Container className={css.weightageInput}>
+        <TextInput
+          max={99}
+          min={1}
+          autoFocus={row.index === cursorIndex}
+          intent={row.original.weightagePercentage > 99 ? Intent.DANGER : Intent.PRIMARY}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onWeightChange({
+              index: row.index,
+              weight: Number(e.currentTarget.value),
+              serviceLevelObjectivesDetails,
+              setServiceLevelObjectivesDetails,
+              setCursorIndex
+            })
+          }
+          name="weightagePercentage"
+          value={row.original.weightagePercentage.toString()}
+        />
+      </Container>
     )
   }
 
@@ -154,7 +156,7 @@ export const AddSLOs = (): JSX.Element => {
 
     return (
       <Icon
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: 'pointer', float: 'right' }}
         padding={'small'}
         name="main-trash"
         onClick={e => {
@@ -169,6 +171,7 @@ export const AddSLOs = (): JSX.Element => {
     {
       accessor: 'serviceLevelObjectiveRef',
       Header: getString('name'),
+      width: '20%',
       Cell: RenderName
     },
     {
@@ -183,17 +186,17 @@ export const AddSLOs = (): JSX.Element => {
     },
     {
       Header: getString('tagsLabel').toUpperCase(),
-      width: '20%',
+      width: '10%',
       Cell: RenderTags
     },
     {
       Header: getString('cv.slos.sliType').toUpperCase(),
-      width: '20%',
+      width: '10%',
       Cell: RenderSLIType
     },
     {
       Header: getString('cv.slos.target').toUpperCase(),
-      width: '20%',
+      width: '10%',
       Cell: RenderTarget
     },
     {
@@ -218,6 +221,7 @@ export const AddSLOs = (): JSX.Element => {
           </Text>
         </>
       ),
+      width: '10%',
       Cell: RenderWeightInput
     },
     {
@@ -242,13 +246,35 @@ export const AddSLOs = (): JSX.Element => {
         text={getString('cv.CompositeSLO.AddSLO')}
         iconProps={{ name: 'plus' }}
         onClick={showDrawer}
-        margin={{ bottom: 'large', top: 'large' }}
+        margin={showSLOTableAndMessage ? { bottom: 'large', top: 'large' } : {}}
       />
       {showSLOTableAndMessage && (
-        <Container>
-          {pageLoading && <Icon name="spinner" color="primary5" size={30} />}
-          <TableV2 sortable columns={columns} data={serviceLevelObjectivesDetails} minimal />
-        </Container>
+        <>
+          {pageLoading ? (
+            <Container className={css.sloTableConatiner}>
+              <Icon name="spinner" color="primary5" size={30} />
+            </Container>
+          ) : (
+            <>
+              <TableV2 sortable columns={columns} data={serviceLevelObjectivesDetails} minimal />
+              <Container className={css.totalRow}>
+                {Array(columns.length - 3)
+                  .fill(0)
+                  .map((_, index) => (
+                    <div key={index.toString()}></div>
+                  ))}
+                <Layout.Horizontal spacing={'medium'}>
+                  <Text>{`${getString('total')} ${getString('cv.CompositeSLO.Weightage').toLowerCase()}`}</Text>
+                  <Text intent={Intent.SUCCESS}>
+                    {serviceLevelObjectivesDetails.reduce((total, num) => {
+                      return num.weightagePercentage + total
+                    }, 0)}
+                  </Text>
+                </Layout.Horizontal>
+              </Container>
+            </>
+          )}
+        </>
       )}
       {pageError && <Text>{getErrorMessage(dashboardWidgetsError)}</Text>}
     </>

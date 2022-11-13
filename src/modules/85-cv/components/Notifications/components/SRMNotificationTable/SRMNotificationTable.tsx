@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { Text, Layout, Button, Switch, Container, Icon, ButtonVariation, TableV2, NoDataCard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Renderer } from 'react-table'
@@ -20,6 +20,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import noDataNotifications from '@cv/assets/noDataNotifications.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ContextMenuActions from '@cv/components/ContextMenuActions/ContextMenuActions'
+import { CompositeSLOContext } from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/CompositeSLOContext'
 import { useSRMNotificationModal } from '../useSRMNotificationModal/useSRMNotificationModal'
 import type { CustomColumn, NotificationRulesItem, SRMNotificationTableProps } from './SRMNotificationTable.types'
 import { SRMNotificationType } from '../../NotificationsContainer.types'
@@ -43,7 +44,7 @@ function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElem
   } = props
   const { getString } = useStrings()
   const { projectIdentifier } = useParams<ProjectPathProps & { identifier: string }>()
-
+  const { renderInsideCompositeSLO } = useContext(CompositeSLOContext)
   const { openNotificationModal } = useSRMNotificationModal({
     getExistingNotificationNames,
     notificationRulesComponent,
@@ -209,6 +210,40 @@ function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElem
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [onUpdate, openNotificationModal, notificationsData]
   )
+
+  if (renderInsideCompositeSLO) {
+    return (
+      <>
+        <Container>
+          <Layout.Horizontal flex>
+            <Button
+              variation={ButtonVariation.SECONDARY}
+              text={getString('cv.notifications.newNotificationRule')}
+              icon="plus"
+              id="newNotificationBtn"
+              onClick={() => openNotificationModal()}
+            />
+          </Layout.Horizontal>
+        </Container>
+        {Boolean(notificationsData.length) && (
+          <Container padding={{ bottom: 'huge' }} className={css.content}>
+            <TableV2<NotificationRuleResponse>
+              columns={columns}
+              data={notificationsData}
+              className={css.notificationTable}
+              pagination={{
+                itemCount: totalItems,
+                pageSize: pageSize,
+                pageCount: totalPages,
+                pageIndex: pageIndex,
+                gotoPage: gotoPage
+              }}
+            />
+          </Container>
+        )}
+      </>
+    )
+  }
 
   if (!notificationsData.length) {
     return (
