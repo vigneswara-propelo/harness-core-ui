@@ -74,7 +74,7 @@ export class GCSStep extends PipelineStep<GCSStepData> {
 
   protected type = StepType.GCS
   protected stepName = 'Upload Artifacts to GCS'
-  protected stepIcon: IconName = 'gcs-step'
+  protected stepIcon: IconName = 'gcs-ci-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.GCS'
   protected stepPaletteVisible = false
 

@@ -85,7 +85,7 @@ export class JFrogArtifactoryStep extends PipelineStep<JFrogArtifactoryStepData>
 
   protected type = StepType.JFrogArtifactory
   protected stepName = 'Upload Artifacts to JFrog Artifactory'
-  protected stepIcon: IconName = 'service-artifactory'
+  protected stepIcon: IconName = 'service-artifactory-ci-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.JFrogArtifactory'
   protected stepPaletteVisible = false
 

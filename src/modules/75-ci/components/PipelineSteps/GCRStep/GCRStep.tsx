@@ -94,7 +94,7 @@ export class GCRStep extends PipelineStep<GCRStepData> {
 
   protected type = StepType.GCR
   protected stepName = 'Build and Push to GCR'
-  protected stepIcon: IconName = 'gcr-step'
+  protected stepIcon: IconName = 'gcr-ci-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.GCR'
   protected stepAdditionalInfo: keyof StringsMap = 'pipeline.linuxOnly'
   protected stepPaletteVisible = false

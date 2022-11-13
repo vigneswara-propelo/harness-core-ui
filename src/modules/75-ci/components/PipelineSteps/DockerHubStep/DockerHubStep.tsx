@@ -102,7 +102,7 @@ export class DockerHubStep extends PipelineStep<DockerHubStepData> {
 
   protected type = StepType.DockerHub
   protected stepName = 'Build and Push an image to Docker Registry'
-  protected stepIcon: IconName = 'docker-step'
+  protected stepIcon: IconName = 'docker-ci-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.DockerHub'
   protected stepAdditionalInfo: keyof StringsMap = 'pipeline.linuxOnly'
   protected stepPaletteVisible = false

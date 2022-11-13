@@ -88,9 +88,10 @@ export class RestoreCacheGCSStep extends PipelineStep<RestoreCacheGCSStepData> {
 
   protected type = StepType.RestoreCacheGCS
   protected stepName = 'Restore Cache from GCS'
-  protected stepIcon: IconName = 'restore-cache-gcs-step'
+  protected stepIcon: IconName = 'restore-cache-gcs-ci-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.RestoreCacheGCS'
   protected stepPaletteVisible = false
+  protected stepIconSize = 34
 
   protected defaultValues: RestoreCacheGCSStepData = {
     identifier: '',

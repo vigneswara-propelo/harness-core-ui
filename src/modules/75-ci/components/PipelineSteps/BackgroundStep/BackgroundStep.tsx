@@ -120,10 +120,11 @@ export class BackgroundStep extends PipelineStep<BackgroundStepData> {
 
   protected type = StepType.Background
   protected stepName = 'Configure Background Step'
-  protected stepIcon: IconName = 'background-step'
+  protected stepIcon: IconName = 'background-ci-step'
   protected stepIconColor = '#4F5162'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.Background'
   protected stepPaletteVisible = false
+  protected stepIconSize = 34
 
   protected defaultValues: BackgroundStepData = {
     identifier: '',

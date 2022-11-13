@@ -547,7 +547,7 @@ export const processLiteEngineTask = (
     name: 'Initialize',
     type: getExecutionPipelineNodeType(nodeData?.stepType),
     status: nodeData?.status as ExecutionStatus,
-    icon: 'initialize-step',
+    icon: 'initialize-ci-step',
     data: nodeData as ExecutionNode,
     itemType: 'service-dependency'
   }
@@ -1264,6 +1264,12 @@ export const processForCIData = ({
     if (node?.uuid && node.stepType === StepType.Background) {
       newNodeMap[node.uuid].startTs = 0
       newNodeMap[node.uuid].endTs = 0
+    } else if (node?.uuid && node.stepType === StepType.Plugin && node.identifier === 'harness-git-clone') {
+      newNodeMap[node.uuid].stepType = StepType.GitClone
+    } else if (node?.uuid && node.stepType === StepType.Plugin && node.identifier === 'save-cache-harness') {
+      newNodeMap[node.uuid].stepType = StepType.SaveCacheHarness
+    } else if (node?.uuid && node.stepType === StepType.Plugin && node.identifier === 'restore-cache-harness') {
+      newNodeMap[node.uuid].stepType = StepType.RestoreCacheHarness
     }
   })
 
