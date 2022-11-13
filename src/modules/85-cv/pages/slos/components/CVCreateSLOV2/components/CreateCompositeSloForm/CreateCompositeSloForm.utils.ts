@@ -71,7 +71,6 @@ export const validateAddSLO = (formikProps: FormikProps<SLOV2Form>): boolean => 
     }
     return !hasInvalidValue
   }
-  return true
 }
 
 export const validateSetSLOTarget = (formikProps: FormikProps<SLOV2Form>): boolean => {

@@ -194,10 +194,17 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
         <Page.Header
           breadcrumbs={<NGBreadcrumbs links={links} />}
           title={
-            <Heading level={3} font={{ variation: FontVariation.H4 }}>
-              {getString('cv.slos.createSLO')}
-              <HarnessDocTooltip tooltipId={'createSLO'} useStandAlone />
-            </Heading>
+            <Layout.Vertical flex={{ justifyContent: 'space-evenly', alignItems: 'flex-start' }} height={45}>
+              <Heading level={3} font={{ variation: FontVariation.H4 }}>
+                {isComposite ? getString('cv.CompositeSLO.CreateTitle') : getString('cv.slos.createSLO')}
+                <HarnessDocTooltip tooltipId={'createCompositeSLO'} useStandAlone />
+              </Heading>
+              {isComposite && (
+                <Text color={Color.GREY_600} font={{ variation: FontVariation.BODY2, weight: 'light' }}>
+                  {getString('cv.CompositeSLO.CreateMessage')}
+                </Text>
+              )}
+            </Layout.Vertical>
           }
         />
       )}
