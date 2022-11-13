@@ -120,6 +120,7 @@ export const CreateCompositeSloForm = ({
             {
               id: CreateCompositeSLOSteps.Error_Budget_Policy,
               title: getString('cv.CompositeSLO.ErrorBudgetPolicy'),
+              isOptional: true,
               panel: (
                 <CompositeSLOContext.Provider value={{ renderInsideCompositeSLO: true }}>
                   <SLOTargetNotificationsContainer
