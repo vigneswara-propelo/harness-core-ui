@@ -19,7 +19,7 @@ import { getFeaturePropsForRunPipelineButton, getRbacButtonModules } from '@pipe
 import { useBooleanStatus, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { Page } from '@common/exports'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import type { GetListOfExecutionsQueryParams } from 'services/pipeline-ng'
+import { GetListOfExecutionsQueryParams, useGetExecutionRepositoriesList } from 'services/pipeline-ng'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -29,6 +29,7 @@ import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { StoreType } from '@common/constants/GitSyncTypes'
+import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import { useExecutionListFilterContext } from '../ExecutionListFilterContext/ExecutionListFilterContext'
 import { ExecutionListFilter } from '../ExecutionListFilter/ExecutionListFilter'
 import type { ExecutionListProps } from '../ExecutionList'
@@ -42,8 +43,11 @@ export interface FilterQueryParams {
 
 interface ExecutionListSubHeaderProps {
   borderless: boolean
-  onBranchChange: (branch: string | undefined) => void
+  onBranchChange: (branch: string) => void
   selectedBranch: string | undefined
+  showRepoBranchFilter?: boolean
+  onChangeRepo?: (repoName: string) => void
+  repoName?: string
 }
 
 export function ExecutionListSubHeader(
@@ -163,7 +167,7 @@ export function ExecutionListSubHeader(
             onChange={(selected: SelectOption) => {
               onBranchChange(selected.value as string)
             }}
-            selectedValue={selectedBranch}
+            selectedBranch={selectedBranch}
             branchSelectorClassName={cx(css.branchSelector, { [css.transparent]: borderless })}
             selectProps={{ borderless }}
           />
@@ -177,6 +181,19 @@ export function ExecutionListSubHeader(
           <NewPipelineSelect
             selectedPipeline={queryParams.pipelineIdentifier}
             onPipelineSelect={value => changeQueryParam('pipelineIdentifier', value)}
+          />
+        )}
+
+        {props.showRepoBranchFilter && !isGitSyncEnabled && (
+          <RepoFilter
+            getRepoListPromise={useGetExecutionRepositoriesList}
+            onChange={props.onChangeRepo}
+            value={props.repoName}
+            showBranchFilter={props.showRepoBranchFilter}
+            onBranchChange={(selected: SelectOption) => {
+              onBranchChange(selected.value as string)
+            }}
+            selectedBranch={selectedBranch}
           />
         )}
       </div>

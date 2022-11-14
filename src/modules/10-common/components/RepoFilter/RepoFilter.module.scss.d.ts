@@ -7,11 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly expandSearch: string
-  readonly gitFilter: string
-  readonly pageBody: string
+  readonly refreshButtonWrapper: string
+  readonly refreshIcon: string
   readonly repoFilterContainer: string
-  readonly subHeader: string
-  readonly tableTitle: string
 }
 export default styles

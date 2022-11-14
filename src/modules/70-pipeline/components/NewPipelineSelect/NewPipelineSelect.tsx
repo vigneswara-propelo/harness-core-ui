@@ -52,6 +52,7 @@ export default function NewPipelineSelect(props: NewPipelineSelectProps): React.
 
   return (
     <DropDown
+      minWidth={120}
       buttonTestId="pipeline-select"
       onChange={option => {
         props.onPipelineSelect(option.value as string)

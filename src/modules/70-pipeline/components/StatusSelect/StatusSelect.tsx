@@ -76,6 +76,7 @@ export default function StatusSelect(props: StatusSelectProps): React.ReactEleme
 
   return (
     <MultiSelectDropDown
+      minWidth={120}
       buttonTestId="status-select"
       value={defaultTo(
         value?.map(item => ({

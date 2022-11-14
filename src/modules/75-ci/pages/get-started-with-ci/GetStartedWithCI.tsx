@@ -275,7 +275,7 @@ export default function GetStartedWithCI(): React.ReactElement {
                         size: 14,
                         className: cx(css.icon, css.iconPadding)
                       },
-                      label: 'ci.getStartedWithCI.selectRepo'
+                      label: 'common.selectRepository'
                     })}
                     {renderBuildPipelineStep({
                       iconProps: {

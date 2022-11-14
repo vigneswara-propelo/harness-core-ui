@@ -397,7 +397,6 @@ export interface StringsMap {
   'common.git.validation.targetBranch': string
   'common.gitDetailsTitle': string
   'common.gitOps': string
-  'common.gitSync.allBranches': string
   'common.gitSync.allRepositories': string
   'common.gitSync.branchFetchFailed': string
   'common.gitSync.branchSyncNotAllowed': string
@@ -414,6 +413,7 @@ export interface StringsMap {
   'common.gitSync.resourceLabel': string
   'common.gitSync.rootFolderLabel': string
   'common.gitSync.savingInProgress': string
+  'common.gitSync.selectBranch': string
   'common.gitSync.selectBranchLabel': string
   'common.gitSync.settingUpNewBranch': string
   'common.gitSync.sync': string
@@ -782,6 +782,7 @@ export interface StringsMap {
   'common.selectDefaultExperience': string
   'common.selectModules': string
   'common.selectName': string
+  'common.selectRepository': string
   'common.selectService': string
   'common.selectServices': string
   'common.selectTimeFrame': string
@@ -6892,7 +6893,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.security': string
   'ci.getStartedWithCI.securityHelpText': string
   'ci.getStartedWithCI.selectInfra': string
-  'ci.getStartedWithCI.selectRepo': string
   'ci.getStartedWithCI.setUpAuth': string
   'ci.getStartedWithCI.settingUpCIPipeline': string
   'ci.getStartedWithCI.startProvisioning': string

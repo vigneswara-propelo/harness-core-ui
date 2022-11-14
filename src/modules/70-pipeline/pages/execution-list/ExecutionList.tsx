@@ -5,15 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import React, { useEffect, useState } from 'react'
+
 import { Container, PageSpinner, Text } from '@harness/uicore'
-import React, { useState } from 'react'
+
 import { Color } from '@harness/design-system'
 
 import { matchPath, useLocation, useParams } from 'react-router-dom'
 import { Page } from '@common/exports'
-import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
-import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { PipelineType, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetCommunity } from '@common/utils/utils'
 import PipelineBuildExecutionsChart from '@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExecutionsChart'
 import PipelineSummaryCards from '@pipeline/components/Dashboards/PipelineSummaryCards/PipelineSummaryCards'
@@ -48,11 +50,14 @@ export interface ExecutionListProps {
 }
 
 function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
+  const params = useParams<PipelinePathProps>()
   const { showHealthAndExecution, ...rest } = props
   const { getString } = useStrings()
-  const defaultBranchSelect: string = getString('common.gitSync.allBranches')
+  const defaultBranchSelect: string = getString('common.gitSync.selectBranch')
+  const { repoName } = useQueryParams<{ repoName?: string }>()
+  const { updateQueryParams } = useUpdateQueryParams<{ repoName?: string }>()
 
-  const [selectedBranch, setSelectedBranch] = useState<string>(defaultBranchSelect)
+  const [selectedBranch, setSelectedBranch] = useState<string | undefined>(defaultBranchSelect)
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId } =
     useParams<PipelineType<PipelinePathProps>>()
   const { isSavedFilterApplied, queryParams, isAnyFilterApplied } = useExecutionListFilterContext()
@@ -91,6 +96,9 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     })
   })
 
+  const isDeploymentsPage = !!matchPath(location.pathname, {
+    path: routes.toDeployments({ ...params, module })
+  })
   const {
     data,
     loading,
@@ -109,6 +117,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       sort: sort.join(','), // TODO: this is temporary until BE supports common format for all. Currently BE supports status in  arrayFormat: 'repeat' and sort in  arrayFormat: 'comma'
       myDeployments,
       status,
+      repoName,
       ...(selectedBranch !== defaultBranchSelect ? { branch: selectedBranch } : {}),
       repoIdentifier,
       searchTerm,
@@ -139,6 +148,13 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
   const showSpinner = initLoading || (loading && !isPolling)
 
+  const onChangeRepo = (_repoName: string): void => {
+    updateQueryParams({ repoName: (_repoName || []) as string })
+  }
+  useEffect(() => {
+    if (!repoName) setSelectedBranch(undefined)
+  }, [repoName])
+
   const { globalFreezes } = useGlobalFreezeBanner()
   return (
     <>
@@ -152,10 +168,13 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
         {showSubHeader && (
           <ExecutionListSubHeader
-            onBranchChange={(value: string | undefined) => {
-              setSelectedBranch(value as string)
+            onBranchChange={(value: string) => {
+              setSelectedBranch(value)
             }}
             selectedBranch={selectedBranch}
+            showRepoBranchFilter={isDeploymentsPage}
+            onChangeRepo={onChangeRepo}
+            repoName={repoName}
             borderless
             {...rest}
           />

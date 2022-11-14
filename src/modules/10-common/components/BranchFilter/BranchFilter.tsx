@@ -30,10 +30,10 @@ export interface BranchFilterProps {
   noLabel?: boolean
   disabled?: boolean
   repoName?: string
-  selectedValue?: string
-  onChange?: (selected: SelectOption, defaultSelected?: boolean) => void // defaultSelected will be true component selected default itself
-  branchSelectorClassName?: string
+  selectedBranch?: string
+  onChange?: (selected: SelectOption) => void
   selectProps?: Omit<SelectProps, 'value' | 'onChange' | 'items'>
+  branchSelectorClassName?: string
 }
 
 const hasToRefetchBranches = (disabled: boolean, repoName: string | undefined) => !disabled && repoName
@@ -62,7 +62,7 @@ const responseHasBranches = (response: ResponsePMSPipelineListBranchesResponse |
   response?.status === 'SUCCESS' && !isEmpty(response?.data)
 
 const BranchFilter: React.FC<BranchFilterProps> = props => {
-  const { repoName, selectedValue, disabled = false } = props
+  const { repoName, selectedBranch, disabled = false } = props
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { pipelineIdentifier } = useParams<PipelinePathProps>()
@@ -119,12 +119,14 @@ const BranchFilter: React.FC<BranchFilterProps> = props => {
         items={branchSelectOptions}
         disabled={disabled || loading}
         buttonTestId={'branch-filter'}
-        value={selectedValue}
+        value={selectedBranch}
         onChange={selected => props.onChange?.(selected)}
-        placeholder={getString('common.gitSync.allBranches')}
+        placeholder={getString('common.gitSync.selectBranch')}
         addClearBtn={true}
-        minWidth={160}
+        minWidth={140}
         usePortal={true}
+        resetOnSelect
+        resetOnClose
       ></DropDown>
 
       {showRefetchButon(disabled, repoName, error) ? (
