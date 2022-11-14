@@ -2,7 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: ng-ui
-  description: Artist Lookup
+  description: ng-ui
   annotations:
     harness.io/cicd-accountIdentifier: vpCkHKsDSxK9_KYfjCTMKA
     harness.io/cicd-orgIdentifier: default
