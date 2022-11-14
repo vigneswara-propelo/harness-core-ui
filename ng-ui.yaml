@@ -9,8 +9,8 @@ metadata:
     harness.io/cicd-projectIdentifier: NextGenUI
     
   tags:
-    - java
-    - data
+    - javascript
+    
   links:
     - url: https://example.com/user
       title: Examples Users
