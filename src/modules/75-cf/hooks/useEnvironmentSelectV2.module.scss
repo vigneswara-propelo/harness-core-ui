@@ -5,16 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.container-border {
-  border-radius: var(--spacing-xsmall);
-  border: 1px solid var(--grey-200);
-}
-
-.copy-button {
-  border: none;
-  background: none;
-  padding: 0;
-  margin: 0 0 0 var(--spacing-small);
-  transform: translateY(-2px);
-  cursor: pointer;
+.hideCreateButton {
+  .Button--button {
+    display: none !important;
+  }
 }

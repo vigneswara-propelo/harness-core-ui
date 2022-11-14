@@ -6531,14 +6531,16 @@ export interface StringsMap {
   'cf.noEnvironment.title': string
   'cf.noResultMatch': string
   'cf.onboarding.android': string
-  'cf.onboarding.backToStart': string
   'cf.onboarding.clientKey': string
+  'cf.onboarding.complete': string
   'cf.onboarding.createAFlag': string
   'cf.onboarding.createEnv': string
   'cf.onboarding.createEnvAndSdk': string
   'cf.onboarding.createFlag': string
+  'cf.onboarding.createSdkKey': string
   'cf.onboarding.createdAndValidated': string
   'cf.onboarding.envCreated': string
+  'cf.onboarding.environmentDescription': string
   'cf.onboarding.errorReceivingEvent': string
   'cf.onboarding.eventWeReceived': string
   'cf.onboarding.flagInputLabel': string
@@ -6551,6 +6553,7 @@ export interface StringsMap {
   'cf.onboarding.ios': string
   'cf.onboarding.keyDescriptionClient': string
   'cf.onboarding.keyDescriptionServer': string
+  'cf.onboarding.keyGeneratedBelow': string
   'cf.onboarding.letsGetStarted': string
   'cf.onboarding.listenToEvent': string
   'cf.onboarding.oneCreateAFlag': string
@@ -6569,15 +6572,16 @@ export interface StringsMap {
   'cf.onboarding.readme.ruby': string
   'cf.onboarding.readme.xamarinAndroid': string
   'cf.onboarding.readme.xamarinIOS': string
-  'cf.onboarding.sdkKeyLabel': string
+  'cf.onboarding.sdkKeyDescription': string
   'cf.onboarding.secret': string
+  'cf.onboarding.selectEnvAndSdk': string
   'cf.onboarding.selectLanguage': string
+  'cf.onboarding.selectOrCreateEnvironment': string
   'cf.onboarding.selectOrCreateFlag': string
-  'cf.onboarding.selectYourEnvironment': string
+  'cf.onboarding.selectedLanguageAndEnv': string
   'cf.onboarding.setUpApp': string
   'cf.onboarding.setUpYourCode': string
   'cf.onboarding.setupCode': string
-  'cf.onboarding.setupLabel': string
   'cf.onboarding.simpliestFlag': string
   'cf.onboarding.simpliestFlagDescription': string
   'cf.onboarding.subTitle': string
@@ -6589,6 +6593,7 @@ export interface StringsMap {
   'cf.onboarding.validatingYourFlag': string
   'cf.onboarding.youCreated': string
   'cf.onboarding.youreUsing': string
+  'cf.onboarding.youveSelected': string
   'cf.percentageRollout.bucketBy': string
   'cf.percentageRollout.invalidTotalError': string
   'cf.percentageRollout.toTargetGroup': string

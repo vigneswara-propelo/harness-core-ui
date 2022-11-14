@@ -514,7 +514,7 @@ onboarding:
   simpliestFlag: Our Simplest Flag
   simpliestFlagDescription: 'You’re creating our simplest feature flag type: Boolean Flag. This flag type is commonly used as a feature toggle, which effectively shows/hides features from your targets.'
   otherTypes: Check out other flag types
-  backToStart: Complete
+  complete: Complete
   title: Feature Flags Quick Start Guide
   subTitle: Everything you need to know in less than 15 minutes.
   tryItOut: '{{ $.getStarted }}'
@@ -530,16 +530,21 @@ onboarding:
   selectOrCreateFlag: Select or Create a Flag
   youCreated: You've created
   youreUsing: You're using
-  setupLabel: Set up your application and code to communicate with our platform.
+  youveSelected: You've selected
+  selectEnvAndSdk: Select Environment and SDK
   selectLanguage: Select your language
-  selectYourEnvironment: Select your Environment
   createEnv: Create an environment
+  selectOrCreateEnvironment: Select or Create an Environment
+  environmentDescription: Environments are spaces within a project where you can independently configure Feature Flags. You can have multiple Environments and the same Flags can have a different state in each Environment.
   envCreated: Environment Created
-  sdkKeyLabel: Please create an SDK key for your environment
-  keyDescriptionServer: We generated a secret as the server-side SDK key of your new environment for you to use in your code below. This secret will be redacted once you leave the page, so make sure to copy and store your secret somewhere safe.
-  keyDescriptionClient: We generated a client-side SDK key of your new environment for you to use in your code below.
+  createSdkKey: Create an SDK Key
+  sdkKeyDescription: SDK keys are unique to each Environment and they authorize the connection between your application and the Feature Flag SDK Client.
+  keyDescriptionServer: We generated a secret as the server-side SDK key for <b>{{env}}</b> Environment for you to use in your code below. This secret will be redacted once you leave the page, so make sure to copy and store your secret somewhere safe.
+  keyDescriptionClient: We generated a client-side SDK key for <b>{{env}}</b> Environment. Use this in your code to authenticate the connection between your application and the Feature Flag SDK client.
+  keyGeneratedBelow: We generated a {{langType}} SDK key of your new environment for you to use in your code below.
   secret: SDK Secret
   clientKey: Client SDK Key
+  selectedLanguageAndEnv: <b>{{language}}</b> and <b>{{env}}</b> environment
   ios: iOS
   android: Android
   setUpYourCode: Set up your code
