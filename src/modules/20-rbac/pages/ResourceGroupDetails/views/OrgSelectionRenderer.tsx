@@ -48,7 +48,7 @@ const RenderColumnProject: Renderer<CellProps<OrgSelector>> = ({ row }) => {
     return <Text>{getString('rbac.resourceScope.noProjects')}</Text>
   } else {
     return projects.length ? (
-      <Layout.Horizontal spacing="xsmall">
+      <Layout.Horizontal className={css.projectRenderer}>
         {data?.data?.content?.map(({ project }) => (
           <Tag key={`${project.orgIdentifier}-${project.identifier}`} className={css.projectTags}>{`${
             project.name
