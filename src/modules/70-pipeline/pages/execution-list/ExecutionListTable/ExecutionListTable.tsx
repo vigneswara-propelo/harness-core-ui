@@ -15,11 +15,11 @@ import type {
   PagePipelineExecutionSummary,
   PipelineExecutionSummary
 } from 'services/pipeline-ng'
-import { useUpdateQueryParams } from '@common/hooks'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
-import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import {
   DurationCell,
   ExecutionCell,
@@ -130,6 +130,7 @@ export function ExecutionListTable({
   const renderRowSubComponent = React.useCallback(({ row }) => <ExecutionStageList row={row} />, [])
 
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
+  const queryParams = useQueryParams<GitQueryParams>()
 
   return (
     <TableV2<PipelineExecutionSummary>
@@ -149,7 +150,7 @@ export function ExecutionListTable({
       }
       sortable
       renderRowSubComponent={renderRowSubComponent}
-      onRowClick={rowDetails => history.push(getExecutionPipelineViewLink(rowDetails, pathParams))}
+      onRowClick={rowDetails => history.push(getExecutionPipelineViewLink(rowDetails, pathParams, queryParams))}
     />
   )
 }

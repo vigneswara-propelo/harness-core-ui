@@ -16,7 +16,12 @@ import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, Use
 import { Duration, TimeAgoPopover } from '@common/components'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
-import type { ExecutionPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type {
+  ExecutionPathProps,
+  GitQueryParams,
+  PipelinePathProps,
+  PipelineType
+} from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { killEvent } from '@common/utils/eventUtils'
@@ -33,16 +38,19 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
+import { useQueryParams } from '@common/hooks'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
 import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
 import css from './ExecutionListTable.module.scss'
 
 export const getExecutionPipelineViewLink = (
   pipelineExecutionSummary: PipelineExecutionSummary,
-  pathParams: PipelineType<PipelinePathProps>
+  pathParams: PipelineType<PipelinePathProps>,
+  queryParams: GitQueryParams
 ): string => {
   const { planExecutionId, pipelineIdentifier: rowDataPipelineIdentifier } = pipelineExecutionSummary
   const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } = pathParams
+  const { storeType } = queryParams
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
 
   return routes.toExecutionPipelineView({
@@ -59,7 +67,7 @@ export const getExecutionPipelineViewLink = (
       pipelineExecutionSummary.gitDetails?.repoIdentifier
     ),
     branch: pipelineExecutionSummary.gitDetails?.branch,
-    storeType: pipelineExecutionSummary.storeType
+    storeType: pipelineExecutionSummary.storeType ?? storeType
   })
 }
 
@@ -119,7 +127,8 @@ export const PipelineNameCell: CellType = ({ row }) => {
   const data = row.original
   const { getString } = useStrings()
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
-  const toExecutionPipelineView = getExecutionPipelineViewLink(data, pathParams)
+  const queryParams = useQueryParams<GitQueryParams>()
+  const toExecutionPipelineView = getExecutionPipelineViewLink(data, pathParams, queryParams)
 
   return (
     <Layout.Vertical>

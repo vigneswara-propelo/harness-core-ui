@@ -21,7 +21,7 @@ import { String, useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
@@ -31,11 +31,13 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RetryHistory from '@pipeline/components/RetryPipeline/RetryHistory/RetryHistory'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import { useQueryParams } from '@common/hooks'
 import css from './ExecutionHeader.module.scss'
 
 export function ExecutionHeader(): React.ReactElement {
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
+  const { storeType } = useQueryParams<GitQueryParams>()
   const { refetch, pipelineExecutionDetail, isPipelineInvalid } = useExecutionContext()
   const { supportingGitSimplification } = useAppStore()
   const { getString } = useStrings()
@@ -93,7 +95,7 @@ export function ExecutionHeader(): React.ReactElement {
                       connectorRef: pipelineExecutionSummary?.connectorRef,
                       repoName: pipelineExecutionSummary?.gitDetails?.repoName,
                       branch: pipelineExecutionSummary?.gitDetails?.branch,
-                      storeType: pipelineExecutionSummary?.storeType as StoreType
+                      storeType: (pipelineExecutionSummary?.storeType as StoreType) ?? storeType
                     }),
                     label: pipelineExecutionSummary.name || getString('common.pipeline')
                   }
@@ -137,7 +139,7 @@ export function ExecutionHeader(): React.ReactElement {
               connectorRef: pipelineExecutionSummary?.connectorRef,
               repoName: pipelineExecutionSummary?.gitDetails?.repoName,
               branch: pipelineExecutionSummary?.gitDetails?.branch,
-              storeType: pipelineExecutionSummary?.storeType as StoreType
+              storeType: (pipelineExecutionSummary?.storeType as StoreType) ?? storeType
             })}
           >
             <Icon name="Edit" size={12} />
@@ -160,7 +162,7 @@ export function ExecutionHeader(): React.ReactElement {
               repoName: pipelineExecutionSummary?.gitDetails?.repoName,
               branch: pipelineExecutionSummary?.gitDetails?.branch,
               stagesExecuted: pipelineExecutionSummary?.stagesExecuted,
-              storeType: pipelineExecutionSummary?.storeType as StoreType
+              storeType: (pipelineExecutionSummary?.storeType as StoreType) ?? storeType
             }}
             isPipelineInvalid={isPipelineInvalid}
             canEdit={canEdit}
