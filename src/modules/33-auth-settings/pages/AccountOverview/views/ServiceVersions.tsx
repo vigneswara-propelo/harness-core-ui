@@ -40,6 +40,16 @@ const versionAPIs = [
     id: 'ci'
   },
   {
+    label: 'Security Tests',
+    url: 'sto/api/v2/system/version',
+    id: 'sto'
+  },
+  {
+    label: 'Security Tests Manager',
+    url: 'sto-manager/version',
+    id: 'sto_manager'
+  },
+  {
     label: 'Continuous Verification',
     url: 'cv/api/version',
     id: 'cv'
