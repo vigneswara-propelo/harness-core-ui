@@ -7,7 +7,6 @@
 
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { useToaster } from '@harness/uicore'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useGetSettingValue } from 'services/cd-ng'
@@ -18,15 +17,10 @@ const useIsGithubWebhookAuthenticationEnabled = (): {
   isGithubWebhookAuthenticationEnabled: boolean
   isGithubWebhookAuthenticationDataLoading: boolean
 } => {
-  const { showError } = useToaster()
   const isSpgNgGithubWebhookAuthenticationEnabled = useFeatureFlag(FeatureFlag.SPG_NG_GITHUB_WEBHOOK_AUTHENTICATION)
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
-  const {
-    data: projectSettingData,
-    loading: isGithubWebhookAuthenticationDataLoading,
-    error: projectSettingDataError
-  } = useGetSettingValue({
+  const { data: projectSettingData, loading: isGithubWebhookAuthenticationDataLoading } = useGetSettingValue({
     identifier: SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION,
     queryParams: {
       accountIdentifier,
@@ -34,10 +28,6 @@ const useIsGithubWebhookAuthenticationEnabled = (): {
       projectIdentifier
     }
   })
-
-  if (projectSettingDataError) {
-    showError(projectSettingDataError.message)
-  }
 
   const isGithubWebhookAuthenticationEnabled = useMemo(() => {
     return isSpgNgGithubWebhookAuthenticationEnabled && projectSettingData?.data?.value === 'true'
