@@ -236,7 +236,7 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
       }}
       formName="userRoleAssignementForm"
       validationSchema={Yup.object().shape({
-        users: Yup.array().min(1, getString('rbac.userRequired')).max(15, getString('rbac.userUpperLimit')),
+        users: Yup.array().min(1, getString('rbac.userRequired')),
         ...(isCommunity
           ? {}
           : {

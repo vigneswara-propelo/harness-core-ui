@@ -214,7 +214,6 @@ resourceGroup:
   selectionHeading: 'Select Resource and define its scope of access.'
 updateNotificationSuccess: Notification preferences updated successfully
 userRequired: User is required
-userUpperLimit: Addition of more than 15 users is not allowed
 userGroupRequired: At least one user group is required
 resourceSelectorErrorMessage: Add atleast one specific resource for the following types [{{resources}}]
 accessControlTitle:

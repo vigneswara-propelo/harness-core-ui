@@ -1312,7 +1312,6 @@ export interface StringsMap {
   'rbac.userGroupPage.userList.deleteTitle': string
   'rbac.userGroupRequired': string
   'rbac.userRequired': string
-  'rbac.userUpperLimit': string
   'rbac.usersPage.deleteConfirmation': string
   'rbac.usersPage.deleteLastAdminError': string
   'rbac.usersPage.deleteLastAdminOrgConfirmation': string
