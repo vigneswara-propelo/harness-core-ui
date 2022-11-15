@@ -176,7 +176,7 @@ function RunPipelineFormBasic({
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [isInputSetApplied, setIsInputSetApplied] = useState(true)
 
-  const [canEdit] = usePermission(
+  const [canSaveInputSet, canEditYaml] = usePermission(
     {
       resourceScope: {
         accountIdentifier: accountId,
@@ -187,7 +187,7 @@ function RunPipelineFormBasic({
         resourceType: ResourceType.PIPELINE,
         resourceIdentifier: pipelineIdentifier
       },
-      permissions: [PermissionIdentifier.EDIT_PIPELINE]
+      permissions: [PermissionIdentifier.EDIT_PIPELINE, PermissionIdentifier.EXECUTE_PIPELINE]
     },
     [accountId, orgIdentifier, projectIdentifier, pipelineIdentifier]
   )
@@ -839,7 +839,7 @@ function RunPipelineFormBasic({
                           invocationMap={factory.getInvocationMap()}
                           height="55vh"
                           width="100%"
-                          isEditModeSupported={canEdit}
+                          isEditModeSupported={canEditYaml}
                           comparableYaml={inputSetYamlResponse?.data?.inputSetTemplateYaml}
                         />
                       </Layout.Vertical>
@@ -953,7 +953,7 @@ function RunPipelineFormBasic({
                         currentPipeline={{ pipeline: values }}
                         values={values}
                         template={inputSetYamlResponse?.data?.inputSetTemplateYaml}
-                        canEdit={canEdit}
+                        canEdit={canSaveInputSet}
                         accountId={accountId}
                         projectIdentifier={projectIdentifier}
                         orgIdentifier={orgIdentifier}
