@@ -3283,11 +3283,6 @@ export type ElastigroupInfrastructure = Infrastructure & {
   metadata?: string
 }
 
-export type ElastigroupRollbackStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  metadata?: string
-}
-
 export type ElastigroupServiceSpec = ServiceSpec & {
   startupScript?: StartupScriptConfiguration
 }
@@ -3461,7 +3456,6 @@ export interface EntityDetail {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
 }
 
 export interface EntityDetailProtoDTO {
@@ -5709,7 +5703,6 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   searchTerm?: string
@@ -5833,7 +5826,6 @@ export interface GitEntityFilterProperties {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
@@ -5990,7 +5982,6 @@ export interface GitFullSyncEntityInfoDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6122,7 +6113,6 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -6362,7 +6352,6 @@ export interface GitSyncEntityDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -6488,7 +6477,6 @@ export interface GitSyncEntityListDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -6631,7 +6619,6 @@ export interface GitSyncErrorDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -9567,7 +9554,6 @@ export interface ReferencedByDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
 }
 
 export interface RefreshResponse {
@@ -10644,7 +10630,6 @@ export interface ResponseListEntityType {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12542,6 +12527,7 @@ export type SamlSettings = SSOSettings & {
   entityIdentifier?: string
   groupMembershipAttr?: string
   logoutUrl?: string
+  metaDataFile?: string
   origin: string
   samlProviderType?: 'AZURE' | 'OKTA' | 'ONELOGIN' | 'OTHER'
   settingType?:
@@ -13614,7 +13600,6 @@ export interface StepData {
     | 'EcsBlueGreenRollback'
     | 'GitOpsUpdateReleaseRepo'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
 }
 
 export interface StepElementConfig {
@@ -14631,9 +14616,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = void
+export type SecretRequestWrapperRequestBody = SecretRequestWrapper
 
-export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
+export type SecretRequestWrapper2RequestBody = void
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -14659,11 +14644,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -15260,7 +15245,6 @@ export interface ListActivitiesQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15378,7 +15362,6 @@ export interface ListActivitiesQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -15600,7 +15583,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15718,7 +15700,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -20132,6 +20113,105 @@ export const getRegionsForGoogleArtifactRegistryPromise = (
     signal
   )
 
+export interface GetBuildDetailsForGoogleArtifactRegistryV2QueryParams {
+  connectorRef?: string
+  region?: string
+  repositoryName?: string
+  project?: string
+  package?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier: string
+  version?: string
+  versionRegex?: string
+  fqnPath: string
+  serviceId?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetBuildDetailsForGoogleArtifactRegistryV2Props = Omit<
+  MutateProps<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets google artifact registry build details v2
+ */
+export const GetBuildDetailsForGoogleArtifactRegistryV2 = (props: GetBuildDetailsForGoogleArtifactRegistryV2Props) => (
+  <Mutate<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/gar/v2/getBuildDetails`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetBuildDetailsForGoogleArtifactRegistryV2Props = Omit<
+  UseMutateProps<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets google artifact registry build details v2
+ */
+export const useGetBuildDetailsForGoogleArtifactRegistryV2 = (
+  props: UseGetBuildDetailsForGoogleArtifactRegistryV2Props
+) =>
+  useMutate<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', `/artifacts/gar/v2/getBuildDetails`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets google artifact registry build details v2
+ */
+export const getBuildDetailsForGoogleArtifactRegistryV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/gar/v2/getBuildDetails`, props, signal)
 export interface GetBuildDetailsForGcrQueryParams {
   imagePath: string
   registryHostname: string
@@ -29828,7 +29908,6 @@ export interface ListReferredByEntitiesQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -30007,7 +30086,6 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   searchTerm?: string
 }
 
@@ -33032,7 +33110,6 @@ export interface GetReferencedByQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   searchTerm?: string
 }
 
@@ -33486,7 +33563,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33500,7 +33577,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -33515,7 +33592,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33529,7 +33606,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -33541,7 +33618,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -33550,7 +33627,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -34056,7 +34133,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -34070,7 +34147,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -34085,7 +34162,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -34099,7 +34176,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -34111,7 +34188,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -34120,7 +34197,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -35340,7 +35417,6 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -35526,7 +35602,6 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'EcsRunTask'
       | 'Chaos'
       | 'ElastigroupDeploy'
-      | 'ElastigroupRollback'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -41186,7 +41261,6 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   yamlGroup?: string
 }
 
@@ -41432,7 +41506,6 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -52408,7 +52481,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -52418,7 +52491,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -52431,7 +52504,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -52445,7 +52518,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -52457,7 +52530,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -52466,7 +52539,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -52859,7 +52932,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -52873,7 +52946,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >
     verb="POST"
@@ -52888,7 +52961,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -52902,7 +52975,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -52914,7 +52987,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -52923,7 +52996,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -53058,7 +53131,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -53073,7 +53146,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -53088,7 +53161,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -53103,7 +53176,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -53122,7 +53195,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -53131,7 +53204,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -53150,7 +53223,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -53165,7 +53238,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -53180,7 +53253,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -53195,7 +53268,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -53214,7 +53287,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -53223,7 +53296,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -53853,7 +53926,6 @@ export interface GetYamlSchemaQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
   subtype?:
     | 'K8sCluster'
     | 'Git'
