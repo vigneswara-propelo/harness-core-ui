@@ -793,7 +793,6 @@ addStage:
 pipelineSteps:
   templateStage: Template Stage
   customStage: Custom Stage
-  chainedPipeline: Chained Pipeline
   templateStageDescription: Use stage template.
   customStageDescription: Use this to set up a stage configurable to your needs.
   chainedPipelineDescription: Run a Pipeline as a stage in another Pipeline.

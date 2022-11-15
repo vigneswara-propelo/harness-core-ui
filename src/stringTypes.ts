@@ -3872,7 +3872,6 @@ export interface StringsMap {
   'pipeline.pipelineInputPanel.selectedExisitingOrProvide': string
   'pipeline.pipelineInputPanel.whatAreInputsets': string
   'pipeline.pipelineSteps.approvalStageDescription': string
-  'pipeline.pipelineSteps.chainedPipeline': string
   'pipeline.pipelineSteps.chainedPipelineDescription': string
   'pipeline.pipelineSteps.customStage': string
   'pipeline.pipelineSteps.customStageDescription': string
