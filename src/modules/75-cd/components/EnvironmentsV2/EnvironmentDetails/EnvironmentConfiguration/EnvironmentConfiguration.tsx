@@ -493,6 +493,11 @@ export default function EnvironmentConfiguration({
                           formikProps.setFieldValue('variables', values.variables)
                         }}
                         addVariableLabel={'variables.newVariable'}
+                        yamlProperties={defaultTo(formikProps.values.variables, []).map(variable => ({
+                          fqn: `env.variables.${variable?.name}`,
+                          variableName: variable?.name,
+                          visible: true
+                        }))}
                       />
                     </Card>
                   </Layout.Vertical>

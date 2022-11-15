@@ -134,7 +134,12 @@ export default function WorkflowVariables({
             tabName,
             formName,
             yamlProperties: getYamlPropertiesForVariables().map(
-              variable => metadataMap[variable.value || '']?.yamlProperties || {}
+              variable =>
+                metadataMap[variable.value || '']?.yamlProperties || {
+                  fqn: `serviceVariables.${variable?.name}`,
+                  variableName: variable?.name,
+                  visible: true
+                }
             ),
             enableValidation: true
           }}
