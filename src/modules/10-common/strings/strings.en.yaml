@@ -433,6 +433,10 @@ errorHandler:
   communityForum: ' Harness Community Forum'
 noRefData: 'No references found'
 references: 'References'
+referenceButtonText: Go view references
+referenceTextWarning: The {{type}} [{{name}}] is being referenced in other entities. Please remove the referenced {{type}} from affected entities before deleting.
+forcedDeleteWarning: Forceful deletion might render entities referencing this {{type}} invalid and will need to be updated.
+forcedDeleteLabel: Forcefully delete this {{type}} now
 labelTestConnection: 'Connection Test'
 path: 'Path'
 enableGitSyncPipeline:

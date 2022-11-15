@@ -59,7 +59,7 @@ const useDelete = (identifier: string, name: string, type: string, notCurrentNod
       </span>
     ),
     titleText: getString('filestore.cantDeleteFile'),
-    confirmButtonText: type === FileStoreNodeTypes.FILE ? getString('filestore.referenceButtonText') : undefined,
+    confirmButtonText: type === FileStoreNodeTypes.FILE ? getString('common.referenceButtonText') : undefined,
     cancelButtonText: getString('cancel'),
     intent: Intent.DANGER,
     onCloseDialog: async (isConfirmed: boolean) => {

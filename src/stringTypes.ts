@@ -306,6 +306,8 @@ export interface StringsMap {
   'common.filters.unsavedFilter': string
   'common.findOutMore': string
   'common.firstGeneration': string
+  'common.forcedDeleteLabel': string
+  'common.forcedDeleteWarning': string
   'common.freezeActiveBannerTextPrefix': string
   'common.freezeActiveBannerTimeframe': string
   'common.freezeListActiveBannerExpandedTextPrefix': string
@@ -674,6 +676,8 @@ export interface StringsMap {
   'common.readOnly': string
   'common.readonlyPermissions': string
   'common.recommended': string
+  'common.referenceButtonText': string
+  'common.referenceTextWarning': string
   'common.references': string
   'common.refresh': string
   'common.refreshDelegateLogs': string
@@ -1599,7 +1603,6 @@ export interface StringsMap {
   'filestore.noFilesInFolderTitle': string
   'filestore.noFilesInStore': string
   'filestore.noFilesTitle': string
-  'filestore.referenceButtonText': string
   'filestore.searchResult': string
   'filestore.uploadFileFolder': string
   'filestore.view.fileName': string
