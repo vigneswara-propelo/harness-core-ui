@@ -22,13 +22,14 @@ import EntityUsageList from './views/EntityUsageListView/EntityUsageList'
 import css from './EntityUsage.module.scss'
 
 interface EntityUsageProps {
-  entityIdentifier: string
+  entityIdentifier?: string
   entityType: ListReferredByEntitiesQueryParams['referredEntityType']
   mockData?: UseGetMockData<ResponsePageEntitySetupUsageDTO>
   pageSize?: number
   pageHeaderClassName?: string
   pageBodyClassName?: string
   withSearchBarInPageHeader?: boolean
+  customReferredEntityFQN?: string
 }
 
 const DEFAULT_PAGE_SIZE = 10
@@ -37,7 +38,7 @@ interface Params {
   accountId: string
   orgIdentifier?: string
   projectIdentifier?: string
-  entityIdentifier: string
+  entityIdentifier?: string
 }
 
 const getReferredEntityFQN = (params: Params) => {
@@ -66,13 +67,17 @@ const EntityUsage: React.FC<EntityUsageProps> = props => {
     pageSize,
     pageBodyClassName,
     withSearchBarInPageHeader = true,
-    pageHeaderClassName
+    pageHeaderClassName,
+    customReferredEntityFQN
   } = props
 
   const { data, loading, refetch, error } = useListAllEntityUsageByFqn({
     queryParams: {
       accountIdentifier: accountId,
-      referredEntityFQN: getReferredEntityFQN({ accountId, orgIdentifier, projectIdentifier, entityIdentifier }),
+      referredEntityFQN: defaultTo(
+        customReferredEntityFQN,
+        getReferredEntityFQN({ accountId, orgIdentifier, projectIdentifier, entityIdentifier })
+      ),
       referredEntityType: entityType,
       searchTerm: searchTerm,
       pageIndex: page,
