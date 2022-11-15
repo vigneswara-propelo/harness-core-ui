@@ -711,48 +711,97 @@ onboarding:
     golang: |
       # Supported GO versions
 
-      This version of FFM has been tested with GO 1.14
+      <a href="https://go.dev/doc/install">Golang 1.16</a> or newer (go version)
+
+      # Quickstart
+
+      To follow along with our test code sample, make sure you've:
+
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag">Created a Feature Flag on the Harness Platform</a> called 'harnessappdemodarkmode'
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key">Created a server SDK key and made a copy of it</a>
 
       # Install
 
+      Install the golang SDK using go
       ```
       go get github.com/harness/ff-golang-server-sdk
       ```
 
       # Usage
 
-      First we need to import lib with harness alias 
-      ```
-      import harness "github.com/harness/ff-golang-server-sdk/client"
-      ```
+      The following is a complete code example that you can use to test the harnessappdemodarkmode Flag you created on the Harness Platform. 
 
-      Next we create client instance for interaction with api 
-      ```
-      client, err := harness.NewCfClient("{{apiKey}}")
-      ```
-
-      Target definition can be user, device, app etc.
+      Create a file called `getting_started.go` and add the following code below:
 
       ```
-      target := dto.NewTargetBuilder("{{apiKey}}").
-      Firstname("John").
-      Lastname("doe").
-      Email("johndoe@acme.com").
-      Country("USA").
-      Custom("height", 160).
-      Build()
+      package main
+
+      import (
+        "log"
+        "os"
+        "time"
+
+        harness "github.com/harness/ff-golang-server-sdk/client"
+        "github.com/harness/ff-golang-server-sdk/evaluation"
+      )
+
+      var (
+        flagName string = getEnvOrDefault("FF_FLAG_NAME", "harnessappdemodarkmode")
+        sdkKey   string = getEnvOrDefault("FF_API_KEY", "changeme")
+      )
+
+      func main() {
+        log.Println("Harness SDK Getting Started")
+
+        // Create a feature flag client instance
+        client, err := harness.NewCfClient(sdkKey)
+        if err != nil {
+          log.Fatalf("could not connect to FF servers %s\n", err)
+        }
+        defer func() { client.Close() }()
+
+        // Create a target (different targets can get different results based on rules)
+        target := evaluation.Target{
+          Identifier: "HT_1",
+          Name:       "Harness_Target_1",
+          Attributes: &map[string]interface{}{"email": "demo@harness.io"},
+        }
+
+        // Loop forever reporting the state of the flag
+        for {
+          resultBool, err := client.BoolVariation(flagName, &target, false)
+          if err != nil {
+            log.Fatal("failed to get evaluation: ", err)
+          }
+          log.Printf("Flag variation %v\n", resultBool)
+          time.Sleep(10 * time.Second)
+        }
+
+      }
+
+      func getEnvOrDefault(key, defaultStr string) string {
+        value := os.Getenv(key)
+        if value == "" {
+          return defaultStr
+        }
+        return value
+      }
+
       ```
 
-      Evaluating Feature Flag:
+      # Test your application
 
       ```
-      showFeature, err := client.BoolVariation(featureFlagKey, &target, false)
+      export FF_API_KEY=<your key here>
+      go run getting_started.go
       ```
 
-      Flush any changes and close the SDK
+      If you don't have the right version of golang installed locally, or don't want to install the dependencies you can use docker to quickly get started
       ```
-      client.close()
+      export FF_API_KEY=<your key here>
+      docker run -e FF_API_KEY=$FF_API_KEY -v $(pwd):/app -w /app golang:1.17 go run getting_started.go
       ```
+
     android: |
       # Setup
 
