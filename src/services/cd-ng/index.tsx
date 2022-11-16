@@ -453,6 +453,7 @@ export interface Account {
   forImport?: boolean
   globalDelegateAccount?: boolean
   harnessSupportAccessAllowed?: boolean
+  immutableDelegateEnabled?: boolean
   lastUpdatedAt: number
   lastUpdatedBy?: EmbeddedUser
   licenseId?: string
@@ -15400,6 +15401,62 @@ export const updateAccountDefaultExperienceNGPromise = (
     AccountDTORequestBody,
     UpdateAccountDefaultExperienceNGPathParams
   >('PUT', getConfig('ng/api'), `/accounts/${accountIdentifier}/default-experience`, props, signal)
+
+export interface IsImmutableDelegateEnabledPathParams {
+  accountIdentifier: string
+}
+
+export type IsImmutableDelegateEnabledProps = Omit<
+  GetProps<ResponseBoolean, Failure | Error, void, IsImmutableDelegateEnabledPathParams>,
+  'path'
+> &
+  IsImmutableDelegateEnabledPathParams
+
+/**
+ * Get Immutable delegate enabled flag
+ */
+export const IsImmutableDelegateEnabled = ({ accountIdentifier, ...props }: IsImmutableDelegateEnabledProps) => (
+  <Get<ResponseBoolean, Failure | Error, void, IsImmutableDelegateEnabledPathParams>
+    path={`/accounts/${accountIdentifier}/immutable-delegate-enabled`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseIsImmutableDelegateEnabledProps = Omit<
+  UseGetProps<ResponseBoolean, Failure | Error, void, IsImmutableDelegateEnabledPathParams>,
+  'path'
+> &
+  IsImmutableDelegateEnabledPathParams
+
+/**
+ * Get Immutable delegate enabled flag
+ */
+export const useIsImmutableDelegateEnabled = ({ accountIdentifier, ...props }: UseIsImmutableDelegateEnabledProps) =>
+  useGet<ResponseBoolean, Failure | Error, void, IsImmutableDelegateEnabledPathParams>(
+    (paramsInPath: IsImmutableDelegateEnabledPathParams) =>
+      `/accounts/${paramsInPath.accountIdentifier}/immutable-delegate-enabled`,
+    { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * Get Immutable delegate enabled flag
+ */
+export const isImmutableDelegateEnabledPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: GetUsingFetchProps<ResponseBoolean, Failure | Error, void, IsImmutableDelegateEnabledPathParams> & {
+    accountIdentifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseBoolean, Failure | Error, void, IsImmutableDelegateEnabledPathParams>(
+    getConfig('ng/api'),
+    `/accounts/${accountIdentifier}/immutable-delegate-enabled`,
+    props,
+    signal
+  )
 
 export interface UpdateAccountNameNGPathParams {
   accountIdentifier: string

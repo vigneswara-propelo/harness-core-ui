@@ -5,11 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import ReactTimeago from 'react-timeago'
 import { defaultTo, set } from 'lodash-es'
 import { useParams, useHistory } from 'react-router-dom'
-import { Button, Text, Layout, Popover, useToaster, useConfirmationDialog, ButtonVariation } from '@harness/uicore'
+import {
+  Button,
+  Text,
+  Layout,
+  Popover,
+  useToaster,
+  useConfirmationDialog,
+  ButtonVariation,
+  PageSpinner
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Menu, MenuItem, Classes, Position, Dialog } from '@blueprintjs/core'
 import type { CellProps, Renderer, UseExpandedRowProps } from 'react-table'
@@ -25,7 +34,7 @@ import { TagsViewer } from '@common/components/TagsViewer/TagsViewer'
 import DelegateInstallationError from '@delegates/components/CreateDelegate/components/DelegateInstallationError/DelegateInstallationError'
 import { Table } from '@common/components'
 import { killEvent } from '@common/utils/eventUtils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useIsImmutableDelegateEnabled } from 'services/cd-ng'
 import { DelegateInstanceList } from './DelegateInstanceList'
 import { getAutoUpgradeTextColor, getInstanceStatus } from './utils/DelegateHelper'
 import DelegateConnectivityStatus from './DelegateConnectivityStatus'
@@ -291,10 +300,21 @@ export const DelegateListingItem: React.FC<DelegateProps> = props => {
       history.push(routes.toDelegatesDetails(params))
     }
   }
-
-  const { USE_IMMUTABLE_DELEGATE } = useFeatureFlags()
+  const { showError } = useToaster()
+  const {
+    data: useImmutableDelegate,
+    error,
+    loading
+  } = useIsImmutableDelegateEnabled({
+    accountIdentifier: accountId
+  })
+  useEffect(() => {
+    if (error) {
+      showError(error.message)
+    }
+  }, [error])
   const columns = useMemo(() => {
-    const columnsArray = USE_IMMUTABLE_DELEGATE
+    const columnsArray = useImmutableDelegate?.data
       ? [
           {
             Header: '',
@@ -403,20 +423,21 @@ export const DelegateListingItem: React.FC<DelegateProps> = props => {
           }
         ]
     return columnsArray
-  }, [])
+  }, [useImmutableDelegate?.data])
 
   const renderRowSubComponent = React.useCallback(
     ({ row }) => (
       <>
         <Layout.Horizontal className={css.podDetailsSeparator}></Layout.Horizontal>
-        <DelegateInstanceList row={row}></DelegateInstanceList>
+        <DelegateInstanceList row={row} canUseImmutableDelegate={!!useImmutableDelegate?.data}></DelegateInstanceList>
       </>
     ),
-    []
+    [useImmutableDelegate?.data]
   )
 
   return (
     <Layout.Horizontal width={'100%'}>
+      {loading ? <PageSpinner /> : null}
       <Table<DelegateGroupDetails>
         columns={columns}
         className={css.instanceTable}
