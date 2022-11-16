@@ -33,9 +33,7 @@ import { ModuleLicenseType, Editions, SubscriptionTabNames } from '@common/const
 import type { FetchPlansQuery } from 'services/common/services'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useSubscribeModal } from '@auth-settings/modals/Subscription/useSubscriptionModal'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { getSavedRefererURL, getGaClientID } from '@common/utils/utils'
-import { FeatureFlag } from '@common/featureFlags'
+import { getSavedRefererURL, getGaClientID, isOnPrem } from '@common/utils/utils'
 import type { TimeType } from '@common/constants/SubscriptionTypes'
 import { getBtnProps } from './planUtils'
 import type { PlanData, PlanProp } from './planUtils'
@@ -197,7 +195,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
     }
   })
   const isSelfService = licenseInformation?.[moduleType]?.selfService === true
-  const isSelfServiceEnabled = useFeatureFlag(FeatureFlag.SELF_SERVICE_ENABLED) && isSelfService
+  const isSelfServiceEnabled = !isOnPrem() && isSelfService
 
   useEffect(() => {
     handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, updatedLicenseInfo)
