@@ -97,9 +97,12 @@ function PipelineYamlView(): React.ReactElement {
         Interval = window.setInterval(() => {
           try {
             const pipelineFromYaml = parse<Pipeline>(yamlHandler.getLatestYaml())?.pipeline
+            // Do not call updatePipeline with undefined, pipelineFromYaml check in below if condition prevents that.
+            // This can happen when somebody adds wrong yaml (e.g. connector's yaml) into pipeline yaml that is stored in Git
+            // and opens pipeline in harness. At this time above line will evaluate to undefined
             if (
-              (!isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) ||
-                entityValidityDetails?.valid === false) &&
+              pipelineFromYaml &&
+              !isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) &&
               yamlHandler.getYAMLValidationErrorMap()?.size === 0 // Don't update for Invalid Yaml
             ) {
               updatePipeline(pipelineFromYaml).then(() => {
