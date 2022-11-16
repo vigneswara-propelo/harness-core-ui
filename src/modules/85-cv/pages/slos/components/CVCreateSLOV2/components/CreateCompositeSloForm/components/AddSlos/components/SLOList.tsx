@@ -44,6 +44,7 @@ import {
   RenderTarget,
   RenderUserJourney
 } from './SLOList.utils'
+import { MinNumberOfSLO, MaxNumberOfSLO } from '../../../CreateCompositeSloForm.constant'
 
 interface SLODashboardWidgetsParams {
   queryParams: GetSLOHealthListViewQueryParams
@@ -82,7 +83,7 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
   })
 
   const { content, totalItems = 0, totalPages = 0, pageIndex = 0, pageSize = 10 } = dashboardWidgetsResponse?.data ?? {}
-
+  const isDisabled = selectedSlos?.length < MinNumberOfSLO || selectedSlos?.length > MaxNumberOfSLO
   useEffect(() => {
     // load selected SLOs when we get data from API
     if (dashboardWidgetsResponse?.data?.content) {
@@ -211,7 +212,7 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
           <Button
             width={150}
             data-testid={'addSloButton'}
-            disabled={selectedSlos.length < 2}
+            disabled={isDisabled}
             variation={ButtonVariation.PRIMARY}
             text={getString('add')}
             onClick={addSLos}
