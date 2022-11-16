@@ -18,7 +18,7 @@ import {
   useToaster,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
-import { cloneDeep, get, omit, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, omit, set } from 'lodash-es'
 import produce from 'immer'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
@@ -31,6 +31,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { sanitize } from '@common/utils/JSONUtils'
+import { queryClient } from 'services/queryClient'
 import ServiceConfiguration from './ServiceConfiguration/ServiceConfiguration'
 import { ServiceTabs, setNameIDDescription, ServicePipelineConfig } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServiceStudio/ServiceStudio.module.scss'
@@ -109,7 +110,8 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
       ...omit(cloneDeep(finalServiceData?.service), 'serviceDefinition', 'gitOpsEnabled'),
       projectIdentifier,
       orgIdentifier,
-      identifier: serviceId,
+      //serviceId is not present in queryParam when service is created in pipeline studio.
+      identifier: defaultTo(serviceId, finalServiceData?.service?.identifier),
       yaml: yamlStringify(sanitize({ ...finalServiceData }, { removeEmptyObject: false, removeEmptyString: false }))
     }
 
@@ -123,6 +125,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
             name: serviceResponse?.name as string
           })
         } else {
+          queryClient.invalidateQueries(['getServiceAccessList'])
           showSuccess(
             isServiceEntityModalView && isServiceCreateModalView
               ? getString('common.serviceCreated')
