@@ -1119,3 +1119,5 @@ singularLabels:
   issue: Issue
 pipelineExecution: Pipeline Executions
 platformServiceVersions: Platform Service Versions
+executionTab:
+  stepsCount: At least one step is required

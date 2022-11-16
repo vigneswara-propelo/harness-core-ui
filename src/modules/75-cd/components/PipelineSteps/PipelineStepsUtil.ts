@@ -286,7 +286,7 @@ export function getCDStageValidationSchema(
       ...getServiceSchema(getString, isNewServiceEnvEntity),
       ...getEnvironmentInfraSchema(getString, isNewEnvInfraDef, deploymentType),
       execution: Yup.object().shape({
-        steps: Yup.array().required().min(1, getString('cd.pipelineSteps.executionTab.stepsCount'))
+        steps: Yup.array().required().min(1, getString('common.executionTab.stepsCount'))
       })
     }),
     failureStrategies: getFailureStrategiesValidationSchema(getString),

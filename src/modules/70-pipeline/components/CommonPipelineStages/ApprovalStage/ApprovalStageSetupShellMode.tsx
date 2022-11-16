@@ -170,7 +170,7 @@ export function ApprovalStageSetupShellMode(): React.ReactElement {
           id={tabHeadings[1]}
           title={
             <span className={css.tab}>
-              <Icon name="deployment-success-legacy" height={20} size={20} />
+              <Icon name="tick" height={20} size={20} />
               {tabHeadings[1]}
             </span>
           }
