@@ -252,7 +252,7 @@
       "sh scripts/license/stamp.sh"
     ],
     "*.{ts,tsx}": [
-      "eslint --rulesdir ./scripts/eslint-rules --resolve-plugins-relative-to",
+      "eslint --rulesdir ./scripts/eslint-rules",
       "sh scripts/typecheck-staged.sh",
       "prettier --check"
     ],
