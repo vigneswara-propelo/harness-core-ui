@@ -50,7 +50,7 @@ export const getExecutionPipelineViewLink = (
 ): string => {
   const { planExecutionId, pipelineIdentifier: rowDataPipelineIdentifier } = pipelineExecutionSummary
   const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } = pathParams
-  const { storeType } = queryParams
+  const { branch, repoIdentifier, repoName, connectorRef, storeType } = queryParams
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
 
   return routes.toExecutionPipelineView({
@@ -61,12 +61,12 @@ export const getExecutionPipelineViewLink = (
     module,
     executionIdentifier: planExecutionId || '-1',
     source,
-    connectorRef: pipelineExecutionSummary.connectorRef,
+    connectorRef: pipelineExecutionSummary.connectorRef ?? connectorRef,
     repoName: defaultTo(
-      pipelineExecutionSummary.gitDetails?.repoName,
-      pipelineExecutionSummary.gitDetails?.repoIdentifier
+      pipelineExecutionSummary.gitDetails?.repoName ?? repoName,
+      pipelineExecutionSummary.gitDetails?.repoIdentifier ?? repoIdentifier
     ),
-    branch: pipelineExecutionSummary.gitDetails?.branch,
+    branch: pipelineExecutionSummary.gitDetails?.branch ?? branch,
     storeType: pipelineExecutionSummary.storeType ?? storeType
   })
 }
