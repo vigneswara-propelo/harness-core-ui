@@ -23,7 +23,7 @@ import produce from 'immer'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { NGServiceConfig, useCreateServiceV2, useUpdateServiceV2 } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -43,7 +43,8 @@ interface ServiceStudioDetailsProps {
 }
 function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElement | null {
   const { getString } = useStrings()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
+
   const { tab } = useQueryParams<{ tab: string }>()
   const { updateQueryParams } = useUpdateQueryParams()
   const {
@@ -92,7 +93,8 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     clear()
 
     let updatedService
-    if (view === SelectedView.YAML) {
+    const isVisualView = view === SelectedView.VISUAL
+    if (!isVisualView) {
       const stage = get(pipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
 
       updatedService = produce(props.serviceData, draft => {
@@ -102,11 +104,12 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
         }
       })
     }
-    const finalServiceData = view === SelectedView.VISUAL ? props.serviceData : updatedService
+    const finalServiceData = isVisualView ? props.serviceData : updatedService
     const body = {
       ...omit(cloneDeep(finalServiceData?.service), 'serviceDefinition', 'gitOpsEnabled'),
       projectIdentifier,
       orgIdentifier,
+      identifier: serviceId,
       yaml: yamlStringify(sanitize({ ...finalServiceData }, { removeEmptyObject: false, removeEmptyString: false }))
     }
 
