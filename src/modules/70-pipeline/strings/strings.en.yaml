@@ -48,7 +48,7 @@ noRunsText: Your project does not have any {{moduleRunType}} yet. Click the butt
 parallelSelectedStages: '{{selected}}, +{{total}} Stages'
 parallelStages: '+{{total}} Stages'
 runAPipeline: Run a Pipeline
-regionPlaceholder: Select Region
+regionPlaceholder: Select or Enter Region
 repositoryPlaceholder: <container-registry-name>.azurecr.io/<image>
 repositoryUrlPlaceholder: Enter Repository URL
 lastSevenDays: In Last 7 days

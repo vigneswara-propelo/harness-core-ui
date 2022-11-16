@@ -12,7 +12,7 @@ dashboard:
 steps:
   common:
     clusterDetails: Cluster Details
-    selectOrEnterClusterPlaceholder: Select or add Cluster
+    selectOrEnterClusterPlaceholder: Select or Enter Cluster
     releaseNamePlaceholder: Enter Release Name
     specifyCredentials: Specify Credentials
     undefinedType: Undefined deployment type
