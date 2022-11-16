@@ -8111,7 +8111,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export interface LDAPSettings {
+export type LDAPSettings = NGAuthSettings & {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -8119,7 +8119,6 @@ export interface LDAPSettings {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -8775,10 +8774,9 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export interface OAuthSettings {
+export type OAuthSettings = NGAuthSettings & {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -9898,6 +9896,10 @@ export type RemoteCloudformationTagsFileSpec = CloudformationTagsFileSpec & {
 }
 
 export type RemoteCloudformationTemplateFileSpec = CloudformationTemplateFileSpec & {
+  store: StoreConfigWrapper
+}
+
+export type RemoteTerraformBackendConfigSpec = TerraformBackendConfigSpec & {
   store: StoreConfigWrapper
 }
 
@@ -18550,6 +18552,100 @@ export const getImagePathsForArtifactoryPromise = (
     signal
   )
 
+export interface GetImagePathsForArtifactoryV2QueryParams {
+  connectorRef?: string
+  repositoryType?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier: string
+  repository: string
+  fqnPath?: string
+  serviceId?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetImagePathsForArtifactoryV2Props = Omit<
+  MutateProps<
+    ResponseArtifactoryImagePathsDTO,
+    Failure | Error,
+    GetImagePathsForArtifactoryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Image Paths details
+ */
+export const GetImagePathsForArtifactoryV2 = (props: GetImagePathsForArtifactoryV2Props) => (
+  <Mutate<
+    ResponseArtifactoryImagePathsDTO,
+    Failure | Error,
+    GetImagePathsForArtifactoryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/artifactory/imagePathsV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetImagePathsForArtifactoryV2Props = Omit<
+  UseMutateProps<
+    ResponseArtifactoryImagePathsDTO,
+    Failure | Error,
+    GetImagePathsForArtifactoryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Image Paths details
+ */
+export const useGetImagePathsForArtifactoryV2 = (props: UseGetImagePathsForArtifactoryV2Props) =>
+  useMutate<
+    ResponseArtifactoryImagePathsDTO,
+    Failure | Error,
+    GetImagePathsForArtifactoryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', `/artifacts/artifactory/imagePathsV2`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets Image Paths details
+ */
+export const getImagePathsForArtifactoryV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseArtifactoryImagePathsDTO,
+    Failure | Error,
+    GetImagePathsForArtifactoryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseArtifactoryImagePathsDTO,
+    Failure | Error,
+    GetImagePathsForArtifactoryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/artifactory/imagePathsV2`, props, signal)
+
 export interface GetRepositoriesDetailsForArtifactoryQueryParams {
   connectorRef?: string
   repositoryType?: string
@@ -19505,7 +19601,7 @@ export type GetJobDetailsForCustomProps = Omit<
 >
 
 /**
- * Gets Job details for Custom
+ * Gets Job details for Custom Artifact
  */
 export const GetJobDetailsForCustom = (props: GetJobDetailsForCustomProps) => (
   <Mutate<ResponseListBuildDetails, Failure | Error, GetJobDetailsForCustomQueryParams, CustomScriptInfo, void>
@@ -19522,7 +19618,7 @@ export type UseGetJobDetailsForCustomProps = Omit<
 >
 
 /**
- * Gets Job details for Custom
+ * Gets Job details for Custom Artifact
  */
 export const useGetJobDetailsForCustom = (props: UseGetJobDetailsForCustomProps) =>
   useMutate<ResponseListBuildDetails, Failure | Error, GetJobDetailsForCustomQueryParams, CustomScriptInfo, void>(
@@ -19532,7 +19628,7 @@ export const useGetJobDetailsForCustom = (props: UseGetJobDetailsForCustomProps)
   )
 
 /**
- * Gets Job details for Custom
+ * Gets Job details for Custom Artifact
  */
 export const getJobDetailsForCustomPromise = (
   props: MutateUsingFetchProps<
@@ -25541,7 +25637,7 @@ export const listBucketsWithServiceV2Promise = (
 export interface GetFilePathsV2ForS3QueryParams {
   region?: string
   connectorRef?: string
-  bucketName: string
+  bucketName?: string
   filePathRegex?: string
   accountIdentifier: string
   orgIdentifier?: string
