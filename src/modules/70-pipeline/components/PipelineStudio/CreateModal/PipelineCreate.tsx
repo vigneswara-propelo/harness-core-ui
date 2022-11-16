@@ -64,6 +64,7 @@ export interface PipelineCreateProps {
   initialValues?: CreatePipelinesValue
   closeModal?: () => void
   gitDetails?: IGitContextFormProps
+  primaryButtonText: string
 }
 
 export default function CreatePipelines({
@@ -80,7 +81,8 @@ export default function CreatePipelines({
     connectorRef: ''
   },
   closeModal,
-  gitDetails
+  gitDetails,
+  primaryButtonText
 }: PipelineCreateProps): JSX.Element {
   const { getString } = useStrings()
   const { pipelineIdentifier } = useParams<{ pipelineIdentifier: string }>()
@@ -247,7 +249,7 @@ export default function CreatePipelines({
               <Button
                 variation={ButtonVariation.PRIMARY}
                 type="submit"
-                text={isEdit ? getString('continue') : getString('start')}
+                text={primaryButtonText}
                 disabled={gitDetails?.remoteFetchFailed}
               />
               &nbsp; &nbsp;
