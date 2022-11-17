@@ -227,7 +227,10 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                 <DropDown
                   items={scopeOptions}
                   value={selectedScope.value.toString()}
-                  onChange={item => setSelectedScope(item)}
+                  onChange={item => {
+                    setSelectedRepo(undefined)
+                    setSelectedScope(item)
+                  }}
                   filterable={false}
                 />
                 {!isGitSyncEnabled && (
