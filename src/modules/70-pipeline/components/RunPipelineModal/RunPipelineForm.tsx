@@ -194,11 +194,15 @@ function RunPipelineFormBasic({
 
   const stageIdentifiers = useMemo((): string[] => {
     let stageIds: string[] = []
-    stageIds = stagesExecuted?.length
-      ? stagesExecuted
-      : selectedStageData.allStagesSelected
-      ? []
-      : (selectedStageData.selectedStageItems.map(stageData => stageData.value) as string[])
+
+    if (stagesExecuted?.length) {
+      stageIds = stagesExecuted
+    } else if (selectedStageData.allStagesSelected) {
+      // do nothing
+    } else {
+      stageIds = selectedStageData.selectedStageItems.map(stageData => stageData.value) as string[]
+    }
+
     if (stageIds.includes(ALL_STAGE_VALUE)) {
       stageIds = []
     }
@@ -237,7 +241,8 @@ function RunPipelineFormBasic({
       repoIdentifier,
       branch,
       getDefaultFromOtherRepo: true
-    }
+    },
+    lazy: executionView
   })
 
   const pipeline: PipelineInfoConfig | undefined = React.useMemo(
@@ -359,7 +364,8 @@ function RunPipelineFormBasic({
       repoIdentifier,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
-    }
+    },
+    lazy: executionView
   })
 
   const executionStageList = useMemo((): SelectOption[] => {
@@ -1011,9 +1017,13 @@ export function RunPipelineFormWrapper(props: RunPipelineFormWrapperProps): Reac
 export function RunPipelineForm(props: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
   return (
     <NestedAccordionProvider>
-      <PipelineVariablesContextProvider storeMetadata={props.storeMetadata}>
+      {props.executionView ? (
         <RunPipelineFormBasic {...props} />
-      </PipelineVariablesContextProvider>
+      ) : (
+        <PipelineVariablesContextProvider storeMetadata={props.storeMetadata}>
+          <RunPipelineFormBasic {...props} />
+        </PipelineVariablesContextProvider>
+      )}
     </NestedAccordionProvider>
   )
 }
