@@ -5,16 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
-  Button,
-  ButtonVariation,
-  Container,
-  Formik,
-  Layout,
-  MultiSelectOption,
-  SelectOption,
-  Text
-} from '@harness/uicore'
+import { Button, ButtonVariation, Container, Formik, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import React, { useCallback, useMemo, useState } from 'react'
 import { Form } from 'formik'
@@ -37,6 +28,7 @@ import {
   NotificationRule,
   SRMNotificationType
 } from '../../NotificationsContainer.types'
+import type { FieldValueType, MoreFieldsType } from '../NotificationRuleRow/NotificationRuleRow.types'
 import css from './ConfigureMonitoredServiceAlertConditions.module.scss'
 
 export default function ConfigureMonitoredServiceAlertConditions({
@@ -77,18 +69,16 @@ export default function ConfigureMonitoredServiceAlertConditions({
   const handleChangeField = useCallback(
     (
       notificationRule: NotificationRule,
-      currentFieldValue: SelectOption | MultiSelectOption[] | string,
+      currentFieldValue: FieldValueType,
       currentField: string,
-      nextField?: string,
-      nextFieldValue?: SelectOption | MultiSelectOption[] | string
+      moreFields?: MoreFieldsType
     ) => {
       const updatedNotificationRules = getUpdatedNotificationRules({
         conditions,
         notificationRule,
         currentField,
         currentFieldValue,
-        nextField,
-        nextFieldValue
+        moreFields
       })
       setConditions(updatedNotificationRules)
     },

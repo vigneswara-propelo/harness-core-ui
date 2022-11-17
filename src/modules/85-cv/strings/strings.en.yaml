@@ -577,6 +577,8 @@ notifications:
   thresholdBelow: Threshold is below
   validations:
     conditionIsRequired: Condition is required
+    eventStatusIsRequired: Events is required
+    eventTypeIsRequired: Event Type is required
 changeSource:
   alertText: Alert
   incident: Incident
