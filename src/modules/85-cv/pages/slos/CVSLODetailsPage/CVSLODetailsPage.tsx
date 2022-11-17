@@ -68,10 +68,10 @@ const CVSLODetailsPage: React.FC = () => {
   })
 
   useEffect(() => {
-    if (identifier && !isCompositeSLO) {
+    if (identifier) {
       refetch()
     }
-  }, [identifier, refetch, sloType])
+  }, [identifier])
 
   const { mutate: resetErrorBudget, loading: resetErrorBudgetLoading } = useResetErrorBudget({
     identifier: '',
@@ -107,7 +107,7 @@ const CVSLODetailsPage: React.FC = () => {
           orgIdentifier,
           projectIdentifier
         }),
-        search: getSearchString({ tab: nextTab, monitoredServiceIdentifier })
+        search: getSearchString({ tab: nextTab, monitoredServiceIdentifier, sloType })
       })
     }
   }

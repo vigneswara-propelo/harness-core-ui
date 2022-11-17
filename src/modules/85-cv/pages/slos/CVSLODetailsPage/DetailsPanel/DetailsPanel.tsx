@@ -83,11 +83,13 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
             >
               {getString('changes')}
             </Heading>
-            <ChangesSourceCard
-              startTime={startTime}
-              endTime={endTime}
-              monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
-            />
+            {sloDashboardWidget?.monitoredServiceIdentifier && (
+              <ChangesSourceCard
+                startTime={startTime}
+                endTime={endTime}
+                monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
+              />
+            )}
             <Text
               icon="info"
               color={Color.GREY_600}
