@@ -43,6 +43,7 @@ export interface ACRStepSpec {
   // pull?: MultiTypePullOption
   resources?: Resources
   runAsUser?: string
+  subscriptionId?: string
 }
 
 export interface ACRStepData {
@@ -104,6 +105,7 @@ export class ACRStep extends PipelineStep<ACRStepData> {
       connectorRef: '',
       remoteCacheImage: '',
       repository: '',
+      subscriptionId: '',
       tags: []
     }
   }

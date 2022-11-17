@@ -37,6 +37,9 @@ export const ACRStepInputSetBasic: React.FC<ACRStepProps> = ({
           }),
           ...(getMultiTypeFromValue(template?.spec?.repository) === MultiTypeInputType.RUNTIME && {
             'spec.repository': {}
+          }),
+          ...(getMultiTypeFromValue(template?.spec?.subscriptionId) === MultiTypeInputType.RUNTIME && {
+            'spec.subscriptionId': {}
           })
         }}
         path={path || ''}

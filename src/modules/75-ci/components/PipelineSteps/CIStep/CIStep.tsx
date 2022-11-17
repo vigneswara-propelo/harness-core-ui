@@ -608,6 +608,24 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
+      {get(enableFields, 'spec.subscriptionId') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          {renderMultiTypeTextField({
+            name: `${prefix}spec.subscriptionId`,
+            tooltipId: 'subscriptionId',
+            optional: true,
+            labelKey: 'common.subscriptionId',
+            inputProps: {
+              multiTextInputProps: {
+                expressions,
+                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+              },
+              disabled: readonly
+            },
+            fieldPath: 'spec.subscriptionId'
+          })}
+        </Container>
+      ) : null}
       {get(enableFields, 'spec.tags') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {/* Corresponding input set view is handled in ArtifactStepCommon.tsx */}

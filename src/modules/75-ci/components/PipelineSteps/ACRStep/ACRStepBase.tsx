@@ -105,6 +105,7 @@ export const ACRStepBase = (
                   type: Connectors.AZURE
                 },
                 'spec.repository': {},
+                'spec.subscriptionId': {},
                 'spec.tags': {}
               }}
               formik={formik}
