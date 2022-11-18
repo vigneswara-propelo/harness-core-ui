@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, get, throttle } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import type { IconName } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import {
@@ -279,35 +279,6 @@ export const scrollZoom = (
     scale += delta * factor * scale
     scale = Math.min(max_scale, scale)
     callback(scale)
-  }
-}
-
-const setupDragEventListeners = (draggableParent: HTMLElement, overlay: HTMLElement): void => {
-  draggableParent.onmousedown = function (event) {
-    if (event?.target !== draggableParent) {
-      return
-    }
-    const initialX = event.pageX
-    const initialY = event.pageY
-    const overlayPosition = getComputedPosition(overlay, draggableParent as HTMLDivElement) as DOMRect
-    const moveAt = (pageX: number, pageY: number): void => {
-      const newX = overlayPosition?.left + pageX - initialX
-      const newY = overlayPosition?.top + pageY - initialY
-      overlay.style.transform = `translate(${newX}px,${newY}px)`
-    }
-
-    const onMouseMove = throttle((e: MouseEvent): void => {
-      moveAt(e.pageX, e.pageY)
-    }, 16)
-
-    draggableParent.addEventListener('mousemove', onMouseMove)
-    draggableParent.onmouseup = function () {
-      draggableParent.removeEventListener('mousemove', onMouseMove)
-      draggableParent.onmouseup = null
-    }
-    draggableParent.onmouseleave = function () {
-      draggableParent.removeEventListener('mousemove', onMouseMove)
-    }
   }
 }
 
@@ -931,7 +902,6 @@ export {
   getComputedPosition,
   getFinalSVGArrowPath,
   getPipelineGraphData,
-  setupDragEventListeners,
   getSVGLinksFromPipeline,
   getTerminalNodeLinks,
   getRelativeBounds,
