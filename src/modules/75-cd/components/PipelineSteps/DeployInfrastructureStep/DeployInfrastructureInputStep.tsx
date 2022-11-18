@@ -179,9 +179,9 @@ function DeployInfrastructureInputStepInternal({
               </>
             )}
 
-            {(serviceOverrideInputs?.variables ||
-              serviceOverrideInputs?.manifest ||
-              serviceOverrideInputs?.configFiles) && (
+            {(serviceOverrideInputs?.variables?.length ||
+              serviceOverrideInputs?.manifests?.length ||
+              serviceOverrideInputs?.configFiles?.length) && (
               <>
                 <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
                   {getString('common.serviceOverrides')}
