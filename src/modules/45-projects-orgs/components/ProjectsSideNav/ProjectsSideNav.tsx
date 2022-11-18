@@ -75,12 +75,17 @@ export default function ProjectsSideNav(): React.ReactElement {
           <SidebarLink label={getString('overview')} to={routes.toProjectDetails(projectDetailsParams)} />
           {NEW_LEFT_NAVBAR_SETTINGS && (
             <SidebarLink
+              className={css.sidebarlink}
               label={getString('common.pipelineExecution')}
               to={routes.toDeployments(projectDetailsParams)}
             />
           )}
           {NEW_LEFT_NAVBAR_SETTINGS && (
-            <SidebarLink label={getString('pipelines')} to={routes.toPipelines(projectDetailsParams)} />
+            <SidebarLink
+              className={css.sidebarlink}
+              label={getString('pipelines')}
+              to={routes.toPipelines(projectDetailsParams)}
+            />
           )}
           <ProjectSetupMenu defaultExpanded={NEW_LEFT_NAVBAR_SETTINGS} />
         </Container>

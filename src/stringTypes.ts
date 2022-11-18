@@ -138,6 +138,7 @@ export interface StringsMap {
   'common.chaosText': string
   'common.city': string
   'common.clearSelection': string
+  'common.clickToKnowMore': string
   'common.clientId': string
   'common.clientSecret': string
   'common.cluster': string

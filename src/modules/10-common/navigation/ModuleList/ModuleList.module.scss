@@ -33,6 +33,20 @@
       font-size: 24px !important;
     }
   }
+  .infoTooltipText {
+    line-height: 20px;
+  }
+}
+
+.popover {
+  :global {
+    .bp3-transition-container {
+      z-index: 22;
+    }
+    .bp3-popover {
+      z-index: 22;
+    }
+  }
 }
 
 .backdrop {
