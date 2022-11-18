@@ -72,6 +72,10 @@ export const getConnectorIdValue = (prevStepData: ConnectorConfigDTO | undefined
   return prevStepData?.identifier || ''
 }
 
+export const getConnectorRefQueryData = (prevStepData: ConnectorConfigDTO | undefined): string => {
+  return prevStepData?.connectorId?.value || prevStepData?.connectorId?.connector?.value || prevStepData?.identifier
+}
+
 export const helperTextData = (
   selectedArtifact: ArtifactType | null,
   formik: FormikValues,

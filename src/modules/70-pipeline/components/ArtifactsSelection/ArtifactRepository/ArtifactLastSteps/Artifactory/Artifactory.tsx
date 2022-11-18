@@ -47,7 +47,8 @@ import {
   getFinalArtifactFormObj,
   resetTag,
   shouldFetchTags,
-  helperTextData
+  helperTextData,
+  getConnectorRefQueryData
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   getHelpeTextForTags,
@@ -218,10 +219,6 @@ function Artifactory({
     )
   }
 
-  const getConnectorRefQueryData = (): string => {
-    return prevStepData?.connectorId?.value || prevStepData?.connectorId?.connector?.value || prevStepData?.identifier
-  }
-
   const {
     data,
     loading: artifactoryBuildDetailsLoading,
@@ -232,7 +229,7 @@ function Artifactory({
       artifactPath: lastQueryData.artifactPath,
       repository: lastQueryData.repository,
       repositoryFormat,
-      connectorRef: getConnectorRefQueryData(),
+      connectorRef: getConnectorRefQueryData(prevStepData),
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
@@ -251,7 +248,7 @@ function Artifactory({
   } = useGetImagePathsForArtifactory({
     queryParams: {
       repository: lastQueryData.repository,
-      connectorRef: getConnectorRefQueryData(),
+      connectorRef: getConnectorRefQueryData(prevStepData),
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
@@ -569,7 +566,7 @@ function Artifactory({
                             refetchImagePathData({
                               queryParams: {
                                 repository: (formik.values?.repository as string) || '',
-                                connectorRef: getConnectorRefQueryData(),
+                                connectorRef: getConnectorRefQueryData(prevStepData),
                                 accountIdentifier: accountId,
                                 orgIdentifier,
                                 projectIdentifier
