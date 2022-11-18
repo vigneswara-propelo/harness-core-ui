@@ -360,7 +360,6 @@ export default function DeployStageSetupShell(): JSX.Element {
   React.useEffect(() => {
     if (!isServiceDefinitionPresent) {
       setSelectedTabId(DeployTabs.SERVICE)
-      return
     }
     validate()
     // eslint-disable-next-line react-hooks/exhaustive-deps
