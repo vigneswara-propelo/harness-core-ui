@@ -40,8 +40,7 @@ export default function ChaosHomePage(): React.ReactElement {
 
   const { data, error, refetch, loading } = useGetLicensesAndSummary({
     queryParams: { moduleType },
-    accountIdentifier: accountId,
-    lazy: true
+    accountIdentifier: accountId
   })
 
   const expiryTime = data?.data?.maxExpiryTime

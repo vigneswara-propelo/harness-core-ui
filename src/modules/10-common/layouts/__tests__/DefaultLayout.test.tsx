@@ -26,7 +26,21 @@ jest.mock('@common/navigation/MainNav', () => {
 jest.mock('@common/hooks/useFeatures', () => ({
   useFeatures: jest.fn(() => ({}))
 }))
-
+const useGetUsageAndLimitReturnMock = {
+  limitData: {
+    limit: {}
+  },
+  usageData: {
+    usage: {}
+  }
+}
+jest.mock('@common/hooks/useGetUsageAndLimit', () => {
+  return {
+    useGetUsageAndLimit: () => {
+      return useGetUsageAndLimitReturnMock
+    }
+  }
+})
 jest.mock('services/cd-ng')
 const useGetLicensesAndSummaryMock = useGetLicensesAndSummary as jest.MockedFunction<any>
 useGetLicensesAndSummaryMock.mockImplementation(() => {
@@ -34,16 +48,6 @@ useGetLicensesAndSummaryMock.mockImplementation(() => {
     data: {}
   }
 })
-
-const useGetUsageAndLimitReturnMock = {
-  usageData: {
-    usage: {}
-  }
-}
-
-jest.mock('@common/hooks/useGetUsageAndLimit', () => ({
-  useGetUsage: () => useGetUsageAndLimitReturnMock
-}))
 
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
 useExtendTrialLicenseMock.mockImplementation(() => {

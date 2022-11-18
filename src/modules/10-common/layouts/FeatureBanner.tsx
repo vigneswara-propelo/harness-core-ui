@@ -20,10 +20,9 @@ import { useLocalStorage } from '@common/hooks/useLocalStorage'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
+import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
-import { useGetUsage, UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit'
-import type { CEModuleLicenseDTO } from 'services/cd-ng'
 import {
   ViewUsageLink,
   ExplorePlansBtn,
@@ -165,16 +164,9 @@ export default function FeatureBanner(): React.ReactElement | null {
   const features = useFeatures({ featuresRequest: { featureNames: defaultTo(activeModuleFeatures?.features, []) } })
 
   const moduleName: ModuleName = module ? moduleToModuleNameMapping[module] : ModuleName.COMMON
-
-  const usage = useGetUsage(moduleName)
+  const usageAndLimitInfo = useGetUsageAndLimit(moduleName)
   const { licenseInformation } = useLicenseStore()
   const isFreeEdition = isFreePlan(licenseInformation, moduleName)
-  const usageAndLimitInfo: UsageAndLimitReturn = {
-    usageData: usage,
-    limitData: {
-      limit: { ccm: { totalSpendLimit: (licenseInformation?.CE as CEModuleLicenseDTO)?.spendLimit } }
-    }
-  }
 
   const isTeamEdition = isTeamPlan(licenseInformation, moduleName)
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, moduleName)

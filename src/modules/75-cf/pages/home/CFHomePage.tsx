@@ -50,8 +50,7 @@ const CFHomePage: React.FC = () => {
     loading: gettingLicense
   } = useGetLicensesAndSummary({
     queryParams: { moduleType },
-    accountIdentifier,
-    lazy: true
+    accountIdentifier
   })
 
   // get project lists via accountId

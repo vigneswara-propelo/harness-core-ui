@@ -8,7 +8,6 @@
 import React from 'react'
 import moment from 'moment'
 import { render, fireEvent, waitFor } from '@testing-library/react'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useGetLicensesAndSummary, useExtendTrialLicense, useSaveFeedback } from 'services/cd-ng'
 
@@ -31,8 +30,6 @@ useSaveFeedbackMock.mockImplementation(() => {
     mutate: saveFeedbackMock
   }
 })
-jest.mock('framework/LicenseStore/LicenseStoreContext')
-const useLicenseStoreMock = useLicenseStore as jest.MockedFunction<any>
 
 describe('TrialLicenseBanner', () => {
   test('should render banner and provide feedback button if api call returns TRIAL and not expired', () => {
@@ -47,15 +44,6 @@ describe('TrialLicenseBanner', () => {
           },
           status: 'SUCCESS'
         }
-      }
-    })
-    useLicenseStoreMock.mockImplementation(() => {
-      return {
-        licenseInformation: {
-          CD: { expiryTime: moment.now() + 24 * 60 * 60 * 1000, edition: 'TEAM', licenseType: 'TRIAL' }
-        },
-        versionMap: {},
-        updateLicenseStore: () => void 0
       }
     })
 
@@ -84,15 +72,7 @@ describe('TrialLicenseBanner', () => {
         }
       }
     })
-    useLicenseStoreMock.mockImplementation(() => {
-      return {
-        licenseInformation: {
-          CD: { expiryTime: moment.now() + 24 * 60 * 60 * 1000, edition: 'TEAM', licenseType: 'PAID' }
-        },
-        versionMap: {},
-        updateLicenseStore: () => void 0
-      }
-    })
+
     const { container, queryByText } = render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
         <TrialLicenseBanner />
@@ -116,15 +96,7 @@ describe('TrialLicenseBanner', () => {
         }
       }
     })
-    useLicenseStoreMock.mockImplementation(() => {
-      return {
-        licenseInformation: {
-          CD: { expiryTime: moment.now() - 24 * 60 * 60 * 1000, edition: 'TEAM', licenseType: 'TRIAL' }
-        },
-        versionMap: {},
-        updateLicenseStore: () => void 0
-      }
-    })
+
     const { container, queryByText, getByText } = render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
         <TrialLicenseBanner />
@@ -150,15 +122,7 @@ describe('TrialLicenseBanner', () => {
         }
       }
     })
-    useLicenseStoreMock.mockImplementation(() => {
-      return {
-        licenseInformation: {
-          CD: { expiryTime: moment.now() - 24 * 60 * 60 * 1000 * 15, edition: 'TEAM', licenseType: 'TRIAL' }
-        },
-        versionMap: {},
-        updateLicenseStore: () => void 0
-      }
-    })
+
     const { container, queryByText, getByText } = render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
         <TrialLicenseBanner />
@@ -185,15 +149,7 @@ describe('TrialLicenseBanner', () => {
         }
       }
     })
-    useLicenseStoreMock.mockImplementation(() => {
-      return {
-        licenseInformation: {
-          CD: { expiryTime: moment.now() - 24 * 60 * 60 * 1000, edition: 'TEAM', licenseType: 'TRIAL' }
-        },
-        versionMap: {},
-        updateLicenseStore: () => void 0
-      }
-    })
+
     const { getByText } = render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
         <TrialLicenseBanner />
@@ -219,15 +175,7 @@ describe('TrialLicenseBanner', () => {
         }
       }
     })
-    useLicenseStoreMock.mockImplementation(() => {
-      return {
-        licenseInformation: {
-          CD: { expiryTime: moment.now() + 24 * 60 * 60 * 1000, edition: 'TEAM', licenseType: 'TRIAL' }
-        },
-        versionMap: {},
-        updateLicenseStore: () => void 0
-      }
-    })
+
     const { getByText } = render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
         <TrialLicenseBanner />
