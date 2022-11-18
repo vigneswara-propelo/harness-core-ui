@@ -6352,6 +6352,7 @@ export interface StringsMap {
   'cf.creationModal.jsonType': string
   'cf.creationModal.mustBeNumber': string
   'cf.creationModal.mustBeValidJSON': string
+  'cf.creationModal.mustContainLetter': string
   'cf.creationModal.nameIsRequired': string
   'cf.creationModal.saveAndClose': string
   'cf.creationModal.valueIsRequired': string

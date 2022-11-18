@@ -49,6 +49,7 @@ creationModal:
   defaultVariationIsRequired: Default variation is required
   mustBeNumber: Value must be a number
   mustBeValidJSON: Value must be a valid JSON object.
+  mustContainLetter: Id must contain at least one letter
   dataType: Data type
   defaultRulesTooltip: Define which variation users will see by default when the flag is ON or OFF
 
