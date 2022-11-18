@@ -7279,6 +7279,7 @@ export interface StringsMap {
   'cv.metricThresholds.customMetricsDeletePromptContent': string
   'cv.metricThresholds.deletePromptTitle': string
   'cv.metricThresholds.metricPacksDeletePromptContent': string
+  'cv.metricThresholds.noThresholdsMessage': string
   'cv.metricThresholds.validations.countValue': string
   'cv.metricThresholds.validations.duplicateThreshold': string
   'cv.metricThresholds.validations.percentageValidation': string
