@@ -7,10 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly alignContainerRight: string
-  readonly borderLeft: string
-  readonly bottomMargin: string
-  readonly card: string
-  readonly stepContainer: string
+  readonly gridLableValue: string
+  readonly previewRows: string
 }
 export default styles

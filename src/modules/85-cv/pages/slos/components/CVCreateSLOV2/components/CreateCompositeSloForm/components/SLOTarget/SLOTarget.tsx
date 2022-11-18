@@ -14,8 +14,9 @@ import { SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSL
 import { PeriodTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
 import { ErrorBudgetCard } from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy'
 import { SLOTargetChart } from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart'
+import { KeyValuePair } from '@cv/pages/slos/CVSLODetailsPage/DetailsPanel/views/ServiceDetails'
 import { getCustomOptionsForSLOTargetChart } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.utils'
-import { CalenderValuePreview, LabelAndValue } from '../CreatePreview/CreatePreview'
+import { CalenderValuePreview } from '../CreatePreview/CreatePreview'
 
 interface SLOTargetProps {
   formikProps: FormikContextType<SLOV2Form>
@@ -30,12 +31,12 @@ const SLOTarget = ({ formikProps }: SLOTargetProps): JSX.Element => {
   return (
     <>
       <Layout.Horizontal spacing="medium" margin={{ bottom: 'small' }}>
-        <LabelAndValue
+        <KeyValuePair
           label={getString('cv.slos.sloTargetAndBudget.periodType')}
           value={formikProps.values.periodType || ''}
         />
         {formikProps.values.periodType === PeriodTypes.ROLLING && (
-          <LabelAndValue label={getString('cv.periodLength')} value={formikProps.values.periodLength || ''} />
+          <KeyValuePair label={getString('cv.periodLength')} value={formikProps.values.periodLength || ''} />
         )}
         {formikProps.values.periodType === PeriodTypes.CALENDAR && <CalenderValuePreview data={formikProps.values} />}
       </Layout.Horizontal>

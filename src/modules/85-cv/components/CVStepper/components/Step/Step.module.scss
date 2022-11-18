@@ -15,11 +15,15 @@
 }
 
 .alignContainerRight {
-  padding: 1em !important;
+  padding: var(--spacing-medium) var(--spacing-large) !important;
   margin: 0 !important;
   margin-left: 16px !important;
 }
 
 .card {
   min-width: 100%;
+}
+
+.bottomMargin {
+  margin-bottom: var(--spacing-huge) !important;
 }

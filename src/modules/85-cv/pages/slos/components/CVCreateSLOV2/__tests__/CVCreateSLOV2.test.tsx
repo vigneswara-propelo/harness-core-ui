@@ -182,7 +182,9 @@ describe('CVCreateSloV2', () => {
       expect(getByText(SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.type)).toBeInTheDocument()
     )
     await waitFor(() =>
-      expect(getByText(SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.spec.periodLength)).toBeInTheDocument()
+      expect(
+        getByText(`${SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.spec.periodLength}`)
+      ).toBeInTheDocument()
     )
     act(() => {
       userEvent.click(screen.getByText('next'))
@@ -200,7 +202,7 @@ describe('CVCreateSloV2', () => {
     })
     await waitFor(() =>
       expect(
-        getByText(SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.sloTargetPercentage.toString())
+        getByText(`${Number(SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.sloTargetPercentage)}%`)
       ).toBeInTheDocument()
     )
   })
@@ -235,7 +237,7 @@ describe('CVCreateSloV2', () => {
     act(() => {
       userEvent.click(screen.getByText('next'))
     })
-    expect(screen.getByText('87')).toBeInTheDocument()
+    expect(screen.getByText('87%')).toBeInTheDocument()
   })
 
   test('Should render period update warning modals', async () => {
@@ -567,7 +569,7 @@ describe('CVCreateSloV2', () => {
     act(() => {
       userEvent.click(screen.getByText('next'))
     })
-    expect(screen.getByText('45')).toBeInTheDocument()
+    expect(screen.getByText('45%')).toBeInTheDocument()
     act(() => {
       userEvent.clear(firstWeight!)
       userEvent.type(firstWeight!, '101')
