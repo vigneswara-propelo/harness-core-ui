@@ -11,7 +11,10 @@ import { TestWrapper } from '@common/utils/testUtils'
 import CESideNav, { ProjectLevelFeedback } from '../CESideNav'
 
 jest.mock('@common/hooks/useFeatureFlag', () => ({
-  useFeatureFlag: jest.fn(() => true)
+  useFeatureFlags: jest.fn(() => ({
+    CLOUD_COST_GOVERNANCE_UI: true,
+    CCM_COMMORCH: true
+  }))
 }))
 
 const trackEventMock = jest.fn()

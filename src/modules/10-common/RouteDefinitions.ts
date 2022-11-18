@@ -1800,6 +1800,13 @@ const routes = {
   toCommitmentOrchestration: withAccountId(() => `/ce/commitment-orchestration`),
   toCommitmentOrchestrationSetup: withAccountId(() => `/ce/commitment-orchestration/setup`),
   toCECloudIntegration: withAccountId(() => `/ce/cloud-integrations/`),
+  toCEGovernance: withAccountId(() => `/ce/governance/`),
+  toCEGovernanceRules: withAccountId(() => `/ce/governance/rules/`),
+  toCEGovernanceEnforcements: withAccountId(() => `/ce/governance/enforcements/`),
+  toCEGovernanceEvaluations: withAccountId(() => `/ce/governance/evaluations/`),
+  toCEGovernanceRuleEditor: withAccountId(
+    ({ ruleId }: { ruleId: string }) => `/ce/governance/rules/${ruleId}/rule-editor/`
+  ),
   toCCMMFE: withAccountId(() => `/ce/new`),
   /********************************************************************************************************************/
   toSTO: withAccountId(() => `/sto`),

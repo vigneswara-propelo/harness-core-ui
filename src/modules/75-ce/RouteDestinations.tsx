@@ -359,6 +359,11 @@ const RedirectToNewNodeRecommendationDetailsRoute = (): React.ReactElement => {
   )
 }
 
+const RedirectToGovernanceRules = (): React.ReactElement => {
+  const params = useParams<AccountPathProps>()
+  return <Redirect to={routes.toCEGovernanceRules(params)} />
+}
+
 const licenseRedirectData: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CCM_LICENSE_STATE,
   startTrialRedirect: RedirectToModuleTrialHome,
@@ -766,7 +771,11 @@ const CERoutes: React.FC = () => {
         }),
         routes.toCECORules({ ...accountPathProps, params: '' }),
         routes.toCommitmentOrchestration({ ...accountPathProps }),
-        routes.toCommitmentOrchestrationSetup({ ...accountPathProps })
+        routes.toCommitmentOrchestrationSetup({ ...accountPathProps }),
+        routes.toCEGovernanceRules({ ...accountPathProps }),
+        routes.toCEGovernanceEnforcements({ ...accountPathProps }),
+        routes.toCEGovernanceEvaluations({ ...accountPathProps }),
+        routes.toCEGovernanceRuleEditor({ ...accountPathProps, ruleId: ':ruleId' })
       ]
     : []
 
@@ -830,7 +839,14 @@ const CERoutes: React.FC = () => {
         >
           <CloudIntegrationPage />
         </RouteWithLayout>
-
+        <RouteWithLayout
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CESideNavProps}
+          path={routes.toCEGovernance({ ...accountPathProps })}
+          exact
+        >
+          <RedirectToGovernanceRules />
+        </RouteWithLayout>
         {enableMicroFrontend ? (
           <RouteWithLayout path={[...mfePaths, routes.toCCMMFE({ ...accountPathProps })]} sidebarProps={CESideNavProps}>
             <ChildAppMounter<CCMUIAppCustomProps>

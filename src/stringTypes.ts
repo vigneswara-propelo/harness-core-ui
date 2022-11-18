@@ -2059,9 +2059,13 @@ export interface StringsMap {
   'connectors.ceAws.crossAccountRoleExtention.step4': string
   'connectors.ceAws.crossAccountRoleExtention.step5': string
   'connectors.ceAws.crossAccountRoleExtention.subHeading': string
+  'connectors.ceAws.crossAccountRoleStep1.adding': string
   'connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.prefix': string
   'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer2': string
   'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer3': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.governance.feat1': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.governance.feat2': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.governance.header': string
   'connectors.ceAws.crossAccountRoleStep1.cards.permissionsInvolved': string
   'connectors.ceAws.crossAccountRoleStep1.cards.providedBy': string
   'connectors.ceAws.crossAccountRoleStep1.cost': string
@@ -2070,6 +2074,7 @@ export interface StringsMap {
   'connectors.ceAws.crossAccountRoleStep1.description': string
   'connectors.ceAws.crossAccountRoleStep1.heading': string
   'connectors.ceAws.crossAccountRoleStep1.hoverOver': string
+  'connectors.ceAws.crossAccountRoleStep1.iamRole': string
   'connectors.ceAws.crossAccountRoleStep1.info': string
   'connectors.ceAws.crossAccountRoleStep1.optimization': string
   'connectors.ceAws.crossAccountRoleStep1.optimizationDes': string
@@ -2078,6 +2083,7 @@ export interface StringsMap {
   'connectors.ceAws.crossAccountRoleStep1.optimize.footer': string
   'connectors.ceAws.crossAccountRoleStep1.optimize.prefix': string
   'connectors.ceAws.crossAccountRoleStep1.subHeading': string
+  'connectors.ceAws.crossAccountRoleStep1.thesePermissions': string
   'connectors.ceAws.crossAccountRoleStep1.visibility': string
   'connectors.ceAws.crossAccountRoleStep1.visibilityDes': string
   'connectors.ceAws.crossAccountRoleStep1.visible.feat1': string
@@ -5828,6 +5834,7 @@ export interface StringsMap {
   'ce.enforcementMessage.exceededSpendLimitFreePlan': string
   'ce.enforcementMessage.perspectivesLimitMsg': string
   'ce.enforcementMessage.usageInfo': string
+  'ce.governance.sideNavText': string
   'ce.gridColumnSelector': string
   'ce.homepage.slogan': string
   'ce.k8sQuickCreate.advanced': string

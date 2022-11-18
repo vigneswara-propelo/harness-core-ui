@@ -32,7 +32,8 @@ import {
   GetConnectorListV2QueryParams,
   Failure,
   AwsCurAttributes,
-  ConnectorResponse
+  ConnectorResponse,
+  CEAwsConnector
 } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { Description, Tags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
@@ -42,7 +43,6 @@ import { Connectors } from '@connectors/constants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
-import type { CEAwsConnector } from 'services/ce'
 import css from '../CreateCeAwsConnector.module.scss'
 
 interface OverviewDetails {

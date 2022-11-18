@@ -13,6 +13,7 @@ declare const styles: {
   readonly cardCtn: string
   readonly connectorExistBox: string
   readonly dataFields: string
+  readonly emptyState: string
   readonly existingCurTable: string
   readonly existingReportsWrapper: string
   readonly extention: string

@@ -648,6 +648,9 @@ ceAws:
     info: '(Selecting features will add the necessary permissions to the IAM role in the next step. Cost Visibility permissions are required by default)'
     cost: 'Cost'
     hoverOver: Hover over feature for more info
+    adding: Adding
+    thesePermissions: these permissions
+    iamRole: to an IAM role in the next step.
     cards:
       providedBy: 'Provided by:'
       permissionsInvolved: 'Permissions involved:'
@@ -656,6 +659,10 @@ ceAws:
         footer3: This cannot be deselected.
       autoStopping:
         prefix: Optimization by
+      governance:
+        header: Cloud Governance
+        feat1: Asset Management (EC2, EBS, RDS, S3)
+        feat2: Automated Actions
     visibility: '{{ $.common.ce.visibility }}'
     optimization: '{{ $.common.ce.optimization }}'
     visibilityDes: '{{ $.connectors.ceAzure.chooseRequirements.visibilityCardDesc }}'
