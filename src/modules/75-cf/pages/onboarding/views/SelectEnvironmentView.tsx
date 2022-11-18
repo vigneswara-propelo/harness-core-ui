@@ -43,7 +43,7 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = ({
   const [dialogOpen, setDialogOpen] = useState(false)
   const [createEnvName, setCreateEnvName] = useState<string>('')
 
-  const { EnvironmentSelect, loading, error, refetch, environments } = useEnvironmentSelectV2({
+  const { EnvironmentSelect, loading, error, refetch } = useEnvironmentSelectV2({
     selectedEnvironmentIdentifier: selectedEnvironment?.identifier,
     allowCreatingNewItems: true,
     noDefault: true,
@@ -95,7 +95,7 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = ({
               <Container width={250}>
                 <EnvironmentSelect />
               </Container>
-              {!!environments?.length && createEnvName && dialogOpen && (
+              {createEnvName && dialogOpen && (
                 <EnvironmentDialog
                   createEnvFromInput={true}
                   createEnvName={createEnvName}
@@ -126,7 +126,7 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = ({
           </Text>
         )}
 
-        {!!environments?.length && selectedEnvironment && (
+        {selectedEnvironment && (
           <>
             <Text
               font={{ variation: FontVariation.BODY1 }}
