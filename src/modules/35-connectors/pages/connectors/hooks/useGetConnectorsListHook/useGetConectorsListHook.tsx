@@ -43,6 +43,7 @@ export const useGetConnectorsListHook = (
     'MONITORING',
     'SECRET_MANAGER'
   ]
+  const codeRepoCatalogue = 'CODE_REPO'
   const { getString } = useStrings()
   const { checkPermission } = usePermissionsContext()
 
@@ -83,6 +84,12 @@ export const useGetConnectorsListHook = (
       const orderedCatalogue: ConnectorCatalogueItem[] | { category: string; connectors: string[] } = []
       connectorCatalogueOrder.forEach(catalogueItem => {
         const catalogueEntry = originalData.find(item => item['category'] === catalogueItem)
+        // deprecate aws code commit
+        if (catalogueEntry?.category == codeRepoCatalogue) {
+          catalogueEntry.connectors = catalogueEntry?.connectors?.filter(
+            connector => connector != Connectors.AWS_CODE_COMMIT
+          )
+        }
         const isProjectOrOrg = projectIdentifier != undefined || orgIdentifier != undefined
         if (catalogueEntry && !(catalogueEntry.category == 'CLOUD_COST' && isProjectOrOrg)) {
           // CLOUD_COST should not be displayed at project or org level drawer

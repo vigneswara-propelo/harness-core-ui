@@ -386,7 +386,7 @@ export const artifactRepoTypes = [
 ]
 
 export const triggersListData = {
-  Webhook: ['GitHub', 'GitLab', 'BitBucket', 'Azure Repos', 'AWS Code Commit', 'Custom'],
+  Webhook: ['GitHub', 'GitLab', 'BitBucket', 'Azure Repos', 'Custom'],
   Artifact: [
     'GCR',
     'ECR',
