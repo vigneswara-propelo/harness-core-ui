@@ -726,7 +726,7 @@ exports[`Jira Create tests Basic snapshot - deploymentform mode: jira-create-dep
       class="StyledProps--font StyledProps--main deploymentViewMedium"
     >
       <div
-        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+        class="Layout--horizontal StyledProps--main"
       >
         <div
           class="bp3-form-group"
@@ -834,7 +834,7 @@ exports[`Jira Create tests Basic snapshot - deploymentform mode: jira-create-dep
       class="StyledProps--font StyledProps--main deploymentViewMedium"
     >
       <div
-        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+        class="Layout--horizontal StyledProps--main"
       >
         <div
           class="bp3-form-group"
@@ -1202,7 +1202,7 @@ exports[`Jira Create tests Basic snapshot - inputset mode: input set with errors
       class="StyledProps--font StyledProps--main deploymentViewMedium"
     >
       <div
-        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+        class="Layout--horizontal StyledProps--main"
       >
         <div
           class="bp3-form-group bp3-intent-danger"
@@ -1341,7 +1341,7 @@ exports[`Jira Create tests Basic snapshot - inputset mode: input set with errors
       class="StyledProps--font StyledProps--main deploymentViewMedium"
     >
       <div
-        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+        class="Layout--horizontal StyledProps--main"
       >
         <div
           class="bp3-form-group bp3-intent-danger"
@@ -1610,7 +1610,7 @@ exports[`Jira Create tests Deploymentform readonly mode: jira-create-deploymentf
       class="StyledProps--font StyledProps--main deploymentViewMedium"
     >
       <div
-        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+        class="Layout--horizontal StyledProps--main"
       >
         <div
           class="bp3-form-group"
@@ -1718,7 +1718,7 @@ exports[`Jira Create tests Deploymentform readonly mode: jira-create-deploymentf
       class="StyledProps--font StyledProps--main deploymentViewMedium"
     >
       <div
-        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+        class="Layout--horizontal StyledProps--main"
       >
         <div
           class="bp3-form-group"

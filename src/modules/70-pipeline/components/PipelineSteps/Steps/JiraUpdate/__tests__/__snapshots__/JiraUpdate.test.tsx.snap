@@ -181,7 +181,7 @@ exports[`Jira Update tests Basic snapshot - deploymentform mode: jira-update-dep
       class="StyledProps--font StyledProps--main deploymentViewMedium"
     >
       <div
-        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+        class="Layout--horizontal StyledProps--main"
       >
         <div
           class="bp3-form-group"
@@ -715,7 +715,7 @@ exports[`Jira Update tests Basic snapshot - inputset mode: input set with errors
       class="StyledProps--font StyledProps--main deploymentViewMedium"
     >
       <div
-        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+        class="Layout--horizontal StyledProps--main"
       >
         <div
           class="bp3-form-group"
@@ -1495,7 +1495,7 @@ exports[`Jira Update tests deploymentform readonly mode: jira-update-deploymentf
       class="StyledProps--font StyledProps--main deploymentViewMedium"
     >
       <div
-        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+        class="Layout--horizontal StyledProps--main"
       >
         <div
           class="bp3-form-group"

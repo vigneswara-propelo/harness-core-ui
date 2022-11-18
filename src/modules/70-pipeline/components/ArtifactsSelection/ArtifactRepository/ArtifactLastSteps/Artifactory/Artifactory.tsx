@@ -67,6 +67,7 @@ import type {
   ImagePathTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults, selectItemsMapper } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -495,6 +496,7 @@ function Artifactory({
                   formik={formik}
                   repoFormat={repositoryFormat}
                   fieldName={'repository'}
+                  stepViewType={StepViewType.Edit}
                 />
 
                 {isGenericArtifactory && (

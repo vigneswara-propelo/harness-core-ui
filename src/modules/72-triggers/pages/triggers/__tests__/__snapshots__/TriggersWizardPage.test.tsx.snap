@@ -2553,6 +2553,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                   >
                                     <div
                                       class="bp3-form-group variableInput"
+                                      style="flex-grow: 1;"
                                     >
                                       
                                       <div

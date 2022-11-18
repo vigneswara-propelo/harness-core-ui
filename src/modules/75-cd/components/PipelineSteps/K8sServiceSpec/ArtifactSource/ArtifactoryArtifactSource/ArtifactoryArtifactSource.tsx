@@ -597,23 +597,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                   ),
                   'connectorRef'
                 )}
-              />
-            )}
-            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.repository`)) ===
-              MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                className={css.configureOptions}
-                style={{ alignSelf: 'center' }}
-                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.repository`)}
-                type="String"
-                variableName="repository"
-                showRequiredField={false}
-                showDefaultField={true}
-                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
-                onChange={value => {
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.repository`, value)
-                }}
+                stepViewType={stepViewType}
               />
             )}
           </div>

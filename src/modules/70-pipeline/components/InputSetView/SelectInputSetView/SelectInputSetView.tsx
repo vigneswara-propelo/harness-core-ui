@@ -64,7 +64,7 @@ export function SelectInputSet(props: SelectInputSetViewProps): JSX.Element {
 
   return (
     <Container className={className}>
-      <Layout.Horizontal spacing={'medium'}>
+      <Layout.Horizontal>
         {inputField}
         {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
           <SelectConfigureOptions
