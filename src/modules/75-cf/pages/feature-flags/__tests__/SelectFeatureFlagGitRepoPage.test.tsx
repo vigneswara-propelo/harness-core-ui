@@ -10,9 +10,13 @@ import { render, screen, RenderResult } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import SelectFlagGitRepoPage from '../SelectFlagGitRepoPage'
 
-jest.mock('services/cd-ng', () => ({
-  useGetSourceCodeManagers: jest.fn(() => ({})),
-  useListGitSync: jest.fn(() => ({ refetch: jest.fn() }))
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn() }
+  }),
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn() }
+  })
 }))
 
 const renderComponent = (): RenderResult => {

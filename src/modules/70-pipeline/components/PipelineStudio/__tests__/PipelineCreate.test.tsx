@@ -23,11 +23,14 @@ const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
 jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
-  }),
-  useListGitSync: jest.fn().mockImplementation(() => {
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: getListGitSync }
   }),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })
 }))

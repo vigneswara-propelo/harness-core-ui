@@ -10,12 +10,18 @@ import { useParams } from 'react-router-dom'
 
 import { noop } from 'lodash-es'
 import { PageSpinner } from '@harness/uicore'
-import { GitSyncConfig, SourceCodeManagerDTO, useGetSourceCodeManagers, useListGitSync } from 'services/cd-ng'
+import {
+  GitSyncConfig,
+  SourceCodeManagerDto,
+  useGetSourceCodeManagersQuery,
+  useListGitSyncQuery
+} from 'services/cd-ng-rq'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
 export interface GitSyncStoreProps {
   readonly gitSyncRepos: GitSyncConfig[]
-  readonly codeManagers: SourceCodeManagerDTO[]
+  readonly codeManagers: SourceCodeManagerDto[]
   readonly loadingRepos: boolean
   readonly loadingCodeManagers: boolean
   updateStore(data: Partial<Pick<GitSyncStoreProps, 'gitSyncRepos'>>): void
@@ -39,20 +45,32 @@ export const useGitSyncStore = (): GitSyncStoreProps => {
 
 export const GitSyncStoreProvider: React.FC<Pick<GitSyncStoreProps, 'spinner'>> = props => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { isGitSyncEnabled } = useAppStore()
 
   //Note: right now we support git-sync only at project level
   const {
     data: dataAllGitSync,
-    loading: loadingRepos,
+    isFetching: loadingRepos,
     refetch
-  } = useListGitSync({
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
-    lazy: true
-  })
+  } = useListGitSyncQuery(
+    {
+      queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+    },
+    {
+      enabled: isGitSyncEnabled && !!projectIdentifier,
+      staleTime: Infinity
+    }
+  )
 
-  const { data: codeManagers, loading: loadingCodeManagers } = useGetSourceCodeManagers({
-    queryParams: { accountIdentifier: accountId }
-  })
+  const { data: codeManagers, isFetching: loadingCodeManagers } = useGetSourceCodeManagersQuery(
+    {
+      queryParams: { accountIdentifier: accountId }
+    },
+    {
+      enabled: isGitSyncEnabled,
+      staleTime: Infinity
+    }
+  )
 
   const [storeData, setStoreData] = React.useState<Omit<GitSyncStoreProps, 'updateStore' | 'strings'>>({
     gitSyncRepos: [],
@@ -86,7 +104,6 @@ export const GitSyncStoreProvider: React.FC<Pick<GitSyncStoreProps, 'spinner'>> 
 
   useEffect(() => {
     if (projectIdentifier) {
-      refetch()
       setStoreData(prevStateData => ({
         ...prevStateData,
         loadingRepos: true
@@ -113,7 +130,7 @@ export const GitSyncStoreProvider: React.FC<Pick<GitSyncStoreProps, 'spinner'>> 
         updateStore
       }}
     >
-      {loadingRepos ? props.spinner : props.children}
+      {isGitSyncEnabled && loadingRepos ? props.spinner : props.children}
     </GitSyncStoreContext.Provider>
   )
 }

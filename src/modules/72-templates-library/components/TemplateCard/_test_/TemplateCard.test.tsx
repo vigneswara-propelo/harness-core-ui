@@ -15,8 +15,8 @@ import { StepTemplate } from '@templates-library/components/Templates/StepTempla
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import type { TemplateMetadataSummaryResponse } from 'services/template-ng'
 
-jest.mock('services/cd-ng', () => ({
-  useListGitSync: jest.fn().mockImplementation(() => {
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn().mockImplementation(() => {
     return {
       data: [
         {
@@ -28,7 +28,7 @@ jest.mock('services/cd-ng', () => ({
       refetch: jest.fn()
     }
   }),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn() }
   })
 }))

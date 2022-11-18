@@ -51,7 +51,6 @@ jest.mock('services/pipeline-ng', () => ({
   }),
   useGetTemplateFromPipeline: jest.fn(() => ({ data: {} })),
   useGetPipeline: jest.fn(() => ({ data: {} })),
-  useGetPipelineSummary: jest.fn(() => PipelineDetailsMockResponse),
   useCreateInputSetForPipeline: jest.fn(() => ({ data: {} })),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => ({ data: {} })),
   useHandleInterrupt: jest.fn(() => ({})),
@@ -85,6 +84,10 @@ jest.mock('services/pipeline-ng', () => ({
   useValidateTemplateInputs: jest.fn(() => ({ data: null }))
 }))
 
+jest.mock('services/pipeline-rq', () => ({
+  useGetPipelineSummaryQuery: jest.fn(() => PipelineDetailsMockResponse)
+}))
+
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
 const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
 
@@ -98,20 +101,23 @@ jest.mock('services/cd-ng', () => ({
   useGetEnvironmentListForProject: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: environments, refetch: jest.fn() })),
-  useListGitSync: jest.fn().mockImplementation(() => {
-    return { data: gitConfigs, refetch: getListGitSync }
-  }),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
-  }),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
-    return { data: sourceCodeManagers, refetch: jest.fn() }
   }),
   useCreatePR: jest.fn(() => noop),
   useCreatePRV2: jest.fn(() => noop),
   useGetFileContent: jest.fn(() => noop),
   useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: getListGitSync }
+  }),
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
 }))
 
 jest.mock('services/template-ng', () => ({
