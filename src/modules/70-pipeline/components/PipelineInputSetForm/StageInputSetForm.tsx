@@ -1042,11 +1042,9 @@ export function StageInputSetFormInternal({
         deploymentStageTemplate={deploymentStageTemplate}
         allowableTypes={
           scope === Scope.PROJECT
-            ? ((allowableTypes as MultiTypeInputType[])?.filter(
-                item => item !== MultiTypeInputType.EXPRESSION
-              ) as AllowedTypes)
+            ? allowableTypes
             : ((allowableTypes as MultiTypeInputType[])?.filter(
-                item => item !== MultiTypeInputType.FIXED && item !== MultiTypeInputType.EXPRESSION
+                item => item !== MultiTypeInputType.FIXED
               ) as AllowedTypes)
         }
         path={path}
