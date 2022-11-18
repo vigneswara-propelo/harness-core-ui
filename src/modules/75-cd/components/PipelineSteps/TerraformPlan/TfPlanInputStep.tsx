@@ -174,7 +174,6 @@ export default function TfPlanInputStep(
           />
         </div>
       )}
-
       {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.exportTerraformPlanJson) ===
         MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -183,6 +182,22 @@ export default function TfPlanInputStep(
               isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
             }spec.configuration.exportTerraformPlanJson`}
             label={getString('cd.exportTerraformPlanJson')}
+            multiTypeTextbox={{ expressions, allowableTypes }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.exportTerraformHumanReadablePlan) ===
+        MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            name={`${
+              isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+            }spec.configuration.exportTerraformHumanReadablePlan`}
+            label={getString('cd.exportTerraformHumanReadablePlan')}
             multiTypeTextbox={{ expressions, allowableTypes }}
             enableConfigureOptions={true}
             configureOptionsProps={{

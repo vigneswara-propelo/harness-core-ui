@@ -4706,6 +4706,7 @@ export interface StringsMap {
   'cd.environmentDelete': string
   'cd.environmentDeleteMessage': string
   'cd.environmentUpdated': string
+  'cd.exportTerraformHumanReadablePlan': string
   'cd.exportTerraformPlanJson': string
   'cd.featureRestriction.banners.deploymentsPerMonthLevelUp': string
   'cd.featureRestriction.banners.dpmWarningActive': string

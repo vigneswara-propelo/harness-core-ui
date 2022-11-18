@@ -248,6 +248,7 @@ export interface TFDataSpec {
   }
   varFiles?: TerraformVarFileWrapper[]
   exportTerraformPlanJson?: boolean
+  exportTerraformHumanReadablePlan?: boolean
 }
 
 export interface TFFormData extends StepElementConfig {
@@ -554,6 +555,12 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
   if (values?.spec?.configuration?.exportTerraformPlanJson) {
     configObject['exportTerraformPlanJson'] = values?.spec?.configuration?.exportTerraformPlanJson
       ? values?.spec?.configuration?.exportTerraformPlanJson
+      : false
+  }
+
+  if (values?.spec?.configuration?.exportTerraformHumanReadablePlan) {
+    configObject['exportTerraformHumanReadablePlan'] = values?.spec?.configuration?.exportTerraformHumanReadablePlan
+      ? values?.spec?.configuration?.exportTerraformHumanReadablePlan
       : false
   }
 

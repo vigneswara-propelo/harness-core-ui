@@ -168,6 +168,7 @@ addTFVarFileLabel: 'Add File Path'
 enterWorkDirectory: Enter Working Directory
 enterTragets: Enter Targets
 exportTerraformPlanJson: Export JSON representation of Terraform Plan
+exportTerraformHumanReadablePlan: Export Human Readable representation of Terraform Plan
 specifyTargetHost: Specify Target Host
 configurationFile: 'Configuration File Repository'
 backendConfigurationFile: 'Backend Configuration File Repository (optional)'
