@@ -21,7 +21,6 @@ import {
   ExpandingSearchInputHandle,
   useConfirmationDialog
 } from '@harness/uicore'
-import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import produce from 'immer'
@@ -252,11 +251,7 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>): 
     <Container className={css.executionWidgetWrapper}>
       <Container flex={{ justifyContent: 'space-between' }}>
         <Layout.Horizontal margin={{ top: 'xlarge', bottom: 'xlarge', left: 'medium', right: 'medium' }}>
-          <Text
-            color={Color.BLACK}
-            className={cx(css.headerText, css.marginRight)}
-            tooltipProps={{ dataTooltipId: 'deploymentStepsDT' }}
-          >
+          <Text color={Color.BLACK} className={css.headerText} tooltipProps={{ dataTooltipId: 'deploymentStepsDT' }}>
             {getString('cd.deploymentSteps')}
           </Text>
           <TemplatesActionPopover
@@ -266,6 +261,7 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>): 
             position={Position.BOTTOM}
             disabled={isReadOnly}
             setMenuOpen={setMenuOpen}
+            className={css.marginLeft}
             usePortal
           >
             <Button

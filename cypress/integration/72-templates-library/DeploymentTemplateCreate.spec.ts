@@ -84,9 +84,6 @@ describe('Deployment Template creation and assertion', () => {
 
     //Infrastructure Tab View
     cy.contains('p', 'Variables').should('be.visible')
-    cy.contains('p', 'Fetch Instance Script').should('be.visible')
-    cy.contains('p', 'Instance Object Array Path').should('be.visible')
-    cy.contains('p', 'Instance Attributes').should('be.visible')
     cy.contains('span', 'Define the variables to be used in your infrastructure').should('be.visible')
 
     //adding String variable
@@ -130,6 +127,7 @@ describe('Deployment Template creation and assertion', () => {
     cy.contains('span', 'Apply Selected').click()
     cy.contains('p', 'test1111').should('be.visible')
     //
+    cy.contains('p', 'Fetch Instance Script').should('be.visible')
     cy.get('input[name="fetchInstancesScript.store.type"]').click({ force: true })
     cy.contains('p', 'Inline').isChildVisible()
     cy.contains('p', 'File Store').isChildVisible()
@@ -140,11 +138,14 @@ describe('Deployment Template creation and assertion', () => {
         cy.get('div[class="view-line"]').its('length').should('be.greaterThan', 0)
       })
 
-    cy.contains('span', 'New Attribute').should('be.visible')
+    cy.contains('p', 'Instance Object Array Path').should('be.visible')
     cy.get('input[name="instancesListPath"]').type('root/bin/')
+
+    cy.contains('p', 'Instance Attributes').should('be.visible')
+    cy.contains('span', 'New Attribute').should('be.visible')
     cy.get('input[name="instanceAttributes[0].description"]').type('for hosting')
     cy.get('input[name="instanceAttributes[0].jsonPath"]').type('jsonPath1')
-
+    cy.wait(1000)
     cy.contains('span', 'Execution').click()
 
     // Execution Tab View
