@@ -50,6 +50,18 @@ export enum TableType {
   FULL = 'full' // for details popup expanded row (headers hidden)
 }
 
+export const isClusterData = (data: InstanceGroupedByArtifact[]): boolean => {
+  let isCluster = false
+  data.forEach(artifact => {
+    artifact.instanceGroupedByEnvironmentList?.forEach(env => {
+      if (env.instanceGroupedByClusterList?.length) {
+        isCluster = true
+      }
+    })
+  })
+  return isCluster
+}
+
 // full table is the expanded table in the dialog
 export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[]): TableRowData[] => {
   const tableData: TableRowData[] = []
@@ -177,7 +189,7 @@ export const getSummaryTableData = (instanceGroupedByArtifact?: InstanceGroupedB
             }
           })
           env.instanceGroupedByClusterList?.forEach(cluster => {
-            infraName ??= cluster.infraName
+            infraName ??= cluster.clusterIdentifier
             totalInfras++
             totalInstances += cluster.count || 0
             if (cluster.lastDeployedAt) {
@@ -524,8 +536,8 @@ export const ActiveServiceInstancesContentV2 = (
   }>
 ): React.ReactElement => {
   const { tableType, loading = false, data, error, refetch } = props
+  const isCluster = isClusterData(defaultTo(data, []))
   const { getString } = useStrings()
-
   const tableData: TableRowData[] = useMemo(() => {
     switch (tableType) {
       case TableType.SUMMARY:
@@ -554,7 +566,9 @@ export const ActiveServiceInstancesContentV2 = (
       {
         Header: (
           <Text lineClamp={1} color={Color.GREY_900}>
-            {getString('cd.serviceDashboard.headers.infrastructures').toLocaleUpperCase()}
+            {isCluster
+              ? getString('common.cluster')
+              : getString('cd.serviceDashboard.headers.infrastructures').toLocaleUpperCase()}
           </Text>
         ),
         id: 'infra',
@@ -586,7 +600,7 @@ export const ActiveServiceInstancesContentV2 = (
 
     return columnsArray
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isCluster])
 
   if (loading || error || !(data || []).length || (tableType === TableType.PREVIEW && !tableData.length)) {
     const component = (() => {
