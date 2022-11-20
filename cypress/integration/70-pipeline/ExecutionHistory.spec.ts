@@ -123,7 +123,7 @@ describe('Pipeline Execution History', () => {
   })
 
   // Executions Chart
-  it('shows pipeline executions chart', () => {
+  it.skip('shows pipeline executions chart', () => {
     // Fixtures
     cy.intercept(pipelineExecutionCall, {
       fixture: 'pipeline/api/executionHistory/pipelineExecution.json'
