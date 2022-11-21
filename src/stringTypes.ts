@@ -3447,10 +3447,12 @@ export interface StringsMap {
   'pipeline.executionFilters.labels.ApprovalWaiting': string
   'pipeline.executionFilters.labels.Expired': string
   'pipeline.executionFilters.labels.Failed': string
+  'pipeline.executionFilters.labels.InputWaiting': string
   'pipeline.executionFilters.labels.InterventionWaiting': string
   'pipeline.executionFilters.labels.Paused': string
   'pipeline.executionFilters.labels.Running': string
   'pipeline.executionFilters.labels.Success': string
+  'pipeline.executionFilters.labels.WaitStepRunning': string
   'pipeline.executionFilters.labels.Waiting': string
   'pipeline.executionFrequency': string
   'pipeline.executionId': string

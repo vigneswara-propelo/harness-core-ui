@@ -587,6 +587,8 @@ executionFilters:
     ApprovalWaiting: Waiting on approval
     InterventionWaiting: Waiting on intervention
     Waiting: Waiting for resources
+    InputWaiting: Waiting on inputs
+    WaitStepRunning: Waiting on wait step
 logs:
   sectionName: 'Section {{index}}'
   errorText: Something has gone wrong while fetching logs
