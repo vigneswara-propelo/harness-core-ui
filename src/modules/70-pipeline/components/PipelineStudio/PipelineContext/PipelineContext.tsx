@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map, uniq } from 'lodash-es'
 import {
   AllowedTypes,
   AllowedTypesWithRunTime,
@@ -360,7 +360,7 @@ const getResolvedCustomDeploymentDetailsMap = (
   pipeline: PipelineInfoConfig,
   queryParams: GetPipelineQueryParams
 ): ReturnType<typeof getResolvedCustomDeploymentDetailsByRef> => {
-  const templateRefs = map(findAllByKey('customDeploymentRef', pipeline), 'templateRef')
+  const templateRefs = uniq(map(findAllByKey('customDeploymentRef', pipeline), 'templateRef'))
   return getResolvedCustomDeploymentDetailsByRef(
     {
       accountIdentifier: queryParams.accountIdentifier,
@@ -381,7 +381,7 @@ const getTemplateType = (
   storeMetadata?: StoreMetadata,
   supportingTemplatesGitx?: boolean
 ): ReturnType<typeof getTemplateTypesByRef> => {
-  const templateRefs = findAllByKey('templateRef', pipeline)
+  const templateRefs = uniq(findAllByKey('templateRef', pipeline))
   return getTemplateTypesByRef(
     {
       accountIdentifier: queryParams.accountIdentifier,
@@ -1289,8 +1289,10 @@ export function PipelineProvider({
   })
 
   React.useEffect(() => {
-    abortControllerRef.current = new AbortController()
-    fetchPipeline({ forceFetch: true, signal: abortControllerRef.current?.signal })
+    if (state.isDBInitialized) {
+      abortControllerRef.current = new AbortController()
+      fetchPipeline({ forceFetch: true, signal: abortControllerRef.current?.signal })
+    }
 
     return () => {
       if (abortControllerRef.current) {

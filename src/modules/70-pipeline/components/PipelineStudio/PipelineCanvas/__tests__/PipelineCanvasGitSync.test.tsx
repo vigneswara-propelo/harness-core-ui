@@ -43,8 +43,11 @@ jest.mock('services/pipeline-ng', () => ({
     mutate: jest.fn(() => Promise.resolve({ data: { yaml: '' } })),
     loading: false,
     cancel: jest.fn()
-  })),
-  useValidateTemplateInputs: jest.fn(() => ({ data: null }))
+  }))
+}))
+
+jest.mock('services/pipeline-rq', () => ({
+  useValidateTemplateInputsQuery: jest.fn(() => ({ data: null }))
 }))
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
