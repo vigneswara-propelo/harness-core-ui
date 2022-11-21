@@ -34,6 +34,11 @@ interface SecretDetailsProps {
   mockSecretDetails?: UseGetMockData<ResponseSecretResponseWrapper>
 }
 
+export enum SecretDetailsTabs {
+  OVERVIEW = 'overview',
+  REFERENCE = 'reference'
+}
+
 const getProjectUrl = ({ accountId, projectIdentifier, orgIdentifier, module }: OptionalIdentifiers): string => {
   if (module && orgIdentifier && projectIdentifier) {
     return routes.toProjectOverview({ orgIdentifier, projectIdentifier, accountId, module })
@@ -146,15 +151,18 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
         <div className={css.secretTabs}>
           <Tabs
             id={'horizontalTabs'}
-            selectedTabId={isReference ? 'reference' : 'overview'}
+            selectedTabId={isReference ? SecretDetailsTabs.REFERENCE : SecretDetailsTabs.OVERVIEW}
+            onChange={newTabId => {
+              setIsReference(newTabId === SecretDetailsTabs.REFERENCE)
+            }}
             tabList={[
               {
-                id: 'overview',
+                id: SecretDetailsTabs.OVERVIEW,
                 title: getString('overview'),
                 panel: <SecretDetails secretData={data || undefined} refetch={refetch} />
               },
               {
-                id: 'reference',
+                id: SecretDetailsTabs.REFERENCE,
                 title: getString('common.references'),
                 panel: <SecretReferences secretData={data || undefined} />
               }

@@ -152,6 +152,7 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const {
     data: connectorDetails,
     loading: loadingConnectorDetails,
+    error: connectorFetchError,
     refetch: getConnectorDetails
   } = useGetConnector({
     identifier:
@@ -159,6 +160,14 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
       (secretResponse?.data?.secret?.spec as SecretTextSpecDTO)?.secretManagerIdentifier,
     lazy: true
   })
+
+  useEffect(() => {
+    if (!loadingConnectorDetails && connectorFetchError) {
+      modalErrorHandler?.showDanger(getRBACErrorMessage(connectorFetchError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingConnectorDetails, connectorFetchError])
+
   const { mutate: createSecretText, loading: loadingCreateText } = usePostSecret({
     queryParams: { accountIdentifier, orgIdentifier, projectIdentifier, privateSecret }
   })
