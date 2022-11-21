@@ -43,7 +43,7 @@ interface CardData {
 const useSelectedCards = (featuresEnabled: Features[]) => {
   const { getString } = useStrings()
 
-  const isGovernanceEnabled = useFeatureFlag(FeatureFlag.CLOUD_COST_GOVERNANCE_UI)
+  const isGovernanceEnabled = useFeatureFlag(FeatureFlag.CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI)
 
   const FeatureCards = useMemo(() => {
     const cards = [
