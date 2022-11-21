@@ -97,8 +97,14 @@ export default function ServiceV2ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES, AZURE_ARTIFACTS_NG, CD_AMI_ARTIFACTS_NG } =
-    useFeatureFlags()
+  const {
+    CUSTOM_ARTIFACT_NG,
+    NG_GOOGLE_ARTIFACT_REGISTRY,
+    GITHUB_PACKAGES,
+    AZURE_ARTIFACTS_NG,
+    CD_AMI_ARTIFACTS_NG,
+    AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
+  } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
@@ -138,6 +144,13 @@ export default function ServiceV2ArtifactsSelection({
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
+    }
+    if (
+      deploymentType === ServiceDeploymentType.AzureWebApp &&
+      AZURE_WEBAPP_NG_JENKINS_ARTIFACTS &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Jenkins)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Jenkins)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentType])
