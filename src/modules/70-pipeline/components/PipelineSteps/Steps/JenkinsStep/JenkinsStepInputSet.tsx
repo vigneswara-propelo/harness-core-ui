@@ -243,6 +243,10 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
             }}
             type={'Jenkins'}
             gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+            templateProps={{
+              isTemplatizedView: true,
+              templateValue: template?.spec?.connectorRef
+            }}
           />
         ) : null}
 
