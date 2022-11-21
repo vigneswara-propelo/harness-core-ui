@@ -49,7 +49,6 @@ export const packageTypes: SelectOption[] = [
 
 function FormComponent({
   expressions,
-  allowableTypes,
   prevStepData,
   previousStep,
   isReadonly = false,
@@ -163,7 +162,7 @@ function FormComponent({
             }}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes: [MultiTypeInputType.FIXED]
             }}
           />
         </div>
@@ -177,7 +176,7 @@ function FormComponent({
             useValue
             multiTypeInputProps={{
               expressions,
-              allowableTypes,
+              allowableTypes: [MultiTypeInputType.FIXED],
               selectProps: {
                 noResults: (
                   <NoTagResults
