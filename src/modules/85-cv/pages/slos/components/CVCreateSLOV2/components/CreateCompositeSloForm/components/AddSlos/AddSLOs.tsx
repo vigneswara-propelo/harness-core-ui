@@ -8,6 +8,7 @@
 import React, { useState, useEffect } from 'react'
 import { useFormikContext } from 'formik'
 import cx from 'classnames'
+import type { GetDataError } from 'restful-react'
 import type { Column, Renderer, CellProps } from 'react-table'
 import {
   Button,
@@ -18,17 +19,17 @@ import {
   TableV2,
   useConfirmationDialog,
   Container,
-  Layout
+  Layout,
+  Page
 } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { useMutateAsGet } from '@common/hooks'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SLOObjective, SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
-import { ServiceLevelObjectiveDetailsDTO, SLOHealthListView, useGetSLOHealthListViewV2 } from 'services/cv'
+import type { ResponsePageSLOHealthListView, ServiceLevelObjectiveDetailsDTO, SLOHealthListView } from 'services/cv'
 import { createRequestBodyForSLOHealthListViewV2, onWeightChange, RenderName, resetSLOWeightage } from './AddSLOs.utils'
 import { SLOList } from './components/SLOList'
 import {
@@ -41,16 +42,28 @@ import {
 import { SLOWeight } from '../../CreateCompositeSloForm.constant'
 import css from './AddSLOs.module.scss'
 
-export const AddSLOs = (): JSX.Element => {
+interface AddSLOsProp {
+  data?: ResponsePageSLOHealthListView | null
+  loading?: boolean
+  refetch?: (props?: any) => Promise<void> | undefined
+  error?: GetDataError<unknown> | null
+}
+
+export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
+  const {
+    data: dashboardWidgetsResponse,
+    loading: dashboardWidgetsLoading,
+    refetch: refetchDashboardWidgets,
+    error: dashboardWidgetsError
+  } = props
   const formikProps = useFormikContext<SLOV2Form>()
   const { getString } = useStrings()
   const [isListViewDataInitialised, setIsListViewDataInitialised] = useState(false)
-  const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
-    ProjectPathProps & { identifier: string }
-  >()
+
   const [initialSLODetails, setInitialSLODetails] = useState<SLOObjective[]>(
     () => formikProps?.values?.serviceLevelObjectivesDetails || []
   )
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
   const { showDrawer, hideDrawer } = useDrawer({
     createDrawerContent: () => {
@@ -64,23 +77,6 @@ export const AddSLOs = (): JSX.Element => {
       )
     }
   })
-
-  const {
-    data: dashboardWidgetsResponse,
-    loading: dashboardWidgetsLoading,
-    refetch: refetchDashboardWidgets,
-    error: dashboardWidgetsError
-  } = useMutateAsGet(useGetSLOHealthListViewV2, {
-    lazy: true,
-    queryParams: { accountId, orgIdentifier, projectIdentifier, pageNumber: 0, pageSize: 20 },
-    body: { compositeSLOIdentifier: identifier }
-  })
-
-  useEffect(() => {
-    if (identifier) {
-      refetchDashboardWidgets()
-    }
-  }, [identifier])
 
   useEffect(() => {
     if (dashboardWidgetsResponse?.data?.content && !isListViewDataInitialised) {
@@ -256,8 +252,6 @@ export const AddSLOs = (): JSX.Element => {
   ]
 
   const showSLOTableAndMessage = Boolean(serviceLevelObjectivesDetails.length)
-  const pageLoading = identifier ? dashboardWidgetsLoading : false
-  const pageError = identifier ? Boolean(dashboardWidgetsError) : false
   const totalOfSloWeight = Number(
     serviceLevelObjectivesDetails
       .reduce((total, num) => {
@@ -268,11 +262,16 @@ export const AddSLOs = (): JSX.Element => {
   const showErrorState = totalOfSloWeight > 100
 
   return (
-    <>
+    <Page.Body
+      loading={dashboardWidgetsLoading}
+      error={getErrorMessage(dashboardWidgetsError)}
+      retryOnError={() => refetchDashboardWidgets?.()}
+      className={css.noMinHeight}
+    >
       {showSLOTableAndMessage && <Text>{getString('cv.CompositeSLO.AddSLOMessage')}</Text>}
       <Button
         width={150}
-        loading={pageLoading}
+        loading={dashboardWidgetsLoading}
         data-testid={'addSlosButton'}
         variation={ButtonVariation.SECONDARY}
         text={getString('cv.CompositeSLO.AddSLO')}
@@ -282,29 +281,20 @@ export const AddSLOs = (): JSX.Element => {
       />
       {showSLOTableAndMessage && (
         <>
-          {pageLoading ? (
-            <Container className={css.sloTableConatiner}>
-              <Icon name="spinner" color="primary5" size={30} />
-            </Container>
-          ) : (
-            <>
-              <TableV2 sortable columns={columns} data={serviceLevelObjectivesDetails} minimal />
-              <Container className={cx(css.totalRow, showErrorState ? css.rowFailure : css.rowSuccess)}>
-                {Array(columns.length - 3)
-                  .fill(0)
-                  .map((_, index) => (
-                    <div key={index.toString()}></div>
-                  ))}
-                <Layout.Horizontal spacing={'medium'}>
-                  <Text>{`${getString('total')} ${getString('cv.CompositeSLO.Weightage').toLowerCase()}`}</Text>
-                  <Text intent={showErrorState ? Intent.DANGER : Intent.SUCCESS}>{totalOfSloWeight}</Text>
-                </Layout.Horizontal>
-              </Container>
-            </>
-          )}
+          <TableV2 sortable columns={columns} data={serviceLevelObjectivesDetails} minimal />
+          <Container className={cx(css.totalRow, showErrorState ? css.rowFailure : css.rowSuccess)}>
+            {Array(columns.length - 3)
+              .fill(0)
+              .map((_, index) => (
+                <div key={index.toString()}></div>
+              ))}
+            <Layout.Horizontal spacing={'medium'}>
+              <Text>{`${getString('total')} ${getString('cv.CompositeSLO.Weightage').toLowerCase()}`}</Text>
+              <Text intent={showErrorState ? Intent.DANGER : Intent.SUCCESS}>{totalOfSloWeight}</Text>
+            </Layout.Horizontal>
+          </Container>
         </>
       )}
-      {pageError && <Text>{getErrorMessage(dashboardWidgetsError)}</Text>}
-    </>
+    </Page.Body>
   )
 }

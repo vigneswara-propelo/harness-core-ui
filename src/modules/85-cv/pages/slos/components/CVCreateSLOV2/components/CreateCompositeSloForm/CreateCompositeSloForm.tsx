@@ -11,16 +11,17 @@ import { Layout, Page, Button, ButtonVariation } from '@harness/uicore'
 import { isEqual } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
-import type { SLOTargetFilterDTO } from 'services/cv'
+import { useMutateAsGet } from '@common/hooks'
+import { SLOTargetFilterDTO, useGetNotificationRuleData, useGetSLOHealthListViewV2 } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CVStepper } from '@cv/components/CVStepper/CVStepper'
+import SLOTargetNotifications from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
 import { isFormDataValid, shouldOpenPeriodUpdateModal } from './CreateCompositeSloForm.utils'
 import { AddSLOs } from './components/AddSlos/AddSLOs'
 import { CreateCompositeSLOSteps, CreateCompositeSloFormInterface } from './CreateCompositeSloForm.types'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
 import { CreatePreview } from './components/CreatePreview/CreatePreview'
 import SLOName from '../../../CVCreateSLO/components/CreateSLOForm/components/SLOName/SLOName'
-import SLOTargetNotificationsContainer from '../../../CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotificationsContainer'
 import SLOTarget from './components/SLOTarget/SLOTarget'
 import useCreateCompositeSloWarningModal from './useCreateCompositeSloWarningModal'
 import PeriodLength from './components/PeriodLength/PeriodLength'
@@ -36,9 +37,12 @@ export const CreateCompositeSloForm = ({
   loadingSaveButton,
   runValidationOnMount
 }: CreateCompositeSloFormInterface): JSX.Element => {
-  const { identifier } = useParams<ProjectPathProps & { identifier: string }>()
+  const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
+    ProjectPathProps & { identifier: string }
+  >()
   const { getString } = useStrings()
   const formikProps = useFormikContext<SLOV2Form>()
+  const [notificationPage, setNotificationPage] = useState(0)
   const isStepValid = useCallback(
     (stepId: string) => isFormDataValid(formikProps, stepId as CreateCompositeSLOSteps),
     [formikProps.values, formikProps.errors]
@@ -55,6 +59,17 @@ export const CreateCompositeSloForm = ({
     prevStepData: prevStepDataRef
   })
 
+  const {
+    data: dashboardWidgetsResponse,
+    loading: dashboardWidgetsLoading,
+    refetch: refetchDashboardWidgets,
+    error: dashboardWidgetsError
+  } = useMutateAsGet(useGetSLOHealthListViewV2, {
+    lazy: true,
+    queryParams: { accountId, orgIdentifier, projectIdentifier, pageNumber: 0, pageSize: 20 },
+    body: { compositeSLOIdentifier: identifier }
+  })
+
   useEffect(() => {
     compositeSloPayloadRef.current = formikProps.values
     prevStepDataRef.current = formikProps.values
@@ -67,6 +82,12 @@ export const CreateCompositeSloForm = ({
       openPeriodUpdateModal()
     }
   }, [openPeriodUpdateModal, formikFilterData])
+
+  useEffect(() => {
+    if (identifier) {
+      refetchDashboardWidgets()
+    }
+  }, [identifier])
 
   const onStepChange = (): void => {
     prevStepDataRef.current = formikProps.values
@@ -81,7 +102,42 @@ export const CreateCompositeSloForm = ({
     }
   }
 
-  const { periodType, periodLengthType } = formikProps.values
+  const {
+    data: notificationData,
+    loading: notificationLoading,
+    error: notificationError,
+    refetch: getNotifications
+  } = useGetNotificationRuleData({
+    queryParams: {
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      pageNumber: notificationPage,
+      notificationRuleIdentifiers: formikProps.values.notificationRuleRefs?.map(item => item.notificationRuleRef),
+      pageSize: 10
+    },
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
+    },
+    lazy: true
+  })
+
+  useEffect(() => {
+    if (formikProps.values.notificationRuleRefs?.length) {
+      getNotifications()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formikProps.values.notificationRuleRefs?.length])
+
+  const { periodType, periodLengthType, serviceLevelObjectivesDetails } = formikProps.values
+  const totalOfSloWeight = Number(
+    serviceLevelObjectivesDetails
+      ?.reduce((total, num) => {
+        return num.weightagePercentage + total
+      }, 0)
+      .toFixed(2)
+  )
+  const isInValid = totalOfSloWeight > 100 || totalOfSloWeight < 100
   return (
     <>
       <Page.Body loading={loading} error={error} retryOnError={() => retryOnError()}>
@@ -108,7 +164,14 @@ export const CreateCompositeSloForm = ({
             {
               id: CreateCompositeSLOSteps.Add_SLOs,
               title: getString('cv.CompositeSLO.AddSLO'),
-              panel: <AddSLOs />,
+              panel: (
+                <AddSLOs
+                  data={dashboardWidgetsResponse}
+                  loading={dashboardWidgetsLoading}
+                  refetch={refetchDashboardWidgets}
+                  error={dashboardWidgetsError}
+                />
+              ),
               preview: <CreatePreview id={CreateCompositeSLOSteps.Add_SLOs} data={formikProps.values} />
             },
             {
@@ -123,10 +186,14 @@ export const CreateCompositeSloForm = ({
               isOptional: true,
               panel: (
                 <CompositeSLOContext.Provider value={{ renderInsideCompositeSLO: true }}>
-                  <SLOTargetNotificationsContainer
-                    identifier={identifier}
-                    setFieldValue={formikProps?.setFieldValue}
-                    notificationRuleRefs={formikProps.values?.notificationRuleRefs}
+                  <SLOTargetNotifications
+                    setFieldValue={formikProps.setFieldValue}
+                    initialNotificationsTableData={notificationData?.data?.content || []}
+                    setPage={setNotificationPage}
+                    page={notificationPage}
+                    loading={notificationLoading}
+                    error={notificationError}
+                    getNotifications={getNotifications}
                   />
                 </CompositeSLOContext.Provider>
               )
@@ -144,7 +211,11 @@ export const CreateCompositeSloForm = ({
                 variation={ButtonVariation.PRIMARY}
                 onClick={() => {
                   setValidateAllSteps(true)
-                  formikProps.submitForm()
+                  // add check to check errors aprt from formik
+                  // fields
+                  if (!isInValid) {
+                    formikProps.submitForm()
+                  }
                 }}
               />
             </Layout.Horizontal>

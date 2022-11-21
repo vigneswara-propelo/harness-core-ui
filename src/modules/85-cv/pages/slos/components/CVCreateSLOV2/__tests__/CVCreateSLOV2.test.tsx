@@ -61,6 +61,9 @@ jest.mock('services/cv', () => ({
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
   useUpdateNotificationRuleData: jest
     .fn()
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
+  useGetNotificationRuleData: jest
+    .fn()
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
 }))
 

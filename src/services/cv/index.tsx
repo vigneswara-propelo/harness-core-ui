@@ -1803,11 +1803,6 @@ export interface ErrorMetadataDTO {
   type?: string
 }
 
-export type ErrorTrackingConditionSpec = NotificationRuleConditionSpec & {
-  errorTrackingEventStatus?: 'NewEvents'[]
-  errorTrackingEventTypes?: ('Exceptions' | 'LogErrors' | 'HttpErrors' | 'CustomErrors' | 'TimeoutErrors')[]
-}
-
 export type ErrorTrackingConnectorDTO = ConnectorConfigDTO & {
   apiKeyRef: string
   delegateSelectors?: string[]
@@ -3293,7 +3288,6 @@ export interface NotificationRuleCondition {
     | 'ChangeImpact'
     | 'HealthScore'
     | 'ChangeObserved'
-    | 'CodeErrors'
 }
 
 export interface NotificationRuleConditionSpec {
@@ -11187,6 +11181,7 @@ export interface GetNotificationRuleDataQueryParams {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  notificationRuleIdentifiers?: string[]
   pageNumber: number
   pageSize: number
 }
