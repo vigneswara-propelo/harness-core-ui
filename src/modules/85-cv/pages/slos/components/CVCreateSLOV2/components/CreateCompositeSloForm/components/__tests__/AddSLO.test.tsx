@@ -25,11 +25,15 @@ jest.mock('@common/hooks', () => ({
 const serviceLevelObjectivesDetails = [
   {
     accountId: 'default',
+    orgIdentifier: 'default',
+    projectIdentifier: 'Project1',
     serviceLevelObjectiveRef: 'hHJYxnUFTCypZdmYr0Q0tQ',
     weightagePercentage: 50
   },
   {
     accountId: 'default',
+    orgIdentifier: 'default',
+    projectIdentifier: 'Project1',
     serviceLevelObjectiveRef: '7b-_GIZxRu6VjFqAqqdVDQ',
     weightagePercentage: 50
   }

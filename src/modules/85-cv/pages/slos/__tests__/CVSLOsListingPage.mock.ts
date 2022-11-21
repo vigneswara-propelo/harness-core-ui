@@ -86,7 +86,8 @@ export const dashboardWidgetsContent: SLODashboardWidget = {
   serviceIdentifier: 'service',
   environmentIdentifier: 'env',
   environmentName: 'env',
-  serviceName: 'serviceName'
+  serviceName: 'serviceName',
+  sloType: 'Simple'
 }
 
 export const dashboardWidgetsResponse: ResponsePageSLOHealthListView = {

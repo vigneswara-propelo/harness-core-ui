@@ -832,6 +832,12 @@ CompositeSLO:
   SetTarget: Set SLO Target
   ErrorBudgetPolicy: Error Budget Policy
   Weightage: Weightage
+  Consumption:
+    title: SLO consumption breakdown for the period
+    AssignedWeightage: Assigned Weightage
+    ActualSlo: Actual SLO
+    ErrorBudgetBurned: Error Budget Burned
+    ContributedErrorBudgetBurned: Contributed Error Budget Burned
   PeriodChangeWarning:
     title: Review Period Type Change
     message: Updating period type will reset selected SLOs, Do you want to continue ?

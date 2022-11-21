@@ -24,7 +24,7 @@ import {
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useMutateAsGet } from '@common/hooks'
-import { SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import { SLOObjective, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   useGetSLOHealthListViewV2,
@@ -55,7 +55,7 @@ interface SLOListProps {
   hideDrawer: () => void
   filter: SLODashboardApiFilter
   onAddSLO: (key: string, value: ServiceLevelObjectiveDetailsDTO[]) => void
-  serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
+  serviceLevelObjectivesDetails: SLOObjective[]
 }
 
 export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDetails }: SLOListProps): JSX.Element => {

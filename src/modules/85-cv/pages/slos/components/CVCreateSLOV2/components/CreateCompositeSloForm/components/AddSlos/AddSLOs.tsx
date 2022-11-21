@@ -191,7 +191,7 @@ export const AddSLOs = (): JSX.Element => {
     )
   }
 
-  const columns: Column<ServiceLevelObjectiveDetailsDTO>[] = [
+  const columns: Column<SLOObjective>[] = [
     {
       accessor: 'serviceLevelObjectiveRef',
       Header: getString('name'),

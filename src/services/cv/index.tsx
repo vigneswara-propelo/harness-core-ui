@@ -650,20 +650,20 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
   billingExportSpec?: BillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   subscriptionId: string
   tenantId: string
 }
 
 export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   connectorRef: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
 }
 
 export interface CVConfig {
@@ -1772,6 +1772,7 @@ export interface Error {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2194,6 +2195,7 @@ export interface Failure {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2218,7 +2220,7 @@ export interface GcpBillingExportSpec {
 
 export type GcpCloudCostConnector = ConnectorConfigDTO & {
   billingExportSpec?: GcpBillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   projectId: string
   serviceAccountEmail: string
 }
@@ -3505,6 +3507,16 @@ export interface PageNotificationRuleResponse {
   totalPages?: number
 }
 
+export interface PageSLOConsumptionBreakdown {
+  content?: SLOConsumptionBreakdown[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageSLOHealthListView {
   content?: SLOHealthListView[]
   empty?: boolean
@@ -4265,6 +4277,7 @@ export interface ResponseMessage {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4362,6 +4375,13 @@ export interface ResponsePageMonitoredServiceResponse {
 export interface ResponsePageNotificationRuleResponse {
   correlationId?: string
   data?: PageNotificationRuleResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageSLOConsumptionBreakdown {
+  correlationId?: string
+  data?: PageSLOConsumptionBreakdown
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -5105,6 +5125,20 @@ export interface SLIRecord {
   version?: number
 }
 
+export interface SLOConsumptionBreakdown {
+  contributedErrorBudgetBurned: number
+  environmentIdentifier: string
+  errorBudgetBurned: number
+  monitoredServiceIdentifier: string
+  serviceName: string
+  sliStatusPercentage: number
+  sliType: 'Availability' | 'Latency'
+  sloIdentifier: string
+  sloName: string
+  sloTargetPercentage: number
+  weightagePercentage: number
+}
+
 export interface SLODashboardApiFilter {
   compositeSLOIdentifier?: string
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
@@ -5131,30 +5165,31 @@ export interface SLODashboardWidget {
   currentPeriodEndTime: number
   currentPeriodLengthDays: number
   currentPeriodStartTime: number
-  environmentIdentifier: string
-  environmentName: string
+  environmentIdentifier?: string
+  environmentName?: string
   errorBudgetBurndown: Point[]
   errorBudgetRemaining: number
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
-  healthSourceIdentifier: string
-  healthSourceName: string
-  monitoredServiceIdentifier: string
-  monitoredServiceName: string
+  healthSourceIdentifier?: string
+  healthSourceName?: string
+  monitoredServiceIdentifier?: string
+  monitoredServiceName?: string
   recalculatingSLI?: boolean
-  serviceIdentifier: string
-  serviceName: string
+  serviceIdentifier?: string
+  serviceName?: string
   sloIdentifier: string
   sloPerformanceTrend: Point[]
   sloTargetPercentage: number
   sloTargetType: 'Rolling' | 'Calender'
+  sloType: 'Simple' | 'Composite'
   tags?: {
     [key: string]: string
   }
   timeRemainingDays: number
   title: string
   totalErrorBudget: number
-  type: 'Availability' | 'Latency'
+  type?: 'Availability' | 'Latency'
 }
 
 export interface SLODebugResponse {
@@ -5389,8 +5424,8 @@ export interface ServiceLevelObjectiveDTO {
 
 export interface ServiceLevelObjectiveDetailsDTO {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   serviceLevelObjectiveRef: string
   weightagePercentage: number
 }
@@ -5427,10 +5462,26 @@ export interface ServiceLevelObjectiveV2Response {
   serviceLevelObjectiveV2: ServiceLevelObjectiveV2DTO
 }
 
+export interface ServiceNowAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface ServiceNowAuthenticationDTO {
+  spec: ServiceNowAuthCredentialsDTO
+  type: 'UsernamePassword'
+}
+
 export type ServiceNowConnector = ConnectorConfigDTO & {
+  auth?: ServiceNowAuthenticationDTO
   delegateSelectors?: string[]
   passwordRef: string
   serviceNowUrl: string
+  username?: string
+  usernameRef?: string
+}
+
+export type ServiceNowUserNamePasswordDTO = ServiceNowAuthCredentialsDTO & {
+  passwordRef: string
   username?: string
   usernameRef?: string
 }
@@ -5551,6 +5602,7 @@ export interface StackdriverDefinition {
   identifier: string
   isManualQuery?: boolean
   jsonMetricDefinition?: { [key: string]: any }
+  jsonMetricDefinitionString?: string
   metricName: string
   metricTags?: string[]
   riskProfile?: RiskProfile
@@ -12231,6 +12283,93 @@ export const getSLODetailsPromise = (
     props,
     signal
   )
+
+export interface GetSloConsumptionBreakdownViewQueryParams {
+  startTime?: number
+  endTime?: number
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface GetSloConsumptionBreakdownViewPathParams {
+  identifier: string
+}
+
+export type GetSloConsumptionBreakdownViewProps = Omit<
+  GetProps<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >,
+  'path'
+> &
+  GetSloConsumptionBreakdownViewPathParams
+
+/**
+ * get SLO consumption breakdown
+ */
+export const GetSloConsumptionBreakdownView = ({ identifier, ...props }: GetSloConsumptionBreakdownViewProps) => (
+  <Get<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >
+    path={`/slo-dashboard/widget/${identifier}/consumption`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSloConsumptionBreakdownViewProps = Omit<
+  UseGetProps<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >,
+  'path'
+> &
+  GetSloConsumptionBreakdownViewPathParams
+
+/**
+ * get SLO consumption breakdown
+ */
+export const useGetSloConsumptionBreakdownView = ({ identifier, ...props }: UseGetSloConsumptionBreakdownViewProps) =>
+  useGet<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >(
+    (paramsInPath: GetSloConsumptionBreakdownViewPathParams) =>
+      `/slo-dashboard/widget/${paramsInPath.identifier}/consumption`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * get SLO consumption breakdown
+ */
+export const getSloConsumptionBreakdownViewPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >(getConfig('cv/api'), `/slo-dashboard/widget/${identifier}/consumption`, props, signal)
 
 export interface GetSLOHealthListViewQueryParams {
   accountId: string

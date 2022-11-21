@@ -6985,6 +6985,11 @@ export interface StringsMap {
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string
   'cv.CompositeSLO.AddSLOMessage': string
+  'cv.CompositeSLO.Consumption.ActualSlo': string
+  'cv.CompositeSLO.Consumption.AssignedWeightage': string
+  'cv.CompositeSLO.Consumption.ContributedErrorBudgetBurned': string
+  'cv.CompositeSLO.Consumption.ErrorBudgetBurned': string
+  'cv.CompositeSLO.Consumption.title': string
   'cv.CompositeSLO.CreateMessage': string
   'cv.CompositeSLO.CreateTitle': string
   'cv.CompositeSLO.DefineSLO': string
