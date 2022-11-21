@@ -543,6 +543,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               <FormInput.MultiTextInput
                 label={getString('repositoryUrlLabel')}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repositoryUrl`)}
+                isOptional
                 multiTextInputProps={{
                   expressions,
                   allowableTypes
