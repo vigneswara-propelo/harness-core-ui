@@ -46,7 +46,7 @@ interface PipelineStageNodeProps {
   allowAdd?: boolean
   selectedNodeId?: string
   showMarkers?: boolean
-  matrixNodeName?: boolean
+  matrixNodeName?: string
   customNodeStyle?: CSSProperties
 }
 function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
@@ -274,7 +274,10 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             tooltipProps={{ popoverClassName: props?.matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
             {props?.matrixNodeName ? (
-              <MatrixNodeNameLabelWrapper matrixLabel={props?.name as unknown as string} />
+              <MatrixNodeNameLabelWrapper
+                matrixNodeName={props?.matrixNodeName}
+                nodeName={props?.name as unknown as string}
+              />
             ) : (
               props.name
             )}
