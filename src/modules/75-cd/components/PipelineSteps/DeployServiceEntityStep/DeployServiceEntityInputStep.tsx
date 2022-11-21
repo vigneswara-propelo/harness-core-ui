@@ -203,7 +203,7 @@ export function DeployServiceEntityInputStep({
 
   return (
     <>
-      <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
+      <Layout.Horizontal style={{ alignItems: 'flex-end' }}>
         <div className={css.inputFieldLayout}>
           {getMultiTypeFromValue(serviceTemplate) === MultiTypeInputType.RUNTIME ? (
             <ExperimentalInput

@@ -387,7 +387,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                     class="nestedAccordions"
                                   >
                                     <div
-                                      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+                                      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
                                     >
                                       <div
                                         class="nopadLeft accordionSummary"
