@@ -832,6 +832,8 @@ CompositeSLO:
   SetTarget: Set SLO Target
   ErrorBudgetPolicy: Error Budget Policy
   Weightage: Weightage
+  NoData: You don’t have any matching SLOs
+  NoDataSuggestion: Try changing the time window or clearing your search input.
   Consumption:
     title: SLO consumption breakdown for the period
     AssignedWeightage: Assigned Weightage

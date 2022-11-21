@@ -210,7 +210,8 @@ export const mockSLODashboardWidgetsData = {
         sloTargetType: 'Rolling',
         sloTargetPercentage: 97.0,
         noOfActiveAlerts: 12,
-        errorBudgetRisk: 'HEALTHY'
+        errorBudgetRisk: 'HEALTHY',
+        sloType: 'Composite'
       }
     ],
     pageIndex: 0,

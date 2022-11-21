@@ -6997,6 +6997,8 @@ export interface StringsMap {
   'cv.CompositeSLO.DefineSLO': string
   'cv.CompositeSLO.ErrorBudgetPolicy': string
   'cv.CompositeSLO.MatchingSLO': string
+  'cv.CompositeSLO.NoData': string
+  'cv.CompositeSLO.NoDataSuggestion': string
   'cv.CompositeSLO.NoSloFound': string
   'cv.CompositeSLO.PeriodChangeWarning.message': string
   'cv.CompositeSLO.PeriodChangeWarning.title': string

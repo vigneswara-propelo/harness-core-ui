@@ -195,11 +195,13 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       Cell: RenderName
     },
     {
+      accessor: 'serviceName',
       Header: getString('cv.slos.monitoredService').toUpperCase(),
       width: '20%',
       Cell: RenderMonitoredService
     },
     {
+      accessor: 'userJourneyName',
       Header: getString('cv.slos.userJourney').toUpperCase(),
       width: '20%',
       Cell: RenderUserJourney
@@ -210,22 +212,31 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       Cell: RenderTags
     },
     {
+      accessor: 'sliType',
       Header: getString('cv.slos.sliType').toUpperCase(),
       width: '10%',
       Cell: RenderSLIType
     },
     {
+      accessor: 'sloTargetPercentage',
       Header: getString('cv.slos.target').toUpperCase(),
       width: '10%',
       Cell: RenderTarget
     },
     {
       accessor: 'weightagePercentage',
+      disableSortBy: true,
       Header: (
         <>
           <Text>{getString('cv.CompositeSLO.Weightage')}</Text>
-          <Text
+          <Button
             color={Color.PRIMARY_7}
+            withoutBoxShadow
+            intent={Intent.PRIMARY}
+            minimal
+            disabled={
+              !formikProps?.values?.serviceLevelObjectivesDetails?.filter(item => item.isManuallyUpdated).length
+            }
             onClick={e => {
               e.stopPropagation()
               const updatedSLOList = resetSLOWeightage(
@@ -238,7 +249,7 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
             }}
           >
             {getString('reset')}
-          </Text>
+          </Button>
         </>
       ),
       width: '10%',

@@ -985,26 +985,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                 <div
                   class="Layout--vertical StyledProps--main StyledProps--padding-left-small"
                 >
-                  <a
-                    href="/account/account_id/cv/orgs/org_identifier/projects/project_identifier/monitoringservices/edit/"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main titleInSloTable StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
-                      title=""
-                    >
-                      
-                    </p>
-                  </a>
-                  <a
-                    href="/account/account_id/cv/orgs/org_identifier/projects/project_identifier/monitoringservices/edit/"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-xsmall"
-                      title=""
-                    >
-                      
-                    </p>
-                  </a>
+                  NA
                 </div>
               </div>
               <div

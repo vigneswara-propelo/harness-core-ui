@@ -24,7 +24,12 @@ export const LabelAndValue = ({
 }: LabelValueProps): JSX.Element => {
   return (
     <Layout.Horizontal spacing="medium" className={className}>
-      <Text font={isLabelHeading ? { weight: 'semi-bold' } : { weight: 'light' }} color={Color.GREY_1000} width={100}>
+      <Text
+        title={label}
+        font={isLabelHeading ? { weight: 'semi-bold' } : { weight: 'light' }}
+        color={Color.GREY_1000}
+        width={100}
+      >
         {label}
       </Text>
       <Text font={isValueHeading ? { weight: 'semi-bold' } : { weight: 'light' }} color={Color.GREY_1000}>

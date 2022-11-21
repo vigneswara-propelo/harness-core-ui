@@ -78,14 +78,20 @@ describe('Validate  AddSLO', () => {
     useMutateAsGet.mockImplementation(() => {
       return {
         data: mockSLODashboardWidgetsData,
-        loading: true,
+        loading: false,
         error: null,
         refetch: jest.fn()
       }
     })
     const { getByText } = render(
       <TestWrapper>
-        <Formik initialValues={{ serviceLevelObjectivesDetails }} onSubmit={jest.fn()}>
+        <Formik
+          initialValues={[
+            { ...serviceLevelObjectivesDetails[0], serviceLevelObjectiveRef: 'SLO4' },
+            { ...serviceLevelObjectivesDetails[1], serviceLevelObjectiveRef: 'SLO3' }
+          ]}
+          onSubmit={jest.fn()}
+        >
           {() => <AddSLOs />}
         </Formik>
       </TestWrapper>
