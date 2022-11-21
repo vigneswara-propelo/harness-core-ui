@@ -375,40 +375,42 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           <div className={css.inputFieldLayout}>
-            <FormInput.MultiTypeInput
-              selectItems={getRepository()}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repository`)}
-              label={getString('repository')}
-              name={`${path}.artifacts.${artifactPath}.spec.repository`}
-              placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
-              useValue
-              multiTypeInputProps={{
-                expressions,
-                allowableTypes,
-                selectProps: {
-                  noResults: (
-                    <NoTagResults
-                      tagError={errorFetchingRepository}
-                      isServerlessDeploymentTypeSelected={false}
-                      defaultErrorText={getString('pipeline.artifactsSelection.errors.noRepositories')}
-                    />
-                  ),
-                  itemRenderer: itemRenderer,
-                  items: getRepository(),
-                  allowCreatingNewItems: true
-                },
-                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                  if (
-                    e?.target?.type !== 'text' ||
-                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
-                    getMultiTypeFromValue(formik.values?.repositoryFormat) === MultiTypeInputType.RUNTIME
-                  ) {
-                    return
+            {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (
+              <FormInput.MultiTypeInput
+                selectItems={getRepository()}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repository`)}
+                label={getString('repository')}
+                name={`${path}.artifacts.${artifactPath}.spec.repository`}
+                placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
+                useValue
+                multiTypeInputProps={{
+                  expressions,
+                  allowableTypes,
+                  selectProps: {
+                    noResults: (
+                      <NoTagResults
+                        tagError={errorFetchingRepository}
+                        isServerlessDeploymentTypeSelected={false}
+                        defaultErrorText={getString('pipeline.artifactsSelection.errors.noRepositories')}
+                      />
+                    ),
+                    itemRenderer: itemRenderer,
+                    items: getRepository(),
+                    allowCreatingNewItems: true
+                  },
+                  onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                    if (
+                      e?.target?.type !== 'text' ||
+                      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                      getMultiTypeFromValue(formik.values?.repositoryFormat) === MultiTypeInputType.RUNTIME
+                    ) {
+                      return
+                    }
+                    refetchRepositoryDetails()
                   }
-                  refetchRepositoryDetails()
-                }
-              }}
-            />
+                }}
+              />
+            )}
             {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.repository`)) ===
               MultiTypeInputType.RUNTIME && (
               <ConfigureOptions
