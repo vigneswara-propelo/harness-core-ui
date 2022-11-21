@@ -139,7 +139,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               multiTypeInputProps={{
                 onTypeChange: (type: MultiTypeInputType) =>
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.region`, type),
-                width: 500,
+                width: 391,
                 expressions,
                 selectProps: {
                   allowCreatingNewItems: true,
@@ -158,6 +158,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               disabled={readonly}
               multiTextInputProps={{
+                width: 391,
                 expressions,
                 allowableTypes
               }}
@@ -170,33 +171,34 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.artifactsSelection.versionRegexPlaceholder')}
               disabled={readonly}
               multiTextInputProps={{
+                width: 391,
                 expressions,
                 allowableTypes
               }}
             />
           )}
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.amiTags`, template) && (
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.tags`, template) && (
             <MultiTypeTagSelector
-              name={`${path}.artifacts.${artifactPath}.spec.amiTags`}
+              name={`${path}.artifacts.${artifactPath}.spec.tags`}
               className="tags-select"
               expressions={expressions}
-              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
               tags={tags}
               label={'AMI Tags'}
               isLoadingTags={isTagsLoading}
-              initialTags={get(initialValues?.artifacts, `${artifactPath}.spec.amiTags`, '')}
+              initialTags={get(initialValues?.artifacts, `${artifactPath}.spec.tags`, '')}
               errorMessage={get(tagsError, 'data.message', '')}
             />
           )}
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.amiFilters`, template) && (
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.filters`, template) && (
             <MultiTypeTagSelector
-              name={`${path}.artifacts.${artifactPath}.spec.amiFilters`}
+              name={`${path}.artifacts.${artifactPath}.spec.filters`}
               className="tags-select"
               expressions={expressions}
-              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
               label={'AMI Filters'}
               tags={amiFilters}
-              initialTags={get(initialValues?.artifacts, `${artifactPath}.spec.amiFilters`, '')}
+              initialTags={get(initialValues?.artifacts, `${artifactPath}.spec.filters`, '')}
               errorMessage={get(tagsError, 'data.message', '')}
             />
           )}

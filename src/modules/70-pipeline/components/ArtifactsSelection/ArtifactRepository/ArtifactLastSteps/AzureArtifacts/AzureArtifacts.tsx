@@ -581,9 +581,9 @@ export function AzureArtifacts(
       is: val => val === 'project',
       then: Yup.string().trim().required(getString('common.validation.projectIsRequired'))
     }),
-    feed: Yup.string().required('pipeline.artifactsSelection.validation.feed'),
+    feed: Yup.string().required(getString('pipeline.artifactsSelection.validation.feed')),
     packageType: Yup.string(),
-    package: Yup.string().required('pipeline.artifactsSelection.validation.packageName'),
+    package: Yup.string().required(getString('pipeline.artifactsSelection.validation.packageName')),
     versionType: Yup.string(),
     versionRegex: Yup.string().when('versionType', {
       is: 'regex',

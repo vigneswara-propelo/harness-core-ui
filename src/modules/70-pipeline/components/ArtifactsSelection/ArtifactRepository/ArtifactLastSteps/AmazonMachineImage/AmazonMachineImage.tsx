@@ -22,7 +22,7 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { defaultTo, get } from 'lodash-es'
+import { cloneDeep, defaultTo, get, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -31,13 +31,15 @@ import { ConnectorConfigDTO, useTags } from 'services/cd-ng'
 import {
   getConnectorIdValue,
   getArtifactFormData,
-  amiFilters
+  amiFilters,
+  getInSelectOptionForm
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   AmazonMachineImageInitialValuesType,
   ArtifactType,
   ImagePathProps,
-  TagTypes
+  TagTypes,
+  VariableInterface
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useListAwsRegions } from 'services/portal'
@@ -52,7 +54,6 @@ function FormComponent({
   expressions,
   allowableTypes,
   prevStepData,
-  initialValues,
   previousStep,
   isReadonly = false,
   formik,
@@ -154,28 +155,28 @@ function FormComponent({
         </div>
         <div className={css.jenkinsFieldContainer}>
           <MultiTypeTagSelector
-            name="spec.amiTags"
+            name="spec.tags"
             className="tags-select"
             expressions={expressions}
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
             tags={tags}
             label={'AMI Tags'}
             isLoadingTags={isTagsLoading}
-            initialTags={initialValues?.spec?.amiTags}
+            initialTags={formik?.initialValues?.spec?.tags}
             errorMessage={get(tagsError, 'data.message', '')}
           />
-          {getMultiTypeFromValue(formik.values?.spec?.amiTags) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(formik.values?.spec?.tags) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <ConfigureOptions
                 style={{ alignSelf: 'center', marginTop: 10 }}
-                value={formik.values?.spec?.amiTags as string}
+                value={formik.values?.spec?.tags as string}
                 type="String"
-                variableName="spec.amiTags"
+                variableName="spec.tags"
                 showRequiredField={false}
                 showDefaultField={false}
                 showAdvanced={true}
                 onChange={value => {
-                  formik.setFieldValue('spec.amiTags', value)
+                  formik.setFieldValue('spec.tags', value)
                 }}
                 isReadonly={isReadonly}
               />
@@ -184,27 +185,27 @@ function FormComponent({
         </div>
         <div className={css.jenkinsFieldContainer}>
           <MultiTypeTagSelector
-            name="spec.amiFilters"
+            name="spec.filters"
             className="tags-select"
             expressions={expressions}
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
             tags={amiFilters}
             label={'AMI Filters'}
-            initialTags={initialValues?.spec?.amiFilters}
+            initialTags={formik?.initialValues?.spec?.filters}
             errorMessage={get(tagsError, 'data.message', '')}
           />
-          {getMultiTypeFromValue(formik.values?.spec?.amiFilters) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(formik.values?.spec?.filters) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <ConfigureOptions
                 style={{ alignSelf: 'center', marginTop: 10 }}
-                value={formik.values?.spec?.amiFilters as string}
+                value={formik.values?.spec?.filters as string}
                 type="String"
-                variableName="spec.amiFilters"
+                variableName="spec.filters"
                 showRequiredField={false}
                 showDefaultField={false}
                 showAdvanced={true}
                 onChange={value => {
-                  formik.setFieldValue('spec.amiFilters', value)
+                  formik.setFieldValue('spec.filters', value)
                 }}
                 isReadonly={isReadonly}
               />
@@ -303,8 +304,30 @@ export function AmazonMachineImage(
   const isTemplateContext = context === ModalViewFor.Template
 
   const getInitialValues = (): AmazonMachineImageInitialValuesType => {
+    const clonedInitialValues = cloneDeep(initialValues)
+    if (
+      clonedInitialValues?.spec?.tags &&
+      getMultiTypeFromValue(clonedInitialValues.spec.tags as string) === MultiTypeInputType.FIXED
+    ) {
+      const parsedTag = {}
+      ;(clonedInitialValues.spec?.tags as VariableInterface[])?.forEach((tag: VariableInterface) => {
+        if (tag.name) set(parsedTag, tag.name, tag.value)
+      })
+      clonedInitialValues.spec.tags = parsedTag
+    }
+    if (
+      clonedInitialValues?.spec?.filters &&
+      getMultiTypeFromValue(clonedInitialValues.spec.filters as string) === MultiTypeInputType.FIXED
+    ) {
+      const parsedFilter = {} as { [key: string]: any }
+      ;(clonedInitialValues.spec?.filters as VariableInterface[])?.forEach((tag: VariableInterface) => {
+        if (tag.name) set(parsedFilter, tag.name, tag.value)
+      })
+
+      clonedInitialValues.spec.filters = parsedFilter
+    }
     return getArtifactFormData(
-      initialValues,
+      clonedInitialValues,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed
     ) as AmazonMachineImageInitialValuesType
@@ -319,13 +342,14 @@ export function AmazonMachineImage(
         : {
             versionRegex: defaultTo(formData.spec?.versionRegex, '')
           }
+
     handleSubmit({
       identifier: formData.identifier,
       spec: {
         connectorRef: connectorId,
         region: formData.spec?.region,
-        amiTags: formData.spec?.amiTags,
-        amiFilters: formData.spec?.amiFilters,
+        tags: getInSelectOptionForm(formData.spec?.tags || ''),
+        filters: getInSelectOptionForm(formData.spec?.filters || ''),
         ...versionData
       }
     })

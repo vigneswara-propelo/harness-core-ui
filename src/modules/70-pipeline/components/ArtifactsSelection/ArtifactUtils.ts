@@ -438,8 +438,8 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         spec: {
           version: '',
           versionRegex: '',
-          amiTags: [],
-          amiFilters: [],
+          tags: [],
+          filters: [],
           region: ''
         }
       }
@@ -595,3 +595,11 @@ export const amiFilters = [
     value: 'ami-platform'
   }
 ]
+
+export const getInSelectOptionForm = (data: { [key: string]: any } | string) => {
+  return getMultiTypeFromValue(data as string) === MultiTypeInputType.RUNTIME
+    ? data
+    : Object.keys(data || {})?.map((key: string | number) => {
+        return { name: key, value: (data as { [key: string]: any })?.[key as any] }
+      })
+}
