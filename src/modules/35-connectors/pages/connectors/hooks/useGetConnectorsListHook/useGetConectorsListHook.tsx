@@ -45,7 +45,7 @@ export const useGetConnectorsListHook = (
   ]
   const codeRepoCatalogue = 'CODE_REPO'
   const { getString } = useStrings()
-  const { checkPermission } = usePermissionsContext()
+  const { checkPermission, permissions } = usePermissionsContext()
 
   const ConnectorCatalogueNames = new Map<ConnectorCatalogueItem['category'], string>()
 
@@ -213,13 +213,13 @@ export const useGetConnectorsListHook = (
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [permissions]
   )
 
   useEffect(() => {
     const computedDrawerMapData = computeCategoriesMap(data)
     setConnectorsData(computedDrawerMapData)
-  }, [computeCategoriesMap, data])
+  }, [computeCategoriesMap, data, permissions])
 
   return {
     loading,
