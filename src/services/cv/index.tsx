@@ -3165,6 +3165,17 @@ export interface MonitoredServiceDTO {
   type: 'Application' | 'Infrastructure'
 }
 
+export interface MonitoredServiceDetail {
+  environmentIdentifier?: string
+  environmentName?: string
+  healthSourceIdentifier?: string
+  healthSourceName?: string
+  monitoredServiceIdentifier?: string
+  monitoredServiceName?: string
+  serviceIdentifier?: string
+  serviceName?: string
+}
+
 export interface MonitoredServiceListItemDTO {
   changeSummary?: ChangeSummaryDTO
   currentHealthScore?: RiskData
@@ -5167,6 +5178,7 @@ export interface SLODashboardWidget {
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
   healthSourceIdentifier?: string
   healthSourceName?: string
+  monitoredServiceDetails?: MonitoredServiceDetail[]
   monitoredServiceIdentifier?: string
   monitoredServiceName?: string
   recalculatingSLI?: boolean
@@ -7173,6 +7185,7 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
+  monitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert')[]
   changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD')[]
   startTime: number
@@ -11458,6 +11471,7 @@ export interface GetServicesFromPagerDutyQueryParams {
   projectIdentifier: string
   connectorIdentifier?: string
   requestGuid: string
+  query?: string
 }
 
 export type GetServicesFromPagerDutyProps = Omit<

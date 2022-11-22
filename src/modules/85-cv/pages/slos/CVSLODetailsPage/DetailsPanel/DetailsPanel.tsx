@@ -36,7 +36,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
   const { sloType } = useQueryParams<{ sloType?: string }>()
   const isCompositeSLO = sloType === SLOType.COMPOSITE
 
-  const { currentPeriodStartTime = 0, currentPeriodEndTime = 0 } = sloDashboardWidget ?? {}
+  const { currentPeriodStartTime = 0, currentPeriodEndTime = 0, monitoredServiceDetails } = sloDashboardWidget ?? {}
   const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
   const [sliderTimeRange, setSliderTimeRange] = useState<{ startTime: number; endTime: number }>()
 
@@ -92,13 +92,16 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
             >
               {getString('changes')}
             </Heading>
-            {sloDashboardWidget?.monitoredServiceIdentifier && (
-              <ChangesSourceCard
-                startTime={startTime}
-                endTime={endTime}
-                monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
-              />
-            )}
+            <ChangesSourceCard
+              startTime={startTime}
+              endTime={endTime}
+              monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
+              monitoredServiceIdentifiers={
+                sloDashboardWidget?.monitoredServiceDetails?.map(
+                  serviceDetails => serviceDetails.monitoredServiceIdentifier || ''
+                ) || []
+              }
+            />
             <Text
               icon="info"
               color={Color.GREY_600}
@@ -114,6 +117,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
               startTime={startTime}
               endTime={endTime}
               monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
+              monitoredServiceDetails={monitoredServiceDetails || []}
             />
           </Card>
         </Container>
