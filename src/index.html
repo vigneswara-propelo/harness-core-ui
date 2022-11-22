@@ -31,8 +31,13 @@
     </style>
     <!-- apiurl -->
     <script type="text/javascript">
+      window.browserRouterEnabled = window.location.href.toString().includes('browserRouterEnabled=true')
       window.getApiBaseUrl = str => {
-        return window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+        if (window.browserRouterEnabled) {
+          return `${window.apiUrl || ''}/${str}`
+        } else {
+          return window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+        }
       }
     </script>
     <!-- segmentToken -->
@@ -48,10 +53,11 @@
     <!-- newNavContentfulAccessToken -->
     <!-- newNavContetfulSpace -->
     <!-- newNavContentfulEnvironment -->
-
+    <!-- harnessNameSpacePlaceHolder -->
     <!-- adding bugsnag for SAAS build -->
     <% if (!__DEV__) { %>
     <script>
+      window.NON_CDN_BASE_PATH = `${window.harnessNameSpace}/ng/static/`
       if (window.deploymentType === 'SAAS') {
         var e = document.createElement('script')
         e.setAttribute('type', 'text/javascript')
@@ -76,9 +82,11 @@
       window.helpPanelAccessToken = '<%= HELP_PANEL_ACCESS_TOKEN_DEV %>'
       window.helpPanelSpace = '<%= HELP_PANEL_SPACE_DEV %>'
       window.helpPanelEnvironment = '<%= HELP_PANEL_ENVIRONMENT_DEV %>'
+      window.NON_CDN_BASE_PATH = '/'
       window.newNavContentfulAccessToken = '<%= NEW_NAV_CONTENTFUL_ACCESS_TOKEN_DEV %>'
       window.newNavContetfulSpace = '<%= NEW_NAV_CONTENTFUL_SPACE_DEV %>'
       window.newNavContentfulEnvironment = '<%= NEW_NAV_CONTENTFUL_ENVIRONMENT_DEV %>'
+      window.harnessNameSpace = ''
     </script>
     <% } %>
     <!-- Enabling ng-auth-ui -->
@@ -110,9 +118,7 @@
       }
     </script>
     <script>
-      window.resourceBasePath = window.HARNESS_ENABLE_CDN
-        ? '//static.harness.io/ng-static/'
-        : '<%= __NON_CDN_BASE_PATH__ %>'
+      window.resourceBasePath = window.HARNESS_ENABLE_CDN ? '//static.harness.io/ng-static/' : window.NON_CDN_BASE_PATH
     </script>
 
     <!-- saberToken -->
