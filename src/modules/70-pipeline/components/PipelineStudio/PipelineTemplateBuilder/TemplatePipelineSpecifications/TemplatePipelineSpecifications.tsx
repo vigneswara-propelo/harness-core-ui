@@ -71,27 +71,6 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   )
 
   const {
-    data: pipelineResponse,
-    error: pipelineError,
-    refetch: refetchPipeline,
-    loading: pipelineLoading
-  } = useMutateAsGet(useGetYamlWithTemplateRefsResolved, {
-    queryParams: {
-      ...getScopeBasedProjectPathParams(queryParams, pipelineScope),
-      pipelineIdentifier: pipeline.identifier,
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
-    },
-    body: {
-      originalEntityYaml: yamlStringify({ pipeline: formValues })
-    },
-    lazy: true
-  })
-
-  React.useEffect(() => {
-    setAllValues(parse<Pipeline>(defaultTo(pipelineResponse?.data?.mergedPipelineYaml, ''))?.pipeline)
-  }, [pipelineResponse?.data?.mergedPipelineYaml])
-
-  const {
     data: templateInputSetYaml,
     error: templateInputSetError,
     refetch: refetchTemplateInputSet,
@@ -104,6 +83,44 @@ export function TemplatePipelineSpecifications(): JSX.Element {
       ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
     }
   })
+
+  const originalEntityYaml = React.useMemo(
+    () =>
+      yamlStringify({
+        pipeline: {
+          name: pipeline.name,
+          identifier: pipeline.identifier,
+          orgIdentifier: pipeline.orgIdentifier,
+          projectIdentifier: pipeline.projectIdentifier,
+          tags: pipeline.tags,
+          template: {
+            templateRef,
+            versionLabel: templateVersionLabel,
+            templateInputs
+          }
+        }
+      }),
+    [pipeline, templateRef, templateVersionLabel, templateInputs]
+  )
+
+  const {
+    data: pipelineResponse,
+    error: pipelineError,
+    refetch: refetchPipeline,
+    loading: pipelineLoading
+  } = useMutateAsGet(useGetYamlWithTemplateRefsResolved, {
+    queryParams: {
+      ...getScopeBasedProjectPathParams(queryParams, pipelineScope),
+      pipelineIdentifier: pipeline.identifier,
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
+    },
+    body: { originalEntityYaml },
+    lazy: true
+  })
+
+  React.useEffect(() => {
+    setAllValues(parse<Pipeline>(defaultTo(pipelineResponse?.data?.mergedPipelineYaml, ''))?.pipeline)
+  }, [pipelineResponse?.data?.mergedPipelineYaml])
 
   const updateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
     const updatedPipeline = produce(pipeline, draft => {
@@ -118,7 +135,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   }
 
   React.useEffect(() => {
-    if (!isEmpty(formValues)) {
+    if (!isEmpty(formValues) && !allValues) {
       refetchPipeline()
     }
   }, [formValues])
