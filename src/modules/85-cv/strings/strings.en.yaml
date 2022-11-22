@@ -209,6 +209,12 @@ monitoringSources:
   addMetric: Add Metric
   addQuery: Add Query
   totalMappedQueries: '{{total}} {{query}} mapped'
+  commonHealthSource:
+    metric: HealthSource Metric
+    addMetric: Add metric
+    metricName: Metric name
+    addGroupName: Add group Name
+    confirmDeleteMetric: 'Are you sure you want to delete metric {{name}}'
   appD:
     advancedOptional: Advanced (Optional)
     ignoreThresholds: Ignore Thresholds

@@ -7445,6 +7445,11 @@ export interface StringsMap {
   'cv.monitoringSources.assign': string
   'cv.monitoringSources.baselineDeviation': string
   'cv.monitoringSources.buildYourQuery': string
+  'cv.monitoringSources.commonHealthSource.addGroupName': string
+  'cv.monitoringSources.commonHealthSource.addMetric': string
+  'cv.monitoringSources.commonHealthSource.confirmDeleteMetric': string
+  'cv.monitoringSources.commonHealthSource.metric': string
+  'cv.monitoringSources.commonHealthSource.metricName': string
   'cv.monitoringSources.datadog.manualInputQueryModal.modalTitle': string
   'cv.monitoringSources.datadog.newDatadogGroupName': string
   'cv.monitoringSources.datadog.noMetricsWidgets': string

@@ -17,14 +17,15 @@ import type { BaseHealthSourceMetricInfo } from '@cv/pages/health-source/common/
 import { HealthSourceFieldNames } from '@cv/pages/health-source/common/utils/HealthSource.constants'
 import { validateAssignComponent, validateIdentifier } from '@cv/pages/health-source/common/utils/HealthSource.utils'
 import type {
-  CustomMappedMetric,
-  RemoveMetricInterface,
+  CommonRemoveMetricInterface,
   CustomSelectedAndMappedMetrics,
-  SelectMetricInerface,
-  UpdateSelectedMetricsMapInterface,
+  CommonSelectMetricInterface,
+  CommonUpdateSelectedMetricsMapInterface,
   CreatedMetricsWithSelectedIndex,
-  InitCustomFormData
-} from './CustomMetric.types'
+  InitCustomFormData,
+  InitHealthSourceCustomFormInterface
+} from './CommonCustomMetric.types'
+import type { CommonHealthSourceFormikInterface } from '../../connectors/CommonHealthSource/CommonHealthSource.types'
 
 export function updateSelectedMetricsMap({
   updatedMetric,
@@ -33,27 +34,30 @@ export function updateSelectedMetricsMap({
   formikValues,
   initCustomForm,
   isPrimaryMetric
-}: UpdateSelectedMetricsMapInterface): { selectedMetric: string; mappedMetrics: Map<string, CustomMappedMetric> } {
+}: CommonUpdateSelectedMetricsMapInterface): {
+  selectedMetric: string
+  mappedMetrics: Map<string, CommonHealthSourceFormikInterface>
+} {
   const emptyName = formikValues.metricName?.length
   if (!emptyName) {
     return { selectedMetric: updatedMetric, mappedMetrics: mappedMetrics }
   }
 
-  const updatedMap = new Map(mappedMetrics)
+  const commonUpdatedMap = new Map(mappedMetrics)
 
   const duplicateName =
     Array.from(mappedMetrics.keys()).indexOf(formikValues.metricName) > -1 && oldMetric !== formikValues?.metricName
   if (duplicateName) {
-    return { selectedMetric: updatedMetric, mappedMetrics: updatedMap }
+    return { selectedMetric: updatedMetric, mappedMetrics: commonUpdatedMap }
   }
 
   // in the case where user updates metric name, update the key for current value
   if (oldMetric !== formikValues?.metricName) {
-    updatedMap.delete(oldMetric)
+    commonUpdatedMap.delete(oldMetric)
   }
 
   // if newly created metric create form object
-  if (!updatedMap.has(updatedMetric)) {
+  if (!commonUpdatedMap.has(updatedMetric)) {
     const metricIdentifier = updatedMetric.split(' ').join('_')
     const identifierObject = isPrimaryMetric
       ? {
@@ -61,7 +65,7 @@ export function updateSelectedMetricsMap({
           identifier: metricIdentifier
         }
       : { metricIdentifier }
-    updatedMap.set(updatedMetric, {
+    commonUpdatedMap.set(updatedMetric, {
       ...{
         _id: uuid(),
         metricName: updatedMetric,
@@ -72,11 +76,11 @@ export function updateSelectedMetricsMap({
   }
 
   // update map with current form data
-  updatedMap.set(formikValues.metricName, {
+  commonUpdatedMap.set(formikValues.metricName, {
     ...formikValues
   })
 
-  return { selectedMetric: updatedMetric, mappedMetrics: updatedMap }
+  return { selectedMetric: updatedMetric, mappedMetrics: commonUpdatedMap }
 }
 
 export const defaultGroupedMetric = (getString: UseStringsReturn['getString']): SelectOption => {
@@ -85,7 +89,7 @@ export const defaultGroupedMetric = (getString: UseStringsReturn['getString']): 
 }
 
 export const initGroupedCreatedMetrics = (
-  mappedMetrics: Map<string, CustomMappedMetric>,
+  mappedMetrics: Map<string, CommonHealthSourceFormikInterface>,
   getString: UseStringsReturn['getString']
 ): GroupedCreatedMetrics =>
   groupBy(getGroupAndMetric(mappedMetrics, getString), function (item) {
@@ -93,7 +97,7 @@ export const initGroupedCreatedMetrics = (
   })
 
 export const getGroupAndMetric = (
-  mappedMetrics: Map<string, CustomMappedMetric>,
+  mappedMetrics: Map<string, CommonHealthSourceFormikInterface>,
   getString: UseStringsReturn['getString']
 ): GroupedMetric[] => {
   return Array.from(mappedMetrics?.values()).map(item => {
@@ -106,7 +110,7 @@ export const getGroupAndMetric = (
 }
 
 export const getGroupedCreatedMetrics = (
-  mappedMetrics: Map<string, CustomMappedMetric>,
+  mappedMetrics: Map<string, CommonHealthSourceFormikInterface>,
   getString: UseStringsReturn['getString']
 ): GroupedCreatedMetrics => {
   const filteredList = Array.from(mappedMetrics?.values()).map((item, index) => {
@@ -130,27 +134,27 @@ export const onRemoveMetric = ({
   setCreatedMetrics,
   setMappedMetrics,
   formikValues
-}: RemoveMetricInterface): void => {
+}: CommonRemoveMetricInterface): void => {
   setMappedMetrics(oldState => {
     const { selectedMetric: oldMetric, mappedMetrics: oldMappedMetric } = oldState
-    const updatedMap = new Map(oldMappedMetric)
+    const commonUpdatedMap = new Map(oldMappedMetric)
 
-    if (updatedMap.has(removedMetric)) {
-      updatedMap.delete(removedMetric)
+    if (commonUpdatedMap.has(removedMetric)) {
+      commonUpdatedMap.delete(removedMetric)
     } else {
       // handle case where user updates the metric name for current selected metric
-      updatedMap.delete(oldMetric)
+      commonUpdatedMap.delete(oldMetric)
     }
 
     // update map with current values
     if (formikValues?.metricName !== removedMetric && formikValues?.metricName === updatedMetric) {
-      updatedMap.set(updatedMetric, { ...formikValues } || { metricName: updatedMetric })
+      commonUpdatedMap.set(updatedMetric, { ...formikValues } || { metricName: updatedMetric })
     }
 
     setCreatedMetrics({ selectedMetricIndex: smIndex, createdMetrics: updatedList })
     return {
       selectedMetric: updatedMetric,
-      mappedMetrics: updatedMap
+      mappedMetrics: commonUpdatedMap
     }
   })
 }
@@ -164,7 +168,7 @@ export const onSelectMetric = ({
   formikValues,
   initCustomForm,
   isPrimaryMetric
-}: SelectMetricInerface): void => {
+}: CommonSelectMetricInterface): void => {
   setMappedMetrics(oldState => {
     setCreatedMetrics({ selectedMetricIndex: smIndex, createdMetrics: updatedList })
     return updateSelectedMetricsMap({
@@ -192,12 +196,15 @@ export function initializeCreatedMetrics(
 export function initializeSelectedMetricsMap(
   defaultSelectedMetricName: string,
   initCustomFormData: InitCustomFormData,
-  mappedServicesAndEnvs?: Map<string, CustomMappedMetric>
+  mappedServicesAndEnvs?: Map<string, CommonHealthSourceFormikInterface>
 ): CustomSelectedAndMappedMetrics {
   return {
     selectedMetric: (Array.from(mappedServicesAndEnvs?.keys() || [])?.[0] as string) || defaultSelectedMetricName,
-    mappedMetrics:
-      mappedServicesAndEnvs || new Map([[defaultSelectedMetricName, initCustomFormData as CustomMappedMetric]])
+    mappedMetrics: (mappedServicesAndEnvs ||
+      new Map([[defaultSelectedMetricName, initCustomFormData as InitHealthSourceCustomFormInterface]])) as Map<
+      string,
+      CommonHealthSourceFormikInterface
+    >
   }
 }
 
@@ -211,8 +218,9 @@ export const validateCommonCustomMetricFields = (
 ): ((key: string) => string) => {
   let errorsToReturn = cloneDeep(errors)
 
-  const isAssignComponentValid = [values.sli, values.continuousVerification, values.healthScore].find(i => i) || false
-  const isRiskCategoryValid = !!values?.riskCategory
+  const commonIsAssignComponentValid =
+    [values.sli, values.continuousVerification, values.healthScore].find(i => i) || false
+  const commonisRiskCategoryValid = !!values?.riskCategory
 
   const duplicateNames = createdMetrics?.filter((metricName, index) => {
     if (index === selectedMetricIndex) {
@@ -244,5 +252,11 @@ export const validateCommonCustomMetricFields = (
       'cv.monitoringSources.prometheus.validation.metricNameUnique'
     )
   }
-  return validateAssignComponent(isAssignComponentValid, errorsToReturn, getString, values, isRiskCategoryValid)
+  return validateAssignComponent(
+    commonIsAssignComponentValid,
+    errorsToReturn,
+    getString,
+    values,
+    commonisRiskCategoryValid
+  )
 }
