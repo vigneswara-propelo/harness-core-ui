@@ -330,10 +330,10 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
         </Container>
       </Layout.Vertical>
       {selectedConfigOption &&
-      ![PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.ChooseExistingYAML].includes(
-        StarterConfigIdToOptionMap[selectedConfigOption.id]
-      ) ? (
-        pipelineYAML ? (
+        ![PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.ChooseExistingYAML].includes(
+          StarterConfigIdToOptionMap[selectedConfigOption.id]
+        ) &&
+        pipelineYAML && (
           <Container margin={{ top: 'xxxlarge' }}>
             <YAMLBuilder
               entityType="Pipelines"
@@ -344,12 +344,10 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
               width={'75%'}
               height={'calc(100vh - 330px)'}
               showCopyIcon={false}
+              hideErrorMesageOnReadOnlyMode={true}
             />
           </Container>
-        ) : (
-          <></>
-        )
-      ) : null}
+        )}
     </Layout.Horizontal>
   )
 }
