@@ -1357,12 +1357,15 @@ onboarding:
 
       Otherwise, the default metrics endpoint URL will be used.
     nodejs: |
-      # Requirements
+      # Quickstart
 
-      To use this SDK, make sure you've: 
-        - Node.js v12 or newer 
+      To follow along with our test code sample, make sure you've:
 
-      # Install the SDK
+      - Installed Node.js v12 or a newer version
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag">Created a Feature Flag on the Harness Platform</a> called 'harnessappdemodarkmode'
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key">Created a server SDK key and made a copy of it</a>
+
+      # Install
 
       Install the SDK as a dependency in your application:
 
@@ -1377,56 +1380,35 @@ onboarding:
       yarn add @harnessio/ff-nodejs-server-sdk
       ```
 
-      # Copy the sample
+      # Usage
 
-      When you run the following sample, it will:
-        1. Connect to the Feature Flag service
-        2. Report the value of the {{flagName}} flag every 10 seconds until the connection is closed.
-        3. Listen for when the flag is enabled or disabled and return the new value
+      Create a js file called 'example.js'. Copy and paste the following complete code example into that file. 
+      You can use this to test the harnessappdemodarkmode Flag you created on the Harness Platform. 
 
       ```
-      const { Client, Event } = require('@harnessio/ff-nodejs-server-sdk');
 
-      (async () => {
-        // set apiKey to your SDK API Key
-        const apiKey = '{{apiKey}}';
+      const { Client } = require('@harnessio/ff-nodejs-server-sdk');
 
-        // set flagName to your flag identifier from the UI
-        const flagName = '{{flagName}}'; 
+      // set apiKey to your SDK API Key
+      const apiKey = '{{apiKey}}';
 
-        console.log('Harness SDK Getting Started');
+      // set flagName to your flag identifier from the UI
+      const flagName = 'harnessappdemodarkmode';
 
-        // Create Client
-        const client = new Client(apiKey);
+      // Create Client
+      const client = new Client(apiKey);
 
-        // Create a target (different targets can receive different results based on rules.
-        // Here we are including "location" as a custom attribute)
-        const target = {
-          identifier: 'nodeserversdk',
-          name: 'NodeServerSDK',
-          attributes: {
-            location: 'emea',
-          },
-        };
+      // Create a target (different targets can receive different results based on rules.
+      const target = {
+        identifier: 'nodeserversdk',
+        name: 'NodeServerSDK',
+      };
 
-        await client.waitForInitialization();
+      client.waitForInitialization()
+        .then(() => client.boolVariation(flagName, target))
+        .then(value => console.log(`${flagName} is ${value}`))
+        .finally(() => process.exit(0))
 
-        try {
-          // Log the state of the flag every 10 seconds
-          setInterval(async () => {
-            const value = await client.boolVariation(flagName, target, false);
-            console.log('Flag variation:', value);
-          }, 10000);
-
-          // We can also watch for the event when a flag changes
-          client.on(Event.CHANGED, async (flagIdentifier) => {
-            const value = await client.boolVariation(flagIdentifier, target, false);
-            console.log(`${flagIdentifier} changed: ${value}`);
-          });
-        } catch (e) {
-          console.error('Error:', e);
-        }
-      })();
       ```
 
       # Run the code sample
