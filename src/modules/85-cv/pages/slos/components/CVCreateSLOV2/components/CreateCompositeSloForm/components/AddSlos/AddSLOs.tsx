@@ -8,6 +8,7 @@
 import React, { useState, useEffect } from 'react'
 import { useFormikContext } from 'formik'
 import cx from 'classnames'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import type { GetDataError } from 'restful-react'
 import type { Column, Renderer, CellProps } from 'react-table'
 import {
@@ -293,6 +294,7 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       {showSLOTableAndMessage && (
         <>
           <TableV2 sortable columns={columns} data={serviceLevelObjectivesDetails} minimal />
+          <HelpPanel referenceId={'compositeSLOWeightage'} type={HelpPanelType.FLOATING_CONTAINER} />
           <Container className={cx(css.totalRow, showErrorState ? css.rowFailure : css.rowSuccess)}>
             {Array(columns.length - 3)
               .fill(0)

@@ -150,6 +150,7 @@ export const CreateCompositeSloForm = ({
             {
               id: CreateCompositeSLOSteps.Define_SLO_Identification,
               title: getString('cv.CompositeSLO.DefineSLO'),
+              helpPanelReferenceId: 'defineCompositeSLO',
               panel: <SLOName<SLOV2Form> formikProps={formikProps} identifier={identifier} isMultiSelect />,
               preview: (
                 <CreatePreview id={CreateCompositeSLOSteps.Define_SLO_Identification} data={formikProps.values} />
@@ -158,12 +159,14 @@ export const CreateCompositeSloForm = ({
             {
               id: CreateCompositeSLOSteps.Set_SLO_Time_Window,
               title: getString('cv.CompositeSLO.SetTimeWindow'),
+              helpPanelReferenceId: 'setCompositeSLOTimeWindow',
               panel: <PeriodLength periodType={periodType} periodLengthType={periodLengthType} />,
               preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Time_Window} data={formikProps.values} />
             },
             {
               id: CreateCompositeSLOSteps.Add_SLOs,
               title: getString('cv.CompositeSLO.AddSLO'),
+              helpPanelReferenceId: 'addSLOsToCompositeSLO',
               panel: (
                 <AddSLOs
                   data={dashboardWidgetsResponse}
@@ -177,12 +180,14 @@ export const CreateCompositeSloForm = ({
             {
               id: CreateCompositeSLOSteps.Set_SLO_Target,
               title: getString('cv.CompositeSLO.SetTarget'),
+              helpPanelReferenceId: 'setCompositeSLOTarget',
               panel: <SLOTarget formikProps={formikProps} />,
               preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Target} data={formikProps.values} />
             },
             {
               id: CreateCompositeSLOSteps.Error_Budget_Policy,
               title: getString('cv.CompositeSLO.ErrorBudgetPolicy'),
+              helpPanelReferenceId: 'setErrorErrorBudgetAndNotification',
               isOptional: true,
               panel: (
                 <CompositeSLOContext.Provider value={{ renderInsideCompositeSLO: true }}>
