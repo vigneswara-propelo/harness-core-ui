@@ -5,7 +5,7 @@ metadata:
   description: ng-ui
   annotations:
     harness.io/cicd-accountId: vpCkHKsDSxK9_KYfjCTMKA
-    harness.io/cicd-orgIde: default
+    harness.io/cicd-orgId: default
     harness.io/cicd-projectId: NextGenUI
     
   tags:
