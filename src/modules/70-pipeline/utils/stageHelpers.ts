@@ -7,6 +7,7 @@
 
 import { defaultTo, get, isEmpty, omit, pick, set } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
+import type { SelectOption } from '@harness/uicore'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import type {
   GraphLayoutNode,
@@ -661,4 +662,10 @@ export const withoutSideCar = (deploymentType: string): boolean => {
 
 export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']) => {
   return `${selectedDeploymentType}DeploymentTypeVariables`
+}
+
+export const getAzureNexusRepoOptions = (deploymentType: string, azureFlag?: boolean): SelectOption[] => {
+  return isSSHWinRMDeploymentType(deploymentType) || (isAzureWebAppDeploymentType(deploymentType) && azureFlag)
+    ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
+    : k8sRepositoryFormatTypes
 }
