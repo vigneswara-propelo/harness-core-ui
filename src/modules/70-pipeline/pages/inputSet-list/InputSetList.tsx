@@ -38,7 +38,6 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncInterface'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { InputSetListView } from './InputSetListView'
-
 import css from './InputSetList.module.scss'
 
 function InputSetList(): React.ReactElement {
@@ -76,7 +75,7 @@ function InputSetList(): React.ReactElement {
           }
         : {})
     },
-    debounce: 300
+    debounce: !isEmpty(searchParam) ? 300 : false
   })
 
   const { showImportResourceModal } = useImportResource({
@@ -177,6 +176,7 @@ function InputSetList(): React.ReactElement {
         })
       )
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [accountId, orgIdentifier, projectIdentifier, pipelineIdentifier, module, history, repoIdentifier, branch]
   )
 
@@ -249,7 +249,7 @@ function InputSetList(): React.ReactElement {
     }
   }
 
-  function getTooltipText() {
+  function getTooltipText(): JSX.Element | undefined {
     if (isPipelineInvalid) return <Text padding="medium">{getString('pipeline.cannotAddInputSetInvalidPipeline')}</Text>
 
     if (!pipelineHasRuntimeInputs)

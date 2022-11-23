@@ -72,7 +72,7 @@ const queryParamOptions = {
   }
 }
 
-export function PipelineListPage(): React.ReactElement {
+function PipelineListView(): React.ReactElement {
   const { getString } = useStrings()
   const searchRef = useRef({} as ExpandingSearchInputHandle)
   const [pipelineList, setPipelineList] = useState<PagePMSPipelineSummaryResponse | undefined>()
@@ -170,18 +170,20 @@ export function PipelineListPage(): React.ReactElement {
         showError(getRBACErrorMessage(e), undefined, 'pipeline.fetch.pipeline.error')
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    accountId,
+    repoName,
     appliedFilter?.filterProperties,
-    branch,
-    orgIdentifier,
-    page,
+    loadPipelineList,
+    accountId,
     projectIdentifier,
-    repoIdentifier,
+    orgIdentifier,
     searchTerm,
+    page,
+    sort,
     size,
-    sort?.toString(),
-    repoName
+    repoIdentifier,
+    branch
   ])
 
   useDocumentTitle([getString('pipelines')])
@@ -242,7 +244,7 @@ export function PipelineListPage(): React.ReactElement {
   const { globalFreezes } = useGlobalFreezeBanner()
 
   return (
-    <GitSyncStoreProvider>
+    <>
       <Page.Header
         title={
           <div className="ng-tooltip-native">
@@ -337,6 +339,20 @@ export function PipelineListPage(): React.ReactElement {
           />
         )}
       </Page.Body>
-    </GitSyncStoreProvider>
+    </>
   )
+}
+
+export function PipelineListPage(): React.ReactElement {
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+
+  if (isGitSyncEnabled) {
+    return (
+      <GitSyncStoreProvider>
+        <PipelineListView />
+      </GitSyncStoreProvider>
+    )
+  }
+  return <PipelineListView />
 }
