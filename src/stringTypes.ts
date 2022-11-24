@@ -1158,6 +1158,7 @@ export interface StringsMap {
   'rbac.pendingUsers': string
   'rbac.permissionLabels.access': string
   'rbac.permissionLabels.approveReject': string
+  'rbac.permissionLabels.copy': string
   'rbac.permissionLabels.create': string
   'rbac.permissionLabels.createEdit': string
   'rbac.permissionLabels.delete': string
