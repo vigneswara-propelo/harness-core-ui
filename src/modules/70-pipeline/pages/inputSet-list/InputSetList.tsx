@@ -123,7 +123,9 @@ function InputSetList(): React.ReactElement {
       orgIdentifier,
       projectIdentifier,
       repoIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     }
   })
 
