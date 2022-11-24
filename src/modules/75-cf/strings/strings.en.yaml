@@ -197,11 +197,11 @@ featureFlags:
     drawerTitle: Flag Pipelines
     drawerDescription: |
       You can only set Pipelines that:
-        <ul>
-          <li>Have a Flag stage configured</li>
-          <li>The Flag must be set as a runtime input</li>
-          <li>Don’t include a Build or Deploy stage</li>
-        <ul>
+      <ul>
+        <li>Have a Flag stage configured</li>
+        <li>The Flag must be set as a runtime input</li>
+        <li>Don’t include a Build or Deploy stage</li>
+      <ul>
     drawerButtonText: Set as Flag Pipeline
     envText: 'Set all Flags in {{ env }}'
     saveSuccess: Flag Pipeline updated
