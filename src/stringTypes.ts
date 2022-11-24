@@ -6595,6 +6595,7 @@ export interface StringsMap {
   'cf.onboarding.readme.nodejs': string
   'cf.onboarding.readme.php': string
   'cf.onboarding.readme.python': string
+  'cf.onboarding.readme.react': string
   'cf.onboarding.readme.reactNative': string
   'cf.onboarding.readme.ruby': string
   'cf.onboarding.readme.xamarinAndroid': string
