@@ -82,7 +82,7 @@ exports[`Environments should render Environments 1`] = `
       >
         <a
           class="TabNavigation--tags TabNavigation--small"
-          href="/account/dummy/undefined/orgs/dummy/projects/dummy/environment"
+          href="/account/dummy/home/orgs/dummy/projects/dummy/environment"
         >
           environment
         </a>

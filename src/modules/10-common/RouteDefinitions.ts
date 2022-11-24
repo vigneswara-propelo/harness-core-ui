@@ -6,7 +6,7 @@
  */
 
 import qs from 'qs'
-import { getScopeBasedRoute, withAccountId } from '@common/utils/routeUtils'
+import { getEnvServiceRoute, getScopeBasedRoute, withAccountId } from '@common/utils/routeUtils'
 import type {
   OrgPathProps,
   ConnectorPathProps,
@@ -50,7 +50,8 @@ import type {
   AccountLevelGitOpsPathProps,
   TemplateType,
   CODEProps,
-  RequireField
+  RequireField,
+  AccountRoutePlacement
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -807,16 +808,79 @@ const routes = {
     })
   }),
   toServices: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/services`
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      accountRoutePlacement
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }>) => {
+      return getEnvServiceRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path: 'services',
+        accountRoutePlacement
+      })
+    }
   ),
   toServiceStudio: withAccountId(
-    ({ orgIdentifier, projectIdentifier, serviceId, module }: PipelineType<ProjectPathProps & ServicePathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/services/${serviceId}`
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      serviceId,
+      module,
+      accountRoutePlacement
+    }: Partial<
+      ProjectPathProps & ModulePathParams & ServicePathProps & { accountRoutePlacement?: AccountRoutePlacement }
+    >) => {
+      return getEnvServiceRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path: `services/${serviceId}`,
+        accountRoutePlacement
+      })
+    }
   ),
   toEnvironment: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment`
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      accountRoutePlacement
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }>) => {
+      return getEnvServiceRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path: 'environment',
+        accountRoutePlacement
+      })
+    }
+  ),
+  toEnvironmentGroups: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      accountRoutePlacement
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }>) => {
+      return getEnvServiceRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path: 'environment-group',
+        accountRoutePlacement
+      })
+    }
   ),
   toEnvironmentDetails: withAccountId(
     ({
@@ -825,35 +889,49 @@ const routes = {
       projectIdentifier,
       module,
       environmentIdentifier,
+      accountRoutePlacement,
       ...rest
-    }: PipelineType<ProjectPathProps & EnvironmentPathProps & EnvironmentQueryParams>) => {
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }> &
+      EnvironmentQueryParams &
+      EnvironmentPathProps) => {
       const queryString = qs.stringify(rest, { skipNulls: true })
-      if (queryString.length > 0) {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment/${environmentIdentifier}/details?${queryString}`
-      } else {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment/${environmentIdentifier}/details`
-      }
+      const routePath = getEnvServiceRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path: `environment/${environmentIdentifier}/details`,
+        accountRoutePlacement
+      })
+
+      return queryString.length > 0 ? `${routePath}?${queryString}` : routePath
     }
-  ),
-  toEnvironmentGroups: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment-group`
   ),
   toEnvironmentGroupDetails: withAccountId(
     ({
       accountId,
       orgIdentifier,
       projectIdentifier,
-      environmentGroupIdentifier,
       module,
+      environmentGroupIdentifier,
+      accountRoutePlacement,
       ...rest
-    }: PipelineType<ProjectPathProps & EnvironmentGroupPathProps & EnvironmentGroupQueryParams>) => {
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }> &
+      EnvironmentGroupQueryParams &
+      EnvironmentGroupPathProps) => {
       const queryString = qs.stringify(rest, { skipNulls: true })
-      if (queryString.length > 0) {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment-group/${environmentGroupIdentifier}/details?${queryString}`
-      } else {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment-group/${environmentGroupIdentifier}/details`
-      }
+      const routePath = getEnvServiceRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path: `environment-group/${environmentGroupIdentifier}/details`,
+        accountRoutePlacement
+      })
+
+      return queryString.length > 0 ? `${routePath}?${queryString}` : routePath
     }
   ),
   toPipelineDetail: withAccountId(

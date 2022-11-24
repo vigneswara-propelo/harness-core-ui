@@ -68,7 +68,7 @@ exports[`ServiceDetailsHeader render no data 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/undefined/undefined/orgs/undefined/projects/undefined/services"
+              href="/account/undefined/services"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
@@ -168,7 +168,7 @@ exports[`ServiceDetailsHeader should render ServiceDetailsHeader 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/undefined/undefined/orgs/undefined/projects/undefined/services"
+              href="/account/undefined/services"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"

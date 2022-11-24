@@ -265,3 +265,9 @@ export type CODEPathProps = RequireField<
 export interface AccountLevelGitOpsPathProps {
   entity: string
 }
+
+/**
+ * At Account level we have two places for nav links
+ * At home dashboard level or account resources(settings) level
+ */
+export type AccountRoutePlacement = 'settings' | 'dashboard'

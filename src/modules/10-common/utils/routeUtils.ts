@@ -35,7 +35,8 @@ import type {
   TemplateStudioPathProps,
   EnvironmentGroupPathProps,
   VariablesPathProps,
-  CODEPathProps
+  CODEPathProps,
+  AccountRoutePlacement
 } from '@common/interfaces/RouteInterfaces'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 
@@ -232,4 +233,25 @@ export const validateReturnUrl = (url: string): boolean => {
 
 export const returnLaunchUrl = (url: string): string => {
   return `${getLocationPathName().replace(/\/ng\//, '/')}${url}`
+}
+
+export const getEnvServiceRoute = ({
+  scope: { orgIdentifier, projectIdentifier, module },
+  path,
+  accountRoutePlacement
+}: {
+  scope: Partial<ProjectPathProps & ModulePathParams>
+  path: string
+  accountRoutePlacement?: AccountRoutePlacement
+}): string => {
+  if (orgIdentifier && projectIdentifier) {
+    const basePath = module || 'home'
+    return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/${path}`
+  } else if (orgIdentifier) {
+    return `/settings/organizations/${orgIdentifier}/setup/resources/${path}`
+  } else if (accountRoutePlacement) {
+    return accountRoutePlacement === 'settings' ? `settings/resources/${path}` : `${path}`
+  } else {
+    return window.location.href.includes('settings') ? `settings/resources/${path}` : `${path}`
+  }
 }
