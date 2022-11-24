@@ -17,7 +17,7 @@ import {
   Text,
   useToggleOpen
 } from '@harness/uicore'
-import { defaultTo, pick } from 'lodash-es'
+import { defaultTo, isEmpty, pick } from 'lodash-es'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
@@ -185,6 +185,25 @@ function PipelineListView(): React.ReactElement {
     repoIdentifier,
     branch
   ])
+  const {
+    data: repoListData,
+    error,
+    loading,
+    refetch
+  } = useGetRepositoryList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: isGitSyncEnabled
+  })
+
+  const repositories = repoListData?.data?.repositories
+
+  const onRefetch = React.useCallback((): void => {
+    refetch()
+  }, [refetch])
 
   useDocumentTitle([getString('pipelines')])
 
@@ -267,7 +286,14 @@ function PipelineListView(): React.ReactElement {
               }}
             />
           ) : (
-            <RepoFilter onChange={onChangeRepo} value={repoName} getRepoListPromise={useGetRepositoryList} />
+            <RepoFilter
+              onChange={onChangeRepo}
+              value={repoName}
+              repositories={repositories}
+              isError={!isEmpty(error)}
+              isLoadingRepos={loading}
+              onRefetch={onRefetch}
+            />
           )}
         </Layout.Horizontal>
         <Layout.Horizontal style={{ alignItems: 'center' }}>

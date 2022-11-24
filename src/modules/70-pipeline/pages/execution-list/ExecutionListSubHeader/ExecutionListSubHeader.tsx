@@ -10,9 +10,15 @@ import { useParams } from 'react-router-dom'
 import { Button, ButtonVariation, Checkbox, ExpandingSearchInput, Layout, SelectOption, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
+import { isEmpty } from 'lodash-es'
 import BranchFilter from '@common/components/BranchFilter/BranchFilter'
 import { String, useStrings } from 'framework/strings'
-import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type {
+  GitQueryParams,
+  PipelinePathProps,
+  PipelineType,
+  ProjectPathProps
+} from '@common/interfaces/RouteInterfaces'
 import StatusSelect from '@pipeline/components/StatusSelect/StatusSelect'
 import NewPipelineSelect from '@pipeline/components/NewPipelineSelect/NewPipelineSelect'
 import { getFeaturePropsForRunPipelineButton, getRbacButtonModules } from '@pipeline/utils/runPipelineUtils'
@@ -81,6 +87,28 @@ export function ExecutionListSubHeader(
       updateQueryParams({ [key]: undefined }) // removes the specific param
     }
   }
+
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+
+  const {
+    data: repoListData,
+    error,
+    loading,
+    refetch
+  } = useGetExecutionRepositoriesList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: isGitSyncEnabled
+  })
+
+  const repositories = repoListData?.data?.repositories
+
+  const onRefetch = React.useCallback((): void => {
+    refetch()
+  }, [refetch])
 
   if (isCompareMode) {
     return (
@@ -186,7 +214,7 @@ export function ExecutionListSubHeader(
 
         {props.showRepoBranchFilter && !isGitSyncEnabled && (
           <RepoFilter
-            getRepoListPromise={useGetExecutionRepositoriesList}
+            repositories={repositories}
             onChange={props.onChangeRepo}
             value={props.repoName}
             showBranchFilter={props.showRepoBranchFilter}
@@ -194,6 +222,9 @@ export function ExecutionListSubHeader(
               onBranchChange(selected.value as string)
             }}
             selectedBranch={selectedBranch}
+            isError={!isEmpty(error)}
+            isLoadingRepos={loading}
+            onRefetch={onRefetch}
           />
         )}
       </div>

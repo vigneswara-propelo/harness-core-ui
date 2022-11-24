@@ -28,6 +28,18 @@ window.IntersectionObserver = jest.fn().mockImplementation(() => ({
   observe: () => null,
   unobserve: () => null
 }))
+const mockRepositories = {
+  status: 'SUCCESS',
+  data: {
+    repositories: ['main', 'main-patch', 'main-patch1', 'main-patch2']
+  },
+  metaData: null,
+  correlationId: 'cc779876-d3af-44e5-8991-916dfecb4548'
+}
+
+const fetchRepositories = jest.fn(() => {
+  return Object.create(mockRepositories)
+})
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({}))
@@ -42,6 +54,9 @@ jest.mock('services/pipeline-ng', () => ({
     loading: false,
     cancel: jest.fn()
   })),
+  useGetExecutionRepositoriesList: jest.fn().mockImplementation(() => {
+    return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
+  }),
   useGetExecutionBranchesList: jest.fn().mockImplementation(() => {
     return { data: jest.fn(), refetch: jest.fn() }
   }),
