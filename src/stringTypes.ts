@@ -7010,6 +7010,8 @@ export interface StringsMap {
   'cv.CompositeSLO.SetTarget': string
   'cv.CompositeSLO.SetTimeWindow': string
   'cv.CompositeSLO.Weightage': string
+  'cv.CompositeSLO.compositeSloCreated': string
+  'cv.CompositeSLO.compositeSloUpdated': string
   'cv.Dependency.noData': string
   'cv.Dependency.serviceChanges': string
   'cv.Dependency.serviceList': string
