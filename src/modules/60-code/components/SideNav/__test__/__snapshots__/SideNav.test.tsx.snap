@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SCM Sidenav Nav should render Repositories link 1`] = `
+exports[`Code Sidenav Nav should render Repositories link 1`] = `
 <div>
   <div
     class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
@@ -72,7 +72,7 @@ exports[`SCM Sidenav Nav should render Repositories link 1`] = `
     </div>
     <a
       class="link"
-      href="/account/dummy/scm/orgs/dummy/projects/dummy/repos"
+      href="/account/dummy/code/dummy/dummy"
     >
       <p
         class="StyledProps--font StyledProps--main text"
@@ -84,7 +84,7 @@ exports[`SCM Sidenav Nav should render Repositories link 1`] = `
 </div>
 `;
 
-exports[`SCM Sidenav Nav should render Repositories link 2`] = `
+exports[`Code Sidenav Nav should render Repositories link 2`] = `
 <div>
   <div>
     <h1>
@@ -93,7 +93,7 @@ exports[`SCM Sidenav Nav should render Repositories link 2`] = `
     <div
       data-testid="location"
     >
-      /account/dummy/scm/orgs/Cisco_Meraki/projects/Online_Banking/repos
+      /account/dummy/code/dummy/dummy
     </div>
   </div>
 </div>

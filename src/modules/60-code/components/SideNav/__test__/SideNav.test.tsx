@@ -18,9 +18,9 @@ jest.mock('services/cd-ng', () => ({
   useDeleteProject: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
 
-describe('SCM Sidenav', () => {
+describe('Code Sidenav', () => {
   const Subject: React.FC<{ path?: string }> = ({
-    path = '/account/:accountId/scm/orgs/:orgIdentifier/projects/:projectIdentifier'
+    path = '/account/:accountId/code/orgs/:orgIdentifier/projects/:projectIdentifier'
   }) => (
     <TestWrapper path={path} pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
       <SideNav />
@@ -38,7 +38,7 @@ describe('SCM Sidenav', () => {
     expect(container).toMatchSnapshot()
 
     act(() => {
-      fireEvent.click(getByText('Online Banking'))
+      fireEvent.click(getByText('repositories'))
     })
 
     expect(container).toMatchSnapshot()

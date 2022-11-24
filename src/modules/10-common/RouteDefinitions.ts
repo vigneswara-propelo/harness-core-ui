@@ -49,7 +49,7 @@ import type {
   EnvironmentQueryParams,
   AccountLevelGitOpsPathProps,
   TemplateType,
-  SCMPathProps,
+  CODEProps,
   RequireField
 } from '@common/interfaces/RouteInterfaces'
 
@@ -1361,88 +1361,58 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/onboarding`
   ),
+
   toCFOnboardingDetail: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/onboarding/detail`
   ),
-
   toCFConfigurePath: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/configurePath`
   ),
 
-  // SCM Module (https://harness.atlassian.net/wiki/spaces/SCM/overview?homepageId=21144371782)
-  toSCM: withAccountId(() => `/scm`),
-  toSCMHome: withAccountId(() => `/scm/home`),
-  toSCMRepos: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: SCMPathProps) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos`
-  ),
-  toSCMNewRepo: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: SCMPathProps) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/new`
-  ),
-  toSCMRepoSettings: withAccountId(
-    ({ orgIdentifier, projectIdentifier, repoName }: RequireField<SCMPathProps, 'repoName'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/settings`
-  ),
-  toSCMFiles: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branchName
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}`
-  ),
-  toSCMFileDetails: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branchName,
-      filePath
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName' | 'filePath'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/files/${filePath}`
-  ),
-  toSCMPullRequests: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branchName
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/pull-requests`
-  ),
-  toSCMPullRequestDetails: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branchName,
-      pullRequestId
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName' | 'pullRequestId'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/pull-requests/${pullRequestId}`
-  ),
-  toSCMCommits: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branchName
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/commits`
-  ),
-  toSCMCommitDetails: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branchName,
-      commitId
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName' | 'commitId'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/commits/${commitId}`
-  ),
+  toCODE: withAccountId(() => `/code`),
+  toCODEHome: withAccountId(() => `/code/home`),
+  toCODERepositoriesListing: ({ space }: Required<Pick<CODEProps, 'space'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier] = space.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}`
+  },
+  toCODERepository: ({
+    repoPath,
+    gitRef,
+    resourcePath
+  }: RequireField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath'>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}${
+      gitRef ? '/files/' + gitRef : ''
+    }${resourcePath ? '/~/' + resourcePath : ''}`
+  },
+  toCODERepositoryFileEdit: ({
+    repoPath,
+    gitRef,
+    resourcePath
+  }: RequireField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath' | 'gitRef'>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/edit/${gitRef}/~/${
+      resourcePath || ''
+    }`
+  },
+  toCODERepositoryCommits: ({ repoPath, commitRef }: Required<Pick<CODEProps, 'repoPath' | 'commitRef'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/commits${
+      commitRef ? '/' + commitRef : ''
+    }`
+  },
+  toCODERepositoryBranches: ({ repoPath, branch }: Required<Pick<CODEProps, 'repoPath' | 'branch'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/branches${
+      branch ? '/' + branch : ''
+    }`
+  },
+  toCODERepositorySettings: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings`
+  },
 
   /********************************************************************************************************************/
   toCV: (params: Partial<ProjectPathProps>): string =>

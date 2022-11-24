@@ -33,11 +33,13 @@
     <script type="text/javascript">
       window.browserRouterEnabled = window.location.href.toString().includes('browserRouterEnabled=true')
       window.getApiBaseUrl = str => {
+        let url = window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+
         if (window.browserRouterEnabled) {
-          return `${window.apiUrl || ''}/${str}`
-        } else {
-          return window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+          url = `${window.apiUrl || ''}/${str}`
         }
+
+        return url.includes('remoteEntry.js') ? `${url}?timestamp=${Date.now()}` : url
       }
     </script>
     <!-- segmentToken -->

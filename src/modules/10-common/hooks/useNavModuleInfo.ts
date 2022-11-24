@@ -23,15 +23,15 @@ export type NavModuleName =
   | ModuleName.CE
   | ModuleName.CHAOS
   | ModuleName.STO
-  | ModuleName.SCM
+  | ModuleName.CODE
 
 export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
+  ModuleName.CODE,
   ModuleName.CD,
   ModuleName.CI,
   ModuleName.CF,
   ModuleName.CE,
   ModuleName.CV,
-  ModuleName.SCM,
   ModuleName.STO,
   ModuleName.CHAOS
 ]
@@ -103,11 +103,11 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     featureFlagName: FeatureFlag.CHAOS_ENABLED,
     color: '--chaos-border'
   },
-  [ModuleName.SCM]: {
-    icon: 'gitops-green',
-    label: 'common.purpose.scm.name',
-    getHomePageUrl: (accountId: string) => routes.toSCM({ accountId }),
-    featureFlagName: FeatureFlag.SCM_ENABLED,
+  [ModuleName.CODE]: {
+    icon: 'code',
+    label: 'common.purpose.code.name',
+    getHomePageUrl: (accountId: string) => routes.toCODE({ accountId }),
+    featureFlagName: FeatureFlag.CODE_ENABLED,
     color: '--default-module-border'
   }
 }
