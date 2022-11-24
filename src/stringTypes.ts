@@ -485,6 +485,7 @@ export interface StringsMap {
   'common.link': string
   'common.loadBalancer': string
   'common.loading': string
+  'common.loadingFieldOptions': string
   'common.local': string
   'common.logs.delegateSelectionLogs': string
   'common.logs.noLogsText': string
@@ -3838,6 +3839,7 @@ export interface StringsMap {
   'pipeline.noArtifactPaths': string
   'pipeline.noBuckets': string
   'pipeline.noBucketsFound': string
+  'pipeline.noFilePathsFound': string
   'pipeline.noPipelinesLabel': string
   'pipeline.noPipelinesText': string
   'pipeline.noRegions': string

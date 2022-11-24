@@ -1104,6 +1104,7 @@ configDetails: 'Configuration Details'
 freezeActiveBannerTextPrefix: Freeze enabled on all deployments for this
 freezeActiveBannerTimeframe: from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 freezeListActiveBannerText: There are {{count}} ongoing deployment freeze windows
+loadingFieldOptions: Loading {{fieldName}}s...
 freezeListActiveBannerExpandedTextPrefix: On the
 resourceIdentifier: Resource Identifier
 configureNav: Or configure your nav!
