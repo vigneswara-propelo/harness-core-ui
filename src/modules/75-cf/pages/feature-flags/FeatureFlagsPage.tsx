@@ -637,8 +637,8 @@ const FeatureFlagsPage: React.FC = () => {
         refetch()
       }}
     >
-      <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
-        {showFilterCards && (
+      {showFilterCards && (
+        <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
           <FlagTableFilters
             features={features}
             currentFilter={flagFilter}
@@ -647,8 +647,10 @@ const FeatureFlagsPage: React.FC = () => {
               setFlagFilter(currentFilter)
             }}
           />
-        )}
-        {!emptyFeatureFlags ? (
+        </Container>
+      )}
+      {!emptyFeatureFlags ? (
+        <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
           <TableV2<Feature>
             columns={columns}
             data={features?.features || []}
@@ -665,17 +667,17 @@ const FeatureFlagsPage: React.FC = () => {
               )
             }}
           />
-        ) : (
-          <NoFeatureFlags
-            hasFeatureFlags={hasFeatureFlags}
-            hasSearchTerm={searchTerm.length > 0}
-            hasFlagFilter={flagFilter.queryProps?.key?.length > 0 && flagFilter.queryProps?.value?.length > 0}
-            environmentIdentifier={environmentIdentifier}
-            clearFilter={onClearFilter}
-            clearSearch={onClearSearch}
-          />
-        )}
-      </Container>
+        </Container>
+      ) : (
+        <NoFeatureFlags
+          hasFeatureFlags={hasFeatureFlags}
+          hasSearchTerm={searchTerm.length > 0}
+          hasFlagFilter={flagFilter.queryProps?.key?.length > 0 && flagFilter.queryProps?.value?.length > 0}
+          environmentIdentifier={environmentIdentifier}
+          clearFilter={onClearFilter}
+          clearSearch={onClearSearch}
+        />
+      )}
     </ListingPageTemplate>
   )
 }
