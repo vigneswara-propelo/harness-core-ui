@@ -10,6 +10,7 @@ import { Classes, Dialog, IDialogProps, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
 import {
   Button,
+  ButtonSize,
   ButtonVariation,
   Container,
   Icon,
@@ -253,12 +254,35 @@ export function PipelineCanvas({
     ? getString('common.viewAndExecutePermissions')
     : getString('common.readonlyPermissions')
 
-  const { openDialog: openUnsavedChangesDialog } = useConfirmationDialog({
-    cancelButtonText: getString('cancel'),
+  const customButtonContainer = (
+    <Container className={css.customButtons}>
+      <Button
+        text={getString('pipeline.discard')}
+        variation={ButtonVariation.SECONDARY}
+        size={ButtonSize.MEDIUM}
+        onClick={() => {
+          updatePipelineView({ ...pipelineView, isYamlEditable: false })
+          fetchPipeline({ forceFetch: true, forceUpdate: true })
+          closeUnsavedChangesDialog()
+        }}
+      />
+      <Button
+        text={getString('cancel')}
+        variation={ButtonVariation.TERTIARY}
+        size={ButtonSize.MEDIUM}
+        onClick={() => closeUnsavedChangesDialog()}
+      />
+    </Container>
+  )
+
+  const { openDialog: openUnsavedChangesDialog, closeDialog: closeUnsavedChangesDialog } = useConfirmationDialog({
+    className: css.paddingTop8,
+    customButtons: customButtonContainer,
     contentText: isYamlError ? getString('navigationYamlError') : getString('navigationCheckText'),
     titleText: isYamlError ? getString('navigationYamlErrorTitle') : getString('navigationCheckTitle'),
     confirmButtonText: getString('confirm'),
     intent: Intent.WARNING,
+    showCloseButton: false,
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
         deletePipelineCache(gitDetails).then(() => {
@@ -787,6 +811,11 @@ export function PipelineCanvas({
       >
         <NavigationCheck
           when={getOtherModal && pipeline.identifier !== ''}
+          onDiscardButtonClick={() => {
+            updatePipelineView({ ...pipelineView, isYamlEditable: false })
+            fetchPipeline({ forceFetch: true, forceUpdate: true })
+          }}
+          showDiscardBtn={true}
           shouldBlockNavigation={nextLocation => {
             let localUpdated = isUpdated
             const matchDefault = matchPath(nextLocation.pathname, {
