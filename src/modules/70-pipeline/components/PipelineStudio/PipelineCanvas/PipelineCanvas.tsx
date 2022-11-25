@@ -72,6 +72,7 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 import type { Pipeline } from '@pipeline/utils/types'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 import { PipelineOutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/PipelineOutOfSyncErrorStrip/PipelineOutOfSyncErrorStrip'
+import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -886,6 +887,11 @@ export function PipelineCanvas({
                       {!isEmpty(pipeline?.tags) && pipeline.tags && (
                         <Container className={css.tagsContainer}>
                           <TagsPopover tags={pipeline.tags} />
+                        </Container>
+                      )}
+                      {pipeline.description && (
+                        <Container className={cx({ [css.tagsContainer]: isGitSyncEnabled })}>
+                          <DescriptionPopover text={pipeline.description} />
                         </Container>
                       )}
                       {isGitSyncEnabled && (
