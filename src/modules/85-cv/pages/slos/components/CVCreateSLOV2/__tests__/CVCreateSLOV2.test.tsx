@@ -351,7 +351,7 @@ describe('CVCreateSloV2', () => {
     userEvent.clear(sloName!)
     userEvent.type(sloName!, 'updated composite slo')
 
-    await act(() => {
+    act(() => {
       userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
     })
 
@@ -363,7 +363,7 @@ describe('CVCreateSloV2', () => {
 
     await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
 
-    await act(() => {
+    act(() => {
       userEvent.click(document.querySelector('.bp3-dialog button')!)
     })
   })
@@ -387,7 +387,7 @@ describe('CVCreateSloV2', () => {
     userEvent.clear(sloName!)
     userEvent.type(sloName!, 'updated composite slo')
 
-    await act(() => {
+    act(() => {
       userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
     })
 
@@ -399,7 +399,7 @@ describe('CVCreateSloV2', () => {
 
     await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
 
-    await act(() => {
+    act(() => {
       userEvent.click(document.querySelector('.bp3-dialog button')!)
     })
   })

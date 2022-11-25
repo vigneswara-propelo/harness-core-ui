@@ -19,7 +19,7 @@ import { PeriodLengthTypes, PeriodTypes } from '../CVCreateSLO/CVCreateSLO.types
 import { SLOObjective, SLOV2Form, SLOV2FormFields } from './CVCreateSLOV2.types'
 import { serviceLevelObjectiveKeys } from './components/CreateCompositeSloForm/CreateCompositeSloForm.constant'
 
-const filterServiceLevelObjectivesDetailsFromSLOObjective = (
+export const filterServiceLevelObjectivesDetailsFromSLOObjective = (
   serviceLevelObjectivesDetails?: SLOObjective[]
 ): ServiceLevelObjectiveDetailsDTO[] =>
   serviceLevelObjectivesDetails

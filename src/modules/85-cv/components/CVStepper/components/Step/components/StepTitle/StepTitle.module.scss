@@ -1,0 +1,9 @@
+.editIcon {
+  background: var(--primary) !important;
+  color: white !important;
+  padding: var(--spacing--xxsmall) !important;
+  border-radius: 20px !important;
+  svg {
+    padding: 3px !important;
+  }
+}

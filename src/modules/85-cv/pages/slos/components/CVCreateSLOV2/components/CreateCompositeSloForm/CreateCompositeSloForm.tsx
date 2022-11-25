@@ -12,7 +12,12 @@ import { isEqual } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'
-import { SLOTargetFilterDTO, useGetNotificationRuleData, useGetSLOHealthListViewV2 } from 'services/cv'
+import {
+  SLOTargetFilterDTO,
+  useGetNotificationRuleData,
+  useGetOnboardingGraph,
+  useGetSLOHealthListViewV2
+} from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CVStepper } from '@cv/components/CVStepper/CVStepper'
 import SLOTargetNotifications from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
@@ -27,6 +32,7 @@ import useCreateCompositeSloWarningModal from './useCreateCompositeSloWarningMod
 import PeriodLength from './components/PeriodLength/PeriodLength'
 import { createSloTargetFilterDTO } from './components/AddSlos/AddSLOs.utils'
 import { CompositeSLOContext } from './CompositeSLOContext'
+import { filterServiceLevelObjectivesDetailsFromSLOObjective } from '../../CVCreateSLOV2.utils'
 import css from './CreateCompositeSloForm.module.scss'
 
 export const CreateCompositeSloForm = ({
@@ -70,6 +76,13 @@ export const CreateCompositeSloForm = ({
     body: { compositeSLOIdentifier: identifier }
   })
 
+  const {
+    data: onBoardingGraphResponse,
+    loading: onBoardingGraphLoading,
+    refetch: onBoardingGraphRefetch,
+    error: onBoardingGraphError
+  } = useMutateAsGet(useGetOnboardingGraph, { lazy: true })
+
   useEffect(() => {
     compositeSloPayloadRef.current = formikProps.values
     prevStepDataRef.current = formikProps.values
@@ -82,6 +95,19 @@ export const CreateCompositeSloForm = ({
       openPeriodUpdateModal()
     }
   }, [openPeriodUpdateModal, formikFilterData])
+
+  useEffect(() => {
+    if (formikProps.values.serviceLevelObjectivesDetails?.length) {
+      onBoardingGraphRefetch({
+        queryParams: { accountId, orgIdentifier, projectIdentifier },
+        body: {
+          serviceLevelObjectivesDetails: filterServiceLevelObjectivesDetailsFromSLOObjective(
+            formikProps.values.serviceLevelObjectivesDetails
+          )
+        }
+      })
+    }
+  }, [formikProps.values.serviceLevelObjectivesDetails])
 
   useEffect(() => {
     if (identifier) {
@@ -180,8 +206,15 @@ export const CreateCompositeSloForm = ({
             {
               id: CreateCompositeSLOSteps.Set_SLO_Target,
               title: getString('cv.CompositeSLO.SetTarget'),
-              helpPanelReferenceId: 'setCompositeSLOTarget',
-              panel: <SLOTarget formikProps={formikProps} />,
+              panel: (
+                <SLOTarget
+                  formikProps={formikProps}
+                  dataPoints={onBoardingGraphResponse?.resource?.dataPoints?.map(item => [item.timeStamp, item.value])}
+                  graphLoading={onBoardingGraphLoading}
+                  graphError={onBoardingGraphError}
+                  refetchGraph={refetchDashboardWidgets}
+                />
+              ),
               preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Target} data={formikProps.values} />
             },
             {

@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import type { GetDataError } from 'restful-react'
 import type { FormikContextType } from 'formik'
 import { Layout, Icon, Text, Container, FormInput } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -20,9 +21,13 @@ import { CalenderValuePreview } from '../CreatePreview/CreatePreview'
 
 interface SLOTargetProps {
   formikProps: FormikContextType<SLOV2Form>
+  graphLoading?: boolean
+  graphError?: GetDataError<unknown> | null
+  refetchGraph?: () => Promise<void> | undefined
+  dataPoints?: Highcharts.SeriesColumnOptions['data']
 }
 
-const SLOTarget = ({ formikProps }: SLOTargetProps): JSX.Element => {
+const SLOTarget = ({ formikProps, dataPoints }: SLOTargetProps): JSX.Element => {
   const { getString } = useStrings()
 
   const { periodType, periodLength = '', periodLengthType, SLOTargetPercentage } = formikProps.values
@@ -68,7 +73,7 @@ const SLOTarget = ({ formikProps }: SLOTargetProps): JSX.Element => {
               </Text>
             }
             customChartOptions={getCustomOptionsForSLOTargetChart(formikProps.values?.SLOTargetPercentage)}
-            dataPoints={[]}
+            dataPoints={dataPoints ? [...dataPoints] : []}
           />
         </Container>
         <ErrorBudgetCard {...errorBudgetCardProps} />

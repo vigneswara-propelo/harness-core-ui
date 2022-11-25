@@ -12126,6 +12126,85 @@ export const saveSLOV2DataPromise = (
     void
   >('POST', getConfig('cv/api'), `/slo/v2`, props, signal)
 
+export interface GetOnboardingGraphQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetOnboardingGraphProps = Omit<
+  MutateProps<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get onboarding graph for composite slo
+ */
+export const GetOnboardingGraph = (props: GetOnboardingGraphProps) => (
+  <Mutate<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >
+    verb="POST"
+    path={`/slo/v2/composite-slo/onboarding-graph`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetOnboardingGraphProps = Omit<
+  UseMutateProps<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get onboarding graph for composite slo
+ */
+export const useGetOnboardingGraph = (props: UseGetOnboardingGraphProps) =>
+  useMutate<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >('POST', `/slo/v2/composite-slo/onboarding-graph`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * Get onboarding graph for composite slo
+ */
+export const getOnboardingGraphPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >('POST', getConfig('cv/api'), `/slo/v2/composite-slo/onboarding-graph`, props, signal)
+
 export interface DeleteSLOV2DataQueryParams {
   accountId: string
   orgIdentifier: string

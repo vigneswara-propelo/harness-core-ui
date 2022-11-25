@@ -13,7 +13,11 @@ import { PeriodTypes, PeriodLengthTypes } from '@cv/pages/slos/components/CVCrea
 import type { ServiceLevelObjectiveDetailsDTO, SLODashboardApiFilter, SLOTargetFilterDTO } from 'services/cv'
 import type { SLOObjective, SLOV2Form } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { SLOType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
-import type { GetDistributionUpdatedProps, UpdateWeightPercentageForCurrentSLOProps } from './AddSLOs.types'
+import type {
+  GetDistributionUpdatedProps,
+  ResetOnDeleteProps,
+  UpdateWeightPercentageForCurrentSLOProps
+} from './AddSLOs.types'
 
 const updateWeightPercentageForCurrentSLO = ({
   weight,
@@ -180,11 +184,12 @@ export const resetSLOWeightage = (
   selectedSlos: SLOObjective[],
   accountId: string,
   orgIdentifier: string,
-  projectIdentifier: string
+  projectIdentifier: string,
+  max = 100
 ): SLOObjective[] => {
   const selectedSlosLength = selectedSlos.length
-  const weight = Number(100 / selectedSlosLength).toFixed(1)
-  const lastWeight = Number(100 - Number(weight) * (selectedSlosLength - 1)).toFixed(1)
+  const weight = Number(max / selectedSlosLength).toFixed(1)
+  const lastWeight = Number(max - Number(weight) * (selectedSlosLength - 1)).toFixed(1)
   const updatedSLOObjective = selectedSlos.map((item, index) => {
     return {
       ...item,
@@ -196,4 +201,30 @@ export const resetSLOWeightage = (
     }
   })
   return updatedSLOObjective
+}
+
+export const resetOnDelete = ({
+  serviceLevelObjectivesDetails,
+  serviceLevelObjectiveRef,
+  accountId,
+  orgIdentifier,
+  projectIdentifier
+}: ResetOnDeleteProps): SLOObjective[] => {
+  const filterServiceLevelObjective = serviceLevelObjectivesDetails?.filter(
+    item => item.serviceLevelObjectiveRef !== serviceLevelObjectiveRef
+  )
+  const nonManuallyUpdatdWeightsSlo = filterServiceLevelObjective?.filter(item => !item.isManuallyUpdated) || []
+  const manuallyUpdatdWeightsSlo = filterServiceLevelObjective?.filter(item => item.isManuallyUpdated) || []
+  const sumofMauallyUpdatedSLO = manuallyUpdatdWeightsSlo?.reduce((total, num) => {
+    return num?.weightagePercentage + total
+  }, 0)
+  const remainingWeight = 100 - (sumofMauallyUpdatedSLO || 0)
+  const updatedWeightDistributionForNonManuallyUpdated = resetSLOWeightage(
+    nonManuallyUpdatdWeightsSlo,
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    remainingWeight
+  )
+  return [...manuallyUpdatdWeightsSlo, ...updatedWeightDistributionForNonManuallyUpdated]
 }

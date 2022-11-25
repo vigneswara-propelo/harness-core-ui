@@ -31,7 +31,13 @@ import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SLOObjective, SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { ResponsePageSLOHealthListView, ServiceLevelObjectiveDetailsDTO, SLOHealthListView } from 'services/cv'
-import { createRequestBodyForSLOHealthListViewV2, onWeightChange, RenderName, resetSLOWeightage } from './AddSLOs.utils'
+import {
+  createRequestBodyForSLOHealthListViewV2,
+  onWeightChange,
+  RenderName,
+  resetOnDelete,
+  resetSLOWeightage
+} from './AddSLOs.utils'
 import { SLOList } from './components/SLOList'
 import {
   RenderMonitoredService,
@@ -167,10 +173,14 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       buttonIntent: Intent.DANGER,
       onCloseDialog: (isConfirmed: boolean) => {
         if (isConfirmed) {
-          const filterServiceLevelObjective = formikProps?.values?.serviceLevelObjectivesDetails?.filter(
-            item => item.serviceLevelObjectiveRef !== serviceLevelObjectiveRef
-          )
-          formikProps.setFieldValue(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, filterServiceLevelObjective)
+          const updatedSLODetailsList = resetOnDelete({
+            accountId,
+            projectIdentifier,
+            orgIdentifier,
+            serviceLevelObjectiveRef,
+            serviceLevelObjectivesDetails
+          })
+          formikProps.setFieldValue(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, updatedSLODetailsList)
         }
       }
     })
@@ -271,7 +281,7 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       }, 0)
       .toFixed(2)
   )
-  const showErrorState = totalOfSloWeight > 100
+  const showErrorState = totalOfSloWeight > 100 || totalOfSloWeight < 100
 
   return (
     <Page.Body
