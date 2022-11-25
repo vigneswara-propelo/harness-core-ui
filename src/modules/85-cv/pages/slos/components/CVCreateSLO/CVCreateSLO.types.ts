@@ -11,7 +11,7 @@ import type {
   ServiceLevelIndicatorSpec,
   ThresholdSLIMetricSpec,
   RatioSLIMetricSpec,
-  SLOTarget,
+  SLOTargetDTO,
   CalenderSLOTargetSpec,
   WeeklyCalendarSpec,
   NotificationRuleRefDTO
@@ -121,7 +121,7 @@ export interface SLOForm extends SLIForm {
   [SLOFormFields.USER_JOURNEY_REF]: string
   [SLOFormFields.MONITORED_SERVICE_REF]: string
   [SLOFormFields.HEALTH_SOURCE_REF]: string
-  [SLOFormFields.PERIOD_TYPE]?: SLOTarget['type']
+  [SLOFormFields.PERIOD_TYPE]?: SLOTargetDTO['type']
   [SLOFormFields.PERIOD_LENGTH]?: string
   [SLOFormFields.PERIOD_LENGTH_TYPE]?: CalenderSLOTargetSpec['type']
   [SLOFormFields.DAY_OF_MONTH]?: string

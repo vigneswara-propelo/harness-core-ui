@@ -124,6 +124,14 @@ export type ApprovalStageConfig = StageInfoConfig & {
   execution: ExecutionElementConfig
 }
 
+export interface ApprovalUserGroupDTO {
+  accountIdentifier?: string
+  identifier: string
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
 export interface ApproverInput {
   name?: string
   value: string
@@ -192,6 +200,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'UPDATE'
     | 'RESTORE'
     | 'DELETE'
+    | 'FORCE_DELETE'
     | 'UPSERT'
     | 'INVITE'
     | 'RESEND_INVITE'
@@ -209,7 +218,20 @@ export type AuditFilterProperties = FilterProperties & {
   )[]
   endTime?: number
   environments?: Environment[]
-  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS')[]
+  modules?: (
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+  )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
   scopes?: ResourceScopeDTO[]
@@ -382,11 +404,17 @@ export interface CIProperties {
 
 export interface CcmConnectorFilter {
   awsAccountId?: string
+  awsAccountIds?: string[]
   azureSubscriptionId?: string
   azureTenantId?: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   gcpProjectId?: string
   k8sConnectorRef?: string[]
+}
+
+export interface ChildExecutionDetailDTO {
+  executionGraph?: ExecutionGraph
+  pipelineExecutionSummary?: PipelineExecutionSummary
 }
 
 export interface Clause {
@@ -522,6 +550,21 @@ export interface ConnectorWrapperResponse {
 
 export interface ContainerResource {
   limits: Limits
+}
+
+export type ContainerStepInfo = StepSpecType & {
+  connectorRef?: string
+  delegateSelectors?: string[]
+  entrypoint?: string[]
+  image?: string
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  metadata?: string
+  privileged?: boolean
+  resources?: ContainerResource
+  retry?: number
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  uses?: string
 }
 
 export interface CriteriaSpec {
@@ -1026,6 +1069,8 @@ export interface Error {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1382,6 +1427,8 @@ export interface ErrorMetadata {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   errorMessage?: string
 }
 
@@ -1415,6 +1462,9 @@ export interface ExecutionErrorInfo {
 }
 
 export interface ExecutionGraph {
+  executionMetadata?: {
+    [key: string]: string
+  }
   nodeAdjacencyListMap?: {
     [key: string]: ExecutionNodeAdjacencyList
   }
@@ -1933,6 +1983,8 @@ export interface Failure {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1951,6 +2003,7 @@ export interface FailureInfoDTO {
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
+    | 'APPROVAL_REJECTION'
   )[]
   message?: string
   responseMessages?: ResponseMessage[]
@@ -2003,6 +2056,7 @@ export interface FilterProperties {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
   tags?: {
     [key: string]: string
   }
@@ -2040,6 +2094,10 @@ export type GcsBuildStoreTypeSpec = BuildStoreTypeSpec & {
   bucketName?: string
   connectorRef?: string
   folderPath?: string
+}
+
+export type GitErrorMetadataDTO = ErrorMetadataDTO & {
+  branch?: string
 }
 
 export interface GithubEventSpec {
@@ -2138,6 +2196,7 @@ export interface GraphLayoutNode {
   failureInfo?: ExecutionErrorInfo
   failureInfoDTO?: FailureInfoDTO
   hidden?: boolean
+  isRollbackStageNode?: boolean
   module?: string
   moduleInfo?: {
     [key: string]: {
@@ -2216,6 +2275,7 @@ export type HarnessApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
   approverInputs?: ApproverInputInfoDTO[]
   approvers: ApproversDTO
   includePipelineExecutionHistory?: boolean
+  validatedApprovalUserGroups?: ApprovalUserGroupDTO[]
 }
 
 export type HarnessApprovalStepInfo = StepSpecType & {
@@ -2432,6 +2492,7 @@ export interface IssuedBy {
 
 export type JenkinsRegistrySpec = ArtifactTypeSpec & {
   artifactPath?: string
+  build?: string
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
   jobName?: string
@@ -2746,6 +2807,7 @@ export interface OnFailureConfig {
     | 'DelegateProvisioning'
     | 'PolicyEvaluationFailure'
     | 'InputTimeoutError'
+    | 'ApprovalRejection'
   )[]
 }
 
@@ -2939,6 +3001,22 @@ export interface ParameterField {
   value?: { [key: string]: any }
 }
 
+export interface ParameterFieldMapStringJsonNode {
+  defaultValue?: {
+    [key: string]: JsonNode
+  }
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: {
+    [key: string]: JsonNode
+  }
+}
+
 export interface ParameterFieldString {
   defaultValue?: string
   executionInput?: boolean
@@ -2993,6 +3071,7 @@ export interface PipelineEvent {
 }
 
 export interface PipelineExecutionDetail {
+  childGraph?: ChildExecutionDetailDTO
   executionGraph?: ExecutionGraph
   pipelineExecutionSummary?: PipelineExecutionSummary
 }
@@ -3053,6 +3132,7 @@ export interface PipelineExecutionSummary {
   executionTriggerInfo?: ExecutionTriggerInfo
   failedStagesCount?: number
   failureInfo?: FailureInfoDTO
+  firstRollbackStageGraphId?: string
   gitDetails?: EntityGitDetails
   governanceMetadata?: GovernanceMetadata
   layoutNodeMap?: {
@@ -3065,6 +3145,7 @@ export interface PipelineExecutionSummary {
   }
   modules?: string[]
   name?: string
+  parentStageInfo?: PipelineStageInfo
   pipelineIdentifier?: string
   planExecutionId?: string
   runSequence?: number
@@ -3190,6 +3271,10 @@ export type PipelineStageConfig = StageInfoConfig & {
   pipeline: string
   pipelineInputs?: JsonNode
   project: string
+}
+
+export interface PipelineStageInfo {
+  [key: string]: any
 }
 
 export interface PipelineWrapperResponse {
@@ -3460,6 +3545,7 @@ export interface ResourceDTO {
     | 'DELEGATE_TOKEN'
     | 'GOVERNANCE_POLICY'
     | 'GOVERNANCE_POLICY_SET'
+    | 'GOVERNANCE_RULE_ENFORCEMENT'
     | 'VARIABLE'
     | 'CHAOS_HUB'
     | 'MONITORED_SERVICE'
@@ -4128,6 +4214,8 @@ export interface ResponseMessage {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4140,6 +4228,7 @@ export interface ResponseMessage {
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
+    | 'APPROVAL_REJECTION'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -4857,7 +4946,6 @@ export interface StepData {
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
-    | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
@@ -5087,7 +5175,7 @@ export interface TriggerCatalogItem {
     | 'AmazonS3'
     | 'Nexus'
     | 'HelmChart'
-    | 'Scheduled'
+    | 'Cron'
   )[]
 }
 
@@ -5343,6 +5431,8 @@ export interface PipelineExecutionInterrupt {
 }
 
 export type FilterDTORequestBody = FilterDTO
+
+export type FilterPropertiesRequestBody = FilterProperties
 
 export type MergeInputSetRequestRequestBody = MergeInputSetRequest
 
@@ -5914,6 +6004,7 @@ export interface GetFilterListQueryParams {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
 }
 
 export type GetFilterListProps = Omit<
@@ -6079,6 +6170,7 @@ export interface DeleteFilterQueryParams {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
 }
 
 export type DeleteFilterProps = Omit<
@@ -6145,6 +6237,7 @@ export interface GetFilterQueryParams {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
 }
 
 export interface GetFilterPathParams {
@@ -10155,7 +10248,7 @@ export type GetListOfExecutionsProps = Omit<
     ResponsePagePipelineExecutionSummary,
     Failure | Error,
     GetListOfExecutionsQueryParams,
-    FilterProperties,
+    FilterPropertiesRequestBody,
     void
   >,
   'path' | 'verb'
@@ -10165,7 +10258,13 @@ export type GetListOfExecutionsProps = Omit<
  * Gets Executions list
  */
 export const GetListOfExecutions = (props: GetListOfExecutionsProps) => (
-  <Mutate<ResponsePagePipelineExecutionSummary, Failure | Error, GetListOfExecutionsQueryParams, FilterProperties, void>
+  <Mutate<
+    ResponsePagePipelineExecutionSummary,
+    Failure | Error,
+    GetListOfExecutionsQueryParams,
+    FilterPropertiesRequestBody,
+    void
+  >
     verb="POST"
     path={`/pipelines/execution/summary`}
     base={getConfig('pipeline/api')}
@@ -10178,7 +10277,7 @@ export type UseGetListOfExecutionsProps = Omit<
     ResponsePagePipelineExecutionSummary,
     Failure | Error,
     GetListOfExecutionsQueryParams,
-    FilterProperties,
+    FilterPropertiesRequestBody,
     void
   >,
   'path' | 'verb'
@@ -10192,7 +10291,7 @@ export const useGetListOfExecutions = (props: UseGetListOfExecutionsProps) =>
     ResponsePagePipelineExecutionSummary,
     Failure | Error,
     GetListOfExecutionsQueryParams,
-    FilterProperties,
+    FilterPropertiesRequestBody,
     void
   >('POST', `/pipelines/execution/summary`, { base: getConfig('pipeline/api'), ...props })
 
@@ -10204,7 +10303,7 @@ export const getListOfExecutionsPromise = (
     ResponsePagePipelineExecutionSummary,
     Failure | Error,
     GetListOfExecutionsQueryParams,
-    FilterProperties,
+    FilterPropertiesRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -10213,41 +10312,42 @@ export const getListOfExecutionsPromise = (
     ResponsePagePipelineExecutionSummary,
     Failure | Error,
     GetListOfExecutionsQueryParams,
-    FilterProperties,
+    FilterPropertiesRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/pipelines/execution/summary`, props, signal)
 
-export interface GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams {
+export interface GetListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperatorsQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
   pipelineIdentifier?: string[]
   page?: number
   size?: number
+  filterIdentifier?: string
 }
 
-export type GetListOfExecutionsForMultiplePipelinesIdentifiersProps = Omit<
+export type GetListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperatorsProps = Omit<
   MutateProps<
     ResponsePagePipelineExecutionSummary,
     Failure | Error,
-    GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams,
-    void,
+    GetListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperatorsQueryParams,
+    FilterPropertiesRequestBody,
     void
   >,
   'path' | 'verb'
 >
 
 /**
- * Gets Executions list for multiple pipeline filters
+ * Gets Executions list for multiple pipeline filters with OR operator
  */
-export const GetListOfExecutionsForMultiplePipelinesIdentifiers = (
-  props: GetListOfExecutionsForMultiplePipelinesIdentifiersProps
+export const GetListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperators = (
+  props: GetListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperatorsProps
 ) => (
   <Mutate<
     ResponsePagePipelineExecutionSummary,
     Failure | Error,
-    GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams,
-    void,
+    GetListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperatorsQueryParams,
+    FilterPropertiesRequestBody,
     void
   >
     verb="POST"
@@ -10257,40 +10357,40 @@ export const GetListOfExecutionsForMultiplePipelinesIdentifiers = (
   />
 )
 
-export type UseGetListOfExecutionsForMultiplePipelinesIdentifiersProps = Omit<
+export type UseGetListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperatorsProps = Omit<
   UseMutateProps<
     ResponsePagePipelineExecutionSummary,
     Failure | Error,
-    GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams,
-    void,
+    GetListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperatorsQueryParams,
+    FilterPropertiesRequestBody,
     void
   >,
   'path' | 'verb'
 >
 
 /**
- * Gets Executions list for multiple pipeline filters
+ * Gets Executions list for multiple pipeline filters with OR operator
  */
-export const useGetListOfExecutionsForMultiplePipelinesIdentifiers = (
-  props: UseGetListOfExecutionsForMultiplePipelinesIdentifiersProps
+export const useGetListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperators = (
+  props: UseGetListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperatorsProps
 ) =>
   useMutate<
     ResponsePagePipelineExecutionSummary,
     Failure | Error,
-    GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams,
-    void,
+    GetListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperatorsQueryParams,
+    FilterPropertiesRequestBody,
     void
   >('POST', `/pipelines/execution/v2/summary`, { base: getConfig('pipeline/api'), ...props })
 
 /**
- * Gets Executions list for multiple pipeline filters
+ * Gets Executions list for multiple pipeline filters with OR operator
  */
-export const getListOfExecutionsForMultiplePipelinesIdentifiersPromise = (
+export const getListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperatorsPromise = (
   props: MutateUsingFetchProps<
     ResponsePagePipelineExecutionSummary,
     Failure | Error,
-    GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams,
-    void,
+    GetListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperatorsQueryParams,
+    FilterPropertiesRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -10298,8 +10398,8 @@ export const getListOfExecutionsForMultiplePipelinesIdentifiersPromise = (
   mutateUsingFetch<
     ResponsePagePipelineExecutionSummary,
     Failure | Error,
-    GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams,
-    void,
+    GetListOfExecutionsForMultiplePipelinesIdentifiersWithOrOperatorsQueryParams,
+    FilterPropertiesRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/pipelines/execution/v2/summary`, props, signal)
 
@@ -10309,6 +10409,7 @@ export interface GetExecutionDetailV2QueryParams {
   projectIdentifier: string
   stageNodeId?: string
   stageNodeExecutionId?: string
+  childStageNodeId?: string
   renderFullBottomGraph?: boolean
 }
 
@@ -12036,6 +12137,7 @@ export interface GetPipelineQueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   getTemplatesResolvedPipeline?: boolean
+  loadFromFallbackBranch?: boolean
 }
 
 export interface GetPipelinePathParams {
@@ -14175,6 +14277,40 @@ export interface GetSchemaYamlQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -14214,10 +14350,14 @@ export interface GetSchemaYamlQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -14393,6 +14533,40 @@ export interface GetStepYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -14432,10 +14606,14 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
