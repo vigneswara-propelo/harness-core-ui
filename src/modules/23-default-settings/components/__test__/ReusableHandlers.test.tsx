@@ -37,7 +37,7 @@ describe('Reusable Components', () => {
     name: 'abcd',
     valueType: 'String',
     allowedValues: ['abcd', 'bcd'],
-    allowedScopes: ['ACCOUNT']
+    allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT']
   }
   const props: SettingRendererProps = {
     setFieldValue: jest.fn(),
