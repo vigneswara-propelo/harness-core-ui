@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { Container, ExpandingSearchInputHandle, PageSpinner, Text } from '@harness/uicore'
 
@@ -154,11 +154,9 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const showSpinner = initLoading || (loading && !isPolling)
 
   const onChangeRepo = (_repoName: string): void => {
+    setSelectedBranch(undefined)
     updateQueryParams({ repoName: (_repoName || []) as string })
   }
-  useEffect(() => {
-    if (!repoName) setSelectedBranch(undefined)
-  }, [repoName])
 
   const { globalFreezes } = useGlobalFreezeBanner()
   return (

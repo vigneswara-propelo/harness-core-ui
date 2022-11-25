@@ -169,7 +169,7 @@ const renderExecutionPage = (module = 'cd'): RenderResult =>
       defaultAppStoreValues={defaultAppStoreValues}
       queryParams={{ listview: true }}
     >
-      <ExecutionList onRunPipeline={jest.fn()} />
+      <ExecutionList onRunPipeline={jest.fn()} showBranchFilter={true} />
     </TestWrapper>
   )
 
@@ -366,5 +366,18 @@ describe('Execution List', () => {
       'href',
       routes.toPipelineStudio({ ...getModuleParams(), pipelineIdentifier: 'MultipleStage' } as any)
     )
+  })
+
+  test('should call API with branch when branch is selected', async () => {
+    renderExecutionPage()
+    const select = await waitFor(() => screen.getByTestId('branch-filter'))
+    userEvent.click(select)
+    const BranchSelect = findPopoverContainer() as HTMLElement
+    const branch1 = within(BranchSelect).getByText('main')
+    userEvent.click(branch1)
+
+    const request = commonRequest()
+    request.queryParams.branch = 'main'
+    expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
   })
 })
