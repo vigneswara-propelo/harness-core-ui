@@ -177,7 +177,7 @@ exports[`STUDIO MODE Valid input set enables Run button if it was disabled due t
               data-tooltip-id="stageExecutionDisabled"
             >
               <div
-                class="bp3-popover-wrapper MultiSelectDropDown--main MultiSelectDropDown--disabled"
+                class="bp3-popover-wrapper MultiSelectDropDown--main MultiSelectDropDown--disabled stagesDropdown"
               >
                 <div
                   class="bp3-popover-target"
@@ -792,7 +792,7 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
               data-tooltip-id="stageExecutionDisabled"
             >
               <div
-                class="bp3-popover-wrapper MultiSelectDropDown--main MultiSelectDropDown--disabled"
+                class="bp3-popover-wrapper MultiSelectDropDown--main MultiSelectDropDown--disabled stagesDropdown"
               >
                 <div
                   class="bp3-popover-target"
@@ -1328,7 +1328,7 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
               data-tooltip-id="stageExecutionDisabled"
             >
               <div
-                class="bp3-popover-wrapper MultiSelectDropDown--main MultiSelectDropDown--disabled"
+                class="bp3-popover-wrapper MultiSelectDropDown--main MultiSelectDropDown--disabled stagesDropdown"
               >
                 <div
                   class="bp3-popover-target"
