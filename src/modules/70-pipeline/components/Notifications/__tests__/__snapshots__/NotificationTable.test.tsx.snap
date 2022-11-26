@@ -211,15 +211,6 @@ exports[`Notification Table test render 1`] = `
                     All Events
                   </span>
                 </span>
-                <span
-                  class="bp3-tag bp3-round"
-                >
-                  <span
-                    class="bp3-text-overflow-ellipsis bp3-fill"
-                  >
-                    Pipeline Failed
-                  </span>
-                </span>
               </div>
             </div>
             <div

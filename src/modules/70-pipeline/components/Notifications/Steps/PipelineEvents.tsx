@@ -9,8 +9,9 @@ import { Button, ButtonVariation, Formik, FormInput, Layout, MultiSelectOption, 
 import React from 'react'
 import { Color, Intent } from '@harness/design-system'
 import * as Yup from 'yup'
+import { Divider } from '@blueprintjs/core'
 import { Form } from 'formik'
-import { startCase, isEmpty } from 'lodash-es'
+import { startCase, isEmpty, isUndefined } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { NotificationRules, PipelineEvent } from 'services/pipeline-ng'
 import css from '../useNotificationModal.module.scss'
@@ -79,6 +80,39 @@ interface PipelineEventsFormData {
 
 type PipelineEventsProps = StepProps<NotificationRules> & { stagesOptions?: MultiSelectOption[] }
 
+// returns - [all events checked , all events not checked]
+const allEventsStatus = (events: PipelineEventsFormData): [boolean, boolean] => {
+  let allFalse = true
+  let allTrue = true
+
+  pipelineEventItems.map(item => {
+    if (events?.types?.[item.value] === true) {
+      allFalse = false
+    }
+    if (isUndefined(events?.types?.[item.value]) || events?.types?.[item.value] === false) {
+      allTrue = false
+    }
+  })
+  return [allTrue, allFalse]
+}
+
+//sets all events as either checked or unchecked
+const setAllEventStatus = (status: boolean): PipelineEventsFormData => {
+  const events = { types: {} } as PipelineEventsFormData
+  pipelineEventItems.map(item => {
+    events.types[item.value] = status
+  })
+  return events
+}
+
+const isIndeterminate = (events: PipelineEventsFormData, currentEvent: PipelineEventType): boolean => {
+  const allChecked = allEventsStatus(events)[0]
+  const allUnChecked = allEventsStatus(events)[1]
+  return currentEvent === PipelineEventType.ALL_EVENTS && !allChecked && !allUnChecked
+}
+
+const isAll_Event = (currentEvent: PipelineEventType): boolean => currentEvent === PipelineEventType.ALL_EVENTS
+
 function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEventsProps): React.ReactElement {
   const { getString } = useStrings()
   const initialValues: PipelineEventsFormData = { types: {} }
@@ -119,6 +153,14 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                 })
               }
               if (Object.keys(val.types).length === 1 && val.types[PipelineEventType.ALL_EVENTS] === false) {
+                return this.createError({
+                  path: 'types',
+                  message: getString('rbac.notifications.eventRequired')
+                })
+              }
+
+              //validation for when all the events are unchecked
+              if (allEventsStatus(val)[1]) {
                 return this.createError({
                   path: 'types',
                   message: getString('rbac.notifications.eventRequired')
@@ -186,33 +228,51 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                 {pipelineEventItems.map(event => {
                   return (
                     <Layout.Vertical key={event.label}>
-                      <Layout.Horizontal margin={{ bottom: 'small' }} flex>
+                      <Layout.Horizontal margin={{ bottom: isAll_Event(event.value) ? 0 : 'small' }} flex>
                         <FormInput.CheckBox
                           className={formikProps.values.types[event.value] ? 'checked' : 'unchecked'}
                           name={`types.${event.value}`}
                           checked={formikProps.values.types[event.label]}
                           label={event.label}
+                          indeterminate={isIndeterminate(formikProps.values, event.value)}
                           padding={{ left: 'xxxlarge' }}
                           onChange={e => {
                             if (e.currentTarget.checked) {
-                              if (event.value === PipelineEventType.ALL_EVENTS) {
-                                const finalUpdatedValue = {
-                                  types: { [PipelineEventType.ALL_EVENTS]: true }
-                                } as PipelineEventsFormData
-
-                                Object.keys(formikProps.values.types).forEach(item => {
-                                  finalUpdatedValue.types[item] = item === PipelineEventType.ALL_EVENTS
-                                })
-                                formikProps.setValues(finalUpdatedValue)
-                              } else {
+                              if (isAll_Event(event.value)) {
                                 formikProps.setValues({
+                                  ...formikProps.values,
+                                  ...setAllEventStatus(true)
+                                })
+                              } else {
+                                const finalUpdatedValue = {
                                   types: {
                                     ...formikProps.values.types,
-                                    [PipelineEventType.ALL_EVENTS]: false,
+                                    [PipelineEventType.ALL_EVENTS]: true,
+                                    [event?.value]: true
+                                  }
+                                } as PipelineEventsFormData
+
+                                formikProps.setValues({
+                                  ...formikProps.values,
+                                  types: {
+                                    ...formikProps.values.types,
+                                    [PipelineEventType.ALL_EVENTS]: allEventsStatus(finalUpdatedValue)[0],
                                     [event?.value]: true
                                   }
                                 })
                               }
+                            } else if (isAll_Event(event.value)) {
+                              formikProps.setValues(setAllEventStatus(false))
+                            } else {
+                              delete formikProps.values?.[event?.value]
+                              formikProps.setValues({
+                                ...formikProps.values,
+                                types: {
+                                  ...formikProps.values.types,
+                                  [PipelineEventType.ALL_EVENTS]: false,
+                                  [event?.value]: false
+                                }
+                              })
                             }
                           }}
                         />
@@ -232,6 +292,7 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                           />
                         )}
                       </Layout.Horizontal>
+                      {isAll_Event(event.value) && <Divider style={{ marginBottom: 'var(--spacing)' }} />}
                     </Layout.Vertical>
                   )
                 })}
