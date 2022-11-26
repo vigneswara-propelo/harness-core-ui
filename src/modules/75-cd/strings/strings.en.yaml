@@ -262,6 +262,8 @@ pipelineSteps:
 cdLaunchText: Launch CD First Generation
 serviceDashboard:
   activeServiceInstancesLabel: '{{$.common.subscriptions.usage.srvcInst}}'
+  runningServiceInstancesLabel: 'Running Service Instances (Current)'
+  recentDeployments: 'Recent Deployments'
   servicesInLast: 'Services added in {{period}}'
   serviceInstancesInLast: 'Active service instance trend in {{period}}'
   serviceInstances: 'Service Instances'

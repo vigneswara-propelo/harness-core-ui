@@ -128,7 +128,7 @@ export const ActiveServiceInstancesV2: React.FC = () => {
         <Tabs id="ServiceDetailTabs" selectedTabId={defaultTab} onChange={handleTabChange}>
           <Tab
             id={ServiceDetailTabs.ACTIVE}
-            title={getString('cd.serviceDashboard.activeServiceInstancesLabel')}
+            title={getString('cd.serviceDashboard.runningServiceInstancesLabel')}
             panel={
               <>
                 <ActiveServiceInstancesHeader />
@@ -145,7 +145,7 @@ export const ActiveServiceInstancesV2: React.FC = () => {
           />
           <Tab
             id={ServiceDetailTabs.DEPLOYMENT}
-            title={getString('pipeline.dashboards.activeDeployments')}
+            title={getString('cd.serviceDashboard.recentDeployments')}
             panel={
               <>
                 {moreDetails()}

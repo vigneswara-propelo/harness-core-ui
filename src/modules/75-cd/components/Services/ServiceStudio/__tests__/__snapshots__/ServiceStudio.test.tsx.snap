@@ -237,7 +237,7 @@ exports[`ServiceStudio should render ServiceStudio 1`] = `
                             role="tab"
                             tabindex="0"
                           >
-                            cd.serviceDashboard.activeServiceInstancesLabel
+                            cd.serviceDashboard.runningServiceInstancesLabel
                           </div>
                           <div
                             aria-controls="bp3-tab-panel_ServiceDetailTabs_Deployments"
@@ -250,7 +250,7 @@ exports[`ServiceStudio should render ServiceStudio 1`] = `
                             role="tab"
                             tabindex="0"
                           >
-                            pipeline.dashboards.activeDeployments
+                            cd.serviceDashboard.recentDeployments
                           </div>
                         </div>
                         <div

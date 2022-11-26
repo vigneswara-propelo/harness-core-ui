@@ -4973,6 +4973,8 @@ export interface StringsMap {
   'cd.serviceDashboard.nonProd': string
   'cd.serviceDashboard.pod': string
   'cd.serviceDashboard.prod': string
+  'cd.serviceDashboard.recentDeployments': string
+  'cd.serviceDashboard.runningServiceInstancesLabel': string
   'cd.serviceDashboard.seeMore': string
   'cd.serviceDashboard.serviceInstances': string
   'cd.serviceDashboard.serviceInstancesInLast': string

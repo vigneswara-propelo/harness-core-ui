@@ -1932,7 +1932,7 @@ exports[`ActiveInstance Tab states change tab to deployments 1`] = `
             role="tab"
             tabindex="0"
           >
-            cd.serviceDashboard.activeServiceInstancesLabel
+            cd.serviceDashboard.runningServiceInstancesLabel
           </div>
           <div
             aria-controls="bp3-tab-panel_ServiceDetailTabs_Deployments"
@@ -1945,7 +1945,7 @@ exports[`ActiveInstance Tab states change tab to deployments 1`] = `
             role="tab"
             tabindex="0"
           >
-            pipeline.dashboards.activeDeployments
+            cd.serviceDashboard.recentDeployments
           </div>
         </div>
         <div
@@ -2047,7 +2047,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
             role="tab"
             tabindex="0"
           >
-            cd.serviceDashboard.activeServiceInstancesLabel
+            cd.serviceDashboard.runningServiceInstancesLabel
           </div>
           <div
             aria-controls="bp3-tab-panel_ServiceDetailTabs_Deployments"
@@ -2060,7 +2060,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
             role="tab"
             tabindex="0"
           >
-            pipeline.dashboards.activeDeployments
+            cd.serviceDashboard.recentDeployments
           </div>
         </div>
         <div
@@ -2767,7 +2767,7 @@ exports[`ActiveServiceInstancesContent should render error 1`] = `
             role="tab"
             tabindex="0"
           >
-            cd.serviceDashboard.activeServiceInstancesLabel
+            cd.serviceDashboard.runningServiceInstancesLabel
           </div>
           <div
             aria-controls="bp3-tab-panel_ServiceDetailTabs_Deployments"
@@ -2780,7 +2780,7 @@ exports[`ActiveServiceInstancesContent should render error 1`] = `
             role="tab"
             tabindex="0"
           >
-            pipeline.dashboards.activeDeployments
+            cd.serviceDashboard.recentDeployments
           </div>
         </div>
         <div
@@ -2946,7 +2946,7 @@ exports[`ActiveServiceInstancesContent should render loading 1`] = `
             role="tab"
             tabindex="0"
           >
-            cd.serviceDashboard.activeServiceInstancesLabel
+            cd.serviceDashboard.runningServiceInstancesLabel
           </div>
           <div
             aria-controls="bp3-tab-panel_ServiceDetailTabs_Deployments"
@@ -2959,7 +2959,7 @@ exports[`ActiveServiceInstancesContent should render loading 1`] = `
             role="tab"
             tabindex="0"
           >
-            pipeline.dashboards.activeDeployments
+            cd.serviceDashboard.recentDeployments
           </div>
         </div>
         <div
@@ -3155,7 +3155,7 @@ exports[`ActiveServiceInstancesContent should render no data 1`] = `
             role="tab"
             tabindex="0"
           >
-            cd.serviceDashboard.activeServiceInstancesLabel
+            cd.serviceDashboard.runningServiceInstancesLabel
           </div>
           <div
             aria-controls="bp3-tab-panel_ServiceDetailTabs_Deployments"
@@ -3168,7 +3168,7 @@ exports[`ActiveServiceInstancesContent should render no data 1`] = `
             role="tab"
             tabindex="0"
           >
-            pipeline.dashboards.activeDeployments
+            cd.serviceDashboard.recentDeployments
           </div>
         </div>
         <div
