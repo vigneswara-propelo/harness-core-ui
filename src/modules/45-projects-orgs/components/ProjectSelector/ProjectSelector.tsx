@@ -99,38 +99,36 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
       fill={true}
       popoverClassName={css.popover}
     >
-      {selectedProject ? (
-        <Button
-          minimal
-          withoutBoxShadow={true}
-          icon="double-chevron-right"
-          tooltipProps={{
-            isDark: true,
-            usePortal: true,
-            fill: true
-          }}
-          tooltip={
+      <Button
+        minimal
+        rightIcon="chevron-right"
+        data-testid="project-select-button"
+        className={cx(css.popoverTarget, css.selectButton)}
+        aria-label={getString('selectProject')}
+        tooltipProps={{
+          isDark: true,
+          usePortal: true,
+          fill: true
+        }}
+        tooltip={
+          selectedProject ? (
             <Text padding="small" color={Color.WHITE}>
               {getString('selectProject')}
             </Text>
-          }
-          data-testid="project-select-dropdown"
-          className={css.popoverTarget}
-          aria-label={getString('selectProject')}
-        />
-      ) : (
-        <Button
-          minimal
-          text={
+          ) : undefined
+        }
+        text={
+          selectedProject ? (
+            <Text color={Color.WHITE} font={{ size: 'normal' }} padding="xsmall" className={css.projectText}>
+              {selectedProject.name}
+            </Text>
+          ) : (
             <Text color={Color.GREY_400} font={{ size: 'normal' }} padding="xsmall">
               {getString('selectProject')}
             </Text>
-          }
-          rightIcon="chevron-right"
-          data-testid="project-select-button"
-          className={cx(css.popoverTarget, css.selectButton)}
-        />
-      )}
+          )
+        }
+      />
 
       <Container width={600} padding="xlarge" className={css.selectContainer}>
         <Layout.Horizontal flex padding={{ bottom: 'large' }}>
@@ -236,18 +234,11 @@ export const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelect, modu
 
   return (
     <>
-      <Layout.Vertical padding={{ left: 'large', right: 'large', top: 'large', bottom: 'small' }}>
+      <Layout.Vertical padding={{ left: 'medium', right: 'medium', top: 'large', bottom: 'small' }}>
         <Text margin={{ bottom: 'xsmall' }} font={{ size: 'small' }} color={Color.GREY_500}>
           {getString('projectLabel')}
         </Text>
-        <div className={cx(css.projectSelector, { [css.selectProjectDisplay]: !selectedProject })}>
-          {selectedProject && (
-            <Text color={Color.WHITE} padding="xsmall" className={css.projectText}>
-              {selectedProject.name}
-            </Text>
-          )}
-          <ProjectSelect onSelect={onSelect} />
-        </div>
+        <ProjectSelect onSelect={onSelect} />
       </Layout.Vertical>
 
       {selectedProject ? null : (

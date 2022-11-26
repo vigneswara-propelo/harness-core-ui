@@ -15,11 +15,9 @@ declare const styles: {
   readonly projectContainer: string
   readonly projectContainerWrapper: string
   readonly projectSearch: string
-  readonly projectSelector: string
   readonly projectText: string
   readonly selectButton: string
   readonly selectContainer: string
-  readonly selectProjectDisplay: string
   readonly selectedProject: string
 }
 export default styles
