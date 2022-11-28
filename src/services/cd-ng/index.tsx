@@ -404,6 +404,7 @@ export interface AccessControlCheckError {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'NO_ELIGIBLE_DELEGATES'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -831,6 +832,12 @@ export interface AppPermission {
     | 'CREATE_CUSTOM_DASHBOARDS'
     | 'MANAGE_RESTRICTED_ACCESS'
     | 'HIDE_NEXTGEN_BUTTON'
+}
+
+export interface Application {
+  agentIdentifier?: string
+  identifier?: string
+  name?: string
 }
 
 export interface ApplicationSettingsConfiguration {
@@ -1768,6 +1775,7 @@ export interface CDStageMetaDataDTO {
 
 export interface CDStageModuleInfo {
   freezeExecutionSummary?: FreezeExecutionSummary
+  gitOpsAppSummary?: GitOpsAppSummary
   gitopsExecutionSummary?: GitOpsExecutionSummary
   infraExecutionSummary?: InfraExecutionSummary
   nodeExecutionId?: string
@@ -2621,6 +2629,7 @@ export interface CustomScriptBaseSource {
 }
 
 export interface CustomScriptInfo {
+  delegateSelector?: TaskSelectorYaml[]
   inputs?: NGVariable[]
   runtimeInputYaml?: string
   script: string
@@ -3536,6 +3545,10 @@ export interface EntityDetail {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
 }
 
 export interface EntityDetailProtoDTO {
@@ -3562,6 +3575,10 @@ export interface EntityReference {
   orgIdentifier?: string
   projectIdentifier?: string
   repoIdentifier?: string
+}
+
+export type EntityReferredByInfraSetupUsageDetail = SetupUsageDetail & {
+  environmentIdentifier?: string
 }
 
 export type EntityReferredByPipelineSetupUsageDetail = SetupUsageDetail & {
@@ -4160,6 +4177,7 @@ export interface Error {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'NO_ELIGIBLE_DELEGATES'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4524,6 +4542,7 @@ export interface ErrorMetadata {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'NO_ELIGIBLE_DELEGATES'
   errorMessage?: string
 }
 
@@ -4939,6 +4958,7 @@ export interface Failure {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'NO_ELIGIBLE_DELEGATES'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -5031,6 +5051,10 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'STRATEGY_MAX_CONCURRENT'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
+    | 'TERRAGRUNT_PLAN'
+    | 'TERRAGRUNT_APPLY'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
   )[]
 }
 
@@ -5103,6 +5127,10 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'STRATEGY_MAX_CONCURRENT'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
+    | 'TERRAGRUNT_PLAN'
+    | 'TERRAGRUNT_APPLY'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
 }
 
 export interface FeatureRestrictionDetailsDTO {
@@ -5189,6 +5217,10 @@ export interface FeatureRestrictionDetailsDTO {
     | 'STRATEGY_MAX_CONCURRENT'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
+    | 'TERRAGRUNT_PLAN'
+    | 'TERRAGRUNT_APPLY'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
   restriction?: RestrictionDTO
   restrictionType?:
     | 'AVAILABILITY'
@@ -5283,6 +5315,10 @@ export interface FeatureRestrictionMetadataDTO {
     | 'STRATEGY_MAX_CONCURRENT'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
+    | 'TERRAGRUNT_PLAN'
+    | 'TERRAGRUNT_APPLY'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
   restrictionMetadata?: {
     [key: string]: RestrictionMetadataDTO
   }
@@ -5319,7 +5355,9 @@ export type FetchInstanceScriptStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
 
-export type FetchLinkedAppsStepInfo = StepSpecType & { [key: string]: any }
+export type FetchLinkedAppsStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
 
 export interface FfSubscriptionDTO {
   accountId?: string
@@ -5884,6 +5922,10 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   )[]
   moduleType?:
     | 'CD'
@@ -6058,6 +6100,10 @@ export interface GitEntityFilterProperties {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6269,6 +6315,10 @@ export interface GitFullSyncEntityInfoDTO {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6439,6 +6489,10 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -6466,6 +6520,14 @@ export type GitLabStore = StoreConfig & {
   gitFetchType: 'Branch' | 'Commit'
   paths?: string[]
   repoName?: string
+}
+
+export interface GitOpsAppSummary {
+  applications?: Application[]
+}
+
+export type GitOpsDeploymentRepoManifest = ManifestAttributes & {
+  store?: StoreConfigWrapper
 }
 
 export interface GitOpsExecutionSummary {
@@ -6721,6 +6783,10 @@ export interface GitSyncEntityDTO {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -6885,6 +6951,10 @@ export interface GitSyncEntityListDTO {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7066,6 +7136,10 @@ export interface GitSyncErrorDTO {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -8573,6 +8647,7 @@ export interface ManifestConfig {
     | 'Values'
     | 'ServerlessAwsLambda'
     | 'ReleaseRepo'
+    | 'DeploymentRepo'
     | 'EcsTaskDefinition'
     | 'EcsServiceDefinition'
     | 'EcsScalableTargetDefinition'
@@ -10146,6 +10221,10 @@ export interface ReferencedByDTO {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
 }
 
 export interface RefreshResponse {
@@ -11294,6 +11373,10 @@ export interface ResponseListEntityType {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -11956,6 +12039,7 @@ export interface ResponseMessage {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'NO_ELIGIBLE_DELEGATES'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -13971,6 +14055,7 @@ export interface SettingDTO {
     | 'GOVERNANCE'
     | 'CHAOS'
     | 'SCIM'
+    | 'GIT_EXPERIENCE'
   defaultValue?: string
   groupIdentifier: string
   identifier: string
@@ -14308,10 +14393,14 @@ export interface StepData {
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitopsFetchLinkedApps'
+    | 'GitOpsFetchLinkedApps'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
     | 'ElastigroupSetup'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerragruntDestroy'
+    | 'TerragruntRollback'
 }
 
 export interface StepElementConfig {
@@ -14507,6 +14596,11 @@ export interface TailFilePattern {
   tailPattern?: ParameterFieldString
 }
 
+export interface TaskSelectorYaml {
+  delegateSelectors?: string
+  origin?: string
+}
+
 export interface TechStack {
   category?: string
   technology?: string
@@ -14687,6 +14781,92 @@ export interface TerraformVarFileSpec {
 
 export interface TerraformVarFileWrapper {
   varFile: TerraformVarFile
+}
+
+export type TerragruntApplyStepInfo = StepSpecType & {
+  configuration: TerragruntStepConfiguration
+  delegateSelectors?: string[]
+  metadata?: string
+  provisionerIdentifier: string
+}
+
+export interface TerragruntBackendConfig {
+  spec?: TerragruntBackendConfigSpec
+  type?: string
+}
+
+export interface TerragruntBackendConfigSpec {
+  type?: string
+}
+
+export interface TerragruntConfigFilesWrapper {
+  moduleSource?: ModuleSource
+  store: StoreConfigWrapper
+}
+
+export type TerragruntDestroyStepInfo = StepSpecType & {
+  configuration: TerragruntStepConfiguration
+  delegateSelectors?: string[]
+  metadata?: string
+  provisionerIdentifier: string
+}
+
+export interface TerragruntExecutionData {
+  backendConfig?: TerragruntBackendConfig
+  configFiles: TerragruntConfigFilesWrapper
+  environmentVariables?: NGVariable[]
+  moduleConfig: TerragruntModuleConfig
+  targets?: string[]
+  varFiles?: TerragruntVarFileWrapper[]
+  workspace?: string
+}
+
+export interface TerragruntModuleConfig {
+  path?: string
+  terragruntRunType: 'RunAll' | 'RunModule'
+}
+
+export interface TerragruntPlanExecutionData {
+  backendConfig?: TerragruntBackendConfig
+  command: 'Apply' | 'Destroy'
+  configFiles: TerragruntConfigFilesWrapper
+  environmentVariables?: NGVariable[]
+  exportTerragruntPlanJson?: boolean
+  moduleConfig: TerragruntModuleConfig
+  secretManagerRef: string
+  targets?: string[]
+  varFiles?: TerragruntVarFileWrapper[]
+  workspace?: string
+}
+
+export type TerragruntPlanStepInfo = StepSpecType & {
+  configuration: TerragruntPlanExecutionData
+  delegateSelectors?: string[]
+  provisionerIdentifier: string
+}
+
+export type TerragruntRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  provisionerIdentifier: string
+}
+
+export interface TerragruntStepConfiguration {
+  spec?: TerragruntExecutionData
+  type: 'Inline' | 'InheritFromPlan' | 'InheritFromApply'
+}
+
+export interface TerragruntVarFile {
+  identifier: string
+  spec: TerragruntVarFileSpec
+  type: string
+}
+
+export interface TerragruntVarFileSpec {
+  type?: string
+}
+
+export interface TerragruntVarFileWrapper {
+  varFile: TerragruntVarFile
 }
 
 export interface Throwable {
@@ -15440,11 +15620,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -16136,6 +16316,10 @@ export interface ListActivitiesQueryParams {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -16292,6 +16476,10 @@ export interface ListActivitiesQueryParams {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -16552,6 +16740,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -16708,6 +16900,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -20264,9 +20460,9 @@ export interface GetBuildDetailsForDockerWithYamlQueryParams {
   imagePath?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
-  pipelineIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
   fqnPath: string
   branch?: string
   repoIdentifier?: string
@@ -30817,6 +31013,10 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'STRATEGY_MAX_CONCURRENT'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
+    | 'TERRAGRUNT_PLAN'
+    | 'TERRAGRUNT_APPLY'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
 }
 
 export type FetchFeatureRestrictionMetadataProps = Omit<
@@ -30959,6 +31159,10 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'STRATEGY_MAX_CONCURRENT'
       | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
       | 'MAX_CHAOS_INFRASTRUCTURES'
+      | 'TERRAGRUNT_PLAN'
+      | 'TERRAGRUNT_APPLY'
+      | 'TERRAGRUNT_DESTROY'
+      | 'TERRAGRUNT_ROLLBACK'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -31132,6 +31336,10 @@ export interface ListReferredByEntitiesQueryParams {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -31349,6 +31557,10 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   searchTerm?: string
 }
 
@@ -34505,6 +34717,10 @@ export interface GetReferencedByQueryParams {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   searchTerm?: string
 }
 
@@ -34961,7 +35177,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -34975,7 +35191,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -34990,7 +35206,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35004,7 +35220,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -35016,7 +35232,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -35025,7 +35241,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -35531,7 +35747,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35545,7 +35761,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -35560,7 +35776,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35574,7 +35790,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -35586,7 +35802,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -35595,7 +35811,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -36854,6 +37070,10 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -37078,6 +37298,10 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'Action'
       | 'ElastigroupSetup'
       | 'Bitrise'
+      | 'TerraformPlan'
+      | 'TerraformApply'
+      | 'TerraformDestroy'
+      | 'TerraformRollback'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -42987,6 +43211,10 @@ export interface GetStepYamlSchemaQueryParams {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   yamlGroup?: string
 }
 
@@ -43271,6 +43499,10 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -48497,6 +48729,7 @@ export interface GetSettingsListQueryParams {
     | 'GOVERNANCE'
     | 'CHAOS'
     | 'SCIM'
+    | 'GIT_EXPERIENCE'
   group?: string
 }
 
@@ -56032,6 +56265,10 @@ export interface GetYamlSchemaQueryParams {
     | 'Action'
     | 'ElastigroupSetup'
     | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
   subtype?:
     | 'K8sCluster'
     | 'Git'
