@@ -11,7 +11,7 @@ import { Expander } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import cx from 'classnames'
-import { defaultTo, isEqual, isNull } from 'lodash-es'
+import { defaultTo, isEqual } from 'lodash-es'
 import * as Yup from 'yup'
 
 import {
@@ -163,7 +163,7 @@ export default function EnvironmentDetails(): React.ReactElement {
 
     if (
       name == newName &&
-      (isNull(description) || description === newDescription) &&
+      description === newDescription &&
       isEqual(tags, newTags) &&
       type === newType &&
       isEqual(variables, newVariables) &&
