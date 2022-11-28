@@ -35,5 +35,4 @@ pipelineStep:
   expectedResilienceScoreLabel: Expected Resilience Score
   expectedResilienceScorePlaceholder: Enter expected resilience score
   description: Enter a description for the chaos step
-viewDetailedExecution: View Detailed Execution
 selectChaosExperiment: Select Chaos Experiment

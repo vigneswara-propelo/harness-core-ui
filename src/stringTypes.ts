@@ -6829,7 +6829,6 @@ export interface StringsMap {
   'chaos.trial.modal.description': string
   'chaos.trial.modal.title': string
   'chaos.trial.modal.welcome': string
-  'chaos.viewDetailedExecution': string
   'ci.advancedLabel': string
   'ci.annotations': string
   'ci.artifactoryConnectorLabel': string
