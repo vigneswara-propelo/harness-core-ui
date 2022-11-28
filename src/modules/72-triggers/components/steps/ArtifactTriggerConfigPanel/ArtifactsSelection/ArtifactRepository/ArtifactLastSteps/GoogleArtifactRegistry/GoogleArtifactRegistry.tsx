@@ -98,7 +98,7 @@ function FormComponent(
         </div>
         <div className={css.jenkinsFieldContainer}>
           <FormInput.MultiTextInput
-            name="pkg"
+            name="package"
             label={getString('pipeline.testsReports.callgraphField.package')}
             placeholder={getString('pipeline.manifestType.packagePlaceholder')}
             multiTextInputProps={{
@@ -135,7 +135,7 @@ export function GoogleArtifactRegistry(
     project: Yup.string().required(getString('common.validation.projectIsRequired')),
     region: Yup.string().required(getString('validation.regionRequired')),
     repositoryName: Yup.string().required(getString('common.validation.repositoryName')),
-    pkg: Yup.string().required(getString('common.validation.package'))
+    package: Yup.string().required(getString('common.validation.package'))
   }
 
   const primarySchema = Yup.object().shape(schemaObject)

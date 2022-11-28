@@ -2117,7 +2117,7 @@ export const getTriggerArtifactInitialSpec = (
     }
     case 'GoogleArtifactRegistry': {
       return {
-        pkg: '',
+        package: '',
         connectorRef,
         eventConditions,
         project: '',
