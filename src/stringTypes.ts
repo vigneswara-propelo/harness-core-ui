@@ -4160,6 +4160,7 @@ export interface StringsMap {
   'pipeline.stepDescription.Wait': string
   'pipeline.stepDescription.createPR': string
   'pipeline.stepDescription.fetchInstanceScript': string
+  'pipeline.stepDescription.fetchLinkedApps': string
   'pipeline.stepDescription.mergePR': string
   'pipeline.stepDescription.updateReleaseRepo': string
   'pipeline.stepDetails': string

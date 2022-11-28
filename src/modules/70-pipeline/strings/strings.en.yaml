@@ -1081,6 +1081,7 @@ stepDescription:
   createPR: Create PR
   mergePR: Merge PR
   updateReleaseRepo: Update Release Repo
+  fetchLinkedApps: Fetch Linked Apps
   fetchInstanceScript: Fetch Instances
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
   CustomApproval: Custom Approval
