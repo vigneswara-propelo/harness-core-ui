@@ -135,6 +135,7 @@ function SaveTemplatePopover(
     )
   }
 
+  /* istanbul ignore next */
   const nextCallback = async (
     latestTemplate: TemplateSummaryResponse,
     updatedGitDetails?: SaveToGitFormInterface,
@@ -143,11 +144,12 @@ function SaveTemplatePopover(
     const isInlineTemplate = isEmpty(updatedGitDetails) && updatedStoreMetadata?.storeType !== StoreType.REMOTE
     if (isInlineTemplate) {
       clear()
-      showSuccess(getString('common.template.saveTemplate.publishTemplate'))
       if (templateIdentifier === DefaultNewTemplateId) {
+        showSuccess(getString('common.template.saveTemplate.publishTemplate'))
         await customDeleteTemplateCache()
         navigateToLocation(latestTemplate, updatedGitDetails)
       } else {
+        showSuccess(getString('common.template.updateTemplate.templateUpdated'))
         await fetchTemplate({ forceFetch: true, forceUpdate: true })
       }
     } else {
