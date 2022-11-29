@@ -37,6 +37,13 @@ DefaultSettingsFactory.registerCategory('CORE', {
   label: 'common.module.core',
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
 })
+
+DefaultSettingsFactory.registerCategory('GIT_EXPERIENCE', {
+  icon: 'cog',
+  label: 'authSettings.cdCommunityPlan.communityPlanStrings.item5',
+  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
+})
+
 DefaultSettingsFactory.registerSettingHandler(SettingType.DISABLE_HARNESS_BUILT_IN_SECRET_MANAGER, {
   label: 'common.accountSetting.connector.disableBISMHeading',
   settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
@@ -48,6 +55,13 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.MANDATE_CUSTOM_WEBHOOK
   label: 'defaultSettings.mandateAuthorizationForCustomWebhookTriggers',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
   settingCategory: 'CORE'
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_GIT_COMMANDS, {
+  label: 'defaultSettings.enableGitCommands',
+  settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'GIT_EXPERIENCE'
 })
 
 AuditTrailFactory.registerResourceHandler('SETTING', {
