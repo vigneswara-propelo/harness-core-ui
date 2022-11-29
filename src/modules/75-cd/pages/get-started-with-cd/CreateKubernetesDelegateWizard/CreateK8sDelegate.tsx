@@ -125,7 +125,8 @@ export const CreateK8sDelegate = ({
         }
       })
       if (get(createKubernetesYamlResponse, 'responseMessages', []).length) {
-        showError(getString('somethingWentWrong'))
+        const errorMsg = createKubernetesYamlResponse.responseMessages?.[0]?.message || getString('somethingWentWrong')
+        showError(errorMsg)
       } else {
         trackEvent(CDOnboardingActions.SetupOnboardingDelegate, {
           category: Category.DELEGATE,
