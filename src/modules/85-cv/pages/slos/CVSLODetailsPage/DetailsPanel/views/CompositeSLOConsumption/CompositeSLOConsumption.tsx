@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Text, Card, TableV2, Container, Icon, PageError, NoDataCard } from '@harness/uicore'
@@ -39,16 +39,21 @@ const CompositeSLOConsumption = ({ startTime, endTime }: CompositeSLOConsumption
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
-  const { error, loading, data, refetch } = useGetSloConsumptionBreakdownView({
-    identifier,
-    queryParams: {
-      accountId,
-      orgIdentifier,
-      projectIdentifier,
-      startTime,
-      endTime
+  const { error, loading, data, refetch } = useGetSloConsumptionBreakdownView({ identifier, lazy: true })
+
+  useEffect(() => {
+    if (startTime && endTime) {
+      refetch({
+        queryParams: {
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          startTime,
+          endTime
+        }
+      })
     }
-  })
+  }, [startTime, endTime])
 
   let content = <></>
   const tabelData = defaultTo(data?.data?.content, [])

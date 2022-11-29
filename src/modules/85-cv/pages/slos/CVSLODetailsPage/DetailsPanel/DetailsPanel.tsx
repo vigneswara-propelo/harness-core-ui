@@ -42,6 +42,9 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
 
   const { startTime = currentPeriodStartTime, endTime = currentPeriodEndTime } = sliderTimeRange ?? chartTimeRange ?? {}
 
+  const consumptionStartTime = startTime === endTime ? currentPeriodStartTime : startTime
+  const consumptionEndTime = startTime === endTime ? currentPeriodEndTime : endTime
+
   const { data } = useGetSLODetails({
     identifier,
     queryParams: {
@@ -79,7 +82,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
           <Container padding={{ bottom: 'xlarge' }} />
           {isCompositeSLO && (
             <>
-              <CompositeSLOConsumption startTime={startTime} endTime={endTime} />
+              <CompositeSLOConsumption startTime={consumptionStartTime} endTime={consumptionEndTime} />
               <Container padding={{ bottom: 'xlarge' }} />
             </>
           )}

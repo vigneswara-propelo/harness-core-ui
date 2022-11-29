@@ -383,7 +383,7 @@ describe('CVCreateSloV2', () => {
     )
 
     const sloName = container.querySelector('input[name ="name"]')
-    await waitFor(() => expect(sloName).toBeInTheDocument())
+    waitFor(() => expect(sloName).toBeInTheDocument())
     userEvent.clear(sloName!)
     userEvent.type(sloName!, 'updated composite slo')
 
@@ -393,11 +393,11 @@ describe('CVCreateSloV2', () => {
 
     fireEvent.change(container.querySelector('[name="SLOTargetPercentage"]')!, { target: { value: 99 } })
 
-    await act(() => {
+    act(() => {
       userEvent.click(screen.getByText('cancel'))
     })
 
-    await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
+    waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
 
     act(() => {
       userEvent.click(document.querySelector('.bp3-dialog button')!)

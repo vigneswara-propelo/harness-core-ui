@@ -122,7 +122,11 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
           max={SLOWeight.MAX}
           min={SLOWeight.MIN}
           autoFocus={row.index === cursorIndex}
-          intent={row.original.weightagePercentage > 99 ? Intent.DANGER : Intent.PRIMARY}
+          intent={
+            row.original.weightagePercentage > SLOWeight.MAX || row.original.weightagePercentage < SLOWeight.MIN
+              ? Intent.DANGER
+              : Intent.PRIMARY
+          }
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             onWeightChange({
               index: row.index,
