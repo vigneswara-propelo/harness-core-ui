@@ -65,7 +65,9 @@ export enum ServiceDeploymentType {
   AzureFunctions = 'AzureFunctions',
   AzureWebApp = 'AzureWebApp',
   ECS = 'ECS',
-  Elastigroup = 'Elastigroup'
+  Elastigroup = 'Elastigroup',
+  SshWinRmAws = 'SshWinRmAws',
+  SshWinRmAzure = 'SshWinRmAzure'
 }
 
 export enum RepositoryFormatTypes {
@@ -378,7 +380,9 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
   [ServiceDeploymentType.WinRm]: 'WinRM',
-  [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details' //todospt
+  [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details', //todospt
+  [ServiceDeploymentType.SshWinRmAws]: 'Amazon Web Services Details',
+  [ServiceDeploymentType.SshWinRmAzure]: 'Azure Infrastructure details'
 }
 
 export const getSelectedDeploymentType = (
