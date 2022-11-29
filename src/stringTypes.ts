@@ -2077,6 +2077,8 @@ export interface StringsMap {
   'connectors.ceAws.crossAccountRoleStep1.default.feat1': string
   'connectors.ceAws.crossAccountRoleStep1.default.footer': string
   'connectors.ceAws.crossAccountRoleStep1.description': string
+  'connectors.ceAws.crossAccountRoleStep1.existingCurWarning1': string
+  'connectors.ceAws.crossAccountRoleStep1.existingCurWarning2': string
   'connectors.ceAws.crossAccountRoleStep1.heading': string
   'connectors.ceAws.crossAccountRoleStep1.hoverOver': string
   'connectors.ceAws.crossAccountRoleStep1.iamRole': string

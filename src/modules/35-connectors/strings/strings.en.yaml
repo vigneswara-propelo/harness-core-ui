@@ -655,7 +655,7 @@ ceAws:
       providedBy: 'Provided by:'
       permissionsInvolved: 'Permissions involved:'
       costVisibility:
-        footer2: from the Cost and Usage Report created in the previoue step.
+        footer2: from the Cost and Usage Report created in the previous step.
         footer3: This cannot be deselected.
       autoStopping:
         prefix: Optimization by
@@ -680,6 +680,8 @@ ceAws:
       feat2: Run on fully orchesterated spot instances
       prefix: AWS OPTIMIZATION BY
       footer: to IAM role
+    existingCurWarning1: for this Linked account is already provided by an existing connector. You must select atleast one additional feature than
+    existingCurWarning2: to proceed adding this linked account.
   crossAccountRoleStep2:
     heading: '{{ $.connectors.roleARN }}'
     subHeading: '{{ $.connectors.ceAws.crossAccountRoleStep1.subHeading }}'
