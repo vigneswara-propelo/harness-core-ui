@@ -3048,6 +3048,7 @@ export interface StringsMap {
   'pipeline.OverviewEmptyStates.runPipelineHeaderMsg': string
   'pipeline.OverviewEmptyStates.runPipelineInfo': string
   'pipeline.aboutYourStage.stageNamePlaceholder': string
+  'pipeline.addDeploymenteRepo': string
   'pipeline.addReleaseRepo': string
   'pipeline.addStage.description': string
   'pipeline.addStage.title': string
@@ -3383,6 +3384,8 @@ export interface StringsMap {
   'pipeline.delegate.DelegateSelectorOptional': string
   'pipeline.dependencyRequired': string
   'pipeline.deploymentFrequency': string
+  'pipeline.deploymentRepo': string
+  'pipeline.deploymentRepoStore': string
   'pipeline.depth': string
   'pipeline.discard': string
   'pipeline.draft': string

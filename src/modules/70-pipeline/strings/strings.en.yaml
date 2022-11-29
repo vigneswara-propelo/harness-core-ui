@@ -619,8 +619,11 @@ enterBuildRegex: Enter Build Regex
 buildRegex: Build Regex
 selectJenkinsBuildsPlaceholder: Select Jenkins Build
 releaseRepo: Release Repo
+deploymentRepo: Deployment Repo
 addReleaseRepo: + Add Release Repo Manifest
+addDeploymenteRepo: + Add Deployment Repo Manifest
 releaseRepoStore: Release Repo Store
+deploymentRepoStore: Deployment Repo Store
 runtimeInputsSubmittedMsg: Inputs have been submitted successfully
 packageType: Package Type
 packageTypePlaceholder: Select Package Type
