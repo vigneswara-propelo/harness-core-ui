@@ -38,7 +38,7 @@ import {
   checkIfQueryParamsisNotEmpty,
   getArtifactFormData,
   getConnectorIdValue,
-  shouldFetchTags
+  shouldFetchFieldOptions
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   ArtifactType,
@@ -252,7 +252,7 @@ export function Nexus3Artifact({
           lastQueryData.groupId !== formikValues.spec.groupId ||
           lastQueryData.extension !== formikValues.spec.extension ||
           lastQueryData.classifier !== formikValues.spec.classifier ||
-          shouldFetchTags(prevStepData, [
+          shouldFetchFieldOptions(prevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.artifactId || '',
@@ -266,7 +266,7 @@ export function Nexus3Artifact({
           lastQueryData.artifactPath !== formikValues.spec.artifactPath ||
           lastQueryData.repositoryUrl !== formikValues.spec.repositoryUrl ||
           lastQueryData.repositoryPort !== formikValues.spec.repositoryPort ||
-          shouldFetchTags(prevStepData, [
+          shouldFetchFieldOptions(prevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.artifactPath || '',
@@ -277,7 +277,7 @@ export function Nexus3Artifact({
         ? lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
           lastQueryData.repository !== formikValues.repository ||
           lastQueryData.group !== formikValues.spec.group ||
-          shouldFetchTags(prevStepData, [
+          shouldFetchFieldOptions(prevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.group || ''
@@ -285,7 +285,7 @@ export function Nexus3Artifact({
         : lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
           lastQueryData.repository !== formikValues.repository ||
           lastQueryData.packageName !== formikValues.spec.packageName ||
-          shouldFetchTags(prevStepData, [
+          shouldFetchFieldOptions(prevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.packageName || ''

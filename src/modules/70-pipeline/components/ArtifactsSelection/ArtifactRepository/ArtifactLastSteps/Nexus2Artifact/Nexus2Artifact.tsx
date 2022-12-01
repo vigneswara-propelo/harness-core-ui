@@ -38,7 +38,7 @@ import {
   checkIfQueryParamsisNotEmpty,
   getConnectorIdValue,
   getArtifactFormData,
-  shouldFetchTags
+  shouldFetchFieldOptions
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -210,7 +210,7 @@ export function Nexus2Artifact({
           lastQueryData.groupId !== formikValues.spec.groupId ||
           lastQueryData.extension !== formikValues.spec.extension ||
           lastQueryData.classifier !== formikValues.spec.classifier ||
-          shouldFetchTags(prevStepData, [
+          shouldFetchFieldOptions(prevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.artifactId || '',
@@ -221,7 +221,7 @@ export function Nexus2Artifact({
         : lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
           lastQueryData.repository !== formikValues.repository ||
           lastQueryData.packageName !== formikValues.spec.packageName ||
-          shouldFetchTags(prevStepData, [
+          shouldFetchFieldOptions(prevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.packageName || ''

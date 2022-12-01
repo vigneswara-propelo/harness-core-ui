@@ -451,7 +451,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               name={`${path}.artifacts.${artifactPath}.spec.region`}
               selectItems={regions}
               useValue
-              disabled={(!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.region`)) || loading}
+              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.region`)}
               multiTypeInputProps={{
                 onChange: selected => {
                   if (fixedRegionValue !== (selected as any).value) {

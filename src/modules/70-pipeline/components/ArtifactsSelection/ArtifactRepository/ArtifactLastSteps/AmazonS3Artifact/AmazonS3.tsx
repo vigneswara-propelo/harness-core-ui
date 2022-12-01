@@ -53,7 +53,7 @@ import {
   checkIfQueryParamsisNotEmpty,
   defaultArtifactInitialValues,
   getConnectorIdValue,
-  shouldFetchTags
+  shouldFetchFieldOptions
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -150,7 +150,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
 
   const canFetchBuckets = useCallback(
     (region: string): boolean => {
-      return !!(lastQueryData.region !== region && shouldFetchTags(prevStepData, []))
+      return !!(lastQueryData.region !== region && shouldFetchFieldOptions(prevStepData, []))
     },
     [lastQueryData, prevStepData]
   )
@@ -218,8 +218,8 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const canFetchFilePaths = useCallback(
     (region: string, bucketName: string): boolean => {
       return (
-        !!(lastQueryData.region !== region && shouldFetchTags(prevStepData, [])) ||
-        !!(lastQueryData.bucketName !== bucketName && shouldFetchTags(prevStepData, [bucketName]))
+        !!(lastQueryData.region !== region && shouldFetchFieldOptions(prevStepData, [])) ||
+        !!(lastQueryData.bucketName !== bucketName && shouldFetchFieldOptions(prevStepData, [bucketName]))
       )
     },
     [lastQueryData, prevStepData]

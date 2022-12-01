@@ -53,7 +53,8 @@ import {
   showAddManifestBtn,
   getBuildPayload,
   isGitTypeManifestStore,
-  ManifestToPathMap
+  ManifestToPathMap,
+  isECSTypeManifest
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -84,6 +85,7 @@ import HarnessFileStore from '../ManifestWizardSteps/HarnessFileStore/HarnessFil
 import KustomizeWithHarnessStore from '../ManifestWizardSteps/KustomizeWithHarnessStore/KustomizeWithHarnessStore'
 import { CommonManifestDetails } from '../ManifestWizardSteps/CommonManifestDetails/CommonManifestDetails'
 import HelmWithHarnessStore from '../ManifestWizardSteps/HelmWithHarnessStore/HelmWithHarnessStore'
+import { ECSWithS3 } from '../ManifestWizardSteps/ECSWithS3/ECSWithS3'
 import css from '../ManifestSelection.module.scss'
 
 const DIALOG_PROPS: IDialogProps = {
@@ -265,6 +267,9 @@ function ManifestListView({
         break
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.S3:
         manifestDetailStep = <HelmWithS3 {...lastStepProps()} />
+        break
+      case isECSTypeManifest(selectedManifest as ManifestTypes) && manifestStore === ManifestStoreMap.S3:
+        manifestDetailStep = <ECSWithS3 {...lastStepProps()} />
         break
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Gcs:
         manifestDetailStep = <HelmWithGcs {...lastStepProps()} />

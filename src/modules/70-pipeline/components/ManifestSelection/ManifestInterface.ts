@@ -247,3 +247,10 @@ export interface CustomManifestManifestDataType {
   paramsPaths?: Array<{ path: string }> | string
   skipResourceVersioning?: boolean
 }
+
+export interface ECSWithS3DataType {
+  identifier: string
+  region: SelectOption | string
+  bucketName: SelectOption | string
+  paths: any
+}

@@ -6,9 +6,9 @@
  */
 
 import type { Schema } from 'yup'
-import type { IconName } from '@harness/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
-import type { ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StringKeys } from 'framework/strings'
 import { NameSchema } from '@common/utils/Validation'
@@ -161,10 +161,10 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   Kustomize: gitStoreTypesWithHarnessStoreType,
   KustomizePatches: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
   ServerlessAwsLambda: gitStoreTypes,
-  EcsTaskDefinition: gitStoreTypesWithHarnessStoreType,
-  EcsServiceDefinition: gitStoreTypesWithHarnessStoreType,
-  EcsScalingPolicyDefinition: gitStoreTypesWithHarnessStoreType,
-  EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType
+  EcsTaskDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
+  EcsServiceDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
+  EcsScalingPolicyDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
+  EcsScalableTargetDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3]
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -301,6 +301,13 @@ export const isGitTypeManifestStore = (manifestStore: ManifestStores): boolean =
   [ManifestStoreMap.Git, ManifestStoreMap.Github, ManifestStoreMap.GitLab, ManifestStoreMap.Bitbucket].includes(
     manifestStore
   )
+export const isECSTypeManifest = (selectedManifest: ManifestTypes): boolean =>
+  [
+    ManifestDataType.EcsTaskDefinition,
+    ManifestDataType.EcsServiceDefinition,
+    ManifestDataType.EcsScalingPolicyDefinition,
+    ManifestDataType.EcsScalableTargetDefinition
+  ].includes(selectedManifest)
 export function getManifestLocation(manifestType: ManifestTypes, manifestStore: ManifestStores): string {
   switch (true) {
     case manifestStore === ManifestStoreMap.Harness:
@@ -347,4 +354,18 @@ export const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
 
 export const getManifestsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
   return `${selectedDeploymentType}DeploymentTypeManifests`
+}
+
+const getConnectorRef = (prevStepData: ConnectorConfigDTO): string => {
+  return getMultiTypeFromValue(prevStepData.connectorRef) !== MultiTypeInputType.FIXED
+    ? prevStepData.connectorRef
+    : prevStepData.connectorRef?.value
+}
+
+const getConnectorId = (prevStepData?: ConnectorConfigDTO): string => {
+  return prevStepData?.identifier ? prevStepData?.identifier : ''
+}
+
+export const getConnectorRefOrConnectorId = (prevStepData?: ConnectorConfigDTO): string => {
+  return prevStepData?.connectorRef ? getConnectorRef(prevStepData) : getConnectorId(prevStepData)
 }

@@ -46,7 +46,7 @@ import {
   getConnectorIdValue,
   getFinalArtifactFormObj,
   resetTag,
-  shouldFetchTags,
+  shouldFetchFieldOptions,
   helperTextData,
   getConnectorRefQueryData
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -301,7 +301,7 @@ function Artifactory({
     (artifactPath: string, repository: string): boolean => {
       return !!(
         (lastQueryData.artifactPath !== artifactPath || lastQueryData.repository !== repository) &&
-        shouldFetchTags(prevStepData, [artifactPath, repository])
+        shouldFetchFieldOptions(prevStepData, [artifactPath, repository])
       )
     },
     [lastQueryData, prevStepData]

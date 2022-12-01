@@ -3554,7 +3554,6 @@ export interface EntityDetail {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -3640,16 +3639,9 @@ export interface EnvIdCountPair {
   envId?: string
 }
 
-export interface EnvSwaggerObjectWrapper {
-  envFilterEntityType?: 'infrastructures' | 'gitOpsClusters' | 'environments'
-  serviceOverrideConfig?: NGServiceOverrideConfig
-}
-
 export interface Environment {
-  envGroupIdentifier?: string
-  envGroupName?: string
-  identifier?: string
-  name?: string
+  identifier: string
+  type: 'PreProduction' | 'Production'
 }
 
 export interface EnvironmentDeploymentInfo {
@@ -5931,7 +5923,6 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6109,7 +6100,6 @@ export interface GitEntityFilterProperties {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6324,7 +6314,6 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6498,7 +6487,6 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6792,7 +6780,6 @@ export interface GitSyncEntityDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6960,7 +6947,6 @@ export interface GitSyncEntityListDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -7145,7 +7131,6 @@ export interface GitSyncErrorDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -10249,7 +10234,6 @@ export interface ReferencedByDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -10809,13 +10793,6 @@ export interface ResponseEnvBuildIdAndInstanceCountInfoList {
 export interface ResponseEnvCount {
   correlationId?: string
   data?: EnvCount
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseEnvSwaggerObjectWrapper {
-  correlationId?: string
-  data?: EnvSwaggerObjectWrapper
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -11411,7 +11388,6 @@ export interface ResponseListEntityType {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -12129,6 +12105,13 @@ export interface ResponseNGEnvironmentConfig {
 export interface ResponseNGServiceConfig {
   correlationId?: string
   data?: NGServiceConfig
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseNGServiceOverrideConfig {
+  correlationId?: string
+  data?: NGServiceOverrideConfig
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -13206,6 +13189,7 @@ export type S3StoreConfig = StoreConfig & {
   connectorRef?: string
   folderPath?: string
   metadata?: string
+  paths?: string[]
   region?: string
 }
 
@@ -16419,7 +16403,6 @@ export interface ListActivitiesQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -16579,7 +16562,6 @@ export interface ListActivitiesQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -16843,7 +16825,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -17003,7 +16984,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -31525,7 +31505,6 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -31746,7 +31725,6 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -32863,50 +32841,6 @@ export const updateEnvironmentV2Promise = (
     void
   >('PUT', getConfig('ng/api'), `/environmentsV2`, props, signal)
 
-export type DummyNGServiceOverrideConfigProps = Omit<
-  GetProps<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>,
-  'path'
->
-
-/**
- * This is dummy api to expose objects to swagger
- */
-export const DummyNGServiceOverrideConfig = (props: DummyNGServiceOverrideConfigProps) => (
-  <Get<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>
-    path={`/environmentsV2/dummy-api-for-exposing-objects`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseDummyNGServiceOverrideConfigProps = Omit<
-  UseGetProps<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>,
-  'path'
->
-
-/**
- * This is dummy api to expose objects to swagger
- */
-export const useDummyNGServiceOverrideConfig = (props: UseDummyNGServiceOverrideConfigProps) =>
-  useGet<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>(
-    `/environmentsV2/dummy-api-for-exposing-objects`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * This is dummy api to expose objects to swagger
- */
-export const dummyNGServiceOverrideConfigPromise = (
-  props: GetUsingFetchProps<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>(
-    getConfig('ng/api'),
-    `/environmentsV2/dummy-api-for-exposing-objects`,
-    props,
-    signal
-  )
-
 export type DummyNGEnvironmentConfigApiProps = Omit<
   GetProps<ResponseNGEnvironmentConfig, Failure | Error, void, void>,
   'path'
@@ -32947,6 +32881,50 @@ export const dummyNGEnvironmentConfigApiPromise = (
   getUsingFetch<ResponseNGEnvironmentConfig, Failure | Error, void, void>(
     getConfig('ng/api'),
     `/environmentsV2/dummy-env-api`,
+    props,
+    signal
+  )
+
+export type DummyNGServiceOverrideConfigProps = Omit<
+  GetProps<ResponseNGServiceOverrideConfig, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * This is dummy api to expose NGServiceOverrideConfig
+ */
+export const DummyNGServiceOverrideConfig = (props: DummyNGServiceOverrideConfigProps) => (
+  <Get<ResponseNGServiceOverrideConfig, Failure | Error, void, void>
+    path={`/environmentsV2/dummy-serviceoverride-api`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDummyNGServiceOverrideConfigProps = Omit<
+  UseGetProps<ResponseNGServiceOverrideConfig, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * This is dummy api to expose NGServiceOverrideConfig
+ */
+export const useDummyNGServiceOverrideConfig = (props: UseDummyNGServiceOverrideConfigProps) =>
+  useGet<ResponseNGServiceOverrideConfig, Failure | Error, void, void>(`/environmentsV2/dummy-serviceoverride-api`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * This is dummy api to expose NGServiceOverrideConfig
+ */
+export const dummyNGServiceOverrideConfigPromise = (
+  props: GetUsingFetchProps<ResponseNGServiceOverrideConfig, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseNGServiceOverrideConfig, Failure | Error, void, void>(
+    getConfig('ng/api'),
+    `/environmentsV2/dummy-serviceoverride-api`,
     props,
     signal
   )
@@ -34906,7 +34884,6 @@ export interface GetReferencedByQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -37259,7 +37236,6 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -37487,7 +37463,6 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ShellScriptProvision'
       | 'Freeze'
       | 'GitOpsUpdateReleaseRepo'
-      | 'GitOpsFetchLinkedApps'
       | 'EcsRunTask'
       | 'Chaos'
       | 'ElastigroupDeploy'
@@ -43401,7 +43376,6 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -43689,7 +43663,6 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -56617,7 +56590,6 @@ export interface GetYamlSchemaQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'

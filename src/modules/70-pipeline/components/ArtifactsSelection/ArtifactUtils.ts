@@ -170,7 +170,7 @@ export const checkIfQueryParamsisNotEmpty = (queryParamList: Array<string | numb
     return querydata !== undefined
   })
 }
-export const shouldFetchTags = (
+export const shouldFetchFieldOptions = (
   prevStepData: ConnectorConfigDTO | undefined,
   queryParamList: Array<string | number>
 ): boolean => {
