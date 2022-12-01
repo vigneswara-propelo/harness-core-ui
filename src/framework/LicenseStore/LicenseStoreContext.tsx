@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
-import { isEmpty, isEqual } from 'lodash-es'
+import { isEmpty, isEqual, cloneDeep } from 'lodash-es'
 
 import { PageSpinner } from '@harness/uicore'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -28,7 +28,7 @@ import { Editions } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useFeaturesContext } from 'framework/featureStore/FeaturesContext'
-import { VersionMap, LICENSE_STATE_VALUES } from './licenseStoreUtil'
+import { VersionMap, LICENSE_STATE_VALUES, defaultLicensesByModule } from './licenseStoreUtil'
 
 // Only keep GA modules for now
 export interface LicenseStoreContextProps {
@@ -91,25 +91,9 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
 
   // If the user has been created from NG signup we will always enforce licensing
   // If the user is a CG user we will look at the NG_LICENSES_ENABLED feature flag to determine whether or not we should enforce licensing
-  const shouldLicensesBeDisabled = __DEV__ || (!createdFromNG && !NG_LICENSES_ENABLED)
+  const shouldLicensesBeDisabled = !createdFromNG && !NG_LICENSES_ENABLED
 
-  const defaultLicenses = {
-    CD: {
-      edition: Editions.FREE
-    },
-    CI: {
-      edition: Editions.FREE
-    },
-    CF: {
-      edition: Editions.FREE
-    },
-    CE: {
-      edition: Editions.FREE
-    },
-    CHAOS: {
-      edition: Editions.FREE
-    }
-  }
+  const defaultLicenses = cloneDeep(defaultLicensesByModule)
 
   const [state, setState] = useState<Omit<LicenseStoreContextProps, 'updateLicenseStore' | 'strings'>>({
     licenseInformation: shouldLicensesBeDisabled ? defaultLicenses : {},
