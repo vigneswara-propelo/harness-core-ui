@@ -5,6 +5,7 @@ metadata:
   description: PR env pipelines
   annotations:
     harness.io/project-url: https://app.harness.io/ng/#/account/vpCkHKsDSxK9_KYfjCTMKA/ci/orgs/default/projects/Wings_UI/deployments
+    harness.io/ci-pipelineIds: WingsUI_Docker_ImageDevelop,Merge_Develop_to_Master_CGUI
   
   tags:
     - cgui
