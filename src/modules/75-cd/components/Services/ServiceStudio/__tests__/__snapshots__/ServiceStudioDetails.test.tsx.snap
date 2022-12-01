@@ -970,6 +970,7 @@ exports[`ServiceStudioDetails renders loading spinner correctly 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main PageSpinner--spinner PageSpinner--fixed StyledProps--flex StyledProps--flex-align-center-center"
+    data-testid="page-spinner"
   >
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main PageSpinner--content"

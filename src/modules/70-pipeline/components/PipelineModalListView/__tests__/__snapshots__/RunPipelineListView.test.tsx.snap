@@ -4,6 +4,7 @@ exports[`PipelineModal List View render list view 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -51,6 +52,7 @@ exports[`PipelineModal List View render list view 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody main"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="bp3-input-group ui-search-box ExpandingSearchInput--main searchContainer  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"

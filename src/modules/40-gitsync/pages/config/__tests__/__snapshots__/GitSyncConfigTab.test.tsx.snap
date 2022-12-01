@@ -4,6 +4,7 @@ exports[`Git Sync - Config tab rendering full sync entities 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageSubHeader--container StyledProps--flex"
+    data-testid="page-subheader"
   >
     <div
       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
@@ -123,6 +124,7 @@ exports[`Git Sync - Config tab rendering full sync entities 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main StyledProps--padding-xlarge"

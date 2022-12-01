@@ -4,6 +4,7 @@ exports[`UserGroupDetails Test render data 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--xlarge header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -131,6 +132,7 @@ exports[`UserGroupDetails Test render data 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody body"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main membersContainer StyledProps--padding-bottom-large"
@@ -731,6 +733,7 @@ exports[`UserGroupDetails Test render data for community editiion 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--xlarge header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -858,6 +861,7 @@ exports[`UserGroupDetails Test render data for community editiion 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody body"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main membersContainer StyledProps--padding-bottom-large"

@@ -480,6 +480,7 @@ exports[`Test Policy Set Modal snapshot test and modal is navigable 1`] = `
                 <div
                   class="StyledProps--font StyledProps--main PageBody--pageBody renderer"
                   data-name="page-body"
+                  data-testid="page-body"
                 >
                   <div
                     class="Collapse--main policySetRows"

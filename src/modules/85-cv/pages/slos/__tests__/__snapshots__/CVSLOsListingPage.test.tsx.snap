@@ -5,6 +5,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
   Help Panel
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -113,6 +114,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
   </div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -156,6 +158,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--vertical StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--padding-bottom-xlarge"

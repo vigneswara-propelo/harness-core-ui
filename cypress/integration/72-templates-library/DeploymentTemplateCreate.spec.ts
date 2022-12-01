@@ -93,7 +93,7 @@ describe('Deployment Template creation and assertion', () => {
     cy.get('input[name="name"]').clear().type('var1')
     cy.get('button[data-testid="addVariableSave"]').click()
 
-    cy.get('span[data-icon="fixed-input"]').click()
+    cy.get('span[data-icon="fixed-input"]').eq(0).click()
     cy.contains('span', 'Fixed value').should('be.visible')
     cy.contains('span', 'Runtime input').should('be.visible')
     cy.contains('span', 'Runtime input').click()
