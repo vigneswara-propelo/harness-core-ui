@@ -34,5 +34,5 @@ metadata:
       icon: alert
 spec:
   type: service
-  lifecycle: experimental
+  lifecycle: prod
   owner: ui-team
