@@ -565,13 +565,6 @@ onboarding:
     getStarted: Get started with SDKs
   readme:
     java: |
-      # Quickstart
-
-      To follow along with our test code sample, make sure you've:
-
-      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag">Created a Feature Flag on the Harness Platform</a> called 'harnessappdemodarkmode'
-      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key">Created a server SDK key and made a copy of it</a>
-
       # Install
 
       To use this SDK, make sure you have:
@@ -614,10 +607,10 @@ onboarding:
 
       public class GettingStarted {
           // API Key - set this as an env variable
-          private static String apiKey = getEnvOrDefault("FF_API_KEY", "");
+          private static String apiKey = "{{apiKey}}";
 
           // Flag Identifier
-          private static String flagName = getEnvOrDefault("FF_FLAG_NAME", "harnessappdemodarkmode");
+          private static String flagName = "{{flagName}}";
 
           private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -653,33 +646,14 @@ onboarding:
                   CfClient.getInstance().close();
               }
           }
-
-          // Get the value from the environment or return the default
-          private static String getEnvOrDefault(String key, String defaultValue) {
-              String value = System.getenv(key);
-              if (value == null || value.isEmpty()) {
-                  return defaultValue;
-              }
-              return value;
-          }
       }
       ```
       # Test your application 
 
       ```
-      export FF_API_KEY=<your key here>
-      cd examples
-
       mvn clean package
+      //Ensure the below command is pointing to your class
       mvn exec:java -Dexec.mainClass="io.harness.ff.examples.GettingStarted"
-      ```
-
-      If you don't have the right version of java installed locally, or don't want to install the dependencies you can use docker to get started.
-
-      ```
-      docker run -v $(PWD)/examples:/app -v "$HOME/.m2":/root/.m2 -w /app maven:3.3-jdk-8 mvn clean package
-
-      docker run -e FF_API_KEY=$FF_API_KEY -v $(PWD)/examples:/app -v "$HOME/.m2":/root/.m2 -w /app maven:3.3-jdk-8 mvn exec:java -Dexec.mainClass="io.harness.ff.examples.GettingStarted"
       ```
 
     javascript: |
@@ -745,18 +719,11 @@ onboarding:
       Run your application by opening `index.html` in your browser. Open the browser dev tools and refresh the page.
 
     golang: |
-      # Supported GO versions
-
-      <a href="https://go.dev/doc/install">Golang 1.16</a> or newer (go version)
-
-      # Quickstart
-
-      To follow along with our test code sample, make sure you've:
-
-      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag">Created a Feature Flag on the Harness Platform</a> called 'harnessappdemodarkmode'
-      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key">Created a server SDK key and made a copy of it</a>
-
       # Install
+
+      To use this SDK, make sure you have:
+
+       <a href="https://go.dev/doc/install">Golang 1.16</a> or newer (go version)
 
       Install the golang SDK using go
       ```
@@ -764,8 +731,6 @@ onboarding:
       ```
 
       # Usage
-
-      The following is a complete code example that you can use to test the harnessappdemodarkmode Flag you created on the Harness Platform. 
 
       Create a file called `getting_started.go` and add the following code below:
 
@@ -782,8 +747,8 @@ onboarding:
       )
 
       var (
-        flagName string = getEnvOrDefault("FF_FLAG_NAME", "harnessappdemodarkmode")
-        sdkKey   string = getEnvOrDefault("FF_API_KEY", "changeme")
+        flagName string = "{{flagName}}"
+        sdkKey   string = "{{apiKey}}"
       )
 
       func main() {
@@ -815,27 +780,12 @@ onboarding:
 
       }
 
-      func getEnvOrDefault(key, defaultStr string) string {
-        value := os.Getenv(key)
-        if value == "" {
-          return defaultStr
-        }
-        return value
-      }
-
       ```
 
       # Test your application
 
       ```
-      export FF_API_KEY=<your key here>
       go run getting_started.go
-      ```
-
-      If you don't have the right version of golang installed locally, or don't want to install the dependencies you can use docker to quickly get started
-      ```
-      export FF_API_KEY=<your key here>
-      docker run -e FF_API_KEY=$FF_API_KEY -v $(pwd):/app -w /app golang:1.17 go run getting_started.go
       ```
 
     android: |
@@ -1357,15 +1307,11 @@ onboarding:
 
       Otherwise, the default metrics endpoint URL will be used.
     nodejs: |
-      # Quickstart
+      # Install
 
-      To follow along with our test code sample, make sure you've:
+      To use this SDK, make sure you have:
 
       - Installed Node.js v12 or a newer version
-      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag">Created a Feature Flag on the Harness Platform</a> called 'harnessappdemodarkmode'
-      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key">Created a server SDK key and made a copy of it</a>
-
-      # Install
 
       Install the SDK as a dependency in your application:
 
@@ -1383,7 +1329,6 @@ onboarding:
       # Usage
 
       Create a js file called 'example.js'. Copy and paste the following complete code example into that file. 
-      You can use this to test the harnessappdemodarkmode Flag you created on the Harness Platform. 
 
       ```
 
@@ -1393,7 +1338,7 @@ onboarding:
       const apiKey = '{{apiKey}}';
 
       // set flagName to your flag identifier from the UI
-      const flagName = 'harnessappdemodarkmode';
+      const flagName = '{{flagName}}';
 
       // Create Client
       const client = new Client(apiKey);
@@ -1521,17 +1466,13 @@ onboarding:
       ```
 
     php: |
-      # Quickstart
+      # Install
 
-      To follow along with our test code sample, make sure you've:
+      To use this SDK, make sure you have:
 
       - Installed <a href="https://www.php.net/">PHP 7.4</a> or a newer version
       - Installed <a href="https://getcomposer.org/">Composer</a>
-      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag">Created a Feature Flag on the Harness Platform</a> called 'harnessappdemodarkmode'
-      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key">Created a server SDK key and made a copy of it</a>
 
-
-      # Install
       The first step is to install the SDK as a dependency in your application using Composer.
 
       ```shell
@@ -1540,8 +1481,7 @@ onboarding:
 
       # Usage
 
-      Create a php file called 'example.php'. Copy and paste the following complete code example into that file. 
-      You can use this to test the harnessappdemodarkmode Flag you created on the Harness Platform. 
+      Create a php file called 'example.php'. Copy and paste the following complete code example into that file.
 
       ```php
       <?php
@@ -1552,7 +1492,7 @@ onboarding:
       use OpenAPI\Client\Model\Target;
 
       $SDK_KEY = '{{apiKey}}';
-      $FLAG_NAME = 'harnessappdemodarkmode';
+      $FLAG_NAME = '{{flagName}}';
 
       $client = new Client(
           $SDK_KEY,
@@ -1610,10 +1550,10 @@ onboarding:
         logger = Logger.new $stdout
 
         # API Key
-        apiKey = ENV['FF_API_KEY'] || 'changeme'
+        apiKey = '{{apiKey}}''
 
         # Flag Name
-        flagName = ENV['FF_FLAG_NAME'] || 'harnessappdemodarkmode'
+        flagName = '{{flagName}}'
 
         # Create a Feature Flag Client and wait for it to initialize
         client = CfClient.instance
@@ -1640,26 +1580,8 @@ onboarding:
         #Install the deps
         gem install ff-ruby-server-sdk typhoeus
 
-        # Set your API Key
-        export FF_API_KEY=<your key here>
-
         # Run the example
         ruby ./example/getting_started.rb
-      ```
-
-      # Running with docker
-
-      If you don't have the right version of ruby installed locally, or don't want to install the dependencies you can
-      use docker to quickly get started
-
-      ```bash
-        #Install the package
-        docker run -v $(pwd):/app -w /app -e FF_API_KEY=$FF_API_KEY ruby:2.7-buster gem install --install-dir 
-        ./gems ff-ruby-server-sdk typhoeus
-
-        #Run the script
-        docker run -v $(pwd):/app -w /app -e FF_API_KEY=$FF_API_KEY -e GEM_HOME=/app/gems ruby:2.7-buster ruby 
-        ./example/getting_started.rb
       ```
 
     xamarinIOS: |
@@ -1689,9 +1611,8 @@ onboarding:
           Identifier = "target_identifier",
           Name = "target_name"
       };
-
-      // Initialize authentication. Update API_KEY with your key.
-      CfClientProxy.Shared.InitializeWithApiKey(API_KEY, config, target);
+      // Initialize authentication. 
+      CfClientProxy.Shared.InitializeWithApiKey( "{{apiKey}}", config, target);
       ```
       Subscribing on receiving library events.
 
@@ -1750,8 +1671,8 @@ onboarding:
           .InvokeName(account)
           .InvokeIdentifier(account);
 
-      // Initialize authentication. Update API_KEY with your key. Listener object should implement IAuthCallback interface.
-      CfClient.Instance.Initialize(this.context, API_KEY, configuration, target, listener);
+      // Initialize authentication. Listener object should implement IAuthCallback interface.
+      CfClient.Instance.Initialize(this.context, "{{apiKey}}", configuration, target, listener);
       ```
       Subscribing on receiving library events.
 
@@ -1835,14 +1756,14 @@ onboarding:
 
       # Code Sample
 
-      The following is a complete code example that you can use to test the harnessappdemodarkmode Flag you created on the Harness Platform. When you run the code it will:
+      The following is a complete code example that you can use to test {{flagName}} you have just created on the Harness Platform. When you run the code it will:
 
       1. Connect to the FF service.
-      2. Report the value of the Flag every 10 seconds until the connection is closed. Every time the `harnessappdemodarkmode` Flag is toggled on 
+      2. Report the value of the Flag every 10 seconds until the connection is closed. Every time {{flagName}} is toggled on 
          or off on the Harness Platform, the updated value is reported.
       3. Close the SDK.
 
-      To use this sample, copy it into your project and enter your SDK key into the `FF_API_KEY` field.
+      To use this sample, copy it into your project.
 
       ```Dart
       // @dart=2.9
@@ -1850,12 +1771,11 @@ onboarding:
       import 'package:flutter/material.dart';
       import 'package:ff_flutter_client_sdk/CfClient.dart';
 
-      // The SDK API Key to use for authentication.  Configure it when installing the app by setting FF_API_KEY
-      // e.g..
-      const apiKey = String.fromEnvironment('FF_API_KEY', defaultValue: '');
+      // The SDK API Key to use for authentication.  
+      const apiKey = '{{apiKey}}'
 
       // The flag name
-      const flagName = String.fromEnvironment('FF_FLAG_NAME', defaultValue: 'harnessappdemodarkmode');
+      const flagName = '{{flagName}}';
 
       void main() => runApp(MyApp());
 
@@ -1965,11 +1885,8 @@ onboarding:
       Using the SDK API key, and a device ID from above you can build and install your app
       on a emulator
       ```shell
-      cd examples/getting_started
-      export FF_API_KEY=<your api key>
-
       flutter pub get
-      flutter run --dart-define=FF_API_KEY=$FF_API_KEY -d <device id>
+      flutter run -d <device id>
       ```
 
       The app should show the configured flags current value. As you toggle the flag in the Harness UI you will see the value update.
@@ -1981,8 +1898,6 @@ onboarding:
 
       - Installed Node.js v12 or a newer version
       - Installed React.js v16.7 or a newer version
-      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag">Created a Feature Flag on the Harness Platform</a> called 'harnessappdemodarkmode'
-      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key">Created a server SDK key and made a copy of it</a>
 
       # Install
 
@@ -1999,7 +1914,6 @@ onboarding:
       # Usage
 
       Create a new React project with a file called 'index.js'. Copy and paste the following complete code example into that file. 
-      You can use this to test the harnessappdemodarkmode Flag you created on the Harness Platform. 
 
       ```
       import React from 'react'
@@ -2014,14 +1928,11 @@ onboarding:
       ReactDOM.render(<App />, document.querySelector('#react-root'))
 
       function App() {
+        const reactTarget = { name: 'ReactClientSDK', identifier: 'reactclientsdk' }
+        const sdkApiKey = '{{apiKey}}'
+        
         return (
-          <FFContextProvider
-            apiKey="{{apiKey}}"
-            target={{
-              identifier: 'reactclientsdk',
-              name: 'ReactClientSDK'
-            }}
-          >
+          <FFContextProvider apiKey={sdkApiKey} target={reactTarget}>
             <SingleFeatureFlag />
             <MultipleFeatureFlags />
           </FFContextProvider>
@@ -2029,10 +1940,10 @@ onboarding:
       }
 
       function SingleFeatureFlag() {
-        const flagValue = useFeatureFlag('harnessappdemodarkmode')
+        const flagValue = useFeatureFlag('{{flagName}}')
 
         return (
-          <p>The value of "harnessappdemodarkmode" is {JSON.stringify(flagValue)}</p>
+          <p>The value of {{flagName}} is {JSON.stringify(flagValue)}</p>
         )
       }
 
@@ -2073,7 +1984,7 @@ onboarding:
       ```
       # Code Sample
 
-      The following is a complete code example with a fresh React-Native project that you can use to test the `harnessappdemodarkmode` Flag you 
+      The following is a complete code example with a fresh React-Native project that you can use to test the {{flagName}} Flag you 
       created on the Harness Platform. When you run the code it will:
 
       Connect to the FF service.
@@ -2101,7 +2012,7 @@ onboarding:
       import cfClientInstance, {CfConfiguration, CfTarget} from '@harnessio/ff-react-native-client-sdk';
           
       export default function App() {
-        const flagName = 'harnessappdemodarkmode';
+        const flagName = '{{flagName}}';
 
         const [client, setClient] = useState(null);
         const [flagValue, setFlagValue] = useState(null);
@@ -2140,7 +2051,7 @@ onboarding:
         return (
           <View style={styles.container}>
             <Text>
-              Feature flag '{flagName}' is {JSON.stringify(flagValue)}
+              Feature flag '{{flagName}}' is {JSON.stringify(flagValue)}
             </Text>
           </View>
         );
