@@ -18,8 +18,6 @@ import {
   InputSetSummaryResponse,
   useDeleteInputSetForPipeline,
   useGetInputSetsListForPipeline,
-  useGetPipeline,
-  useGetPipelineSummary,
   useGetTemplateFromPipeline
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -37,6 +35,7 @@ import useImportResource from '@pipeline/components/ImportResource/useImportReso
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncInterface'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import { InputSetListView } from './InputSetListView'
 import css from './InputSetList.module.scss'
 
@@ -101,35 +100,25 @@ function InputSetList(): React.ReactElement {
     }
   })
 
-  const { data: pipelineMetadata } = useGetPipelineSummary({
-    pipelineIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      repoIdentifier,
-      getMetadataOnly: true
-    }
-  })
-
   const {
-    data: pipeline,
-    loading: loadingPipeline,
-    error: pipelineFetchError
-  } = useGetPipeline({
-    pipelineIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      repoIdentifier,
-      branch,
-      parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoName
-    }
-  })
-
-  const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid !== true
+    data: pipelineMetadata,
+    isFetching: loadingPipelineSummary,
+    error: pipelineSummaryFetchError
+  } = useGetPipelineSummaryQuery(
+    {
+      pipelineIdentifier,
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        repoIdentifier,
+        branch,
+        getMetadataOnly: true
+      }
+    },
+    { staleTime: 5 * 60 * 1000 }
+  )
+  const isPipelineInvalid = !pipelineMetadata?.data?.entityValidityDetails?.valid
 
   const { mutate: deleteInputSet } = useDeleteInputSetForPipeline({
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier, pipelineIdentifier }
@@ -285,7 +274,9 @@ function InputSetList(): React.ReactElement {
         </Menu>
       }
       position={Position.BOTTOM}
-      disabled={!canUpdateInputSet || !pipelineHasRuntimeInputs || isPipelineInvalid || Boolean(pipelineFetchError)}
+      disabled={
+        !canUpdateInputSet || !pipelineHasRuntimeInputs || isPipelineInvalid || Boolean(pipelineSummaryFetchError)
+      }
     >
       <RbacButton
         text={getString('inputSets.newInputSet')}
@@ -325,7 +316,7 @@ function InputSetList(): React.ReactElement {
       </Page.SubHeader>
 
       <Page.Body
-        loading={loading || isLoading || loadingPipeline}
+        loading={loading || isLoading || loadingPipelineSummary}
         error={error?.message}
         retryOnError={/* istanbul ignore next */ () => refetch()}
         noData={{
@@ -341,12 +332,8 @@ function InputSetList(): React.ReactElement {
             : undefined
         }}
       >
-        {pipelineFetchError ? (
-          <NoEntityFound
-            identifier={pipelineIdentifier}
-            entityType={'inputSet'}
-            errorObj={pipelineFetchError?.data as unknown as Error}
-          />
+        {pipelineSummaryFetchError ? (
+          <NoEntityFound identifier={pipelineIdentifier} entityType={'inputSet'} errorObj={pipelineSummaryFetchError} />
         ) : (
           <InputSetListView
             data={inputSet?.data}

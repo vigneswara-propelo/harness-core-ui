@@ -573,7 +573,6 @@ describe('Input Sets', () => {
   it('Input Set Creation & Deletion', () => {
     cy.visitPageAssertion()
     cy.wait('@emptyInputSetList')
-    cy.wait('@pipelineYAML')
     cy.wait('@pipelineMetadata')
     cy.wait(1000)
     cy.contains('span', '+ New Input Set').should('be.visible')
