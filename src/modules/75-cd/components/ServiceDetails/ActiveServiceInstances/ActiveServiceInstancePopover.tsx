@@ -7,8 +7,10 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Card, Layout, Text } from '@harness/uicore'
+import cx from 'classnames'
+import { Card, getErrorInfoFromErrorObject, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { Spinner } from '@blueprintjs/core'
 import { capitalize } from 'lodash-es'
 import {
   AzureWebAppInstanceInfoDTO,
@@ -111,8 +113,28 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     }
   })
 
-  if (loading || error || !data?.data?.instancesByBuildIdList?.[0]?.instances?.length) {
-    return <></>
+  if (loading) {
+    return (
+      <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>
+        <Spinner />
+      </Card>
+    )
+  }
+
+  if (error) {
+    return (
+      <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>
+        <Text className={css.errorText}>{getErrorInfoFromErrorObject(error)}</Text>
+      </Card>
+    )
+  }
+
+  if (!data?.data?.instancesByBuildIdList?.[0]?.instances?.length) {
+    return (
+      <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>
+        <Text>{getString('cd.serviceDashboard.instanceDataEmpty')}</Text>
+      </Card>
+    )
   }
 
   const instanceData = data?.data?.instancesByBuildIdList?.[0]?.instances[instanceNum] || {}

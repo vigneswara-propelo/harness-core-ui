@@ -261,6 +261,7 @@ pipelineSteps:
     stageIsRequired: Stage is required
 cdLaunchText: Launch CD First Generation
 serviceDashboard:
+  instanceDataEmpty: Instance data is empty.
   activeServiceInstancesLabel: '{{$.common.subscriptions.usage.srvcInst}}'
   runningServiceInstancesLabel: 'Running Service Instances (Current)'
   recentDeployments: 'Recent Deployments'
