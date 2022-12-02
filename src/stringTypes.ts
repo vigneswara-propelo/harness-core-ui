@@ -3838,6 +3838,7 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.ServerlessAzure': string
   'pipeline.manifestTypeLabels.ServerlessGCP': string
   'pipeline.manifestTypeLabels.ValuesYaml': string
+  'pipeline.manuallyTriggered': string
   'pipeline.mostRecentDirection': string
   'pipeline.moveStage.description': string
   'pipeline.moveStage.title': string
@@ -4255,6 +4256,9 @@ export interface StringsMap {
   'pipeline.traffic': string
   'pipeline.trafficPercentage': string
   'pipeline.triggerInfo': string
+  'pipeline.triggeredBy': string
+  'pipeline.triggeredByCron': string
+  'pipeline.triggeredByThirdParty': string
   'pipeline.uniqueIdentifier': string
   'pipeline.uniqueName': string
   'pipeline.unsupportedImagesWarning': string

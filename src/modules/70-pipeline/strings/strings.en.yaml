@@ -1482,3 +1482,7 @@ step:
     namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
 runDisabledOnFreeze: Cannot run pipeline due to an active freeze
 viewFreeze: View freeze details
+triggeredBy: Triggered by {{triggerType}}
+manuallyTriggered: This execution was triggered manually
+triggeredByThirdParty: Triggered by a third party system
+triggeredByCron: Triggered on {{start}} by cron {{triggeredBy}}
