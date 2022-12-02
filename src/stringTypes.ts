@@ -2570,6 +2570,7 @@ export interface StringsMap {
   'connectors.name_labels.SecretManager': string
   'connectors.name_labels.Splunk': string
   'connectors.name_labels.Spot': string
+  'connectors.name_labels.TAS': string
   'connectors.name_labels.gcpKms': string
   'connectors.newArtifactRepository': string
   'connectors.newRelic.accountIdFieldLabel': string
@@ -2663,6 +2664,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.url.nexus': string
   'connectors.testConnectionStep.url.splunk': string
   'connectors.testConnectionStep.url.spot': string
+  'connectors.testConnectionStep.url.tas': string
   'connectors.testConnectionStep.url.vault': string
   'connectors.testConnectionStep.validationText.appD': string
   'connectors.testConnectionStep.validationText.artifactory': string
@@ -2690,6 +2692,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.splunk': string
   'connectors.testConnectionStep.validationText.spot': string
   'connectors.testConnectionStep.validationText.sumologic': string
+  'connectors.testConnectionStep.validationText.tas': string
   'connectors.testConnectionStep.validationText.testingURLReachability': string
   'connectors.testConnectionStep.validationText.vault': string
   'connectors.testConnectionStep.verificationSuccessful': string
@@ -2730,11 +2733,13 @@ export interface StringsMap {
   'connectors.title.splunk': string
   'connectors.title.spot': string
   'connectors.title.sumologic': string
+  'connectors.title.tas': string
   'connectors.unableToCreateConnector': string
   'connectors.unableToUpdateConnector': string
   'connectors.updatedSuccessfully': string
   'connectors.updating': string
   'connectors.validation.connectorIsRequired': string
+  'connectors.validation.endpointUrl': string
   'connectors.validation.personalAccessToken': string
   'connectors.validation.serviceNowUrl': string
   'connectors.validationPath': string
