@@ -1188,6 +1188,9 @@ featureRestriction:
   maxTotalBuilds90PercentLimit: You have used {{usagePercent}}% of builds included in the free plan. After 2,500 builds, the free plan will be restricted to 100 builds per month.
   maxBuildsPerMonth100PercentLimit: You have used 100 / 100 free builds this month. Consider upgrading for unlimited builds.
   numMonthlyBuilds: You have used {{count}} / {{limit}} free builds this month.
+  maxTotalScans90PercentLimit: You have used {{usagePercent}}% of scans included in the free plan. After 2,500 scans, the free plan will be restricted to 100 scans per month.
+  maxScansPerMonth100PercentLimit: You have used 100 / 100 free scans this month. Consider upgrading for unlimited builds.
+  numMonthlyScans: You have used {{count}} / {{limit}} free scans this month.
   subscription90PercentLimit: You have used {{usagePercent}}% of your developer subscription limit.
   subscriptionExceededLimit: You have exceeded your developer subscription limit.
   unlimitedBuildsRequiredPlan: Monthly builds limit met. For Unlimited builds, consider upgrading to Team or Enterprise plan.

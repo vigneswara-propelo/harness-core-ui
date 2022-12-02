@@ -893,6 +893,7 @@ export interface StringsMap {
   'common.subscriptions.overview.subscribe': string
   'common.subscriptions.overview.trialExpiry': string
   'common.subscriptions.paid': string
+  'common.subscriptions.sto.developers': string
   'common.subscriptions.tabs.overview': string
   'common.subscriptions.tabs.plans': string
   'common.subscriptions.title': string
@@ -917,6 +918,10 @@ export interface StringsMap {
   'common.subscriptions.usage.serviceLicenses': string
   'common.subscriptions.usage.services': string
   'common.subscriptions.usage.srvcInst': string
+  'common.subscriptions.usage.stoDevelopers': string
+  'common.subscriptions.usage.stoDevelopersTooltip': string
+  'common.subscriptions.usage.stoScans': string
+  'common.subscriptions.usage.stoScansTooltip': string
   'common.subtotal': string
   'common.successfullCreate': string
   'common.successfullUpdate': string
@@ -3587,10 +3592,13 @@ export interface StringsMap {
   'pipeline.featureRestriction.initialDeploymentWarning': string
   'pipeline.featureRestriction.integratedApprovalsJira': string
   'pipeline.featureRestriction.maxBuildsPerMonth100PercentLimit': string
+  'pipeline.featureRestriction.maxScansPerMonth100PercentLimit': string
   'pipeline.featureRestriction.maxTotalBuilds90PercentLimit': string
+  'pipeline.featureRestriction.maxTotalScans90PercentLimit': string
   'pipeline.featureRestriction.monthlyDeploymentLimitExceeded': string
   'pipeline.featureRestriction.monthlyDeploymentWarning': string
   'pipeline.featureRestriction.numMonthlyBuilds': string
+  'pipeline.featureRestriction.numMonthlyScans': string
   'pipeline.featureRestriction.serviceLimitExceeded': string
   'pipeline.featureRestriction.serviceUsageWarning': string
   'pipeline.featureRestriction.subscription90PercentLimit': string
