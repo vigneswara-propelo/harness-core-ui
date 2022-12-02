@@ -811,6 +811,7 @@ export interface StringsMap {
   'common.serviceUpdated': string
   'common.setAsDefault': string
   'common.setAsStable': string
+  'common.settingCategory.general': string
   'common.setup': string
   'common.sh': string
   'common.shell': string
