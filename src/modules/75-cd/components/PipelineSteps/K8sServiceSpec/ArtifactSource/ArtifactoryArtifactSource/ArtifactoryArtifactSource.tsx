@@ -16,10 +16,9 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  SelectOption,
-  Text
+  SelectOption
 } from '@harness/uicore'
-import { Menu } from '@blueprintjs/core'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -27,6 +26,7 @@ import {
   ArtifactoryImagePath,
   DeploymentStageConfig,
   Failure,
+  Error,
   PrimaryArtifact,
   ResponseArtifactoryResponseDTO,
   ServiceSpec,
@@ -55,6 +55,7 @@ import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getConnectorRefFqnPath,
@@ -491,19 +492,13 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     return false
   }
 
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={imagePathLoading}
-        onClick={handleClick}
-      />
-    </div>
-  ))
+  const artifactPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => {
+    const isDisabled =
+      imagePathLoading ||
+      (imagePathError?.data as Error)?.status === 'ERROR' ||
+      (imagePathError?.data as Failure)?.status === 'FAILURE'
+    return <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={isDisabled} />
+  })
 
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
@@ -631,7 +626,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                   allowableTypes,
                   selectProps: {
                     noResults: <NoTagResults tagError={imagePathError} isServerlessDeploymentTypeSelected={false} />,
-                    itemRenderer: itemRenderer,
+                    itemRenderer: artifactPathItemRenderer,
                     items: artifactPaths,
                     allowCreatingNewItems: true
                   },
