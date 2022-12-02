@@ -161,7 +161,9 @@ export function DeployServiceEntityInputStep({
       if (!serviceInputs || isValueRuntimeInput(serviceInputs)) {
         serviceInputs = svcTemplate ? clearRuntimeInput(svcTemplate) : undefined
       } else {
-        serviceInputs = merge(svcTemplate ? clearRuntimeInput(svcTemplate) : undefined, serviceInputs)
+        serviceInputs = isMultiSvcTemplate
+          ? merge(svcTemplate ? clearRuntimeInput(svcTemplate) : undefined, serviceInputs)
+          : svcTemplate
       }
 
       return {
