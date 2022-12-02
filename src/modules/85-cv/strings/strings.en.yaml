@@ -853,6 +853,7 @@ CompositeSLO:
   NoSloFound: There are no SLOs available for selected filter
   compositeSloCreated: Composite SLO created successfully
   compositeSloUpdated: Composite SLO updated successfully
+  SLIMetricRatio: SLI = (SLO1*weightage1 + SLO2*weightage2... + SLON*weightageN)/n*100
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on
