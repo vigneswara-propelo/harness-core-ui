@@ -45,6 +45,7 @@ export type ManifestStores =
   | 'Inline'
   | 'Harness'
   | 'CustomRemote'
+  | 'AzureRepo'
 
 export type ManifestStoreTypeWithoutConnector = 'InheritFromManifest' | 'Harness' | 'Inline' | 'CustomRemote'
 
