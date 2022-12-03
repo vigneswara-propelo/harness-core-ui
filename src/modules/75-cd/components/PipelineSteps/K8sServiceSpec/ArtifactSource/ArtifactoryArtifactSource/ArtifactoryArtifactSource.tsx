@@ -68,7 +68,8 @@ import {
   isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource,
-  isExecutionTimeFieldDisabled
+  isExecutionTimeFieldDisabled,
+  getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
@@ -202,7 +203,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     artifact,
     isSidecar,
     artifactPath,
-    stepViewType
+    stepViewType,
+    artifacts
   } = props
 
   const { getString } = useStrings()
@@ -273,11 +275,12 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     return isServerlessOrSshOrWinRmSelected || isAzureWebAppGenericSelected
   }, [isServerlessOrSshOrWinRmSelected, isAzureWebAppGenericSelected])
 
-  const connectorRef =
-    get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
-
+  const connectorRef = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  )
   const repositoryValue = getDefaultQueryParam(
-    artifact?.spec?.repository,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.repository`, ''), artifact?.spec?.repository),
     get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
   )
 
@@ -346,12 +349,15 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   // Initial values
   const artifactPathValue = isGenericArtifactory
     ? getDefaultQueryParam(
-        artifact?.spec?.artifactDirectory,
+        getValidInitialValuePath(
+          get(artifacts, `${artifactPath}.spec.artifactDirectory`, ''),
+          artifact?.spec?.artifactDirectory
+        ),
         get(initialValues?.artifacts, `${artifactPath}.spec.artifactDirectory`, '')
       )
     : getImagePath(artifact?.spec?.artifactPath, get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, ''))
   const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
 
@@ -361,7 +367,10 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
         // API is expecting artifacthPath query param to have artifactDirectory field value for generic artifactory
         artifactPath: getFinalQueryParamValue(
           getDefaultQueryParam(
-            artifact?.spec?.artifactDirectory,
+            getValidInitialValuePath(
+              get(artifacts, `${artifactPath}.spec.artifactDirectory`, ''),
+              artifact?.spec?.artifactDirectory
+            ),
             get(initialValues?.artifacts, `${artifactPath}.spec.artifactDirectory`, '')
           )
         ),

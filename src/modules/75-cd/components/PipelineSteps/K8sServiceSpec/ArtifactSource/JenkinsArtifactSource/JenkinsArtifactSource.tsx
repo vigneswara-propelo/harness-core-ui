@@ -44,6 +44,7 @@ import {
   getFinalQueryParamValue,
   getFqnPath,
   getImagePath,
+  getValidInitialValuePath,
   getYamlData,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity
@@ -75,7 +76,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     isSidecar,
     artifactPath,
     serviceIdentifier,
-    stepViewType
+    stepViewType,
+    artifacts
   } = props
 
   const { getString } = useStrings()
@@ -100,7 +102,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const [connectorRefValue, setConnectorRefValue] = React.useState(
     getFinalQueryParamValue(
       getDefaultQueryParam(
-        artifact?.spec?.connectorRef,
+        getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
         get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
       )
     )
@@ -108,14 +110,17 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   const [jobNameValue, setJobNameValue] = React.useState(
     getFinalQueryParamValue(
-      getDefaultQueryParam(artifact?.spec?.jobName, get(initialValues?.artifacts, `${artifactPath}.spec.jobName`, ''))
+      getDefaultQueryParam(
+        getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.jobName`, ''), artifact?.spec?.jobName),
+        get(initialValues?.artifacts, `${artifactPath}.spec.jobName`, '')
+      )
     )
   )
 
   const [artifactPathValue, setArtifactPathValue] = React.useState(
     getFinalQueryParamValue(
       getDefaultQueryParam(
-        artifact?.spec?.artifactPath,
+        getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.artifactPath`, ''), artifact?.spec?.artifactPath),
         get(initialValues?.artifacts, `${artifactPath}.spec.artifactPath`, '')
       )
     )
