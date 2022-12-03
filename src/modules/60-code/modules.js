@@ -5,18 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.subNav {
-  padding-left: var(--spacing-medium);
-  margin-left: var(--spacing-xxlarge);
-
-  > p {
-    > span:not([data-icon='code-file-light']) {
-      color: var(--white) !important;
-      padding-right: var(--spacing-small) !important;
-
-      svg path {
-        fill: var(--white);
-      }
-    }
-  }
-}
+module.exports = [
+  'code/App',
+  'code/Repositories',
+  'code/Repository',
+  'code/FileEdit',
+  'code/Commits',
+  'code/Branches',
+  'code/PullRequests',
+  'code/Compare',
+  'code/PullRequest',
+  'code/Settings',
+  'code/Webhooks',
+  'code/CreateWebhook',
+  'code/EditWebhook'
+]
