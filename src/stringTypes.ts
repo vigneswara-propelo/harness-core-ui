@@ -4757,6 +4757,15 @@ export interface StringsMap {
   'cd.environmentCreated': string
   'cd.environmentDelete': string
   'cd.environmentDeleteMessage': string
+  'cd.environmentDetailPage.emptyExecutionListMsg': string
+  'cd.environmentDetailPage.emptyInstanceDetailMsg': string
+  'cd.environmentDetailPage.emptyServiceDetailMsg': string
+  'cd.environmentDetailPage.infraSlashCluster': string
+  'cd.environmentDetailPage.noInstancesToShow': string
+  'cd.environmentDetailPage.noServiceArtifactMsg': string
+  'cd.environmentDetailPage.seeFull': string
+  'cd.environmentDetailPage.selectInfraMsg': string
+  'cd.environmentDetailPage.viewInTable': string
   'cd.environmentUpdated': string
   'cd.exportTerraformHumanReadablePlan': string
   'cd.exportTerraformPlanJson': string

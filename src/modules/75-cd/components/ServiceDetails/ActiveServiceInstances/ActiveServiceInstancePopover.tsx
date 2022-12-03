@@ -36,6 +36,7 @@ export interface ActiveServiceInstancePopoverProps {
   buildId?: string
   envId?: string
   instanceNum?: number
+  serviceIdentifier?: string
 }
 
 interface SectionProps {
@@ -94,7 +95,7 @@ const Section: React.FC<{ data: SectionProps[] }> = props => {
 }
 
 export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopoverProps> = props => {
-  const { buildId = '', envId = '', instanceNum = 0 } = props
+  const { buildId = '', envId = '', instanceNum = 0, serviceIdentifier = '' } = props
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { getString } = useStrings()
 
@@ -102,7 +103,7 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
-    serviceId,
+    serviceId: serviceId || serviceIdentifier,
     envId,
     buildIds: [buildId]
   }
