@@ -163,7 +163,7 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   ],
   Kustomize: gitStoreTypesWithHarnessStoreType,
   KustomizePatches: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
-  ServerlessAwsLambda: gitStoreTypes,
+  ServerlessAwsLambda: [...gitStoreTypes, ManifestStoreMap.S3],
   EcsTaskDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
   EcsServiceDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
   EcsScalingPolicyDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],

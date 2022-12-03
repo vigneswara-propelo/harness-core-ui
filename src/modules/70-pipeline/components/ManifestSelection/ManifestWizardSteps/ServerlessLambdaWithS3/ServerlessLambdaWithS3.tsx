@@ -26,7 +26,8 @@ import {
   SelectOption,
   ButtonVariation,
   AllowedTypes,
-  FormikForm
+  FormikForm,
+  Accordion
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 
@@ -40,6 +41,7 @@ import {
 } from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -47,12 +49,11 @@ import {
   checkIfQueryParamsisNotEmpty,
   shouldFetchFieldOptions
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import type { ECSWithS3DataType, ManifestTypes } from '../../ManifestInterface'
+import type { ServerlessLambdaWithS3DataType, ManifestTypes } from '../../ManifestInterface'
 import { getConnectorRefOrConnectorId, ManifestIdentifierValidation } from '../../Manifesthelper'
 import { filePathWidth } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
-import { shouldAllowOnlyOneFilePath } from '../CommonManifestDetails/utils'
-import css from './ECSWithS3.module.scss'
+import css from './ServerlessLambdaWithS3.module.scss'
 
 const getConnectorRefFromPrevStep = (prevStepData?: ConnectorConfigDTO): string => {
   return (
@@ -60,7 +61,7 @@ const getConnectorRefFromPrevStep = (prevStepData?: ConnectorConfigDTO): string 
   )
 }
 
-interface ECSWithS3PropsType {
+interface ServerlessLambdaWithS3Props {
   stepName: string
   expressions: string[]
   allowableTypes: AllowedTypes
@@ -70,10 +71,9 @@ interface ECSWithS3PropsType {
   isReadonly?: boolean
   deploymentType?: string
   selectedManifest: ManifestTypes | null
-  showIdentifierField?: boolean
 }
 
-export function ECSWithS3({
+export function ServerlessLambdaWithS3({
   stepName,
   prevStepData,
   expressions,
@@ -83,9 +83,8 @@ export function ECSWithS3({
   previousStep,
   manifestIdsList,
   isReadonly = false,
-  selectedManifest,
-  showIdentifierField = true
-}: StepProps<ConnectorConfigDTO> & ECSWithS3PropsType): React.ReactElement {
+  selectedManifest
+}: StepProps<ConnectorConfigDTO> & ServerlessLambdaWithS3Props): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
@@ -197,7 +196,7 @@ export function ECSWithS3({
   )
 
   /** Calculating initialValues for formik form */
-  const setBucketNameInitialValue = (values: ECSWithS3DataType, specValues: StoreConfig): void => {
+  const setBucketNameInitialValue = (values: ServerlessLambdaWithS3DataType, specValues: StoreConfig): void => {
     if (
       getMultiTypeFromValue(specValues?.bucketName) === MultiTypeInputType.FIXED &&
       getMultiTypeFromValue(prevStepData?.connectorRef) === MultiTypeInputType.FIXED &&
@@ -209,7 +208,7 @@ export function ECSWithS3({
     }
   }
 
-  const getInitialValues = (): ECSWithS3DataType => {
+  const getInitialValues = (): ServerlessLambdaWithS3DataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -219,7 +218,8 @@ export function ECSWithS3({
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
-            : specValues.paths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
+            : specValues.paths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
+        configOverridePath: initialValues?.spec?.configOverridePath
       }
       setBucketNameInitialValue(values, specValues)
       return values
@@ -234,7 +234,7 @@ export function ECSWithS3({
 
   /** Calculating final manifest object after Submit button is clicked */
   const submitFormData = (
-    formData: ECSWithS3DataType & { region: SelectOption | string; store?: string; connectorRef?: string }
+    formData: ServerlessLambdaWithS3DataType & { region: SelectOption | string; store?: string; connectorRef?: string }
   ): void => {
     const manifestObj: ManifestConfigWrapper = {
       manifest: {
@@ -252,7 +252,8 @@ export function ECSWithS3({
                   ? formData?.paths
                   : formData?.paths?.map((path: { path: string }) => path.path)
             }
-          }
+          },
+          configOverridePath: formData.configOverridePath
         }
       }
     }
@@ -260,7 +261,7 @@ export function ECSWithS3({
     handleSubmit(manifestObj)
   }
 
-  const renderS3Bucket = (formik: FormikProps<ECSWithS3DataType>): JSX.Element => {
+  const renderS3Bucket = (formik: FormikProps<ServerlessLambdaWithS3DataType>): JSX.Element => {
     if (
       getMultiTypeFromValue(formik.values?.region) !== MultiTypeInputType.FIXED ||
       getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
@@ -329,7 +330,8 @@ export function ECSWithS3({
           }}
         />
         {getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
+          <SelectConfigureOptions
+            options={buckets}
             style={{ alignSelf: 'center', marginBottom: 3 }}
             value={formik.values?.bucketName as string}
             type="String"
@@ -352,11 +354,9 @@ export function ECSWithS3({
       </Text>
       <Formik
         initialValues={getInitialValues()}
-        formName="ecsWithS3"
+        formName="serverlessLambdaWithS3"
         validationSchema={Yup.object().shape({
-          ...(showIdentifierField
-            ? ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName'))
-            : {}),
+          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
           region: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.region')),
           bucketName: Yup.string().trim().required(getString('pipeline.manifestType.bucketNameRequired')),
           paths: Yup.lazy((value): Yup.Schema<unknown> => {
@@ -370,7 +370,7 @@ export function ECSWithS3({
             return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
           })
         })}
-        onSubmit={(formData: ECSWithS3DataType) => {
+        onSubmit={(formData: ServerlessLambdaWithS3DataType) => {
           submitFormData({
             ...prevStepData,
             ...formData,
@@ -378,14 +378,14 @@ export function ECSWithS3({
           })
         }}
       >
-        {(formik: FormikProps<ECSWithS3DataType>) => (
+        {(formik: FormikProps<ServerlessLambdaWithS3DataType>) => (
           <FormikForm>
             <Layout.Vertical
               flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
               className={css.manifestForm}
             >
               <div className={css.manifestStepWidth}>
-                {showIdentifierField && (
+                {
                   <div className={css.halfWidth}>
                     <FormInput.Text
                       name="identifier"
@@ -393,7 +393,7 @@ export function ECSWithS3({
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                     />
                   </div>
-                )}
+                }
                 <div
                   className={cx(css.halfWidth, {
                     [css.runtimeInput]: getMultiTypeFromValue(formik.values?.region) === MultiTypeInputType.RUNTIME
@@ -424,7 +424,8 @@ export function ECSWithS3({
                     label={getString('regionLabel')}
                   />
                   {getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
+                    <SelectConfigureOptions
+                      options={regions}
                       style={{ alignSelf: 'center', marginBottom: 3 }}
                       value={formik.values?.region as string}
                       type="String"
@@ -456,7 +457,7 @@ export function ECSWithS3({
                     placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                     defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                     dragDropFieldWidth={filePathWidth}
-                    allowOnlyOneFilePath={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
+                    allowOnlyOneFilePath={true}
                   />
                   {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
@@ -472,6 +473,41 @@ export function ECSWithS3({
                     />
                   )}
                 </div>
+                <Accordion className={css.advancedStepOpen}>
+                  <Accordion.Panel
+                    id={getString('advancedTitle')}
+                    addDomId={true}
+                    summary={getString('advancedTitle')}
+                    details={
+                      <div
+                        className={cx(css.halfWidth, {
+                          [css.runtimeInput]:
+                            getMultiTypeFromValue(formik.values.configOverridePath) === MultiTypeInputType.RUNTIME
+                        })}
+                      >
+                        <FormInput.MultiTextInput
+                          multiTextInputProps={{ expressions, allowableTypes }}
+                          label={getString('pipeline.manifestType.serverlessConfigFilePath')}
+                          placeholder={getString('pipeline.manifestType.serverlessConfigFilePathPlaceholder')}
+                          name="configOverridePath"
+                        />
+
+                        {getMultiTypeFromValue(formik.values.configOverridePath) === MultiTypeInputType.RUNTIME && (
+                          <ConfigureOptions
+                            value={formik.values.configOverridePath as string}
+                            type="String"
+                            variableName="configOverridePath"
+                            showRequiredField={false}
+                            showDefaultField={false}
+                            showAdvanced={true}
+                            onChange={value => formik.setFieldValue('configOverridePath', value)}
+                            isReadonly={isReadonly}
+                          />
+                        )}
+                      </div>
+                    }
+                  />
+                </Accordion>
               </div>
             </Layout.Vertical>
 

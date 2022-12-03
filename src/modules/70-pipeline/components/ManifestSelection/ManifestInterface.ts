@@ -255,3 +255,11 @@ export interface ECSWithS3DataType {
   bucketName: SelectOption | string
   paths: any
 }
+
+export interface ServerlessLambdaWithS3DataType {
+  identifier: string
+  region: SelectOption | string
+  bucketName: SelectOption | string
+  paths: any
+  configOverridePath?: string
+}
