@@ -808,6 +808,10 @@ pipelineSteps:
   approvalStageDescription: Approve or reject changes during Pipeline progress.
 pipelineChaining:
   selectPipeline: Select Pipeline
+  pipelineOutputs: Pipeline Outputs
+  outputTabSummaryDetail: Define outputs from child pipeline that you can use in other stages in parent pipeline.
+  newOutput: New Output
+  removeOutput: Remove this output
 aboutYourStage:
   stageNamePlaceholder: Enter Stage Name
 infraSpecifications:

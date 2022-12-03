@@ -7,10 +7,12 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly actionButtons: string
-  readonly content: string
-  readonly outputPanel: string
-  readonly pipelineStageOverviewWrapper: string
-  readonly sectionCard: string
+  readonly actionButton: string
+  readonly addOutput: string
+  readonly headerRow: string
+  readonly outputVariablesContainer: string
+  readonly tableRow: string
+  readonly tooltip: string
+  readonly valueColumn: string
 }
 export default styles

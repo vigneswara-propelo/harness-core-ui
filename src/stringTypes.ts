@@ -3917,6 +3917,10 @@ export interface StringsMap {
   'pipeline.phasesForm.phase': string
   'pipeline.phasesForm.phases': string
   'pipeline.phasesForm.useVerification': string
+  'pipeline.pipelineChaining.newOutput': string
+  'pipeline.pipelineChaining.outputTabSummaryDetail': string
+  'pipeline.pipelineChaining.pipelineOutputs': string
+  'pipeline.pipelineChaining.removeOutput': string
   'pipeline.pipelineChaining.selectPipeline': string
   'pipeline.pipelineInputPanel.automaticallyExtractedFromText': string
   'pipeline.pipelineInputPanel.existing': string
