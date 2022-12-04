@@ -2075,10 +2075,14 @@ export const buildServiceNowPayload = (formData: FormData) => {
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
       serviceNowUrl: formData.serviceNowUrl,
-
-      username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-      usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
-      passwordRef: formData.passwordRef.referenceString
+      auth: {
+        type: AuthTypes.USER_PASSWORD,
+        spec: {
+          username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
+          usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+          passwordRef: formData.passwordRef.referenceString
+        }
+      }
     }
   }
 
@@ -2096,16 +2100,19 @@ export const setupServiceNowFormData = async (
 
   const formData = {
     serviceNowUrl: connectorInfo.spec.serviceNowUrl,
-
+    authType: connectorInfo.spec.auth.type,
     username:
-      connectorInfo.spec.username || connectorInfo.spec.usernameRef
+      connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD &&
+      (connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef)
         ? {
-            value: connectorInfo.spec.username || connectorInfo.spec.usernameRef,
-            type: connectorInfo.spec.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+            value: connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef,
+            type: connectorInfo.spec.auth.spec.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
           }
         : undefined,
-
-    passwordRef: await setSecretField(connectorInfo.spec.passwordRef, scopeQueryParams)
+    passwordRef:
+      connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD
+        ? await setSecretField(connectorInfo.spec.auth.spec.passwordRef, scopeQueryParams)
+        : undefined
   }
   return formData
 }
