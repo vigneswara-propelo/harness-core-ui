@@ -3124,6 +3124,7 @@ export interface StringsMap {
   'pipeline.approveOrReject': string
   'pipeline.artifactImagePathLabel': string
   'pipeline.artifactImageTag': string
+  'pipeline.artifactOrImagePathDependencyRequired': string
   'pipeline.artifactPathDependencyRequired': string
   'pipeline.artifactPathFilterLabel': string
   'pipeline.artifactPathLabel': string

@@ -1022,6 +1022,7 @@ gitCloneStep:
     associatedBuildInput: Associated build input
 tagDependencyRequired: required to fetch the tags
 artifactPathDependencyRequired: required to fetch the artifact paths
+artifactOrImagePathDependencyRequired: required to fetch the artifact/image path
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
 bucketNameHelperText: 'Connector is required to fetch buckets'
 filePathHelperText: 'Connector and Bucket Name are required to fetch file paths'

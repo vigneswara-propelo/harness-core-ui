@@ -42,6 +42,7 @@ import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/Triggers
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
+  getHelpeTextForTags,
   isAzureWebAppGenericDeploymentType,
   isServerlessDeploymentType,
   ServiceDeploymentType
@@ -360,6 +361,9 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
+  const isArtifactDisabled = () => {
+    return repositoryValue?.toString()?.length === 0 || connectorRefValue?.toString()?.length === 0
+  }
 
   const artifactoryTagsDataCallMetadataQueryParams = React.useMemo(() => {
     if (isGenericArtifactory) {
@@ -630,6 +634,15 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                 name={`${path}.artifacts.${artifactPath}.spec.artifactPath`}
                 placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
                 useValue
+                helperText={getHelpeTextForTags(
+                  {
+                    repository: repositoryValue as string,
+                    connectorRef: connectorRefValue
+                  },
+                  getString,
+                  isGenericArtifactory,
+                  getString('pipeline.artifactOrImagePathDependencyRequired')
+                )}
                 multiTypeInputProps={{
                   expressions,
                   allowableTypes,
@@ -643,7 +656,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                   onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                     if (
                       e?.target?.type !== 'text' ||
-                      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                      isArtifactDisabled()
                     ) {
                       return
                     }

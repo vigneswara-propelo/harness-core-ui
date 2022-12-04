@@ -216,7 +216,11 @@ function Artifactory({
   })
 
   const isArtifactDisabled = (formik: FormikProps<ImagePathTypes>) => {
-    if (getMultiTypeFromValue(formik?.values?.repository) === MultiTypeInputType.RUNTIME) return true
+    if (
+      getMultiTypeFromValue(formik?.values?.repository) === MultiTypeInputType.RUNTIME ||
+      getMultiTypeFromValue(prevStepData?.connectorId) === MultiTypeInputType.RUNTIME
+    )
+      return true
     return !(
       (formik.values?.repository as SelectOption)?.value?.toString()?.length ||
       formik.values?.repository?.toString()?.length
@@ -525,6 +529,18 @@ function Artifactory({
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTypeInput
                       selectItems={artifactPaths}
+                      helperText={
+                        getMultiTypeFromValue(formik?.values?.artifactPath) === MultiTypeInputType.FIXED &&
+                        getHelpeTextForTags(
+                          {
+                            repository: formik.values?.repository as string,
+                            connectorRef: getConnectorIdValue(prevStepData)
+                          },
+                          getString,
+                          isGenericArtifactory,
+                          getString('pipeline.artifactOrImagePathDependencyRequired')
+                        )
+                      }
                       multiTypeInputProps={{
                         onChange: () => {
                           onChangeImageArtifactPath()
@@ -532,12 +548,6 @@ function Artifactory({
                         expressions,
                         allowableTypes,
                         selectProps: {
-                          noResults: (
-                            <NoTagResults
-                              tagError={imagePathError}
-                              isServerlessDeploymentTypeSelected={isGenericArtifactory}
-                            />
-                          ),
                           items: artifactPaths,
                           addClearBtn: true,
                           itemRenderer: imagePathItemRenderer,
