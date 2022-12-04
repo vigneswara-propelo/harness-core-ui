@@ -33,9 +33,8 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import type { PipelineStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { PipelineStageTabs } from '../utils'
+import { MAX_LENGTH } from './utils'
 import css from './PipelineStageOutputSection.module.scss'
-
-const MAX_LENGTH = 64
 
 export function VariableOutputPanel(): React.ReactElement {
   const {

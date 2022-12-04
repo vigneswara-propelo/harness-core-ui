@@ -10,7 +10,11 @@ declare const styles: {
   readonly actionButton: string
   readonly addOutput: string
   readonly headerRow: string
+  readonly outputListTable: string
+  readonly outputPanelInputSetsContainer: string
+  readonly outputValueRow: string
   readonly outputVariablesContainer: string
+  readonly subHeader: string
   readonly tableRow: string
   readonly tooltip: string
   readonly valueColumn: string

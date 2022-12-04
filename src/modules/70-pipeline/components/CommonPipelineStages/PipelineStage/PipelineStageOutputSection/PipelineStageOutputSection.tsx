@@ -11,11 +11,8 @@ import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { VariableOutputPanel } from './VariableOutputPanel'
+import type { PipelineStageOutputSectionProps } from './utils'
 import css from '../PipelineStageOverview.module.scss'
-
-export interface PipelineStageOutputSectionProps {
-  children: React.ReactElement
-}
 
 export function PipelineStageOutputSection(props: PipelineStageOutputSectionProps): React.ReactElement {
   const { getString } = useStrings()
