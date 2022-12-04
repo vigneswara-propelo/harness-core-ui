@@ -18,12 +18,36 @@ import noDataFound from './EmptyStateSvgs/noDataFound.svg'
 
 import css from './EnvironmentDetailSummary.module.scss'
 
-export function DialogEmptyState(): JSX.Element {
+export function DialogEmptyState({
+  isSearchApplied,
+  resetSearch,
+  message
+}: {
+  isSearchApplied: boolean
+  resetSearch: () => void
+  message: string
+}): JSX.Element {
   const { getString } = useStrings()
   return (
     <Container className={css.instanceEmptyState}>
-      <img src={emptyInstanceDetail} alt={getString('cd.environmentDetailPage.selectInfraMsg')} />
-      <Text>{getString('cd.environmentDetailPage.selectInfraMsg')}</Text>
+      {isSearchApplied ? (
+        <>
+          <img src={noDataFound} alt={getString('common.filters.noResultsFound')} />
+          <Text font={{ weight: 'bold', size: 'medium' }} color={Color.GREY_800}>
+            {getString('common.filters.noResultsFound')}
+          </Text>
+          <Button
+            text={getString('common.filters.clearFilters')}
+            variation={ButtonVariation.LINK}
+            onClick={resetSearch}
+          />
+        </>
+      ) : (
+        <>
+          <img src={emptyInstanceDetail} alt={getString('cd.environmentDetailPage.selectInfraMsg')} />
+          <Text>{message}</Text>
+        </>
+      )}
     </Container>
   )
 }
@@ -45,7 +69,7 @@ export function ExecutionListEmptyState({
   const { isAnyFilterApplied } = useExecutionListFilterContext()
 
   return (
-    <Container className={css.serviceDetailEmptyState} style={{ height: '350px', margin: '18px' }}>
+    <Container className={css.serviceDetailEmptyState} style={{ height: 400, margin: 18 }}>
       {isAnyFilterApplied ? (
         <Layout.Vertical flex={{ alignItems: 'center' }}>
           <img src={noDataFound} alt={getString('common.filters.noResultsFound')} />

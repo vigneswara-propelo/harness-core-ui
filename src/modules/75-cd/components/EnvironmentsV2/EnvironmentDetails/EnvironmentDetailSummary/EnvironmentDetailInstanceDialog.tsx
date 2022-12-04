@@ -5,11 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
+import React, { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Container, Dialog, ExpandingSearchInput, Text } from '@harness/uicore'
+import { Container, Dialog, ExpandingSearchInput, ExpandingSearchInputHandle, Text } from '@harness/uicore'
 import type { InstanceGroupedByInfrastructureV2, InstanceGroupedByService } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -31,17 +31,30 @@ export default function EnvironmentDetailInstanceDialog(
   const { isOpen, setIsOpen, serviceFilter, data: serviceArtifactData } = props
   const { getString } = useStrings()
   const [searchTerm, setSearchTerm] = useState('')
+  const isSearchApplied = useRef<boolean>(!isEmpty(searchTerm))
+  const [searchTermInfra, setSearchTermInfra] = useState('')
+  const searchInfraRef = useRef({} as ExpandingSearchInputHandle)
+  const searchRef = useRef({} as ExpandingSearchInputHandle)
+  const isSearchAppliedInfra = useRef<boolean>(!isEmpty(searchTermInfra))
   const [rowClickFilter, setRowClickFilter] = useState<InfraViewFilters>({
     artifactFilter: '',
     serviceFilter: ''
   })
 
-  const { environmentIdentifier: envFilter } = useParams<ProjectPathProps & EnvironmentPathProps>()
+  const resetSearchInfra = (): void => {
+    searchInfraRef.current.clear()
+  }
 
+  const resetSearch = (): void => {
+    searchRef.current.clear()
+  }
+
+  const { environmentIdentifier: envFilter } = useParams<ProjectPathProps & EnvironmentPathProps>()
   const data = defaultTo(serviceArtifactData, [])
 
   //filter by serviceName, artifactVersion and infraName
   const filteredData = useMemo(() => {
+    isSearchApplied.current = !isEmpty(searchTerm)
     if (!searchTerm) {
       return data
     }
@@ -70,6 +83,12 @@ export default function EnvironmentDetailInstanceDialog(
 
   const onSearch = useCallback((val: string) => {
     setSearchTerm(val.trim())
+    isSearchApplied.current = !isEmpty(val.trim())
+  }, [])
+
+  const onSearchInfra = useCallback((val: string) => {
+    setSearchTermInfra(val.trim())
+    isSearchAppliedInfra.current = !isEmpty(val.trim())
   }, [])
 
   const dataInfra = useMemo((): InstanceGroupedByInfrastructureV2[][] => {
@@ -100,6 +119,27 @@ export default function EnvironmentDetailInstanceDialog(
     return finalArray
   }, [envFilter, filteredData, rowClickFilter.artifactFilter, rowClickFilter.serviceFilter])
 
+  //filter by infraName/clusterId and lastPipelineExecutionName
+  const filteredDataInfra = useMemo(() => {
+    isSearchAppliedInfra.current = !isEmpty(searchTermInfra)
+    if (!searchTermInfra) {
+      return dataInfra
+    }
+    const searchValue = searchTermInfra.toLocaleLowerCase()
+    return dataInfra.filter(infraArray =>
+      infraArray.some(
+        infra =>
+          (infra.infraName && infra.infraName?.toLocaleLowerCase().includes(searchValue)) ||
+          (infra.clusterIdentifier && infra.clusterIdentifier?.toLocaleLowerCase().includes(searchValue)) ||
+          infra.instanceGroupedByPipelineExecutionList?.some(
+            infraDetail =>
+              infraDetail.lastPipelineExecutionName &&
+              infraDetail.lastPipelineExecutionName.toLocaleLowerCase().includes(searchValue)
+          )
+      )
+    )
+  }, [searchTermInfra, dataInfra])
+
   const infraDetailView = useMemo(() => {
     return (
       <Container className={css.instanceDetailView}>
@@ -108,20 +148,30 @@ export default function EnvironmentDetailInstanceDialog(
           <ExpandingSearchInput
             placeholder={getString('search')}
             throttle={200}
-            onChange={onSearch} //todo
+            onChange={onSearchInfra}
             className={css.searchIconStyle}
             alwaysExpanded
+            ref={searchInfraRef}
           />
         </Container>
         <EnvironmentDetailInfraView
           artifactFilter={rowClickFilter.artifactFilter}
           envFilter={envFilter}
           serviceFilter={rowClickFilter.serviceFilter}
-          data={dataInfra}
+          data={filteredDataInfra}
+          isSearchApplied={isSearchAppliedInfra.current}
+          resetSearch={resetSearchInfra}
         />
       </Container>
     )
-  }, [dataInfra, envFilter, getString, onSearch, rowClickFilter.artifactFilter, rowClickFilter.serviceFilter])
+  }, [
+    getString,
+    onSearchInfra,
+    rowClickFilter.artifactFilter,
+    rowClickFilter.serviceFilter,
+    envFilter,
+    filteredDataInfra
+  ])
 
   return (
     <Dialog
@@ -141,6 +191,7 @@ export default function EnvironmentDetailInstanceDialog(
             onChange={onSearch}
             className={css.searchIconStyle}
             alwaysExpanded
+            ref={searchRef}
           />
           <EnvironmentDetailTable
             tableType={TableType.FULL}
@@ -148,6 +199,8 @@ export default function EnvironmentDetailInstanceDialog(
             tableStyle={css.fullViewTableStyle}
             setRowClickFilter={setRowClickFilter}
             serviceFilter={serviceFilter}
+            isSearchApplied={isSearchApplied.current}
+            resetSearch={resetSearch}
           />
         </Container>
         {infraDetailView}

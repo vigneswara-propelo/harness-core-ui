@@ -129,18 +129,18 @@ export function EnvironmentDetailInstances(props: EnvironmentDetailInstancesProp
 
   const renderCards = createGroups(serviceList)
 
-  const noDataState = !serviceDetail?.data?.instanceGroupedByServiceList?.length
+  const noDataState = !serviceDetail?.data?.instanceGroupedByServiceList?.length || !renderCards.length
   const renderState = React.useMemo(() => {
     if (loading) {
       return (
-        <Container className={css.loadingContainer} height={335}>
+        <Container className={css.loadingContainer} height={300}>
           <Icon name="spinner" color={Color.BLUE_500} size={30} />
         </Container>
       )
     }
     if (error) {
       return (
-        <Container data-test="ActiveServiceInstancesError" height={335} flex={{ justifyContent: 'center' }}>
+        <Container data-test="ActiveServiceInstancesError" height={300} flex={{ justifyContent: 'center' }}>
           <PageError onClick={() => refetch?.()} message={getErrorInfoFromErrorObject(error)} />
         </Container>
       )

@@ -19,10 +19,12 @@ interface EnvironmentDetailInfraViewProps {
   serviceFilter: string
   envFilter: string
   data: InstanceGroupedByInfrastructureV2[][]
+  isSearchApplied: boolean
+  resetSearch: () => void
 }
 
 export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfraViewProps): React.ReactElement {
-  const { artifactFilter, envFilter, serviceFilter, data: dataInfra } = props
+  const { artifactFilter, envFilter, serviceFilter, data: dataInfra, isSearchApplied = false, resetSearch } = props
   const { getString } = useStrings()
 
   const headers = React.useMemo(() => {
@@ -61,13 +63,24 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
 
   const list = React.useMemo(() => {
     if (!dataInfra.length) {
-      return DialogEmptyState()
+      return (
+        <DialogEmptyState
+          isSearchApplied={isSearchApplied}
+          resetSearch={resetSearch}
+          message={getString('cd.environmentDetailPage.selectInfraMsg')}
+        />
+      )
     }
     return (
       <Container>
-        <div className="separator" style={{ marginTop: '14px', borderTop: '1px solid var(--grey-100)' }} />
+        <div className="separator" style={{ marginTop: '14px', borderTop: '1px solid var(--grey-200)' }} />
+        <Text
+          icon="services"
+          font={{ variation: FontVariation.SMALL_BOLD }}
+          style={{ marginTop: 12 }}
+        >{`${serviceFilter}, ${artifactFilter}`}</Text>
         {headers}
-        <Container style={{ overflowY: 'auto', maxHeight: '615px' }}>
+        <Container style={{ overflowY: 'auto', maxHeight: '590px' }}>
           {dataInfra.map((infra, index) => {
             return (
               <Collapse
@@ -104,7 +117,7 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
         </Container>
       </Container>
     )
-  }, [artifactFilter, dataInfra, envFilter, headers, serviceFilter])
+  }, [artifactFilter, dataInfra, envFilter, getString, headers, isSearchApplied, resetSearch, serviceFilter])
 
   return list
 }

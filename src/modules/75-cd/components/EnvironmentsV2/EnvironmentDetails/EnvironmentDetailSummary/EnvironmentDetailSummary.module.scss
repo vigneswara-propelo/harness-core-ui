@@ -44,8 +44,8 @@
 }
 
 .dialogBase {
-  width: 1350px;
-  height: 800px;
+  min-width: 1350px;
+  min-height: 800px;
   padding: 0 !important;
 }
 
@@ -64,7 +64,7 @@
 .instanceDetailView {
   min-height: 800px;
   background-color: var(--primary-bg) !important;
-  padding: var(--spacing-9) 18px var(--spacing-9) var(--spacing-7) !important;
+  padding: var(--spacing-9) 18px var(--spacing-8) var(--spacing-7) !important;
 
   .instanceDetailTitle {
     font-weight: 600 !important;
@@ -90,6 +90,11 @@
 
   p {
     margin-top: var(--spacing-7) !important;
+    margin-left: var(--spacing-6) !important;
+  }
+
+  button {
+    margin-left: var(--spacing-6) !important;
   }
 }
 
@@ -158,7 +163,7 @@
 
 .latestBadgeStyle {
   display: grid !important;
-  grid-template-columns: 1fr 0.25fr;
+  grid-template-columns: 0.15fr 1fr;
 }
 
 .overflow {
@@ -174,10 +179,11 @@
 .paddedInfraContainer {
   display: flex;
   background: var(--green-50) !important;
-  padding: var(--spacing-3) !important;
-  border-radius: var(--spacing-3);
+  padding: var(--spacing-2) 6px !important;
+  border-radius: var(--spacing-2);
   width: fit-content;
   margin-right: var(--spacing-3) !important;
+
   p {
     font-weight: 700 !important;
     color: var(--green-900) !important;
@@ -284,12 +290,12 @@
 
 .collapseBody {
   width: calc(100% - 4px);
-  min-height: 55px;
+  min-height: var(--spacing-10);
   margin-bottom: var(--spacing-3) !important;
   box-shadow: 0px 0px 1px rgb(40 41 61 / 8%), 0px 0.5px var(--spacing-1) rgb(96 97 112 / 16%);
   border-top: 0px;
   background: var(--white);
-  padding: var(--spacing-4);
+  padding-top: var(--spacing-3);
   border-radius: var(--spacing-2);
 
   :global(.TableV2--table) {
@@ -340,7 +346,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: var(--spacing-4);
+  padding-top: var(--spacing-4) !important;
 }
 
 .selected {
@@ -356,8 +362,8 @@
 }
 
 .serviceDetailEmptyState {
-  height: 335px;
-  border: 0.7px solid var(--grey-300);
+  height: 300px;
+  box-shadow: var(--elevation-2);
   border-radius: var(--spacing-2);
   display: flex;
   align-items: center;

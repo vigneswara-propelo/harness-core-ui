@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import type { GetDataError } from 'restful-react'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, noop } from 'lodash-es'
 import cx from 'classnames'
 import { Container, Layout, PageError, PageSpinner, Popover, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -38,6 +38,7 @@ export interface TableRowData {
   serviceFilter?: string
   artifactVersion?: string
   infraIdentifier?: string
+  clusterId?: string
   infraName?: string
   instanceCount?: number
   lastPipelineExecutionId?: string
@@ -63,6 +64,8 @@ export const getSummaryViewTableData = (
     let totalInstances = 0
     let lastDeployedAt = 0
     const infraName = infra.infraName || infra.clusterIdentifier
+    const clusterIdentifier = infra.clusterIdentifier
+    const infraIdentifier = infra.infraIdentifier
     if (infra.instanceGroupedByPipelineExecutionList) {
       infra.instanceGroupedByPipelineExecutionList.forEach(infraDetail => {
         totalInstances += defaultTo(infraDetail.count, 0)
@@ -82,6 +85,8 @@ export const getSummaryViewTableData = (
       infraName: defaultTo(infraName, ''),
       totalInstanceCount: totalInstances,
       showInfra: true,
+      infraIdentifier: infraIdentifier,
+      clusterId: clusterIdentifier,
       lastDeployedAt: lastDeployedAt,
       envId: defaultTo(envFilter, ''),
       serviceFilter: defaultTo(serviceFilter, ''),
@@ -126,6 +131,8 @@ export const getFullViewTableData = (
           showInfra: showInfra,
           totalInstanceCount: totalInstances,
           lastDeployedAt: lastDeployedAt,
+          infraIdentifier: infra.infraIdentifier,
+          clusterId: infra.clusterIdentifier,
           infraName: defaultTo(infraName, ''),
           envId: defaultTo(envFilter, ''),
           serviceFilter: defaultTo(serviceFilter, ''),
@@ -157,10 +164,19 @@ export const RenderInfra: Renderer<CellProps<TableRowData>> = ({
 
 const RenderInstances: Renderer<CellProps<TableRowData>> = ({
   row: {
-    original: { envId, artifactVersion: buildId, totalInstanceCount, serviceFilter }
+    original: {
+      envId,
+      artifactVersion: buildId,
+      totalInstanceCount,
+      tableType,
+      serviceFilter,
+      infraIdentifier,
+      clusterId,
+      lastPipelineExecutionId
+    }
   }
 }) => {
-  const totalVisibleInstance = 10
+  const totalVisibleInstance = tableType === InfraViewTableType.SUMMARY ? 8 : 26
   return totalInstanceCount ? (
     <Container className={cx(css.paddedContainer, css.hexContainer)} flex={{ justifyContent: 'flex-start' }}>
       {Array(Math.min(totalInstanceCount, totalVisibleInstance))
@@ -168,14 +184,15 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
         .map((_, index) => (
           <Popover
             interactionKind={PopoverInteractionKind.CLICK}
-            key={`${serviceFilter}+${buildId}`}
+            key={`${serviceFilter}_${buildId}_${index}`}
             modifiers={{ preventOverflow: { escapeWithReference: true } }}
+            disabled={tableType === InfraViewTableType.SUMMARY}
           >
             <Container
               className={css.hex}
               width={18}
               height={18}
-              background={Color.PRIMARY_3}
+              background={Color.PRIMARY_5}
               margin={{ left: 'xsmall', right: 'xsmall', top: 'xsmall', bottom: 'xsmall' }}
             />
             <ActiveServiceInstancePopover
@@ -183,6 +200,10 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
               envId={envId}
               instanceNum={index}
               serviceIdentifier={serviceFilter}
+              clusterId={clusterId}
+              isEnvDetail={true}
+              infraIdentifier={infraIdentifier}
+              pipelineExecutionId={lastPipelineExecutionId}
             />
           </Popover>
         ))}
@@ -360,7 +381,13 @@ export const EnvironmentDetailInfraTable = (
     )
   }
   if (!data?.length) {
-    return <DialogEmptyState />
+    return (
+      <DialogEmptyState
+        isSearchApplied={false}
+        resetSearch={noop}
+        message={getString('cd.environmentDetailPage.selectInfraMsg')}
+      />
+    )
   }
 
   return (

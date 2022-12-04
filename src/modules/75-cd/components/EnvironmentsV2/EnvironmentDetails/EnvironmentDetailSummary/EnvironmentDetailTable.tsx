@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import type { GetDataError } from 'restful-react'
 import cx from 'classnames'
-import { defaultTo, isEqual } from 'lodash-es'
+import { defaultTo, isEqual, noop } from 'lodash-es'
 import { Container, Layout, PageError, PageSpinner, Popover, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
@@ -18,7 +18,7 @@ import { useStrings } from 'framework/strings'
 import { numberFormatter } from '@cd/components/Services/common'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
 import type { InstanceGroupedByService } from 'services/cd-ng'
-import emptyInstanceDetail from './EmptyStateSvgs/emptyInstanceDetail.svg'
+import { DialogEmptyState } from './EnvironmentDetailsUtils'
 
 import css from './EnvironmentDetailSummary.module.scss'
 
@@ -189,10 +189,12 @@ export const RenderArtifactVersion: Renderer<CellProps<TableRowData>> = ({
       }}
     >
       <Layout.Horizontal flex={{ alignItems: 'center' }} className={cx({ [css.latestBadgeStyle]: latest })}>
+        {latest && <Container className={css.latestArtifact} />}
         <Text
           style={{
             maxWidth: tableType === TableType.SUMMARY ? (latest ? '62px' : '70px') : '125px',
-            paddingRight: 'var(--spacing-3)'
+            paddingRight: 'var(--spacing-3)',
+            marginLeft: tableType === TableType.FULL && !latest ? 14 : ''
           }}
           font={{ size: 'small' }}
           lineClamp={1}
@@ -201,7 +203,6 @@ export const RenderArtifactVersion: Renderer<CellProps<TableRowData>> = ({
         >
           {artifactVersion}
         </Text>
-        {latest && <Container className={css.latestArtifact} />}
       </Layout.Horizontal>
 
       {popoverTable}
@@ -290,9 +291,22 @@ export const EnvironmentDetailTable = (
     serviceFilter?: string
     tableStyle: string
     setRowClickFilter: React.Dispatch<React.SetStateAction<InfraViewFilters>>
+    isSearchApplied?: boolean
+    resetSearch?: () => void
   }>
 ): React.ReactElement => {
-  const { tableType, loading = false, data, error, refetch, serviceFilter, tableStyle, setRowClickFilter } = props
+  const {
+    tableType,
+    loading = false,
+    data,
+    error,
+    refetch,
+    serviceFilter,
+    tableStyle,
+    setRowClickFilter,
+    isSearchApplied = false,
+    resetSearch
+  } = props
   const [selectedRow, setSelectedRow] = React.useState<string>()
 
   const { getString } = useStrings()
@@ -356,10 +370,11 @@ export const EnvironmentDetailTable = (
   }
   if (!data?.length) {
     return tableType === TableType.FULL ? (
-      <Container className={css.instanceEmptyState}>
-        <img src={emptyInstanceDetail} />
-        <Text>{getString('cd.environmentDetailPage.noServiceArtifactMsg')}</Text>
-      </Container>
+      <DialogEmptyState
+        isSearchApplied={isSearchApplied}
+        resetSearch={defaultTo(resetSearch, noop)}
+        message={getString('cd.environmentDetailPage.noServiceArtifactMsg')}
+      />
     ) : (
       <Layout.Vertical height={'165px'} flex={{ align: 'center-center' }} data-test="ActiveServiceInstancesEmpty">
         <Container margin={{ bottom: 'medium' }}>
