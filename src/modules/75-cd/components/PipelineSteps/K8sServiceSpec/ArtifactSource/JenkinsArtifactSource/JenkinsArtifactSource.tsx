@@ -16,7 +16,7 @@ import {
   MultiTypeInputType,
   SelectOption
 } from '@harness/uicore'
-import type { SubmenuSelectOption } from '@harness/uicore/dist/components/SelectWithSubmenu/SelectWithSubmenu'
+import type { SubmenuSelectOption } from '@harness/uicore/dist/components/SelectWithSubmenu/SelectWithSubmenuV2'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { useMutateAsGet } from '@common/hooks'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
@@ -392,7 +392,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.jobName`, template) && (
-            <FormInput.SelectWithSubmenuTypeInput
+            <FormInput.SelectWithSubmenuTypeInputV2
               label={'Job Name'}
               name={`${path}.artifacts.${artifactPath}.spec.jobName`}
               placeholder={
