@@ -512,6 +512,7 @@ planEnforcement:
     approachingLimit: 'You have used {{ clientMauUsagePercentage }}% of your Monthly Active Users (MAU) subscription limit.'
     upgradeRequired: 'You have exceeded your Monthly Active Users (MAU) subscription limit.'
 onboarding:
+  freeBanner: All Products are free forever. For greater functionality explore plans.
   simpliestFlag: Our Simplest Flag
   simpliestFlagDescription: 'You’re creating our simplest feature flag type: Boolean Flag. This flag type is commonly used as a feature toggle, which effectively shows/hides features from your targets.'
   otherTypes: Check out other flag types

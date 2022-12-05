@@ -6627,6 +6627,7 @@ export interface StringsMap {
   'cf.onboarding.errorReceivingEvent': string
   'cf.onboarding.eventWeReceived': string
   'cf.onboarding.flagInputLabel': string
+  'cf.onboarding.freeBanner': string
   'cf.onboarding.furtherAssistance': string
   'cf.onboarding.help.getStarted': string
   'cf.onboarding.help.heading1': string
