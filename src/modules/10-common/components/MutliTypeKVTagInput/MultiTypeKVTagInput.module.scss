@@ -5,25 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.card {
-  width: 100%;
-}
+.main {
+  .multitype {
+    position: relative;
 
-.dialogStyles {
-  :global {
-    .ModalDialog--body {
-      padding: 0 !important;
-
-      &::before,
-      &::after {
-        margin: 0 !important;
-      }
-    }
-
-    .ModalDialog--bodyContent {
-      padding: 0 !important;
+    &.hasError {
+      border-color: var(--red-500);
     }
   }
 
-  overflow: hidden;
+  :global {
+    // This is required for aligning type button with input
+    .bp3-tag-input {
+      flex-grow: 1;
+    }
+  }
 }

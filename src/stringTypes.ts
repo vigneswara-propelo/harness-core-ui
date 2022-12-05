@@ -55,6 +55,7 @@ export interface StringsMap {
   'common.and': string
   'common.andCaps': string
   'common.annually': string
+  'common.any': string
   'common.apiKeys': string
   'common.apiStatus': string
   'common.apikey': string
@@ -151,6 +152,7 @@ export interface StringsMap {
   'common.commentModal.commentLabel': string
   'common.comments': string
   'common.community': string
+  'common.condition': string
   'common.confictOccured': string
   'common.config': string
   'common.configDetails': string
@@ -217,6 +219,8 @@ export interface StringsMap {
   'common.deleteServiceConfirmation': string
   'common.deleteServiceFailure': string
   'common.deleteServiceMessage': string
+  'common.deployToEntity': string
+  'common.deployToFilteredList': string
   'common.deploymentTemplateSteps': string
   'common.descriptionPlaceholder': string
   'common.directly': string
@@ -301,6 +305,7 @@ export interface StringsMap {
   'common.fetchingBranches': string
   'common.file': string
   'common.files': string
+  'common.filterOnName': string
   'common.filters.clearFilters': string
   'common.filters.noFilterSaved': string
   'common.filters.noMatchingFilterData': string
@@ -790,6 +795,7 @@ export interface StringsMap {
   'common.selectDefaultExperience': string
   'common.selectModules': string
   'common.selectName': string
+  'common.selectNameManually': string
   'common.selectRepository': string
   'common.selectService': string
   'common.selectServices': string

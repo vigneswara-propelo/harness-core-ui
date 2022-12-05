@@ -1133,3 +1133,9 @@ executionTab:
 clickToKnowMore: 'Click to know more about'
 settingCategory:
   general: General
+condition: Condition
+any: Any
+filterOnName: Filter on {{name}}
+deployToEntity: Deploy to {{entity}}
+deployToFilteredList: Deploy to filtered list
+selectNameManually: 'Select {{ name }} manually'
