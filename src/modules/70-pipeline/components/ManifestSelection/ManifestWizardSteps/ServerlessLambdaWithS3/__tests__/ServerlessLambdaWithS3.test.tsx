@@ -252,7 +252,7 @@ describe('ServerlessLambdaWithS3 tests', () => {
     await waitFor(() => expect(fetchBuckets).toHaveBeenCalledTimes(1))
   })
 
-  test(`configure values should work fine when all values are runtime inputs including filePath`, async () => {
+  test(`configure values should work fine when all values are runtime inputs`, async () => {
     const initialValues = {
       identifier: 'test',
       type: ManifestDataType.ServerlessAwsLambda,
