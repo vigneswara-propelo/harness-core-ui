@@ -78,7 +78,7 @@ function FormComponent({
     branch
   }
 
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value)
+  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
   const isTemplateContext = context === ModalViewFor.Template
 
   const {
