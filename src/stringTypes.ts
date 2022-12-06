@@ -6977,6 +6977,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.parallelizationHelpText': string
   'ci.getStartedWithCI.parameterization': string
   'ci.getStartedWithCI.parameterizationHelpText': string
+  'ci.getStartedWithCI.pipelineConfig': string
   'ci.getStartedWithCI.pleaseChoose': string
   'ci.getStartedWithCI.provisionSecureEnv': string
   'ci.getStartedWithCI.provisioningFailed': string
