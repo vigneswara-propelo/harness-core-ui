@@ -6624,6 +6624,7 @@ export interface StringsMap {
   'cf.onboarding.createFlag': string
   'cf.onboarding.createSdkKey': string
   'cf.onboarding.createdAndValidated': string
+  'cf.onboarding.enterKeyName': string
   'cf.onboarding.envCreated': string
   'cf.onboarding.environmentDescription': string
   'cf.onboarding.errorReceivingEvent': string

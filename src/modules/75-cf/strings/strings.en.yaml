@@ -539,6 +539,7 @@ onboarding:
   selectOrCreateEnvironment: Select or Create an Environment
   environmentDescription: Environments are spaces within a project where you can independently configure Feature Flags. You can have multiple Environments and the same Flags can have a different state in each Environment.
   envCreated: Environment Created
+  enterKeyName: Enter key name
   createSdkKey: Create an SDK Key
   sdkKeyDescription: SDK keys are unique to each Environment and they authorize the connection between your application and the Feature Flag SDK Client.
   keyDescriptionServer: We generated a secret as the server-side SDK key for <b>{{env}}</b> Environment for you to use in your code below. This secret will be redacted once you leave the page, so make sure to copy and store your secret somewhere safe.
