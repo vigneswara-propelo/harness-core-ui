@@ -7049,6 +7049,11 @@ export interface StringsMap {
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string
   'cv.CompositeSLO.AddSLOMessage': string
+  'cv.CompositeSLO.AddSLOValidation.maxSLOCount': string
+  'cv.CompositeSLO.AddSLOValidation.minMaxSLOCount': string
+  'cv.CompositeSLO.AddSLOValidation.minSLOCount': string
+  'cv.CompositeSLO.AddSLOValidation.totalSLOWeight': string
+  'cv.CompositeSLO.AddSLOValidation.weightMinMax': string
   'cv.CompositeSLO.Consumption.ActualSlo': string
   'cv.CompositeSLO.Consumption.AssignedWeightage': string
   'cv.CompositeSLO.Consumption.ContributedErrorBudgetBurned': string
