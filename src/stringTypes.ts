@@ -483,6 +483,7 @@ export interface StringsMap {
   'common.lastConnectedOn': string
   'common.lastModified': string
   'common.lastModifiedTime': string
+  'common.lastUpdatedAt': string
   'common.latest': string
   'common.launchFirstGen': string
   'common.letsGetYouStarted': string
@@ -988,6 +989,7 @@ export interface StringsMap {
   'common.triggerName': string
   'common.triggersLabel': string
   'common.true': string
+  'common.tryAgain': string
   'common.types': string
   'common.unlimited': string
   'common.unsavedChanges': string
@@ -3941,6 +3943,11 @@ export interface StringsMap {
   'pipeline.phasesForm.phase': string
   'pipeline.phasesForm.phases': string
   'pipeline.phasesForm.useVerification': string
+  'pipeline.pipelineCachedCopy.cacheInProgress': string
+  'pipeline.pipelineCachedCopy.cacheUpdateFailed': string
+  'pipeline.pipelineCachedCopy.cachedCopyText': string
+  'pipeline.pipelineCachedCopy.reloadPipeline': string
+  'pipeline.pipelineCachedCopy.reloadPipelineContent': string
   'pipeline.pipelineChaining.newOutput': string
   'pipeline.pipelineChaining.outputTabSummaryDetail': string
   'pipeline.pipelineChaining.pipelineOutputs': string
@@ -6599,7 +6606,6 @@ export interface StringsMap {
   'cf.gitSync.saveFlagToGit': string
   'cf.gitSync.syncingPaused': string
   'cf.gitSync.toggleGitSyncPause': string
-  'cf.gitSync.tryAgain': string
   'cf.gitSync.turnOffGitAndContinue': string
   'cf.homepage.learnMore': string
   'cf.homepage.slogan': string
