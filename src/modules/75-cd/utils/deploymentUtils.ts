@@ -96,7 +96,7 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
   }
   if (SPOT_ELASTIGROUP_NG) {
     baseTypes.push({
-      label: 'pipeline.serviceDeploymentTypes.elastigroup',
+      label: 'pipeline.serviceDeploymentTypes.spotElastigroup',
       icon: deploymentIconMap[ServiceDeploymentType.Elastigroup],
       value: ServiceDeploymentType.Elastigroup
     })
