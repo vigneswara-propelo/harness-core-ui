@@ -61,6 +61,18 @@ describe('RouteDestinations', () => {
 
     expect(routesHavePageName(routes, 'EnvironmentDetails')).toBeFalsy()
   })
+
+  test('it should render the NGUI version of the Target Groups page when FFM_5939_MFE_TARGET_GROUPS_LISTING is false', async () => {
+    const routes = renderRoutes({ FFM_5939_MFE_TARGET_GROUPS_LISTING: false })
+
+    expect(routesHavePageName(routes, 'SegmentsPage')).toBeTruthy()
+  })
+
+  test('it should not render the NGUI version of the Target Groups page when FFM_5939_MFE_TARGET_GROUPS_LISTING is true', async () => {
+    const routes = renderRoutes({ FFM_5939_MFE_TARGET_GROUPS_LISTING: true })
+
+    expect(routesHavePageName(routes, 'SegmentsPage')).toBeFalsy()
+  })
 })
 
 // Recursively search through routes (which can contain arrays of routes) for the given page name.

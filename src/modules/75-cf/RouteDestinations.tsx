@@ -149,7 +149,14 @@ registerFeatureFlagPipelineStage()
 registerFlagConfigurationPipelineStep()
 
 const CFRoutes: FC = () => {
-  const { FF_PIPELINE, FFM_1512, FFM_1827, NG_SETTINGS, FFM_3959_FF_MFE_Environment_Detail } = useFeatureFlags()
+  const {
+    FF_PIPELINE,
+    FFM_1512,
+    FFM_1827,
+    NG_SETTINGS,
+    FFM_3959_FF_MFE_Environment_Detail,
+    FFM_5939_MFE_TARGET_GROUPS_LISTING
+  } = useFeatureFlags()
 
   return (
     <>
@@ -260,9 +267,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.SegmentsPage}
       >
-        <FFGitSyncProvider>
-          <SegmentsPage />
-        </FFGitSyncProvider>
+        <FFGitSyncProvider>{FFM_5939_MFE_TARGET_GROUPS_LISTING ? <FFUIApp /> : <SegmentsPage />}</FFGitSyncProvider>
       </RouteWithLayout>
 
       <RouteWithLayout
