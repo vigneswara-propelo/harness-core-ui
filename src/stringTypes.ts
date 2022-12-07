@@ -6668,6 +6668,7 @@ export interface StringsMap {
   'cf.onboarding.selectLanguage': string
   'cf.onboarding.selectOrCreateEnvironment': string
   'cf.onboarding.selectOrCreateFlag': string
+  'cf.onboarding.selectOrTypeEnv': string
   'cf.onboarding.selectedLanguageAndEnv': string
   'cf.onboarding.setUpApp': string
   'cf.onboarding.setUpYourCode': string
