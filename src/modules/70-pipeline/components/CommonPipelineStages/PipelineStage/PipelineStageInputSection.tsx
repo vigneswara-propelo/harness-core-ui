@@ -66,8 +66,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   >()
   const {
     state: {
-      selectionState: { selectedStageId = '' },
-      pipeline: pipelineFromContext
+      selectionState: { selectedStageId = '' }
     },
     allowableTypes,
     updateStage,
@@ -107,7 +106,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   const { setPipeline: updatePipelineInVariablesContext, selectedInputSetsContext } = usePipelineVariables()
   const [existingProvide, setExistingProvide] = useState<ExistingProvide>('existing')
   const [inputTabFormValues, setInputTabFormValues] = React.useState<PipelineInfoConfig | undefined>(
-    pipelineFromContext
+    {} as PipelineInfoConfig
   )
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
   const tempPipelineInputs = useRef<PipelineInfoConfig | undefined>(undefined)
@@ -483,7 +482,9 @@ function PipelineInputSetFormBasic(): React.ReactElement {
                         readonly={existingProvide === 'existing'}
                         path=""
                         viewType={StepViewType.TemplateUsage}
-                        maybeContainerClass={existingProvide === 'provide' ? css.inputSetFormRunPipeline : ''}
+                        maybeContainerClass={
+                          existingProvide === 'provide' && hasInputSets ? css.inputSetFormRunPipeline : ''
+                        }
                         selectedStageData={{} as StageSelectionData}
                         allowableTypes={allowableTypes}
                       />
