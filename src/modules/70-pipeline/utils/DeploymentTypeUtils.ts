@@ -21,7 +21,8 @@ export const deploymentTypeLabel: Record<ServiceDefinition['type'], StringKeys> 
   ECS: 'pipeline.serviceDeploymentTypes.amazonEcs',
   Elastigroup: 'pipeline.serviceDeploymentTypes.spotElastigroup',
   CustomDeployment: 'pipeline.serviceDeploymentTypes.customDeployment',
-  TAS: 'pipeline.serviceDeploymentTypes.tas'
+  TAS: 'pipeline.serviceDeploymentTypes.tas',
+  Asg: 'pipeline.serviceDeploymentTypes.tas'
 }
 
 export const deploymentTypeIcon: Record<ServiceTypes, IconName> = {
@@ -48,5 +49,6 @@ export const executionStrategyTypes: Record<ServiceDefinition['type'], StringKey
   CustomDeployment: 'pipeline.serviceDeploymentTypes.customDeploy',
   Elastigroup: 'pipeline.serviceDeploymentTypes.spotElastigroup',
   ECS: 'ce.common.containerService',
-  TAS: 'pipeline.serviceDeploymentTypes.tas'
+  TAS: 'pipeline.serviceDeploymentTypes.tas',
+  Asg: 'pipeline.serviceDeploymentTypes.tas'
 }
