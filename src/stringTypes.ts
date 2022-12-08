@@ -4166,6 +4166,7 @@ export interface StringsMap {
   'pipeline.stepDescription.ECSRollingRollback': string
   'pipeline.stepDescription.ECSRunTask': string
   'pipeline.stepDescription.ElastigroupRollback': string
+  'pipeline.stepDescription.ElastigroupSetup': string
   'pipeline.stepDescription.Email': string
   'pipeline.stepDescription.FlagConfiguration': string
   'pipeline.stepDescription.GCR': string
@@ -4606,6 +4607,13 @@ export interface StringsMap {
   'triggers.validation.repositoryFormat': string
   'triggers.validation.selectedArtifact': string
   'triggers.validation.triggerName': string
+  'cd.ElastigroupStep.appName': string
+  'cd.ElastigroupStep.desiredInstances': string
+  'cd.ElastigroupStep.maxInstances': string
+  'cd.ElastigroupStep.minInstances': string
+  'cd.ElastigroupStep.valueCannotBe': string
+  'cd.ElastigroupStep.valueCannotBeGreaterThan': string
+  'cd.ElastigroupStep.valueCannotBeLessThan': string
   'cd.GitOpsServerDelete': string
   'cd.IdEmptyError': string
   'cd.aboutGitOpsServer': string

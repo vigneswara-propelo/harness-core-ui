@@ -635,3 +635,11 @@ environmentDetailPage:
   emptyInstanceDetailMsg: 'Empty instance detail'
   emptyServiceDetailMsg: 'There are no services with instances in this environment.'
   emptyExecutionListMsg: 'There are no executions for this given criteria.'
+ElastigroupStep:
+  appName: App Name
+  minInstances: Min Instances
+  maxInstances: Max Instances
+  desiredInstances: Desired Instances
+  valueCannotBeLessThan: '{{value}} cannot be less than {{value2}}'
+  valueCannotBeGreaterThan: '{{value}} cannot be greater than {{value2}}'
+  valueCannotBe: '{{value}} cannot be empty, string etc., should only be a positive number'
