@@ -37,7 +37,6 @@ import css from './ExecutionList.module.scss'
 
 export interface ExecutionListProps {
   onRunPipeline(): void
-  repoName?: string
   showHealthAndExecution?: boolean
   isPipelineInvalid?: boolean
   showBranchFilter?: boolean
@@ -110,7 +109,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       sort: sort.join(','), // TODO: this is temporary until BE supports common format for all. Currently BE supports status in  arrayFormat: 'repeat' and sort in  arrayFormat: 'comma'
       myDeployments,
       status,
-      repoName,
+      ...(!isExecutionHistoryView && repoName ? { repoName } : {}),
       ...(selectedBranch !== defaultBranchSelect ? { branch: selectedBranch } : {}),
       repoIdentifier,
       searchTerm,
