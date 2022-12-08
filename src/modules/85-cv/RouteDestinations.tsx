@@ -286,6 +286,10 @@ export default (
       <CVSLOsListingPage />
     </RouteWithLayout>
 
+    <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routes.toAccountCVSLOs({ ...accountPathProps })}>
+      <CVSLOsListingPage />
+    </RouteWithLayout>
+
     <RouteWithLayout
       sidebarProps={CVSideNavProps}
       path={routes.toErrorTracking({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
