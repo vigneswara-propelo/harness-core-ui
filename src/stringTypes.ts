@@ -7351,6 +7351,9 @@ export interface StringsMap {
   'cv.lastSuccessfulRun': string
   'cv.learnMore': string
   'cv.left': string
+  'cv.licenseBanner.freePlanUsageMessage': string
+  'cv.licenseBanner.limitExceedMessage': string
+  'cv.licenseBanner.teamPlanUsageMessage': string
   'cv.logCluster': string
   'cv.logs.eventMarkedAs': string
   'cv.logs.eventPriorityUpdate': string
@@ -7398,11 +7401,13 @@ export interface StringsMap {
   'cv.monitoredServices.filterlabel': string
   'cv.monitoredServices.heading': string
   'cv.monitoredServices.healthScoreDataNotAvailable': string
+  'cv.monitoredServices.listToggleSwitchDisableMessage': string
   'cv.monitoredServices.monitoredServiceCreated': string
   'cv.monitoredServices.monitoredServiceDeleted': string
   'cv.monitoredServices.monitoredServiceDetails': string
   'cv.monitoredServices.monitoredServiceName': string
   'cv.monitoredServices.monitoredServiceTabs.configurations': string
+  'cv.monitoredServices.monitoredServiceTabs.disabledText': string
   'cv.monitoredServices.monitoredServiceTabs.serviceHealth': string
   'cv.monitoredServices.monitoredServiceToggle': string
   'cv.monitoredServices.monitoredServiceUpdated': string
