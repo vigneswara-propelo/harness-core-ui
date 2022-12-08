@@ -3784,9 +3784,13 @@ export interface StringsMap {
   'pipeline.loopingStrategy.warningText': string
   'pipeline.manifestToConnectorLabelMap.AWSLabel': string
   'pipeline.manifestType.InheritFromManifest': string
+  'pipeline.manifestType.addAutoScalerYAMLPath': string
   'pipeline.manifestType.addManifestLabel': string
   'pipeline.manifestType.addValuesYamlPath': string
+  'pipeline.manifestType.addVarsYAMLPath': string
   'pipeline.manifestType.attachPath': string
+  'pipeline.manifestType.autoScalerPathRequired': string
+  'pipeline.manifestType.autoScalerYAMLPath': string
   'pipeline.manifestType.azureRepoConnectorLabel': string
   'pipeline.manifestType.basePath': string
   'pipeline.manifestType.basePathPlaceholder': string
@@ -3796,6 +3800,7 @@ export interface StringsMap {
   'pipeline.manifestType.bucketNamePlaceholder': string
   'pipeline.manifestType.bucketNameRequired': string
   'pipeline.manifestType.bucketPlaceHolder': string
+  'pipeline.manifestType.cfCliVersion': string
   'pipeline.manifestType.chartPathPlaceholder': string
   'pipeline.manifestType.chartPathRequired': string
   'pipeline.manifestType.commandFlagRequired': string
@@ -3857,6 +3862,9 @@ export interface StringsMap {
   'pipeline.manifestType.specifyManifestRepoType': string
   'pipeline.manifestType.specifyManifestStore': string
   'pipeline.manifestType.valuesYamlPath': string
+  'pipeline.manifestType.varsPathRequired': string
+  'pipeline.manifestType.varsYAMLPath': string
+  'pipeline.manifestTypeLabels.Autoscaler': string
   'pipeline.manifestTypeLabels.AwsSAM': string
   'pipeline.manifestTypeLabels.AzureFunctions': string
   'pipeline.manifestTypeLabels.EcsScalableTargetDefinition': string
@@ -3873,7 +3881,9 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.ServerlessAwsLambda': string
   'pipeline.manifestTypeLabels.ServerlessAzure': string
   'pipeline.manifestTypeLabels.ServerlessGCP': string
+  'pipeline.manifestTypeLabels.TASManifest': string
   'pipeline.manifestTypeLabels.ValuesYaml': string
+  'pipeline.manifestTypeLabels.VarsYAML': string
   'pipeline.manuallyTriggered': string
   'pipeline.mostRecentDirection': string
   'pipeline.moveStage.description': string
@@ -5175,6 +5185,11 @@ export interface StringsMap {
   'cd.steps.pdcStep.title': string
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
+  'cd.steps.tasInfra.organizationError': string
+  'cd.steps.tasInfra.organizationPlaceholder': string
+  'cd.steps.tasInfra.space': string
+  'cd.steps.tasInfra.spacePlaceholder': string
+  'cd.steps.tasInfra.spacesError': string
   'cd.successfullyLinkedClusters': string
   'cd.terraformVarFiles': string
   'cd.testConnectionStepName': string
