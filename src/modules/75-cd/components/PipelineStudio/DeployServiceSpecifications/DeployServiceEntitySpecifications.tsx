@@ -94,7 +94,7 @@ export default function DeployServiceEntitySpecifications({
       } else {
         const isSingleSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef)
 
-        /*  Currently BE does not support use from stage with multi services, so commenting this temporarily, to filter stages with multi service. 
+        /*  Currently BE does not support use from stage with multi services, so commenting this temporarily, to filter out stages with multi service. 
         Once BE has support for multi service propagate, we need to just add the condition as ( !isSingleSvcEmpty || !isMultiSvcEmpty) */
         // const isMultiSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.services?.values)
 
