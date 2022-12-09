@@ -112,9 +112,9 @@ export const OnboardingDetailPage: React.FC = () => {
 
   return (
     <Layout.Vertical
-      height="100vh"
       padding={{ top: 'huge', left: 'huge', right: 'huge', bottom: 'none' }}
       background={Color.WHITE}
+      className={css.mainContent}
     >
       <Layout.Horizontal
         spacing="xsmall"
@@ -134,7 +134,7 @@ export const OnboardingDetailPage: React.FC = () => {
           }
         />
       </Layout.Horizontal>
-      <Container className={css.mainContentContainer} height="100%" padding={{ top: 'xxlarge', bottom: 'xlarge' }}>
+      <Container className={css.onboardingContainer} height="100%" padding={{ top: 'xxlarge', bottom: 'xlarge' }}>
         {selectedStep !== STEP.VALIDATE_FLAG ? (
           <>
             <Heading level={3} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }}>

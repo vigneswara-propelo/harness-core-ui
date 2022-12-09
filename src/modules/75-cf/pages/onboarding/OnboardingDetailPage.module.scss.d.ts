@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly keepOnTop: string
-  readonly mainContentContainer: string
+  readonly mainContent: string
+  readonly onboardingContainer: string
 }
 export default styles
