@@ -9,6 +9,7 @@ import React from 'react'
 import { render, waitFor, screen, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
+import * as useFeatureFlag from '@common/hooks/useFeatureFlag'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import * as useFeatures from '@common/hooks/useFeatures'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
@@ -61,6 +62,11 @@ jest
   .mockImplementation(() => ({ data: serviceCountData, refetch: refetchServiceCountData } as any))
 
 describe('Monitored Service list', () => {
+  beforeAll(() => {
+    const useFeatureFlags = jest.spyOn(useFeatureFlag, 'useFeatureFlag')
+    useFeatureFlags.mockReturnValue(true)
+  })
+
   test('Service listing component renders', async () => {
     const { container } = render(
       <TestWrapper {...testWrapperProps}>

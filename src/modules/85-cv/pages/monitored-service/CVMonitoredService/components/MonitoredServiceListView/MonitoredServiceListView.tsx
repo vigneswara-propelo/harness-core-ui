@@ -27,6 +27,8 @@ import type { MonitoredServiceListItemDTO } from 'services/cv'
 import { EnvironmentToolTipDisplay } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentToolTipDisplay'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import IconGrid from '../IconGrid/IconGrid'
@@ -213,6 +215,8 @@ const MonitoredServiceListView: React.FC<MonitoredServiceListViewProps> = ({
     }
   })
 
+  const isSRMLicenseEnabled = useFeatureFlag(FeatureFlag.CVNG_LICENSE_ENFORCEMENT)
+
   const RenderContextMenu: Renderer<CellProps<MonitoredServiceListItemDTO>> = ({ row }) => {
     const monitoredService = row.original
 
@@ -281,7 +285,8 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
       [projectIdentifier]
     )
 
-    const canDisableMonitoredServiceToggle = !monitoredService?.serviceLicenseEnabled && !srmServicesFeatureEnabled
+    const canDisableMonitoredServiceToggle =
+      isSRMLicenseEnabled && !monitoredService?.serviceLicenseEnabled && !srmServicesFeatureEnabled
 
     const getTooltip = (): ReactElement | undefined => {
       if (!canToggle) {

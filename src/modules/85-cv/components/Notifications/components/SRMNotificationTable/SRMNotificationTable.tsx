@@ -14,6 +14,8 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { getIconByNotificationMethod } from '@rbac/utils/NotificationUtils'
 import type { NotificationType } from '@rbac/interfaces/Notifications'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { NotificationRuleResponse } from 'services/cv'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -56,7 +58,9 @@ function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElem
   const formik = useFormikContext<MonitoredServiceForm>()
   const { values: formValues } = formik || {}
 
-  const isNotificationDisabled = formValues?.isEdit && !formValues?.isMonitoredServiceEnabled
+  const isSRMLicenseEnabled = useFeatureFlag(FeatureFlag.CVNG_LICENSE_ENFORCEMENT)
+
+  const isNotificationDisabled = isSRMLicenseEnabled && formValues?.isEdit && !formValues?.isMonitoredServiceEnabled
 
   const getAddNotificationButton = (): JSX.Element => (
     <RbacButton

@@ -18,6 +18,8 @@ import { getCVMonitoringServicesSearchParam, getErrorMessage } from '@cv/utils/C
 import DetailsBreadcrumb from '@cv/pages/monitored-service/views/DetailsBreadcrumb'
 import DetailsHeaderTitle from '@cv/pages/monitored-service/views/DetailsHeaderTitle'
 import DetailsToolbar from '@cv/pages/monitored-service/views/DetailsToolbar'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import Configurations from './components/Configurations/Configurations'
 import { MonitoredServiceEnum } from './MonitoredServicePage.constants'
 import ServiceHealth from './components/ServiceHealth/ServiceHealth'
@@ -35,6 +37,8 @@ const ServiceHealthAndConfiguration: React.FC = () => {
   const { orgIdentifier, projectIdentifier, accountId, identifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
+
+  const isSRMLicenseEnabled = useFeatureFlag(FeatureFlag.CVNG_LICENSE_ENFORCEMENT)
 
   const {
     data: monitoredServiceData,
@@ -55,7 +59,7 @@ const ServiceHealthAndConfiguration: React.FC = () => {
   let selectedTab = tab
 
   if (!loading && !error) {
-    selectedTab = monitoredService?.enabled ? tab : MonitoredServiceEnum.Configurations
+    selectedTab = monitoredService?.enabled || !isSRMLicenseEnabled ? tab : MonitoredServiceEnum.Configurations
   }
 
   if (error) {
@@ -77,7 +81,7 @@ const ServiceHealthAndConfiguration: React.FC = () => {
   }
 
   const onTabChange = (nextTab: MonitoredServiceEnum): void => {
-    if (nextTab !== tab && monitoredService?.enabled) {
+    if (nextTab !== tab && (monitoredService?.enabled || !isSRMLicenseEnabled)) {
       history.push({
         pathname: routes.toCVAddMonitoringServicesEdit({
           accountId,
@@ -132,7 +136,7 @@ const ServiceHealthAndConfiguration: React.FC = () => {
     </Page.Body>
   )
 
-  const isMonitoredServiceDisabled = Boolean(!identifier || !monitoredService?.enabled)
+  const isMonitoredServiceDisabled = isSRMLicenseEnabled && Boolean(!identifier || !monitoredService?.enabled)
 
   return (
     <>

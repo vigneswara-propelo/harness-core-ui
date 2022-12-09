@@ -8,6 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { Formik } from 'formik'
+import * as useFeatureFlag from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { NotificationRuleResponse } from 'services/cv'
 import NotificationsContainer from '../NotificationsContainer'
@@ -39,6 +40,11 @@ const WrapperComponent = (props: NotificationsContainerProps): JSX.Element => {
 }
 
 describe('Unit tests for NotificationsContainer', () => {
+  beforeAll(() => {
+    const useFeatureFlags = jest.spyOn(useFeatureFlag, 'useFeatureFlag')
+    useFeatureFlags.mockReturnValue(true)
+  })
+
   const props = {
     children: <></>,
     type: SRMNotificationType.SERVICE_LEVEL_OBJECTIVE,
