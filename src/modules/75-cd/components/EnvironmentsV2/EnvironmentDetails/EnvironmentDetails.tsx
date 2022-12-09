@@ -77,7 +77,9 @@ export default function EnvironmentDetails(): React.ReactElement {
   const formikRef = useRef<FormikProps<NGEnvironmentInfoConfig>>()
 
   const [selectedTabId, setSelectedTabId] = useState<EnvironmentDetailsTab>(
-    EnvironmentDetailsTab[EnvironmentDetailsTab[defaultTo(sectionId, 'CONFIGURATION')]]
+    EnvironmentDetailsTab[
+      EnvironmentDetailsTab[defaultTo(sectionId, environmentSummaryEnabled ? 'SUMMARY' : 'CONFIGURATION')]
+    ]
   )
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [updateLoading, setUpdateLoading] = useState(false)

@@ -153,7 +153,12 @@ export const RenderInfra: Renderer<CellProps<TableRowData>> = ({
 }) => {
   return showInfra ? (
     <Container className={css.paddedInfraContainer}>
-      <Text font={{ size: 'small' }} lineClamp={1} tooltipProps={{ isDark: true }}>
+      <Text
+        font={{ variation: FontVariation.SMALL }}
+        lineClamp={1}
+        tooltipProps={{ isDark: true }}
+        color={Color.GREEN_900}
+      >
         {infraName ? infraName : '-'}
       </Text>
     </Container>
@@ -181,7 +186,7 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
         .fill(null)
         .map((_, index) => (
           <Popover
-            interactionKind={PopoverInteractionKind.CLICK}
+            interactionKind={PopoverInteractionKind.HOVER}
             key={`${serviceFilter}_${buildId}_${index}`}
             modifiers={{ preventOverflow: { escapeWithReference: true } }}
             position={Position.TOP}
@@ -341,7 +346,7 @@ export const EnvironmentDetailInfraTable = (
       {
         Header: (
           <Text lineClamp={1} color={Color.GREY_600}>
-            {'INFRA / CLUSTER'}
+            {getString('cd.environmentDetailPage.infraSlashCluster')}
           </Text>
         ),
         id: 'infra',
@@ -355,7 +360,7 @@ export const EnvironmentDetailInfraTable = (
         Cell: RenderInstances
       },
       {
-        Header: getString('cd.serviceDashboard.headers.instances'),
+        Header: getString('cd.serviceDashboard.headers.pipelineExecution'),
         id: 'pipelineExecution',
         width: columnsProperties.pipelineExecution.width,
         Cell: RenderPipelineExecution
@@ -384,7 +389,7 @@ export const EnvironmentDetailInfraTable = (
       <DialogEmptyState
         isSearchApplied={false}
         resetSearch={noop}
-        message={getString('cd.environmentDetailPage.selectInfraMsg')}
+        message={getString('cd.environmentDetailPage.selectArtifactMsg')}
       />
     )
   }
