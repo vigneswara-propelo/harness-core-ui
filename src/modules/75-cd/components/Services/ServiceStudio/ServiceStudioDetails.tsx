@@ -106,6 +106,9 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
       })
     }
     const finalServiceData = isVisualView ? props.serviceData : updatedService
+    if (!finalServiceData?.service?.name) {
+      return
+    }
     const body = {
       ...omit(cloneDeep(finalServiceData?.service), 'serviceDefinition', 'gitOpsEnabled'),
       projectIdentifier,
