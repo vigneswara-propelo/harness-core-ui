@@ -16,7 +16,9 @@ import {
   FilePaths,
   GetFilePathsV2ForS3QueryParams,
   SidecarArtifact,
+  useGetFilePathsForS3,
   useGetFilePathsV2ForS3,
+  useGetV2BucketListForS3,
   useListBucketsWithServiceV2
 } from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'
@@ -45,7 +47,7 @@ import {
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 export const resetFieldValue = (formik: FormikValues, fieldPath: string): void => {
-  const fieldValue = get(formik.values, fieldPath, '')
+  const fieldValue = get(formik?.values, fieldPath, '')
   if (getMultiTypeFromValue(fieldValue) === MultiTypeInputType.FIXED && fieldValue?.length) {
     formik.setFieldValue(fieldPath, '')
   }
@@ -74,7 +76,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     pipelineIdentifier,
     serviceIdentifier,
     stepViewType,
-    artifacts
+    artifacts,
+    useArtifactV1Data = false
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -153,11 +156,29 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     )
   }
 
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
-    data: bucketData,
-    error,
-    loading,
-    refetch: refetchBuckets
+    data: bucketV1Data,
+    error: bucketV1Error,
+    loading: bucketV1Loading,
+    refetch: refetchV1Buckets
+  } = useGetV2BucketListForS3({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      connectorRef: defaultTo(fixedConnectorValue, ''),
+      region: getFinalQueryParamValue(fixedRegionValue)
+    },
+    lazy: true
+  })
+
+  const {
+    data: bucketV2Data,
+    error: bucketV2Error,
+    loading: bucketV2Loading,
+    refetch: refetchV2Buckets
   } = useMutateAsGet(useListBucketsWithServiceV2, {
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
@@ -171,6 +192,20 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     lazy: true,
     debounce: 300
   })
+
+  const { bucketData, error, loading, refetchBuckets } = useArtifactV1Data
+    ? {
+        bucketData: bucketV1Data,
+        error: bucketV1Error,
+        loading: bucketV1Loading,
+        refetchBuckets: refetchV1Buckets
+      }
+    : {
+        bucketData: bucketV2Data,
+        error: bucketV2Error,
+        loading: bucketV2Loading,
+        refetchBuckets: refetchV2Buckets
+      }
 
   const selectItems = useMemo(() => {
     return defaultTo(
@@ -250,11 +285,31 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     )
   }
 
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
-    data: filePathData,
-    error: filePathError,
-    loading: fetchingFilePaths,
-    refetch: refetchFilePaths
+    data: filePathV1Data,
+    error: filePathV1Error,
+    loading: fetchingV1FilePaths,
+    refetch: refetchV1FilePaths
+  } = useGetFilePathsForS3({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      connectorRef: defaultTo(fixedConnectorValue, ''),
+      region: getFinalQueryParamValue(fixedRegionValue),
+      bucketName: defaultTo(fixedBucketValue, ''),
+      filePathRegex: '*'
+    },
+    lazy: true
+  })
+
+  const {
+    data: filePathV2Data,
+    error: filePathV2Error,
+    loading: fetchingV2FilePaths,
+    refetch: refetchV2FilePaths
   } = useMutateAsGet(useGetFilePathsV2ForS3, {
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
@@ -268,6 +323,20 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     lazy: true,
     debounce: 300
   })
+
+  const { filePathData, filePathError, fetchingFilePaths, refetchFilePaths } = useArtifactV1Data
+    ? {
+        filePathData: filePathV1Data,
+        filePathError: filePathV1Error,
+        fetchingFilePaths: fetchingV1FilePaths,
+        refetchFilePaths: refetchV1FilePaths
+      }
+    : {
+        filePathData: filePathV2Data,
+        filePathError: filePathV2Error,
+        fetchingFilePaths: fetchingV2FilePaths,
+        refetchFilePaths: refetchV2FilePaths
+      }
 
   const filePathSelectItems = useMemo(() => {
     return defaultTo(
@@ -389,7 +458,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
 
   const getBucketNameHelperText = () => {
     if (
-      getMultiTypeFromValue(get(formik.values, `${path}.artifacts.${artifactPath}.spec.bucketName`)) ===
+      getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.bucketName`)) ===
         MultiTypeInputType.FIXED &&
       (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME || fixedConnectorValue?.length === 0)
     ) {
@@ -399,7 +468,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
 
   const getFilePathHelperText = () => {
     if (
-      (getMultiTypeFromValue(get(formik.values, `${path}.artifacts.${artifactPath}.spec.filePath`)) ===
+      (getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.filePath`)) ===
         MultiTypeInputType.FIXED &&
         (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME ||
           fixedConnectorValue?.length === 0)) ||
