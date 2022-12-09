@@ -86,6 +86,18 @@ describe('RouteDestinations', () => {
 
     expect(routesHavePageName(routes, 'EnvironmentsPage')).toBeFalsy()
   })
+
+  test('it should render the NGUI version of the Targets page when FFM_5951_FF_MFE_Targets_Listing is false', async () => {
+    const routes = renderRoutes({ FFM_5951_FF_MFE_Targets_Listing: false })
+
+    expect(routesHavePageName(routes, 'TargetsPage')).toBeTruthy()
+  })
+
+  test('it should not render the NGUI version of the Targets page when FFM_5951_FF_MFE_Targets_Listing is true', async () => {
+    const routes = renderRoutes({ FFM_5951_FF_MFE_Targets_Listing: true })
+
+    expect(routesHavePageName(routes, 'TargetsPage')).toBeFalsy()
+  })
 })
 
 // Recursively search through routes (which can contain arrays of routes) for the given page name.
