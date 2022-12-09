@@ -1826,7 +1826,7 @@
   resolved "https://npm.pkg.github.com/download/@harness/use-modal/1.1.0/693a3bb3e6ea5d3ec02d301316a8a940773fefec4d88019302fc57428fc913c6#98ff8498247e27c239626ff1b195797e4c69882c"
   integrity sha512-cpbd8xUfbkz1jA9ANGlbLjd1bC+aP3/SJ66j7V3ErsHIv6apK6B8eTgL4N7pnMiTemuTNyjhGvsGCZOF9FO6Pg==
 
-"@harnessio/ff-javascript-client-sdk@^1.4.12":
+"@harnessio/ff-javascript-client-sdk@^1.4.14":
   version "1.4.14"
   resolved "https://registry.yarnpkg.com/@harnessio/ff-javascript-client-sdk/-/ff-javascript-client-sdk-1.4.14.tgz#e2b8237f2c1e490d59cfc65ae3c1fe8c73be8e39"
   integrity sha512-VJsScAE6Lb5m4HZg5yxFUMFKNef4YGkVIApMsvUukkqXiIz+uEhqp44Lj8i76oe26vfcipmLCba5nVSNxln++g==
@@ -1834,12 +1834,12 @@
     jwt-decode "^3.1.2"
     mitt "^2.1.0"
 
-"@harnessio/ff-react-client-sdk@^1.0.0-alpha.12":
-  version "1.0.0-alpha.12"
-  resolved "https://registry.yarnpkg.com/@harnessio/ff-react-client-sdk/-/ff-react-client-sdk-1.0.0-alpha.12.tgz#5cc0056000e2e198dadb2030cf77829b83c61bf8"
-  integrity sha512-tXOeyHsbcFNWlmCBzsk+TAN+jQM8RccGErOD/uSmLEAKKD/mYyf1qrfXij9RyhIKrPS6huJrtuiDYTEidnMd9w==
+"@harnessio/ff-react-client-sdk@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/ff-react-client-sdk/-/ff-react-client-sdk-1.0.0.tgz#cb901cffaa1fd12e580ec0c783ddc2a0d44f907c"
+  integrity sha512-umUETVhKPnbnIxDT5qz/iQ9b+bgrYVoAaiiLFFfzJXSlYaJU27LMEWmrhp2r2F8H3EoGPdYjpqZb7I7T8h8pkA==
   dependencies:
-    "@harnessio/ff-javascript-client-sdk" "^1.4.12"
+    "@harnessio/ff-javascript-client-sdk" "^1.4.14"
     lodash.omit "^4.5.0"
 
 "@harnessio/oats-cli@^2.1.0":
