@@ -13,6 +13,7 @@ import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import type { CacheResponseMetadata } from 'services/pipeline-ng'
+import { StringUtils } from '@common/exports'
 import { usePipelineContext } from '../../PipelineContext/PipelineContext'
 import css from './PipelineCachedCopy.module.scss'
 
@@ -56,7 +57,8 @@ function PipelineCachedCopy(): React.ReactElement {
           <div>{getString('pipeline.pipelineCachedCopy.cacheInProgress')}</div>
         )}
         <div>
-          {getString('common.lastUpdatedAt')}: {getReadableDateTime(cacheResponse.lastUpdatedAt)}
+          <span>{getString('common.lastUpdatedAt')}</span>:{' '}
+          {getReadableDateTime(cacheResponse.lastUpdatedAt, StringUtils.DEFAULT_DATE_FORMAT)}
         </div>
       </>
     )
@@ -64,7 +66,12 @@ function PipelineCachedCopy(): React.ReactElement {
 
   return (
     <>
-      <Layout.Horizontal flex={{ alignItems: 'center' }} spacing="small" margin={{ right: 'medium' }}>
+      <Layout.Horizontal
+        flex={{ alignItems: 'center' }}
+        spacing="small"
+        margin={{ right: 'medium' }}
+        className={css.reloadFromCache}
+      >
         <div className={css.cachedcopy}>
           <Tooltip position="bottom" content={getTooltipContent()}>
             <Text

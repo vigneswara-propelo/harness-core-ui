@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { fireEvent, render, waitFor, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -51,11 +58,25 @@ describe('Test Pipeline gitx cache Copy', () => {
 
     const cacheCopyText = screen.getByText('pipeline.pipelineCachedCopy.cachedCopyText')
     expect(cacheCopyText).toBeTruthy()
-    fireEvent.mouseOver(cacheCopyText)
     const refreshIcon = container.querySelector(`[data-icon="command-rollback"]`)
     const validcache = container.querySelector(`[data-icon="success-tick"]`)
     expect(refreshIcon).toBeDefined()
     expect(validcache).toBeDefined()
+  })
+
+  test('should show last updated data on hover', async () => {
+    render(
+      <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
+        <PipelineContext.Provider value={cacheResponseContextValue}>
+          <PipelineCachedCopy />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const cacheCopyText = screen.getByText('pipeline.pipelineCachedCopy.cachedCopyText')
+    expect(cacheCopyText).toBeTruthy()
+    fireEvent.mouseOver(cacheCopyText)
+    expect(await screen.findByText('common.lastUpdatedAt')).toBeInTheDocument()
   })
 
   test('reload the data from cache', async () => {

@@ -9,5 +9,6 @@
 declare const styles: {
   readonly cachedcopy: string
   readonly dialogStyles: string
+  readonly reloadFromCache: string
 }
 export default styles
