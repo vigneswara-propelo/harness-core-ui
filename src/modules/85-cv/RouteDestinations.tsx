@@ -370,6 +370,14 @@ export default (
     </RouteWithLayout>
 
     <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
+      path={routes.toAccountCVCreateCompositeSLOs({ ...accountPathProps, ...cvModuleParams })}
+    >
+      <CVCreateSLOV2 isComposite />
+    </RouteWithLayout>
+
+    <RouteWithLayout
       sidebarProps={CVSideNavProps}
       path={routes.toErrorTracking({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
     >
@@ -390,6 +398,18 @@ export default (
       path={routes.toCVSLODetailsPage({
         ...accountPathProps,
         ...projectPathProps,
+        ...editParams,
+        ...cvModuleParams
+      })}
+    >
+      <CVSLODetailsPage />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
+      path={routes.toAccountCVSLODetailsPage({
+        ...accountPathProps,
         ...editParams,
         ...cvModuleParams
       })}

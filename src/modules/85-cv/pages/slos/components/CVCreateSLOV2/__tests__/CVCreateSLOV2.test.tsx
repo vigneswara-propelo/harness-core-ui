@@ -74,7 +74,10 @@ describe('CVCreateSloV2', () => {
 
   test('CVCreateSLOV2 when isComposite is false', async () => {
     const { container } = render(
-      <TestWrapper>
+      <TestWrapper
+        path="/account/:accountId/cv/dashboard/orgs/:orgIdentifier/projects/:projectIdentifier/slos"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
         <CVCreateSLOV2 isComposite={false} />
       </TestWrapper>
     )

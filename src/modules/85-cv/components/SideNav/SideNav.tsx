@@ -108,6 +108,9 @@ export default function CVSideNav(): React.ReactElement {
           if (tabId === CVSideNavTabIds.AccountTab) {
             updateAppStore({ selectedProject: undefined })
             history.push(routes.toAccountCVSLOs({ accountId }))
+          } else {
+            updateAppStore({ selectedProject: undefined })
+            history.push(routes.toCVHome({ accountId }))
           }
         }}
         tabList={[

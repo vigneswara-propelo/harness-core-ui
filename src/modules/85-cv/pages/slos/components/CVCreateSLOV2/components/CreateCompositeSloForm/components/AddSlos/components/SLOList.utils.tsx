@@ -9,7 +9,7 @@ import React from 'react'
 import { Layout, Text, Checkbox } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Renderer, CellProps, Row } from 'react-table'
-import type { ServiceLevelObjectiveDetailsDTO, SLOHealthListView } from 'services/cv'
+import type { ServiceLevelObjectiveDetailsDTO, SLOConsumptionBreakdown, SLOHealthListView } from 'services/cv'
 import css from './SLOList.module.scss'
 
 export const getUpdatedSLOObjectives = (
@@ -22,10 +22,19 @@ export const getUpdatedSLOObjectives = (
   const weight = Number(100 / selectedSlosLength).toFixed(1)
   const lastWeight = Number(100 - Number(weight) * (selectedSlosLength - 1)).toFixed(1)
   const updatedSLOObjective = selectedSlos.map((item, index) => {
+    const orgAndProjectIdentifiers =
+      orgIdentifier && projectIdentifier
+        ? {
+            orgIdentifier,
+            projectIdentifier
+          }
+        : {
+            orgIdentifier: item?.projectParams?.orgIdentifier ?? '',
+            projectIdentifier: item?.projectParams?.projectIdentifier ?? ''
+          }
     return {
       accountId,
-      orgIdentifier,
-      projectIdentifier,
+      ...orgAndProjectIdentifiers,
       serviceLevelObjectiveRef: item?.sloIdentifier,
       ...item,
       weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight)
@@ -77,16 +86,19 @@ export const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({
 export const RenderUserJourney: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
   const slo = row.original
   const { userJourneys = [] } = slo || {}
-  return userJourneys?.map(userJourney => (
-    <Text
-      key={userJourney.identifier}
-      className={css.titleInSloTable}
-      title={userJourney.name}
-      font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
-    >
-      {userJourney.name}
-    </Text>
-  ))
+  return userJourneys?.map(userJourney => {
+    const { name, identifier } = userJourney
+    return (
+      <Text
+        key={identifier}
+        className={css.titleInSloTable}
+        title={name}
+        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+      >
+        {name || identifier}
+      </Text>
+    )
+  })
 }
 
 export const RenderTags: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
@@ -117,7 +129,7 @@ export const RenderTarget: Renderer<CellProps<SLOHealthListView>> = ({ row }) =>
   )
 }
 
-export const RenderSLIType: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
+export const RenderSLIType: Renderer<CellProps<SLOHealthListView | SLOConsumptionBreakdown>> = ({ row }) => {
   const slo = row.original
   return (
     <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>

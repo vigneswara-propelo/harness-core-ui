@@ -5,15 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import React from 'react'
+import { Text } from '@harness/uicore'
+import type { Renderer, CellProps, Column } from 'react-table'
 import type { FormikProps } from 'formik'
 import { defaultTo, isEmpty, isEqual } from 'lodash-es'
-import type { SLOTargetFilterDTO } from 'services/cv'
+import type { SLOConsumptionBreakdown, SLOTargetFilterDTO } from 'services/cv'
 import type { UseStringsReturn } from 'framework/strings'
 import { PeriodLengthTypes, PeriodTypes } from '../../../CVCreateSLO/CVCreateSLO.types'
-import type { SLOV2Form } from '../../CVCreateSLOV2.types'
+import type { SLOObjective, SLOV2Form } from '../../CVCreateSLOV2.types'
 import { createSloTargetFilterDTO } from './components/AddSlos/AddSLOs.utils'
 import { MinNumberOfSLO, MaxNumberOfSLO, SLOWeight } from './CreateCompositeSloForm.constant'
 import { CompositeSLOFormFields, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
+import css from './CreateCompositeSloForm.module.scss'
 
 const addSLOError = (formikProps: FormikProps<SLOV2Form>, getString?: UseStringsReturn['getString']) => {
   let errorList: string[] = []
@@ -171,3 +175,54 @@ export const shouldOpenPeriodUpdateModal = (
     !isEqual(formikFilterData, filterData?.current)
   )
 }
+
+export const RenderOrg: Renderer<CellProps<SLOObjective | SLOConsumptionBreakdown>> = ({ row }) => {
+  const slo = row.original
+  return (
+    <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+      {slo?.orgName}
+    </Text>
+  )
+}
+
+export const RenderProject: Renderer<CellProps<SLOObjective | SLOConsumptionBreakdown>> = ({ row }) => {
+  const slo = row.original
+  return (
+    <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+      {slo?.projectName}
+    </Text>
+  )
+}
+
+export const getProjectAndOrgColumn = ({ getString }: { getString: UseStringsReturn['getString'] }) => [
+  {
+    accessor: 'orgIdentifier',
+    Header: getString('orgLabel').toUpperCase(),
+    width: '20%',
+    Cell: RenderOrg
+  },
+  {
+    accessor: 'projectIdentifier',
+    Header: getString('projectLabel').toUpperCase(),
+    width: '20%',
+    Cell: RenderProject
+  }
+]
+
+export const getColumsForProjectAndAccountLevel = ({
+  isAccountLevel,
+  allColumns,
+  getString
+}: {
+  isAccountLevel: boolean
+  getString: UseStringsReturn['getString']
+  allColumns: Array<Column<any>>
+}): Array<Column<any>> =>
+  isAccountLevel
+    ? allColumns
+    : allColumns.filter(
+        column =>
+          ![getString('orgLabel').toUpperCase(), getString('projectLabel').toUpperCase()].includes(
+            column.Header as string
+          )
+      )

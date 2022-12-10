@@ -1566,6 +1566,9 @@ const routes = {
     }: Partial<ProjectPathProps & { identifier: string; module: string }>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/${identifier}`
   ),
+  toAccountCVSLODetailsPage: withAccountId(
+    ({ module = 'cv', identifier }: { identifier: string; module?: string }) => `/${module}/slos/${identifier}`
+  ),
   toErrorTracking: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/et`
@@ -1581,6 +1584,9 @@ const routes = {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create/composite`
     }
   ),
+  toAccountCVCreateCompositeSLOs: withAccountId(({ module = 'cv' }: { module?: string }) => {
+    return `/${module}/slos/create/composite`
+  }),
   toCVAddMonitoringServicesSetup: withAccountId(
     ({ projectIdentifier, orgIdentifier }: Partial<ProjectPathProps & { identifier: string }>) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices/setup`

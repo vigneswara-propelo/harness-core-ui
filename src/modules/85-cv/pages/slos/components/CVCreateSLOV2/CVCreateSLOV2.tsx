@@ -57,11 +57,13 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
     ProjectPathProps & { identifier: string }
   >()
 
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
+  const pathQueryParams = isAccountLevel ? { accountId } : { accountId, orgIdentifier, projectIdentifier }
   const projectIdentifierRef = useRef<string>()
   const sloPayloadRef = useRef<ServiceLevelObjectiveV2DTO | null>(null)
 
   useEffect(() => {
-    if (projectIdentifierRef.current && projectIdentifierRef.current !== projectIdentifier) {
+    if (!isAccountLevel && projectIdentifierRef.current && projectIdentifierRef.current !== projectIdentifier) {
       history.push(routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }))
       return
     }
@@ -73,7 +75,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
 
   const { mutate: updateSLO, loading: updateSLOLoading } = useUpdateSLOV2Data({
     identifier,
-    queryParams: { accountId, orgIdentifier, projectIdentifier }
+    queryParams: { ...pathQueryParams }
   })
 
   const {
@@ -84,9 +86,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
   } = useGetServiceLevelObjectiveV2({
     identifier,
     queryParams: {
-      accountId,
-      orgIdentifier,
-      projectIdentifier
+      ...pathQueryParams
     },
     lazy: true
   })
@@ -155,7 +155,9 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
   )
 
   const handleRedirect = (): void => {
-    history.push(routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }))
+    isAccountLevel
+      ? history.push(routes.toAccountCVSLOs({ accountId }))
+      : history.push(routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }))
   }
 
   const handleSLOV2Submit = async (values: SLOV2Form): Promise<void> => {
@@ -194,7 +196,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
 
   const links = [
     {
-      url: routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }),
+      url: routes.toAccountCVSLOs({ accountId }),
       label: getString('cv.slos.title')
     }
   ]
