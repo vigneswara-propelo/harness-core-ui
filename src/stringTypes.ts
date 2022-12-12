@@ -3870,6 +3870,10 @@ export interface StringsMap {
   'pipeline.manifestType.valuesYamlPath': string
   'pipeline.manifestType.varsPathRequired': string
   'pipeline.manifestType.varsYAMLPath': string
+  'pipeline.manifestTypeLabels.AsgConfiguration': string
+  'pipeline.manifestTypeLabels.AsgLaunchTemplate': string
+  'pipeline.manifestTypeLabels.AsgScalingPolicy': string
+  'pipeline.manifestTypeLabels.AsgScheduledUpdateGroupAction': string
   'pipeline.manifestTypeLabels.Autoscaler': string
   'pipeline.manifestTypeLabels.AwsSAM': string
   'pipeline.manifestTypeLabels.AzureFunctions': string
@@ -4061,6 +4065,7 @@ export interface StringsMap {
   'pipeline.serviceDependencyText': string
   'pipeline.serviceDeploymentTypes.amazonAmi': string
   'pipeline.serviceDeploymentTypes.amazonEcs': string
+  'pipeline.serviceDeploymentTypes.asg': string
   'pipeline.serviceDeploymentTypes.awsCodeDeploy': string
   'pipeline.serviceDeploymentTypes.awsLambda': string
   'pipeline.serviceDeploymentTypes.awsSAM': string

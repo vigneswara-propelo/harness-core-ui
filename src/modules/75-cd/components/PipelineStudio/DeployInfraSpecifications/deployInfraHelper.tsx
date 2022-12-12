@@ -199,6 +199,14 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+    case InfraDeploymentType.Asg: {
+      const { connectorRef, region } = infrastructure?.spec || {}
+      return {
+        connectorRef,
+        region,
+        allowSimultaneousDeployments
+      }
+    }
     case InfraDeploymentType.Elastigroup: {
       const { connectorRef, configuration } = infrastructure?.spec || {}
       return {
@@ -288,6 +296,18 @@ export const getInfraGroups = (
       ]
     }
   ]
+  const asgInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
+      items: [
+        {
+          label: getString('common.aws'),
+          icon: 'aws-asg',
+          value: InfraDeploymentType.Asg
+        }
+      ]
+    }
+  ]
 
   const elastigroupInfraGroups: InfrastructureGroup[] = [
     {
@@ -334,6 +354,8 @@ export const getInfraGroups = (
       return sshWinRMInfraGroups
     case deploymentType === ServiceDeploymentType.ECS:
       return ecsInfraGroups
+    case deploymentType === ServiceDeploymentType.Asg:
+      return asgInfraGroups
     case isElastigroupDeploymentType(deploymentType):
       return elastigroupInfraGroups
     case isCustomDeploymentType(deploymentType):
@@ -450,6 +472,10 @@ export const isCustomDeploymentInfrastructureType = (infrastructureType?: string
 }
 export const isTASInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.TAS
+}
+
+export const isAsgDeploymentInfrastructureType = (infrastructureType?: string): boolean => {
+  return infrastructureType === InfraDeploymentType.Asg
 }
 
 export const getInfraDefinitionDetailsHeaderTooltipId = (selectedInfrastructureType: string): string => {

@@ -69,7 +69,11 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   EcsScalableTargetDefinition: 'EcsScalableTargetDefinition',
   TasManifest: 'TasManifest',
   TasVars: 'TasVars',
-  TasAutoScaler: 'TasAutoScaler'
+  TasAutoScaler: 'TasAutoScaler',
+  AsgConfiguration: 'AsgConfiguration',
+  AsgLaunchTemplate: 'AsgLaunchTemplate',
+  AsgScalingPolicy: 'AsgScalingPolicy',
+  AsgScheduledUpdateGroupAction: 'AsgScheduledUpdateGroupAction'
 }
 
 export const TASManifestTypes = [ManifestDataType.TasManifest, ManifestDataType.TasVars, ManifestDataType.TasAutoScaler]
@@ -137,8 +141,14 @@ export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
     ManifestDataType.EcsScalingPolicyDefinition,
     ManifestDataType.EcsScalableTargetDefinition
   ],
-  CustomDeployment: [],
-  TAS: TASManifestTypes
+  TAS: TASManifestTypes,
+  Asg: [
+    ManifestDataType.AsgLaunchTemplate,
+    ManifestDataType.AsgConfiguration,
+    ManifestDataType.AsgScalingPolicy,
+    ManifestDataType.AsgScheduledUpdateGroupAction
+  ],
+  CustomDeployment: []
 }
 
 export const gitStoreTypes: Array<ManifestStores> = [
@@ -191,7 +201,11 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   EcsScalableTargetDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
   TasManifest: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
   TasVars: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
-  TasAutoScaler: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote]
+  TasAutoScaler: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
+  AsgLaunchTemplate: gitStoreTypesWithHarnessStoreType,
+  AsgConfiguration: gitStoreTypesWithHarnessStoreType,
+  AsgScalingPolicy: gitStoreTypesWithHarnessStoreType,
+  AsgScheduledUpdateGroupAction: gitStoreTypesWithHarnessStoreType
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -209,7 +223,11 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   EcsScalableTargetDefinition: 'service-amazon-ecs',
   TasManifest: 'tas-manifest',
   TasVars: 'list-vars',
-  TasAutoScaler: 'autoScaler'
+  TasAutoScaler: 'autoScaler',
+  AsgLaunchTemplate: 'aws-asg',
+  AsgConfiguration: 'aws-asg',
+  AsgScalingPolicy: 'aws-asg',
+  AsgScheduledUpdateGroupAction: 'aws-asg'
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
@@ -227,7 +245,11 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   EcsScalableTargetDefinition: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition',
   TasManifest: 'pipeline.manifestTypeLabels.TASManifest',
   TasVars: 'pipeline.manifestTypeLabels.VarsYAML',
-  TasAutoScaler: 'pipeline.manifestTypeLabels.Autoscaler'
+  TasAutoScaler: 'pipeline.manifestTypeLabels.Autoscaler',
+  AsgLaunchTemplate: 'pipeline.manifestTypeLabels.AsgLaunchTemplate',
+  AsgConfiguration: 'pipeline.manifestTypeLabels.AsgConfiguration',
+  AsgScalingPolicy: 'pipeline.manifestTypeLabels.AsgScalingPolicy',
+  AsgScheduledUpdateGroupAction: 'pipeline.manifestTypeLabels.AsgScheduledUpdateGroupAction'
 }
 
 export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> = [
@@ -369,7 +391,11 @@ export function getManifestLocation(manifestType: ManifestTypes, manifestStore: 
       ManifestDataType.EcsTaskDefinition,
       ManifestDataType.EcsServiceDefinition,
       ManifestDataType.EcsScalableTargetDefinition,
-      ManifestDataType.EcsScalingPolicyDefinition
+      ManifestDataType.EcsScalingPolicyDefinition,
+      ManifestDataType.AsgLaunchTemplate,
+      ManifestDataType.AsgConfiguration,
+      ManifestDataType.AsgScalingPolicy,
+      ManifestDataType.AsgScheduledUpdateGroupAction
     ].includes(manifestType):
       return 'store.spec.paths'
     case manifestType === ManifestDataType.Kustomize:

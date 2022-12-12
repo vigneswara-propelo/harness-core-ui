@@ -33,6 +33,10 @@ export type ManifestTypes =
   | 'TasManifest'
   | 'TasVars'
   | 'TasAutoScaler'
+  | 'AsgConfiguration'
+  | 'AsgLaunchTemplate'
+  | 'AsgScalingPolicy'
+  | 'AsgScheduledUpdateGroupAction'
 
 export type PrimaryManifestType =
   | 'K8sManifest'

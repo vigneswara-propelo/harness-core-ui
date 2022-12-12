@@ -39,7 +39,8 @@ export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isRe
       deploymentType === ServiceDeploymentType.AzureWebApp ||
       deploymentType === ServiceDeploymentType.Elastigroup ||
       deploymentType === ServiceDeploymentType.CustomDeployment ||
-      deploymentType === ServiceDeploymentType.TAS
+      deploymentType === ServiceDeploymentType.TAS ||
+      deploymentType === ServiceDeploymentType.Asg
     )
   )
 }
@@ -192,6 +193,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Acr
   ],
+  Asg: [ENABLED_ARTIFACT_TYPES.AmazonMachineImage],
   Elastigroup: [ENABLED_ARTIFACT_TYPES.AmazonS3],
   CustomDeployment: [
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
@@ -214,8 +216,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Jenkins,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.CustomArtifact
-  ],
-  Asg: []
+  ]
 }
 
 export const tagOptions: IOptionProps[] = [

@@ -1027,6 +1027,12 @@ export type AsgConfigurationManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
+export type AsgInfrastructure = Infrastructure & {
+  connectorRef: string
+  metadata?: string
+  region: string
+}
+
 export type AsgLaunchTemplateManifest = ManifestAttributes & {
   metadata?: string
   store?: StoreConfigWrapper
@@ -7771,6 +7777,7 @@ export interface InfrastructureDef {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
 }
 
 export interface InfrastructureDefinitionConfig {
@@ -7811,6 +7818,7 @@ export interface InfrastructureDefinitionConfig {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
 }
 
 export interface InfrastructureDetails {
@@ -7850,6 +7858,7 @@ export interface InfrastructureRequestDTO {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
   yaml?: string
 }
 
@@ -7895,6 +7904,7 @@ export interface InfrastructureResponseDTO {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
   yaml?: string
 }
 

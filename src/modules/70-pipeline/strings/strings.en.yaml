@@ -406,6 +406,10 @@ manifestTypeLabels:
   EcsServiceDefinition: 'ECS Service Definition'
   EcsScalingPolicyDefinition: 'ECS Scaling Policy'
   EcsScalableTargetDefinition: 'ECS Scalable Target'
+  AsgLaunchTemplate: ASG Launch Template
+  AsgConfiguration: ASG Configuration
+  AsgScalingPolicy: ASG Scaling Policy
+  AsgScheduledUpdateGroupAction: ASG Scheduled Group Update Action
   ReleaseRepo: Release Repo Manifest
   TASManifest: TAS Manifest
   VarsYAML: Vars
@@ -1305,6 +1309,7 @@ serviceDeploymentTypes:
   serverlessAwsType: Serverless Aws Lambda
   customDeploy: Custom Deployment
   spotElastigroup: Spot Elastigroup
+  asg: AWS ASG
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data

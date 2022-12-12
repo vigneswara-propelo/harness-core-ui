@@ -29,7 +29,8 @@ export const deploymentIconMap: Record<string, IconName> = {
   [ServiceDeploymentType.awsLambda]: 'service-aws-lamda',
   [ServiceDeploymentType.TAS]: 'tas',
   [ServiceDeploymentType.CustomDeployment]: 'CustomDeployment',
-  [ServiceDeploymentType.Elastigroup]: 'elastigroup'
+  [ServiceDeploymentType.Elastigroup]: 'elastigroup',
+  [ServiceDeploymentType.Asg]: 'aws-asg'
 }
 
 export interface DeploymentTypeItem {
@@ -46,10 +47,11 @@ export interface GetNgSupportedDeploymentTypesProps {
   NG_SVC_ENV_REDESIGN?: boolean
   SPOT_ELASTIGROUP_NG?: boolean
   CDS_TAS_NG?: boolean
+  ASG_NG?: boolean
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, CDS_TAS_NG } = props
+  const { SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, ASG_NG } = props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -107,6 +109,13 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.tas',
       icon: deploymentIconMap[ServiceDeploymentType.TAS],
       value: ServiceDeploymentType.TAS
+    })
+  }
+  if (ASG_NG) {
+    baseTypes.push({
+      label: 'pipeline.serviceDeploymentTypes.asg',
+      icon: deploymentIconMap[ServiceDeploymentType.Asg],
+      value: ServiceDeploymentType.Asg
     })
   }
 

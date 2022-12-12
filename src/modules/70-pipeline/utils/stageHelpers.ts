@@ -67,7 +67,8 @@ export enum ServiceDeploymentType {
   ECS = 'ECS',
   Elastigroup = 'Elastigroup',
   SshWinRmAws = 'SshWinRmAws',
-  SshWinRmAzure = 'SshWinRmAzure'
+  SshWinRmAzure = 'SshWinRmAzure',
+  Asg = 'Asg'
 }
 
 export enum RepositoryFormatTypes {
@@ -629,7 +630,8 @@ export const infraDefinitionTypeMapping: { [key: string]: string } = {
   ServerlessAwsLambda: StepType.ServerlessAwsInfra,
   ECS: StepType.EcsInfra,
   CustomDeployment: StepType.CustomDeployment,
-  TAS: StepType.TasInfra
+  TAS: StepType.TasInfra,
+  Asg: StepType.AsgInfraSpec
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
@@ -650,6 +652,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.ElastigroupService
     case ServiceDeploymentType.TAS:
       return StepType.TasService
+    case ServiceDeploymentType.Asg:
+      return StepType.Asg
     default:
       return StepType.K8sServiceSpec
   }

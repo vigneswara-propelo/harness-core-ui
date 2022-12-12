@@ -129,7 +129,9 @@ export enum StepType {
   ElastigroupRollback = 'ElastigroupRollback',
   ElastigroupSetup = 'ElastigroupSetup',
   TasService = 'TasService',
-  TasInfra = 'TAS'
+  TasInfra = 'TAS',
+  Asg = 'ASGServiceSpec',
+  AsgInfraSpec = 'AsgInfraSpec'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {
