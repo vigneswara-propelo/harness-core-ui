@@ -1049,6 +1049,7 @@ noRegions: No regions found
 noBuckets: No buckets found with given region
 noBucketsFound: No buckets found
 noFilePathsFound: No file paths found
+noClustersFound: No clusters found
 gitRepo: Git Repo
 buildRepo: Build Repo
 failureTypetext: Select Failure Type

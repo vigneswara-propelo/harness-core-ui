@@ -3910,6 +3910,7 @@ export interface StringsMap {
   'pipeline.noArtifactPaths': string
   'pipeline.noBuckets': string
   'pipeline.noBucketsFound': string
+  'pipeline.noClustersFound': string
   'pipeline.noFilePathsFound': string
   'pipeline.noPipelinesLabel': string
   'pipeline.noPipelinesText': string

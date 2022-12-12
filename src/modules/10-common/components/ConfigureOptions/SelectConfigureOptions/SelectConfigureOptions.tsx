@@ -59,7 +59,8 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
   }, [error])
 
   const multiSelectProps: Omit<MultiSelectProps, 'value' | 'onChange' | 'items' | 'tagInputProps'> = {
-    placeholder: loading ? getString('loading') : getString('common.configureOptions.selectAllowedValuesPlaceholder')
+    placeholder: loading ? getString('loading') : getString('common.configureOptions.selectAllowedValuesPlaceholder'),
+    allowCreatingNewItems: true
   }
 
   React.useEffect(() => {

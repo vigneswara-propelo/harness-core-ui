@@ -9,7 +9,8 @@ import React from 'react'
 import { defaultTo, get, isNil } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikValues } from 'formik'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
+import type { IItemRendererProps } from '@blueprintjs/select'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 
 import { StringKeys, useStrings } from 'framework/strings'
 import { NameValuePair, useListAwsRegions } from 'services/portal'
@@ -17,6 +18,8 @@ import { useGetBucketsInManifests } from 'services/cd-ng'
 import List from '@common/components/List/List'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useMutateAsGet } from '@common/hooks'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { ManifestToConnectorMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
@@ -73,6 +76,7 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { getRBACErrorMessage } = useRBACError()
 
   const [lastQueryData, setLastQueryData] = React.useState({
     connectorRef: '',
@@ -123,7 +127,8 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
   const {
     data: s3BucketList,
     loading: s3BucketDataLoading,
-    refetch: refetchS3Buckets
+    refetch: refetchS3Buckets,
+    error: fetchBucketsError
   } = useMutateAsGet(useGetBucketsInManifests, {
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
@@ -138,25 +143,25 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
     debounce: 300
   })
 
-  const s3BucketOptions = React.useMemo(() => {
+  const buckets = React.useMemo((): { label: string; value: string }[] => {
+    if (s3BucketDataLoading) {
+      return [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
+    } else if (fetchBucketsError) {
+      return []
+    }
     return Object.keys(s3BucketList?.data || {}).map(item => ({
       label: item,
       value: item
     }))
-  }, [s3BucketList?.data])
-
-  const getBuckets = React.useCallback((): { label: string; value: string }[] => {
-    if (s3BucketDataLoading) {
-      return [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
-    }
-    return defaultTo(s3BucketOptions, [])
-  }, [s3BucketDataLoading, s3BucketOptions])
+  }, [s3BucketDataLoading, s3BucketList?.data, fetchBucketsError])
 
   const canFetchBuckets = React.useCallback((): boolean => {
     return (
       !!(
         (lastQueryData.connectorRef != fixedConnectorValue || lastQueryData.region !== fixedRegionValue) &&
-        shouldFetchTagsSource([fixedConnectorValue, fixedRegionValue])
+        (isNewServiceEnvEntity(path as string)
+          ? shouldFetchTagsSource([serviceIdentifier])
+          : shouldFetchTagsSource([fixedConnectorValue, fixedRegionValue]))
       ) || isNil(s3BucketList?.data)
     )
   }, [template, lastQueryData, fixedConnectorValue, fixedRegionValue, s3BucketList?.data])
@@ -185,6 +190,13 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
     )
   }
 
+  const itemRenderer = React.useCallback(
+    (item: SelectOption, itemProps: IItemRendererProps) => (
+      <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={s3BucketDataLoading} />
+    ),
+    [s3BucketDataLoading]
+  )
+
   const renderBucketNameField = (): React.ReactElement | null => {
     return (
       <div className={css.verticalSpacingInput}>
@@ -211,14 +223,20 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
             selectProps: {
               usePortal: true,
               addClearBtn: !readonly,
-              items: getBuckets(),
-              allowCreatingNewItems: true
+              items: buckets,
+              allowCreatingNewItems: true,
+              itemRenderer,
+              noResults: (
+                <Text lineClamp={2} width={400} height={100} padding="small">
+                  {getRBACErrorMessage(fetchBucketsError as RBACError) || getString('pipeline.noBuckets')}
+                </Text>
+              )
             },
             expressions,
             allowableTypes
           }}
           useValue
-          selectItems={s3BucketOptions}
+          selectItems={buckets}
         />
       </div>
     )
