@@ -822,6 +822,8 @@ pipelineSteps:
   approvalStageDescription: Approve or reject changes during Pipeline progress.
 pipelineChaining:
   selectPipeline: Select Pipeline
+  noProjectSelected: Project is not selected
+  noPipelineSelected: Pipeline is not selected
   pipelineOutputs: Pipeline Outputs
   outputTabSummaryDetail: Define outputs from child pipeline that you can use in other stages in parent pipeline.
   newOutput: New Output
