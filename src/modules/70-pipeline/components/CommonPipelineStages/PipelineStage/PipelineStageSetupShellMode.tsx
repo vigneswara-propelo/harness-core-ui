@@ -136,7 +136,7 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
           id={PipelineStageTabs.OUTPUTS}
           title={
             <span className={approvalStepCss.tab}>
-              <Icon name="template-inputs" height={20} size={20} color={'black'} />
+              <Icon name="pipeline-outputs" height={20} size={20} color={'black'} />
               {getString('connectors.ceAws.crossAccountRoleExtention.step3.p2')}
             </span>
           }

@@ -49,7 +49,7 @@ export const stageTypeToIconMap: Record<string, IconName> = {
   Deployment: 'cd-main',
   CI: 'ci-main',
   SecurityTests: 'sto-color-filled',
-  Pipeline: 'pipeline',
+  Pipeline: 'chained-pipeline',
   Custom: 'custom-stage-icon',
   Approval: 'approval-stage-icon',
   FeatureFlag: 'cf-main'
