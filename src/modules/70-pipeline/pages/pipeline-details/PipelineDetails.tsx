@@ -218,7 +218,7 @@ function PipelinePageHeader(): React.ReactElement {
     })
   })
 
-  const onGitBranchChange = (selectedFilter: GitFilterScope, defaultSelected = false): void => {
+  const onGitBranchChange = (selectedFilter: GitFilterScope): void => {
     if (branch !== selectedFilter.branch) {
       updateQueryParams(
         {
@@ -227,9 +227,6 @@ function PipelinePageHeader(): React.ReactElement {
         { skipNulls: true },
         true
       )
-      if (!defaultSelected) {
-        window.location.reload()
-      }
     }
   }
 
