@@ -1505,7 +1505,7 @@ customDeployment:
 step:
   validation:
     namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
-runDisabledOnFreeze: Cannot run pipeline due to an active freeze
+runDisabledOnFreeze: An active freeze is applicable on this pipeline. Any deployment stage on this pipeline will be aborted.
 viewFreeze: View freeze details
 triggeredBy: Triggered by {{triggerType}}
 manuallyTriggered: This execution was triggered manually
