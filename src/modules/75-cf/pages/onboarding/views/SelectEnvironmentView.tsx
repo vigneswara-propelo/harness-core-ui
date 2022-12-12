@@ -152,7 +152,7 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = ({
           </Layout.Vertical>
           <Layout.Horizontal flex={{ alignItems: 'baseline' }} padding={{ top: 'small' }}>
             {apiKey ? (
-              <IdentifierText identifier={apiKey.apiKey} allowCopy lineClamp={1} hideLabel />
+              <IdentifierText identifier={apiKey.apiKey} allowCopy hideLabel />
             ) : (
               <AddKeyDialog
                 keyType={
