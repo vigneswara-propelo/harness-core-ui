@@ -23,7 +23,7 @@ describe('Validate useCommonGroupedSideNaveHook Hook', () => {
         useCommonGroupedSideNaveHook({
           defaultCustomMetricName: 'Default Custom Metric',
           initCustomMetricData: {},
-          mappedServicesAndEnvs: new Map(),
+          customMetricsMap: new Map(),
           selectedMetricData: 'metric-1'
         }),
       { wrapper }

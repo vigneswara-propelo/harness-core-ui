@@ -7,7 +7,6 @@
 
 import type { SelectOption } from '@harness/uicore'
 import type { FailMetricThresholdSpec, MetricThreshold, MetricThresholdSpec } from 'services/cv'
-import type { CustomSelectedAndMappedMetrics } from '../../common/CommonCustomMetric/CommonCustomMetric.types'
 import type { CriteriaPercentageType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { HealthSourceTypes } from '../../types'
 
@@ -16,10 +15,13 @@ export interface HealthSourcesConfig {
 }
 
 export interface HealthSourceConfig {
-  customMetrics: {
+  customMetrics?: {
     enabled: boolean
   }
-  sideNav: {
+  queryAndRecords: {
+    enabled: boolean
+  }
+  sideNav?: {
     shouldBeAbleToDeleteLastMetric: boolean
     enableDefaultGroupName?: boolean
   }
@@ -35,7 +37,7 @@ export interface HealthSourceSetupSource {
   workspaceId?: string
 
   // Custom metrics section
-  mappedServicesAndEnvs: Map<string, CommonCustomMetricFormikInterface>
+  customMetricsMap: Map<string, CommonCustomMetricFormikInterface>
   selectedMetric: string
 
   // metrics threshold section
@@ -55,7 +57,7 @@ export interface HealthSourceInitialData {
   // non custom metric section
 
   // Custom Metric section
-  mappedServicesAndEnvs: Map<string, CommonCustomMetricFormikInterface>
+  customMetricsMap: Map<string, CommonCustomMetricFormikInterface>
   selectedMetric?: string
 
   // metric thresholds
@@ -67,7 +69,7 @@ export interface CommonHealthSourceConfigurations {
   // non custom metric section
 
   // Custom Metric section
-  mappedServicesAndEnvs: Map<string, CommonCustomMetricFormikInterface>
+  customMetricsMap: Map<string, CommonCustomMetricFormikInterface>
   selectedMetric: string
 
   // metric thresholds
@@ -104,34 +106,6 @@ export interface CommonCustomMetricFormikInterface {
   //TODO - figure out how this can be controlled by config to
   // show dropdown/input/Json path selector
   serviceInstance?: string | SelectOption
-}
-
-export interface PersistMappedMetricsType {
-  mappedMetrics: Map<string, CommonCustomMetricFormikInterface>
-  selectedMetric: string
-  metricThresholds: MetricThresholdsState
-  formikValues: CommonCustomMetricFormikInterface
-  setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
-}
-
-export const CommonHealthSourceFieldNames = {
-  METRIC_NAME: 'metricName',
-  METRIC_IDENTIFIER: 'identifier',
-  GROUP_NAME: 'groupName',
-  QUERY: 'query',
-
-  METRIC_VALUE: 'metricValue',
-  TIMESTAMP_LOCATOR: 'timestamp',
-  TIMESTAMP_FORMAT: 'timestampFormat',
-  SERVICE_INSTANCE: 'serviceInstanceIdentifier',
-
-  SLI: 'sli',
-  HEALTH_SCORE: 'healthScore',
-  CONTINUOUS_VERIFICATION: 'continuousVerification',
-
-  RISK_CATEGORY: 'riskCategory',
-  HIGHER_BASELINE_DEVIATION: 'higherBaselineDeviation',
-  LOWER_BASELINE_DEVIATION: 'lowerBaselineDeviation'
 }
 
 // Metric Thresholds

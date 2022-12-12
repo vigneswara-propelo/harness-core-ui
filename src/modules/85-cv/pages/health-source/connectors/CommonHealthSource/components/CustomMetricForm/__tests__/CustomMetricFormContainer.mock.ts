@@ -34,7 +34,7 @@ export const mockedCustomMetricFormContainerData = {
       type: 'AppDynamics',
       applicationName: '',
       tierName: '',
-      mappedServicesAndEnvs: {}
+      customMetricsMap: {}
     },
     groupedCreatedMetrics: {
       'Please Select Group Name': [

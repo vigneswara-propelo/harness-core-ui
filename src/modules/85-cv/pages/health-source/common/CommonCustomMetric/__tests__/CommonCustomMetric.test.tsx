@@ -15,8 +15,8 @@ import CustomMetric from '../CommonCustomMetric'
 
 const WrapperComponent = () => {
   const INIT = { metricName: 'Metric Name', groupName: { label: 'Group 1', value: 'Group 1' } }
-  const mappedServicesAndEnvs = new Map()
-  mappedServicesAndEnvs.set('Metric Name', INIT)
+  const customMetricsMap = new Map()
+  customMetricsMap.set('Metric Name', INIT)
 
   const {
     createdMetrics,
@@ -29,7 +29,7 @@ const WrapperComponent = () => {
   } = useCommonGroupedSideNaveHook({
     defaultCustomMetricName: 'cv.monitoringSources.appD.defaultAppDMetricName',
     initCustomMetricData: INIT as any,
-    mappedServicesAndEnvs
+    customMetricsMap
   })
   const formInit = mappedMetrics.get(selectedMetric)
   return (

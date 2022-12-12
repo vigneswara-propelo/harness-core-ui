@@ -26,7 +26,7 @@ export const createHealthSourceData = (sourceData: any): HealthSourceInitialData
     // Configurations page
 
     //Custom metric section
-    mappedServicesAndEnvs: sourceData?.mappedServicesAndEnvs || new Map(),
+    customMetricsMap: sourceData?.customMetricsMap || new Map(),
     selectedMetric: sourceData?.selectedMetric,
 
     // metric threshold section
@@ -49,8 +49,8 @@ export function transformCommonHealthSourceToSetupSource(
     connectorRef: sourceData.connectorRef,
     product: sourceData.product,
 
-    mappedServicesAndEnvs:
-      sourceData?.mappedServicesAndEnvs ||
+    customMetricsMap:
+      sourceData?.customMetricsMap ||
       (new Map([
         [
           getString('cv.monitoringSources.commonHealthSource.metric'),
@@ -78,7 +78,7 @@ export const initHealthSourceCustomForm = () => {
 export const resetShowCustomMetric = (
   selectedMetric: string,
   mappedMetrics: Map<string, CommonCustomMetricFormikInterface>,
-  setShowCustomMetric: (value: React.SetStateAction<boolean>) => void
+  setShowCustomMetric: (value: React.SetStateAction<boolean | undefined>) => void
 ): void => {
   if (!selectedMetric && !mappedMetrics.size) {
     setShowCustomMetric(false)

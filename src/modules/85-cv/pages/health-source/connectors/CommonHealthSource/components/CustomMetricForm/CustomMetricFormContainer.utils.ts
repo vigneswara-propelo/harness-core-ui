@@ -8,8 +8,9 @@
 import type { FormikErrors } from 'formik'
 import { set } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
-import { CommonHealthSourceFieldNames, CommonCustomMetricFormikInterface } from '../../CommonHealthSource.types'
 import type { AddMetricForm } from './CustomMetricForm.types'
+import { CommonHealthSourceFieldNames } from '../../CommonHealthSource.constants'
+import type { CommonCustomMetricFormikInterface } from '../../CommonHealthSource.types'
 
 export const validateAddMetricForm = (
   formData: AddMetricForm,

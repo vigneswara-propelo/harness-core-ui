@@ -20,11 +20,7 @@ import type {
   HealthSourceInitialData
 } from './CommonHealthSource.types'
 import CustomMetricFormContainer from './components/CustomMetricForm/CustomMetricFormContainer'
-import {
-  initHealthSourceCustomForm,
-  // submitData,
-  transformCommonHealthSourceToSetupSource
-} from './CommonHealthSource.utils'
+import { initHealthSourceCustomForm, transformCommonHealthSourceToSetupSource } from './CommonHealthSource.utils'
 import css from './CommonHealthSource.module.scss'
 
 export interface CommonHealthSourceProps {
@@ -64,7 +60,7 @@ export default function CommonHealthSource({
   } = useCommonGroupedSideNaveHook({
     defaultCustomMetricName: 'health source metric',
     initCustomMetricData: initHealthSourceCustomForm(),
-    mappedServicesAndEnvs: transformedSourceData?.mappedServicesAndEnvs || new Map(),
+    customMetricsMap: transformedSourceData?.customMetricsMap || new Map(),
     selectedMetricData: transformedSourceData?.selectedMetric
   })
 
@@ -73,7 +69,7 @@ export default function CommonHealthSource({
 
   const healthSourceConfigurationsInitialValues = {
     // Custom metric fields
-    mappedServicesAndEnvs: mappedMetrics,
+    customMetricsMap: mappedMetrics,
     selectedMetric,
 
     // metric threshold section
@@ -109,6 +105,7 @@ export default function CommonHealthSource({
                     return (
                       <FormikForm className={css.formFullheight}>
                         <CustomMetricFormContainer
+                          setConfigurationsFormikFieldValue={formik.setFieldValue}
                           mappedMetrics={mappedMetrics}
                           selectedMetric={selectedMetric}
                           setMappedMetrics={setMappedMetrics}

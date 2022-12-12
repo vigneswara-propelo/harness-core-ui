@@ -503,20 +503,20 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
   isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
   billingExportSpec?: BillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
   subscriptionId: string
   tenantId: string
 }
 
 export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   connectorRef: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
 }
 
 export interface CVLicenseUsageDTO {
@@ -1561,6 +1561,11 @@ export interface ErrorMetadataDTO {
   type?: string
 }
 
+export type ErrorTrackingConditionSpec = NotificationRuleConditionSpec & {
+  errorTrackingEventStatus?: 'NewEvents'[]
+  errorTrackingEventTypes?: ('Exceptions' | 'LogErrors' | 'HttpErrors' | 'CustomErrors' | 'TimeoutErrors')[]
+}
+
 export type ErrorTrackingConnectorDTO = ConnectorConfigDTO & {
   apiKeyRef: string
   delegateSelectors?: string[]
@@ -1974,7 +1979,7 @@ export interface GcpBillingExportSpec {
 
 export type GcpCloudCostConnector = ConnectorConfigDTO & {
   billingExportSpec?: GcpBillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
   projectId: string
   serviceAccountEmail: string
 }
@@ -3136,6 +3141,7 @@ export interface NotificationRuleCondition {
     | 'ChangeImpact'
     | 'HealthScore'
     | 'ChangeObserved'
+    | 'CodeErrors'
 }
 
 export interface NotificationRuleConditionSpec {
@@ -5990,7 +5996,7 @@ export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type SaveMonitoredServiceFromTemplateInputBodyRequestBody = string
+export type UpdateMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]
@@ -6241,6 +6247,315 @@ export const getChangeEventDetailPromise = (
   getUsingFetch<RestResponseChangeEventDTO, unknown, void, GetChangeEventDetailPathParams>(
     getConfig('cv/api'),
     `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/change-event/${activityId}`,
+    props,
+    signal
+  )
+
+export interface GetSampleLogDataPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetSampleLogDataProps = Omit<
+  MutateProps<
+    RestResponseLogRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleLogDataPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSampleLogDataPathParams
+
+/**
+ * Fetch log records by submitting a query to the health source provider.
+ */
+export const GetSampleLogData = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: GetSampleLogDataProps) => (
+  <Mutate<RestResponseLogRecordsResponse, unknown, void, QueryRecordsRequestRequestBody, GetSampleLogDataPathParams>
+    verb="POST"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/log-records`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSampleLogDataProps = Omit<
+  UseMutateProps<
+    RestResponseLogRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleLogDataPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSampleLogDataPathParams
+
+/**
+ * Fetch log records by submitting a query to the health source provider.
+ */
+export const useGetSampleLogData = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseGetSampleLogDataProps) =>
+  useMutate<RestResponseLogRecordsResponse, unknown, void, QueryRecordsRequestRequestBody, GetSampleLogDataPathParams>(
+    'POST',
+    (paramsInPath: GetSampleLogDataPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/health-source/log-records`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * Fetch log records by submitting a query to the health source provider.
+ */
+export const getSampleLogDataPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseLogRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleLogDataPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseLogRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleLogDataPathParams
+  >(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/log-records`,
+    props,
+    signal
+  )
+
+export interface GetSampleMetricDataPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetSampleMetricDataProps = Omit<
+  MutateProps<
+    RestResponseMetricRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleMetricDataPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSampleMetricDataPathParams
+
+/**
+ * Fetch metric records by submitting a query to the health source provider.
+ */
+export const GetSampleMetricData = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: GetSampleMetricDataProps) => (
+  <Mutate<
+    RestResponseMetricRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleMetricDataPathParams
+  >
+    verb="POST"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/metric-records`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSampleMetricDataProps = Omit<
+  UseMutateProps<
+    RestResponseMetricRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleMetricDataPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSampleMetricDataPathParams
+
+/**
+ * Fetch metric records by submitting a query to the health source provider.
+ */
+export const useGetSampleMetricData = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseGetSampleMetricDataProps) =>
+  useMutate<
+    RestResponseMetricRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleMetricDataPathParams
+  >(
+    'POST',
+    (paramsInPath: GetSampleMetricDataPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/health-source/metric-records`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * Fetch metric records by submitting a query to the health source provider.
+ */
+export const getSampleMetricDataPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseMetricRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleMetricDataPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseMetricRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleMetricDataPathParams
+  >(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/metric-records`,
+    props,
+    signal
+  )
+
+export interface GetSampleRawRecordPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetSampleRawRecordProps = Omit<
+  MutateProps<
+    RestResponseHealthSourceRecordsResponse,
+    unknown,
+    void,
+    HealthSourceRecordsRequest,
+    GetSampleRawRecordPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSampleRawRecordPathParams
+
+/**
+ * Fetch health source raw records by submitting a query to the health source provider.
+ */
+export const GetSampleRawRecord = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: GetSampleRawRecordProps) => (
+  <Mutate<
+    RestResponseHealthSourceRecordsResponse,
+    unknown,
+    void,
+    HealthSourceRecordsRequest,
+    GetSampleRawRecordPathParams
+  >
+    verb="POST"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/records`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSampleRawRecordProps = Omit<
+  UseMutateProps<
+    RestResponseHealthSourceRecordsResponse,
+    unknown,
+    void,
+    HealthSourceRecordsRequest,
+    GetSampleRawRecordPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSampleRawRecordPathParams
+
+/**
+ * Fetch health source raw records by submitting a query to the health source provider.
+ */
+export const useGetSampleRawRecord = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseGetSampleRawRecordProps) =>
+  useMutate<
+    RestResponseHealthSourceRecordsResponse,
+    unknown,
+    void,
+    HealthSourceRecordsRequest,
+    GetSampleRawRecordPathParams
+  >(
+    'POST',
+    (paramsInPath: GetSampleRawRecordPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/health-source/records`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * Fetch health source raw records by submitting a query to the health source provider.
+ */
+export const getSampleRawRecordPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseHealthSourceRecordsResponse,
+    unknown,
+    void,
+    HealthSourceRecordsRequest,
+    GetSampleRawRecordPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseHealthSourceRecordsResponse,
+    unknown,
+    void,
+    HealthSourceRecordsRequest,
+    GetSampleRawRecordPathParams
+  >(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/records`,
     props,
     signal
   )
@@ -9402,7 +9717,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9416,7 +9731,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -9431,7 +9746,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9445,7 +9760,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -9457,7 +9772,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -9466,7 +9781,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 

@@ -13,8 +13,8 @@ import GroupName from '@cv/components/GroupName/GroupName'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
 import type { CustomHealthMetricDefinition } from 'services/cv'
-import { CommonHealthSourceFieldNames } from '../../../CommonHealthSource.types'
-import type { AddMetricForm } from '../CustomMetricForm.types'
+import { CommonHealthSourceFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import type { AddMetricForm } from '../../CustomMetricForm.types'
 
 export interface AddMetricProps {
   enableDefaultGroupName: boolean

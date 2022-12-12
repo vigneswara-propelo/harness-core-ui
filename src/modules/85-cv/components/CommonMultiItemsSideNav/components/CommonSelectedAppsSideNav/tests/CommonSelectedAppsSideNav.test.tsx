@@ -6,10 +6,9 @@
  */
 
 import React from 'react'
-import { act } from 'react-test-renderer'
 import { Formik, FormikForm } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CommonSelectedAppsSideNavProps, CommonSelectedAppsSideNav } from '../CommonSelectedAppsSideNav'
 
@@ -41,40 +40,5 @@ describe('Unit tests forCommonSelectedAppsSideNav', () => {
       />
     )
     await waitFor(() => expect(container.querySelectorAll(`[class*="selectedApp"]`).length).toBe(50))
-  })
-
-  test('Ensure that when groupedSelectedApps is provided, the grouped list is rendered', async () => {
-    const { container } = render(
-      <WrapperComponent
-        openEditMetricModal={openEditMetricModal}
-        selectedMetrics={['appdMetric 102', 'appdMetric 101']}
-        groupedSelectedApps={{
-          'Group 2': [{ groupName: { label: 'Group 2', value: 'Group 2' }, metricName: 'appdMetric 102 ' }],
-          'Group 1': [{ groupName: { label: 'Group 1', value: 'Group 1' }, metricName: 'appdMetric 101' }]
-        }}
-      />
-    )
-    await waitFor(() => expect(container.querySelectorAll(`[class*="collapsePanel"]`).length).toBe(2))
-    await waitFor(() => expect(container.querySelectorAll(`[class*="selectedApp"]`).length).toBe(4))
-    // Collapsed
-    await waitFor(() =>
-      expect(container.querySelectorAll('.bp3-collapse-body')[0]).toHaveStyle(`transform: translateY(0);`)
-    )
-    await waitFor(() =>
-      expect(container.querySelectorAll('.bp3-collapse-body')[1]).toHaveStyle(`transform: translateY(0);`)
-    )
-
-    act(() => {
-      fireEvent.click(container.querySelectorAll(`[class*="selectedApp"]`)[1])
-      fireEvent.click(container.querySelectorAll(`[class*="selectedApp"]`)[0])
-    })
-
-    // Expanded
-    await waitFor(() =>
-      expect(container.querySelectorAll('.bp3-collapse-body')[0]).toHaveStyle(`transform: translateY(0);`)
-    )
-    await waitFor(() =>
-      expect(container.querySelectorAll('.bp3-collapse-body')[1]).toHaveStyle(`transform: translateY(0);`)
-    )
   })
 })

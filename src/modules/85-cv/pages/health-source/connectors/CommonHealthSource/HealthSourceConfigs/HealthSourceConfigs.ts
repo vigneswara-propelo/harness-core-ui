@@ -12,16 +12,22 @@ export const healthSourcesConfig: HealthSourcesConfig = {
     customMetrics: {
       enabled: true
     },
+    queryAndRecords: {
+      enabled: true
+    },
     sideNav: {
-      shouldBeAbleToDeleteLastMetric: true
+      shouldBeAbleToDeleteLastMetric: false
     }
   },
   SumoLogic_LOGS: {
     customMetrics: {
       enabled: true
     },
+    queryAndRecords: {
+      enabled: true
+    },
     sideNav: {
-      shouldBeAbleToDeleteLastMetric: true,
+      shouldBeAbleToDeleteLastMetric: false,
       enableDefaultGroupName: true
     }
   }

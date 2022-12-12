@@ -6,20 +6,49 @@
  */
 
 import React from 'react'
-import { Container } from '@harness/uicore'
-import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
+import { Container, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import CommonCustomMetricFormContainer from './components/CommonCustomMetricFormContainer/CommonCustomMetricFormContainerLayout/CommonCustomMetricFormContainer'
 import css from '../../CommonHealthSource.module.scss'
 
-export default function CustomMetricForm(): JSX.Element {
+interface CustomMetricFormProps {
+  isTemplate?: boolean
+  expressions?: string[]
+  connectorIdentifier: string
+  isConnectorRuntimeOrExpression?: boolean
+  enabledRecordsAndQuery?: boolean
+}
+
+export default function CustomMetricForm(props: CustomMetricFormProps): JSX.Element {
+  const { isTemplate, expressions, connectorIdentifier, isConnectorRuntimeOrExpression, enabledRecordsAndQuery } = props
   const { getString } = useStrings()
 
   return (
     <Container className={css.main}>
-      <SetupSourceCardHeader
-        mainHeading={getString('cv.monitoringSources.prometheus.querySpecificationsAndMappings')}
-        subHeading={getString('cv.monitoringSources.prometheus.customizeQuery')}
-      />
+      <Layout.Vertical padding={{ left: 'medium', top: 'medium', bottom: 'small' }}>
+        <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
+          {getString('cv.monitoringSources.prometheus.querySpecificationsAndMappings')}
+        </Text>
+        <Text color={Color.BLACK}>{getString('cv.monitoringSources.prometheus.customizeQuery')}</Text>
+      </Layout.Vertical>
+      <Layout.Vertical padding={{ left: 'medium', top: 'medium' }}>
+        <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
+          {getString('cv.monitoringSources.commonHealthSource.defineQuery')}
+        </Text>
+        <Text color={Color.BLACK}>{getString('cv.monitoringSources.commonHealthSource.defineQueryDescription')}</Text>
+        <Text color={Color.BLACK}>
+          {getString('cv.monitoringSources.commonHealthSource.defineQuerySubDescription')}
+        </Text>
+      </Layout.Vertical>
+      {enabledRecordsAndQuery ? (
+        <CommonCustomMetricFormContainer
+          connectorIdentifier={connectorIdentifier}
+          isTemplate={isTemplate}
+          expressions={expressions}
+          isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+        />
+      ) : null}
     </Container>
   )
 }

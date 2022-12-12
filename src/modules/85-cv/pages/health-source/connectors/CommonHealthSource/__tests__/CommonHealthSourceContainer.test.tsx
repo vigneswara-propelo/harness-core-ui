@@ -51,8 +51,11 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       customMetrics: {
         enabled: true
       },
+      queryAndRecords: {
+        enabled: true
+      },
       sideNav: {
-        shouldBeAbleToDeleteLastMetric: true
+        shouldBeAbleToDeleteLastMetric: false
       }
     },
     isTemplate: false,
@@ -75,10 +78,10 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
     const { selectedMetric, mappedMetrics } = initializeSelectedMetricsMap(
       'defaultMetricName',
       initHealthSourceCustomForm(),
-      expectedHealthSourceData?.mappedServicesAndEnvs
+      expectedHealthSourceData?.customMetricsMap
     )
-    const mappedServicesAndEnvs = new Map()
-    mappedServicesAndEnvs.set('appdMetric', healthSourceMetricValue)
+    const customMetricsMap = new Map()
+    customMetricsMap.set('appdMetric', healthSourceMetricValue)
     expect(selectedMetric).toEqual('defaultMetricName')
     initializeCreatedMetrics('defaultMetricName', selectedMetric, mappedMetrics)
 
@@ -88,7 +91,7 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       identifier: undefined,
       ignoreThresholds: undefined,
       isEdit: true,
-      mappedServicesAndEnvs: new Map(),
+      customMetricsMap: new Map(),
       name: undefined,
       product: {
         label: 'Application Monitoring',

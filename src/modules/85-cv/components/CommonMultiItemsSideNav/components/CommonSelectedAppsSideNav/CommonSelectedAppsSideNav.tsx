@@ -51,16 +51,20 @@ export function CommonSelectedAppsSideNav(props: CommonSelectedAppsSideNavProps)
     content = <PageError {...error} />
   } else if (loading) {
     content = LoadingCells.map(loadingCell => (
-      <Container key={loadingCell} className={css.seletedAppContainer}>
-        <Container className={cx(Classes.SKELETON, css.selectedApp)} height={16} width="100%" />
+      <Container key={loadingCell} className={css.selectedAppContainer}>
+        <Container className={cx(Classes.SKELETON, css.metricName)} height={16} width="100%" />
       </Container>
     ))
   } else {
     content = selectedMetrics?.map((selectedApp, index) => {
       return (
-        <Container key={selectedApp} className={css.seletedAppContainer} onClick={() => onSelect?.(selectedApp, index)}>
+        <Container
+          key={selectedApp}
+          className={css.selectedAppContainer}
+          onClick={() => onSelect?.(selectedApp, index)}
+        >
           <Text
-            className={cx(css.selectedApp, selectedItem && selectedApp === selectedItem ? css.isSelected : false)}
+            className={cx(css.metricName, selectedItem && selectedApp === selectedItem ? css.isSelected : false)}
             lineClamp={1}
           >
             {selectedApp}
@@ -87,15 +91,17 @@ export function CommonSelectedAppsSideNav(props: CommonSelectedAppsSideNavProps)
       {headerText && <Text className={css.navHeader}>{headerText}</Text>}
       {filterProps && <TableFilter {...filterProps} />}
       {groupedSelectedAppsList.length ? (
-        <GroupedSideNav
-          onSelect={onSelect}
-          selectedItem={selectedItem}
-          onRemoveItem={onRemoveItem}
-          groupedSelectedAppsList={groupedSelectedAppsList}
-          isMetricThresholdEnabled={isMetricThresholdEnabled}
-          openEditMetricModal={openEditMetricModal}
-          isValidInput={isValidInput}
-        />
+        <Container padding={{ top: 'medium' }}>
+          <GroupedSideNav
+            onSelect={onSelect}
+            selectedItem={selectedItem}
+            onRemoveItem={onRemoveItem}
+            groupedSelectedAppsList={groupedSelectedAppsList}
+            isMetricThresholdEnabled={isMetricThresholdEnabled}
+            openEditMetricModal={openEditMetricModal}
+            isValidInput={isValidInput}
+          />
+        </Container>
       ) : (
         content
       )}

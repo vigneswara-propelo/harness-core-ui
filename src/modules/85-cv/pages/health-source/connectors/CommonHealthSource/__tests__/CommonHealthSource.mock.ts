@@ -5,7 +5,7 @@ export const expectedHealthSourceData = {
   connectorRef: 'TestAppD',
   identifier: 'AppD_Single',
   isEdit: true,
-  mappedServicesAndEnvs: new Map(),
+  customMetricsMap: new Map(),
   metricPacks: [
     {
       identifier: 'Performance',

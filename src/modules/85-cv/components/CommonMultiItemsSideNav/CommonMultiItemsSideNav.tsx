@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useEffect, useMemo, useState } from 'react'
-import { Button, Container } from '@harness/uicore'
+import { Button, ButtonVariation, Container } from '@harness/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
+import { useStrings } from 'framework/strings'
 import { CommonSelectedAppsSideNav } from './components/CommonSelectedAppsSideNav/CommonSelectedAppsSideNav'
 import {
   getCreatedMetricLength,
@@ -54,6 +55,7 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
     isMetricThresholdEnabled,
     openEditMetricModal
   } = props
+  const { getString } = useStrings()
   const [filter, setFilter] = useState<string | undefined>()
   const [createdMetrics, setCreatedMetrics] = useState<string[]>(
     propsCreatedMetrics?.length ? propsCreatedMetrics : [defaultMetricName]
@@ -92,11 +94,11 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
     <Container className={css.main}>
       <Button
         icon="plus"
-        minimal
-        intent="primary"
+        variation={ButtonVariation.SECONDARY}
         disabled={!isValidInput}
         tooltip={!isValidInput ? tooptipMessage : undefined}
         tooltipProps={{ interactionKind: PopoverInteractionKind.HOVER_TARGET_ONLY }}
+        margin={{ bottom: 'small', left: 'medium', top: 'medium' }}
         onClick={() => {
           // TODO - This will be implemented once the entire form is implemented
           // if (isValidInput) {
@@ -141,7 +143,8 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
         }
         filterProps={{
           onFilter: setFilter,
-          className: css.metricsFilter
+          className: css.metricsFilter,
+          placeholder: getString('search')
         }}
       />
     </Container>

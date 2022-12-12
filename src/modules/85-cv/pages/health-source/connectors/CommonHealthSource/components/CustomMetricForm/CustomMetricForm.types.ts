@@ -34,4 +34,5 @@ export interface CustomMetricFormContainerProps {
   expressions?: string[]
   healthSourceConfig: HealthSourceConfig
   healthSourceData: HealthSourceInitialData
+  setConfigurationsFormikFieldValue: (key: string, data: any) => void
 }

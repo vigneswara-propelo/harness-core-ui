@@ -10,7 +10,7 @@ import { Formik, FormikForm } from '@harness/uicore'
 import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { CustomHealthMetricDefinition } from 'services/cv'
-import AddMetric, { AddMetricProps } from '../AddMetric'
+import AddMetric, { AddMetricProps } from '../AddMetric/AddMetric'
 
 function WrapperComponent(props: AddMetricProps): JSX.Element {
   return (
