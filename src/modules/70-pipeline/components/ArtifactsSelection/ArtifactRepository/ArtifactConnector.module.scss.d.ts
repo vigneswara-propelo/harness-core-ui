@@ -24,7 +24,6 @@ declare const styles: {
   readonly heading: string
   readonly imagePathContainer: string
   readonly inputWidth: string
-  readonly jenkinsFieldContainer: string
   readonly label: string
   readonly marginBottom: string
   readonly optionsViewContainer: string
