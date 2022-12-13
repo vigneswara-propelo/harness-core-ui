@@ -1572,7 +1572,6 @@ export interface StringsMap {
   'secrets.secret.inlineSecret': string
   'secrets.secret.labelFile': string
   'secrets.secret.labelSecretFile': string
-  'secrets.secret.labelSecretReference': string
   'secrets.secret.labelSecretType': string
   'secrets.secret.labelText': string
   'secrets.secret.messageSelectSM': string
@@ -1583,6 +1582,7 @@ export interface StringsMap {
   'secrets.secret.noSecretsFound': string
   'secrets.secret.placeholderSecretReference': string
   'secrets.secret.placeholderSecretValue': string
+  'secrets.secret.referenceRqrd': string
   'secrets.secret.referenceSecret': string
   'secrets.secret.referenceSecretVersionRqrd': string
   'secrets.secret.region': string

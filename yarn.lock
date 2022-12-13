@@ -1806,10 +1806,10 @@
     vscode-languageserver "^5.2.1"
     vscode-uri "^2.1.1"
 
-"@harness/ng-tooltip@^1.31.25":
-  version "1.31.25"
-  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.31.25/a70d33d98687d8812a7a0c6fa7f8d99aefe2333e#a70d33d98687d8812a7a0c6fa7f8d99aefe2333e"
-  integrity sha512-UXaY4bU0ib0xD6zYa+i/2l2FFzDoP6TJwe62gCTc96vyd+p2/QYLCrWgSBHWLsqqm6rSfgAUD8lmXw9PKVLFDg==
+"@harness/ng-tooltip@^1.31.62":
+  version "1.31.62"
+  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.31.62/f36e7a44ef186bcbaba1c957301e89417fe5ce49#f36e7a44ef186bcbaba1c957301e89417fe5ce49"
+  integrity sha512-zlF9CcwbJGD81ai7P6Vx9Ne1dmN6nyE4BqvomUfMZ19gwk4B5exF8kR2gYbbGY5v/IyS76GvG0A4KaS1J5B+IA==
 
 "@harness/telemetry@^1.0.42":
   version "1.0.42"
