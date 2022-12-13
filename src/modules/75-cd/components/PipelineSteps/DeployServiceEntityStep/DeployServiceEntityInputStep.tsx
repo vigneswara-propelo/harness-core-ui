@@ -227,7 +227,7 @@ export function DeployServiceEntityInputStep({
     label: isMultiSvcTemplate
       ? getString('cd.pipelineSteps.serviceTab.specifyYourServices')
       : getString('cd.pipelineSteps.serviceTab.specifyYourService'),
-    disabled: inputSetData?.readonly || isMultiSvcTemplate ? loading : false
+    disabled: inputSetData?.readonly || (isMultiSvcTemplate ? loading : false)
   }
 
   return (
