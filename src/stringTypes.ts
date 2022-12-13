@@ -4233,6 +4233,10 @@ export interface StringsMap {
   'pipeline.stepDescription.ServiceNowImportSet': string
   'pipeline.stepDescription.ServiceNowUpdate': string
   'pipeline.stepDescription.ShellScriptProvision': string
+  'pipeline.stepDescription.SwapRollback': string
+  'pipeline.stepDescription.SwapRoute': string
+  'pipeline.stepDescription.TanzuCommandScript': string
+  'pipeline.stepDescription.TasRollback': string
   'pipeline.stepDescription.TerraformApply': string
   'pipeline.stepDescription.TerraformDestroy': string
   'pipeline.stepDescription.TerraformPlan': string
@@ -5199,6 +5203,12 @@ export interface StringsMap {
   'cd.steps.pdcStep.title': string
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
+  'cd.steps.tas.enableDownSizeOldApplication': string
+  'cd.steps.tas.enableUpsizeInActiveApp': string
+  'cd.steps.tas.newAppInstance': string
+  'cd.steps.tas.oldAppInstance': string
+  'cd.steps.tas.oldAppInstances': string
+  'cd.steps.tas.totalInstances': string
   'cd.steps.tasInfra.organizationError': string
   'cd.steps.tasInfra.organizationPlaceholder': string
   'cd.steps.tasInfra.space': string

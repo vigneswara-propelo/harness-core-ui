@@ -130,6 +130,10 @@ export enum StepType {
   ElastigroupSetup = 'ElastigroupSetup',
   TasService = 'TasService',
   TasInfra = 'TAS',
+  AppRollback = 'AppRollback',
+  SwapRoutes = 'SwapRoutes',
+  SwapRollback = 'SwapRollback',
+  TanzuCommand = 'TanzuCommand',
   Asg = 'ASGServiceSpec',
   AsgInfraSpec = 'AsgInfraSpec'
 }

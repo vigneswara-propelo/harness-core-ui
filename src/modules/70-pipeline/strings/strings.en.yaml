@@ -1127,6 +1127,10 @@ stepDescription:
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
   ElastigroupSetup: Elastigroup setup step
+  SwapRoute: Swap Route for Tanzu Application Service
+  SwapRollback: Swap Rolback for Tanzu Application Service
+  TasRollback: Rollback for the TAS steps
+  TanzuCommandScript: Command Scripts to run any CF CLI command or script at any point in your Harness TAS Pipelines
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
