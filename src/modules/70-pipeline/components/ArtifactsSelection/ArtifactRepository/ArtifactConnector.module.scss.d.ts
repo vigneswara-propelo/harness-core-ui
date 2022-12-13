@@ -16,6 +16,7 @@ declare const styles: {
   readonly connectorContainer: string
   readonly connectorForm: string
   readonly customArtifactContainer: string
+  readonly customArtifactForm: string
   readonly dockerSideCard: string
   readonly existingDocker: string
   readonly expanded: string

@@ -39,6 +39,11 @@
     overflow: scroll;
   }
 
+  .customArtifactForm {
+    margin-left: calc(var(--spacing-5) * -1);
+    padding-right: var(--spacing-5);
+  }
+
   .artifactSelect {
     button.bp3-button {
       width: 380px;
