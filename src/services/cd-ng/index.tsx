@@ -13531,7 +13531,6 @@ export type SamlSettings = SSOSettings & {
   entityIdentifier?: string
   groupMembershipAttr?: string
   logoutUrl?: string
-  metaDataFile?: string
   origin: string
   samlProviderType?: 'AZURE' | 'OKTA' | 'ONELOGIN' | 'OTHER'
   settingType?:
@@ -14088,8 +14087,6 @@ export type ServiceNowConnector = ConnectorConfigDTO & {
   delegateSelectors?: string[]
   passwordRef?: string
   serviceNowUrl: string
-  username?: string
-  usernameRef?: string
 }
 
 export interface ServiceNowFieldAllowedValueNG {
@@ -29483,8 +29480,8 @@ export const getInstancesDetailsPromise = (
 
 export interface GetServiceHeaderInfoQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
 }
 
@@ -33813,8 +33810,8 @@ export interface GetServiceOverridesListQueryParams {
   page?: number
   size?: number
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   environmentIdentifier: string
   serviceIdentifier?: string
   sort?: string[]
@@ -48481,6 +48478,7 @@ export interface GetServiceListQueryParams {
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
+  includeAllServicesAccessibleAtScope?: boolean
 }
 
 export type GetServiceListProps = Omit<

@@ -26,7 +26,7 @@ import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMu
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { getIdentifierFromScopedRef, isValueRuntimeInput } from '@common/utils/utils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
@@ -72,7 +72,7 @@ export function DeployServiceEntityInputStep({
   const servicesValue: ServiceYamlV2[] = get(initialValues, `services.values`, [])
   const serviceTemplate = inputSetData?.template?.service?.serviceRef
   const servicesTemplate = inputSetData?.template?.services?.values
-  const { GLOBAL_SERVICE_ENV } = useFeatureFlags()
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const serviceIdentifiers: string[] = useMemo(() => {
     if (serviceValue) {
       return [serviceValue]
@@ -149,7 +149,8 @@ export function DeployServiceEntityInputStep({
     const newServicesTemplate: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
       return {
         serviceRef: RUNTIME_INPUT_VALUE,
-        serviceInputs: servicesData.find(svcTpl => svcTpl.service.identifier === svcId)?.serviceInputs
+        serviceInputs: servicesData.find(svcTpl => svcTpl.service.identifier === getIdentifierFromScopedRef(svcId))
+          ?.serviceInputs
       }
     })
 
@@ -158,7 +159,9 @@ export function DeployServiceEntityInputStep({
     }
     // updated values based on selected services
     const newServicesValues: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
-      const svcTemplate = servicesData.find(svcTpl => svcTpl.service.identifier === svcId)?.serviceInputs
+      const svcTemplate = servicesData.find(
+        svcTpl => svcTpl.service.identifier === getIdentifierFromScopedRef(svcId)
+      )?.serviceInputs
       let serviceInputs = isMultiSvcTemplate
         ? get(formik.values, `${localPathPrefix}values`)?.find((svc: ServiceYamlV2) => svc.serviceRef === svcId)
             ?.serviceInputs
@@ -232,7 +235,7 @@ export function DeployServiceEntityInputStep({
       <Layout.Horizontal style={{ alignItems: 'flex-end' }}>
         <div className={css.inputFieldLayout}>
           {getMultiTypeFromValue(serviceTemplate) === MultiTypeInputType.RUNTIME ? (
-            GLOBAL_SERVICE_ENV ? (
+            CDS_OrgAccountLevelServiceEnvEnvGroup ? (
               <MultiTypeServiceField
                 {...commonProps}
                 deploymentType={deploymentType as ServiceDeploymentType}
@@ -285,7 +288,7 @@ export function DeployServiceEntityInputStep({
           )}
         </div>
         {isMultiSvcTemplate ? (
-          GLOBAL_SERVICE_ENV ? (
+          CDS_OrgAccountLevelServiceEnvEnvGroup ? (
             <MultiTypeServiceField
               {...commonProps}
               deploymentType={deploymentType as ServiceDeploymentType}
