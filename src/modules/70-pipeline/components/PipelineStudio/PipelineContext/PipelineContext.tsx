@@ -394,7 +394,9 @@ const getTemplateType = (
   pipeline: PipelineInfoConfig,
   queryParams: GetPipelineQueryParams,
   storeMetadata?: StoreMetadata,
-  supportingTemplatesGitx?: boolean
+  supportingTemplatesGitx?: boolean,
+  isPipelineGitCacheEnabled?: boolean,
+  loadFromCache?: boolean
 ): ReturnType<typeof getTemplateTypesByRef> => {
   const templateRefs = uniq(findAllByKey('templateRef', pipeline))
   return getTemplateTypesByRef(
@@ -409,7 +411,9 @@ const getTemplateType = (
     },
     templateRefs,
     storeMetadata,
-    supportingTemplatesGitx
+    supportingTemplatesGitx,
+    isPipelineGitCacheEnabled,
+    loadFromCache
   )
 }
 
@@ -569,7 +573,14 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     }
     if (data && !forceUpdate) {
       const { templateTypes, templateServiceData, templateIcons } = data.pipeline
-        ? await getTemplateType(data.pipeline, templateQueryParams, storeMetadata, supportingTemplatesGitx)
+        ? await getTemplateType(
+            data.pipeline,
+            templateQueryParams,
+            storeMetadata,
+            supportingTemplatesGitx,
+            isPipelineGitCacheEnabled,
+            loadFromCache
+          )
         : { templateTypes: {}, templateServiceData: {}, templateIcons: {} }
 
       const { resolvedCustomDeploymentDetailsByRef } = data.pipeline
