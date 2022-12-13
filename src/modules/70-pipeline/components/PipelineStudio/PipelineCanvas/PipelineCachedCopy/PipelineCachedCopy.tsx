@@ -111,9 +111,7 @@ function PipelineCachedCopy(): React.ReactElement {
         width={600}
         className={css.dialogStyles}
       >
-        <Text margin={{ left: 'huge', top: 'large', right: 'huge', bottom: 'large' }}>
-          {getString('pipeline.pipelineCachedCopy.reloadPipelineContent')}
-        </Text>
+        <Text>{getString('pipeline.pipelineCachedCopy.reloadPipelineContent')}</Text>
       </ModalDialog>
       <ModalDialog
         isOpen={isErrorModalOpen}
@@ -141,9 +139,7 @@ function PipelineCachedCopy(): React.ReactElement {
         width={600}
         className={css.dialogStyles}
       >
-        <Text margin={{ left: 'huge', top: 'large', right: 'huge', bottom: 'large' }}>
-          {getString('pipeline.pipelineCachedCopy.reloadPipelineContent')}
-        </Text>
+        <Text>{getString('pipeline.pipelineCachedCopy.reloadPipelineContent')}</Text>
       </ModalDialog>
     </>
   )
