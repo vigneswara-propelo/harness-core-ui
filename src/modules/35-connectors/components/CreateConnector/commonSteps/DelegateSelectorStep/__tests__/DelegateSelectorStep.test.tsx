@@ -10,6 +10,7 @@ import { act } from 'react-dom/test-utils'
 import { render, fireEvent } from '@testing-library/react'
 import * as portalServices from 'services/portal'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
+import * as featureFlags from '@common/hooks/useFeatureFlag'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import {
   defaultProps,
@@ -74,6 +75,9 @@ jest.mock('services/cd-ng-rq', () => ({
   })
 }))
 
+jest.spyOn(featureFlags, 'useFeatureFlags').mockImplementation(() => ({
+  CDNG_ENABLED: false
+}))
 describe('DelegateSelectorStep', () => {
   test('should render DelegateSelectorStep component', async () => {
     const { container } = render(
@@ -89,6 +93,9 @@ describe('DelegateSelectorStep', () => {
   })
 
   test('should confirm that install new delegate button is visible if feature flags are present', async () => {
+    jest.spyOn(featureFlags, 'useFeatureFlags').mockImplementation(() => ({
+      CDNG_ENABLED: true
+    }))
     const { container } = render(
       <TestWrapper>
         <DelegateSelectorStep {...defaultProps} buildPayload={jest.fn()} />
@@ -330,6 +337,9 @@ describe('DelegateSelectorStep', () => {
   })
 
   test('should open Git Sync modal on clicking Save and Continue', async () => {
+    jest.spyOn(featureFlags, 'useFeatureFlags').mockImplementation(() => ({
+      CDNG_ENABLED: true
+    }))
     const { getByTestId } = render(
       <GitSyncTestWrapper>
         <DelegateSelectorStep

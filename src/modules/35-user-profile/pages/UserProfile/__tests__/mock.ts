@@ -230,6 +230,7 @@ export const twoFactorAuthSettings = {
 
 export const enabledTwoFactorAuth: Pick<AppStoreContextProps, 'featureFlags' | 'currentUserInfo'> = {
   featureFlags: {
+    CDNG_ENABLED: true,
     CVNG_ENABLED: true,
     CING_ENABLED: true,
     CENG_ENABLED: true,

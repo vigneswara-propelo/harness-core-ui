@@ -22,9 +22,8 @@ import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
+import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectListView.module.scss'
 
@@ -73,16 +72,15 @@ export const RenderColumnOrganization: Renderer<CellProps<ProjectAggregateDTO>> 
 }
 
 const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
-  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
-  const data = row.original
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
+  const data = row.original
   const shouldShowModules = data.projectResponse.project.modules?.length
-  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
   function getModuleIcons(project: Project): React.ReactElement[] {
     const modules = project.modules
     const icons = []
 
-    if (shouldVisible && modules?.includes(ModuleName.CD)) {
+    if (CDNG_ENABLED && modules?.includes(ModuleName.CD)) {
       icons.push(<Icon name={getModuleIcon(ModuleName.CD)} size={20} key={ModuleName.CD} />)
     }
 

@@ -22,11 +22,6 @@ describe('Project Card test', () => {
         path={routes.toProjects({ ...accountPathProps })}
         pathParams={{ accountId: 'testAcc' }}
         defaultAppStoreValues={defaultAppStoreValues}
-        defaultLicenseStoreValues={{
-          licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
-          }
-        }}
       >
         <ProjectCard data={responseProjectAggregateDTO.data as ProjectAggregateDTO} />
       </TestWrapper>
@@ -39,11 +34,6 @@ describe('Project Card test', () => {
           path={routes.toProjects({ ...accountPathProps })}
           pathParams={{ accountId: 'testAcc' }}
           defaultAppStoreValues={defaultAppStoreValues}
-          defaultLicenseStoreValues={{
-            licenseInformation: {
-              CD: { edition: 'FREE', status: 'ACTIVE' }
-            }
-          }}
         >
           <ProjectCard data={responseProjectAggregateDTOWithNoModules.data as ProjectAggregateDTO} isPreview={true} />
         </TestWrapper>

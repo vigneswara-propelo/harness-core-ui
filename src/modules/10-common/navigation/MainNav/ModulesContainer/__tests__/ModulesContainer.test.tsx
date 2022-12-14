@@ -43,8 +43,7 @@ describe('Modules containter test', () => {
     const { container, queryByText } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
-        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
+        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
       >
         <ModulesContainer />
       </TestWrapper>
@@ -74,7 +73,7 @@ describe('Modules containter test', () => {
     const { container } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
-        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
       >
         <ModulesContainer />
       </TestWrapper>
@@ -99,7 +98,7 @@ describe('Modules containter test', () => {
     const { container } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
-        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
       >
         <ModulesContainer />
       </TestWrapper>
@@ -123,8 +122,7 @@ describe('Modules containter test', () => {
     const { container } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
-        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
+        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
       >
         <ModulesContainer />
       </TestWrapper>
@@ -148,7 +146,7 @@ describe('Modules containter test', () => {
     const { container } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
-        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
       >
         <ModulesContainer />
       </TestWrapper>
@@ -172,7 +170,7 @@ describe('Modules containter test', () => {
     const { container, queryByText } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
-        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
       >
         <ModulesContainer />
       </TestWrapper>

@@ -1,4 +1,4 @@
-import { DEFAULT_MODULES_ORDER, NavModuleName, useNavModuleInfoReturnType } from '@common/hooks/useGetModuleInfo'
+import { DEFAULT_MODULES_ORDER, NavModuleName, useNavModuleInfoReturnType } from '@common/hooks/useNavModuleInfo'
 import { filterNavModules } from '../util'
 
 const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {

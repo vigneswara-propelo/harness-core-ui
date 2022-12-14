@@ -21,7 +21,6 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { PermissionRequest } from '@rbac/hooks/usePermission'
-import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 
 interface ContextMenuProps {
   project: Project
@@ -37,7 +36,7 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const { project, editProject, collaborators, setMenuOpen, openDialog } = props
-  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
   const permissionRequest: Optional<PermissionRequest, 'permission'> = {
@@ -138,10 +137,10 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
       })
     )
   }
-  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+
   return (
     <Menu style={{ minWidth: 'unset' }}>
-      {shouldVisible && project.modules?.includes(ModuleName.CD) ? (
+      {CDNG_ENABLED && project.modules?.includes(ModuleName.CD) ? (
         <Menu.Item
           text={
             <Layout.Horizontal spacing="xsmall">

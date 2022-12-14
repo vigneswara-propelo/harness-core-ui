@@ -120,11 +120,6 @@ describe('Project Details', () => {
         path={routes.toProjectDetails({ ...projectPathProps })}
         pathParams={{ accountId: 'testAcc', orgIdentifier: 'Cisco_Meraki', projectIdentifier: 'Portal' }}
         defaultAppStoreValues={defaultAppStoreValues}
-        defaultLicenseStoreValues={{
-          licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
-          }
-        }}
       >
         <ProjectDetails />
       </TestWrapper>

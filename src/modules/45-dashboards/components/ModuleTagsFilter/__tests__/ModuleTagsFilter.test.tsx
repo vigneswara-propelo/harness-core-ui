@@ -38,11 +38,12 @@ describe('ModuleTagsFilter', () => {
     useFeatureFlagsMock.mockReturnValue({
       CENG_ENABLED: true,
       CING_ENABLED: true,
-      CFNG_ENABLED: true
+      CFNG_ENABLED: true,
+      CDNG_ENABLED: true
     })
     mockImport('framework/LicenseStore/LicenseStoreContext', {
       useLicenseStore: jest.fn().mockImplementation(() => ({
-        licenseInformation: { STO: { status: 'ACTIVE' }, CD: { status: 'ACTIVE' } }
+        licenseInformation: { STO: { status: 'ACTIVE' } }
       }))
     })
   })
@@ -62,6 +63,7 @@ describe('ModuleTagsFilter', () => {
     useFeatureFlagsMock.mockReturnValue({
       CENG_ENABLED: true,
       CING_ENABLED: true,
+      CDNG_ENABLED: false,
       CFNG_ENABLED: false
     })
     mockImport('framework/LicenseStore/LicenseStoreContext', {

@@ -31,7 +31,7 @@ describe('Draggable module item tests', () => {
 
   test('render when feature flag is off', () => {
     const { queryByText, container } = render(
-      <TestWrapper defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}>
+      <TestWrapper defaultFeatureFlagValues={{ CDNG_ENABLED: true }}>
         <DraggableModuleItemWithCondition index={0} module={ModuleName.CD} />
       </TestWrapper>
     )

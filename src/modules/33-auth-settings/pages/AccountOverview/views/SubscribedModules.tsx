@@ -19,7 +19,6 @@ import type { AccountPathProps, SubscriptionQueryParams } from '@common/interfac
 import { useGetAccountLicenses } from 'services/cd-ng'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import { Editions } from '@common/constants/SubscriptionTypes'
-import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 import css from '../AccountOverview.module.scss'
 
 interface ModuleCardProps {
@@ -92,12 +91,11 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
 const SubscribedModules: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
-  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   function isModuleEnabled(moduleType: ModuleLicenseDTO['moduleType']): boolean | undefined {
     switch (moduleType) {
       case ModuleName.CD: {
-        return shouldVisible
+        return CDNG_ENABLED
       }
       case ModuleName.CE: {
         return CENG_ENABLED
