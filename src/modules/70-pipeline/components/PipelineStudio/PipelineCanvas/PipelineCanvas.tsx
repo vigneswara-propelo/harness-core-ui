@@ -677,11 +677,28 @@ export function PipelineCanvas({
     replaceQueryParams({ repoIdentifier, branch, connectorRef, storeType, repoName }, { skipNulls: true }, true)
   }
 
+  const allowOpeningRunPipelineModal: boolean = React.useMemo(() => {
+    /**
+     * This is done because Run Pipeline modal was opening twice for Remote Pipelines.
+     * For remote pipeline when we land on Pipeline Studio from Deployments page, there is no branch initially,
+     * because pipeline in list view does not have branch, so there is no branch in url initially and then we update branch in the url.
+     * Because of all this, useModalHook for opening Run Pipeline modal runs twice and modal visibly opens twice.
+     * To Prevent the issue, added a check which waits for branch name to appear in url when pipeline is of Remote type,
+     */
+    let shouldOpenRunPipelineModal = false
+    if (!isPipelineRemote) {
+      shouldOpenRunPipelineModal = true
+    } else if (isPipelineRemote && !isEmpty(branch)) {
+      shouldOpenRunPipelineModal = true
+    }
+    return shouldOpenRunPipelineModal
+  }, [branch, isPipelineRemote])
+
   React.useEffect(() => {
-    if (runPipeline) {
+    if (runPipeline && allowOpeningRunPipelineModal) {
       openRunPipelineModal()
     }
-  }, [runPipeline])
+  }, [runPipeline, allowOpeningRunPipelineModal])
 
   React.useEffect(() => {
     isPipelineRemote &&
