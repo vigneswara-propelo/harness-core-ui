@@ -27,14 +27,12 @@ import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
 import { getIdentifierFromScopedRef, isValueRuntimeInput } from '@common/utils/utils'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import type { DeployServiceEntityData, DeployServiceEntityCustomProps } from './DeployServiceEntityUtils'
 import { useGetServicesData } from './useGetServicesData'
-import { isExecutionTimeFieldDisabled } from '../K8sServiceSpec/ArtifactSource/artifactSourceUtils'
 import css from './DeployServiceEntityStep.module.scss'
 
 export interface DeployServiceEntityInputStepProps extends DeployServiceEntityCustomProps {
@@ -55,8 +53,7 @@ export function DeployServiceEntityInputStep({
   allowableTypes,
   deploymentType,
   gitOpsEnabled,
-  customDeploymentData,
-  stepViewType
+  customDeploymentData
 }: DeployServiceEntityInputStepProps): React.ReactElement | null {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -230,6 +227,14 @@ export function DeployServiceEntityInputStep({
     disabled: inputSetData?.readonly || (isMultiSvcTemplate ? loading : false)
   }
 
+  const allowableTypesWithoutExecution = (allowableTypes as MultiTypeInputType[])?.filter(
+    item => item !== MultiTypeInputType.EXECUTION_TIME
+  ) as AllowedTypes
+
+  const allowableTypesWithoutExpressionExecution = (allowableTypes as MultiTypeInputType[])?.filter(
+    item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
+  ) as AllowedTypes
+
   return (
     <>
       <Layout.Horizontal style={{ alignItems: 'flex-end' }}>
@@ -246,7 +251,7 @@ export function DeployServiceEntityInputStep({
                 width={300}
                 multiTypeProps={{
                   expressions,
-                  allowableTypes,
+                  allowableTypes: allowableTypesWithoutExecution,
                   defaultValueToReset: ''
                 }}
               />
@@ -258,7 +263,7 @@ export function DeployServiceEntityInputStep({
                 useValue
                 multiTypeInputProps={{
                   expressions,
-                  allowableTypes: allowableTypes,
+                  allowableTypes: allowableTypesWithoutExecution,
                   selectProps: {
                     addClearBtn: !inputSetData?.readonly,
                     items: selectOptions
@@ -269,23 +274,6 @@ export function DeployServiceEntityInputStep({
               />
             )
           ) : null}
-          {getMultiTypeFromValue(get(formik?.values, `${localPathPrefix}serviceRef`)) ===
-            MultiTypeInputType.RUNTIME && (
-            <ConfigureOptions
-              className={css.configureOptions}
-              style={{ alignSelf: 'center' }}
-              value={get(formik?.values, `${localPathPrefix}serviceRef`)}
-              type="String"
-              variableName="skipResourceVersioning"
-              isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-              showRequiredField={false}
-              showDefaultField={true}
-              showAdvanced={true}
-              onChange={value => {
-                formik.setFieldValue(`${localPathPrefix}serviceRef`, value)
-              }}
-            />
-          )}
         </div>
         {isMultiSvcTemplate ? (
           CDS_OrgAccountLevelServiceEnvEnvGroup ? (
@@ -300,7 +288,7 @@ export function DeployServiceEntityInputStep({
               isNewConnectorLabelVisible={false}
               multiTypeProps={{
                 expressions,
-                allowableTypes
+                allowableTypes: allowableTypesWithoutExpressionExecution
               }}
             />
           ) : (
@@ -316,7 +304,7 @@ export function DeployServiceEntityInputStep({
                 width: 300,
                 height: 32,
                 expressions,
-                allowableTypes
+                allowableTypes: allowableTypesWithoutExpressionExecution
               }}
             />
           )

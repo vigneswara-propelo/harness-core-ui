@@ -50,11 +50,11 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { getIdentifierFromScopedRef, isMultiTypeRuntime } from '@common/utils/utils'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { queryClient } from 'services/queryClient'
+import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -524,10 +524,8 @@ export default function DeployServiceEntityWidget({
                                 }}
                                 multiTypeProps={{
                                   width: 300,
-                                  expressions,
-                                  allowableTypes
+                                  allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
                                 }}
-                                enableConfigureOptions
                               />
                             ) : (
                               <MultiTypeServiceField
@@ -546,7 +544,7 @@ export default function DeployServiceEntityWidget({
                                 width={300}
                                 multiTypeProps={{
                                   expressions,
-                                  allowableTypes,
+                                  allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
                                   onTypeChange: setServiceInputType
                                 }}
                               />
@@ -597,21 +595,6 @@ export default function DeployServiceEntityWidget({
                                   onChange: handleSingleSelectChange
                                 }}
                                 selectItems={selectOptions}
-                              />
-                            )}
-                            {getMultiTypeFromValue(formik?.values.service) === MultiTypeInputType.RUNTIME && (
-                              <ConfigureOptions
-                                className={css.configureOptions}
-                                style={{ alignSelf: 'center' }}
-                                value={defaultTo(formik?.values.service, '')}
-                                type="String"
-                                variableName="service"
-                                showRequiredField={false}
-                                showDefaultField={true}
-                                showAdvanced={true}
-                                onChange={value => {
-                                  formik.setFieldValue('service', value)
-                                }}
                               />
                             )}
                           </div>
