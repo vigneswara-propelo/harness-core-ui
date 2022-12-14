@@ -6993,7 +6993,8 @@ export interface StringsMap {
   'ci.getStartedWithCI.chooseExistingYAML': string
   'ci.getStartedWithCI.chooseExistingYAMLHelptext': string
   'ci.getStartedWithCI.chooseStarterConfig': string
-  'ci.getStartedWithCI.cloneCodebaseHelpText': string
+  'ci.getStartedWithCI.cloneGitRepo': string
+  'ci.getStartedWithCI.cloneGitRepoHelpText': string
   'ci.getStartedWithCI.codeRepo': string
   'ci.getStartedWithCI.configInfra': string
   'ci.getStartedWithCI.configurationOption': string
