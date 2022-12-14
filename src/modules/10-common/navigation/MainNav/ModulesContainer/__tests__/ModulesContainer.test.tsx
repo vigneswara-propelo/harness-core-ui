@@ -43,11 +43,13 @@ describe('Modules containter test', () => {
     const { container, queryByText } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
-        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <ModulesContainer />
       </TestWrapper>
     )
+
     // checking length of nav items
     expect(container.querySelectorAll('[class*="navItem"]').length).toBe(3)
     // selected modules should be defined
@@ -72,7 +74,7 @@ describe('Modules containter test', () => {
     const { container } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
-        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
       >
         <ModulesContainer />
       </TestWrapper>
@@ -97,7 +99,7 @@ describe('Modules containter test', () => {
     const { container } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
-        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
       >
         <ModulesContainer />
       </TestWrapper>
@@ -121,7 +123,8 @@ describe('Modules containter test', () => {
     const { container } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
-        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <ModulesContainer />
       </TestWrapper>
@@ -145,7 +148,7 @@ describe('Modules containter test', () => {
     const { container } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
-        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
       >
         <ModulesContainer />
       </TestWrapper>
@@ -169,7 +172,7 @@ describe('Modules containter test', () => {
     const { container, queryByText } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
-        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
       >
         <ModulesContainer />
       </TestWrapper>

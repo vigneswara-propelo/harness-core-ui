@@ -31,6 +31,7 @@ import {
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetCommunity } from '@common/utils/utils'
+import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 import SubscriptionTab from './SubscriptionTab'
 import css from './SubscriptionsPage.module.scss'
 
@@ -78,22 +79,22 @@ const SubscriptionsPage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { moduleCard } = useQueryParams<{ moduleCard?: ModuleName }>()
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SRM_LICENSE_ENABLED } =
-    useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SRM_LICENSE_ENABLED } = useFeatureFlags()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const history = useHistory()
   const isCommunity = useGetCommunity()
   useEffect(() => {
     trackPage(PAGE_NAME.SubscriptionsPage, { module: moduleCard as string })
   }, [])
+  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
   const ACTIVE_MODULE_SELECT_CARDS = MODULE_SELECT_CARDS.reduce(
     (accumulator: ModuleSelectCard[], card: ModuleSelectCard) => {
       const { module } = card
-
       switch (module) {
-        case ModuleName.CD:
-          CDNG_ENABLED && accumulator.push(card)
+        case ModuleName.CD: {
+          shouldVisible && accumulator.push(card)
           return accumulator
+        }
         case ModuleName.CV:
           CVNG_ENABLED && SRM_LICENSE_ENABLED && accumulator.push(card)
           return accumulator

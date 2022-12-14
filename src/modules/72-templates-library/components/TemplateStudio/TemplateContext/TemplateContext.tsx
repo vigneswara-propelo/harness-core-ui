@@ -49,6 +49,7 @@ import type { Module } from '@common/interfaces/RouteInterfaces'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
+import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 import { initialState, TemplateReducer, TemplateReducerState, TemplateViewData } from './TemplateReducer'
 import { ActionReturnType, TemplateContextActions } from './TemplateActions'
 
@@ -879,7 +880,7 @@ export const TemplateProvider: React.FC<{
   const { repoIdentifier, branch } = queryParams
   const { supportingTemplatesGitx } = useAppStore()
   const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)
@@ -1002,14 +1003,14 @@ export const TemplateProvider: React.FC<{
   const setIntermittentLoading = React.useCallback((isIntermittentLoading: boolean) => {
     dispatch(TemplateContextActions.setIntermittentLoading({ isIntermittentLoading }))
   }, [])
-
+  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
   const renderPipelineStage = (args: Omit<PipelineStagesProps, 'children'>) =>
     getPipelineStages({
       args,
       getString,
       module,
       isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
-      isCDEnabled: licenseInformation['CD'] && CDNG_ENABLED,
+      isCDEnabled: shouldVisible,
       isCFEnabled: licenseInformation['CF'] && CFNG_ENABLED,
       isSTOEnabled: licenseInformation['STO']?.status === 'ACTIVE',
       isApprovalStageEnabled: true
