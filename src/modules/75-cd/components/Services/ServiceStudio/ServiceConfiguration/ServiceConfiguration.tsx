@@ -7,7 +7,7 @@
 
 import React, { useCallback, useState } from 'react'
 import { VisualYamlToggle, VisualYamlSelectedView as SelectedView, Tag, ButtonVariation } from '@harness/uicore'
-import { cloneDeep, defaultTo, set } from 'lodash-es'
+import { cloneDeep, defaultTo, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import produce from 'immer'
@@ -30,6 +30,7 @@ import css from './ServiceConfiguration.module.scss'
 
 interface ServiceConfigurationProps {
   serviceData: NGServiceConfig
+  setHasYamlValidationErrors: (hasErrors: boolean) => void
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -44,7 +45,10 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   }
 }
 
-function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React.ReactElement | null {
+function ServiceConfiguration({
+  serviceData,
+  setHasYamlValidationErrors
+}: ServiceConfigurationProps): React.ReactElement | null {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const {
     state: {
@@ -73,6 +77,10 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
   })
 
   const getUpdatedPipelineYaml = useCallback((): PipelineInfoConfig | undefined => {
+    requestAnimationFrame(() => {
+      setHasYamlValidationErrors(!isEmpty(yamlHandler?.getYAMLValidationErrorMap()))
+    })
+
     const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
     const serviceSetYamlVisual = parse(yaml).service
 
@@ -134,6 +142,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
         <div className={css.yamlBuilder}>
           <YamlBuilderMemo
             {...yamlBuilderReadOnlyModeProps}
+            fileName={`${serviceData.service?.name}.yaml`}
             key={isYamlEditable.toString()}
             isReadOnlyMode={isReadonly || !isYamlEditable}
             onChange={onYamlChange}
