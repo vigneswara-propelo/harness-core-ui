@@ -134,6 +134,7 @@ export enum StepType {
   SwapRoutes = 'SwapRoutes',
   SwapRollback = 'SwapRollback',
   TanzuCommand = 'TanzuCommand',
+  AppResize = 'AppResize',
   Asg = 'ASGServiceSpec',
   AsgInfraSpec = 'AsgInfraSpec'
 }

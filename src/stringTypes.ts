@@ -4174,6 +4174,7 @@ export interface StringsMap {
   'pipeline.stepConfigContent': string
   'pipeline.stepConfigHasChanges': string
   'pipeline.stepDescription.ACR': string
+  'pipeline.stepDescription.AppResize': string
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Background': string
@@ -5205,6 +5206,7 @@ export interface StringsMap {
   'cd.steps.serverless.stagePlaceholder': string
   'cd.steps.tas.enableDownSizeOldApplication': string
   'cd.steps.tas.enableUpsizeInActiveApp': string
+  'cd.steps.tas.minimumCountPercentage': string
   'cd.steps.tas.newAppInstance': string
   'cd.steps.tas.oldAppInstance': string
   'cd.steps.tas.oldAppInstances': string

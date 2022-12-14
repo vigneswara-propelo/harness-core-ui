@@ -93,6 +93,7 @@ import { SwapRollbackStep } from './SwapRollbackStep/SwapRollback'
 import { SwapRouteStep } from './SwapRouteStep/SwapRouteStep'
 import { TASRollbackStep } from './TasRollbackStep/TasRollbackStep'
 import { TanzuCommandStep } from './TanzuCommandStep/TanzuCommand'
+import { AppResizeStep } from './AppResizeStep/AppResizeStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -180,3 +181,4 @@ factory.registerStep(new SwapRollbackStep())
 factory.registerStep(new SwapRouteStep())
 factory.registerStep(new TASRollbackStep())
 factory.registerStep(new TanzuCommandStep())
+factory.registerStep(new AppResizeStep())

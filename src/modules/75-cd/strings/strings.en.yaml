@@ -133,6 +133,7 @@ steps:
     oldAppInstances: Desired Instances - Old Version
     newAppInstance: New App Instance
     oldAppInstance: Old App Instance
+    minimumCountPercentage: Percentage must be greater than or equal to 0
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
