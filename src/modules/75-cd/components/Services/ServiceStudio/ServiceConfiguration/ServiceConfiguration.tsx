@@ -7,7 +7,7 @@
 
 import React, { useCallback, useState } from 'react'
 import { VisualYamlToggle, VisualYamlSelectedView as SelectedView, Tag, ButtonVariation } from '@harness/uicore'
-import { cloneDeep, defaultTo, isEmpty, set } from 'lodash-es'
+import { cloneDeep, defaultTo, isEmpty, isEqual, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import produce from 'immer'
@@ -53,6 +53,7 @@ function ServiceConfiguration({
   const {
     state: {
       pipeline: service,
+      originalPipeline: originalService,
       pipelineView: { isYamlEditable },
       pipelineView
     },
@@ -77,12 +78,16 @@ function ServiceConfiguration({
   })
 
   const getUpdatedPipelineYaml = useCallback((): PipelineInfoConfig | undefined => {
-    requestAnimationFrame(() => {
-      setHasYamlValidationErrors(!isEmpty(yamlHandler?.getYAMLValidationErrorMap()))
-    })
-
     const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
     const serviceSetYamlVisual = parse(yaml).service
+    if (
+      !isEmpty(serviceSetYamlVisual.serviceDefinition.spec) ||
+      !isEmpty(serviceSetYamlVisual.serviceDefinition.type)
+    ) {
+      requestAnimationFrame(() => {
+        setHasYamlValidationErrors(!isEmpty(yamlHandler?.getYAMLValidationErrorMap()))
+      })
+    }
 
     if (serviceSetYamlVisual) {
       return produce({ ...service }, draft => {
@@ -94,7 +99,7 @@ function ServiceConfiguration({
         )
       })
     }
-  }, [service, yamlHandler])
+  }, [service, setHasYamlValidationErrors, yamlHandler])
 
   const onYamlChange = useCallback(
     (yamlChanged: boolean): void => {
@@ -110,13 +115,14 @@ function ServiceConfiguration({
   const handleModeSwitch = useCallback(
     (view: SelectedView): void => {
       if (view === SelectedView.VISUAL) {
+        const isYamlUpdated = !isEqual(service, originalService)
         const newServiceData = getUpdatedPipelineYaml()
-        newServiceData && updatePipeline(newServiceData, view)
+        newServiceData && isYamlUpdated && updatePipeline(newServiceData, view)
       }
       setView(view)
       setSelectedView(view)
     },
-    [setView, getUpdatedPipelineYaml, updatePipeline]
+    [setView, getUpdatedPipelineYaml, service, originalService, updatePipeline]
   )
 
   if (service.identifier === DefaultNewPipelineId && !isServiceCreateModalView) {

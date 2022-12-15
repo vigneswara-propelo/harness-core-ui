@@ -18,7 +18,7 @@ import {
   useToaster,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
-import { cloneDeep, defaultTo, get, omit, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, omit, set, unset } from 'lodash-es'
 import produce from 'immer'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
@@ -109,6 +109,11 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     if (!finalServiceData?.service?.name) {
       return
     }
+
+    if (!get(finalServiceData, 'service.serviceDefinition.type')) {
+      unset(finalServiceData?.service, 'serviceDefinition')
+    }
+
     const body = {
       ...omit(cloneDeep(finalServiceData?.service), 'serviceDefinition', 'gitOpsEnabled'),
       projectIdentifier,
