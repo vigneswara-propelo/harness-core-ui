@@ -101,12 +101,20 @@ export const validateStep = ({
   const isTemplateStep = !!(originalStep?.step as unknown as TemplateStepNode)?.template
   const stepType = isTemplateStep ? StepType.Template : (originalStep?.step as StepElementConfig)?.type
   const pipelineStep = factory.getStep(stepType)
+  const delegateSelectorPath = 'spec.delegateSelectors'
   const errorResponse = pipelineStep?.validateInputSet({
     data: step,
     template: template,
     getString,
     viewType
   })
+  if (get(template, delegateSelectorPath) && isEmpty(get(step, delegateSelectorPath))) {
+    set(
+      errors,
+      `step.${delegateSelectorPath}`,
+      getString?.('common.validation.fieldIsRequired', { name: getString('delegate.DelegateSelector') })
+    )
+  }
   if (!isEmpty(errorResponse)) {
     const suffix = isTemplateStep ? '.template.templateInputs' : ''
     set(errors, `step${suffix}`, errorResponse)
