@@ -7579,6 +7579,7 @@ export interface StringsMap {
   'cv.monitoringSources.buildYourQuery': string
   'cv.monitoringSources.commonHealthSource.addGroupName': string
   'cv.monitoringSources.commonHealthSource.addMetric': string
+  'cv.monitoringSources.commonHealthSource.chart': string
   'cv.monitoringSources.commonHealthSource.confirmDeleteMetric': string
   'cv.monitoringSources.commonHealthSource.defineQuery': string
   'cv.monitoringSources.commonHealthSource.defineQueryDescription': string
@@ -7586,6 +7587,7 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.metric': string
   'cv.monitoringSources.commonHealthSource.metricName': string
   'cv.monitoringSources.commonHealthSource.runQuery': string
+  'cv.monitoringSources.commonHealthSource.searchMetric': string
   'cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords': string
   'cv.monitoringSources.datadog.manualInputQueryModal.modalTitle': string
   'cv.monitoringSources.datadog.newDatadogGroupName': string
