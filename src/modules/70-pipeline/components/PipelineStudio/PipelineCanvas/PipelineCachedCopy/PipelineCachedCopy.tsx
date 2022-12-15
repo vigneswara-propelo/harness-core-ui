@@ -6,14 +6,14 @@
  */
 
 import React, { useEffect } from 'react'
+import type { GetDataError } from 'restful-react'
 import { Button, ButtonVariation, Icon, IconName, Layout, ModalDialog, Text, useToggleOpen } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { Tooltip } from '@blueprintjs/core'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
-import type { CacheResponseMetadata } from 'services/pipeline-ng'
-import { usePipelineContext } from '../../PipelineContext/PipelineContext'
+import type { CacheResponseMetadata, Failure } from 'services/pipeline-ng'
 import css from './PipelineCachedCopy.module.scss'
 
 // enum CacheState {
@@ -22,7 +22,10 @@ import css from './PipelineCachedCopy.module.scss'
 //   UNKNOWN = 'UNKNOWN'
 // }
 interface PipelineCachedCopyInterface {
-  updateLoadCacheStatus: () => void
+  reloadContent: string
+  cacheResponse: CacheResponseMetadata
+  reloadFromCache: () => void
+  fetchError?: GetDataError<Failure | Error> | null
 }
 const cacheStateToIconMap: Record<CacheResponseMetadata['cacheState'], IconName> = {
   VALID_CACHE: 'success-tick',
@@ -30,27 +33,25 @@ const cacheStateToIconMap: Record<CacheResponseMetadata['cacheState'], IconName>
   UNKNOWN: 'danger-icon'
 }
 
-function PipelineCachedCopy({ updateLoadCacheStatus }: PipelineCachedCopyInterface): React.ReactElement {
+function PipelineCachedCopy({
+  reloadContent,
+  cacheResponse,
+  fetchError,
+  reloadFromCache
+}: PipelineCachedCopyInterface): React.ReactElement {
   const { getString } = useStrings()
   const { isOpen: isModalOpen, close: hideModal, open: showModal } = useToggleOpen(false)
   const { isOpen: isErrorModalOpen, close: hideErrorModal, open: showErrorModal } = useToggleOpen(false)
-  const {
-    state: { cacheResponse = {} as unknown as CacheResponseMetadata, pipelineView, remoteFetchError },
-    updatePipelineView,
-    fetchPipeline
-  } = usePipelineContext()
 
   useEffect(() => {
-    if (!isEmpty(remoteFetchError)) {
+    if (!isEmpty(fetchError)) {
       showErrorModal()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [remoteFetchError])
+  }, [fetchError])
 
   function reloadPipeline(): void {
-    updateLoadCacheStatus()
-    updatePipelineView({ ...pipelineView, isYamlEditable: false })
-    fetchPipeline({ forceFetch: true, forceUpdate: true, loadFromCache: false })
+    reloadFromCache()
   }
 
   function getTooltipContent(): JSX.Element {
@@ -69,13 +70,8 @@ function PipelineCachedCopy({ updateLoadCacheStatus }: PipelineCachedCopyInterfa
 
   return (
     <>
-      <Layout.Horizontal
-        flex={{ alignItems: 'center' }}
-        spacing="small"
-        margin={{ right: 'medium' }}
-        className={css.reloadFromCache}
-      >
-        <div className={css.cachedcopy}>
+      <div className={css.cachedcopy}>
+        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }} spacing="small">
           <Tooltip position="bottom" content={getTooltipContent()}>
             <Text
               font={{ align: 'center', size: 'xsmall' }}
@@ -85,9 +81,9 @@ function PipelineCachedCopy({ updateLoadCacheStatus }: PipelineCachedCopyInterfa
               {getString('pipeline.pipelineCachedCopy.cachedCopyText')}
             </Text>
           </Tooltip>
-        </div>
-        <Icon size={12} name="command-rollback" onClick={() => showModal()} />
-      </Layout.Horizontal>
+          <Icon size={12} name="command-rollback" onClick={() => showModal()} />
+        </Layout.Horizontal>
+      </div>
       <ModalDialog
         isOpen={isModalOpen}
         isCloseButtonShown
@@ -98,7 +94,7 @@ function PipelineCachedCopy({ updateLoadCacheStatus }: PipelineCachedCopyInterfa
         title={
           <>
             <Icon name="warning-icon" intent={Intent.WARNING} size={32} />{' '}
-            <span>{getString('pipeline.pipelineCachedCopy.reloadPipeline')}</span>
+            <span>{getString('pipeline.pipelineCachedCopy.reloadPipeline', { pageType: reloadContent })}</span>
           </>
         }
         footer={
@@ -114,7 +110,9 @@ function PipelineCachedCopy({ updateLoadCacheStatus }: PipelineCachedCopyInterfa
         width={600}
         className={css.dialogStyles}
       >
-        <Text>{getString('pipeline.pipelineCachedCopy.reloadPipelineContent')}</Text>
+        <Text margin={{ left: 'huge', right: 'huge' }}>
+          {getString('pipeline.pipelineCachedCopy.reloadPipelineContent', { pageType: reloadContent })}
+        </Text>
       </ModalDialog>
       <ModalDialog
         isOpen={isErrorModalOpen}
@@ -142,7 +140,9 @@ function PipelineCachedCopy({ updateLoadCacheStatus }: PipelineCachedCopyInterfa
         width={600}
         className={css.dialogStyles}
       >
-        <Text>{getString('pipeline.pipelineCachedCopy.reloadPipelineContent')}</Text>
+        <Text margin={{ left: 'huge', right: 'huge' }}>
+          {getString('pipeline.pipelineCachedCopy.reloadPipelineContent', { pageType: reloadContent })}
+        </Text>
       </ModalDialog>
     </>
   )

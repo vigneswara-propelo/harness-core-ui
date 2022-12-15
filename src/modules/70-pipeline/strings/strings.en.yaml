@@ -1522,7 +1522,7 @@ triggeredByCron: Triggered on {{start}} by cron {{triggeredBy}}
 configureArtifactSource: Configure Artifact Source
 pipelineCachedCopy:
   cachedCopyText: Cached Copy
-  reloadPipeline: Reload Pipeline?
-  reloadPipelineContent: Are you sure you want to load the pipeline from Git? You will lose all your unsaved changes.
+  reloadPipeline: Reload {{pageType}}?
+  reloadPipelineContent: Are you sure you want to load the {{pageType}} from Git? You will lose all your unsaved changes.
   cacheInProgress: Cache update in progress
   cacheUpdateFailed: Cache Update Failed

@@ -28,7 +28,7 @@ import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
-import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { CacheResponseMetadata, Error, PipelineInfoConfig } from 'services/pipeline-ng'
 import { EntityGitDetails, InputSetSummaryResponse, useGetInputsetYaml } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -998,7 +998,16 @@ export function PipelineCanvas({
                   <div>
                     <div className={css.savePublishContainer}>
                       {isPipelineGitCacheEnabled && !isEmpty(pipelineCacheResponse) && (
-                        <PipelineCachedCopy updateLoadCacheStatus={() => setLoadFromCache(false)} />
+                        <PipelineCachedCopy
+                          reloadContent={getString('common.pipeline')}
+                          cacheResponse={pipelineCacheResponse as CacheResponseMetadata}
+                          reloadFromCache={() => {
+                            setLoadFromCache(false)
+                            updatePipelineView({ ...pipelineView, isYamlEditable: false })
+                            fetchPipeline({ forceFetch: true, forceUpdate: true, loadFromCache: false })
+                          }}
+                          fetchError={remoteFetchError}
+                        />
                       )}
                       {isReadonly && (
                         <div className={css.readonlyAccessTag}>
