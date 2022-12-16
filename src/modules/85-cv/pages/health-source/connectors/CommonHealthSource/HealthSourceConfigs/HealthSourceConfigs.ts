@@ -11,6 +11,7 @@ import type { HealthSourcesConfig } from '../CommonHealthSource.types'
 export const healthSourcesConfig: HealthSourcesConfig = {
   SumoLogic_METRICS: {
     addQuery: {
+      label: 'Metric',
       enableDefaultGroupName: false
     },
     customMetrics: {
@@ -29,6 +30,7 @@ export const healthSourcesConfig: HealthSourcesConfig = {
   },
   SumoLogic_LOGS: {
     addQuery: {
+      label: 'Log',
       enableDefaultGroupName: true
     },
     customMetrics: {

@@ -213,7 +213,7 @@ monitoringSources:
     metric: HealthSource Metric
     chart: Chart
     addMetric: Add metric
-    metricName: Metric name
+    metricName: '{{name}} name'
     addGroupName: Add group Name
     runQuery: Run Query
     confirmDeleteMetric: 'Are you sure you want to delete metric {{name}}'

@@ -18,6 +18,7 @@ export interface HealthSourcesConfig {
 export interface HealthSourceConfig {
   addQuery: {
     enableDefaultGroupName?: boolean
+    label: string
   }
   customMetrics?: {
     enabled: boolean

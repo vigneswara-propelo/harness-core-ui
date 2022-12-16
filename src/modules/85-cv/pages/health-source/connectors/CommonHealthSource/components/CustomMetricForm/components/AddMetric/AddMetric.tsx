@@ -21,21 +21,24 @@ export interface AddMetricProps {
   currentSelectedMetricDetail: CustomHealthMetricDefinition
   groupNames: SelectOption[]
   setGroupName: Dispatch<SetStateAction<SelectOption[]>>
+  fieldLabel: string
 }
 
 export default function AddMetric(props: AddMetricProps): JSX.Element {
-  const { enableDefaultGroupName, currentSelectedMetricDetail, groupNames, setGroupName } = props
+  const { enableDefaultGroupName, currentSelectedMetricDetail, groupNames, setGroupName, fieldLabel } = props
   const { handleReset, handleSubmit, values, setFieldValue } = useFormikContext<AddMetricForm>()
   const { getString } = useStrings()
   const handleSubmitData = (): void => handleSubmit()
   return (
     <Container padding="large">
       <Text font={{ weight: 'bold', size: 'large' }} color={Color.BLACK} padding={{ bottom: 'xxlarge' }}>
-        {getString('cv.monitoringSources.commonHealthSource.addMetric')}
+        {getString('common.addName', {
+          name: fieldLabel
+        })}
       </Text>
       <Layout.Vertical spacing="small">
         <NameId
-          nameLabel={getString('cv.monitoringSources.commonHealthSource.metricName')}
+          nameLabel={getString('cv.monitoringSources.commonHealthSource.metricName', { name: fieldLabel })}
           identifierProps={{
             inputName: CommonHealthSourceFieldNames.METRIC_NAME,
             idName: CommonHealthSourceFieldNames.METRIC_IDENTIFIER,

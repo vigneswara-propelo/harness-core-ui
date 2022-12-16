@@ -49,7 +49,8 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
     },
     healthSourceConfig: {
       addQuery: {
-        enableDefaultGroupName: false
+        enableDefaultGroupName: false,
+        label: 'Metric'
       },
       customMetrics: {
         enabled: true,
@@ -67,7 +68,7 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
   }
   test('Ensure CommonHealthSourceContainer component loads with the button to add metric', async () => {
     const { getByText } = render(<WrapperComponent {...props} />)
-    await waitFor(() => expect(getByText('cv.monitoringSources.addMetric')).toBeInTheDocument())
+    await waitFor(() => expect(getByText('common.addName')).toBeInTheDocument())
   })
 
   test('should be able to click on the submit button and submit the form', async () => {

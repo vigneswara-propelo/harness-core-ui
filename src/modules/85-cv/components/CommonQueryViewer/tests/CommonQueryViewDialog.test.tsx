@@ -40,7 +40,7 @@ describe('Unit tests for CommonQueryViewer ', () => {
     act(() => {
       fireEvent.click(fetchRecordsButton)
     })
-    expect(fetchRecordsMock).toHaveBeenCalledTimes(2)
+    expect(fetchRecordsMock).toHaveBeenCalledTimes(1)
   })
 
   test('Verify that fetchRecordsButton is disabled if there is no query', async () => {

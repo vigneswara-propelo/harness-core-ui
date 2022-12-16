@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
-import { Container, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import React, { useState } from 'react'
+import { Container, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { CommonHealthSourceFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import CVMultiTypeQuery from '../CVMultiTypeQuery/CVMultiTypeQuery'
@@ -31,15 +31,6 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
   } = props
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const isQueryRuntimeOrExpression = getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
-
-  useEffect(() => {
-    // if query exists then always fetch records on did mount
-    if (query && !isConnectorRuntimeOrExpression && !isQueryRuntimeOrExpression) {
-      fetchRecords()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const handleFetchRecords = (): void => {
     fetchRecords()

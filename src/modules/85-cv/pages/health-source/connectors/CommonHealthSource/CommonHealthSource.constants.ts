@@ -9,6 +9,13 @@ export const SumoLogicProducts = {
   LOGS: 'SumoLogic Cloud Logs'
 }
 
+export const initConfigurationsForm = {
+  customMetricsMap: new Map(),
+  selectedMetric: '',
+  ignoreThresholds: [],
+  failFastThresholds: []
+}
+
 export const initCustomForm = {
   sli: false,
   healthScore: false,

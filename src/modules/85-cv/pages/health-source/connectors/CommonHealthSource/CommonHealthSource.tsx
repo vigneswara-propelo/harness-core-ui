@@ -79,71 +79,69 @@ export default function CommonHealthSource({
   }
 
   return (
-    <>
-      <Formik<CommonHealthSourceConfigurations>
-        enableReinitialize
-        initialValues={healthSourceConfigurationsInitialValues}
-        formName="healthSourceConfigurationsForm"
-        onSubmit={() => {
-          // TODO - will be implemented
-        }}
-      >
-        {formik => {
-          return (
-            <>
-              {/* Non custom fields section can be added here */}
-              <FormikForm>
-                <Formik<CommonCustomMetricFormikInterface>
-                  enableReinitialize
-                  formName={'customMetricForm'}
-                  validateOnMount
-                  initialValues={{
-                    ...(initialCustomMetricFormValues as CommonCustomMetricFormikInterface)
-                  }}
-                  onSubmit={noop}
-                >
-                  {() => {
-                    return (
-                      <FormikForm className={css.formFullheight}>
-                        <CustomMetricFormContainer
-                          setConfigurationsFormikFieldValue={formik.setFieldValue}
-                          mappedMetrics={mappedMetrics}
-                          selectedMetric={selectedMetric}
-                          setMappedMetrics={setMappedMetrics}
-                          connectorIdentifier={connectorIdentifier}
-                          isMetricThresholdEnabled={isMetricThresholdEnabled}
-                          createdMetrics={createdMetrics}
-                          setCreatedMetrics={setCreatedMetrics}
-                          setGroupedCreatedMetrics={setGroupedCreatedMetrics}
-                          isTemplate={isTemplate}
-                          expressions={expressions}
-                          healthSourceConfig={healthSourceConfig}
-                          healthSourceData={healthSourceData}
-                          groupedCreatedMetrics={groupedCreatedMetrics}
-                        />
-                      </FormikForm>
-                    )
-                  }}
-                </Formik>
-              </FormikForm>
-              {/* Metric threshold section can be added here */}
-              <DrawerFooter
-                isSubmit
-                onPrevious={() => onPrevious(formik.values)}
-                onNext={() => {
-                  // For showing validation error message purpose
-                  formik.submitForm()
-
-                  if (formik.isValid) {
-                    // TODO - this will be implemented once we implement the submit form
-                    // submitData(formik, mappedMetrics, selectedMetric, onSubmit, groupedCreatedMetrics)
-                  }
+    <Formik<CommonHealthSourceConfigurations>
+      enableReinitialize
+      initialValues={healthSourceConfigurationsInitialValues}
+      formName="healthSourceConfigurationsForm"
+      onSubmit={() => {
+        // TODO - will be implemented
+      }}
+    >
+      {formik => {
+        return (
+          <>
+            {/* Non custom fields section can be added here */}
+            <FormikForm>
+              <Formik<CommonCustomMetricFormikInterface>
+                enableReinitialize
+                formName={'customMetricForm'}
+                validateOnMount
+                initialValues={{
+                  ...(initialCustomMetricFormValues as CommonCustomMetricFormikInterface)
                 }}
-              />
-            </>
-          )
-        }}
-      </Formik>
-    </>
+                onSubmit={noop}
+              >
+                {() => {
+                  return (
+                    <FormikForm className={css.formFullheight}>
+                      <CustomMetricFormContainer
+                        setConfigurationsFormikFieldValue={formik.setFieldValue}
+                        mappedMetrics={mappedMetrics}
+                        selectedMetric={selectedMetric}
+                        setMappedMetrics={setMappedMetrics}
+                        connectorIdentifier={connectorIdentifier}
+                        isMetricThresholdEnabled={isMetricThresholdEnabled}
+                        createdMetrics={createdMetrics}
+                        setCreatedMetrics={setCreatedMetrics}
+                        setGroupedCreatedMetrics={setGroupedCreatedMetrics}
+                        isTemplate={isTemplate}
+                        expressions={expressions}
+                        healthSourceConfig={healthSourceConfig}
+                        healthSourceData={healthSourceData}
+                        groupedCreatedMetrics={groupedCreatedMetrics}
+                      />
+                    </FormikForm>
+                  )
+                }}
+              </Formik>
+            </FormikForm>
+            {/* Metric threshold section can be added here */}
+            <DrawerFooter
+              isSubmit
+              onPrevious={() => onPrevious(formik.values)}
+              onNext={() => {
+                // For showing validation error message purpose
+                formik.submitForm()
+
+                if (formik.isValid) {
+                  // TODO - this will be implemented once we implement the submit form
+                  // submitData(formik, mappedMetrics, selectedMetric, onSubmit, groupedCreatedMetrics)
+                }
+              }}
+            />
+          </>
+        )
+      }}
+    </Formik>
   )
 }

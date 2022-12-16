@@ -43,15 +43,15 @@ describe('Unit tests for CustomMetricFormContainer', () => {
 
   test('Ensure CustomMetricFormContainer component loads with the button to add metric', async () => {
     const { getByText } = render(<WrapperComponent {...props} />)
-    await waitFor(() => expect(getByText('cv.monitoringSources.addMetric')).toBeInTheDocument())
+    await waitFor(() => expect(getByText('common.addName')).toBeInTheDocument())
   })
 
   test('should be able to click on the add Metric button to open the Add Metric modal', async () => {
-    const { getByText } = render(<WrapperComponent {...props} />)
-    const addMetricButton = getByText('cv.monitoringSources.addMetric')
+    const { getByText, getAllByText } = render(<WrapperComponent {...props} />)
+    const addMetricButton = getByText('common.addName')
     await waitFor(() => expect(addMetricButton).toBeInTheDocument())
     userEvent.click(addMetricButton)
-    await waitFor(() => expect(getByText('cv.monitoringSources.commonHealthSource.addMetric')).toBeInTheDocument())
+    await waitFor(() => expect(getAllByText('common.addName')).toHaveLength(2))
   })
 
   test('should give proper error message when metric name is not passed', async () => {
@@ -60,7 +60,8 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       identifier: 'identifier',
       groupName: 'group-1'
     }
-    const actualErrors = validateAddMetricForm(formData, getString)
+    const createdMetrics: string[] = []
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
     expect(actualErrors).toEqual({ metricName: 'fieldRequired' })
   })
 
@@ -70,7 +71,8 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       identifier: 'identifier',
       groupName: ''
     }
-    const actualErrors = validateAddMetricForm(formData, getString)
+    const createdMetrics: string[] = []
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
     expect(actualErrors).toEqual({ groupName: 'fieldRequired' })
   })
 
@@ -80,7 +82,21 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       identifier: '',
       groupName: 'group-1'
     }
-    const actualErrors = validateAddMetricForm(formData, getString)
+    const createdMetrics: string[] = []
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
     expect(actualErrors).toEqual({ identifier: 'fieldRequired' })
+  })
+
+  test('should give proper error message when duplicate metric name is passed', async () => {
+    const formData = {
+      metricName: 'metric1',
+      identifier: 'metric1',
+      groupName: 'group-1'
+    }
+    const createdMetrics: string[] = ['metric1']
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
+    expect(actualErrors).toEqual({
+      metricName: 'cv.monitoringSources.prometheus.validation.uniqueName'
+    })
   })
 })
