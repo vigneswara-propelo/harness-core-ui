@@ -51,7 +51,6 @@ import { PipelineContextType } from '@pipeline/components/PipelineStudio/Pipelin
 
 import EntityUsage from '@common/pages/entityUsage/EntityUsage'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
-import { sanitize } from '@common/utils/JSONUtils'
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
 import EnvironmentConfiguration from './EnvironmentConfiguration/EnvironmentConfiguration'
 import { ServiceOverrides } from './ServiceOverrides/ServiceOverrides'
@@ -113,15 +112,15 @@ export default function EnvironmentDetails(): React.ReactElement {
         name: values.name,
         description: values.description,
         identifier: values.identifier,
-        orgIdentifier: values.orgIdentifier?.length ? values.orgIdentifier : undefined,
-        projectIdentifier: values.projectIdentifier?.length ? values.projectIdentifier : undefined,
+        orgIdentifier: values.orgIdentifier,
+        projectIdentifier: values.projectIdentifier,
         tags: values.tags,
         type: defaultTo(values.type, 'Production')
       }
       const response = await updateEnvironmentV2Promise({
         body: {
           ...bodyWithoutYaml,
-          yaml: yamlStringify(sanitize({ environment: values }, { removeEmptyString: true }))
+          yaml: yamlStringify({ environment: values })
         },
         queryParams: {
           accountIdentifier: accountId
@@ -207,8 +206,8 @@ export default function EnvironmentDetails(): React.ReactElement {
                 description,
                 tags: defaultTo(tags, {}),
                 type: defaultTo(type, ''),
-                orgIdentifier: defaultTo(orgIdentifier, ''),
-                projectIdentifier: defaultTo(projectIdentifier, ''),
+                orgIdentifier: orgIdentifier,
+                projectIdentifier: projectIdentifier,
                 variables,
                 overrides
               } as NGEnvironmentInfoConfig
