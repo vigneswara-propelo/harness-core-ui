@@ -211,6 +211,7 @@ serviceNow:
 k8:
   delegateOutClusterInfo: 'Specify master URL and credentials'
   delegateInClusterInfo: '{{ $.connectors.delegateInClusterInfo }}'
+  delegateSelector: Select how you would like to reach your Kubernetes cluster
   masterUrlLabel: 'Master URL'
   serviceAccountToken: 'Service Account Token'
   serviceAccountKey: 'Service Account Key'

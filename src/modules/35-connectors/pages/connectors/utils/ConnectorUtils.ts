@@ -42,6 +42,7 @@ import { useConnectorWizard } from '../../../components/CreateConnectorWizard/Co
 export interface DelegateCardInterface {
   type: string
   info: string
+  icon?: IconName
   disabled?: boolean
 }
 

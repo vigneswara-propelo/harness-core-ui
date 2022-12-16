@@ -2572,6 +2572,7 @@ export interface StringsMap {
   'connectors.k8.clientSecretOptional': string
   'connectors.k8.delegateInClusterInfo': string
   'connectors.k8.delegateOutClusterInfo': string
+  'connectors.k8.delegateSelector': string
   'connectors.k8.masterUrlLabel': string
   'connectors.k8.placeholder.masterUrl': string
   'connectors.k8.serviceAccountKey': string
