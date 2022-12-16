@@ -4194,8 +4194,11 @@ export interface StringsMap {
   'pipeline.stepDescription.ECSRollingDeploy': string
   'pipeline.stepDescription.ECSRollingRollback': string
   'pipeline.stepDescription.ECSRunTask': string
+  'pipeline.stepDescription.ElastigroupBGStageSetup': string
+  'pipeline.stepDescription.ElastigroupDeploy': string
   'pipeline.stepDescription.ElastigroupRollback': string
   'pipeline.stepDescription.ElastigroupSetup': string
+  'pipeline.stepDescription.ElastigroupSwapRoute': string
   'pipeline.stepDescription.Email': string
   'pipeline.stepDescription.FlagConfiguration': string
   'pipeline.stepDescription.GCR': string
@@ -4640,6 +4643,13 @@ export interface StringsMap {
   'triggers.validation.repositoryFormat': string
   'triggers.validation.selectedArtifact': string
   'triggers.validation.triggerName': string
+  'cd.ElastigroupBGStageSetup.awsLoadBalancer': string
+  'cd.ElastigroupBGStageSetup.awsLoadBalancerConfig': string
+  'cd.ElastigroupBGStageSetup.configureProductionListener': string
+  'cd.ElastigroupBGStageSetup.configureStageListener': string
+  'cd.ElastigroupBGStageSetup.connectedCloudProvider': string
+  'cd.ElastigroupBGStageSetup.listenerColon': string
+  'cd.ElastigroupBGStageSetup.ruleColon': string
   'cd.ElastigroupStep.appName': string
   'cd.ElastigroupStep.desiredInstances': string
   'cd.ElastigroupStep.maxInstances': string
@@ -4647,6 +4657,7 @@ export interface StringsMap {
   'cd.ElastigroupStep.valueCannotBe': string
   'cd.ElastigroupStep.valueCannotBeGreaterThan': string
   'cd.ElastigroupStep.valueCannotBeLessThan': string
+  'cd.ElastigroupSwap.downsizeOldElastigroup': string
   'cd.GitOpsServerDelete': string
   'cd.IdEmptyError': string
   'cd.aboutGitOpsServer': string
@@ -4933,6 +4944,7 @@ export interface StringsMap {
   'cd.notReachable': string
   'cd.oauthPlugin': string
   'cd.oauthPluginCmd': string
+  'cd.oldService': string
   'cd.overrideType': string
   'cd.overrideValue': string
   'cd.overrideYaml': string

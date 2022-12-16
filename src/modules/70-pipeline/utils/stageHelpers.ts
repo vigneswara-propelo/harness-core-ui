@@ -402,7 +402,7 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
   [ServiceDeploymentType.WinRm]: 'WinRM',
-  [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details', //todospt
+  [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details',
   [ServiceDeploymentType.SshWinRmAws]: 'Amazon Web Services Details',
   [ServiceDeploymentType.SshWinRmAzure]: 'Azure Infrastructure details',
   [ServiceDeploymentType.TAS]: 'Tanzu Application Service Infrastructure Details'

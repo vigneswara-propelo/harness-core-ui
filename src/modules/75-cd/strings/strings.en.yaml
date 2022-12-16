@@ -656,4 +656,15 @@ ElastigroupStep:
   desiredInstances: Desired Instances
   valueCannotBeLessThan: '{{value}} cannot be less than {{value2}}'
   valueCannotBeGreaterThan: '{{value}} cannot be greater than {{value2}}'
-  valueCannotBe: '{{value}} cannot be empty, string etc., should only be a positive number'
+  valueCannotBe: '{{value}} cannot be empty, string etc., should only be a non-negative number'
+ElastigroupSwap:
+  downsizeOldElastigroup: Downsize old Elastigroup
+oldService: Old Service
+ElastigroupBGStageSetup:
+  connectedCloudProvider: Connected Cloud Provider
+  awsLoadBalancerConfig: AWS Load Balancer Configuration
+  awsLoadBalancer: AWS Load Balancer
+  configureProductionListener: Configure your Production Listener
+  configureStageListener: Configure your Stage Listener
+  listenerColon: 'Listener :'
+  ruleColon: 'Rule :'

@@ -1132,6 +1132,9 @@ stepDescription:
   TasRollback: Rollback for the TAS steps
   AppResize: Update the number of instances for this app
   TanzuCommandScript: Command Scripts to run any CF CLI command or script at any point in your Harness TAS Pipelines
+  ElastigroupDeploy: Elastigroup Deploy step
+  ElastigroupSwapRoute: Elastigroup Swap Route
+  ElastigroupBGStageSetup: Elastigroup Blue/Green Step
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy

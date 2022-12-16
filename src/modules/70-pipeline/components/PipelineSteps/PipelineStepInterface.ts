@@ -136,7 +136,10 @@ export enum StepType {
   TanzuCommand = 'TanzuCommand',
   AppResize = 'AppResize',
   Asg = 'ASGServiceSpec',
-  AsgInfraSpec = 'AsgInfraSpec'
+  AsgInfraSpec = 'AsgInfraSpec',
+  ElastigroupDeploy = 'ElastigroupDeploy',
+  ElastigroupSwapRoute = 'ElastigroupSwapRoute',
+  ElastigroupBGStageSetup = 'ElastigroupBGStageSetup'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

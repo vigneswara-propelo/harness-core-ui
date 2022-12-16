@@ -93,6 +93,9 @@ import { SwapRollbackStep } from './SwapRollbackStep/SwapRollback'
 import { SwapRouteStep } from './SwapRouteStep/SwapRouteStep'
 import { TASRollbackStep } from './TasRollbackStep/TasRollbackStep'
 import { TanzuCommandStep } from './TanzuCommandStep/TanzuCommand'
+import { ElastigroupDeploy } from './ElastigroupDeploy/ElastigroupDeploy'
+import { ElastigroupSwapRouteStep } from './ElastigroupSwapRouteStep/ElastigroupSwapRouteStep'
+import { ElastigroupBGStageSetupStep } from './ElastigroupBGStageSetupStep/ElastigroupBGStageSetupStep'
 import { AppResizeStep } from './AppResizeStep/AppResizeStep'
 
 factory.registerStep(new CommandScriptsStep())
@@ -181,4 +184,7 @@ factory.registerStep(new SwapRollbackStep())
 factory.registerStep(new SwapRouteStep())
 factory.registerStep(new TASRollbackStep())
 factory.registerStep(new TanzuCommandStep())
+factory.registerStep(new ElastigroupDeploy())
+factory.registerStep(new ElastigroupSwapRouteStep())
+factory.registerStep(new ElastigroupBGStageSetupStep())
 factory.registerStep(new AppResizeStep())

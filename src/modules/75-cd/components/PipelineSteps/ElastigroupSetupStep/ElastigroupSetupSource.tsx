@@ -18,11 +18,12 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import { ElastigroupSetupData, InstancesType } from './ElastigroupSetupTypes'
+import type { ElastigroupBGStageSetupData } from '../ElastigroupBGStageSetupStep/ElastigroupBGStageSetupStepTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ElastigroupSetupStep.module.scss'
 
 export default function ElastigroupSetupSource(props: {
-  formik: FormikProps<ElastigroupSetupData>
+  formik: FormikProps<ElastigroupSetupData> | FormikProps<ElastigroupBGStageSetupData>
   isNewStep: boolean
   readonly?: boolean
   stepViewType?: StepViewType
@@ -116,7 +117,7 @@ export default function ElastigroupSetupSource(props: {
 
       <FormInput.RadioGroup
         name="spec.instances.type"
-        label={<Text className={css.instanceStyle}>{'Instances'}</Text>}
+        label={<Text className={css.instanceStyle}>{getString('instanceFieldOptions.instances')}</Text>}
         items={[
           {
             label: 'Same as already running Instances',
@@ -180,7 +181,7 @@ export default function ElastigroupSetupSource(props: {
               />
             )}
           </div>
-          <div className={cx(stepCss.formGroup, stepCss.lg)}>
+          <div className={cx(stepCss.formGroup, stepCss.lg, stepCss.bottomMargin4)}>
             <FormInput.MultiTextInput
               name="spec.instances.spec.desired"
               placeholder={getString('cd.ElastigroupStep.desiredInstances')}

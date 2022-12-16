@@ -17,19 +17,25 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import type { StringsMap } from 'stringTypes'
-import { checkEmptyOrNegative, ElastigroupSetupData, ElastigroupSetupTemplate } from './ElastigroupSetupTypes'
-import { ElastigroupSetupWidgetWithRef } from './ElastigroupSetupWidget'
-import { ElastigroupSetupVariablesView, ElastigroupSetupVariablesViewProps } from './ElastigroupSetupVariablesView'
-import ElastigroupSetupInputSet from './ElastigroupSetupInputSet'
+import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
+import type {
+  ElastigroupBGStageSetupCustomStepProps,
+  ElastigroupBGStageSetupData,
+  ElastigroupBGStageSetupTemplate
+} from './ElastigroupBGStageSetupStepTypes'
+import { checkEmptyOrNegative } from '../ElastigroupSetupStep/ElastigroupSetupTypes'
+import { ElastigroupBGStageSetupEditRef } from './ElastigroupBGStageSetupStepEdit'
+import ElastigroupSetupInputSet from '../ElastigroupSetupStep/ElastigroupSetupInputSet'
+import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
-export class ElastigroupSetupStep extends PipelineStep<ElastigroupSetupData> {
+export class ElastigroupBGStageSetupStep extends PipelineStep<ElastigroupBGStageSetupData> {
   constructor() {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
 
-  renderStep(props: StepProps<ElastigroupSetupData>): JSX.Element {
+  renderStep(props: StepProps<ElastigroupBGStageSetupData>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -45,9 +51,12 @@ export class ElastigroupSetupStep extends PipelineStep<ElastigroupSetupData> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
+        //runtime view for the loadbalancers will be added in 2nd iteration
         <ElastigroupSetupInputSet
           initialValues={initialValues}
-          onUpdate={/* istanbul ignore next */ data => onUpdate?.(this.processFormData(data))}
+          onUpdate={
+            /* istanbul ignore next */ data => onUpdate?.(this.processFormData(data as ElastigroupBGStageSetupData))
+          }
           stepViewType={stepViewType}
           readonly={!!inputSetData?.readonly}
           template={inputSetData?.template}
@@ -58,16 +67,19 @@ export class ElastigroupSetupStep extends PipelineStep<ElastigroupSetupData> {
     }
 
     if (stepViewType === StepViewType.InputVariable) {
+      const { variablesData, metadataMap } = customStepProps as ElastigroupBGStageSetupCustomStepProps
       return (
-        <ElastigroupSetupVariablesView
-          {...(customStepProps as ElastigroupSetupVariablesViewProps)}
+        <VariablesListTable
+          className={pipelineVariableCss.variablePaddingL3}
+          data={variablesData}
           originalData={initialValues}
+          metadataMap={metadataMap}
         />
       )
     }
 
     return (
-      <ElastigroupSetupWidgetWithRef
+      <ElastigroupBGStageSetupEditRef
         initialValues={initialValues}
         onUpdate={data => onUpdate?.(this.processFormData(data))}
         onChange={data => onChange?.(this.processFormData(data))}
@@ -85,8 +97,8 @@ export class ElastigroupSetupStep extends PipelineStep<ElastigroupSetupData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<ElastigroupSetupData>): FormikErrors<ElastigroupSetupData> {
-    const errors: FormikErrors<ElastigroupSetupTemplate> = {}
+  }: ValidateInputSetProps<ElastigroupBGStageSetupData>): FormikErrors<ElastigroupBGStageSetupData> {
+    const errors: FormikErrors<ElastigroupBGStageSetupTemplate> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     /* istanbul ignore else */
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
@@ -167,22 +179,22 @@ export class ElastigroupSetupStep extends PipelineStep<ElastigroupSetupData> {
     return errors
   }
 
-  protected type = StepType.ElastigroupSetup
-  protected stepName = 'Elastigroup Setup'
-  protected stepIcon: IconName = 'elastigroup-setup'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ElastigroupSetup'
-  protected referenceId = 'ElastigroupSetupHelpPanel'
+  protected type = StepType.ElastigroupBGStageSetup
+  protected stepName = 'Elastigroup Blue Green Setup'
+  protected stepIcon: IconName = 'elastigroup-bluegreen'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ElastigroupBGStageSetup'
+  protected referenceId = 'ElastigroupBGStageSetupHelpPanel'
   protected isHarnessSpecific = false
   protected invocationMap: Map<
     RegExp,
     (path: string, yaml: string, params: Record<string, unknown>) => Promise<CompletionItemInterface[]>
   > = new Map()
 
-  protected defaultValues: ElastigroupSetupData = {
+  protected defaultValues: ElastigroupBGStageSetupData = {
     identifier: '',
     timeout: '10m',
     name: '',
-    type: StepType.ElastigroupSetup,
+    type: StepType.ElastigroupBGStageSetup,
     spec: {
       name: '',
       instances: {
@@ -192,11 +204,30 @@ export class ElastigroupSetupStep extends PipelineStep<ElastigroupSetupData> {
           max: 1,
           min: 1
         }
-      }
+      },
+      connectedCloudProvider: {
+        type: 'AWS',
+        spec: {
+          connectorRef: '',
+          region: ''
+        }
+      },
+      loadBalancers: [
+        {
+          type: 'AWSLoadBalancerConfig',
+          spec: {
+            loadBalancer: '',
+            prodListenerPort: '',
+            prodListenerRuleArn: '',
+            stageListenerPort: '',
+            stageListenerRuleArn: ''
+          }
+        }
+      ]
     }
   }
 
-  processFormData(data: ElastigroupSetupData): ElastigroupSetupData {
+  processFormData(data: ElastigroupBGStageSetupData): ElastigroupBGStageSetupData {
     const modifiedData = {
       ...data,
       spec: {

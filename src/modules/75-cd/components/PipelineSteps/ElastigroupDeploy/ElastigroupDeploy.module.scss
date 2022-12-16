@@ -5,12 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.instanceStyle {
-  margin-top: var(--spacing-4) !important;
-  margin-bottom: var(--spacing-3) !important;
-  color: var(--grey-600) !important;
-}
-
-.radioBtn {
-  margin-bottom: var(--spacing-large);
+.subHeadingStyle {
+  color: var(--grey-800) !important;
+  font-weight: 600 !important;
+  font-size: var(--font-size-normal) !important;
+  margin-top: var(--spacing-3) !important;
+  margin-bottom: var(--spacing-4) !important;
 }

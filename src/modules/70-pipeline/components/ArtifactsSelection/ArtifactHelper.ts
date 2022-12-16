@@ -194,7 +194,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Acr
   ],
   Asg: [ENABLED_ARTIFACT_TYPES.AmazonMachineImage],
-  Elastigroup: [ENABLED_ARTIFACT_TYPES.AmazonS3],
+  Elastigroup: [ENABLED_ARTIFACT_TYPES.AmazonMachineImage],
   CustomDeployment: [
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,

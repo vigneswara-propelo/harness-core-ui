@@ -87,7 +87,7 @@ export function getInstanceDropdownSchema(
           if (getMultiTypeFromValue(value as unknown as string) !== MultiTypeInputType.FIXED) {
             return true
           }
-          if (required && isNil(value)) {
+          if (required && (isNil(value) || value === '')) {
             return this.createError({
               message: requiredErrorMessage || getString('common.instanceValidation.required')
             })
@@ -102,7 +102,7 @@ export function getInstanceDropdownSchema(
           }
         } else if (type === InstanceTypes.Percentage) {
           const value = this.parent?.spec?.percentage
-          if (required && isNil(value)) {
+          if (required && (isNil(value) || value === '')) {
             return this.createError({
               message: requiredErrorMessage || getString('common.instanceValidation.required')
             })
@@ -166,8 +166,8 @@ export const InstanceDropdownField: React.FC<InstanceDropdownFieldProps> = ({
           placeholder: isPercentageType
             ? getString('instanceFieldOptions.percentagePlaceHolder')
             : getString('instanceFieldOptions.instanceHolder'),
-          ...textProps,
-          min: 1
+          min: 1,
+          ...textProps
         }}
         onChange={(val, _valType, typeInput) => {
           let finalValue: string | number | undefined

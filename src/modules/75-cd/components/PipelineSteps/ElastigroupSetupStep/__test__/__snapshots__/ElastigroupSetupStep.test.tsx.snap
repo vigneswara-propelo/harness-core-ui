@@ -289,7 +289,7 @@ exports[`Test Elastigroup Setup Step should render edit view as new step - with 
           <p
             class="StyledProps--font StyledProps--main instanceStyle"
           >
-            Instances
+            instanceFieldOptions.instances
           </p>
         </span>
          
@@ -486,7 +486,7 @@ exports[`Test Elastigroup Setup Step should render edit view as new step - with 
         </div>
       </div>
       <div
-        class="formGroup lg"
+        class="formGroup lg bottomMargin4"
       >
         <div
           class="bp3-form-group"

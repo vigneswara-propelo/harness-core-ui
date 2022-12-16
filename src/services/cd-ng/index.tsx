@@ -1128,6 +1128,11 @@ export interface AwsCFTemplateParamsData {
   paramType?: string
 }
 
+export type AwsCloudProviderBasicConfig = CloudProviderSpec & {
+  connectorRef?: string
+  region?: string
+}
+
 export interface AwsCodeCommitAuthenticationDTO {
   spec: AwsCodeCommitCredentialsDTO
   type: 'HTTPS'
@@ -1235,6 +1240,14 @@ export interface AwsListInstancesFilter {
   }
   vpcIds?: string[]
   winRm?: boolean
+}
+
+export type AwsLoadBalancerConfigYaml = LoadBalancerSpec & {
+  loadBalancer?: string
+  prodListenerPort?: string
+  prodListenerRuleArn?: string
+  stageListenerPort?: string
+  stageListenerRuleArn?: string
 }
 
 export type AwsManualConfigSpec = AwsCredentialSpec & {
@@ -1947,6 +1960,15 @@ export type ChaosStepInfo = StepSpecType & {
   assertion?: string
   expectedResilienceScore: number
   experimentRef: string
+}
+
+export interface CloudProvider {
+  spec?: CloudProviderSpec
+  type: 'AWS'
+}
+
+export interface CloudProviderSpec {
+  type?: 'AWS'
 }
 
 export interface CloudformationCreateStackStepConfiguration {
@@ -3351,6 +3373,14 @@ export interface EditionActionDTO {
   reason?: string
 }
 
+export type ElastigroupBGStageSetupStepInfo = StepSpecType & {
+  connectedCloudProvider: CloudProvider
+  delegateSelectors?: string[]
+  instances: ElastigroupInstances
+  loadBalancers: LoadBalancer[]
+  name: string
+}
+
 export interface ElastigroupConfiguration {
   metadata?: string
   store: StoreConfigWrapper
@@ -3398,7 +3428,12 @@ export type ElastigroupServiceSpec = ServiceSpec & {
 export type ElastigroupSetupStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   instances: ElastigroupInstances
-  name: string
+  name?: string
+}
+
+export type ElastigroupSwapRouteStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  downsizeOldElastigroup: boolean
 }
 
 export interface Element {
@@ -3625,6 +3660,8 @@ export interface EntityDetail {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
 }
 
 export interface EntityDetailProtoDTO {
@@ -6026,6 +6063,8 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   )[]
   moduleType?:
     | 'CD'
@@ -6217,6 +6256,8 @@ export interface GitEntityFilterProperties {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6479,6 +6520,8 @@ export interface GitFullSyncEntityInfoDTO {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6665,6 +6708,8 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -6972,6 +7017,8 @@ export interface GitSyncEntityDTO {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7152,6 +7199,8 @@ export interface GitSyncEntityListDTO {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7349,6 +7398,8 @@ export interface GitSyncErrorDTO {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -8867,6 +8918,15 @@ export interface LicensesWithSummaryDTO {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IACM'
+}
+
+export interface LoadBalancer {
+  spec?: LoadBalancerSpec
+  type: 'AWSLoadBalancerConfig'
+}
+
+export interface LoadBalancerSpec {
+  type?: 'AWSLoadBalancerConfig'
 }
 
 export type LocalConnectorDTO = ConnectorConfigDTO & {
@@ -10534,6 +10594,8 @@ export interface ReferencedByDTO {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
 }
 
 export interface RefreshResponse {
@@ -11736,6 +11798,8 @@ export interface ResponseListEntityType {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -14609,6 +14673,17 @@ export interface SpotCredentialSpec {
   [key: string]: any
 }
 
+export type SpotInfrastructureDetails = InfrastructureDetails & {
+  ec2InstanceId?: string
+  elastigroupId?: string
+}
+
+export type SpotInstanceInfoDTO = InstanceInfoDTO & {
+  ec2InstanceId: string
+  elastigroupId: string
+  infrastructureKey: string
+}
+
 export type SpotPermanentTokenConfigSpec = SpotCredentialSpec & {
   apiTokenRef: string
   spotAccountId?: string
@@ -14803,6 +14878,8 @@ export interface StepData {
     | 'SwapRoutes'
     | 'AppRollback'
     | 'TanzuCommand'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
 }
 
 export interface StepElementConfig {
@@ -16912,6 +16989,8 @@ export interface ListActivitiesQueryParams {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17084,6 +17163,8 @@ export interface ListActivitiesQueryParams {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -17360,6 +17441,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17532,6 +17615,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -32127,6 +32212,8 @@ export interface ListReferredByEntitiesQueryParams {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -32360,6 +32447,8 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   searchTerm?: string
 }
 
@@ -35602,6 +35691,8 @@ export interface GetReferencedByQueryParams {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   searchTerm?: string
 }
 
@@ -38097,6 +38188,8 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -38337,6 +38430,8 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'SwapRollback'
       | 'TanzuCommand'
       | 'Container'
+      | 'ElastigroupBGStageSetup'
+      | 'ElastigroupSwapRoute'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -44269,6 +44364,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   yamlGroup?: string
 }
 
@@ -44569,6 +44666,8 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -57903,6 +58002,8 @@ export interface GetYamlSchemaQueryParams {
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
   subtype?:
     | 'K8sCluster'
     | 'Git'
