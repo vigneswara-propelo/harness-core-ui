@@ -49,7 +49,7 @@ import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
-import { parse } from '@common/utils/YamlHelperMethods'
+import { memoizedParse, parse } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, InputSetType, Pipeline, InputSet } from '@pipeline/utils/types'
@@ -418,7 +418,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const child = React.useCallback(
     () => (
       <PipelineVariablesContextProvider
-        pipeline={parse<Pipeline>(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline as PipelineInfoConfig}
+        pipeline={memoizedParse<Pipeline>(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline as PipelineInfoConfig}
         enablePipelineTemplatesResolution={true}
         storeMetadata={{ storeType, connectorRef, repoName, branch, filePath }}
       >
