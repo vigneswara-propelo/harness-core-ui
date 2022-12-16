@@ -142,6 +142,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -246,6 +247,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -318,6 +320,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -390,6 +393,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -526,6 +530,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -798,6 +803,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -918,6 +924,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -990,6 +997,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1062,6 +1070,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1200,6 +1209,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1438,6 +1448,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1558,6 +1569,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1630,6 +1642,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1702,6 +1715,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1867,6 +1881,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span

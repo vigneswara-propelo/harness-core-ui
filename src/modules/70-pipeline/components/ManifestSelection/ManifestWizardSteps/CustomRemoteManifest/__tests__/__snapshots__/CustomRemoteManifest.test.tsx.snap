@@ -210,6 +210,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -487,6 +488,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -624,6 +626,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
                                       >
                                         <button
                                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                          data-testid="multi-type-button"
                                         >
                                           <span
                                             class="bp3-icon StyledProps--main"
@@ -1238,6 +1241,7 @@ exports[`Custom remote tests initial rendering 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1515,6 +1519,7 @@ exports[`Custom remote tests initial rendering 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -1893,6 +1898,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2170,6 +2176,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"

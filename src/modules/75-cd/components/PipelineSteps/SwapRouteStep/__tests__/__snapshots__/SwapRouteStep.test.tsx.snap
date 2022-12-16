@@ -162,6 +162,7 @@ exports[`SwapRouteStep tests should render edit view as edit step with all runti
               </div>
               <button
                 class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                data-testid="multi-type-button"
                 disabled=""
               >
                 <span
@@ -250,6 +251,7 @@ exports[`SwapRouteStep tests should render edit view as edit step with all runti
                 </label>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span

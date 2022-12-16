@@ -79,6 +79,7 @@ exports[`Elastigroup - inputSet/runtime view Runtime view to render - with initi
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -406,6 +407,7 @@ exports[`ElastigroupInfraSpec tests render elastigroupInfra with empty initial v
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"

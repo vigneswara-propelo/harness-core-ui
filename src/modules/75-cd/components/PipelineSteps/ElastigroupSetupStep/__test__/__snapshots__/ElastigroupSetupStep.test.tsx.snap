@@ -175,6 +175,7 @@ exports[`Test Elastigroup Setup Step should render edit view as new step - with 
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -249,6 +250,7 @@ exports[`Test Elastigroup Setup Step should render edit view as new step - with 
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -386,6 +388,7 @@ exports[`Test Elastigroup Setup Step should render edit view as new step - with 
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -457,6 +460,7 @@ exports[`Test Elastigroup Setup Step should render edit view as new step - with 
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -528,6 +532,7 @@ exports[`Test Elastigroup Setup Step should render edit view as new step - with 
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"

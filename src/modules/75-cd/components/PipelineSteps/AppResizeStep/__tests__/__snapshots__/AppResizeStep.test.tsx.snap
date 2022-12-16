@@ -159,6 +159,7 @@ exports[`Test AppResizeStep should render edit view 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -239,6 +240,7 @@ exports[`Test AppResizeStep should render edit view 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -356,6 +358,7 @@ exports[`Test AppResizeStep should render edit view 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -583,6 +586,7 @@ exports[`Test AppResizeStep should render edit view as edit step with all runtim
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -668,6 +672,7 @@ exports[`Test AppResizeStep should render edit view as edit step with all runtim
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -824,6 +829,7 @@ exports[`Test AppResizeStep should render edit view as edit step with all runtim
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1083,6 +1089,7 @@ exports[`Test AppResizeStep should render edit view as new step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -1163,6 +1170,7 @@ exports[`Test AppResizeStep should render edit view as new step 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1280,6 +1288,7 @@ exports[`Test AppResizeStep should render edit view as new step 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1406,6 +1415,7 @@ exports[`Test AppResizeStep should render input set view 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1525,6 +1535,7 @@ exports[`Test AppResizeStep should render input set view 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1669,6 +1680,7 @@ exports[`Test AppResizeStep should render input set with percentage and timeout 
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1747,6 +1759,7 @@ exports[`Test AppResizeStep should render input set with percentage and timeout 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1866,6 +1879,7 @@ exports[`Test AppResizeStep should render input set with percentage and timeout 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -2007,6 +2021,7 @@ exports[`Test AppResizeStep should render null for StepviewType.template 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -2087,6 +2102,7 @@ exports[`Test AppResizeStep should render null for StepviewType.template 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -2204,6 +2220,7 @@ exports[`Test AppResizeStep should render null for StepviewType.template 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -2439,6 +2456,7 @@ exports[`Test AppResizeStep should submit with valid payload for instance type p
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -2519,6 +2537,7 @@ exports[`Test AppResizeStep should submit with valid payload for instance type p
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -2636,6 +2655,7 @@ exports[`Test AppResizeStep should submit with valid payload for instance type p
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -2863,6 +2883,7 @@ exports[`Test AppResizeStep should submit with valid paylod for instace type cou
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -2943,6 +2964,7 @@ exports[`Test AppResizeStep should submit with valid paylod for instace type cou
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -3060,6 +3082,7 @@ exports[`Test AppResizeStep should submit with valid paylod for instace type cou
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"

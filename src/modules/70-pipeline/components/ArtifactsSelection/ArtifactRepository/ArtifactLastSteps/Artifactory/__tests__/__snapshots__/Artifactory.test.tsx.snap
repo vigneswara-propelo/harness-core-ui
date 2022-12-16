@@ -148,6 +148,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -267,6 +268,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -344,6 +346,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -414,6 +417,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -746,6 +750,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -865,6 +870,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -942,6 +948,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1012,6 +1019,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -1304,6 +1312,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository while fetching repo
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -1378,6 +1387,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository while fetching repo
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1448,6 +1458,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository while fetching repo
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -1727,6 +1738,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with repository as 
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -1801,6 +1813,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with repository as 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1877,6 +1890,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with repository as 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2185,6 +2199,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as erro
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -2259,6 +2274,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as erro
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2329,6 +2345,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as erro
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -2636,6 +2653,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as fail
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -2710,6 +2728,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as fail
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2780,6 +2799,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as fail
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -3087,6 +3107,7 @@ exports[`Serverless artifact renders serverlessArtifactRepository 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -3161,6 +3182,7 @@ exports[`Serverless artifact renders serverlessArtifactRepository 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -3231,6 +3253,7 @@ exports[`Serverless artifact renders serverlessArtifactRepository 1`] = `
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
