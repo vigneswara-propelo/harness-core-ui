@@ -180,16 +180,6 @@ function K8sValuesManifest({
             }
             return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
           }),
-          valuesPaths: Yup.lazy((value): Yup.Schema<unknown> => {
-            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-              return Yup.array().of(
-                Yup.object().shape({
-                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
-                })
-              )
-            }
-            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
-          }),
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
             if (
               connectionType === GitRepoName.Repo ||
