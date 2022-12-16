@@ -32,6 +32,7 @@ import { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, useGetGCSBuc
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/components'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 
 import type { HelmWithGcsDataType } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
@@ -86,7 +87,10 @@ function HelmWithGcs({
     value: item
   }))
 
-  const onBucketNameFocus = (): void => {
+  const onBucketNameFocus = (e: React.FocusEvent<HTMLInputElement>): void => {
+    if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
+      return
+    }
     if (!bucketData?.data) {
       refetchBuckets({
         queryParams: {
