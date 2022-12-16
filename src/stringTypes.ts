@@ -694,6 +694,7 @@ export interface StringsMap {
   'common.refreshPage': string
   'common.reject': string
   'common.releaseName': string
+  'common.reload': string
   'common.remove': string
   'common.removeThisVariable': string
   'common.repo_provider.awscodecommit': string
@@ -3961,10 +3962,13 @@ export interface StringsMap {
   'pipeline.phasesForm.phases': string
   'pipeline.phasesForm.useVerification': string
   'pipeline.pipelineCachedCopy.cacheInProgress': string
+  'pipeline.pipelineCachedCopy.cacheUpdateAvailable': string
   'pipeline.pipelineCachedCopy.cacheUpdateFailed': string
   'pipeline.pipelineCachedCopy.cachedCopyText': string
+  'pipeline.pipelineCachedCopy.newCacheVersion': string
   'pipeline.pipelineCachedCopy.reloadPipeline': string
   'pipeline.pipelineCachedCopy.reloadPipelineContent': string
+  'pipeline.pipelineCachedCopy.updateAvailable': string
   'pipeline.pipelineChaining.newOutput': string
   'pipeline.pipelineChaining.noPipelineSelected': string
   'pipeline.pipelineChaining.noProjectSelected': string

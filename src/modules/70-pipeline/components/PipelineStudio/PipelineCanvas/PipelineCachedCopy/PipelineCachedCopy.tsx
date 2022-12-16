@@ -5,27 +5,28 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { GetDataError } from 'restful-react'
 import { Button, ButtonVariation, Icon, IconName, Layout, ModalDialog, Text, useToggleOpen } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
-import { Tooltip } from '@blueprintjs/core'
+import { Spinner, Tooltip } from '@blueprintjs/core'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 import type { CacheResponseMetadata, Failure } from 'services/pipeline-ng'
 import css from './PipelineCachedCopy.module.scss'
 
-// enum CacheState {
-//   VALID_CACHE = 'VALID_CACHE',
-//   STALE_CACHE = 'STALE_CACHE',
-//   UNKNOWN = 'UNKNOWN'
-// }
+enum CacheState {
+  VALID_CACHE = 'VALID_CACHE',
+  STALE_CACHE = 'STALE_CACHE',
+  UNKNOWN = 'UNKNOWN'
+}
 interface PipelineCachedCopyInterface {
   reloadContent: string
   cacheResponse: CacheResponseMetadata
-  reloadFromCache: () => void
+  reloadFromCache: (loadFromCache?: boolean) => void
   fetchError?: GetDataError<Failure | Error> | null
+  readonly?: boolean
 }
 const cacheStateToIconMap: Record<CacheResponseMetadata['cacheState'], IconName> = {
   VALID_CACHE: 'success-tick',
@@ -37,35 +38,54 @@ function PipelineCachedCopy({
   reloadContent,
   cacheResponse,
   fetchError,
-  reloadFromCache
+  reloadFromCache,
+  readonly
 }: PipelineCachedCopyInterface): React.ReactElement {
   const { getString } = useStrings()
+  const [updateAvailable, setUpdateAvailable] = useState(false)
   const { isOpen: isModalOpen, close: hideModal, open: showModal } = useToggleOpen(false)
   const { isOpen: isErrorModalOpen, close: hideErrorModal, open: showErrorModal } = useToggleOpen(false)
+  const { isOpen: isStaleCacheModalOpen, close: hideStaleCacheModal, open: showCacheModal } = useToggleOpen(false)
 
   useEffect(() => {
-    if (!isEmpty(fetchError)) {
+    if (cacheResponse.cacheState === CacheState.STALE_CACHE && !readonly) {
+      showCacheModal()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchError])
+
+  useEffect(() => {
+    if (!isEmpty(fetchError) && !readonly) {
       showErrorModal()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchError])
 
   function reloadPipeline(): void {
+    setUpdateAvailable(false)
     reloadFromCache()
   }
 
   function getTooltipContent(): JSX.Element {
     return (
       <>
-        {/* Commenting this temporarily, as the reload of cache on pipeline studio initial render is not supported yet
-        {cacheResponse.cacheState === CacheState.STALE_CACHE && (
+        {cacheResponse.cacheState === CacheState.STALE_CACHE && !readonly && (
           <div>{getString('pipeline.pipelineCachedCopy.cacheInProgress')}</div>
-        )} */}
+        )}
         <div>
           <span>{getString('common.lastUpdatedAt')}</span>: {formatDatetoLocale(cacheResponse.lastUpdatedAt)}
         </div>
       </>
     )
+  }
+
+  function renderCacheUpdatedIcon(): JSX.Element | undefined {
+    if (!readonly) {
+      if (cacheResponse.cacheState === CacheState.STALE_CACHE && !updateAvailable) {
+        return <Spinner size={Spinner.SIZE_SMALL} />
+      }
+      return <Icon size={12} name="command-rollback" onClick={updateAvailable ? showCacheModal : showModal} />
+    }
   }
 
   return (
@@ -78,10 +98,12 @@ function PipelineCachedCopy({
               icon={cacheStateToIconMap[cacheResponse.cacheState]}
               iconProps={{ size: 12 }}
             >
-              {getString('pipeline.pipelineCachedCopy.cachedCopyText')}
+              {updateAvailable
+                ? getString('pipeline.pipelineCachedCopy.updateAvailable')
+                : getString('pipeline.pipelineCachedCopy.cachedCopyText')}
             </Text>
           </Tooltip>
-          <Icon size={12} name="command-rollback" onClick={() => showModal()} />
+          {renderCacheUpdatedIcon()}
         </Layout.Horizontal>
       </div>
       <ModalDialog
@@ -113,6 +135,32 @@ function PipelineCachedCopy({
         <Text margin={{ left: 'huge', right: 'huge' }}>
           {getString('pipeline.pipelineCachedCopy.reloadPipelineContent', { pageType: reloadContent })}
         </Text>
+      </ModalDialog>
+      <ModalDialog
+        isOpen={isStaleCacheModalOpen}
+        isCloseButtonShown
+        canEscapeKeyClose
+        canOutsideClickClose
+        enforceFocus={false}
+        onClose={() => {
+          setUpdateAvailable(true)
+          hideStaleCacheModal()
+        }}
+        title={
+          <>
+            <Icon name="warning-icon" intent={Intent.WARNING} size={32} />{' '}
+            <span>{getString('pipeline.pipelineCachedCopy.cacheUpdateAvailable')}</span>
+          </>
+        }
+        footer={
+          <Layout.Horizontal spacing="small">
+            <Button variation={ButtonVariation.PRIMARY} text={getString('common.reload')} onClick={reloadPipeline} />
+          </Layout.Horizontal>
+        }
+        width={600}
+        className={css.dialogStyles}
+      >
+        <Text margin={{ left: 'huge', right: 'huge' }}>{getString('pipeline.pipelineCachedCopy.newCacheVersion')}</Text>
       </ModalDialog>
       <ModalDialog
         isOpen={isErrorModalOpen}

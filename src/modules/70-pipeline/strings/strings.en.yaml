@@ -1526,3 +1526,6 @@ pipelineCachedCopy:
   reloadPipelineContent: Are you sure you want to load the {{pageType}} from Git? You will lose all your unsaved changes.
   cacheInProgress: Cache update in progress
   cacheUpdateFailed: Cache Update Failed
+  updateAvailable: Update Available
+  cacheUpdateAvailable: Cache {{$.pipeline.pipelineCachedCopy.updateAvailable}}
+  newCacheVersion: New Cache version is available, click reload to view details.
