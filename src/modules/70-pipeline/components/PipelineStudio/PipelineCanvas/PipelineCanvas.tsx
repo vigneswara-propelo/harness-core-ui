@@ -833,7 +833,7 @@ export function PipelineCanvas({
   if (isLoading) {
     return (
       <React.Fragment>
-        <PageSpinner fixed />
+        <PageSpinner />
         <div /> {/* this empty div is required for rendering layout correctly */}
       </React.Fragment>
     )
