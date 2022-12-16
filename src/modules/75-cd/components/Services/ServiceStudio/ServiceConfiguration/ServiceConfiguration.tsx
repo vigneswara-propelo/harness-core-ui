@@ -53,7 +53,6 @@ function ServiceConfiguration({
   const {
     state: {
       pipeline: service,
-      originalPipeline: originalService,
       pipelineView: { isYamlEditable },
       pipelineView
     },
@@ -80,14 +79,6 @@ function ServiceConfiguration({
   const getUpdatedPipelineYaml = useCallback((): PipelineInfoConfig | undefined => {
     const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
     const serviceSetYamlVisual = parse(yaml).service
-    if (
-      !isEmpty(serviceSetYamlVisual.serviceDefinition.spec) ||
-      !isEmpty(serviceSetYamlVisual.serviceDefinition.type)
-    ) {
-      requestAnimationFrame(() => {
-        setHasYamlValidationErrors(!isEmpty(yamlHandler?.getYAMLValidationErrorMap()))
-      })
-    }
 
     if (serviceSetYamlVisual) {
       return produce({ ...service }, draft => {
@@ -99,30 +90,40 @@ function ServiceConfiguration({
         )
       })
     }
-  }, [service, setHasYamlValidationErrors, yamlHandler])
+  }, [service, yamlHandler])
 
   const onYamlChange = useCallback(
     (yamlChanged: boolean): void => {
       if (yamlChanged) {
-        const newServiceData = getUpdatedPipelineYaml()
+        const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
+        const serviceSetYamlVisual = parse(yaml).service
+        if (
+          !isEmpty(serviceSetYamlVisual.serviceDefinition.spec) ||
+          !isEmpty(serviceSetYamlVisual.serviceDefinition.type)
+        ) {
+          requestAnimationFrame(() => {
+            setHasYamlValidationErrors(!isEmpty(yamlHandler?.getYAMLValidationErrorMap()))
+          })
+        }
 
-        newServiceData && updatePipeline(newServiceData)
+        const newServiceData = getUpdatedPipelineYaml()
+        const isYamlUpdated = !isEqual(service, newServiceData)
+        newServiceData && isYamlUpdated && updatePipeline(newServiceData)
       }
     },
-    [getUpdatedPipelineYaml, updatePipeline]
+    [getUpdatedPipelineYaml, service, setHasYamlValidationErrors, updatePipeline, yamlHandler]
   )
 
   const handleModeSwitch = useCallback(
     (view: SelectedView): void => {
       if (view === SelectedView.VISUAL) {
-        const isYamlUpdated = !isEqual(service, originalService)
         const newServiceData = getUpdatedPipelineYaml()
-        newServiceData && isYamlUpdated && updatePipeline(newServiceData, view)
+        newServiceData && updatePipeline(newServiceData, view)
       }
       setView(view)
       setSelectedView(view)
     },
-    [setView, getUpdatedPipelineYaml, service, originalService, updatePipeline]
+    [setView, getUpdatedPipelineYaml, updatePipeline]
   )
 
   if (service.identifier === DefaultNewPipelineId && !isServiceCreateModalView) {
