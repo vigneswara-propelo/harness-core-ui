@@ -1108,8 +1108,8 @@ stepDescription:
   ServerlessLambdaDeploy: Create the Lambda functions defined in this Stage.
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
   createPR: Create PR
-  mergePR: Merge PR
-  updateReleaseRepo: Update Release Repo
+  mergePR: Merge the PR created by the GitOps Update Release Repo step
+  updateReleaseRepo: Create the PR with your updated JSON files
   fetchLinkedApps: Fetch Linked Apps
   fetchInstanceScript: Fetch Instances
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
