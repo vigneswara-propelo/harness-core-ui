@@ -3391,6 +3391,8 @@ export interface StringsMap {
   'pipeline.customDeployment.seeOnlyTemplatesFor': string
   'pipeline.customDeployment.updateInfraVariablesTitle': string
   'pipeline.customDeployment.validations.nameUnique': string
+  'pipeline.dashboardDeploymentsWidget.activePipeline.plural': string
+  'pipeline.dashboardDeploymentsWidget.activePipeline.singular': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.plural': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.singular': string
   'pipeline.dashboardDeploymentsWidget.pendingApproval.plural': string

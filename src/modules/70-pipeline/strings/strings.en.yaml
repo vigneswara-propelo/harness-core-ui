@@ -1263,6 +1263,9 @@ dashboardDeploymentsWidget:
   runningPipeline:
     singular: Currently running pipeline
     plural: Currently running pipelines
+  activePipeline:
+    singular: Currently active pipeline
+    plural: Currently active pipelines
 runtimeInputNotSupported: '{{field}} cannot be runtime inputs'
 runPipeline:
   ciCodebaseConfig: CI Codebase Configuration is missing. Codebase is required when the pipeline contains a CI stage that is set to clone codebase.
