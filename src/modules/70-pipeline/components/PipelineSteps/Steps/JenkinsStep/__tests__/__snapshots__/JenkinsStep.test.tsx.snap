@@ -213,7 +213,7 @@ exports[`Jenkins step tests Basic snapshot - deploymentform mode 1`] = `
 exports[`Jenkins step tests Basic snapshot - input variable view: jira-approval-input variable view 1`] = `
 <div>
   <div
-    class="variablesListTable"
+    class="variablesListTable variablePaddingL3"
   />
 </div>
 `;
