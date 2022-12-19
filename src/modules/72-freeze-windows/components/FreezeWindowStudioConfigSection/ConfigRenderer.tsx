@@ -28,6 +28,7 @@ interface ConfigRendererProps {
   resources: ResourcesInterface
   fieldsVisibility: FieldVisibility
   onDeleteRule: (index: number) => void
+  resetValuesForEntity: (index: number) => void
   isReadOnly: boolean
 }
 
@@ -43,7 +44,8 @@ export const ConfigRenderer = ({
   resources,
   fieldsVisibility,
   onDeleteRule,
-  isReadOnly
+  isReadOnly,
+  resetValuesForEntity
 }: ConfigRendererProps) => {
   const saveEntity = async () => {
     const formErrors = await formikProps.validateForm()
@@ -65,6 +67,7 @@ export const ConfigRenderer = ({
   }
 
   const setVisualViewMode = React.useCallback(() => {
+    resetValuesForEntity(index)
     setEditView(index, false)
   }, [entityConfigs])
   const setEditViewMode = React.useCallback(() => {
