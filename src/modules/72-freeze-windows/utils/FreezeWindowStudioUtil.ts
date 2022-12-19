@@ -20,6 +20,7 @@ import {
   FreezeWindowLevels,
   ResourcesInterface
 } from '@freeze-windows/types'
+import { DefaultFreezeId } from '@freeze-windows/context/FreezeWindowReducer'
 
 export const isAllOptionSelected = (selected?: SelectOption[]) => {
   if (Array.isArray(selected)) {
@@ -84,6 +85,9 @@ export function isValidYaml(
 
 export const getInitialValues = (freezeObj: any) => {
   const pickedValues = pick(freezeObj, 'name', 'identifier', 'description', 'tags')
+  if (freezeObj.identifier === DefaultFreezeId) {
+    pickedValues.identifier = ''
+  }
   return {
     ...pickedValues
   }
