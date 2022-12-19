@@ -287,6 +287,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
                 type="String"
                 variableName="tagRegex"
                 showRequiredField={false}
+                isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}

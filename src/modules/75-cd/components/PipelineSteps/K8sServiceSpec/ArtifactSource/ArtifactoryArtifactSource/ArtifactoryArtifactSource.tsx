@@ -693,6 +693,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                   type="String"
                   variableName="repositoryUrl"
                   showRequiredField={false}
+                  isReadonly={readonly}
                   showDefaultField={true}
                   isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                   showAdvanced={true}
@@ -798,6 +799,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                   type="String"
                   variableName="artifactPath"
                   showRequiredField={false}
+                  isReadonly={readonly}
                   showDefaultField={true}
                   isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                   showAdvanced={true}

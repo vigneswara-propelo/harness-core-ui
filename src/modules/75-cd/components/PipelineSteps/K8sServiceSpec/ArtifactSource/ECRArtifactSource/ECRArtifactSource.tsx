@@ -270,6 +270,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
                 type="String"
                 variableName="region"
                 showRequiredField={false}
+                isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}
@@ -341,6 +342,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
                 type="String"
                 variableName="tagRegex"
                 showRequiredField={false}
+                isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}
