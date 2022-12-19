@@ -6,7 +6,6 @@
  */
 
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import {
   MultiTypeInputType,
@@ -24,6 +23,7 @@ import { Intent, Spinner } from '@blueprintjs/core'
 import type { FormikErrors } from 'formik'
 
 import {
+  ExecutionGraph,
   ExecutionNode,
   StageElementConfig,
   StageElementWrapperConfig,
@@ -32,7 +32,6 @@ import {
   useSubmitExecutionInput
 } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
-import type { ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import pipelineFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -49,12 +48,13 @@ import css from './ExecutionInputs.module.scss'
 
 export interface ExecutionInputsProps {
   step: ExecutionNode
+  executionMetadata: ExecutionGraph['executionMetadata']
   factory?: AbstractStepFactory
 }
 
 export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement {
-  const { step, factory = pipelineFactory } = props
-  const { accountId, projectIdentifier, orgIdentifier, executionIdentifier } = useParams<ExecutionPathProps>()
+  const { step, factory = pipelineFactory, executionMetadata } = props
+  const { accountId, projectIdentifier, orgIdentifier, planExecutionId } = defaultTo(executionMetadata, {})
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -102,7 +102,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
     close: closeAbortConfirmation
   } = useToggleOpen()
   const { mutate: abortPipeline } = useHandleInterrupt({
-    planExecutionId: executionIdentifier,
+    planExecutionId,
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,

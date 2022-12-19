@@ -8,15 +8,13 @@
 import React from 'react'
 import { Text, Layout, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { useParams, Link } from 'react-router-dom'
-import { isArray, isEmpty, isNil } from 'lodash-es'
+import { Link } from 'react-router-dom'
+import { defaultTo, isArray, isEmpty, isNil } from 'lodash-es'
 import { Duration } from '@common/exports'
 import { useDelegateSelectionLogsModal } from '@common/components/DelegateSelectionLogs/DelegateSelectionLogs'
-import type { DelegateInfo, ExecutableResponse, ExecutionNode } from 'services/pipeline-ng'
+import type { DelegateInfo, ExecutableResponse, ExecutionGraph, ExecutionNode } from 'services/pipeline-ng'
 import { String, useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
-
-import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import {
   ExecutionStatusEnum,
@@ -32,13 +30,14 @@ export interface StepLabels {
 }
 export interface StepDetailsProps {
   step: ExecutionNode
+  executionMetadata: ExecutionGraph['executionMetadata']
   labels?: StepLabels[]
 }
 
 export function StepDetails(props: StepDetailsProps): React.ReactElement {
-  const { step, labels = [] } = props
+  const { step, executionMetadata, labels = [] } = props
   const { getString } = useStrings()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
+  const { orgIdentifier, projectIdentifier, accountId } = defaultTo(executionMetadata, {})
   //TODO - types will modified when the backend swagger docs are updated
   const deploymentTag = step?.stepParameters?.deploymentTag as any
   const serviceIdentifier = step?.stepParameters?.serviceIdentifier as any

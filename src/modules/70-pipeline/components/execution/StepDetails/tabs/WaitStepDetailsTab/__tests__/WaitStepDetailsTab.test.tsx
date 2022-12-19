@@ -10,6 +10,7 @@ import { render, fireEvent, waitFor, queryByAttribute, screen } from '@testing-l
 import type { ResponseWaitStepExecutionDetailsDto } from 'services/pipeline-ng'
 import { TestWrapper, UseGetMockData } from '@common/utils/testUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
+import executionMetadata from '@pipeline/components/execution/StepDetails/common/ExecutionContent/PolicyEvaluationContent/__mocks__/executionMetadata.json'
 import { WaitStepDetailsTab } from '../WaitStepDetailsTab'
 import { msToTime } from '../WaitStepDetailstabUtil'
 
@@ -138,7 +139,12 @@ describe('<WaitStepDetailsTab /> tests', () => {
     const step = data(ExecutionStatusEnum.WaitStepRunning, undefined, undefined, details)
     const { container } = render(
       <TestWrapper>
-        <WaitStepDetailsTab step={step as any} loading={false} executionDetails={mockDetailResponse.data} />
+        <WaitStepDetailsTab
+          step={step as any}
+          loading={false}
+          executionDetails={mockDetailResponse.data}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
 
@@ -150,7 +156,12 @@ describe('<WaitStepDetailsTab /> tests', () => {
     const step = data(ExecutionStatusEnum.Success, undefined, undefined, details)
     const { container } = render(
       <TestWrapper>
-        <WaitStepDetailsTab step={step as any} loading={false} executionDetails={mockDetailResponse.data} />
+        <WaitStepDetailsTab
+          step={step as any}
+          loading={false}
+          executionDetails={mockDetailResponse.data}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
 
@@ -161,7 +172,12 @@ describe('<WaitStepDetailsTab /> tests', () => {
     const step = data(ExecutionStatusEnum.WaitStepRunning, undefined, undefined, details)
     const { container } = render(
       <TestWrapper>
-        <WaitStepDetailsTab step={step as any} loading={false} executionDetails={mockDetailResponse.data} />
+        <WaitStepDetailsTab
+          step={step as any}
+          loading={false}
+          executionDetails={mockDetailResponse.data}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -172,7 +188,12 @@ describe('<WaitStepDetailsTab /> tests', () => {
     const step = data(ExecutionStatusEnum.WaitStepRunning, undefined, undefined, details)
     const { container } = render(
       <TestWrapper>
-        <WaitStepDetailsTab step={step as any} loading={false} executionDetails={mockDetailResponse.data} />
+        <WaitStepDetailsTab
+          step={step as any}
+          loading={false}
+          executionDetails={mockDetailResponse.data}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
 
@@ -184,7 +205,12 @@ describe('<WaitStepDetailsTab /> tests', () => {
     const step = data(ExecutionStatusEnum.WaitStepRunning, undefined, undefined, details)
     const { container } = render(
       <TestWrapper>
-        <WaitStepDetailsTab step={step as any} loading={true} executionDetails={mockDetailResponse.data} />
+        <WaitStepDetailsTab
+          step={step as any}
+          loading={true}
+          executionDetails={mockDetailResponse.data}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
 
@@ -205,6 +231,7 @@ describe('<WaitStepDetailsTab /> tests', () => {
               nodeExecutionId: 'foo'
             }
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -218,7 +245,12 @@ describe('<WaitStepDetailsTab /> tests', () => {
     const step = data(ExecutionStatusEnum.WaitStepRunning, 0, undefined, details)
     const { container } = render(
       <TestWrapper>
-        <WaitStepDetailsTab step={step as any} loading={false} executionDetails={mockDetailResponse.data} />
+        <WaitStepDetailsTab
+          step={step as any}
+          loading={false}
+          executionDetails={mockDetailResponse.data}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
 
@@ -229,9 +261,9 @@ describe('<WaitStepDetailsTab /> tests', () => {
       expect(mutate).toHaveBeenLastCalledWith(waitStepRequestDto, {
         headers: { 'content-type': 'application/json' },
         queryParams: {
-          accountIdentifier: undefined,
-          orgIdentifier: undefined,
-          projectIdentifier: undefined
+          accountIdentifier: 'acc',
+          orgIdentifier: 'org',
+          projectIdentifier: 'project'
         }
       })
     })
