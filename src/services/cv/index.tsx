@@ -3638,6 +3638,42 @@ export interface QueryRecordsRequest {
   startTime: number
 }
 
+export interface QueryJsonPath {
+  queryValueJsonPath?: string
+  timestampFormat?: string
+  timestampJsonPath?: string
+}
+
+export interface QueryRecordsRequest {
+  connectorIdentifier: string
+  endTime: number
+  healthSourceParams?: HealthSourceParams
+  healthSourceQueryParams?: HealthSourceQueryParams
+  providerType:
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELASTICSEARCH'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
+  query: string
+  queryJSONPath?: QueryJsonPath
+  startTime: number
+}
+
 export type RatioSLIMetricSpec = SLIMetricSpec & {
   eventType: 'Good' | 'Bad'
   metric1: string

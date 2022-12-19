@@ -18,9 +18,9 @@ import {
 } from '@harness/uicore'
 import { Formik, useFormikContext } from 'formik'
 import { defaultTo } from 'lodash-es'
+import type { CustomHealthMetricDefinition } from 'services/cv'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
-import type { CustomHealthMetricDefinition } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import CommonCustomMetric from '@cv/pages/health-source/common/CommonCustomMetric/CommonCustomMetric'
@@ -60,13 +60,8 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const wrapperRef = useRef(null)
   useUpdateConfigFormikOnOutsideClick(wrapperRef, mappedMetrics, selectedMetric, formValues)
 
-  const {
-    enabledDefaultGroupName,
-    fieldLabel,
-    shouldBeAbleToDeleteLastMetric,
-    enabledRecordsAndQuery,
-    customMetricsConfig
-  } = getHealthSourceConfigDetails(healthSourceConfig)
+  const { enabledDefaultGroupName, fieldLabel, shouldBeAbleToDeleteLastMetric, enabledRecordsAndQuery } =
+    getHealthSourceConfigDetails(healthSourceConfig)
 
   const {
     sourceData: { existingMetricDetails }
@@ -202,7 +197,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
                 expressions={expressions}
                 isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
                 enabledRecordsAndQuery={enabledRecordsAndQuery}
-                customMetricsConfig={customMetricsConfig}
+                healthSourceConfig={healthSourceConfig}
               />
             </Container>
           </CommonCustomMetric>

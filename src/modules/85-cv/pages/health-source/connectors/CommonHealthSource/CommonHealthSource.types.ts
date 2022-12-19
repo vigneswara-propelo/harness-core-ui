@@ -15,6 +15,13 @@ export interface HealthSourcesConfig {
   [x: string]: HealthSourceConfig
 }
 
+export interface FieldMapping {
+  type: FIELD_ENUM
+  label: string
+  identifier: keyof CommonCustomMetricFormikInterface
+  defaultValue: string
+}
+
 export interface HealthSourceConfig {
   addQuery: {
     enableDefaultGroupName?: boolean
@@ -37,13 +44,6 @@ export interface HealthSourceConfig {
   sideNav?: {
     shouldBeAbleToDeleteLastMetric: boolean
   }
-}
-
-export interface FieldMapping {
-  type: FIELD_ENUM
-  label: string
-  identifier: string
-  defaultValue: string
 }
 
 export interface HealthSourceSetupSource {

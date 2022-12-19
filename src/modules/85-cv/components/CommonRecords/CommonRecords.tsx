@@ -9,7 +9,7 @@ import React, { useMemo } from 'react'
 import cx from 'classnames'
 import { Container, Icon, StackTraceList, Text, PageError, NoDataCard } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { transformSampleData } from './utils'
@@ -58,7 +58,7 @@ export function CommonRecords(props: CommonRecordsProps): JSX.Element {
 
   return (
     <Container className={css.queryAndRecords}>
-      <Text className={css.labelText} font={{ weight: 'semi-bold', size: 'medium' }}>
+      <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'small' }}>
         {getString('cv.monitoringSources.gcoLogs.records')}
       </Text>
       <Container className={cx(css.chartContainer)}>{content}</Container>

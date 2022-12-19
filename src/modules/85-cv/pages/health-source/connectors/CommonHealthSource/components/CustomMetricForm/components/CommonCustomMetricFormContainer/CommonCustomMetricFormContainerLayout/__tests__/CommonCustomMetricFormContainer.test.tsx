@@ -72,7 +72,12 @@ jest.mock('services/cv', () => ({
 describe('Unit tests for CommonCustomMetricFormContainer', () => {
   const initialProps = {
     connectorIdentifier: 'Test',
-    onChange: jest.fn()
+    onChange: jest.fn(),
+    healthSourceConfig: {
+      addQuery: {
+        label: 'Logs'
+      }
+    }
   }
   test('Verify that records are fetched when fetch records button is clicked', async () => {
     const { getAllByText, container, getByText } = render(<WrapperComponent {...initialProps} />)
@@ -97,7 +102,12 @@ describe('Unit tests for CommonCustomMetricFormContainer', () => {
   test('Verify that records are fetched automatically when query is prefilled in edit flow', async () => {
     const propsWhenQueryIsPresent = {
       connectorIdentifier: 'Test',
-      onChange: jest.fn()
+      onChange: jest.fn(),
+      healthSourceConfig: {
+        addQuery: {
+          label: 'Logs'
+        }
+      }
     }
     const { getByText, container } = render(<WrapperComponent {...propsWhenQueryIsPresent} />)
 

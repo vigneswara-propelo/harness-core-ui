@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
-import { Container, Layout, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import type { HealthSourceConfig } from '../../CommonHealthSource.types'
 import CommonCustomMetricFormContainer from './components/CommonCustomMetricFormContainer/CommonCustomMetricFormContainerLayout/CommonCustomMetricFormContainer'
-import type { HealthSourcesConfig } from '../../CommonHealthSource.types'
 import css from '../../CommonHealthSource.module.scss'
 
 interface CustomMetricFormProps {
@@ -19,7 +19,7 @@ interface CustomMetricFormProps {
   connectorIdentifier: string
   isConnectorRuntimeOrExpression?: boolean
   enabledRecordsAndQuery?: boolean
-  customMetricsConfig?: HealthSourcesConfig['x']['customMetrics']
+  healthSourceConfig: HealthSourceConfig
 }
 
 export default function CustomMetricForm(props: CustomMetricFormProps): JSX.Element {
@@ -29,36 +29,30 @@ export default function CustomMetricForm(props: CustomMetricFormProps): JSX.Elem
     connectorIdentifier,
     isConnectorRuntimeOrExpression,
     enabledRecordsAndQuery,
-    customMetricsConfig
+    healthSourceConfig
   } = props
   const { getString } = useStrings()
 
   return (
-    <Container className={css.main}>
-      <Layout.Vertical padding={{ left: 'medium', top: 'medium', bottom: 'small' }}>
-        <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
+    <Layout.Vertical spacing="medium" className={css.main} padding="medium">
+      <Layout.Vertical margin={{ bottom: 'medium' }}>
+        <Text font={{ variation: FontVariation.H5 }}>
           {getString('cv.monitoringSources.prometheus.querySpecificationsAndMappings')}
         </Text>
-        <Text color={Color.BLACK}>{getString('cv.monitoringSources.prometheus.customizeQuery')}</Text>
-      </Layout.Vertical>
-      <Layout.Vertical padding={{ left: 'medium', top: 'medium' }}>
-        <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
-          {getString('cv.monitoringSources.commonHealthSource.defineQuery')}
-        </Text>
-        <Text color={Color.BLACK}>{getString('cv.monitoringSources.commonHealthSource.defineQueryDescription')}</Text>
-        <Text color={Color.BLACK}>
-          {getString('cv.monitoringSources.commonHealthSource.defineQuerySubDescription')}
+        <Text font={{ variation: FontVariation.BODY }}>
+          {getString('cv.monitoringSources.prometheus.customizeQuery')}
         </Text>
       </Layout.Vertical>
-      {enabledRecordsAndQuery ? (
+
+      {enabledRecordsAndQuery && (
         <CommonCustomMetricFormContainer
           connectorIdentifier={connectorIdentifier}
           isTemplate={isTemplate}
           expressions={expressions}
           isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
-          customMetricsConfig={customMetricsConfig}
+          healthSourceConfig={healthSourceConfig}
         />
-      ) : null}
-    </Container>
+      )}
+    </Layout.Vertical>
   )
 }

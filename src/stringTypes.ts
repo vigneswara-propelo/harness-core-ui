@@ -7603,6 +7603,13 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.defineQuery': string
   'cv.monitoringSources.commonHealthSource.defineQueryDescription': string
   'cv.monitoringSources.commonHealthSource.defineQuerySubDescription': string
+  'cv.monitoringSources.commonHealthSource.logsTable.ServiceInstance': string
+  'cv.monitoringSources.commonHealthSource.logsTable.jsonSelectorDrawerTitlePrefix': string
+  'cv.monitoringSources.commonHealthSource.logsTable.noSampleAvailable': string
+  'cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText': string
+  'cv.monitoringSources.commonHealthSource.logsTable.subTitle': string
+  'cv.monitoringSources.commonHealthSource.logsTable.timestamp': string
+  'cv.monitoringSources.commonHealthSource.logsTable.title': string
   'cv.monitoringSources.commonHealthSource.metric': string
   'cv.monitoringSources.commonHealthSource.metricName': string
   'cv.monitoringSources.commonHealthSource.runQuery': string
@@ -7861,6 +7868,7 @@ export interface StringsMap {
   'cv.preProductionTests': string
   'cv.previousErrorBudgetResetHistory': string
   'cv.proceedToEdit': string
+  'cv.processing': string
   'cv.quarterly': string
   'cv.queries': string
   'cv.query': string

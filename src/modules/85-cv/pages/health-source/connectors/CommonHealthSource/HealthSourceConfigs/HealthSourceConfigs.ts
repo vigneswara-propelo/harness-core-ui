@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { CHART_VISIBILITY_ENUM } from '../CommonHealthSource.constants'
+import { CHART_VISIBILITY_ENUM, FIELD_ENUM } from '../CommonHealthSource.constants'
 import type { HealthSourcesConfig } from '../CommonHealthSource.types'
 
 export const healthSourcesConfig: HealthSourcesConfig = {
@@ -35,10 +35,19 @@ export const healthSourcesConfig: HealthSourcesConfig = {
     },
     customMetrics: {
       enabled: true,
+      fieldMappings: [
+        {
+          type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
+          label: 'Identifier service path',
+          identifier: 'serviceInstance',
+          defaultValue: '_sourcehost'
+        }
+      ],
       queryAndRecords: {
         enabled: true
       }
     },
+
     sideNav: {
       shouldBeAbleToDeleteLastMetric: false
     }

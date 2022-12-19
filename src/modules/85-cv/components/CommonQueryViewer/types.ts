@@ -45,8 +45,6 @@ export interface CommonQueryViewerProps {
   queryTextAreaProps?: TextAreaProps['textArea']
   queryContentMandatoryProps?: any[]
   dataTooltipId?: string
-  isTemplate?: boolean
-  expressions?: string[]
   isConnectorRuntimeOrExpression?: boolean
   queryTextareaName?: string
 }

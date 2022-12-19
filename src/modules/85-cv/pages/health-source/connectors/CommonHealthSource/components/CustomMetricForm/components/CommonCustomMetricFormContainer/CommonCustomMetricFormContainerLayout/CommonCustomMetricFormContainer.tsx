@@ -9,35 +9,43 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import { Container, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { TimeSeries, useGetSampleMetricData, useGetSampleRawRecord } from 'services/cv'
+import { TimeSeries, useGetSampleMetricData, useGetSampleRawRecord, QueryRecordsRequest } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { CommonQueryViewer } from '@cv/components/CommonQueryViewer/CommonQueryViewer'
 import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import { CommonQueryViewer } from '@cv/components/CommonQueryViewer/CommonQueryViewer'
-import type { CommonCustomMetricFormContainerProps } from './CommonCustomMetricFormContainer.types'
-import CommonChart from '../../CommonChart/CommonChart'
 import {
-  getRecordsRequestBody,
+  getIsLogsTableVisible,
+  getProviderType
+} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
+import CommonChart from '../../CommonChart/CommonChart'
+import type { CommonCustomMetricFormContainerProps } from './CommonCustomMetricFormContainer.types'
+import LogsTableContainer from '../../LogsTable/LogsTableContainer'
+import {
   shouldAutoBuildChart,
-  shouldShowChartComponent
+  shouldShowChartComponent,
+  getRecordsRequestBody
 } from './CommonCustomMetricFormContainer.utils'
 
 export default function CommonCustomMetricFormContainer(props: CommonCustomMetricFormContainerProps): JSX.Element {
   const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
-  const {
-    sourceData: { product, sourceType }
-  } = useContext(SetupSourceTabsContext)
-  const { connectorIdentifier, isTemplate, expressions, isConnectorRuntimeOrExpression, customMetricsConfig } = props
+  const { sourceData } = useContext(SetupSourceTabsContext)
+
+  const { product, sourceType } = sourceData || {}
+
+  const { connectorIdentifier, isTemplate, expressions, isConnectorRuntimeOrExpression, healthSourceConfig } = props
 
   const [records, setRecords] = useState<Record<string, any>[]>([])
   const [isQueryExecuted, setIsQueryExecuted] = useState(false)
   const [healthSourceTimeSeriesData, setHealthSourceTimeSeriesData] = useState<TimeSeries[] | undefined>()
 
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
-  const chartConfig = customMetricsConfig?.metricsChart
+  const chartConfig = healthSourceConfig?.customMetrics?.metricsChart
   const providerType = `${sourceType?.toUpperCase()}_${product?.value}`
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
   const isQueryRuntimeOrExpression = getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
+
+  const isLogsTableVisible = getIsLogsTableVisible(healthSourceConfig)
 
   const {
     mutate: queryHealthSource,
@@ -103,8 +111,6 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
         error={error}
         query={query}
         dataTooltipId={'healthSourceQuery'}
-        isTemplate={isTemplate}
-        expressions={expressions}
         isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
       />
       {/* Field Mappings component Can be added here along with build chart/ get message button */}
@@ -116,6 +122,19 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
         />
       ) : null}
       {/* Logs Table Can be added here */}
+      {isLogsTableVisible && (
+        <LogsTableContainer
+          query={values.query}
+          fieldMappings={healthSourceConfig?.customMetrics?.fieldMappings}
+          providerType={getProviderType(sourceData) as QueryRecordsRequest['providerType']}
+          connectorIdentifier={connectorIdentifier}
+          isTemplate={isTemplate}
+          expressions={expressions}
+          isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+          sampleRecords={records}
+          disableLogFields={Boolean(fetchingSampleRecordLoading || error || !records?.length)}
+        />
+      )}
     </Container>
   )
 }

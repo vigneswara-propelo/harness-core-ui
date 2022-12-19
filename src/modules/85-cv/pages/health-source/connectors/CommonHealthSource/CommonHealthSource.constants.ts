@@ -1,3 +1,5 @@
+import type { QueryRecordsRequest } from 'services/cv'
+
 export const BasePathKeyPrefix = 'basePathDropdown_'
 export const BasePathInitValue = { basePathDropdown_0: { value: '', path: '' } }
 
@@ -58,4 +60,17 @@ export enum FIELD_ENUM {
 export enum CHART_VISIBILITY_ENUM {
   AUTO = 'auto',
   DEFAULT = 'default'
+}
+// Logs table constants
+
+export enum FieldMappingInputTypes {
+  JsonSelector = 'JsonSelector'
+}
+
+export const logsTableDefaultConfigs = {
+  size: '40%'
+}
+
+export const ProviderTypes: Record<string, QueryRecordsRequest['providerType']> = {
+  SumoLogic_LOGS: 'SUMOLOGIC_LOG'
 }
