@@ -1646,6 +1646,12 @@ export interface StringsMap {
   'filestore.noFilesInStore': string
   'filestore.noFilesTitle': string
   'filestore.searchResult': string
+  'filestore.sort.byAlphabeticalAz': string
+  'filestore.sort.byAlphabeticalZa': string
+  'filestore.sort.byFileType': string
+  'filestore.sort.byFolderType': string
+  'filestore.sort.firstModified': string
+  'filestore.sort.nodeBy': string
   'filestore.uploadFileFolder': string
   'filestore.view.fileName': string
   'filestore.view.fileUsage': string
