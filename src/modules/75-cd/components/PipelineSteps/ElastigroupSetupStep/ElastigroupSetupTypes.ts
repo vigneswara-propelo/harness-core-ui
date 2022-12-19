@@ -5,7 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty } from 'lodash-es'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type {
   ElastigroupSetupStepInfo,
@@ -47,14 +46,4 @@ export interface ElastigroupSetupTemplate {
       }
     }
   }
-}
-
-export const checkEmptyOrNegative = (value: any): boolean => /* istanbul ignore next */ {
-  if (typeof value === 'string') {
-    return isEmpty(value)
-  }
-  if (typeof value === 'number') {
-    return value < 0
-  }
-  return false
 }

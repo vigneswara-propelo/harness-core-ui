@@ -1277,7 +1277,7 @@ exports[`Test AppResizeStep should render edit view as new step 1`] = `
                     min="1"
                     placeholder="instanceFieldOptions.instanceHolder"
                     type="number"
-                    value="1"
+                    value="0"
                   />
                 </div>
                 <span
@@ -2209,7 +2209,7 @@ exports[`Test AppResizeStep should render null for StepviewType.template 1`] = `
                     min="1"
                     placeholder="instanceFieldOptions.instanceHolder"
                     type="number"
-                    value="1"
+                    value="0"
                   />
                 </div>
                 <span

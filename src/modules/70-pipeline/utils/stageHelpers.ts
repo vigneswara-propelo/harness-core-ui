@@ -395,6 +395,15 @@ export const isCustomDTGenericDeploymentType = (deploymentType: string, repo: st
 
   return false
 }
+
+export const isTasGenericDeploymentType = (deploymentType: string, repo: string | undefined): boolean => {
+  if (isTASDeploymentType(deploymentType)) {
+    // default repository format should be Generic if none is previously selected
+    return repo ? repo === RepositoryFormatTypes.Generic : true
+  }
+
+  return false
+}
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',

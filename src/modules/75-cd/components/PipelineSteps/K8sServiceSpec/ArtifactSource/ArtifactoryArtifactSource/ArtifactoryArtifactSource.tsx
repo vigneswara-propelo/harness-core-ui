@@ -50,6 +50,7 @@ import {
   isAzureWebAppGenericDeploymentType,
   isCustomDTGenericDeploymentType,
   isServerlessDeploymentType,
+  isTasGenericDeploymentType,
   RepositoryFormatTypes,
   ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
@@ -275,12 +276,37 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     repoFormat ? isCustomDTGenericDeploymentType(selectedDeploymentType, repoFormat) : false
   )
 
+  const [isTasGenericSelected, setIsTasGenericSelected] = useState(
+    repoFormat ? isCustomDTGenericDeploymentType(selectedDeploymentType, repoFormat) : false
+  )
+
   const [isGenericArtifactory, setIsGenericArtifactory] = useState(
     isServerlessOrSshOrWinRmSelected ||
       isAzureWebAppGenericSelected ||
       isCustomDeploymentGenericSelected ||
+      isTasGenericSelected ||
       repoFormat === RepositoryFormatTypes.Generic
   )
+
+  useEffect(() => {
+    let serviceRepoFormat
+    /* istanbul ignore else */
+    if (service) {
+      const parsedService = service?.data?.yaml && parse(service?.data?.yaml)
+      // to be refactored for some fields once generic dependency is resolved via V2
+      const artifactsInfo = get(parsedService, `service.serviceDefinition.spec.artifacts`) as ArtifactListConfig
+      artifactsInfo?.primary?.sources?.map(artifactInfo => {
+        if (artifactInfo?.identifier === (artifact as ArtifactSource)?.identifier) {
+          serviceRepoFormat = artifactInfo?.spec?.repositoryFormat
+          setRepoFormat(serviceRepoFormat)
+        }
+      })
+    }
+
+    setIsTasGenericSelected(
+      serviceRepoFormat ? isTasGenericDeploymentType(selectedDeploymentType, serviceRepoFormat) : false
+    )
+  }, [service, artifact, selectedDeploymentType])
 
   useEffect(() => {
     let serviceRepoFormat
@@ -325,9 +351,16 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       isServerlessOrSshOrWinRmSelected ||
         isAzureWebAppGenericSelected ||
         isCustomDeploymentGenericSelected ||
+        isTasGenericSelected ||
         repoFormat === RepositoryFormatTypes.Generic
     )
-  }, [isServerlessOrSshOrWinRmSelected, isAzureWebAppGenericSelected, isCustomDeploymentGenericSelected, repoFormat])
+  }, [
+    isServerlessOrSshOrWinRmSelected,
+    isAzureWebAppGenericSelected,
+    isCustomDeploymentGenericSelected,
+    isTasGenericSelected,
+    repoFormat
+  ])
 
   const connectorRef = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),

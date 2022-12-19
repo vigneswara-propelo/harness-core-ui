@@ -27,7 +27,16 @@ export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDe
   return (
     deploymentType === ServiceDeploymentType.Kubernetes ||
     deploymentType === ServiceDeploymentType.NativeHelm ||
-    deploymentType === ServiceDeploymentType.ECS
+    deploymentType === ServiceDeploymentType.ECS ||
+    deploymentType == ServiceDeploymentType.TAS
+  )
+}
+
+export const isAllowedGoogleArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+  return (
+    deploymentType === ServiceDeploymentType.Kubernetes ||
+    deploymentType === ServiceDeploymentType.CustomDeployment ||
+    deploymentType === ServiceDeploymentType.TAS
   )
 }
 
@@ -208,15 +217,14 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Acr
   ],
   TAS: [
-    ENABLED_ARTIFACT_TYPES.AmazonS3,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-    ENABLED_ARTIFACT_TYPES.Acr,
-    ENABLED_ARTIFACT_TYPES.DockerRegistry,
-    ENABLED_ARTIFACT_TYPES.Ecr,
-    ENABLED_ARTIFACT_TYPES.Gcr,
-    ENABLED_ARTIFACT_TYPES.Jenkins,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
-    ENABLED_ARTIFACT_TYPES.CustomArtifact
+    ENABLED_ARTIFACT_TYPES.Nexus2Registry,
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.AmazonS3,
+    ENABLED_ARTIFACT_TYPES.Gcr,
+    ENABLED_ARTIFACT_TYPES.Ecr,
+    ENABLED_ARTIFACT_TYPES.Acr
   ]
 }
 

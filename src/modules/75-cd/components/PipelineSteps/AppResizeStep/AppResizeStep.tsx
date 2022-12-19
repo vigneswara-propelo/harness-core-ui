@@ -89,7 +89,7 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
               },
               getString
             ),
-            oldAppInstances: getInstanceDropdownSchema({ required: true }, getString)
+            oldAppInstances: getInstanceDropdownSchema({}, getString)
           })
         })}
       >
@@ -290,10 +290,6 @@ export class AppResizeStep extends PipelineStep<AppResizeData> {
       newAppInstances: {
         type: InstanceTypes.Count,
         spec: { value: '1' }
-      },
-      oldAppInstances: {
-        type: InstanceTypes.Count,
-        spec: { value: '1' }
       }
     }
   }
@@ -397,32 +393,7 @@ export class AppResizeStep extends PipelineStep<AppResizeData> {
       })
 
       try {
-        newAppInstances.validateSync(data)
-      } catch (e) {
-        /* istanbul ignore next */
-        if (e instanceof Yup.ValidationError) {
-          const err = yupToFormErrors(e)
-          Object.assign(errors.spec, err)
-        }
-      }
-    }
-    /* istanbul ignore else */
-    if (getMultiTypeFromValue(template?.spec?.oldAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME) {
-      const oldAppInstances = Yup.object().shape({
-        oldAppInstances: getInstanceDropdownSchema(
-          {
-            required: true,
-            requiredErrorMessage: /* istanbul ignore next */ getString?.('fieldRequired', {
-              field: getString('cd.steps.tas.oldAppInstance')
-            })
-          },
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          getString!
-        )
-      })
-
-      try {
-        oldAppInstances.validateSync(data)
+        newAppInstances.validateSync(data.spec)
       } catch (e) {
         /* istanbul ignore next */
         if (e instanceof Yup.ValidationError) {

@@ -266,6 +266,9 @@ export class TASInfrastructureSpec extends PipelineStep<TASInfrastructureSpecSte
   renderStep(props: StepProps<TanzuApplicationServiceInfrastructure>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, customStepProps, readonly, allowableTypes } = props
     if (this.isTemplatizedView(stepViewType)) {
+      if (initialValues?.deploymentType) {
+        delete initialValues.deploymentType
+      }
       return (
         <TASInfrastructureSpecInputForm
           {...(customStepProps as TASInfrastructureSpecEditableProps)}

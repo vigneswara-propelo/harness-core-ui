@@ -17,10 +17,11 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import type { StringsMap } from 'stringTypes'
-import { checkEmptyOrNegative, ElastigroupSetupData, ElastigroupSetupTemplate } from './ElastigroupSetupTypes'
+import type { ElastigroupSetupData, ElastigroupSetupTemplate } from './ElastigroupSetupTypes'
 import { ElastigroupSetupWidgetWithRef } from './ElastigroupSetupWidget'
 import { ElastigroupSetupVariablesView, ElastigroupSetupVariablesViewProps } from './ElastigroupSetupVariablesView'
 import ElastigroupSetupInputSet from './ElastigroupSetupInputSet'
+import { checkEmptyOrNegative } from '../PipelineStepsUtil'
 
 export class ElastigroupSetupStep extends PipelineStep<ElastigroupSetupData> {
   constructor() {

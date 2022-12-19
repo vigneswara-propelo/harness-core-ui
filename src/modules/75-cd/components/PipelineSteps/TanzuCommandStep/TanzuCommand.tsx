@@ -204,7 +204,6 @@ const TanzuCommandInputStep: React.FC<TanzuCommandProps> = ({
   inputSetData,
   allowableTypes,
   stepViewType,
-  formikRef,
   initialValues
 }) => {
   const { getString } = useStrings()
@@ -242,7 +241,6 @@ const TanzuCommandInputStep: React.FC<TanzuCommandProps> = ({
           <MultiConfigSelectField
             fileType={'fileStore'}
             name={`${prefix}spec.script.store.spec.files`}
-            formik={formikRef}
             expressions={expressions}
             values={defaultTo(initialValues.spec?.script?.store?.spec?.files, '')}
             multiTypeFieldSelectorProps={{

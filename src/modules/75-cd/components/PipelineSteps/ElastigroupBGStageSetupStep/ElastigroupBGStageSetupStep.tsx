@@ -23,9 +23,9 @@ import type {
   ElastigroupBGStageSetupData,
   ElastigroupBGStageSetupTemplate
 } from './ElastigroupBGStageSetupStepTypes'
-import { checkEmptyOrNegative } from '../ElastigroupSetupStep/ElastigroupSetupTypes'
 import { ElastigroupBGStageSetupEditRef } from './ElastigroupBGStageSetupStepEdit'
 import ElastigroupSetupInputSet from '../ElastigroupSetupStep/ElastigroupSetupInputSet'
+import { checkEmptyOrNegative } from '../PipelineStepsUtil'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 export class ElastigroupBGStageSetupStep extends PipelineStep<ElastigroupBGStageSetupData> {
