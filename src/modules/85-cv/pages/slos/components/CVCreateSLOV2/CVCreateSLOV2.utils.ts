@@ -186,7 +186,7 @@ export const getSLOV2FormValidationSchema = (getString: UseStringsReturn['getStr
     }),
     [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: Yup.number()
       .typeError(REQUIRED)
-      .min(0, getString('cv.minValueN', { n: 0 }))
+      .min(1, getString('cv.minValueN', { n: 1 }))
       .max(100, getString('cv.maxValue', { n: 100 }))
       .required(REQUIRED)
   })
