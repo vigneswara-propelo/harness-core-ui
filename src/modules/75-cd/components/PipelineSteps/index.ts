@@ -100,6 +100,7 @@ import { AppResizeStep } from './AppResizeStep/AppResizeStep'
 import { TASBasicAppSetupStep } from './TASBasicAppSetupStep/TASBasicAppSetupStep'
 import { TasBGAppSetupStep } from './TasBGAppSetup/TasBGAppSetup'
 import { TasCanaryAppSetupStep } from './TasCanaryAppSetup/TasCanaryAppSetup'
+import { AsgCanaryDeleteStep } from './AsgCanaryDeleteStep/AsgCanaryDeleteStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -194,3 +195,4 @@ factory.registerStep(new AppResizeStep())
 factory.registerStep(new TASBasicAppSetupStep())
 factory.registerStep(new TasBGAppSetupStep())
 factory.registerStep(new TasCanaryAppSetupStep())
+factory.registerStep(new AsgCanaryDeleteStep())

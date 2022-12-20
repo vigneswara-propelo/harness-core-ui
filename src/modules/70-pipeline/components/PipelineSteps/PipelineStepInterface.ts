@@ -140,6 +140,7 @@ export enum StepType {
   AppResize = 'AppResize',
   Asg = 'ASGServiceSpec',
   AsgInfraSpec = 'AsgInfraSpec',
+  AsgCanaryDelete = 'AsgCanaryDelete',
   ElastigroupDeploy = 'ElastigroupDeploy',
   ElastigroupSwapRoute = 'ElastigroupSwapRoute',
   ElastigroupBGStageSetup = 'ElastigroupBGStageSetup'

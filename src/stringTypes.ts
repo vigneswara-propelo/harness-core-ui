@@ -4697,6 +4697,7 @@ export interface StringsMap {
   'cd.artifactRepoTooltip': string
   'cd.artifactSource.artifactRepositoryTypeIsRequired': string
   'cd.artifactVersion': string
+  'cd.asgCanaryDeleteStepDescription': string
   'cd.attributeFilters': string
   'cd.awsCli': string
   'cd.azureArm.description': string
