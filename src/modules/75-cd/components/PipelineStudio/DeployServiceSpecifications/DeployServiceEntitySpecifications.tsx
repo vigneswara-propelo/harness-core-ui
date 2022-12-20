@@ -181,7 +181,8 @@ export default function DeployServiceEntitySpecifications({
       return {
         ...pick(stage?.stage?.spec, ['service', 'services']),
         ...(scope !== Scope.PROJECT &&
-          isEmpty(get(stage, 'stage.spec.service.serviceRef')) && {
+          isEmpty(get(stage, 'stage.spec.service.serviceRef')) &&
+          isEmpty(get(stage, 'stage.spec.services.values')) && {
             service: { serviceRef: RUNTIME_INPUT_VALUE }
           })
       }
