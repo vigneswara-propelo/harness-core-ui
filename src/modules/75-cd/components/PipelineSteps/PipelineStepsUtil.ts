@@ -337,12 +337,12 @@ export const shouldFetchFieldData = (fieldList: string[]) => {
   return emptyOrRuntimeFields.length === 0
 }
 
-export const checkEmptyOrNegative = (value: any): boolean => /* istanbul ignore next */ {
+export const checkEmptyOrLessThan = (value: any, minimumCount = 0): boolean => /* istanbul ignore next */ {
   if (typeof value === 'string') {
     return isEmpty(value)
   }
   if (typeof value === 'number') {
-    return value < 0
+    return value < minimumCount
   }
   return false
 }

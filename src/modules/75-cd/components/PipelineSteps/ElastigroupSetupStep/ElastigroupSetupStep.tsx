@@ -21,7 +21,7 @@ import type { ElastigroupSetupData, ElastigroupSetupTemplate } from './Elastigro
 import { ElastigroupSetupWidgetWithRef } from './ElastigroupSetupWidget'
 import { ElastigroupSetupVariablesView, ElastigroupSetupVariablesViewProps } from './ElastigroupSetupVariablesView'
 import ElastigroupSetupInputSet from './ElastigroupSetupInputSet'
-import { checkEmptyOrNegative } from '../PipelineStepsUtil'
+import { checkEmptyOrLessThan } from '../PipelineStepsUtil'
 
 export class ElastigroupSetupStep extends PipelineStep<ElastigroupSetupData> {
   constructor() {
@@ -124,7 +124,7 @@ export class ElastigroupSetupStep extends PipelineStep<ElastigroupSetupData> {
     if (
       getMultiTypeFromValue(template?.spec?.instances.spec.desired) === MultiTypeInputType.RUNTIME &&
       isRequired &&
-      checkEmptyOrNegative(data?.spec?.instances.spec.desired)
+      checkEmptyOrLessThan(data?.spec?.instances.spec.desired)
     ) {
       set(
         errors,
@@ -139,7 +139,7 @@ export class ElastigroupSetupStep extends PipelineStep<ElastigroupSetupData> {
     if (
       getMultiTypeFromValue(template?.spec?.instances.spec.max) === MultiTypeInputType.RUNTIME &&
       isRequired &&
-      checkEmptyOrNegative(data?.spec?.instances.spec.max)
+      checkEmptyOrLessThan(data?.spec?.instances.spec.max)
     ) {
       set(
         errors,
@@ -154,7 +154,7 @@ export class ElastigroupSetupStep extends PipelineStep<ElastigroupSetupData> {
     if (
       getMultiTypeFromValue(template?.spec?.instances.spec.min) === MultiTypeInputType.RUNTIME &&
       isRequired &&
-      checkEmptyOrNegative(data?.spec?.instances.spec.min)
+      checkEmptyOrLessThan(data?.spec?.instances.spec.min)
     ) {
       set(
         errors,

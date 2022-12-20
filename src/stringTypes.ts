@@ -4252,6 +4252,9 @@ export interface StringsMap {
   'pipeline.stepDescription.ShellScriptProvision': string
   'pipeline.stepDescription.SwapRollback': string
   'pipeline.stepDescription.SwapRoute': string
+  'pipeline.stepDescription.TASBGAppSetup': string
+  'pipeline.stepDescription.TASBasicAppSetup': string
+  'pipeline.stepDescription.TASCanaryAppSetup': string
   'pipeline.stepDescription.TanzuCommandScript': string
   'pipeline.stepDescription.TasRollback': string
   'pipeline.stepDescription.TerraformApply': string
@@ -5271,13 +5274,22 @@ export interface StringsMap {
   'cd.steps.pdcStep.title': string
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
+  'cd.steps.tas.additionalRoutes': string
+  'cd.steps.tas.downScaleOldFirstLabel': string
   'cd.steps.tas.enableDownSizeOldApplication': string
   'cd.steps.tas.enableUpsizeInActiveApp': string
+  'cd.steps.tas.existingVersionToKeep': string
+  'cd.steps.tas.matchRunningInstances': string
   'cd.steps.tas.minimumCountPercentage': string
   'cd.steps.tas.newAppInstance': string
   'cd.steps.tas.oldAppInstance': string
   'cd.steps.tas.oldAppInstances': string
+  'cd.steps.tas.readFromManifest': string
+  'cd.steps.tas.tempRouteMandatory': string
+  'cd.steps.tas.tempRoutes': string
   'cd.steps.tas.totalInstances': string
+  'cd.steps.tas.typeAndEnterForRouteAdd': string
+  'cd.steps.tas.upscaleNewFirstLabel': string
   'cd.steps.tasInfra.organizationError': string
   'cd.steps.tasInfra.organizationPlaceholder': string
   'cd.steps.tasInfra.space': string

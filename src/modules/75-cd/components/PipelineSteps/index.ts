@@ -97,6 +97,9 @@ import { ElastigroupDeploy } from './ElastigroupDeploy/ElastigroupDeploy'
 import { ElastigroupSwapRouteStep } from './ElastigroupSwapRouteStep/ElastigroupSwapRouteStep'
 import { ElastigroupBGStageSetupStep } from './ElastigroupBGStageSetupStep/ElastigroupBGStageSetupStep'
 import { AppResizeStep } from './AppResizeStep/AppResizeStep'
+import { TASBasicAppSetupStep } from './TASBasicAppSetupStep/TASBasicAppSetupStep'
+import { TasBGAppSetupStep } from './TasBGAppSetup/TasBGAppSetup'
+import { TasCanaryAppSetupStep } from './TasCanaryAppSetup/TasCanaryAppSetup'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -188,3 +191,6 @@ factory.registerStep(new ElastigroupDeploy())
 factory.registerStep(new ElastigroupSwapRouteStep())
 factory.registerStep(new ElastigroupBGStageSetupStep())
 factory.registerStep(new AppResizeStep())
+factory.registerStep(new TASBasicAppSetupStep())
+factory.registerStep(new TasBGAppSetupStep())
+factory.registerStep(new TasCanaryAppSetupStep())

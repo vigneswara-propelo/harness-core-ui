@@ -134,6 +134,15 @@ steps:
     newAppInstance: New App Instance
     oldAppInstance: Old App Instance
     minimumCountPercentage: Percentage must be greater than or equal to 0
+    existingVersionToKeep: Existing Versions To Keep
+    additionalRoutes: Additional Routes
+    tempRoutes: Temporary Routes
+    readFromManifest: Read from Manifest
+    matchRunningInstances: Match Running Instances
+    typeAndEnterForRouteAdd: Type and press enter to add a route
+    tempRouteMandatory: Temp route is mandatory
+    upscaleNewFirstLabel: Add new instances first, then downsize old instances
+    downScaleOldFirstLabel: Downsize old instances first, then add new instances
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'

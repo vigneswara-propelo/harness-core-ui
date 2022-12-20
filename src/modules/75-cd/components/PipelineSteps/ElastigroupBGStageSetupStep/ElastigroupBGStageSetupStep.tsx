@@ -25,7 +25,7 @@ import type {
 } from './ElastigroupBGStageSetupStepTypes'
 import { ElastigroupBGStageSetupEditRef } from './ElastigroupBGStageSetupStepEdit'
 import ElastigroupSetupInputSet from '../ElastigroupSetupStep/ElastigroupSetupInputSet'
-import { checkEmptyOrNegative } from '../PipelineStepsUtil'
+import { checkEmptyOrLessThan } from '../PipelineStepsUtil'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 export class ElastigroupBGStageSetupStep extends PipelineStep<ElastigroupBGStageSetupData> {
@@ -135,7 +135,7 @@ export class ElastigroupBGStageSetupStep extends PipelineStep<ElastigroupBGStage
     if (
       getMultiTypeFromValue(template?.spec?.instances.spec.desired) === MultiTypeInputType.RUNTIME &&
       isRequired &&
-      checkEmptyOrNegative(data?.spec?.instances.spec.desired)
+      checkEmptyOrLessThan(data?.spec?.instances.spec.desired)
     ) {
       set(
         errors,
@@ -150,7 +150,7 @@ export class ElastigroupBGStageSetupStep extends PipelineStep<ElastigroupBGStage
     if (
       getMultiTypeFromValue(template?.spec?.instances.spec.max) === MultiTypeInputType.RUNTIME &&
       isRequired &&
-      checkEmptyOrNegative(data?.spec?.instances.spec.max)
+      checkEmptyOrLessThan(data?.spec?.instances.spec.max)
     ) {
       set(
         errors,
@@ -165,7 +165,7 @@ export class ElastigroupBGStageSetupStep extends PipelineStep<ElastigroupBGStage
     if (
       getMultiTypeFromValue(template?.spec?.instances.spec.min) === MultiTypeInputType.RUNTIME &&
       isRequired &&
-      checkEmptyOrNegative(data?.spec?.instances.spec.min)
+      checkEmptyOrLessThan(data?.spec?.instances.spec.min)
     ) {
       set(
         errors,
