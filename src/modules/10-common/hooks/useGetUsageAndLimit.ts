@@ -268,6 +268,7 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     },
     lazy: module !== ModuleName.CD
   })
+
   const {
     data: stoUsageData,
     loading: loadingSTOUsage,
@@ -275,7 +276,7 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     refetch: refetchSTOUsage
   } = useGetSTOUsage({
     queryParams: {
-      accountIdentifier: accountId,
+      accountId,
       timestamp
     },
     lazy: module !== ModuleName.STO
