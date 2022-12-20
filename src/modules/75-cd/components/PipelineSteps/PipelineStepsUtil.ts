@@ -320,9 +320,10 @@ export function getAsgInfraValidationSchema(getString: UseStringsReturn['getStri
 
 export const isMultiArtifactSourceEnabled = (
   isMultiArtifactSource: boolean,
-  stage: DeploymentStageElementConfig
+  stage: DeploymentStageElementConfig,
+  isServiceEntityPage: boolean
 ): boolean => {
-  return isMultiArtifactSource && isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.type)
+  return isMultiArtifactSource && (isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.type) || isServiceEntityPage)
 }
 
 export const shouldFetchFieldData = (fieldList: string[]) => {

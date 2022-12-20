@@ -59,7 +59,8 @@ const ElastigroupServiceSpecEditable: React.FC<ElastigroupServiceSpecFormProps> 
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
     !!NG_ARTIFACT_SOURCES,
-    stage?.stage as DeploymentStageElementConfig
+    stage?.stage as DeploymentStageElementConfig,
+    isServiceEntityPage
   )
   const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
 
