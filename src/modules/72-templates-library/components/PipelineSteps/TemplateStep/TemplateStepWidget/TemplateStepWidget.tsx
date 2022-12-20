@@ -81,7 +81,7 @@ function TemplateStepWidget(
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
     }
   })
 
@@ -101,7 +101,7 @@ function TemplateStepWidget(
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
     }
   })
 

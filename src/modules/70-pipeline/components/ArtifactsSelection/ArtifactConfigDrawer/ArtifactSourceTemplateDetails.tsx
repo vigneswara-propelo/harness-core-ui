@@ -129,7 +129,7 @@ function ArtifactSourceTemplateDetails(
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: artifactSourceTemplate.versionLabel,
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
     }
   })
 
@@ -155,7 +155,7 @@ function ArtifactSourceTemplateDetails(
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: artifactSourceTemplate.versionLabel || '',
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
     }
   })
 

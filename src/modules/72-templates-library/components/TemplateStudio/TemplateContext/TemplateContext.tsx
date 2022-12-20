@@ -374,12 +374,15 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
         const versions: string[] = templateMetadata.map(item => defaultTo(item.versionLabel, ''))
         const stableVersion = templateMetadata.find(item => item.stableTemplate)?.versionLabel
         const lastPublishedVersion = maxBy(templateMetadata, 'createdAt')?.versionLabel
+        const storeType = templateMetadata.at(0)?.storeType
+        const loadFromFallbackBranch = !branch && !queryParams.branch && storeType === 'REMOTE'
 
         const templateWithGitDetails = await getTemplateYaml(
           {
             ...queryParams,
             versionLabel,
-            ...(repoName && branch ? { repoName, branch } : {})
+            ...(repoName && branch ? { repoName, branch } : {}),
+            ...(loadFromFallbackBranch && { loadFromFallbackBranch: true })
           },
           templateIdentifier,
           !!isGitCacheEnabled,
@@ -439,7 +442,11 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
           templateInputsErrorNodeSummary
         })
       } catch (error) {
-        if ((error as Error).code === 'INVALID_REQUEST') {
+        if (
+          (error as Error).code === 'INVALID_REQUEST' ||
+          (error as Error).code === 'HINT' ||
+          (error as Error).code === 'EXPLANATION'
+        ) {
           const template = templateMetadata.find(item => item.versionLabel === versionLabel)
           const versions: string[] = templateMetadata.map(item => defaultTo(item.versionLabel, ''))
           const stableVersion = templateMetadata.find(item => item.stableTemplate)?.versionLabel
@@ -448,7 +455,8 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
             connectorRef: (template as TemplateResponse)?.connectorRef,
             storeType: (template as TemplateResponse)?.storeType,
             repoName: template?.gitDetails?.repoName,
-            branch: gitDetails?.branch,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            branch: (error as any)?.metadata?.branch ?? gitDetails?.branch,
             filePath: template?.gitDetails?.filePath
           }
 

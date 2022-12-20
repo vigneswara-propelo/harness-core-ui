@@ -289,7 +289,12 @@ function BootstrapDeployInfraDefinition({
         getScopeFromValue(defaultTo(stageCustomDeploymentData?.templateRef, ''))
       ),
       versionLabel: defaultTo(stageCustomDeploymentData?.versionLabel, ''),
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params: queryParams,
+        repoIdentifier: gitDetails.repoIdentifier,
+        branch: gitDetails.branch
+      })
     },
     lazy: !shouldFetchCustomDeploymentTemplate
   })

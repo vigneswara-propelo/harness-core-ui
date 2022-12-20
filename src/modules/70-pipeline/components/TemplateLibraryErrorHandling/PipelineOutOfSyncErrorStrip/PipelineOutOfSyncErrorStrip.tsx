@@ -41,7 +41,7 @@ export function PipelineOutOfSyncErrorStrip({
         orgIdentifier,
         projectIdentifier,
         identifier: pipelineIdentifier,
-        ...getGitQueryParamsWithParentScope(storeMetadata, params)
+        ...getGitQueryParamsWithParentScope({ storeMetadata, params })
       },
       headers: { ...(loadFromcache ? { 'Load-From-Cache': 'true' } : {}) }
     },

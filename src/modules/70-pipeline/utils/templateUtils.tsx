@@ -187,10 +187,15 @@ const getPromisesForTemplateGet = (
           ...params,
           projectIdentifier: scope === Scope.PROJECT ? params.projectIdentifier : undefined,
           orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? params.orgIdentifier : undefined,
-          ...getGitQueryParamsWithParentScope(storeMetadata, {
-            accountId: params.accountIdentifier,
-            orgIdentifier: defaultTo(params.orgIdentifier, ''),
-            projectIdentifier: defaultTo(params.projectIdentifier, '')
+          ...getGitQueryParamsWithParentScope({
+            storeMetadata,
+            params: {
+              accountId: params.accountIdentifier,
+              orgIdentifier: defaultTo(params.orgIdentifier, ''),
+              projectIdentifier: defaultTo(params.projectIdentifier, '')
+            },
+            repoIdentifier: params.repoIdentifier,
+            branch: params.branch
           })
         },
         requestOptions: {

@@ -76,6 +76,7 @@ export interface TemplateDetailsProps {
   storeMetadata?: StoreMetadata
   isStandAlone?: boolean
   disableVersionChange?: boolean
+  loadFromFallbackBranch?: boolean
 }
 
 export enum TemplateTabs {
@@ -90,7 +91,14 @@ export enum ParentTemplateTabs {
 }
 
 export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
-  const { template, setTemplate, storeMetadata, isStandAlone = false, disableVersionChange = false } = props
+  const {
+    template,
+    setTemplate,
+    storeMetadata,
+    isStandAlone = false,
+    disableVersionChange = false,
+    loadFromFallbackBranch = false
+  } = props
   const { getString } = useStrings()
   const history = useHistory()
   const [versionOptions, setVersionOptions] = React.useState<SelectOption[]>([])
@@ -127,7 +135,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       orgIdentifier: selectedTemplate?.orgIdentifier,
       projectIdentifier: selectedTemplate?.projectIdentifier,
       versionLabel: selectedTemplate?.versionLabel,
-      ...getGitQueryParamsWithParentScope(storeMetadata, params)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params, loadFromFallbackBranch })
     },
     requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
     lazy: true
