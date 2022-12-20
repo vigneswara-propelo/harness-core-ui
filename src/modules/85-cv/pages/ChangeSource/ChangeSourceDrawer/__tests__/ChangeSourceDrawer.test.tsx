@@ -81,12 +81,12 @@ describe('Test Change Source Drawer', () => {
     )
 
     // change source name input and source type dropdown are rendered
-    await waitFor(() => expect(container.querySelector('input[value="deploymentText"]')).toBeTruthy())
+    await waitFor(() => expect(container.querySelector('input[value="deploymentsText"]')).toBeTruthy())
     await waitFor(() => expect(container.querySelector('input[value="HarnessCDNextGen"]')).toBeTruthy())
     await waitFor(() => expect(getByText('cv.onboarding.changeSourceTypes.HarnessCDNextGen.name')).toBeTruthy())
 
     // category dropdown and thumbnailSelect are disabled in editmode
-    await waitFor(() => expect(container.querySelector('input[value="deploymentText"]')).toBeDisabled())
+    await waitFor(() => expect(container.querySelector('input[value="deploymentsText"]')).toBeDisabled())
     await waitFor(() => expect(container.querySelector('input[value="HarnessCDNextGen"]')).toBeDisabled())
 
     setFieldValue({
@@ -204,7 +204,7 @@ describe('Test Change Source Drawer', () => {
       </TestWrapper>
     )
 
-    await waitFor(() => expect(container.querySelector(`input[value="deploymentText"]`)).not.toBeNull())
+    await waitFor(() => expect(container.querySelector(`input[value="deploymentsText"]`)).not.toBeNull())
     expect(container.querySelector('[class*="ReferenceSelect"]')).toBeNull()
 
     fireEvent.click(container.querySelector(`.bp3-input-action [data-icon="chevron-down"]`)!)
@@ -236,13 +236,13 @@ describe('Test Change Source Drawer', () => {
       </TestWrapper>
     )
 
-    await waitFor(() => expect(container.querySelector(`input[value="deploymentText"]`)).not.toBeNull())
-    expect(container.querySelector('input[name="category"][value="deploymentText"]')).not.toBeNull()
+    await waitFor(() => expect(container.querySelector(`input[value="deploymentsText"]`)).not.toBeNull())
+    expect(container.querySelector('input[name="category"][value="deploymentsText"]')).not.toBeNull()
     fireEvent.click(container.querySelector(`.bp3-input-action [data-icon="chevron-down"]`)!)
     await waitFor(() => expect(container.querySelector('[class*="menuItemLabel"]')).not.toBeNull())
 
     let menuItemLabels = container.querySelectorAll('[class*="menuItemLabel"]')
-    expect(menuItemLabels[0].innerHTML).toEqual('deploymentText')
+    expect(menuItemLabels[0].innerHTML).toEqual('deploymentsText')
     expect(menuItemLabels[1].innerHTML).toEqual('cv.changeSource.incident')
 
     rerender(

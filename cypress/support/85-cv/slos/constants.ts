@@ -928,17 +928,21 @@ export const monitoredServiceChangeEventSummaryResponse = {
     categoryCountMap: {
       Deployment: {
         count: 2,
-        countInPrecedingWindow: 0
+        countInPrecedingWindow: 0,
+        percentageChange: 100
       },
       Alert: {
         count: 0,
-        countInPrecedingWindow: 0
+        countInPrecedingWindow: 0,
+        percentageChange: 0
       },
       Infrastructure: {
         count: 0,
-        countInPrecedingWindow: 0
+        countInPrecedingWindow: 0,
+        percentageChange: 0
       }
-    }
+    },
+    total: { count: 2, countInPrecedingWindow: 0, percentageChange: 100 }
   },
   responseMessages: []
 }

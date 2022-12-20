@@ -584,11 +584,12 @@ export interface CalenderSpec {
 export interface CategoryCountDetails {
   count?: number
   countInPrecedingWindow?: number
+  percentageChange?: number
 }
 
 export interface ChangeEventDTO {
   accountId: string
-  category?: 'Deployment' | 'Infrastructure' | 'Alert'
+  category?: 'Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag'
   changeSourceIdentifier?: string
   envIdentifier?: string
   environmentName?: string
@@ -601,7 +602,7 @@ export interface ChangeEventDTO {
   projectIdentifier: string
   serviceIdentifier?: string
   serviceName?: string
-  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD'
+  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF'
 }
 
 export interface ChangeEventMetadata {
@@ -619,12 +620,12 @@ export type ChangeObservedConditionSpec = NotificationRuleConditionSpec & {
 }
 
 export interface ChangeSourceDTO {
-  category?: 'Deployment' | 'Infrastructure' | 'Alert'
+  category?: 'Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag'
   enabled?: boolean
   identifier?: string
   name?: string
   spec: ChangeSourceSpec
-  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD'
+  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF'
 }
 
 export interface ChangeSourceSpec {
@@ -635,6 +636,7 @@ export interface ChangeSummaryDTO {
   categoryCountMap?: {
     [key: string]: CategoryCountDetails
   }
+  total?: CategoryCountDetails
 }
 
 export interface ChangeTimeline {
@@ -999,9 +1001,14 @@ export type DatadogMetricHealthSourceSpec = HealthSourceSpec & {
   metricPacks?: TimeSeriesMetricPackDTO[]
 }
 
+export interface DeepLink {
+  action?: 'FETCH_DIFF_DATA' | 'REDIRECT_URL'
+  url?: string
+}
+
 export interface DemoChangeEventDTO {
   changeSourceIdentifier?: string
-  changeSourceType?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD'
+  changeSourceType?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF'
   monitoredServiceIdentifier?: string
 }
 
@@ -1580,6 +1587,12 @@ export interface EventCount {
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
   displayName?: string
+}
+
+export interface EventDetails {
+  changeEventDetailsLink?: DeepLink
+  eventDescriptions?: string[]
+  internalLinkToEntity?: DeepLink
 }
 
 export interface ExceptionInfo {
@@ -2428,6 +2441,21 @@ export interface InputSetTemplateRequest {
 
 export interface InputSetTemplateResponse {
   inputSetTemplateYaml?: string
+}
+
+export type InternalChangeEventMetaData = ChangeEventMetadata & {
+  activityType?:
+    | 'DEPLOYMENT'
+    | 'CONFIG'
+    | 'KUBERNETES'
+    | 'HARNESS_CD'
+    | 'PAGER_DUTY'
+    | 'HARNESS_CD_CURRENT_GEN'
+    | 'FEATURE_FLAG'
+  eventDetails?: EventDetails
+  eventEndTime?: number
+  eventStartTime?: number
+  updatedBy?: string
 }
 
 export interface JenkinsAuthCredentialsDTO {
@@ -5203,7 +5231,7 @@ export interface ServiceDependencyGraphDTO {
 }
 
 export interface ServiceDependencyMetadata {
-  supportedChangeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD')[]
+  supportedChangeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   type?: 'KUBERNETES'
 }
 
@@ -6032,14 +6060,14 @@ export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type UpdateMonitoredServiceFromYamlBodyRequestBody = string
+export type SaveMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]
   envIdentifiers?: string[]
   monitoredServiceIdentifiers?: string[]
-  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD')[]
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6125,8 +6153,8 @@ export interface ChangeEventTimelineQueryParams {
   serviceIdentifiers?: string[]
   envIdentifiers?: string[]
   monitoredServiceIdentifiers?: string[]
-  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD')[]
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   searchText?: string
   startTime: number
   endTime: number
@@ -7230,8 +7258,8 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
   projectIdentifier: string
   monitoredServiceIdentifier?: string
   monitoredServiceIdentifiers?: string[]
-  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD')[]
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   startTime: number
   endTime: number
 }
@@ -7290,7 +7318,7 @@ export interface GetMonitoredServiceChangeTimelineQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   searchText?: string
   duration: 'FOUR_HOURS' | 'TWENTY_FOUR_HOURS' | 'THREE_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS'
   endTime: number
@@ -9753,7 +9781,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9767,7 +9795,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -9782,7 +9810,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9796,7 +9824,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -9808,7 +9836,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -9817,7 +9845,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 
