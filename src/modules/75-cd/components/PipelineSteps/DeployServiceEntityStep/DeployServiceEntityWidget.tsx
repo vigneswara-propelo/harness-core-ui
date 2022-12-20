@@ -49,7 +49,7 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
-import { getIdentifierFromScopedRef, isMultiTypeRuntime } from '@common/utils/utils'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
@@ -58,6 +58,7 @@ import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineU
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useDeepCompareEffect } from '@common/hooks'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -189,6 +190,7 @@ export default function DeployServiceEntityWidget({
     deploymentType: deploymentType as ServiceDefinition['type'],
     ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {})
   })
+
   useEffect(() => {
     subscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
     return () => unSubscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
@@ -218,9 +220,7 @@ export default function DeployServiceEntityWidget({
       if (formikRef.current && servicesData.length > 0) {
         const { setValues, values } = formikRef.current
         if (serviceOrServices.service) {
-          const service = servicesData.find(
-            svc => svc.service.identifier === getIdentifierFromScopedRef(serviceOrServices.service as string)
-          )
+          const service = servicesData.find(svc => getScopedValueFromDTO(svc.service) === serviceOrServices.service)
           setValues({
             ...values,
             ...serviceOrServices,
@@ -237,9 +237,7 @@ export default function DeployServiceEntityWidget({
         } else if (Array.isArray(serviceOrServices.services)) {
           const updatedServices = serviceOrServices.services.reduce<ServicesWithInputs>(
             (p, c) => {
-              const service = servicesData.find(
-                svc => svc.service.identifier === getIdentifierFromScopedRef(c.value as string)
-              )
+              const service = servicesData.find(svc => getScopedValueFromDTO(svc.service) === c.value)
 
               if (service) {
                 p.services.push({ label: service.service.name, value: c.value })

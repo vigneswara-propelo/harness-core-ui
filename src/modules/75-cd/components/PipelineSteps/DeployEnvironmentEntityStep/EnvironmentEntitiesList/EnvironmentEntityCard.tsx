@@ -33,7 +33,6 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { getStepTypeByDeploymentType } from '@pipeline/utils/stageHelpers'
-
 import { getIdentifierFromName } from '@common/utils/StringUtils'
 import type {
   DeployEnvironmentEntityCustomStepProps,

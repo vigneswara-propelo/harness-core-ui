@@ -23,6 +23,8 @@ import {
   useGetEnvironmentsInputYamlAndServiceOverrides
 } from 'services/cd-ng'
 
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import type { EnvironmentData } from '../types'
 
 export interface UseGetEnvironmentsDataProps {
@@ -57,6 +59,11 @@ export function useGetEnvironmentsData({
   const [environmentsList, setEnvironmentsList] = useState<EnvironmentYaml[]>([])
   const [environmentsData, setEnvironmentsData] = useState<EnvironmentData[]>([])
 
+  const envGroupScope = getScopeFromValue(envGroupIdentifier as string)
+
+  if (envGroupScope !== Scope.PROJECT) {
+    envIdentifiers = envIdentifiers.map(envId => `${envGroupScope}.${envId}`)
+  }
   const {
     data: environmentsListResponse,
     error: environmentsListError,
@@ -105,7 +112,9 @@ export function useGetEnvironmentsData({
           description: environmentResponse.environment?.description,
           tags: environmentResponse.environment?.tags,
           type: defaultTo(environmentResponse.environment?.type, 'PreProduction'),
-          yaml: environmentResponse.environment?.yaml
+          yaml: environmentResponse.environment?.yaml,
+          orgIdentifier: environmentResponse.environment?.orgIdentifier,
+          projectIdentifier: environmentResponse.environment?.projectIdentifier
         }))
       }
 

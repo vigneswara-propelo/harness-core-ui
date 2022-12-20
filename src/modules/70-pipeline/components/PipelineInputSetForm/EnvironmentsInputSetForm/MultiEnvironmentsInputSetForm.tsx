@@ -24,6 +24,7 @@ import {
   infraDefinitionTypeMapping
 } from '@pipeline/utils/stageHelpers'
 
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { StepWidget } from '../../AbstractSteps/StepWidget'
 import factory from '../../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../../PipelineSteps/PipelineStepInterface'
@@ -300,6 +301,9 @@ export function MultiEnvironmentsInputSetForm({
                           customStepProps={{
                             deploymentType,
                             environmentIdentifier: environment.environmentRef,
+                            scope: getScopeFromValue(
+                              get(deploymentStageInputSet, 'environmentGroup.envGroupRef') as string
+                            ),
                             isMultipleInfrastructure: true,
                             customDeploymentRef: deploymentStage?.customDeploymentRef,
                             deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll,

@@ -26,10 +26,11 @@ import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMu
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
-import { getIdentifierFromScopedRef, isValueRuntimeInput } from '@common/utils/utils'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import type { DeployServiceEntityData, DeployServiceEntityCustomProps } from './DeployServiceEntityUtils'
 import { useGetServicesData } from './useGetServicesData'
@@ -146,8 +147,7 @@ export function DeployServiceEntityInputStep({
     const newServicesTemplate: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
       return {
         serviceRef: RUNTIME_INPUT_VALUE,
-        serviceInputs: servicesData.find(svcTpl => svcTpl.service.identifier === getIdentifierFromScopedRef(svcId))
-          ?.serviceInputs
+        serviceInputs: servicesData.find(svcTpl => getScopedValueFromDTO(svcTpl.service) === svcId)?.serviceInputs
       }
     })
 
@@ -156,9 +156,7 @@ export function DeployServiceEntityInputStep({
     }
     // updated values based on selected services
     const newServicesValues: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
-      const svcTemplate = servicesData.find(
-        svcTpl => svcTpl.service.identifier === getIdentifierFromScopedRef(svcId)
-      )?.serviceInputs
+      const svcTemplate = servicesData.find(svcTpl => getScopedValueFromDTO(svcTpl.service) === svcId)?.serviceInputs
       let serviceInputs = isMultiSvcTemplate
         ? get(formik.values, `${localPathPrefix}values`)?.find((svc: ServiceYamlV2) => svc.serviceRef === svcId)
             ?.serviceInputs

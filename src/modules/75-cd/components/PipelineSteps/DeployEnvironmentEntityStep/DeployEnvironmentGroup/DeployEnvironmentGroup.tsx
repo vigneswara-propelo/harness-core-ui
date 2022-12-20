@@ -38,6 +38,9 @@ import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineU
 
 import CreateEnvironmentGroupModal from '@cd/components/EnvironmentGroups/CreateEnvironmentGroupModal'
 
+import { MultiTypeEnvironmentGroupField } from '@pipeline/components/FormMultiTypeEnvironmentGroupField/FormMultiTypeEnvironmentGroupField'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
@@ -104,6 +107,8 @@ export default function DeployEnvironmentGroup({
   const isFixed = getMultiTypeFromValue(values.environmentGroup) === MultiTypeInputType.FIXED
   const isRuntime = getMultiTypeFromValue(values.environmentGroup) === MultiTypeInputType.RUNTIME
   const filterPrefix = 'environmentGroupFilters'
+
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   // API
   const {
@@ -199,24 +204,43 @@ export default function DeployEnvironmentGroup({
         flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
         className={css.inputField}
       >
-        <FormInput.MultiTypeInput
-          tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
-          label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
-          name="environmentGroup"
-          useValue
-          disabled={disabled}
-          placeholder={placeHolderForEnvironmentGroup}
-          multiTypeInputProps={{
-            width: 300,
-            selectProps: { items: selectOptions },
-            allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
-            defaultValueToReset: '',
-            onChange: item => {
-              setSelectedEnvironmentGroups(getSelectedEnvironmentGroupsFromOptions([item as SelectOption]))
-            }
-          }}
-          selectItems={selectOptions}
-        />
+        {!CDS_OrgAccountLevelServiceEnvEnvGroup ? (
+          <FormInput.MultiTypeInput
+            tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
+            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
+            name="environmentGroup"
+            useValue
+            disabled={disabled}
+            placeholder={placeHolderForEnvironmentGroup}
+            multiTypeInputProps={{
+              width: 300,
+              selectProps: { items: selectOptions },
+              allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
+              defaultValueToReset: '',
+              onChange: item => {
+                setSelectedEnvironmentGroups(getSelectedEnvironmentGroupsFromOptions([item as SelectOption]))
+              }
+            }}
+            selectItems={selectOptions}
+          />
+        ) : (
+          <MultiTypeEnvironmentGroupField
+            tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
+            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
+            name="environmentGroup"
+            setRefValue
+            disabled={disabled}
+            placeholder={placeHolderForEnvironmentGroup}
+            onChange={item => {
+              setSelectedEnvironmentGroups([item])
+            }}
+            multiTypeProps={{
+              width: 300,
+              allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
+              defaultValueToReset: ''
+            }}
+          />
+        )}
         {isFixed && (
           <RbacButton
             margin={{ top: 'xlarge' }}
@@ -240,7 +264,10 @@ export default function DeployEnvironmentGroup({
             loading={loadingEnvironmentGroupsList || updatingEnvironmentGroupsList}
             environmentGroupsList={environmentGroupsList.filter(envGroupInList =>
               envGroupInList.envGroup?.identifier
-                ? selectedEnvironmentGroups.includes(envGroupInList.envGroup.identifier)
+                ? selectedEnvironmentGroups.some(
+                    selectedEnv =>
+                      selectedEnv === getScopedValueFromDTO(envGroupInList?.envGroup as EnvironmentGroupConfig)
+                  )
                 : false
             )}
             readonly={readonly}

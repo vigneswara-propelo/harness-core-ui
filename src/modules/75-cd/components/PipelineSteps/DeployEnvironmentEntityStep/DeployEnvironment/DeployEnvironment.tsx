@@ -27,18 +27,12 @@ import {
   useToggleOpen
 } from '@harness/uicore'
 
-import type { EnvironmentYaml } from 'services/cd-ng'
+import type { EnvironmentYaml, NGEnvironmentInfoConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
-import {
-  getIdentifierFromScopedRef,
-  isMultiTypeExpression,
-  isMultiTypeFixed,
-  isMultiTypeRuntime,
-  isValueRuntimeInput
-} from '@common/utils/utils'
+import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -50,6 +44,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -208,8 +203,7 @@ export default function DeployEnvironment({
       if (values && environmentsData.length > 0) {
         if (values.environment && !values.environmentInputs?.[values.environment]) {
           const environment = environmentsData.find(
-            environmentData =>
-              environmentData.environment.identifier === getIdentifierFromScopedRef(values.environment as string)
+            environmentData => getScopedValueFromDTO(environmentData.environment) === values.environment
           )
 
           setValues({
@@ -222,11 +216,12 @@ export default function DeployEnvironment({
         } else if (Array.isArray(values.environments)) {
           const updatedEnvironments = values.environments.reduce<EnvironmentWithInputs>(
             (p, c) => {
-              const environment = environmentsData.find(
-                environmentData =>
-                  environmentData.environment.identifier === getIdentifierFromScopedRef(c.value as string)
-              )
-
+              const environment = environmentsData.find(environmentData => {
+                if (envGroupIdentifier) {
+                  return environmentData.environment.identifier === c.value
+                }
+                return getScopedValueFromDTO(environmentData.environment) === c.value
+              })
               if (environment) {
                 p.environments.push({ label: environment.environment.name, value: c.value })
                 // if environment input is not found, add it, else use the existing one
@@ -249,7 +244,7 @@ export default function DeployEnvironment({
             [uniquePathForEnvironments.current]: selectedEnvironments.map(envId => ({
               label: defaultTo(
                 environmentsList.find(
-                  environmentInList => environmentInList.identifier === getIdentifierFromScopedRef(envId)
+                  environmentInList => getScopedValueFromDTO(environmentInList as NGEnvironmentInfoConfig) === envId
                 )?.name,
                 envId
               ),

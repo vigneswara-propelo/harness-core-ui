@@ -311,7 +311,7 @@ export default function DeployEnvironmentEntityInputStep({
           and we are deploying to all environments from pipeline studio.
           Then we should hide this field and just update the formik values */}
         {isMultiEnvironment && deployToAllEnvironments !== true ? (
-          CDS_OrgAccountLevelServiceEnvEnvGroup ? (
+          CDS_OrgAccountLevelServiceEnvEnvGroup && !envGroupIdentifier ? (
             <MultiTypeEnvironmentField
               {...commonProps}
               placeholder={placeHolderForEnvironments}

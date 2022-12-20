@@ -43,6 +43,8 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
 
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import InfrastructureEntitiesList from '../InfrastructureEntitiesList/InfrastructureEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -106,6 +108,7 @@ export default function DeployInfrastructure({
   const { templateRef: deploymentTemplateIdentifier, versionLabel } = customDeploymentRef || {}
   const { getTemplate } = useTemplateSelector()
   const uniquePathForInfrastructures = React.useRef(`_pseudo_field_${uuid()}`)
+  let envToFetchInfraInputs = environmentIdentifier
 
   // State
   const [selectedInfrastructures, setSelectedInfrastructures] = useState(
@@ -114,6 +117,11 @@ export default function DeployInfrastructure({
   const [infrastructureRefType, setInfrastructureRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues.infrastructure)
   )
+
+  if (get(values, 'category') === 'group') {
+    const scope = getScopeFromValue(get(values, 'environmentGroup') as string)
+    envToFetchInfraInputs = scope !== Scope.PROJECT ? `${scope}.${environmentIdentifier}` : environmentIdentifier
+  }
 
   // Constants
   const isFixed =
@@ -136,7 +144,7 @@ export default function DeployInfrastructure({
     refetchInfrastructuresData,
     prependInfrastructureToInfrastructureList
   } = useGetInfrastructuresData({
-    environmentIdentifier,
+    environmentIdentifier: envToFetchInfraInputs,
     // this condition makes the yaml metadata call data
     infrastructureIdentifiers: lazyInfrastructure ? [] : selectedInfrastructures,
     deploymentType,

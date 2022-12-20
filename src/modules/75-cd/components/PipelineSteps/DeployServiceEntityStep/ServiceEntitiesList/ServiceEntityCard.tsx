@@ -35,9 +35,8 @@ import type { NGServiceV2InfoConfig, ServiceSpec } from 'services/cd-ng'
 import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
 
 import { useDeepCompareEffect } from '@common/hooks'
-import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { getScopedValueFromDTO, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { getIdentifierFromName } from '@common/utils/StringUtils'
 import type { FormState, ServiceData } from '../DeployServiceEntityUtils'
 import css from './ServiceEntitiesList.module.scss'
 
@@ -63,9 +62,8 @@ const getScopedRefUsingIdentifier = (
   if (serviceRef) {
     return serviceRef
   }
-  return get(formik?.values, 'services', []).find(
-    (svc: SelectOption) => getIdentifierFromName(svc.label) === service?.identifier
-  )?.value
+  return get(formik?.values, 'services', []).find((svc: SelectOption) => svc.value === getScopedValueFromDTO(service))
+    ?.value
 }
 
 export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactElement {

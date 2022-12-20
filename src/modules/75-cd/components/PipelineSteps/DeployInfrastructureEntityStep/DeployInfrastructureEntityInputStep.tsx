@@ -25,7 +25,7 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-
+import { getScopeAppendedToIdentifier } from '@common/utils/StringUtils'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import { useGetInfrastructuresData } from '../DeployEnvironmentEntityStep/DeployInfrastructure/useGetInfrastructuresData'
 import type { DeployEnvironmentEntityConfig } from '../DeployEnvironmentEntityStep/types'
@@ -55,6 +55,7 @@ export default function DeployInfrastructureEntityInputStep({
   environmentIdentifier,
   isMultipleInfrastructure,
   deployToAllInfrastructures,
+  scope,
   stepViewType,
   areEnvironmentFiltersAdded
 }: DeployInfrastructureEntityInputStepProps): React.ReactElement {
@@ -113,7 +114,7 @@ export default function DeployInfrastructureEntityInputStep({
     updatingInfrastructuresData
   } = useGetInfrastructuresData({
     infrastructureIdentifiers,
-    environmentIdentifier,
+    environmentIdentifier: getScopeAppendedToIdentifier(environmentIdentifier, scope),
     deploymentType,
     ...(shouldAddCustomDeploymentData && {
       deploymentTemplateIdentifier,

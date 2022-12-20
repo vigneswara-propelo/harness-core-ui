@@ -19,9 +19,11 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
+  EnvironmentGroupConfig,
   EnvironmentGroupData
 } from '../types'
 
@@ -140,7 +142,7 @@ export function EnvironmentGroupCard({
               deploymentType={deploymentType}
               customDeploymentRef={customDeploymentRef}
               gitOpsEnabled={gitOpsEnabled}
-              envGroupIdentifier={identifier}
+              envGroupIdentifier={getScopedValueFromDTO(envGroup as EnvironmentGroupConfig)}
             />
           }
           entityFilterListProps={{
