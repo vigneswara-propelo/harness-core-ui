@@ -8133,7 +8133,6 @@ export interface StringsMap {
   'sto.noSecurityIssues': string
   'sto.noSecurityResults': string
   'sto.scans': string
-  'sto.securityReview': string
   'sto.securityStage.description': string
   'sto.stepDescription.ZeroNorth': string
   'sto.stoExemption': string
