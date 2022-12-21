@@ -17,7 +17,8 @@ export const healthSourcesConfig: HealthSourcesConfig = {
     customMetrics: {
       enabled: true,
       queryAndRecords: {
-        enabled: true
+        enabled: true,
+        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics'
       },
       metricsChart: {
         enabled: true,
@@ -43,8 +44,12 @@ export const healthSourcesConfig: HealthSourcesConfig = {
           defaultValue: '_sourcehost'
         }
       ],
-      queryAndRecords: {
+      logsTable: {
         enabled: true
+      },
+      queryAndRecords: {
+        enabled: true,
+        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQuerySubDescription'
       }
     },
 

@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import type { StringKeys } from 'framework/strings'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   initializeCreatedMetrics,
@@ -55,7 +56,8 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       customMetrics: {
         enabled: true,
         queryAndRecords: {
-          enabled: true
+          enabled: true,
+          titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQuerySubDescription' as StringKeys
         }
       },
       sideNav: {

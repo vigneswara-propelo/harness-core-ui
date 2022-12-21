@@ -7662,7 +7662,7 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.chart': string
   'cv.monitoringSources.commonHealthSource.confirmDeleteMetric': string
   'cv.monitoringSources.commonHealthSource.defineQuery': string
-  'cv.monitoringSources.commonHealthSource.defineQueryDescription': string
+  'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics': string
   'cv.monitoringSources.commonHealthSource.defineQuerySubDescription': string
   'cv.monitoringSources.commonHealthSource.logsTable.ServiceInstance': string
   'cv.monitoringSources.commonHealthSource.logsTable.jsonSelectorDrawerTitlePrefix': string
@@ -7673,6 +7673,7 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.logsTable.title': string
   'cv.monitoringSources.commonHealthSource.metric': string
   'cv.monitoringSources.commonHealthSource.metricName': string
+  'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle': string
   'cv.monitoringSources.commonHealthSource.runQuery': string
   'cv.monitoringSources.commonHealthSource.searchMetric': string
   'cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords': string

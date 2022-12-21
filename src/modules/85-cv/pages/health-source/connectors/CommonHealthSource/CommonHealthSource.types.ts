@@ -6,6 +6,7 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
+import type { StringKeys } from 'framework/strings'
 import type { FailMetricThresholdSpec, MetricThreshold, MetricThresholdSpec } from 'services/cv'
 import type { CriteriaPercentageType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { HealthSourceTypes } from '../../types'
@@ -31,6 +32,7 @@ export interface HealthSourceConfig {
     enabled: boolean
     queryAndRecords: {
       enabled: boolean
+      titleStringKey: StringKeys
     }
     fieldMappings?: FieldMapping[]
     metricsChart?: {
