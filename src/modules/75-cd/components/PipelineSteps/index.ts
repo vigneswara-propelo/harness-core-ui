@@ -101,6 +101,7 @@ import { TASBasicAppSetupStep } from './TASBasicAppSetupStep/TASBasicAppSetupSte
 import { TasBGAppSetupStep } from './TasBGAppSetup/TasBGAppSetup'
 import { TasCanaryAppSetupStep } from './TasCanaryAppSetup/TasCanaryAppSetup'
 import { AsgCanaryDeleteStep } from './AsgCanaryDeleteStep/AsgCanaryDeleteStep'
+import { AsgCanaryDeployStep } from './AsgCanaryDeploy/AsgCanaryDeployStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -196,3 +197,4 @@ factory.registerStep(new TASBasicAppSetupStep())
 factory.registerStep(new TasBGAppSetupStep())
 factory.registerStep(new TasCanaryAppSetupStep())
 factory.registerStep(new AsgCanaryDeleteStep())
+factory.registerStep(new AsgCanaryDeployStep())
