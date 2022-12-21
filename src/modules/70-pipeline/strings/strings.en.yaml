@@ -368,7 +368,7 @@ manifestType:
   valuesYamlPath: Values.yaml
   addValuesYamlPath: Add Values.yaml
   varsYAMLPath: Vars.yaml path
-  addVarsYAMLPath: Auto Vars.yaml path
+  addVarsYAMLPath: Add Vars.yaml
   autoScalerYAMLPath: AutoScaler.yaml
   addAutoScalerYAMLPath: Add AutoScaler.yaml
   cfCliVersion: CLI Version
