@@ -344,6 +344,8 @@ serviceDashboard:
   taskArn: Task ARN
   awsRegion: AWS Region
   containerList: Container List
+  elastigroupId: Elastigroup Id
+  ec2InstanceId: EC2 Instance Id
 noEnvironment:
   title: No Environments Available
   message: Create an environment and let’s start configuring the deployment

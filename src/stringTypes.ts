@@ -5139,6 +5139,8 @@ export interface StringsMap {
   'cd.serviceDashboard.deployedBy': string
   'cd.serviceDashboard.deploymentDetails': string
   'cd.serviceDashboard.deploymentSlot': string
+  'cd.serviceDashboard.ec2InstanceId': string
+  'cd.serviceDashboard.elastigroupId': string
   'cd.serviceDashboard.envName': string
   'cd.serviceDashboard.executionId': string
   'cd.serviceDashboard.frequency': string
