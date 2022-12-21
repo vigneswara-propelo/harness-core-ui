@@ -2653,7 +2653,6 @@ export interface StringsMap {
   'connectors.pdc.hostsUpload2': string
   'connectors.pdc.manuallyHosts': string
   'connectors.pdc.selectLabel': string
-  'connectors.pdc.testConnection.step1': string
   'connectors.pdc.uploadJson': string
   'connectors.pdc.validateHosts': string
   'connectors.pdc.validateHostsJson': string
@@ -2737,6 +2736,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.k8s': string
   'connectors.testConnectionStep.validationText.nexus': string
   'connectors.testConnectionStep.validationText.pagerduty': string
+  'connectors.testConnectionStep.validationText.pdc': string
   'connectors.testConnectionStep.validationText.serviceNow': string
   'connectors.testConnectionStep.validationText.splunk': string
   'connectors.testConnectionStep.validationText.spot': string
