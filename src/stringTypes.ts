@@ -251,6 +251,7 @@ export interface StringsMap {
   'common.environmentGroup.edit': string
   'common.environmentGroup.filters.environmentGroupNamePlaceholder': string
   'common.environmentGroup.label': string
+  'common.environmentGroup.nameWithLabel': string
   'common.environmentGroup.new': string
   'common.environmentGroup.noEnvironment': string
   'common.environmentGroup.updated': string
@@ -3930,6 +3931,8 @@ export interface StringsMap {
   'pipeline.noRunsText': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string
+  'pipeline.numOfEnvs': string
+  'pipeline.numOfServices': string
   'pipeline.numOfServicesAndEnv': string
   'pipeline.numOfStage': string
   'pipeline.numOfStages': string

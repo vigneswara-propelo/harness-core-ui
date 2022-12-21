@@ -1243,7 +1243,9 @@ runstageError: '{{count}} Error(s): Unable to run stages.'
 stageDependencyError: 'Stage {{stageId}} has a ‘useFromStage’ dependency on Stage {{dependentStage}}. Please select Stage {{dependentStage}} to run Stage {{stageId}}.'
 noApprovalInstanceCreated: Approval instance not created, no details to display
 approvalTypeRequired: Approval type is required
-numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironment}} Environment(s)'
+numOfServices: '{{numOfServices}} Services'
+numOfEnvs: '{{numOfEnvironments}} Environments'
+numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironments}} Environment(s)'
 executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
   servicesDeployed: 'Services deployed'

@@ -945,6 +945,7 @@ azureConnector: Azure Connector
 environmentList: Environment List
 environmentGroup:
   label: Environment Group
+  nameWithLabel: '{{name}} (Environment Group)'
   new: New Environment Group
   createNew: Create new Environment Group
   created: Environment Group created successfully
