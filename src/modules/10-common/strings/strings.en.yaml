@@ -151,7 +151,7 @@ configureOptions:
   validationErrors:
     regExIsRequired: 'Regex value is required'
     defaultRegExValid: Default value should validate with regex provided
-    defaultAllowedValid: Default value should be from allowed value
+    defaultAllowedValid: Default value should be from allowed values
     regExNotValid: 'Regex value is not valid'
     jexlExpressionRequired: '{{ $.common.jexlExpression }} is required'
     minOneAllowedValue: 'Minimum one allowed value'
