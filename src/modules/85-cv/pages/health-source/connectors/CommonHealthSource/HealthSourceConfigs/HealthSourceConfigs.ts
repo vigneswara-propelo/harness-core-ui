@@ -25,8 +25,14 @@ export const healthSourcesConfig: HealthSourcesConfig = {
         chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO
       }
     },
+    metricPacks: {
+      enabled: false
+    },
     sideNav: {
-      shouldBeAbleToDeleteLastMetric: false
+      shouldBeAbleToDeleteLastMetric: true
+    },
+    metricThresholds: {
+      enabled: true
     }
   },
   SumoLogic_LOGS: {
@@ -55,6 +61,12 @@ export const healthSourcesConfig: HealthSourcesConfig = {
 
     sideNav: {
       shouldBeAbleToDeleteLastMetric: false
+    },
+    metricPacks: {
+      enabled: false
+    },
+    metricThresholds: {
+      enabled: false
     }
   }
 }
