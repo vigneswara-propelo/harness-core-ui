@@ -5,13 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.filter-grid {
-  display: grid;
-  grid-template-columns: 200px 200px 50px auto min-content;
-  gap: var(--spacing-medium) var(--spacing-large);
-  align-items: center;
+.tag-input {
+  flex-grow: 1;
 }
 
-.readonly-tags {
-  max-width: 100px;
+.radio-group {
+  margin-top: var(--spacing-xlarge) !important;
+
+  :global(.RadioButtonGroup--inline) {
+    flex-wrap: nowrap !important;
+
+    & label:last-child {
+      margin-right: 0 !important;
+    }
+  }
 }

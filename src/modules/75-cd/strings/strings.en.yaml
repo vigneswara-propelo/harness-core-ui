@@ -722,3 +722,12 @@ ElastigroupBGStageSetup:
   configureStageListener: Configure your Stage Listener
   listenerColon: 'Listener :'
   ruleColon: 'Rule :'
+inlineEntityFilters:
+  filterIdentifier: Filter identifier
+  enterFilterIdentifier: Enter filter identifier
+  validation:
+    filterIdentifierRequired: Filter identifier is required
+    filterIdentifierAlreadyExists: Filter with same identifier already exists
+    selectAtleastOneEntity: Atlteast 1 entity is required
+    tagsAreRequired: Tags are required
+    chooseAllOrAny: Please choose one of All or Any

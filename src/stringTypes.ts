@@ -306,6 +306,7 @@ export interface StringsMap {
   'common.fetchingBranches': string
   'common.file': string
   'common.files': string
+  'common.filter': string
   'common.filterOnName': string
   'common.filters.clearFilters': string
   'common.filters.noFilterSaved': string
@@ -4967,6 +4968,13 @@ export interface StringsMap {
   'cd.infrastructure.sshWinRmAzure.hostConnectionType': string
   'cd.infrastructure.sshWinRmAzure.noTagsAzure': string
   'cd.infrastructure.updated': string
+  'cd.inlineEntityFilters.enterFilterIdentifier': string
+  'cd.inlineEntityFilters.filterIdentifier': string
+  'cd.inlineEntityFilters.validation.chooseAllOrAny': string
+  'cd.inlineEntityFilters.validation.filterIdentifierAlreadyExists': string
+  'cd.inlineEntityFilters.validation.filterIdentifierRequired': string
+  'cd.inlineEntityFilters.validation.selectAtleastOneEntity': string
+  'cd.inlineEntityFilters.validation.tagsAreRequired': string
   'cd.installAdapterHelperText': string
   'cd.installCluster': string
   'cd.installDelegate': string

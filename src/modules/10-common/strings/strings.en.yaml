@@ -586,6 +586,7 @@ confirmText: Are you sure?
 paste: Paste
 artifactTag: tag
 clientId: Client Id
+filter: Filter
 filters:
   saveNewFilter: Save New Filter
   unsavedFilter: Unsaved Filter

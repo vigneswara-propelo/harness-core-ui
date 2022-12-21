@@ -28,6 +28,7 @@ import { DeployEnvironmentGroupStep } from './DeployEnvironmentGroupStep/DeployE
 import { DeployInfrastructureStep } from './DeployInfrastructureStep/DeployInfrastructureStep'
 import { DeployInfrastructureEntityStep } from './DeployInfrastructureEntityStep/DeployInfrastructureEntityStep'
 import { DeployClusterEntityStep } from './DeployClusterEntityStep/DeployClusterEntityStep'
+import { InlineEntityFiltersStep } from './DeployEnvironmentEntityStep/components/InlineEntityFilters/InlineEntityFiltersStep'
 import { DeployServiceStep } from './DeployServiceStep/DeployServiceStep'
 import { HelmDeploy } from './HelmDeploy/HelmDeploy'
 import { HelmRollback } from './HelmRollback/HelmRollback'
@@ -130,6 +131,7 @@ factory.registerStep(new DeployEnvironmentGroupStep())
 factory.registerStep(new DeployInfrastructureStep())
 factory.registerStep(new DeployInfrastructureEntityStep())
 factory.registerStep(new DeployClusterEntityStep())
+factory.registerStep(new InlineEntityFiltersStep())
 factory.registerStep(new DeployServiceStep())
 factory.registerStep(new DeployServiceEntityStep())
 factory.registerStep(new GenericServiceSpec())

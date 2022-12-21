@@ -38,7 +38,7 @@ urlCopied: URL Copied
 unit: Unit
 anomalousMetrics: Anomalous metrics
 proceedToEdit: Proceed to Edit
-filter: Filter
+filter: '{{$.common.filter}}'
 allMetrics: All Metrics
 selectNamespace: Select Namespace
 riskTimeline: Risk Timeline
