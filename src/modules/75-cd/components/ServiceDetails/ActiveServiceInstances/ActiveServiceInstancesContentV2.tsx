@@ -22,6 +22,7 @@ import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState
 import { numberFormatter } from '@common/utils/utils'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, PipelinePathProps, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { ActiveServiceInstancePopover } from './ActiveServiceInstancePopover'
 import css from './ActiveServiceInstances.module.scss'
 
@@ -472,8 +473,7 @@ export const RenderPipelineExecution: Renderer<CellProps<TableRowData>> = ({
         source
       })
 
-      const baseUrl = window.location.href.split('#')[0]
-      window.open(`${baseUrl}#${route}`)
+      window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
     }

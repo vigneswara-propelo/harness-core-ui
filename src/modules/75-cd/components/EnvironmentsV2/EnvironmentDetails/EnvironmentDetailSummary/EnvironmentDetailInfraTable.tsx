@@ -24,6 +24,7 @@ import type { InstanceGroupedByInfrastructureV2, InstanceGroupedByPipelineExecut
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { numberFormatter } from '@common/utils/utils'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { DialogEmptyState } from './EnvironmentDetailsUtils'
 
 import css from './EnvironmentDetailSummary.module.scss'
@@ -256,8 +257,7 @@ const RenderPipelineExecution: Renderer<CellProps<TableRowData>> = ({
         storeType: pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
       })
 
-      const baseUrl = window.location.href.split('#')[0]
-      window.open(`${baseUrl}#${route}`)
+      window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
     }

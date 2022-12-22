@@ -55,6 +55,7 @@ import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceS
 import { isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { mapToExecutionStatus } from '@pipeline/components/Dashboards/shared'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 
@@ -270,7 +271,7 @@ const RenderLastDeployment: Renderer<CellProps<ServiceListItem>> = ({ row }) => 
         source
       })
 
-      const baseUrl = window.location.href.split('#')[0]
+      const baseUrl = windowLocationUrlPartBeforeHash()
       window.open(`${baseUrl}#${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))

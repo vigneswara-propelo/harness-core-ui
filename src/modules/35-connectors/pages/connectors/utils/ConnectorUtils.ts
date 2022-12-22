@@ -37,6 +37,7 @@ import { setSecretField } from '@secrets/utils/SecretField'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { transformStepHeadersAndParamsForPayloadForPrometheus } from '@connectors/components/CreateConnector/PrometheusConnector/utils'
 import { transformStepHeadersAndParamsForPayload } from '@connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthHeadersAndParams/CustomHealthHeadersAndParams.utils'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { AuthTypes, GitAuthTypes, GitAPIAuthTypes } from './ConnectorHelper'
 import { useConnectorWizard } from '../../../components/CreateConnectorWizard/ConnectorWizardContext'
 export interface DelegateCardInterface {
@@ -1987,7 +1988,7 @@ export const buildErrorTrackingPayload = (formData: FormData): Connector => {
       description,
       tags,
       spec: {
-        url: window.location.href.split('#')[0],
+        url: windowLocationUrlPartBeforeHash(),
         apiKeyRef: apiReferenceKey,
         delegateSelectors: delegateSelectors || {}
       } as ErrorTrackingConnectorDTO
