@@ -4646,6 +4646,7 @@ export interface StringsMap {
   'triggers.triggerConfigurationPanel.listenOnNewWebhook': string
   'triggers.triggerConfigurationPanel.payloadType': string
   'triggers.triggerConfigurationPanel.pollingFrequency': string
+  'triggers.triggerConfigurationPanel.pollingFrequencyPlaceholder': string
   'triggers.triggerConfigurationPanel.title': string
   'triggers.triggerCouldNotBeSavedContent': string
   'triggers.triggerCouldNotBeSavedGenericError': string
