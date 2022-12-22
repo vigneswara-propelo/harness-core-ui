@@ -44,6 +44,7 @@ import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { NodeType, NonSelectableNodes } from '@pipeline/utils/executionUtils'
 import { StageFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { validateStage } from '@pipeline/components/PipelineStudio/StepUtil'
+import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import css from './ExecutionInputs.module.scss'
 
 export interface ExecutionInputsProps {
@@ -88,7 +89,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
   const fieldYaml = parse<{ step: StepElementConfig; stage: StageElementConfig }>(
     defaultTo(get(data, 'data.fieldYaml'), '{}')
   )
-  const isDone = !isEmpty(userInput)
+  const isDone = !isEmpty(userInput) || isExecutionComplete(step.status)
 
   const finalUserInput = defaultTo(isStageForm ? userInput : userInput.step, {})
   const parsedStep = defaultTo(template.step, {})

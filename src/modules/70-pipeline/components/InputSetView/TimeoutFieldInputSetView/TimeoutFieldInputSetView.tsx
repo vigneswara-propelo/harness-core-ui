@@ -57,6 +57,7 @@ export function TimeoutFieldInputSetView(props: TimeoutFieldInputSetViewProps): 
               allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
               style={label ? { marginTop: 'var(--spacing-6)' } : undefined}
               {...configureOptionsProps}
+              isExecutionTimeFieldDisabled
               isReadonly={disabled}
             />
           )}
