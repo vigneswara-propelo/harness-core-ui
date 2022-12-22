@@ -287,24 +287,12 @@ export const MenuCell: CellType = ({ row, column }) => {
             onClick={runPipeline}
             featuresProps={getFeaturePropsForRunPipelineButton({ modules: data.modules, getString })}
           />
-          <Menu.Item
-            className={css.link}
-            icon="cog"
-            text={
-              <Link to={routes.toPipelineStudio(getRouteProps(pathParams, data))}>
-                {getString('pipeline.viewPipeline')}
-              </Link>
-            }
-          />
-          <Menu.Item
-            className={css.link}
-            icon="list-detail-view"
-            text={
-              <Link to={routes.toPipelineDeploymentList(getRouteProps(pathParams, data))}>
-                {getString('viewExecutions')}
-              </Link>
-            }
-          />
+          <Link className={css.link} to={routes.toPipelineStudio(getRouteProps(pathParams, data))}>
+            <Menu.Item tagName="div" icon="cog" text={getString('pipeline.viewPipeline')} />
+          </Link>
+          <Link className={css.link} to={routes.toPipelineDeploymentList(getRouteProps(pathParams, data))}>
+            <Menu.Item tagName="div" icon="list-detail-view" text={getString('viewExecutions')} />
+          </Link>
           <Menu.Divider />
           <Menu.Item
             icon="duplicate"
