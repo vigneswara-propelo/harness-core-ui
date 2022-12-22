@@ -6,6 +6,7 @@ dashboards: Dashboards
 setup: Setup
 agent: Agent
 agents: Agents
+gitopsAgents: Gitops Agents
 perModule: Per Module
 application: Application
 certificate: Certificate

@@ -438,6 +438,7 @@ export interface StringsMap {
   'common.gitSync.unSynced.message2': string
   'common.gitSync.unableToCreatePR': string
   'common.gitSync.updateResource': string
+  'common.gitopsAgents': string
   'common.gnupgKeys': string
   'common.goBack': string
   'common.governance': string
