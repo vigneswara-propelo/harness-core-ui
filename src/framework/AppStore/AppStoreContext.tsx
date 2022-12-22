@@ -296,7 +296,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
         connectivityMode: undefined,
         isGitSimplificationEnabled: false,
         supportingGitSimplification: true,
-        supportingTemplatesGitx: state.featureFlags['NG_TEMPLATE_GITX'],
+        supportingTemplatesGitx: !state.featureFlags['USE_OLD_GIT_SYNC'] && state.featureFlags['NG_TEMPLATE_GITX'],
         gitSyncEnabledOnlyForFF: false
       }))
     }

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { merge, cloneDeep, defaultTo, isEqual, maxBy, isEmpty } from 'lodash-es'
+import { merge, cloneDeep, defaultTo, isEqual, maxBy } from 'lodash-es'
 import { VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import { parse } from 'yaml'
 import type { Color } from '@harness/design-system'
@@ -713,10 +713,7 @@ const _updateTemplate = async (
       isUpdated,
       gitDetails
     }
-    // type is a mandatory field in template, this safe check has been added to ensure that IndexedDb and the template context
-    // never gets updated with an incorrect template object which does not contain type, as this template payload is sent by
-    // different child components for different template types.
-    if (IdbTemplate && !isEmpty((template as NGTemplateInfoConfig)?.type)) {
+    if (IdbTemplate) {
       await IdbTemplate.put(IdbTemplateStoreName, payload)
       dispatch(TemplateContextActions.success({ error: '', template: template as NGTemplateInfoConfig, isUpdated }))
     }
