@@ -234,7 +234,8 @@ function FormComponent(
               selectProps: {
                 allowCreatingNewItems: true,
                 addClearBtn: !isReadonly,
-                items: regions
+                items: regions,
+                usePortal: false
               },
               allowableTypes
             }}
@@ -339,7 +340,8 @@ function FormComponent(
                   ),
                   itemRenderer: itemRenderer,
                   items: getBuilds(),
-                  allowCreatingNewItems: true
+                  allowCreatingNewItems: true,
+                  usePortal: false
                 },
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
