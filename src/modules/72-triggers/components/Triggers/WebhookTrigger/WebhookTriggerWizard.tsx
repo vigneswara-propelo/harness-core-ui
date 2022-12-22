@@ -336,7 +336,7 @@ export default function WebhookTriggerWizard(
       resolvedPipeline,
       anyAction: false,
       autoAbortPreviousExecutions: false,
-      pipelineBranchName: getDefaultPipelineReferenceBranch(baseType)
+      pipelineBranchName: getDefaultPipelineReferenceBranch(baseType) || branch
     }
   }
 

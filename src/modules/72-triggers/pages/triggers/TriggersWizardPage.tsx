@@ -1388,7 +1388,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         pipeline: newPipeline,
         originalPipeline,
         resolvedPipeline,
-        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType),
+        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType) || branch,
         ...getDefaultExpressionBreakdownValues(scheduleTabsId.MINUTES)
       }
     } else if (isArtifactOrManifestTrigger(triggerType)) {
@@ -1404,7 +1404,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         originalPipeline,
         resolvedPipeline,
         inputSetTemplateYamlObj,
-        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew),
+        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew) || branch,
         selectedArtifact: {}
       }
     }
