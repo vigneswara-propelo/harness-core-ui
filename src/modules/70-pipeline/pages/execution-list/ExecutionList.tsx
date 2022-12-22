@@ -146,6 +146,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   }
 
   const { globalFreezes } = useGlobalFreezeBanner()
+
   return (
     <>
       <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
