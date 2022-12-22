@@ -221,7 +221,7 @@ export function ECRArtifact({
       >
         {formik => (
           <FormikForm>
-            <div className={cx(css.connectorForm, formClassName)}>
+            <div className={cx(css.artifactForm, formClassName)}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>

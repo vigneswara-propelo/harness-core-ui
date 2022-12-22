@@ -525,7 +525,7 @@ export function ACRArtifact({
           formikRef.current = formik
           return (
             <FormikForm>
-              <div className={cx(css.connectorForm, formClassName)}>
+              <div className={cx(css.artifactForm, formClassName)}>
                 {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 <div className={css.imagePathContainer}>

@@ -19,7 +19,7 @@ exports[`DockerRegistry Image Path Artifact tests renders correctly in edit case
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
@@ -384,7 +384,7 @@ exports[`DockerRegistry Image Path Artifact tests renders while adding step firs
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
@@ -749,7 +749,7 @@ exports[`DockerRegistry Image Path Artifact tests renders without crashing 1`] =
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
