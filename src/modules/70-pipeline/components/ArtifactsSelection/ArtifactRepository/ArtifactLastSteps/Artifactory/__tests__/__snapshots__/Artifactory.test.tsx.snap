@@ -621,7 +621,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case: CDS_ARTIFACTO
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
@@ -1825,7 +1825,7 @@ exports[`Nexus Artifact tests renders without crashing: CDS_ARTIFACTORY_REPOSITO
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
