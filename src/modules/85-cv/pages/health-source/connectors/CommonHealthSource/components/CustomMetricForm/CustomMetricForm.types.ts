@@ -6,7 +6,6 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
-import type { Dispatch, SetStateAction } from 'react'
 import type { GroupedCreatedMetrics } from '@cv/components/CommonMultiItemsSideNav/components/CommonSelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
 import type {
   CreatedMetricsWithSelectedIndex,
@@ -25,11 +24,8 @@ export interface CustomMetricFormContainerProps {
   isMetricThresholdEnabled: boolean
   mappedMetrics: CustomSelectedAndMappedMetrics['mappedMetrics']
   selectedMetric: CustomSelectedAndMappedMetrics['selectedMetric']
-  setMappedMetrics: Dispatch<SetStateAction<CustomSelectedAndMappedMetrics>>
   createdMetrics: CreatedMetricsWithSelectedIndex['createdMetrics']
   groupedCreatedMetrics: GroupedCreatedMetrics
-  setCreatedMetrics: Dispatch<SetStateAction<CreatedMetricsWithSelectedIndex>>
-  setGroupedCreatedMetrics: Dispatch<SetStateAction<GroupedCreatedMetrics>>
   isTemplate?: boolean
   expressions?: string[]
   healthSourceConfig: HealthSourceConfig

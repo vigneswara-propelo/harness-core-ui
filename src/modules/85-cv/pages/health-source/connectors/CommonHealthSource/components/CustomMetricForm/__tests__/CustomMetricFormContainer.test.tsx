@@ -24,19 +24,27 @@ import {
   sampleRawRecordsMock
 } from './CustomMetricFormContainer.mock'
 import { validateAddMetricForm } from '../CustomMetricFormContainer.utils'
+import CommonHealthSourceContext from '../../../CommonHealthSourceContext'
 
+const updateParentFormik = jest.fn()
 function WrapperComponent(props: CustomMetricFormContainerProps): JSX.Element {
   return (
-    <Formik initialValues={props} onSubmit={jest.fn()}>
-      <FormikForm>
-        <TestWrapper
-          path="/account/:accountId/cv/orgs/:orgIdentifier/projects/:projectIdentifier"
-          pathParams={{ accountId: 'account', orgIdentifier: 'org', projectIdentifier: 'project' }}
-        >
-          <CustomMetricFormContainer {...props} />
-        </TestWrapper>
-      </FormikForm>
-    </Formik>
+    <CommonHealthSourceContext.Provider
+      value={{
+        updateParentFormik
+      }}
+    >
+      <Formik initialValues={props} onSubmit={jest.fn()}>
+        <FormikForm>
+          <TestWrapper
+            path="/account/:accountId/cv/orgs/:orgIdentifier/projects/:projectIdentifier"
+            pathParams={{ accountId: 'account', orgIdentifier: 'org', projectIdentifier: 'project' }}
+          >
+            <CustomMetricFormContainer {...props} />
+          </TestWrapper>
+        </FormikForm>
+      </Formik>
+    </CommonHealthSourceContext.Provider>
   )
 }
 

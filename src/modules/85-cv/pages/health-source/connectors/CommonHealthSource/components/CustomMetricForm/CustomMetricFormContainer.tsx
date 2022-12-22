@@ -17,7 +17,7 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { Formik, useFormikContext } from 'formik'
-import { defaultTo } from 'lodash-es'
+import { cloneDeep, defaultTo } from 'lodash-es'
 import type { CustomHealthMetricDefinition } from 'services/cv'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
@@ -35,6 +35,7 @@ import {
 import { resetShowCustomMetric } from '../../CommonHealthSource.utils'
 import AddMetric from './components/AddMetric/AddMetric'
 import CustomMetricForm from './CustomMetricForm'
+import CommonHealthSourceContext, { CommonHealthSourceContextFields } from '../../CommonHealthSourceContext'
 import css from './CustomMetricForm.module.scss'
 
 export default function CustomMetricFormContainer(props: CustomMetricFormContainerProps): JSX.Element {
@@ -42,18 +43,14 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const {
     mappedMetrics,
     selectedMetric,
-    setMappedMetrics,
     isMetricThresholdEnabled,
     createdMetrics,
-    setCreatedMetrics,
-    setGroupedCreatedMetrics,
     healthSourceConfig,
     healthSourceData,
     groupedCreatedMetrics,
     isTemplate,
     expressions,
-    connectorIdentifier: connectorRef,
-    setConfigurationsFormikFieldValue
+    connectorIdentifier: connectorRef
   } = props
 
   const { values: formValues, setValues, isValid } = useFormikContext<CommonCustomMetricFormikInterface>()
@@ -66,6 +63,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const {
     sourceData: { existingMetricDetails }
   } = useContext(SetupSourceTabsContext)
+  const { updateParentFormik } = useContext(CommonHealthSourceContext)
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.FIXED
 
   const [groupNames, setGroupName] = useState<SelectOption[]>(initializeGroupNames(mappedMetrics, getString))
@@ -102,8 +100,14 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
        */
       function handleClickOutside(event: { target: unknown }): void {
         if (ref.current && !ref.current.contains(event.target)) {
-          mappedMetricsData.set(selectedMetricName, formValuesData)
-          setConfigurationsFormikFieldValue('customMetricsMap', mappedMetricsData)
+          const clonedMappedMetricsData = cloneDeep(mappedMetricsData)
+          const hasEmptySet = clonedMappedMetricsData.has('')
+          clonedMappedMetricsData.set(selectedMetricName, formValuesData)
+          if (hasEmptySet) {
+            clonedMappedMetricsData.delete('')
+          }
+          updateParentFormik(CommonHealthSourceContextFields.CustomMetricsMap, clonedMappedMetricsData)
+          updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, selectedMetricName)
         }
       }
       // Bind the event listener
@@ -128,7 +132,10 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
         canEscapeKeyClose
         canOutsideClickClose
         enforceFocus={false}
-        onClose={hideModal}
+        onClose={() => {
+          hideModal()
+          updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, createdMetrics[0])
+        }}
       >
         <Formik<AddMetricForm>
           initialValues={getAddMetricInitialValues(formValues, enabledDefaultGroupName)}
@@ -138,7 +145,12 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
             hideModal()
             setShowCustomMetric(true)
           }}
-          onReset={hideModal}
+          onReset={() => {
+            hideModal()
+            mappedMetrics.delete('')
+            updateParentFormik(CommonHealthSourceContextFields.CustomMetricsMap, mappedMetrics)
+            updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, createdMetrics[0])
+          }}
           validate={data => {
             return validateAddMetricForm(data, getString, createdMetrics)
           }}
@@ -172,14 +184,11 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
         >
           <CommonCustomMetric
             isValidInput={isValid}
-            setMappedMetrics={setMappedMetrics}
             selectedMetric={selectedMetric}
             formikValues={formValues}
             mappedMetrics={mappedMetrics}
             createdMetrics={createdMetrics}
             groupedCreatedMetrics={groupedCreatedMetrics}
-            setCreatedMetrics={setCreatedMetrics}
-            setGroupedCreatedMetrics={setGroupedCreatedMetrics}
             defaultMetricName={'healthSourceMetric'}
             tooptipMessage={getString('cv.monitoringSources.gcoLogs.addQueryTooltip')}
             addFieldLabel={getString('common.addName', {

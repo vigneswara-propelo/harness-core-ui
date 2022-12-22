@@ -12,7 +12,6 @@ import { useStrings } from 'framework/strings'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import useCommonGroupedSideNaveHook from '@cv/hooks/CommonGroupedSideNaveHook/useCommonGroupedSideNaveHook'
 import type {
   CommonHealthSourceConfigurations,
   CommonCustomMetricFormikInterface,
@@ -21,6 +20,11 @@ import type {
 } from './CommonHealthSource.types'
 import CustomMetricFormContainer from './components/CustomMetricForm/CustomMetricFormContainer'
 import { initHealthSourceCustomForm, transformCommonHealthSourceToSetupSource } from './CommonHealthSource.utils'
+import {
+  initGroupedCreatedMetrics,
+  initializeSelectedMetricsMap
+} from '../../common/CommonCustomMetric/CommonCustomMetric.utils'
+import CommonHealthSourceContext from './CommonHealthSourceContext'
 import { getCanShowMetricThresholds } from '../../common/MetricThresholds/MetricThresholds.utils'
 import MetricThresholdProvider from './components/MetricThresholds/MetricThresholdProvider'
 import css from './CommonHealthSource.module.scss'
@@ -51,23 +55,13 @@ export default function CommonHealthSource({
     [healthSourceData]
   )
 
-  // TODO this should be moved to memoized functions.
-  const {
-    createdMetrics,
-    mappedMetrics,
-    selectedMetric,
-    groupedCreatedMetrics,
-    setMappedMetrics,
-    setCreatedMetrics,
-    setGroupedCreatedMetrics
-  } = useCommonGroupedSideNaveHook({
-    defaultCustomMetricName: 'health source metric',
-    initCustomMetricData: initHealthSourceCustomForm(),
-    customMetricsMap: transformedSourceData?.customMetricsMap || new Map(),
-    selectedMetricData: transformedSourceData?.selectedMetric
-  })
+  const { selectedMetric, mappedMetrics } = initializeSelectedMetricsMap(
+    'health source metric',
+    initHealthSourceCustomForm(),
+    transformedSourceData?.customMetricsMap || new Map(),
+    transformedSourceData?.selectedMetric
+  )
 
-  const initialCustomMetricFormValues = mappedMetrics?.get(selectedMetric || '')
   const { ignoreThresholds = [], failFastThresholds = [] } = transformedSourceData
 
   const healthSourceConfigurationsInitialValues = {
@@ -80,13 +74,6 @@ export default function CommonHealthSource({
     failFastThresholds
   }
 
-  const isShowMetricThreshold = getCanShowMetricThresholds({
-    isMetricThresholdConfigEnabled: Boolean(healthSourceConfig?.metricThresholds?.enabled),
-    isMetricThresholdFFEnabled: isMetricThresholdEnabled,
-    isMetricPacksEnabled: Boolean(healthSourceConfig?.metricPacks?.enabled),
-    groupedCreatedMetrics
-  })
-
   return (
     <Formik<CommonHealthSourceConfigurations>
       enableReinitialize
@@ -97,55 +84,72 @@ export default function CommonHealthSource({
       }}
     >
       {formik => {
+        const { customMetricsMap, selectedMetric: currentSelectedMetric } = formik.values
+        const createdMetrics = Array.from(formik.values.customMetricsMap.keys()) || ['health source metric']
+        const groupedCreatedMetrics = initGroupedCreatedMetrics(formik.values.customMetricsMap, getString)
+        const hasEmptySet = customMetricsMap.has('')
+        if (hasEmptySet) {
+          customMetricsMap.delete('')
+        }
+        const isShowMetricThreshold = getCanShowMetricThresholds({
+          isMetricThresholdConfigEnabled: Boolean(healthSourceConfig?.metricThresholds?.enabled),
+          isMetricThresholdFFEnabled: isMetricThresholdEnabled,
+          isMetricPacksEnabled: Boolean(healthSourceConfig?.metricPacks?.enabled),
+          groupedCreatedMetrics
+        })
+
         return (
           <>
             {/* Non custom fields section can be added here */}
-            <FormikForm>
-              <Formik<CommonCustomMetricFormikInterface>
-                enableReinitialize
-                formName={'customMetricForm'}
-                validateOnMount
-                initialValues={{
-                  ...(initialCustomMetricFormValues as CommonCustomMetricFormikInterface)
-                }}
-                onSubmit={noop}
-              >
-                {() => {
-                  return (
-                    <FormikForm className={css.formFullheight}>
-                      <CustomMetricFormContainer
-                        setConfigurationsFormikFieldValue={formik.setFieldValue}
-                        mappedMetrics={mappedMetrics}
-                        selectedMetric={selectedMetric}
-                        setMappedMetrics={setMappedMetrics}
-                        connectorIdentifier={connectorIdentifier}
-                        isMetricThresholdEnabled={isMetricThresholdEnabled}
-                        createdMetrics={createdMetrics}
-                        setCreatedMetrics={setCreatedMetrics}
-                        setGroupedCreatedMetrics={setGroupedCreatedMetrics}
-                        isTemplate={isTemplate}
-                        expressions={expressions}
-                        healthSourceConfig={healthSourceConfig}
-                        healthSourceData={healthSourceData}
-                        groupedCreatedMetrics={groupedCreatedMetrics}
-                      />
-                    </FormikForm>
-                  )
-                }}
-              </Formik>
-              {/* ⭐️ Metric threshold section  */}
-
-              {isShowMetricThreshold && (
-                <MetricThresholdProvider
-                  formikValues={formik.values}
-                  groupedCreatedMetrics={groupedCreatedMetrics}
-                  metricPacks={[]}
-                  isOnlyCustomMetricHealthSource={!healthSourceConfig?.metricPacks?.enabled}
-                />
-              )}
-            </FormikForm>
-            {/* Empty space at bottom */}
-            <Container height={200} />
+            <CommonHealthSourceContext.Provider
+              value={{
+                updateParentFormik: formik.setFieldValue
+              }}
+            >
+              <FormikForm>
+                <Formik<CommonCustomMetricFormikInterface>
+                  enableReinitialize
+                  formName={'customMetricForm'}
+                  validateOnMount
+                  initialValues={{
+                    ...(customMetricsMap.get(currentSelectedMetric) as CommonCustomMetricFormikInterface)
+                  }}
+                  onSubmit={noop}
+                >
+                  {() => {
+                    return (
+                      <FormikForm className={css.formFullheight}>
+                        <CustomMetricFormContainer
+                          setConfigurationsFormikFieldValue={formik.setFieldValue}
+                          mappedMetrics={customMetricsMap}
+                          selectedMetric={currentSelectedMetric}
+                          connectorIdentifier={connectorIdentifier}
+                          isMetricThresholdEnabled={isMetricThresholdEnabled}
+                          createdMetrics={createdMetrics}
+                          isTemplate={isTemplate}
+                          expressions={expressions}
+                          healthSourceConfig={healthSourceConfig}
+                          healthSourceData={healthSourceData}
+                          groupedCreatedMetrics={groupedCreatedMetrics}
+                        />
+                      </FormikForm>
+                    )
+                  }}
+                </Formik>
+                {/* ⭐️ Metric threshold section  */}
+                {isShowMetricThreshold && (
+                  <MetricThresholdProvider
+                    formikValues={formik.values}
+                    groupedCreatedMetrics={groupedCreatedMetrics}
+                    metricPacks={[]}
+                    isOnlyCustomMetricHealthSource={!healthSourceConfig?.metricPacks?.enabled}
+                  />
+                )}
+              </FormikForm>
+              {/* Empty space at bottom */}
+              <Container height={200} />
+            </CommonHealthSourceContext.Provider>
+            {/* Metric threshold section can be added here */}
             <DrawerFooter
               isSubmit
               onPrevious={() => onPrevious(formik.values)}

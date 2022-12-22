@@ -105,7 +105,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   }
 
   return (
-    <Container padding={'small'} margin={'small'}>
+    <Container key={values?.identifier} padding={'small'} margin={'small'}>
       <CommonQueryViewer
         isQueryExecuted={isQueryExecuted}
         records={records}

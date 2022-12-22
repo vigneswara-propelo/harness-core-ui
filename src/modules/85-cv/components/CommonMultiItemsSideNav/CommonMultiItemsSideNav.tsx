@@ -4,15 +4,18 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { defaultTo } from 'lodash-es'
 import { Button, ButtonVariation, Container } from '@harness/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
+import CommonHealthSourceContext, {
+  CommonHealthSourceContextFields
+} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSourceContext'
 import { CommonSelectedAppsSideNav } from './components/CommonSelectedAppsSideNav/CommonSelectedAppsSideNav'
 import {
   getCreatedMetricLength,
   getFilteredGroupedCreatedMetric,
-  getSelectedMetricIndex,
   getUpdatedMetric
 } from './CommonMultiItemsSideNav.utils'
 import type { GroupedCreatedMetrics } from './components/CommonSelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
@@ -43,7 +46,6 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
   const {
     onSelectMetric,
     createdMetrics: propsCreatedMetrics,
-    renamedMetric,
     onRemoveMetric,
     isValidInput,
     defaultSelectedMetric,
@@ -62,22 +64,7 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
   )
   const [selectedMetric, setSelectedMetric] = useState<string | undefined>(defaultSelectedMetric || createdMetrics[0])
 
-  useEffect(() => {
-    const selectedMetricIndex = getSelectedMetricIndex(createdMetrics, selectedMetric, renamedMetric)
-    if (selectedMetricIndex > -1) {
-      setCreatedMetrics(oldMetrics => {
-        if (selectedMetricIndex !== -1) oldMetrics[selectedMetricIndex] = renamedMetric as string
-        return Array.from(oldMetrics)
-      })
-      setSelectedMetric(renamedMetric)
-    }
-  }, [renamedMetric])
-
-  const metricsToRender = useMemo(() => {
-    return filter
-      ? createdMetrics.filter(metric => metric.toLocaleLowerCase().includes(filter?.toLocaleLowerCase()))
-      : createdMetrics
-  }, [filter, createdMetrics])
+  const { updateParentFormik } = useContext(CommonHealthSourceContext)
 
   const filteredGroupMetric = useMemo(() => {
     return getFilteredGroupedCreatedMetric(groupedCreatedMetrics, filter)
@@ -89,6 +76,16 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
   )
 
   const hasOnRemove = shouldBeAbleToDeleteLastMetric || createdMetricsLength > 1
+
+  useEffect(() => {
+    setSelectedMetric(defaultSelectedMetric)
+  }, [defaultSelectedMetric])
+
+  useEffect(() => {
+    if (propsCreatedMetrics?.length) {
+      setCreatedMetrics(propsCreatedMetrics)
+    }
+  }, [propsCreatedMetrics])
 
   return (
     <Container className={css.main}>
@@ -102,40 +99,31 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
         onClick={() => {
           // TODO - This will be implemented once the entire form is implemented
           // if (isValidInput) {
-          setCreatedMetrics(oldMetrics => {
-            const newMetricName = ''
-            onSelectMetric(newMetricName, [newMetricName, ...oldMetrics], 0)
-            setSelectedMetric(newMetricName)
-            return [newMetricName, ...oldMetrics]
-          })
           // }
+          updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, '')
           openEditMetricModal()
         }}
       >
         {addFieldLabel}
       </Button>
       <CommonSelectedAppsSideNav
+        key={createdMetrics?.map(i => i)?.join('')}
         isValidInput={isValidInput}
         onSelect={(newlySelectedMetric, index) => {
           onSelectMetric(newlySelectedMetric, createdMetrics, index)
           setSelectedMetric(newlySelectedMetric)
         }}
         selectedItem={selectedMetric}
-        selectedMetrics={metricsToRender}
         groupedSelectedApps={filteredGroupMetric}
         isMetricThresholdEnabled={isMetricThresholdEnabled}
         openEditMetricModal={openEditMetricModal}
         onRemoveItem={
           hasOnRemove
-            ? (removedItem, index) => {
+            ? removedItem => {
                 setCreatedMetrics(oldMetrics => {
-                  const { updatedMetric, filteredOldMetrics, updateIndex } = getUpdatedMetric(
-                    oldMetrics,
-                    removedItem,
-                    index
-                  )
+                  const { updatedMetric, filteredOldMetrics, updateIndex } = getUpdatedMetric(oldMetrics, removedItem)
                   setSelectedMetric(updatedMetric)
-                  onRemoveMetric(removedItem, updatedMetric, [...filteredOldMetrics], updateIndex)
+                  onRemoveMetric(removedItem, updatedMetric, [...filteredOldMetrics], defaultTo(updateIndex, 0))
                   return [...filteredOldMetrics]
                 })
               }
