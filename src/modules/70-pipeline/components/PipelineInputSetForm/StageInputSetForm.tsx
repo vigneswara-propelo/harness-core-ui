@@ -76,6 +76,7 @@ import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariab
 import type { StepViewType } from '../AbstractSteps/Step'
 import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '../../utils/constants'
 import EnvironmentsInputSetForm from './EnvironmentsInputSetForm/EnvironmentsInputSetForm'
+import type { CommandFlags } from '../ManifestSelection/ManifestInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
@@ -159,6 +160,28 @@ function StepFormInternal({
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { expressions } = useVariablesExpression()
+  const renderCommandFlags = (commandFlagPath: string): React.ReactElement => {
+    const commandFlags = get(template, commandFlagPath)
+    return commandFlags?.map((commandFlag: CommandFlags, flagIdx: number) => {
+      if (
+        getMultiTypeFromValue(get(template, `step.spec.commandFlags[${flagIdx}].flag`)) === MultiTypeInputType.RUNTIME
+      ) {
+        return (
+          <div className={cx(stepCss.formGroup, stepCss.md)} key={flagIdx}>
+            <FormInput.MultiTextInput
+              disabled={readonly}
+              name={`${path}.spec.commandFlags[${flagIdx}].flag`}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              label={`${commandFlag.commandType}: ${getString('flag')}`}
+            />
+          </div>
+        )
+      }
+    })
+  }
   return (
     <div>
       <StepWidget<Partial<StepElementConfig>>
@@ -212,6 +235,7 @@ function StepFormInternal({
           <StrategyForm path={`${path}.strategy`} readonly={readonly} />
         </div>
       )}
+      {renderCommandFlags('step.spec.commandFlags')}
     </div>
   )
 }

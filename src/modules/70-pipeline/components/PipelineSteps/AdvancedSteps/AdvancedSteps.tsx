@@ -25,21 +25,24 @@ import { getIsFailureStrategyDisabled } from '@pipeline/utils/CIUtils'
 import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import DelegateSelectorPanel from './DelegateSelectorPanel/DelegateSelectorPanel'
 import FailureStrategyPanel from './FailureStrategyPanel/FailureStrategyPanel'
 import type { AllFailureStrategyConfig } from './FailureStrategyPanel/utils'
 import { getFailureStrategiesValidationSchema } from './FailureStrategyPanel/validation'
 import type { StepType } from '../PipelineStepInterface'
 import ConditionalExecutionPanel from './ConditionalExecutionPanel/ConditionalExecutionPanel'
+import CommandFlagsPanel from './CommandFlagsPanel/CommandFlagsPanel'
 import css from './AdvancedSteps.module.scss'
 
-export type FormValues = Pick<Values, 'delegateSelectors' | 'when' | 'strategy'> & {
+export type FormValues = Pick<Values, 'delegateSelectors' | 'when' | 'strategy' | 'commandFlags'> & {
   failureStrategies?: AllFailureStrategyConfig[]
 }
 
 export interface AdvancedStepsProps extends Omit<StepCommandsProps, 'onUseTemplate' | 'onRemoveTemplate'> {
   stepType?: StepType
   stageType?: StageType
+  deploymentType?: string
 }
 
 type Step = StepElementConfig | StepGroupElementConfig
@@ -74,6 +77,7 @@ export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: Step
       initialValues={{
         failureStrategies: defaultTo(failureStrategies, []) as AllFailureStrategyConfig[],
         delegateSelectors: defaultTo(delegateSelectors, []),
+        commandFlags: defaultTo((step as StepElementConfig)?.spec?.commandFlags, []),
         when,
         strategy
       }}
@@ -107,12 +111,13 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
     isReadonly,
     stageType,
     stepType,
-    step
+    step,
+    deploymentType
   } = props
-
   const accordionRef = React.useRef<AccordionHandle>({} as AccordionHandle)
   const { getString } = useStrings()
   const isFailureStrategyDisabled = getIsFailureStrategyDisabled({ stageType, stepType })
+  const { NG_K8_COMMAND_FLAGS } = useFeatureFlags()
 
   React.useEffect(() => {
     if (formikProps.isSubmitting) {
@@ -126,6 +131,9 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
 
       if (!isEmpty(formikProps.errors?.delegateSelectors) && accordionRef.current) {
         accordionRef.current.open(AdvancedPanels.DelegateSelectors)
+      }
+      if (!isEmpty(formikProps.errors?.commandFlags) && accordionRef.current) {
+        accordionRef.current.open(AdvancedPanels.CommandFlags)
       }
     }
   }, [formikProps.isSubmitting, formikProps.errors])
@@ -198,6 +206,15 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
               }
             />
           )}
+          {!hiddenPanels.includes(AdvancedPanels.CommandFlags) &&
+          stepsFactory.getStep(stepType)?.hasCommandFlagSelectionVisible &&
+          NG_K8_COMMAND_FLAGS ? (
+            <Accordion.Panel
+              id={AdvancedPanels.CommandFlags}
+              summary={getString('pipeline.stepDescription.AdvancedCommandFlags')}
+              details={<CommandFlagsPanel formik={formikProps} step={step} deploymentType={deploymentType} />}
+            />
+          ) : null}
         </Accordion>
       </div>
     </FormikForm>

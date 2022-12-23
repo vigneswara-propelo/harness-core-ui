@@ -3675,6 +3675,14 @@ export interface EntityDetail {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -6083,6 +6091,14 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -6279,6 +6295,14 @@ export interface GitEntityFilterProperties {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -6546,6 +6570,14 @@ export interface GitFullSyncEntityInfoDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -6737,6 +6769,14 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -7049,6 +7089,14 @@ export interface GitSyncEntityDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -7234,6 +7282,14 @@ export interface GitSyncEntityListDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -7436,6 +7492,14 @@ export interface GitSyncErrorDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -8531,6 +8595,7 @@ export type K8SDirectInfrastructure = Infrastructure & {
 }
 
 export type K8sApplyStepInfo = StepSpecType & {
+  commandFlags?: K8sStepCommandFlag[]
   delegateSelectors?: string[]
   filePaths?: string[]
   overrides?: ManifestConfigWrapper[]
@@ -8563,6 +8628,7 @@ export interface K8sBasicInfo {
 }
 
 export type K8sBlueGreenStepInfo = StepSpecType & {
+  commandFlags?: K8sStepCommandFlag[]
   delegateSelectors?: string[]
   pruningEnabled?: boolean
   skipDryRun?: boolean
@@ -8573,6 +8639,7 @@ export type K8sCanaryDeleteStepInfo = StepSpecType & {
 }
 
 export type K8sCanaryStepInfo = StepSpecType & {
+  commandFlags?: K8sStepCommandFlag[]
   delegateSelectors?: string[]
   instanceSelection: InstanceSelectionWrapper
   skipDryRun?: boolean
@@ -8624,11 +8691,13 @@ export type K8sManifest = ManifestAttributes & {
 }
 
 export type K8sRollingRollbackStepInfo = StepSpecType & {
+  commandFlags?: K8sStepCommandFlag[]
   delegateSelectors?: string[]
   pruningEnabled?: boolean
 }
 
 export type K8sRollingStepInfo = StepSpecType & {
+  commandFlags?: K8sStepCommandFlag[]
   delegateSelectors?: string[]
   pruningEnabled?: boolean
   skipDryRun?: boolean
@@ -8639,6 +8708,11 @@ export type K8sScaleStepInfo = StepSpecType & {
   instanceSelection: InstanceSelectionWrapper
   skipSteadyStateCheck?: boolean
   workload: string
+}
+
+export interface K8sStepCommandFlag {
+  commandType: 'Apply'
+  flag?: string
 }
 
 export type KerberosConfigDTO = BaseSSHSpecDTO & {
@@ -10637,6 +10711,14 @@ export interface ReferencedByDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -11844,6 +11926,14 @@ export interface ResponseListEntityType {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -13138,6 +13228,13 @@ export interface ResponseSetHelmCommandFlagType {
     | 'Update'
     | 'Version'
   )[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseSetK8sCommandFlagType {
+  correlationId?: string
+  data?: 'Apply'[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -14930,6 +15027,14 @@ export interface StepData {
     | 'TerraformApply'
     | 'TerragruntDestroy'
     | 'TerragruntRollback'
+    | 'SwapRollback'
+    | 'BasicAppSetup'
+    | 'BGAppSetup'
+    | 'CanaryAppSetup'
+    | 'AppResize'
+    | 'SwapRoutes'
+    | 'AppRollback'
+    | 'TanzuCommand'
     | 'AsgCanaryDeploy'
     | 'AsgCanaryDelete'
     | 'BasicAppSetup'
@@ -17042,6 +17147,14 @@ export interface ListActivitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -17219,6 +17332,14 @@ export interface ListActivitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -17500,6 +17621,14 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -17677,6 +17806,14 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -32560,6 +32697,14 @@ export interface ListReferredByEntitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -32798,6 +32943,14 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -36046,6 +36199,14 @@ export interface GetReferencedByQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -38546,6 +38707,14 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -38791,6 +38960,14 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'IACMStage'
       | 'IACMStep'
       | 'IACM'
+      | 'CanaryAppSetup'
+      | 'BGAppSetup'
+      | 'BasicAppSetup'
+      | 'AppResize'
+      | 'AppRollback'
+      | 'SwapRoutes'
+      | 'SwapRollback'
+      | 'TanzuCommand'
       | 'Container'
       | 'IACM'
       | 'ElastigroupBGStageSetup'
@@ -44728,6 +44905,14 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -45033,6 +45218,14 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -50061,6 +50254,54 @@ export const dummyNGServiceConfigApiPromise = (
   getUsingFetch<ResponseNGServiceConfig, Failure | Error, void, void>(
     getConfig('ng/api'),
     `/servicesV2/dummy-serviceConfig-api`,
+    props,
+    signal
+  )
+
+export interface K8sCmdFlagsQueryParams {
+  serviceSpecType: string
+}
+
+export type K8sCmdFlagsProps = Omit<
+  GetProps<ResponseSetK8sCommandFlagType, Failure | Error, K8sCmdFlagsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Command flags for K8s
+ */
+export const K8sCmdFlags = (props: K8sCmdFlagsProps) => (
+  <Get<ResponseSetK8sCommandFlagType, Failure | Error, K8sCmdFlagsQueryParams, void>
+    path={`/servicesV2/k8s/command-flags`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseK8sCmdFlagsProps = Omit<
+  UseGetProps<ResponseSetK8sCommandFlagType, Failure | Error, K8sCmdFlagsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Command flags for K8s
+ */
+export const useK8sCmdFlags = (props: UseK8sCmdFlagsProps) =>
+  useGet<ResponseSetK8sCommandFlagType, Failure | Error, K8sCmdFlagsQueryParams, void>(
+    `/servicesV2/k8s/command-flags`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get Command flags for K8s
+ */
+export const k8sCmdFlagsPromise = (
+  props: GetUsingFetchProps<ResponseSetK8sCommandFlagType, Failure | Error, K8sCmdFlagsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseSetK8sCommandFlagType, Failure | Error, K8sCmdFlagsQueryParams, void>(
+    getConfig('ng/api'),
+    `/servicesV2/k8s/command-flags`,
     props,
     signal
   )
@@ -58384,6 +58625,14 @@ export interface GetYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'

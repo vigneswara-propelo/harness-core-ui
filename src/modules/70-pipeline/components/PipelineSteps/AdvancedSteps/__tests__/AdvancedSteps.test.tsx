@@ -10,7 +10,6 @@ import { render } from '@testing-library/react'
 
 import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-
 import { AdvancedStepsWithRef } from '../AdvancedSteps'
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor')
@@ -37,7 +36,11 @@ describe('<AdvancedSteps /> tests', () => {
           isReadonly={false}
           step={{} as any}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
-          stepsFactory={{ getStep: jest.fn(() => ({ hasDelegateSelectionVisible: true })) } as any}
+          stepsFactory={
+            {
+              getStep: jest.fn(() => ({ hasDelegateSelectionVisible: true, hasCommandFlagSelectionVisible: true }))
+            } as any
+          }
           onUpdate={jest.fn()}
         />
       </TestWrapper>

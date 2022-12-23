@@ -1073,6 +1073,7 @@ stepDescription:
   K8sApply: Deploy individual Kubernetes workloads from your stage's Service.
   K8sCanaryDelete: Clean up the workload deployed by the Canary Deployment step.
   K8sDelete: Delete Kubernetes resources by name, manifest path, and release name.
+  AdvancedCommandFlags: Command Flags
   K8sRollingDeploy: Use a rolling update to schedule new pods on nodes with available resources. This step uses the number of replicas you specified in the Deployment manifest.
   Plugin: Use Docker containers to perform predefined tasks like deploy code, publish artifacts, send notifications, and more.
   Run: Execute one or more commands on a container image in a CI stage.

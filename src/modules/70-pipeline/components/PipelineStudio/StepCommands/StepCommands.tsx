@@ -18,8 +18,8 @@ import { StepWidgetWithFormikRef } from '@pipeline/components/AbstractSteps/Step
 import { AdvancedStepsWithRef } from '@pipeline/components/PipelineSteps/AdvancedSteps/AdvancedSteps'
 import type { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { StageType } from '@pipeline/utils/stageHelpers'
-import type { StepElementConfig } from 'services/cd-ng'
+import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
+import type { DeploymentStageConfig, StepElementConfig } from 'services/cd-ng'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
@@ -260,6 +260,10 @@ export function StepCommands(
                     ref={advancedConfRef}
                     stageType={defaultTo(selectedStage?.stage?.type, StageType.DEPLOY) as StageType}
                     stepType={stepType}
+                    deploymentType={defaultTo(
+                      (selectedStage?.stage?.spec as DeploymentStageConfig)?.deploymentType,
+                      ServiceDeploymentType.Kubernetes
+                    )}
                   />
                 }
               />

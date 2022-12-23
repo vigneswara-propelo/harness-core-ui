@@ -37,6 +37,7 @@ import type { StringsMap } from 'stringTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
+import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -208,6 +209,19 @@ const processNodeImpl = (
       set(node, 'strategy', item.strategy)
     }
 
+    if (item.commandFlags && item.tab === TabTypes.Advanced) {
+      const commandFlags = item.commandFlags.map((commandFlag: CommandFlags) =>
+        commandFlag.commandType && commandFlag.flag
+          ? {
+              commandType: commandFlag.commandType,
+              flag: commandFlag.flag
+            }
+          : {}
+      )
+      const filteredCommandFlags = commandFlags.filter((currFlag: CommandFlags) => !isEmpty(currFlag))
+      set(node, 'spec.commandFlags', filteredCommandFlags)
+    }
+
     // Delete values if they were already added and now removed
     if (node.timeout && !(item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced) delete node.timeout
     if (node.description && !(item as StepElementConfig).description && item.tab !== TabTypes.Advanced)
@@ -237,6 +251,13 @@ const processNodeImpl = (
       delete node.spec.delegateSelectors
     }
     if (
+      node.spec?.commandFlags &&
+      (!item.commandFlags || item.commandFlags?.length === 0) &&
+      item.tab === TabTypes.Advanced
+    ) {
+      delete node.spec.commandFlags
+    }
+    if (
       data.stepConfig?.isStepGroup &&
       node.delegateSelectors &&
       (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
@@ -244,6 +265,7 @@ const processNodeImpl = (
     ) {
       delete node.delegateSelectors
     }
+
     if (
       node.spec?.commandOptions &&
       (!(item as StepElementConfig)?.spec?.commandOptions ||
@@ -911,7 +933,7 @@ export function RightDrawer(): React.ReactElement {
           isNewStep={!data.stepConfig.stepsMap.get(data.stepConfig.node.identifier)?.isSaved}
           stepsFactory={stepsFactory}
           hasStepGroupAncestor={!!data?.stepConfig?.isUnderStepGroup}
-          onUpdate={value =>
+          onUpdate={value => {
             onSubmitStep(
               value,
               DrawerTypes.StepConfig,
@@ -923,7 +945,7 @@ export function RightDrawer(): React.ReactElement {
               pipelineView,
               Boolean(isRollbackToggled)
             )
-          }
+          }}
           viewType={StepCommandsViews.Pipeline}
           allowableTypes={allowableTypes}
           onUseTemplate={(selectedTemplate: TemplateSummaryResponse) =>
