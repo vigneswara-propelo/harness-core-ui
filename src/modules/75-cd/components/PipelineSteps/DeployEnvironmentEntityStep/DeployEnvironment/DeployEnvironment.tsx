@@ -129,7 +129,6 @@ export default function DeployEnvironment({
   const [environmentsType, setEnvironmentsType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues.environment || initialValues.environments)
   )
-
   // Constants
   const isFixed = isMultiTypeFixed(environmentsType)
   const isRuntime = isMultiTypeRuntime(environmentsType)
@@ -417,6 +416,7 @@ export default function DeployEnvironment({
               isMultiSelect
               onMultiSelectChange={onMultiSelectChangeForEnvironments}
               multitypeInputValue={environmentsType}
+              isNewConnectorLabelVisible
               onChange={(item: SelectOption[]) => {
                 onMultiSelectChangeForEnvironments(item)
               }}
@@ -469,8 +469,11 @@ export default function DeployEnvironment({
             placeholder={placeHolderForEnvironment}
             setRefValue={true}
             openAddNewModal={openAddNewModal}
+            isNewConnectorLabelVisible
             onChange={item => {
-              setSelectedEnvironments([item])
+              if (getMultiTypeFromValue(item) === MultiTypeInputType.FIXED && item.length) {
+                setSelectedEnvironments([item])
+              } else setSelectedEnvironments([])
             }}
             width={300}
             multiTypeProps={{

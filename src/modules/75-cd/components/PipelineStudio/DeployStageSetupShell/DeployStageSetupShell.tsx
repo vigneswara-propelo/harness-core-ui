@@ -71,7 +71,7 @@ const iconNames = { tick: 'tick' as IconName }
 
 export default function DeployStageSetupShell(): JSX.Element {
   const { getString } = useStrings()
-  const { NG_SVC_ENV_REDESIGN = false } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN = false, CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const layoutRef = React.useRef<HTMLDivElement>(null)
   const pipelineContext = usePipelineContext()
   const {
@@ -136,12 +136,13 @@ export default function DeployStageSetupShell(): JSX.Element {
             isEmpty(get(draft, 'stage.spec.services.values')) &&
             isEmpty(get(draft, 'stage.spec.service.useFromStage')) &&
             set(draft, 'stage.spec.service', {
-              serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
-              serviceInputs: scope === Scope.PROJECT ? undefined : RUNTIME_INPUT_VALUE
+              serviceRef: scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup ? '' : RUNTIME_INPUT_VALUE,
+              serviceInputs:
+                scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup ? undefined : RUNTIME_INPUT_VALUE
             })
         } else {
           set(draft, 'stage.spec.serviceConfig', {
-            serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
+            serviceRef: scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup ? '' : RUNTIME_INPUT_VALUE,
             serviceDefinition: {
               spec: {
                 variables: []
@@ -153,7 +154,7 @@ export default function DeployStageSetupShell(): JSX.Element {
     })
 
     return debounceUpdateStage(stageData?.stage)
-  }, [debounceUpdateStage, scope, selectedStage, isNewService])
+  }, [selectedStage, debounceUpdateStage, isNewService, scope, CDS_OrgAccountLevelServiceEnvEnvGroup])
 
   //this will default the tab to execution for previously configured stages -- for new stages it will still takes user to service tab only
   const defaultExecTab = (): boolean => {

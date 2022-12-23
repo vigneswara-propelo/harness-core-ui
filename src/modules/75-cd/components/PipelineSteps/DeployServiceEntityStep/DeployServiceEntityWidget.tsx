@@ -538,6 +538,7 @@ export default function DeployServiceEntityWidget({
                                 placeholder={placeHolderForServices}
                                 openAddNewModal={openAddNewModal}
                                 isMultiSelect={true}
+                                isNewConnectorLabelVisible
                                 onMultiSelectChange={handleMultiSelectChange}
                                 width={300}
                                 multiTypeProps={{
@@ -563,6 +564,7 @@ export default function DeployServiceEntityWidget({
                                 setRefValue={true}
                                 disabled={readonly || (isFixed && loading)}
                                 openAddNewModal={openAddNewModal}
+                                isNewConnectorLabelVisible
                                 onChange={handleSingleSelectChange}
                                 width={300}
                                 multiTypeProps={{

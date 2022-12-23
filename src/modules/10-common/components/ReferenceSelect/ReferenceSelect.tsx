@@ -73,6 +73,7 @@ export interface ReferenceSelectProps<T extends MinimalObject>
   disabled?: boolean
   componentName?: string
   isMultiSelect?: boolean
+  isOnlyFixedtype?: boolean
   selectedReferences?: string[] | Item[]
   onMultiSelectChange?: (records: ScopeAndIdentifier[]) => void
 }
@@ -278,6 +279,19 @@ function MultiTypeReferenceInputFixedTypeComponent<T extends MinimalObject>(
 }
 export function MultiTypeReferenceInput<T extends MinimalObject>(props: MultiTypeReferenceInputProps<T>): JSX.Element {
   const { referenceSelectProps, ...rest } = props
+  if (referenceSelectProps.isOnlyFixedtype) {
+    const { selected, width = 300, ...restProps } = referenceSelectProps
+    return (
+      <ReferenceSelect
+        {...restProps}
+        selected={selected}
+        width={width}
+        onChange={(record, scope) => {
+          rest.onChange?.({ record, scope } as any, MultiTypeInputValue.SELECT_OPTION, MultiTypeInputType.FIXED)
+        }}
+      />
+    )
+  }
   return (
     <ExpressionAndRuntimeType<MultiTypeReferenceInputProps<T>['referenceSelectProps']>
       width={referenceSelectProps.width}
