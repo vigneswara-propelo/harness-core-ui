@@ -8294,16 +8294,6 @@ export interface InstanceDetailsDTO {
   terraformInstance?: string
 }
 
-export interface InstanceGroupedByArtifact {
-  artifactPath?: string
-  artifactVersion?: string
-  instanceGroupedByEnvironmentList?: InstanceGroupedByEnvironment[]
-}
-
-export interface InstanceGroupedByArtifactList {
-  instanceGroupedByArtifactList?: InstanceGroupedByArtifact[]
-}
-
 export interface InstanceGroupedByArtifactV2 {
   artifactPath?: string
   artifactVersion?: string
@@ -8312,30 +8302,12 @@ export interface InstanceGroupedByArtifactV2 {
   latest?: boolean
 }
 
-export interface InstanceGroupedByEnvironment {
-  envId?: string
-  envName?: string
-  instanceGroupedByClusterList?: InstanceGroupedByInfrastructure[]
-  instanceGroupedByInfraList?: InstanceGroupedByInfrastructure[]
-}
-
 export interface InstanceGroupedByEnvironmentV2 {
   envId?: string
   envName?: string
   instanceGroupedByClusterList?: InstanceGroupedByInfrastructureV2[]
   instanceGroupedByInfraList?: InstanceGroupedByInfrastructureV2[]
   lastDeployedAt?: number
-}
-
-export interface InstanceGroupedByInfrastructure {
-  agentIdentifier?: string
-  clusterIdentifier?: string
-  count?: number
-  infraIdentifier?: string
-  infraName?: string
-  lastDeployedAt?: string
-  lastPipelineExecutionId?: string
-  lastPipelineExecutionName?: string
 }
 
 export interface InstanceGroupedByInfrastructureV2 {
@@ -11593,9 +11565,9 @@ export interface ResponseInstanceDetailsByBuildId {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseInstanceGroupedByArtifactList {
+export interface ResponseInstanceGroupedByService {
   correlationId?: string
-  data?: InstanceGroupedByArtifactList
+  data?: InstanceGroupedByService
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -29589,7 +29561,7 @@ export interface GetActiveServiceDeploymentsQueryParams {
 }
 
 export type GetActiveServiceDeploymentsProps = Omit<
-  GetProps<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>,
+  GetProps<ResponseInstanceGroupedByService, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>,
   'path'
 >
 
@@ -29597,7 +29569,7 @@ export type GetActiveServiceDeploymentsProps = Omit<
  * Get Information about artifacts for a particular service, deployed to different environments
  */
 export const GetActiveServiceDeployments = (props: GetActiveServiceDeploymentsProps) => (
-  <Get<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>
+  <Get<ResponseInstanceGroupedByService, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>
     path={`/dashboard/getActiveServiceDeployments`}
     base={getConfig('ng/api')}
     {...props}
@@ -29605,7 +29577,7 @@ export const GetActiveServiceDeployments = (props: GetActiveServiceDeploymentsPr
 )
 
 export type UseGetActiveServiceDeploymentsProps = Omit<
-  UseGetProps<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>,
+  UseGetProps<ResponseInstanceGroupedByService, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>,
   'path'
 >
 
@@ -29613,7 +29585,7 @@ export type UseGetActiveServiceDeploymentsProps = Omit<
  * Get Information about artifacts for a particular service, deployed to different environments
  */
 export const useGetActiveServiceDeployments = (props: UseGetActiveServiceDeploymentsProps) =>
-  useGet<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>(
+  useGet<ResponseInstanceGroupedByService, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>(
     `/dashboard/getActiveServiceDeployments`,
     { base: getConfig('ng/api'), ...props }
   )
@@ -29623,14 +29595,14 @@ export const useGetActiveServiceDeployments = (props: UseGetActiveServiceDeploym
  */
 export const getActiveServiceDeploymentsPromise = (
   props: GetUsingFetchProps<
-    ResponseInstanceGroupedByArtifactList,
+    ResponseInstanceGroupedByService,
     Failure | Error,
     GetActiveServiceDeploymentsQueryParams,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>(
+  getUsingFetch<ResponseInstanceGroupedByService, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>(
     getConfig('ng/api'),
     `/dashboard/getActiveServiceDeployments`,
     props,
@@ -29702,7 +29674,7 @@ export interface GetActiveServiceInstancesQueryParams {
 }
 
 export type GetActiveServiceInstancesProps = Omit<
-  GetProps<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>,
+  GetProps<ResponseInstanceGroupedByService, Failure | Error, GetActiveServiceInstancesQueryParams, void>,
   'path'
 >
 
@@ -29710,7 +29682,7 @@ export type GetActiveServiceInstancesProps = Omit<
  * Get list of artifact version, last pipeline execution, environment, infrastructure with instance count
  */
 export const GetActiveServiceInstances = (props: GetActiveServiceInstancesProps) => (
-  <Get<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>
+  <Get<ResponseInstanceGroupedByService, Failure | Error, GetActiveServiceInstancesQueryParams, void>
     path={`/dashboard/getActiveServiceInstances`}
     base={getConfig('ng/api')}
     {...props}
@@ -29718,7 +29690,7 @@ export const GetActiveServiceInstances = (props: GetActiveServiceInstancesProps)
 )
 
 export type UseGetActiveServiceInstancesProps = Omit<
-  UseGetProps<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>,
+  UseGetProps<ResponseInstanceGroupedByService, Failure | Error, GetActiveServiceInstancesQueryParams, void>,
   'path'
 >
 
@@ -29726,7 +29698,7 @@ export type UseGetActiveServiceInstancesProps = Omit<
  * Get list of artifact version, last pipeline execution, environment, infrastructure with instance count
  */
 export const useGetActiveServiceInstances = (props: UseGetActiveServiceInstancesProps) =>
-  useGet<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>(
+  useGet<ResponseInstanceGroupedByService, Failure | Error, GetActiveServiceInstancesQueryParams, void>(
     `/dashboard/getActiveServiceInstances`,
     { base: getConfig('ng/api'), ...props }
   )
@@ -29736,14 +29708,14 @@ export const useGetActiveServiceInstances = (props: UseGetActiveServiceInstances
  */
 export const getActiveServiceInstancesPromise = (
   props: GetUsingFetchProps<
-    ResponseInstanceGroupedByArtifactList,
+    ResponseInstanceGroupedByService,
     Failure | Error,
     GetActiveServiceInstancesQueryParams,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>(
+  getUsingFetch<ResponseInstanceGroupedByService, Failure | Error, GetActiveServiceInstancesQueryParams, void>(
     getConfig('ng/api'),
     `/dashboard/getActiveServiceInstances`,
     props,

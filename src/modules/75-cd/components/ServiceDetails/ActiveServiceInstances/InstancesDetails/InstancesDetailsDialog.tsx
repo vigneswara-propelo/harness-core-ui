@@ -11,7 +11,7 @@ import { Collapse, Container, Dialog, ExpandingSearchInput, Layout, Text } from 
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import type { InstanceGroupedByArtifact } from 'services/cd-ng'
+import type { InstanceGroupedByArtifactV2 } from 'services/cd-ng'
 import { DeploymentsV2 } from '../../DeploymentView/DeploymentViewV2'
 import { ActiveServiceInstancesContentV2, isClusterData, TableType } from '../ActiveServiceInstancesContentV2'
 import css from './InstancesDetailsDialog.module.scss'
@@ -19,7 +19,7 @@ import css from './InstancesDetailsDialog.module.scss'
 export interface InstancesDetailsDialogProps {
   isOpen: boolean
   setIsOpen: Dispatch<SetStateAction<boolean>>
-  data?: InstanceGroupedByArtifact[]
+  data?: InstanceGroupedByArtifactV2[]
   isActiveInstance?: boolean
 }
 
@@ -36,27 +36,30 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
     if (!searchTerm) {
       return deployments
     }
+    const searchValue = searchTerm.toLocaleLowerCase()
     return deployments.filter(
       deployment =>
-        (deployment.artifactVersion || '').toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1 ||
-        deployment.instanceGroupedByEnvironmentList?.filter(
+        (deployment.artifactVersion || '').toLocaleLowerCase().includes(searchValue) ||
+        deployment.instanceGroupedByEnvironmentList?.some(
           i =>
-            (i.envName !== null && i.envName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1) ||
-            i.instanceGroupedByInfraList?.filter(
+            i.envName?.toLocaleLowerCase().includes(searchValue) ||
+            i.instanceGroupedByInfraList?.some(
               infra =>
-                (infra.infraName !== null &&
-                  infra.infraName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1) ||
-                (infra.lastPipelineExecutionName !== null &&
-                  infra.lastPipelineExecutionName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1)
-            ).length ||
-            i.instanceGroupedByClusterList?.filter(
+                infra.infraName?.toLocaleLowerCase().includes(searchValue) ||
+                (infra.instanceGroupedByPipelineExecutionList?.length &&
+                  infra.instanceGroupedByPipelineExecutionList.some(item =>
+                    item.lastPipelineExecutionName?.toLocaleLowerCase().includes(searchValue)
+                  ))
+            ) ||
+            i.instanceGroupedByClusterList?.some(
               cluster =>
-                (cluster.clusterIdentifier !== null &&
-                  cluster.clusterIdentifier?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1) ||
-                (cluster.lastPipelineExecutionName !== null &&
-                  cluster.lastPipelineExecutionName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1)
-            ).length
-        ).length
+                cluster.clusterIdentifier?.toLocaleLowerCase().includes(searchValue) ||
+                (cluster.instanceGroupedByPipelineExecutionList?.length &&
+                  cluster.instanceGroupedByPipelineExecutionList.some(item =>
+                    item.lastPipelineExecutionName?.toLocaleLowerCase().includes(searchValue)
+                  ))
+            )
+        )
     )
   }, [searchTerm, deployments])
 
