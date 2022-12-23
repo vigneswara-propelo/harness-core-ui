@@ -5269,6 +5269,8 @@ export interface StringsMap {
   'cd.steps.ecsBGCreateServiceStep.sectionHeaders.configureProductionService': string
   'cd.steps.ecsBGCreateServiceStep.sectionHeaders.configureStageService': string
   'cd.steps.ecsRunTaskStep.ecsRunTaskDefinition': string
+  'cd.steps.ecsRunTaskStep.ecsRunTaskDefinitionArn': string
+  'cd.steps.ecsRunTaskStep.ecsRunTaskDefinitionArnPlaceholder': string
   'cd.steps.ecsRunTaskStep.ecsRunTaskRequestDefinition': string
   'cd.steps.ecsRunTaskStep.runTaskDefinition': string
   'cd.steps.ecsRunTaskStep.runTaskRequestDefinition': string

@@ -99,6 +99,8 @@ steps:
       vpcs: VPCs
   ecsRunTaskStep:
     ecsRunTaskDefinition: ECS Run Task Definition
+    ecsRunTaskDefinitionArn: ECS Run Task Definition ARN
+    ecsRunTaskDefinitionArnPlaceholder: Enter ECS Run Task Definition ARN
     runTaskDefinition: Run Task Definition
     ecsRunTaskRequestDefinition: ECS Run Task Request Definition
     runTaskRequestDefinition: Run Task Request Definition
