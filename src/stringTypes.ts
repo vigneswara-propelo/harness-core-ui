@@ -292,6 +292,7 @@ export interface StringsMap {
   'common.extendTrial.heading': string
   'common.failureRate': string
   'common.false': string
+  'common.favorites': string
   'common.feature.keepGettingShipDone.requestUpgrade': string
   'common.feature.keepGettingShipDone.title': string
   'common.feature.levelUp.description': string
@@ -552,6 +553,7 @@ export interface StringsMap {
   'common.noDelegateForTask': string
   'common.noDeployments': string
   'common.noInfo': string
+  'common.noRecentProjects': string
   'common.noRefData': string
   'common.noSearchResultsFound': string
   'common.noexpiration': string
@@ -694,6 +696,7 @@ export interface StringsMap {
   'common.pwsh': string
   'common.readOnly': string
   'common.readonlyPermissions': string
+  'common.recents': string
   'common.recommended': string
   'common.referenceButtonText': string
   'common.referenceTextWarning': string

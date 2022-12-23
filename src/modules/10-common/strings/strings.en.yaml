@@ -1165,6 +1165,9 @@ viewAll: View all
 lastUpdatedAt: Last updated at
 tryAgain: Try Again
 reload: Reload
+recents: Recents
+favorites: Favorites
+noRecentProjects: No Recent Projects
 organizations: ORGANIZATIONS
 projects: PROJECTS
 serviceId: 'SERVICE ID'
