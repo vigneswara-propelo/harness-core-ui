@@ -219,7 +219,7 @@ export function EnvironmentEntityCard({
         </>
       ) : null}
 
-      {!values.environment && Array.isArray(values.environments) && (
+      {!values.environment && Array.isArray(values.environments) && scopedEnvRef && (
         <>
           <Container margin={{ top: 'medium', bottom: 'medium' }}>
             <Divider />

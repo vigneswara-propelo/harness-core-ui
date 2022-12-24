@@ -527,7 +527,7 @@ export function StageInputSetFormInternal({
     deploymentStageTemplateInfraKeys.includes(field)
   )
   const namePath = isEmpty(path) ? '' : `${path}.`
-  const { NG_SVC_ENV_REDESIGN, CIE_HOSTED_VMS_MAC } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, CIE_HOSTED_VMS_MAC, CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const renderMultiTypeInputWithAllowedValues = React.useCallback(
     ({
@@ -1065,7 +1065,7 @@ export function StageInputSetFormInternal({
         deploymentStage={deploymentStage}
         deploymentStageTemplate={deploymentStageTemplate}
         allowableTypes={
-          scope === Scope.PROJECT
+          scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
             ? allowableTypes
             : ((allowableTypes as MultiTypeInputType[])?.filter(
                 item => item !== MultiTypeInputType.FIXED

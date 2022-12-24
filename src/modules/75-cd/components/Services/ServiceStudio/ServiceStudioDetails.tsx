@@ -56,7 +56,13 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     isReadonly
   } = usePipelineContext()
 
-  const { isServiceEntityModalView, isServiceCreateModalView, onServiceCreate, onCloseModal } = useServiceContext()
+  const {
+    isServiceEntityModalView,
+    isServiceCreateModalView,
+    onServiceCreate,
+    onCloseModal,
+    serviceResponse: serviceData
+  } = useServiceContext()
   const [selectedTabId, setSelectedTabId] = useState(tab ?? ServiceTabs.SUMMARY)
   const { showSuccess, showError, clear } = useToaster()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
@@ -116,8 +122,8 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
 
     const body = {
       ...omit(cloneDeep(finalServiceData?.service), 'serviceDefinition', 'gitOpsEnabled'),
-      projectIdentifier,
-      orgIdentifier,
+      projectIdentifier: isServiceCreateModalView ? projectIdentifier : serviceData?.projectIdentifier,
+      orgIdentifier: isServiceCreateModalView ? orgIdentifier : serviceData?.orgIdentifier,
       //serviceId is not present in queryParam when service is created in pipeline studio.
       identifier: defaultTo(serviceId, finalServiceData?.service?.identifier),
       yaml: yamlStringify(sanitize({ ...finalServiceData }, { removeEmptyObject: false, removeEmptyString: false }))

@@ -59,6 +59,8 @@ import { usePipelineVariables } from '@pipeline/components/PipelineVariablesCont
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useDeepCompareEffect } from '@common/hooks'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -316,11 +318,13 @@ export default function DeployServiceEntityWidget({
     if (formikRef.current) {
       queryClient.invalidateQueries(['getServicesYamlAndRuntimeInputs'])
       const { values, setValues } = formikRef.current
+
+      const scope = getScopeFromValue(values?.service as string)
       const body = {
         queryParams: {
           accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier
+          orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
+          projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined
         },
         serviceIdentifier: updatedService.identifier,
         pathParams: { serviceIdentifier: updatedService.identifier },
