@@ -9,7 +9,7 @@ import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 
 import cx from 'classnames'
 import { Collapse, Container, Dialog, ExpandingSearchInput, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { InstanceGroupedByArtifactV2 } from 'services/cd-ng'
 import { DeploymentsV2 } from '../../DeploymentView/DeploymentViewV2'
@@ -118,6 +118,21 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
     return (
       <Container style={{ overflowY: 'auto' }}>
         {filteredDeployments?.map((dataItem, index) => {
+          if (
+            dataItem.instanceGroupedByEnvironmentList?.length === 1 &&
+            defaultTo(dataItem.instanceGroupedByEnvironmentList[0].instanceGroupedByClusterList?.length, 0) <= 1 &&
+            defaultTo(dataItem.instanceGroupedByEnvironmentList[0].instanceGroupedByInfraList?.length, 0) <= 1
+          ) {
+            return (
+              <Container className={css.nonCollapseRow}>
+                {isActiveInstance ? (
+                  <ActiveServiceInstancesContentV2 tableType={TableType.FULL} data={[dataItem]} />
+                ) : (
+                  <DeploymentsV2 tableType={TableType.FULL} data={[dataItem]} />
+                )}
+              </Container>
+            )
+          }
           return (
             dataItem.artifactVersion &&
             dataItem.instanceGroupedByEnvironmentList && (
@@ -135,6 +150,9 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
                 expandedHeading={<>{/* empty element on purpose */}</>}
                 collapsedIcon={'main-chevron-right'}
                 expandedIcon={'main-chevron-down'}
+                transitionDuration={0}
+                //this is for the case when search is applied, then we will show atleast one row opened
+                isOpen={!isEmpty(searchTerm) && !index}
               >
                 {isActiveInstance ? (
                   <ActiveServiceInstancesContentV2 tableType={TableType.FULL} data={[dataItem]} />
