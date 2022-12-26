@@ -20,7 +20,8 @@ import {
   AllowedTypes,
   Heading,
   FormikForm,
-  IconName
+  IconName,
+  Container
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
@@ -156,7 +157,7 @@ function AttachPathYamlFlow({
                       allowOnlyOneFilePath={allowOnlyOneFilePath}
                     />
                   ) : (
-                    <>
+                    <Container margin={{ bottom: 'small' }}>
                       <MultiConfigSelectField
                         isAttachment
                         name="valuesPaths"
@@ -164,14 +165,14 @@ function AttachPathYamlFlow({
                         fileType={FILE_TYPE_VALUES.FILE_STORE}
                         formik={formik}
                         expressions={expressions}
-                        values={formik.values.valuesPaths as string | string[]}
+                        values={(formik.values.valuesPaths as string | string[]) || ['']}
                         multiTypeFieldSelectorProps={{
                           disableTypeSelection: false,
                           label: <Text>{getString('pipeline.manifestType.pathPlaceholder')}</Text>
                         }}
                         restrictToSingleEntry={allowOnlyOneFilePath}
                       />
-                    </>
+                    </Container>
                   )}
                   <Layout.Horizontal>
                     <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('submit')} />

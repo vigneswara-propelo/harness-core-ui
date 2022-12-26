@@ -1157,9 +1157,9 @@ exports[`Test AppResizeStep should render edit view as new step 1`] = `
                   <input
                     class="bp3-input"
                     min="1"
-                    placeholder="instanceFieldOptions.instanceHolder"
+                    placeholder="instanceFieldOptions.percentagePlaceHolder"
                     type="number"
-                    value="1"
+                    value="100"
                   />
                 </div>
                 <span
@@ -1199,14 +1199,14 @@ exports[`Test AppResizeStep should render edit view as new step 1`] = `
                   class="bp3-popover-target"
                 >
                   <button
-                    aria-label="instanceFieldOptions.instanceText"
+                    aria-label="instanceFieldOptions.percentageText"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withRightIcon"
                     type="button"
                   >
                     <span
                       class="bp3-button-text"
                     >
-                      instanceFieldOptions.instanceText
+                      instanceFieldOptions.percentageText
                     </span>
                     <span
                       class="bp3-icon bp3-icon-caret-down StyledProps--main"
@@ -1275,9 +1275,9 @@ exports[`Test AppResizeStep should render edit view as new step 1`] = `
                   <input
                     class="bp3-input"
                     min="1"
-                    placeholder="instanceFieldOptions.instanceHolder"
+                    placeholder="instanceFieldOptions.percentagePlaceHolder"
                     type="number"
-                    value="0"
+                    value=""
                   />
                 </div>
                 <span
@@ -1317,14 +1317,14 @@ exports[`Test AppResizeStep should render edit view as new step 1`] = `
                   class="bp3-popover-target"
                 >
                   <button
-                    aria-label="instanceFieldOptions.instanceText"
+                    aria-label="instanceFieldOptions.percentageText"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withRightIcon"
                     type="button"
                   >
                     <span
                       class="bp3-button-text"
                     >
-                      instanceFieldOptions.instanceText
+                      instanceFieldOptions.percentageText
                     </span>
                     <span
                       class="bp3-icon bp3-icon-caret-down StyledProps--main"
@@ -2089,9 +2089,9 @@ exports[`Test AppResizeStep should render null for StepviewType.template 1`] = `
                   <input
                     class="bp3-input"
                     min="1"
-                    placeholder="instanceFieldOptions.instanceHolder"
+                    placeholder="instanceFieldOptions.percentagePlaceHolder"
                     type="number"
-                    value="1"
+                    value="100"
                   />
                 </div>
                 <span
@@ -2131,14 +2131,14 @@ exports[`Test AppResizeStep should render null for StepviewType.template 1`] = `
                   class="bp3-popover-target"
                 >
                   <button
-                    aria-label="instanceFieldOptions.instanceText"
+                    aria-label="instanceFieldOptions.percentageText"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withRightIcon"
                     type="button"
                   >
                     <span
                       class="bp3-button-text"
                     >
-                      instanceFieldOptions.instanceText
+                      instanceFieldOptions.percentageText
                     </span>
                     <span
                       class="bp3-icon bp3-icon-caret-down StyledProps--main"
@@ -2207,9 +2207,9 @@ exports[`Test AppResizeStep should render null for StepviewType.template 1`] = `
                   <input
                     class="bp3-input"
                     min="1"
-                    placeholder="instanceFieldOptions.instanceHolder"
+                    placeholder="instanceFieldOptions.percentagePlaceHolder"
                     type="number"
-                    value="0"
+                    value=""
                   />
                 </div>
                 <span
@@ -2249,14 +2249,14 @@ exports[`Test AppResizeStep should render null for StepviewType.template 1`] = `
                   class="bp3-popover-target"
                 >
                   <button
-                    aria-label="instanceFieldOptions.instanceText"
+                    aria-label="instanceFieldOptions.percentageText"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withRightIcon"
                     type="button"
                   >
                     <span
                       class="bp3-button-text"
                     >
-                      instanceFieldOptions.instanceText
+                      instanceFieldOptions.percentageText
                     </span>
                     <span
                       class="bp3-icon bp3-icon-caret-down StyledProps--main"
@@ -3153,7 +3153,7 @@ exports[`Test AppResizeStep should submit with valid paylod for instace type cou
 
 exports[`Test AppResizeStep validate time to not be less than 10s 1`] = `
 Object {
-  "timeout": "timeout is a required field",
+  "timeout": "Value must be greater than or equal to \\"10s\\"",
 }
 `;
 

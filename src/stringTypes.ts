@@ -5322,6 +5322,7 @@ export interface StringsMap {
   'cd.steps.tas.totalInstances': string
   'cd.steps.tas.typeAndEnterForRouteAdd': string
   'cd.steps.tas.upscaleNewFirstLabel': string
+  'cd.steps.tas.upsizeInactiveService': string
   'cd.steps.tasInfra.organizationError': string
   'cd.steps.tasInfra.organizationPlaceholder': string
   'cd.steps.tasInfra.space': string

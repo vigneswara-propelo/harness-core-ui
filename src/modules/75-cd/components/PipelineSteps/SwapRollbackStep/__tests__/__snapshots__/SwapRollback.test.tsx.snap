@@ -234,7 +234,7 @@ exports[`SwapRollbackStep tests should render edit view as edit step with all ru
               class="Tooltip--acenter"
               data-tooltip-id="TasSwapRollback_spec.upsizeInActiveApp"
             >
-              cd.steps.tas.enableUpsizeInActiveApp
+              cd.steps.tas.upsizeInactiveService
             </span>
              
             <span

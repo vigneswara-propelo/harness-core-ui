@@ -77,7 +77,7 @@ export class ElastigroupDeploy extends PipelineStep<
       })
 
       try {
-        timeout.validateSync(data.spec)
+        timeout.validateSync(data)
       } catch (e) {
         /* istanbul ignore else */
         if (e instanceof Yup.ValidationError) {

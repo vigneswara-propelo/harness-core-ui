@@ -200,6 +200,12 @@ export interface FormInstanceDropdownFieldProps extends Omit<InstanceDropdownFie
   readonly?: boolean
   enableConfigureOptions?: boolean
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
+  defaultValue?: InstanceFieldValue
+}
+
+const defaultInitialValue = {
+  type: InstanceTypes.Count,
+  spec: { value: 0 }
 }
 
 const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (props): JSX.Element => {
@@ -215,6 +221,7 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
     readonly,
     enableConfigureOptions = false,
     configureOptionsProps,
+    defaultValue,
     ...restProps
   } = props
   const hasError = errorCheck(`${name}.type`, formik)
@@ -225,7 +232,7 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
     ...rest
   } = restProps
 
-  const value: InstanceFieldValue = get(formik?.values, name, { type: InstanceTypes.Count, spec: { value: 0 } })
+  const value: InstanceFieldValue = get(formik?.values, name, defaultValue || defaultInitialValue)
   const valueForConfigureOptions = value?.spec?.value as string
 
   const tooltipContext = React.useContext(FormikTooltipContext)

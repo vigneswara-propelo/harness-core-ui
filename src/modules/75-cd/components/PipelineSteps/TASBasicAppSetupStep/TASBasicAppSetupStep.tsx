@@ -62,7 +62,7 @@ export class TASBasicAppSetupStep extends PipelineStep<TASBasicAppSetupData> {
     type: StepType.BasicAppSetup,
     spec: {
       tasInstanceCountType: InstancesType.FromManifest,
-      existingVersionToKeep: 1
+      existingVersionToKeep: 3
     }
   }
 

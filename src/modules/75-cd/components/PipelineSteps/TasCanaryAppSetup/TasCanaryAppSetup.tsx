@@ -66,7 +66,7 @@ export class TasCanaryAppSetupStep extends PipelineStep<TasCanaryAppSetupData> {
     type: StepType.CanaryAppSetup,
     spec: {
       tasInstanceCountType: InstancesType.FromManifest,
-      existingVersionToKeep: 1,
+      existingVersionToKeep: 3,
       resizeStrategy: ResizeStrategyType.DownScaleOldFirst
     }
   }

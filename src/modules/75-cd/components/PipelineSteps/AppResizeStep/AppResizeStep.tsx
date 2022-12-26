@@ -10,7 +10,7 @@ import { IconName, Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType,
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, set } from 'lodash-es'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig, TasAppResizeStepInfo } from 'services/cd-ng'
@@ -71,6 +71,10 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
           onUpdate?.(values)
         }}
         validate={(values: AppResizeData) => {
+          const getOldAppInstance = values.spec.oldAppInstances?.spec
+          if (!getOldAppInstance?.value) {
+            set(values, 'spec.oldAppInstances', undefined)
+          }
           /* istanbul ignore next */
           onChange?.(values)
         }}
@@ -176,6 +180,7 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
                   readonly={readonly}
                   expressions={expressions}
                   allowableTypes={allowableTypes}
+                  defaultValue={{ type: InstanceTypes.Percentage, spec: { value: '' } }}
                 />
                 {getMultiTypeFromValue(values.spec.oldAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
@@ -288,8 +293,8 @@ export class AppResizeStep extends PipelineStep<AppResizeData> {
     type: StepType.AppResize,
     spec: {
       newAppInstances: {
-        type: InstanceTypes.Count,
-        spec: { value: '1' }
+        type: InstanceTypes.Percentage,
+        spec: { value: '100' }
       }
     }
   }
@@ -367,7 +372,7 @@ export class AppResizeStep extends PipelineStep<AppResizeData> {
       })
 
       try {
-        timeout.validateSync(data.spec)
+        timeout.validateSync(data)
       } catch (e) {
         /* istanbul ignore else */
         if (e instanceof Yup.ValidationError) {

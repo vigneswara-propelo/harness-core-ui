@@ -122,14 +122,14 @@ export default function ArtifactsSelection({
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     }
     if (
-      [ServiceDeploymentType.Kubernetes, ServiceDeploymentType.TAS].includes(deploymentType as ServiceDeploymentType) &&
+      deploymentType === ServiceDeploymentType.Kubernetes &&
       AZURE_ARTIFACTS_NG &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
     }
     if (
-      [ServiceDeploymentType.Kubernetes, ServiceDeploymentType.TAS].includes(deploymentType as ServiceDeploymentType) &&
+      deploymentType === ServiceDeploymentType.Kubernetes &&
       CD_AMI_ARTIFACTS_NG &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AmazonMachineImage)
     ) {

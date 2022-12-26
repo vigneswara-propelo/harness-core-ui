@@ -62,7 +62,7 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
     type: StepType.BGAppSetup,
     spec: {
       tasInstanceCountType: InstancesType.FromManifest,
-      existingVersionToKeep: 1,
+      existingVersionToKeep: 3,
       tempRoutes: []
     }
   }

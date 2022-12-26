@@ -148,7 +148,7 @@ function SwapRollbackWidget(
                 <FormMultiTypeCheckboxField
                   multiTypeTextbox={{ expressions, allowableTypes }}
                   name="spec.upsizeInActiveApp"
-                  label={getString('cd.steps.tas.enableUpsizeInActiveApp')}
+                  label={getString('cd.steps.tas.upsizeInactiveService')}
                   disabled={readonly}
                 />
               </div>
@@ -199,7 +199,7 @@ const SwapRollbackInputStep: React.FC<SwapRollbackProps> = ({ inputSetData, allo
                 allowableTypes: allowableTypes
               }}
               name={getNameEntity('spec.upsizeInActiveApp')}
-              label={getString('cd.steps.tas.enableUpsizeInActiveApp')}
+              label={getString('cd.steps.tas.upsizeInactiveService')}
               disabled={inputSetData?.readonly}
               setToFalseWhenEmpty={true}
             />

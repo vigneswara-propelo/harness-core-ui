@@ -324,7 +324,7 @@ export const buildTasPayload = (formData: FormData): ConnectorRequestBody => {
       credential: {
         type: CredTypeValues.ManualConfig,
         spec: {
-          endpointUrl: formData.endpointUrl,
+          endpointUrl: formData.endpointUrl.trim(),
           [formData.username.type === ValueType.TEXT ? 'username' : 'usernameRef']: formData.username.value,
           passwordRef: formData.passwordRef.referenceString
         }
