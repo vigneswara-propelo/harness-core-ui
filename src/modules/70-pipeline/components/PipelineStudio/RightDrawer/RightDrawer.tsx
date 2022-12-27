@@ -733,15 +733,49 @@ export function RightDrawer(): React.ReactElement {
 
   const { onSearchInputChange } = usePipelineVariables()
 
+  const getStepNameSuffix = (stepType: string, stepName: string, isProvisioner = false) => {
+    let maxId = 0
+    const suffixNameArray: string[] = []
+    const stepsMap = data?.paletteData?.stepsMap
+    stepsMap?.forEach((_value, key: string) => {
+      const stepDetails = getStepFromId(
+        isProvisioner
+          ? (selectedStage as StageElementWrapper<DeploymentStageElementConfig>)?.stage?.spec?.infrastructure
+              ?.infrastructureDefinition?.provisioner
+          : selectedStage?.stage?.spec?.execution,
+        key
+      )
+      if (stepDetails?.node?.type === stepType) {
+        const stepNodeName = stepDetails?.node?.name
+        if (stepNodeName.length > stepName.length) {
+          const suffix = stepNodeName.slice(stepName.length)
+          suffixNameArray.push(suffix)
+        }
+        maxId++
+      }
+    })
+    let suffixString = `_${maxId + 1}`
+    let loopCount = 1
+    while (loopCount <= suffixNameArray.length) {
+      if (suffixNameArray.includes(suffixString)) {
+        suffixString += '_1'
+        loopCount++
+      } else break
+    }
+    return suffixString
+  }
+
   const onStepSelection = async (item: StepData): Promise<void> => {
     const paletteData = data?.paletteData
+    const suffixString = getStepNameSuffix(item.type, item.name)
+    const stepName = `${item.name}${suffixString}`
     if (paletteData?.entity) {
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(defaultTo(selectedStageId, '')))
       const newStepData = {
         step: {
           type: item.type,
-          name: item.name,
-          identifier: generateRandomString(item.name),
+          name: stepName,
+          identifier: stepName.split(' ').join(''),
           spec: {}
         }
       }
