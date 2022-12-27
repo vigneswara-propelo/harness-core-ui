@@ -1,3 +1,5 @@
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+
 export const mockedCustomMetricFormContainerData = {
   mappedMetrics: new Map(),
   selectedMetric: 'HealthSource Metric',
@@ -70,6 +72,10 @@ export const mockedCustomMetricsFormForLogsTable = {
   isTemplate: false,
   expressions: [],
   healthSourceConfig: {
+    addQuery: {
+      label: 'Log',
+      enableDefaultGroupName: true
+    },
     customMetrics: {
       enabled: true,
       fieldMappings: [
@@ -116,6 +122,11 @@ export const mockedCustomMetricsFormForLogsTable = {
       }
     ]
   }
+}
+
+export const mockedCustomMetricsFormForLogsTableConnectorTemplates = {
+  ...mockedCustomMetricsFormForLogsTable,
+  connectorIdentifier: RUNTIME_INPUT_VALUE
 }
 
 const mappedMetrics2 = new Map()

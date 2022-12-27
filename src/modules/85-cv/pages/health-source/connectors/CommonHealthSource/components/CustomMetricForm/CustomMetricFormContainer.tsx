@@ -35,7 +35,8 @@ import {
 import { resetShowCustomMetric } from '../../CommonHealthSource.utils'
 import AddMetric from './components/AddMetric/AddMetric'
 import CustomMetricForm from './CustomMetricForm'
-import CommonHealthSourceContext, { CommonHealthSourceContextFields } from '../../CommonHealthSourceContext'
+import { useCommonHealthSource } from './components/CommonHealthSourceContext/useCommonHealthSource'
+import { CommonHealthSourceContextFields } from '../../CommonHealthSource.constants'
 import css from './CustomMetricForm.module.scss'
 
 export default function CustomMetricFormContainer(props: CustomMetricFormContainerProps): JSX.Element {
@@ -63,7 +64,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const {
     sourceData: { existingMetricDetails }
   } = useContext(SetupSourceTabsContext)
-  const { updateParentFormik } = useContext(CommonHealthSourceContext)
+  const { updateParentFormik } = useCommonHealthSource()
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.FIXED
 
   const [groupNames, setGroupName] = useState<SelectOption[]>(initializeGroupNames(mappedMetrics, getString))

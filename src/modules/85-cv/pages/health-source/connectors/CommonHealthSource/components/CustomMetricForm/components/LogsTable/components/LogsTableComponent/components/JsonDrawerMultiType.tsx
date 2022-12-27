@@ -1,23 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react'
-import {
-  AllowedTypes,
-  ExpressionAndRuntimeType,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  RUNTIME_INPUT_VALUE
-} from '@harness/uicore'
+import React, { useContext } from 'react'
+import { AllowedTypes, ExpressionAndRuntimeType, MultiTypeInputType } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import {
-  getIsConnectorRuntimeOrExpression,
-  getIsQueryRuntimeOrExpression
-} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
+import { useCommonHealthSource } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
+import { getIsConnectorRuntimeOrExpression } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
 import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import JsonSelectorButton, { JsonSelectorButtonProps } from './JsonSelectorButton'
 
 interface JsonDrawerMultiTypeProps {
-  name: string
+  name: keyof CommonCustomMetricFormikInterface
   label: string
   value: string
   key?: string
@@ -25,6 +17,8 @@ interface JsonDrawerMultiTypeProps {
   disabled?: boolean
   className?: string
   onClick: (name: string, label: string) => void
+  multiType: MultiTypeInputType
+  setMultiType: (fieldName: keyof CommonCustomMetricFormikInterface, updatedValue: MultiTypeInputType) => void
 }
 
 const JsonDrawerMultiType = ({
@@ -34,29 +28,20 @@ const JsonDrawerMultiType = ({
   displayText,
   label,
   disabled,
-  className
+  className,
+  multiType,
+  setMultiType
 }: JsonDrawerMultiTypeProps): JSX.Element => {
-  const [multiType, setMultiType] = useState(() => {
-    return getMultiTypeFromValue(value)
-  })
-
   const { expressions, sourceData } = useContext(SetupSourceTabsContext)
-  const { values, setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
+  const { setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
 
   const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
-  const isQueryRuntimeOrExpression = getIsQueryRuntimeOrExpression(values.query)
+  const { isQueryRuntimeOrExpression } = useCommonHealthSource()
 
   const allowedTypes =
     isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression
       ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
       : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
-
-  useEffect(() => {
-    if ((isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression) && multiType === MultiTypeInputType.FIXED) {
-      setMultiType(MultiTypeInputType.RUNTIME)
-      setFieldValue(name, RUNTIME_INPUT_VALUE)
-    }
-  }, [isConnectorRuntimeOrExpression, isQueryRuntimeOrExpression])
 
   return (
     <ExpressionAndRuntimeType<JsonSelectorButtonProps>
@@ -68,13 +53,11 @@ const JsonDrawerMultiType = ({
       multitypeInputValue={multiType}
       onChange={(updatedValue, _, type): void => {
         if (type !== multiType) {
-          setMultiType?.(type)
+          setMultiType?.(name, type)
         }
 
-        if (isMultiTypeRuntime(type)) {
+        if (isMultiTypeRuntime(type) || type === MultiTypeInputType.EXPRESSION) {
           setFieldValue(name, updatedValue)
-        } else if (type === MultiTypeInputType.EXPRESSION) {
-          setMultiType?.(MultiTypeInputType.EXPRESSION)
         } else if (type === MultiTypeInputType.FIXED) {
           setFieldValue(name, undefined)
         }
@@ -83,7 +66,7 @@ const JsonDrawerMultiType = ({
         onClick: () => onClick(name, label),
         displayText: displayText,
         icon: 'plus',
-        disabled: disabled,
+        isDisabled: disabled,
         className: className
       }}
       fixedTypeComponent={JsonSelectorButton}
@@ -91,4 +74,4 @@ const JsonDrawerMultiType = ({
   )
 }
 
-export default React.memo(JsonDrawerMultiType)
+export default JsonDrawerMultiType

@@ -20,20 +20,17 @@ import {
   mockedCustomMetricFormContainerData,
   mockedCustomMetricsFormForLogsTable,
   mockedCustomMetricsFormForLogsTable2,
+  mockedCustomMetricsFormForLogsTableConnectorTemplates,
   sampleDataResponse,
   sampleRawRecordsMock
 } from './CustomMetricFormContainer.mock'
 import { validateAddMetricForm } from '../CustomMetricFormContainer.utils'
-import CommonHealthSourceContext from '../../../CommonHealthSourceContext'
+import CommonHealthSourceProvider from '../components/CommonHealthSourceContext/CommonHealthSourceContext'
 
 const updateParentFormik = jest.fn()
 function WrapperComponent(props: CustomMetricFormContainerProps): JSX.Element {
   return (
-    <CommonHealthSourceContext.Provider
-      value={{
-        updateParentFormik
-      }}
-    >
+    <CommonHealthSourceProvider updateParentFormik={updateParentFormik}>
       <Formik initialValues={props} onSubmit={jest.fn()}>
         <FormikForm>
           <TestWrapper
@@ -44,7 +41,7 @@ function WrapperComponent(props: CustomMetricFormContainerProps): JSX.Element {
           </TestWrapper>
         </FormikForm>
       </Formik>
-    </CommonHealthSourceContext.Provider>
+    </CommonHealthSourceProvider>
   )
 }
 
@@ -408,6 +405,92 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         providerType: 'SUMOLOGIC_LOG',
         query: 'select *',
         startTime: expect.any(Number)
+      })
+    })
+
+    describe('Logs table templates', () => {
+      function TemplatesWrapperComponent(newProps: CustomMetricFormContainerProps): JSX.Element {
+        return (
+          <SetupSourceTabsContext.Provider
+            value={{
+              isTemplate: true,
+              expressions: [],
+              onNext: jest.fn(),
+              onPrevious: jest.fn(),
+              sourceData: { sourceType: 'SumoLogic', product: { value: 'LOGS' } }
+            }}
+          >
+            <CommonHealthSourceProvider updateParentFormik={updateParentFormik}>
+              <Formik initialValues={newProps} onSubmit={jest.fn()}>
+                <FormikForm>
+                  <TestWrapper
+                    path="/account/:accountId/cv/orgs/:orgIdentifier/projects/:projectIdentifier"
+                    pathParams={{ accountId: 'account', orgIdentifier: 'org', projectIdentifier: 'project' }}
+                  >
+                    <CustomMetricFormContainer {...newProps} />
+                  </TestWrapper>
+                </FormikForm>
+              </Formik>
+            </CommonHealthSourceProvider>
+          </SetupSourceTabsContext.Provider>
+        )
+      }
+      test('should test template inputs are visible if it is tempaltes', () => {
+        const { container } = render(<TemplatesWrapperComponent {...mockProps} query="select *" />)
+
+        const templateFixedInput = container.querySelector('.MultiTypeInput--FIXED')
+
+        expect(templateFixedInput).toBeInTheDocument()
+      })
+
+      test('should test template inputs are Runtime if connector is runtime', () => {
+        const mockPropsConnectorTemplateProps = {
+          ...mockedCustomMetricsFormForLogsTableConnectorTemplates,
+          setMappedMetrics: jest.fn(),
+          setCreatedMetrics: jest.fn(),
+          setGroupedCreatedMetrics: jest.fn(),
+          setNonCustomFeilds: jest.fn()
+        } as any
+        const { container } = render(
+          <SetupSourceTabsContext.Provider
+            value={{
+              isTemplate: true,
+              expressions: [],
+              onNext: jest.fn(),
+              onPrevious: jest.fn(),
+              sourceData: { sourceType: 'SumoLogic', product: { value: 'LOGS' }, connectorRef: '<+input>' }
+            }}
+          >
+            <CommonHealthSourceProvider updateParentFormik={updateParentFormik}>
+              <Formik initialValues={mockPropsConnectorTemplateProps} onSubmit={jest.fn()}>
+                <FormikForm>
+                  <TestWrapper
+                    path="/account/:accountId/cv/orgs/:orgIdentifier/projects/:projectIdentifier"
+                    pathParams={{ accountId: 'account', orgIdentifier: 'org', projectIdentifier: 'project' }}
+                  >
+                    <CustomMetricFormContainer {...mockPropsConnectorTemplateProps} />
+                  </TestWrapper>
+                </FormikForm>
+              </Formik>
+            </CommonHealthSourceProvider>
+          </SetupSourceTabsContext.Provider>
+        )
+
+        const templateFixedInput = container.querySelector('.MultiTypeInput--FIXED')
+        const templateRuntimeInput = container.querySelector('.MultiTypeInput--RUNTIME')
+
+        expect(templateFixedInput).not.toBeInTheDocument()
+        expect(templateRuntimeInput).toBeInTheDocument()
+      })
+
+      test('should test runtime inputs are rendered, in query is a runtime', () => {
+        const { container } = render(<TemplatesWrapperComponent {...mockProps} query="<+input>" />)
+
+        const templateFixedInput = container.querySelector('.MultiTypeInput--FIXED')
+        const templateRuntimeInput = container.querySelector('.MultiTypeInput--RUNTIME')
+
+        expect(templateFixedInput).not.toBeInTheDocument()
+        expect(templateRuntimeInput).toBeInTheDocument()
       })
     })
   })

@@ -5,14 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useCallback, useContext } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
 import { CommonMultiItemsSideNav } from '@cv/components/CommonMultiItemsSideNav/CommonMultiItemsSideNav'
 import { updateSelectedMetricsMap } from './CommonCustomMetric.utils'
+import { CommonHealthSourceContextFields } from '../../connectors/CommonHealthSource/CommonHealthSource.constants'
 import type { CommonCustomMetricInterface } from './CommonCustomMetric.types'
-import CommonHealthSourceContext, {
-  CommonHealthSourceContextFields
-} from '../../connectors/CommonHealthSource/CommonHealthSourceContext'
+
+import { useCommonHealthSource } from '../../connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
 
 export default function CommonCustomMetric(props: CommonCustomMetricInterface): JSX.Element {
   const {
@@ -34,7 +34,7 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
     openEditMetricModal
   } = props
 
-  const { updateParentFormik } = useContext(CommonHealthSourceContext)
+  const { updateParentFormik } = useCommonHealthSource()
 
   useEffect(() => {
     let data = { selectedMetric, mappedMetrics }

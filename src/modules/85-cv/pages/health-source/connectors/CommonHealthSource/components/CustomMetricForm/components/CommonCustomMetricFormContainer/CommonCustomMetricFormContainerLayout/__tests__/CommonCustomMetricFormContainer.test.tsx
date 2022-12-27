@@ -15,6 +15,7 @@ import { CHART_VISIBILITY_ENUM } from '@cv/pages/health-source/connectors/Common
 import CommonCustomMetricFormContainer from '../CommonCustomMetricFormContainer'
 import type { CommonCustomMetricFormContainerProps } from '../CommonCustomMetricFormContainer.types'
 import { mockedStackdriverLogSampleData } from './CommonCustomMetricFormContainer.mocks'
+import CommonHealthSourceProvider from '../../../CommonHealthSourceContext/CommonHealthSourceContext'
 import { shouldAutoBuildChart, shouldShowChartComponent } from '../CommonCustomMetricFormContainer.utils'
 
 const WrapperComponent = (props: CommonCustomMetricFormContainerProps): JSX.Element => {
@@ -33,11 +34,13 @@ const WrapperComponent = (props: CommonCustomMetricFormContainerProps): JSX.Elem
         orgIdentifier: '1234_ORG'
       }}
     >
-      <Formik initialValues={initialValues} onSubmit={jest.fn()}>
-        <FormikForm>
-          <CommonCustomMetricFormContainer {...props} />
-        </FormikForm>
-      </Formik>
+      <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+        <Formik initialValues={initialValues} onSubmit={jest.fn()}>
+          <FormikForm>
+            <CommonCustomMetricFormContainer {...props} />
+          </FormikForm>
+        </Formik>
+      </CommonHealthSourceProvider>
     </TestWrapper>
   )
 }

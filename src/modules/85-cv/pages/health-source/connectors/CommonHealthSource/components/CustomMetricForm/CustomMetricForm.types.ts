@@ -5,18 +5,29 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@harness/uicore'
+import type { MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { GroupedCreatedMetrics } from '@cv/components/CommonMultiItemsSideNav/components/CommonSelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
 import type {
   CreatedMetricsWithSelectedIndex,
   CustomSelectedAndMappedMetrics
 } from '@cv/pages/health-source/common/CommonCustomMetric/CommonCustomMetric.types'
-import type { HealthSourceConfig, HealthSourceInitialData } from '../../CommonHealthSource.types'
+import type {
+  CommonCustomMetricFormikInterface,
+  FieldMapping,
+  HealthSourceConfig,
+  HealthSourceInitialData
+} from '../../CommonHealthSource.types'
 
 export interface AddMetricForm {
   identifier: string
   metricName: string
   groupName: SelectOption | string
+}
+
+export interface GetMultiTypeRecordInitialValueParams {
+  filteredFieldsMapping?: FieldMapping[]
+  isTemplate?: boolean
+  formValues: CommonCustomMetricFormikInterface
 }
 
 export interface CustomMetricFormContainerProps {
@@ -32,3 +43,5 @@ export interface CustomMetricFormContainerProps {
   healthSourceData: HealthSourceInitialData
   setConfigurationsFormikFieldValue: (key: string, data: any) => void
 }
+
+export type LogFieldsMultiTypeState = Record<Partial<keyof CommonCustomMetricFormikInterface>, MultiTypeInputType>

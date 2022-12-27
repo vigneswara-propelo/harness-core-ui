@@ -74,3 +74,8 @@ export const logsTableDefaultConfigs = {
 export const ProviderTypes: Record<string, QueryRecordsRequest['providerType']> = {
   SumoLogic_LOGS: 'SUMOLOGIC_LOG'
 }
+
+export enum CommonHealthSourceContextFields {
+  SelectedMetric = 'selectedMetric',
+  CustomMetricsMap = 'customMetricsMap'
+}

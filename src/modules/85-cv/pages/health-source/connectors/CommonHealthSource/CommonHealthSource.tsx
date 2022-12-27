@@ -24,7 +24,7 @@ import {
   initGroupedCreatedMetrics,
   initializeSelectedMetricsMap
 } from '../../common/CommonCustomMetric/CommonCustomMetric.utils'
-import CommonHealthSourceContext from './CommonHealthSourceContext'
+import CommonHealthSourceProvider from './components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import { getCanShowMetricThresholds } from '../../common/MetricThresholds/MetricThresholds.utils'
 import MetricThresholdProvider from './components/MetricThresholds/MetricThresholdProvider'
 import css from './CommonHealthSource.module.scss'
@@ -101,11 +101,8 @@ export default function CommonHealthSource({
         return (
           <>
             {/* Non custom fields section can be added here */}
-            <CommonHealthSourceContext.Provider
-              value={{
-                updateParentFormik: formik.setFieldValue
-              }}
-            >
+
+            <CommonHealthSourceProvider updateParentFormik={formik.setFieldValue}>
               <FormikForm>
                 <Formik<CommonCustomMetricFormikInterface>
                   enableReinitialize
@@ -148,7 +145,7 @@ export default function CommonHealthSource({
               </FormikForm>
               {/* Empty space at bottom */}
               <Container height={200} />
-            </CommonHealthSourceContext.Provider>
+            </CommonHealthSourceProvider>
             {/* Metric threshold section can be added here */}
             <DrawerFooter
               isSubmit

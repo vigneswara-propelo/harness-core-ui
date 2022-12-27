@@ -4,14 +4,14 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { defaultTo } from 'lodash-es'
 import { Button, ButtonVariation, Container } from '@harness/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import CommonHealthSourceContext, {
-  CommonHealthSourceContextFields
-} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSourceContext'
+
+import { useCommonHealthSource } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
+import { CommonHealthSourceContextFields } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { CommonSelectedAppsSideNav } from './components/CommonSelectedAppsSideNav/CommonSelectedAppsSideNav'
 import {
   getCreatedMetricLength,
@@ -64,7 +64,7 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
   )
   const [selectedMetric, setSelectedMetric] = useState<string | undefined>(defaultSelectedMetric || createdMetrics[0])
 
-  const { updateParentFormik } = useContext(CommonHealthSourceContext)
+  const { updateParentFormik } = useCommonHealthSource()
 
   const filteredGroupMetric = useMemo(() => {
     return getFilteredGroupedCreatedMetric(groupedCreatedMetrics, filter)

@@ -9,6 +9,7 @@ import React from 'react'
 import * as Formik from 'formik'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import { CommonMultiItemsSideNav } from '../CommonMultiItemsSideNav'
 import { getFilteredGroupedCreatedMetric, getSelectedMetricIndex } from '../CommonMultiItemsSideNav.utils'
 import { groupedCreatedMetrics } from './CommonMultiItemsSideNav.mock'
@@ -30,19 +31,21 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
   test('Ensure that all passed in metrics are rendered in CommonMultiItemsSideNav', async () => {
     const { container, getByText } = render(
       <TestWrapper>
-        <CommonMultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['appdMetric 101', 'appdMetric 102']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={jest.fn()}
-          isValidInput={true}
-          renamedMetric="appdMetric 101"
-          openEditMetricModal={jest.fn()}
-          defaultSelectedMetric={'appdMetric 101'}
-          groupedCreatedMetrics={groupedCreatedMetrics}
-        />
+        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+          <CommonMultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['appdMetric 101', 'appdMetric 102']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={jest.fn()}
+            isValidInput={true}
+            renamedMetric="appdMetric 101"
+            openEditMetricModal={jest.fn()}
+            defaultSelectedMetric={'appdMetric 101'}
+            groupedCreatedMetrics={groupedCreatedMetrics}
+          />
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
     await waitFor(() => expect(getByText('appdMetric 101')).not.toBeNull())
@@ -56,19 +59,21 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
     const onRemoveMock = jest.fn()
     const { container, getByText } = render(
       <TestWrapper>
-        <CommonMultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['appdMetric 101', 'appdMetric 102']}
-          onRemoveMetric={onRemoveMock}
-          onSelectMetric={onSelectMock}
-          isValidInput={true}
-          renamedMetric="appdMetric 101"
-          defaultSelectedMetric={'appdMetric 101'}
-          openEditMetricModal={jest.fn()}
-          groupedCreatedMetrics={groupedCreatedMetrics}
-        />
+        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+          <CommonMultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['appdMetric 101', 'appdMetric 102']}
+            onRemoveMetric={onRemoveMock}
+            onSelectMetric={onSelectMock}
+            isValidInput={true}
+            renamedMetric="appdMetric 101"
+            defaultSelectedMetric={'appdMetric 101'}
+            openEditMetricModal={jest.fn()}
+            groupedCreatedMetrics={groupedCreatedMetrics}
+          />
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
 
@@ -84,21 +89,23 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
   test('Ensure that only when single app is there delete button does not exist in CommonMultiItemsSideNav', async () => {
     const { container, getByText } = render(
       <TestWrapper>
-        <CommonMultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['appdMetric 101']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={jest.fn()}
-          isValidInput={true}
-          renamedMetric="appdMetric 101"
-          openEditMetricModal={jest.fn()}
-          defaultSelectedMetric={'appdMetric 101'}
-          groupedCreatedMetrics={{
-            'Group 1': [{ groupName: { label: 'Group 1', value: 'Group 1' }, metricName: 'appdMetric 101' }]
-          }}
-        />
+        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+          <CommonMultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['appdMetric 101']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={jest.fn()}
+            isValidInput={true}
+            renamedMetric="appdMetric 101"
+            openEditMetricModal={jest.fn()}
+            defaultSelectedMetric={'appdMetric 101'}
+            groupedCreatedMetrics={{
+              'Group 1': [{ groupName: { label: 'Group 1', value: 'Group 1' }, metricName: 'appdMetric 101' }]
+            }}
+          />
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
 
@@ -110,21 +117,23 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
   test('Ensure that when selected app name changes, the nav shows that change in CommonMultiItemsSideNav', async () => {
     const { container, getByText, rerender } = render(
       <TestWrapper>
-        <CommonMultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['appdMetric 101']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={jest.fn()}
-          isValidInput={true}
-          renamedMetric="appdMetric 101"
-          openEditMetricModal={jest.fn()}
-          defaultSelectedMetric={'appdMetric 101'}
-          groupedCreatedMetrics={{
-            'Group 1': [{ groupName: { label: 'Group 1', value: 'Group 1' }, metricName: 'appdMetric 101' }]
-          }}
-        />
+        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+          <CommonMultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['appdMetric 101']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={jest.fn()}
+            isValidInput={true}
+            renamedMetric="appdMetric 101"
+            openEditMetricModal={jest.fn()}
+            defaultSelectedMetric={'appdMetric 101'}
+            groupedCreatedMetrics={{
+              'Group 1': [{ groupName: { label: 'Group 1', value: 'Group 1' }, metricName: 'appdMetric 101' }]
+            }}
+          />
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
 
@@ -134,21 +143,23 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
 
     rerender(
       <TestWrapper>
-        <CommonMultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['solo-dolo']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={jest.fn()}
-          isValidInput={true}
-          renamedMetric="solo-dolo"
-          openEditMetricModal={jest.fn()}
-          defaultSelectedMetric={'solo-dolo'}
-          groupedCreatedMetrics={{
-            'Group 1': [{ groupName: { label: 'Group 1', value: 'Group 1' }, metricName: 'solo-dolo' }]
-          }}
-        />
+        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+          <CommonMultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['solo-dolo']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={jest.fn()}
+            isValidInput={true}
+            renamedMetric="solo-dolo"
+            openEditMetricModal={jest.fn()}
+            defaultSelectedMetric={'solo-dolo'}
+            groupedCreatedMetrics={{
+              'Group 1': [{ groupName: { label: 'Group 1', value: 'Group 1' }, metricName: 'solo-dolo' }]
+            }}
+          />
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
 
@@ -162,21 +173,23 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
     const onSelectMock = jest.fn()
     const { container, getByText } = render(
       <TestWrapper>
-        <CommonMultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['appdMetric 101']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={onSelectMock}
-          isValidInput={true}
-          renamedMetric="appdMetric 101"
-          openEditMetricModal={jest.fn()}
-          defaultSelectedMetric={'appdMetric 101'}
-          groupedCreatedMetrics={{
-            'Group 1': [{ groupName: { label: 'Group 1', value: 'Group 1' }, metricName: 'appdMetric 101' }]
-          }}
-        />
+        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+          <CommonMultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['appdMetric 101']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={onSelectMock}
+            isValidInput={true}
+            renamedMetric="appdMetric 101"
+            openEditMetricModal={jest.fn()}
+            defaultSelectedMetric={'appdMetric 101'}
+            groupedCreatedMetrics={{
+              'Group 1': [{ groupName: { label: 'Group 1', value: 'Group 1' }, metricName: 'appdMetric 101' }]
+            }}
+          />
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
 

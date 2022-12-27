@@ -10,7 +10,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { Formik, FormInput } from '@harness/uicore'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
-import CommonHealthSourceContext from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSourceContext'
+import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import CustomMetric from '../CommonCustomMetric'
 import { initGroupedCreatedMetrics, initializeSelectedMetricsMap } from '../CommonCustomMetric.utils'
 
@@ -28,11 +28,7 @@ const WrapperComponent = () => {
   const formInit = mappedMetrics.get(selectedMetric)
 
   return (
-    <CommonHealthSourceContext.Provider
-      value={{
-        updateParentFormik
-      }}
-    >
+    <CommonHealthSourceProvider updateParentFormik={updateParentFormik}>
       <Formik initialValues={formInit} onSubmit={jest.fn()} formName="runtimeInputsTest">
         {formik => {
           const createdMetrics = Array.from(customMetricsMap?.keys()) || ['health source metric']
@@ -66,7 +62,7 @@ const WrapperComponent = () => {
           )
         }}
       </Formik>
-    </CommonHealthSourceContext.Provider>
+    </CommonHealthSourceProvider>
   )
 }
 

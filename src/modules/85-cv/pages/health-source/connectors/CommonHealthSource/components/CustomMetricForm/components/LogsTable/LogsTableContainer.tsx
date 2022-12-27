@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
@@ -10,6 +10,7 @@ import {
   getFieldsDefaultValuesFromConfig,
   getRequestBodyForSampleLogs
 } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
+import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import type {
   CommonCustomMetricFormikInterface,
   FieldMapping
@@ -38,7 +39,7 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
 
   const [logsSampleData, setLogsSampleData] = useState<LogRecord[] | null>(null)
 
-  // const { isTemplate } = useContext(SetupSourceTabsContext)
+  const { isTemplate } = useContext(SetupSourceTabsContext)
 
   // const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
 
@@ -67,24 +68,13 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
   const { getString } = useStrings()
 
   useEffect(() => {
-    const defaultValuesToUpdateFormik = getFieldsDefaultValuesFromConfig(values, fieldMappings)
-    if (!isEmpty(defaultValuesToUpdateFormik)) {
-      setValues({ ...values, ...defaultValuesToUpdateFormik })
+    if (!isTemplate) {
+      const defaultValuesToUpdateFormik = getFieldsDefaultValuesFromConfig(values, fieldMappings)
+      if (!isEmpty(defaultValuesToUpdateFormik)) {
+        setValues({ ...values, ...defaultValuesToUpdateFormik })
+      }
     }
   }, [values])
-
-  // useEffect(() => {
-  //   if ((isQueryRuntimeOrExpression || isConnectorRuntimeOrExpression) && isTemplate) {
-  //     // check if fields are fixed or empty
-  //     // 1. update the fields to runtime
-
-  //     const defaultValuesToUpdateFormik = getTemplateValuesForConfigFields(values, fieldMappings)
-
-  //     if (!isEmpty(defaultValuesToUpdateFormik)) {
-  //       setValues({ ...values, ...defaultValuesToUpdateFormik })
-  //     }
-  //   }
-  // }, [isQueryRuntimeOrExpression, isConnectorRuntimeOrExpression, isTemplate, fieldMappings, values.query, setValues])
 
   const handleFetchSampleLogs = () => {
     const fetchSampleLogsPayload = getRequestBodyForSampleLogs(providerType, {

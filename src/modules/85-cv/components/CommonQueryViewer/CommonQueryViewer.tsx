@@ -5,19 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import cx from 'classnames'
-import { Container, MultiTypeInputType, Text } from '@harness/uicore'
+import { Container, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { CommonHealthSourceFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import CustomMetricsSectionHeader from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CustomMetricsSectionHeader'
+import { useCommonHealthSource } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
 import CVMultiTypeQuery from '../CVMultiTypeQuery/CVMultiTypeQuery'
 import { CommonQueryViewDialog } from './components/CommonQueryViewerDialog/CommonQueryViewDialog'
 import { CommonQueryContent } from './components/CommonQueryContent/CommonQueryContent'
-import { CommonRecords } from '../CommonRecords/CommonRecords'
 import { SetupSourceTabsContext } from '../CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
+import { CommonRecords } from '../CommonRecords/CommonRecords'
 import type { CommonQueryViewerProps } from './types'
 
 export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
@@ -40,6 +41,16 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
   const { getString } = useStrings()
 
   const { isTemplate, expressions } = useContext(SetupSourceTabsContext)
+  const healthSourceConfigContext = useCommonHealthSource()
+
+  useEffect(() => {
+    if (isTemplate) {
+      const queryType = getMultiTypeFromValue(query)
+      healthSourceConfigContext.updateHelperContext({
+        isQueryRuntimeOrExpression: queryType !== MultiTypeInputType.FIXED
+      })
+    }
+  }, [])
 
   const handleFetchRecords = (): void => {
     fetchRecords()
@@ -48,7 +59,11 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
     }
   }
 
-  // const primaryTitle =
+  const handleQueryTemplateTypeChange = (updatedType: MultiTypeInputType): void => {
+    const isQueryTypeRuntimeOrExpression = updatedType !== MultiTypeInputType.FIXED
+
+    healthSourceConfigContext.updateHelperContext({ isQueryRuntimeOrExpression: isQueryTypeRuntimeOrExpression })
+  }
 
   return (
     <Container className={cx(className)}>
@@ -72,6 +87,7 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
           expressions={defaultTo(expressions, [])}
           fetchRecords={handleFetchRecords}
           disableFetchButton={isEmpty(query) || isConnectorRuntimeOrExpression || loading}
+          onTypeChange={handleQueryTemplateTypeChange}
           allowedTypes={
             isConnectorRuntimeOrExpression
               ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
