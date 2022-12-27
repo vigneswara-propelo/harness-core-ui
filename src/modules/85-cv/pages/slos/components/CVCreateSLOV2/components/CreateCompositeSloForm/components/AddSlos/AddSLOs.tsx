@@ -280,11 +280,12 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
           </Button>
         </>
       ),
-      width: '10%',
+      width: '15%',
       Cell: RenderWeightInput
     },
     {
       id: 'deletSLO',
+      width: '5%',
       Cell: RenderDelete,
       disableSortBy: true
     }
