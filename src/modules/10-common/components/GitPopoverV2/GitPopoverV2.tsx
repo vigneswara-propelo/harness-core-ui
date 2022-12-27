@@ -26,7 +26,7 @@ interface GitPopoverV2Props {
   storeMetadata: StoreMetadata
   gitDetails: EntityGitDetails
   onGitBranchChange: (selectedFilter: GitFilterScope) => void
-  isReadonly?: boolean
+  branchChangeDisabled?: boolean
   forceFetch?: boolean
 }
 
@@ -101,7 +101,7 @@ const getActualTemplateValue = (
 export const GitPopoverV2 = ({
   storeMetadata = {},
   gitDetails = {},
-  isReadonly = false,
+  branchChangeDisabled = false,
   forceFetch = false,
   onGitBranchChange
 }: GitPopoverV2Props): JSX.Element => {
@@ -130,10 +130,10 @@ export const GitPopoverV2 = ({
   })
 
   useEffect(() => {
-    if (!isReadonly || forceFetch) {
+    if (!branchChangeDisabled || forceFetch) {
       refetch()
     }
-  }, [forceFetch, isReadonly, refetch])
+  }, [forceFetch, branchChangeDisabled, refetch])
 
   const branchOptions = useMemo(() => {
     if (response?.status === 'SUCCESS' && !isEmpty(response?.data)) {
@@ -187,7 +187,7 @@ export const GitPopoverV2 = ({
           <ItemUI
             label={getString('gitBranch')}
             icon="git-new-branch"
-            value={isReadonly ? selectedBranch.value : branchUI}
+            value={branchChangeDisabled ? selectedBranch.value : branchUI}
           />
         )}
       </Layout.Vertical>

@@ -354,7 +354,6 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                       }}
                       gitDetails={selectedTemplate.gitDetails!}
                       onGitBranchChange={onGitBranchChange}
-                      isReadonly={isStandAlone}
                       forceFetch
                     />
                   )}

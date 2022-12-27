@@ -337,7 +337,7 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
             <GitPopoverV2
               storeMetadata={storeMetadata!}
               gitDetails={gitDetails}
-              isReadonly={isReadonly || templateIdentifier === DefaultNewTemplateId}
+              branchChangeDisabled={templateIdentifier === DefaultNewTemplateId}
               onGitBranchChange={onGitBranchChange!}
             />
           </>

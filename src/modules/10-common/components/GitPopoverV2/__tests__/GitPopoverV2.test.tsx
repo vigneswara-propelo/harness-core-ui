@@ -99,7 +99,12 @@ describe('<GitPopoverV2 />', () => {
   test('readonly popover UI on hover', async () => {
     const { container, getByText } = render(
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS}>
-        <GitPopoverV2 storeMetadata={storeMetadata} gitDetails={gitDetails} isReadonly onGitBranchChange={noop} />
+        <GitPopoverV2
+          storeMetadata={storeMetadata}
+          gitDetails={gitDetails}
+          branchChangeDisabled
+          onGitBranchChange={noop}
+        />
       </TestWrapper>
     )
 
