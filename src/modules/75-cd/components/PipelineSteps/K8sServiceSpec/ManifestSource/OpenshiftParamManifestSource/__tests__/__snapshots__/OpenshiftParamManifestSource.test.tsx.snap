@@ -265,6 +265,12 @@ exports[`OpenshiftParamManifestSource tests Should match snapshot 1`] = `
           class="inputFieldLayout"
         />
         <div
+          class="inputFieldLayout"
+        />
+        <div
+          class="inputFieldLayout"
+        />
+        <div
           class="verticalSpacingInput"
         >
           <div>
@@ -635,6 +641,12 @@ exports[`OpenshiftParamManifestSource tests Should match snapshot with fromTrigg
             </div>
           </div>
         </div>
+        <div
+          class="inputFieldLayout"
+        />
+        <div
+          class="inputFieldLayout"
+        />
         <div
           class="inputFieldLayout"
         />

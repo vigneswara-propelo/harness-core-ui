@@ -200,6 +200,12 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot 1`] = `
         />
         <div
           class="inputFieldLayout"
+        />
+        <div
+          class="inputFieldLayout"
+        />
+        <div
+          class="inputFieldLayout"
         >
           <div
             class="verticalSpacingInput"
@@ -441,6 +447,12 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot 1`] = `
             </div>
           </div>
         </div>
+        <div
+          class="inputFieldLayout"
+        />
+        <div
+          class="inputFieldLayout"
+        />
         <div
           class="inputFieldLayout"
         />
@@ -815,6 +827,12 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot with fromTr
         />
         <div
           class="inputFieldLayout"
+        />
+        <div
+          class="inputFieldLayout"
+        />
+        <div
+          class="inputFieldLayout"
         >
           <div
             class="verticalSpacingInput"
@@ -1054,6 +1072,12 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot with fromTr
             </div>
           </div>
         </div>
+        <div
+          class="inputFieldLayout"
+        />
+        <div
+          class="inputFieldLayout"
+        />
         <div
           class="inputFieldLayout"
         />

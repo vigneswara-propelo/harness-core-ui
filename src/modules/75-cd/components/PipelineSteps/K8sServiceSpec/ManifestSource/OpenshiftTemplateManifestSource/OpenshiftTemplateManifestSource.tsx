@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
+import { getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
@@ -21,6 +21,7 @@ import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
 import ManifestCommonRuntimeFields from '../ManifestSourceRuntimeFields/ManifestCommonRuntimeFields'
+import CustomRemoteManifestRuntimeFields from '../ManifestSourceRuntimeFields/CustomRemoteManifestRuntimeFields'
 import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourceUtils'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
@@ -52,18 +53,18 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     >
       <ManifestGitStoreRuntimeFields {...props} />
       <ManifestCommonRuntimeFields {...props} />
+      <CustomRemoteManifestRuntimeFields {...props} />
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
           <div className={css.verticalSpacingInput}>
-            <FormInput.MultiTextInput
-              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.paths`)}
-              name={`${path}.${manifestPath}.spec.store.spec.paths`}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
+            <List
               label={getString('pipeline.manifestType.osTemplatePath')}
+              name={`${path}.${manifestPath}.spec.store.spec.paths`}
               placeholder={getString('pipeline.manifestType.osTemplatePathPlaceHolder')}
+              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.paths`)}
+              expressions={expressions}
+              allowOnlyOne
+              isNameOfArrayType
             />
           </div>
         )}
