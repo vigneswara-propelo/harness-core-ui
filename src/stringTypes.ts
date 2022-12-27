@@ -553,6 +553,7 @@ export interface StringsMap {
   'common.noDelegateForTask': string
   'common.noDeployments': string
   'common.noInfo': string
+  'common.noNotifications': string
   'common.noRecentProjects': string
   'common.noRefData': string
   'common.noSearchResultsFound': string
@@ -560,6 +561,7 @@ export interface StringsMap {
   'common.notEnabled': string
   'common.note': string
   'common.noteAccountSwitch': string
+  'common.notification': string
   'common.notificationPreferences': string
   'common.oAuthLabel': string
   'common.ok': string
