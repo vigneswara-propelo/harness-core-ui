@@ -151,23 +151,22 @@ const HelmRollbackInputStep: React.FC<HelmRollbackProps> = ({ inputSetData, allo
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-            label={getString('pipelineSteps.timeoutLabel')}
-            disabled={inputSetData?.readonly}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: inputSetData?.readonly
-            }}
-            template={inputSetData?.template}
-            fieldPath={'timeout'}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+          label={getString('pipelineSteps.timeoutLabel')}
+          disabled={inputSetData?.readonly}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: inputSetData?.readonly
+          }}
+          template={inputSetData?.template}
+          fieldPath={'timeout'}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
     </>
   )

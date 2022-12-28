@@ -163,7 +163,7 @@ function PrimaryArtifactRef({
   }
 
   return (
-    <Container width={391}>
+    <Container width={400}>
       {getMultiTypeFromValue(template?.artifacts?.primary?.primaryArtifactRef as string) ===
         MultiTypeInputType.RUNTIME && (
         <ExperimentalInput

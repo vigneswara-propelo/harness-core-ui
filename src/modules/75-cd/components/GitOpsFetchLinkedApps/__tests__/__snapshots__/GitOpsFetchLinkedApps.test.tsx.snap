@@ -34,7 +34,7 @@ exports[`Gitops Fetch Linked App Step - Input Set it should render input set: In
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup sm"
+      class="fieldAndOptions formGroup sm"
     >
       <div
         class="bp3-form-group"

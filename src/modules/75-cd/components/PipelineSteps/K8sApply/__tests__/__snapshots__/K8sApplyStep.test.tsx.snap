@@ -31,10 +31,10 @@ exports[`Test K8sApplyStep should render edit view 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup sm"
+      class="fieldAndOptions formGroup sm"
     >
       <div
-        class="bp3-form-group checkbox"
+        class="bp3-form-group"
       >
         <label
           class="bp3-label"
@@ -1694,7 +1694,7 @@ exports[`Test K8sApplyStep should render edit view as edit step with all runtime
           class="bp3-form-content"
         >
           <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--horizontal StyledProps--main"
           >
             <div
               class="bp3-form-group bp3-disabled runtimeDisabled"
@@ -2598,10 +2598,10 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup sm"
+      class="fieldAndOptions formGroup sm"
     >
       <div
-        class="bp3-form-group checkbox"
+        class="bp3-form-group"
       >
         <label
           class="bp3-label"

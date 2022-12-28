@@ -133,16 +133,14 @@ function Artifactory({
                     }}
                   />
                 </div>
-                <div className={css.imagePathContainer}>
-                  <ServerlessArtifactoryRepository
-                    connectorRef={getConnectorIdValue(prevStepData)}
-                    expressions={[]}
-                    allowableTypes={[MultiTypeInputType.FIXED]}
-                    formik={formik}
-                    repoFormat={formik.values.repositoryFormat}
-                    fieldName={'repository'}
-                  />
-                </div>
+                <ServerlessArtifactoryRepository
+                  connectorRef={getConnectorIdValue(prevStepData)}
+                  expressions={[]}
+                  allowableTypes={[MultiTypeInputType.FIXED]}
+                  formik={formik}
+                  repoFormat={formik.values.repositoryFormat}
+                  fieldName={'repository'}
+                />
                 {isGenericRepositoryFormat && (
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTextInput

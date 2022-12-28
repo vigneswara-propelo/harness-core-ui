@@ -198,43 +198,41 @@ const TerraformRollbackInputStep: React.FC<TerraformRollbackProps> = ({
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TimeoutFieldInputSetView
-            template={inputSetData?.template}
-            fieldPath={'timeout'}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-            disabled={readonly}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          template={inputSetData?.template}
+          fieldPath={'timeout'}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+          disabled={readonly}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
       {getMultiTypeFromValue(inputSetData?.template?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            template={inputSetData?.template}
-            fieldPath={'spec.provisionerIdentifier'}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.provisionerIdentifier`}
-            placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
-            label={getString('pipelineSteps.provisionerIdentifier')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-          />
-        </div>
+        <TextFieldInputSetView
+          template={inputSetData?.template}
+          fieldPath={'spec.provisionerIdentifier'}
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.provisionerIdentifier`}
+          placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
+          label={getString('pipelineSteps.provisionerIdentifier')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
     </>
   )

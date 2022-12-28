@@ -1342,7 +1342,7 @@ exports[`Terraform Remote Form tests should be able to load edit mode correctly 
                   class="bp3-form-content"
                 >
                   <div
-                    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                    class="Layout--horizontal StyledProps--main"
                   >
                     <div
                       class="bp3-form-group bp3-disabled runtimeDisabled"

@@ -352,7 +352,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               allowableTypes,
               expressions
             }}
-            width={391}
+            width={400}
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
@@ -407,21 +407,22 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           />
         )}
       </div>
-      <div className={css.inputFieldLayout}>
-        {isFieldRuntime(`${manifestPath}.spec.store.spec.branch`, template) && (
-          <TextFieldInputSetView
-            disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.branch`)}
-            name={`${path}.${manifestPath}.spec.store.spec.branch`}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            label={getString('pipelineSteps.deploy.inputSet.branch')}
-            fieldPath={`${manifestPath}.spec.store.spec.branch`}
-            template={template}
-          />
-        )}
-      </div>
+
+      {isFieldRuntime(`${manifestPath}.spec.store.spec.branch`, template) && (
+        <TextFieldInputSetView
+          disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.branch`)}
+          name={`${path}.${manifestPath}.spec.store.spec.branch`}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          label={getString('pipelineSteps.deploy.inputSet.branch')}
+          fieldPath={`${manifestPath}.spec.store.spec.branch`}
+          template={template}
+          className={cx(css.fieldAndOptionsWidth, css.verticalSpacingInput)}
+        />
+      )}
+
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.commitId`, template) && (
           <div className={css.verticalSpacingInput}>

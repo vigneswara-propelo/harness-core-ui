@@ -303,24 +303,22 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(props.stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            className={stepCss.checkbox}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-            disabled={readonly}
-            fieldPath={'timeout'}
-            template={inputSetData?.template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(props.stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+          disabled={readonly}
+          fieldPath={'timeout'}
+          template={inputSetData?.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
 
       {getMultiTypeFromValue(inputSetData?.template?.spec?.filePaths) === MultiTypeInputType.RUNTIME && (

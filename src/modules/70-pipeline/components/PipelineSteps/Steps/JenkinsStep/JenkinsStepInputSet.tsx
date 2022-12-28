@@ -202,23 +202,22 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
     <>
       <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
         {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(css.formGroup, css.sm)}>
-            <TimeoutFieldInputSetView
-              multiTypeDurationProps={{
-                configureOptionsProps: {
-                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-                },
-                allowableTypes,
-                expressions,
-                disabled: readonly
-              }}
-              label={getString('pipelineSteps.timeoutLabel')}
-              name={`${prefix}timeout`}
-              disabled={readonly}
-              fieldPath={'timeout'}
-              template={template}
-            />
-          </div>
+          <TimeoutFieldInputSetView
+            multiTypeDurationProps={{
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
+              allowableTypes,
+              expressions,
+              disabled: readonly
+            }}
+            label={getString('pipelineSteps.timeoutLabel')}
+            name={`${prefix}timeout`}
+            disabled={readonly}
+            fieldPath={'timeout'}
+            template={template}
+            className={cx(css.formGroup, css.sm)}
+          />
         )}
         {getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME ? (
           <FormMultiTypeConnectorField

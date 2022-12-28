@@ -170,23 +170,22 @@ const SwapRollbackInputStep: React.FC<SwapRollbackProps> = ({ inputSetData, allo
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            name={getNameEntity('timeout')}
-            label={getString('pipelineSteps.timeoutLabel')}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes: allowableTypes,
-              expressions,
-              disabled: inputSetData?.readonly
-            }}
-            disabled={inputSetData?.readonly}
-            fieldPath={'timeout'}
-            template={inputSetData?.template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          name={getNameEntity('timeout')}
+          label={getString('pipelineSteps.timeoutLabel')}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes: allowableTypes,
+            expressions,
+            disabled: inputSetData?.readonly
+          }}
+          disabled={inputSetData?.readonly}
+          fieldPath={'timeout'}
+          template={inputSetData?.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
 
       {

@@ -520,7 +520,7 @@ exports[`Test Wait Step renders deployment form 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup sm"
+      class="fieldAndOptions formGroup sm"
     >
       <div
         class="bp3-form-group"
@@ -652,7 +652,7 @@ exports[`Test Wait Step renders input sets 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup sm"
+      class="fieldAndOptions formGroup sm"
     >
       <div
         class="bp3-form-group"

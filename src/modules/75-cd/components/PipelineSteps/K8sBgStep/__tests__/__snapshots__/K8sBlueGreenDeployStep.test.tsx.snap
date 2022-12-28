@@ -12,7 +12,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup sm"
+      class="fieldAndOptions formGroup sm"
     >
       <div
         class="bp3-form-group"
@@ -879,7 +879,7 @@ exports[`Test K8sBlueGreenDeployStep should render input with no path 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup sm"
+      class="fieldAndOptions formGroup sm"
     >
       <div
         class="bp3-form-group"

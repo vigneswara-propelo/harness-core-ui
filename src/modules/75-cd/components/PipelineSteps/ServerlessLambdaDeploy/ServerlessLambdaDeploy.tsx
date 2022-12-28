@@ -154,23 +154,22 @@ const ServerlessLambdaDeployInputStep: React.FC<ServerlessLambdaDeployProps> = (
   return (
     <>
       {getMultiTypeFromValue(inputSetData.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}timeout`}
-            label={getString('pipelineSteps.timeoutLabel')}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: inputSetData.readonly
-            }}
-            disabled={inputSetData.readonly}
-            fieldPath="timeout"
-            template={inputSetData.template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}timeout`}
+          label={getString('pipelineSteps.timeoutLabel')}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: inputSetData.readonly
+          }}
+          disabled={inputSetData.readonly}
+          fieldPath="timeout"
+          template={inputSetData.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {getMultiTypeFromValue(inputSetData.template?.spec?.commandOptions) === MultiTypeInputType.RUNTIME && (
         <ServerlessDeployCommandOptions

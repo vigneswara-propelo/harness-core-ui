@@ -822,7 +822,7 @@ exports[`Test UpdateReleaseRepoStep should render edit view as edit step with ru
     >
       <div>
         <div
-          class="formGroup sm"
+          class="fieldAndOptions formGroup sm"
         >
           <div
             class="bp3-form-group"
@@ -1124,7 +1124,7 @@ exports[`Test UpdateReleaseRepoStep should render edit view as edit step with ru
     >
       <div>
         <div
-          class="formGroup sm"
+          class="fieldAndOptions formGroup sm"
         >
           <div
             class="bp3-form-group"

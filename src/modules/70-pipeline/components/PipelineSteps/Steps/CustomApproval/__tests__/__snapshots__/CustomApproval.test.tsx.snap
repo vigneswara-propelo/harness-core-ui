@@ -53,7 +53,7 @@ exports[`CustomApproval tests Basic snapshot - inputset mode but no runtime valu
     >
       <div>
         <div
-          class="formGroup sm"
+          class="fieldAndOptions formGroup sm"
         >
           <div
             class="bp3-form-group"
@@ -226,7 +226,7 @@ exports[`CustomApproval tests Basic snapshot - inputset mode but no runtime valu
           </div>
         </div>
         <div
-          class="formGroup sm"
+          class="fieldAndOptions formGroup sm"
         >
           <div
             class="bp3-form-group"
@@ -303,7 +303,7 @@ exports[`CustomApproval tests Basic snapshot - inputset mode but no runtime valu
           </div>
         </div>
         <div
-          class="formGroup sm"
+          class="fieldAndOptions formGroup sm"
         >
           <div
             class="bp3-form-group"

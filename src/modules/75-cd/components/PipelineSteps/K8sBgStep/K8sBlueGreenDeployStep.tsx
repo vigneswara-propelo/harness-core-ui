@@ -171,23 +171,22 @@ const K8BGDeployInputStep: React.FC<K8BGDeployProps> = ({ inputSetData, allowabl
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            label={getString('pipelineSteps.timeoutLabel')}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: inputSetData?.readonly
-            }}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-            disabled={inputSetData?.readonly}
-            fieldPath={'timeout'}
-            template={inputSetData?.template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          label={getString('pipelineSteps.timeoutLabel')}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: inputSetData?.readonly
+          }}
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+          disabled={inputSetData?.readonly}
+          fieldPath={'timeout'}
+          template={inputSetData?.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {getMultiTypeFromValue(inputSetData?.template?.spec?.skipDryRun) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>

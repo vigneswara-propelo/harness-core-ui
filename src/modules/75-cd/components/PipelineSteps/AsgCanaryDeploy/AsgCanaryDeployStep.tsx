@@ -183,23 +183,22 @@ const AsgCanaryDeployInputStep: React.FC<AsgCanaryDeployProps> = ({
   return (
     <>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}timeout`}
-            disabled={readonly}
-            template={template}
-            fieldPath={'timeout'}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}timeout`}
+          disabled={readonly}
+          template={template}
+          fieldPath={'timeout'}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
       {(getMultiTypeFromValue(template?.spec?.instanceSelection?.spec?.count) === MultiTypeInputType.RUNTIME ||
         getMultiTypeFromValue(template?.spec?.instanceSelection?.spec?.percentage) === MultiTypeInputType.RUNTIME) && (

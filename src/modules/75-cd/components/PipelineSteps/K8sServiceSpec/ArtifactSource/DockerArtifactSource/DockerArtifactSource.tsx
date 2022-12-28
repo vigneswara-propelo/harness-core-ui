@@ -197,7 +197,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
   return (
     <>
       {isRuntime && (
-        <Layout.Vertical key={artifactPath} className={css.inputWidth}>
+        <Layout.Vertical key={artifactPath}>
           {isFieldRuntime(`artifacts.${artifactPath}.spec.connectorRef`, template) && (
             <FormMultiTypeConnectorField
               name={`${path}.artifacts.${artifactPath}.spec.connectorRef`}
@@ -208,7 +208,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
               projectIdentifier={projectIdentifier}
               configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
-              width={391}
+              width={400}
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
@@ -237,6 +237,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
               fieldPath={`artifacts.${artifactPath}.spec.imagePath`}
               template={template}
+              className={css.inputFieldLayout}
             />
           )}
 
@@ -250,6 +251,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
               }}
               disabled={true}
               name={`${path}.artifacts.${artifactPath}.spec.tag`}
+              className={css.width400}
             />
           )}
 

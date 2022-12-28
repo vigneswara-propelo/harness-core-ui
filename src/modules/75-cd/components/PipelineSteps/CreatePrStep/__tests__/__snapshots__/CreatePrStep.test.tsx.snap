@@ -959,7 +959,7 @@ exports[`Test CreatePRStep should render edit view as inputset step 1`] = `
     >
       <div>
         <div
-          class="formGroup sm"
+          class="fieldAndOptions formGroup sm"
         >
           <div
             class="bp3-form-group"

@@ -102,7 +102,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
         <TimeoutFieldInputSetView
           name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
-          className={css.deploymentViewMedium}
+          className={css.deploymentViewFieldWidth}
           multiTypeDurationProps={{
             configureOptionsProps: {
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -126,7 +126,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          width={385}
+          width={400}
           setRefValue
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeProps={{
@@ -144,7 +144,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
       {getMultiTypeFromValue(template?.spec?.issueKey) === MultiTypeInputType.RUNTIME ? (
         <TextFieldInputSetView
           label={getString('pipeline.jiraApprovalStep.issueKey')}
-          className={css.deploymentViewMedium}
+          className={css.deploymentViewFieldWidth}
           name={`${prefix}spec.issueKey`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           placeholder={getString('pipeline.jiraApprovalStep.issueKeyPlaceholder')}
@@ -160,7 +160,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
       {getMultiTypeFromValue(template?.spec?.transitionTo?.status) === MultiTypeInputType.RUNTIME ? (
         <SelectInputSetView
           selectItems={statusOptions}
-          className={css.deploymentViewMedium}
+          className={css.deploymentViewFieldWidth}
           label={getString('status')}
           name={`${prefix}spec.transitionTo.status`}
           disabled={isApprovalStepFieldDisabled(readonly)}
@@ -192,7 +192,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
         <TextFieldInputSetView
           placeholder={getString('pipeline.jiraUpdateStep.transitionPlaceholder')}
           label={getString('pipeline.jiraUpdateStep.transitionLabel')}
-          className={css.deploymentViewMedium}
+          className={css.deploymentViewFieldWidth}
           name={`${prefix}spec.transitionTo.transitionName`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTextInputProps={{ expressions, allowableTypes }}
@@ -212,7 +212,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
             disabled={isApprovalStepFieldDisabled(readonly)}
             name={`${prefix}spec.fields[${index}].value`}
             placeholder={field.name}
-            className={css.deploymentViewMedium}
+            className={css.deploymentViewFieldWidth}
             multiTextInputProps={{
               allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
               expressions

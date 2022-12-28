@@ -166,23 +166,22 @@ const K8sBGSwapInputStep: React.FC<K8sBGSwapProps> = ({ inputSetData, allowableT
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: inputSetData?.readonly
-            }}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-            label={getString('pipelineSteps.timeoutLabel')}
-            disabled={inputSetData?.readonly}
-            fieldPath={'timeout'}
-            template={inputSetData?.template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: inputSetData?.readonly
+          }}
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+          label={getString('pipelineSteps.timeoutLabel')}
+          disabled={inputSetData?.readonly}
+          fieldPath={'timeout'}
+          template={inputSetData?.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
     </>
   )

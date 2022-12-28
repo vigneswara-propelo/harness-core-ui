@@ -484,23 +484,22 @@ const K8sDeleteInputStep: React.FC<K8sDeleteProps> = ({ inputSetData, readonly, 
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            fieldPath={'timeout'}
-            template={inputSetData?.template}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-            disabled={readonly}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          fieldPath={'timeout'}
+          template={inputSetData?.template}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+          disabled={readonly}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {getMultiTypeFromValue(inputSetData?.template?.spec?.deleteResources?.spec?.manifestPaths as string) ===
         MultiTypeInputType.RUNTIME && (

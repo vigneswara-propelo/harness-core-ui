@@ -79,7 +79,7 @@ exports[`UpdateReleaseREpoInput tests renders input sets 1`] = `
     >
       <div>
         <div
-          class="formGroup sm"
+          class="fieldAndOptions formGroup sm"
         >
           <div
             class="bp3-form-group"

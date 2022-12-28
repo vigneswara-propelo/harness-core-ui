@@ -143,23 +143,22 @@ const K8sCanaryDeleteInputWidget: React.FC<K8sCanaryDeployProps> = ({ inputSetDa
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: inputSetData?.readonly
-            }}
-            label={getString('pipelineSteps.timeoutLabel')}
-            disabled={inputSetData?.readonly}
-            fieldPath={'timeout'}
-            template={inputSetData?.template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: inputSetData?.readonly
+          }}
+          label={getString('pipelineSteps.timeoutLabel')}
+          disabled={inputSetData?.readonly}
+          fieldPath={'timeout'}
+          template={inputSetData?.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
     </>
   )

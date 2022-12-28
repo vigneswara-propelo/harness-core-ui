@@ -1472,7 +1472,7 @@ exports[`Test Policy Step render runtime inputs in edit step 1`] = `
           class="bp3-form-content"
         >
           <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--horizontal StyledProps--main"
           >
             <div
               class="bp3-form-group bp3-disabled runtimeDisabled"
@@ -1510,10 +1510,10 @@ exports[`Test Policy Step renders deployment form 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup lg"
+      class="fieldAndOptions formGroup lg duration"
     >
       <div
-        class="bp3-form-group duration"
+        class="bp3-form-group"
       >
         <label
           class="bp3-label"
@@ -1812,10 +1812,10 @@ exports[`Test Policy Step renders input sets 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup lg"
+      class="fieldAndOptions formGroup lg duration"
     >
       <div
-        class="bp3-form-group duration"
+        class="bp3-form-group"
       >
         <label
           class="bp3-label"

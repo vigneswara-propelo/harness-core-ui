@@ -186,71 +186,69 @@ const ECSInfraSpecInputForm = ({
         </div>
       )}
       {getMultiTypeFromValue(template?.region) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <SelectInputSetView
-            fieldPath={'region'}
-            template={template}
-            name={regionFieldName}
-            selectItems={regions}
-            useValue
-            multiTypeInputProps={{
-              expressions,
-              allowableTypes,
-              selectProps: {
-                items: regions,
-                popoverClassName: cx(stepCss.formGroup, stepCss.md)
-              },
-              onChange: selectedRegion => {
-                if (get(formik?.values, regionFieldName) !== ((selectedRegion as SelectOption).value as string)) {
-                  resetFieldValue(clusterFieldName, formik)
-                }
+        <SelectInputSetView
+          className={cx(stepCss.formGroup, stepCss.md)}
+          fieldPath={'region'}
+          template={template}
+          name={regionFieldName}
+          selectItems={regions}
+          useValue
+          multiTypeInputProps={{
+            expressions,
+            allowableTypes,
+            selectProps: {
+              items: regions,
+              popoverClassName: cx(stepCss.formGroup, stepCss.md)
+            },
+            onChange: selectedRegion => {
+              if (get(formik?.values, regionFieldName) !== ((selectedRegion as SelectOption).value as string)) {
+                resetFieldValue(clusterFieldName, formik)
               }
-            }}
-            label={getString('regionLabel')}
-            placeholder={getString('pipeline.regionPlaceholder')}
-            disabled={readonly}
-          />
-        </div>
+            }
+          }}
+          label={getString('regionLabel')}
+          placeholder={getString('pipeline.regionPlaceholder')}
+          disabled={readonly}
+        />
       )}
       {getMultiTypeFromValue(template?.cluster) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <SelectInputSetView
-            fieldPath={'cluster'}
-            template={template}
-            name={clusterFieldName}
-            selectItems={clusters}
-            useValue
-            multiTypeInputProps={{
-              expressions,
-              allowableTypes,
-              selectProps: {
-                items: clusters,
-                popoverClassName: cx(stepCss.formGroup, stepCss.md),
-                allowCreatingNewItems: true,
-                itemRenderer,
-                noResults: (
-                  <Text lineClamp={1} width={500} height={100} padding="small">
-                    {getRBACErrorMessage(fetchClustersError as RBACError) || getString('pipeline.noClustersFound')}
-                  </Text>
-                )
-              },
-              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                if (
-                  e?.target?.type !== 'text' ||
-                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
-                ) {
-                  return
-                }
-                if (!loadingClusters) {
-                  fetchClusters(initialConnectorValue, initialRegionValue, environmentRef, infrastructureRef)
-                }
+        <SelectInputSetView
+          className={cx(stepCss.formGroup, stepCss.md)}
+          fieldPath={'cluster'}
+          template={template}
+          name={clusterFieldName}
+          selectItems={clusters}
+          useValue
+          multiTypeInputProps={{
+            expressions,
+            allowableTypes,
+            selectProps: {
+              items: clusters,
+              popoverClassName: cx(stepCss.formGroup, stepCss.md),
+              allowCreatingNewItems: true,
+              itemRenderer,
+              noResults: (
+                <Text lineClamp={1} width={500} height={100} padding="small">
+                  {getRBACErrorMessage(fetchClustersError as RBACError) || getString('pipeline.noClustersFound')}
+                </Text>
+              )
+            },
+            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+              if (
+                e?.target?.type !== 'text' ||
+                (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+              ) {
+                return
               }
-            }}
-            label={getString('common.cluster')}
-            placeholder={getString('cd.steps.common.selectOrEnterClusterPlaceholder')}
-            disabled={readonly}
-          />
-        </div>
+              if (!loadingClusters) {
+                fetchClusters(initialConnectorValue, initialRegionValue, environmentRef, infrastructureRef)
+              }
+            }
+          }}
+          label={getString('common.cluster')}
+          placeholder={getString('cd.steps.common.selectOrEnterClusterPlaceholder')}
+          disabled={readonly}
+        />
       )}
     </Layout.Vertical>
   )

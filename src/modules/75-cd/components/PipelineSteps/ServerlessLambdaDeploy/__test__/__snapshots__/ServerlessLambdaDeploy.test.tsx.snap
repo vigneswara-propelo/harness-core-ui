@@ -987,7 +987,7 @@ exports[`Test ServerlessDeployStep - InputSet view when path under inputSetData 
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup sm"
+      class="fieldAndOptions formGroup sm"
     >
       <div
         class="bp3-form-group"
