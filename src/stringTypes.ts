@@ -4283,6 +4283,8 @@ export interface StringsMap {
   'pipeline.stepDescription.TerraformDestroy': string
   'pipeline.stepDescription.TerraformPlan': string
   'pipeline.stepDescription.TerraformRollback': string
+  'pipeline.stepDescription.TerragruntApply': string
+  'pipeline.stepDescription.TerragruntPlan': string
   'pipeline.stepDescription.Verify': string
   'pipeline.stepDescription.Wait': string
   'pipeline.stepDescription.createPR': string
@@ -4816,8 +4818,6 @@ export interface StringsMap {
   'cd.componentsInstalled': string
   'cd.configFileDetails': string
   'cd.configFilePlaceHolder': string
-  'cd.configFileStepOne': string
-  'cd.configFileStore': string
   'cd.configFileStoreTitle': string
   'cd.configIdentifer': string
   'cd.configurationFile': string
@@ -4882,6 +4882,7 @@ export interface StringsMap {
   'cd.environmentUpdated': string
   'cd.exportTerraformHumanReadablePlan': string
   'cd.exportTerraformPlanJson': string
+  'cd.exportTerragruntPlanJson': string
   'cd.featureRestriction.banners.deploymentsPerMonthLevelUp': string
   'cd.featureRestriction.banners.dpmWarningActive': string
   'cd.featureRestriction.banners.initialDeploymentsWarningActive': string
@@ -5014,6 +5015,7 @@ export interface StringsMap {
   'cd.miniKubeCmd3': string
   'cd.miniKubeCmd4': string
   'cd.minikube': string
+  'cd.moduleConfiguration': string
   'cd.moreIssue': string
   'cd.moreIssues': string
   'cd.nameEmptyError': string
@@ -5331,7 +5333,11 @@ export interface StringsMap {
   'cd.steps.tasInfra.spacePlaceholder': string
   'cd.steps.tasInfra.spacesError': string
   'cd.successfullyLinkedClusters': string
+  'cd.terraformConfigFileStepOne': string
+  'cd.terraformConfigFileStore': string
   'cd.terraformVarFiles': string
+  'cd.terragruntConfigFileStepOne': string
+  'cd.terragruntConfigFileStore': string
   'cd.testConnectionStepName': string
   'cd.tfVarStore': string
   'cd.typeError': string

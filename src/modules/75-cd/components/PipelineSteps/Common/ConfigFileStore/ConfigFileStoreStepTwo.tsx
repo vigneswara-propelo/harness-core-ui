@@ -31,21 +31,21 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { HarnessOption } from '@pipeline/components/StartupScriptSelection/HarnessOption'
-import { formInputNames, formikOnChangeNames, stepTwoValidationSchema, getPath } from './TerraformConfigFormHelper'
-
-import type { Connector } from '../TerraformInterfaces'
-
-import css from './TerraformConfigForm.module.scss'
+import { formInputNames, formikOnChangeNames, stepTwoValidationSchema, getPath } from './ConfigFileStoreHelper'
+import type { Connector } from './ConfigFileStoreHelper'
+import css from './ConfigFileStore.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-interface TerraformConfigStepTwoProps {
+
+interface ConfigFileStoreStepTwoProps {
   allowableTypes: AllowedTypes
   isReadonly: boolean
   onSubmitCallBack: any
   isTerraformPlan?: boolean
   isBackendConfig?: boolean
+  isTerragruntPlan?: boolean
 }
 
-export const TerraformConfigStepTwo: React.FC<StepProps<any> & TerraformConfigStepTwoProps> = ({
+export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreStepTwoProps> = ({
   previousStep,
   prevStepData,
   onSubmitCallBack,
@@ -53,7 +53,8 @@ export const TerraformConfigStepTwo: React.FC<StepProps<any> & TerraformConfigSt
   allowableTypes,
   name,
   isTerraformPlan = false,
-  isBackendConfig = false
+  isBackendConfig = false,
+  isTerragruntPlan = false
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -61,16 +62,16 @@ export const TerraformConfigStepTwo: React.FC<StepProps<any> & TerraformConfigSt
     { label: getString('gitFetchTypes.fromBranch'), value: getString('pipelineSteps.deploy.inputSet.branch') },
     { label: getString('gitFetchTypes.fromCommit'), value: getString('pipelineSteps.commitIdValue') }
   ]
-  const validationSchema = stepTwoValidationSchema(isTerraformPlan, isBackendConfig, getString)
+  const validationSchema = stepTwoValidationSchema(isTerraformPlan, isTerragruntPlan, isBackendConfig, getString)
 
   const [path, setPath] = React.useState('')
 
   useEffect(() => {
-    setPath(getPath(isTerraformPlan, isBackendConfig))
-  }, [isTerraformPlan, isBackendConfig])
+    setPath(getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig))
+  }, [isTerraformPlan, isTerragruntPlan, isBackendConfig])
 
   if (prevStepData?.selectedType === 'Harness') {
-    let values = get(prevStepData.formValues, `${getPath(isTerraformPlan, isBackendConfig)}.store`)
+    let values = get(prevStepData.formValues, `${getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig)}.store`)
     if (values?.type !== 'Harness') {
       values = null
     }
@@ -254,7 +255,7 @@ export const TerraformConfigStepTwo: React.FC<StepProps<any> & TerraformConfigSt
                               label={getString('cd.useConnectorCredentials')}
                               className={css.checkBox}
                               checked={
-                                isTerraformPlan
+                                isTerraformPlan || isTerragruntPlan
                                   ? formik?.values?.spec?.configuration?.configFiles?.moduleSource
                                       ?.useConnectorCredentials
                                   : formik?.values?.spec?.configuration?.spec?.configFiles?.moduleSource

@@ -195,6 +195,7 @@ enterWorkDirectory: Enter Working Directory
 enterTragets: Enter Targets
 exportTerraformPlanJson: Export JSON representation of Terraform Plan
 exportTerraformHumanReadablePlan: Export Human Readable representation of Terraform Plan
+exportTerragruntPlanJson: Export JSON representation of Terragrunt Plan
 specifyTargetHost: Specify Target Host
 configurationFile: 'Configuration File Repository'
 backendConfigurationFile: 'Backend Configuration File Repository (optional)'
@@ -414,8 +415,10 @@ featureRestriction:
     initialDeploymentsWarningActive: You have used {{ warningLimit }}% of deployments included in the free plan. After 1,000 deployments, the free plan will be restricted to 100 deployments per month.
     serviceOveruseTeamEnterprise: You have exceeded your service subscription limit. Consider increasing your limits to keep shipping.
 configFileDetails: 'Config File Details'
-configFileStore: 'Specify Terraform Config File Store'
-configFileStepOne: 'Terraform Config Store'
+terraformConfigFileStore: 'Specify Terraform Config File Store'
+terragruntConfigFileStore: 'Specify Terragrunt Config File Store'
+terraformConfigFileStepOne: 'Terraform Config Store'
+terragruntConfigFileStepOne: 'Terragrunt Config Store'
 configFileStoreTitle: 'Config File'
 backendConfigFileDetails: 'Backend Config File Details'
 backendConfigFileStore: 'Specify Terraform Backend Config File Store'
@@ -727,6 +730,7 @@ ElastigroupBGStageSetup:
   configureStageListener: Configure your Stage Listener
   listenerColon: 'Listener :'
   ruleColon: 'Rule :'
+moduleConfiguration: Module Configuration
 inlineEntityFilters:
   filterIdentifier: Filter identifier
   enterFilterIdentifier: Enter filter identifier

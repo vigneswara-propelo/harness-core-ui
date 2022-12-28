@@ -21,7 +21,8 @@ import {
   StepWizard,
   ButtonVariation,
   Icon,
-  AllowedTypes
+  AllowedTypes,
+  FormError
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
@@ -30,8 +31,7 @@ import cx from 'classnames'
 import { cloneDeep, set, unset, get } from 'lodash-es'
 
 import type { FormikProps } from 'formik'
-
-import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
+import { Classes, Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
@@ -42,14 +42,9 @@ import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/compo
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-
-import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
-import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
-import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useQueryParams } from '@common/hooks'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
-
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
@@ -60,23 +55,12 @@ import StepGithubAuthentication from '@connectors/components/CreateConnector/Git
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
 import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
-
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
+import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
+import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import { isMultiTypeRuntime } from '@common/utils/utils'
-import { TFMonaco } from './TFMonacoEditor'
-
-import TfVarFileList from './TFVarFileList'
-import { TFArtifactoryForm } from './TerraformArtifactoryForm'
-import {
-  BackendConfigurationTypes,
-  ConfigurationTypes,
-  TerraformData,
-  TerraformProps,
-  TFFormData
-} from '../TerraformInterfaces'
-import { ConfigFileStoreStepOne } from '../../ConfigFileStore/ConfigFileStoreStepOne'
-import { ConfigFileStoreStepTwo } from '../../ConfigFileStore/ConfigFileStoreStepTwo'
 import {
   ConnectorMap,
   ConnectorTypes,
@@ -84,13 +68,16 @@ import {
   getConfigFilePath,
   getPath
 } from '../../ConfigFileStore/ConfigFileStoreHelper'
-import { formatArtifactoryData } from './TerraformArtifactoryFormHelper'
+import { TFArtifactoryForm } from '../../Terraform/Editview/TerraformArtifactoryForm'
+import { BackendConfigurationTypes, ConfigurationTypes } from '../../Terraform/TerraformInterfaces'
+import { formatArtifactoryData } from '../../Terraform/Editview/TerraformArtifactoryFormHelper'
+import type { TerragruntData, TerragruntProps } from '../TerragruntInterface'
+import { ConfigFileStoreStepOne } from '../../ConfigFileStore/ConfigFileStoreStepOne'
+import { ConfigFileStoreStepTwo } from '../../ConfigFileStore/ConfigFileStoreStepTwo'
+import TgVarFileList from './TGVarFileList'
+import { DIALOG_PROPS } from '../TerragruntHelper'
+import css from '../../Terraform/Editview/TerraformVarfile.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import css from './TerraformVarfile.module.scss'
-
-const setInitialValues = (data: TFFormData): TFFormData => {
-  return data
-}
 
 interface StepChangeData<SharedObject> {
   prevStep?: number
@@ -98,35 +85,17 @@ interface StepChangeData<SharedObject> {
   prevStepData: SharedObject
 }
 
-export default function TerraformEditView(
-  props: TerraformProps,
-  formikRef: StepFormikFowardRef<TFFormData>
+export default function TerragruntEitView(
+  props: TerragruntProps,
+  formikRef: StepFormikFowardRef<TerragruntData>
 ): React.ReactElement {
   const { stepType, isNewStep = true } = props
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, readonly = false } = props
   const { getString } = useStrings()
-  const { TERRAFORM_REMOTE_BACKEND_CONFIG } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
-    projectIdentifier: string
-    orgIdentifier: string
-    accountId: string
-  }>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
-  const planValidationSchema = Yup.object().shape({
-    ...getNameAndIdentifierSchema(getString, stepViewType),
-    timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
-    spec: Yup.object().shape({
-      provisionerIdentifier: IdentifierSchemaWithOutName(getString, {
-        requiredErrorMsg: getString('common.validation.provisionerIdentifierIsRequired'),
-        regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
-      }),
-      configuration: Yup.object().shape({
-        command: Yup.string().required(getString('pipelineSteps.commandRequired'))
-      })
-    })
-  })
   const regularValidationSchema = Yup.object().shape({
     ...getNameAndIdentifierSchema(getString, stepViewType),
     timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
@@ -146,7 +115,8 @@ export default function TerraformEditView(
     })
   })
   let configurationTypes: SelectOption[]
-  if (stepType === StepType.TerraformApply) {
+
+  if (stepType === StepType.TerragruntApply) {
     configurationTypes = [
       { label: getString('inline'), value: ConfigurationTypes.Inline },
       { label: getString('pipelineSteps.configTypes.fromPlan'), value: ConfigurationTypes.InheritFromPlan }
@@ -165,22 +135,11 @@ export default function TerraformEditView(
   const [connectorView, setConnectorView] = React.useState(false)
   const [selectedConnector, setSelectedConnector] = React.useState<ConnectorTypes | ''>('')
 
-  const query = useQueryParams()
-  const sectionId = (query as any).sectionId || ''
-
-  const DIALOG_PROPS: IDialogProps = {
-    isOpen: true,
-    usePortal: true,
-    autoFocus: true,
-    canEscapeKeyClose: true,
-    canOutsideClickClose: true,
-    enforceFocus: false,
-    style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
-  }
+  const { sectionId } = useQueryParams<any>()
 
   const getNewConnectorSteps = () => {
     const connectorType = ConnectorMap[selectedConnector]
-    const buildPayload = getBuildPayload(ConnectorMap[selectedConnector])
+    const buildPayload = getBuildPayload(connectorType)
     return (
       <StepWizard title={getString('connectors.createNewConnector')}>
         <ConnectorDetailsStep
@@ -283,36 +242,184 @@ export default function TerraformEditView(
       </StepWizard>
     )
   }
-
   const onStepChange = (arg: StepChangeData<any>): void => {
     if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 1) {
       setConnectorView(false)
     }
   }
-
   const getTitle = (isBackendConfig: boolean): React.ReactElement => (
     <Layout.Vertical flex style={{ justifyContent: 'center', alignItems: 'center' }} margin={{ bottom: 'xlarge' }}>
-      <Icon name="service-terraform" className={css.remoteIcon} size={50} padding={{ bottom: 'large' }} />
+      <Icon
+        name={isBackendConfig ? 'service-terraform' : 'service-terragrunt'}
+        className={css.remoteIcon}
+        size={50}
+        padding={{ bottom: 'large' }}
+      />
       <Text color={Color.WHITE}>
-        {isBackendConfig ? getString('cd.backendConfigFileStoreTitle') : getString('cd.terraformConfigFileStore')}
+        {isBackendConfig ? getString('cd.backendConfigFileStoreTitle') : getString('cd.terragruntConfigFileStore')}
       </Text>
     </Layout.Vertical>
   )
-
   const onCloseConfigWizard = (): void => {
     setSelectedConnector('Git')
     setConnectorView(false)
     setShowModal(false)
     setIsEditMode(false)
   }
-
   const onCloseBackendConfigWizard = (): void => {
     setSelectedConnector('Git')
     setConnectorView(false)
     setShowBackendConfigRemoteWizard(false)
     setIsEditMode(false)
   }
+  const newConfigFileComponent = (
+    formik: FormikProps<TerragruntData>,
+    isConfig: boolean,
+    isBackendConfig: boolean
+  ): React.ReactElement => {
+    return (
+      <StepWizard title={getTitle(isBackendConfig)} className={css.configWizard} onStepChange={onStepChange}>
+        <ConfigFileStoreStepOne
+          name={
+            isBackendConfig ? getString('cd.backendConfigFileStepOne') : getString('cd.terragruntConfigFileStepOne')
+          }
+          data={formik.values}
+          isBackendConfig={isBackendConfig}
+          isReadonly={readonly}
+          isEditMode={isEditMode}
+          allowableTypes={allowableTypes}
+          setConnectorView={setConnectorView}
+          selectedConnector={selectedConnector}
+          setSelectedConnector={setSelectedConnector}
+          isTerragruntPlan={false}
+          isTerragrunt
+        />
+        {connectorView ? getNewConnectorSteps() : null}
+        {selectedConnector === 'Artifactory' ? (
+          <TFArtifactoryForm
+            isConfig={isConfig}
+            isTerraformPlan={false}
+            isBackendConfig={isBackendConfig}
+            allowableTypes={allowableTypes}
+            name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
+            onSubmitCallBack={(data: any, prevStepData: any) => {
+              const path = getPath(false, false, isBackendConfig)
+              const configObject = get(prevStepData?.formValues, path)
 
+              const valObj = formatArtifactoryData(
+                prevStepData,
+                data,
+                configObject,
+                formik,
+                isBackendConfig ? 'spec.configuration.backendConfig.spec' : 'spec.configuration.configFiles'
+              )
+              set(valObj, path, { ...configObject })
+              formik.setValues(valObj)
+              setConnectorView(false)
+              setShowModal(false)
+            }}
+          />
+        ) : (
+          <ConfigFileStoreStepTwo
+            name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
+            isBackendConfig={isBackendConfig}
+            isTerragruntPlan={false}
+            isReadonly={readonly}
+            allowableTypes={allowableTypes}
+            onSubmitCallBack={(data: any, prevStepData: any) => {
+              const path = getPath(false, false, isBackendConfig)
+              const configObject = get(data, path) || {
+                store: {}
+              }
+              if (data?.store?.type === 'Harness') {
+                configObject.store = data?.store
+              } else {
+                configObject.moduleSource = data.spec?.configuration?.spec?.configFiles?.moduleSource
+
+                if (prevStepData.identifier && prevStepData.identifier !== data?.identifier) {
+                  configObject.store.spec.connectorRef = prevStepData?.identifier
+                }
+                if (configObject?.store.spec.gitFetchType === 'Branch') {
+                  unset(configObject.store.spec, 'commitId')
+                } else if (configObject?.store.spec.gitFetchType === 'Commit') {
+                  unset(configObject.store.spec, 'branch')
+                }
+                if (configObject?.store?.spec?.artifactPaths) {
+                  unset(configObject?.store?.spec, 'artifactPaths')
+                  unset(configObject?.store?.spec, 'repositoryName')
+                }
+                if (configObject?.store?.spec?.files) {
+                  unset(configObject?.store?.spec, 'files')
+                }
+                if (configObject?.store?.spec?.secretFiles) {
+                  unset(configObject?.store?.spec, 'secretFiles')
+                }
+              }
+              const valObj = cloneDeep(formik.values)
+              configObject.store.type = prevStepData?.selectedType
+              set(valObj, path, { ...configObject })
+              formik.setValues(valObj)
+              setConnectorView(false)
+              setShowModal(false)
+            }}
+          />
+        )}
+      </StepWizard>
+    )
+  }
+
+  const inlineBackendConfig = (formik: FormikProps<TerragruntData>): React.ReactElement => (
+    <div className={cx(stepCss.formGroup, stepCss.alignStart)}>
+      <MultiTypeFieldSelector
+        name="spec.configuration.spec.backendConfig.spec.content"
+        label={
+          <Text style={{ color: 'rgb(11, 11, 13)' }}>
+            {getString('optionalField', { name: getString('cd.backEndConfig') })}
+          </Text>
+        }
+        defaultValueToReset=""
+        allowedTypes={allowableTypes}
+        skipRenderValueInExpressionLabel
+        disabled={readonly}
+        expressionRender={
+          /* istanbul ignore next */ () => {
+            return (
+              <MonacoTextField
+                name="spec.configuration.spec.backendConfig.spec.content"
+                expressions={expressions}
+                height={300}
+                disabled={readonly}
+                fullScreenAllowed
+                fullScreenTitle={getString('optionalField', { name: getString('cd.backEndConfig') })}
+              />
+            )
+          }
+        }
+      >
+        <MonacoTextField
+          name="spec.configuration.spec.backendConfig.spec.content"
+          expressions={expressions}
+          height={300}
+          disabled={readonly}
+          fullScreenAllowed
+          fullScreenTitle={getString('optionalField', { name: getString('cd.backEndConfig') })}
+        />
+      </MultiTypeFieldSelector>
+      {getMultiTypeFromValue(formik.values.spec.configuration?.spec?.backendConfig?.spec?.content) ===
+        MultiTypeInputType.RUNTIME && (
+        <ConfigureOptions
+          value={formik.values.spec.configuration?.spec?.backendConfig?.spec?.content as string}
+          type="String"
+          variableName="spec.configuration.spec.backendConfig.spec.content"
+          showRequiredField={false}
+          showDefaultField={false}
+          showAdvanced={true}
+          onChange={value => formik.setFieldValue('spec.configuration.spec.backendConfig.spec.content', value)}
+          isReadonly={readonly}
+        />
+      )}
+    </div>
+  )
   const onSelectChange = (
     e: React.ChangeEvent<HTMLSelectElement>,
     setFieldValue: (field: string, value: any) => void
@@ -341,172 +448,33 @@ export default function TerraformEditView(
     }
   }
 
-  const newConfigFileComponent = (formik: any, isConfig: boolean, isBackendConfig: boolean): React.ReactElement => {
-    return (
-      <StepWizard title={getTitle(isBackendConfig)} className={css.configWizard} onStepChange={onStepChange}>
-        <ConfigFileStoreStepOne
-          name={isBackendConfig ? getString('cd.backendConfigFileStepOne') : getString('cd.terraformConfigFileStepOne')}
-          data={formik.values}
-          isBackendConfig={isBackendConfig}
-          isReadonly={readonly}
-          isEditMode={isEditMode}
-          allowableTypes={allowableTypes}
-          setConnectorView={setConnectorView}
-          selectedConnector={selectedConnector}
-          setSelectedConnector={setSelectedConnector}
-        />
-        {connectorView ? getNewConnectorSteps() : null}
-        {selectedConnector === 'Artifactory' ? (
-          <TFArtifactoryForm
-            isConfig={isConfig}
-            isTerraformPlan={false}
-            isBackendConfig={isBackendConfig}
-            allowableTypes={allowableTypes}
-            name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
-            onSubmitCallBack={(data: any, prevStepData: any) => {
-              const path = getPath(false, false, isBackendConfig)
-              const configObject = get(prevStepData?.formValues, path)
-
-              const valObj = formatArtifactoryData(
-                prevStepData,
-                data,
-                configObject,
-                formik,
-                isBackendConfig ? 'spec.configuration.backendConfig.spec' : 'spec.configuration.configFiles'
-              )
-              set(valObj, path, { ...configObject })
-              formik.setValues(valObj)
-              setConnectorView(false)
-              setShowModal(false)
-              setShowBackendConfigRemoteWizard(false)
-            }}
-          />
-        ) : (
-          <ConfigFileStoreStepTwo
-            name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
-            isBackendConfig={isBackendConfig}
-            isReadonly={readonly}
-            allowableTypes={allowableTypes}
-            onSubmitCallBack={(data: any, prevStepData: any) => {
-              const path = getPath(false, false, isBackendConfig)
-              const configObject = get(data, path) || {
-                store: {}
-              }
-              if (data?.store?.type === 'Harness') {
-                configObject.store = data?.store
-              } else {
-                configObject.moduleSource =
-                  data?.type === 'TerraformPlan'
-                    ? data.spec?.configuration?.configFiles?.moduleSource
-                    : data.spec?.configuration?.spec?.configFiles?.moduleSource
-
-                if (prevStepData.identifier && prevStepData.identifier !== data?.identifier) {
-                  configObject.store.spec.connectorRef = prevStepData?.identifier
-                }
-                if (configObject?.store.spec.gitFetchType === 'Branch') {
-                  unset(configObject.store.spec, 'commitId')
-                } else if (configObject?.store.spec.gitFetchType === 'Commit') {
-                  unset(configObject.store.spec, 'branch')
-                }
-                if (configObject?.store?.spec?.artifactPaths) {
-                  unset(configObject?.store?.spec, 'artifactPaths')
-                  unset(configObject?.store?.spec, 'repositoryName')
-                }
-                if (configObject?.store?.spec?.files) {
-                  unset(configObject?.store?.spec, 'files')
-                }
-                if (configObject?.store?.spec?.secretFiles) {
-                  unset(configObject?.store?.spec, 'secretFiles')
-                }
-              }
-              const valObj = cloneDeep(formik.values)
-              configObject.store.type = prevStepData?.selectedType
-              set(valObj, path, { ...configObject })
-              formik.setValues(valObj)
-              setConnectorView(false)
-              setShowModal(false)
-              setShowBackendConfigRemoteWizard(false)
-            }}
-          />
-        )}
-      </StepWizard>
-    )
-  }
-
-  const inlineBackendConfig = (formik: FormikProps<TFFormData>): React.ReactElement => (
-    <div className={cx(stepCss.formGroup, css.addMarginBottom)}>
-      <MultiTypeFieldSelector
-        name="spec.configuration.spec.backendConfig.spec.content"
-        label={
-          <Text style={{ color: 'rgb(11, 11, 13)' }}>
-            {getString('optionalField', { name: getString('cd.backEndConfig') })}
-          </Text>
-        }
-        defaultValueToReset=""
-        allowedTypes={allowableTypes}
-        skipRenderValueInExpressionLabel
-        disabled={readonly}
-        expressionRender={() => {
-          return (
-            <TFMonaco
-              name="spec.configuration.spec.backendConfig.spec.content"
-              formik={formik as FormikProps<unknown>}
-              expressions={expressions}
-              title={getString('cd.backEndConfig')}
-            />
-          )
-        }}
-      >
-        <TFMonaco
-          name="spec.configuration.spec.backendConfig.spec.content"
-          formik={formik as FormikProps<unknown>}
-          expressions={expressions}
-          title={getString('cd.backEndConfig')}
-        />
-      </MultiTypeFieldSelector>
-      {getMultiTypeFromValue(formik.values.spec?.configuration?.spec?.backendConfig?.spec?.content) ===
-        MultiTypeInputType.RUNTIME && (
-        <ConfigureOptions
-          value={formik.values.spec?.configuration?.spec?.backendConfig?.spec?.content as string}
-          type="String"
-          variableName="spec.configuration.spec.backendConfig.spec.content"
-          showRequiredField={false}
-          showDefaultField={false}
-          showAdvanced={true}
-          onChange={value => formik.setFieldValue('spec.configuration.spec.backendConfig.spec.content', value)}
-          isReadonly={readonly}
-        />
-      )}
-    </div>
-  )
-
   return (
     <>
-      <Formik<TFFormData>
+      <Formik<TerragruntData>
         onSubmit={values => {
           const payload = {
             ...values
           }
-          onUpdate?.(payload as any)
+          onUpdate?.(payload)
         }}
         validate={values => {
           const payload = {
             ...values
           }
-          onChange?.(payload as any)
+          onChange?.(payload)
         }}
-        formName={`terraformEdit-${stepType}-${sectionId}`}
-        initialValues={setInitialValues(initialValues as any)}
-        validationSchema={stepType === StepType.TerraformPlan ? planValidationSchema : regularValidationSchema}
+        formName={`terragruntEdit-${stepType}-${sectionId}`}
+        initialValues={initialValues}
+        validationSchema={regularValidationSchema}
       >
-        {(formik: FormikProps<TFFormData>) => {
+        {(formik: FormikProps<TerragruntData>) => {
           const { values, setFieldValue } = formik
           setFormikRef(formikRef, formik)
 
-          const configFile = formik.values?.spec?.configuration?.spec?.configFiles
+          const configFile = formik.values.spec.configuration.spec?.configFiles
           const configFilePath = getConfigFilePath(configFile)
           const backendConfigFile =
-            formik.values?.spec?.configuration?.spec?.backendConfig?.type === BackendConfigurationTypes.Remote
+            formik.values.spec.configuration.spec?.backendConfig?.type === BackendConfigurationTypes.Remote
               ? values?.spec?.configuration?.spec?.backendConfig
               : undefined
           const backendConfigFilePath = getConfigFilePath(backendConfigFile?.spec)
@@ -578,7 +546,7 @@ export default function TerraformEditView(
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
+                    showAdvanced
                     onChange={value => {
                       setFieldValue('spec.provisionerIdentifier', value)
                     }}
@@ -588,16 +556,16 @@ export default function TerraformEditView(
                 )}
               </div>
 
-              {formik.values?.spec?.configuration?.type === ConfigurationTypes.Inline && (
+              {formik.values.spec?.configuration?.type === ConfigurationTypes.Inline && (
                 <>
                   <Layout.Vertical>
                     <Label
                       style={{ color: Color.GREY_900 }}
                       className={css.configLabel}
-                      data-tooltip-id="tfConfigurationFile"
+                      data-tooltip-id="tgConfigurationFile"
                     >
                       {getString('cd.configurationFile')}
-                      <HarnessDocTooltip useStandAlone={true} tooltipId="tfConfigurationFile" />
+                      <HarnessDocTooltip useStandAlone={true} tooltipId="tgConfigurationFile" />
                     </Label>
                     <div className={cx(css.configFile, css.addMarginBottom)}>
                       <div className={css.configField}>
@@ -630,6 +598,51 @@ export default function TerraformEditView(
                         ) : null}
                       </div>
                     </div>
+                    <div className={cx(stepCss.formGroup, stepCss.md)}>
+                      <FormInput.RadioGroup
+                        disabled={readonly}
+                        name="spec.configuration.spec.moduleConfig.terragruntRunType"
+                        radioGroup={{ inline: true }}
+                        label={getString('cd.moduleConfiguration')}
+                        items={[
+                          { label: 'All Modules', value: 'RunAll' },
+                          { label: 'Specific Module', value: 'RunModule' }
+                        ]}
+                      />
+                    </div>
+
+                    <div className={cx(stepCss.formGroup, stepCss.md)}>
+                      <FormInput.MultiTextInput
+                        name="spec.configuration.spec.moduleConfig.path"
+                        placeholder={'Enter path'}
+                        label={getString('common.path')}
+                        multiTextInputProps={{ expressions, allowableTypes }}
+                        disabled={readonly}
+                      />
+                      {getMultiTypeFromValue(values.spec.configuration.spec?.moduleConfig?.path) ===
+                        MultiTypeInputType.RUNTIME && (
+                        <ConfigureOptions
+                          value={values.spec?.configuration.spec?.moduleConfig?.path as string}
+                          type={getString('string')}
+                          variableName="spec.configuration.spec.moduleConfig.path"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced
+                          onChange={value => {
+                            setFieldValue('spec.configuration.spec.moduleConfig.path', value)
+                          }}
+                          isReadonly={readonly}
+                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                        />
+                      )}
+                    </div>
+                    {values?.spec?.configuration?.type === ConfigurationTypes.Inline &&
+                    !formik.values?.spec?.configuration?.spec?.moduleConfig?.path ? (
+                      <FormError
+                        name="spec.configuration.spec.moduleConfig.path"
+                        errorMessage={getString('fieldRequired', { field: getString('common.path') })}
+                      />
+                    ) : null}
                   </Layout.Vertical>
 
                   <Accordion className={stepCss.accordion}>
@@ -638,7 +651,7 @@ export default function TerraformEditView(
                       summary={getString('common.optionalConfig')}
                       details={
                         <div className={css.optionalConfigDetails}>
-                          {formik.values?.spec?.configuration?.type === ConfigurationTypes.Inline && (
+                          {formik.values.spec.configuration.type === ConfigurationTypes.Inline && (
                             <div className={cx(stepCss.formGroup, stepCss.md)}>
                               <FormInput.MultiTextInput
                                 name="spec.configuration.spec.workspace"
@@ -648,12 +661,12 @@ export default function TerraformEditView(
                                 isOptional={true}
                                 disabled={readonly}
                               />
-                              {getMultiTypeFromValue(formik.values.spec?.configuration?.spec?.workspace) ===
+                              {getMultiTypeFromValue(formik.values.spec.configuration.spec?.workspace) ===
                                 MultiTypeInputType.RUNTIME && (
                                 <ConfigureOptions
                                   value={formik.values?.spec?.configuration?.spec?.workspace as string}
                                   type="String"
-                                  variableName="configuration.spec.workspace"
+                                  variableName="spec.configuration.spec.workspace"
                                   showRequiredField={false}
                                   showDefaultField={false}
                                   showAdvanced={true}
@@ -667,8 +680,8 @@ export default function TerraformEditView(
                             </div>
                           )}
                           <div className={cx(css.divider, css.addMarginBottom)} />
-                          <TfVarFileList
-                            formik={formik as FormikProps<TerraformData>}
+                          <TgVarFileList
+                            formik={formik as FormikProps<TerragruntData>}
                             isReadonly={readonly}
                             allowableTypes={allowableTypes}
                             setSelectedConnector={setSelectedConnector}
@@ -676,88 +689,85 @@ export default function TerraformEditView(
                             selectedConnector={selectedConnector}
                           />
                           <div className={css.divider} />
-                          {TERRAFORM_REMOTE_BACKEND_CONFIG && initialValues?.type !== 'TerraformDestroy' ? (
-                            <>
-                              <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
-                                {formik.values?.spec?.configuration?.spec?.backendConfig?.type ===
-                                  BackendConfigurationTypes.Remote && (
-                                  <Layout.Vertical>
-                                    <Label
-                                      data-tooltip-id={'TF-apply-remoteBackendConfiguration'}
-                                      style={{ color: Color.GREY_900 }}
-                                      className={css.configLabel}
-                                    >
-                                      {getString('cd.backendConfigurationFile')}
-                                      <HarnessDocTooltip
-                                        useStandAlone={true}
-                                        tooltipId="TF-apply-remoteBackendConfiguration"
-                                      />
-                                    </Label>
-                                  </Layout.Vertical>
-                                )}
-                                <div className={css.fileSelect}>
-                                  <select
-                                    className={css.fileDropdown}
-                                    name="spec.configuration.spec.backendConfig.type"
-                                    disabled={readonly}
-                                    value={
-                                      formik.values?.spec?.configuration?.spec?.backendConfig?.type ||
-                                      BackendConfigurationTypes.Inline
-                                    }
-                                    onChange={e => {
-                                      /* istanbul ignore next */
-                                      onSelectChange(e, setFieldValue)
-                                    }}
-                                    data-testid="backendConfigurationOptions"
-                                  >
-                                    <option value={BackendConfigurationTypes.Inline}>{getString('inline')}</option>
-                                    <option value={BackendConfigurationTypes.Remote}>{getString('remote')}</option>
-                                  </select>
-                                </div>
-                              </Layout.Horizontal>
+                          <>
+                            <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
                               {formik.values?.spec?.configuration?.spec?.backendConfig?.type ===
-                              BackendConfigurationTypes.Remote ? (
-                                <div
-                                  className={cx(css.configFile, css.configField, css.addMarginTop, css.addMarginBottom)}
-                                  onClick={() => {
-                                    /* istanbul ignore next */
-                                    setShowBackendConfigRemoteWizard(true)
-                                  }}
-                                  data-testid="remoteTemplate"
-                                >
-                                  <>
-                                    {!backendConfigFilePath && (
-                                      <a
-                                        className={css.configPlaceHolder}
-                                        onClick={() => setShowBackendConfigRemoteWizard(true)}
-                                      >
-                                        {getString('cd.backendConfigFilePlaceHolder')}
-                                      </a>
-                                    )}
-                                    {backendConfigFilePath && (
-                                      <>
-                                        <Text font="normal" lineClamp={1} width={200}>
-                                          /{backendConfigFilePath}
-                                        </Text>
-                                        <Button
-                                          minimal
-                                          icon="Edit"
-                                          withoutBoxShadow
-                                          iconProps={{ size: 16 }}
-                                          data-name="backend-config-edit"
-                                          withoutCurrentColor={true}
-                                        />
-                                      </>
-                                    )}
-                                  </>
-                                </div>
-                              ) : (
-                                inlineBackendConfig(formik)
+                                BackendConfigurationTypes.Remote && (
+                                <Layout.Vertical>
+                                  <Label
+                                    data-tooltip-id={'TF-apply-remoteBackendConfiguration'}
+                                    style={{ color: Color.GREY_900 }}
+                                    className={css.configLabel}
+                                  >
+                                    {getString('cd.backendConfigurationFile')}
+                                    <HarnessDocTooltip
+                                      useStandAlone={true}
+                                      tooltipId="TF-apply-remoteBackendConfiguration"
+                                    />
+                                  </Label>
+                                </Layout.Vertical>
                               )}
-                            </>
-                          ) : (
-                            inlineBackendConfig(formik)
-                          )}
+                              <div className={css.fileSelect}>
+                                <select
+                                  className={css.fileDropdown}
+                                  name="spec.configuration.spec.backendConfig.type"
+                                  disabled={readonly}
+                                  value={
+                                    formik.values?.spec?.configuration?.spec?.backendConfig?.type ||
+                                    BackendConfigurationTypes.Inline
+                                  }
+                                  onChange={e => {
+                                    /* istanbul ignore next */
+                                    onSelectChange(e, setFieldValue)
+                                  }}
+                                  data-testid="backendConfigurationOptions"
+                                >
+                                  <option value={BackendConfigurationTypes.Inline}>{getString('inline')}</option>
+                                  <option value={BackendConfigurationTypes.Remote}>{getString('remote')}</option>
+                                </select>
+                              </div>
+                            </Layout.Horizontal>
+                            {formik.values?.spec?.configuration?.spec?.backendConfig?.type ===
+                            BackendConfigurationTypes.Remote ? (
+                              <div
+                                className={cx(css.configFile, css.configField, css.addMarginTop, css.addMarginBottom)}
+                                onClick={() => {
+                                  /* istanbul ignore next */
+                                  setShowBackendConfigRemoteWizard(true)
+                                }}
+                                data-testid="remoteTemplate"
+                              >
+                                <>
+                                  {!backendConfigFilePath && (
+                                    <a
+                                      className={css.configPlaceHolder}
+                                      onClick={() => setShowBackendConfigRemoteWizard(true)}
+                                    >
+                                      {getString('cd.backendConfigFilePlaceHolder')}
+                                    </a>
+                                  )}
+                                  {backendConfigFilePath && (
+                                    <>
+                                      <Text font="normal" lineClamp={1} width={200}>
+                                        {backendConfigFilePath}
+                                      </Text>
+                                      <Button
+                                        minimal
+                                        icon="Edit"
+                                        withoutBoxShadow
+                                        iconProps={{ size: 16 }}
+                                        data-name="backend-config-edit"
+                                        withoutCurrentColor={true}
+                                      />
+                                    </>
+                                  )}
+                                </>
+                              </div>
+                            ) : (
+                              inlineBackendConfig(formik)
+                            )}
+                          </>
+
                           <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
                             <MultiTypeList
                               multiTextInputProps={{

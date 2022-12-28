@@ -26,7 +26,7 @@ import { useStrings } from 'framework/strings'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { Connectors } from '@connectors/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -34,12 +34,12 @@ import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { fileTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
-import type { TerraformData, TerraformProps } from '../TerraformInterfaces'
+import type { TerragruntData, TerragruntProps } from '../TerragruntInterface'
 import { getPath } from '../../ConfigFileStore/ConfigFileStoreHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-function ConfigSectionRef<T extends TerraformData = TerraformData>(
-  props: TerraformProps<T> & { formik?: FormikContextType<any> }
+function ConfigSectionRef<T extends TerragruntData>(
+  props: TerragruntProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -47,31 +47,21 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
   const { expressions } = useVariablesExpression()
   const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType, isBackendConfig } = props
 
-  const configPath = getPath(false, false, isBackendConfig)
+  const configPath = getPath(false, true, isBackendConfig)
   const config = inputSetData?.template?.spec?.configuration
   const configSpec = get(inputSetData?.template, configPath)
   const store = configSpec?.store
 
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
-    projectIdentifier: string
-    orgIdentifier: string
-    accountId: string
-  }>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  let connectorVal = get(formik?.values, `${path}.${configPath}.store.spec.connectorRef`)
-  if (!connectorVal) {
-    connectorVal = get(props?.allValues, `${configPath}.store.spec.connectorRef`)
-  }
+  const connectorVal =
+    get(formik?.values, `${path}.${configPath}.store.spec.connectorRef`) ||
+    get(props?.allValues, `${configPath}.store.spec.connectorRef`)
 
-  let repoName = get(formik?.values, `${path}.${configPath}.store.spec.repositoryName`)
-  if (!repoName) {
-    repoName = get(props?.allValues, `${configPath}.store.spec.repositoryName`)
-  }
-  let storeType = get(formik?.values, `${path}.${configPath}.store.type`)
-  if (!storeType) {
-    storeType = get(props?.allValues, `${configPath}.store.type`)
-  }
+  const storeType =
+    get(formik?.values, `${path}.${configPath}.store.type`) || get(props?.allValues, `${configPath}.store.type`)
+
   const reposRequired = getMultiTypeFromValue(configSpec?.store?.spec?.repositoryName) === MultiTypeInputType.RUNTIME
   const {
     data: ArtifactRepoData,
@@ -112,7 +102,7 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
 
   return (
     <>
-      {(configSpec?.store?.spec || config?.spec?.workspace) && (
+      {configSpec?.store?.spec && (
         <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
           {isBackendConfig ? getString('pipelineSteps.backendConfig') : getString('cd.configurationFile')}
         </Label>

@@ -27,7 +27,7 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { fileTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { TerraformPlanProps } from '../../Common/Terraform/TerraformInterfaces'
-import { getPath } from '../../Common/Terraform/Editview/TerraformConfigFormHelper'
+import { getPath } from '../../Common/ConfigFileStore/ConfigFileStoreHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.ReactElement {
@@ -36,7 +36,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
   const { getRBACErrorMessage } = useRBACError()
   const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType, isBackendConfig } = props
 
-  const configPath = getPath(true, isBackendConfig)
+  const configPath = getPath(true, false, isBackendConfig)
   const config = inputSetData?.template?.spec?.configuration
   const configSpec = get(inputSetData?.template, configPath)
   const store = configSpec?.store

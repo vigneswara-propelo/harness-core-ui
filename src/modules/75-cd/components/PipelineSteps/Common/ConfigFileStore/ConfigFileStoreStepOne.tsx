@@ -37,11 +37,10 @@ import {
   ConnectorLabelMap,
   ConnectorTypes,
   getPath
-} from './TerraformConfigFormHelper'
+} from './ConfigFileStoreHelper'
+import css from './ConfigFileStore.module.scss'
 
-import css from './TerraformConfigForm.module.scss'
-
-interface TerraformConfigStepOneProps {
+interface ConfigFileStoreStepOneProps {
   data: any
   isReadonly: boolean
   allowableTypes: MultiTypeAllowedTypes
@@ -51,9 +50,11 @@ interface TerraformConfigStepOneProps {
   setSelectedConnector: (val: ConnectorTypes) => void
   isTerraformPlan?: boolean
   isBackendConfig?: boolean
+  isTerragruntPlan?: boolean
+  isTerragrunt?: boolean
 }
 
-export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigStepOneProps> = ({
+export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreStepOneProps> = ({
   data,
   isReadonly,
   allowableTypes,
@@ -62,7 +63,9 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
   selectedConnector,
   setSelectedConnector,
   isTerraformPlan = false,
-  isBackendConfig = false
+  isBackendConfig = false,
+  isTerragruntPlan = false,
+  isTerragrunt = false
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -73,22 +76,12 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
   }>()
 
   const storeTypes = isBackendConfig ? [...AllowedTypes, 'Harness'] : AllowedTypes
-  const path = getPath(isTerraformPlan, isBackendConfig)
+  const path = getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig)
 
   useEffect(() => {
-    let selectedStore: ConnectorTypes
-    if (isBackendConfig) {
-      selectedStore = isTerraformPlan
-        ? data?.spec?.configuration?.backendConfig?.spec?.store?.type
-        : data?.spec?.configuration?.spec?.backendConfig?.spec?.store?.type
-    } else {
-      selectedStore = isTerraformPlan
-        ? data?.spec?.configuration?.configFiles?.store?.type
-        : data?.spec?.configuration?.spec?.configFiles?.store?.type
-    }
-
+    const selectedStore: ConnectorTypes = get(data, `${path}.store.type`)
     selectedStore && setSelectedConnector(selectedStore)
-  }, [data, isTerraformPlan, isBackendConfig, setSelectedConnector])
+  }, [data, isTerraformPlan, isTerragruntPlan, isBackendConfig, setSelectedConnector])
 
   const isHarness = (store?: string): boolean => {
     return store === 'Harness'
@@ -123,12 +116,12 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
     })
   }
 
-  const getValidationSchema = (isBeConfig: boolean, isTfPlan: boolean): Yup.ObjectSchema | void => {
+  const getValidationSchema = (isBeConfig: boolean, isTfPlan: boolean, isTgPlan: boolean): Yup.ObjectSchema | void => {
     if (isHarness(selectedConnector)) {
       return
     }
     if (isBeConfig) {
-      return isTfPlan
+      return isTfPlan || isTgPlan
         ? Yup.object().shape({
             spec: Yup.object().shape({
               configuration: Yup.object().shape({
@@ -146,7 +139,7 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
             })
           })
     } else {
-      return isTfPlan
+      return isTfPlan || isTgPlan
         ? Yup.object().shape({
             spec: Yup.object().shape({
               configuration: Yup.object().shape({
@@ -169,7 +162,11 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
   return (
     <Layout.Vertical className={css.tfConfigForm}>
       <Heading level={2} style={{ color: Color.BLACK, fontSize: 24, fontWeight: 'bold' }} margin={{ bottom: 'xlarge' }}>
-        {isBackendConfig ? getString('cd.backendConfigFileStore') : getString('cd.configFileStore')}
+        {isBackendConfig
+          ? getString('cd.backendConfigFileStore')
+          : isTerragruntPlan || isTerragrunt
+          ? getString('cd.terragruntConfigFileStore')
+          : getString('cd.terraformConfigFileStore')}
       </Heading>
       <Formik
         formName={isBackendConfig ? 'tfPlanBackendConfigForm' : 'tfPlanConfigForm'}
@@ -179,7 +176,7 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
           nextStep?.({ formValues: values, selectedType: selectedConnector })
         }}
         initialValues={data}
-        validationSchema={getValidationSchema(isBackendConfig, isTerraformPlan)}
+        validationSchema={getValidationSchema(isBackendConfig, isTerraformPlan, isTerragruntPlan)}
       >
         {formik => {
           const connectorRef = get(formik?.values, `${path}.store.spec.connectorRef`)
