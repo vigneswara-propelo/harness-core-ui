@@ -5,6 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export function killEvent(e: React.MouseEvent<HTMLDivElement>): void {
+export function killEvent(e: React.MouseEvent<any>): void {
   e.stopPropagation()
 }

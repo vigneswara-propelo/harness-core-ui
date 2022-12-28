@@ -213,3 +213,14 @@
 .stageLink {
   font-size: var(--font-size-small);
 }
+
+.childPipelineExecutionInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.parentPipelineLink {
+  max-width: 180px;
+  margin-left: calc(-1 * (var(--spacing-xsmall))) !important;
+}

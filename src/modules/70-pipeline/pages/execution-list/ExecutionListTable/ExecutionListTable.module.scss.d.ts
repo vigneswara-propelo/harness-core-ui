@@ -10,6 +10,7 @@ declare const styles: {
   readonly accordionBtn: string
   readonly cdExecutionSummary: string
   readonly checkbox: string
+  readonly childPipelineExecutionInfo: string
   readonly divider: string
   readonly environmentsText: string
   readonly execution: string
@@ -21,6 +22,7 @@ declare const styles: {
   readonly matrixSummary: string
   readonly menu: string
   readonly multiSvcEnv: string
+  readonly parentPipelineLink: string
   readonly prState: string
   readonly selectiveStageExecution: string
   readonly separator: string

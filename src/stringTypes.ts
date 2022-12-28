@@ -3588,6 +3588,7 @@ export interface StringsMap {
   'pipeline.executionStrategy.strategies.rolling.steps.step3.description': string
   'pipeline.executionStrategy.useStrategy': string
   'pipeline.executionTarget': string
+  'pipeline.executionTriggeredBy': string
   'pipeline.expressionRequired': string
   'pipeline.expressionsEvaluation': string
   'pipeline.expressionsReplaced': string

@@ -1531,6 +1531,7 @@ step:
     namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
 runDisabledOnFreeze: An active freeze is applicable on this pipeline. Any deployment stage on this pipeline will be aborted.
 viewFreeze: View freeze details
+executionTriggeredBy: This execution was triggered by
 triggeredBy: Triggered by {{triggerType}}
 manuallyTriggered: This execution was triggered manually
 triggeredByThirdParty: Triggered by a third party system
