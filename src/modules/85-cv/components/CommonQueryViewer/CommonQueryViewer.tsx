@@ -7,7 +7,7 @@
 
 import React, { useState, useContext, useEffect } from 'react'
 import cx from 'classnames'
-import { Container, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
+import { Container, getMultiTypeFromValue, MultiTypeInputType, Text, ButtonVariation } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -93,6 +93,10 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
               ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
               : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
           }
+          fetchButtonProps={{
+            text: getString('cv.monitoringSources.commonHealthSource.runQuery'),
+            variation: ButtonVariation.SECONDARY
+          }}
         />
       ) : (
         <CommonQueryContent

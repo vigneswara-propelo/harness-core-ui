@@ -11,6 +11,7 @@ import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
 import userEvent from '@testing-library/user-event'
 import * as cvServices from 'services/cv'
+import * as useDrawerHook from '@cv/hooks/useDrawerHook/useDrawerHook'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { CustomMetricFormContainerProps } from '../CustomMetricForm.types'
@@ -117,7 +118,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     })
   })
 
-  describe('Custom metric logs table', () => {
+  describe('Common health source logs table', () => {
     const mockProps = {
       ...mockedCustomMetricsFormForLogsTable,
       setMappedMetrics: jest.fn(),
@@ -283,6 +284,13 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     })
 
     test('should test whether logs table is shown if the sample data responds with correct data', async () => {
+      const showDrawerMock = jest.fn()
+
+      jest.spyOn(useDrawerHook, 'useDrawer').mockReturnValue({
+        showDrawer: showDrawerMock,
+        hideDrawer: jest.fn()
+      })
+
       jest.spyOn(cvServices, 'useGetSampleRawRecord').mockReturnValue({
         mutate: jest.fn().mockImplementation(() => {
           return {
@@ -337,6 +345,14 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       await waitFor(() => expect(container.querySelector('.TableV2--table')).toBeInTheDocument())
 
       expect(container.querySelectorAll('.TableV2--row')).toHaveLength(4)
+
+      const firstRow = container.querySelector('.TableV2--clickable:first-child') as Element
+
+      act(() => {
+        userEvent.click(firstRow)
+      })
+
+      expect(showDrawerMock).toHaveBeenCalledWith({ rowData: sampleDataResponse[0] })
     })
 
     test('should test whether empty state UI is shown is sample data API responds with empty array', async () => {

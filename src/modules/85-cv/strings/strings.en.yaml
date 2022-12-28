@@ -4,6 +4,7 @@ methodLabel: Method Label
 request: '{{ $.common.request }}'
 response: Response
 responseBody: Response Body
+dateAndTimeLabel: Date and Time
 statusCode: Status Code
 failures: Failures
 initiated: Initiated
@@ -228,6 +229,7 @@ monitoringSources:
       title: Field Mapping
       subTitle: Choose the data to display the logs from the fields below
       sampleLogButtonText: Get sample log messages
+      sampleLogMessageDrawerTitle: Sample Log Messages
       noSampleAvailable: No sample data available
       timestamp: Timestamp
       ServiceInstance: Service Instance

@@ -7389,6 +7389,7 @@ export interface StringsMap {
   'cv.dashboard.notStarted': string
   'cv.dashboard.subHeading': string
   'cv.dateAndTime': string
+  'cv.dateAndTimeLabel': string
   'cv.day': string
   'cv.days': string
   'cv.dependenciesHealthWithCount': string
@@ -7702,6 +7703,7 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.logsTable.jsonSelectorDrawerTitlePrefix': string
   'cv.monitoringSources.commonHealthSource.logsTable.noSampleAvailable': string
   'cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText': string
+  'cv.monitoringSources.commonHealthSource.logsTable.sampleLogMessageDrawerTitle': string
   'cv.monitoringSources.commonHealthSource.logsTable.subTitle': string
   'cv.monitoringSources.commonHealthSource.logsTable.timestamp': string
   'cv.monitoringSources.commonHealthSource.logsTable.title': string
