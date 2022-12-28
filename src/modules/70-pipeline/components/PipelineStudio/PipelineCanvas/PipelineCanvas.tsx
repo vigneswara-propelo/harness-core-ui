@@ -405,6 +405,7 @@ export function PipelineCanvas({
               closeModal={onCloseCreate}
               gitDetails={{ ...gitDetails, remoteFetchFailed: Boolean(remoteFetchError) } as IGitContextFormProps}
               primaryButtonText={modalMode === 'create' ? getString('start') : getString('continue')}
+              isReadonly={isReadonly}
             />
           </Dialog>
         </PipelineVariablesContextProvider>
@@ -419,7 +420,8 @@ export function PipelineCanvas({
     gitDetails,
     branch,
     connectorRef,
-    modalMode
+    modalMode,
+    isReadonly
   ])
 
   React.useEffect(() => {
@@ -954,7 +956,7 @@ export function PipelineCanvas({
                           entityType={'Pipeline'}
                         />
                       )}
-                      {isYaml || isReadonly ? null : (
+                      {isYaml ? null : (
                         <Button
                           variation={ButtonVariation.ICON}
                           icon="Edit"
