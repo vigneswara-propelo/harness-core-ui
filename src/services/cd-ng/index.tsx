@@ -649,7 +649,9 @@ export interface ActiveServiceDTO {
   licensesConsumed?: number
   module?: string
   name?: string
+  orgIdentifier?: string
   orgName?: string
+  projectIdentifier?: string
   projectName?: string
   timestamp?: number
 }
@@ -659,10 +661,15 @@ export interface ActiveServiceInstanceSummary {
   countDetails?: InstanceCountDetailsByEnvTypeBase
 }
 
+export interface ActiveServiceInstanceSummaryV2 {
+  changeRate?: ChangeRate
+  countDetails?: InstanceCountDetailsByEnvTypeBase
+}
+
 export interface ActiveServicesFilterParams {
-  orgName?: string
-  projectName?: string
-  serviceName?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceIdentifier?: string
 }
 
 export interface Activity {
@@ -1062,6 +1069,18 @@ export type AsgLaunchTemplateManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
+export type AsgRollingDeployStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  instanceWarmup?: number
+  minimumHealthyPercentage?: number
+  skipMatching?: boolean
+  useAlreadyRunningInstances: boolean
+}
+
+export type AsgRollingRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
 export type AsgScalingPolicyManifest = ManifestAttributes & {
   metadata?: string
   store?: StoreConfigWrapper
@@ -1106,6 +1125,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -1850,6 +1870,7 @@ export interface CDPipelineModuleInfo {
 
 export interface CDStageMetaDataDTO {
   environmentRef?: string
+  serviceEnvRefList?: ServiceEnvRef[]
   serviceRef?: string
 }
 
@@ -1973,6 +1994,11 @@ export interface CdDeployStageMetadataRequestDTO {
 export interface CeLicenseInfo {
   expiryTime?: number
   licenseType?: 'FULL_TRIAL' | 'LIMITED_TRIAL' | 'PAID'
+}
+
+export interface ChangeRate {
+  percentChange?: number
+  trend?: 'UP_TREND' | 'DOWN_TREND' | 'NO_CHANGE' | 'INVALID'
 }
 
 export type ChaosModuleLicenseDTO = ModuleLicenseDTO & {
@@ -2793,6 +2819,10 @@ export interface DashboardWorkloadDeployment {
   workloadDeploymentInfoList?: WorkloadDeploymentInfo[]
 }
 
+export interface DashboardWorkloadDeploymentV2 {
+  workloadDeploymentInfoList?: WorkloadDeploymentInfoV2[]
+}
+
 export type DatadogConnectorDTO = ConnectorConfigDTO & {
   apiKeyRef: string
   applicationKeyRef: string
@@ -3048,6 +3078,13 @@ export interface DeploymentChangeRates {
   frequencyChangeRate?: number
 }
 
+export interface DeploymentChangeRatesV2 {
+  failureRate?: number
+  failureRateChangeRate?: ChangeRate
+  frequency?: number
+  frequencyChangeRate?: ChangeRate
+}
+
 export interface DeploymentCount {
   failure?: number
   success?: number
@@ -3063,6 +3100,12 @@ export interface DeploymentInfo {
   count?: number
   countList?: DeploymentDateAndCount[]
   rate?: number
+}
+
+export interface DeploymentInfoV2 {
+  count?: number
+  countList?: DeploymentDateAndCount[]
+  rate?: ChangeRate
 }
 
 export type DeploymentStageConfig = StageInfoConfig & {
@@ -3358,6 +3401,7 @@ export type EcsRunTaskStepInfo = StepSpecType & {
   runTaskRequestDefinition?: StoreConfigWrapper
   skipSteadyStateCheck?: boolean
   taskDefinition?: StoreConfigWrapper
+  taskDefinitionArn?: string
 }
 
 export type EcsScalableTargetDefinitionManifest = ManifestAttributes & {
@@ -3675,14 +3719,6 @@ export interface EntityDetail {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -3697,6 +3733,8 @@ export interface EntityDetail {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
 }
 
 export interface EntityDetailProtoDTO {
@@ -3782,6 +3820,7 @@ export interface Environment {
   envGroupName?: string
   identifier?: string
   name?: string
+  type?: string
 }
 
 export interface EnvironmentDeploymentInfo {
@@ -3968,6 +4007,7 @@ export interface EnvironmentYamlV2 {
   infrastructureDefinitions?: InfraStructureDefinitionYaml[]
   provisioner?: ExecutionElementConfig
   serviceOverrideInputs?: JsonNode
+  servicesOverrides?: ServiceOverrideInputsYaml[]
 }
 
 export interface EnvironmentsMetadata {
@@ -5294,6 +5334,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -5393,6 +5434,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -5487,6 +5529,7 @@ export interface FeedbackFormDTO {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -6093,14 +6136,6 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -6115,6 +6150,8 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   )[]
   moduleType?:
     | 'CD'
@@ -6124,6 +6161,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -6297,14 +6335,6 @@ export interface GitEntityFilterProperties {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -6319,6 +6349,8 @@ export interface GitEntityFilterProperties {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6329,6 +6361,7 @@ export interface GitEntityFilterProperties {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -6572,14 +6605,6 @@ export interface GitFullSyncEntityInfoDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -6594,6 +6619,8 @@ export interface GitFullSyncEntityInfoDTO {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6771,14 +6798,6 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -6793,6 +6812,8 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7091,14 +7112,6 @@ export interface GitSyncEntityDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -7113,6 +7126,8 @@ export interface GitSyncEntityDTO {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7284,14 +7299,6 @@ export interface GitSyncEntityListDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -7306,6 +7313,8 @@ export interface GitSyncEntityListDTO {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7494,14 +7503,6 @@ export interface GitSyncErrorDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -7516,6 +7517,8 @@ export interface GitSyncErrorDTO {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -7548,6 +7551,7 @@ export interface GitSyncRepoFilesList {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -7805,11 +7809,22 @@ export interface HealthDeploymentDashboard {
   healthDeploymentInfo?: HealthDeploymentInfo
 }
 
+export interface HealthDeploymentDashboardV2 {
+  healthDeploymentInfo?: HealthDeploymentInfoV2
+}
+
 export interface HealthDeploymentInfo {
   active?: DeploymentInfo
   failure?: DeploymentInfo
   success?: DeploymentInfo
   total?: TotalDeploymentInfo
+}
+
+export interface HealthDeploymentInfoV2 {
+  active?: DeploymentInfoV2
+  failure?: DeploymentInfoV2
+  success?: DeploymentInfoV2
+  total?: TotalDeploymentInfoV2
 }
 
 export interface HelmChartInfo {
@@ -8447,6 +8462,7 @@ export interface JenkinsJobDetailsDTO {
 export interface JenkinsParameterField {
   metadata?: string
   name?: string
+  type?: 'String' | 'Number'
   value: string
 }
 
@@ -9012,6 +9028,7 @@ export interface LicensesWithSummaryDTO {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -9159,6 +9176,7 @@ export interface ModuleLicenseDTO {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -9510,6 +9528,7 @@ export interface OAuthSignupDTO {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -10223,6 +10242,7 @@ export interface PartialSchemaDTO {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -10424,6 +10444,7 @@ export interface Project {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -10685,14 +10706,6 @@ export interface ReferencedByDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -10707,6 +10720,8 @@ export interface ReferencedByDTO {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
 }
 
 export interface RefreshResponse {
@@ -10805,6 +10820,7 @@ export interface ResourceDTO {
     | 'AUTOSTOPPING_STARTSTOP'
     | 'SETTING'
     | 'NG_LOGIN_SETTINGS'
+    | 'DEPLOYMENT_FREEZE'
     | 'CLOUD_ASSET_GOVERNANCE_RULE'
     | 'CLOUD_ASSET_GOVERNANCE_RULE_SET'
     | 'CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT'
@@ -10898,6 +10914,13 @@ export interface ResponseActiveProjectsCountDTO {
 export interface ResponseActiveServiceInstanceSummary {
   correlationId?: string
   data?: ActiveServiceInstanceSummary
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseActiveServiceInstanceSummaryV2 {
+  correlationId?: string
+  data?: ActiveServiceInstanceSummaryV2
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -11171,6 +11194,13 @@ export interface ResponseDashboardExecutionStatusInfo {
 export interface ResponseDashboardWorkloadDeployment {
   correlationId?: string
   data?: DashboardWorkloadDeployment
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseDashboardWorkloadDeploymentV2 {
+  correlationId?: string
+  data?: DashboardWorkloadDeploymentV2
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -11509,6 +11539,13 @@ export interface ResponseGlobalFreezeBannerDetailsResponseDTO {
 export interface ResponseHealthDeploymentDashboard {
   correlationId?: string
   data?: HealthDeploymentDashboard
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseHealthDeploymentDashboardV2 {
+  correlationId?: string
+  data?: HealthDeploymentDashboardV2
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -11902,14 +11939,6 @@ export interface ResponseListEntityType {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -11924,6 +11953,8 @@ export interface ResponseListEntityType {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -13103,9 +13134,23 @@ export interface ResponseServiceDeploymentListInfo {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseServiceDeploymentListInfoV2 {
+  correlationId?: string
+  data?: ServiceDeploymentListInfoV2
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseServiceDetailsInfoDTO {
   correlationId?: string
   data?: ServiceDetailsInfoDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseServiceDetailsInfoDTOV2 {
+  correlationId?: string
+  data?: ServiceDetailsInfoDTOV2
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -13769,6 +13814,10 @@ export type SAMLSettings = NGAuthSettings & {
   samlProviderType?: string
 }
 
+export type SRMModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfServices?: number
+}
+
 export interface SSHAuthDTO {
   spec: BaseSSHSpecDTO
   type: 'SSH' | 'Kerberos'
@@ -14349,6 +14398,24 @@ export interface ServiceDeploymentListInfo {
   totalDeploymentsChangeRate?: number
 }
 
+export interface ServiceDeploymentListInfoV2 {
+  endTime?: number
+  failureRate?: number
+  failureRateChangeRate?: ChangeRate
+  frequency?: number
+  frequencyChangeRate?: ChangeRate
+  serviceDeploymentList?: ServiceDeploymentV2[]
+  startTime?: number
+  totalDeployments?: number
+  totalDeploymentsChangeRate?: ChangeRate
+}
+
+export interface ServiceDeploymentV2 {
+  deployments?: DeploymentCount
+  rate?: DeploymentChangeRatesV2
+  time?: number
+}
+
 export interface ServiceDetailsDTO {
   deploymentTypeList?: string[]
   description?: string
@@ -14369,8 +14436,37 @@ export interface ServiceDetailsDTO {
   totalDeployments?: number
 }
 
+export interface ServiceDetailsDTOV2 {
+  deploymentTypeList?: string[]
+  description?: string
+  failureRate?: number
+  failureRateChangeRate?: ChangeRate
+  frequency?: number
+  frequencyChangeRate?: ChangeRate
+  instanceCountDetails?: InstanceCountDetailsByEnvTypeBase
+  lastPipelineExecuted?: ServicePipelineInfo
+  serviceIdentifier?: string
+  serviceName?: string
+  successRate?: number
+  successRateChangeRate?: ChangeRate
+  tags?: {
+    [key: string]: string
+  }
+  totalDeploymentChangeRate?: ChangeRate
+  totalDeployments?: number
+}
+
 export interface ServiceDetailsInfoDTO {
   serviceDeploymentDetailsList?: ServiceDetailsDTO[]
+}
+
+export interface ServiceDetailsInfoDTOV2 {
+  serviceDeploymentDetailsList?: ServiceDetailsDTOV2[]
+}
+
+export interface ServiceEnvRef {
+  environmentRef?: string
+  serviceRef?: string
 }
 
 export interface ServiceExecutionSummary {
@@ -14472,6 +14568,11 @@ export type ServiceNowUserNamePasswordDTO = ServiceNowAuthCredentialsDTO & {
   passwordRef: string
   username?: string
   usernameRef?: string
+}
+
+export interface ServiceOverrideInputsYaml {
+  serviceOverrideInputs?: JsonNode
+  serviceRef: string
 }
 
 export interface ServiceOverrideRequestDTO {
@@ -14920,6 +15021,7 @@ export interface StartTrialDTO {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -15008,14 +15110,6 @@ export interface StepData {
     | 'TerraformApply'
     | 'TerragruntDestroy'
     | 'TerragruntRollback'
-    | 'SwapRollback'
-    | 'BasicAppSetup'
-    | 'BGAppSetup'
-    | 'CanaryAppSetup'
-    | 'AppResize'
-    | 'SwapRoutes'
-    | 'AppRollback'
-    | 'TanzuCommand'
     | 'AsgCanaryDeploy'
     | 'AsgCanaryDelete'
     | 'BasicAppSetup'
@@ -15028,6 +15122,8 @@ export interface StepData {
     | 'AppRollback'
     | 'ElastigroupBGStageSetup'
     | 'ElastigroupSwapRoute'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
 }
 
 export interface StepElementConfig {
@@ -15165,6 +15261,7 @@ export interface SubscriptionDTO {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -15190,6 +15287,7 @@ export interface SubscriptionDetailDTO {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -15785,6 +15883,14 @@ export interface TotalDeploymentInfo {
   rate?: number
 }
 
+export interface TotalDeploymentInfoV2 {
+  count?: number
+  countList?: DeploymentDateAndCount[]
+  nonProduction?: number
+  production?: number
+  rate?: ChangeRate
+}
+
 export interface TrialSignupOptions {
   assistedOption?: boolean
   productsSelected?: ('CD' | 'CE' | 'CI')[]
@@ -16248,6 +16354,23 @@ export interface WorkloadDeploymentInfo {
   workload?: WorkloadDateCountInfo[]
 }
 
+export interface WorkloadDeploymentInfoV2 {
+  deploymentTypeList?: string[]
+  failureRate?: number
+  failureRateChangeRate?: ChangeRate
+  frequency?: number
+  frequencyChangeRate?: ChangeRate
+  lastExecuted?: LastWorkloadInfo
+  lastPipelineExecutionId?: string
+  percentSuccess?: number
+  rateSuccess?: ChangeRate
+  serviceId?: string
+  serviceName?: string
+  totalDeploymentChangeRate?: ChangeRate
+  totalDeployments?: number
+  workload?: WorkloadDateCountInfo[]
+}
+
 export interface YamlGroup {
   group?: string
 }
@@ -16280,6 +16403,7 @@ export interface YamlSchemaMetadata {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -16303,6 +16427,7 @@ export interface YamlSchemaWithDetails {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -16433,11 +16558,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
+export type DeleteManyFreezesBodyRequestBody = string[]
+
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
-
-export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -17136,14 +17261,6 @@ export interface ListActivitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -17158,6 +17275,8 @@ export interface ListActivitiesQueryParams {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17321,14 +17440,6 @@ export interface ListActivitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -17343,6 +17454,8 @@ export interface ListActivitiesQueryParams {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -17610,14 +17723,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -17632,6 +17737,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17795,14 +17902,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -17817,6 +17916,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -18723,6 +18824,7 @@ export interface GetProjectAggregateDTOListQueryParams {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -29570,6 +29672,63 @@ export const getDeploymentHealthPromise = (
     signal
   )
 
+export interface GetDeploymentHealthV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  startTime: number
+  endTime: number
+}
+
+export type GetDeploymentHealthV2Props = Omit<
+  GetProps<ResponseHealthDeploymentDashboardV2, Failure | Error, GetDeploymentHealthV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Get deployment health V2
+ */
+export const GetDeploymentHealthV2 = (props: GetDeploymentHealthV2Props) => (
+  <Get<ResponseHealthDeploymentDashboardV2, Failure | Error, GetDeploymentHealthV2QueryParams, void>
+    path={`/dashboard/deploymentHealthV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetDeploymentHealthV2Props = Omit<
+  UseGetProps<ResponseHealthDeploymentDashboardV2, Failure | Error, GetDeploymentHealthV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Get deployment health V2
+ */
+export const useGetDeploymentHealthV2 = (props: UseGetDeploymentHealthV2Props) =>
+  useGet<ResponseHealthDeploymentDashboardV2, Failure | Error, GetDeploymentHealthV2QueryParams, void>(
+    `/dashboard/deploymentHealthV2`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get deployment health V2
+ */
+export const getDeploymentHealthV2Promise = (
+  props: GetUsingFetchProps<
+    ResponseHealthDeploymentDashboardV2,
+    Failure | Error,
+    GetDeploymentHealthV2QueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseHealthDeploymentDashboardV2, Failure | Error, GetDeploymentHealthV2QueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/deploymentHealthV2`,
+    props,
+    signal
+  )
+
 export interface GetActiveServiceDeploymentsQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -29682,6 +29841,68 @@ export const getActiveServiceInstanceSummaryPromise = (
     GetActiveServiceInstanceSummaryQueryParams,
     void
   >(getConfig('ng/api'), `/dashboard/getActiveServiceInstanceSummary`, props, signal)
+
+export interface GetActiveServiceInstanceSummaryV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceId: string
+  timestamp: number
+}
+
+export type GetActiveServiceInstanceSummaryV2Props = Omit<
+  GetProps<ResponseActiveServiceInstanceSummaryV2, Failure | Error, GetActiveServiceInstanceSummaryV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Get active service instance summary v2
+ */
+export const GetActiveServiceInstanceSummaryV2 = (props: GetActiveServiceInstanceSummaryV2Props) => (
+  <Get<ResponseActiveServiceInstanceSummaryV2, Failure | Error, GetActiveServiceInstanceSummaryV2QueryParams, void>
+    path={`/dashboard/getActiveServiceInstanceSummaryV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetActiveServiceInstanceSummaryV2Props = Omit<
+  UseGetProps<
+    ResponseActiveServiceInstanceSummaryV2,
+    Failure | Error,
+    GetActiveServiceInstanceSummaryV2QueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get active service instance summary v2
+ */
+export const useGetActiveServiceInstanceSummaryV2 = (props: UseGetActiveServiceInstanceSummaryV2Props) =>
+  useGet<ResponseActiveServiceInstanceSummaryV2, Failure | Error, GetActiveServiceInstanceSummaryV2QueryParams, void>(
+    `/dashboard/getActiveServiceInstanceSummaryV2`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get active service instance summary v2
+ */
+export const getActiveServiceInstanceSummaryV2Promise = (
+  props: GetUsingFetchProps<
+    ResponseActiveServiceInstanceSummaryV2,
+    Failure | Error,
+    GetActiveServiceInstanceSummaryV2QueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseActiveServiceInstanceSummaryV2,
+    Failure | Error,
+    GetActiveServiceInstanceSummaryV2QueryParams,
+    void
+  >(getConfig('ng/api'), `/dashboard/getActiveServiceInstanceSummaryV2`, props, signal)
 
 export interface GetActiveServiceInstancesQueryParams {
   accountIdentifier: string
@@ -30442,6 +30663,59 @@ export const getWorkloadsPromise = (
     signal
   )
 
+export interface GetWorkloadsV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  startTime: number
+  endTime: number
+  environmentType?: 'PreProduction' | 'Production'
+}
+
+export type GetWorkloadsV2Props = Omit<
+  GetProps<ResponseDashboardWorkloadDeploymentV2, Failure | Error, GetWorkloadsV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Get workloads
+ */
+export const GetWorkloadsV2 = (props: GetWorkloadsV2Props) => (
+  <Get<ResponseDashboardWorkloadDeploymentV2, Failure | Error, GetWorkloadsV2QueryParams, void>
+    path={`/dashboard/getWorkloadsV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetWorkloadsV2Props = Omit<
+  UseGetProps<ResponseDashboardWorkloadDeploymentV2, Failure | Error, GetWorkloadsV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Get workloads
+ */
+export const useGetWorkloadsV2 = (props: UseGetWorkloadsV2Props) =>
+  useGet<ResponseDashboardWorkloadDeploymentV2, Failure | Error, GetWorkloadsV2QueryParams, void>(
+    `/dashboard/getWorkloadsV2`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get workloads
+ */
+export const getWorkloadsV2Promise = (
+  props: GetUsingFetchProps<ResponseDashboardWorkloadDeploymentV2, Failure | Error, GetWorkloadsV2QueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseDashboardWorkloadDeploymentV2, Failure | Error, GetWorkloadsV2QueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/getWorkloadsV2`,
+    props,
+    signal
+  )
+
 export interface GetServiceDeploymentsQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -30555,6 +30829,65 @@ export const getServiceDeploymentsInfoPromise = (
     signal
   )
 
+export interface GetServiceDeploymentsInfoV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  startTime: number
+  endTime: number
+  serviceId?: string
+  bucketSizeInDays?: number
+}
+
+export type GetServiceDeploymentsInfoV2Props = Omit<
+  GetProps<ResponseServiceDeploymentListInfoV2, Failure | Error, GetServiceDeploymentsInfoV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Get service deployments info v2
+ */
+export const GetServiceDeploymentsInfoV2 = (props: GetServiceDeploymentsInfoV2Props) => (
+  <Get<ResponseServiceDeploymentListInfoV2, Failure | Error, GetServiceDeploymentsInfoV2QueryParams, void>
+    path={`/dashboard/serviceDeploymentsInfoV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceDeploymentsInfoV2Props = Omit<
+  UseGetProps<ResponseServiceDeploymentListInfoV2, Failure | Error, GetServiceDeploymentsInfoV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Get service deployments info v2
+ */
+export const useGetServiceDeploymentsInfoV2 = (props: UseGetServiceDeploymentsInfoV2Props) =>
+  useGet<ResponseServiceDeploymentListInfoV2, Failure | Error, GetServiceDeploymentsInfoV2QueryParams, void>(
+    `/dashboard/serviceDeploymentsInfoV2`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get service deployments info v2
+ */
+export const getServiceDeploymentsInfoV2Promise = (
+  props: GetUsingFetchProps<
+    ResponseServiceDeploymentListInfoV2,
+    Failure | Error,
+    GetServiceDeploymentsInfoV2QueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseServiceDeploymentListInfoV2, Failure | Error, GetServiceDeploymentsInfoV2QueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/serviceDeploymentsInfoV2`,
+    props,
+    signal
+  )
+
 export interface GetServiceDetailsQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -30604,6 +30937,59 @@ export const getServiceDetailsPromise = (
   getUsingFetch<ResponseServiceDetailsInfoDTO, Failure | Error, GetServiceDetailsQueryParams, void>(
     getConfig('ng/api'),
     `/dashboard/serviceDetails`,
+    props,
+    signal
+  )
+
+export interface GetServiceDetailsV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  startTime: number
+  endTime: number
+  sort?: string[]
+}
+
+export type GetServiceDetailsV2Props = Omit<
+  GetProps<ResponseServiceDetailsInfoDTOV2, Failure | Error, GetServiceDetailsV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Get service details list v2
+ */
+export const GetServiceDetailsV2 = (props: GetServiceDetailsV2Props) => (
+  <Get<ResponseServiceDetailsInfoDTOV2, Failure | Error, GetServiceDetailsV2QueryParams, void>
+    path={`/dashboard/serviceDetailsV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceDetailsV2Props = Omit<
+  UseGetProps<ResponseServiceDetailsInfoDTOV2, Failure | Error, GetServiceDetailsV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Get service details list v2
+ */
+export const useGetServiceDetailsV2 = (props: UseGetServiceDetailsV2Props) =>
+  useGet<ResponseServiceDetailsInfoDTOV2, Failure | Error, GetServiceDetailsV2QueryParams, void>(
+    `/dashboard/serviceDetailsV2`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get service details list v2
+ */
+export const getServiceDetailsV2Promise = (
+  props: GetUsingFetchProps<ResponseServiceDetailsInfoDTOV2, Failure | Error, GetServiceDetailsV2QueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseServiceDetailsInfoDTOV2, Failure | Error, GetServiceDetailsV2QueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/serviceDetailsV2`,
     props,
     signal
   )
@@ -32686,14 +33072,6 @@ export interface ListReferredByEntitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -32708,6 +33086,8 @@ export interface ListReferredByEntitiesQueryParams {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -32932,14 +33312,6 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -32954,6 +33326,8 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   searchTerm?: string
 }
 
@@ -34372,7 +34746,6 @@ export interface GetEnvironmentListV2QueryParams {
   envIdentifiers?: string[]
   sort?: string[]
   filterIdentifier?: string
-  includeAllAccessibleAtScope?: boolean
 }
 
 export type GetEnvironmentListV2Props = Omit<
@@ -36189,14 +36562,6 @@ export interface GetReferencedByQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -36211,6 +36576,8 @@ export interface GetReferencedByQueryParams {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   searchTerm?: string
 }
 
@@ -36667,7 +37034,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -36681,7 +37048,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -36696,7 +37063,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -36710,7 +37077,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -36722,7 +37089,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -36731,7 +37098,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -37237,7 +37604,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37251,7 +37618,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -37266,7 +37633,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37280,7 +37647,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -37292,7 +37659,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -37301,7 +37668,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -38697,14 +39064,6 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -38719,6 +39078,8 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -38950,14 +39311,6 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'IACMStage'
       | 'IACMStep'
       | 'IACM'
-      | 'CanaryAppSetup'
-      | 'BGAppSetup'
-      | 'BasicAppSetup'
-      | 'AppResize'
-      | 'AppRollback'
-      | 'SwapRoutes'
-      | 'SwapRollback'
-      | 'TanzuCommand'
       | 'Container'
       | 'IACM'
       | 'ElastigroupBGStageSetup'
@@ -38972,6 +39325,8 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'BGAppSetup'
       | 'BasicAppSetup'
       | 'TanzuCommand'
+      | 'AsgRollingDeploy'
+      | 'AsgRollingRollback'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -43567,6 +43922,7 @@ export interface GetEditionActionsQueryParams {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -43629,6 +43985,7 @@ export interface StartCommunityLicenseQueryParams {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -43757,6 +44114,7 @@ export interface StartFreeLicenseQueryParams {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -43823,6 +44181,7 @@ export interface GetModuleLicensesByAccountAndModuleTypeQueryParams {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -44052,6 +44411,7 @@ export interface GetLicensesAndSummaryQueryParams {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -44895,14 +45255,6 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -44917,6 +45269,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   yamlGroup?: string
 }
 
@@ -45208,14 +45562,6 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -45230,6 +45576,8 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -45770,6 +46118,7 @@ export interface GetProjectListQueryParams {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -45897,6 +46246,7 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -51868,6 +52218,7 @@ export interface ListSubscriptionsQueryParams {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -52452,6 +52803,7 @@ export interface RetrieveProductPricesQueryParams {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -58603,14 +58955,6 @@ export interface GetYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'IACM'
     | 'ElastigroupBGStageSetup'
@@ -58625,6 +58969,8 @@ export interface GetYamlSchemaQueryParams {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
   subtype?:
     | 'K8sCluster'
     | 'Git'
