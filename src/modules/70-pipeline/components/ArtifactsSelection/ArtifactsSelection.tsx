@@ -62,8 +62,7 @@ import {
   allowedArtifactTypes,
   ModalViewFor,
   isAllowedCustomArtifactDeploymentTypes,
-  isSidecarAllowed,
-  isAllowedGoogleArtifactDeploymentTypes
+  isSidecarAllowed
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -98,7 +97,6 @@ export default function ArtifactsSelection({
 
   const {
     CUSTOM_ARTIFACT_NG,
-    NG_GOOGLE_ARTIFACT_REGISTRY,
     GITHUB_PACKAGES,
     AZURE_ARTIFACTS_NG,
     CD_AMI_ARTIFACTS_NG,
@@ -134,13 +132,6 @@ export default function ArtifactsSelection({
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AmazonMachineImage)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AmazonMachineImage)
-    }
-    if (
-      isAllowedGoogleArtifactDeploymentTypes(deploymentType) &&
-      NG_GOOGLE_ARTIFACT_REGISTRY &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     }
     if (
       [ServiceDeploymentType.AzureWebApp, ServiceDeploymentType.TAS].includes(

@@ -32,14 +32,6 @@ export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDe
   )
 }
 
-export const isAllowedGoogleArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
-  return (
-    deploymentType === ServiceDeploymentType.Kubernetes ||
-    deploymentType === ServiceDeploymentType.CustomDeployment ||
-    deploymentType === ServiceDeploymentType.TAS
-  )
-}
-
 export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
   return (
     !isReadOnly &&
@@ -154,7 +146,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-    ENABLED_ARTIFACT_TYPES.Acr
+    ENABLED_ARTIFACT_TYPES.Acr,
+    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
   ],
   NativeHelm: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
@@ -214,7 +207,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.Gcr,
-    ENABLED_ARTIFACT_TYPES.Acr
+    ENABLED_ARTIFACT_TYPES.Acr,
+    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
   ],
   TAS: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -224,7 +218,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.AmazonS3,
     ENABLED_ARTIFACT_TYPES.Gcr,
     ENABLED_ARTIFACT_TYPES.Ecr,
-    ENABLED_ARTIFACT_TYPES.Acr
+    ENABLED_ARTIFACT_TYPES.Acr,
+    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
   ]
 }
 
