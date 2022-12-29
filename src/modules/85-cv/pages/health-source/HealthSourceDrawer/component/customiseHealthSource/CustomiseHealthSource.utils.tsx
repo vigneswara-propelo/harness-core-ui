@@ -56,7 +56,6 @@ export const LoadSourceByType = ({
   expressions?: string[]
 }): JSX.Element | null => {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
-  const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
   const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
   const healthSourceConfig = healthSourcesConfig[data?.product?.value]
 
@@ -156,9 +155,6 @@ export const LoadSourceByType = ({
       return <ErrorTrackingHealthSource data={data} onSubmit={onSubmit} />
     case Connectors.AWS:
     case HealthSourceTypes.CloudWatchMetrics:
-      if (!isCloudWatchEnabled) {
-        return null
-      }
       return <CloudWatch data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
 
     case HealthSourceTypes.NextGenHealthSource:

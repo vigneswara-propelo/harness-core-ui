@@ -73,9 +73,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
 
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
-  const isElkEnabled = useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
-  const isDataSourceTypeSelectorEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_AWS_PROMETHEUS)
-  const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
+
   const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
 
   const disabledByFF: string[] = useMemo(() => {
@@ -85,22 +83,14 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
       disabledConnectorsList.push(HealthSourceTypes.ErrorTracking)
     }
 
-    if (!isElkEnabled) {
-      disabledConnectorsList.push(HealthSourceTypes.Elk)
-    }
-
-    if (!isCloudWatchEnabled) {
-      disabledConnectorsList.push(HealthSourceTypes.CloudWatch)
-    }
-
     if (!isSumoLogicEnabled) {
       disabledConnectorsList.push(HealthSourceTypes.SumoLogic)
     }
     return disabledConnectorsList
-  }, [isErrorTrackingEnabled, isElkEnabled, isCloudWatchEnabled, isSumoLogicEnabled])
+  }, [isErrorTrackingEnabled, isSumoLogicEnabled])
 
   const initialValues = useMemo(() => {
-    return getInitialValues(sourceData, getString, isDataSourceTypeSelectorEnabled)
+    return getInitialValues(sourceData, getString)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceData?.healthSourceIdentifier])
 
@@ -176,8 +166,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
             isEdit,
             connectorRef,
             sourceType,
-            dataSourceType,
-            isDataSourceTypeSelectorEnabled
+            dataSourceType
           })}
           tooltipProps={{ dataTooltipId: 'selectHealthSourceConnector' }}
         />
@@ -198,7 +187,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   }
 
   const getDataSourceTypeSelector = (sourceType?: string): JSX.Element | null => {
-    if (canShowDataSelector(sourceType, isDataSourceTypeSelectorEnabled)) {
+    if (canShowDataSelector(sourceType)) {
       return <PrometheusDataSourceTypeSelector isEdit={isEdit} />
     }
 
@@ -206,7 +195,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   }
 
   const getDataInfoSelector = (sourceType?: string, dataSourceType?: string): JSX.Element | null => {
-    if (canShowDataInfoSelector(sourceType, dataSourceType, isDataSourceTypeSelectorEnabled)) {
+    if (canShowDataInfoSelector(sourceType, dataSourceType)) {
       return <DataInfoSelector isEdit={isEdit} />
     }
 
@@ -222,7 +211,6 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
         validate={values => {
           return formValidation({
             values,
-            isDataSourceTypeSelectorEnabled,
             isEdit,
             getString
           })

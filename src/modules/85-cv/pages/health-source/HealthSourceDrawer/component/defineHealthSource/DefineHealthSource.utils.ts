@@ -68,20 +68,11 @@ export const validateDuplicateIdentifier = (
   return {}
 }
 
-const isDataSourceTypeNotValid = ({
-  isDataSourceTypeSelectorEnabled,
-  sourceType,
-  dataSourceType
-}: DataSourceTypeValidateFunctionProps): boolean => {
-  return Boolean(isDataSourceTypeSelectorEnabled && sourceType === HealthSourceTypes.Prometheus && !dataSourceType)
+const isDataSourceTypeNotValid = ({ sourceType, dataSourceType }: DataSourceTypeValidateFunctionProps): boolean => {
+  return Boolean(sourceType === HealthSourceTypes.Prometheus && !dataSourceType)
 }
 
-export const formValidation = ({
-  values,
-  isEdit,
-  isDataSourceTypeSelectorEnabled,
-  getString
-}: FormValidationFunctionProps): Record<string, string> => {
+export const formValidation = ({ values, isEdit, getString }: FormValidationFunctionProps): Record<string, string> => {
   let errors = {}
 
   const { dataSourceType, sourceType } = values || {}
@@ -93,8 +84,7 @@ export const formValidation = ({
   if (
     isDataSourceTypeNotValid({
       dataSourceType,
-      sourceType,
-      isDataSourceTypeSelectorEnabled
+      sourceType
     })
   ) {
     errors = {
@@ -110,14 +100,13 @@ export const getIsConnectorDisabled = ({
   isEdit,
   connectorRef,
   sourceType,
-  isDataSourceTypeSelectorEnabled,
   dataSourceType
 }: ConnectorDisableFunctionProps): boolean => {
   if (isEdit && connectorRef) {
     return true
   } else if (!isEdit && !sourceType) {
     return true
-  } else if (isDataSourceTypeNotValid({ isDataSourceTypeSelectorEnabled, sourceType, dataSourceType })) {
+  } else if (isDataSourceTypeNotValid({ sourceType, dataSourceType })) {
     return true
   }
 
@@ -309,15 +298,11 @@ const getHealthSourceType = (type?: string, sourceType?: string): string | undef
   return sourceType
 }
 
-export const getDataSourceType = ({
-  type,
-  dataSourceType,
-  isDataSourceTypeSelectorEnabled
-}: GetDataSourceTypeParams): string | null => {
+export const getDataSourceType = ({ type, dataSourceType }: GetDataSourceTypeParams): string | null => {
   if (type !== HealthSourceTypes.NextGenHealthSource) {
     if (type === HealthSourceTypes.AwsPrometheus || dataSourceType === AWSDataSourceType) {
       return AWSDataSourceType
-    } else if (isDataSourceTypeSelectorEnabled) {
+    } else if (type === HealthSourceTypes.Prometheus || dataSourceType === HealthSourceTypes.Prometheus) {
       return HealthSourceTypes.Prometheus
     }
   }
@@ -326,11 +311,7 @@ export const getDataSourceType = ({
 
 const PrometheusTypes = [Connectors.PROMETHEUS, HealthSourceTypes.AwsPrometheus]
 
-export const getInitialValues = (
-  sourceData: any,
-  getString: UseStringsReturn['getString'],
-  isDataSourceTypeSelectorEnabled?: boolean
-): any => {
+export const getInitialValues = (sourceData: any, getString: UseStringsReturn['getString']): any => {
   const currentHealthSource = sourceData?.healthSourceList?.find(
     (el: any) => el?.identifier === sourceData?.healthSourceIdentifier
   )
@@ -348,8 +329,7 @@ export const getInitialValues = (
     sourceType: getHealthSourceType(currentHealthSource?.type, sourceType),
     dataSourceType: getDataSourceType({
       type: currentHealthSource?.type,
-      dataSourceType,
-      isDataSourceTypeSelectorEnabled
+      dataSourceType
     }),
     region: sourceDataRegion || region,
     workspaceId: sourceDataWorkspaceId || workspaceId,
@@ -423,14 +403,10 @@ export function getWorkspaceDropdownOptions(workspaces?: AwsPrometheusWorkspaceD
   return workspaceOptions
 }
 
-export function canShowDataSelector(sourceType?: string, isDataSourceTypeSelectorEnabled?: boolean): boolean {
-  return Boolean(sourceType === HealthSourceTypes.Prometheus && isDataSourceTypeSelectorEnabled)
+export function canShowDataSelector(sourceType?: string): boolean {
+  return Boolean(sourceType === HealthSourceTypes.Prometheus)
 }
 
-export function canShowDataInfoSelector(
-  sourceType?: string,
-  dataSourceType?: string,
-  isDataSourceTypeSelectorEnabled?: boolean
-): boolean {
-  return canShowDataSelector(sourceType, isDataSourceTypeSelectorEnabled) && dataSourceType === AWSDataSourceType
+export function canShowDataInfoSelector(sourceType?: string, dataSourceType?: string): boolean {
+  return canShowDataSelector(sourceType) && dataSourceType === AWSDataSourceType
 }

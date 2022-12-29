@@ -32,7 +32,7 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import '@testing-library/cypress/add-commands'
 import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command'
-import { getConnectorIconByType } from '../utils/connctors-utils'
+import { Connectors, getConnectorIconByType } from '../utils/connctors-utils'
 import { activeTabClassName } from './70-pipeline/constants'
 import {
   servicesCall,
@@ -369,6 +369,10 @@ Cypress.Commands.add('populateDefineHealthSource', (connectorType, connectorName
 
   if (connectorName) {
     cy.contains('span', 'Connector Selection is required.').should('be.visible')
+    if (connectorType === Connectors.PROMETHEUS) {
+      cy.get('.GroupedThumbnailSelect--thumbnailsRow [data-icon="service-prometheus"]').should('exist')
+      cy.get('.GroupedThumbnailSelect--thumbnailsRow [data-icon="service-prometheus"]').scrollIntoView().click()
+    }
     cy.get('button[data-testid="cr-field-connectorRef"]').click()
     cy.contains('p', connectorName).click()
     cy.contains('span', 'Apply Selected').click()

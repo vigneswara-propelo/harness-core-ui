@@ -19,8 +19,6 @@ import { getConnectorRef } from '../../common/utils/HealthSource.utils'
 import css from './CloudWatch.module.scss'
 
 export default function CloudWatch({ data, onSubmit, isTemplate, expressions }: CloudWatchProps): JSX.Element | null {
-  const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
-
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
   const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
@@ -44,10 +42,6 @@ export default function CloudWatch({ data, onSubmit, isTemplate, expressions }: 
     }
     return value
   }, [expressions, isConnectorRuntimeOrExpression, isTemplate, riskProfileResponse])
-
-  if (!isCloudWatchEnabled) {
-    return null
-  }
 
   return (
     <Container padding="medium" className={css.cloudWatch} data-testid="cloudWatchContainer">
@@ -80,7 +74,7 @@ export default function CloudWatch({ data, onSubmit, isTemplate, expressions }: 
                   onNext={async () => {
                     formikProps.submitForm()
 
-                    if (formikProps.isValid && isCloudWatchEnabled) {
+                    if (formikProps.isValid) {
                       const payload = createPayloadForCloudWatch({
                         setupSourceData: data,
                         formikValues: formikProps.values,

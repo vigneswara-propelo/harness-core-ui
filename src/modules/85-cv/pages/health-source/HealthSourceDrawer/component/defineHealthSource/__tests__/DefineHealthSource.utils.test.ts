@@ -32,7 +32,6 @@ describe('DefineHealthSource.utils.test', () => {
     const result = formValidation({
       getString: a => a,
       values: { sourceType: 'Prometheus', healthSourceIdentifier: '322', healthSourceList: [] },
-      isDataSourceTypeSelectorEnabled: true,
       isEdit: false
     })
     expect(result).toEqual({ dataSourceType: 'cv.healthSource.dataSourceTypeValidation' })
@@ -43,7 +42,6 @@ describe('DefineHealthSource.utils.test', () => {
       connectorRef: '',
       isEdit: false,
       sourceType: '',
-      isDataSourceTypeSelectorEnabled: true,
       dataSourceType: ''
     })
     expect(result).toBe(true)
@@ -54,21 +52,32 @@ describe('DefineHealthSource.utils.test', () => {
       connectorRef: '',
       isEdit: false,
       sourceType: 'Prometheus',
-      isDataSourceTypeSelectorEnabled: true,
       dataSourceType: 'AwsPrometheus'
     })
     expect(result).toBe(false)
   })
 
   test('getDataSourceType should return AwsPrometheus, if selected dataSourceType is AWS', () => {
-    const result = getDataSourceType({ dataSourceType: AWSDataSourceType, isDataSourceTypeSelectorEnabled: true })
+    const result = getDataSourceType({ dataSourceType: AWSDataSourceType })
 
     expect(result).toBe(AWSDataSourceType)
   })
 
-  test('getDataSourceType should return AwsPrometheus, if selected health source type is AwaPrometheus', () => {
-    const result = getDataSourceType({ type: HealthSourceTypes.AwsPrometheus, isDataSourceTypeSelectorEnabled: true })
+  test('getDataSourceType should return AwsPrometheus, if selected health source type is AwsPrometheus', () => {
+    const result = getDataSourceType({ type: HealthSourceTypes.AwsPrometheus })
 
     expect(result).toBe(AWSDataSourceType)
+  })
+
+  test('getDataSourceType should return Prometheus, if selected health source type is Prometheus', () => {
+    const result = getDataSourceType({ type: HealthSourceTypes.Prometheus })
+
+    expect(result).toBe(HealthSourceTypes.Prometheus)
+  })
+
+  test('getDataSourceType should return Prometheus, if selected datasource type is Prometheus', () => {
+    const result = getDataSourceType({ dataSourceType: HealthSourceTypes.Prometheus })
+
+    expect(result).toBe(HealthSourceTypes.Prometheus)
   })
 })
