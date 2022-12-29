@@ -389,6 +389,15 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     lazy: true,
     debounce: 300
   })
+  const getTagRegexFieldName = (): string => {
+    if (isGenericArtifactory) {
+      return `artifacts.${artifactPath}.spec.artifactPathFilter`
+    }
+    return `artifacts.${artifactPath}.spec.tagRegex`
+  }
+
+  const getFQNFieldName = (): string =>
+    isGenericArtifactory ? 'artifactPath' : isFieldRuntime(getTagRegexFieldName(), template) ? 'tagRegex' : 'tag'
 
   const {
     data: imagePathV2Data,
@@ -420,7 +429,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
             : artifactPath,
           ''
         ),
-        isGenericArtifactory ? 'artifactPath' : 'tag'
+        getFQNFieldName()
       )
     },
     lazy: true
