@@ -4723,6 +4723,7 @@ export interface StringsMap {
   'cd.artifactSource.artifactRepositoryTypeIsRequired': string
   'cd.artifactVersion': string
   'cd.asgCanaryDeleteStepDescription': string
+  'cd.asgRollingRollbackStepDescription': string
   'cd.attributeFilters': string
   'cd.awsCli': string
   'cd.azureArm.description': string

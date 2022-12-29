@@ -531,6 +531,7 @@ manifestId: Manifest Id
 azureWebAppRollbackDescription: Rollback to the last successfully deployed app.
 azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.
 asgCanaryDeleteStepDescription: Asg Canary Delete
+asgRollingRollbackStepDescription: Asg Rolling Rollback
 getStartedWithCD:
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
