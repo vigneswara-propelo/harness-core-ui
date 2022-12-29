@@ -41,7 +41,8 @@ export enum HealthSourceTypes {
   CloudWatchMetrics = 'CloudWatchMetrics',
   Elk = 'ElasticSearch',
   AwsPrometheus = 'AwsPrometheus',
-  SumoLogic = 'SumoLogic'
+  SumoLogic = 'SumoLogic',
+  NextGenHealthSource = 'NextGenHealthSource'
 }
 
 export type CommonNonCustomMetricFieldsType = {

@@ -10,9 +10,10 @@ export function shouldAutoBuildChart(
 export function shouldShowChartComponent(
   chartConfig: { enabled: boolean; chartVisibilityMode: CHART_VISIBILITY_ENUM } | undefined,
   records: Record<string, any>[],
-  fetchingSampleRecordLoading: boolean
+  fetchingSampleRecordLoading: boolean,
+  query: string
 ): boolean {
-  return !!(chartConfig?.enabled && records && records?.length && !fetchingSampleRecordLoading)
+  return !!(query && chartConfig?.enabled && records && records?.length && !fetchingSampleRecordLoading)
 }
 
 export function getRecordsRequestBody(

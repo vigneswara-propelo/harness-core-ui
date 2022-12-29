@@ -36,7 +36,7 @@ export default function HealthSourceInputsetTable({ healthSources }: any): JSX.E
             accessor: function accessor(row: any) {
               return (
                 <Layout.Horizontal>
-                  <Icon name={getIconBySourceType(row.type)} margin={{ right: 'medium' }} />
+                  <Icon name={getIconBySourceType(row.type, row?.spec)} margin={{ right: 'medium' }} />
                   <Text>{row.healthSource}</Text>
                 </Layout.Horizontal>
               )

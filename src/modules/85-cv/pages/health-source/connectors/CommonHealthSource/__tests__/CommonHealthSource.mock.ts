@@ -188,7 +188,7 @@ export const sourceDataMockWithcustomMetrics = {
       {
         metricName: 'test',
         identifier: 'test',
-        groupName: 'test',
+        groupName: { label: 'test', value: 'test' },
         continuousVerification: true,
         query: 'test query'
       }
@@ -243,5 +243,253 @@ export const healthSourceConfigWithMetricThresholdsDisabled = {
   ...healthSourceConfig,
   metricThresholds: {
     enabled: false
+  }
+}
+
+export const mockedDefineHealthSourcedata = {
+  product: {
+    value: 'SUMOLOGIC_METRICS',
+    label: 'SumoLogic Cloud Metrics'
+  },
+  sourceType: 'SumoLogic',
+  healthSourceName: 'Health source 2 ',
+  connectorRef: 'account.Sumologic_Metric_Test',
+  healthSourceIdentifier: 'Health_source_2'
+}
+
+export const mockedSourceData = {
+  connectorRef: 'account.Sumologic_Metric_Test',
+  isEdit: true,
+  healthSourceList: [
+    {
+      name: 'Health source 2 ',
+      identifier: 'Health_source_2',
+      type: 'NextGenHealthSource',
+      spec: {
+        connectorRef: 'account.Sumologic_Metric_Test',
+        dataSourceType: 'SUMOLOGIC_METRICS',
+        queryDefinitions: [
+          {
+            identifier: 'M1',
+            name: 'M1',
+            groupName: 'G1',
+            liveMonitoringEnabled: false,
+            continuousVerificationEnabled: false,
+            sliEnabled: false,
+            query: '*',
+            metricThresholds: [],
+            riskProfile: {
+              category: 'Errors',
+              metricType: 'INFRA',
+              thresholdTypes: ['ACT_WHEN_LOWER']
+            }
+          }
+        ]
+      }
+    },
+    {
+      name: 'Log',
+      identifier: 'Log',
+      type: 'NextGenHealthSource',
+      spec: {
+        connectorRef: 'SumoLogic',
+        dataSourceType: 'SUMOLOGIC_LOG',
+        queryDefinitions: [
+          {
+            identifier: 's1_e1/Log',
+            name: 'Log 1',
+            queryParams: {
+              serviceInstanceField: '_sourcehost'
+            },
+            query: '*',
+            metricThresholds: []
+          }
+        ]
+      }
+    },
+    {
+      name: 'H1',
+      identifier: 'H1',
+      type: 'NextGenHealthSource',
+      spec: {
+        connectorRef: 'SumoLogic',
+        dataSourceType: 'SUMOLOGIC_METRICS',
+        queryDefinitions: [
+          {
+            identifier: 'M3',
+            name: 'M3',
+            groupName: 'g2',
+            liveMonitoringEnabled: false,
+            continuousVerificationEnabled: false,
+            sliEnabled: false,
+            query: 'm3',
+            metricThresholds: [],
+            riskProfile: {
+              category: 'Errors',
+              metricType: 'INFRA',
+              thresholdTypes: ['ACT_WHEN_LOWER']
+            }
+          },
+          {
+            identifier: 'M1',
+            name: 'M1',
+            groupName: 'g1',
+            liveMonitoringEnabled: false,
+            continuousVerificationEnabled: false,
+            sliEnabled: false,
+            query: 'm1',
+            metricThresholds: [],
+            riskProfile: {
+              category: 'Errors',
+              metricType: 'INFRA',
+              thresholdTypes: ['ACT_WHEN_LOWER']
+            }
+          },
+          {
+            identifier: 'M2',
+            name: 'M2',
+            groupName: 'g1',
+            liveMonitoringEnabled: false,
+            continuousVerificationEnabled: false,
+            sliEnabled: false,
+            query: 'm2',
+            metricThresholds: [],
+            riskProfile: {
+              category: 'Errors',
+              metricType: 'INFRA',
+              thresholdTypes: ['ACT_WHEN_LOWER']
+            }
+          }
+        ]
+      }
+    },
+    {
+      name: 'a',
+      identifier: 'a',
+      type: 'NextGenHealthSource',
+      spec: {
+        connectorRef: 'account.Sumologic_Metric_Test',
+        dataSourceType: 'SUMOLOGIC_METRICS',
+        queryDefinitions: [
+          {
+            identifier: 'M1',
+            name: 'M1',
+            groupName: 'G1',
+            queryParams: {
+              serviceInstanceField: '_sourceHost'
+            },
+            liveMonitoringEnabled: false,
+            continuousVerificationEnabled: false,
+            sliEnabled: false,
+            query: '*',
+            metricThresholds: [],
+            riskProfile: {
+              category: 'Errors',
+              metricType: 'INFRA',
+              thresholdTypes: ['ACT_WHEN_LOWER']
+            }
+          }
+        ]
+      }
+    },
+    {
+      name: 'AA',
+      identifier: 'AA',
+      type: 'NextGenHealthSource',
+      spec: {
+        connectorRef: 'SumoLogic',
+        dataSourceType: 'SUMOLOGIC_METRICS',
+        queryDefinitions: [
+          {
+            identifier: 'M2',
+            name: 'M2',
+            groupName: 'g1',
+            queryParams: {
+              serviceInstanceField: '_sourceHost'
+            },
+            liveMonitoringEnabled: false,
+            continuousVerificationEnabled: false,
+            sliEnabled: false,
+            query: 'c new',
+            metricThresholds: [],
+            riskProfile: {
+              category: 'Errors',
+              metricType: 'INFRA',
+              thresholdTypes: ['ACT_WHEN_LOWER']
+            }
+          },
+          {
+            identifier: 'M3',
+            name: 'M3',
+            groupName: 'g1',
+            liveMonitoringEnabled: false,
+            continuousVerificationEnabled: false,
+            sliEnabled: false,
+            query: 'a',
+            metricThresholds: [],
+            riskProfile: {
+              category: 'Errors',
+              metricType: 'INFRA',
+              thresholdTypes: ['ACT_WHEN_LOWER']
+            }
+          },
+          {
+            identifier: 'M4',
+            name: 'M4',
+            groupName: 'g1',
+            liveMonitoringEnabled: false,
+            continuousVerificationEnabled: false,
+            sliEnabled: false,
+            query: 'm4',
+            metricThresholds: [],
+            riskProfile: {
+              category: 'Errors',
+              metricType: 'INFRA',
+              thresholdTypes: ['ACT_WHEN_LOWER']
+            }
+          }
+        ]
+      }
+    }
+  ],
+  serviceRef: 's1',
+  environmentRef: 'e1',
+  monitoredServiceRef: {
+    name: 's1_e1',
+    identifier: 's1_e1'
+  },
+  existingMetricDetails: {
+    name: 'Health source 2 ',
+    identifier: 'Health_source_2',
+    type: 'NextGenHealthSource',
+    spec: {
+      connectorRef: 'account.Sumologic_Metric_Test',
+      dataSourceType: 'SUMOLOGIC_METRICS',
+      queryDefinitions: [
+        {
+          identifier: 'M1',
+          name: 'M1',
+          groupName: 'G1',
+          liveMonitoringEnabled: false,
+          continuousVerificationEnabled: false,
+          sliEnabled: false,
+          query: '*',
+          metricThresholds: [],
+          riskProfile: {
+            category: 'Errors',
+            metricType: 'INFRA',
+            thresholdTypes: ['ACT_WHEN_LOWER']
+          }
+        }
+      ]
+    }
+  },
+  healthSourceName: 'Health source 2 ',
+  healthSourceIdentifier: 'Health_source_2',
+  sourceType: 'NextGenHealthSource',
+  dataSourceType: null,
+  product: {
+    label: 'SumoLogic Cloud Metrics',
+    value: 'SUMOLOGIC_METRICS'
   }
 }

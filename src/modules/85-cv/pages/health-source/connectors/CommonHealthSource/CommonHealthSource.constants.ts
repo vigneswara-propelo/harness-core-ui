@@ -1,4 +1,5 @@
 import type { QueryRecordsRequest } from 'services/cv'
+import type { HealthSourceProductsType } from './CommonHealthSource.types'
 
 export const BasePathKeyPrefix = 'basePathDropdown_'
 export const BasePathInitValue = { basePathDropdown_0: { value: '', path: '' } }
@@ -6,9 +7,17 @@ export const BasePathInitValue = { basePathDropdown_0: { value: '', path: '' } }
 export const MetricPathKeyPrefix = 'metricPathDropdown_'
 export const MetricPathInitValue = { metricPathDropdown_0: { value: '', path: '', isMetric: false } }
 
-export const SumoLogicProducts = {
-  METRICS: 'SumoLogic Cloud Metrics',
-  LOGS: 'SumoLogic Cloud Logs'
+export const DEFAULT_HEALTH_SOURCE_QUERY = 'Health Source Query'
+export const METRICS = 'METRICS'
+export const HealthSourceProducts: HealthSourceProductsType = {
+  SUMOLOGIC_METRICS: {
+    label: 'SumoLogic Cloud Metrics',
+    value: 'SUMOLOGIC_METRICS'
+  },
+  SUMOLOGIC_LOG: {
+    label: 'SumoLogic Cloud Logs',
+    value: 'SUMOLOGIC_LOG'
+  }
 }
 
 export const initConfigurationsForm = {

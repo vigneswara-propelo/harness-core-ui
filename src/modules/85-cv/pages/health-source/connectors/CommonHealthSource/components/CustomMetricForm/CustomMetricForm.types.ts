@@ -14,8 +14,7 @@ import type {
 import type {
   CommonCustomMetricFormikInterface,
   FieldMapping,
-  HealthSourceConfig,
-  HealthSourceInitialData
+  HealthSourceConfig
 } from '../../CommonHealthSource.types'
 
 export interface AddMetricForm {
@@ -40,7 +39,6 @@ export interface CustomMetricFormContainerProps {
   isTemplate?: boolean
   expressions?: string[]
   healthSourceConfig: HealthSourceConfig
-  healthSourceData: HealthSourceInitialData
   setConfigurationsFormikFieldValue: (key: string, data: any) => void
 }
 

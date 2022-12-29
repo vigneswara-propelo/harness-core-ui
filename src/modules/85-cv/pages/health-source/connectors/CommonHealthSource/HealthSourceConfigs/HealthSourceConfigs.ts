@@ -9,7 +9,7 @@ import { CHART_VISIBILITY_ENUM, FIELD_ENUM } from '../CommonHealthSource.constan
 import type { HealthSourcesConfig } from '../CommonHealthSource.types'
 
 export const healthSourcesConfig: HealthSourcesConfig = {
-  SumoLogic_METRICS: {
+  SUMOLOGIC_METRICS: {
     addQuery: {
       label: 'Metric',
       enableDefaultGroupName: false
@@ -35,7 +35,7 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       enabled: true
     }
   },
-  SumoLogic_LOGS: {
+  SUMOLOGIC_LOG: {
     addQuery: {
       label: 'Log',
       enableDefaultGroupName: true

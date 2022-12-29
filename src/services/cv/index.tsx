@@ -519,13 +519,6 @@ export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
 }
 
-export interface CVLicenseUsageDTO {
-  accountIdentifier?: string
-  activeServices?: UsageDataDTO
-  module?: string
-  timestamp?: number
-}
-
 export type CVNGEmailChannelSpec = CVNGNotificationChannelSpec & {
   recipients?: string[]
   userGroups?: string[]
@@ -1589,12 +1582,6 @@ export interface EventCount {
   displayName?: string
 }
 
-export interface EventDetails {
-  changeEventDetailsLink?: DeepLink
-  eventDescriptions?: string[]
-  internalLinkToEntity?: DeepLink
-}
-
 export interface ExceptionInfo {
   exception?: string
   stackTrace?: string
@@ -2248,6 +2235,7 @@ export interface HealthScoreDTO {
 export interface HealthSource {
   identifier?: string
   name?: string
+  nextGenHealthSourceSpec?: NextGenHealthSourceSpec
   spec: HealthSourceSpec
   type?:
     | 'AppDynamics'
@@ -2266,6 +2254,7 @@ export interface HealthSource {
     | 'ElasticSearch'
     | 'CloudWatchMetrics'
     | 'AwsPrometheus'
+    | 'NextGenHealthSource'
 }
 
 export interface HealthSourceDTO {
@@ -2294,8 +2283,8 @@ export interface HealthSourceDTO {
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
 
-export interface HealthSourceParams {
-  [key: string]: any
+export interface HealthSourceParamsDTO {
+  region?: string
 }
 
 export interface HealthSourceQueryParams {
@@ -2305,7 +2294,7 @@ export interface HealthSourceQueryParams {
 export interface HealthSourceRecordsRequest {
   connectorIdentifier: string
   endTime: number
-  healthSourceParams?: HealthSourceParams
+  healthSourceParams?: HealthSourceParamsDTO
   healthSourceQueryParams?: HealthSourceQueryParams
   providerType:
     | 'APP_DYNAMICS'
@@ -2443,6 +2432,12 @@ export interface InputSetTemplateResponse {
   inputSetTemplateYaml?: string
 }
 
+export interface InternalChangeEvent {
+  changeEventDetailsLink?: DeepLink
+  eventDescriptions?: string[]
+  internalLinkToEntity?: DeepLink
+}
+
 export type InternalChangeEventMetaData = ChangeEventMetadata & {
   activityType?:
     | 'DEPLOYMENT'
@@ -2452,9 +2447,9 @@ export type InternalChangeEventMetaData = ChangeEventMetadata & {
     | 'PAGER_DUTY'
     | 'HARNESS_CD_CURRENT_GEN'
     | 'FEATURE_FLAG'
-  eventDetails?: EventDetails
   eventEndTime?: number
   eventStartTime?: number
+  internalChangeEvent?: InternalChangeEvent
   updatedBy?: string
 }
 
@@ -3126,6 +3121,32 @@ export interface NewRelicMetricDefinition {
   sli?: Slidto
 }
 
+export type NextGenHealthSourceSpec = HealthSourceSpec & {
+  dataSourceType?:
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELASTICSEARCH'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
+  healthSourceParams?: HealthSourceParamsDTO
+  metricPacks?: TimeSeriesMetricPackDTO[]
+  queryDefinitions?: QueryDefinition[]
+}
+
 export interface NexusAuthCredentials {
   [key: string]: any
 }
@@ -3534,6 +3555,7 @@ export interface PartialSchemaDTO {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -3630,40 +3652,17 @@ export interface QueryDTO {
   timeStampIdentifier: string
 }
 
-export interface QueryJsonPath {
-  queryValueJsonPath?: string
-  timestampFormat?: string
-  timestampJsonPath?: string
-}
-
-export interface QueryRecordsRequest {
-  connectorIdentifier: string
-  endTime: number
-  healthSourceParams?: HealthSourceParams
-  healthSourceQueryParams?: HealthSourceQueryParams
-  providerType:
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELASTICSEARCH'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-    | 'SUMOLOGIC_METRICS'
-    | 'SUMOLOGIC_LOG'
-  query: string
-  queryJSONPath?: QueryJsonPath
-  startTime: number
+export interface QueryDefinition {
+  continuousVerificationEnabled?: boolean
+  groupName?: string
+  identifier: string
+  liveMonitoringEnabled?: boolean
+  metricThresholds?: MetricThreshold[]
+  name?: string
+  query?: string
+  queryParams?: QueryParamsDTO
+  riskProfile?: RiskProfile
+  sliEnabled?: boolean
 }
 
 export interface QueryJsonPath {
@@ -3672,10 +3671,14 @@ export interface QueryJsonPath {
   timestampJsonPath?: string
 }
 
+export interface QueryParamsDTO {
+  serviceInstanceField?: string
+}
+
 export interface QueryRecordsRequest {
   connectorIdentifier: string
   endTime: number
-  healthSourceParams?: HealthSourceParams
+  healthSourceParams?: HealthSourceParamsDTO
   healthSourceQueryParams?: HealthSourceQueryParams
   providerType:
     | 'APP_DYNAMICS'
@@ -3736,13 +3739,6 @@ export interface ResponseAppdynamicsMetricDataResponse {
 export interface ResponseBoolean {
   correlationId?: string
   data?: boolean
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseCVLicenseUsageDTO {
-  correlationId?: string
-  data?: CVLicenseUsageDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4411,6 +4407,13 @@ export interface ResponseSLODashboardDetail {
 export interface ResponseSLORiskCountResponse {
   correlationId?: string
   data?: SLORiskCountResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseSRMLicenseUsageDTO {
+  correlationId?: string
+  data?: SRMLicenseUsageDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -5212,6 +5215,13 @@ export interface SLOTargetSpec {
   [key: string]: any
 }
 
+export interface SRMLicenseUsageDTO {
+  accountIdentifier?: string
+  activeServices?: UsageDataDTO
+  module?: string
+  timestamp?: number
+}
+
 export interface SampleDataDTO {
   groupName: string
   jsonResponse: string
@@ -5619,6 +5629,8 @@ export interface TimeSeriesAnomalousPatterns {
 export interface TimeSeriesCumulativeSums {
   analysisEndTime?: number
   analysisStartTime?: number
+  createdAt?: number
+  lastUpdatedAt?: number
   transactionMetricSums?: TransactionMetricSums[]
   uuid?: string
   validUntil?: string
@@ -5716,6 +5728,8 @@ export interface TimeSeriesRecordDTO {
 export interface TimeSeriesRiskSummary {
   analysisEndTime?: number
   analysisStartTime?: number
+  createdAt?: number
+  lastUpdatedAt?: number
   overallRisk?: number
   transactionMetricRiskList?: TransactionMetricRisk[]
   uuid?: string
@@ -6004,6 +6018,7 @@ export interface YamlSchemaMetadata {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -6027,6 +6042,7 @@ export interface YamlSchemaWithDetails {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -6040,6 +6056,8 @@ export interface YamlSchemaWithDetails {
 
 export type ChangeEventDTORequestBody = ChangeEventDTO
 
+export type CompositeServiceLevelObjectiveSpecRequestBody = CompositeServiceLevelObjectiveSpec
+
 export type LogSampleRequestDTORequestBody = LogSampleRequestDTO
 
 export type MetricPackDTOArrayRequestBody = MetricPackDTO[]
@@ -6049,6 +6067,8 @@ export type MonitoredServiceDTORequestBody = MonitoredServiceDTO
 export type NotificationRuleDTORequestBody = NotificationRuleDTO
 
 export type QueryRecordsRequestRequestBody = QueryRecordsRequest
+
+export type SLODashboardApiFilterRequestBody = SLODashboardApiFilter
 
 export type ServiceGuardTimeSeriesAnalysisDTORequestBody = ServiceGuardTimeSeriesAnalysisDTO
 
@@ -6066,6 +6086,7 @@ export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]
   envIdentifiers?: string[]
   monitoredServiceIdentifiers?: string[]
+  scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
   changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   searchText?: string
@@ -6089,7 +6110,7 @@ export type ChangeEventListProps = Omit<
   ChangeEventListPathParams
 
 /**
- * get ChangeEvent List
+ * get ChangeEvent List For Project
  */
 export const ChangeEventList = ({
   accountIdentifier,
@@ -6111,7 +6132,7 @@ export type UseChangeEventListProps = Omit<
   ChangeEventListPathParams
 
 /**
- * get ChangeEvent List
+ * get ChangeEvent List For Project
  */
 export const useChangeEventList = ({
   accountIdentifier,
@@ -6126,7 +6147,7 @@ export const useChangeEventList = ({
   )
 
 /**
- * get ChangeEvent List
+ * get ChangeEvent List For Project
  */
 export const changeEventListPromise = (
   {
@@ -6153,6 +6174,7 @@ export interface ChangeEventTimelineQueryParams {
   serviceIdentifiers?: string[]
   envIdentifiers?: string[]
   monitoredServiceIdentifiers?: string[]
+  scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
   changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   searchText?: string
@@ -6174,7 +6196,7 @@ export type ChangeEventTimelineProps = Omit<
   ChangeEventTimelinePathParams
 
 /**
- * get ChangeEvent timeline
+ * get ChangeEvent timeline For Project
  */
 export const ChangeEventTimeline = ({
   accountIdentifier,
@@ -6196,7 +6218,7 @@ export type UseChangeEventTimelineProps = Omit<
   ChangeEventTimelinePathParams
 
 /**
- * get ChangeEvent timeline
+ * get ChangeEvent timeline For Project
  */
 export const useChangeEventTimeline = ({
   accountIdentifier,
@@ -6211,7 +6233,7 @@ export const useChangeEventTimeline = ({
   )
 
 /**
- * get ChangeEvent timeline
+ * get ChangeEvent timeline For Project
  */
 export const changeEventTimelinePromise = (
   {
@@ -7258,6 +7280,7 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
   projectIdentifier: string
   monitoredServiceIdentifier?: string
   monitoredServiceIdentifiers?: string[]
+  isMonitoredServiceIdentifierScoped?: boolean
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
   changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   startTime: number
@@ -12378,8 +12401,8 @@ export const getSLODetailsPromise = (
   )
 
 export interface GetSloConsumptionBreakdownViewQueryParams {
-  startTime?: number
-  endTime?: number
+  startTime: number
+  endTime: number
   accountId: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -12531,7 +12554,13 @@ export interface GetSLOHealthListViewV2QueryParams {
 }
 
 export type GetSLOHealthListViewV2Props = Omit<
-  MutateProps<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>,
+  MutateProps<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilterRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -12539,7 +12568,13 @@ export type GetSLOHealthListViewV2Props = Omit<
  * get slo list view
  */
 export const GetSLOHealthListViewV2 = (props: GetSLOHealthListViewV2Props) => (
-  <Mutate<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>
+  <Mutate<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilterRequestBody,
+    void
+  >
     verb="POST"
     path={`/slo-dashboard/widgets/list`}
     base={getConfig('cv/api')}
@@ -12552,7 +12587,7 @@ export type UseGetSLOHealthListViewV2Props = Omit<
     ResponsePageSLOHealthListView,
     unknown,
     GetSLOHealthListViewV2QueryParams,
-    SLODashboardApiFilter,
+    SLODashboardApiFilterRequestBody,
     void
   >,
   'path' | 'verb'
@@ -12562,11 +12597,13 @@ export type UseGetSLOHealthListViewV2Props = Omit<
  * get slo list view
  */
 export const useGetSLOHealthListViewV2 = (props: UseGetSLOHealthListViewV2Props) =>
-  useMutate<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>(
-    'POST',
-    `/slo-dashboard/widgets/list`,
-    { base: getConfig('cv/api'), ...props }
-  )
+  useMutate<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilterRequestBody,
+    void
+  >('POST', `/slo-dashboard/widgets/list`, { base: getConfig('cv/api'), ...props })
 
 /**
  * get slo list view
@@ -12576,7 +12613,7 @@ export const getSLOHealthListViewV2Promise = (
     ResponsePageSLOHealthListView,
     unknown,
     GetSLOHealthListViewV2QueryParams,
-    SLODashboardApiFilter,
+    SLODashboardApiFilterRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -12585,7 +12622,7 @@ export const getSLOHealthListViewV2Promise = (
     ResponsePageSLOHealthListView,
     unknown,
     GetSLOHealthListViewV2QueryParams,
-    SLODashboardApiFilter,
+    SLODashboardApiFilterRequestBody,
     void
   >('POST', getConfig('cv/api'), `/slo-dashboard/widgets/list`, props, signal)
 
@@ -12739,7 +12776,7 @@ export type GetOnboardingGraphProps = Omit<
     RestResponseTimeGraphResponse,
     unknown,
     GetOnboardingGraphQueryParams,
-    CompositeServiceLevelObjectiveSpec,
+    CompositeServiceLevelObjectiveSpecRequestBody,
     void
   >,
   'path' | 'verb'
@@ -12753,7 +12790,7 @@ export const GetOnboardingGraph = (props: GetOnboardingGraphProps) => (
     RestResponseTimeGraphResponse,
     unknown,
     GetOnboardingGraphQueryParams,
-    CompositeServiceLevelObjectiveSpec,
+    CompositeServiceLevelObjectiveSpecRequestBody,
     void
   >
     verb="POST"
@@ -12768,7 +12805,7 @@ export type UseGetOnboardingGraphProps = Omit<
     RestResponseTimeGraphResponse,
     unknown,
     GetOnboardingGraphQueryParams,
-    CompositeServiceLevelObjectiveSpec,
+    CompositeServiceLevelObjectiveSpecRequestBody,
     void
   >,
   'path' | 'verb'
@@ -12782,7 +12819,7 @@ export const useGetOnboardingGraph = (props: UseGetOnboardingGraphProps) =>
     RestResponseTimeGraphResponse,
     unknown,
     GetOnboardingGraphQueryParams,
-    CompositeServiceLevelObjectiveSpec,
+    CompositeServiceLevelObjectiveSpecRequestBody,
     void
   >('POST', `/slo/v2/composite-slo/onboarding-graph`, { base: getConfig('cv/api'), ...props })
 
@@ -12794,7 +12831,7 @@ export const getOnboardingGraphPromise = (
     RestResponseTimeGraphResponse,
     unknown,
     GetOnboardingGraphQueryParams,
-    CompositeServiceLevelObjectiveSpec,
+    CompositeServiceLevelObjectiveSpecRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -12803,7 +12840,7 @@ export const getOnboardingGraphPromise = (
     RestResponseTimeGraphResponse,
     unknown,
     GetOnboardingGraphQueryParams,
-    CompositeServiceLevelObjectiveSpec,
+    CompositeServiceLevelObjectiveSpecRequestBody,
     void
   >('POST', getConfig('cv/api'), `/slo/v2/composite-slo/onboarding-graph`, props, signal)
 
@@ -14271,7 +14308,7 @@ export interface GetLicenseUsageQueryParams {
 }
 
 export type GetLicenseUsageProps = Omit<
-  GetProps<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+  GetProps<ResponseSRMLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
   'path'
 >
 
@@ -14279,7 +14316,7 @@ export type GetLicenseUsageProps = Omit<
  * Gets License Usage for CV
  */
 export const GetLicenseUsage = (props: GetLicenseUsageProps) => (
-  <Get<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>
+  <Get<ResponseSRMLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>
     path={`/usage/CV`}
     base={getConfig('cv/api')}
     {...props}
@@ -14287,7 +14324,7 @@ export const GetLicenseUsage = (props: GetLicenseUsageProps) => (
 )
 
 export type UseGetLicenseUsageProps = Omit<
-  UseGetProps<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+  UseGetProps<ResponseSRMLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
   'path'
 >
 
@@ -14295,7 +14332,7 @@ export type UseGetLicenseUsageProps = Omit<
  * Gets License Usage for CV
  */
 export const useGetLicenseUsage = (props: UseGetLicenseUsageProps) =>
-  useGet<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>(`/usage/CV`, {
+  useGet<ResponseSRMLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>(`/usage/CV`, {
     base: getConfig('cv/api'),
     ...props
   })
@@ -14304,10 +14341,10 @@ export const useGetLicenseUsage = (props: UseGetLicenseUsageProps) =>
  * Gets License Usage for CV
  */
 export const getLicenseUsagePromise = (
-  props: GetUsingFetchProps<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+  props: GetUsingFetchProps<ResponseSRMLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>(
+  getUsingFetch<ResponseSRMLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>(
     getConfig('cv/api'),
     `/usage/CV`,
     props,

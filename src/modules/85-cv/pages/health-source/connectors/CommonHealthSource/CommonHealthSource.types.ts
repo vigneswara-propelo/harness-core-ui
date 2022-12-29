@@ -11,6 +11,8 @@ import type {
   FailMetricThresholdSpec,
   MetricThreshold,
   MetricThresholdSpec,
+  NextGenHealthSourceSpec,
+  RiskProfile,
   TimeSeriesMetricPackDTO
 } from 'services/cv'
 import type { CriteriaPercentageType } from '../../common/MetricThresholds/MetricThresholds.types'
@@ -77,24 +79,15 @@ export interface HealthSourceSetupSource {
   failFastThresholds: HealthSourceMetricThresholdType[]
 }
 
-export interface HealthSourceInitialData {
-  // Fields coming from define health source screen
+export interface HealthSourceProductsType {
+  [key: string]: SelectOption
+}
+
+export interface HealthSourcePayload {
   name: string
-  identifier: string
-  connectorRef: { connector: { identifier: string }; value: string }
-  product: string
   type: HealthSourceTypes
-
-  // Configurations Page
-  // non custom metric section
-
-  // Custom Metric section
-  customMetricsMap: Map<string, CommonCustomMetricFormikInterface>
-  selectedMetric?: string
-
-  // metric thresholds
-  ignoreThresholds?: HealthSourceMetricThresholdType[]
-  failFastThresholds?: HealthSourceMetricThresholdType[]
+  identifier: string
+  spec: NextGenHealthSourceSpec
 }
 
 export interface CommonHealthSourceConfigurations {
@@ -112,7 +105,7 @@ export interface CommonHealthSourceConfigurations {
 export interface CommonCustomMetricFormikInterface {
   identifier: string
   metricName: string
-  groupName: SelectOption | string
+  groupName: string | SelectOption
 
   // Define Query
   query: string
@@ -128,8 +121,7 @@ export interface CommonCustomMetricFormikInterface {
   healthScore?: boolean
 
   // Risk
-  // TODO - define RiskCategoryEnum
-  riskCategory?: string
+  riskCategory?: RiskProfile['category']
 
   // Deviation compare to baseline
   lowerBaselineDeviation?: boolean

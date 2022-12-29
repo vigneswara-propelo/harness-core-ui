@@ -31,20 +31,16 @@ import {
 export default function CommonCustomMetricFormContainer(props: CommonCustomMetricFormContainerProps): JSX.Element {
   const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
   const { sourceData } = useContext(SetupSourceTabsContext)
-
-  const { product, sourceType } = sourceData || {}
-
+  const { product } = sourceData || {}
   const { connectorIdentifier, expressions, isConnectorRuntimeOrExpression, healthSourceConfig } = props
-
   const { getString } = useStrings()
-
   const [records, setRecords] = useState<Record<string, any>[]>([])
   const [isQueryExecuted, setIsQueryExecuted] = useState(false)
   const [healthSourceTimeSeriesData, setHealthSourceTimeSeriesData] = useState<TimeSeries[] | undefined>()
 
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const chartConfig = healthSourceConfig?.customMetrics?.metricsChart
-  const providerType = `${sourceType?.toUpperCase()}_${product?.value}`
+  const providerType = product?.value
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
   const isQueryRuntimeOrExpression = getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
 
@@ -93,13 +89,15 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   }
 
   const handleFetchRecords = async (): Promise<void> => {
-    setIsQueryExecuted(true)
-    const fetchRecordsRequestBody = getRecordsRequestBody(connectorIdentifier, providerType, query)
-    const recordsData = await queryHealthSource(fetchRecordsRequestBody)
-    if (recordsData) {
-      setRecords(recordsData?.resource?.rawRecords as Record<string, any>[])
-      if (shouldAutoBuildChart(chartConfig)) {
-        handleBuildChart()
+    if (query) {
+      setIsQueryExecuted(true)
+      const fetchRecordsRequestBody = getRecordsRequestBody(connectorIdentifier, providerType, query)
+      const recordsData = await queryHealthSource(fetchRecordsRequestBody)
+      if (recordsData?.resource?.rawRecords) {
+        setRecords(recordsData?.resource?.rawRecords as Record<string, any>[])
+        if (shouldAutoBuildChart(chartConfig)) {
+          handleBuildChart()
+        }
       }
     }
   }
@@ -122,7 +120,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
         )}
       />
       {/* Field Mappings component Can be added here along with build chart/ get message button */}
-      {shouldShowChartComponent(chartConfig, records, fetchingSampleRecordLoading) ? (
+      {shouldShowChartComponent(chartConfig, records, fetchingSampleRecordLoading, query) ? (
         <CommonChart
           timeSeriesDataLoading={timeSeriesDataLoading}
           timeseriesDataError={timeseriesDataError}

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React from 'react'
 import { noop } from 'lodash-es'
 import { Container, Formik, FormikForm } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -15,78 +15,51 @@ import { FeatureFlag } from '@common/featureFlags'
 import type {
   CommonHealthSourceConfigurations,
   CommonCustomMetricFormikInterface,
-  HealthSourceConfig,
-  HealthSourceInitialData
+  HealthSourceConfig
 } from './CommonHealthSource.types'
 import CustomMetricFormContainer from './components/CustomMetricForm/CustomMetricFormContainer'
-import { initHealthSourceCustomForm, transformCommonHealthSourceToSetupSource } from './CommonHealthSource.utils'
-import {
-  initGroupedCreatedMetrics,
-  initializeSelectedMetricsMap
-} from '../../common/CommonCustomMetric/CommonCustomMetric.utils'
+import { getCurrentQueryData, getInitialValuesForHealthSourceConfigurations } from './CommonHealthSource.utils'
+import { initGroupedCreatedMetrics } from '../../common/CommonCustomMetric/CommonCustomMetric.utils'
 import CommonHealthSourceProvider from './components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import { getCanShowMetricThresholds } from '../../common/MetricThresholds/MetricThresholds.utils'
 import MetricThresholdProvider from './components/MetricThresholds/MetricThresholdProvider'
+import { DEFAULT_HEALTH_SOURCE_QUERY } from './CommonHealthSource.constants'
 import css from './CommonHealthSource.module.scss'
 
 export interface CommonHealthSourceProps {
-  data: HealthSourceInitialData
-  onSubmit: (healthSourcePayload: any) => void
+  data: CommonHealthSourceConfigurations
+  onSubmit: (configureHealthSourceData: CommonHealthSourceConfigurations) => void
   onPrevious: (formikValues: CommonHealthSourceConfigurations) => void
   isTemplate?: boolean
   expressions?: string[]
   healthSourceConfig: HealthSourceConfig
+  connectorRef: string
 }
 
 export default function CommonHealthSource({
-  data: healthSourceData,
+  data: configurationsPageData,
   onPrevious,
   isTemplate,
   expressions,
-  healthSourceConfig
+  healthSourceConfig,
+  onSubmit,
+  connectorRef
 }: CommonHealthSourceProps): JSX.Element {
   const { getString } = useStrings()
   const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
-  const connectorIdentifier = (healthSourceData?.connectorRef?.value || healthSourceData?.connectorRef) as string
-
-  const transformedSourceData = useMemo(
-    () => transformCommonHealthSourceToSetupSource(healthSourceData, getString),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [healthSourceData]
-  )
-
-  const { selectedMetric, mappedMetrics } = initializeSelectedMetricsMap(
-    'health source metric',
-    initHealthSourceCustomForm(),
-    transformedSourceData?.customMetricsMap || new Map(),
-    transformedSourceData?.selectedMetric
-  )
-
-  const { ignoreThresholds = [], failFastThresholds = [] } = transformedSourceData
-
-  const healthSourceConfigurationsInitialValues = {
-    // Custom metric fields
-    customMetricsMap: mappedMetrics,
-    selectedMetric,
-
-    // metric threshold section
-    ignoreThresholds,
-    failFastThresholds
-  }
+  const healthSourceConfigurationsInitialValues = getInitialValuesForHealthSourceConfigurations(configurationsPageData)
 
   return (
     <Formik<CommonHealthSourceConfigurations>
       enableReinitialize
       initialValues={healthSourceConfigurationsInitialValues}
       formName="healthSourceConfigurationsForm"
-      onSubmit={() => {
-        // TODO - will be implemented
-      }}
+      onSubmit={noop}
     >
       {formik => {
-        const { customMetricsMap, selectedMetric: currentSelectedMetric } = formik.values
-        const createdMetrics = Array.from(formik.values.customMetricsMap.keys()) || ['health source metric']
-        const groupedCreatedMetrics = initGroupedCreatedMetrics(formik.values.customMetricsMap, getString)
+        const { customMetricsMap, selectedMetric: currentSelectedMetric = '' } = formik.values
+        const createdMetrics = Array.from(customMetricsMap.keys()) || [DEFAULT_HEALTH_SOURCE_QUERY]
+        const groupedCreatedMetrics = initGroupedCreatedMetrics(customMetricsMap, getString)
         const hasEmptySet = customMetricsMap.has('')
         if (hasEmptySet) {
           customMetricsMap.delete('')
@@ -108,9 +81,7 @@ export default function CommonHealthSource({
                   enableReinitialize
                   formName={'customMetricForm'}
                   validateOnMount
-                  initialValues={{
-                    ...(customMetricsMap.get(currentSelectedMetric) as CommonCustomMetricFormikInterface)
-                  }}
+                  initialValues={getCurrentQueryData(customMetricsMap, currentSelectedMetric)}
                   onSubmit={noop}
                 >
                   {() => {
@@ -120,13 +91,12 @@ export default function CommonHealthSource({
                           setConfigurationsFormikFieldValue={formik.setFieldValue}
                           mappedMetrics={customMetricsMap}
                           selectedMetric={currentSelectedMetric}
-                          connectorIdentifier={connectorIdentifier}
+                          connectorIdentifier={connectorRef}
                           isMetricThresholdEnabled={isMetricThresholdEnabled}
                           createdMetrics={createdMetrics}
                           isTemplate={isTemplate}
                           expressions={expressions}
                           healthSourceConfig={healthSourceConfig}
-                          healthSourceData={healthSourceData}
                           groupedCreatedMetrics={groupedCreatedMetrics}
                         />
                       </FormikForm>
@@ -151,12 +121,10 @@ export default function CommonHealthSource({
               isSubmit
               onPrevious={() => onPrevious(formik.values)}
               onNext={() => {
-                // For showing validation error message purpose
-                formik.submitForm()
+                formik.validateForm()
 
                 if (formik.isValid) {
-                  // TODO - this will be implemented once we implement the submit form
-                  // submitData(formik, mappedMetrics, selectedMetric, onSubmit, groupedCreatedMetrics)
+                  onSubmit(formik.values)
                 }
               }}
             />

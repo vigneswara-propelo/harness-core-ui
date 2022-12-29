@@ -104,16 +104,23 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceData?.healthSourceIdentifier])
 
-  const isCardSelected = useCallback((name, formik) => {
-    if (formik?.values?.product?.value) {
-      const features = getFeatureOption(name, getString, isSplunkMetricEnabled)
-      return features.some(el => el?.value === formik.values.product.value)
+  const isCardSelected = useCallback((connectorTypeName, formik) => {
+    const { product = {}, sourceType = '', type = '' } = formik?.values || {}
+    const productValue = product.value
+    if (productValue) {
+      if (type === HealthSourceTypes.NextGenHealthSource) {
+        return productValue.includes(connectorTypeName)
+      } else {
+        const features = getFeatureOption(connectorTypeName, getString, isSplunkMetricEnabled)
+        return features.some(el => el?.value === productValue)
+      }
     } else {
-      if (name === Connectors.GCP && formik?.values?.sourceType === HealthSourcesType.Stackdriver) {
+      if (connectorTypeName === Connectors.GCP && sourceType === HealthSourcesType.Stackdriver) {
         return true
       }
-      return name == formik?.values?.sourceType
+      return connectorTypeName === sourceType
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

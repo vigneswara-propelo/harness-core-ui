@@ -58,7 +58,7 @@ export const LoadSourceByType = ({
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
   const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
-  const healthSourceConfig = healthSourcesConfig[`${type}_${data?.product?.value}`]
+  const healthSourceConfig = healthSourcesConfig[data?.product?.value]
 
   switch (type) {
     case HealthSourceTypes.AppDynamics:
@@ -161,6 +161,7 @@ export const LoadSourceByType = ({
       }
       return <CloudWatch data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
 
+    case HealthSourceTypes.NextGenHealthSource:
     case HealthSourceTypes.SumoLogic:
       if (!isSumoLogicEnabled) {
         return null

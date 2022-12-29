@@ -47,7 +47,6 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     isMetricThresholdEnabled,
     createdMetrics,
     healthSourceConfig,
-    healthSourceData,
     groupedCreatedMetrics,
     isTemplate,
     expressions,
@@ -70,8 +69,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const [groupNames, setGroupName] = useState<SelectOption[]>(initializeGroupNames(mappedMetrics, getString))
 
   const [showCustomMetric, setShowCustomMetric] = useState(
-    !!Array.from(defaultTo(healthSourceData?.customMetricsMap, []))?.length &&
-      healthSourceConfig?.customMetrics?.enabled
+    !!Array.from(defaultTo(mappedMetrics, []))?.length && healthSourceConfig?.customMetrics?.enabled
   )
 
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions

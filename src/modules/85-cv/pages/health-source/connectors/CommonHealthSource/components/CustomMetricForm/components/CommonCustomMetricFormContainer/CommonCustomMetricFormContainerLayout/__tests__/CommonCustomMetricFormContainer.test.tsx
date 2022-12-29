@@ -143,12 +143,17 @@ describe('Unit tests for CommonCustomMetricFormContainer', () => {
   test('should show Chart component when records are present and chart section is enabled in healthsource config', async () => {
     const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
     const records = [{ record1: 'record-1' }]
-    expect(shouldShowChartComponent(chartConfig, records, false)).toEqual(true)
+    expect(shouldShowChartComponent(chartConfig, records, false, 'query')).toEqual(true)
   })
 
   test('should not show Chart component when records are not present and chart section is enabled in healthsource config', async () => {
     const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
     const records = [] as Record<string, any>[]
-    expect(shouldShowChartComponent(chartConfig, records, false)).toEqual(false)
+    expect(shouldShowChartComponent(chartConfig, records, false, 'query')).toEqual(false)
+  })
+  test('should not show Chart component when query is not present', async () => {
+    const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
+    const records = [{ record1: 'record-1' }]
+    expect(shouldShowChartComponent(chartConfig, records, false, '')).toEqual(false)
   })
 })

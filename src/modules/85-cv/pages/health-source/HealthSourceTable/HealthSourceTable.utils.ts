@@ -7,13 +7,26 @@
 
 import type { IconName } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
-import type { ChangeSourceDTO, Sources } from 'services/cv'
+import type { ChangeSourceDTO, NextGenHealthSourceSpec, Sources } from 'services/cv'
 import { Connectors } from '@connectors/constants'
 import type { UseStringsReturn } from 'framework/strings'
 import { HealthSourceTypes } from '../types'
 import type { UpdatedHealthSource, RowData } from '../HealthSourceDrawer/HealthSourceDrawerContent.types'
+import { METRICS } from '../connectors/CommonHealthSource/CommonHealthSource.constants'
 
-export const getTypeByFeature = (feature: string, getString: UseStringsReturn['getString']): string => {
+export const getTypeByFeature = (
+  feature: string,
+  getString: UseStringsReturn['getString'],
+  spec?: NextGenHealthSourceSpec
+): string => {
+  if (feature === HealthSourceTypes.NextGenHealthSource) {
+    const type = spec?.dataSourceType as string
+    if (type.includes(METRICS)) {
+      return getString('pipeline.verification.analysisTab.metrics')
+    } else {
+      return getString('pipeline.verification.analysisTab.logs')
+    }
+  }
   switch (feature) {
     case Connectors.APP_DYNAMICS:
     case Connectors.AWS:
@@ -37,8 +50,12 @@ export const getTypeByFeature = (feature: string, getString: UseStringsReturn['g
   }
 }
 
-export const getIconBySourceType = (type: string): IconName => {
-  switch (type) {
+export const getIconBySourceType = (type: string, spec?: NextGenHealthSourceSpec): IconName => {
+  let sourceType = type
+  if (type === HealthSourceTypes.NextGenHealthSource) {
+    sourceType = spec?.dataSourceType as string
+  }
+  switch (sourceType) {
     case 'KUBERNETES':
       return 'service-kubernetes'
     case 'APP_DYNAMICS':
@@ -97,6 +114,9 @@ export const getIconBySourceType = (type: string): IconName => {
     case HealthSourceTypes.CloudWatchMetrics:
     case 'CLOUDWATCH_METRICS':
       return 'service-aws'
+    case 'SUMOLOGIC_METRICS':
+    case 'SUMOLOGIC_LOG':
+      return 'service-sumologic'
     default:
       return 'placeholder'
   }
