@@ -85,6 +85,7 @@ import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
 import { useDeepCompareEffect } from '@common/hooks'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { getIdentifierFromScopedRef } from '@common/utils/utils'
 import ReconcileInfraDialogWrapper from './ReconcileHandler/ReconcileInfraDialogWrapper'
 import css from './InfrastructureDefinition.module.scss'
 
@@ -722,7 +723,7 @@ function BootstrapDeployInfraDefinition({
                     ...formikRef.current?.values,
                     orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
                     projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-                    environmentRef: environmentIdentifier,
+                    environmentRef: getIdentifierFromScopedRef(environmentIdentifier),
                     deploymentType: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.serviceConfig
                       ?.serviceDefinition?.type,
                     type: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
@@ -784,7 +785,7 @@ function BootstrapDeployInfraDefinition({
                     ...formikRef.current?.values,
                     orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
                     projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-                    environmentRef: environmentIdentifier,
+                    environmentRef: getIdentifierFromScopedRef(environmentIdentifier),
                     deploymentType: (pipeline.stages?.[0].stage?.spec as DeployStageConfig)?.serviceConfig
                       ?.serviceDefinition?.type,
                     type: (pipeline.stages?.[0].stage?.spec as DeployStageConfig)?.infrastructure

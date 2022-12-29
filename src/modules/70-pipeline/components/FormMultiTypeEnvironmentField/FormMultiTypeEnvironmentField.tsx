@@ -62,6 +62,7 @@ export interface EnvironmentReferenceFieldProps extends Omit<IFormGroupProps, 'l
   error?: string
   isMultiSelect?: boolean
   onMultiSelectChange?: any
+  isOnlyFixedType?: boolean
   isNewConnectorLabelVisible?: boolean
 }
 
@@ -105,6 +106,7 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
     onMultiSelectChange,
     openAddNewModal,
     isNewConnectorLabelVisible,
+    isOnlyFixedType = false,
     placeholder,
     disabled,
     width,
@@ -169,6 +171,7 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
               disableCollapse: true,
               selectedRenderer: getSelectedRenderer(selected),
               hideModal: hideModal,
+              isOnlyFixedtype: isOnlyFixedType,
               onMultiSelectChange: handleMultiSelectChange,
               isMultiSelect: isMultiSelect,
               pagination: {

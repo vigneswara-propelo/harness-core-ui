@@ -477,6 +477,7 @@ export default function DeployEnvironment({
             }}
             width={300}
             multiTypeProps={{
+              onTypeChange: setEnvironmentsType,
               expressions,
               allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,
               defaultValueToReset: ''
