@@ -90,7 +90,15 @@ export const getModuleDescription = (module: ModuleName): StringKeys => {
   return 'projectsOrgs.blank'
 }
 
-export const getDefaultRole = (scope: ScopedObjectDTO, getString: (key: keyof StringsMap) => string): RoleOption => {
+export const getDefaultRole = (
+  scope: ScopedObjectDTO,
+  getString: (key: keyof StringsMap) => string,
+  selectDefaultRole: boolean
+): RoleOption => {
+  if (!selectDefaultRole) {
+    return { label: getString('rbac.usersPage.selectRole'), value: '', managed: true }
+  }
+
   if (getScopeFromDTO(scope) === Scope.PROJECT) {
     return { label: getString('common.projectViewer'), value: '_project_viewer', managed: true }
   }
