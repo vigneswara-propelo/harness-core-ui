@@ -10,8 +10,6 @@ import { noop } from 'lodash-es'
 import { Container, Formik, FormikForm } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type {
   CommonHealthSourceConfigurations,
   CommonCustomMetricFormikInterface,
@@ -46,7 +44,7 @@ export default function CommonHealthSource({
   connectorRef
 }: CommonHealthSourceProps): JSX.Element {
   const { getString } = useStrings()
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
+  const isMetricThresholdEnabled = !isTemplate
   const healthSourceConfigurationsInitialValues = getInitialValuesForHealthSourceConfigurations(configurationsPageData)
 
   return (
@@ -66,9 +64,9 @@ export default function CommonHealthSource({
         }
         const isShowMetricThreshold = getCanShowMetricThresholds({
           isMetricThresholdConfigEnabled: Boolean(healthSourceConfig?.metricThresholds?.enabled),
-          isMetricThresholdFFEnabled: isMetricThresholdEnabled,
           isMetricPacksEnabled: Boolean(healthSourceConfig?.metricPacks?.enabled),
-          groupedCreatedMetrics
+          groupedCreatedMetrics,
+          isMetricThresholdEnabled
         })
 
         return (

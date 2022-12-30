@@ -21,7 +21,7 @@ import css from './CloudWatch.module.scss'
 export default function CloudWatch({ data, onSubmit, isTemplate, expressions }: CloudWatchProps): JSX.Element | null {
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
+  const isMetricThresholdEnabled = !isTemplate
 
   const { getString } = useStrings()
 

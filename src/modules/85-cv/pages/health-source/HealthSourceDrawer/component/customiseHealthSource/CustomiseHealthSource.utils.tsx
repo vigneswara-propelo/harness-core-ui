@@ -147,7 +147,7 @@ export const LoadSourceByType = ({
       return <SplunkMetricsHealthSource data={data} onSubmit={onSubmit} />
     case HealthSourceTypes.CustomHealth:
       if (data.product?.value === CustomHealthProduct.METRICS || shouldRenderCustomHealthMetric(data)) {
-        return <CustomHealthSource data={data} onSubmit={onSubmit} />
+        return <CustomHealthSource data={data} isTemplate={isTemplate} onSubmit={onSubmit} />
       } else {
         return <CustomHealthLogSource data={data} onSubmit={onSubmit} />
       }

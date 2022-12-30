@@ -857,18 +857,18 @@ export const getFilteredMetricThresholdValuesV2 = (
  */
 export const getCanShowMetricThresholds = ({
   isMetricThresholdConfigEnabled,
-  isMetricThresholdFFEnabled,
+  isMetricThresholdEnabled,
   isMetricPacksEnabled,
   groupedCreatedMetrics,
   metricData
 }: {
   isMetricThresholdConfigEnabled: boolean
-  isMetricThresholdFFEnabled?: boolean
+  isMetricThresholdEnabled?: boolean
   isMetricPacksEnabled?: boolean
   groupedCreatedMetrics: GroupedCreatedMetrics
   metricData?: { [key: string]: boolean }
 }): boolean => {
-  if (!isMetricThresholdConfigEnabled || !isMetricThresholdFFEnabled || isEmpty(groupedCreatedMetrics)) {
+  if (!isMetricThresholdConfigEnabled || !isMetricThresholdEnabled || isEmpty(groupedCreatedMetrics)) {
     return false
   }
 

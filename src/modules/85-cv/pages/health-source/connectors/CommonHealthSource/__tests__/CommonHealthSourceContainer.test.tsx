@@ -164,13 +164,11 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
         expect(screen.queryByTestId(/commonHealthSource_metricThresholds/)).not.toBeInTheDocument()
       })
 
-      test('should check metric threshold should not get rendered, if feature flag is turned off', () => {
-        const useFeatureFlags = jest.spyOn(useFeatureFlag, 'useFeatureFlag')
-        useFeatureFlags.mockReturnValue(false)
+      test('should check metric threshold should not get rendered, if it is a template', () => {
         const newProps = {
           data: sourceDataMock,
           healthSourceConfig,
-          isTemplate: false,
+          isTemplate: true,
           expressions: [],
           onSubmit: jest.fn()
         }
