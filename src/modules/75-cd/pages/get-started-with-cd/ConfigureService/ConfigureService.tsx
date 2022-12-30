@@ -64,6 +64,7 @@ import {
   defaultManifestConfig,
   getUniqueEntityIdentifier,
   newServiceState,
+  ONBOARDING_PREFIX,
   ServiceDataType
 } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
@@ -515,6 +516,10 @@ const ConfigureServiceRef = (
     enableNextBtn()
   }
 
+  const getValidConnectorRef = (): string =>
+    get(serviceData, 'data.connectorRef.identifier') ||
+    `${selectGitProviderRef.current?.values?.gitProvider?.type}_${ONBOARDING_PREFIX}`
+
   return createLoading ? (
     <ContainerSpinner />
   ) : (
@@ -605,10 +610,7 @@ const ConfigureServiceRef = (
                               <li className={`${moduleCss.progressItem} ${moduleCss.progressItemActive}`}>
                                 <SelectRepository
                                   selectedRepository={formikProps.values?.repository}
-                                  validatedConnectorRef={
-                                    get(serviceData, 'data.gitValues.gitProvider.type') ||
-                                    selectGitProviderRef.current?.values?.gitProvider?.type
-                                  }
+                                  validatedConnectorRef={getValidConnectorRef()}
                                   onChange={onRepositoryChange}
                                 />
                               </li>
