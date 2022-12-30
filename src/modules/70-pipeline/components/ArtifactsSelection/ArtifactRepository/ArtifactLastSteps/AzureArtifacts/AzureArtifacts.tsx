@@ -45,7 +45,8 @@ import {
   getArtifactFormData,
   helperTextData,
   isFieldFixedAndNonEmpty,
-  shouldHideHeaderAndNavBtns
+  shouldHideHeaderAndNavBtns,
+  hasFixedDefiniteValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -251,6 +252,24 @@ function FormComponent({
     )
   }
 
+  const canFetchProject = hasFixedDefiniteValue(connectorRefValue)
+  const isProjectFixed = () => {
+    if (formik.values?.scope === 'project') {
+      return hasFixedDefiniteValue(connectorRefValue) || hasFixedDefiniteValue(projectValue)
+    }
+    return false
+  }
+  const canFetchFeeds = isProjectFixed() || hasFixedDefiniteValue(connectorRefValue)
+
+  const canFetchPackage =
+    isProjectFixed() || hasFixedDefiniteValue(connectorRefValue) || hasFixedDefiniteValue(feedValue)
+
+  const canFetchVersion =
+    isProjectFixed() ||
+    hasFixedDefiniteValue(connectorRefValue) ||
+    hasFixedDefiniteValue(feedValue) ||
+    hasFixedDefiniteValue(packageValue)
+
   return (
     <FormikForm>
       <div className={cx(css.artifactForm, formClassName)}>
@@ -286,7 +305,8 @@ function FormComponent({
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
                     e?.target?.type !== 'text' ||
-                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                    canFetchProject
                   ) {
                     return
                   }
@@ -342,7 +362,8 @@ function FormComponent({
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                 if (
                   e?.target?.type !== 'text' ||
-                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                  canFetchFeeds
                 ) {
                   return
                 }
@@ -401,7 +422,8 @@ function FormComponent({
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                 if (
                   e?.target?.type !== 'text' ||
-                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                  canFetchPackage
                 ) {
                   return
                 }
@@ -470,7 +492,8 @@ function FormComponent({
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
                     e?.target?.type !== 'text' ||
-                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                    canFetchVersion
                   ) {
                     return
                   }
