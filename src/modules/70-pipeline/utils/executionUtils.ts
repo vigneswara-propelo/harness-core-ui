@@ -1068,7 +1068,10 @@ export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSumma
   return response
 }
 
-export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): PipelineGraphState[] => {
+export const processExecutionDataForGraph = (
+  stages?: PipelineGraphState[],
+  parentStageId?: string
+): PipelineGraphState[] => {
   const items: PipelineGraphState[] = []
   stages?.forEach(currentStage => {
     if (currentStage?.children?.length) {
@@ -1081,6 +1084,7 @@ export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): Pip
         type: [StageType.LOOP, StageType.PARALLELISM].includes(currentStage?.type as StageType)
           ? ExecutionPipelineNodeType.MATRIX
           : currentStage?.type,
+        parentStageId,
         data: {
           ...currentStage.data,
           conditionalExecutionEnabled: getConditionalExecutionFlag(currentStage?.data?.nodeRunInfo),
@@ -1111,6 +1115,7 @@ export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): Pip
             ...currentNode,
             icon: getIconFromStageModule(node?.module, node.nodeType),
             status: node?.status as never,
+            parentStageId,
             data: {
               ...node,
               conditionalExecutionEnabled: getConditionalExecutionFlag(node?.nodeRunInfo),
@@ -1141,6 +1146,7 @@ export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): Pip
         type: [StageType.LOOP, StageType.PARALLELISM].includes(currentStage?.type as StageType)
           ? ExecutionPipelineNodeType.MATRIX
           : currentStage?.type,
+        parentStageId,
         data: {
           ...stage,
           conditionalExecutionEnabled: getConditionalExecutionFlag(stage?.nodeRunInfo),

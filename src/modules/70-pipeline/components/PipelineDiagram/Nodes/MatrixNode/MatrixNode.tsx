@@ -9,7 +9,7 @@ import * as React from 'react'
 import cx from 'classnames'
 import { Icon, Layout, Text, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty, isUndefined } from 'lodash-es'
 import { isMultiSvcOrMultiEnv, STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -32,6 +32,7 @@ import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import { getPipelineGraphData } from '../../PipelineGraph/PipelineGraphUtils'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import { NodeStatusIndicator } from '../../NodeStatusIndicator/NodeStatusIndicator'
+import { useNodeDimensionContext } from '../NodeDimensionStore'
 import css from './MatrixNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
@@ -71,6 +72,7 @@ const getCalculatedStyles = (data: PipelineGraphState[], parallelism: number, sh
 export function MatrixNode(props: any): JSX.Element {
   const allowAdd = defaultTo(props.allowAdd, false)
   const { getString } = useStrings()
+  const { updateDimensions } = useNodeDimensionContext()
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
   const [showAddLink, setShowAddLink] = React.useState(false)
   const [treeRectangle, setTreeRectangle] = React.useState<DOMRect | void>()
@@ -123,6 +125,18 @@ export function MatrixNode(props: any): JSX.Element {
   React.useEffect(() => {
     props?.data?.status && setNodeCollapsed(isExecutionNotStarted(props?.data?.status))
   }, [props?.data?.status])
+
+  React.useLayoutEffect(() => {
+    // collapsed default matrix node dimensions
+    isNodeCollapsed
+      ? updateDimensions?.({
+          [(props?.data?.id || props?.id) as string]: { height: 165, width: 165, type: 'matrix', isNodeCollapsed }
+        })
+      : updateDimensions?.({
+          [(props?.data?.id || props?.id) as string]: { ...layoutStyles, type: 'matrix', isNodeCollapsed }
+        })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [layoutStyles])
 
   React.useLayoutEffect(() => {
     if (state?.length) {
@@ -183,7 +197,8 @@ export function MatrixNode(props: any): JSX.Element {
           }}
           onDragLeave={() => !props.readonly && allowAdd && debounceHideVisibility()}
           className={cx(css.matrixNode, {
-            [css.firstnode]: !props?.isParallelNode,
+            [css.firstnode]: !props?.isParallelNode && isUndefined(props?.parentStageId),
+            [css.childPipelineFirstnode]: !props?.isParallelNode && !isUndefined(props?.parentStageId),
             [css.marginBottom]: props?.isParallelNode,
             [css.nestedGroup]: isNestedStepGroup,
             [css.multiSvcEnv]: isMultiSvcOrMultiEnv(subType)
@@ -341,6 +356,7 @@ export function MatrixNode(props: any): JSX.Element {
                               showMarkers={false}
                               name={node.name}
                               matrixNodeName={node.matrixNodeName}
+                              parentStageId={props?.parentStageId}
                             />
                           ) : null}
                         </React.Fragment>

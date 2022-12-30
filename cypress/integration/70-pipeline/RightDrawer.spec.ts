@@ -45,7 +45,7 @@ describe('RightDrawer test', () => {
   it('default name and id test', () => {
     // select pipeline
     cy.get(`div[data-testid="pipeline-studio"]`, { timeout: 5000 }).should('be.visible')
-    cy.contains('p', 'testStage_Cypress').click()
+    cy.contains('p', 'testStage_Cypress').click({ force: true })
     cy.contains('span', 'Execution').click()
     addDeleteStep()
 

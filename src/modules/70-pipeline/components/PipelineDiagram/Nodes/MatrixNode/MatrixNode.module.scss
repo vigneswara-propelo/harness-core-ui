@@ -131,6 +131,11 @@
       }
     }
   }
+
+  &.childPipelineFirstnode {
+    top: 20px;
+  }
+
   .nestedGroup {
     top: -10px;
     :global(.default-node) {

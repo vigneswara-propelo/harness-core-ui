@@ -62,6 +62,7 @@ export default function ExecutionGraphView(): React.ReactElement {
     allNodeMap,
     pipelineStagesMap,
     selectedStageId,
+    selectedChildStageId,
     selectedStageExecutionId,
     queryParams,
     setSelectedStepId,
@@ -93,6 +94,7 @@ export default function ExecutionGraphView(): React.ReactElement {
         view: queryParams?.view,
         stage: selectedStageId,
         ...(selectedStageExecutionId && { stageExecId: selectedStageExecutionId }),
+        ...(selectedChildStageId && { childStage: selectedChildStageId }),
         step
       }
 
@@ -103,7 +105,7 @@ export default function ExecutionGraphView(): React.ReactElement {
     }
   }
 
-  function handleStageSelection(stage: string, stageExecId?: string): void {
+  function handleStageSelection(stage: string, parentStageId?: string, stageExecId?: string): void {
     const selectedStage = pipelineStagesMap.get(stage)
 
     if (!stageExecId) {
@@ -116,12 +118,14 @@ export default function ExecutionGraphView(): React.ReactElement {
 
     const params = {
       ...queryParams,
-      stage,
-      stageExecId
+      ...(parentStageId ? { stage: parentStageId } : { stage }),
+      stageExecId,
+      ...(parentStageId && { childStage: stage })
     }
 
     delete params.step
     delete params.retryStep
+    if (!parentStageId && params?.childStage) delete params.childStage
 
     replaceQueryParams(params)
   }
