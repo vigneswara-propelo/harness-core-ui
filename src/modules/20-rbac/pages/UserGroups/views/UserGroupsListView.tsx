@@ -32,7 +32,7 @@ import {
   RoleAssignmentMetadataDTO
 } from 'services/cd-ng'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
-import { useStrings, String } from 'framework/strings'
+import { useStrings, String, StringKeys } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import {
   getUserGroupActionTooltipText,
@@ -40,7 +40,8 @@ import {
   isUserGroupInherited,
   mapfromScopetoPrincipalScope,
   getScopeFromUserGroupDTO,
-  getUserGroupMenuOptionText
+  getUserGroupMenuOptionText,
+  AuthenticationMechanisms
 } from '@rbac/utils/utils'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -64,6 +65,14 @@ interface UserGroupsListViewProps {
   openUserGroupModal: (userGroup?: UserGroupDTO, _isAddMember?: boolean) => void
 }
 
+const getSsoTypeLabel = (data: UserGroupDTO): StringKeys => {
+  if (AuthenticationMechanisms.SAML === data?.linkedSsoType) {
+    return 'rbac.userDetails.linkToSSOProviderModal.saml'
+  } else {
+    return 'rbac.userDetails.linkToSSOProviderModal.ldap'
+  }
+}
+
 export const UserGroupColumn = (data: UserGroupDTO): React.ReactElement => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const userGroupInherited = isUserGroupInherited(accountId, orgIdentifier, projectIdentifier, data)
@@ -82,7 +91,7 @@ export const UserGroupColumn = (data: UserGroupDTO): React.ReactElement => {
               <Layout.Vertical spacing="xsmall" padding="medium">
                 <Layout.Horizontal spacing="xsmall">
                   <Text color={Color.BLACK}>
-                    <String stringID="rbac.userDetails.linkToSSOProviderModal.saml" />
+                    <String stringID={getSsoTypeLabel(data)} />
                   </Text>
                   <Text lineClamp={1}>{data.linkedSsoDisplayName}</Text>
                 </Layout.Horizontal>
