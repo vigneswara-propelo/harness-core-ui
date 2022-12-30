@@ -150,7 +150,8 @@ export enum StepType {
   ElastigroupSwapRoute = 'ElastigroupSwapRoute',
   ElastigroupBGStageSetup = 'ElastigroupBGStageSetup',
   AsgCanaryDeploy = 'AsgCanaryDeploy',
-  AsgRollingRollback = 'AsgRollingRollback'
+  AsgRollingRollback = 'AsgRollingRollback',
+  AsgRollingDeploy = 'AsgRollingDeploy'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

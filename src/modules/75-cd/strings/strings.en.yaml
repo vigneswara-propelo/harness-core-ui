@@ -532,6 +532,16 @@ azureWebAppRollbackDescription: Rollback to the last successfully deployed app.
 azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.
 asgCanaryDeleteStepDescription: Asg Canary Delete
 asgRollingRollbackStepDescription: Asg Rolling Rollback
+minimumHealthyPercentageMaxLimit: Minimum Healthy Percentage should be less than 100%
+minimumHealthyPercentageMinLimit: Minimum Healthy Percentage should be positive percentage
+instanceWarmupError: Instance Warmup must be a positive number
+useAlreadyRunningInstance: Same as already running Instances
+instanceRefresh: Instance Refresh Configuration
+minimumHealthyPercentageLabel: Minimum Healthy Percentage (Optional)
+minimumHealthyPercentagePlaceholder: Minimum Healthy Percentage
+instanceWarmupLabel: Instance Warmup (Optional)
+instanceWarmupPlaceholder: Instance Warmup
+skipMatchingLabel: Skip Matching
 getStartedWithCD:
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control

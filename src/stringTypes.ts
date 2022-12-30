@@ -4998,6 +4998,10 @@ export interface StringsMap {
   'cd.installAdapterHelperText': string
   'cd.installCluster': string
   'cd.installDelegate': string
+  'cd.instanceRefresh': string
+  'cd.instanceWarmupError': string
+  'cd.instanceWarmupLabel': string
+  'cd.instanceWarmupPlaceholder': string
   'cd.instructionsCluster': string
   'cd.instructionsDelegate': string
   'cd.kubectl': string
@@ -5018,6 +5022,10 @@ export interface StringsMap {
   'cd.miniKubeCmd3': string
   'cd.miniKubeCmd4': string
   'cd.minikube': string
+  'cd.minimumHealthyPercentageLabel': string
+  'cd.minimumHealthyPercentageMaxLimit': string
+  'cd.minimumHealthyPercentageMinLimit': string
+  'cd.minimumHealthyPercentagePlaceholder': string
   'cd.moduleConfiguration': string
   'cd.moreIssue': string
   'cd.moreIssues': string
@@ -5214,6 +5222,7 @@ export interface StringsMap {
   'cd.serviceUpdated': string
   'cd.setUpProvisionerBtnText': string
   'cd.setupGitOpsServerStep': string
+  'cd.skipMatchingLabel': string
   'cd.skipRendering': string
   'cd.specifyTargetHost': string
   'cd.specifyTfVarStore': string
@@ -5350,6 +5359,7 @@ export interface StringsMap {
   'cd.updatedSuccessfully': string
   'cd.updating': string
   'cd.updatingGitOpsServer': string
+  'cd.useAlreadyRunningInstance': string
   'cd.useConnectorCredentials': string
   'cd.useStepTemplatesForYourDeploymentType': string
   'cd.validation.specifyFilter': string

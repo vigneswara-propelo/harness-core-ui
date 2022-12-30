@@ -108,6 +108,7 @@ import { TasCanaryAppSetupStep } from './TasCanaryAppSetup/TasCanaryAppSetup'
 import { AsgCanaryDeleteStep } from './AsgCanaryDeleteStep/AsgCanaryDeleteStep'
 import { AsgCanaryDeployStep } from './AsgCanaryDeploy/AsgCanaryDeployStep'
 import { AsgRollingRollbackStep } from './AsgRollingRollbackStep/AsgRollingRollbackStep'
+import { AsgRollingDeploy } from './AsgRollingDeployStep/AsgRollingDeployStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -210,3 +211,4 @@ factory.registerStep(new TasCanaryAppSetupStep())
 factory.registerStep(new AsgCanaryDeleteStep())
 factory.registerStep(new AsgCanaryDeployStep())
 factory.registerStep(new AsgRollingRollbackStep())
+factory.registerStep(new AsgRollingDeploy())
