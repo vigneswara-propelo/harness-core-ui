@@ -282,6 +282,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
 
   function onConnectorCreateSuccess(data?: ConnectorConfigDTO): void {
     if (data) {
+      props?.onLoadingFinish?.()
       setIsConnectorEdited(true)
       const scope = getScopeFromDTO<ConnectorConfigDTO>(data.connector)
       const val = {
