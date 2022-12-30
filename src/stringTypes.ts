@@ -3167,6 +3167,7 @@ export interface StringsMap {
   'pipeline.approvalStep.status.APPROVE': string
   'pipeline.approvalStep.status.REJECT': string
   'pipeline.approvalStep.validation.approvalMessage': string
+  'pipeline.approvalStep.validation.minimumCountDecimal': string
   'pipeline.approvalStep.validation.minimumCountOne': string
   'pipeline.approvalStep.validation.minimumCountRequired': string
   'pipeline.approvalStep.validation.userGroups': string

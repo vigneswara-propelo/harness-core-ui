@@ -324,10 +324,16 @@ function HarnessApprovalStepMode(
               .test({
                 test(value: string) {
                   if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED && !value.match(regexPositiveNumbers)) {
-                    return this.createError({
-                      message: getString('pipeline.approvalStep.validation.minimumCountOne')
-                    })
+                    if (value !== '0' && value.includes('.'))
+                      return this.createError({
+                        message: getString('pipeline.approvalStep.validation.minimumCountDecimal')
+                      })
+                    else
+                      return this.createError({
+                        message: getString('pipeline.approvalStep.validation.minimumCountOne')
+                      })
                   }
+
                   return true
                 }
               })

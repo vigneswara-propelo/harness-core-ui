@@ -116,6 +116,7 @@ approvalStep:
     approvalMessage: Approval message is required.
     userGroups: 'Atleast one user group is required'
     minimumCountOne: 'Minimum count cannot be less than one.'
+    minimumCountDecimal: 'Minimum count cannot be decimal value.'
     minimumCountRequired: 'Minimum count is required.'
   status:
     APPROVE: Approved
