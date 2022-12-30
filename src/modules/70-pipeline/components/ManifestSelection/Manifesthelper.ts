@@ -130,7 +130,7 @@ export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
     ManifestDataType.Kustomize,
     ManifestDataType.KustomizePatches
   ],
-  NativeHelm: [ManifestDataType.Values, ManifestDataType.HelmChart],
+  NativeHelm: [ManifestDataType.HelmChart, ManifestDataType.Values],
   ServerlessAwsLambda: [ManifestDataType.ServerlessAwsLambda],
   Ssh: [],
   WinRm: [],
