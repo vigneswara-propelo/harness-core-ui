@@ -7,7 +7,9 @@
 
 import React from 'react'
 import * as Formik from 'formik'
+import { noop } from 'lodash-es'
 import { fireEvent, render, waitFor } from '@testing-library/react'
+import { Formik as FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import { CommonMultiItemsSideNav } from '../CommonMultiItemsSideNav'
@@ -82,8 +84,52 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
 
     // select second app
     fireEvent.click(getByText('appdMetric 102'))
-    await waitFor(() => expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('appdMetric 102'))
     expect(onSelectMock).toHaveBeenCalledWith('appdMetric 102', ['appdMetric 101', 'appdMetric 102'], undefined)
+  })
+
+  test('Ensure onSelect work in CommonMultiItemsSideNav with local formik', async () => {
+    const onRemoveMock = jest.fn()
+    const { container, getByText } = render(
+      <TestWrapper>
+        <FormikForm
+          onSubmit={noop}
+          formName=""
+          initialValues={{
+            identifier: 'appdMetric101',
+            metricName: 'appdMetric 101',
+            groupName: { label: 'Group 1', value: 'Group 1' },
+            query: 'query'
+          }}
+        >
+          {formikData => {
+            return (
+              <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+                <CommonMultiItemsSideNav
+                  tooptipMessage={tooptipMessage}
+                  defaultMetricName={defaultMetricName}
+                  addFieldLabel={addFieldLabel}
+                  createdMetrics={['appdMetric 101', 'appdMetric 102']}
+                  onRemoveMetric={onRemoveMock}
+                  onSelectMetric={name => formikData.setFieldValue('metricName', name)}
+                  isValidInput={true}
+                  renamedMetric="appdMetric 101"
+                  defaultSelectedMetric={formikData.values.metricName}
+                  openEditMetricModal={jest.fn()}
+                  groupedCreatedMetrics={groupedCreatedMetrics}
+                />
+              </CommonHealthSourceProvider>
+            )
+          }}
+        </FormikForm>
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(getByText('appdMetric 101')).not.toBeNull())
+    expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('appdMetric 101')
+
+    // select second app
+    fireEvent.click(getByText('appdMetric 102'))
+    await waitFor(() => expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('appdMetric 102'))
   })
 
   test('Ensure that only when single app is there delete button does not exist in CommonMultiItemsSideNav', async () => {

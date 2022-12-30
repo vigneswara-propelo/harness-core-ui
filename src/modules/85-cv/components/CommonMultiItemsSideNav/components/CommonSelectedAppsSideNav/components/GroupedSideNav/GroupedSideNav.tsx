@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -52,15 +52,6 @@ export default function GroupedSideNav({
     )
   }
 
-  const handleOnDelete = useCallback(
-    (selectedMetric, index) => {
-      if (selectedMetric && onRemoveItem) {
-        onRemoveItem(selectedMetric, index as number)
-      }
-    },
-    [onRemoveItem]
-  )
-
   return (
     <>
       {groupedSelectedAppsList.map(groupItem => {
@@ -104,7 +95,7 @@ export default function GroupedSideNav({
                       {!isValidInput ? <Icon name="warning-icon" size={18} color={Color.ORANGE_700} /> : null}
                       <MetricMenu
                         onEdit={openEditMetricModal}
-                        onDelete={handleOnDelete}
+                        onDelete={onRemoveItem}
                         titleText={getString('common.delete', { name: selectedApp?.metricName })}
                         contentText={getString('cv.monitoringSources.commonHealthSource.confirmDeleteMetric', {
                           name: selectedApp?.metricName

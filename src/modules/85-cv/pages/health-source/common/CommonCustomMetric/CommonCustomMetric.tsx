@@ -73,14 +73,6 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
 
       if (commonUpdatedMap.has(removedMetric)) {
         commonUpdatedMap.delete(removedMetric)
-      } else {
-        // handle case where user updates the metric name for current selected metric
-        commonUpdatedMap.delete(selectedMetric)
-      }
-
-      // update map with current values
-      if (formikValues?.metricName !== removedMetric && formikValues?.metricName === updatedMetric) {
-        commonUpdatedMap.set(updatedMetric, { ...formikValues } || { metricName: updatedMetric })
       }
 
       updateParentFormik(CommonHealthSourceContextFields.CustomMetricsMap, commonUpdatedMap)

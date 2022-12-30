@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { defaultTo } from 'lodash-es'
 import { Button, ButtonVariation, Container } from '@harness/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
@@ -59,10 +59,12 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
   } = props
   const { getString } = useStrings()
   const [filter, setFilter] = useState<string | undefined>()
-  const [createdMetrics, setCreatedMetrics] = useState<string[]>(
-    propsCreatedMetrics?.length ? propsCreatedMetrics : [defaultMetricName]
+
+  const createdMetrics = useMemo(
+    () => (propsCreatedMetrics?.length ? propsCreatedMetrics : [defaultMetricName]),
+    [propsCreatedMetrics]
   )
-  const [selectedMetric, setSelectedMetric] = useState<string | undefined>(defaultSelectedMetric || createdMetrics[0])
+  const selectedMetric = defaultSelectedMetric || createdMetrics[0]
 
   const { updateParentFormik } = useCommonHealthSource()
 
@@ -77,15 +79,12 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
 
   const hasOnRemove = shouldBeAbleToDeleteLastMetric || createdMetricsLength > 1
 
-  useEffect(() => {
-    setSelectedMetric(defaultSelectedMetric)
-  }, [defaultSelectedMetric])
-
-  useEffect(() => {
-    if (propsCreatedMetrics?.length) {
-      setCreatedMetrics(propsCreatedMetrics)
-    }
-  }, [propsCreatedMetrics])
+  const onRemoveItem = (removedItem: string): void => {
+    if (!hasOnRemove) return
+    const { updatedMetric, filteredOldMetrics, updateIndex } = getUpdatedMetric(createdMetrics, removedItem)
+    updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, updatedMetric)
+    onRemoveMetric(removedItem, updatedMetric, [...filteredOldMetrics], defaultTo(updateIndex, 0))
+  }
 
   return (
     <Container className={css.main}>
@@ -107,28 +106,16 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
         {addFieldLabel}
       </Button>
       <CommonSelectedAppsSideNav
-        key={createdMetrics?.map(i => i)?.join('')}
         isValidInput={isValidInput}
         onSelect={(newlySelectedMetric, index) => {
           onSelectMetric(newlySelectedMetric, createdMetrics, index)
-          setSelectedMetric(newlySelectedMetric)
+          updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, newlySelectedMetric)
         }}
         selectedItem={selectedMetric}
         groupedSelectedApps={filteredGroupMetric}
         isMetricThresholdEnabled={isMetricThresholdEnabled}
         openEditMetricModal={openEditMetricModal}
-        onRemoveItem={
-          hasOnRemove
-            ? removedItem => {
-                setCreatedMetrics(oldMetrics => {
-                  const { updatedMetric, filteredOldMetrics, updateIndex } = getUpdatedMetric(oldMetrics, removedItem)
-                  setSelectedMetric(updatedMetric)
-                  onRemoveMetric(removedItem, updatedMetric, [...filteredOldMetrics], defaultTo(updateIndex, 0))
-                  return [...filteredOldMetrics]
-                })
-              }
-            : undefined
-        }
+        onRemoveItem={onRemoveItem}
         filterProps={{
           onFilter: setFilter,
           className: css.metricsFilter,

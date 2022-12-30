@@ -66,7 +66,7 @@ export default function MetricMenu({
       onDelete?.(itemName, index)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index, itemName, showPromptOnDelete])
+  }, [index, itemName, showPromptOnDelete, onDelete])
 
   return (
     <Popover
