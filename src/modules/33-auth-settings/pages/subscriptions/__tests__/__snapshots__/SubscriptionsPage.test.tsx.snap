@@ -751,11 +751,15 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
                     role="cell"
                     style="width: 15%;"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                    <a
+                      href="/account/kmpySmUISimoRrJL6NL73w/services/K8S_Service"
                     >
-                      K8S_Service
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small"
+                      >
+                        K8S_Service
+                      </p>
+                    </a>
                   </div>
                   <div
                     class="TableV2--cell"
@@ -837,11 +841,15 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
                     role="cell"
                     style="width: 15%;"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                    <a
+                      href="/account/kmpySmUISimoRrJL6NL73w/services/SSHService"
                     >
-                      SSHService
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small"
+                      >
+                        SSHService
+                      </p>
+                    </a>
                   </div>
                   <div
                     class="TableV2--cell"
@@ -1536,11 +1544,15 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
                     role="cell"
                     style="width: 15%;"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                    <a
+                      href="/account/kmpySmUISimoRrJL6NL73w/services/K8S_Service"
                     >
-                      K8S_Service
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small"
+                      >
+                        K8S_Service
+                      </p>
+                    </a>
                   </div>
                   <div
                     class="TableV2--cell"
@@ -1622,11 +1634,15 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
                     role="cell"
                     style="width: 15%;"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                    <a
+                      href="/account/kmpySmUISimoRrJL6NL73w/services/SSHService"
                     >
-                      SSHService
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small"
+                      >
+                        SSHService
+                      </p>
+                    </a>
                   </div>
                   <div
                     class="TableV2--cell"
@@ -2321,11 +2337,15 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
                     role="cell"
                     style="width: 15%;"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                    <a
+                      href="/account/kmpySmUISimoRrJL6NL73w/services/K8S_Service"
                     >
-                      K8S_Service
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small"
+                      >
+                        K8S_Service
+                      </p>
+                    </a>
                   </div>
                   <div
                     class="TableV2--cell"
@@ -2407,11 +2427,15 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
                     role="cell"
                     style="width: 15%;"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                    <a
+                      href="/account/kmpySmUISimoRrJL6NL73w/services/SSHService"
                     >
-                      SSHService
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small"
+                      >
+                        SSHService
+                      </p>
+                    </a>
                   </div>
                   <div
                     class="TableV2--cell"
@@ -3044,11 +3068,15 @@ exports[`Subscriptions Page it renders trial not started information 1`] = `
                     role="cell"
                     style="width: 15%;"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                    <a
+                      href="/account/kmpySmUISimoRrJL6NL73w/services/K8S_Service"
                     >
-                      K8S_Service
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small"
+                      >
+                        K8S_Service
+                      </p>
+                    </a>
                   </div>
                   <div
                     class="TableV2--cell"
@@ -3130,11 +3158,15 @@ exports[`Subscriptions Page it renders trial not started information 1`] = `
                     role="cell"
                     style="width: 15%;"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                    <a
+                      href="/account/kmpySmUISimoRrJL6NL73w/services/SSHService"
                     >
-                      SSHService
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small"
+                      >
+                        SSHService
+                      </p>
+                    </a>
                   </div>
                   <div
                     class="TableV2--cell"
@@ -3844,11 +3876,15 @@ exports[`Subscriptions Page it should update the license store 1`] = `
                     role="cell"
                     style="width: 15%;"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                    <a
+                      href="/account/kmpySmUISimoRrJL6NL73w/services/K8S_Service"
                     >
-                      K8S_Service
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small"
+                      >
+                        K8S_Service
+                      </p>
+                    </a>
                   </div>
                   <div
                     class="TableV2--cell"
@@ -3930,11 +3966,15 @@ exports[`Subscriptions Page it should update the license store 1`] = `
                     role="cell"
                     style="width: 15%;"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                    <a
+                      href="/account/kmpySmUISimoRrJL6NL73w/services/SSHService"
                     >
-                      SSHService
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small"
+                      >
+                        SSHService
+                      </p>
+                    </a>
                   </div>
                   <div
                     class="TableV2--cell"
