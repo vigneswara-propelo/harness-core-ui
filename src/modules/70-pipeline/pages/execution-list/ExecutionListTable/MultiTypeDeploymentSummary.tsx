@@ -1,18 +1,27 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Button, ButtonSize, ButtonVariation, Icon, Layout, Text } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Icon, Layout, Text, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { get } from 'lodash-es'
-import { Tooltip } from '@blueprintjs/core'
+import { Classes, PopoverInteractionKind, Tooltip } from '@blueprintjs/core'
 
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
+import type { Application } from 'services/cd-ng'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
 import { isMultiSvcOrMultiEnv as getIsMultiSvcOrMultiEnv } from '@pipeline/utils/executionUtils'
 import type { StageType } from '@pipeline/utils/stageHelpers'
-
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { stageIconMap } from './ExecutionStage'
-
+import { linkNode } from './gitopsRenderer'
 import css from './ExecutionListTable.module.scss'
 
 export interface MultiTypeDeploymentSummaryProps {
@@ -110,6 +119,36 @@ function getEnvironmentsTextAndTooltip(props: GetTextAndTooltipProps): [string, 
   return [environmentsText, environmentsTooltipText]
 }
 
+function getGitOpsApplicationTextAndTooltip(
+  props: GetTextAndTooltipProps & ProjectPathProps & ModulePathParams
+): [string, React.ReactElement | undefined] {
+  const { getString, children, orgIdentifier, module, accountId, projectIdentifier } = props
+  let appsText = ''
+  let appsTooltipText: React.ReactElement | undefined = undefined
+
+  if (Array.isArray(children) && children.length > 0) {
+    const apps: Application[] = get(children[0], 'data.moduleInfo.cd.gitOpsAppSummary.applications') || []
+    appsText = apps.length > 1 ? getString('pipeline.numOfApps', { numOfApps: apps.length }) : apps[0]?.name || ''
+    appsTooltipText =
+      apps.length > 1 ? (
+        <Layout.Vertical spacing="small" padding="medium" style={{ maxWidth: 500 }}>
+          {apps.map((e: Application, i: number) =>
+            linkNode(e, {
+              index: i,
+              color: Color.WHITE,
+              lineClamp: 1,
+              orgIdentifier,
+              module,
+              accountId,
+              projectIdentifier
+            })
+          )}
+        </Layout.Vertical>
+      ) : undefined
+  }
+  return [appsText, appsTooltipText]
+}
+
 export function MultiTypeDeploymentSummary(props: MultiTypeDeploymentSummaryProps): React.ReactElement {
   const { stage, onToggleClick, isStagesExpanded } = props
   const { getString } = useStrings()
@@ -117,6 +156,7 @@ export function MultiTypeDeploymentSummary(props: MultiTypeDeploymentSummaryProp
   const subType = get(stage, 'data.moduleInfo.stepParameters.subType')
   const isMultiSvcOrMultiEnv = getIsMultiSvcOrMultiEnv(subType)
   const stepParameters = get(stage, 'data.moduleInfo.stepParameters')
+  const { orgIdentifier, projectIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
 
   const [servicesText, servicesTooltipText] = getServicesTextAndTooltip({
     stepParameters,
@@ -129,6 +169,16 @@ export function MultiTypeDeploymentSummary(props: MultiTypeDeploymentSummaryProp
     getString,
     subType,
     children: stage.data.children
+  })
+  const [gitopsAppsText, gitopsAppsTooltipText] = getGitOpsApplicationTextAndTooltip({
+    stepParameters,
+    getString,
+    subType,
+    children: stage.data.children,
+    orgIdentifier,
+    projectIdentifier,
+    accountId,
+    module
   })
 
   return (
@@ -168,6 +218,23 @@ export function MultiTypeDeploymentSummary(props: MultiTypeDeploymentSummaryProp
               {environmentsText}
             </Text>
           </Tooltip>
+          {gitopsAppsText ? (
+            <Popover
+              interactionKind={PopoverInteractionKind.HOVER}
+              className={Classes.DARK}
+              disabled={!gitopsAppsTooltipText}
+              content={gitopsAppsTooltipText}
+            >
+              <Text
+                font={{ size: 'small' }}
+                color={Color.PRIMARY_5}
+                className={css.environmentsText}
+                style={{ textDecoration: gitopsAppsTooltipText ? 'underline dotted' : undefined }}
+              >
+                {gitopsAppsText}
+              </Text>
+            </Popover>
+          ) : null}
         </Layout.Horizontal>
       ) : null}
       <Text font={{ size: 'small' }}>|</Text>

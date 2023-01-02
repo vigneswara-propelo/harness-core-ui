@@ -24,6 +24,7 @@ declare const styles: {
   readonly multiSvcEnv: string
   readonly parentPipelineLink: string
   readonly prState: string
+  readonly primary6: string
   readonly selectiveStageExecution: string
   readonly separator: string
   readonly service: string

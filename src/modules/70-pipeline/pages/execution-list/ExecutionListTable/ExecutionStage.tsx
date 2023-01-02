@@ -28,7 +28,7 @@ import routes from '@common/RouteDefinitions'
 import type { ExecutionPathProps, PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
-import GitOpsExecutionSummaryInfo from './GitOpsExecutionSummary'
+import GitOpsExecutionSummary from './GitOpsExecutionSummary'
 import { CDExecutionSummary } from './CDExecutionSummary'
 
 import css from './ExecutionListTable.module.scss'
@@ -128,7 +128,7 @@ export function ExecutionStage(props: ExecutionStageProps): React.ReactElement {
 
       <div className={css.stageInfo}>
         <CDExecutionSummary stageInfo={cdStageInfo} />
-        <GitOpsExecutionSummaryInfo stageInfo={cdStageInfo} limit={1} />
+        <GitOpsExecutionSummary stageInfo={cdStageInfo} />
 
         {stage.type === StageType.SECURITY &&
           !isEmpty(stoStageInfo) &&

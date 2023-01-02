@@ -1251,6 +1251,7 @@ noApprovalInstanceCreated: Approval instance not created, no details to display
 approvalTypeRequired: Approval type is required
 numOfServices: '{{numOfServices}} Services'
 numOfEnvs: '{{numOfEnvironments}} Environments'
+numOfApps: '{{numOfApps}} Applications'
 numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironments}} Environment(s)'
 requiredToFetch: '{{requiredField}} is required to fetch {{dependentField}}'
 executionList:

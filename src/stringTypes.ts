@@ -3951,6 +3951,7 @@ export interface StringsMap {
   'pipeline.noRunsText': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string
+  'pipeline.numOfApps': string
   'pipeline.numOfEnvs': string
   'pipeline.numOfServices': string
   'pipeline.numOfServicesAndEnv': string

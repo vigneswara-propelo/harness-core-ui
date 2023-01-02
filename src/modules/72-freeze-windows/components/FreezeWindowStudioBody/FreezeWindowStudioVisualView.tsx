@@ -50,7 +50,7 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
         setValidationErrors(formErrors as ValidationErrorType)
         return
       } else {
-        sectionId === FreezeWindowTabs.FREEZE_CONFIG ? formik?.onTabChange(formik.values) : null
+        sectionId === FreezeWindowTabs.FREEZE_CONFIG && formik.onTabChange ? formik.onTabChange(formik.values) : null
         setValidationErrors({})
       }
     }
