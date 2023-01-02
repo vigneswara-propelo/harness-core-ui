@@ -5,12 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import { Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { ModuleName } from 'framework/types/ModuleName'
-
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import { useLisCDActiveServices, LisCDActiveServicesQueryParams } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -62,16 +61,17 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const { accountId } = useParams<AccountPathProps>()
   const queryParams = useQueryParams<LisCDActiveServicesQueryParams>(queryParamOptions)
   const { page, size } = queryParams
+  const [orgName, setOrgName] = useState<string>('')
+  const [projName, setProjName] = useState<string>('')
 
   const sort = useMemo(
     () => (sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort),
     [queryParams.sort, sortingPreference]
   )
-  const { data: activeServiceList } = useMutateAsGet(useLisCDActiveServices, {
+  const { data: activeServiceList, loading } = useMutateAsGet(useLisCDActiveServices, {
     body: {
-      orgName: 'all',
-      projectName: 'all',
-      serviceName: 'all'
+      orgIdentifier: orgName,
+      projectIdentifier: projName
     },
     queryParams: {
       accountIdentifier: accountId,
@@ -81,6 +81,16 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
     },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
+  const updateFilters = (orgId: string, projId: string) => {
+    if (orgId === '$$ALL$$') {
+      orgId = ''
+    }
+    if (projId === '$$ALL$$') {
+      projId = ''
+    }
+    setOrgName(orgId)
+    setProjName(projId)
+  }
   return (
     <Layout.Vertical spacing="large" width={'90%'}>
       <SubscriptionDetailsCard
@@ -100,6 +110,8 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
             updateQueryParams({ sort: sortArray })
           }}
           sortBy={sort}
+          updateFilters={updateFilters}
+          servicesLoading={loading}
         />
       ) : null}
     </Layout.Vertical>

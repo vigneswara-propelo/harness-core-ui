@@ -1177,5 +1177,7 @@ licensesConsumed: 'LICENSES CONSUMED'
 downloadCSV: 'Download CSV'
 whatIsActiveService: What is an Active Service?
 noActiveServiceData: No active Service Record found
+tabOrgs: 'Organizations: {{name}}'
+tabProjects: 'Projects: {{name}}'
 notification: Notification
 noNotifications: No Notifications

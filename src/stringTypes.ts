@@ -958,6 +958,8 @@ export interface StringsMap {
   'common.switchToBarChart': string
   'common.switchToLineChart': string
   'common.sync': string
+  'common.tabOrgs': string
+  'common.tabProjects': string
   'common.tagName': string
   'common.targetBranch': string
   'common.targetBranchPlaceholder': string
@@ -3081,7 +3083,7 @@ export interface StringsMap {
   'projectsOrgs.searchPlaceHolder': string
   'projectsOrgs.searchProjectPlaceHolder': string
   'projectsOrgs.selectAnExistingProject': string
-  'projectsOrgs.tabOrgs': string
+  'projectsOrgs.tabProjects': string
   'projectsOrgs.urlMessageOrg': string
   'projectsOrgs.urlMessageProject': string
   'projectsOrgs.viewAllProjects': string

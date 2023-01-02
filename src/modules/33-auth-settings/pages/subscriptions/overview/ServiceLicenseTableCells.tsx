@@ -23,7 +23,7 @@ type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance
 }
 
 type CellType = Renderer<CellTypeWithActions<ActiveServiceDTO>>
-export const LastModifiedNameCell: CellType = ({ row }) => {
+export const ServiceNameCell: CellType = ({ row }) => {
   const data = row.original
   return (
     <Text color={Color.GREY_900} font={{ size: 'small' }}>
