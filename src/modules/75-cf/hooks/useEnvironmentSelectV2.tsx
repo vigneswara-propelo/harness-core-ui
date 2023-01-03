@@ -11,6 +11,7 @@ import { Select, SelectOption, SelectProps } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { EnvironmentResponseDTO, useGetEnvironmentListForProject } from 'services/cd-ng'
 import { rewriteCurrentLocationWithActiveEnvironment } from '@cf/utils/CFUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import css from './useEnvironmentSelectV2.module.scss'
 
 export interface UseEnvironmentSelectV2Params {
@@ -23,6 +24,10 @@ export interface UseEnvironmentSelectV2Params {
 }
 
 export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => {
+  const { preference: preferredEnvironment, setPreference: setPreferredEnvironment } = usePreferenceStore<string>(
+    PreferenceScope.USER,
+    'FF_SELECTED_ENV'
+  )
   const { getString } = useStrings()
   const {
     onChange = () => undefined,
@@ -44,6 +49,13 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
     })) || []
 
   useEffect(() => {
+    if (typeof selectedEnvironment?.value === 'string' && preferredEnvironment !== selectedEnvironment.value) {
+      setPreferredEnvironment(selectedEnvironment.value)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [preferredEnvironment, selectedEnvironment?.value])
+
+  useEffect(() => {
     if (data?.data?.content?.length) {
       if (selectedEnvironmentIdentifier) {
         const found = data?.data?.content?.find(env => env.identifier === selectedEnvironmentIdentifier)
@@ -59,10 +71,23 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
           return
         }
       }
+
       if (!noDefault) {
-        setSelectedEnvironment(selectOptions[0])
-        onChange(selectOptions[0], data?.data?.content?.[0], false)
-        rewriteCurrentLocationWithActiveEnvironment(data?.data?.content?.[0].identifier)
+        const preferenceOption = selectOptions.find(({ value }) => value === preferredEnvironment)
+
+        if (preferenceOption) {
+          setSelectedEnvironment(preferenceOption)
+          onChange(
+            preferenceOption,
+            data.data.content.find(({ identifier }) => identifier === preferredEnvironment) as EnvironmentResponseDTO,
+            false
+          )
+          rewriteCurrentLocationWithActiveEnvironment(preferredEnvironment)
+        } else {
+          setSelectedEnvironment(selectOptions[0])
+          onChange(selectOptions[0], data?.data?.content?.[0], false)
+          rewriteCurrentLocationWithActiveEnvironment(data?.data?.content?.[0].identifier)
+        }
       }
     } else if (data?.data?.content?.length === 0) {
       onEmpty()
