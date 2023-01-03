@@ -271,7 +271,8 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
                 formikProps?.values?.serviceLevelObjectivesDetails as ServiceLevelObjectiveDetailsDTO[],
                 accountId,
                 orgIdentifier,
-                projectIdentifier
+                projectIdentifier,
+                isAccountLevel
               )
               formikProps.setFieldValue(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, updatedSLOList)
             }}
