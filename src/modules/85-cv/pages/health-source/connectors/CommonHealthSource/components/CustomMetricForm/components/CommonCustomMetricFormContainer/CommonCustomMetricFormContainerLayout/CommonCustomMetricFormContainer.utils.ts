@@ -39,3 +39,31 @@ export function getStartAndEndTime(): { endTime: number; startTime: number } {
   const endTime = Date.now()
   return { endTime, startTime }
 }
+
+export const getIsLogsCanBeShown = ({
+  isLogsTableEnabled,
+  isDataAvailableForLogsTable,
+  isQueryRuntimeOrExpression,
+  isConnectorRuntimeOrExpression
+}: {
+  isLogsTableEnabled: boolean
+  isDataAvailableForLogsTable: boolean
+  isQueryRuntimeOrExpression?: boolean
+  isConnectorRuntimeOrExpression?: boolean
+}): boolean => {
+  return Boolean(
+    isLogsTableEnabled && (isDataAvailableForLogsTable || isQueryRuntimeOrExpression || isConnectorRuntimeOrExpression)
+  )
+}
+
+export const getCanShowSampleLogButton = ({
+  isTemplate,
+  isQueryRuntimeOrExpression,
+  isConnectorRuntimeOrExpression
+}: {
+  isTemplate?: boolean
+  isQueryRuntimeOrExpression?: boolean
+  isConnectorRuntimeOrExpression?: boolean
+}): boolean => {
+  return Boolean(!isTemplate || (!isQueryRuntimeOrExpression && !isConnectorRuntimeOrExpression))
+}

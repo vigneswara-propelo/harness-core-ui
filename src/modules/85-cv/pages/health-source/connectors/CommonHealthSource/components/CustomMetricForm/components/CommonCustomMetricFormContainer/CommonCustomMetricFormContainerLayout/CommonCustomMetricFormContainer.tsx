@@ -8,7 +8,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
-import { Container, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { Container } from '@harness/uicore'
 import { TimeSeries, useGetSampleMetricData, useGetSampleRawRecord, QueryRecordsRequest } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -25,24 +25,27 @@ import LogsTableContainer from '../../LogsTable/LogsTableContainer'
 import {
   shouldAutoBuildChart,
   shouldShowChartComponent,
-  getRecordsRequestBody
+  getRecordsRequestBody,
+  getIsLogsCanBeShown
 } from './CommonCustomMetricFormContainer.utils'
+import { useCommonHealthSource } from '../../CommonHealthSourceContext/useCommonHealthSource'
 
 export default function CommonCustomMetricFormContainer(props: CommonCustomMetricFormContainerProps): JSX.Element {
   const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
   const { sourceData } = useContext(SetupSourceTabsContext)
   const { product } = sourceData || {}
-  const { connectorIdentifier, expressions, isConnectorRuntimeOrExpression, healthSourceConfig } = props
+  const { connectorIdentifier, isConnectorRuntimeOrExpression, healthSourceConfig } = props
   const { getString } = useStrings()
   const [records, setRecords] = useState<Record<string, any>[]>([])
   const [isQueryExecuted, setIsQueryExecuted] = useState(false)
   const [healthSourceTimeSeriesData, setHealthSourceTimeSeriesData] = useState<TimeSeries[] | undefined>()
 
+  const { isQueryRuntimeOrExpression } = useCommonHealthSource()
+
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const chartConfig = healthSourceConfig?.customMetrics?.metricsChart
   const providerType = product?.value
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
-  const isQueryRuntimeOrExpression = getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
   const isLogsTableVisible = getIsLogsTableVisible(healthSourceConfig)
 
   const {
@@ -101,6 +104,8 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
     }
   }
 
+  const isDataAvailableForLogsTable = Boolean(!fetchingSampleRecordLoading && !error && records?.length)
+
   return (
     <Container key={values?.identifier} padding={'small'} margin={'small'}>
       <CommonQueryViewer
@@ -126,16 +131,21 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
           healthSourceTimeSeriesData={healthSourceTimeSeriesData}
         />
       ) : null}
-      {isLogsTableVisible && (
+
+      {/* ⭐️ Logs Table */}
+      {getIsLogsCanBeShown({
+        isLogsTableEnabled: isLogsTableVisible,
+        isDataAvailableForLogsTable,
+        isQueryRuntimeOrExpression,
+        isConnectorRuntimeOrExpression
+      }) && (
         <LogsTableContainer
           fieldMappings={healthSourceConfig?.customMetrics?.fieldMappings}
           providerType={getProviderType(sourceData) as QueryRecordsRequest['providerType']}
           connectorIdentifier={connectorIdentifier}
-          expressions={expressions}
-          isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
           sampleRecords={records}
           isRecordsLoading={fetchingSampleRecordLoading}
-          disableLogFields={Boolean(fetchingSampleRecordLoading || error || !records?.length)}
+          disableLogFields={!isDataAvailableForLogsTable}
         />
       )}
     </Container>

@@ -116,10 +116,10 @@ export function getProviderType(sourceData: any): QueryRecordsRequest['providerT
     return null
   }
 
-  const { sourceType, product } = sourceData
+  const { product } = sourceData
   const { value } = product || {}
 
-  return ProviderTypes[`${sourceType}_${value}`]
+  return ProviderTypes[value]
 }
 
 export function getRequestBodyForSampleLogs(
@@ -131,7 +131,7 @@ export function getRequestBodyForSampleLogs(
   }
 ): QueryRecordsRequest | null {
   switch (providerType) {
-    case ProviderTypes.SumoLogic_LOGS: {
+    case ProviderTypes.SUMOLOGIC_LOG: {
       const currentTime = new Date()
       const startTime = currentTime.setHours(currentTime.getHours() - 2)
 

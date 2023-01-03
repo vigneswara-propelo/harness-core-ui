@@ -80,5 +80,5 @@ export const logsTableDefaultConfigs = {
   size: '40%'
 }
 export const ProviderTypes: Record<string, QueryRecordsRequest['providerType']> = {
-  SumoLogic_LOGS: 'SUMOLOGIC_LOG'
+  SUMOLOGIC_LOG: 'SUMOLOGIC_LOG'
 }

@@ -8,6 +8,7 @@ import { LogRecord, QueryRecordsRequest, useGetSampleLogData } from 'services/cv
 import { useStrings } from 'framework/strings'
 import {
   getFieldsDefaultValuesFromConfig,
+  getIsConnectorRuntimeOrExpression,
   getRequestBodyForSampleLogs
 } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
@@ -18,14 +19,14 @@ import type {
 import JsonSelectorWithDrawer from './components/JsonSelectorWithDrawer'
 import LogsTableComponent from './components/LogsTableComponent/LogsTableComponent'
 import CustomMetricsSectionHeader from '../CustomMetricsSectionHeader'
+import { useCommonHealthSource } from '../CommonHealthSourceContext/useCommonHealthSource'
+import { getCanShowSampleLogButton } from '../CommonCustomMetricFormContainer/CommonCustomMetricFormContainerLayout/CommonCustomMetricFormContainer.utils'
 
 interface CommonHealthSourceLogsTable {
   connectorIdentifier: string
   providerType: QueryRecordsRequest['providerType']
   fieldMappings?: FieldMapping[]
   isRecordsLoading?: boolean
-  expressions?: string[]
-  isConnectorRuntimeOrExpression?: boolean
   disableLogFields?: boolean
   sampleRecords: Record<string, any>[]
 }
@@ -41,9 +42,8 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
 
   const { isTemplate } = useContext(SetupSourceTabsContext)
 
-  // const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
-
-  // const isQueryRuntimeOrExpression = getIsQueryRuntimeOrExpression(values.query)
+  const { isQueryRuntimeOrExpression } = useCommonHealthSource()
+  const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(connectorIdentifier)
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
@@ -105,13 +105,15 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
         />
       </Container>
 
-      <Layout.Horizontal spacing="medium" margin={{ bottom: 'medium', top: 'medium' }}>
-        <Button onClick={handleFetchSampleLogs} disabled={isLogFieldsDisabled} variation={ButtonVariation.SECONDARY}>
-          {getString('cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText')}
-        </Button>
+      {getCanShowSampleLogButton({ isQueryRuntimeOrExpression, isConnectorRuntimeOrExpression, isTemplate }) && (
+        <Layout.Horizontal spacing="medium" margin={{ bottom: 'medium', top: 'medium' }}>
+          <Button onClick={handleFetchSampleLogs} disabled={isLogFieldsDisabled} variation={ButtonVariation.SECONDARY}>
+            {getString('cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText')}
+          </Button>
 
-        {logsLoading && <Text icon="spinner">{getString('cv.processing')}</Text>}
-      </Layout.Horizontal>
+          {logsLoading && <Text icon="spinner">{getString('cv.processing')}</Text>}
+        </Layout.Horizontal>
+      )}
 
       <LogsTableComponent
         loading={logsLoading}
