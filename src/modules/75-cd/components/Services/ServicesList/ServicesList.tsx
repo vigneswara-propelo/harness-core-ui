@@ -44,18 +44,19 @@ import { SortOption } from '@common/components/SortOption/SortOption'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
 import { getFixed, INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { numberFormatter } from '@common/utils/utils'
-import { ServiceDetailsDTO, useDeleteServiceV2 } from 'services/cd-ng'
+import { ChangeRate, ServiceDetailsDTO, ServiceDetailsDTOV2, useDeleteServiceV2 } from 'services/cd-ng'
 import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/DeploymentTypeIcons'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { mapToExecutionStatus } from '@pipeline/components/Dashboards/shared'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { calcTrend, RateTrend, TrendPopover } from '@cd/pages/dashboard/dashboardUtils'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 
@@ -93,15 +94,18 @@ export interface ServiceListItem {
 export interface ServicesListProps {
   loading: boolean
   error: boolean
-  data: ServiceDetailsDTO[]
+  data: ServiceDetailsDTO[] | ServiceDetailsDTOV2[]
   refetch: () => void
   setSavedSortOption: (value: string[] | undefined) => void
   setSort: React.Dispatch<React.SetStateAction<string[]>>
   sort: string[]
 }
 
-const transformServiceDetailsData = (data: ServiceDetailsDTO[]): ServiceListItem[] => {
-  return data.map(item => ({
+const transformServiceDetailsData = (
+  data: ServiceDetailsDTO[] | ServiceDetailsDTOV2[],
+  flag: boolean | undefined
+): ServiceListItem[] => {
+  return data.map((item: ServiceDetailsDTOV2 | ServiceDetailsDTO) => ({
     name: defaultTo(item.serviceName, ''),
     identifier: defaultTo(item.serviceIdentifier, ''),
     description: defaultTo(item.description, ''),
@@ -114,15 +118,42 @@ const transformServiceDetailsData = (data: ServiceDetailsDTO[]): ServiceListItem
     },
     deployments: {
       value: numberFormatter(item.totalDeployments),
-      change: defaultTo(item.totalDeploymentChangeRate, 0)
+      change: defaultTo(
+        flag && item.totalDeploymentChangeRate
+          ? (item.totalDeploymentChangeRate as ChangeRate).percentChange
+          : (item.totalDeploymentChangeRate as number),
+        0
+      ),
+      trend:
+        flag && item.totalDeploymentChangeRate
+          ? ((item.totalDeploymentChangeRate as ChangeRate).trend as RateTrend)
+          : calcTrend(item.totalDeploymentChangeRate as number)
     },
     failureRate: {
       value: numberFormatter(item.failureRate),
-      change: defaultTo(item.failureRateChangeRate, 0)
+      change: defaultTo(
+        flag && item.failureRateChangeRate
+          ? (item.failureRateChangeRate as ChangeRate).percentChange
+          : (item.failureRateChangeRate as number),
+        0
+      ),
+      trend:
+        flag && item.failureRateChangeRate
+          ? ((item.failureRateChangeRate as ChangeRate).trend as RateTrend)
+          : calcTrend(item.failureRateChangeRate as number)
     },
     frequency: {
       value: numberFormatter(item.frequency),
-      change: defaultTo(item.frequencyChangeRate, 0)
+      change: defaultTo(
+        flag && item.frequencyChangeRate
+          ? (item.frequencyChangeRate as ChangeRate).percentChange
+          : (item.frequencyChangeRate as number),
+        0
+      ),
+      trend:
+        flag && item.frequencyChangeRate
+          ? ((item.frequencyChangeRate as ChangeRate).trend as RateTrend)
+          : calcTrend(item.frequencyChangeRate as number)
     },
     lastDeployment: {
       name: defaultTo(item.lastPipelineExecuted?.name, ''),
@@ -164,12 +195,12 @@ const RenderType: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
 const TickerCard: React.FC<{ item: ChangeValue & { name: string } }> = props => {
   const { item } = props
   const value = Number(item.value)
-  const isBoostMode = item.change === INVALID_CHANGE_RATE
+  const isBoostMode = item.change === INVALID_CHANGE_RATE || item.trend === RateTrend.INVALID
   const color = (() => {
     if (item.name !== 'failureRate') {
-      return !isBoostMode && item.change < 0 ? Color.RED_500 : Color.GREEN_500
+      return !isBoostMode && item.trend === RateTrend.DOWN ? Color.RED_500 : Color.GREEN_500
     } else {
-      return isBoostMode || item.change < 0 ? Color.GREEN_500 : Color.RED_500
+      return isBoostMode || item.trend === RateTrend.DOWN ? Color.GREEN_500 : Color.RED_500
     }
   })()
   return (
@@ -182,7 +213,7 @@ const TickerCard: React.FC<{ item: ChangeValue & { name: string } }> = props => 
             <Text color={color} font={{ size: 'small' }}>{`${Math.abs(getFixed(item.change))}%`}</Text>
           )
         }
-        decreaseMode={!isBoostMode && item.change < 0}
+        decreaseMode={!isBoostMode && item.trend === RateTrend.DOWN}
         boost={isBoostMode}
         color={color}
         tickerContainerStyles={css.tickerContainerStyles}
@@ -200,7 +231,11 @@ const getRenderTickerCard: (tickerCardKey: keyof ServiceListItem) => Renderer<Ce
   tickerCardKey =>
   ({ row }) => {
     const value = row.original[tickerCardKey] as ChangeValue
-    return <TickerCard item={{ ...value, name: tickerCardKey }} />
+    return (
+      <TrendPopover trend={value.trend}>
+        <TickerCard item={{ ...value, name: tickerCardKey }} />
+      </TrendPopover>
+    )
   }
 
 const RenderServiceInstances: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
@@ -525,6 +560,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const history = useHistory()
+  const { CDC_DASHBOARD_ENHANCEMENT_NG } = useFeatureFlags()
 
   const ServiceListHeaderCustomPrimary = useMemo(
     () => (headerProps: { total?: number }) =>
@@ -610,7 +646,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
     columns,
     loading,
     error,
-    data: transformServiceDetailsData(data),
+    data: transformServiceDetailsData(data, CDC_DASHBOARD_ENHANCEMENT_NG),
     refetch,
     HeaderCustomPrimary: ServiceListHeaderCustomPrimary,
     onRowClick: goToServiceDetails,

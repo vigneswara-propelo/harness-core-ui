@@ -4868,6 +4868,7 @@ export interface StringsMap {
   'cd.editIdError': string
   'cd.enterTragets': string
   'cd.enterWorkDirectory': string
+  'cd.envChanges': string
   'cd.environment.createSubTitle': string
   'cd.environment.delete': string
   'cd.environment.deleteConfirmation': string
@@ -5356,6 +5357,10 @@ export interface StringsMap {
   'cd.terragruntConfigFileStore': string
   'cd.testConnectionStepName': string
   'cd.tfVarStore': string
+  'cd.trendMessage.downTrend': string
+  'cd.trendMessage.invalidTrend': string
+  'cd.trendMessage.noChangeTrend': string
+  'cd.trendMessage.upTrend': string
   'cd.typeError': string
   'cd.unLink': string
   'cd.unLinkedCluster': string

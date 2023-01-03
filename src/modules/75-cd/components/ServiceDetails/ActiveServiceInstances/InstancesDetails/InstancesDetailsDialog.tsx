@@ -119,12 +119,23 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
       <Container style={{ overflowY: 'auto' }}>
         {filteredDeployments?.map((dataItem, index) => {
           if (
+            dataItem.artifactVersion &&
             dataItem.instanceGroupedByEnvironmentList?.length === 1 &&
             defaultTo(dataItem.instanceGroupedByEnvironmentList[0].instanceGroupedByClusterList?.length, 0) <= 1 &&
-            defaultTo(dataItem.instanceGroupedByEnvironmentList[0].instanceGroupedByInfraList?.length, 0) <= 1
+            defaultTo(dataItem.instanceGroupedByEnvironmentList[0].instanceGroupedByInfraList?.length, 0) <= 1 &&
+            defaultTo(
+              dataItem.instanceGroupedByEnvironmentList[0].instanceGroupedByInfraList?.[0]
+                ?.instanceGroupedByPipelineExecutionList?.length,
+              0
+            ) <= 5 &&
+            defaultTo(
+              dataItem.instanceGroupedByEnvironmentList[0].instanceGroupedByClusterList?.[0]
+                ?.instanceGroupedByPipelineExecutionList?.length,
+              0
+            ) <= 5
           ) {
             return (
-              <Container className={css.nonCollapseRow}>
+              <Container className={css.nonCollapseRow} key={index}>
                 {isActiveInstance ? (
                   <ActiveServiceInstancesContentV2 tableType={TableType.FULL} data={[dataItem]} />
                 ) : (

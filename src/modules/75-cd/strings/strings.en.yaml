@@ -751,3 +751,9 @@ inlineEntityFilters:
     selectAtleastOneEntity: Atlteast 1 entity is required
     tagsAreRequired: Tags are required
     chooseAllOrAny: Please choose one of All or Any
+trendMessage:
+  upTrend: 'Percent increase in rate compared to the previous time interval'
+  downTrend: 'Percent decrease in rate compared to the previous time interval'
+  noChangeTrend: 'No change in rate compared to the previous time interval'
+  invalidTrend: 'No trend data in the previous time interval'
+envChanges: 'Environment Changes'
