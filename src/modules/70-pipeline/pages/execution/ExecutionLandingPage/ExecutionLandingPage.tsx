@@ -316,7 +316,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   )
   isDataLoadedForSelectedStage ||= isDataLoadedForChildSelectedStage
 
-  let pipelineStagesMap = React.useMemo(() => {
+  const allStagesMap = React.useMemo(() => {
     return getPipelineStagesMap(
       data?.data?.pipelineExecutionSummary?.layoutNodeMap,
       data?.data?.pipelineExecutionSummary?.startingNodeId
@@ -333,6 +333,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     data?.data?.childGraph?.pipelineExecutionSummary?.startingNodeId
   ])
 
+  let pipelineStagesMap = allStagesMap
   if (childPipelineStagesMap.size)
     pipelineStagesMap = new Map<string, GraphLayoutNode>([...pipelineStagesMap, ...childPipelineStagesMap])
 
@@ -429,6 +430,8 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         pipelineExecutionDetail: data?.data || null,
         allNodeMap,
         pipelineStagesMap,
+        childPipelineStagesMap,
+        allStagesMap,
         isPipelineInvalid,
         selectedStageId,
         selectedChildStageId,
