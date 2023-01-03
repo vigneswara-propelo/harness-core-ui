@@ -136,6 +136,12 @@ declare module 'chaos/ChaosStepExecution' {
   export default ChildApp
 }
 
+declare module 'chaos/ResilienceViewContent' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'ffui/MicroFrontendApp' {
   const ChildApp: ChildAppComponent
   export default ChildApp

@@ -53,6 +53,7 @@ export enum PAGE_NAME {
   ExecutionSecurityView = 'ExecutionSecurityView',
   ExecutionInputsView = 'ExecutionInputsView',
   ExecutionArtifactsView = 'ExecutionArtifactsView',
+  ExecutionResilienceView = 'ExecutionResilienceView',
   BuildTests = 'BuildTests',
   BuildCommits = 'BuildCommits',
   CIPipelineDeploymentList = 'CIPipelineDeploymentList',

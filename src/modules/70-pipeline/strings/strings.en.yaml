@@ -1549,3 +1549,5 @@ pipelineCachedCopy:
   updateAvailable: Update Available
   cacheUpdateAvailable: Cache {{$.pipeline.pipelineCachedCopy.updateAvailable}}
   newCacheVersion: New Cache version is available, click reload to view details.
+resilienceTab:
+  title: Resilience

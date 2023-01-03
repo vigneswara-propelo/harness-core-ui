@@ -1225,6 +1225,19 @@ const routes = {
       return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/et`
     }
   ),
+  toResilienceView: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      executionIdentifier,
+      module,
+      source
+    }: PipelineType<ExecutionPathProps>) => {
+      const basePath = module || 'home'
+      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/resilience`
+    }
+  ),
   /********************************************************************************************************************/
   toTemplates: withAccountId(
     ({

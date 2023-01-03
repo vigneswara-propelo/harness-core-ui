@@ -4068,6 +4068,7 @@ export interface StringsMap {
   'pipeline.repositoryPlaceholder': string
   'pipeline.repositoryUrlPlaceholder': string
   'pipeline.requiredToFetch': string
+  'pipeline.resilienceTab.title': string
   'pipeline.resourceConstraints.currentlyExecuting': string
   'pipeline.resourceConstraints.infoText': string
   'pipeline.resourceConstraints.k8sNamespaceText': string

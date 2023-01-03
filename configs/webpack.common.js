@@ -248,6 +248,7 @@ if (!enableChaosUI) {
   config.resolve.alias['chaos/PipelineExperimentSelect'] = ChildAppError
   config.resolve.alias['chaos/ExperimentPreview'] = ChildAppError
   config.resolve.alias['chaos/ChaosStepExecution'] = ChildAppError
+  config.resolve.alias['chaos/ResilienceViewContent'] = ChildAppError
 }
 
 if (!enableSTO) {
