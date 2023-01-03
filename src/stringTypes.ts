@@ -157,6 +157,7 @@ export interface StringsMap {
   'common.confictOccured': string
   'common.config': string
   'common.configDetails': string
+  'common.configureJfrog': string
   'common.configureModuleList': string
   'common.configureNav': string
   'common.configureOptions.advancedHelp': string
@@ -451,6 +452,7 @@ export interface StringsMap {
   'common.governance': string
   'common.gpgkey': string
   'common.harnessClusterHostingAccount': string
+  'common.harnessCommunityTitle': string
   'common.harnessDelegate': string
   'common.harnessFirstGeneration': string
   'common.harnessFirstGenerationDescription': string
@@ -688,6 +690,8 @@ export interface StringsMap {
   'common.purpose.cd.continuous': string
   'common.purpose.cd.delivery': string
   'common.purpose.cd.description': string
+  'common.purpose.cd.introductionConcepts': string
+  'common.purpose.cd.introductionText': string
   'common.purpose.cd.newGen.description': string
   'common.purpose.cd.newGen.title': string
   'common.purpose.cd.subtitle': string
@@ -848,6 +852,8 @@ export interface StringsMap {
   'common.secretKey': string
   'common.secrets': string
   'common.seeDetails': string
+  'common.seeLess': string
+  'common.seeMore': string
   'common.seeWhatChanged': string
   'common.selectAChannel': string
   'common.selectAVersion.description': string
@@ -996,6 +1002,9 @@ export interface StringsMap {
   'common.successfullCreate': string
   'common.successfullUpdate': string
   'common.suggestionsLabel': string
+  'common.support.subtitle': string
+  'common.support.title': string
+  'common.supportText': string
   'common.supportedInFirstGeneration': string
   'common.supportedModals': string
   'common.switchAccount': string
@@ -2940,8 +2949,6 @@ export interface StringsMap {
   'gitsync.rootFolderListHeader': string
   'gitsync.rootFolderUpdatedSuccessfully': string
   'gitsync.rootfolderLabel': string
-  'gitsync.seeLess': string
-  'gitsync.seeMore': string
   'gitsync.selectBranchTitle': string
   'gitsync.selectDefaultBranch': string
   'gitsync.selectHarnessFolder': string

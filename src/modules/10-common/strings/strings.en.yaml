@@ -253,6 +253,8 @@ purpose:
   selectAModule: Select a module below to get started
   changeSelection: Change Selection
   cd:
+    introductionText: Introduction to Continuous Deployment
+    introductionConcepts: Introduction to Continuous Deployment concepts
     delivery: Delivery
     subtitle: Deploy your services with blazingly fast pipelines.
     continuous: Continuous Delivery
@@ -1255,3 +1257,11 @@ moduleDetails:
       title: '{{$.common.sloNoData}}'
       description: A Service Level Objective (SLO) is the sum of a collection of performance metrics (Service Level Indicator or SLI) such as uptime, response time, and error rate that are used to measure the services performance. To create SLO, you’ll need at least one Monitored Service, Health Source and a Metric.
 deploymentsIn: 'Deployments in {{value}}'
+harnessCommunityTitle: See what Harness Community is up to
+seeMore: 'See more'
+seeLess: 'See less'
+support:
+  title: Find the Best buddy to support you
+  subtitle: We are here 24/7 for you.
+configureJfrog: How to Configure Your Builds with JFrog Artifactory and Harness
+supportText: Support
