@@ -91,8 +91,6 @@ export interface HealthSourcePayload {
 }
 
 export interface CommonHealthSourceConfigurations {
-  // non custom metric section
-
   // Custom Metric section
   customMetricsMap: Map<string, CommonCustomMetricFormikInterface>
   selectedMetric: string

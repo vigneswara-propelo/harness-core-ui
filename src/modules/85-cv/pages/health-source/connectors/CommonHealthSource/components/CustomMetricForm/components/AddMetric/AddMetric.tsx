@@ -13,7 +13,7 @@ import GroupName from '@cv/components/GroupName/GroupName'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
 import type { CustomHealthMetricDefinition } from 'services/cv'
-import { CommonHealthSourceFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import type { AddMetricForm } from '../../CustomMetricForm.types'
 
 export interface AddMetricProps {
@@ -40,8 +40,8 @@ export default function AddMetric(props: AddMetricProps): JSX.Element {
         <NameId
           nameLabel={getString('cv.monitoringSources.commonHealthSource.metricName', { name: fieldLabel })}
           identifierProps={{
-            inputName: CommonHealthSourceFieldNames.METRIC_NAME,
-            idName: CommonHealthSourceFieldNames.METRIC_IDENTIFIER,
+            inputName: CustomMetricFormFieldNames.METRIC_NAME,
+            idName: CustomMetricFormFieldNames.METRIC_IDENTIFIER,
             isIdentifierEditable: Boolean(!currentSelectedMetricDetail?.identifier)
           }}
         />
@@ -53,7 +53,7 @@ export default function AddMetric(props: AddMetricProps): JSX.Element {
             setGroupNames={setGroupName}
             label={getString('rbac.userDetails.linkToSSOProviderModal.groupNameLabel')}
             title={getString('cv.monitoringSources.commonHealthSource.addGroupName')}
-            fieldName={CommonHealthSourceFieldNames.GROUP_NAME}
+            fieldName={CustomMetricFormFieldNames.GROUP_NAME}
           />
         ) : null}
         <Container style={{ paddingTop: 'var(--spacing-xlarge)' }}>

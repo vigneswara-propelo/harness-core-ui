@@ -6,13 +6,17 @@
  */
 
 import type { FormikErrors } from 'formik'
-import { set } from 'lodash-es'
+import { cloneDeep, set } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { CreatedMetricsWithSelectedIndex } from '@cv/pages/health-source/common/CommonCustomMetric/CommonCustomMetric.types'
 import type { AddMetricForm } from './CustomMetricForm.types'
-import { CommonHealthSourceFieldNames } from '../../CommonHealthSource.constants'
-import type { CommonCustomMetricFormikInterface, HealthSourceConfig } from '../../CommonHealthSource.types'
-import { defaultEmptyGroupName, defaultLogsGroupName, initCustomForm } from './CustomMetricForm.constants'
+import { CommonConfigurationsFormFieldNames, CustomMetricFormFieldNames } from '../../CommonHealthSource.constants'
+import type {
+  CommonCustomMetricFormikInterface,
+  CommonHealthSourceConfigurations,
+  HealthSourceConfig
+} from '../../CommonHealthSource.types'
+import { DEFAULT_EMPTY_GROUP_NAME, DEFAULT_LOGS_GROUP_NAME, initCustomForm } from './CustomMetricForm.constants'
 
 export const validateAddMetricForm = (
   formData: AddMetricForm,
@@ -23,16 +27,16 @@ export const validateAddMetricForm = (
   const { identifier = '', metricName = '', groupName } = formData
 
   if (!identifier) {
-    set(errors, CommonHealthSourceFieldNames.METRIC_IDENTIFIER, getString('fieldRequired', { field: 'Identifier' }))
+    set(errors, CustomMetricFormFieldNames.METRIC_IDENTIFIER, getString('fieldRequired', { field: 'Identifier' }))
   }
   if (!metricName) {
-    set(errors, CommonHealthSourceFieldNames.METRIC_NAME, getString('fieldRequired', { field: 'Metric name' }))
+    set(errors, CustomMetricFormFieldNames.METRIC_NAME, getString('fieldRequired', { field: 'Metric name' }))
   }
   if (typeof groupName === 'string' && !groupName) {
-    set(errors, CommonHealthSourceFieldNames.GROUP_NAME, getString('fieldRequired', { field: 'Group name' }))
+    set(errors, CustomMetricFormFieldNames.GROUP_NAME, getString('fieldRequired', { field: 'Group name' }))
   }
   if (typeof groupName === 'object' && !groupName?.value) {
-    set(errors, CommonHealthSourceFieldNames.GROUP_NAME, getString('fieldRequired', { field: 'Group name' }))
+    set(errors, CustomMetricFormFieldNames.GROUP_NAME, getString('fieldRequired', { field: 'Group name' }))
   }
 
   if (createdMetrics?.filter((name: string) => name === metricName).length) {
@@ -65,13 +69,40 @@ export function getAddMetricInitialValues(
   return {
     identifier: formValues?.identifier ?? '',
     metricName: formValues?.metricName ?? '',
-    groupName: enabledDefaultGroupName ? defaultLogsGroupName : formValues?.groupName ?? ''
+    groupName: enabledDefaultGroupName ? DEFAULT_LOGS_GROUP_NAME : formValues?.groupName ?? ''
   }
 }
 
 export const initHealthSourceCustomFormValue = () => {
   return {
     ...initCustomForm,
-    groupName: defaultEmptyGroupName
+    groupName: DEFAULT_EMPTY_GROUP_NAME
   }
+}
+
+export function cleanUpMappedMetrics(mappedMetricsData: Map<string, CommonCustomMetricFormikInterface>): void {
+  const hasEmptySet = mappedMetricsData.has('')
+  if (hasEmptySet) {
+    mappedMetricsData.delete('')
+  }
+}
+
+export function getUpdatedMappedMetricsData(
+  mappedMetricsData: Map<string, CommonCustomMetricFormikInterface>,
+  selectedMetricName: string,
+  formValuesData: CommonCustomMetricFormikInterface
+): CommonHealthSourceConfigurations['customMetricsMap'] {
+  const updatedMappedMetricsData = cloneDeep(mappedMetricsData)
+  updatedMappedMetricsData.set(selectedMetricName, formValuesData)
+  cleanUpMappedMetrics(updatedMappedMetricsData)
+  return updatedMappedMetricsData
+}
+
+export function updateParentFormikWithLatestData(
+  updateParentFormik: (field: string, value: any, shouldValidate?: boolean | undefined) => void,
+  updatedMappedMetricsData: Map<string, CommonCustomMetricFormikInterface>,
+  selectedMetricName: string
+): void {
+  updateParentFormik(CommonConfigurationsFormFieldNames.CUSTOM_METRICS_MAP, updatedMappedMetricsData)
+  updateParentFormik(CommonConfigurationsFormFieldNames.SELECTED_METRIC, selectedMetricName)
 }

@@ -21,6 +21,7 @@ declare const styles: {
   readonly queryIcons: string
   readonly queryViewDialog: string
   readonly recordContainer: string
+  readonly stackTracePanelClassName: string
   readonly tooManyRecords: string
 }
 export default styles

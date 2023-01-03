@@ -5,13 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { FormikErrors, FormikProps } from 'formik'
+import { cloneDeep, defaultTo, set } from 'lodash-es'
 import { RUNTIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
-import { cloneDeep, defaultTo } from 'lodash-es'
+import type { UseStringsReturn } from 'framework/strings'
 import type { NextGenHealthSourceSpec, QueryRecordsRequest, RiskProfile } from 'services/cv'
 import { initializeSelectedMetricsMap } from '../../common/CommonCustomMetric/CommonCustomMetric.utils'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '../../types'
-import { initCustomForm, ProviderTypes, FIELD_ENUM, DEFAULT_HEALTH_SOURCE_QUERY } from './CommonHealthSource.constants'
+import {
+  initCustomForm,
+  ProviderTypes,
+  FIELD_ENUM,
+  DEFAULT_HEALTH_SOURCE_QUERY,
+  CustomMetricFormFieldNames
+} from './CommonHealthSource.constants'
 import type {
   HealthSourcePayload,
   HealthSourceConfig,
@@ -19,6 +27,7 @@ import type {
   FieldMapping,
   CommonHealthSourceConfigurations
 } from './CommonHealthSource.types'
+import { DEFAULT_LOGS_GROUP_NAME } from './components/CustomMetricForm/CustomMetricForm.constants'
 
 export const initHealthSourceCustomForm = () => {
   return {
@@ -164,6 +173,36 @@ export const getIsQueryRuntimeOrExpression = (query?: string): boolean => {
   return getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
 }
 
+// Validation functions
+export const handleValidateCustomMetricForm = (
+  formData: CommonCustomMetricFormikInterface,
+  getString: UseStringsReturn['getString']
+): FormikErrors<CommonCustomMetricFormikInterface> => {
+  const errors: FormikErrors<CommonCustomMetricFormikInterface> = {}
+  const { query = '' } = formData
+
+  if (!query) {
+    set(errors, CustomMetricFormFieldNames.QUERY, getString('fieldRequired', { field: 'Query' }))
+  }
+
+  // validation for assign section can be added here.
+  return errors
+}
+
+export const handleValidateHealthSourceConfigurationsForm = (): FormikErrors<CommonHealthSourceConfigurations> => {
+  const errors: FormikErrors<CommonHealthSourceConfigurations> = {}
+  // const { ignoreThresholds = [], failFastThresholds = [] } = formData || {}
+
+  // TODO - validations for metric threshold section can be added here.
+  return errors
+}
+
+export function checkIfCurrentCustomMetricFormIsValid(
+  customMetricFormRef: React.MutableRefObject<FormikProps<CommonCustomMetricFormikInterface> | undefined>
+): boolean {
+  return Boolean(customMetricFormRef?.current && customMetricFormRef?.current.isValid)
+}
+
 export const createHealthSourcePayload = (
   defineHealthSourcedata: {
     product: SelectOption
@@ -286,7 +325,9 @@ function getUpdatedCustomMetrics(
               : queryDefinition?.queryParams?.serviceInstanceField,
           lowerBaselineDeviation: queryDefinition?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER') || false,
           higherBaselineDeviation: queryDefinition?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_HIGHER') || false,
-          groupName: { label: queryDefinition?.groupName || '', value: queryDefinition?.groupName || '' },
+          groupName: queryDefinition?.groupName
+            ? { label: queryDefinition?.groupName, value: queryDefinition?.groupName }
+            : DEFAULT_LOGS_GROUP_NAME,
           continuousVerification: queryDefinition?.continuousVerificationEnabled,
           healthScore: queryDefinition?.liveMonitoringEnabled,
           sli: queryDefinition?.sliEnabled

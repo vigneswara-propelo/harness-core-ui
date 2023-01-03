@@ -35,7 +35,6 @@ const WrapperComponent = () => {
           const groupedCreatedMetrics = initGroupedCreatedMetrics(customMetricsMap, str => str)
           return (
             <CustomMetric
-              isValidInput={true}
               selectedMetric={selectedMetric}
               formikValues={formik.values as any}
               mappedMetrics={customMetricsMap}

@@ -8,10 +8,11 @@ import React, { useMemo, useState } from 'react'
 import { defaultTo } from 'lodash-es'
 import { Button, ButtonVariation, Container } from '@harness/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
+import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
-
+import { CommonConfigurationsFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { useCommonHealthSource } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
-import { CommonHealthSourceContextFields } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { CommonSelectedAppsSideNav } from './components/CommonSelectedAppsSideNav/CommonSelectedAppsSideNav'
 import {
   getCreatedMetricLength,
@@ -29,7 +30,6 @@ export interface CommonMultiItemsSideNavProps {
     updatedList: string[],
     selectedMetricIndex: number
   ) => void
-  isValidInput: boolean
   renamedMetric?: string
   createdMetrics?: string[]
   defaultSelectedMetric?: string
@@ -43,11 +43,12 @@ export interface CommonMultiItemsSideNavProps {
 }
 
 export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JSX.Element {
+  const { isValid } = useFormikContext<CommonCustomMetricFormikInterface>()
+
   const {
     onSelectMetric,
     createdMetrics: propsCreatedMetrics,
     onRemoveMetric,
-    isValidInput,
     defaultSelectedMetric,
     defaultMetricName,
     tooptipMessage,
@@ -76,13 +77,12 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
     () => getCreatedMetricLength(createdMetrics, groupedCreatedMetrics),
     [groupedCreatedMetrics, createdMetrics]
   )
-
   const hasOnRemove = shouldBeAbleToDeleteLastMetric || createdMetricsLength > 1
 
   const onRemoveItem = (removedItem: string): void => {
     if (!hasOnRemove) return
     const { updatedMetric, filteredOldMetrics, updateIndex } = getUpdatedMetric(createdMetrics, removedItem)
-    updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, updatedMetric)
+    updateParentFormik(CommonConfigurationsFormFieldNames.SELECTED_METRIC, updatedMetric)
     onRemoveMetric(removedItem, updatedMetric, [...filteredOldMetrics], defaultTo(updateIndex, 0))
   }
 
@@ -91,25 +91,25 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
       <Button
         icon="plus"
         variation={ButtonVariation.SECONDARY}
-        disabled={!isValidInput}
-        tooltip={!isValidInput ? tooptipMessage : undefined}
+        disabled={!isValid}
+        tooltip={!isValid ? tooptipMessage : undefined}
         tooltipProps={{ interactionKind: PopoverInteractionKind.HOVER_TARGET_ONLY }}
         margin={{ bottom: 'small', left: 'medium', top: 'medium' }}
         onClick={() => {
-          // TODO - This will be implemented once the entire form is implemented
-          // if (isValidInput) {
-          // }
-          updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, '')
+          updateParentFormik(CommonConfigurationsFormFieldNames.SELECTED_METRIC, '')
           openEditMetricModal()
         }}
       >
         {addFieldLabel}
       </Button>
       <CommonSelectedAppsSideNav
-        isValidInput={isValidInput}
+        isValidInput={isValid}
         onSelect={(newlySelectedMetric, index) => {
-          onSelectMetric(newlySelectedMetric, createdMetrics, index)
-          updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, newlySelectedMetric)
+          // Allow change of panel only if current panel is valid
+          if (isValid) {
+            onSelectMetric(newlySelectedMetric, createdMetrics, index)
+            updateParentFormik(CommonConfigurationsFormFieldNames.SELECTED_METRIC, newlySelectedMetric)
+          }
         }}
         selectedItem={selectedMetric}
         groupedSelectedApps={filteredGroupMetric}

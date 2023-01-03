@@ -13,12 +13,12 @@ import { TimeSeries, useGetSampleMetricData, useGetSampleRawRecord, QueryRecords
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CommonQueryViewer } from '@cv/components/CommonQueryViewer/CommonQueryViewer'
-import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import {
   getIsLogsTableVisible,
   getProviderType
 } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
+import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import CommonChart from '../../CommonChart/CommonChart'
 import type { CommonCustomMetricFormContainerProps } from './CommonCustomMetricFormContainer.types'
 import LogsTableContainer from '../../LogsTable/LogsTableContainer'
@@ -43,7 +43,6 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   const providerType = product?.value
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
   const isQueryRuntimeOrExpression = getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
-
   const isLogsTableVisible = getIsLogsTableVisible(healthSourceConfig)
 
   const {
@@ -127,7 +126,6 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
           healthSourceTimeSeriesData={healthSourceTimeSeriesData}
         />
       ) : null}
-      {/* Logs Table Can be added here */}
       {isLogsTableVisible && (
         <LogsTableContainer
           fieldMappings={healthSourceConfig?.customMetrics?.fieldMappings}

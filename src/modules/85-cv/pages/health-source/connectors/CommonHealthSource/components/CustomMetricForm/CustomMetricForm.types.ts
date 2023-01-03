@@ -39,7 +39,6 @@ export interface CustomMetricFormContainerProps {
   isTemplate?: boolean
   expressions?: string[]
   healthSourceConfig: HealthSourceConfig
-  setConfigurationsFormikFieldValue: (key: string, data: any) => void
 }
 
 export type LogFieldsMultiTypeState = Record<Partial<keyof CommonCustomMetricFormikInterface>, MultiTypeInputType>

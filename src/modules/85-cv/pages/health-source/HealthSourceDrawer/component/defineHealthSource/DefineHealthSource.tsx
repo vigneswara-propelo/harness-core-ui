@@ -73,7 +73,6 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
 
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
-
   const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
 
   const disabledByFF: string[] = useMemo(() => {

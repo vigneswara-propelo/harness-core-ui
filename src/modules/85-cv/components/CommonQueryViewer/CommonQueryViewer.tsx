@@ -11,7 +11,7 @@ import { Container, getMultiTypeFromValue, MultiTypeInputType, Text, ButtonVaria
 import { FontVariation } from '@harness/design-system'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { CommonHealthSourceFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import CustomMetricsSectionHeader from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CustomMetricsSectionHeader'
 import { useCommonHealthSource } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
 import CVMultiTypeQuery from '../CVMultiTypeQuery/CVMultiTypeQuery'
@@ -83,7 +83,7 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
       )}
       {isTemplate ? (
         <CVMultiTypeQuery
-          name={CommonHealthSourceFieldNames.QUERY}
+          name={CustomMetricFormFieldNames.QUERY}
           expressions={defaultTo(expressions, [])}
           fetchRecords={handleFetchRecords}
           disableFetchButton={isEmpty(query) || isConnectorRuntimeOrExpression || loading}

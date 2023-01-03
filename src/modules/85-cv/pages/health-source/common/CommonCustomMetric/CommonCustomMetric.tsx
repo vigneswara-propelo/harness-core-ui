@@ -9,9 +9,8 @@ import React, { useEffect, useCallback } from 'react'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
 import { CommonMultiItemsSideNav } from '@cv/components/CommonMultiItemsSideNav/CommonMultiItemsSideNav'
 import { updateSelectedMetricsMap } from './CommonCustomMetric.utils'
-import { CommonHealthSourceContextFields } from '../../connectors/CommonHealthSource/CommonHealthSource.constants'
 import type { CommonCustomMetricInterface } from './CommonCustomMetric.types'
-
+import { updateParentFormikWithLatestData } from '../../connectors/CommonHealthSource/components/CustomMetricForm/CustomMetricFormContainer.utils'
 import { useCommonHealthSource } from '../../connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
 
 export default function CommonCustomMetric(props: CommonCustomMetricInterface): JSX.Element {
@@ -22,7 +21,6 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
     tooptipMessage,
     addFieldLabel,
     createdMetrics,
-    isValidInput,
     mappedMetrics,
     selectedMetric,
     groupedCreatedMetrics,
@@ -63,8 +61,8 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
       initCustomForm,
       isPrimaryMetric
     })
-    updateParentFormik(CommonHealthSourceContextFields.CustomMetricsMap, data.mappedMetrics)
-    updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, data.selectedMetric)
+
+    updateParentFormikWithLatestData(updateParentFormik, data?.mappedMetrics, data?.selectedMetric)
   }, [formikValues?.groupName, formikValues?.metricName, formikValues?.continuousVerification])
 
   const removeMetric = useCallback(
@@ -75,14 +73,13 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
         commonUpdatedMap.delete(removedMetric)
       }
 
-      updateParentFormik(CommonHealthSourceContextFields.CustomMetricsMap, commonUpdatedMap)
-      updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, updatedMetric)
+      updateParentFormikWithLatestData(updateParentFormik, commonUpdatedMap, updatedMetric)
 
       if (isMetricThresholdEnabled && filterRemovedMetricNameThresholds && removedMetric) {
         filterRemovedMetricNameThresholds(removedMetric)
       }
     },
-    [formikValues, mappedMetrics]
+    [formikValues, isMetricThresholdEnabled, mappedMetrics, selectedMetric]
   )
 
   const selectMetric = useCallback(
@@ -95,8 +92,8 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
         initCustomForm,
         isPrimaryMetric
       })
-      updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, data.selectedMetric)
-      updateParentFormik(CommonHealthSourceContextFields.CustomMetricsMap, data.mappedMetrics)
+
+      updateParentFormikWithLatestData(updateParentFormik, data?.mappedMetrics, data?.selectedMetric)
     },
     [formikValues]
   )
@@ -111,7 +108,6 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
           createdMetrics={createdMetrics}
           defaultSelectedMetric={selectedMetric}
           renamedMetric={formikValues?.metricName}
-          isValidInput={isValidInput}
           groupedCreatedMetrics={groupedCreatedMetrics}
           onRemoveMetric={(removedMetric, updatedMetric) => {
             removeMetric(removedMetric, updatedMetric)

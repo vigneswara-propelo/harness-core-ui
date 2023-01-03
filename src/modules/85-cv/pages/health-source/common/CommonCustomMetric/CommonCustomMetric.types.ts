@@ -41,7 +41,6 @@ export interface CommonCustomMetricInterface {
   tooptipMessage: string
   addFieldLabel: string
   createdMetrics: string[]
-  isValidInput: boolean
   formikValues: CommonCustomMetricFormikInterface
   mappedMetrics: Map<string, CommonCustomMetricFormikInterface>
   initCustomForm: InitCustomFormData

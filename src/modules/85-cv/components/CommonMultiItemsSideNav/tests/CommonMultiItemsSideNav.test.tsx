@@ -41,7 +41,6 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
             createdMetrics={['appdMetric 101', 'appdMetric 102']}
             onRemoveMetric={jest.fn()}
             onSelectMetric={jest.fn()}
-            isValidInput={true}
             renamedMetric="appdMetric 101"
             openEditMetricModal={jest.fn()}
             defaultSelectedMetric={'appdMetric 101'}
@@ -69,7 +68,6 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
             createdMetrics={['appdMetric 101', 'appdMetric 102']}
             onRemoveMetric={onRemoveMock}
             onSelectMetric={onSelectMock}
-            isValidInput={true}
             renamedMetric="appdMetric 101"
             defaultSelectedMetric={'appdMetric 101'}
             openEditMetricModal={jest.fn()}
@@ -82,9 +80,9 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
     await waitFor(() => expect(getByText('appdMetric 101')).not.toBeNull())
     expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('appdMetric 101')
 
-    // select second app
+    // if Form is not valid onSelect should not have been called.
     fireEvent.click(getByText('appdMetric 102'))
-    expect(onSelectMock).toHaveBeenCalledWith('appdMetric 102', ['appdMetric 101', 'appdMetric 102'], undefined)
+    expect(onSelectMock).not.toHaveBeenCalled()
   })
 
   test('Ensure onSelect work in CommonMultiItemsSideNav with local formik', async () => {
@@ -111,7 +109,6 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
                   createdMetrics={['appdMetric 101', 'appdMetric 102']}
                   onRemoveMetric={onRemoveMock}
                   onSelectMetric={name => formikData.setFieldValue('metricName', name)}
-                  isValidInput={true}
                   renamedMetric="appdMetric 101"
                   defaultSelectedMetric={formikData.values.metricName}
                   openEditMetricModal={jest.fn()}
@@ -127,9 +124,9 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
     await waitFor(() => expect(getByText('appdMetric 101')).not.toBeNull())
     expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('appdMetric 101')
 
-    // select second app
+    // should not swtch the metric if validations are not met
     fireEvent.click(getByText('appdMetric 102'))
-    await waitFor(() => expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('appdMetric 102'))
+    await waitFor(() => expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('appdMetric 101'))
   })
 
   test('Ensure that only when single app is there delete button does not exist in CommonMultiItemsSideNav', async () => {
@@ -143,7 +140,6 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
             createdMetrics={['appdMetric 101']}
             onRemoveMetric={jest.fn()}
             onSelectMetric={jest.fn()}
-            isValidInput={true}
             renamedMetric="appdMetric 101"
             openEditMetricModal={jest.fn()}
             defaultSelectedMetric={'appdMetric 101'}
@@ -171,7 +167,6 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
             createdMetrics={['appdMetric 101']}
             onRemoveMetric={jest.fn()}
             onSelectMetric={jest.fn()}
-            isValidInput={true}
             renamedMetric="appdMetric 101"
             openEditMetricModal={jest.fn()}
             defaultSelectedMetric={'appdMetric 101'}
@@ -197,7 +192,6 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
             createdMetrics={['solo-dolo']}
             onRemoveMetric={jest.fn()}
             onSelectMetric={jest.fn()}
-            isValidInput={true}
             renamedMetric="solo-dolo"
             openEditMetricModal={jest.fn()}
             defaultSelectedMetric={'solo-dolo'}
@@ -227,7 +221,6 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
             createdMetrics={['appdMetric 101']}
             onRemoveMetric={jest.fn()}
             onSelectMetric={onSelectMock}
-            isValidInput={true}
             renamedMetric="appdMetric 101"
             openEditMetricModal={jest.fn()}
             defaultSelectedMetric={'appdMetric 101'}

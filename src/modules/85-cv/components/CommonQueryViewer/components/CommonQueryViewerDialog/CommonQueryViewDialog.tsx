@@ -11,7 +11,7 @@ import { isEmpty } from 'lodash-es'
 import React from 'react'
 import { useStrings } from 'framework/strings'
 import { CommonRecords } from '@cv/components/CommonRecords/CommonRecords'
-import { CommonHealthSourceFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { CommonQueryViewDialogProps, DrawerProps } from '../../types'
 import css from './CommonQueryViewDialog.module.scss'
 
@@ -21,7 +21,7 @@ export function CommonQueryViewDialog(props: CommonQueryViewDialogProps): JSX.El
   return (
     <Drawer {...DrawerProps} isOpen={isOpen} onClose={onHide} className={css.queryViewDialog}>
       <Container className={css.queryContainer}>
-        <FormInput.TextArea name={CommonHealthSourceFieldNames.QUERY} className={css.formQueryBox} />
+        <FormInput.TextArea name={CustomMetricFormFieldNames.QUERY} className={css.formQueryBox} />
         <Button
           variation={ButtonVariation.SECONDARY}
           text={getString('cv.monitoringSources.commonHealthSource.runQuery')}

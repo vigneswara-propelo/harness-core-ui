@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { MutableRefObject, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useModalHook } from '@harness/use-modal'
 import {
   Button,
@@ -17,7 +17,7 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { Formik, useFormikContext } from 'formik'
-import { cloneDeep, defaultTo } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import type { CustomHealthMetricDefinition } from 'services/cv'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
@@ -27,16 +27,19 @@ import CommonCustomMetric from '@cv/pages/health-source/common/CommonCustomMetri
 import type { CommonCustomMetricFormikInterface } from '../../CommonHealthSource.types'
 import type { AddMetricForm, CustomMetricFormContainerProps } from './CustomMetricForm.types'
 import {
+  cleanUpMappedMetrics,
   getAddMetricInitialValues,
   getHealthSourceConfigDetails,
+  getUpdatedMappedMetricsData,
   initHealthSourceCustomFormValue,
+  updateParentFormikWithLatestData,
   validateAddMetricForm
 } from './CustomMetricFormContainer.utils'
 import { resetShowCustomMetric } from '../../CommonHealthSource.utils'
 import AddMetric from './components/AddMetric/AddMetric'
 import CustomMetricForm from './CustomMetricForm'
+import { CommonConfigurationsFormFieldNames, CustomMetricFormFieldNames } from '../../CommonHealthSource.constants'
 import { useCommonHealthSource } from './components/CommonHealthSourceContext/useCommonHealthSource'
-import { CommonHealthSourceContextFields } from '../../CommonHealthSource.constants'
 import css from './CustomMetricForm.module.scss'
 
 export default function CustomMetricFormContainer(props: CustomMetricFormContainerProps): JSX.Element {
@@ -53,21 +56,22 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     connectorIdentifier: connectorRef
   } = props
 
-  const { values: formValues, setValues, isValid } = useFormikContext<CommonCustomMetricFormikInterface>()
+  const {
+    values: formValues,
+    setValues,
+    validateForm,
+    setFieldTouched
+  } = useFormikContext<CommonCustomMetricFormikInterface>()
   const wrapperRef = useRef(null)
   useUpdateConfigFormikOnOutsideClick(wrapperRef, mappedMetrics, selectedMetric, formValues)
-
   const { enabledDefaultGroupName, fieldLabel, shouldBeAbleToDeleteLastMetric, enabledRecordsAndQuery } =
     getHealthSourceConfigDetails(healthSourceConfig)
-
   const {
     sourceData: { existingMetricDetails }
   } = useContext(SetupSourceTabsContext)
   const { updateParentFormik } = useCommonHealthSource()
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.FIXED
-
   const [groupNames, setGroupName] = useState<SelectOption[]>(initializeGroupNames(mappedMetrics, getString))
-
   const [showCustomMetric, setShowCustomMetric] = useState(
     !!Array.from(defaultTo(mappedMetrics, []))?.length && healthSourceConfig?.customMetrics?.enabled
   )
@@ -88,25 +92,23 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   )
 
   function useUpdateConfigFormikOnOutsideClick(
-    ref: React.MutableRefObject<any>,
+    ref: MutableRefObject<any>,
     mappedMetricsData: Map<string, CommonCustomMetricFormikInterface>,
     selectedMetricName: string,
     formValuesData: CommonCustomMetricFormikInterface
   ): void {
     useEffect(() => {
-      /**
-       * update Parent formik when clicked outside.
-       */
-      function handleClickOutside(event: { target: unknown }): void {
+      //  update Parent formik when clicked outside.
+      async function handleClickOutside(event: { target: unknown }): Promise<void> {
         if (ref.current && !ref.current.contains(event.target)) {
-          const clonedMappedMetricsData = cloneDeep(mappedMetricsData)
-          const hasEmptySet = clonedMappedMetricsData.has('')
-          clonedMappedMetricsData.set(selectedMetricName, formValuesData)
-          if (hasEmptySet) {
-            clonedMappedMetricsData.delete('')
-          }
-          updateParentFormik(CommonHealthSourceContextFields.CustomMetricsMap, clonedMappedMetricsData)
-          updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, selectedMetricName)
+          const updatedMappedMetricsData = getUpdatedMappedMetricsData(
+            mappedMetricsData,
+            selectedMetricName,
+            formValuesData
+          )
+          setFieldTouched(CustomMetricFormFieldNames.QUERY)
+          await validateForm()
+          updateParentFormikWithLatestData(updateParentFormik, updatedMappedMetricsData, selectedMetricName)
         }
       }
       // Bind the event listener
@@ -133,7 +135,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
         enforceFocus={false}
         onClose={() => {
           hideModal()
-          updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, createdMetrics[0])
+          updateParentFormik(CommonConfigurationsFormFieldNames.SELECTED_METRIC, createdMetrics[0])
         }}
       >
         <Formik<AddMetricForm>
@@ -146,15 +148,12 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
           }}
           onReset={() => {
             hideModal()
-            mappedMetrics.delete('')
-            updateParentFormik(CommonHealthSourceContextFields.CustomMetricsMap, mappedMetrics)
-            updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, createdMetrics[0])
+            cleanUpMappedMetrics(mappedMetrics)
+            updateParentFormikWithLatestData(updateParentFormik, mappedMetrics, createdMetrics[0])
           }}
           validate={data => {
             return validateAddMetricForm(data, getString, createdMetrics)
           }}
-          validateOnChange
-          validateOnBlur
         >
           {() => {
             return (
@@ -182,7 +181,6 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
           cardSectionClassName={css.customMetricContainer}
         >
           <CommonCustomMetric
-            isValidInput={isValid}
             selectedMetric={selectedMetric}
             formikValues={formValues}
             mappedMetrics={mappedMetrics}

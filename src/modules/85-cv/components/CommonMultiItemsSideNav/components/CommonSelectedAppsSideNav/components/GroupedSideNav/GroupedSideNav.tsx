@@ -18,6 +18,7 @@ import type {
 } from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.types'
 import MetricMenu from './components/MetricMenu'
 import type { GroupedMetric } from './GroupedSideNav.types'
+import { showWarningIcon } from './GroupedSideNav.utils'
 import css from '../../CommonSelectedAppsSideNav.module.scss'
 
 interface GroupedSideNavInterface {
@@ -39,7 +40,7 @@ export default function GroupedSideNav({
   isValidInput
 }: GroupedSideNavInterface): JSX.Element {
   const { getString } = useStrings()
-  const { values: formValues } = useFormikContext()
+  const { values: formValues, touched } = useFormikContext()
 
   const getShowPromptOnDelete = (metricName?: string): boolean => {
     return Boolean(
@@ -92,7 +93,9 @@ export default function GroupedSideNav({
                       {selectedApp.metricName}
                     </Text>
                     <Container>
-                      {!isValidInput ? <Icon name="warning-icon" size={18} color={Color.ORANGE_700} /> : null}
+                      {showWarningIcon({ touched, isValidInput, selectedApp, selectedItem }) ? (
+                        <Icon name="warning-icon" size={18} color={Color.ORANGE_700} />
+                      ) : null}
                       <MetricMenu
                         onEdit={openEditMetricModal}
                         onDelete={onRemoveItem}

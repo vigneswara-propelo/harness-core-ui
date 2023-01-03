@@ -1,12 +1,6 @@
 import type { QueryRecordsRequest } from 'services/cv'
 import type { HealthSourceProductsType } from './CommonHealthSource.types'
 
-export const BasePathKeyPrefix = 'basePathDropdown_'
-export const BasePathInitValue = { basePathDropdown_0: { value: '', path: '' } }
-
-export const MetricPathKeyPrefix = 'metricPathDropdown_'
-export const MetricPathInitValue = { metricPathDropdown_0: { value: '', path: '', isMetric: false } }
-
 export const DEFAULT_HEALTH_SOURCE_QUERY = 'Health Source Query'
 export const METRICS = 'METRICS'
 export const HealthSourceProducts: HealthSourceProductsType = {
@@ -39,7 +33,7 @@ export const ThresholdTypes: Record<string, 'IgnoreThreshold' | 'FailImmediately
   FailImmediately: 'FailImmediately'
 }
 
-export const CommonHealthSourceFieldNames = {
+export const CustomMetricFormFieldNames = {
   METRIC_NAME: 'metricName',
   METRIC_IDENTIFIER: 'identifier',
   GROUP_NAME: 'groupName',
@@ -60,6 +54,13 @@ export const CommonHealthSourceFieldNames = {
   LOWER_BASELINE_DEVIATION: 'lowerBaselineDeviation'
 }
 
+export const CommonConfigurationsFormFieldNames = {
+  CUSTOM_METRICS_MAP: 'customMetricsMap',
+  SELECTED_METRIC: 'selectedMetric',
+  IGNORE_THRESHOLDS: 'ignoreThresholds',
+  FAILFAST_THRESHOLDS: 'failFastThresholds'
+}
+
 export enum FIELD_ENUM {
   JSON_SELECTOR = 'JsonSelector',
   TEXT_INPUT = 'TextInput',
@@ -70,21 +71,14 @@ export enum CHART_VISIBILITY_ENUM {
   AUTO = 'auto',
   DEFAULT = 'default'
 }
-// Logs table constants
 
+// Logs table constants
 export enum FieldMappingInputTypes {
   JsonSelector = 'JsonSelector'
 }
-
 export const logsTableDefaultConfigs = {
   size: '40%'
 }
-
 export const ProviderTypes: Record<string, QueryRecordsRequest['providerType']> = {
   SumoLogic_LOGS: 'SUMOLOGIC_LOG'
-}
-
-export enum CommonHealthSourceContextFields {
-  SelectedMetric = 'selectedMetric',
-  CustomMetricsMap = 'customMetricsMap'
 }

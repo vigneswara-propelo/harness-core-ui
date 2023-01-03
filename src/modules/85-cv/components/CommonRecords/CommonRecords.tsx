@@ -53,7 +53,13 @@ export function CommonRecords(props: CommonRecordsProps): JSX.Element {
       </Container>
     )
   } else {
-    content = <StackTraceList stackTraceList={records} className={css.recordContainer} />
+    content = (
+      <StackTraceList
+        stackTraceList={records}
+        className={css.recordContainer}
+        stackTracePanelClassName={css.stackTracePanelClassName}
+      />
+    )
   }
 
   return (
