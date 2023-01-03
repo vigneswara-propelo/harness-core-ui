@@ -556,7 +556,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         }}
         noData={{
           when: () => !isSLOFilterApplied(getString, filterState) && !riskCountResponse?.data?.totalCount,
-          messageTitle: getString('cv.slos.noData'),
+          messageTitle: getString('common.sloNoData'),
           message: getString('cv.slos.noSLOsStateMessage'),
           button: getAddSLOButton(),
           image: slosEmptyState

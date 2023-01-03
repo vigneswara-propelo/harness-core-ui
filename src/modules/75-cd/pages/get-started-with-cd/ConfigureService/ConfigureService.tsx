@@ -538,7 +538,7 @@ const ConfigureServiceRef = (
                 <Layout.Vertical width="70%">
                   <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_600}>
-                      {getString('cd.getStartedWithCD.configureService')}
+                      {getString('common.configureService')}
                     </Text>
                     <Layout.Horizontal flex={{ alignItems: 'center' }}>
                       {editService ? (

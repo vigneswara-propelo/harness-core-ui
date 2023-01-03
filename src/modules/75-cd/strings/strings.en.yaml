@@ -549,8 +549,6 @@ getStartedWithCD:
   delegateInstalled: Delegate installed successfully
   selectDeploymentType: Select deployment type
   deployToGitops: Do you want to deploy using GitOps?
-  configureEnvironment: Connect to Environment
-  configureService: Configure Service
   helm: Helm
   manifestTypeSelection: Manifest type
   manifestStoreLabel: Manifest location
@@ -751,6 +749,7 @@ inlineEntityFilters:
     selectAtleastOneEntity: Atlteast 1 entity is required
     tagsAreRequired: Tags are required
     chooseAllOrAny: Please choose one of All or Any
+  valueCannotBe: '{{value}} cannot be empty, string etc., should only be a positive number'
 trendMessage:
   upTrend: 'Percent increase in rate compared to the previous time interval'
   downTrend: 'Percent decrease in rate compared to the previous time interval'

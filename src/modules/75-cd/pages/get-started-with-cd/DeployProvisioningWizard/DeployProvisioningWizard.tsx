@@ -365,7 +365,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
             // catch any errors and do nothing
           }
         },
-        stepFooterLabel: 'cd.getStartedWithCD.configureEnvironment'
+        stepFooterLabel: 'common.connectEnvironment'
       }
     ],
     [
@@ -391,7 +391,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           isDelegateInstalled ? moveToConfigureService() : showDelegateRequiredWarning()
         },
 
-        stepFooterLabel: 'cd.getStartedWithCD.configureService'
+        stepFooterLabel: 'common.configureService'
       }
     ],
     [
@@ -500,7 +500,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           1,
           {
             StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.DelegateSelector), StepStatus.ToDo),
-            StepName: getString('cd.getStartedWithCD.configureEnvironment'),
+            StepName: getString('common.connectEnvironment'),
             onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.DelegateSelector)
           }
         ],
@@ -508,7 +508,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           2,
           {
             StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.ConfigureService), StepStatus.ToDo),
-            StepName: getString('cd.getStartedWithCD.configureService'),
+            StepName: getString('common.connectEnvironment'),
             onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.ConfigureService)
           }
         ],

@@ -95,7 +95,7 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
           >
             <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
               <Text font={{ variation: FontVariation.H5 }} padding={{ right: 'medium' }}>
-                {getString('cd.getStartedWithCD.configureEnvironment')}
+                {getString('common.connectEnvironment')}
               </Text>
               <Icon
                 name="Edit"

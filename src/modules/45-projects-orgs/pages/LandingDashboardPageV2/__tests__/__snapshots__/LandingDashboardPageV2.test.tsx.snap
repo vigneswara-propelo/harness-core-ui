@@ -36,6 +36,14 @@ exports[`landing dashboard page tests time range update 1`] = `
         >
           dummyRangeOne
         </div>
+        <div
+          class="StyledProps--font StyledProps--main border"
+        />
+        <div
+          data-testid="moduleOverview"
+        >
+          moduleOverview
+        </div>
       </div>
       <div
         class="Layout--vertical StyledProps--main right"

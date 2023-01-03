@@ -272,7 +272,7 @@ export default function GetStartedWithCI(): React.ReactElement {
                   <Layout.Horizontal padding={{ top: 'xxlarge', bottom: 'huge' }}>
                     {renderBuildPipelineStep({
                       iconProps: { name: 'scm', size: 18, className: cx(css.icon, css.paddingXSmall) },
-                      label: 'ci.getStartedWithCI.connectRepo'
+                      label: 'common.connectGitRepo'
                     })}
                     {renderBuildPipelineStep({
                       iconProps: {
