@@ -627,6 +627,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           {
             readOnly: defaultTo(isReadOnlyMode, !isEditModeSupported),
             wordBasedSuggestions: false,
+            scrollBeyondLastLine: false,
             fontFamily: "'Roboto Mono', monospace",
             fontSize: 13,
             minimap: {

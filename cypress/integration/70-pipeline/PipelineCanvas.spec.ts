@@ -311,7 +311,7 @@ describe('Execution Stages', () => {
     // Toggle to YAML view
     cy.get('[data-name="toggle-option-two"]').click({ force: true })
     cy.wait(1000)
-    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '25%', { ensureScrollable: false })
+    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '40%', { ensureScrollable: false })
     cy.contains('span', stepName).should('be.visible')
     cy.contains('span', getIdentifierFromName(stepName)).should('be.visible')
     resourceName.forEach(resource => {
