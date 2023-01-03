@@ -20,8 +20,14 @@ import {
   getRiskColorLogo,
   SLOErrorBudget,
   getDetailsLabel,
-  getRiskLabelStringId
-} from './CommonUtils'
+  getRiskLabelStringId,
+  getMonitoredServiceIdentifiers
+} from '../CommonUtils'
+import {
+  monitoredServiceDetails,
+  projectLevelMonitoredServiceIdentifier,
+  accountLevelMonitoredServiceIdentifier
+} from './CommonUtils.mock'
 
 function getString(key: StringKeys): StringKeys {
   return key
@@ -157,5 +163,22 @@ describe('Test for getRiskLabelStringId', () => {
       'cv.monitoredServices.serviceHealth.serviceDependencies.states.exhausted'
     )
     expect(getRiskLabelStringId(undefined)).toEqual('na')
+  })
+})
+
+describe('Test for getMonitoredServiceIdentifiers', () => {
+  test('test with empty undefined', () => {
+    expect(getMonitoredServiceIdentifiers(false, undefined)).toEqual([])
+    expect(getMonitoredServiceIdentifiers(true, undefined)).toEqual([])
+    expect(getMonitoredServiceIdentifiers(true, [])).toEqual([])
+    expect(getMonitoredServiceIdentifiers(false, [])).toEqual([])
+  })
+  test('test with values', () => {
+    expect(getMonitoredServiceIdentifiers(false, monitoredServiceDetails)).toEqual(
+      projectLevelMonitoredServiceIdentifier
+    )
+    expect(getMonitoredServiceIdentifiers(true, monitoredServiceDetails)).toEqual(
+      accountLevelMonitoredServiceIdentifier
+    )
   })
 })

@@ -21,6 +21,15 @@ jest.mock('services/cv', () => ({
       error: null,
       loading: false
     }
+  }),
+  useChangeEventListForAccount: jest.fn().mockImplementation(() => {
+    return {
+      data: {},
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    }
   })
 }))
 describe('Change table', () => {
@@ -107,7 +116,8 @@ describe('Change table', () => {
           serviceIdentifiers: ['srv'],
           startTime: 0,
           changeSourceTypes: [],
-          changeCategories: []
+          changeCategories: [],
+          monitoredServiceIdentifiers: ['']
         },
         queryParamStringifyOptions: { arrayFormat: 'repeat' }
       })
@@ -160,7 +170,8 @@ describe('Change table', () => {
           startTime: 1,
           // Need to remove once these made as optional from BE
           changeCategories: [],
-          changeSourceTypes: []
+          changeSourceTypes: [],
+          monitoredServiceIdentifiers: ['']
         }
       })
     )

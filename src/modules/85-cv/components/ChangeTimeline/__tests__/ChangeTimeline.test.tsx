@@ -31,6 +31,23 @@ jest.mock('services/cv', () => ({
       cancel: jest.fn()
     }
   }),
+  useChangeEventTimelineForAccount: jest.fn().mockImplementation(() => {
+    return {
+      data: {
+        resource: {
+          categoryTimeline: {
+            Deployment: [],
+            Infrastructure: [],
+            Alert: []
+          }
+        }
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    }
+  }),
   useGetMonitoredServiceChangeTimeline: jest.fn().mockReturnValue({
     data: {
       resource: {
@@ -179,6 +196,7 @@ describe('Render ChangeTimeline', () => {
           changeSourceTypes: [],
           serviceIdentifiers: [serviceIdentifier],
           envIdentifiers: [environmentIdentifier],
+          monitoredServiceIdentifiers: [''],
           ...sliderTimeRange
         },
         queryParamStringifyOptions: {
@@ -212,6 +230,7 @@ describe('Render ChangeTimeline', () => {
           changeSourceTypes: [],
           serviceIdentifiers: [serviceIdentifier],
           envIdentifiers: [environmentIdentifier],
+          monitoredServiceIdentifiers: [''],
           ...sliderTimeRange
         },
         queryParamStringifyOptions: {

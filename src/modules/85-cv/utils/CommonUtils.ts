@@ -12,7 +12,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import type { ResponseListEnvironmentResponse, EnvironmentResponse } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
 import type { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
-import type { CVNGLogTag, SloHealthIndicatorDTO } from 'services/cv'
+import type { CVNGLogTag, MonitoredServiceDetail, SloHealthIndicatorDTO } from 'services/cv'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 
 export enum EVENT_TYPE {
@@ -284,3 +284,13 @@ export const getDetailsLabel = (key: string, getString: UseStringsReturn['getStr
 export const getIsValidPrimitive = <T>(value: T): value is NonNullable<T> => {
   return value !== undefined && value !== null
 }
+
+export const getMonitoredServiceIdentifiers = (
+  isAccountLevel: boolean,
+  monitoredServiceDetails?: MonitoredServiceDetail[]
+): string[] =>
+  monitoredServiceDetails?.map(serviceDetails => {
+    return isAccountLevel
+      ? `PROJECT.${serviceDetails.projectParams?.accountIdentifier}.${serviceDetails.projectParams?.orgIdentifier}.${serviceDetails.projectParams?.projectIdentifier}.${serviceDetails.monitoredServiceIdentifier}`
+      : serviceDetails.monitoredServiceIdentifier ?? ''
+  }) || []

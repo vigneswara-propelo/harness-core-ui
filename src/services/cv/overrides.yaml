@@ -122,6 +122,8 @@ allowpaths:
   - /service-dependency-graph
   - /change-event/monitored-service-summary
   - /activity/{activityId}/healthSources
+  - /account/{accountIdentifier}/change-event
+  - /account/{accountIdentifier}/change-event/timeline
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/change-event
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/change-event/timeline
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/change-event/{activityId}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -6081,6 +6081,195 @@ export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
 export type SaveMonitoredServiceFromYamlBodyRequestBody = string
+
+export interface ChangeEventListForAccountQueryParams {
+  serviceIdentifiers?: string[]
+  envIdentifiers?: string[]
+  monitoredServiceIdentifiers?: string[]
+  scopedMonitoredServiceIdentifiers?: string[]
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  searchText?: string
+  startTime: number
+  endTime: number
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+}
+
+export interface ChangeEventListForAccountPathParams {
+  accountIdentifier: string
+}
+
+export type ChangeEventListForAccountProps = Omit<
+  GetProps<
+    RestResponsePageChangeEventDTO,
+    unknown,
+    ChangeEventListForAccountQueryParams,
+    ChangeEventListForAccountPathParams
+  >,
+  'path'
+> &
+  ChangeEventListForAccountPathParams
+
+/**
+ * get ChangeEvent List For Account
+ */
+export const ChangeEventListForAccount = ({ accountIdentifier, ...props }: ChangeEventListForAccountProps) => (
+  <Get<
+    RestResponsePageChangeEventDTO,
+    unknown,
+    ChangeEventListForAccountQueryParams,
+    ChangeEventListForAccountPathParams
+  >
+    path={`/account/${accountIdentifier}/change-event`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseChangeEventListForAccountProps = Omit<
+  UseGetProps<
+    RestResponsePageChangeEventDTO,
+    unknown,
+    ChangeEventListForAccountQueryParams,
+    ChangeEventListForAccountPathParams
+  >,
+  'path'
+> &
+  ChangeEventListForAccountPathParams
+
+/**
+ * get ChangeEvent List For Account
+ */
+export const useChangeEventListForAccount = ({ accountIdentifier, ...props }: UseChangeEventListForAccountProps) =>
+  useGet<
+    RestResponsePageChangeEventDTO,
+    unknown,
+    ChangeEventListForAccountQueryParams,
+    ChangeEventListForAccountPathParams
+  >((paramsInPath: ChangeEventListForAccountPathParams) => `/account/${paramsInPath.accountIdentifier}/change-event`, {
+    base: getConfig('cv/api'),
+    pathParams: { accountIdentifier },
+    ...props
+  })
+
+/**
+ * get ChangeEvent List For Account
+ */
+export const changeEventListForAccountPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponsePageChangeEventDTO,
+    unknown,
+    ChangeEventListForAccountQueryParams,
+    ChangeEventListForAccountPathParams
+  > & { accountIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponsePageChangeEventDTO,
+    unknown,
+    ChangeEventListForAccountQueryParams,
+    ChangeEventListForAccountPathParams
+  >(getConfig('cv/api'), `/account/${accountIdentifier}/change-event`, props, signal)
+
+export interface ChangeEventTimelineForAccountQueryParams {
+  serviceIdentifiers?: string[]
+  envIdentifiers?: string[]
+  monitoredServiceIdentifiers?: string[]
+  scopedMonitoredServiceIdentifiers?: string[]
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  searchText?: string
+  startTime: number
+  endTime: number
+  pointCount?: number
+}
+
+export interface ChangeEventTimelineForAccountPathParams {
+  accountIdentifier: string
+}
+
+export type ChangeEventTimelineForAccountProps = Omit<
+  GetProps<
+    RestResponseChangeTimeline,
+    unknown,
+    ChangeEventTimelineForAccountQueryParams,
+    ChangeEventTimelineForAccountPathParams
+  >,
+  'path'
+> &
+  ChangeEventTimelineForAccountPathParams
+
+/**
+ * get ChangeEvent timeline For Account
+ */
+export const ChangeEventTimelineForAccount = ({ accountIdentifier, ...props }: ChangeEventTimelineForAccountProps) => (
+  <Get<
+    RestResponseChangeTimeline,
+    unknown,
+    ChangeEventTimelineForAccountQueryParams,
+    ChangeEventTimelineForAccountPathParams
+  >
+    path={`/account/${accountIdentifier}/change-event/timeline`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseChangeEventTimelineForAccountProps = Omit<
+  UseGetProps<
+    RestResponseChangeTimeline,
+    unknown,
+    ChangeEventTimelineForAccountQueryParams,
+    ChangeEventTimelineForAccountPathParams
+  >,
+  'path'
+> &
+  ChangeEventTimelineForAccountPathParams
+
+/**
+ * get ChangeEvent timeline For Account
+ */
+export const useChangeEventTimelineForAccount = ({
+  accountIdentifier,
+  ...props
+}: UseChangeEventTimelineForAccountProps) =>
+  useGet<
+    RestResponseChangeTimeline,
+    unknown,
+    ChangeEventTimelineForAccountQueryParams,
+    ChangeEventTimelineForAccountPathParams
+  >(
+    (paramsInPath: ChangeEventTimelineForAccountPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/change-event/timeline`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * get ChangeEvent timeline For Account
+ */
+export const changeEventTimelineForAccountPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseChangeTimeline,
+    unknown,
+    ChangeEventTimelineForAccountQueryParams,
+    ChangeEventTimelineForAccountPathParams
+  > & { accountIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponseChangeTimeline,
+    unknown,
+    ChangeEventTimelineForAccountQueryParams,
+    ChangeEventTimelineForAccountPathParams
+  >(getConfig('cv/api'), `/account/${accountIdentifier}/change-event/timeline`, props, signal)
 
 export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]
