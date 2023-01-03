@@ -87,7 +87,8 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
           serviceLevelObjectivesDetails={formikProps?.values?.serviceLevelObjectivesDetails || []}
         />
       )
-    }
+    },
+    drawerOptions: { size: '60%', canOutsideClickClose: false }
   })
 
   useEffect(() => {
