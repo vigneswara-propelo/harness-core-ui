@@ -98,7 +98,7 @@ function DeployEnvironment({
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
   const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
   const [firstRender, setFirstRender] = React.useState<boolean>(true)
-
+  const isEnvInputLoaded = environmentRefType === MultiTypeInputType.FIXED
   const {
     data: environmentsResponse,
     loading: environmentsLoading,
@@ -207,7 +207,10 @@ function DeployEnvironment({
               get(formik?.values, 'infrastructureRef') === '') &&
               set(values, `environment.infrastructureDefinitions`, '')
           }
-          formik?.setValues({ ...values, isEnvInputLoaded: true })
+          formik?.setValues({
+            ...values,
+            isEnvInputLoaded: isEnvInputLoaded
+          })
         } else {
           formik?.setValues({
             ...formik.values,
@@ -258,7 +261,7 @@ function DeployEnvironment({
                 gitOpsClusters: environmentValues.environmentRef === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : []
               })
             },
-            isEnvInputLoaded: true
+            isEnvInputLoaded: isEnvInputLoaded
           } as any)
           updateStageFormTemplate(updatedTemplate, path)
         }
