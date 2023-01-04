@@ -3917,6 +3917,8 @@ export interface StringsMap {
   'pipeline.manifestType.http.chartVersion': string
   'pipeline.manifestType.http.chartVersionPlaceHolder': string
   'pipeline.manifestType.http.chartVersionRequired': string
+  'pipeline.manifestType.http.loadingChartVersion': string
+  'pipeline.manifestType.http.noResultsChartVersion': string
   'pipeline.manifestType.httpHelmRepoConnectorLabel': string
   'pipeline.manifestType.kustomizeBasePath': string
   'pipeline.manifestType.kustomizeFolderPath': string

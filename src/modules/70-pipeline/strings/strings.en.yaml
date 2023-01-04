@@ -384,6 +384,8 @@ manifestType:
     chartNamePlaceHolder: 'Enter Chart Name'
     chartVersionPlaceHolder: 'Enter Chart Version'
     chartVersionRequired: 'Chart Version is required'
+    loadingChartVersion: 'Fetching Chart Versions...'
+    noResultsChartVersion: 'No manifest chart versions found'
   oci:
     basePathRequired: 'Base Path is required'
     chartVersionValidation: '"latest" tag is not supported as chart version'
