@@ -8503,6 +8503,354 @@ export const getPipelineOpaContextFromEvaluationPromise = (
     GetPipelineOpaContextFromEvaluationPathParams
   >(getConfig('pipeline/api'), `/opa/getPipelineOpaContextFromEvaluation/${planExecutionId}`, props, signal)
 
+export interface DebugPipelineExecuteWithInputSetYamlV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  moduleType?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  useFQNIfError?: boolean
+}
+
+export interface DebugPipelineExecuteWithInputSetYamlV2PathParams {
+  originalExecutionId: string
+  identifier: string
+}
+
+export type DebugPipelineExecuteWithInputSetYamlV2Props = Omit<
+  MutateProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlV2QueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  DebugPipelineExecuteWithInputSetYamlV2PathParams
+
+/**
+ * Re Execute a pipeline with inputSet pipeline yaml Version 2
+ */
+export const DebugPipelineExecuteWithInputSetYamlV2 = ({
+  originalExecutionId,
+  identifier,
+  ...props
+}: DebugPipelineExecuteWithInputSetYamlV2Props) => (
+  <Mutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlV2QueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlV2PathParams
+  >
+    verb="POST"
+    path={`/pipeline/execute/debug/v2/${originalExecutionId}/${identifier}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseDebugPipelineExecuteWithInputSetYamlV2Props = Omit<
+  UseMutateProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlV2QueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  DebugPipelineExecuteWithInputSetYamlV2PathParams
+
+/**
+ * Re Execute a pipeline with inputSet pipeline yaml Version 2
+ */
+export const useDebugPipelineExecuteWithInputSetYamlV2 = ({
+  originalExecutionId,
+  identifier,
+  ...props
+}: UseDebugPipelineExecuteWithInputSetYamlV2Props) =>
+  useMutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlV2QueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlV2PathParams
+  >(
+    'POST',
+    (paramsInPath: DebugPipelineExecuteWithInputSetYamlV2PathParams) =>
+      `/pipeline/execute/debug/v2/${paramsInPath.originalExecutionId}/${paramsInPath.identifier}`,
+    { base: getConfig('pipeline/api'), pathParams: { originalExecutionId, identifier }, ...props }
+  )
+
+/**
+ * Re Execute a pipeline with inputSet pipeline yaml Version 2
+ */
+export const debugPipelineExecuteWithInputSetYamlV2Promise = (
+  {
+    originalExecutionId,
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlV2QueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlV2PathParams
+  > & { originalExecutionId: string; identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlV2QueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlV2PathParams
+  >('POST', getConfig('pipeline/api'), `/pipeline/execute/debug/v2/${originalExecutionId}/${identifier}`, props, signal)
+
+export interface DebugPipelineExecuteWithInputSetYamlQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  moduleType?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  useFQNIfError?: boolean
+}
+
+export interface DebugPipelineExecuteWithInputSetYamlPathParams {
+  originalExecutionId: string
+  identifier: string
+}
+
+export type DebugPipelineExecuteWithInputSetYamlProps = Omit<
+  MutateProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlQueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlPathParams
+  >,
+  'path' | 'verb'
+> &
+  DebugPipelineExecuteWithInputSetYamlPathParams
+
+/**
+ * debug a pipeline with inputSet pipeline yaml
+ */
+export const DebugPipelineExecuteWithInputSetYaml = ({
+  originalExecutionId,
+  identifier,
+  ...props
+}: DebugPipelineExecuteWithInputSetYamlProps) => (
+  <Mutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlQueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlPathParams
+  >
+    verb="POST"
+    path={`/pipeline/execute/debug/${originalExecutionId}/${identifier}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseDebugPipelineExecuteWithInputSetYamlProps = Omit<
+  UseMutateProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlQueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlPathParams
+  >,
+  'path' | 'verb'
+> &
+  DebugPipelineExecuteWithInputSetYamlPathParams
+
+/**
+ * debug a pipeline with inputSet pipeline yaml
+ */
+export const useDebugPipelineExecuteWithInputSetYaml = ({
+  originalExecutionId,
+  identifier,
+  ...props
+}: UseDebugPipelineExecuteWithInputSetYamlProps) =>
+  useMutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlQueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlPathParams
+  >(
+    'POST',
+    (paramsInPath: DebugPipelineExecuteWithInputSetYamlPathParams) =>
+      `/pipeline/execute/debug/${paramsInPath.originalExecutionId}/${paramsInPath.identifier}`,
+    { base: getConfig('pipeline/api'), pathParams: { originalExecutionId, identifier }, ...props }
+  )
+
+/**
+ * debug a pipeline with inputSet pipeline yaml
+ */
+export const debugPipelineExecuteWithInputSetYamlPromise = (
+  {
+    originalExecutionId,
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlQueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlPathParams
+  > & { originalExecutionId: string; identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlQueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlPathParams
+  >('POST', getConfig('pipeline/api'), `/pipeline/execute/debug/${originalExecutionId}/${identifier}`, props, signal)
+
+export interface DebugStagesWithRuntimeInputYamlQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  moduleType?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  useFQNIfError?: boolean
+}
+
+export interface DebugStagesWithRuntimeInputYamlPathParams {
+  originalExecutionId: string
+  identifier: string
+}
+
+export type DebugStagesWithRuntimeInputYamlProps = Omit<
+  MutateProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugStagesWithRuntimeInputYamlQueryParams,
+    RunStageRequestDTORequestBody,
+    DebugStagesWithRuntimeInputYamlPathParams
+  >,
+  'path' | 'verb'
+> &
+  DebugStagesWithRuntimeInputYamlPathParams
+
+/**
+ * debug a pipeline with inputSet pipeline yaml
+ */
+export const DebugStagesWithRuntimeInputYaml = ({
+  originalExecutionId,
+  identifier,
+  ...props
+}: DebugStagesWithRuntimeInputYamlProps) => (
+  <Mutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugStagesWithRuntimeInputYamlQueryParams,
+    RunStageRequestDTORequestBody,
+    DebugStagesWithRuntimeInputYamlPathParams
+  >
+    verb="POST"
+    path={`/pipeline/execute/debug/${originalExecutionId}/${identifier}/stages`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseDebugStagesWithRuntimeInputYamlProps = Omit<
+  UseMutateProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugStagesWithRuntimeInputYamlQueryParams,
+    RunStageRequestDTORequestBody,
+    DebugStagesWithRuntimeInputYamlPathParams
+  >,
+  'path' | 'verb'
+> &
+  DebugStagesWithRuntimeInputYamlPathParams
+
+/**
+ * debug a pipeline with inputSet pipeline yaml
+ */
+export const useDebugStagesWithRuntimeInputYaml = ({
+  originalExecutionId,
+  identifier,
+  ...props
+}: UseDebugStagesWithRuntimeInputYamlProps) =>
+  useMutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugStagesWithRuntimeInputYamlQueryParams,
+    RunStageRequestDTORequestBody,
+    DebugStagesWithRuntimeInputYamlPathParams
+  >(
+    'POST',
+    (paramsInPath: DebugStagesWithRuntimeInputYamlPathParams) =>
+      `/pipeline/execute/debug/${paramsInPath.originalExecutionId}/${paramsInPath.identifier}/stages`,
+    { base: getConfig('pipeline/api'), pathParams: { originalExecutionId, identifier }, ...props }
+  )
+
+/**
+ * debug a pipeline with inputSet pipeline yaml
+ */
+export const debugStagesWithRuntimeInputYamlPromise = (
+  {
+    originalExecutionId,
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugStagesWithRuntimeInputYamlQueryParams,
+    RunStageRequestDTORequestBody,
+    DebugStagesWithRuntimeInputYamlPathParams
+  > & { originalExecutionId: string; identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugStagesWithRuntimeInputYamlQueryParams,
+    RunStageRequestDTORequestBody,
+    DebugStagesWithRuntimeInputYamlPathParams
+  >(
+    'POST',
+    getConfig('pipeline/api'),
+    `/pipeline/execute/debug/${originalExecutionId}/${identifier}/stages`,
+    props,
+    signal
+  )
+
 export interface GetPreflightCheckResponseQueryParams {
   accountIdentifier: string
   orgIdentifier: string
