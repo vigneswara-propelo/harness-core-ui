@@ -150,7 +150,7 @@ function KustomizeWithHarnessStore({
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                     />
                   </div>
-                  <div className={css.halfWidth}>
+                  <div className={cx(css.halfWidth, css.addmarginBottom)}>
                     <MultiConfigSelectField
                       name="files"
                       allowableTypes={allowableTypes}
@@ -163,6 +163,7 @@ function KustomizeWithHarnessStore({
                         disableTypeSelection: false,
                         label: <Text>{getString('pipeline.manifestType.kustomizeFolderPath')}</Text>
                       }}
+                      restrictToSingleEntry
                     />
                   </div>
                   <div
