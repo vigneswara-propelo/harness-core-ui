@@ -78,6 +78,7 @@ declare interface Window {
   featureFlagsConfig: {
     useLegacyFeatureFlags: boolean
     baseUrl: string
+    eventUrl: string
     enableStream: boolean
     sdkKey: string
     async: boolean
