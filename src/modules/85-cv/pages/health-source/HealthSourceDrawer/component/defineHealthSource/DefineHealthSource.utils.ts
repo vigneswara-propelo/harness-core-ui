@@ -415,7 +415,13 @@ export function canShowDataInfoSelector(sourceType?: string, dataSourceType?: st
 export function shouldShowProductChangeConfirmation(
   isSumoLogicEnabled: boolean,
   currentProduct: SelectOption,
-  updatedProduct: SelectOption
+  updatedProduct: SelectOption,
+  isHealthSourceConfigured: boolean
 ): boolean {
-  return isSumoLogicEnabled && !isEmpty(currentProduct) && currentProduct?.value !== updatedProduct?.value
+  return (
+    isSumoLogicEnabled &&
+    !isEmpty(currentProduct) &&
+    currentProduct?.value !== updatedProduct?.value &&
+    isHealthSourceConfigured
+  )
 }

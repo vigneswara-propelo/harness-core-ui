@@ -667,7 +667,6 @@ healthSource:
   selectHealthSource: Select health source type
   defineYourSource: Define Your Sources
   defineHealthSource: Define Health Source
-  customizeHealthSource: Customize Health Source
   deleteHealthSourceWarning: Are you sure you want to delete Health Source
   deleteHealthSource: Delete Health Source
   selectConnectionTypeInfo: Select the connection type to see your hosted entities directly in Harness

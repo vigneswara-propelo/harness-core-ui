@@ -12,6 +12,7 @@ export interface CommonRecordsProps {
   data?: any
   loading?: boolean
   error?: any
+  className?: string
 }
 
 export interface HighchartsOptionAndRecords {

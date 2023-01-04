@@ -17,7 +17,7 @@ import type { CommonRecordsProps } from './types'
 import css from './CommonRecords.module.scss'
 
 export function CommonRecords(props: CommonRecordsProps): JSX.Element {
-  const { data, loading, error, fetchRecords, query } = props
+  const { data, loading, error, fetchRecords, query, className } = props
   const { getString } = useStrings()
   let content = null
 
@@ -67,7 +67,7 @@ export function CommonRecords(props: CommonRecordsProps): JSX.Element {
       <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'small' }}>
         {getString('cv.monitoringSources.gcoLogs.records')}
       </Text>
-      <Container className={cx(css.chartContainer)}>{content}</Container>
+      <Container className={cx(css.chartContainer, className)}>{content}</Container>
     </Container>
   )
 }

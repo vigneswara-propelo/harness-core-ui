@@ -9,6 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
+import userEvent from '@testing-library/user-event'
 import * as cvService from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { CommonRecordsProps } from '../types'
@@ -45,7 +46,13 @@ describe('Unit tests for CommonRecords component', () => {
       <WrapperComponent fetchRecords={fetchRecordsMock} error={{ data: { message: 'mockError' } }} />
     )
     // check for error
+
     expect(getByText('mockError')).not.toBeNull()
+
+    // should be able to click on the retry button
+    const retryButton = getByText('Retry')
+    expect(retryButton).not.toBeNull()
+    userEvent.click(retryButton)
   })
 
   test('Verify that No Records state is rendering correctly for Records', async () => {
@@ -53,6 +60,11 @@ describe('Unit tests for CommonRecords component', () => {
     const fetchRecordsMock = jest.fn()
     const { getByText } = render(<WrapperComponent fetchRecords={fetchRecordsMock} data={[]} />)
     expect(getByText('cv.monitoringSources.gcoLogs.noRecordsForQuery')).not.toBeNull()
+
+    // should be able to click on the retry button
+    const retryButton = getByText('retry')
+    expect(retryButton).not.toBeNull()
+    userEvent.click(retryButton)
   })
 
   test('Verify that valid records state is rendering correctly for Records', async () => {

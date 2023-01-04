@@ -209,19 +209,23 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
     return null
   }
 
-  const handleSetProduct = (formik: FormikProps<any>, product: SelectOption | null): void => {
+  const handleSetProduct = (
+    formik: FormikProps<any>,
+    product: SelectOption | null,
+    shouldResetConfigurations: boolean
+  ): void => {
     const newValues = {
       ...formik.values,
       product,
-      ...initConfigurationsForm
+      ...(shouldResetConfigurations && { ...initConfigurationsForm })
     }
     formik.setValues(newValues)
   }
 
-  const handleProductChange = (product: SelectOption | null): void => {
+  const handleProductChange = (product: SelectOption | null, shouldResetConfigurations: boolean): void => {
     const defineHealthSourceForm = defineHealthSourceFormRef?.current
     if (defineHealthSourceForm) {
-      handleSetProduct(defineHealthSourceForm, product)
+      handleSetProduct(defineHealthSourceForm, product, shouldResetConfigurations)
     }
   }
 
@@ -235,9 +239,9 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
     className: css.productChangeConfirmation,
     onCloseDialog: function (shouldUpdateProduct: boolean) {
       if (shouldUpdateProduct) {
-        handleProductChange(productInfo.updatedProduct)
+        handleProductChange(productInfo.updatedProduct, true)
       } else {
-        handleProductChange(productInfo.currentProduct)
+        handleProductChange(productInfo.currentProduct, false)
       }
     }
   })
@@ -394,11 +398,19 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                       onChange={product => {
                         const currentProduct = formik?.values?.product
                         const updatedProduct = product
-                        if (shouldShowProductChangeConfirmation(isSumoLogicEnabled, currentProduct, updatedProduct)) {
+                        const isHealthSourceConfigured = formik?.values?.customMetricsMap?.size > 0
+                        if (
+                          shouldShowProductChangeConfirmation(
+                            isSumoLogicEnabled,
+                            currentProduct,
+                            updatedProduct,
+                            isHealthSourceConfigured
+                          )
+                        ) {
                           setProductInfo({ updatedProduct, currentProduct })
                           openDialog()
                         } else {
-                          handleSetProduct(formik, product)
+                          handleSetProduct(formik, product, false)
                         }
                       }}
                     />
