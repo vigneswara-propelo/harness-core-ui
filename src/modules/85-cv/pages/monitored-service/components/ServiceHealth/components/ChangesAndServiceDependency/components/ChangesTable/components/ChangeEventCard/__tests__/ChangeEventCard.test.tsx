@@ -18,6 +18,7 @@ import {
 import ChangeEventCard from '../ChangeEventCard'
 import {
   HarnessCDMockData,
+  HarnessFFMockData,
   HarnessNextGenMockData,
   HarnessNextGenMockDataWithoutMetadata,
   payload
@@ -177,6 +178,33 @@ describe('Validate ChangeCard', () => {
 
     // Card details title
     await waitFor(() => expect(getAllByText('details')).toHaveLength(2))
+  })
+
+  test('should render Feature flag card', async () => {
+    jest.spyOn(cvService, 'useGetChangeEventDetail').mockImplementation(
+      () =>
+        ({
+          data: HarnessFFMockData,
+          refetch: jest.fn(),
+          error: null,
+          loading: false
+        } as any)
+    )
+    jest.spyOn(cvService, 'useGetMonitoredServiceOverAllHealthScore').mockReturnValue({
+      data: mockedHealthScoreData,
+      refetch: jest.fn() as unknown
+    } as UseGetReturn<any, any, any, any>)
+    const { getByText, getAllByText } = render(
+      <TestWrapper>
+        <ChangeEventCard activityId={'dasda'} />
+      </TestWrapper>
+    )
+    // Card Title is rendered Correctly
+    await waitFor(() => expect(getByText(HarnessFFMockData.resource.name)).toBeTruthy())
+
+    // Card details title
+    await waitFor(() => expect(getAllByText('details')).toHaveLength(1))
+    await waitFor(() => expect(getAllByText('action')).toHaveLength(1))
   })
 
   test('should render in loading state', async () => {

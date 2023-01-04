@@ -1068,6 +1068,7 @@ export interface StringsMap {
   'common.unlimited': string
   'common.unsavedChanges': string
   'common.unsavedChangesLong': string
+  'common.updatedBy': string
   'common.updating': string
   'common.upgrade': string
   'common.usage': string
@@ -7392,6 +7393,7 @@ export interface StringsMap {
   'cv.changeSource.changeSourceCard.information': string
   'cv.changeSource.changeSourceCard.triggred': string
   'cv.changeSource.changeSourceCard.viewDeployment': string
+  'cv.changeSource.changeSourceCard.viewFeatureFlag': string
   'cv.changeSource.configureChangeSource': string
   'cv.changeSource.connectChangeSource': string
   'cv.changeSource.defineChangeSource': string

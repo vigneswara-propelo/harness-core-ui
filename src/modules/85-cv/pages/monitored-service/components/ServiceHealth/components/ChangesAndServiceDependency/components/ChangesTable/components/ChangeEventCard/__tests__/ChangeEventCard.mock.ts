@@ -83,6 +83,7 @@ export const HarnessNextGenMockData = {
   },
   responseMessages: []
 }
+
 export const HarnessNextGenMockDataWithoutMetadata = {
   metaData: {
     pipelinePath: 'https://harness.io'
@@ -136,6 +137,48 @@ export const HarnessCDMockData = {
     },
     category: 'Deployment',
     type: 'HarnessCD'
+  },
+  responseMessages: []
+}
+
+export const HarnessFFMockData = {
+  metaData: {},
+  resource: {
+    id: 'fWjG6GwTSN-HtyqsgK564g',
+    accountId: 'kmpySmUISimoRrJL6NL73w',
+    category: 'FeatureFlag',
+    changeSourceIdentifier: 'featureFlag',
+    orgIdentifier: 'default',
+    projectIdentifier: 'demokaran',
+    serviceIdentifier: 'demoservice',
+    serviceName: 'demo-service',
+    monitoredServiceIdentifier: 'demoservice_demoenv',
+    envIdentifier: 'demoenv',
+    environmentName: 'demo-env',
+    name: 'CV Trial Limit',
+    eventTime: 1633961702460,
+    metadata: {
+      internalChangeEvent: {
+        internalLinkToEntity: {
+          action: 'REDIRECT_URL',
+          url: '/account/wFHXHD0RRQWoO8tIZT5YVw/cf/orgs/EngOps/projects/testproject_2/feature-flags'
+        },
+        eventDescriptions: [
+          `Feature Flag turned off`,
+          `A rule was added with clauses`,
+          `Target "Luis" was added for Variation false`
+        ],
+        changeEventDetailsLink: {
+          action: 'FETCH_DIFF_DATA',
+          url: 'url'
+        }
+      },
+      updatedBy: 'karan.saraswat@harness.io',
+      activityType: 'FEATURE_FLAG',
+      eventStartTime: 1633961702460,
+      eventEndTime: 1633962499782
+    },
+    type: 'HARNESS_FF'
   },
   responseMessages: []
 }

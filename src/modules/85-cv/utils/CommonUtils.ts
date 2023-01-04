@@ -13,6 +13,7 @@ import type { ResponseListEnvironmentResponse, EnvironmentResponse } from 'servi
 import type { StringsMap } from 'stringTypes'
 import type { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import type { CVNGLogTag, MonitoredServiceDetail, SloHealthIndicatorDTO } from 'services/cv'
+import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 
 export enum EVENT_TYPE {
@@ -276,6 +277,8 @@ export const getDetailsLabel = (key: string, getString: UseStringsReturn['getStr
       return getString('common.executedBy')
     case 'eventType':
       return getString('pipeline.verification.logs.eventType')
+    case 'updatedBy':
+      return getString('common.updatedBy')
     default:
       return key
   }
@@ -294,3 +297,10 @@ export const getMonitoredServiceIdentifiers = (
       ? `PROJECT.${serviceDetails.projectParams?.accountIdentifier}.${serviceDetails.projectParams?.orgIdentifier}.${serviceDetails.projectParams?.projectIdentifier}.${serviceDetails.monitoredServiceIdentifier}`
       : serviceDetails.monitoredServiceIdentifier ?? ''
   }) || []
+
+export const openWindowInNewTab = (url?: string): void => {
+  const targetUrl = `${window.location.origin}${getLocationPathName()}#${url}`
+  if (url) {
+    window.open(targetUrl, '_blank')
+  }
+}

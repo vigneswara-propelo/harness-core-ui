@@ -1030,6 +1030,7 @@ true: 'true'
 false: 'false'
 saving: 'Saving'
 executedBy: Executed By
+updatedBy: Updated By
 headerWithOptionalText: '{{header}} (Optional)'
 selectWorkload: Select Workload
 

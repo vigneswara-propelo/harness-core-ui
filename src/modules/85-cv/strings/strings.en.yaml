@@ -640,6 +640,7 @@ changeSource:
     information: Information
     triggred: Triggered
     viewDeployment: View Deployment
+    viewFeatureFlag: View Feature Flag
     finished: 'Finished: '
     deploymentHealth: Deployment Health
     ago: ago
