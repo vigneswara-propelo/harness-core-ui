@@ -102,8 +102,6 @@ declare interface Document {
 
 declare const monaco: any
 
-declare module 'event-source-polyfill'
-
 declare module 'refiner-js'
 
 declare module 'gitopsui/MicroFrontendApp' {

@@ -25,6 +25,7 @@ import type useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { usePermission } from '@rbac/hooks/usePermission'
 import type useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import type { useFeature } from '@common/hooks/useFeatures'
+import type { useEventSourceListener } from '@common/hooks/useEventSourceListener'
 
 // parent context types
 import type { AppStoreContext, AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
@@ -70,6 +71,7 @@ export interface Hooks {
   usePermission?: typeof usePermission
   useCreateConnectorModal?: typeof useCreateConnectorModal
   useFeature?: typeof useFeature
+  useEventSourceListener?: typeof useEventSourceListener
 }
 
 export interface Utils {
