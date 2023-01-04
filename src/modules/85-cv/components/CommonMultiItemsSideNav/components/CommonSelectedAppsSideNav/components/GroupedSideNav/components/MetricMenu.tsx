@@ -24,7 +24,8 @@ export default function MetricMenu({
   metricThresholdTitleText,
   metricThresholdCancelButtonText,
   metricThresholdWarningContentText,
-  showPromptOnDelete
+  showPromptOnDelete,
+  hideDeleteIcon
 }: MetricMenuProps): JSX.Element {
   const { getString } = useStrings()
   const [popoverOpen, setPopoverOpen] = useState(false)
@@ -33,6 +34,8 @@ export default function MetricMenu({
     contentText,
     confirmButtonText: confirmButtonText ?? getString('delete'),
     cancelButtonText: getString('cancel'),
+    intent: Intent.DANGER,
+    buttonIntent: Intent.DANGER,
     onCloseDialog: function (shouldDelete: boolean) {
       if (shouldDelete) {
         handleDelete()
@@ -92,15 +95,17 @@ export default function MetricMenu({
           text={editLabel ?? <String stringID="edit" />}
           onClick={onEdit}
         />
-        <Menu.Item
-          data-testid="sideNav-delete"
-          icon="trash"
-          text={deleteLabel ?? <String stringID="delete" />}
-          onClick={(e: React.MouseEvent) => {
-            e.stopPropagation()
-            openDialog()
-          }}
-        />
+        {!hideDeleteIcon ? (
+          <Menu.Item
+            data-testid="sideNav-delete"
+            icon="trash"
+            text={deleteLabel ?? <String stringID="delete" />}
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation()
+              openDialog()
+            }}
+          />
+        ) : null}
       </Menu>
     </Popover>
   )

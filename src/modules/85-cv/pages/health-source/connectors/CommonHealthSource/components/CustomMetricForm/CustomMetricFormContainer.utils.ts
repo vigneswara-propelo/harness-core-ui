@@ -44,6 +44,7 @@ export const validateAddMetricForm = (
       existingName: metricName
     })
   }
+
   return errors
 }
 

@@ -28,7 +28,7 @@ interface GroupedSideNavInterface {
   groupedSelectedAppsList: [string, GroupedMetric[]][]
   isMetricThresholdEnabled?: boolean
   openEditMetricModal: () => void
-  isValidInput?: boolean
+  hideDeleteIcon?: boolean
 }
 export default function GroupedSideNav({
   groupedSelectedAppsList,
@@ -37,10 +37,10 @@ export default function GroupedSideNav({
   onSelect,
   isMetricThresholdEnabled,
   openEditMetricModal,
-  isValidInput
+  hideDeleteIcon
 }: GroupedSideNavInterface): JSX.Element {
   const { getString } = useStrings()
-  const { values: formValues, touched } = useFormikContext()
+  const { values: formValues, touched, isValid } = useFormikContext()
 
   const getShowPromptOnDelete = (metricName?: string): boolean => {
     return Boolean(
@@ -93,7 +93,7 @@ export default function GroupedSideNav({
                       {selectedApp.metricName}
                     </Text>
                     <Container>
-                      {showWarningIcon({ touched, isValidInput, selectedApp, selectedItem }) ? (
+                      {showWarningIcon({ touched, isValid, selectedApp, selectedItem }) ? (
                         <Icon name="warning-icon" size={18} color={Color.ORANGE_700} />
                       ) : null}
                       <MetricMenu
@@ -113,6 +113,7 @@ export default function GroupedSideNav({
                           'cv.metricThresholds.customMetricsDeletePromptContent'
                         )}
                         showPromptOnDelete={getShowPromptOnDelete(selectedApp.metricName)}
+                        hideDeleteIcon={hideDeleteIcon}
                       />
                     </Container>
                   </Container>

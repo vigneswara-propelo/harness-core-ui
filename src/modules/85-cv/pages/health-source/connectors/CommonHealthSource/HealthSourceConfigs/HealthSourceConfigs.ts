@@ -29,7 +29,7 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       enabled: false
     },
     sideNav: {
-      shouldBeAbleToDeleteLastMetric: true
+      shouldBeAbleToDeleteLastMetric: false
     },
     metricThresholds: {
       enabled: true
@@ -58,7 +58,6 @@ export const healthSourcesConfig: HealthSourcesConfig = {
         titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQuerySubDescription'
       }
     },
-
     sideNav: {
       shouldBeAbleToDeleteLastMetric: false
     },

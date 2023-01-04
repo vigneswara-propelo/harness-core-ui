@@ -17,7 +17,7 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { Formik, useFormikContext } from 'formik'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEqual } from 'lodash-es'
 import type { CustomHealthMetricDefinition } from 'services/cv'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
@@ -75,12 +75,12 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const [showCustomMetric, setShowCustomMetric] = useState(
     !!Array.from(defaultTo(mappedMetrics, []))?.length && healthSourceConfig?.customMetrics?.enabled
   )
-
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
   const currentSelectedMetricDetail = metricDefinitions?.find(
     (metricDefinition: CustomHealthMetricDefinition) =>
       metricDefinition.metricName === mappedMetrics.get(selectedMetric || '')?.metricName
   )
+  const isEdit = Boolean(formValues?.identifier)
 
   const filterRemovedMetricNameThresholds = useCallback(
     (deletedMetricName: string) => {
@@ -100,12 +100,17 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     useEffect(() => {
       //  update Parent formik when clicked outside.
       async function handleClickOutside(event: { target: unknown }): Promise<void> {
-        if (ref.current && !ref.current.contains(event.target)) {
+        if (
+          ref.current &&
+          !ref.current.contains(event.target) &&
+          !isEqual(mappedMetricsData.get(selectedMetricName), formValuesData)
+        ) {
           const updatedMappedMetricsData = getUpdatedMappedMetricsData(
             mappedMetricsData,
             selectedMetricName,
             formValuesData
           )
+          // This will be executed only when current form value changes.
           setFieldTouched(CustomMetricFormFieldNames.QUERY)
           await validateForm()
           updateParentFormikWithLatestData(updateParentFormik, updatedMappedMetricsData, selectedMetricName)
@@ -163,6 +168,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
                 groupNames={groupNames}
                 setGroupName={setGroupName}
                 fieldLabel={fieldLabel}
+                isEdit={isEdit}
               />
             )
           }}

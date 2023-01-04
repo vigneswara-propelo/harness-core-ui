@@ -679,6 +679,8 @@ healthSource:
   dataSourceTypeValidation: Connection Type is required
   noDataPresentHealthSource: No data is present for the selected Health Source
   seriveEnvironmentNote: Service selected is {{service}} and Environment selected is {{environment}}
+  productChangeConfirmationHeader: Changing feature will reset the configurations.
+  productChangeConfirmation: Are you sure you want to change the feature ?
   table:
     serviceMapping: Service Mapping
     environmentMapping: Environment Mapping
