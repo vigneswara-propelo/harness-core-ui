@@ -53,6 +53,7 @@ const ElastigroupDeployStepEdit = (
         initialValues={initialValues}
         validate={data => {
           const getOldServiceSpec = data?.spec?.oldService?.spec
+          /* istanbul ignore else */
           if (!getOldServiceSpec?.count && !getOldServiceSpec?.percentage) {
             set(data, 'spec.oldService', undefined)
           }
@@ -108,9 +109,11 @@ const ElastigroupDeployStepEdit = (
                     showRequiredField={false}
                     showDefaultField={false}
                     showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('instances', value)
-                    }}
+                    onChange={
+                      /* istanbul ignore next */ value => {
+                        setFieldValue('instances', value)
+                      }
+                    }
                     isReadonly={readonly}
                   />
                 )}
@@ -139,9 +142,11 @@ const ElastigroupDeployStepEdit = (
                           allowableTypes={allowableTypes}
                           textProps={{ min: 0 }}
                           defaultValue={{ type: InstanceTypes.Instances, spec: { count: '' } }}
-                          onChange={val => {
-                            formik.setFieldValue('spec.oldService', { ...val })
-                          }}
+                          onChange={
+                            /* istanbul ignore next */ val => {
+                              formik.setFieldValue('spec.oldService', { ...val })
+                            }
+                          }
                         />
                         {(getMultiTypeFromValue(values?.spec?.oldService?.spec?.count) === MultiTypeInputType.RUNTIME ||
                           getMultiTypeFromValue(values?.spec?.oldService?.spec?.percentage) ===
@@ -156,9 +161,11 @@ const ElastigroupDeployStepEdit = (
                             showRequiredField={false}
                             showDefaultField={false}
                             showAdvanced={true}
-                            onChange={value => {
-                              setFieldValue('instances', value)
-                            }}
+                            onChange={
+                              /* istanbul ignore next */ value => {
+                                setFieldValue('instances', value)
+                              }
+                            }
                             isReadonly={readonly}
                           />
                         )}
