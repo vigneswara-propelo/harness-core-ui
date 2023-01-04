@@ -810,7 +810,7 @@ const transformStepsData = ({
 const getNodeInfo = (type: string, graphType: PipelineGraphType): { iconName: IconName; nodeType: string } => {
   return graphType === PipelineGraphType.STEP_GRAPH
     ? {
-        iconName: StepTypeToPipelineIconMap[type],
+        iconName: StepTypeToPipelineIconMap[type] || stageTypeToIconMap[type],
         nodeType: NodeTypeToNodeMap[type]
       }
     : {

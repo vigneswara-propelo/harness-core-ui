@@ -611,7 +611,7 @@ export const addStepOrGroup = (
   }
 }
 
-export const StepTypeToPipelineIconMap: Record<any, IconName> = {
+export const StepTypeToPipelineIconMap: Record<string, IconName> = {
   [PipelineStepType.SHELLSCRIPT]: 'command-shell-script',
   [PipelineStepType.K8sRollingRollback]: 'undo',
   [PipelineStepType.K8sRollingDeploy]: 'rolling',
