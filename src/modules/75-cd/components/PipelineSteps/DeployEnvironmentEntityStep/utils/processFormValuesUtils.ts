@@ -247,6 +247,9 @@ export function processEnvironmentGroupFormValues(
       return {
         environmentGroup: {
           envGroupRef: RUNTIME_INPUT_VALUE,
+          metadata: {
+            parallel: data.parallel
+          },
           ...(filters.length
             ? { filters }
             : {
@@ -265,6 +268,9 @@ export function processEnvironmentGroupFormValues(
       return {
         environmentGroup: {
           envGroupRef: data.environmentGroup,
+          metadata: {
+            parallel: data.parallel
+          },
           ...(filters?.length
             ? { filters }
             : {

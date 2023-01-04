@@ -261,7 +261,14 @@ export default function DeployEnvironmentGroup({
           />
         )}
       </Layout.Horizontal>
+
       <Layout.Vertical className={css.mainContent} spacing="medium">
+        {
+          <FormInput.CheckBox
+            label={getString('cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployLabel')}
+            name="parallel"
+          />
+        }
         {isFixed && !isEmpty(selectedEnvironmentGroups) && (
           <EnvironmentGroupsList
             loading={loadingEnvironmentGroupsList || updatingEnvironmentGroupsList}

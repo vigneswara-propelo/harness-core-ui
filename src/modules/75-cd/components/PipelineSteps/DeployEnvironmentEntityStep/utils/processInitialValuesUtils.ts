@@ -250,5 +250,6 @@ export function processEnvironmentGroupInitialValues(
   }
 
   formState.category = 'group'
+  formState.parallel = defaultTo(initialValues.environmentGroup?.metadata?.parallel, true)
   return formState
 }
