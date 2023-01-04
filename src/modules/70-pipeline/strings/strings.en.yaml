@@ -1138,6 +1138,8 @@ stepDescription:
   TasRollback: Rollback for the TAS steps
   AppResize: Update the number of instances for this app
   TanzuCommandScript: Command Scripts to run any CF CLI command or script at any point in your Harness TAS Pipelines
+  GHAPlugin: Run GitHub Actions as a step in the pipeline
+  BitrisePlugin: Run Bitrise plugin as a step in the pipeline
   TASBasicAppSetup: TAS basic setup step
   TASBGAppSetup: TAS blue green setup step
   TASCanaryAppSetup: TAS canary setup step

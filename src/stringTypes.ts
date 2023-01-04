@@ -4275,6 +4275,7 @@ export interface StringsMap {
   'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Background': string
   'pipeline.stepDescription.Barrier': string
+  'pipeline.stepDescription.BitrisePlugin': string
   'pipeline.stepDescription.CustomApproval': string
   'pipeline.stepDescription.DockerHub': string
   'pipeline.stepDescription.ECR': string
@@ -4295,6 +4296,7 @@ export interface StringsMap {
   'pipeline.stepDescription.FlagConfiguration': string
   'pipeline.stepDescription.GCR': string
   'pipeline.stepDescription.GCS': string
+  'pipeline.stepDescription.GHAPlugin': string
   'pipeline.stepDescription.GitClone': string
   'pipeline.stepDescription.HTTP': string
   'pipeline.stepDescription.HarnessApproval': string
@@ -7130,10 +7132,15 @@ export interface StringsMap {
   'chaos.trial.modal.description': string
   'chaos.trial.modal.title': string
   'chaos.trial.modal.welcome': string
+  'ci.GHAPluginUsesPlaceholder': string
+  'ci.GHAPluginWithKeyPlaceholder': string
   'ci.advancedLabel': string
   'ci.annotations': string
   'ci.artifactoryConnectorLabel': string
   'ci.baseConnectorImage': string
+  'ci.bitrisePluginUsesPlaceholder': string
+  'ci.bitrisePluginWithKeyPlaceholder': string
+  'ci.bitrisePluginWithValuePlaceholder': string
   'ci.buildInfra.awsHelpText': string
   'ci.buildInfra.awsVM.architecture': string
   'ci.buildInfra.awsVM.isRequiredWhen': string
@@ -7257,6 +7264,8 @@ export interface StringsMap {
   'ci.noData': string
   'ci.optimize': string
   'ci.pipelineSteps.build.infraSpecifications.whereToRunSTO': string
+  'ci.pluginEnvKeyPlaceholder': string
+  'ci.pluginEnvValuePlaceholder': string
   'ci.portBindings': string
   'ci.postCommandLabel': string
   'ci.prSymbol': string
@@ -7296,6 +7305,7 @@ export interface StringsMap {
   'ci.testSummary': string
   'ci.titleResources': string
   'ci.titleSettings': string
+  'ci.usesLabel': string
   'ci.welcome': string
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string
