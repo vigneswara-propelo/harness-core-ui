@@ -29,7 +29,7 @@ export const orgLevelFreezeId = 'org_level_freeze'
 export const newOrgLevelFreezeRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/settings/organizations/${orgId}/setup/freeze-window-studio/window/-1`
 export const existingOrgLevelFreezeRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/settings/organizations/${orgId}/setup/freeze-window-studio/window/${orgLevelFreezeId}`
 export const getOrgCall = `ng/api/aggregate/organizations/${orgId}?routingId=${accountId}&accountIdentifier=${accountId}`
-export const projectsAPI = `ng/api/projects?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgId}`
+export const projectsAPI = `ng/api/projects?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgId}&pageSize=200`
 export const orgLevelPostFreezeCall = `ng/api/freeze?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgId}`
 export const orgLevelGetFreezeCall = `/ng/api/freeze/${orgLevelFreezeId}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgId}`
 export const orgLevelPutFreezeCall = `ng/api/freeze/${orgLevelFreezeId}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgId}`
