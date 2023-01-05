@@ -6,7 +6,7 @@
  */
 
 import type { FormikErrors, FormikProps } from 'formik'
-import { cloneDeep, defaultTo, set } from 'lodash-es'
+import { cloneDeep, set } from 'lodash-es'
 import { RUNTIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import type { NextGenHealthSourceSpec, QueryRecordsRequest, RiskProfile } from 'services/cv'
@@ -28,6 +28,12 @@ import type {
   CommonHealthSourceConfigurations
 } from './CommonHealthSource.types'
 import { DEFAULT_LOGS_GROUP_NAME } from './components/CustomMetricForm/CustomMetricForm.constants'
+import {
+  getFilteredMetricThresholdValuesV2,
+  getMetricThresholdsForCustomMetric
+} from '../../common/MetricThresholds/MetricThresholds.utils'
+import { MetricThresholdTypes } from '../../common/MetricThresholds/MetricThresholds.constants'
+import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 
 export const initHealthSourceCustomForm = () => {
   return {
@@ -211,11 +217,13 @@ export const createHealthSourcePayload = (
     healthSourceName: string
     connectorRef: string
   },
-  consfigureHealthSourceData: CommonHealthSourceConfigurations
+  consfigureHealthSourceData: CommonHealthSourceConfigurations,
+  isTemplate?: boolean
 ): UpdatedHealthSource => {
+  const isMetricThresholdEnabled = !isTemplate
   const { product, healthSourceName, healthSourceIdentifier, connectorRef } = defineHealthSourcedata
   const productValue = (product?.value ?? product) as string
-  const { customMetricsMap = new Map() } = consfigureHealthSourceData
+  const { customMetricsMap = new Map(), ignoreThresholds, failFastThresholds } = consfigureHealthSourceData
 
   const healthSourcePayload = {
     type: HealthSourceTypes.NextGenHealthSource as UpdatedHealthSource['type'],
@@ -253,6 +261,14 @@ export const createHealthSourcePayload = (
         liveMonitoringEnabled: Boolean(healthScore),
         continuousVerificationEnabled: Boolean(continuousVerification),
         sliEnabled: Boolean(sli),
+        metricThresholds:
+          Array.isArray(ignoreThresholds) && Array.isArray(failFastThresholds)
+            ? getMetricThresholdsForCustomMetric({
+                metricName,
+                isMetricThresholdEnabled,
+                metricThresholds: [...ignoreThresholds, ...failFastThresholds]
+              })
+            : [],
 
         // TODO this will be taken from assign section when the section is implemented
         riskProfile: {
@@ -276,20 +292,28 @@ export function createHealthSourceConfigurationsData(
     isEdit = false,
     healthSourceIdentifier = '',
     customMetricsMap = new Map(),
-    selectedMetric = '',
-    connectorRef = ''
+    selectedMetric = ''
   } = sourceData
   let customMetricsMapData = cloneDeep(customMetricsMap)
-  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.FIXED
+
+  let ignoreThresholds: MetricThresholdType[] = []
+  let failFastThresholds: MetricThresholdType[] = []
 
   if (isEdit && customMetricsMap.size === 0) {
     const currentHealthSource = healthSourceList.find(
       (healthSource: { identifier: string }) => healthSource?.identifier === healthSourceIdentifier
     )
     const { queryDefinitions = [] } = currentHealthSource?.spec || {}
-    customMetricsMapData = cloneDeep(
-      getUpdatedCustomMetrics(queryDefinitions, isTemplate, isConnectorRuntimeOrExpression)
-    )
+    customMetricsMapData = cloneDeep(getUpdatedCustomMetrics(queryDefinitions))
+
+    if (!isTemplate) {
+      ignoreThresholds = getFilteredMetricThresholdValuesV2(MetricThresholdTypes.IgnoreThreshold, [], queryDefinitions)
+      failFastThresholds = getFilteredMetricThresholdValuesV2(
+        MetricThresholdTypes.FailImmediately,
+        [],
+        queryDefinitions
+      )
+    }
   }
 
   return {
@@ -297,15 +321,13 @@ export function createHealthSourceConfigurationsData(
     selectedMetric: getSelectedMetric(selectedMetric, customMetricsMapData),
 
     // metric thresholds section can be updated here.
-    ignoreThresholds: [],
-    failFastThresholds: []
+    ignoreThresholds,
+    failFastThresholds
   }
 }
 
 function getUpdatedCustomMetrics(
-  queryDefinitions: NextGenHealthSourceSpec['queryDefinitions'],
-  isTemplate: boolean | undefined,
-  isConnectorRuntimeOrExpression: boolean
+  queryDefinitions: NextGenHealthSourceSpec['queryDefinitions']
 ): CommonHealthSourceConfigurations['customMetricsMap'] {
   const updatedCustomMetricsMap = new Map()
   if (queryDefinitions?.length) {
@@ -316,13 +338,7 @@ function getUpdatedCustomMetrics(
           metricName: queryDefinition.name,
           query: queryDefinition.query || '',
           riskCategory: queryDefinition?.riskProfile?.category,
-          serviceInstance:
-            isTemplate && !isConnectorRuntimeOrExpression
-              ? {
-                  label: defaultTo(queryDefinition?.queryParams?.serviceInstanceField, ''),
-                  value: defaultTo(queryDefinition?.queryParams?.serviceInstanceField, '')
-                }
-              : queryDefinition?.queryParams?.serviceInstanceField,
+          serviceInstance: queryDefinition?.queryParams?.serviceInstanceField,
           lowerBaselineDeviation: queryDefinition?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER') || false,
           higherBaselineDeviation: queryDefinition?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_HIGHER') || false,
           groupName: queryDefinition?.groupName
@@ -378,6 +394,7 @@ export function getHealthSourceConfigurations(
   selectedMetric: string
 ): CommonHealthSourceConfigurations {
   const { ignoreThresholds = [], failFastThresholds = [] } = configurationsPageData
+
   return {
     // Custom metric fields
     customMetricsMap: mappedMetrics,

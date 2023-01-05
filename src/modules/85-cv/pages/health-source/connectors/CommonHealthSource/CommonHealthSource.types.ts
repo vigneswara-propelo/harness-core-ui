@@ -15,7 +15,7 @@ import type {
   RiskProfile,
   TimeSeriesMetricPackDTO
 } from 'services/cv'
-import type { CriteriaPercentageType } from '../../common/MetricThresholds/MetricThresholds.types'
+import type { CriteriaPercentageType, MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { HealthSourceTypes } from '../../types'
 import type { CHART_VISIBILITY_ENUM, FIELD_ENUM } from './CommonHealthSource.constants'
 
@@ -96,8 +96,8 @@ export interface CommonHealthSourceConfigurations {
   selectedMetric: string
 
   // metric thresholds
-  ignoreThresholds: HealthSourceMetricThresholdType[]
-  failFastThresholds: HealthSourceMetricThresholdType[]
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
 }
 
 export interface CommonCustomMetricFormikInterface {

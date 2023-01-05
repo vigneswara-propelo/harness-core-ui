@@ -11,7 +11,18 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import CommonHealthSourceContainer, { CommonHealthSourceContainerProps } from '../CommonHealthSource.container'
 import { createHealthSourceConfigurationsData, createHealthSourcePayload } from '../CommonHealthSource.utils'
-import { healthSourceConfig, mockedDefineHealthSourcedata, mockedSourceData } from './CommonHealthSource.mock'
+
+import {
+  consfigureHealthSourceDataWithMetricThresholds,
+  expectedMetrithresholdsEdit,
+  healthSourceConfig,
+  metricThresholdDisabledPayloadResult,
+  mockedDefineHealthSourcedata,
+  mockedSourceData,
+  mockedSourceDataWithMetricThresholds,
+  payloadMockWithMetricThresholdsMock
+} from './CommonHealthSource.mock'
+import type { MetricThresholdType } from '../../AppDynamics/AppDHealthSource.types'
 
 function WrapperComponent(props: CommonHealthSourceContainerProps): JSX.Element {
   return (
@@ -60,7 +71,7 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
     userEvent.click(submitButton)
   })
 
-  test('should validate createHealthSourcePayload', () => {
+  test('should validate createHealthSourcePayload and handles if invalid data is sent', () => {
     const customMetricsMap = new Map()
     customMetricsMap.set('M1', {
       identifier: 'M1',
@@ -74,42 +85,22 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
     const consfigureHealthSourceData = {
       customMetricsMap,
       selectedMetric: 'M1',
-      ignoreThresholds: [],
+      ignoreThresholds: null as unknown as MetricThresholdType[],
       failFastThresholds: []
     }
 
-    expect(createHealthSourcePayload(mockedDefineHealthSourcedata, consfigureHealthSourceData)).toEqual({
-      identifier: 'Health_source_2',
-      name: 'Health source 2 ',
-      spec: {
-        connectorRef: 'account.Sumologic_Metric_Test',
-        dataSourceType: 'SUMOLOGIC_METRICS',
-        queryDefinitions: [
-          {
-            continuousVerificationEnabled: false,
-            groupName: 'G1',
-            identifier: 'M1',
-            liveMonitoringEnabled: false,
-            name: 'M1',
-            query: '*',
-            queryParams: {},
-            riskProfile: {
-              category: 'Performance',
-              metricType: 'INFRA',
-              riskCategory: 'Errors',
-              thresholdTypes: ['ACT_WHEN_LOWER']
-            },
-            sliEnabled: false
-          }
-        ]
-      },
-      type: 'NextGenHealthSource'
-    })
+    expect(createHealthSourcePayload(mockedDefineHealthSourcedata, consfigureHealthSourceData, false)).toEqual(
+      metricThresholdDisabledPayloadResult
+    )
+  })
+
+  test('should validate createHealthSourcePayload with metric thresholds enabled', () => {
+    expect(
+      createHealthSourcePayload(mockedDefineHealthSourcedata, consfigureHealthSourceDataWithMetricThresholds, false)
+    ).toEqual(payloadMockWithMetricThresholdsMock)
   })
 
   test('should validate createHealthSourceConfigurationsData', () => {
-    const isTemplate = false
-
     const customMetricsMap = new Map()
     customMetricsMap.set('M1', {
       continuousVerification: false,
@@ -128,11 +119,36 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       sli: false
     })
 
-    expect(createHealthSourceConfigurationsData(mockedSourceData, isTemplate)).toEqual({
+    expect(createHealthSourceConfigurationsData(mockedSourceData)).toEqual({
       customMetricsMap,
       failFastThresholds: [],
       ignoreThresholds: [],
       selectedMetric: 'M1'
+    })
+  })
+
+  test('should create correct data to support edit health source', () => {
+    const customMetricsMap = new Map()
+    customMetricsMap.set('M1', {
+      continuousVerification: false,
+      groupName: {
+        label: 'G1',
+        value: 'G1'
+      },
+      healthScore: false,
+      higherBaselineDeviation: false,
+      identifier: 'M1',
+      lowerBaselineDeviation: true,
+      metricName: 'M1',
+      query: '*',
+      riskCategory: 'Errors',
+      serviceInstance: 'test',
+      sli: false
+    })
+
+    expect(createHealthSourceConfigurationsData(mockedSourceDataWithMetricThresholds)).toEqual({
+      ...expectedMetrithresholdsEdit,
+      customMetricsMap
     })
   })
 })

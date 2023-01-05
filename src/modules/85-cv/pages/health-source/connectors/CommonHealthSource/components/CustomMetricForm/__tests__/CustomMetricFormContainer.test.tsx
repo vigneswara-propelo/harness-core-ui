@@ -13,6 +13,7 @@ import userEvent from '@testing-library/user-event'
 import * as cvServices from 'services/cv'
 import * as useDrawerHook from '@cv/hooks/useDrawerHook/useDrawerHook'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
+import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { CustomMetricFormContainerProps } from '../CustomMetricForm.types'
 import CustomMetricFormContainer from '../CustomMetricFormContainer'
@@ -28,10 +29,9 @@ import {
 import { validateAddMetricForm } from '../CustomMetricFormContainer.utils'
 import CommonHealthSourceProvider from '../components/CommonHealthSourceContext/CommonHealthSourceContext'
 
-const updateParentFormik = jest.fn()
 function WrapperComponent(props: CustomMetricFormContainerProps): JSX.Element {
   return (
-    <CommonHealthSourceProvider updateParentFormik={updateParentFormik}>
+    <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
       <Formik initialValues={props} onSubmit={jest.fn()}>
         <FormikForm>
           <TestWrapper
@@ -475,7 +475,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
               sourceData: { sourceType: 'SumoLogic', product: { value: 'SUMOLOGIC_LOG' } }
             }}
           >
-            <CommonHealthSourceProvider updateParentFormik={updateParentFormik}>
+            <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
               <Formik initialValues={newProps} onSubmit={jest.fn()}>
                 <FormikForm>
                   <TestWrapper
@@ -516,7 +516,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
               sourceData: { sourceType: 'SumoLogic', product: { value: 'SUMOLOGIC_LOG' }, connectorRef: '<+input>' }
             }}
           >
-            <CommonHealthSourceProvider updateParentFormik={updateParentFormik}>
+            <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
               <Formik initialValues={mockPropsConnectorTemplateProps} onSubmit={jest.fn()}>
                 <FormikForm>
                   <TestWrapper

@@ -11,6 +11,7 @@ import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
+import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
 import { CHART_VISIBILITY_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import CommonCustomMetricFormContainer from '../CommonCustomMetricFormContainer'
 import type { CommonCustomMetricFormContainerProps } from '../CommonCustomMetricFormContainer.types'
@@ -34,7 +35,7 @@ const WrapperComponent = (props: CommonCustomMetricFormContainerProps): JSX.Elem
         orgIdentifier: '1234_ORG'
       }}
     >
-      <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+      <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
         <Formik initialValues={initialValues} onSubmit={jest.fn()}>
           <FormikForm>
             <CommonCustomMetricFormContainer {...props} />

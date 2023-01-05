@@ -11,11 +11,6 @@ import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { CollapseList, CollapseListPanel, Container, Icon, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { isGivenMetricNameContainsThresholds } from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.utils'
-import type {
-  MetricThresholdType,
-  ThresholdsPropertyNames
-} from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.types'
 import MetricMenu from './components/MetricMenu'
 import type { GroupedMetric } from './GroupedSideNav.types'
 import { showWarningIcon } from './GroupedSideNav.utils'
@@ -35,23 +30,11 @@ export default function GroupedSideNav({
   selectedItem,
   onRemoveItem,
   onSelect,
-  isMetricThresholdEnabled,
   openEditMetricModal,
   hideDeleteIcon
 }: GroupedSideNavInterface): JSX.Element {
   const { getString } = useStrings()
-  const { values: formValues, touched, isValid } = useFormikContext()
-
-  const getShowPromptOnDelete = (metricName?: string): boolean => {
-    return Boolean(
-      metricName &&
-        isMetricThresholdEnabled &&
-        isGivenMetricNameContainsThresholds(
-          formValues as Record<ThresholdsPropertyNames, MetricThresholdType[]>,
-          metricName
-        )
-    )
-  }
+  const { touched, isValid } = useFormikContext()
 
   return (
     <>
@@ -112,7 +95,6 @@ export default function GroupedSideNav({
                         metricThresholdWarningContentText={getString(
                           'cv.metricThresholds.customMetricsDeletePromptContent'
                         )}
-                        showPromptOnDelete={getShowPromptOnDelete(selectedApp.metricName)}
                         hideDeleteIcon={hideDeleteIcon}
                       />
                     </Container>

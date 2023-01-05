@@ -1,5 +1,6 @@
 import type { StringKeys } from 'framework/strings'
 import { CHART_VISIBILITY_ENUM, ThresholdTypes } from '../CommonHealthSource.constants'
+import type { CommonHealthSourceConfigurations } from '../CommonHealthSource.types'
 
 export const expectedHealthSourceData = {
   applicationName: 'PR-git-experiment',
@@ -427,4 +428,240 @@ export const mockedSourceData = {
     label: 'SumoLogic Cloud Metrics',
     value: 'SUMOLOGIC_METRICS'
   }
+}
+
+export const mockedSourceDataWithMetricThresholds = {
+  connectorRef: 'account.Sumologic_Metric_Test',
+  isEdit: true,
+  healthSourceList: [
+    {
+      name: 'Health source 2 ',
+      identifier: 'Health_source_2',
+      type: 'NextGenHealthSource',
+      spec: {
+        connectorRef: 'account.Sumologic_Metric_Test',
+        dataSourceType: 'SUMOLOGIC_METRICS',
+        queryDefinitions: [
+          {
+            identifier: 'M1',
+            name: 'M1',
+            groupName: 'G1',
+            liveMonitoringEnabled: false,
+            continuousVerificationEnabled: false,
+            queryParams: {
+              serviceInstanceField: 'test'
+            },
+            sliEnabled: false,
+            query: '*',
+            metricThresholds: [
+              {
+                criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+                metricName: 'M1',
+                metricType: 'Custom',
+                spec: { action: 'Ignore' },
+                type: 'IgnoreThreshold'
+              },
+              {
+                criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+                metricName: 'M1',
+                metricType: 'Custom',
+                spec: { action: 'FailAfterOccurrence' },
+                type: 'FailImmediately'
+              }
+            ],
+            riskProfile: {
+              category: 'Errors',
+              metricType: 'INFRA',
+              thresholdTypes: ['ACT_WHEN_LOWER']
+            }
+          }
+        ]
+      }
+    }
+  ],
+  serviceRef: 's1',
+  environmentRef: 'e1',
+  monitoredServiceRef: {
+    name: 's1_e1',
+    identifier: 's1_e1'
+  },
+  existingMetricDetails: {
+    name: 'Health source 2 ',
+    identifier: 'Health_source_2',
+    type: 'NextGenHealthSource',
+    spec: {
+      connectorRef: 'account.Sumologic_Metric_Test',
+      dataSourceType: 'SUMOLOGIC_METRICS',
+      queryDefinitions: [
+        {
+          identifier: 'M1',
+          name: 'M1',
+          groupName: 'G1',
+          liveMonitoringEnabled: false,
+          continuousVerificationEnabled: false,
+          sliEnabled: false,
+          query: '*',
+          metricThresholds: [
+            {
+              criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+              metricName: 'M1',
+              metricType: 'Custom',
+              spec: { action: 'Ignore' },
+              type: 'IgnoreThreshold'
+            },
+            {
+              criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+              metricName: 'M1',
+              metricType: 'Custom',
+              spec: { action: 'FailAfterOccurrence' },
+              type: 'FailImmediately'
+            }
+          ],
+          riskProfile: {
+            category: 'Errors',
+            metricType: 'INFRA',
+            thresholdTypes: ['ACT_WHEN_LOWER']
+          }
+        }
+      ]
+    }
+  },
+  healthSourceName: 'Health source 2 ',
+  healthSourceIdentifier: 'Health_source_2',
+  sourceType: 'NextGenHealthSource',
+  dataSourceType: null,
+  product: {
+    label: 'SumoLogic Cloud Metrics',
+    value: 'SUMOLOGIC_METRICS'
+  }
+}
+
+export const metricThresholdDisabledPayloadResult = {
+  identifier: 'Health_source_2',
+  name: 'Health source 2 ',
+  spec: {
+    connectorRef: 'account.Sumologic_Metric_Test',
+    dataSourceType: 'SUMOLOGIC_METRICS',
+    queryDefinitions: [
+      {
+        continuousVerificationEnabled: false,
+        groupName: 'G1',
+        identifier: 'M1',
+        liveMonitoringEnabled: false,
+        metricThresholds: [],
+        name: 'M1',
+        query: '*',
+        queryParams: {},
+        riskProfile: {
+          category: 'Performance',
+          metricType: 'INFRA',
+          riskCategory: 'Errors',
+          thresholdTypes: ['ACT_WHEN_LOWER']
+        },
+        sliEnabled: false
+      }
+    ]
+  },
+  type: 'NextGenHealthSource'
+}
+
+const customMetricsMap = new Map()
+customMetricsMap.set('M1', {
+  identifier: 'M1',
+  metricName: 'metric 1',
+  groupName: {
+    label: 'G1',
+    value: 'G1'
+  },
+  query: '*'
+})
+
+export const consfigureHealthSourceDataWithMetricThresholds: CommonHealthSourceConfigurations = {
+  customMetricsMap,
+  selectedMetric: 'M1',
+  ignoreThresholds: [
+    {
+      criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+      metricName: 'metric 1',
+      metricType: 'Custom',
+      spec: { action: 'Ignore' },
+      type: 'IgnoreThreshold'
+    }
+  ],
+  failFastThresholds: [
+    {
+      criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+      metricName: 'metric 1',
+      metricType: 'Custom',
+      spec: { action: 'FailAfterOccurrence' },
+      type: 'FailImmediately'
+    }
+  ]
+}
+
+export const payloadMockWithMetricThresholdsMock = {
+  identifier: 'Health_source_2',
+  name: 'Health source 2 ',
+  spec: {
+    connectorRef: 'account.Sumologic_Metric_Test',
+    dataSourceType: 'SUMOLOGIC_METRICS',
+    queryDefinitions: [
+      {
+        continuousVerificationEnabled: false,
+        groupName: 'G1',
+        identifier: 'M1',
+        liveMonitoringEnabled: false,
+        metricThresholds: [
+          {
+            criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+            metricName: 'metric 1',
+            metricType: 'Custom',
+            spec: { action: 'Ignore' },
+            type: 'IgnoreThreshold'
+          },
+          {
+            criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+            metricName: 'metric 1',
+            metricType: 'Custom',
+            spec: { action: 'FailAfterOccurrence' },
+            type: 'FailImmediately'
+          }
+        ],
+        name: 'metric 1',
+        query: '*',
+        queryParams: {},
+        riskProfile: {
+          category: 'Performance',
+          metricType: 'INFRA',
+          riskCategory: 'Errors',
+          thresholdTypes: ['ACT_WHEN_LOWER']
+        },
+        sliEnabled: false
+      }
+    ]
+  },
+  type: 'NextGenHealthSource'
+}
+
+export const expectedMetrithresholdsEdit = {
+  customMetricsMap: customMetricsMap,
+  failFastThresholds: [
+    {
+      criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+      metricName: 'M1',
+      metricType: 'Custom',
+      spec: { action: 'FailAfterOccurrence' },
+      type: 'FailImmediately'
+    }
+  ],
+  ignoreThresholds: [
+    {
+      criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+      metricName: 'M1',
+      metricType: 'Custom',
+      spec: { action: 'Ignore' },
+      type: 'IgnoreThreshold'
+    }
+  ],
+  selectedMetric: 'M1'
 }

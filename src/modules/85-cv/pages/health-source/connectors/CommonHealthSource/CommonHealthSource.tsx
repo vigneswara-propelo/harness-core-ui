@@ -29,6 +29,7 @@ import { DEFAULT_HEALTH_SOURCE_QUERY } from './CommonHealthSource.constants'
 import { cleanUpMappedMetrics } from './components/CustomMetricForm/CustomMetricFormContainer.utils'
 import CustomMetricFormContainer from './components/CustomMetricForm/CustomMetricFormContainer'
 import MetricThresholdContainer from './components/MetricThresholds/MetricThresholdContainer'
+import { getMetricNameFilteredMetricThresholds } from '../MonitoredServiceConnector.utils'
 import css from './CommonHealthSource.module.scss'
 
 export interface CommonHealthSourceProps {
@@ -65,17 +66,40 @@ export default function CommonHealthSource({
       onSubmit={noop}
     >
       {formik => {
-        const { customMetricsMap, selectedMetric: currentSelectedMetric = '' } = formik.values
+        const {
+          customMetricsMap,
+          selectedMetric: currentSelectedMetric = '',
+          ignoreThresholds,
+          failFastThresholds
+        } = formik.values
 
-        const createdMetrics = Array.from(formik.values.customMetricsMap.keys()) || [DEFAULT_HEALTH_SOURCE_QUERY]
-        const groupedCreatedMetrics = initGroupedCreatedMetrics(formik.values.customMetricsMap, getString)
+        const createdMetrics = Array.from(customMetricsMap.keys()) || [DEFAULT_HEALTH_SOURCE_QUERY]
+        const groupedCreatedMetrics = initGroupedCreatedMetrics(customMetricsMap, getString)
         cleanUpMappedMetrics(customMetricsMap)
+
+        const filterRemovedMetricNameThresholds = (deletedMetricName: string): void => {
+          if (isMetricThresholdEnabled && deletedMetricName) {
+            const metricThresholds = {
+              ignoreThresholds,
+              failFastThresholds
+            }
+
+            const updatedMetricThresholds = getMetricNameFilteredMetricThresholds({
+              isMetricThresholdEnabled,
+              metricThresholds,
+              metricName: deletedMetricName
+            })
+
+            formik.setFieldValue('ignoreThresholds', updatedMetricThresholds.ignoreThresholds)
+            formik.setFieldValue('failFastThresholds', updatedMetricThresholds.failFastThresholds)
+          }
+        }
 
         return (
           <>
             {/* Non custom fields section can be added here */}
 
-            <CommonHealthSourceProvider updateParentFormik={formik.setFieldValue}>
+            <CommonHealthSourceProvider updateParentFormik={formik.setFieldValue} parentFormValues={formik.values}>
               <FormikForm>
                 <Formik<CommonCustomMetricFormikInterface>
                   enableReinitialize
@@ -99,6 +123,7 @@ export default function CommonHealthSource({
                           expressions={expressions}
                           healthSourceConfig={healthSourceConfig}
                           groupedCreatedMetrics={groupedCreatedMetrics}
+                          filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
                         />
                       </FormikForm>
                     )

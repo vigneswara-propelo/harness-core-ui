@@ -79,7 +79,7 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
         filterRemovedMetricNameThresholds(removedMetric)
       }
     },
-    [formikValues, isMetricThresholdEnabled, mappedMetrics, selectedMetric]
+    [formikValues, isMetricThresholdEnabled, mappedMetrics, selectedMetric, filterRemovedMetricNameThresholds]
   )
 
   const selectMetric = useCallback(

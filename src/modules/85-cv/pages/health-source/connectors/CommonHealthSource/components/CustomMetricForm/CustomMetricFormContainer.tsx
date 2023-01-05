@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MutableRefObject, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { MutableRefObject, useContext, useEffect, useRef, useState } from 'react'
 import { useModalHook } from '@harness/use-modal'
 import {
   Button,
@@ -53,7 +53,8 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     groupedCreatedMetrics,
     isTemplate,
     expressions,
-    connectorIdentifier: connectorRef
+    connectorIdentifier: connectorRef,
+    filterRemovedMetricNameThresholds
   } = props
 
   const {
@@ -81,15 +82,6 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
       metricDefinition.metricName === mappedMetrics.get(selectedMetric || '')?.metricName
   )
   const isEdit = Boolean(formValues?.identifier)
-
-  const filterRemovedMetricNameThresholds = useCallback(
-    (deletedMetricName: string) => {
-      if (isMetricThresholdEnabled && deletedMetricName) {
-        // TODO implement this later
-      }
-    },
-    [isMetricThresholdEnabled]
-  )
 
   function useUpdateConfigFormikOnOutsideClick(
     ref: MutableRefObject<any>,
