@@ -338,7 +338,7 @@ function ServiceNowImportSetStepMode(
         ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
-          connectorRef: ConnectorRefSchema({
+          connectorRef: ConnectorRefSchema(getString, {
             requiredErrorMsg: getString('pipeline.serviceNowApprovalStep.validations.connectorRef')
           }),
           stagingTableName: Yup.lazy((value?: string): Yup.Schema<string | undefined> => {

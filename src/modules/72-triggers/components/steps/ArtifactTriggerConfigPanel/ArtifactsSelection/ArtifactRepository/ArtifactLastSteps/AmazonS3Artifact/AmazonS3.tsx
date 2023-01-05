@@ -114,7 +114,7 @@ export function AmazonS3(
   }
   const sidecarSchema = Yup.object().shape({
     ...schemaObject,
-    ...ArtifactIdentifierValidation([], initialValues?.identifier, getString('pipeline.uniqueIdentifier'))
+    ...ArtifactIdentifierValidation(getString, [], initialValues?.identifier, getString('pipeline.uniqueIdentifier'))
   })
 
   const primarySchema = Yup.object().shape(schemaObject)

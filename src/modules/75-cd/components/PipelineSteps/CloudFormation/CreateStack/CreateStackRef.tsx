@@ -268,7 +268,7 @@ export const CreateStack = (
             return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
           }),
           configuration: Yup.object().shape({
-            connectorRef: ConnectorRefSchema(),
+            connectorRef: ConnectorRefSchema(getString),
             region: Yup.string().required(getString('cd.cloudFormation.errors.region')),
             stackName: Yup.string().required(getString('cd.cloudFormation.errors.stackName')),
             templateFile: Yup.object().shape({

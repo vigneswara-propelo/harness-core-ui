@@ -137,7 +137,12 @@ function HarnessFileStore({
         formName="harnessFileStore"
         validationSchema={Yup.object().shape({
           ...(showIdentifierField
-            ? ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName'))
+            ? ManifestIdentifierValidation(
+                getString,
+                manifestIdsList,
+                initialValues?.identifier,
+                getString('pipeline.uniqueName')
+              )
             : {}),
           files: Yup.lazy((value): Yup.Schema<unknown> => {
             if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {

@@ -81,7 +81,7 @@ export const AzureArmRef = (
           return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
         }),
         configuration: Yup.object().shape({
-          connectorRef: ConnectorRefSchema(),
+          connectorRef: ConnectorRefSchema(getString),
           template: Yup.object().shape({
             store: Yup.object({
               type: Yup.string(),

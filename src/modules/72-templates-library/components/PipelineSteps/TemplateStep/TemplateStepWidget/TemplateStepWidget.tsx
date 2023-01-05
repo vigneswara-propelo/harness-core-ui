@@ -200,8 +200,8 @@ function TemplateStepWidget(
         initialValues={formValues}
         formName="templateStepWidget"
         validationSchema={Yup.object().shape({
-          name: NameSchema({ requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
-          identifier: IdentifierSchema()
+          name: NameSchema(getString, { requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
+          identifier: IdentifierSchema(getString)
         })}
         validate={validateForm}
         enableReinitialize={true}
