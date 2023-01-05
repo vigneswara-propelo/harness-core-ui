@@ -113,6 +113,9 @@ function PrimaryArtifactRef({
               set(draft, `${path}.artifacts.primary.sources`, undefined)
             })
           )
+        } else {
+          updateStageFormTemplate(undefined, `${path}.artifacts.primary.sources`)
+          formik?.setFieldValue(`${path}.artifacts.primary.sources`, undefined)
         }
       }
     }
