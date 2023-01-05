@@ -143,6 +143,7 @@
           var e = document.createElement('script')
           e.setAttribute('type', 'text/javascript')
           e.setAttribute('src', 'https://widget.saberfeedback.com/v2/widget.js')
+          e.setAttribute('defer', 'defer')
           e.onload = function () {
             Saber.do('set_option', 'hide_button', true)
             Saber.do('set_option', 'show_thanks', false)
