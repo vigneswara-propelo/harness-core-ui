@@ -8243,7 +8243,37 @@ export interface StringsMap {
   'sto.noSecurityResults': string
   'sto.scans': string
   'sto.securityStage.description': string
+  'sto.stepDescription.AquaTrivy': string
+  'sto.stepDescription.Bandit': string
+  'sto.stepDescription.Blackduckhub': string
+  'sto.stepDescription.Brakeman': string
+  'sto.stepDescription.Burp': string
+  'sto.stepDescription.Checkmarx': string
+  'sto.stepDescription.Fortify': string
+  'sto.stepDescription.FortifyOnDemand': string
+  'sto.stepDescription.Owasp': string
+  'sto.stepDescription.ScoutSuite': string
+  'sto.stepDescription.Snyk': string
+  'sto.stepDescription.TwistLock': string
+  'sto.stepDescription.Veracode': string
+  'sto.stepDescription.WhiteSource': string
+  'sto.stepDescription.Zap': string
   'sto.stepDescription.ZeroNorth': string
+  'sto.stepField.advanced.cli': string
+  'sto.stepField.advanced.failOnSeverity': string
+  'sto.stepField.advanced.includeRaw': string
+  'sto.stepField.advanced.logLevel': string
+  'sto.stepField.advanced.passthrough': string
+  'sto.stepField.advanced.serializer': string
+  'sto.stepField.config': string
+  'sto.stepField.ingestion.file': string
+  'sto.stepField.mode': string
+  'sto.stepField.optionLabels.logLevel.debug': string
+  'sto.stepField.target.name': string
+  'sto.stepField.target.ssl': string
+  'sto.stepField.target.type': string
+  'sto.stepField.target.variant': string
+  'sto.stepField.target.workspace': string
   'sto.stoExemption': string
   'sto.targets.testTargets': string
   'sto.zeroNorthImagePlaceholder': string
