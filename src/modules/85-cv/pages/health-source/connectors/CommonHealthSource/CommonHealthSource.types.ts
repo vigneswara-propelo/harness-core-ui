@@ -50,7 +50,7 @@ export interface HealthSourceConfig {
       enabled: boolean
     }
   }
-  metricPacks: {
+  metricPacks?: {
     enabled: boolean
   }
   sideNav?: {

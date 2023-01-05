@@ -1,6 +1,5 @@
 import type { StringKeys } from 'framework/strings'
 import { CHART_VISIBILITY_ENUM, ThresholdTypes } from '../CommonHealthSource.constants'
-import type { CommonCustomMetricFormikInterface } from '../CommonHealthSource.types'
 
 export const expectedHealthSourceData = {
   applicationName: 'PR-git-experiment',
@@ -155,63 +154,6 @@ export const healthSourceMetricValue = {
   sli: true
 }
 
-export const sourceDataMock = {
-  connectorRef: 'SumoLogic',
-  isEdit: false,
-  healthSourceList: [],
-  serviceRef: 'svcddmetricsshs',
-  environmentRef: 'envddmetricsshs',
-  monitoredServiceRef: {
-    name: 'svcddmetricsshs_envddmetricsshs',
-    identifier: 'svcddmetricsshs_envddmetricsshs'
-  },
-  existingMetricDetails: null,
-  sourceType: 'SumoLogic',
-  dataSourceType: null,
-  product: {
-    value: 'METRICS',
-    label: 'SumoLogic Cloud Metrics'
-  },
-  healthSourceName: 'test_Sumo_healthSource',
-  healthSourceIdentifier: 'test_Sumo_healthSource',
-  customMetricsMap: new Map([]),
-  selectedMetric: '',
-  ignoreThresholds: [],
-  failFastThresholds: []
-}
-
-export const sourceDataMockWithcustomMetrics = {
-  ...sourceDataMock,
-  customMetricsMap: new Map([
-    [
-      'metric',
-      {
-        metricName: 'test',
-        identifier: 'test',
-        groupName: { label: 'test', value: 'test' },
-        continuousVerification: true,
-        query: 'test query'
-      }
-    ]
-  ]) as Map<string, CommonCustomMetricFormikInterface>
-}
-
-export const sourceDataMockWithcustomMetricsCVDisabled = {
-  ...sourceDataMock,
-  customMetricsMap: new Map([
-    [
-      'metric',
-      {
-        metricName: 'test',
-        identifier: 'test',
-        groupName: 'test',
-        continuousVerification: false,
-        query: 'test query'
-      }
-    ]
-  ]) as Map<string, CommonCustomMetricFormikInterface>
-}
-
 export const healthSourceConfig = {
   addQuery: {
     label: 'Metric',
@@ -236,13 +178,6 @@ export const healthSourceConfig = {
   },
   metricThresholds: {
     enabled: true
-  }
-}
-
-export const healthSourceConfigWithMetricThresholdsDisabled = {
-  ...healthSourceConfig,
-  metricThresholds: {
-    enabled: false
   }
 }
 

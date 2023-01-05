@@ -25,11 +25,10 @@ import {
 } from './CommonHealthSource.utils'
 import { initGroupedCreatedMetrics } from '../../common/CommonCustomMetric/CommonCustomMetric.utils'
 import CommonHealthSourceProvider from './components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
-import { getCanShowMetricThresholds } from '../../common/MetricThresholds/MetricThresholds.utils'
-import MetricThresholdProvider from './components/MetricThresholds/MetricThresholdProvider'
 import { DEFAULT_HEALTH_SOURCE_QUERY } from './CommonHealthSource.constants'
 import { cleanUpMappedMetrics } from './components/CustomMetricForm/CustomMetricFormContainer.utils'
 import CustomMetricFormContainer from './components/CustomMetricForm/CustomMetricFormContainer'
+import MetricThresholdContainer from './components/MetricThresholds/MetricThresholdContainer'
 import css from './CommonHealthSource.module.scss'
 
 export interface CommonHealthSourceProps {
@@ -71,12 +70,6 @@ export default function CommonHealthSource({
         const createdMetrics = Array.from(formik.values.customMetricsMap.keys()) || [DEFAULT_HEALTH_SOURCE_QUERY]
         const groupedCreatedMetrics = initGroupedCreatedMetrics(formik.values.customMetricsMap, getString)
         cleanUpMappedMetrics(customMetricsMap)
-        const isShowMetricThreshold = getCanShowMetricThresholds({
-          isMetricThresholdConfigEnabled: Boolean(healthSourceConfig?.metricThresholds?.enabled),
-          isMetricPacksEnabled: Boolean(healthSourceConfig?.metricPacks?.enabled),
-          groupedCreatedMetrics,
-          isMetricThresholdEnabled
-        })
 
         return (
           <>
@@ -111,14 +104,11 @@ export default function CommonHealthSource({
                     )
                   }}
                 </Formik>
-                {isShowMetricThreshold && (
-                  <MetricThresholdProvider
-                    formikValues={formik.values}
-                    groupedCreatedMetrics={groupedCreatedMetrics}
-                    metricPacks={[]}
-                    isOnlyCustomMetricHealthSource={!healthSourceConfig?.metricPacks?.enabled}
-                  />
-                )}
+                <MetricThresholdContainer
+                  healthSourceConfig={healthSourceConfig}
+                  groupedCreatedMetrics={groupedCreatedMetrics}
+                  isMetricThresholdEnabled={isMetricThresholdEnabled}
+                />
               </FormikForm>
               <Container height={200} />
             </CommonHealthSourceProvider>
