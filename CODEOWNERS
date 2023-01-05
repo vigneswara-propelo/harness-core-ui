@@ -87,3 +87,5 @@ src/modules/75-ce/pages/home @harness/ui-plg
 src/modules/75-cf/modals/FFTrial @harness/ui-plg
 src/modules/75-cf/pages/home @harness/ui-plg
 src/modules/75-ce @harness/ui-ce
+src/modules/75-chaos @harness/ui-chaos
+src/modules/70-pipeline/pages/execution/ResilienceView @harness/ui-chaos
