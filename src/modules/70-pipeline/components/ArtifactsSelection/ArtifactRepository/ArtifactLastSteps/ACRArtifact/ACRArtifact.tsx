@@ -542,7 +542,7 @@ export function ACRArtifact({
                         ) {
                           return
                         }
-                        if (connectorRef === RUNTIME_INPUT_VALUE) {
+                        if (!connectorRef || connectorRef === RUNTIME_INPUT_VALUE) {
                           return
                         }
 
@@ -618,6 +618,7 @@ export function ACRArtifact({
                         const subscriptionId = getValue(formik?.values?.subscriptionId)
 
                         if (
+                          !connectorRef ||
                           connectorRef === RUNTIME_INPUT_VALUE ||
                           !subscriptionId ||
                           subscriptionId === RUNTIME_INPUT_VALUE
@@ -704,6 +705,7 @@ export function ACRArtifact({
                         const registry = getValue(formik?.values?.registry)
 
                         if (
+                          !connectorRef ||
                           connectorRef === RUNTIME_INPUT_VALUE ||
                           !subscriptionId ||
                           subscriptionId === RUNTIME_INPUT_VALUE ||
