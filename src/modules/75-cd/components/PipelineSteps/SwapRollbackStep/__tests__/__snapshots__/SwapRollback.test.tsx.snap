@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`SwapRollbackStep tests Variables view renders fine 1`] = `
+<div>
+  <div
+    class="variablesListTable variablePaddingL3"
+  />
+</div>
+`;
+
 exports[`SwapRollbackStep tests should render edit view as edit step with all runtime inputs 1`] = `
 <div>
   <div

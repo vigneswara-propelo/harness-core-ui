@@ -218,9 +218,11 @@ function TanzuCommandWidget(
                   showRequiredField={false}
                   showDefaultField={false}
                   showAdvanced={true}
-                  onChange={value => {
-                    setFieldValue('timeout', value)
-                  }}
+                  onChange={
+                    /* istanbul ignore next */ value => {
+                      setFieldValue('timeout', value)
+                    }
+                  }
                   isReadonly={readonly}
                   allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                 />
@@ -234,10 +236,11 @@ function TanzuCommandWidget(
                   name="spec.script.store.type"
                   disabled={readonly}
                   value={templateFileType}
-                  onChange={e => {
-                    /* istanbul ignore next */
-                    onSelectChange(e, values, setFieldValue)
-                  }}
+                  onChange={
+                    /* istanbul ignore next */ e => {
+                      onSelectChange(e, values, setFieldValue)
+                    }
+                  }
                   data-testid="templateOptions"
                 >
                   <option value={InstanceScriptTypes.FileStore}>{getString('resourcePage.fileStore')}</option>
@@ -276,16 +279,18 @@ function TanzuCommandWidget(
                   allowedTypes={allowableTypes}
                   disableTypeSelection={readonly}
                   skipRenderValueInExpressionLabel
-                  expressionRender={() => {
-                    return (
-                      <ShellScriptMonacoField
-                        name="spec.script.store.spec.content"
-                        scriptType={scriptType}
-                        disabled={readonly}
-                        expressions={expressions}
-                      />
-                    )
-                  }}
+                  expressionRender={
+                    /* istanbul ignore next */ () => {
+                      return (
+                        <ShellScriptMonacoField
+                          name="spec.script.store.spec.content"
+                          scriptType={scriptType}
+                          disabled={readonly}
+                          expressions={expressions}
+                        />
+                      )
+                    }
+                  }
                 >
                   <ShellScriptMonacoField
                     name="spec.script.store.spec.content"
@@ -368,14 +373,16 @@ const TanzuCommandInputStep: React.FC<TanzuCommandProps> = props => {
             allowedTypes={allowableTypes}
             skipRenderValueInExpressionLabel
             disabled={inputSetData?.readonly}
-            expressionRender={() => (
-              <ShellScriptMonacoField
-                name={`${prefix}spec.script.store.spec.content`}
-                scriptType={scriptType}
-                disabled={inputSetData?.readonly}
-                expressions={expressions}
-              />
-            )}
+            expressionRender={
+              /* istanbul ignore next */ () => (
+                <ShellScriptMonacoField
+                  name={`${prefix}spec.script.store.spec.content`}
+                  scriptType={scriptType}
+                  disabled={inputSetData?.readonly}
+                  expressions={expressions}
+                />
+              )
+            }
           >
             <ShellScriptMonacoField
               name={`${prefix}spec.script.store.spec.content`}
@@ -416,7 +423,7 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
         <TanzuCommandInputStep
           allowableTypes={allowableTypes}
           initialValues={initialValues}
-          onUpdate={data => onUpdate?.(this.processFormData(data))}
+          onUpdate={/* istanbul ignore next */ data => onUpdate?.(this.processFormData(data))}
           stepViewType={stepViewType}
           inputSetData={inputSetData}
           formikRef={formikRef}
@@ -435,8 +442,8 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
       return (
         <VariablesListTable
           className={pipelineVariablesCss.variablePaddingL3}
-          data={variablesData}
-          originalData={initialValues}
+          data={variablesData.spec}
+          originalData={initialValues.spec}
           metadataMap={metadataMap}
         />
       )

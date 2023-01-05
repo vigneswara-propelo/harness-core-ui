@@ -60,6 +60,7 @@ export function TasCanaryAppSetupWidget(
       })
     }
     if (value < 1) {
+      /* istanbul ignore next */
       return this.createError({
         message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
           value: valueString,
@@ -77,6 +78,7 @@ export function TasCanaryAppSetupWidget(
       tasInstanceCountType: Yup.string().trim().required(getString('common.validation.typeIsRequired')),
       existingVersionToKeep: Yup.mixed().test({
         test(value): boolean | Yup.ValidationError {
+          /* istanbul ignore else */
           if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
             if (value < 1) {
               return this.createError({

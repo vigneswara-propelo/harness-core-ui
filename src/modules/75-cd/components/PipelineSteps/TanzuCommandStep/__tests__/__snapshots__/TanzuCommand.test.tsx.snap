@@ -328,6 +328,14 @@ exports[`TanzuCommandStep tests InputSet view renders errors 1`] = `
 </div>
 `;
 
+exports[`TanzuCommandStep tests Variables view renders fine 1`] = `
+<div>
+  <div
+    class="variablesListTable variablePaddingL3"
+  />
+</div>
+`;
+
 exports[`TanzuCommandStep tests should render edit view as edit step with all runtime inputs 1`] = `
 <div>
   <div

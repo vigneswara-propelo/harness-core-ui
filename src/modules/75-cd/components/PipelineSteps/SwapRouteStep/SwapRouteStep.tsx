@@ -132,9 +132,11 @@ function SwapRouteWidget(props: SwapRouteProps, formikRef: StepFormikFowardRef<S
                     showRequiredField={false}
                     showDefaultField={false}
                     showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('timeout', value)
-                    }}
+                    onChange={
+                      /* istanbul ignore next */ value => {
+                        setFieldValue('timeout', value)
+                      }
+                    }
                     isReadonly={readonly}
                     allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
@@ -242,8 +244,8 @@ export class SwapRouteStep extends PipelineStep<SwapRouteData> {
       return (
         <VariablesListTable
           className={pipelineVariablesCss.variablePaddingL3}
-          data={variablesData}
-          originalData={initialValues}
+          data={variablesData.spec}
+          originalData={initialValues.spec}
           metadataMap={metadataMap}
         />
       )

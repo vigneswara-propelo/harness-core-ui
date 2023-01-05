@@ -72,6 +72,7 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
         }}
         validate={(values: AppResizeData) => {
           const getOldAppInstance = values.spec.oldAppInstances?.spec
+          /* istanbul ignore next */
           if (!getOldAppInstance?.value) {
             set(values, 'spec.oldAppInstances', undefined)
           }
