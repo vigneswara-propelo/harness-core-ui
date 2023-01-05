@@ -4127,6 +4127,7 @@ export interface StringsMap {
   'pipeline.requiredToFetch': string
   'pipeline.resilienceTab.title': string
   'pipeline.resourceConstraints.currentlyExecuting': string
+  'pipeline.resourceConstraints.elastigroupInfraEntity': string
   'pipeline.resourceConstraints.infoText': string
   'pipeline.resourceConstraints.k8sNamespaceText': string
   'pipeline.resourceConstraints.serverlessInfraEntity': string

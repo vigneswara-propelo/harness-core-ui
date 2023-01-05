@@ -564,6 +564,7 @@ resourceConstraints:
   yourPipeline: ' ( your execution )'
   k8sNamespaceText: K8s namespace
   serverlessInfraEntity: serverless infrastructure entity
+  elastigroupInfraEntity: Elastigroup Infrastructure
 targets:
   title: Targets
 barriers:
