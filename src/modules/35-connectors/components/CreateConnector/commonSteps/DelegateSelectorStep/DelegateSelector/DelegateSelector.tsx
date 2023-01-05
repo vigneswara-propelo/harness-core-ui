@@ -90,7 +90,7 @@ const CustomRadioGroup: React.FC<CustomRadioGroupProps> = props => {
               value={item.value}
               color={Color.GREY_800}
               className={css.radio}
-              checked={item.checked}
+              defaultChecked={item.checked}
               disabled={item.disabled}
               onClick={() => onClick(item.value as DelegateOptions)}
             />
