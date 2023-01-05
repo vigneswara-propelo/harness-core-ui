@@ -614,6 +614,7 @@ export interface StringsMap {
   'common.ok': string
   'common.on': string
   'common.onPremSaaSPlansMsg': string
+  'common.openInNewTab': string
   'common.operator': string
   'common.optionalConfig': string
   'common.optionalLabel': string
@@ -4015,7 +4016,6 @@ export interface StringsMap {
   'pipeline.numOfStage': string
   'pipeline.numOfStages': string
   'pipeline.onlyPositiveInteger': string
-  'pipeline.openInNewTab': string
   'pipeline.openInPipelineStudio': string
   'pipeline.openPipelineInNewTab': string
   'pipeline.openTemplateInNewTabLabel': string
