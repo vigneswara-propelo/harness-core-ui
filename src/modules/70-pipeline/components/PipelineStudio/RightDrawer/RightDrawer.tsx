@@ -38,6 +38,7 @@ import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -293,10 +294,10 @@ const updateWithNodeIdentifier = async (
   updateStage: (stage: StageElementConfig) => Promise<void>,
   data: any,
   pipelineView: PipelineViewData,
-  isRollback: boolean
+  isRollback: boolean,
+  provisionerPath: string
 ): Promise<void> => {
-  const provisioner = (selectedStage?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
-    ?.infrastructureDefinition?.provisioner
+  const provisioner = get(selectedStage?.stage as DeploymentStageElementConfig, `spec.${provisionerPath}`)
   if (drawerType === DrawerTypes.StepConfig && selectedStage?.stage?.spec?.execution) {
     const processingNodeIdentifier = data?.stepConfig?.node?.identifier
     const stageData = produce(selectedStage, draft => {
@@ -319,8 +320,7 @@ const updateWithNodeIdentifier = async (
   } else if (drawerType === DrawerTypes.ProvisionerStepConfig && provisioner) {
     const processingNodeIdentifier = data?.stepConfig?.node?.identifier
     const stageData = produce(selectedStage, draft => {
-      const provisionerInternal = (draft?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
-        ?.infrastructureDefinition?.provisioner
+      const provisionerInternal = get(draft?.stage as DeploymentStageElementConfig, `spec.${provisionerPath}`)
       if (provisionerInternal) {
         updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode, isRollback)
       }
@@ -347,7 +347,8 @@ const onSubmitStep = async (
   updatePipelineView: (data: PipelineViewData) => void,
   updateStage: (stage: StageElementConfig) => Promise<void>,
   pipelineView: PipelineViewData,
-  isRollback: boolean
+  isRollback: boolean,
+  provisionerPath: string
 ): Promise<void> => {
   if (data?.stepConfig?.node) {
     const processNode = processNodeImpl(item, data, trackEvent)
@@ -361,7 +362,8 @@ const onSubmitStep = async (
         updateStage,
         data,
         pipelineView,
-        isRollback
+        isRollback,
+        provisionerPath
       )
     }
   }
@@ -377,7 +379,8 @@ const applyChanges = async (
   trackEvent: TrackEvent,
   isRollback: boolean,
   selectedStage: StageElementWrapper<StageElementConfig> | undefined,
-  updateStage: (stage: StageElementConfig) => Promise<void>
+  updateStage: (stage: StageElementConfig) => Promise<void>,
+  provisionerPath: string
 ): Promise<void> => {
   if (checkDuplicateStep(formikRef, data, getString)) {
     return
@@ -402,7 +405,8 @@ const applyChanges = async (
           })
         }
       }),
-      isRollback
+      isRollback,
+      provisionerPath
     )
 
     setSelectedStepId(undefined)
@@ -531,6 +535,12 @@ export function RightDrawer(): React.ReactElement {
     stepData = stepsFactory.getStepData(StepType.StepGroup)
   }
 
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+
+  const provisionerPath = NG_SVC_ENV_REDESIGN
+    ? 'environment.provisioner'
+    : 'infrastructure.infrastructureDefinition.provisioner'
+
   const discardChanges = (): void => {
     updatePipelineView({
       ...pipelineView,
@@ -564,7 +574,8 @@ export function RightDrawer(): React.ReactElement {
             trackEvent,
             !!isRollbackToggled,
             selectedStage,
-            updateStage
+            updateStage,
+            provisionerPath
           )
         }
       ></RightDrawerTitle>
@@ -724,7 +735,8 @@ export function RightDrawer(): React.ReactElement {
           trackEvent,
           !!isRollbackToggled,
           selectedStage,
-          updateStage
+          updateStage,
+          provisionerPath
         )
       }
     },
@@ -740,8 +752,7 @@ export function RightDrawer(): React.ReactElement {
     stepsMap?.forEach((_value, key: string) => {
       const stepDetails = getStepFromId(
         isProvisioner
-          ? (selectedStage as StageElementWrapper<DeploymentStageElementConfig>)?.stage?.spec?.infrastructure
-              ?.infrastructureDefinition?.provisioner
+          ? get(selectedStage as StageElementWrapper<DeploymentStageElementConfig>, `stage.spec.${provisionerPath}`)
           : selectedStage?.stage?.spec?.execution,
         key
       )
@@ -838,8 +849,7 @@ export function RightDrawer(): React.ReactElement {
       if (drawerType === DrawerTypes.StepConfig && draft?.stage?.spec?.execution) {
         updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode, isRollback)
       } else if (drawerType === DrawerTypes.ProvisionerStepConfig) {
-        const provisionerInternal = (draft?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
-          ?.infrastructureDefinition?.provisioner
+        const provisionerInternal = get(draft?.stage as DeploymentStageElementConfig, `spec.${provisionerPath}`)
         if (provisionerInternal) {
           updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode, isRollback)
         }
@@ -977,7 +987,8 @@ export function RightDrawer(): React.ReactElement {
               updatePipelineView,
               updateStage,
               pipelineView,
-              Boolean(isRollbackToggled)
+              Boolean(isRollbackToggled),
+              provisionerPath
             )
           }}
           viewType={StepCommandsViews.Pipeline}
@@ -1079,17 +1090,14 @@ export function RightDrawer(): React.ReactElement {
 
               data?.paletteData?.onUpdate?.(newStepData.step)
 
-              if (
-                pipelineStage &&
-                !get(pipelineStage?.stage, 'spec.infrastructure.infrastructureDefinition.provisioner')
-              ) {
-                set(pipelineStage, 'stage.spec.infrastructure.infrastructureDefinition.provisioner', {
+              if (pipelineStage && !get(pipelineStage?.stage, `spec.${provisionerPath}`)) {
+                set(pipelineStage, `stage.spec.${provisionerPath}`, {
                   steps: [],
                   rollbackSteps: []
                 })
               }
 
-              const provisioner = get(pipelineStage?.stage, 'spec.infrastructure.infrastructureDefinition.provisioner')
+              const provisioner = get(pipelineStage?.stage, `spec.${provisionerPath}`)
               // set empty arrays
               if (!paletteData.isRollback && !provisioner.steps) provisioner.steps = []
               if (paletteData.isRollback && !provisioner.rollbackSteps) provisioner.rollbackSteps = []
@@ -1152,7 +1160,8 @@ export function RightDrawer(): React.ReactElement {
               updatePipelineView,
               updateStage,
               pipelineView,
-              Boolean(isRollbackToggled)
+              Boolean(isRollbackToggled),
+              provisionerPath
             )
           }
           isStepGroup={data.stepConfig.isStepGroup}

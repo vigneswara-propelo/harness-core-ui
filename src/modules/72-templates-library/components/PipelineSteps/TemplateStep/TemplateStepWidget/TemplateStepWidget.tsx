@@ -29,12 +29,12 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { validateStep } from '@pipeline/components/PipelineStudio/StepUtil'
-import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
 import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useQueryParams } from '@common/hooks'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { StepForm } from '@pipeline/components/PipelineInputSetForm/StepInputSetForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TemplateStepWidget.module.scss'
 
