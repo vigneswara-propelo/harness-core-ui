@@ -33,6 +33,7 @@ previewTemplateLabel: Preview Template YAML
 templateInputs: Template Inputs
 onlyPositiveInteger: Only positive integer values
 depth: Depth
+feedsText: Feeds
 advancedOptions: Advanced Options
 additionalConfiguration: Additional Configuration
 pipelineTimeoutSettings: Pipeline Timeout Settings

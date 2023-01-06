@@ -505,8 +505,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
           ? Yup.object().required(getString('pipeline.jenkinsStep.validations.jobName')) // typeError is necessary here, otherwise we get a bad-looking yup error
           : Yup.string().required(getString('pipeline.jenkinsStep.validations.jobName'))
       ),
-      artifactPath: Yup.string(),
-      build: Yup.string().required('Build is a required Field')
+      artifactPath: Yup.string()
     })
   }
 

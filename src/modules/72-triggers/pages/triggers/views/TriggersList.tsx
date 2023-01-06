@@ -17,6 +17,7 @@ import routes from '@common/RouteDefinitions'
 import { useGetTriggerListForTarget } from 'services/pipeline-ng'
 import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { AddDrawer } from '@common/components'
 import { DrawerContext } from '@common/components/AddDrawer/AddDrawer'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -38,7 +39,7 @@ interface TriggersListPropsInterface {
 export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {
   const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled } = props
   const { branch, repoIdentifier, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
-
+  const { CD_TRIGGER_V2 } = useFeatureFlags()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<{
       projectIdentifier: string
@@ -172,7 +173,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
 
     return (
       <AddDrawer
-        addDrawerMap={getCategoryItems(getString, false)}
+        addDrawerMap={getCategoryItems(getString, false, CD_TRIGGER_V2)}
         onSelect={onSelect}
         onClose={hideDrawer}
         drawerContext={DrawerContext.STUDIO}
