@@ -1557,3 +1557,8 @@ pipelineCachedCopy:
   newCacheVersion: New Cache version is available, click reload to view details.
 resilienceTab:
   title: Resilience
+noServicesFound: No Services Available
+noEnvironmentGroupsFound: No Environment Groups Available
+envGroupLabel: Select an existing Environment Group
+envLabel: Select an existing Environment
+serviceLabel: Select an existing service

@@ -234,6 +234,8 @@ export default function DeployEnvironmentGroup({
             setRefValue
             disabled={disabled}
             placeholder={placeHolderForEnvironmentGroup}
+            openAddNewModal={openAddNewModal}
+            isNewConnectorLabelVisible
             onChange={item => {
               setSelectedEnvironmentGroups([item])
             }}

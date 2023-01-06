@@ -3525,6 +3525,8 @@ export interface StringsMap {
   'pipeline.enableVerificationOptions': string
   'pipeline.enableVerificationTitle': string
   'pipeline.enterBuildRegex': string
+  'pipeline.envGroupLabel': string
+  'pipeline.envLabel': string
   'pipeline.errorFramework.fixErrors': string
   'pipeline.errorFramework.fixStage': string
   'pipeline.errorFramework.fixStep': string
@@ -4001,6 +4003,7 @@ export interface StringsMap {
   'pipeline.noBuckets': string
   'pipeline.noBucketsFound': string
   'pipeline.noClustersFound': string
+  'pipeline.noEnvironmentGroupsFound': string
   'pipeline.noFilePathsFound': string
   'pipeline.noPipelinesLabel': string
   'pipeline.noPipelinesText': string
@@ -4008,6 +4011,7 @@ export interface StringsMap {
   'pipeline.noRunsLabel': string
   'pipeline.noRunsSimpleText': string
   'pipeline.noRunsText': string
+  'pipeline.noServicesFound': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string
   'pipeline.numOfApps': string
@@ -4187,6 +4191,7 @@ export interface StringsMap {
   'pipeline.serviceDeploymentTypes.ssh': string
   'pipeline.serviceDeploymentTypes.tas': string
   'pipeline.serviceDeploymentTypes.winrm': string
+  'pipeline.serviceLabel': string
   'pipeline.serviceNowApprovalStep.approvalChangeWindow': string
   'pipeline.serviceNowApprovalStep.connectToServiceNow': string
   'pipeline.serviceNowApprovalStep.connectorRef': string
