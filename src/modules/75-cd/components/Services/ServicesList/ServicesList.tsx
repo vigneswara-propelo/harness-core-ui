@@ -617,7 +617,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
         {
           Header: getString('cd.serviceDashboard.lastPipelineExecution').toLocaleUpperCase(),
           id: 'lastDeployment',
-          width: '15%',
+          width: '25%',
           Cell: RenderLastDeployment
         },
         {

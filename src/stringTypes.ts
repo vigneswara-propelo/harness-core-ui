@@ -501,6 +501,7 @@ export interface StringsMap {
   'common.latest': string
   'common.launchFirstGen': string
   'common.learnMore': string
+  'common.leaveThisPage': string
   'common.letsGetYouStarted': string
   'common.levelUp': string
   'common.licensesConsumed': string
@@ -947,6 +948,7 @@ export interface StringsMap {
   'common.startFreePlan': string
   'common.startTrial': string
   'common.state': string
+  'common.stayOnThisPage': string
   'common.stepName': string
   'common.stoText': string
   'common.submittingRequest': string
