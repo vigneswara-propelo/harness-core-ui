@@ -156,18 +156,21 @@ describe('Unit tests for CommonCustomMetricFormContainer', () => {
 
   test('should show Chart component when records are present and chart section is enabled in healthsource config', async () => {
     const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
-    const records = [{ record1: 'record-1' }]
-    expect(shouldShowChartComponent(chartConfig, records, false, 'query')).toEqual(true)
+    // const records = [{ record1: 'record-1' }]
+    expect(shouldShowChartComponent(chartConfig)).toEqual(true)
   })
 
-  test('should not show Chart component when records are not present and chart section is enabled in healthsource config', async () => {
-    const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
-    const records = [] as Record<string, any>[]
-    expect(shouldShowChartComponent(chartConfig, records, false, 'query')).toEqual(false)
-  })
-  test('should not show Chart component when query is not present', async () => {
-    const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
-    const records = [{ record1: 'record-1' }]
-    expect(shouldShowChartComponent(chartConfig, records, false, '')).toEqual(false)
-  })
+  // eslint-disable-next-line jest/no-commented-out-tests
+  // test('should not show Chart component when records are not present and chart section is enabled in healthsource config', async () => {
+  //   const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
+  //   const records = [] as Record<string, any>[]
+  //   expect(shouldShowChartComponent(chartConfig, records, false, 'query')).toEqual(false)
+  // })
+
+  // eslint-disable-next-line jest/no-commented-out-tests
+  // test('should not show Chart component when query is not present', async () => {
+  //   const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
+  //   const records = [{ record1: 'record-1' }]
+  //   expect(shouldShowChartComponent(chartConfig, records, false, '')).toEqual(false)
+  // })
 })

@@ -44,7 +44,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   const { connectorIdentifier, isConnectorRuntimeOrExpression, healthSourceConfig } = props
   const { getString } = useStrings()
   const [records, setRecords] = useState<Record<string, any>[]>([])
-  const [isQueryExecuted, setIsQueryExecuted] = useState(false)
+  const [isQueryExecuted, setIsQueryExecuted] = useState<boolean>(false)
   const [healthSourceTimeSeriesData, setHealthSourceTimeSeriesData] = useState<TimeSeries[] | undefined>()
 
   const { isQueryRuntimeOrExpression } = useCommonHealthSource()
@@ -131,8 +131,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
             'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle'
         )}
       />
-      {/* Field Mappings component Can be added here along with build chart/ get message button */}
-      {shouldShowChartComponent(chartConfig, records, fetchingSampleRecordLoading, query) ? (
+      {shouldShowChartComponent(chartConfig) ? (
         <CommonChart
           timeSeriesDataLoading={timeSeriesDataLoading}
           timeseriesDataError={timeseriesDataError}

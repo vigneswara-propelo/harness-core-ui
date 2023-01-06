@@ -225,6 +225,10 @@ monitoringSources:
     defineQueryDescriptionMetrics: Queries can only be defined for a single timeseries.
     defineQuerySubDescription: Learn how to find the query to monitor your data source with Harness.
     querySectionSecondaryTitle: Query Section
+    records:
+      fetchingRecords: Fetching records ...
+    metricsChart:
+      fetchingCharts: Fetching charts data ...
     logsTable:
       title: Field Mapping
       subTitle: Choose the data to display the logs from the fields below

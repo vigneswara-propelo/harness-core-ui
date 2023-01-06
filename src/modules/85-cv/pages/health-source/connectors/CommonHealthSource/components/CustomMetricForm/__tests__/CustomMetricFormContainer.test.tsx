@@ -29,6 +29,7 @@ import {
 } from './CustomMetricFormContainer.mock'
 import { validateAddMetricForm } from '../CustomMetricFormContainer.utils'
 import CommonHealthSourceProvider from '../components/CommonHealthSourceContext/CommonHealthSourceContext'
+import type { GroupedCreatedMetrics } from '../../../CommonHealthSource.types'
 
 function WrapperComponent(props: CustomMetricFormContainerProps): JSX.Element {
   return (
@@ -88,7 +89,8 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       groupName: 'group-1'
     }
     const createdMetrics: string[] = []
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
+    const groupedCreatedMetrics: GroupedCreatedMetrics = {}
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics)
     expect(actualErrors).toEqual({ metricName: 'fieldRequired' })
   })
 
@@ -99,7 +101,8 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       groupName: ''
     }
     const createdMetrics: string[] = []
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
+    const groupedCreatedMetrics: GroupedCreatedMetrics = {}
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics)
     expect(actualErrors).toEqual({ groupName: 'fieldRequired' })
   })
 
@@ -110,7 +113,8 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       groupName: 'group-1'
     }
     const createdMetrics: string[] = []
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
+    const groupedCreatedMetrics: GroupedCreatedMetrics = {}
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics)
     expect(actualErrors).toEqual({ identifier: 'fieldRequired' })
   })
 
@@ -118,10 +122,21 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     const formData = {
       metricName: 'metric1',
       identifier: 'metric1',
-      groupName: 'group-1'
+      groupName: 'group1'
     }
     const createdMetrics: string[] = ['metric1']
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
+    const groupedCreatedMetrics: GroupedCreatedMetrics = {
+      group1: [
+        {
+          groupName: {
+            label: 'group1',
+            value: 'group1'
+          },
+          metricName: 'metric1'
+        }
+      ]
+    }
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics)
     expect(actualErrors).toEqual({
       metricName: 'cv.monitoringSources.prometheus.validation.uniqueName'
     })

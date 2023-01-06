@@ -72,8 +72,8 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
   })
 
   test('should validate createHealthSourcePayload and handles if invalid data is sent', () => {
-    const customMetricsMap = new Map()
-    customMetricsMap.set('M1', {
+    const queryMetricsMap = new Map()
+    queryMetricsMap.set('M1', {
       identifier: 'M1',
       metricName: 'M1',
       groupName: {
@@ -86,7 +86,7 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       higherBaselineDeviation: false
     })
     const consfigureHealthSourceData = {
-      customMetricsMap,
+      queryMetricsMap,
       selectedMetric: 'M1',
       ignoreThresholds: null as unknown as MetricThresholdType[],
       failFastThresholds: []
@@ -104,8 +104,8 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
   })
 
   test('should validate createHealthSourceConfigurationsData', () => {
-    const customMetricsMap = new Map()
-    customMetricsMap.set('M1', {
+    const queryMetricsMap = new Map()
+    queryMetricsMap.set('M1', {
       continuousVerification: false,
       groupName: {
         label: 'G1',
@@ -123,7 +123,7 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
     })
 
     expect(createHealthSourceConfigurationsData(mockedSourceData)).toEqual({
-      customMetricsMap,
+      queryMetricsMap,
       failFastThresholds: [],
       ignoreThresholds: [],
       selectedMetric: 'M1'
@@ -131,8 +131,8 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
   })
 
   test('should create correct data to support edit health source', () => {
-    const customMetricsMap = new Map()
-    customMetricsMap.set('M1', {
+    const queryMetricsMap = new Map()
+    queryMetricsMap.set('M1', {
       continuousVerification: false,
       groupName: {
         label: 'G1',
@@ -151,7 +151,7 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
 
     expect(createHealthSourceConfigurationsData(mockedSourceDataWithMetricThresholds)).toEqual({
       ...expectedMetrithresholdsEdit,
-      customMetricsMap
+      queryMetricsMap
     })
   })
 })

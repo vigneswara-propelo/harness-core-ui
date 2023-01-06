@@ -71,7 +71,7 @@ export const healthSourceConfigWithMetricThresholdsEnabled = {
 }
 
 export const configurationsPageInitialValues = {
-  customMetricsMap: new Map([
+  queryMetricsMap: new Map([
     [
       'M1',
       {

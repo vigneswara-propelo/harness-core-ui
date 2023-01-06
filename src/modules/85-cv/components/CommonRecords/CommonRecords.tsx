@@ -37,7 +37,14 @@ export function CommonRecords(props: CommonRecordsProps): JSX.Element {
       />
     )
   } else if (loading) {
-    content = <Icon name="steps-spinner" size={32} color={Color.GREY_600} className={css.centerElement} />
+    content = (
+      <Container className={css.loadingContainer}>
+        <Icon name="spinner" size={32} color={Color.GREY_600} />
+        <Text padding={{ top: 'small', left: 'medium' }}>
+          {getString('cv.monitoringSources.commonHealthSource.records.fetchingRecords')}
+        </Text>
+      </Container>
+    )
   } else if (!records?.length) {
     content = (
       <Container className={css.noRecords}>

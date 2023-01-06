@@ -323,7 +323,7 @@ export const createHealthSourcePayload = (
   const isMetricThresholdEnabled = !isTemplate
   const { product, healthSourceName, healthSourceIdentifier, connectorRef } = defineHealthSourcedata
   const productValue = (product?.value ?? product) as string
-  const { customMetricsMap = new Map(), ignoreThresholds, failFastThresholds } = consfigureHealthSourceData
+  const { queryMetricsMap = new Map(), ignoreThresholds, failFastThresholds } = consfigureHealthSourceData
 
   const healthSourcePayload = {
     type: HealthSourceTypes.NextGenHealthSource as UpdatedHealthSource['type'],
@@ -336,7 +336,7 @@ export const createHealthSourcePayload = (
     }
   }
 
-  for (const entry of customMetricsMap.entries()) {
+  for (const entry of queryMetricsMap.entries()) {
     const {
       identifier,
       metricName,
@@ -392,20 +392,20 @@ export function createHealthSourceConfigurationsData(
     healthSourceList = [],
     isEdit = false,
     healthSourceIdentifier = '',
-    customMetricsMap = new Map(),
+    queryMetricsMap = new Map(),
     selectedMetric = ''
   } = sourceData
-  let customMetricsMapData = cloneDeep(customMetricsMap)
+  let queryMetricsMapData = cloneDeep(queryMetricsMap)
 
   let ignoreThresholds: MetricThresholdType[] = []
   let failFastThresholds: MetricThresholdType[] = []
 
-  if (isEdit && customMetricsMap.size === 0) {
+  if (isEdit && queryMetricsMap.size === 0) {
     const currentHealthSource = healthSourceList.find(
       (healthSource: { identifier: string }) => healthSource?.identifier === healthSourceIdentifier
     )
     const { queryDefinitions = [] } = currentHealthSource?.spec || {}
-    customMetricsMapData = cloneDeep(getUpdatedCustomMetrics(queryDefinitions))
+    queryMetricsMapData = cloneDeep(getUpdatedCustomMetrics(queryDefinitions))
 
     if (!isTemplate) {
       ignoreThresholds = getFilteredMetricThresholdValuesV2(MetricThresholdTypes.IgnoreThreshold, [], queryDefinitions)
@@ -418,8 +418,8 @@ export function createHealthSourceConfigurationsData(
   }
 
   return {
-    customMetricsMap: customMetricsMapData,
-    selectedMetric: getSelectedMetric(selectedMetric, customMetricsMapData),
+    queryMetricsMap: queryMetricsMapData,
+    selectedMetric: getSelectedMetric(selectedMetric, queryMetricsMapData),
 
     // metric thresholds section can be updated here.
     ignoreThresholds,
@@ -429,7 +429,7 @@ export function createHealthSourceConfigurationsData(
 
 function getUpdatedCustomMetrics(
   queryDefinitions: NextGenHealthSourceSpec['queryDefinitions']
-): CommonHealthSourceConfigurations['customMetricsMap'] {
+): CommonHealthSourceConfigurations['queryMetricsMap'] {
   const updatedCustomMetricsMap = new Map()
   if (queryDefinitions?.length) {
     for (const queryDefinition of queryDefinitions) {
@@ -458,14 +458,14 @@ function getUpdatedCustomMetrics(
 
 export function getSelectedMetric(
   selectedMetric: string,
-  customMetricsMapData: CommonHealthSourceConfigurations['customMetricsMap']
+  queryMetricsMapData: CommonHealthSourceConfigurations['queryMetricsMap']
 ): string {
   let selectedMetricData = ''
   if (selectedMetric) {
     selectedMetricData = selectedMetric
   } else {
-    if (customMetricsMapData?.size > 0) {
-      selectedMetricData = customMetricsMapData.entries().next().value[0]
+    if (queryMetricsMapData?.size > 0) {
+      selectedMetricData = queryMetricsMapData.entries().next().value[0]
     }
   }
   return selectedMetricData
@@ -477,7 +477,7 @@ export function getInitialValuesForHealthSourceConfigurations(
   const { selectedMetric, mappedMetrics } = initializeSelectedMetricsMap(
     DEFAULT_HEALTH_SOURCE_QUERY,
     initHealthSourceCustomForm(),
-    configurationsPageData?.customMetricsMap || new Map(),
+    configurationsPageData?.queryMetricsMap || new Map(),
     configurationsPageData?.selectedMetric
   )
 
@@ -498,7 +498,7 @@ export function getHealthSourceConfigurations(
 
   return {
     // Custom metric fields
-    customMetricsMap: mappedMetrics,
+    queryMetricsMap: mappedMetrics,
     selectedMetric,
 
     // metric threshold section
@@ -508,12 +508,12 @@ export function getHealthSourceConfigurations(
 }
 
 export function getCurrentQueryData(
-  customMetricsMap: Map<string, CommonCustomMetricFormikInterface>,
+  queryMetricsMap: Map<string, CommonCustomMetricFormikInterface>,
   currentSelectedMetric: string
 ): CommonCustomMetricFormikInterface {
   return (
-    currentSelectedMetric && customMetricsMap.has(currentSelectedMetric)
-      ? customMetricsMap?.get(currentSelectedMetric)
+    currentSelectedMetric && queryMetricsMap.has(currentSelectedMetric)
+      ? queryMetricsMap?.get(currentSelectedMetric)
       : {}
   ) as CommonCustomMetricFormikInterface
 }

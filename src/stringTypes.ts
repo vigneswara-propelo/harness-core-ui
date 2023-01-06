@@ -7819,7 +7819,9 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.logsTable.title': string
   'cv.monitoringSources.commonHealthSource.metric': string
   'cv.monitoringSources.commonHealthSource.metricName': string
+  'cv.monitoringSources.commonHealthSource.metricsChart.fetchingCharts': string
   'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle': string
+  'cv.monitoringSources.commonHealthSource.records.fetchingRecords': string
   'cv.monitoringSources.commonHealthSource.runQuery': string
   'cv.monitoringSources.commonHealthSource.searchMetric': string
   'cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords': string

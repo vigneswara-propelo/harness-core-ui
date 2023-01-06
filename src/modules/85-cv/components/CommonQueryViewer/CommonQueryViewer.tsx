@@ -107,9 +107,9 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
           handleFetchRecords={handleFetchRecords}
         />
       )}
-      {isQueryExecuted ? (
-        <CommonRecords fetchRecords={handleFetchRecords} loading={loading} data={records} error={error} query={query} />
-      ) : null}
+      {/* {isQueryExecuted ? ( */}
+      <CommonRecords fetchRecords={handleFetchRecords} loading={loading} data={records} error={error} query={query} />
+      {/* ) : null} */}
       <CommonQueryViewDialog
         isOpen={isDialogOpen}
         onHide={() => setIsDialogOpen(false)}

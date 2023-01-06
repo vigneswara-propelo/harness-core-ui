@@ -77,7 +77,7 @@ export interface HealthSourceSetupSource {
   workspaceId?: string
 
   // Custom metrics section
-  customMetricsMap: Map<string, CommonCustomMetricFormikInterface>
+  queryMetricsMap: Map<string, CommonCustomMetricFormikInterface>
   selectedMetric: string
 
   // metrics threshold section
@@ -98,7 +98,7 @@ export interface HealthSourcePayload {
 
 export interface CommonHealthSourceConfigurations {
   // Custom Metric section
-  customMetricsMap: Map<string, CommonCustomMetricFormikInterface>
+  queryMetricsMap: Map<string, CommonCustomMetricFormikInterface>
   selectedMetric: string
 
   // metric thresholds

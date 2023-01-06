@@ -16,13 +16,7 @@ import type {
   CommonCustomMetricFormikInterface,
   HealthSourceConfig
 } from './CommonHealthSource.types'
-import {
-  checkIfCurrentCustomMetricFormIsValid,
-  getCurrentQueryData,
-  getInitialValuesForHealthSourceConfigurations,
-  handleValidateCustomMetricForm,
-  handleValidateHealthSourceConfigurationsForm
-} from './CommonHealthSource.utils'
+
 import { initGroupedCreatedMetrics } from '../../common/CommonCustomMetric/CommonCustomMetric.utils'
 import CommonHealthSourceProvider from './components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import { DEFAULT_HEALTH_SOURCE_QUERY } from './CommonHealthSource.constants'
@@ -30,6 +24,13 @@ import { cleanUpMappedMetrics } from './components/CustomMetricForm/CustomMetric
 import CustomMetricFormContainer from './components/CustomMetricForm/CustomMetricFormContainer'
 import MetricThresholdContainer from './components/MetricThresholds/MetricThresholdContainer'
 import { getMetricNameFilteredMetricThresholds } from '../MonitoredServiceConnector.utils'
+import {
+  checkIfCurrentCustomMetricFormIsValid,
+  getCurrentQueryData,
+  getInitialValuesForHealthSourceConfigurations,
+  handleValidateCustomMetricForm,
+  handleValidateHealthSourceConfigurationsForm
+} from './CommonHealthSource.utils'
 import css from './CommonHealthSource.module.scss'
 
 export interface CommonHealthSourceProps {
@@ -74,15 +75,15 @@ export default function CommonHealthSource({
     >
       {formik => {
         const {
-          customMetricsMap,
+          queryMetricsMap,
           selectedMetric: currentSelectedMetric = '',
           ignoreThresholds,
           failFastThresholds
         } = formik.values
 
-        const createdMetrics = Array.from(customMetricsMap.keys()) || [DEFAULT_HEALTH_SOURCE_QUERY]
-        const groupedCreatedMetrics = initGroupedCreatedMetrics(customMetricsMap, getString)
-        cleanUpMappedMetrics(customMetricsMap)
+        const createdMetrics = Array.from(queryMetricsMap.keys()) || [DEFAULT_HEALTH_SOURCE_QUERY]
+        const groupedCreatedMetrics = initGroupedCreatedMetrics(queryMetricsMap, getString)
+        cleanUpMappedMetrics(queryMetricsMap)
 
         const filterRemovedMetricNameThresholds = (deletedMetricName: string): void => {
           if (isMetricThresholdEnabled && deletedMetricName) {
@@ -112,7 +113,7 @@ export default function CommonHealthSource({
                   enableReinitialize
                   formName={'customMetricForm'}
                   validateOnMount
-                  initialValues={getCurrentQueryData(customMetricsMap, currentSelectedMetric)}
+                  initialValues={getCurrentQueryData(queryMetricsMap, currentSelectedMetric)}
                   onSubmit={noop}
                   validate={values =>
                     handleValidateCustomMetricForm({
@@ -127,7 +128,7 @@ export default function CommonHealthSource({
                     return (
                       <FormikForm className={css.formFullheight}>
                         <CustomMetricFormContainer
-                          mappedMetrics={customMetricsMap}
+                          mappedMetrics={queryMetricsMap}
                           selectedMetric={currentSelectedMetric}
                           connectorIdentifier={connectorRef}
                           isMetricThresholdEnabled={isMetricThresholdEnabled}

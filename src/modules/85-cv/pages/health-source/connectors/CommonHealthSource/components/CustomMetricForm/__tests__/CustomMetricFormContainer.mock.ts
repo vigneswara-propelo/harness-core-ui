@@ -43,7 +43,7 @@ export const mockedCustomMetricFormContainerData = {
       type: 'AppDynamics',
       applicationName: '',
       tierName: '',
-      customMetricsMap: {}
+      queryMetricsMap: {}
     },
     groupedCreatedMetrics: {
       'Please Select Group Name': [
@@ -115,7 +115,7 @@ export const mockedCustomMetricsFormForLogsTable = {
       label: 'SumoLogic Cloud Logs'
     },
     type: 'SumoLogic',
-    customMetricsMap: mappedMetrics
+    queryMetricsMap: mappedMetrics
   },
   groupedCreatedMetrics: {
     'Logs Group': [
@@ -153,7 +153,7 @@ export const mockedCustomMetricsFormForLogsTable2 = {
   mappedMetrics: mappedMetrics2,
   healthSourceData: {
     ...mockedCustomMetricsFormForLogsTable.healthSourceData,
-    customMetricsMap: mappedMetrics2
+    queryMetricsMap: mappedMetrics2
   }
 }
 

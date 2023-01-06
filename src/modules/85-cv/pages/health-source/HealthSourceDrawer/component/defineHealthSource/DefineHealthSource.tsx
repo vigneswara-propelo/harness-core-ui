@@ -398,7 +398,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                       onChange={product => {
                         const currentProduct = formik?.values?.product
                         const updatedProduct = product
-                        const isHealthSourceConfigured = formik?.values?.customMetricsMap?.size > 0
+                        const isHealthSourceConfigured = formik?.values?.queryMetricsMap?.size > 0
                         if (
                           shouldShowProductChangeConfirmation(
                             isSumoLogicEnabled,

@@ -8,7 +8,7 @@ describe('CommonHealthSource utils tests', () => {
       ignoreThresholds: [],
       failFastThresholds: [],
       selectedMetric: '',
-      customMetricsMap: new Map()
+      queryMetricsMap: new Map()
     }
     const result = handleValidateHealthSourceConfigurationsForm({
       formValues,
@@ -39,7 +39,7 @@ describe('CommonHealthSource utils tests', () => {
         }
       ],
       selectedMetric: '',
-      customMetricsMap: new Map()
+      queryMetricsMap: new Map()
     }
     const result = handleValidateHealthSourceConfigurationsForm({
       formValues,
@@ -64,7 +64,7 @@ describe('CommonHealthSource utils tests', () => {
       ],
       failFastThresholds: [],
       selectedMetric: '',
-      customMetricsMap: new Map()
+      queryMetricsMap: new Map()
     }
     const result = handleValidateHealthSourceConfigurationsForm({
       formValues,

@@ -57,7 +57,8 @@
     }
   }
 
-  .centerElement {
+  .loadingContainer {
+    display: flex;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -69,7 +70,7 @@
   }
   .chartContainer {
     position: relative;
-    height: 387px !important;
+    height: 354px !important;
     width: 100% !important;
     border: 1px solid var(--grey-200);
     border-radius: var(--spacing-3);

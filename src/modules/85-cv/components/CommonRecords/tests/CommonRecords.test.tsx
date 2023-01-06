@@ -32,7 +32,7 @@ describe('Unit tests for CommonRecords component', () => {
     jest.spyOn(cvService, 'useGetStackdriverLogSampleData').mockReturnValue({} as any)
     const fetchRecordsMock = jest.fn()
     const { container } = render(<WrapperComponent fetchRecords={fetchRecordsMock} loading={true} />)
-    expect(container.querySelector('[data-icon="steps-spinner"]')).not.toBeNull()
+    expect(container.querySelector('[data-icon="spinner"]')).not.toBeNull()
   })
 
   test('Verify that error state is rendering correctly for Records', async () => {

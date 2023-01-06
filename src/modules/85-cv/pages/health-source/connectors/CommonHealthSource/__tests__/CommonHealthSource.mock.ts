@@ -14,7 +14,7 @@ export const expectedHealthSourceData = {
   connectorRef: 'TestAppD',
   identifier: 'AppD_Single',
   isEdit: true,
-  customMetricsMap: new Map(),
+  queryMetricsMap: new Map(),
   metricPacks: [
     {
       identifier: 'Performance',
@@ -573,8 +573,8 @@ export const metricThresholdDisabledPayloadResult = {
   type: 'NextGenHealthSource'
 }
 
-const customMetricsMap = new Map()
-customMetricsMap.set('M1', {
+const queryMetricsMap = new Map()
+queryMetricsMap.set('M1', {
   identifier: 'M1',
   metricName: 'metric 1',
   groupName: {
@@ -588,7 +588,7 @@ customMetricsMap.set('M1', {
 })
 
 export const consfigureHealthSourceDataWithMetricThresholds: CommonHealthSourceConfigurations = {
-  customMetricsMap,
+  queryMetricsMap,
   selectedMetric: 'M1',
   ignoreThresholds: [
     {
@@ -653,7 +653,7 @@ export const payloadMockWithMetricThresholdsMock = {
 }
 
 export const expectedMetrithresholdsEdit = {
-  customMetricsMap: customMetricsMap,
+  queryMetricsMap: queryMetricsMap,
   failFastThresholds: [
     {
       criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
