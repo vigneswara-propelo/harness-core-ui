@@ -8,7 +8,7 @@
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, merge } from 'lodash-es'
-import type { ArtifactConfig, ConnectorConfigDTO, PrimaryArtifact, SidecarArtifact } from 'services/cd-ng'
+import type { ArtifactConfig, PrimaryArtifact, SidecarArtifact } from 'services/cd-ng'
 import { ENABLED_ARTIFACT_TYPES } from './ArtifactHelper'
 import {
   ArtifactTagHelperText,
@@ -42,16 +42,6 @@ export const resetTag = (formik: FormikValues): void => {
     getMultiTypeFromValue(formik.values.tag?.value) === MultiTypeInputType.FIXED &&
     formik.values.tag?.value?.length &&
     formik.setFieldValue('tag', '')
-}
-
-export const getConnectorIdValue = (prevStepData: ConnectorConfigDTO | undefined): string => {
-  if (getMultiTypeFromValue(prevStepData?.connectorId) !== MultiTypeInputType.FIXED) {
-    return prevStepData?.connectorId
-  }
-  if (prevStepData?.connectorId?.value) {
-    return prevStepData?.connectorId?.value
-  }
-  return prevStepData?.identifier || ''
 }
 
 export const helperTextData = (
