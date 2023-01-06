@@ -439,6 +439,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                                 }
                                 template={parse<Pipeline>(get(template, 'data.inputSetTemplateYaml', '')).pipeline}
                                 viewType={StepViewType.InputSet}
+                                disableRuntimeInputConfigureOptions
                               />
                             )}
                           </Layout.Vertical>
