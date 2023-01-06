@@ -8,11 +8,11 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly action: string
+  readonly centerElement: string
   readonly chart: string
   readonly chartContainer: string
   readonly formQueryBox: string
   readonly labelText: string
-  readonly loadingContainer: string
   readonly main: string
   readonly noQueryChart: string
   readonly noRecords: string

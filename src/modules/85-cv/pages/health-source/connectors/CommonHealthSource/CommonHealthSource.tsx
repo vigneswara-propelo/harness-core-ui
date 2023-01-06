@@ -105,8 +105,6 @@ export default function CommonHealthSource({
 
         return (
           <>
-            {/* Non custom fields section can be added here */}
-
             <CommonHealthSourceProvider updateParentFormik={formik.setFieldValue} parentFormValues={formik.values}>
               <FormikForm>
                 <Formik<CommonCustomMetricFormikInterface>
@@ -155,9 +153,7 @@ export default function CommonHealthSource({
               isSubmit
               onPrevious={() => onPrevious(formik.values)}
               onNext={() => {
-                // This will trigger the validation for configurations page
                 formik.submitForm()
-
                 // For showing validation error message purpose
                 if (checkIfCurrentCustomMetricFormIsValid(customMetricFormRef) && formik.isValid) {
                   onSubmit(formik.values)

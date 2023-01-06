@@ -25,7 +25,7 @@ export function getRecordsRequestBody(
   const { endTime, startTime } = getStartAndEndTime()
 
   const recordsRequestBody = {
-    connectorIdentifier,
+    connectorIdentifier: connectorIdentifier?.connector?.identifier ?? connectorIdentifier,
     endTime,
     startTime,
     providerType: providerType as HealthSourceRecordsRequest['providerType'],

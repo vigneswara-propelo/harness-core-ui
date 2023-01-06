@@ -29,7 +29,6 @@ function WrapperComponent(props: CommonRecordsProps): any {
 
 describe('Unit tests for CommonRecords component', () => {
   test('Verify that loading state is rendering correctly for CommonRecords', async () => {
-    jest.spyOn(cvService, 'useGetStackdriverLogSampleData').mockReturnValue({} as any)
     const fetchRecordsMock = jest.fn()
     const { container } = render(<WrapperComponent fetchRecords={fetchRecordsMock} loading={true} />)
     expect(container.querySelector('[data-icon="spinner"]')).not.toBeNull()
@@ -56,9 +55,8 @@ describe('Unit tests for CommonRecords component', () => {
   })
 
   test('Verify that No Records state is rendering correctly for Records', async () => {
-    jest.spyOn(cvService, 'useGetStackdriverLogSampleData').mockReturnValue({} as any)
     const fetchRecordsMock = jest.fn()
-    const { getByText } = render(<WrapperComponent fetchRecords={fetchRecordsMock} data={[]} />)
+    const { getByText } = render(<WrapperComponent fetchRecords={fetchRecordsMock} data={[]} isQueryExecuted={true} />)
     expect(getByText('cv.monitoringSources.gcoLogs.noRecordsForQuery')).not.toBeNull()
 
     // should be able to click on the retry button
@@ -67,12 +65,18 @@ describe('Unit tests for CommonRecords component', () => {
     userEvent.click(retryButton)
   })
 
+  test('Verify that correct message is shown if no query is executed', async () => {
+    const fetchRecordsMock = jest.fn()
+    const { getByText } = render(<WrapperComponent fetchRecords={fetchRecordsMock} data={[]} />)
+    expect(getByText('cv.monitoringSources.commonHealthSource.records.runQueryToSeeRecords')).not.toBeNull()
+  })
+
   test('Verify that valid records state is rendering correctly for Records', async () => {
-    jest.spyOn(cvService, 'useGetStackdriverLogSampleData').mockReturnValue({} as any)
     const fetchRecordsMock = jest.fn()
     const { container } = render(
       <WrapperComponent
         fetchRecords={fetchRecordsMock}
+        isQueryExecuted={true}
         data={[
           {
             insertId: 's0w7sqfbplb0y',

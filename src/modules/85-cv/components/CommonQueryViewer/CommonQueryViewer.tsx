@@ -61,7 +61,6 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
 
   const handleQueryTemplateTypeChange = (updatedType: MultiTypeInputType): void => {
     const isQueryTypeRuntimeOrExpression = updatedType !== MultiTypeInputType.FIXED
-
     healthSourceConfigContext.updateHelperContext({ isQueryRuntimeOrExpression: isQueryTypeRuntimeOrExpression })
   }
 
@@ -108,7 +107,14 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
         />
       )}
       {/* {isQueryExecuted ? ( */}
-      <CommonRecords fetchRecords={handleFetchRecords} loading={loading} data={records} error={error} query={query} />
+      <CommonRecords
+        fetchRecords={handleFetchRecords}
+        loading={loading}
+        data={records}
+        error={error}
+        query={query}
+        isQueryExecuted={isQueryExecuted}
+      />
       {/* ) : null} */}
       <CommonQueryViewDialog
         isOpen={isDialogOpen}

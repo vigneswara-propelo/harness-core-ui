@@ -227,6 +227,7 @@ monitoringSources:
     querySectionSecondaryTitle: Query Section
     records:
       fetchingRecords: Fetching records ...
+      runQueryToSeeRecords: Please run the query to see the records.
     metricsChart:
       fetchingCharts: Fetching charts data ...
     logsTable:

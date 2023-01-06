@@ -17,7 +17,7 @@ import type { CommonRecordsProps } from './types'
 import css from './CommonRecords.module.scss'
 
 export function CommonRecords(props: CommonRecordsProps): JSX.Element {
-  const { data, loading, error, fetchRecords, query, className } = props
+  const { data, loading, error, fetchRecords, query, className, isQueryExecuted } = props
   const { getString } = useStrings()
   let content = null
 
@@ -38,10 +38,18 @@ export function CommonRecords(props: CommonRecordsProps): JSX.Element {
     )
   } else if (loading) {
     content = (
-      <Container className={css.loadingContainer}>
+      <Container className={css.centerElement}>
         <Icon name="spinner" size={32} color={Color.GREY_600} />
         <Text padding={{ top: 'small', left: 'medium' }}>
           {getString('cv.monitoringSources.commonHealthSource.records.fetchingRecords')}
+        </Text>
+      </Container>
+    )
+  } else if (!isQueryExecuted) {
+    content = (
+      <Container className={css.centerElement}>
+        <Text padding={{ top: 'small', left: 'medium' }}>
+          {getString('cv.monitoringSources.commonHealthSource.records.runQueryToSeeRecords')}
         </Text>
       </Container>
     )

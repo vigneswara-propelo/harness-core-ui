@@ -97,12 +97,12 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
           !ref.current.contains(event.target) &&
           !isEqual(mappedMetricsData.get(selectedMetricName), formValuesData)
         ) {
+          // This will be executed only when current form value changes.
           const updatedMappedMetricsData = getUpdatedMappedMetricsData(
             mappedMetricsData,
             selectedMetricName,
             formValuesData
           )
-          // This will be executed only when current form value changes.
           setFieldTouched(CustomMetricFormFieldNames.QUERY)
           await validateForm()
           updateParentFormikWithLatestData(updateParentFormik, updatedMappedMetricsData, selectedMetricName)
