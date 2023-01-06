@@ -90,7 +90,7 @@ function HarnessFileStore({
       identifier: '',
       files: [''],
       valuesPaths: [''],
-      paramsPaths: [''],
+      paramsPaths: [],
       skipResourceVersioning: false
     }
   }
