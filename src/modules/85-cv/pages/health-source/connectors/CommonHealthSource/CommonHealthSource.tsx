@@ -114,7 +114,13 @@ export default function CommonHealthSource({
                   validateOnMount
                   initialValues={getCurrentQueryData(customMetricsMap, currentSelectedMetric)}
                   onSubmit={noop}
-                  validate={values => handleValidateCustomMetricForm(values, getString)}
+                  validate={values =>
+                    handleValidateCustomMetricForm({
+                      getString,
+                      formData: values,
+                      customMetricsConfig: healthSourceConfig.customMetrics
+                    })
+                  }
                   innerRef={customMetricFormRef as Ref<FormikProps<CommonCustomMetricFormikInterface>>}
                 >
                   {() => {

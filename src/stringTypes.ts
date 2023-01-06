@@ -7791,6 +7791,19 @@ export interface StringsMap {
   'cv.monitoringSources.buildYourQuery': string
   'cv.monitoringSources.commonHealthSource.addGroupName': string
   'cv.monitoringSources.commonHealthSource.addMetric': string
+  'cv.monitoringSources.commonHealthSource.assign.continuousVerification.helptext': string
+  'cv.monitoringSources.commonHealthSource.assign.continuousVerification.title': string
+  'cv.monitoringSources.commonHealthSource.assign.deviation.helptext': string
+  'cv.monitoringSources.commonHealthSource.assign.deviation.title': string
+  'cv.monitoringSources.commonHealthSource.assign.riskProfileSubHeader': string
+  'cv.monitoringSources.commonHealthSource.assign.serviceHealth.helptext': string
+  'cv.monitoringSources.commonHealthSource.assign.serviceInstance.helptext': string
+  'cv.monitoringSources.commonHealthSource.assign.serviceInstance.higherLabel': string
+  'cv.monitoringSources.commonHealthSource.assign.serviceInstance.lowerLabel': string
+  'cv.monitoringSources.commonHealthSource.assign.serviceInstance.title': string
+  'cv.monitoringSources.commonHealthSource.assign.serviceLevelIndicator.helptext': string
+  'cv.monitoringSources.commonHealthSource.assign.serviceLevelIndicator.title': string
+  'cv.monitoringSources.commonHealthSource.assign.subHeader': string
   'cv.monitoringSources.commonHealthSource.chart': string
   'cv.monitoringSources.commonHealthSource.confirmDeleteMetric': string
   'cv.monitoringSources.commonHealthSource.defineQuery': string

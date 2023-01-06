@@ -23,6 +23,12 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       metricsChart: {
         enabled: true,
         chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO
+      },
+      assign: {
+        enabled: true,
+        hideCV: false,
+        hideServiceIdentifier: false,
+        hideSLIAndHealthScore: false
       }
     },
     metricPacks: {
@@ -56,6 +62,9 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       queryAndRecords: {
         enabled: true,
         titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQuerySubDescription'
+      },
+      assign: {
+        enabled: false
       }
     },
     sideNav: {

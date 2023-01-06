@@ -23,6 +23,7 @@ import {
   mockedCustomMetricsFormForLogsTable,
   mockedCustomMetricsFormForLogsTable2,
   mockedCustomMetricsFormForLogsTableConnectorTemplates,
+  riskCategoryMock,
   sampleDataResponse,
   sampleRawRecordsMock
 } from './CustomMetricFormContainer.mock'
@@ -50,6 +51,8 @@ const getString = (key: any): any => {
   return key
 }
 
+const refetchMock = jest.fn()
+
 describe('Unit tests for CustomMetricFormContainer', () => {
   const props = {
     ...mockedCustomMetricFormContainerData,
@@ -58,6 +61,12 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     setGroupedCreatedMetrics: jest.fn(),
     setNonCustomFeilds: jest.fn()
   } as any
+
+  beforeAll(() => {
+    jest
+      .spyOn(cvServices, 'useGetRiskCategoryForCustomHealthMetric')
+      .mockImplementation(() => ({ loading: false, error: null, data: riskCategoryMock, refetch: refetchMock } as any))
+  })
 
   test('Ensure CustomMetricFormContainer component loads with the button to add metric', async () => {
     const { getByText } = render(<WrapperComponent {...props} />)

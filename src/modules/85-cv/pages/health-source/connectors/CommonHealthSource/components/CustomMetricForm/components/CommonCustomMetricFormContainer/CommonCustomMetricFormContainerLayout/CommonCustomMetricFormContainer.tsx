@@ -9,7 +9,13 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import { Container } from '@harness/uicore'
-import { TimeSeries, useGetSampleMetricData, useGetSampleRawRecord, QueryRecordsRequest } from 'services/cv'
+import {
+  TimeSeries,
+  useGetSampleMetricData,
+  useGetSampleRawRecord,
+  QueryRecordsRequest,
+  useGetRiskCategoryForCustomHealthMetric
+} from 'services/cv'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CommonQueryViewer } from '@cv/components/CommonQueryViewer/CommonQueryViewer'
@@ -29,6 +35,7 @@ import {
   getIsLogsCanBeShown
 } from './CommonCustomMetricFormContainer.utils'
 import { useCommonHealthSource } from '../../CommonHealthSourceContext/useCommonHealthSource'
+import SelectHealthSourceServices from '../../Assign/SelectHealthSourceServices'
 
 export default function CommonCustomMetricFormContainer(props: CommonCustomMetricFormContainerProps): JSX.Element {
   const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
@@ -47,6 +54,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   const providerType = product?.value
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
   const isLogsTableVisible = getIsLogsTableVisible(healthSourceConfig)
+  const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
   const {
     mutate: queryHealthSource,
@@ -146,6 +154,20 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
           sampleRecords={records}
           isRecordsLoading={fetchingSampleRecordLoading}
           disableLogFields={!isDataAvailableForLogsTable}
+        />
+      )}
+      {healthSourceConfig.customMetrics?.assign?.enabled && (
+        <SelectHealthSourceServices
+          values={{
+            sli: !!values.sli,
+            healthScore: !!values.healthScore,
+            riskCategory: values?.riskCategory,
+            continuousVerification: !!values.continuousVerification
+          }}
+          riskProfileResponse={riskProfileResponse}
+          hideCV={healthSourceConfig.customMetrics?.assign?.hideCV}
+          hideServiceIdentifier={healthSourceConfig.customMetrics?.assign?.hideServiceIdentifier}
+          hideSLIAndHealthScore={healthSourceConfig.customMetrics?.assign?.hideSLIAndHealthScore}
         />
       )}
     </Container>

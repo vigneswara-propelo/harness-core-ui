@@ -6,7 +6,14 @@
  */
 
 import { get } from 'lodash-es'
-import { Utils, Views, SelectOption, MultiSelectOption } from '@harness/uicore'
+import {
+  Utils,
+  Views,
+  SelectOption,
+  MultiSelectOption,
+  getMultiTypeFromValue,
+  MultiTypeInputType
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import type { ResponseListEnvironmentResponse, EnvironmentResponse } from 'services/cd-ng'
@@ -297,6 +304,17 @@ export const getMonitoredServiceIdentifiers = (
       ? `PROJECT.${serviceDetails.projectParams?.accountIdentifier}.${serviceDetails.projectParams?.orgIdentifier}.${serviceDetails.projectParams?.projectIdentifier}.${serviceDetails.monitoredServiceIdentifier}`
       : serviceDetails.monitoredServiceIdentifier ?? ''
   }) || []
+
+export const getTypeOfInput = (value: SelectOption | string) => {
+  const selectedItem = typeof value === 'string' ? value : value?.label
+  if (getMultiTypeFromValue(selectedItem) === MultiTypeInputType.RUNTIME) {
+    return MultiTypeInputType.RUNTIME
+  }
+  if (/^</.test(selectedItem)) {
+    return MultiTypeInputType.EXPRESSION
+  }
+  return MultiTypeInputType.FIXED
+}
 
 export const openWindowInNewTab = (url?: string): void => {
   const targetUrl = `${window.location.origin}${getLocationPathName()}#${url}`

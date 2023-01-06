@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import type { StringKeys } from 'framework/strings'
 import { CHART_VISIBILITY_ENUM, ThresholdTypes } from '../CommonHealthSource.constants'
 import type { CommonHealthSourceConfigurations } from '../CommonHealthSource.types'
@@ -187,10 +194,13 @@ export const mockedDefineHealthSourcedata = {
     value: 'SUMOLOGIC_METRICS',
     label: 'SumoLogic Cloud Metrics'
   },
+  riskCategory: 'Errors',
   sourceType: 'SumoLogic',
   healthSourceName: 'Health source 2 ',
   connectorRef: 'account.Sumologic_Metric_Test',
-  healthSourceIdentifier: 'Health_source_2'
+  healthSourceIdentifier: 'Health_source_2',
+  lowerBaselineDeviation: true,
+  higherBaselineDeviation: false
 }
 
 export const mockedSourceData = {
@@ -553,8 +563,6 @@ export const metricThresholdDisabledPayloadResult = {
         query: '*',
         queryParams: {},
         riskProfile: {
-          category: 'Performance',
-          metricType: 'INFRA',
           riskCategory: 'Errors',
           thresholdTypes: ['ACT_WHEN_LOWER']
         },
@@ -573,7 +581,10 @@ customMetricsMap.set('M1', {
     label: 'G1',
     value: 'G1'
   },
-  query: '*'
+  query: '*',
+  riskCategory: 'Errors',
+  lowerBaselineDeviation: true,
+  higherBaselineDeviation: false
 })
 
 export const consfigureHealthSourceDataWithMetricThresholds: CommonHealthSourceConfigurations = {
@@ -631,8 +642,6 @@ export const payloadMockWithMetricThresholdsMock = {
         query: '*',
         queryParams: {},
         riskProfile: {
-          category: 'Performance',
-          metricType: 'INFRA',
           riskCategory: 'Errors',
           thresholdTypes: ['ACT_WHEN_LOWER']
         },

@@ -9,7 +9,7 @@ import type { FormikErrors, FormikProps } from 'formik'
 import { cloneDeep, set } from 'lodash-es'
 import { RUNTIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
-import type { NextGenHealthSourceSpec, QueryRecordsRequest, RiskProfile } from 'services/cv'
+import type { NextGenHealthSourceSpec, QueryRecordsRequest } from 'services/cv'
 import { initializeSelectedMetricsMap } from '../../common/CommonCustomMetric/CommonCustomMetric.utils'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '../../types'
@@ -28,6 +28,7 @@ import type {
   CommonHealthSourceConfigurations
 } from './CommonHealthSource.types'
 import { DEFAULT_LOGS_GROUP_NAME } from './components/CustomMetricForm/CustomMetricForm.constants'
+import { getThresholdTypes } from '../../common/utils/HealthSource.utils'
 import {
   getFilteredMetricThresholdValuesV2,
   getMetricThresholdsForCustomMetric,
@@ -184,18 +185,82 @@ export const getIsQueryRuntimeOrExpression = (query?: string): boolean => {
 }
 
 // Validation functions
-export const handleValidateCustomMetricForm = (
-  formData: CommonCustomMetricFormikInterface,
+export const handleValidateCustomMetricForm = ({
+  formData,
+  getString,
+  customMetricsConfig
+}: {
+  formData: CommonCustomMetricFormikInterface
   getString: UseStringsReturn['getString']
-): FormikErrors<CommonCustomMetricFormikInterface> => {
-  const errors: FormikErrors<CommonCustomMetricFormikInterface> = {}
+  customMetricsConfig: HealthSourceConfig['customMetrics']
+}): FormikErrors<CommonCustomMetricFormikInterface> => {
+  const isAssignComponentEnabled = customMetricsConfig?.assign?.enabled
+  let errors: FormikErrors<CommonCustomMetricFormikInterface> = {}
   const { query = '' } = formData
 
   if (!query) {
     set(errors, CustomMetricFormFieldNames.QUERY, getString('fieldRequired', { field: 'Query' }))
   }
 
-  // validation for assign section can be added here.
+  if (isAssignComponentEnabled) {
+    errors = validateAssignComponent(formData, getString, errors)
+  }
+
+  return errors
+}
+
+export const validateAssignComponent = (
+  formData: CommonCustomMetricFormikInterface,
+  getString: UseStringsReturn['getString'],
+  errors: FormikErrors<CommonCustomMetricFormikInterface>
+): FormikErrors<CommonCustomMetricFormikInterface> => {
+  const {
+    sli,
+    continuousVerification,
+    healthScore,
+    riskCategory,
+    lowerBaselineDeviation,
+    higherBaselineDeviation,
+    serviceInstance
+  } = formData
+  const isAssignComponentValid = [sli, continuousVerification, healthScore].find(checked => checked)
+  const isRiskCategoryValid = !!riskCategory
+
+  if (!isAssignComponentValid) {
+    set(
+      errors,
+      CustomMetricFormFieldNames.SLI,
+      getString('cv.monitoringSources.gco.mapMetricsToServicesPage.validation.baseline')
+    )
+  } else if (isAssignComponentValid) {
+    const eitherCVorHeathScoreEnabled = continuousVerification || healthScore
+    const areAllDeviationsFalse = !(lowerBaselineDeviation || higherBaselineDeviation)
+    const isCVEnabledWithEmptyServiceInstace = continuousVerification && !serviceInstance
+    if (eitherCVorHeathScoreEnabled) {
+      if (areAllDeviationsFalse) {
+        set(
+          errors,
+          CustomMetricFormFieldNames.LOWER_BASELINE_DEVIATION,
+          getString('cv.monitoringSources.prometheus.validation.deviation')
+        )
+      }
+      if (isCVEnabledWithEmptyServiceInstace) {
+        set(
+          errors,
+          CustomMetricFormFieldNames.SERVICE_INSTANCE,
+          getString('cv.healthSource.connectors.AppDynamics.validation.missingServiceInstanceMetricPath')
+        )
+      }
+      if (!isRiskCategoryValid) {
+        set(
+          errors,
+          CustomMetricFormFieldNames.RISK_CATEGORY,
+          getString('cv.monitoringSources.gco.mapMetricsToServicesPage.validation.riskCategory')
+        )
+      }
+    }
+  }
+
   return errors
 }
 
@@ -280,7 +345,10 @@ export const createHealthSourcePayload = (
       sli,
       continuousVerification,
       healthScore,
-      serviceInstance
+      riskCategory,
+      serviceInstance,
+      lowerBaselineDeviation,
+      higherBaselineDeviation
     }: CommonCustomMetricFormikInterface = entry[1]
     const groupNameValue = ((groupName as SelectOption)?.value ?? groupName) as string
 
@@ -307,10 +375,8 @@ export const createHealthSourcePayload = (
 
         // TODO this will be taken from assign section when the section is implemented
         riskProfile: {
-          category: 'Performance' as RiskProfile['category'],
-          metricType: 'INFRA' as RiskProfile['metricType'],
-          riskCategory: 'Errors' as RiskProfile['riskCategory'],
-          thresholdTypes: ['ACT_WHEN_LOWER'] as RiskProfile['thresholdTypes']
+          riskCategory: riskCategory,
+          thresholdTypes: getThresholdTypes({ lowerBaselineDeviation, higherBaselineDeviation })
         }
       })
   }

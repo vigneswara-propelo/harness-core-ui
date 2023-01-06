@@ -80,7 +80,10 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
         label: 'G1',
         value: 'G1'
       },
-      query: '*'
+      query: '*',
+      riskCategory: 'Errors',
+      lowerBaselineDeviation: true,
+      higherBaselineDeviation: false
     })
     const consfigureHealthSourceData = {
       customMetricsMap,

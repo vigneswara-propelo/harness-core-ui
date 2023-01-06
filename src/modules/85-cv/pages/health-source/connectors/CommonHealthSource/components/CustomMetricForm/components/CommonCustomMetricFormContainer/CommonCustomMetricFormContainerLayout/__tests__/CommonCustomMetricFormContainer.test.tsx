@@ -13,6 +13,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
 import { CHART_VISIBILITY_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { riskCategoryMock } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/__tests__/CustomMetricFormContainer.mock'
 import CommonCustomMetricFormContainer from '../CommonCustomMetricFormContainer'
 import type { CommonCustomMetricFormContainerProps } from '../CommonCustomMetricFormContainer.types'
 import { mockedStackdriverLogSampleData } from './CommonCustomMetricFormContainer.mocks'
@@ -68,6 +69,18 @@ jest.mock('services/cv', () => ({
         resource: {
           timeSeriesData: mockedStackdriverLogSampleData
         }
+      }
+    })
+  })),
+  useGetRiskCategoryForCustomHealthMetric: jest.fn().mockImplementation(() => ({
+    loading: false,
+    error: null,
+    mutate: jest.fn().mockImplementation(() => {
+      return {
+        loading: false,
+        error: null,
+        data: riskCategoryMock,
+        refetch: jest.fn()
       }
     })
   }))

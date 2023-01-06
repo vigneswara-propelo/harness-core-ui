@@ -54,12 +54,14 @@ export function getHealthSourceConfigDetails(healthSourceConfig: HealthSourceCon
   const customMetricsConfig = healthSourceConfig?.customMetrics
   const fieldLabel = healthSourceConfig?.addQuery?.label
   const shouldBeAbleToDeleteLastMetric = healthSourceConfig?.sideNav?.shouldBeAbleToDeleteLastMetric
+  const isAssignComponentEnabled = healthSourceConfig?.customMetrics?.assign?.enabled
   return {
     enabledDefaultGroupName,
     fieldLabel,
     shouldBeAbleToDeleteLastMetric,
     enabledRecordsAndQuery,
-    customMetricsConfig
+    customMetricsConfig,
+    isAssignComponentEnabled
   }
 }
 

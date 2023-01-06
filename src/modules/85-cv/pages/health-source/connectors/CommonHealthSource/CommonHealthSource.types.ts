@@ -12,7 +12,7 @@ import type {
   MetricThreshold,
   MetricThresholdSpec,
   NextGenHealthSourceSpec,
-  RiskProfile,
+  RiskCategoryDTO,
   TimeSeriesMetricPackDTO
 } from 'services/cv'
 import type { CriteriaPercentageType, MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
@@ -48,6 +48,12 @@ export interface HealthSourceConfig {
     }
     logsTable?: {
       enabled: boolean
+    }
+    assign?: {
+      enabled: boolean
+      hideCV?: boolean
+      hideServiceIdentifier?: boolean
+      hideSLIAndHealthScore?: boolean
     }
   }
   metricPacks?: {
@@ -119,7 +125,7 @@ export interface CommonCustomMetricFormikInterface {
   healthScore?: boolean
 
   // Risk
-  riskCategory?: RiskProfile['category']
+  riskCategory?: RiskCategoryDTO['identifier']
 
   // Deviation compare to baseline
   lowerBaselineDeviation?: boolean
