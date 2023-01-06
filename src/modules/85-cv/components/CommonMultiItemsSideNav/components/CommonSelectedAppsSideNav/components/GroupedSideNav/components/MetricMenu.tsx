@@ -13,6 +13,7 @@ import { useCommonHealthSource } from '@cv/pages/health-source/connectors/Common
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { isGivenMetricNameContainsThresholds } from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.utils'
 import type { MetricMenuProps } from './MetricMenu.types'
+import css from './MetricMenu.module.scss'
 
 export default function MetricMenu({
   onEdit,
@@ -58,7 +59,8 @@ export default function MetricMenu({
       if (shouldDelete) {
         onDelete?.(itemName, index)
       }
-    }
+    },
+    className: css.metricMenuConfirmationPopup
   })
 
   return (

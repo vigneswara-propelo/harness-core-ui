@@ -665,3 +665,13 @@ export const expectedMetrithresholdsEdit = {
   ],
   selectedMetric: 'M1'
 }
+
+export const metricThresholdsValidationMock = {
+  'failFastThresholds.0.criteria.type': 'cv.required',
+  'failFastThresholds.0.metricName': 'cv.required',
+  'failFastThresholds.0.metricType': 'cv.required',
+  'failFastThresholds.0.spec.spec.count': 'cv.required',
+  'ignoreThresholds.0.criteria.type': 'cv.required',
+  'ignoreThresholds.0.metricName': 'cv.required',
+  'ignoreThresholds.0.metricType': 'cv.required'
+}

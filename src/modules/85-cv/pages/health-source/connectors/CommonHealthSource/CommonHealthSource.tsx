@@ -61,7 +61,14 @@ export default function CommonHealthSource({
       enableReinitialize
       initialValues={healthSourceConfigurationsInitialValues}
       formName="healthSourceConfigurationsForm"
-      validate={handleValidateHealthSourceConfigurationsForm}
+      validate={formValues =>
+        handleValidateHealthSourceConfigurationsForm({
+          formValues,
+          healthSourceConfig,
+          isTemplate,
+          getString
+        })
+      }
       validateOnMount
       onSubmit={noop}
     >
@@ -142,7 +149,7 @@ export default function CommonHealthSource({
               onPrevious={() => onPrevious(formik.values)}
               onNext={() => {
                 // This will trigger the validation for configurations page
-                formik.validateForm()
+                formik.submitForm()
 
                 // For showing validation error message purpose
                 if (checkIfCurrentCustomMetricFormIsValid(customMetricFormRef) && formik.isValid) {

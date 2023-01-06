@@ -30,9 +30,13 @@ import type {
 import { DEFAULT_LOGS_GROUP_NAME } from './components/CustomMetricForm/CustomMetricForm.constants'
 import {
   getFilteredMetricThresholdValuesV2,
-  getMetricThresholdsForCustomMetric
+  getMetricThresholdsForCustomMetric,
+  validateMetricThresholds
 } from '../../common/MetricThresholds/MetricThresholds.utils'
-import { MetricThresholdTypes } from '../../common/MetricThresholds/MetricThresholds.constants'
+import {
+  MetricThresholdTypes,
+  MetricThresholdPropertyName
+} from '../../common/MetricThresholds/MetricThresholds.constants'
 import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 
 export const initHealthSourceCustomForm = () => {
@@ -195,11 +199,42 @@ export const handleValidateCustomMetricForm = (
   return errors
 }
 
-export const handleValidateHealthSourceConfigurationsForm = (): FormikErrors<CommonHealthSourceConfigurations> => {
+export const handleValidateHealthSourceConfigurationsForm = ({
+  formValues,
+  healthSourceConfig,
+  isTemplate,
+  getString
+}: {
+  formValues: CommonHealthSourceConfigurations
+  getString: UseStringsReturn['getString']
+  healthSourceConfig?: HealthSourceConfig
+  isTemplate?: boolean
+}): FormikErrors<CommonHealthSourceConfigurations> => {
   const errors: FormikErrors<CommonHealthSourceConfigurations> = {}
-  // const { ignoreThresholds = [], failFastThresholds = [] } = formData || {}
 
-  // TODO - validations for metric threshold section can be added here.
+  const isMetricThresholdsGroupEnabled = healthSourceConfig?.metricPacks?.enabled
+  const isMetricThresholdEnabled = !isTemplate
+
+  if (isMetricThresholdEnabled) {
+    // ignoreThresholds Validation
+    validateMetricThresholds({
+      thresholdName: MetricThresholdPropertyName.IgnoreThreshold,
+      errors: errors as Record<string, string>,
+      thresholdValues: formValues[MetricThresholdPropertyName.IgnoreThreshold],
+      getString,
+      isValidateGroup: Boolean(isMetricThresholdsGroupEnabled)
+    })
+
+    // failFastThresholds Validation
+    validateMetricThresholds({
+      thresholdName: MetricThresholdPropertyName.FailFastThresholds,
+      errors: errors as Record<string, string>,
+      thresholdValues: formValues[MetricThresholdPropertyName.FailFastThresholds],
+      getString,
+      isValidateGroup: Boolean(isMetricThresholdsGroupEnabled)
+    })
+  }
+
   return errors
 }
 
