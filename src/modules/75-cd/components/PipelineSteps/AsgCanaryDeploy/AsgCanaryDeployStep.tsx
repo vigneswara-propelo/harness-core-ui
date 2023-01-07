@@ -34,6 +34,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import type { StringsMap } from 'stringTypes'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { getSanitizedflatObjectForVariablesView } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -228,7 +229,7 @@ const AsgCanaryDeployVariableStep: React.FC<AsgCanaryDeployVariableStepProps> = 
 }) => {
   return (
     <VariablesListTable
-      data={variablesData.spec}
+      data={getSanitizedflatObjectForVariablesView(variablesData.spec)}
       originalData={initialValues.spec}
       metadataMap={metadataMap}
       className={pipelineVariablesCss.variablePaddingL3}

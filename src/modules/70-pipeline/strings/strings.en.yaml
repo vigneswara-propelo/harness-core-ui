@@ -1342,7 +1342,7 @@ serviceDeploymentTypes:
   serverlessAwsType: Serverless Aws Lambda
   customDeploy: Custom Deployment
   spotElastigroup: Spot Elastigroup
-  asg: AWS ASG
+  asg: AWS Auto Scaling Group
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
