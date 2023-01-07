@@ -32,7 +32,7 @@ import { usePipelineVariables } from '@pipeline/components/PipelineVariablesCont
 import { PipelineGovernanceView } from '@governance/PipelineGovernanceView'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import { createTemplate } from '@pipeline/utils/templateUtils'
-import type { TemplateStepNode } from 'services/pipeline-ng'
+import type { ExecutionWrapperConfig, TemplateStepNode } from 'services/pipeline-ng'
 import type { StringsMap } from 'stringTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
@@ -98,13 +98,14 @@ const checkDuplicateStep = (
 }
 
 export const updateStepWithinStage = (
-  execution: ExecutionElementConfig,
+  execution: ExecutionElementConfig | StepGroupElementConfig,
   processingNodeIdentifier: string,
   processedNode: StepElementConfig | TemplateStepNode,
   isRollback: boolean
 ): void => {
   // Finds the step in the stage, and updates with the processed node
-  execution?.[isRollback ? 'rollbackSteps' : 'steps']?.forEach(stepWithinStage => {
+  const executionSteps = get(execution, isRollback ? 'rollbackSteps' : 'steps') as ExecutionWrapperConfig[]
+  executionSteps?.forEach((stepWithinStage: ExecutionWrapperConfig) => {
     if (stepWithinStage.stepGroup) {
       // If stage has a step group, loop over the step group steps and update the matching identifier with node
       if (stepWithinStage.stepGroup?.identifier === processingNodeIdentifier) {
