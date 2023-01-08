@@ -12,6 +12,7 @@ export enum StepType {
   StageRuntimeInput = 'StageRuntimeInput', // UI level step, only used in execution view
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
+  Container = 'Container',
   GitOpsUpdateReleaseRepo = 'GitOpsUpdateReleaseRepo',
   GitOpsFetchLinkedApps = 'GitOpsFetchLinkedApps',
   Command = 'Command',

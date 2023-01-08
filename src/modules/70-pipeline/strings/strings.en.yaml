@@ -1151,6 +1151,7 @@ stepDescription:
   ElastigroupDeploy: Elastigroup Deploy step
   ElastigroupSwapRoute: Elastigroup Swap Route
   ElastigroupBGStageSetup: Elastigroup Blue/Green Step
+  Container: Execute one or more commands on a container image in a CD stage.
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy

@@ -4288,6 +4288,7 @@ export interface StringsMap {
   'pipeline.stepDescription.Background': string
   'pipeline.stepDescription.Barrier': string
   'pipeline.stepDescription.BitrisePlugin': string
+  'pipeline.stepDescription.Container': string
   'pipeline.stepDescription.CustomApproval': string
   'pipeline.stepDescription.DockerHub': string
   'pipeline.stepDescription.ECR': string
