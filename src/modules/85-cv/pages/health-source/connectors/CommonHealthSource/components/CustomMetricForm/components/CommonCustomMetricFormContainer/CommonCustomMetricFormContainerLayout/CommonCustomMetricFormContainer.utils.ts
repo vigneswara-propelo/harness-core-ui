@@ -8,13 +8,14 @@ export function shouldAutoBuildChart(
 }
 
 export function shouldShowChartComponent(
-  chartConfig: { enabled: boolean; chartVisibilityMode: CHART_VISIBILITY_ENUM } | undefined
+  chartConfig: { enabled: boolean; chartVisibilityMode: CHART_VISIBILITY_ENUM } | undefined,
+  isQueryRuntimeOrExpression?: boolean
   // records: Record<string, any>[],
   // fetchingSampleRecordLoading: boolean,
   // query: string
 ): boolean {
   // return !!(query && chartConfig?.enabled && records && records?.length && !fetchingSampleRecordLoading)
-  return Boolean(chartConfig?.enabled)
+  return Boolean(chartConfig?.enabled && !isQueryRuntimeOrExpression)
 }
 
 export function getRecordsRequestBody(

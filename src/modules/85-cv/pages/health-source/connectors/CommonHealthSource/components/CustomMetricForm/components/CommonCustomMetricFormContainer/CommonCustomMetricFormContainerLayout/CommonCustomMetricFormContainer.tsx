@@ -131,7 +131,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
             'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle'
         )}
       />
-      {shouldShowChartComponent(chartConfig) ? (
+      {shouldShowChartComponent(chartConfig, isQueryRuntimeOrExpression) ? (
         <CommonChart
           timeSeriesDataLoading={timeSeriesDataLoading}
           timeseriesDataError={timeseriesDataError}

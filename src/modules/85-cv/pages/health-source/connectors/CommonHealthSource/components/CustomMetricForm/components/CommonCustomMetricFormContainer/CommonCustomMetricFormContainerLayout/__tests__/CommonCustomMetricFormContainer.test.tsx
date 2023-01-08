@@ -154,10 +154,16 @@ describe('Unit tests for CommonCustomMetricFormContainer', () => {
     expect(shouldAutoBuildChart(chartConfig)).toEqual(false)
   })
 
-  test('should show Chart component when records are present and chart section is enabled in healthsource config', async () => {
+  test('should show Chart component when chart section is enabled in healthsource config', async () => {
     const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
-    // const records = [{ record1: 'record-1' }]
-    expect(shouldShowChartComponent(chartConfig)).toEqual(true)
+    const isQueryRuntimeOrExpression = false
+    expect(shouldShowChartComponent(chartConfig, isQueryRuntimeOrExpression)).toEqual(true)
+  })
+
+  test('should not show Chart component when query is runtime or expression and health source config is enabled', async () => {
+    const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
+    const isQueryRuntimeOrExpression = true
+    expect(shouldShowChartComponent(chartConfig, isQueryRuntimeOrExpression)).toEqual(false)
   })
 
   // eslint-disable-next-line jest/no-commented-out-tests
