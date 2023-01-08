@@ -7401,6 +7401,7 @@ export interface StringsMap {
   'cv.bad': string
   'cv.bottom': string
   'cv.burnRatePerDay': string
+  'cv.changeSource.FeatureFlag.noDataAvailableForYAMLDiff': string
   'cv.changeSource.HarnessCDCurrentGen.applicationId': string
   'cv.changeSource.HarnessCDCurrentGen.selectHarnessAppId': string
   'cv.changeSource.HarnessCDCurrentGen.selectHarnessEnv': string

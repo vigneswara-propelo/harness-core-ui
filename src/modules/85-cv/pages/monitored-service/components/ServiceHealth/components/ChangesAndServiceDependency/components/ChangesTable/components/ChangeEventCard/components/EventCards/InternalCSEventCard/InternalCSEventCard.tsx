@@ -8,7 +8,7 @@
 import React, { useMemo, useState } from 'react'
 import { defaultTo } from 'lodash-es'
 import { Divider } from '@blueprintjs/core'
-import { Card, Layout, Text } from '@harness/uicore'
+import { Card, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import type { ChangeEventDTO, InternalChangeEventMetaData } from 'services/cv'
@@ -21,6 +21,7 @@ import { createChangeDetailsData, createChangeTitleDataForInternalCS } from '../
 import { TIME_FORMAT_DETAILS_CARD, TWO_HOURS_IN_MILLISECONDS } from '../../../ChangeEventCard.constant'
 import ChangeTitleWithRedirectButton from '../../ChangeTitleWithRedirectButton/ChangeTitleWithRedirectButton'
 import ChangeDetails from '../../ChangeDetails/ChangeDetails'
+import YAMLDiffView from './components/YAMLDiffView'
 import css from '../../../ChangeEventCard.module.scss'
 
 export default function HarnessFFEventCard({ data }: { data: ChangeEventDTO }): JSX.Element {
@@ -88,6 +89,19 @@ export default function HarnessFFEventCard({ data }: { data: ChangeEventDTO }): 
             eventType={data.type}
           />
         </>
+      )}
+      <Divider className={css.divider} />
+      {internalChangeEvent?.changeEventDetailsLink?.url && (
+        <Container>
+          <Text
+            font={{ size: 'normal', weight: 'bold' }}
+            color={Color.GREY_800}
+            style={{ marginBottom: 'var(--spacing-medium)' }}
+          >
+            {getString('auditTrail.yamlDifference')}
+          </Text>
+          <YAMLDiffView url={internalChangeEvent?.changeEventDetailsLink?.url} />
+        </Container>
       )}
     </Card>
   )
