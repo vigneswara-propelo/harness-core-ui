@@ -12,6 +12,7 @@ import { useStrings } from 'framework/strings'
 import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import CustomMetricsSectionHeader from '../../../CustomMetricsSectionHeader'
+import css from './AssignSection.module.scss'
 
 interface AssignSectionProps {
   hideCV?: boolean
@@ -23,7 +24,7 @@ export default function AssignSection({ hideCV, showOnlySLI, hideSLIAndHealthSco
   const { errors, touched } = useFormikContext<CommonCustomMetricFormikInterface>()
   const showFieldError = Boolean(Object.keys(touched).length)
   return (
-    <>
+    <Container className={css.assignSection}>
       <CustomMetricsSectionHeader
         sectionTitle={getString('cv.monitoringSources.assign')}
         sectionSubTitle={getString('cv.monitoringSources.commonHealthSource.assign.subHeader')}
@@ -61,6 +62,6 @@ export default function AssignSection({ hideCV, showOnlySLI, hideSLIAndHealthSco
           <FormError name={CustomMetricFormFieldNames.SLI} errorMessage={errors.sli} />
         </Container>
       )}
-    </>
+    </Container>
   )
 }

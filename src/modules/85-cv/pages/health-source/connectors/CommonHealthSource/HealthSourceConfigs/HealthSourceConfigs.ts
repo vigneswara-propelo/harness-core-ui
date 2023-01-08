@@ -28,7 +28,8 @@ export const healthSourcesConfig: HealthSourcesConfig = {
         enabled: true,
         hideCV: false,
         hideServiceIdentifier: false,
-        hideSLIAndHealthScore: false
+        hideSLIAndHealthScore: false,
+        defaultServiceInstance: '_sourceHost'
       }
     },
     metricPacks: {
@@ -64,7 +65,8 @@ export const healthSourcesConfig: HealthSourcesConfig = {
         titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQuerySubDescription'
       },
       assign: {
-        enabled: false
+        enabled: false,
+        defaultServiceInstance: ''
       }
     },
     sideNav: {

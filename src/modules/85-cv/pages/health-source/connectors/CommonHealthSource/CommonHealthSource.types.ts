@@ -51,6 +51,7 @@ export interface HealthSourceConfig {
     }
     assign?: {
       enabled: boolean
+      defaultServiceInstance: string
       hideCV?: boolean
       hideServiceIdentifier?: boolean
       hideSLIAndHealthScore?: boolean

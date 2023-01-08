@@ -29,7 +29,8 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
     shouldBeAbleToDeleteLastMetric,
     isMetricThresholdEnabled,
     filterRemovedMetricNameThresholds,
-    openEditMetricModal
+    openEditMetricModal,
+    defaultServiceInstance
   } = props
 
   const { updateParentFormik } = useCommonHealthSource()
@@ -53,8 +54,12 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
       data = { selectedMetric: selectedMetric, mappedMetrics: mappedMetrics }
     }
 
+    if (formikValues?.continuousVerification && !formikValues.serviceInstance) {
+      formikValues.serviceInstance = defaultServiceInstance
+    }
+
     data = updateSelectedMetricsMap({
-      updatedMetric: metricName,
+      updatedMetric: formikValues.metricName,
       oldMetric: selectedMetric,
       mappedMetrics,
       formikValues,

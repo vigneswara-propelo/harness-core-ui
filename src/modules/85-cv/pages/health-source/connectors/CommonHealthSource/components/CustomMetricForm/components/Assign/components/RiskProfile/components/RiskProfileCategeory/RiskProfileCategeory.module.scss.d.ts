@@ -7,8 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly checkBoxGroup: string
-  readonly groupLabel: string
-  readonly main: string
+  readonly loadingContainer: string
+  readonly riskProfileRadioGroup: string
 }
 export default styles

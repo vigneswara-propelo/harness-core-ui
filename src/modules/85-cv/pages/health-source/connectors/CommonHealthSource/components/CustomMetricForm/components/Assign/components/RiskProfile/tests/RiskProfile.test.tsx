@@ -15,8 +15,9 @@ import type { useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import { RiskProfile } from '../RiskProfile'
-import { riskProfileResponse } from '../../../__tests__/SelectHealthSourceServices.mock'
+import { riskProfileResponse } from '../../../__tests__/AssignQuery.mock'
 import { getRiskCategoryOptionsV2 } from '../RiskProfile.utils'
 
 const showErrorMock = jest.fn()
@@ -30,12 +31,14 @@ const WrapperComponent = ({
   data,
   isTemplate,
   serviceInstance,
-  continuousVerificationEnabled
+  continuousVerificationEnabled,
+  isQueryRuntimeOrExpression
 }: {
   data: ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>
   isTemplate?: boolean
   serviceInstance?: string
   continuousVerificationEnabled?: boolean
+  isQueryRuntimeOrExpression?: boolean
 }): JSX.Element => {
   return (
     <TestWrapper>
@@ -44,13 +47,19 @@ const WrapperComponent = ({
           <SetupSourceTabsContext.Provider
             value={{ isTemplate, expression: ['expression 1'], sourceData: { connectorRef: 'sumologic' } } as any}
           >
-            <FormikForm>
-              <RiskProfile
-                riskProfileResponse={data}
-                serviceInstance={serviceInstance}
-                continuousVerificationEnabled={continuousVerificationEnabled}
-              />
-            </FormikForm>
+            <CommonHealthSourceProvider
+              isQueryRuntimeOrExpression={isQueryRuntimeOrExpression}
+              updateParentFormik={jest.fn()}
+              parentFormValues={{} as any}
+            >
+              <FormikForm>
+                <RiskProfile
+                  riskProfileResponse={data}
+                  serviceInstance={serviceInstance}
+                  continuousVerificationEnabled={continuousVerificationEnabled}
+                />
+              </FormikForm>
+            </CommonHealthSourceProvider>
           </SetupSourceTabsContext.Provider>
         )}
       </Formik>
@@ -92,12 +101,10 @@ describe('Unit tests for RiskProfile', () => {
     jest.spyOn(formik, 'useFormikContext').mockReturnValue({
       errors: {
         [CustomMetricFormFieldNames.LOWER_BASELINE_DEVIATION]: 'Deviation Error',
-        [CustomMetricFormFieldNames.RISK_CATEGORY]: 'Risk category Error',
-        [CustomMetricFormFieldNames.SERVICE_INSTANCE]: 'Service instance Error'
+        [CustomMetricFormFieldNames.RISK_CATEGORY]: 'Risk category Error'
       },
       touched: {
         [CustomMetricFormFieldNames.RISK_CATEGORY]: true,
-        [CustomMetricFormFieldNames.SERVICE_INSTANCE]: true,
         [CustomMetricFormFieldNames.LOWER_BASELINE_DEVIATION]: true
       }
     } as unknown as any)
@@ -109,7 +116,6 @@ describe('Unit tests for RiskProfile', () => {
 
     expect(getByText('Deviation Error')).toBeInTheDocument()
     expect(getByText('Risk category Error')).toBeInTheDocument()
-    expect(getByText('Service instance Error')).toBeInTheDocument()
   })
 
   test('Ensure that loading state is rendered correctly', async () => {
@@ -137,6 +143,16 @@ describe('Unit tests for RiskProfile', () => {
   })
 
   test('Renders in template mode', async () => {
+    const { container: containerExpression } = render(
+      <WrapperComponent
+        data={{} as unknown as ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>}
+        isTemplate
+        continuousVerificationEnabled
+        serviceInstance=""
+        isQueryRuntimeOrExpression
+      />
+    )
+    expect(containerExpression.querySelector('[data-icon="expression-input"]')).toBeInTheDocument()
     const { container, rerender } = render(
       <WrapperComponent data={{} as unknown as ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>} isTemplate />
     )
@@ -147,7 +163,17 @@ describe('Unit tests for RiskProfile', () => {
         continuousVerificationEnabled
       />
     )
-    expect(container).toMatchSnapshot()
+    expect(container.querySelector('[data-icon="fixed-input"]')).toBeInTheDocument()
+    rerender(
+      <WrapperComponent
+        data={{} as unknown as ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>}
+        isTemplate
+        serviceInstance="<+input>"
+        isQueryRuntimeOrExpression
+        continuousVerificationEnabled
+      />
+    )
+    expect(container.querySelector('[name="serviceInstance"]')).toHaveValue('<+input>')
   })
 
   test('validate getRiskCategoryOptionsV2', () => {

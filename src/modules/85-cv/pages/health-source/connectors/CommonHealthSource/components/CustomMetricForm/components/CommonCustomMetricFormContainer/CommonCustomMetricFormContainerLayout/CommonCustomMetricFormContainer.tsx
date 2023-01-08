@@ -35,7 +35,7 @@ import {
   getIsLogsCanBeShown
 } from './CommonCustomMetricFormContainer.utils'
 import { useCommonHealthSource } from '../../CommonHealthSourceContext/useCommonHealthSource'
-import SelectHealthSourceServices from '../../Assign/SelectHealthSourceServices'
+import SelectHealthSourceServices from '../../Assign/AssignQuery'
 
 export default function CommonCustomMetricFormContainer(props: CommonCustomMetricFormContainerProps): JSX.Element {
   const { values } = useFormikContext<CommonCustomMetricFormikInterface>()

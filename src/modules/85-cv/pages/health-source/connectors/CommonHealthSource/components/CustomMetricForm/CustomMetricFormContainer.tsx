@@ -17,7 +17,7 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { Formik, useFormikContext } from 'formik'
-import { defaultTo, isEqual } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import type { CustomHealthMetricDefinition } from 'services/cv'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
@@ -94,8 +94,8 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
       async function handleClickOutside(event: { target: unknown }): Promise<void> {
         if (
           ref.current &&
-          !ref.current.contains(event.target) &&
-          !isEqual(mappedMetricsData.get(selectedMetricName), formValuesData)
+          !ref.current.contains(event.target)
+          // && !isEqual(mappedMetricsData.get(selectedMetricName), formValuesData)
         ) {
           // This will be executed only when current form value changes.
           const updatedMappedMetricsData = getUpdatedMappedMetricsData(
@@ -194,6 +194,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
             isMetricThresholdEnabled={isMetricThresholdEnabled}
             filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
             openEditMetricModal={openModal}
+            defaultServiceInstance={healthSourceConfig.customMetrics?.assign?.defaultServiceInstance}
           >
             <Container ref={wrapperRef}>
               <CustomMetricForm

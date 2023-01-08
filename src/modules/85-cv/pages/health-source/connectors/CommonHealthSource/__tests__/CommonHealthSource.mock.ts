@@ -227,6 +227,7 @@ export const mockedSourceData = {
             riskProfile: {
               category: 'Errors',
               metricType: 'INFRA',
+              riskCategory: 'Errors',
               thresholdTypes: ['ACT_WHEN_LOWER']
             }
           }
@@ -482,6 +483,7 @@ export const mockedSourceDataWithMetricThresholds = {
             riskProfile: {
               category: 'Errors',
               metricType: 'INFRA',
+              riskCategory: 'Errors',
               thresholdTypes: ['ACT_WHEN_LOWER']
             }
           }

@@ -8,9 +8,9 @@
 import React from 'react'
 import { Container } from '@harness/uicore'
 import { RiskProfile } from './components/RiskProfile/RiskProfile'
-import type { SelectHealthSourceServicesProps } from './SelectHealthSourceServices.types'
+import type { SelectHealthSourceServicesProps } from './AssignQuery.types'
 import AssignSection from './components/AssignSection/AssignSection'
-import css from './SelectHealthSourceServices.module.scss'
+import css from './AssignQuery.module.scss'
 
 export default function SelectHealthSourceServices({
   values,

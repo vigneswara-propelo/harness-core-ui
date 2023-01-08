@@ -18,12 +18,12 @@ export default function Deviation(): JSX.Element {
   const { errors, touched } = useFormikContext<CommonCustomMetricFormikInterface>()
   const showFieldError = Boolean(Object.keys(touched).length)
   return (
-    <Container>
+    <Container margin={{ bottom: 'xlarge' }}>
       <CustomMetricsSectionHeader
         sectionTitle={getString('cv.monitoringSources.commonHealthSource.assign.deviation.title')}
         sectionSubTitle={getString('cv.monitoringSources.commonHealthSource.assign.deviation.helptext')}
       />
-      <Layout.Horizontal spacing={'medium'}>
+      <Layout.Horizontal spacing={'medium'} margin={{ top: 'small' }}>
         <FormInput.CheckBox
           label={getString('cv.monitoringSources.commonHealthSource.assign.serviceInstance.higherLabel')}
           name={CustomMetricFormFieldNames.HIGHER_BASELINE_DEVIATION}

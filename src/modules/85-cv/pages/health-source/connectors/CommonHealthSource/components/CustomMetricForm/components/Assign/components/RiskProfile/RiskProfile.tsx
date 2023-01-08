@@ -7,7 +7,9 @@
 
 import React from 'react'
 import { Layout } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 import type { useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
+import CustomMetricsSectionHeader from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CustomMetricsSectionHeader'
 import RiskProfileCategeory from './components/RiskProfileCategeory/RiskProfileCategeory'
 import Deviation from './components/Deviation/Deviation'
 import ServiceInstance from './components/ServiceInstance/ServiceInstance'
@@ -22,15 +24,21 @@ interface RiskProfileProps {
 
 export function RiskProfile(props: RiskProfileProps): JSX.Element {
   const { continuousVerificationEnabled, serviceInstance, riskCategory, riskProfileResponse } = props
-
+  const { getString } = useStrings()
   return (
-    <Layout.Vertical className={css.main} spacing="large">
-      <RiskProfileCategeory riskCategory={riskCategory} riskProfileResponse={riskProfileResponse} />
-      <Deviation />
-      <ServiceInstance
-        serviceInstance={serviceInstance}
-        continuousVerificationEnabled={continuousVerificationEnabled}
+    <>
+      <CustomMetricsSectionHeader
+        sectionTitle={getString('cv.monitoringSources.riskProfile')}
+        sectionSubTitle={getString('cv.monitoringSources.commonHealthSource.assign.riskProfileSubHeader')}
       />
-    </Layout.Vertical>
+      <Layout.Vertical className={css.main}>
+        <RiskProfileCategeory riskCategory={riskCategory} riskProfileResponse={riskProfileResponse} />
+        <Deviation />
+        <ServiceInstance
+          serviceInstance={serviceInstance}
+          continuousVerificationEnabled={continuousVerificationEnabled}
+        />
+      </Layout.Vertical>
+    </>
   )
 }

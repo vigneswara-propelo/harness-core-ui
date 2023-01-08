@@ -11,24 +11,34 @@ import { Formik } from '@harness/uicore'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
-import SelectHealthSourceServices from '../SelectHealthSourceServices'
-import { riskProfileResponse } from './SelectHealthSourceServices.mock'
+import AssignQuery from '../AssignQuery'
+import { riskProfileResponse } from './AssignQuery.mock'
+import CommonHealthSourceProvider from '../../CommonHealthSourceContext/CommonHealthSourceContext'
 
-describe('Validate SelectHealthSourceServices', () => {
+const WrapperComponent = ({ children }: { children: JSX.Element }) => {
+  return (
+    <TestWrapper>
+      <CommonHealthSourceProvider updateParentFormik={jest.fn()} parentFormValues={{} as any}>
+        {children}
+      </CommonHealthSourceProvider>
+    </TestWrapper>
+  )
+}
+describe('Validate AssignQuery', () => {
   test('should render RiskProfile when continuousVerification and healthScore are true', () => {
     const { container, getByText } = render(
-      <TestWrapper>
+      <WrapperComponent>
         <Formik
           initialValues={{ continuousVerification: true, healthScore: true }}
           onSubmit={jest.fn()}
           formName="runtimeInputsTest"
         >
-          <SelectHealthSourceServices
+          <AssignQuery
             values={{ continuousVerification: true, healthScore: true, sli: false }}
             riskProfileResponse={riskProfileResponse as any}
           />
         </Formik>
-      </TestWrapper>
+      </WrapperComponent>
     )
     expect(container.querySelector('input[name="sli"')).not.toBeChecked()
     expect(container.querySelector('input[name="healthScore"')).toBeChecked()
@@ -43,51 +53,48 @@ describe('Validate SelectHealthSourceServices', () => {
       errors: {
         [CustomMetricFormFieldNames.SLI]: 'SLI Error',
         [CustomMetricFormFieldNames.LOWER_BASELINE_DEVIATION]: 'Deviation Error',
-        [CustomMetricFormFieldNames.RISK_CATEGORY]: 'Risk category Error',
-        [CustomMetricFormFieldNames.SERVICE_INSTANCE]: 'Service instance Error'
+        [CustomMetricFormFieldNames.RISK_CATEGORY]: 'Risk category Error'
       },
       touched: {
         [CustomMetricFormFieldNames.SLI]: true,
         [CustomMetricFormFieldNames.RISK_CATEGORY]: true,
-        [CustomMetricFormFieldNames.SERVICE_INSTANCE]: true,
         [CustomMetricFormFieldNames.LOWER_BASELINE_DEVIATION]: true
       }
     } as unknown as any)
     const { container, getByText } = render(
-      <TestWrapper>
+      <WrapperComponent>
         <Formik
           initialValues={{ continuousVerification: true, healthScore: true }}
           onSubmit={jest.fn()}
           formName="runtimeInputsTest"
         >
-          <SelectHealthSourceServices
+          <AssignQuery
             values={{ continuousVerification: true, healthScore: true, sli: false }}
             riskProfileResponse={riskProfileResponse as any}
           />
         </Formik>
-      </TestWrapper>
+      </WrapperComponent>
     )
     expect(getByText('SLI Error')).toBeInTheDocument()
     expect(getByText('Deviation Error')).toBeInTheDocument()
     expect(getByText('Risk category Error')).toBeInTheDocument()
-    expect(getByText('Service instance Error')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 
   test('should render RiskProfile when continuousVerification and healthScore are true with empty riskProfileResponse', () => {
     const { container, getByText, rerender } = render(
-      <TestWrapper>
+      <WrapperComponent>
         <Formik
           initialValues={{ continuousVerification: true, healthScore: true }}
           onSubmit={jest.fn()}
           formName="runtimeInputsTest"
         >
-          <SelectHealthSourceServices
+          <AssignQuery
             values={{ continuousVerification: true, healthScore: true, sli: false }}
             riskProfileResponse={[] as any}
           />
         </Formik>
-      </TestWrapper>
+      </WrapperComponent>
     )
     expect(container.querySelector('input[name="sli"')).not.toBeChecked()
     expect(container.querySelector('input[name="healthScore"')).toBeChecked()
@@ -96,32 +103,32 @@ describe('Validate SelectHealthSourceServices', () => {
     expect(container).toMatchSnapshot()
 
     rerender(
-      <TestWrapper>
+      <WrapperComponent>
         <Formik
           initialValues={{ continuousVerification: true, healthScore: true }}
           onSubmit={jest.fn()}
           formName="runtimeInputsTest"
         >
-          <SelectHealthSourceServices values={{ continuousVerification: true, healthScore: true, sli: false }} />
+          <AssignQuery values={{ continuousVerification: true, healthScore: true, sli: false }} />
         </Formik>
-      </TestWrapper>
+      </WrapperComponent>
     )
   })
 
   test('should not render RiskProfile when continuousVerification and healthScore are false', () => {
     const { container } = render(
-      <TestWrapper>
+      <WrapperComponent>
         <Formik
           initialValues={{ continuousVerification: false, healthScore: false, sli: true }}
           onSubmit={jest.fn()}
           formName="runtimeInputsTest"
         >
-          <SelectHealthSourceServices
+          <AssignQuery
             values={{ continuousVerification: false, healthScore: false, sli: true }}
             riskProfileResponse={riskProfileResponse as any}
           />
         </Formik>
-      </TestWrapper>
+      </WrapperComponent>
     )
     expect(container.querySelector('input[name="sli"')).toBeChecked()
     expect(container.querySelector('input[name="healthScore"')).not.toBeChecked()
@@ -133,9 +140,9 @@ describe('Validate SelectHealthSourceServices', () => {
 
   test('should render SLI if showOnlySLI prop is passed', () => {
     const { container } = render(
-      <TestWrapper>
+      <WrapperComponent>
         <Formik initialValues={{ sli: true }} onSubmit={jest.fn()} formName="runtimeInputsTest">
-          <SelectHealthSourceServices
+          <AssignQuery
             values={{ sli: true }}
             riskProfileResponse={riskProfileResponse as any}
             showOnlySLI
@@ -144,7 +151,7 @@ describe('Validate SelectHealthSourceServices', () => {
             hideServiceIdentifier
           />
         </Formik>
-      </TestWrapper>
+      </WrapperComponent>
     )
     expect(container.querySelector('input[name="sli"')).toBeInTheDocument()
     expect(container.querySelector('input[name="healthScore"')).not.toBeInTheDocument()

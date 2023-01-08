@@ -6,11 +6,10 @@
  */
 
 import React, { useContext } from 'react'
-import { useFormikContext } from 'formik'
-import { Container, FormInput, FormError, MultiTypeInputType } from '@harness/uicore'
+import { Container, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { useStrings } from 'framework/strings'
-import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import { useCommonHealthSource } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
 import CustomMetricsSectionHeader from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CustomMetricsSectionHeader'
 import { ServiceInstanceLabel } from '@cv/pages/health-source/common/ServiceInstanceLabel/ServiceInstanceLabel'
 import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
@@ -25,10 +24,10 @@ export default function ServiceInstance({
   continuousVerificationEnabled
 }: ServiceInstanceProps): JSX.Element {
   const { getString } = useStrings()
-  const { errors, touched } = useFormikContext<CommonCustomMetricFormikInterface>()
-  const showFieldError = Boolean(Object.keys(touched).length)
+  const { isQueryRuntimeOrExpression } = useCommonHealthSource()
   const { isTemplate, expressions, sourceData } = useContext(SetupSourceTabsContext)
   const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
+
   return (
     <Container>
       {continuousVerificationEnabled ? (
@@ -45,9 +44,14 @@ export default function ServiceInstance({
                 multiTextInputProps={{
                   value: serviceInstance,
                   expressions,
-                  allowableTypes: isConnectorRuntimeOrExpression
-                    ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
-                    : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                  multitypeInputValue:
+                    (isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression) && !serviceInstance
+                      ? MultiTypeInputType.EXPRESSION
+                      : getMultiTypeFromValue(serviceInstance),
+                  allowableTypes:
+                    isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression
+                      ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+                      : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
                 }}
               />
             </Container>
@@ -58,11 +62,6 @@ export default function ServiceInstance({
           )}
         </>
       ) : null}
-      {errors.serviceInstance && showFieldError && (
-        <Container margin={{ top: 'small', bottom: 'small' }}>
-          <FormError name={CustomMetricFormFieldNames.SLI} errorMessage={errors.serviceInstance} />
-        </Container>
-      )}
     </Container>
   )
 }

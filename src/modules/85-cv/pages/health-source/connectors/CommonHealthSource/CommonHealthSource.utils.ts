@@ -195,7 +195,7 @@ export const handleValidateCustomMetricForm = ({
   customMetricsConfig: HealthSourceConfig['customMetrics']
 }): FormikErrors<CommonCustomMetricFormikInterface> => {
   const isAssignComponentEnabled = customMetricsConfig?.assign?.enabled
-  let errors: FormikErrors<CommonCustomMetricFormikInterface> = {}
+  const errors: FormikErrors<CommonCustomMetricFormikInterface> = {}
   const { query = '' } = formData
 
   if (!query) {
@@ -203,7 +203,7 @@ export const handleValidateCustomMetricForm = ({
   }
 
   if (isAssignComponentEnabled) {
-    errors = validateAssignComponent(formData, getString, errors)
+    validateAssignComponent(formData, getString, errors)
   }
 
   return errors
@@ -213,7 +213,7 @@ export const validateAssignComponent = (
   formData: CommonCustomMetricFormikInterface,
   getString: UseStringsReturn['getString'],
   errors: FormikErrors<CommonCustomMetricFormikInterface>
-): FormikErrors<CommonCustomMetricFormikInterface> => {
+): void => {
   const {
     sli,
     continuousVerification,
@@ -260,8 +260,6 @@ export const validateAssignComponent = (
       }
     }
   }
-
-  return errors
 }
 
 export const handleValidateHealthSourceConfigurationsForm = ({
@@ -438,7 +436,7 @@ function getUpdatedCustomMetrics(
           identifier: queryDefinition.identifier,
           metricName: queryDefinition.name,
           query: queryDefinition.query || '',
-          riskCategory: queryDefinition?.riskProfile?.category,
+          riskCategory: queryDefinition?.riskProfile?.riskCategory,
           serviceInstance: queryDefinition?.queryParams?.serviceInstanceField,
           lowerBaselineDeviation: queryDefinition?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER') || false,
           higherBaselineDeviation: queryDefinition?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_HIGHER') || false,

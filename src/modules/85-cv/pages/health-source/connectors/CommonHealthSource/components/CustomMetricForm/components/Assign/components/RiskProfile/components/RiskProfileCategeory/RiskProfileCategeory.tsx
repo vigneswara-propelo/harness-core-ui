@@ -18,6 +18,7 @@ import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/
 import CustomMetricsSectionHeader from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CustomMetricsSectionHeader'
 import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { getRiskCategoryOptionsV2 } from '../../RiskProfile.utils'
+import css from './RiskProfileCategeory.module.scss'
 
 interface RiskProfileCategeoryProps {
   riskCategory?: string
@@ -54,15 +55,11 @@ export default function RiskProfileCategeory({
     metricPackContent = (
       <Container data-testid="metricPackOptions-loading">
         <CustomMetricsSectionHeader sectionTitle={getString('cv.monitoringSources.riskCategoryLabel')} />
-        {[1, 2, 3, 4].map(val => (
-          <Container
-            key={val}
-            width={150}
-            height={15}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            className={Classes.SKELETON}
-          />
-        ))}
+        <div className={css.loadingContainer}>
+          {[1, 2, 3, 4].map(val => (
+            <Container key={val} width={150} height={15} className={Classes.SKELETON} />
+          ))}
+        </div>
       </Container>
     )
   } else if (riskCategoryItems?.length) {
@@ -82,21 +79,16 @@ export default function RiskProfileCategeory({
         radioGroup={{ inline: true }}
         name={CustomMetricFormFieldNames.RISK_CATEGORY}
         items={riskCategoryItems}
+        className={css.riskProfileRadioGroup}
       />
     )
   }
   return (
-    <>
-      <CustomMetricsSectionHeader
-        sectionTitle={getString('cv.monitoringSources.riskProfile')}
-        sectionSubTitle={getString('cv.monitoringSources.commonHealthSource.assign.riskProfileSubHeader')}
-      />
+    <Container margin={{ bottom: 'xlarge' }}>
       {metricPackContent}
       {errors.riskCategory && showFieldError && (
-        <Container margin={{ top: 'small', bottom: 'small' }}>
-          <FormError name={CustomMetricFormFieldNames.SLI} errorMessage={errors.riskCategory} />
-        </Container>
+        <FormError name={CustomMetricFormFieldNames.SLI} errorMessage={errors.riskCategory} />
       )}
-    </>
+    </Container>
   )
 }
