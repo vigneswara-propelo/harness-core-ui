@@ -113,3 +113,11 @@
   height: auto;
   min-height: 800px;
 }
+
+.noDataContainer > div:first-child {
+  height: unset !important;
+}
+
+.noDataContainer > div:first-child > div:first-child {
+  margin-top: 0 !important;
+}

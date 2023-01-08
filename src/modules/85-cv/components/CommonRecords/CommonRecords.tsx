@@ -12,6 +12,7 @@ import { isEmpty } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import noDataImage from '@cv/assets/noData.svg'
 import { transformSampleData } from './utils'
 import type { CommonRecordsProps } from './types'
 import css from './CommonRecords.module.scss'
@@ -47,21 +48,24 @@ export function CommonRecords(props: CommonRecordsProps): JSX.Element {
     )
   } else if (!isQueryExecuted) {
     content = (
-      <Container className={css.centerElement}>
-        <Text padding={{ top: 'small', left: 'medium' }}>
-          {getString('cv.monitoringSources.commonHealthSource.records.runQueryToSeeRecords')}
-        </Text>
+      <Container className={css.noDataContainer}>
+        <NoDataCard
+          message={
+            <Text padding={{ top: 'small', left: 'medium' }}>
+              {getString('cv.monitoringSources.commonHealthSource.records.runQueryToSeeRecords')}
+            </Text>
+          }
+          image={noDataImage}
+        />
       </Container>
     )
   } else if (!records?.length) {
     content = (
       <Container className={css.noRecords}>
         <NoDataCard
-          icon="warning-sign"
+          image={noDataImage}
           message={getString('cv.monitoringSources.gcoLogs.noRecordsForQuery')}
-          onClick={() => {
-            fetchRecords()
-          }}
+          onClick={fetchRecords}
           buttonText={getString('retry')}
           buttonDisabled={isEmpty(query)}
         />
