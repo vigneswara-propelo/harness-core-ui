@@ -7819,6 +7819,7 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics': string
   'cv.monitoringSources.commonHealthSource.defineQuerySubDescription': string
   'cv.monitoringSources.commonHealthSource.logsTable.ServiceInstance': string
+  'cv.monitoringSources.commonHealthSource.logsTable.fetchLogDataButtonDisableMessage': string
   'cv.monitoringSources.commonHealthSource.logsTable.jsonSelectorDrawerTitlePrefix': string
   'cv.monitoringSources.commonHealthSource.logsTable.noSampleAvailable': string
   'cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText': string
@@ -7826,6 +7827,7 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.logsTable.subTitle': string
   'cv.monitoringSources.commonHealthSource.logsTable.timestamp': string
   'cv.monitoringSources.commonHealthSource.logsTable.title': string
+  'cv.monitoringSources.commonHealthSource.logsTable.validationMessage': string
   'cv.monitoringSources.commonHealthSource.metric': string
   'cv.monitoringSources.commonHealthSource.metricName': string
   'cv.monitoringSources.commonHealthSource.metricsChart.fetchingCharts': string

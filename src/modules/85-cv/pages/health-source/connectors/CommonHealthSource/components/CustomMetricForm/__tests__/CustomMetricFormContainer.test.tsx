@@ -150,9 +150,10 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       setGroupedCreatedMetrics: jest.fn(),
       setNonCustomFeilds: jest.fn()
     } as any
-    test('should test whether the logs table section is hidden if the query is not entered', async () => {
+    test('should test whether the inputs are disabled if the query is not entered and should take correct default value', async () => {
       const { container } = render(<WrapperComponent {...mockProps} />)
-      expect(container.querySelector('.jsonSelectorButton')).toBeNull()
+      expect(container.querySelector('.jsonSelectorButton')).toBeDisabled()
+      expect(container.querySelector('.jsonSelectorButton')).toHaveTextContent('_sourcehost')
     })
 
     test('should test whether the inputs are enabled if the query present', async () => {
@@ -514,12 +515,12 @@ describe('Unit tests for CustomMetricFormContainer', () => {
           </SetupSourceTabsContext.Provider>
         )
       }
-      test('should test template inputs not are visible if it is tempaltes and query is not runtime or expression', () => {
+      test('should test multitype template inputs are visible if it is a tempalte and query is fixed', () => {
         const { container } = render(<TemplatesWrapperComponent {...mockProps} query="select *" />)
 
         const templateFixedInput = container.querySelector('.MultiTypeInput--FIXED')
 
-        expect(templateFixedInput).toBeNull()
+        expect(templateFixedInput).toBeInTheDocument()
       })
 
       test('should test template inputs are Runtime and fetch logs button is hidden if connector is runtime', () => {

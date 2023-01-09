@@ -239,6 +239,8 @@ monitoringSources:
       timestamp: Timestamp
       ServiceInstance: Service Instance
       jsonSelectorDrawerTitlePrefix: Select path for
+      validationMessage: '{{fieldName}} is required'
+      fetchLogDataButtonDisableMessage: Records are not available
     assign:
       subHeader: Select services to which the metric and custom metric will be applied.
       riskProfileSubHeader: Harness will verify and rate your events based on your selected risk category and deviation.

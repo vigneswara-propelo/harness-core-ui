@@ -31,8 +31,7 @@ import LogsTableContainer from '../../LogsTable/LogsTableContainer'
 import {
   shouldAutoBuildChart,
   shouldShowChartComponent,
-  getRecordsRequestBody,
-  getIsLogsCanBeShown
+  getRecordsRequestBody
 } from './CommonCustomMetricFormContainer.utils'
 import { useCommonHealthSource } from '../../CommonHealthSourceContext/useCommonHealthSource'
 import SelectHealthSourceServices from '../../Assign/AssignQuery'
@@ -116,6 +115,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
 
   return (
     <Container key={values?.identifier} padding={'small'} margin={'small'}>
+      {/* ⭐️ Query section */}
       <CommonQueryViewer
         isQueryExecuted={isQueryExecuted}
         records={records}
@@ -140,12 +140,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
       ) : null}
 
       {/* ⭐️ Logs Table */}
-      {getIsLogsCanBeShown({
-        isLogsTableEnabled: isLogsTableVisible,
-        isDataAvailableForLogsTable,
-        isQueryRuntimeOrExpression,
-        isConnectorRuntimeOrExpression
-      }) && (
+      {isLogsTableVisible && (
         <LogsTableContainer
           fieldMappings={healthSourceConfig?.customMetrics?.fieldMappings}
           providerType={getProviderType(sourceData) as QueryRecordsRequest['providerType']}
@@ -155,6 +150,8 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
           disableLogFields={!isDataAvailableForLogsTable}
         />
       )}
+
+      {/* ⭐️ Assign section */}
       {healthSourceConfig.customMetrics?.assign?.enabled && (
         <SelectHealthSourceServices
           values={{

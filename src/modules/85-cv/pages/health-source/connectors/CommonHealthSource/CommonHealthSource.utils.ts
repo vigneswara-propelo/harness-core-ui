@@ -10,6 +10,7 @@ import { cloneDeep, set } from 'lodash-es'
 import { RUNTIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import type { NextGenHealthSourceSpec, QueryRecordsRequest } from 'services/cv'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { initializeSelectedMetricsMap } from '../../common/CommonCustomMetric/CommonCustomMetric.utils'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '../../types'
@@ -39,6 +40,7 @@ import {
   MetricThresholdPropertyName
 } from '../../common/MetricThresholds/MetricThresholds.constants'
 import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
+import type { LogFieldsMultiTypeState } from './components/CustomMetricForm/CustomMetricForm.types'
 
 export const initHealthSourceCustomForm = () => {
   return {
@@ -82,19 +84,64 @@ export function getIsLogsTableVisible(healthSourceConfig: HealthSourceConfig): b
   return customMetrics?.fieldMappings.some(field => field.type === FIELD_ENUM.JSON_SELECTOR)
 }
 
-export function getFieldsDefaultValuesFromConfig(
-  values: CommonCustomMetricFormikInterface,
-  logsTableConfig?: FieldMapping[]
-): Partial<CommonCustomMetricFormikInterface> {
-  if (!Array.isArray(logsTableConfig) || !values) {
+const canSetDefaultValue = ({
+  isTemplate,
+  multiTypeRecord,
+  field,
+  values
+}: {
+  isTemplate?: boolean
+  multiTypeRecord: LogFieldsMultiTypeState | null
+  field: FieldMapping
+  values: CommonCustomMetricFormikInterface
+}): boolean => {
+  return Boolean(
+    (!isTemplate || (isTemplate && multiTypeRecord?.[field.identifier] === MultiTypeInputType.FIXED)) &&
+      !values[field.identifier] &&
+      field.defaultValue
+  )
+}
+
+const canSetRuntimeInputValue = ({
+  isTemplate,
+  multiTypeRecord,
+  field,
+  values
+}: {
+  isTemplate?: boolean
+  multiTypeRecord: LogFieldsMultiTypeState | null
+  field: FieldMapping
+  values: CommonCustomMetricFormikInterface
+}): boolean => {
+  return Boolean(
+    isTemplate &&
+      isMultiTypeRuntime(multiTypeRecord?.[field.identifier] as MultiTypeInputType) &&
+      !values[field.identifier]
+  )
+}
+
+export function getFieldsDefaultValuesFromConfig({
+  values,
+  multiTypeRecord,
+  fieldMappings,
+  isTemplate
+}: {
+  values: CommonCustomMetricFormikInterface
+  multiTypeRecord: LogFieldsMultiTypeState | null
+  fieldMappings?: FieldMapping[]
+  isTemplate?: boolean
+}): Partial<CommonCustomMetricFormikInterface> {
+  if (!Array.isArray(fieldMappings) || !values) {
     return {}
   }
 
   const valuesToUpdate: Partial<CommonCustomMetricFormikInterface> = {}
 
-  for (const field of logsTableConfig) {
-    if (!values[field.identifier] && field.defaultValue) {
+  for (const field of fieldMappings) {
+    if (canSetDefaultValue({ field, isTemplate, values, multiTypeRecord })) {
       ;(valuesToUpdate[field.identifier] as string) = field.defaultValue
+    } else if (canSetRuntimeInputValue({ field, isTemplate, values, multiTypeRecord })) {
+      ;(valuesToUpdate[field.identifier] as string) = RUNTIME_INPUT_VALUE
     }
   }
 
@@ -137,13 +184,14 @@ export function getRequestBodyForSampleLogs(
   providerType: QueryRecordsRequest['providerType'],
   otherValues: {
     query: string
-    connectorIdentifier: string
+    connectorIdentifier: string | { connector: { identifier: string } }
     serviceInstance: string
   }
 ): QueryRecordsRequest | null {
   switch (providerType) {
     case ProviderTypes.SUMOLOGIC_LOG: {
       const currentTime = new Date()
+
       const startTime = currentTime.setHours(currentTime.getHours() - 2)
 
       const { connectorIdentifier, query, serviceInstance } = otherValues
@@ -153,7 +201,8 @@ export function getRequestBodyForSampleLogs(
         endTime: Date.now(),
         providerType,
         query,
-        connectorIdentifier,
+        connectorIdentifier:
+          typeof connectorIdentifier === 'string' ? connectorIdentifier : connectorIdentifier?.connector?.identifier,
         healthSourceQueryParams: {
           serviceInstanceField: serviceInstance
         }
@@ -184,6 +233,32 @@ export const getIsQueryRuntimeOrExpression = (query?: string): boolean => {
   return getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
 }
 
+const validateLogFields = ({
+  formData,
+  getString,
+  errors,
+  customMetricsConfig
+}: {
+  formData: CommonCustomMetricFormikInterface
+  getString: UseStringsReturn['getString']
+  customMetricsConfig: HealthSourceConfig['customMetrics']
+  errors: FormikErrors<CommonCustomMetricFormikInterface>
+}): FormikErrors<CommonCustomMetricFormikInterface> => {
+  const fieldMappings = customMetricsConfig?.fieldMappings
+
+  if (!Array.isArray(fieldMappings)) {
+    return errors
+  }
+
+  fieldMappings.forEach(field => {
+    if (!formData[field.identifier]) {
+      errors[field.identifier] = getString('cv.monitoringSources.commonHealthSource.logsTable.validationMessage')
+    }
+  })
+
+  return errors
+}
+
 // Validation functions
 export const handleValidateCustomMetricForm = ({
   formData,
@@ -195,7 +270,9 @@ export const handleValidateCustomMetricForm = ({
   customMetricsConfig: HealthSourceConfig['customMetrics']
 }): FormikErrors<CommonCustomMetricFormikInterface> => {
   const isAssignComponentEnabled = customMetricsConfig?.assign?.enabled
-  const errors: FormikErrors<CommonCustomMetricFormikInterface> = {}
+
+  const isLogsTableEnabled = customMetricsConfig?.logsTable?.enabled
+  let errors: FormikErrors<CommonCustomMetricFormikInterface> = {}
   const { query = '' } = formData
 
   if (!query) {
@@ -204,6 +281,15 @@ export const handleValidateCustomMetricForm = ({
 
   if (isAssignComponentEnabled) {
     validateAssignComponent(formData, getString, errors)
+  }
+
+  if (isLogsTableEnabled) {
+    errors = validateLogFields({
+      formData,
+      getString,
+      errors,
+      customMetricsConfig
+    })
   }
 
   return errors

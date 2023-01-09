@@ -25,6 +25,8 @@ describe('JsonSelectorWithDrawer', () => {
                 }
               ]}
               disableFields={false}
+              multiTypeRecord={null}
+              setMultiTypeRecord={() => void 0}
             />
           </Formik>
         </CommonHealthSourceProvider>
@@ -64,6 +66,8 @@ describe('JsonSelectorWithDrawer', () => {
                 }
               ]}
               disableFields={false}
+              multiTypeRecord={null}
+              setMultiTypeRecord={() => void 0}
             />
           </Formik>
         </CommonHealthSourceProvider>
