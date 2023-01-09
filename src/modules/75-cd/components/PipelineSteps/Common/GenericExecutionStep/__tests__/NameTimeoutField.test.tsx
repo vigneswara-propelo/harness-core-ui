@@ -79,7 +79,7 @@ describe('NameTimeoutField tests', () => {
   test(`change existing runtime value of timeout using cog`, async () => {
     const initialValues = { name: 'Existing Name', timeout: '<+input>' }
 
-    const { container, debug } = render(
+    const { container } = render(
       <TestWrapper>
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           <NameTimeoutField
@@ -104,16 +104,11 @@ describe('NameTimeoutField tests', () => {
     expect(timeoutInput).toBeInTheDocument()
     expect(timeoutInput.value).toBe('<+input>')
 
-    debug(container)
-
     const cogTimeout = document.querySelector('[data-icon="cog"]')
     userEvent.click(cogTimeout!)
     await waitFor(() => expect(modals.length).toBe(1))
     const timeoutCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(timeoutCOGModal)
-    // await waitFor(() =>
-    //   expect(mockSetFieldValue).toBeCalledWith('timeout', '<+input>.regex(<+input>.includes(/test/))')
-    // )
   })
 
   test('identifier should not be editable when isNewStep is false', () => {
