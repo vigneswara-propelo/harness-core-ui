@@ -84,7 +84,7 @@ import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { Connectors } from '@connectors/constants'
 import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '@pipeline/utils/constants'
-import { isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isEnterprisePlan, isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import {
   KUBERNETES_HOSTED_INFRA_ID,
@@ -386,6 +386,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
   const { licenseInformation } = useLicenseStore()
   const isFreeEdition = isFreePlan(licenseInformation, ModuleName.CI)
+  const isSecurityEnterprise =
+    isEnterprisePlan(licenseInformation, ModuleName.STO) && licenseInformation['STO']?.status === 'ACTIVE'
 
   const BuildInfraTypes: ThumbnailSelectProps['items'] = [
     ...(enabledHostedBuildsForFreeUsers && CIE_HOSTED_VMS
@@ -406,7 +408,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           } as Item
         ]
       : []),
-    ...(!isFreeEdition
+    ...(!isFreeEdition || isSecurityEnterprise
       ? [
           {
             label: getString('pipeline.serviceDeploymentTypes.kubernetes'),
@@ -424,7 +426,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           } as Item
         ]
       : []),
-    ...(!isFreeEdition
+    ...(!isFreeEdition || isSecurityEnterprise
       ? [
           {
             label: getString('ci.buildInfra.vMs'),
