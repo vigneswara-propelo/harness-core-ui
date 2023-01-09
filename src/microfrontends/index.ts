@@ -45,6 +45,7 @@ import type { TIUIAppCustomProps } from '@pipeline/pages/execution/ExecutionTest
 import type { ChaosCustomMicroFrontendProps } from '@chaos/interfaces/Chaos.types'
 import type { FFCustomMicroFrontendProps } from '@cf/FFCustomMicroFrontendProps.types'
 import type { getLocationPathName } from 'framework/utils/WindowLocation'
+import type { IACMCustomMicroFrontendProps } from '@iacm/interfaces/IACMCustomMicroFrontendProps.types'
 
 export interface Scope {
   accountId?: string
@@ -115,5 +116,6 @@ export {
   CCMUIAppCustomProps,
   TIUIAppCustomProps,
   ChaosCustomMicroFrontendProps,
-  FFCustomMicroFrontendProps
+  FFCustomMicroFrontendProps,
+  IACMCustomMicroFrontendProps
 }

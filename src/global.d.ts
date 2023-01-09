@@ -185,6 +185,16 @@ declare module 'stoV2/PipelineSecurityView' {
   export default ChildApp
 }
 
+declare module 'iacm/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'iacm/IACMStage' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 declare type Mutable<T> = {

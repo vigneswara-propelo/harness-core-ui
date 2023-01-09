@@ -470,6 +470,8 @@ export interface StringsMap {
   'common.home': string
   'common.hostLabel': string
   'common.hourly': string
+  'common.iacm': string
+  'common.iacmText': string
   'common.ignore': string
   'common.import': string
   'common.importEntityFromGit': string
@@ -8260,6 +8262,33 @@ export interface StringsMap {
   'cv.windowsEndIsRequired': string
   'cv.yourExistingErrorBudgetIs': string
   'cv.zoom': string
+  'iacm.ansible': string
+  'iacm.cdk': string
+  'iacm.cloudformation': string
+  'iacm.createStack': string
+  'iacm.navTitle': string
+  'iacm.pulumi': string
+  'iacm.stackWizard.autoApprove': string
+  'iacm.stackWizard.autoApproveRequired': string
+  'iacm.stackWizard.connectorRequired': string
+  'iacm.stackWizard.provisionerDetails': string
+  'iacm.stackWizard.provisionerType': string
+  'iacm.stackWizard.provisionerTypeRequired': string
+  'iacm.stackWizard.provisionerVersion': string
+  'iacm.stackWizard.provisionerVersionRequired': string
+  'iacm.stackWizard.repoConnectorTypeRequired': string
+  'iacm.stackWizard.repoDetails': string
+  'iacm.stackWizard.scriptsPath': string
+  'iacm.stackWizard.scriptsPathRequired': string
+  'iacm.stackWizard.selectGitConnector': string
+  'iacm.stackWizard.ttl': string
+  'iacm.stackWizard.ttlRequired': string
+  'iacm.stackWizard.workspaceRequired': string
+  'iacm.stacks': string
+  'iacm.stageDescription': string
+  'iacm.stageTitle': string
+  'iacm.terraform': string
+  'iacm.terragrunt': string
   'sto.Critical': string
   'sto.Info': string
   'sto.Unassigned': string
