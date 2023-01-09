@@ -1113,9 +1113,9 @@ allClusters: 'All Clusters'
 all: 'All {{name}}'
 sortedByCreatedTime: List sorted by created time
 configDetails: 'Configuration Details'
-freezeActiveBannerTextPrefix: Freeze enabled on all deployments for this
+freezeActiveBannerTextPrefix: Global deployment freeze enabled on this
 freezeActiveBannerTimeframe: from <b>{{startTime}}</b> to <b>{{endTime}}</b>
-freezeListActiveBannerText: There are {{count}} ongoing deployment freeze windows
+freezeListActiveBannerText: There are {{count}} ongoing global deployment freeze windows
 loadingFieldOptions: Loading {{fieldName}}s...
 freezeListActiveBannerExpandedTextPrefix: On the
 resourceIdentifier: Resource Identifier
