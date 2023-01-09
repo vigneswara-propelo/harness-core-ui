@@ -236,23 +236,10 @@ function FormContent({
                 disabled={isReadonly}
                 multiTypeDurationProps={{
                   expressions,
-                  enableConfigureOptions: false,
+                  enableConfigureOptions: true,
                   allowableTypes
                 }}
               />
-              {getMultiTypeFromValue(formik.values?.spec?.timeout) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={formik.values?.spec?.timeout || ''}
-                  type="String"
-                  style={{ marginTop: 22 }}
-                  variableName="timeout"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  showAdvanced={true}
-                  onChange={value => formik.setFieldValue('spec.timeout', value)}
-                  isReadonly={isReadonly}
-                />
-              )}
             </div>
             <div className={css.customArtifactContainer}>
               <FormInput.Select

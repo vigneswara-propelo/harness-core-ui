@@ -331,22 +331,9 @@ export const CreateStack = (
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
                 disabled={readonly}
               />
-              {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={defaultTo(values.timeout, '')}
-                  type="String"
-                  variableName="timeout"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  showAdvanced={true}
-                  onChange={value => formik.setFieldValue('timeout', value)}
-                  isReadonly={readonly}
-                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                />
-              )}
             </div>
             <div className={css.divider} />
             <div className={cx(stepCss.formGroup, stepCss.sm)}>

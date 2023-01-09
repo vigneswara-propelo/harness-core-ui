@@ -76,8 +76,6 @@ const ElastigroupDeployStepEdit = (
           return (
             <>
               <NameTimeoutField
-                values={{ name: values.name, timeout: values.timeout }}
-                setFieldValue={setFieldValue}
                 allowableTypes={allowableTypes}
                 isNewStep={isNewStep}
                 readonly={readonly}
