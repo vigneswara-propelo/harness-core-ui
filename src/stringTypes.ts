@@ -3155,6 +3155,7 @@ export interface StringsMap {
   'code.homepageHeading': string
   'code.learnMore': string
   'code.pullRequests': string
+  'code.webhooks': string
   'pipeline.ACR.name': string
   'pipeline.ACR.registry': string
   'pipeline.ACR.registryError': string
