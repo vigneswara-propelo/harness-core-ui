@@ -3568,12 +3568,15 @@ export interface StringsMap {
   'pipeline.execution.elapsedTime': string
   'pipeline.execution.emptyStepGroup': string
   'pipeline.execution.ignoreFailedWarningText': string
+  'pipeline.execution.instanceList': string
+  'pipeline.execution.instances': string
   'pipeline.execution.iotab.noInputText': string
   'pipeline.execution.iotab.noOutputText': string
   'pipeline.execution.layouts.bottom': string
   'pipeline.execution.layouts.float': string
   'pipeline.execution.layouts.minimize': string
   'pipeline.execution.layouts.right': string
+  'pipeline.execution.listDetails': string
   'pipeline.execution.noInputsText': string
   'pipeline.execution.pipelineActionMessages.abortedMessage': string
   'pipeline.execution.pipelineActionMessages.pausedMessage': string

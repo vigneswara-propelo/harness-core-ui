@@ -526,6 +526,9 @@ execution:
   compareExecutionsTitle: Select executions to compare the compiled YAML
   emptyStepGroup: Step Group is empty
   ignoreFailedWarningText: A failed step was ignored because the step’s Failure Strategy is Ignore Failure. The step’s failure did not impact the Pipeline’s success.
+  instanceList: Instance list
+  instances: INSTANCES
+  listDetails: List details
   iotab:
     noInputText: No input found for current step
     noOutputText: No output found for current step
