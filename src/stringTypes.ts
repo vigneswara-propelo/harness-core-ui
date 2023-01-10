@@ -7161,6 +7161,7 @@ export interface StringsMap {
   'ci.buildInfra.awsVM.isRequiredWhen': string
   'ci.buildInfra.awsVM.os': string
   'ci.buildInfra.cloud': string
+  'ci.buildInfra.hostNames': string
   'ci.buildInfra.infrastructureTypesLabel': string
   'ci.buildInfra.k8sLabel': string
   'ci.buildInfra.kubernetesHelpText': string

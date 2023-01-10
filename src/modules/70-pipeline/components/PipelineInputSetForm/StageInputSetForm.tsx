@@ -898,7 +898,12 @@ export function StageInputSetFormInternal({
                 stringKey: 'ci.annotations',
                 hasValuesAsRuntimeInput: true
               })}
-
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.hostNames &&
+              renderMultiTypeListInputSet({
+                name: `${namePath}infrastructure.spec.hostNames`,
+                labelKey: 'ci.buildInfra.hostNames',
+                tooltipId: 'hostNames'
+              })}
             {hasContainerSecurityContextFields && (
               <>
                 <Separator topSeparation={16} bottomSeparation={8} />
