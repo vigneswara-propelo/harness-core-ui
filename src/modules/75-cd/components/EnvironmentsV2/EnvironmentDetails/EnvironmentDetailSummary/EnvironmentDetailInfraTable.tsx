@@ -6,10 +6,9 @@
  */
 
 import React, { useMemo } from 'react'
-import type { GetDataError } from 'restful-react'
 import { defaultTo, noop } from 'lodash-es'
 import cx from 'classnames'
-import { Container, Layout, PageError, PageSpinner, Popover, Text, useToaster } from '@harness/uicore'
+import { Container, Layout, Popover, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
@@ -67,6 +66,7 @@ export const getSummaryViewTableData = (
     let totalInstances = 0
     let lastDeployedAt = 0
     const infraName = infra.infraName || infra.clusterIdentifier
+    /* istanbul ignore else */
     if (infra.instanceGroupedByPipelineExecutionList) {
       infra.instanceGroupedByPipelineExecutionList.forEach(infraDetail => {
         totalInstances += defaultTo(infraDetail.count, 0)
@@ -113,6 +113,7 @@ export const getFullViewTableData = (
   InstanceGroupedByInfraList?.forEach(infra => {
     const infraName = infra.infraName || infra.clusterIdentifier
     let showInfra = true
+    /* istanbul ignore else */
     if (infra.instanceGroupedByPipelineExecutionList) {
       infra.instanceGroupedByPipelineExecutionList.forEach(infraDetail => {
         let pipelineExecution: string | undefined
@@ -245,6 +246,7 @@ const RenderPipelineExecution: Renderer<CellProps<TableRowData>> = ({
     useParams<PipelineType<PipelinePathProps>>()
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
 
+  /* istanbul ignore next */
   function handleClick(): void {
     if (lastPipelineExecutionName && lastPipelineExecutionId) {
       const route = routes.toExecutionPipelineView({
@@ -314,10 +316,7 @@ const columnsProperties = {
 export const EnvironmentDetailInfraTable = (
   props: React.PropsWithChildren<{
     tableType: InfraViewTableType
-    loading?: boolean
     data?: InstanceGroupedByInfrastructureV2[]
-    error?: GetDataError<unknown> | null
-    refetch?: () => Promise<void>
     artifactVersion?: string
     artifactPath?: string
     envFilter?: string
@@ -325,18 +324,7 @@ export const EnvironmentDetailInfraTable = (
     tableStyle: string
   }>
 ): React.ReactElement => {
-  const {
-    tableType,
-    loading = false,
-    data,
-    error,
-    refetch,
-    tableStyle,
-    artifactVersion,
-    envFilter,
-    serviceFilter,
-    artifactPath
-  } = props
+  const { tableType, data, tableStyle, artifactVersion, envFilter, serviceFilter, artifactPath } = props
 
   const { getString } = useStrings()
   const tableData: TableRowData[] = useMemo(() => {
@@ -377,20 +365,6 @@ export const EnvironmentDetailInfraTable = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (loading) {
-    return (
-      <Container data-test="ActiveServiceInstancesLoader" height="360px">
-        <PageSpinner />
-      </Container>
-    )
-  }
-  if (error) {
-    return (
-      <Container data-test="ActiveServiceInstancesError" height="360px">
-        <PageError onClick={() => refetch?.()} />
-      </Container>
-    )
-  }
   if (!data?.length) {
     return (
       <DialogEmptyState

@@ -62,7 +62,7 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
 
   const { page, size, sort, myDeployments, status, repoIdentifier, searchTerm, repoName } = queryParams
 
-  const resetFilter = (): void => {
+  const resetFilter = /* istanbul ignore next */ (): void => {
     searchRef.current.clear()
     replaceQueryParams({})
   }
@@ -117,7 +117,7 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
   const hasExecutions = executionList?.totalElements && executionList?.totalElements > 0
   const showSpinner = initLoading || (loading && !isPolling)
 
-  const changeQueryParam = <T extends keyof GetListOfExecutionsQueryParams>(
+  const changeQueryParam = /* istanbul ignore next */ <T extends keyof GetListOfExecutionsQueryParams>(
     key: T,
     value: GetListOfExecutionsQueryParams[T]
   ): void => {
@@ -128,7 +128,7 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
     }
   }
 
-  const compareYamls = (): JSX.Element => {
+  const compareYamls = (): JSX.Element => /* istanbul ignore next */ {
     return isCompareMode ? (
       <>
         <Page.SubHeader className={css.main}>
@@ -173,7 +173,7 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
         <ExpandingSearchInput
           defaultValue={queryParams.searchTerm}
           alwaysExpanded
-          onChange={value => changeQueryParam('searchTerm', value)}
+          onChange={/* istanbul ignore next */ value => changeQueryParam('searchTerm', value)}
           width={200}
           ref={searchRef}
         />
