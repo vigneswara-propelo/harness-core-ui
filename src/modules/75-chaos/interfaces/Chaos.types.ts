@@ -31,7 +31,7 @@ export interface ChaosExperiment {
 
 export interface PipelineExperimentSelectProps {
   onSelect: (experiment: ChaosExperiment) => void
-  goToNewExperiment: () => void
+  goToNewExperiment: (query?: string) => void
 }
 
 export interface ExperimentPreviewProps {
