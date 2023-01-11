@@ -192,6 +192,7 @@ export function PipelineCanvas({
 
   useDocumentTitle([parse(pipeline?.name || getString('pipelines'))])
   const [discardBEUpdateDialog, setDiscardBEUpdate] = React.useState(false)
+
   const { openDialog: openConfirmBEUpdateError } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
     contentText: getString('pipelines-studio.pipelineUpdatedError'),
