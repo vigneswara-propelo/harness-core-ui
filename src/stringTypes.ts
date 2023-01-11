@@ -516,6 +516,7 @@ export interface StringsMap {
   'common.logs.noLogsText': string
   'common.manage': string
   'common.manageSubscription': string
+  'common.matchType': string
   'common.member': string
   'common.modified': string
   'common.module.cd': string
