@@ -3751,6 +3751,7 @@ export interface StringsMap {
   'pipeline.gitPullRequest': string
   'pipeline.gitPullRequestNumber': string
   'pipeline.gitRepo': string
+  'pipeline.imagePathHelperText': string
   'pipeline.imagePathLabel': string
   'pipeline.imageTag': string
   'pipeline.imageVersionDeprecated': string
@@ -4013,6 +4014,7 @@ export interface StringsMap {
   'pipeline.noClustersFound': string
   'pipeline.noEnvironmentGroupsFound': string
   'pipeline.noFilePathsFound': string
+  'pipeline.noImagesFound': string
   'pipeline.noPipelinesLabel': string
   'pipeline.noPipelinesText': string
   'pipeline.noRegions': string

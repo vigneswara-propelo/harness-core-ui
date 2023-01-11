@@ -1054,6 +1054,7 @@ artifactOrImagePathDependencyRequired: required to fetch the artifact/image path
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
 bucketNameHelperText: 'Connector is required to fetch buckets'
 filePathHelperText: 'Connector and Bucket Name are required to fetch file paths'
+imagePathHelperText: 'Connector and Region are required to fetch image paths'
 myDeploymentsText: My Deployments
 myBuildsText: My Builds
 mySecurityTestsText: My Security Tests
@@ -1063,6 +1064,7 @@ noBuckets: No buckets found with given region
 noBucketsFound: No buckets found
 noFilePathsFound: No file paths found
 noClustersFound: No clusters found
+noImagesFound: No images found
 gitRepo: Git Repo
 buildRepo: Build Repo
 failureTypetext: Select Failure Type
