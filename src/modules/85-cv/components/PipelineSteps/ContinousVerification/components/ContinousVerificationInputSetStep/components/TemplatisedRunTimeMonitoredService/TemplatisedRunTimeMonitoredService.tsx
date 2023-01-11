@@ -25,9 +25,7 @@ import {
 } from '@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment'
 import {
   checkIfRunTimeInput,
-  doesHealthSourceHasQueries,
-  getMetricDefinitionPath,
-  getMetricDefinitions,
+  getMetricDefinitionData,
   setCommaSeperatedList
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import type { ConnectorInfoDTO } from 'services/cv'
@@ -82,10 +80,13 @@ export default function TemplatisedRunTimeMonitoredService(
       </Card>
       {healthSources?.map((healthSource: any, index: number) => {
         const spec = healthSource?.spec || {}
-        const hasQueries = doesHealthSourceHasQueries(healthSource)
-        let path = `sources.healthSources.${index}.spec`
+        const path = `sources.healthSources.${index}.spec`
         const runtimeInputs = getRunTimeInputsFromHealthSource(spec, path)
-        const metricDefinitions = getMetricDefinitions(hasQueries, healthSource)
+        const { metricDefinitions, metricDefinitionInptsetFormPath } = getMetricDefinitionData(
+          healthSource,
+          path,
+          healthSource?.type
+        )
 
         return (
           <Card key={`${healthSource?.name}.${index}`} className={css.card}>
@@ -133,53 +134,54 @@ export default function TemplatisedRunTimeMonitoredService(
             ) : (
               <NoResultsView text={'No Runtime inputs available'} minimal={true} />
             )}
-            <Layout.Vertical padding={{ top: 'medium' }}>
-              {metricDefinitions?.map((item: any, idx: number) => {
-                path = getMetricDefinitionPath(path, hasQueries)
-                const runtimeItems = getNestedRuntimeInputs(item, [], `${path}.${idx}`)
-                return (
-                  <>
-                    <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: 'medium' }}>
-                      {getString('cv.monitoringSources.metricLabel')}: {item?.metricName}
-                    </Text>
-                    {runtimeItems.map(input => {
-                      if (input.name === INDEXES) {
-                        return (
-                          <FormInput.MultiTextInput
-                            key={input.name}
-                            name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
-                            label={getFieldLabelForVerifyTemplate(input.name, getString)}
-                            onChange={value => {
-                              setCommaSeperatedList(
-                                value as string,
-                                onChange,
-                                `${prefix}spec.monitoredService.spec.templateInputs.${input.path}`
-                              )
-                            }}
-                            multiTextInputProps={{
-                              expressions,
-                              allowableTypes
-                            }}
-                          />
-                        )
-                      } else {
-                        return (
-                          <FormInput.MultiTextInput
-                            key={input.name}
-                            name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
-                            label={getFieldLabelForVerifyTemplate(input.name, getString)}
-                            multiTextInputProps={{
-                              expressions,
-                              allowableTypes
-                            }}
-                          />
-                        )
-                      }
-                    })}
-                  </>
-                )
-              })}
-            </Layout.Vertical>
+            {Array.isArray(metricDefinitions) && metricDefinitions.length ? (
+              <Layout.Vertical padding={{ top: 'medium' }}>
+                {metricDefinitions.map((item: any, idx: number) => {
+                  const runtimeItems = getNestedRuntimeInputs(item, [], `${metricDefinitionInptsetFormPath}.${idx}`)
+                  return (
+                    <>
+                      <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: 'medium' }}>
+                        {getString('cv.monitoringSources.metricLabel')}: {item?.metricName}
+                      </Text>
+                      {runtimeItems.map(input => {
+                        if (input.name === INDEXES) {
+                          return (
+                            <FormInput.MultiTextInput
+                              key={input.name}
+                              name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
+                              label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                              onChange={value => {
+                                setCommaSeperatedList(
+                                  value as string,
+                                  onChange,
+                                  `${prefix}spec.monitoredService.spec.templateInputs.${input.path}`
+                                )
+                              }}
+                              multiTextInputProps={{
+                                expressions,
+                                allowableTypes
+                              }}
+                            />
+                          )
+                        } else {
+                          return (
+                            <FormInput.MultiTextInput
+                              key={input.name}
+                              name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
+                              label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                              multiTextInputProps={{
+                                expressions,
+                                allowableTypes
+                              }}
+                            />
+                          )
+                        }
+                      })}
+                    </>
+                  )
+                })}
+              </Layout.Vertical>
+            ) : null}
           </Card>
         )
       })}

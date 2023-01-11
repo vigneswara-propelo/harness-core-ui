@@ -15,7 +15,8 @@ import type {
   CustomHealthSourceMetricSpec,
   CustomHealthSourceLogSpec,
   ErrorTrackingHealthSourceSpec,
-  DynatraceHealthSourceSpec
+  DynatraceHealthSourceSpec,
+  NextGenHealthSourceSpec
 } from 'services/cv'
 import type { MetricThresholdType, ThresholdsPropertyNames } from './common/MetricThresholds/MetricThresholds.types'
 import type { DatadogLogsHealthSpec } from './connectors/DatadogLogsHealthSource/DatadogLogsHealthSource.type'
@@ -63,5 +64,6 @@ export interface UpdatedHealthSourceWithAllSpecs extends Omit<HealthSource, 'spe
     CustomHealthSourceMetricSpec &
     CustomHealthSourceLogSpec &
     ErrorTrackingHealthSourceSpec &
-    DynatraceHealthSourceSpec
+    DynatraceHealthSourceSpec &
+    NextGenHealthSourceSpec
 }

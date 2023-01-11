@@ -11,6 +11,7 @@ import { FormikErrors, yupToFormErrors } from 'formik'
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { HealthSourceTypes, UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import type { ContinousVerificationData, spec, VerifyStepMonitoredService } from './types'
 import {
   VerificationSensitivityOptions,
@@ -24,6 +25,11 @@ import {
 } from './constants'
 import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 import { validateTemplateInputs } from './components/ContinousVerificationWidget/ContinousVerificationWidget.utils'
+import {
+  METRIC_DEFINITIONS,
+  QUERIES,
+  QUERY_DEFINITIONS
+} from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
 
 /**
  * checks if a field is a runtime input.
@@ -262,18 +268,8 @@ export function isTemplatisedMonitoredService(type: string): boolean {
   return type === MONITORED_SERVICE_TYPE.TEMPLATE
 }
 
-export function getMetricDefinitions(hasQueries: boolean, healthSource: any) {
-  return hasQueries
-    ? healthSource?.spec?.queries
-    : healthSource?.spec?.metricDefinitions || healthSource?.spec?.newRelicMetricDefinitions
-}
-
 export function doesHealthSourceHasQueries(healthSource: any) {
   return healthSource?.spec?.queries !== undefined
-}
-
-export function getMetricDefinitionPath(path: string, hasQueries: boolean) {
-  return `${path}.${hasQueries ? 'queries' : 'metricDefinitions'}`
 }
 
 export const getDurationOptions = (enableVerifyStepLongDuration?: boolean): SelectOption[] =>
@@ -290,4 +286,41 @@ export const setCommaSeperatedList = (
     actualValue = value?.toString()?.split(',')
   }
   onChange?.(path, actualValue)
+}
+
+export const getMetricDefinitionData = (
+  healthSource: UpdatedHealthSourceWithAllSpecs,
+  path: string,
+  type: UpdatedHealthSourceWithAllSpecs['type']
+): {
+  metricDefinitions: unknown
+  metricDefinitionInptsetFormPath: string
+} => {
+  const hasQueries = doesHealthSourceHasQueries(healthSource)
+  const isNewRelicMetric = Boolean(healthSource?.spec?.newRelicMetricDefinitions)
+  let metricDefinitions = []
+  let metricDefinitionInptsetFormPath = null
+
+  if (type === HealthSourceTypes.NextGenHealthSource) {
+    metricDefinitions = healthSource?.spec?.queryDefinitions || []
+    metricDefinitionInptsetFormPath = `${path}.${'queryDefinitions'}`
+  } else {
+    metricDefinitions = hasQueries
+      ? healthSource?.spec?.queries
+      : healthSource?.spec?.metricDefinitions || healthSource?.spec?.newRelicMetricDefinitions || []
+
+    metricDefinitionInptsetFormPath = `${path}.${
+      hasQueries ? 'queries' : isNewRelicMetric ? 'newRelicMetricDefinitions' : 'metricDefinitions'
+    }`
+  }
+
+  return { metricDefinitions, metricDefinitionInptsetFormPath }
+}
+
+export function showQueriesText(healthSource: any): boolean {
+  return doesHealthSourceHasQueries(healthSource) || healthSource?.type === HealthSourceTypes.NextGenHealthSource
+}
+
+export function shouldRenderField(input: { name: string; path: string }): boolean {
+  return input.name !== METRIC_DEFINITIONS && input.name !== QUERIES && input.name !== QUERY_DEFINITIONS
 }

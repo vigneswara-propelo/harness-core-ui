@@ -9,17 +9,27 @@ import React from 'react'
 import { Icon, Layout, TableV2, Text } from '@harness/uicore'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { getIconBySourceType } from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import css from './HealthSourceInputsetTable.module.scss'
 
 export default function HealthSourceInputsetTable({ healthSources }: any): JSX.Element {
   const tableData =
     healthSources?.map((healthSource: any) => {
       const { name, spec, type } = healthSource
-      return {
-        healthSource: name,
-        connector: spec?.connectorRef,
-        feature: spec?.feature,
-        type
+      if (type === HealthSourceTypes.NextGenHealthSource) {
+        return {
+          healthSource: name,
+          connector: spec?.connectorRef,
+          feature: spec?.dataSourceType,
+          type: spec?.dataSourceType
+        }
+      } else {
+        return {
+          healthSource: name,
+          connector: spec?.connectorRef,
+          feature: spec?.feature,
+          type
+        }
       }
     }) || []
 
