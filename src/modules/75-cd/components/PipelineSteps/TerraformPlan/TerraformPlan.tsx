@@ -762,8 +762,8 @@ function TerraformPlanWidget(
                           placeholder={getString('cd.enterTragets')}
                           multiTextInputProps={{
                             expressions,
-                            allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(item =>
-                              isMultiTypeRuntime(item)
+                            allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                              item => !isMultiTypeRuntime(item)
                             ) as AllowedTypes
                           }}
                           multiTypeFieldSelectorProps={{
@@ -783,8 +783,8 @@ function TerraformPlanWidget(
                           name="spec.configuration.environmentVariables"
                           valueMultiTextInputProps={{
                             expressions,
-                            allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(item =>
-                              isMultiTypeRuntime(item)
+                            allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                              item => !isMultiTypeRuntime(item)
                             ) as AllowedTypes
                           }}
                           multiTypeFieldSelectorProps={{
