@@ -1374,12 +1374,15 @@ errorFramework:
 delegate:
   DelegateSelectorOptional: 'Delegate Selector (optional)'
 cannotRunInvalidPipeline: Cannot run the pipeline because it's invalid, please review the configuration.
+cannotRunUnsavedPipeline: Please click Save and then run the pipeline.
 cannotAddTriggerInvalidPipeline: Cannot add a trigger because pipeline is invalid, please review the configuration.
 cannotAddInputSetInvalidPipeline: Cannot add an input set because pipeline is invalid, please review the configuration.
 cannotEditTriggerInvalidPipeline: Cannot edit the trigger because pipeline is invalid, please review the configuration.
 parentStageDeleteWarning: "Warning: this Stage's settings are propagated to another Stage(s) in this Pipeline ({{propagatingStages}}). If you delete this Stage, you must update the other Stages' settings or the Pipeline will fail."
 outOfSyncErrorStrip:
   reconcile: Reconcile
+  reconcileStarted: Reconciliation has started.
+  noErrorText: All of the entities referenced in this {{entity}} are in sync.
   unsyncedTemplateInfo: Some of the entities referenced in this {{entity}} have gone out of sync.
   updatedTemplateInfo: Some of the entities referenced in this {{entity}} have been updated.
 reconcileDialog:

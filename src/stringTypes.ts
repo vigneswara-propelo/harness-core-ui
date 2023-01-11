@@ -3387,6 +3387,7 @@ export interface StringsMap {
   'pipeline.cannotAddTriggerInvalidPipeline': string
   'pipeline.cannotEditTriggerInvalidPipeline': string
   'pipeline.cannotRunInvalidPipeline': string
+  'pipeline.cannotRunUnsavedPipeline': string
   'pipeline.changeTemplateLabel': string
   'pipeline.ci.validations.invalidSize': string
   'pipeline.ci.validations.keyUnique': string
@@ -4037,7 +4038,9 @@ export interface StringsMap {
   'pipeline.openTemplateInNewTabLabel': string
   'pipeline.operatorPlaceholder': string
   'pipeline.outOf': string
+  'pipeline.outOfSyncErrorStrip.noErrorText': string
   'pipeline.outOfSyncErrorStrip.reconcile': string
+  'pipeline.outOfSyncErrorStrip.reconcileStarted': string
   'pipeline.outOfSyncErrorStrip.unsyncedTemplateInfo': string
   'pipeline.outOfSyncErrorStrip.updatedTemplateInfo': string
   'pipeline.overrideSets.configure': string
