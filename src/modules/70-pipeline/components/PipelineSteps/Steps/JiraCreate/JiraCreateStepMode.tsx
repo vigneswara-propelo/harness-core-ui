@@ -539,6 +539,7 @@ function FormContent({
             selectedFields={formik.values.spec.selectedRequiredFields}
             renderRequiredFields={true}
             readonly={readonly}
+            connectorRef={defaultTo(connectorRefFixedValue, '')}
           />
         </div>
         {!ALLOW_USER_TYPE_FIELDS_JIRA && unsupportedRequiredFields?.length > 0 && (
