@@ -1031,7 +1031,6 @@ verification:
     totalClusters: Total Clusters
 stepCommonFields:
   runAsUser: Run as User
-  ifNotPresent: 'If Not Present'
   validation:
     mustBeANumber: '{{label}} must be a number'
     invalidLimitMemory: Invalid Limit Memory. To learn more, hover over the Set Container Resources tooltip.

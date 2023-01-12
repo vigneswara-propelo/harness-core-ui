@@ -472,6 +472,7 @@ export interface StringsMap {
   'common.hourly': string
   'common.iacm': string
   'common.iacmText': string
+  'common.ifNotPresent': string
   'common.ignore': string
   'common.import': string
   'common.importEntityFromGit': string
@@ -4290,7 +4291,6 @@ export interface StringsMap {
   'pipeline.startup.script.subtitle': string
   'pipeline.startup.scriptFilePath': string
   'pipeline.step.validation.namePatternIsNotValid': string
-  'pipeline.stepCommonFields.ifNotPresent': string
   'pipeline.stepCommonFields.runAsUser': string
   'pipeline.stepCommonFields.validation.invalidLimitCPU': string
   'pipeline.stepCommonFields.validation.invalidLimitMemory': string
