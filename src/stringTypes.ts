@@ -3965,6 +3965,7 @@ export interface StringsMap {
   'pipeline.manifestType.path': string
   'pipeline.manifestType.pathPlaceholder': string
   'pipeline.manifestType.pathRequired': string
+  'pipeline.manifestType.periodPrefixValidation': string
   'pipeline.manifestType.pluginPathHelperText': string
   'pipeline.manifestType.repoNamePlaceholder': string
   'pipeline.manifestType.selectManifestStore': string

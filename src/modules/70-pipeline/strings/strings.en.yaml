@@ -341,6 +341,7 @@ manifestType:
   kustomizePathRequired: Kustomize Path is required
   kustomizeFolderPathRequired: Kustomize Folder Path is required
   pathRequired: File Path is required
+  periodPrefixValidation: '{{ name }} can not start with "."'
   varsPathRequired: Vars Path is required
   autoScalerPathRequired: Autoscaler Path is required
   bucketNameRequired: Bucket Name is required
