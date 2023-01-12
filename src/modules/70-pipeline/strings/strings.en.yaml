@@ -569,6 +569,10 @@ resourceConstraints:
   k8sNamespaceText: K8s namespace
   serverlessInfraEntity: serverless infrastructure entity
   elastigroupInfraEntity: Elastigroup Infrastructure
+  tanzuInfraEntity: Tanzu Infrastructure
+  ecsInfraEntity: ECS Infrastructure
+  traditionalInfraEntity: SSH/WinRm Infrastructure
+
 targets:
   title: Targets
 barriers:
