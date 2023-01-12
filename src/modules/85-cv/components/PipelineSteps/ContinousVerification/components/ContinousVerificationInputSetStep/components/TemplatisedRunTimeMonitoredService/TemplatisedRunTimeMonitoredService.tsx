@@ -25,14 +25,18 @@ import {
 } from '@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment'
 import {
   checkIfRunTimeInput,
+  enrichHealthSourceWithVersionForHealthsourceType,
   getMetricDefinitionData,
+  getSourceTypeForConnector,
   setCommaSeperatedList
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
-import type { ConnectorInfoDTO } from 'services/cv'
-import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
+import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import { getMultiTypeInputProps } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { getRunTimeInputsFromHealthSource } from './TemplatisedRunTimeMonitoredService.utils'
-import { INDEXES } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
+import {
+  CONNECTOR_REF,
+  INDEXES
+} from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
 import css from './TemplatisedRunTimeMonitoredService.module.scss'
 
 export interface TemplatisedRunTimeMonitoredServiceProps {
@@ -58,35 +62,39 @@ export default function TemplatisedRunTimeMonitoredService(
 
   return (
     <Layout.Vertical>
-      <Card className={css.card}>
-        {checkIfRunTimeInput(serviceRef) ? (
-          <FormInput.MultiTypeInput
-            name={`${prefix}spec.monitoredService.spec.templateInputs.serviceRef`}
-            label={getString('service')}
-            selectItems={serviceOptions}
-            multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
-            useValue
-          />
-        ) : null}
-        {checkIfRunTimeInput(environmentRef) ? (
-          <FormInput.MultiTypeInput
-            name={`${prefix}spec.monitoredService.spec.templateInputs.environmentRef`}
-            label={getString('environment')}
-            selectItems={environmentOptions}
-            multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
-            useValue
-          />
-        ) : null}
-      </Card>
-      {healthSources?.map((healthSource: any, index: number) => {
-        const spec = healthSource?.spec || {}
+      {checkIfRunTimeInput(serviceRef) || checkIfRunTimeInput(environmentRef) ? (
+        <Card className={css.card}>
+          {checkIfRunTimeInput(serviceRef) ? (
+            <FormInput.MultiTypeInput
+              name={`${prefix}spec.monitoredService.spec.templateInputs.serviceRef`}
+              label={getString('service')}
+              selectItems={serviceOptions}
+              multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+              useValue
+            />
+          ) : null}
+          {checkIfRunTimeInput(environmentRef) ? (
+            <FormInput.MultiTypeInput
+              name={`${prefix}spec.monitoredService.spec.templateInputs.environmentRef`}
+              label={getString('environment')}
+              selectItems={environmentOptions}
+              multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+              useValue
+            />
+          ) : null}
+        </Card>
+      ) : null}
+      {healthSources?.map((healthSourceData: any, index: number) => {
+        const spec = healthSourceData?.spec || {}
         const path = `sources.healthSources.${index}.spec`
         const runtimeInputs = getRunTimeInputsFromHealthSource(spec, path)
-        const { metricDefinitions, metricDefinitionInptsetFormPath } = getMetricDefinitionData(
-          healthSource,
-          path,
-          healthSource?.type
+
+        // TODO - this can be removed once the templateInputs api gives version also in healthsoure entity.
+        const healthSource = enrichHealthSourceWithVersionForHealthsourceType(
+          healthSourceData as UpdatedHealthSourceWithAllSpecs
         )
+
+        const { metricDefinitions, metricDefinitionInptsetFormPath } = getMetricDefinitionData(healthSource, path)
 
         return (
           <Card key={`${healthSource?.name}.${index}`} className={css.card}>
@@ -96,7 +104,7 @@ export default function TemplatisedRunTimeMonitoredService(
             </Text>
             {runtimeInputs.length ? (
               runtimeInputs.map(input => {
-                if (input.name === 'connectorRef') {
+                if (input.name === CONNECTOR_REF) {
                   return (
                     <FormMultiTypeConnectorField
                       accountIdentifier={accountId}
@@ -106,12 +114,12 @@ export default function TemplatisedRunTimeMonitoredService(
                       name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
                       label={getString('connector')}
                       placeholder={getString('cv.healthSource.connectors.selectConnector', {
-                        sourceType: healthSource?.type
+                        sourceType: getSourceTypeForConnector(healthSource)
                       })}
-                      disabled={!healthSource?.type}
+                      disabled={!getSourceTypeForConnector(healthSource)}
                       setRefValue
                       multiTypeProps={{ allowableTypes, expressions }}
-                      type={healthSourceTypeMapping(healthSource?.type as ConnectorInfoDTO['type'])}
+                      type={getSourceTypeForConnector(healthSource)}
                       enableConfigureOptions={false}
                     />
                   )

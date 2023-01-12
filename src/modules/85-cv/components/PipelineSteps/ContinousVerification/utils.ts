@@ -11,7 +11,10 @@ import { FormikErrors, yupToFormErrors } from 'formik'
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { HealthSourceTypes, UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
+import type { HealthSourceTypes, UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
+import { getConnectorTypeName } from '@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.utils'
+import type { ConnectorInfoDTO, HealthSource } from 'services/cv'
+import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import type { ContinousVerificationData, spec, VerifyStepMonitoredService } from './types'
 import {
   VerificationSensitivityOptions,
@@ -21,14 +24,17 @@ import {
   SensitivityTypes,
   defaultMonitoredServiceSpec,
   monitoredServiceRefPath,
-  extendedDurationOptions
+  extendedDurationOptions,
+  V2_HEALTHSOURCES
 } from './constants'
 import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 import { validateTemplateInputs } from './components/ContinousVerificationWidget/ContinousVerificationWidget.utils'
 import {
   METRIC_DEFINITIONS,
+  NEWRELIC_METRIC_DEFINITIONS,
   QUERIES,
-  QUERY_DEFINITIONS
+  QUERY_DEFINITIONS,
+  V2
 } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
 
 /**
@@ -290,8 +296,7 @@ export const setCommaSeperatedList = (
 
 export const getMetricDefinitionData = (
   healthSource: UpdatedHealthSourceWithAllSpecs,
-  path: string,
-  type: UpdatedHealthSourceWithAllSpecs['type']
+  path: string
 ): {
   metricDefinitions: unknown
   metricDefinitionInptsetFormPath: string
@@ -301,16 +306,16 @@ export const getMetricDefinitionData = (
   let metricDefinitions = []
   let metricDefinitionInptsetFormPath = null
 
-  if (type === HealthSourceTypes.NextGenHealthSource) {
+  if (isHealthSourceVersionV2(healthSource)) {
     metricDefinitions = healthSource?.spec?.queryDefinitions || []
-    metricDefinitionInptsetFormPath = `${path}.${'queryDefinitions'}`
+    metricDefinitionInptsetFormPath = `${path}.${QUERY_DEFINITIONS}`
   } else {
     metricDefinitions = hasQueries
       ? healthSource?.spec?.queries
       : healthSource?.spec?.metricDefinitions || healthSource?.spec?.newRelicMetricDefinitions || []
 
     metricDefinitionInptsetFormPath = `${path}.${
-      hasQueries ? 'queries' : isNewRelicMetric ? 'newRelicMetricDefinitions' : 'metricDefinitions'
+      hasQueries ? QUERIES : isNewRelicMetric ? NEWRELIC_METRIC_DEFINITIONS : METRIC_DEFINITIONS
     }`
   }
 
@@ -318,9 +323,36 @@ export const getMetricDefinitionData = (
 }
 
 export function showQueriesText(healthSource: any): boolean {
-  return doesHealthSourceHasQueries(healthSource) || healthSource?.type === HealthSourceTypes.NextGenHealthSource
+  return doesHealthSourceHasQueries(healthSource) || isHealthSourceVersionV2(healthSource)
+}
+
+export function isHealthSourceVersionV2(healthSource: HealthSource): boolean {
+  return healthSource?.version === V2
+}
+
+export function enrichHealthSourceWithVersionForHealthsourceType(
+  healthSource: UpdatedHealthSourceWithAllSpecs
+): UpdatedHealthSourceWithAllSpecs {
+  let updatedHealthSource = { ...healthSource }
+  if (V2_HEALTHSOURCES.includes(healthSource?.type as HealthSourceTypes)) {
+    updatedHealthSource = { ...healthSource, version: V2 }
+  }
+  return updatedHealthSource
+}
+
+export function getSourceTypeForConnector(healthSource: HealthSource): ConnectorInfoDTO['type'] | undefined {
+  return (
+    isHealthSourceVersionV2(healthSource)
+      ? getConnectorTypeName(healthSource?.type as HealthSourceTypes)
+      : healthSourceTypeMapping(healthSource?.type as ConnectorInfoDTO['type'])
+  ) as ConnectorInfoDTO['type']
 }
 
 export function shouldRenderField(input: { name: string; path: string }): boolean {
-  return input.name !== METRIC_DEFINITIONS && input.name !== QUERIES && input.name !== QUERY_DEFINITIONS
+  return (
+    input.name !== METRIC_DEFINITIONS &&
+    input.name !== QUERIES &&
+    input.name !== QUERY_DEFINITIONS &&
+    input.name !== NEWRELIC_METRIC_DEFINITIONS
+  )
 }

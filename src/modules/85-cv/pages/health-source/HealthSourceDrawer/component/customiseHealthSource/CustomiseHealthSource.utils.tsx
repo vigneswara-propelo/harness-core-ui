@@ -59,10 +59,8 @@ export const LoadSourceByType = ({
   const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
   const selectedProduct = data?.product?.value || data?.existingMetricDetails?.spec?.dataSourceType
   const healthSourceConfig = healthSourcesConfig[selectedProduct]
-  const typeInfo =
-    type === HealthSourceTypes.NextGenHealthSource || type === HealthSourceTypes.SumoLogic ? selectedProduct : type
 
-  switch (typeInfo) {
+  switch (type) {
     case HealthSourceTypes.AppDynamics:
       return (
         <AppDHealthSourceContainer data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
@@ -160,8 +158,9 @@ export const LoadSourceByType = ({
     case HealthSourceTypes.CloudWatchMetrics:
       return <CloudWatch data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
 
-    case HealthSourceTypes.SumoLogicLogs:
-    case HealthSourceTypes.SumoLogicMetrics:
+    case HealthSourceTypes.SumoLogic:
+    case HealthSourceTypes.SumologicLogs:
+    case HealthSourceTypes.SumologicMetrics:
       if (!isSumoLogicEnabled) {
         return null
       }

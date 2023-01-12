@@ -34,6 +34,7 @@ import {
   getRecordsRequestBody
 } from './CommonCustomMetricFormContainer.utils'
 import { useCommonHealthSource } from '../../CommonHealthSourceContext/useCommonHealthSource'
+import { HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING } from './CommonCustomMetricFormContainer.constants'
 import AssignQuery from '../../Assign/AssignQuery'
 
 export default function CommonCustomMetricFormContainer(props: CommonCustomMetricFormContainerProps): JSX.Element {
@@ -45,12 +46,10 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   const [records, setRecords] = useState<Record<string, any>[]>([])
   const [isQueryExecuted, setIsQueryExecuted] = useState<boolean>(false)
   const [healthSourceTimeSeriesData, setHealthSourceTimeSeriesData] = useState<TimeSeries[] | undefined>()
-
   const { isQueryRuntimeOrExpression } = useCommonHealthSource()
-
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const chartConfig = healthSourceConfig?.customMetrics?.metricsChart
-  const providerType = product?.value
+  const providerType = HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING[product?.value]
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
   const isLogsTableVisible = getIsLogsTableVisible(healthSourceConfig)
   const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
@@ -144,6 +143,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
       {isLogsTableVisible && (
         <LogsTableContainer
           fieldMappings={healthSourceConfig?.customMetrics?.fieldMappings}
+          //TODO this extra function should not be required.
           providerType={getProviderType(sourceData) as QueryRecordsRequest['providerType']}
           connectorIdentifier={connectorIdentifier}
           sampleRecords={records}

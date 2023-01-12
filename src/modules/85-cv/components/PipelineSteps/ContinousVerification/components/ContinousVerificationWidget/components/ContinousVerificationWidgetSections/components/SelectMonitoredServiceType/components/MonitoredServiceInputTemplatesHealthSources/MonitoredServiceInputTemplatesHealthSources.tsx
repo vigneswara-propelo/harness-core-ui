@@ -21,12 +21,14 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { TemplateInputs } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import {
+  enrichHealthSourceWithVersionForHealthsourceType,
   getMetricDefinitionData,
+  getSourceTypeForConnector,
   setCommaSeperatedList,
   shouldRenderField,
   showQueriesText
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
-import { HealthSourceTypes } from '@cv/pages/health-source/types'
+import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import {
   CONNECTOR_REF,
   IDENTIFIER,
@@ -53,18 +55,18 @@ export default function MonitoredServiceInputTemplatesHealthSources(
 
   return (
     <>
-      {healthSources?.map((healthSource: any, index: number) => {
-        const spec = healthSource?.spec || {}
+      {healthSources?.map((healthSourceData: any, index: number) => {
+        const spec = healthSourceData?.spec || {}
         const path = `sources.healthSources.${index}.spec`
         const fields = Object.entries(spec).map(item => {
           return { name: item[0], path: `${path}.${item[0]}` }
         })
 
-        const { metricDefinitions, metricDefinitionInptsetFormPath } = getMetricDefinitionData(
-          healthSource,
-          path,
-          healthSource?.type
+        // TODO - this can be removed once the templateInputs api gives version also in healthsoure entity.
+        const healthSource = enrichHealthSourceWithVersionForHealthsourceType(
+          healthSourceData as UpdatedHealthSourceWithAllSpecs
         )
+        const { metricDefinitions, metricDefinitionInptsetFormPath } = getMetricDefinitionData(healthSource, path)
 
         return (
           <Card key={`${healthSource?.name}.${index}`}>
@@ -84,15 +86,12 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                       name={`spec.monitoredService.spec.templateInputs.${input.path}`}
                       label={getString('connector')}
                       placeholder={getString('cv.healthSource.connectors.selectConnector', {
-                        sourceType:
-                          healthSource?.type === HealthSourceTypes.NextGenHealthSource
-                            ? healthSource?.spec?.dataSourceType
-                            : healthSource?.type
+                        sourceType: getSourceTypeForConnector(healthSource)
                       })}
-                      disabled={!healthSource?.type}
+                      disabled={!getSourceTypeForConnector(healthSource)}
                       setRefValue
                       multiTypeProps={{ allowableTypes, expressions }}
-                      type={healthSource?.type}
+                      type={getSourceTypeForConnector(healthSource)}
                       enableConfigureOptions={false}
                     />
                   )

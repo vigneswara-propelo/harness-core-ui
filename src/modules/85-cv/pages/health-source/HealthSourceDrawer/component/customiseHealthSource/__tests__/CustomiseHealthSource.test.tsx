@@ -125,7 +125,7 @@ describe('CustomiseHealthSource', () => {
   })
 
   test('should load Common Health source component when healthsourc type is sumo metrics ', () => {
-    sourceData.sourceType = HealthSourceTypes.SumoLogicMetrics
+    sourceData.sourceType = HealthSourceTypes.SumologicMetrics
 
     const { queryByTestId } = render(
       <TestWrapper {...testWrapperProps}>
@@ -137,7 +137,7 @@ describe('CustomiseHealthSource', () => {
   })
 
   test('should load Common Health source component when healthsourc type is sumo logs ', () => {
-    sourceData.sourceType = HealthSourceTypes.SumoLogicLogs
+    sourceData.sourceType = HealthSourceTypes.SumologicLogs
 
     const { queryByTestId } = render(
       <TestWrapper {...testWrapperProps}>
