@@ -225,14 +225,6 @@ export const getIsConnectorRuntimeOrExpression = (
   return getMultiTypeFromValue(connectorValue) !== MultiTypeInputType.FIXED
 }
 
-export const getIsQueryRuntimeOrExpression = (query?: string): boolean => {
-  if (!query) {
-    return false
-  }
-
-  return getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
-}
-
 const validateLogFields = ({
   formData,
   getString,

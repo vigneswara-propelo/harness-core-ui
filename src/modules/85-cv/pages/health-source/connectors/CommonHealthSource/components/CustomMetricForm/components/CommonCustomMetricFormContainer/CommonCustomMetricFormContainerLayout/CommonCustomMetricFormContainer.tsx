@@ -34,7 +34,7 @@ import {
   getRecordsRequestBody
 } from './CommonCustomMetricFormContainer.utils'
 import { useCommonHealthSource } from '../../CommonHealthSourceContext/useCommonHealthSource'
-import SelectHealthSourceServices from '../../Assign/AssignQuery'
+import AssignQuery from '../../Assign/AssignQuery'
 
 export default function CommonCustomMetricFormContainer(props: CommonCustomMetricFormContainerProps): JSX.Element {
   const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
@@ -112,6 +112,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   }
 
   const isDataAvailableForLogsTable = Boolean(!fetchingSampleRecordLoading && !error && records?.length)
+  const { sli, healthScore, riskCategory, serviceInstance, continuousVerification } = values
 
   return (
     <Container key={values?.identifier} padding={'small'} margin={'small'}>
@@ -153,17 +154,19 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
 
       {/* ⭐️ Assign section */}
       {healthSourceConfig.customMetrics?.assign?.enabled && (
-        <SelectHealthSourceServices
+        <AssignQuery
           values={{
-            sli: !!values.sli,
-            healthScore: !!values.healthScore,
-            riskCategory: values?.riskCategory,
-            continuousVerification: !!values.continuousVerification
+            riskCategory,
+            serviceInstance,
+            sli: Boolean(sli),
+            healthScore: Boolean(healthScore),
+            continuousVerification: Boolean(continuousVerification)
           }}
           riskProfileResponse={riskProfileResponse}
           hideCV={healthSourceConfig.customMetrics?.assign?.hideCV}
           hideServiceIdentifier={healthSourceConfig.customMetrics?.assign?.hideServiceIdentifier}
           hideSLIAndHealthScore={healthSourceConfig.customMetrics?.assign?.hideSLIAndHealthScore}
+          defaultServiceInstance={healthSourceConfig.customMetrics?.assign?.defaultServiceInstance}
         />
       )}
     </Container>
