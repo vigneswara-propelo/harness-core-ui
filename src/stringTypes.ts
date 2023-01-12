@@ -8288,6 +8288,7 @@ export interface StringsMap {
   'iacm.stackWizard.autoApprove': string
   'iacm.stackWizard.autoApproveRequired': string
   'iacm.stackWizard.connectorRequired': string
+  'iacm.stackWizard.gitFetchTypeRequired': string
   'iacm.stackWizard.provisionerDetails': string
   'iacm.stackWizard.provisionerType': string
   'iacm.stackWizard.provisionerTypeRequired': string
