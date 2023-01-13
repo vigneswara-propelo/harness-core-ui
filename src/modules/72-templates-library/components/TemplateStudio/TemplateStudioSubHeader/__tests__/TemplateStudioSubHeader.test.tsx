@@ -23,7 +23,8 @@ const stepTemplateContext = getTemplateContextMock(TemplateType.Step)
 const baseProps: TemplateStudioSubHeaderProps = {
   onViewChange: jest.fn(),
   getErrors: jest.fn(),
-  onGitBranchChange: jest.fn()
+  onGitBranchChange: jest.fn(),
+  onReconcile: jest.fn()
 }
 
 describe('TemplateStudioSubHeader tests', async () => {

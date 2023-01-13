@@ -236,7 +236,7 @@ export function TemplateStudioSubHeaderLeftView(
     }
   })
 
-  const updateStableLabel = async () => {
+  const updateStableLabel = async (): Promise<void> => {
     try {
       await updateStableTemplate()
       showSuccess(getString('common.template.updateTemplate.templateUpdated'))

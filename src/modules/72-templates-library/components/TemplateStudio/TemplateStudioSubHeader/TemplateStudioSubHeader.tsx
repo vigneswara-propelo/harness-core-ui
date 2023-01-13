@@ -51,16 +51,18 @@ export interface TemplateStudioSubHeaderProps {
   onViewChange: (view: SelectedView) => boolean
   getErrors: () => Promise<GetErrorResponse>
   onGitBranchChange: (selectedFilter: GitFilterScope) => void
+  onReconcile(): void
 }
 
 export type TemplateStudioSubHeaderHandle = {
   updateTemplate: (templateYaml: string) => Promise<void>
 }
 
-const TemplateStudioSubHeader: (
+function TemplateStudioSubHeader(
   props: TemplateStudioSubHeaderProps,
   ref: React.ForwardedRef<TemplateStudioSubHeaderHandle>
-) => JSX.Element = ({ onViewChange, getErrors, onGitBranchChange }, ref) => {
+): React.ReactElement {
+  const { onViewChange, getErrors, onGitBranchChange, onReconcile } = props
   const { state, fetchTemplate, view, isReadonly } = React.useContext(TemplateContext)
   const { template, originalTemplate, isUpdated, entityValidityDetails, templateYamlError, storeMetadata } = state
   const { getString } = useStrings()
@@ -181,7 +183,7 @@ const TemplateStudioSubHeader: (
                           <RbacMenuItem
                             icon="refresh"
                             text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
-                            disabled={true}
+                            onClick={onReconcile}
                             permission={{
                               resourceScope: {
                                 accountIdentifier: accountId,

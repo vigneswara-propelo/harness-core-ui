@@ -121,7 +121,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const { isYamlEditable } = pipelineView
   const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
-  const [loadFromCache, setLoadFromCache] = React.useState(true)
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
   const pipelineCachedCopyRef = React.useRef<PipelineCachedCopyHandle | null>(null)
   const isCommunity = useGetCommunity()
@@ -133,8 +132,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
         projectIdentifier,
         identifier: pipelineIdentifier,
         ...getGitQueryParamsWithParentScope({ storeMetadata, params })
-      },
-      headers: { ...(isPipelineGitCacheEnabled && loadFromCache ? { 'Load-From-Cache': 'true' } : {}) }
+      }
     },
     {
       enabled: false,
@@ -252,7 +250,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   }
 
   function handleReloadFromCache(): void {
-    setLoadFromCache(false)
     updatePipelineView({ ...pipelineView, isYamlEditable: false })
     fetchPipeline({ forceFetch: true, forceUpdate: true, loadFromCache: false })
   }
