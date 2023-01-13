@@ -83,13 +83,17 @@ export function ACRArtifact({
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const isTemplateContext = context === ModalViewFor.Template
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
+  const connectorRef = defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
+  const isConnectorUndefinedOrRunTime = !connectorRef || connectorRef === RUNTIME_INPUT_VALUE
 
-  const loadingItems = [{ label: 'Loading...', value: 'Loading Loading...' }]
+  const loadingItems = [{ label: getString('loading'), value: '' }]
 
   const [tagList, setTagList] = React.useState([])
-  const [subscriptions, setSubscriptions] = React.useState<SelectOption[]>(loadingItems)
-  const [registries, setRegistries] = React.useState<SelectOption[]>(loadingItems)
-  const [repositories, setRepositories] = React.useState<SelectOption[]>(loadingItems)
+  const [subscriptions, setSubscriptions] = React.useState<SelectOption[]>(
+    isConnectorUndefinedOrRunTime ? [] : loadingItems
+  )
+  const [registries, setRegistries] = React.useState<SelectOption[]>([])
+  const [repositories, setRepositories] = React.useState<SelectOption[]>([])
   const [lastQueryData, setLastQueryData] = React.useState<{
     subscriptionId: string
     registry: string
@@ -101,8 +105,6 @@ export function ACRArtifact({
   })
 
   const formikRef = React.useRef<FormikContextType<ACRArtifactType>>()
-
-  const connectorRef = defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
 
   const schemaObject = {
     subscriptionId: Yup.lazy((value): Yup.Schema<unknown> => {
@@ -543,7 +545,7 @@ export function ACRArtifact({
                         ) {
                           return
                         }
-                        if (!connectorRef || connectorRef === RUNTIME_INPUT_VALUE) {
+                        if (isConnectorUndefinedOrRunTime) {
                           return
                         }
 
@@ -634,6 +636,7 @@ export function ACRArtifact({
                           return
                         }
 
+                        setRegistries(loadingItems)
                         refetchRegistries({
                           queryParams: {
                             connectorRef,
@@ -723,6 +726,7 @@ export function ACRArtifact({
                           return
                         }
 
+                        setRepositories(loadingItems)
                         refetchRepositories({
                           queryParams: {
                             connectorRef,
