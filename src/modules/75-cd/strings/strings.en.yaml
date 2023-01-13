@@ -756,3 +756,4 @@ trendMessage:
   noChangeTrend: 'No change in rate compared to the previous time interval'
   invalidTrend: 'No trend data in the previous time interval'
 envChanges: 'Environment Changes'
+valuesYamlValidation: 'Values.yaml file path cannot be empty'

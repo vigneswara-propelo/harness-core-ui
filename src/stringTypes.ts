@@ -5463,6 +5463,7 @@ export interface StringsMap {
   'cd.useConnectorCredentials': string
   'cd.useStepTemplatesForYourDeploymentType': string
   'cd.validation.specifyFilter': string
+  'cd.valuesYamlValidation': string
   'cd.varFile': string
   'cd.varFileDetails': string
   'cd.welcomeMessage': string
