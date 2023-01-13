@@ -91,7 +91,8 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     }
     const createdMetrics: string[] = []
     const groupedCreatedMetrics: GroupedCreatedMetrics = {}
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics)
+    const fieldLabel = 'Metric'
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics, fieldLabel)
     expect(actualErrors).toEqual({ metricName: 'fieldRequired' })
   })
 
@@ -103,7 +104,8 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     }
     const createdMetrics: string[] = []
     const groupedCreatedMetrics: GroupedCreatedMetrics = {}
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics)
+    const fieldLabel = 'Metric'
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics, fieldLabel)
     expect(actualErrors).toEqual({ groupName: 'fieldRequired' })
   })
 
@@ -115,7 +117,8 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     }
     const createdMetrics: string[] = []
     const groupedCreatedMetrics: GroupedCreatedMetrics = {}
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics)
+    const fieldLabel = 'Metric'
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics, fieldLabel)
     expect(actualErrors).toEqual({ identifier: 'fieldRequired' })
   })
 
@@ -137,7 +140,8 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         }
       ]
     }
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics)
+    const fieldLabel = 'Metric'
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics, fieldLabel)
     expect(actualErrors).toEqual({
       metricName: 'cv.monitoringSources.prometheus.validation.uniqueName'
     })

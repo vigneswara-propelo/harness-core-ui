@@ -24,7 +24,8 @@ export const validateAddMetricForm = (
   formData: AddMetricForm,
   getString: UseStringsReturn['getString'],
   createdMetrics: CreatedMetricsWithSelectedIndex['createdMetrics'],
-  groupedCreatedMetrics: GroupedCreatedMetrics
+  groupedCreatedMetrics: GroupedCreatedMetrics,
+  fieldLabel: string
 ): FormikErrors<AddMetricForm> => {
   const errors: FormikErrors<AddMetricForm> = {}
   const { identifier = '', metricName = '', groupName } = formData
@@ -33,7 +34,7 @@ export const validateAddMetricForm = (
     set(errors, CustomMetricFormFieldNames.METRIC_IDENTIFIER, getString('fieldRequired', { field: 'Identifier' }))
   }
   if (!metricName) {
-    set(errors, CustomMetricFormFieldNames.METRIC_NAME, getString('fieldRequired', { field: 'Metric name' }))
+    set(errors, CustomMetricFormFieldNames.METRIC_NAME, getString('fieldRequired', { field: `${fieldLabel} name` }))
   }
   if (typeof groupName === 'string' && !groupName) {
     set(errors, CustomMetricFormFieldNames.GROUP_NAME, getString('fieldRequired', { field: 'Group name' }))
@@ -62,11 +63,11 @@ function validateDuplicateMetricName({
   errors: FormikErrors<AddMetricForm>
   getString: UseStringsReturn['getString']
 }): void {
-  if (createdMetrics?.filter((name: string) => name === metricName).length) {
+  if (createdMetrics?.filter((name: string) => name?.toLowerCase() === metricName?.toLowerCase()).length) {
     let oldGroupName = ''
     Object.entries(groupedCreatedMetrics).map(groupedMetricData => {
-      const groupedMetrics = groupedMetricData[1]?.map(el => el.metricName)
-      if (groupedMetrics?.includes(metricName)) {
+      const groupedMetrics = groupedMetricData[1]?.map(el => el?.metricName?.toLowerCase())
+      if (groupedMetrics?.includes(metricName?.toLowerCase())) {
         oldGroupName = groupedMetricData[0]
       }
     })

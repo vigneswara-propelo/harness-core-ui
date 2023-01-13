@@ -149,7 +149,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
             updateParentFormikWithLatestData(updateParentFormik, mappedMetrics, createdMetrics[0])
           }}
           validate={data => {
-            return validateAddMetricForm(data, getString, createdMetrics, groupedCreatedMetrics)
+            return validateAddMetricForm(data, getString, createdMetrics, groupedCreatedMetrics, fieldLabel)
           }}
         >
           {() => {
