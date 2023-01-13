@@ -892,6 +892,7 @@ levelUp: LEVEL UP
 overuse: OVERUSE
 scope: '{{ $.common.scopeLabel }}'
 community: Community
+communityForum: Community Forum
 resourceCenter:
   title: 'RESOURCE CENTER'
   link: 'contact our support'
@@ -899,6 +900,7 @@ resourceCenter:
     title: Product Updates
     whatsnew: 'What’s New'
     earlyAcess: Early Access
+    releaseText: Your Harness account {{accountid}} is hosted on the harness {{clustername}} cluster. Following are the versions of various components running along with links to their release notes.
   ticketmenu:
     title: 'Contact us'
     tickets: 'My tickets'
@@ -910,8 +912,9 @@ resourceCenter:
     desc: Other useful resources
     docs: Docs
     sitestatus: Site Status
-    university: University
-    apiDocs: API Docs
+    university: Certifications
+    apiDocs: API Reference
+    tutorials: Tutorials
     releaseNote: Release Notes
   feedback:
     submit: Give us feedback

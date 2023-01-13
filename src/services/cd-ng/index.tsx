@@ -10869,6 +10869,21 @@ export interface ResponseAccountDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ModuleVersioningInfo {
+  name?: string
+  display_name?: string
+  version?: string
+  updated?: string
+  release_notes_link?: string
+  microservices_version_info?: MicroservicesVersionInfo[]
+}
+
+export interface MicroservicesVersionInfo {
+  name?: string
+  version_url?: string
+  version?: string
+}
+
 export interface ResponseAccountLicenseDTO {
   correlationId?: string
   data?: AccountLicenseDTO
@@ -59471,3 +59486,33 @@ export const schemafilePromise = (
   signal?: RequestInit['signal']
 ) =>
   getUsingFetch<void, void, SchemafileQueryParams, void>(getConfig('ng/api'), `/yamlschema/schemafile`, props, signal)
+
+export interface GetModulesVersionQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  searchTerm?: string
+}
+
+export type GetModulesVersionProps = Omit<
+  GetProps<ModuleVersioningInfo[], unknown, GetModulesVersionQueryParams, void>,
+  'path'
+>
+
+export const GetModulesVersion = (props: GetModulesVersionProps) => (
+  <Get<ModuleVersioningInfo[], unknown, GetModulesVersionQueryParams, void>
+    path={`/v1/module-versions`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetModulesVersionProps = Omit<
+  UseGetProps<ModuleVersioningInfo[], unknown, GetModulesVersionQueryParams, void>,
+  'path'
+>
+
+export const useGetModulesVersion = (props: UseGetModulesVersionProps) =>
+  useGet<ModuleVersioningInfo[], unknown, GetModulesVersionQueryParams, void>(`/v1/module-versions`, {
+    base: getConfig('ng/api'),
+    ...props
+  })

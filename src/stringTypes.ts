@@ -153,6 +153,7 @@ export interface StringsMap {
   'common.commentModal.commentLabel': string
   'common.comments': string
   'common.community': string
+  'common.communityForum': string
   'common.condition': string
   'common.confictOccured': string
   'common.config': string
@@ -787,12 +788,14 @@ export interface StringsMap {
   'common.resourceCenter.bottomlayout.docs': string
   'common.resourceCenter.bottomlayout.releaseNote': string
   'common.resourceCenter.bottomlayout.sitestatus': string
+  'common.resourceCenter.bottomlayout.tutorials': string
   'common.resourceCenter.bottomlayout.university': string
   'common.resourceCenter.communityLevelUp': string
   'common.resourceCenter.communitySlack': string
   'common.resourceCenter.feedback.submit': string
   'common.resourceCenter.link': string
   'common.resourceCenter.productUpdates.earlyAcess': string
+  'common.resourceCenter.productUpdates.releaseText': string
   'common.resourceCenter.productUpdates.title': string
   'common.resourceCenter.productUpdates.whatsnew': string
   'common.resourceCenter.ticketmenu.submitDesc': string
