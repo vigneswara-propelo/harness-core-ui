@@ -54,7 +54,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import type { ItemInterface } from '@common/components/AddDrawer/AddDrawer'
-import { InpuSetFunction, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
+import { InputSetFunction, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import {
   ConnectorReferenceFieldProps,
   getReferenceFieldProps,
@@ -393,7 +393,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
 
     if (typeof input !== 'string') return
 
-    return parseInput(input)?.[InpuSetFunction.ALLOWED_VALUES]?.values?.map(getIdentifierFromValue)
+    return parseInput(input)?.[InputSetFunction.ALLOWED_VALUES]?.values?.map(getIdentifierFromValue)
   }, [templateProps?.isTemplatizedView, templateProps?.templateValue])
 
   const getReferenceFieldPropsValues = getReferenceFieldProps({

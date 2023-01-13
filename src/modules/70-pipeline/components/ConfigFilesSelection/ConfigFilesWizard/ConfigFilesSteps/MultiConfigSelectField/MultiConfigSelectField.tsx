@@ -24,7 +24,7 @@ import {
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import { FormGroup, Intent } from '@blueprintjs/core'
 import { connect, FieldArray, FormikContextType } from 'formik'
-import { defaultTo, get, isEmpty, isUndefined } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { MultiTypeFieldSelectorProps } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -99,17 +99,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
   const [changed, setChanged] = React.useState(false)
   const getDefaultResetValue = () => (name === 'paramsPaths' ? [] : [''])
   const isDeploymentForm = stepViewType === StepViewType.DeploymentForm
-  const shouldResetDefaultFormValue = stepViewType === StepViewType.InputSet || isDeploymentForm
   const value = get(formik?.values, name, getDefaultResetValue())
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      const currentValue = formik?.getFieldProps(name).value
-      if (shouldResetDefaultFormValue && !isUndefined(currentValue) && isEmpty(currentValue)) {
-        formik?.setFieldValue(name, getDefaultResetValue())
-      }
-    }, 0)
-  }, [name])
 
   const allowableFileSelectTypes = (allowableTypes as MultiTypeInputType[])?.filter(
     item => !isMultiTypeRuntime(item)
