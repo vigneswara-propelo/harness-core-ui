@@ -32,7 +32,8 @@ const MODULE_ICONS: {
   CE: 'ccm-with-dark-text',
   CV: 'srm-with-dark-text',
   CF: 'ff-with-dark-text',
-  CI: 'ci-with-dark-text'
+  CI: 'ci-with-dark-text',
+  STO: 'sto-with-dark-text'
 }
 
 const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
@@ -92,7 +93,9 @@ const SubscribedModules: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
-  function isModuleEnabled(moduleType: ModuleLicenseDTO['moduleType']): boolean | undefined {
+  function isModuleEnabled(moduleLicense: ModuleLicenseDTO): boolean | undefined {
+    const moduleType = moduleLicense['moduleType']
+    const licenseStatus = moduleLicense['status']
     switch (moduleType) {
       case ModuleName.CD: {
         return CDNG_ENABLED
@@ -108,6 +111,9 @@ const SubscribedModules: React.FC = () => {
       }
       case ModuleName.CV: {
         return CVNG_ENABLED
+      }
+      case ModuleName.STO: {
+        return licenseStatus === 'ACTIVE'
       }
       default:
         return undefined
@@ -146,7 +152,7 @@ const SubscribedModules: React.FC = () => {
       Object.values(modules).map(moduleLicenses => {
         if (moduleLicenses?.length > 0) {
           const latestModuleLicense = moduleLicenses[moduleLicenses.length - 1]
-          if (isModuleEnabled(latestModuleLicense.moduleType)) {
+          if (isModuleEnabled(latestModuleLicense)) {
             return (
               <div key={latestModuleLicense.moduleType}>
                 <ModuleCard module={latestModuleLicense} />
