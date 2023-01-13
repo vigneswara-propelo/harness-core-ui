@@ -76,12 +76,13 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
     accountId: string
   }>()
 
-  const storeTypes =
-    (isBackendConfig && isTerragrunt) || isTerragrunt
-      ? TerragruntAllowedTypes
-      : isBackendConfig
-      ? [...AllowedTypes, 'Harness']
-      : AllowedTypes
+  const storeTypes = isTerragrunt
+    ? isBackendConfig
+      ? [...TerragruntAllowedTypes, 'Harness']
+      : TerragruntAllowedTypes
+    : isBackendConfig
+    ? [...AllowedTypes, 'Harness']
+    : AllowedTypes
   const path = getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig)
 
   useEffect(() => {
