@@ -43,6 +43,8 @@ import {
 } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { initConfigurationsForm } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { getSourceTypeForConnector } from '@cv/components/PipelineSteps/ContinousVerification/utils'
+import type { HealthSource } from 'services/cv'
 import { ConnectorRefFieldName, HEALTHSOURCE_LIST } from './DefineHealthSource.constant'
 import {
   getFeatureOption,
@@ -118,7 +120,14 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
 
   const connectorData = useCallback(
     formik => {
-      const { connectorRef, sourceType, dataSourceType } = formik?.values || {}
+      const {
+        connectorRef,
+        sourceType,
+        dataSourceType,
+        healthSourceIdentifier = '',
+        healthSourceList = []
+      } = formik?.values || {}
+      const currentHealthSource = healthSourceList.find((el: HealthSource) => el?.identifier === healthSourceIdentifier)
 
       return isTemplate ? (
         <FormMultiTypeConnectorField
@@ -131,13 +140,17 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
             </Text>
           }
           placeholder={getString('cv.healthSource.connectors.selectConnector', {
-            sourceType: healthSourceTypeMapping(sourceType)
+            sourceType: currentHealthSource
+              ? getSourceTypeForConnector(currentHealthSource)
+              : healthSourceTypeMapping(sourceType)
           })}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           width={400}
-          type={healthSourceTypeMapping(sourceType)}
+          type={
+            currentHealthSource ? getSourceTypeForConnector(currentHealthSource) : healthSourceTypeMapping(sourceType)
+          }
           multiTypeProps={{ expressions, allowableTypes: AllMultiTypeInputTypesForStep }}
           onChange={(value: any) => {
             const connectorValue =

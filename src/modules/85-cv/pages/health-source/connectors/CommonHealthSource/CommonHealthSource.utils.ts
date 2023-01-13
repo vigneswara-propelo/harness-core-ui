@@ -395,7 +395,7 @@ export const createHealthSourcePayload = (
     name: healthSourceName,
     version: V2 as HealthSource['version'],
     spec: {
-      connectorRef: connectorRef as string,
+      connectorRef: ((connectorRef as any)?.connector?.identifier ?? connectorRef) as string,
       queryDefinitions: [] as NextGenHealthSourceSpec['queryDefinitions']
     }
   }
