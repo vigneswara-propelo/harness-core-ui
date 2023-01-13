@@ -205,7 +205,7 @@ export function StageForm({
         <Layout.Horizontal spacing="small" padding={{ top: 'medium', left: 'large', right: 0, bottom: 0 }}>
           {type && <Icon name={stageTypeToIconMap[type]} size={18} />}
           <Text color={Color.BLACK_100} font={{ weight: 'semi-bold' }}>
-            Stage: {defaultTo(allValues?.stage?.name, '')}
+            Stage: {defaultTo(allValues?.stage?.name, defaultTo(allValues?.stage?.identifier, ''))}
           </Text>
         </Layout.Horizontal>
       )}
