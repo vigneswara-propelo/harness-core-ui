@@ -11,6 +11,7 @@ import {
   ButtonVariation,
   Container,
   Heading,
+  Icon,
   PopoverProps,
   SplitButton,
   SplitButtonOption,
@@ -440,6 +441,35 @@ function SavePipelinePopover(
     initPipelinePublish
   ])
 
+  const [canExecute] = usePermission(
+    {
+      resourceScope: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier
+      },
+      resource: {
+        resourceType: ResourceType.PIPELINE,
+        resourceIdentifier: pipeline?.identifier
+      },
+      permissions: [PermissionIdentifier.EXECUTE_PIPELINE]
+    },
+    [orgIdentifier, projectIdentifier, accountId, pipeline?.identifier]
+  )
+
+  const permissionText = canExecute
+    ? getString('common.viewAndExecutePermissions')
+    : getString('common.readonlyPermissions')
+
+  const tooltip = isSaveDisabled ? (
+    <div className={css.readonlyAccessTag}>
+      <Icon name="eye-open" size={16} />
+      <span className={css.readonlyAccessText}>{permissionText}</span>
+    </div>
+  ) : undefined
+
+  const saveText: React.ReactNode = getString('save')
+
   React.useImperativeHandle(
     ref,
     () => ({
@@ -463,10 +493,11 @@ function SavePipelinePopover(
       return (
         <Button
           variation={ButtonVariation.PRIMARY}
-          text={getString('save')}
+          text={saveText}
           onClick={saveAndPublish}
           icon="send-data"
           disabled={isSaveDisabled}
+          tooltip={tooltip}
         />
       )
     } else {
@@ -478,9 +509,10 @@ function SavePipelinePopover(
     <SplitButton
       disabled={isSaveDisabled}
       variation={ButtonVariation.PRIMARY}
-      text={getString('save')}
+      text={saveText}
       loading={loading}
       onClick={saveAndPublish}
+      tooltip={tooltip}
     >
       <SplitButtonOption onClick={save} disabled={isIntermittentLoading} text={getString('common.saveAsTemplate')} />
     </SplitButton>
