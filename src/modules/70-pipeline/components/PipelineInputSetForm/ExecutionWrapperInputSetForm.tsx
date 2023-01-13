@@ -6,7 +6,7 @@
  */
 
 import type { AllowedTypes } from '@harness/uicore'
-import { identity, pickBy, set } from 'lodash-es'
+import { identity, pickBy, set, isEmpty } from 'lodash-es'
 import React from 'react'
 import type { DeploymentStageConfig, ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
 import type { StepViewType } from '../AbstractSteps/Step'
@@ -147,23 +147,38 @@ export function ExecutionWrapperInputSetForm(props: {
                 />
               ) : null
             } else if (nodep.stepGroup) {
+              const isTemplateStepGroup = !isEmpty(nodep.stepGroup?.template?.templateInputs)
               const stepGroup = getStepFromStage(nodep.stepGroup.identifier, allValues)
               const initialValues = getStepFromStage(nodep.stepGroup?.identifier || '', values)
               return (
                 <>
                   <CollapseForm
-                    header={stepGroup?.stepGroup?.name || ''}
+                    header={isTemplateStepGroup ? nodep.stepGroup?.identifier : stepGroup?.stepGroup?.name || ''}
                     headerProps={{ font: { size: 'normal' } }}
                     headerColor="var(--black)"
                   >
                     <ExecutionWrapperInputSetForm
                       executionIdentifier={executionIdentifier}
-                      stepsTemplate={nodep.stepGroup.steps}
+                      stepsTemplate={
+                        isTemplateStepGroup ? nodep.stepGroup?.template?.templateInputs?.steps : nodep.stepGroup.steps
+                      }
                       formik={formik}
                       readonly={readonly}
-                      path={`${path}[${index}].parallel[${indexp}].stepGroup.steps`}
-                      allValues={stepGroup?.stepGroup?.steps}
-                      values={initialValues?.stepGroup?.steps}
+                      path={
+                        isTemplateStepGroup
+                          ? `${path}[${index}].parallel[${indexp}].stepGroup.template.templateInputs.steps`
+                          : `${path}[${index}].parallel[${indexp}].stepGroup.steps`
+                      }
+                      allValues={
+                        isTemplateStepGroup
+                          ? nodep.stepGroup?.template?.templateInputs?.steps
+                          : stepGroup?.stepGroup?.steps
+                      }
+                      values={
+                        isTemplateStepGroup
+                          ? nodep.stepGroup?.template?.templateInputs?.steps
+                          : initialValues?.stepGroup?.steps
+                      }
                       viewType={viewType}
                       allowableTypes={allowableTypes}
                       customStepProps={customStepProps}
@@ -176,23 +191,38 @@ export function ExecutionWrapperInputSetForm(props: {
             }
           })
         } else if (item.stepGroup) {
+          const isTemplateStepGroup = !isEmpty(item?.stepGroup?.template?.templateInputs)
           const stepGroup = getStepFromStage(item.stepGroup.identifier, allValues)
           const initialValues = getStepFromStage(item.stepGroup?.identifier || '', values)
           return (
             <>
               <CollapseForm
-                header={stepGroup?.stepGroup?.name || ''}
+                header={stepGroup?.stepGroup?.name || stepGroup?.stepGroup?.identifier || ''}
                 headerProps={{ font: { size: 'normal' } }}
                 headerColor="var(--black)"
               >
                 <ExecutionWrapperInputSetForm
                   executionIdentifier={executionIdentifier}
-                  stepsTemplate={item.stepGroup.steps}
+                  stepsTemplate={
+                    isTemplateStepGroup ? item.stepGroup?.template?.templateInputs?.steps : item.stepGroup.steps
+                  }
                   formik={formik}
                   readonly={readonly}
-                  path={`${path}[${index}].stepGroup.steps`}
-                  allValues={stepGroup?.stepGroup?.steps}
-                  values={initialValues?.stepGroup?.steps}
+                  path={
+                    isTemplateStepGroup
+                      ? `${path}[${index}].stepGroup.template.templateInputs.steps`
+                      : `${path}[${index}].stepGroup.steps`
+                  }
+                  allValues={
+                    isTemplateStepGroup
+                      ? initialValues?.stepGroup?.template?.templateInputs?.steps
+                      : initialValues?.stepGroup?.steps
+                  }
+                  values={
+                    isTemplateStepGroup
+                      ? initialValues?.stepGroup?.template?.templateInputs?.steps
+                      : initialValues?.stepGroup?.steps
+                  }
                   viewType={viewType}
                   allowableTypes={allowableTypes}
                   customStepProps={customStepProps}

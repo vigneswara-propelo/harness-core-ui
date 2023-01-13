@@ -64,7 +64,15 @@ export enum TabTypes {
   Advanced = 'ADVANCED'
 }
 
-export type StepOrStepGroupOrTemplateStepData = StepElementConfig | StepGroupElementConfig | TemplateStepNode
+export interface StepGroupWithStageElementConfig extends StepGroupElementConfig {
+  stageType?: string
+}
+
+export type StepOrStepGroupOrTemplateStepData =
+  | StepElementConfig
+  | StepGroupElementConfig
+  | TemplateStepNode
+  | StepGroupWithStageElementConfig
 
 export type Values = StepOrStepGroupOrTemplateStepData & {
   tab?: TabTypes
@@ -75,4 +83,5 @@ export type Values = StepOrStepGroupOrTemplateStepData & {
   template?: TemplateLinkConfig
   strategy?: any
   commandFlags?: any
+  stageType?: string
 }

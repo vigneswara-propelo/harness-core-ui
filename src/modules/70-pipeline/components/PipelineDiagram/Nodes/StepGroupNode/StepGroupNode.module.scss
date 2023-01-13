@@ -199,7 +199,9 @@
       }
     }
   }
-
+  &.templateStepGroup {
+    background-color: rgba(var(--grey-200), 0.25);
+  }
   &.rollbackGroup {
     border-color: var(--orange-700);
 

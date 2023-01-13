@@ -203,7 +203,7 @@ export interface ValidateStepsProps {
   viewType: StepViewType
 }
 
-const validateSteps = ({
+export const validateSteps = ({
   steps,
   template,
   originalSteps,
@@ -237,6 +237,33 @@ const validateSteps = ({
             set(errors, `steps[${index}].parallel[${indexP}]`, errorResponse)
           }
         }
+        if (stepParallel?.stepGroup) {
+          if (stepParallel?.stepGroup?.steps) {
+            const errorResponse = validateSteps({
+              steps: stepParallel?.stepGroup?.steps,
+              template: template?.[index]?.parallel?.[indexP]?.stepGroup?.steps,
+              originalSteps: getStepFromStage(stepParallel.stepGroup.identifier, originalSteps)?.stepGroup?.steps,
+              getString,
+              viewType
+            })
+            if (!isEmpty(errorResponse)) {
+              set(errors, `steps[${index}].parallel[${indexP}].stepGroup`, errorResponse)
+            }
+          }
+          if (stepParallel?.stepGroup?.template?.templateInputs?.steps) {
+            const errorResponse = validateSteps({
+              steps: stepParallel?.stepGroup?.template?.templateInputs?.steps,
+              template: template?.[index]?.parallel?.[indexP]?.stepGroup?.template?.templateInputs?.steps,
+              originalSteps: getStepFromStage(stepParallel.stepGroup.identifier, originalSteps)?.stepGroup?.template
+                ?.templateInputs?.steps,
+              getString,
+              viewType
+            })
+            if (!isEmpty(errorResponse)) {
+              set(errors, `steps[${index}].parallel[${indexP}].stepGroup.template.templateInputs`, errorResponse)
+            }
+          }
+        }
       })
     } else if (stepObj.stepGroup) {
       const originalStepGroup = getStepFromStage(stepObj.stepGroup.identifier, originalSteps)
@@ -249,7 +276,19 @@ const validateSteps = ({
           viewType
         })
         if (!isEmpty(errorResponse)) {
-          set(errors, `steps[${index}].stepGroup.steps`, errorResponse)
+          set(errors, `steps[${index}].stepGroup`, errorResponse)
+        }
+      }
+      if (stepObj.stepGroup?.template?.templateInputs?.steps) {
+        const errorResponse = validateSteps({
+          steps: stepObj.stepGroup?.template?.templateInputs?.steps,
+          template: template?.[index]?.stepGroup?.template?.templateInputs?.steps,
+          originalSteps: originalStepGroup?.stepGroup?.template?.templateInputs?.steps,
+          getString,
+          viewType
+        })
+        if (!isEmpty(errorResponse)) {
+          set(errors, `steps[${index}].stepGroup.template.templateInputs`, errorResponse)
         }
       }
     }

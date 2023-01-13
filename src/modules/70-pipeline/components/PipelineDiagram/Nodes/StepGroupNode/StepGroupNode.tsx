@@ -53,13 +53,14 @@ export function StepGroupNode(props: any): JSX.Element {
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const DefaultNode: React.FC<any> | undefined = props?.getDefaultNode()?.component
   const stepGroupData = defaultTo(props?.data?.stepGroup, props?.data?.step?.data?.stepGroup) || props?.data?.step
-  const stepsData = stepGroupData?.steps
+  const stepsData = stepGroupData?.steps || stepGroupData?.template?.templateInputs?.steps
   const isParentMatrix = defaultTo(props?.isParentMatrix, false)
   const { module, source = 'executions' } = useParams<PipelineType<ExecutionPathProps>>()
 
   const stepStatus = defaultTo(props?.status || props?.data?.status, props?.data?.step?.status as ExecutionStatus)
   const isExecutionView = Boolean(stepStatus)
-
+  const displayName = props.name || props.identifier
+  const showTemplateIcon = !!props.data?.isTemplateNode || !!props?.data?.stepGroup?.template
   const { updateDimensions } = useNodeDimensionContext()
   const isNestedStepGroup = Boolean(
     get(props, 'data.step.data.isNestedGroup') || (get(props, 'data.isNestedGroup') && props?.parentIdentifier)
@@ -110,14 +111,33 @@ export function StepGroupNode(props: any): JSX.Element {
   const debounceHideVisibility = debounce(() => {
     setVisibilityOfAdd(false)
   }, 300)
+
   const nodeType = Object.keys(props?.data?.stepGroup?.strategy || {})[0]
   const showExecutionMetaDataForChainedPipeline = props?.type === StageType.PIPELINE && !!executionMetaData
+
+  React.useEffect(() => {
+    // collapse stepGroup template
+    if (!isEmpty(props?.data?.stepGroup?.template)) {
+      setNodeCollapsed(true)
+    }
+  }, [props?.data?.stepGroup])
 
   return (
     <>
       {isNodeCollapsed && DefaultNode ? (
         <DefaultNode
-          onClick={() => {
+          onClick={(event: Event) => {
+            if (!isEmpty(props?.data?.stepGroup?.template)) {
+              event.stopPropagation()
+              debounceHideVisibility()
+              props?.fireEvent?.({
+                type: Event.StepGroupClicked,
+                target: event.target,
+                data: { ...props }
+              })
+              return
+            }
+
             if (props?.type !== StageType.PIPELINE && isEmpty(stepsData) && isExecutionView) {
               showPrimary(getString('pipeline.execution.emptyStepGroup'))
             }
@@ -176,6 +196,7 @@ export function StepGroupNode(props: any): JSX.Element {
               [css.nestedGroup]: isNestedStepGroup,
               [css.stepGroupNormal]: !isNestedStepGroup,
               parentMatrix: isParentMatrix,
+              [css.templateStepGroup]: !!props?.data?.isTemplateNode,
               [css.rollbackGroup]: StageType.ROLLBACK === props?.type
             })}
           >
@@ -202,6 +223,7 @@ export function StepGroupNode(props: any): JSX.Element {
             {props.data?.loopingStrategyEnabled && (
               <MatrixNodeLabelWrapper isParallelNode={props?.isParallelNode} nodeType={nodeType} />
             )}
+
             <div
               id={props?.id}
               className={cx('stepGroupNode', css.horizontalBar)}
@@ -244,6 +266,7 @@ export function StepGroupNode(props: any): JSX.Element {
                   onMouseOut={e => {
                     e.stopPropagation()
                   }}
+                  flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
                 >
                   <Icon
                     className={css.collapseIcon}
@@ -287,8 +310,9 @@ export function StepGroupNode(props: any): JSX.Element {
                       position: 'bottom'
                     }}
                   >
-                    {props.name}
+                    {displayName}
                   </Text>
+                  {showTemplateIcon && <Icon size={12} name={'template-library'} margin={{ left: 'xsmall' }} />}
                 </Layout.Horizontal>
                 {showExecutionMetaDataForChainedPipeline && (
                   <Link
@@ -358,7 +382,6 @@ export function StepGroupNode(props: any): JSX.Element {
               />
             )}
           </div>
-
           {!props.isParallelNode && !props.readonly && (
             <AddLinkNode<BaseReactComponentProps>
               nextNode={props?.nextNode}

@@ -66,6 +66,7 @@ import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { StepWidget } from '../AbstractSteps/StepWidget'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '../AbstractSteps/Step'
+
 import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '../../utils/constants'
 import EnvironmentsInputSetForm from './EnvironmentsInputSetForm/EnvironmentsInputSetForm'
 import { ExecutionWrapperInputSetForm } from './ExecutionWrapperInputSetForm'

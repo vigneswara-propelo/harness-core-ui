@@ -1018,7 +1018,8 @@ export enum PipelineContextType {
   Pipeline = 'Pipeline',
   StageTemplate = 'StageTemplate',
   PipelineTemplate = 'PipelineTemplate',
-  Standalone = 'Standalone'
+  Standalone = 'Standalone',
+  StepGroupTemplate = 'StepGroupTemplate'
 }
 
 export const PipelineContext = React.createContext<PipelineContextInterface>({

@@ -524,6 +524,7 @@ export function RightDrawer(): React.ReactElement {
   let stepData = (data?.stepConfig?.node as StepElementConfig)?.type
     ? stepsFactory.getStepData(defaultTo((data?.stepConfig?.node as StepElementConfig)?.type, ''))
     : null
+
   const templateStepTemplate = (data?.stepConfig?.node as TemplateStepNode)?.template
   const formikRef = React.useRef<StepFormikRef | null>(null)
   const flowControlRef = React.useRef<FlowControlRef | null>(null)
@@ -560,7 +561,10 @@ export function RightDrawer(): React.ReactElement {
   }
 
   if (stepData || templateStepTemplate) {
-    const stepType = stepData ? stepData?.type : get(templateTypes, templateStepTemplate.templateRef)
+    const stepType = stepData
+      ? stepData?.type
+      : get(templateTypes, templateStepTemplate.templateRef) ||
+        (data?.stepConfig?.node as TemplateStepNode)?.template?.templateInputs?.type
     const toolTipType = type ? `_${type}` : ''
     title = (
       <RightDrawerTitle

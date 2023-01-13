@@ -35,5 +35,6 @@ declare const styles: {
   readonly stepGroupParent: string
   readonly svgLeftJointPoint: string
   readonly svgRightJointPoint: string
+  readonly templateStepGroup: string
 }
 export default styles

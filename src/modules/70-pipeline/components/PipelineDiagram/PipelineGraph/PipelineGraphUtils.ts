@@ -771,7 +771,8 @@ const transformStepsData = ({
             loopingStrategyEnabled: !!(step.stepGroup as any)?.strategy,
             conditionalExecutionEnabled: getConditionalExecutionEnabled(step, isExecutionView, true),
             graphType,
-            isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || hasErrors
+            isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || hasErrors,
+            isTemplateNode: !!step?.stepGroup?.template?.templateRef
           }
         })
       } else {
