@@ -61,7 +61,8 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   AmazonS3: 'service-service-s3',
   GoogleArtifactRegistry: 'service-gar',
   GithubPackageRegistry: 'service-github-package',
-  AzureArtifacts: 'service-azure-artifacts'
+  AzureArtifacts: 'service-azure-artifacts',
+  AmazonMachineImage: 'service-ami'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -76,7 +77,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   AmazonS3: 'pipeline.artifactsSelection.amazonS3Title',
   GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle',
   GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle',
-  AzureArtifacts: 'connectors.title.azureArtifacts'
+  AzureArtifacts: 'connectors.title.azureArtifacts',
+  AmazonMachineImage: 'pipeline.artifactsSelection.AmazonMachineImageTitle'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -91,7 +93,8 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   AmazonS3: 'AmazonS3',
   GoogleArtifactRegistry: 'GoogleArtifactRegistry',
   GithubPackageRegistry: 'GithubPackageRegistry',
-  AzureArtifacts: 'AzureArtifacts'
+  AzureArtifacts: 'AzureArtifacts',
+  AmazonMachineImage: 'AmazonMachineImage'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -105,7 +108,8 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   AmazonS3: Connectors.AWS,
   GoogleArtifactRegistry: Connectors.GCP,
   GithubPackageRegistry: Connectors.GITHUB,
-  AzureArtifacts: Connectors.AZURE_ARTIFACTS
+  AzureArtifacts: Connectors.AZURE_ARTIFACTS,
+  AmazonMachineImage: Connectors.AWS
 }
 
 export const ArtifactConnectorLabelMap: Record<string, string> = {
@@ -119,7 +123,8 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   AmazonS3: 'AWS',
   GoogleArtifactRegistry: 'GCP',
   GithubPackageRegistry: 'Github',
-  AzureArtifacts: 'Azure Artifacts'
+  AzureArtifacts: 'Azure Artifacts',
+  AmazonMachineImage: 'AWS'
 }
 
 export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<ArtifactType>> = {

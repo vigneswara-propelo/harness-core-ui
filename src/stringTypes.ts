@@ -3185,6 +3185,8 @@ export interface StringsMap {
   'pipeline.advancedOptions': string
   'pipeline.allStages': string
   'pipeline.alwaysEditModeYAML': string
+  'pipeline.amiFilters': string
+  'pipeline.amiTags': string
   'pipeline.and': string
   'pipeline.appServiceConfig.applicationSettings.file': string
   'pipeline.appServiceConfig.applicationSettings.fileDetails': string

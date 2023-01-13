@@ -197,16 +197,18 @@ const triggerDrawerMap = (
                 value: ENABLED_ARTIFACT_TYPES.AzureArtifacts,
                 iconName: ArtifactIconByType.AzureArtifacts as IconName,
                 disabled: isNewService
-              }
-            ]
-          : []),
-        ...(isNewService
-          ? [
+              },
               {
                 itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
                 value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,
                 iconName: ArtifactIconByType.Nexus3Registry as IconName,
-                disabled: true
+                disabled: isNewService
+              },
+              {
+                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonMachineImage]),
+                value: ENABLED_ARTIFACT_TYPES.AmazonMachineImage,
+                iconName: ArtifactIconByType.AmazonMachineImage as IconName,
+                disabled: isNewService
               }
             ]
           : [])

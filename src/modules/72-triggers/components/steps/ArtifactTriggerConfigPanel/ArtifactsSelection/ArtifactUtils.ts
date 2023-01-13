@@ -323,7 +323,18 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         tagType: TagTypes.Value,
         tag: RUNTIME_INPUT_VALUE,
         tagRegex: RUNTIME_INPUT_VALUE,
+        imagePath: '',
+        repositoryFormat: 'docker',
+        repository: '',
         repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryUrl
+      }
+    case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
+      return {
+        identifier: '',
+        filters: [],
+        tags: [],
+        region: '',
+        version: RUNTIME_INPUT_VALUE
       }
     case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
       return {

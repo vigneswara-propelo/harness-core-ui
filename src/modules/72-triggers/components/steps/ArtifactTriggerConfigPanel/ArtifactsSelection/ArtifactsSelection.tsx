@@ -81,6 +81,7 @@ import { GithubPackageRegistry } from './ArtifactRepository/ArtifactLastSteps/Gi
 import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
 import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
 import { AzureArtifacts } from './ArtifactRepository/ArtifactLastSteps/AzureArtifacts/AzuerArtifacts'
+import { AmazonMachineImage } from './ArtifactRepository/ArtifactLastSteps/AmazonMachineImage/AmazonMachineImage'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactsSelection.module.scss'
 
 interface ArtifactsSelectionProps {
@@ -411,6 +412,18 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
             />
           </StepWizard>
         )
+      case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
+        return (
+          <StepWizard title={stepWizardTitle}>
+            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifactType]} {...connectorDetailStepProps} />
+            <StepAWSAuthentication name={getString('details')} {...authenticationStepProps} />
+            <DelegateSelectorStep buildPayload={buildAWSPayload} {...delegateStepProps} />
+            <ConnectorTestConnection
+              type={ArtifactToConnectorMap[selectedArtifactType]}
+              {...ConnectorTestConnectionProps}
+            />
+          </StepWizard>
+        )
       case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
         return (
           <StepWizard title={stepWizardTitle}>
@@ -481,6 +494,8 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
         return <JenkinsArtifact {...artifactLastStepProps()} />
       case 'DockerRegistry':
         return <DockerRegistryArtifact {...artifactLastStepProps()} />
+      case 'AmazonMachineImage':
+        return <AmazonMachineImage {...artifactLastStepProps()} />
     }
   }, [artifactLastStepProps, selectedArtifactType])
 

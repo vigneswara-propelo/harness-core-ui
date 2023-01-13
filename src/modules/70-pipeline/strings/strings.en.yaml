@@ -57,6 +57,8 @@ neverRan: This pipeline never ran
 startedOn: Started On
 nodes: nodes
 nodesLabel: Nodes
+amiTags: AMI Tags
+amiFilters: AMi Filters
 poweredByHarness: powered by Harness
 linuxOnly: Supported on Linux only
 outOf: Out Of

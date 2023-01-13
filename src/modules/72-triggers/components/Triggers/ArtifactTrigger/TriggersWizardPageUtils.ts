@@ -30,7 +30,8 @@ import type {
   CustomArtifactSpec,
   GithubPackagesSpec,
   GarSpec,
-  AzureArtifactsRegistrySpec
+  AzureArtifactsRegistrySpec,
+  AMIRegistrySpec
 } from 'services/pipeline-ng'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -55,7 +56,10 @@ import type {
   FlatOnEditValuesInterface
 } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
 import type { AddConditionInterface } from '@triggers/pages/triggers/views/AddConditionsSection'
-import type { ArtifactTriggerSpec } from '@triggers/components/steps/ArtifactTriggerConfigPanel/ArtifactsSelection/ArtifactInterface'
+import {
+  ArtifactTriggerSpec,
+  RepositoryPortOrServer
+} from '@triggers/components/steps/ArtifactTriggerConfigPanel/ArtifactsSelection/ArtifactInterface'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import type { TriggerType } from '../TriggerInterface'
 export const CUSTOM = 'Custom'
@@ -2090,9 +2094,9 @@ export const getTriggerArtifactInitialSpec = (
         connectorRef,
         eventConditions,
         imagePath,
-        repositoryFormat: 'repositoryUrl',
-        repositoryName: '',
-        repositoryUrl: '',
+        repositoryFormat: 'docker',
+        repository: '',
+        repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryUrl,
         tag
       } as NexusRegistrySpec
     }
@@ -2146,6 +2150,16 @@ export const getTriggerArtifactInitialSpec = (
         feed: '',
         version
       } as AzureArtifactsRegistrySpec
+    }
+    case 'AmazonMachineImage': {
+      return {
+        eventConditions,
+        connectorRef,
+        filters: [],
+        tags: [],
+        region: '',
+        version
+      } as AMIRegistrySpec
     }
   }
 }
