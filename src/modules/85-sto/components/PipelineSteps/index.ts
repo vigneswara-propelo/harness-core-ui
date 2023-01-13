@@ -10,7 +10,9 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { ZeroNorthStep } from './ZeroNorthStep/ZeroNorthStep'
 import { BanditStep } from './BanditStep/BanditStep'
 import { SnykStep } from './SnykStep/SnykStep'
+import { SonarqubeStep } from './SonarqubeStep/SonarqubeStep'
 
 factory.registerStep(new ZeroNorthStep())
 factory.registerStep(new BanditStep())
 factory.registerStep(new SnykStep())
+factory.registerStep(new SonarqubeStep())

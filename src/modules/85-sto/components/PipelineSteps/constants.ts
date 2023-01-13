@@ -266,7 +266,7 @@ export const authFieldsValidationConfig = (
     name: 'spec.auth.accessToken',
     type: ValidationFieldTypes.Text,
     label: 'sto.stepField.authToken',
-    isRequired: data.spec.mode === 'orchestration'
+    isRequired: data.spec.mode !== 'ingestion'
   },
   {
     name: 'spec.auth.domain',

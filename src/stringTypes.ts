@@ -8340,6 +8340,7 @@ export interface StringsMap {
   'sto.stepDescription.Owasp': string
   'sto.stepDescription.ScoutSuite': string
   'sto.stepDescription.Snyk': string
+  'sto.stepDescription.Sonarqube': string
   'sto.stepDescription.TwistLock': string
   'sto.stepDescription.Veracode': string
   'sto.stepDescription.WhiteSource': string
@@ -8369,6 +8370,9 @@ export interface StringsMap {
   'sto.stepField.target.type': string
   'sto.stepField.target.variant': string
   'sto.stepField.target.workspace': string
+  'sto.stepField.tool.javaBinaries': string
+  'sto.stepField.tool.javaLibraries': string
+  'sto.stepField.toolInclude': string
   'sto.stoExemption': string
   'sto.targets.testTargets': string
   'sto.zeroNorthImagePlaceholder': string

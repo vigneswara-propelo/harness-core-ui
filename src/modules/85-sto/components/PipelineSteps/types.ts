@@ -55,6 +55,15 @@ type Auth = {
   ssl: boolean
 }
 
+type Tool = {
+  include?: string
+  exclude?: string
+  java?: {
+    libraries?: string
+    binaries?: string
+  }
+}
+
 type LogLevel = 'info' | 'debug' | 'warning' | 'error'
 type LogSerializer = 'simple' | 'basic' | 'bunyan' | 'simple_onprem' | 'onprem'
 type FailOnSeverity = 'none' | 'low' | 'medium' | 'high' | 'critical'
@@ -78,6 +87,7 @@ export interface SecurityStepSpec {
   target: Target
   auth?: Auth
   image?: Image
+  tool?: Tool
   ingestion?: Ingestion
   advanced?: AdvancedSettings // TODO verify that this is optional
   privileged?: boolean

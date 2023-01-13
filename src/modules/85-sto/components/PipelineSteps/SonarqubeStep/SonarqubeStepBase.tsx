@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Formik, FormikForm } from '@harness/uicore'
+import { Divider } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
@@ -20,8 +21,8 @@ import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidate
 import { CIStep } from '@ci/components/PipelineSteps/CIStep/CIStep'
 import { useGetPropagatedStageById } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
-import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './SnykStepFunctionConfigs'
-import type { SnykStepProps, SnykStepData } from './SnykStep'
+import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './SonarqubeStepFunctionConfigs'
+import type { SonarqubeStepProps, SonarqubeStepData } from './SonarqubeStep'
 import {
   AdditionalFields,
   SecurityAuthFields,
@@ -31,15 +32,17 @@ import {
   SecurityTargetFields
 } from '../SecurityFields'
 import {
-  CONTAINER_TARGET_TYPE,
   INGESTION_SCAN_MODE,
   ORCHESTRATION_SCAN_MODE,
-  REPOSITORY_TARGET_TYPE
+  EXTRACTION_SCAN_MODE,
+  REPOSITORY_TARGET_TYPE,
+  dividerBottomMargin
 } from '../constants'
+import SecurityField from '../SecurityField'
 
-export const SnykStepBase = (
-  { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, allowableTypes, onChange }: SnykStepProps,
-  formikRef: StepFormikFowardRef<SnykStepData>
+export const SonarqubeStepBase = (
+  { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, allowableTypes, onChange }: SonarqubeStepProps,
+  formikRef: StepFormikFowardRef<SonarqubeStepData>
 ): JSX.Element => {
   const {
     state: {
@@ -51,7 +54,7 @@ export const SnykStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const valuesInCorrectFormat = getInitialValuesInCorrectFormat<SnykStepData, SnykStepData>(
+  const valuesInCorrectFormat = getInitialValuesInCorrectFormat<SonarqubeStepData, SonarqubeStepData>(
     initialValues,
     transformValuesFieldsConfig(initialValues),
     { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
@@ -60,9 +63,9 @@ export const SnykStepBase = (
   return (
     <Formik
       initialValues={valuesInCorrectFormat}
-      formName="SnykStep"
+      formName="SonarqubeStep"
       validate={valuesToValidate => {
-        const schemaValues = getFormValuesInCorrectFormat<SnykStepData, SnykStepData>(
+        const schemaValues = getFormValuesInCorrectFormat<SonarqubeStepData, SonarqubeStepData>(
           valuesToValidate,
           transformValuesFieldsConfig(valuesToValidate)
         )
@@ -79,8 +82,8 @@ export const SnykStepBase = (
           stepViewType
         )
       }}
-      onSubmit={(_values: SnykStepData) => {
-        const schemaValues = getFormValuesInCorrectFormat<SnykStepData, SnykStepData>(
+      onSubmit={(_values: SonarqubeStepData) => {
+        const schemaValues = getFormValuesInCorrectFormat<SonarqubeStepData, SonarqubeStepData>(
           _values,
           transformValuesFieldsConfig(_values)
         )
@@ -88,14 +91,11 @@ export const SnykStepBase = (
         onUpdate?.(schemaValues)
       }}
     >
-      {(formik: FormikProps<SnykStepData>) => {
+      {(formik: FormikProps<SonarqubeStepData>) => {
         // This is required
         setFormikRef?.(formikRef, formik)
 
         const targetTypeSelectItems = [REPOSITORY_TARGET_TYPE]
-        if (formik.values.spec.mode !== 'orchestration') {
-          targetTypeSelectItems.push(CONTAINER_TARGET_TYPE)
-        }
 
         if (targetTypeSelectItems.length === 1 && formik.values.spec.target.type !== 'repository') {
           formik.setFieldValue('spec.target.type', 'repository')
@@ -119,7 +119,7 @@ export const SnykStepBase = (
               formik={formik}
               stepViewType={stepViewType}
               scanConfigReadonly
-              scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, INGESTION_SCAN_MODE]}
+              scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, EXTRACTION_SCAN_MODE, INGESTION_SCAN_MODE]}
             />
 
             <SecurityTargetFields
@@ -133,7 +133,37 @@ export const SnykStepBase = (
 
             <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
 
-            <SecurityAuthFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityAuthFields
+              showFields={{
+                ssl: true,
+                domain: true
+              }}
+              allowableTypes={allowableTypes}
+              formik={formik}
+              stepViewType={stepViewType}
+            />
+
+            {formik.values.spec.mode === 'orchestration' && (
+              <>
+                <SecurityField
+                  stepViewType={stepViewType}
+                  allowableTypes={allowableTypes}
+                  formik={formik}
+                  enableFields={{
+                    'spec.tool.include': {
+                      label: 'sto.stepField.toolInclude'
+                    },
+                    'spec.tool.java.libraries': {
+                      label: 'sto.stepField.tool.javaLibraries'
+                    },
+                    'spec.tool.java.binaries': {
+                      label: 'sto.stepField.tool.javaBinaries'
+                    }
+                  }}
+                />
+                <Divider style={{ marginBottom: dividerBottomMargin }} />
+              </>
+            )}
 
             <AdditionalFields
               readonly={readonly}
@@ -149,4 +179,4 @@ export const SnykStepBase = (
   )
 }
 
-export const SnykStepBaseWithRef = React.forwardRef(SnykStepBase)
+export const SonarqubeStepBaseWithRef = React.forwardRef(SonarqubeStepBase)
