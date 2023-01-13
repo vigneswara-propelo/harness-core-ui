@@ -218,13 +218,7 @@ function PipelineGraph({
       }}
     >
       <div id="draggable-parent" className={css.draggableParent} ref={draggableParentRefCallback}>
-        <Draggable
-          scale={graphScale}
-          position={position}
-          onStart={() => setDragging(true)}
-          onStop={onDrag}
-          offsetParent={document.body}
-        >
+        <Draggable position={position} onStart={() => setDragging(true)} onStop={onDrag} offsetParent={document.body}>
           <div
             id="overlay"
             onClick={() => {

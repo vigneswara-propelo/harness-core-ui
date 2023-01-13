@@ -17,6 +17,7 @@ import type { ExecutionNode } from 'services/pipeline-ng'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { getExecutionStatusOptions } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
+import { getExecutionNodeName } from '@pipeline/utils/execUtils'
 import { CollapsedNodeActionType, useCollapsedNodeStore } from './CollapsedNodeStore'
 import { ExecutionStatusIcon } from '../ExecutionStatusIcon/ExecutionStatusIcon'
 import ExecutionStatusLabel from '../ExecutionStatusLabel/ExecutionStatusLabel'
@@ -112,7 +113,7 @@ const NameAndIconCell: CellRenderer = ({ row }) => {
     <div className={styles.nameAndIconCell}>
       {node?.status && <ExecutionStatusIcon status={node.status as ExecutionStatus} size={20} />}
       <Text lineClamp={1} font={{ variation: FontVariation.SMALL_SEMI }}>
-        {node.name}
+        {getExecutionNodeName(node)}
       </Text>
     </div>
   )
@@ -168,7 +169,7 @@ export function InstanceListPanel(): JSX.Element | null {
   }, [instancesHeaderText, statusHeaderText])
 
   const tableData = useMemo(() => {
-    const searchTerm = search.toLocaleLowerCase().trim()
+    const searchTerm = search.trim().toLocaleLowerCase()
 
     return childNodeIds.reduce((acc, childNodeId) => {
       const childNode = nodeMap?.[childNodeId]
@@ -176,7 +177,9 @@ export function InstanceListPanel(): JSX.Element | null {
 
       let include = true
       if (searchTerm) {
-        include = include && !!childNode?.name?.toLocaleLowerCase()?.includes(searchTerm)
+        const nodeName = getExecutionNodeName(childNode)?.toLocaleLowerCase()
+
+        include = include && !!nodeName?.includes(searchTerm)
       }
       if (status) {
         include = include && childNode?.status === status

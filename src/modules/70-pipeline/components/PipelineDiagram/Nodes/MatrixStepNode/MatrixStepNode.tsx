@@ -165,7 +165,7 @@ export function MatrixStepNode(props: any): JSX.Element {
     }
   }, [childrenDimensions])
 
-  const onShowAll: ButtonProps['onClick'] = e => {
+  const onCollapsedNodeClick: ButtonProps['onClick'] = e => {
     e.stopPropagation()
     props?.fireEvent?.({
       type: Event.CollapsedNodeClick,
@@ -275,7 +275,9 @@ export function MatrixStepNode(props: any): JSX.Element {
                       target: event.target,
                       data: { ...props }
                     })
+                    onCollapsedNodeClick(event)
                   }}
+                  tooltipProps={{ position: 'bottom' }}
                 >
                   {props.name}
                 </Text>
@@ -396,7 +398,7 @@ export function MatrixStepNode(props: any): JSX.Element {
                               withoutBoxShadow
                               size={ButtonSize.SMALL}
                               text={getString('showAll')}
-                              onClick={onShowAll}
+                              onClick={onCollapsedNodeClick}
                             />
                           </>
                         )}
