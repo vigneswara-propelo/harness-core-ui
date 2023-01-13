@@ -344,6 +344,8 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
     module,
     userGroupIdentifier: identifier
   })
+  const urlWithParentScope = `${userGroupDetailsUrl}?parentScope=${getPrincipalScopeFromDTO(data)}`
+
   return row.original.userGroupDTO.harnessManaged ? (
     <></>
   ) : (
@@ -367,7 +369,7 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
         />
         <Menu>
           <li>
-            <OpenInNewTab url={userGroupDetailsUrl} />
+            <OpenInNewTab url={urlWithParentScope} />
           </li>
           <RbacMenuItem
             icon="res-roles"
