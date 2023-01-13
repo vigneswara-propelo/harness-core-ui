@@ -80,3 +80,15 @@
 .noDataCardContainerContent {
   margin-top: 0px !important;
 }
+
+.environment-label {
+  padding-bottom: var(--spacing-small);
+  [data-testid='environmentTooltip'] {
+    margin-bottom: 5px;
+  }
+  :global {
+    .TextInput--main {
+      margin-bottom: 0px;
+    }
+  }
+}

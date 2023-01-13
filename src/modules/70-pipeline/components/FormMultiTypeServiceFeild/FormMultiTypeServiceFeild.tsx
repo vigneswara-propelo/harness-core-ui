@@ -6,6 +6,7 @@
  */
 import React, { useState } from 'react'
 import { Classes, FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
+import cx from 'classnames'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
 import {
@@ -67,6 +68,7 @@ export interface ServiceReferenceFieldProps extends Omit<IFormGroupProps, 'label
   onMultiSelectChange?: any
   isNewConnectorLabelVisible?: boolean
   isOnlyFixedType?: boolean
+  labelClass?: string
 }
 
 export function getSelectedRenderer(selected: any): JSX.Element {
@@ -112,6 +114,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     isOnlyFixedType = false,
     placeholder,
     disabled,
+    labelClass: labelClassFromProps = '',
     width,
     ...restProps
   } = props
@@ -158,7 +161,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     onMultiSelectChange(services)
   }
   return (
-    <div style={style}>
+    <div style={style} className={cx(css.serviceLabel, labelClassFromProps)}>
       <Container data-testid="serviceTooltip">
         <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} className={Classes.LABEL} />
       </Container>

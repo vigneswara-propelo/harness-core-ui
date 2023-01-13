@@ -6,6 +6,7 @@
  */
 import React, { useState } from 'react'
 import { Classes, FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
+import cx from 'classnames'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
 import {
@@ -62,6 +63,7 @@ export interface EnvironmentGroupReferenceFieldProps extends Omit<IFormGroupProp
   error?: string
   isMultiSelect?: boolean
   onMultiSelectChange?: any
+  labelClass?: string
   isNewConnectorLabelVisible?: boolean
 }
 
@@ -106,6 +108,7 @@ export function MultiTypeEnvironmentGroupField(props: EnvironmentGroupReferenceF
     openAddNewModal,
     isNewConnectorLabelVisible,
     placeholder,
+    labelClass: labelClassFromProps = '',
     disabled,
     width,
     ...restProps
@@ -151,8 +154,8 @@ export function MultiTypeEnvironmentGroupField(props: EnvironmentGroupReferenceF
     onMultiSelectChange(environments)
   }
   return (
-    <div style={style}>
-      <Container data-testid="environmentTooltip">
+    <div style={style} className={cx(css.environmentGroupLabel, labelClassFromProps)}>
+      <Container data-testid="environmentGroupTooltip">
         <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} className={Classes.LABEL} />
       </Container>
       <FormGroup {...rest} labelFor={name} helperText={helperText} intent={intent}>

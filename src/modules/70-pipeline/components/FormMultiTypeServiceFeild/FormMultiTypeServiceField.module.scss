@@ -80,3 +80,15 @@
 .noDataCardContainerContent {
   margin-top: 0px !important;
 }
+
+.service-label {
+  padding-bottom: var(--spacing-small);
+  [data-testid='serviceTooltip'] {
+    margin-bottom: 5px;
+  }
+  :global {
+    .TextInput--main {
+      margin-bottom: 0px;
+    }
+  }
+}

@@ -481,7 +481,7 @@ export default function DeployServiceEntityWidget({
           const isMultiSvc = !isNil(values.services)
           const isFixed = isMultiSvc ? Array.isArray(values.services) : serviceInputType === MultiTypeInputType.FIXED
           let placeHolderForServices =
-            Array.isArray(values.services) && values.services
+            Array.isArray(values.services) && !isEmpty(values.services)
               ? getString('services')
               : getString('cd.pipelineSteps.serviceTab.selectServices')
           const placeHolderForService = loading

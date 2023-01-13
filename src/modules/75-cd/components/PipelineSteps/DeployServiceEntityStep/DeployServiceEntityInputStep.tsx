@@ -288,6 +288,9 @@ export function DeployServiceEntityInputStep({
                 expressions,
                 allowableTypes: allowableTypesWithoutExpressionExecution
               }}
+              multitypeInputValue={
+                typeof servicesValue === 'string' ? getMultiTypeFromValue(servicesValue) : MultiTypeInputType.FIXED
+              }
             />
           ) : (
             <FormMultiTypeMultiSelectDropDown
