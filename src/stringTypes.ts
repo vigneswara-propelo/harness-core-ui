@@ -6927,6 +6927,8 @@ export interface StringsMap {
   'cf.onboarding.keyGeneratedBelow': string
   'cf.onboarding.letsGetStarted': string
   'cf.onboarding.listenToEvent': string
+  'cf.onboarding.multiStep.createEnv': string
+  'cf.onboarding.multiStep.validate': string
   'cf.onboarding.oneCreateAFlag': string
   'cf.onboarding.otherTypes': string
   'cf.onboarding.readme.android': string
