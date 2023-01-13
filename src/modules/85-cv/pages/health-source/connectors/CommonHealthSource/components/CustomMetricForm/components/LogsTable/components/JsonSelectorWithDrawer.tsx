@@ -139,7 +139,8 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
       )
     },
     drawerOptions: logsTableDefaultConfigs,
-    className: css.logsTableJsonDrawer
+    className: css.logsTableJsonDrawer,
+    showConfirmationDuringClose: false
   })
 
   const openDrawer = (fieldName: string, label: string): void => {
