@@ -38,7 +38,6 @@ import {
   useRunStagesWithRuntimeInputYaml,
   useRerunStagesWithRuntimeInputYaml,
   useGetStagesExecutionList,
-  useValidateTemplateInputs,
   Failure,
   PipelineStageConfig
 } from 'services/pipeline-ng'
@@ -80,7 +79,6 @@ import {
 import { useDeepCompareEffect } from '@common/hooks/useDeepCompareEffect'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
-import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -241,19 +239,6 @@ function RunPipelineFormBasic({
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
     }
-  })
-
-  const { data: validateTemplateInputsResponse, loading: loadingValidateTemplateInputs } = useValidateTemplateInputs({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      identifier: pipelineIdentifier,
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
-    },
-    lazy: executionView
   })
 
   const pipeline: PipelineInfoConfig | undefined = React.useMemo(
@@ -773,7 +758,7 @@ function RunPipelineFormBasic({
   }
 
   const shouldShowPageSpinner = (): boolean => {
-    return loadingPipeline || loadingValidateTemplateInputs || loadingResolvedChildPipeline
+    return loadingPipeline || loadingResolvedChildPipeline
   }
 
   const formRefDom = React.useRef<HTMLElement | undefined>()
@@ -809,22 +794,7 @@ function RunPipelineFormBasic({
 
   let runPipelineFormContent: React.ReactElement | null = null
 
-  if (validateTemplateInputsResponse?.data?.validYaml === false) {
-    // repoName={repoIdentifier} because values is calculated at top and one of them (repoIdentifier, repoName)
-    // will be undefined based on the enabled flag (isGitSyncEnabled)
-    runPipelineFormContent = (
-      <PipelineErrorView
-        errorNodeSummary={validateTemplateInputsResponse.data.errorNodeSummary}
-        pipelineIdentifier={pipelineIdentifier}
-        repoIdentifier={repoIdentifier}
-        repoName={repoIdentifier}
-        branch={branch}
-        connectorRef={connectorRef}
-        storeType={storeType}
-        onClose={onClose}
-      />
-    )
-  } else if (inputSetsError?.message) {
+  if (inputSetsError?.message) {
     runPipelineFormContent = <PipelineInvalidRequestContent onClose={onClose} getTemplateError={inputSetsError} />
   } else {
     runPipelineFormContent = (

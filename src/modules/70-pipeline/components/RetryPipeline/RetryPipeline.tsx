@@ -41,8 +41,7 @@ import {
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   useGetPipeline,
   useGetRetryStages,
-  useRetryPipeline,
-  useValidateTemplateInputs
+  useRetryPipeline
 } from 'services/pipeline-ng'
 
 import type {
@@ -70,7 +69,6 @@ import {
   mergeTemplateWithInputSetData
 } from '@pipeline/utils/runPipelineUtils'
 import type { InputSet, InputSetDTO, Pipeline } from '@pipeline/utils/types'
-import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
@@ -206,18 +204,6 @@ function RetryPipeline({
       getTemplatesResolvedPipeline: true,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
-    }
-  })
-
-  const { data: validateTemplateInputsResponse, loading: loadingValidateTemplateInputs } = useValidateTemplateInputs({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      identifier: pipelineId,
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
     }
   })
 
@@ -706,32 +692,8 @@ function RetryPipeline({
 
   const formRefDom = React.useRef<HTMLElement | undefined>()
 
-  if (
-    loadingPipeline ||
-    loadingTemplate ||
-    inputSetLoading ||
-    loadingRetry ||
-    loadingValidateTemplateInputs ||
-    loadingInputSetTemplate
-  ) {
+  if (loadingPipeline || loadingTemplate || inputSetLoading || loadingRetry || loadingInputSetTemplate) {
     return <PageSpinner />
-  }
-
-  if (validateTemplateInputsResponse?.data?.validYaml === false) {
-    // repoName={repoIdentifier} because values is calculated at top and one of them (repoIdentifier, repoName)
-    // will be undefined based on the enabled flag (isGitSyncEnabled)
-    return (
-      <PipelineErrorView
-        errorNodeSummary={validateTemplateInputsResponse.data.errorNodeSummary}
-        pipelineIdentifier={pipelineId}
-        repoIdentifier={repoIdentifier}
-        repoName={repoIdentifier}
-        branch={branch}
-        connectorRef={connectorRef}
-        storeType={storeType}
-        onClose={onClose}
-      />
-    )
   }
 
   return (
