@@ -4204,6 +4204,7 @@ export interface StringsMap {
   'pipeline.serviceDeploymentTypes.customDeployment': string
   'pipeline.serviceDeploymentTypes.deployDifferentLabel': string
   'pipeline.serviceDeploymentTypes.elastigroup': string
+  'pipeline.serviceDeploymentTypes.googleCloudFunctions': string
   'pipeline.serviceDeploymentTypes.kubernetes': string
   'pipeline.serviceDeploymentTypes.serverlessAwsLambda': string
   'pipeline.serviceDeploymentTypes.serverlessAwsType': string

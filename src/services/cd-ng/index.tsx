@@ -19,9 +19,9 @@ export interface ACLAggregateFilter {
 
 export type AMIArtifactConfig = ArtifactConfig & {
   connectorRef: string
-  filters?: ParameterFieldListAMIFilter
+  filters?: AMIFilter[]
   region: string
-  tags?: ParameterFieldListAMITag
+  tags?: AMITag[]
   version?: string
   versionRegex?: string
 }
@@ -333,6 +333,7 @@ export interface AccessControlCheckError {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -404,6 +405,7 @@ export interface AccessControlCheckError {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -1870,7 +1872,6 @@ export interface CDPipelineModuleInfo {
 
 export interface CDStageMetaDataDTO {
   environmentRef?: string
-  serviceEnvRefList?: ServiceEnvRef[]
   serviceRef?: string
 }
 
@@ -3118,6 +3119,7 @@ export type DeploymentStageConfig = StageInfoConfig & {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
+    | 'GoogleCloudFunctions'
   environment?: EnvironmentYamlV2
   environmentGroup?: EnvironmentGroupYaml
   environments?: EnvironmentsYaml
@@ -3732,6 +3734,7 @@ export interface EntityDetail {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4296,6 +4299,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -4367,6 +4371,7 @@ export interface Error {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4660,6 +4665,7 @@ export interface ErrorMetadata {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -4731,6 +4737,7 @@ export interface ErrorMetadata {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
   errorMessage?: string
 }
 
@@ -5075,6 +5082,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -5146,6 +5154,7 @@ export interface Failure {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -6150,6 +6159,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   )[]
   moduleType?:
     | 'CD'
@@ -6350,6 +6360,7 @@ export interface GitEntityFilterProperties {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6621,6 +6632,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6815,6 +6827,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7130,6 +7143,7 @@ export interface GitSyncEntityDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7318,6 +7332,7 @@ export interface GitSyncEntityListDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7523,6 +7538,7 @@ export interface GitSyncErrorDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -7777,6 +7793,13 @@ export type GoogleArtifactRegistryConfig = ArtifactConfig & {
   version?: string
   versionRegex?: string
 }
+
+export type GoogleCloudFunctionDefinitionManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
+}
+
+export type GoogleCloudFunctionsServiceSpec = ServiceSpec & {}
 
 export interface GovernanceMetadata {
   [key: string]: any
@@ -8081,6 +8104,7 @@ export interface InfrastructureDefinitionConfig {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
+    | 'GoogleCloudFunctions'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -8169,6 +8193,7 @@ export interface InfrastructureResponseDTO {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
+    | 'GoogleCloudFunctions'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -8804,7 +8829,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export interface LDAPSettings {
+export type LDAPSettings = NGAuthSettings & {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -8812,7 +8837,6 @@ export interface LDAPSettings {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -9111,6 +9135,7 @@ export interface ManifestConfig {
     | 'AsgConfiguration'
     | 'AsgScalingPolicy'
     | 'AsgScheduledUpdateGroupAction'
+    | 'GoogleCloudFunctionDefinition'
 }
 
 export interface ManifestConfigWrapper {
@@ -10185,30 +10210,6 @@ export interface ParameterFieldBoolean {
   value?: boolean
 }
 
-export interface ParameterFieldListAMIFilter {
-  defaultValue?: AMIFilter[]
-  executionInput?: boolean
-  expression?: boolean
-  expressionValue?: string
-  inputSetValidator?: InputSetValidator
-  jsonResponseField?: boolean
-  responseField?: string
-  typeString?: boolean
-  value?: AMIFilter[]
-}
-
-export interface ParameterFieldListAMITag {
-  defaultValue?: AMITag[]
-  executionInput?: boolean
-  expression?: boolean
-  expressionValue?: string
-  inputSetValidator?: InputSetValidator
-  jsonResponseField?: boolean
-  responseField?: string
-  typeString?: boolean
-  value?: AMITag[]
-}
-
 export interface ParameterFieldMapStringString {
   defaultValue?: {
     [key: string]: string
@@ -10727,6 +10728,7 @@ export interface ReferencedByDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
 }
 
 export interface RefreshResponse {
@@ -11961,6 +11963,7 @@ export interface ResponseListEntityType {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12150,6 +12153,7 @@ export interface ResponseListServiceDefinitionType {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
+    | 'GoogleCloudFunctions'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12554,6 +12558,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -12625,6 +12630,7 @@ export interface ResponseMessage {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -14373,6 +14379,7 @@ export interface ServiceDefinition {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
+    | 'GoogleCloudFunctions'
 }
 
 export interface ServiceDeployment {
@@ -14468,11 +14475,6 @@ export interface ServiceDetailsInfoDTO {
 
 export interface ServiceDetailsInfoDTOV2 {
   serviceDeploymentDetailsList?: ServiceDetailsDTOV2[]
-}
-
-export interface ServiceEnvRef {
-  environmentRef?: string
-  serviceRef?: string
 }
 
 export interface ServiceExecutionSummary {
@@ -16544,9 +16546,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -16574,11 +16576,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -17294,6 +17296,7 @@ export interface ListActivitiesQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17474,6 +17477,7 @@ export interface ListActivitiesQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -17758,6 +17762,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17938,6 +17943,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -20624,7 +20630,7 @@ export interface GetImagePathsForArtifactoryV2QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  pipelineIdentifier: string
+  pipelineIdentifier?: string
   repository?: string
   fqnPath?: string
   serviceId?: string
@@ -32215,6 +32221,7 @@ export const generateNgHelmValuesYamlPromise = (
   )
 
 export interface GetDelegateTokensQueryParams {
+  name?: string
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -33253,6 +33260,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -33494,6 +33502,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   searchTerm?: string
 }
 
@@ -36746,6 +36755,7 @@ export interface GetReferencedByQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   searchTerm?: string
 }
 
@@ -37202,7 +37212,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37216,7 +37226,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -37231,7 +37241,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37245,7 +37255,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -37257,7 +37267,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -37266,7 +37276,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -37772,7 +37782,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37786,7 +37796,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -37801,7 +37811,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37815,7 +37825,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -37827,7 +37837,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -37836,7 +37846,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -39249,6 +39259,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -39497,6 +39508,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'TanzuCommand'
       | 'AsgRollingDeploy'
       | 'AsgRollingRollback'
+      | 'GovernanceRuleAWS'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -41413,6 +41425,7 @@ export interface GetInfrastructureListQueryParams {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
+    | 'GoogleCloudFunctions'
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   sort?: string[]
@@ -45443,6 +45456,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   yamlGroup?: string
 }
 
@@ -45751,6 +45765,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -46010,6 +46025,7 @@ export interface GetStepsQueryParams {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
+    | 'GoogleCloudFunctions'
 }
 
 export type GetStepsProps = Omit<GetProps<ResponseStepCategory, Failure | Error, GetStepsQueryParams, void>, 'path'>
@@ -46098,7 +46114,7 @@ export const getExecutionStrategyListPromise = (
   )
 
 export interface GetProvisionerExecutionStrategyYamlQueryParams {
-  provisionerType: 'TERRAFORM' | 'CLOUD_FORMATION' | 'AZURE_ARM' | 'SHELL_SCRIPT_PROVISIONER'
+  provisionerType: 'TERRAFORM' | 'CLOUD_FORMATION' | 'AZURE_ARM' | 'AZURE_BLUEPRINT' | 'SHELL_SCRIPT_PROVISIONER'
 }
 
 export type GetProvisionerExecutionStrategyYamlProps = Omit<
@@ -46158,6 +46174,7 @@ export interface GetExecutionStrategyYamlQueryParams {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
+    | 'GoogleCloudFunctions'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
   accountIdentifier?: string
@@ -46221,6 +46238,7 @@ export interface PostExecutionStrategyYamlQueryParams {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
+    | 'GoogleCloudFunctions'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -50226,6 +50244,7 @@ export interface GetServiceListQueryParams {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
+    | 'GoogleCloudFunctions'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -50840,6 +50859,7 @@ export interface GetServiceAccessListQueryParams {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
+    | 'GoogleCloudFunctions'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -57479,7 +57499,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -57489,7 +57509,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -57502,7 +57522,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -57516,7 +57536,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -57528,7 +57548,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -57537,7 +57557,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -57930,7 +57950,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -57944,7 +57964,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -57959,7 +57979,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -57973,7 +57993,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -57985,7 +58005,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -57994,7 +58014,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -58130,7 +58150,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -58145,7 +58165,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -58160,7 +58180,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -58175,7 +58195,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -58194,7 +58214,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -58203,7 +58223,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -58222,7 +58242,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -58237,7 +58257,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -58252,7 +58272,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -58267,7 +58287,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -58286,7 +58306,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -58295,7 +58315,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -59146,6 +59166,7 @@ export interface GetYamlSchemaQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
   subtype?:
     | 'K8sCluster'
     | 'Git'
