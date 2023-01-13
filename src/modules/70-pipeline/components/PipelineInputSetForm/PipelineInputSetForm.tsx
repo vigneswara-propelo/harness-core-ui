@@ -349,13 +349,10 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
           {finalTemplate?.stages?.map((stageObj, index) => {
             const pathPrefix = !isEmpty(finalPath) ? `${finalPath}.` : ''
             if (stageObj.stage) {
-              const allValues = getStageFromPipeline(stageObj?.stage?.identifier || '', originalPipeline)
-              const pipelineStageTemplate = (stageObj?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
-              const pipelineStageOutputs = (stageObj?.stage?.spec as PipelineStageConfig)?.outputs
-              const isTemplateOriginalPipeline = !!pipelineStageTemplate?.template
-              const _originalPipeline = isTemplateOriginalPipeline
-                ? (pipelineStageTemplate?.template?.templateInputs as PipelineInfoConfig)
-                : pipelineStageTemplate
+              const allValues = getStageFromPipeline(stageObj.stage?.identifier || '', originalPipeline)
+              const pipelineStageTemplate = (stageObj.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
+              const pipelineStageOutputs = (stageObj.stage?.spec as PipelineStageConfig)?.outputs
+              const _originalPipeline = (allValues?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
 
               return (
                 <Layout.Vertical key={stageObj?.stage?.identifier || index}>
@@ -412,6 +409,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                 const allValues = getStageFromPipeline(stageP?.stage?.identifier || '', originalPipeline)
                 const pipelineStageTemplate = (stageP?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
                 const pipelineStageOutputs = (stageP?.stage?.spec as PipelineStageConfig)?.outputs
+                const _originalPipeline = (allValues?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
 
                 return (
                   <Layout.Vertical key={`${stageObj?.stage?.identifier}-${stageP.stage?.identifier}-${indexp}`}>
@@ -435,7 +433,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                           />
                         )}
                         <PipelineInputSetFormInternal
-                          originalPipeline={pipelineStageTemplate}
+                          originalPipeline={_originalPipeline}
                           template={pipelineStageTemplate}
                           path={`${pathPrefix}stages[${index}].parallel[${indexp}].stage.spec.inputs`}
                           readonly={readonly}
