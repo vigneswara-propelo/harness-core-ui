@@ -1384,6 +1384,13 @@ onboarding:
 
       CfClient is a base class that provides all features of the SDK.
 
+      Add CFClient and Target imports to your app.py
+
+      ```
+      from featureflags.client import CfClient
+      from featureflags.evaluations.auth_target import Target
+      ```
+
       Put the API Key here from your environment
 
       ```
