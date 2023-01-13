@@ -150,7 +150,6 @@ describe('Environment Detail Summary', () => {
     const infraText = getAllByText(fullTableDialog!, 'infraStructure4')
     fireEvent.click(infraText[0])
     await waitFor(() => expect(getByText('pipelineLink2')))
-    expect(findByText(fullTableDialog!, 'CD.SERVICEDASHBOARD.HEADERS.PIPELINEEXECUTION')).toBeTruthy()
 
     const closeBtn = fullTableDialog?.querySelector('.Dialog--close')
     fireEvent.click(closeBtn!)
