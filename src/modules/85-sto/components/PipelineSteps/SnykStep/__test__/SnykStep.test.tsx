@@ -12,28 +12,84 @@ import type { StringKeys } from 'framework/strings'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { BanditStep, BanditStepData } from '../BanditStep'
+import { SnykStep, SnykStepData } from '../SnykStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
-describe('Bandit Step', () => {
+describe('Snyk Step', () => {
   beforeAll(() => {
-    factory.registerStep(new BanditStep())
+    factory.registerStep(new SnykStep())
   })
 
   describe('Edit View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.Bandit} stepViewType={StepViewType.Edit} />
+        <TestStepWidget initialValues={{}} type={StepType.Snyk} stepViewType={StepViewType.Edit} />
       )
 
       expect(container).toMatchSnapshot()
     })
 
-    test('renders runtime inputs', async () => {
+    test('renders runtime inputs - Ingestion Container', async () => {
       const initialValues = {
-        identifier: 'My_Bandit_Step',
-        name: 'My Bandit Step',
+        identifier: 'My_Snyk_Step',
+        name: 'My Snyk Step',
+        description: RUNTIME_INPUT_VALUE,
+        timeout: RUNTIME_INPUT_VALUE,
+        spec: {
+          privileged: RUNTIME_INPUT_VALUE,
+          target: {
+            type: 'container',
+            name: RUNTIME_INPUT_VALUE,
+            variant: RUNTIME_INPUT_VALUE
+          },
+          ingestion: {
+            file: 'ingestion filename'
+          },
+          mode: 'ingestion',
+          config: 'default',
+          settings: RUNTIME_INPUT_VALUE,
+          advanced: {
+            fail_on_severity: RUNTIME_INPUT_VALUE,
+            log: {
+              level: RUNTIME_INPUT_VALUE,
+              serializer: RUNTIME_INPUT_VALUE
+            }
+          },
+          // Right now we do not support Image Pull Policy but will do in the future
+          // pull: RUNTIME_INPUT_VALUE,
+          resources: {
+            limits: {
+              cpu: RUNTIME_INPUT_VALUE,
+              memory: RUNTIME_INPUT_VALUE
+            }
+          }
+        }
+      }
+
+      const onUpdate = jest.fn()
+      const ref = React.createRef<StepFormikRef<unknown>>()
+      const { container } = render(
+        <TestStepWidget
+          initialValues={initialValues}
+          type={StepType.Snyk}
+          stepViewType={StepViewType.Edit}
+          onUpdate={onUpdate}
+          ref={ref}
+        />
+      )
+
+      expect(container).toMatchSnapshot()
+
+      await act(() => ref.current?.submitForm()!)
+
+      expect(onUpdate).toHaveBeenCalledWith(initialValues)
+    })
+
+    test('renders runtime inputs - Orchestration Repository', async () => {
+      const initialValues = {
+        identifier: 'My_Snyk_Step',
+        name: 'My Snyk Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
@@ -43,6 +99,11 @@ describe('Bandit Step', () => {
             name: RUNTIME_INPUT_VALUE,
             variant: RUNTIME_INPUT_VALUE,
             workspace: RUNTIME_INPUT_VALUE
+          },
+          auth: {
+            domain: RUNTIME_INPUT_VALUE,
+            accessToken: RUNTIME_INPUT_VALUE,
+            ssl: RUNTIME_INPUT_VALUE
           },
           mode: 'orchestration',
           config: 'default',
@@ -73,7 +134,7 @@ describe('Bandit Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.Bandit}
+          type={StepType.Snyk}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -89,17 +150,22 @@ describe('Bandit Step', () => {
 
     test('edit mode works', async () => {
       const initialValues = {
-        identifier: 'My_Bandit_Step',
-        name: 'My Bandit Step',
+        identifier: 'My_Snyk_Stp',
+        name: 'My Snyk Step',
         description: 'Description',
         timeout: '10s',
         spec: {
           privileged: true,
           target: {
             type: 'repository',
-            name: 'Bandit Test',
+            name: 'Snyk Test',
             variant: 'variant',
             workspace: '~/workspace'
+          },
+          auth: {
+            domain: 'auth domain',
+            accessToken: 'token',
+            ssl: true
           },
           config: 'default',
           mode: 'orchestration',
@@ -109,8 +175,11 @@ describe('Bandit Step', () => {
           },
           advanced: {
             log: {
-              level: 'DEBUG',
-              serializer: 'SIMPLE_ONPREM' // Remove From UI
+              level: 'debug',
+              serializer: 'simple_onprem'
+            },
+            args: {
+              cli: 'additional cli args'
             }
           },
           // Right now we do not support Image Pull Policy but will do in the future
@@ -128,7 +197,7 @@ describe('Bandit Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.Bandit}
+          type={StepType.Snyk}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -146,7 +215,7 @@ describe('Bandit Step', () => {
   describe('InputSet View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.Bandit} stepViewType={StepViewType.InputSet} />
+        <TestStepWidget initialValues={{}} type={StepType.Snyk} stepViewType={StepViewType.InputSet} />
       )
 
       expect(container).toMatchSnapshot()
@@ -154,13 +223,32 @@ describe('Bandit Step', () => {
 
     test('should render all fields', async () => {
       const template = {
-        type: StepType.Bandit,
-        identifier: 'My_Bandit_Step',
+        type: StepType.Snyk,
+        identifier: 'My_Snyk_Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
+          target: {
+            type: 'container',
+            name: RUNTIME_INPUT_VALUE,
+            variant: RUNTIME_INPUT_VALUE,
+            workspace: RUNTIME_INPUT_VALUE
+          },
+          auth: {
+            domain: RUNTIME_INPUT_VALUE,
+            accessToken: RUNTIME_INPUT_VALUE,
+            ssl: RUNTIME_INPUT_VALUE
+          },
+          config: RUNTIME_INPUT_VALUE,
+          mode: RUNTIME_INPUT_VALUE,
+          advanced: {
+            log: {
+              level: RUNTIME_INPUT_VALUE,
+              serializer: RUNTIME_INPUT_VALUE // Remove From UI
+            }
+          },
           // Right now we do not support Image Pull Policy but will do in the future
           // pull: RUNTIME_INPUT_VALUE,
           resources: {
@@ -173,14 +261,33 @@ describe('Bandit Step', () => {
       }
 
       const allValues = {
-        type: StepType.Bandit,
+        type: StepType.Snyk,
         name: 'Test A',
-        identifier: 'My_Bandit_Step',
+        identifier: 'My_Snyk_Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
+          target: {
+            type: 'container',
+            name: RUNTIME_INPUT_VALUE,
+            variant: RUNTIME_INPUT_VALUE,
+            workspace: RUNTIME_INPUT_VALUE
+          },
+          auth: {
+            domain: RUNTIME_INPUT_VALUE,
+            accessToken: RUNTIME_INPUT_VALUE,
+            ssl: RUNTIME_INPUT_VALUE
+          },
+          config: RUNTIME_INPUT_VALUE,
+          mode: RUNTIME_INPUT_VALUE,
+          advanced: {
+            log: {
+              level: RUNTIME_INPUT_VALUE,
+              serializer: RUNTIME_INPUT_VALUE // Remove From UI
+            }
+          },
           // Right now we do not support Image Pull Policy but will do in the future
           // pull: RUNTIME_INPUT_VALUE,
           resources: {
@@ -197,7 +304,7 @@ describe('Bandit Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.Bandit}
+          type={StepType.Snyk}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -210,24 +317,18 @@ describe('Bandit Step', () => {
 
     test('should not render any fields', async () => {
       const template = {
-        type: StepType.Bandit,
-        identifier: 'My_Bandit_Step'
+        type: StepType.Snyk,
+        identifier: 'My_Snyk_Step'
       }
 
       const allValues = {
-        type: StepType.Bandit,
-        identifier: 'My_Bandit_Step',
-        name: 'My Bandit Step',
+        type: StepType.Snyk,
+        identifier: 'My_Snyk_Step',
+        name: 'My Snyk Step',
         description: 'Description',
         timeout: '10s',
         spec: {
           privileged: false,
-          target: {
-            type: 'repository',
-            name: 'Bandit Test',
-            variant: 'variant',
-            workspace: '~/workspace'
-          },
           settings: {
             key1: 'value1',
             key2: 'value2',
@@ -249,7 +350,7 @@ describe('Bandit Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.Bandit}
+          type={StepType.Snyk}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -268,7 +369,7 @@ describe('Bandit Step', () => {
           initialValues={{
             identifier: 'Test_A',
             name: 'Test A',
-            type: StepType.Bandit,
+            type: StepType.Snyk,
             description: 'Description',
             timeout: '10s',
             spec: {
@@ -347,9 +448,9 @@ describe('Bandit Step', () => {
               }
             },
             variablesData: {
-              type: StepType.Bandit,
+              type: StepType.Snyk,
               __uuid: 'step-identifier',
-              identifier: 'Bandit',
+              identifier: 'Snyk',
               name: 'step-name',
               description: 'step-description',
               timeout: 'step-timeout',
@@ -367,7 +468,7 @@ describe('Bandit Step', () => {
               }
             }
           }}
-          type={StepType.Bandit}
+          type={StepType.Snyk}
           stepViewType={StepViewType.InputVariable}
         />
       )
@@ -377,11 +478,11 @@ describe('Bandit Step', () => {
   })
 
   test('validates input set correctly', () => {
-    const data: BanditStepData = {
+    const data: SnykStepData = {
       identifier: 'id',
       name: 'name',
       description: 'desc',
-      type: StepType.Bandit,
+      type: StepType.Snyk,
       timeout: '1h',
       spec: {
         target: {
@@ -413,7 +514,7 @@ describe('Bandit Step', () => {
       }
     }
 
-    const result = new BanditStep().validateInputSet({
+    const result = new SnykStep().validateInputSet({
       data,
       template: data,
       getString: (key: StringKeys, _vars?: Record<string, any>) => key as string,

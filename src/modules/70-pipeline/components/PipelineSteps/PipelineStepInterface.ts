@@ -149,6 +149,7 @@ export enum StepType {
   Asg = 'ASGServiceSpec',
   AsgInfraSpec = 'AsgInfraSpec',
   Bandit = 'Bandit',
+  Snyk = 'Snyk',
   AsgCanaryDelete = 'AsgCanaryDelete',
   ElastigroupDeploy = 'ElastigroupDeploy',
   ElastigroupSwapRoute = 'ElastigroupSwapRoute',

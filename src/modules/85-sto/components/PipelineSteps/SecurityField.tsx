@@ -117,7 +117,7 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
                     multiTypeInputProps: {
                       expressions,
                       allowableTypes,
-                      selectProps: { addClearBtn: true, items: selectItems }
+                      selectProps: { items: selectItems }
                     },
                     width: 384,
                     disabled: readonly || selectItems?.length === 1,

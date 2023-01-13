@@ -25,25 +25,39 @@ export type InputSetViewValidateFieldsConfig = {
   isRequired?: boolean
 }
 
-type TargetType = 'repository' | 'containerImage' | 'instance'
+type TargetType = 'repository' | 'container' | 'instance'
 
 type Target = {
   type: TargetType
   name: string
   variant: string
-  workspace: string
-  ssl: boolean
+  workspace?: string
 }
 
-type ScanMode = 'orchestration' | 'extraction' | 'ingestion'
+export type ScanMode = 'orchestration' | 'extraction' | 'ingestion'
 
 type Ingestion = {
   file: string
 }
 
-type LogLevel = 'INFO' | 'DEBUG' | 'WARNING' | 'ERROR'
-type LogSerializer = 'SIMPLE' | 'BASIC' | 'BUNYAN' | 'SIMPLE_ONPREM' | 'ONPREM'
-type FailOnSeverity = 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'
+type Image = {
+  type: 'local_image' | 'docker_v2' | 'jfrog_artifactory' | 'aws_ecr'
+  name: string
+  domain: string
+  access_token: string
+  region: string
+  access_id: string
+}
+
+type Auth = {
+  accessToken: string
+  domain: string
+  ssl: boolean
+}
+
+type LogLevel = 'info' | 'debug' | 'warning' | 'error'
+type LogSerializer = 'simple' | 'basic' | 'bunyan' | 'simple_onprem' | 'onprem'
+type FailOnSeverity = 'none' | 'low' | 'medium' | 'high' | 'critical'
 
 type AdvancedSettings = {
   log?: {
@@ -62,6 +76,8 @@ export interface SecurityStepSpec {
   mode: ScanMode
   config: string
   target: Target
+  auth?: Auth
+  image?: Image
   ingestion?: Ingestion
   advanced?: AdvancedSettings // TODO verify that this is optional
   privileged?: boolean

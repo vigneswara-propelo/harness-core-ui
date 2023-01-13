@@ -20,14 +20,26 @@ import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidate
 import { CIStep } from '@ci/components/PipelineSteps/CIStep/CIStep'
 import { useGetPropagatedStageById } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
-import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './BanditStepFunctionConfigs'
-import type { BanditStepProps, BanditStepData } from './BanditStep'
-import { AdditionalFields, SecurityIngestionFields, SecurityScanFields, SecurityTargetFields } from '../SecurityFields'
-import { INGESTION_SCAN_MODE, ORCHESTRATION_SCAN_MODE, REPOSITORY_TARGET_TYPE } from '../constants'
+import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './SnykStepFunctionConfigs'
+import type { SnykStepProps, SnykStepData } from './SnykStep'
+import {
+  AdditionalFields,
+  SecurityAuthFields,
+  SecurityImageFields,
+  SecurityIngestionFields,
+  SecurityScanFields,
+  SecurityTargetFields
+} from '../SecurityFields'
+import {
+  CONTAINER_TARGET_TYPE,
+  INGESTION_SCAN_MODE,
+  ORCHESTRATION_SCAN_MODE,
+  REPOSITORY_TARGET_TYPE
+} from '../constants'
 
-export const BanditStepBase = (
-  { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, allowableTypes, onChange }: BanditStepProps,
-  formikRef: StepFormikFowardRef<BanditStepData>
+export const SnykStepBase = (
+  { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, allowableTypes, onChange }: SnykStepProps,
+  formikRef: StepFormikFowardRef<SnykStepData>
 ): JSX.Element => {
   const {
     state: {
@@ -39,7 +51,7 @@ export const BanditStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const valuesInCorrectFormat = getInitialValuesInCorrectFormat<BanditStepData, BanditStepData>(
+  const valuesInCorrectFormat = getInitialValuesInCorrectFormat<SnykStepData, SnykStepData>(
     initialValues,
     transformValuesFieldsConfig(initialValues),
     { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
@@ -48,9 +60,9 @@ export const BanditStepBase = (
   return (
     <Formik
       initialValues={valuesInCorrectFormat}
-      formName="BanditStep"
+      formName="SnykStep"
       validate={valuesToValidate => {
-        const schemaValues = getFormValuesInCorrectFormat<BanditStepData, BanditStepData>(
+        const schemaValues = getFormValuesInCorrectFormat<SnykStepData, SnykStepData>(
           valuesToValidate,
           transformValuesFieldsConfig(valuesToValidate)
         )
@@ -67,8 +79,8 @@ export const BanditStepBase = (
           stepViewType
         )
       }}
-      onSubmit={(_values: BanditStepData) => {
-        const schemaValues = getFormValuesInCorrectFormat<BanditStepData, BanditStepData>(
+      onSubmit={(_values: SnykStepData) => {
+        const schemaValues = getFormValuesInCorrectFormat<SnykStepData, SnykStepData>(
           _values,
           transformValuesFieldsConfig(_values)
         )
@@ -76,9 +88,18 @@ export const BanditStepBase = (
         onUpdate?.(schemaValues)
       }}
     >
-      {(formik: FormikProps<BanditStepData>) => {
+      {(formik: FormikProps<SnykStepData>) => {
         // This is required
         setFormikRef?.(formikRef, formik)
+
+        const targetTypeSelectItems = [REPOSITORY_TARGET_TYPE]
+        if (formik.values.spec.mode !== 'orchestration') {
+          targetTypeSelectItems.push(CONTAINER_TARGET_TYPE)
+        }
+
+        if (targetTypeSelectItems.length === 1 && formik.values.spec.target.type !== 'repository') {
+          formik.setFieldValue('spec.target.type', 'repository')
+        }
 
         return (
           <FormikForm>
@@ -105,10 +126,19 @@ export const BanditStepBase = (
               allowableTypes={allowableTypes}
               formik={formik}
               stepViewType={stepViewType}
-              targetTypeSelectItems={[REPOSITORY_TARGET_TYPE]}
+              targetTypeSelectItems={targetTypeSelectItems}
             />
 
+            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+
             <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+
+            <SecurityAuthFields
+              allowableTypes={allowableTypes}
+              formik={formik}
+              stepViewType={stepViewType}
+              initialAuthDomain={initialValues.spec.auth?.domain}
+            />
 
             <AdditionalFields
               readonly={readonly}
@@ -124,4 +154,4 @@ export const BanditStepBase = (
   )
 }
 
-export const BanditStepBaseWithRef = React.forwardRef(BanditStepBase)
+export const SnykStepBaseWithRef = React.forwardRef(SnykStepBase)

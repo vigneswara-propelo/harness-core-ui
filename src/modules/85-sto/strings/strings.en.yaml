@@ -22,12 +22,23 @@ stepField:
     type: Target Type
     name: Target Name
     variant: Target Variant
-    ssl: Verify SSL
     workspace: Target Workspace
+  authToken: Auth Token
+  authDomain: Auth Domain
+  authSsl: Enforce SSL
+  image:
+    type: Image Type
+    domain: Image Domain
+    token: Image Token
+    region: Image Region
+    accessId: Image Access Id
+  container:
+    containerAccessToken: Container Access Token
+    containerRegion: Container Region
   advanced:
     logLevel: Log Level
     serializer: Log Serializer
-    cli: CLI
+    cli: Additional CLI flags
     passthrough: Passthrough
     failOnSeverity: Fail On Severity
     includeRaw: Include Raw

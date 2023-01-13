@@ -8351,12 +8351,21 @@ export interface StringsMap {
   'sto.stepField.advanced.logLevel': string
   'sto.stepField.advanced.passthrough': string
   'sto.stepField.advanced.serializer': string
+  'sto.stepField.authDomain': string
+  'sto.stepField.authSsl': string
+  'sto.stepField.authToken': string
   'sto.stepField.config': string
+  'sto.stepField.container.containerAccessToken': string
+  'sto.stepField.container.containerRegion': string
+  'sto.stepField.image.accessId': string
+  'sto.stepField.image.domain': string
+  'sto.stepField.image.region': string
+  'sto.stepField.image.token': string
+  'sto.stepField.image.type': string
   'sto.stepField.ingestion.file': string
   'sto.stepField.mode': string
   'sto.stepField.optionLabels.logLevel.debug': string
   'sto.stepField.target.name': string
-  'sto.stepField.target.ssl': string
   'sto.stepField.target.type': string
   'sto.stepField.target.variant': string
   'sto.stepField.target.workspace': string

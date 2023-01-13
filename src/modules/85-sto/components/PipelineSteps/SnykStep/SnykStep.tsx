@@ -15,42 +15,42 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
-import { BanditStepBaseWithRef } from './BanditStepBase'
-import { BanditStepInputSet } from './BanditStepInputSet'
-import { BanditStepVariables, BanditStepVariablesProps } from './BanditStepVariables'
-import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './BanditStepFunctionConfigs'
+import { SnykStepBaseWithRef } from './SnykStepBase'
+import { SnykStepInputSet } from './SnykStepInputSet'
+import { SnykStepVariables, SnykStepVariablesProps } from './SnykStepVariables'
+import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SnykStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 
-export type BanditStepData = SecurityStepData<SecurityStepSpec>
-export interface BanditStepProps {
-  initialValues: BanditStepData
-  template?: BanditStepData
+export type SnykStepData = SecurityStepData<SecurityStepSpec>
+export interface SnykStepProps {
+  initialValues: SnykStepData
+  template?: SnykStepData
   path?: string
   isNewStep?: boolean
   readonly?: boolean
   stepViewType: StepViewType
-  onUpdate?: (data: BanditStepData) => void
-  onChange?: (data: BanditStepData) => void
+  onUpdate?: (data: SnykStepData) => void
+  onChange?: (data: SnykStepData) => void
   allowableTypes: AllowedTypes
   formik?: any
 }
 
-export class BanditStep extends PipelineStep<BanditStepData> {
+export class SnykStep extends PipelineStep<SnykStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.Bandit
-  protected stepName = 'Configure Bandit'
-  protected stepIcon: IconName = 'bandit'
-  protected stepDescription: keyof StringsMap = 'sto.stepDescription.Bandit'
+  protected type = StepType.Snyk
+  protected stepName = 'Configure Snyk'
+  protected stepIcon: IconName = 'Snyk'
+  protected stepDescription: keyof StringsMap = 'sto.stepDescription.Snyk'
   protected stepPaletteVisible = false
 
-  protected defaultValues: BanditStepData = {
+  protected defaultValues: SnykStepData = {
     identifier: '',
-    type: StepType.Bandit as string,
+    type: StepType.Snyk as string,
     spec: {
       mode: 'orchestration',
       config: 'default',
@@ -60,16 +60,24 @@ export class BanditStep extends PipelineStep<BanditStepData> {
         variant: '',
         workspace: '/harness'
       },
+      auth: {
+        domain: '',
+        accessToken: '<+secrets.getValue(“<your_snyk_token_secret>“)>',
+        ssl: true
+      },
       advanced: {
         log: {
           level: 'info'
+        },
+        args: {
+          cli: ''
         }
       }
     }
   }
 
   /* istanbul ignore next */
-  processFormData(data: BanditStepData): BanditStepData {
+  processFormData(data: SnykStepData): SnykStepData {
     return getFormValuesInCorrectFormat(data, transformValuesFieldsConfig(data))
   }
 
@@ -78,15 +86,16 @@ export class BanditStep extends PipelineStep<BanditStepData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<BanditStepData>): FormikErrors<BanditStepData> {
+  }: ValidateInputSetProps<SnykStepData>): FormikErrors<SnykStepData> {
     if (getString) {
       return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(data), { getString }, viewType)
     }
 
+    /* istanbul ignore next */
     return {}
   }
 
-  renderStep(props: StepProps<BanditStepData>): JSX.Element {
+  renderStep(props: StepProps<SnykStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -104,9 +113,11 @@ export class BanditStep extends PipelineStep<BanditStepData> {
       case StepViewType.InputSet:
       case StepViewType.DeploymentForm:
         return (
-          <BanditStepInputSet
+          <SnykStepInputSet
             initialValues={initialValues}
+            /* istanbul ignore next */
             template={inputSetData?.template}
+            /* istanbul ignore next */
             path={inputSetData?.path || ''}
             readonly={!!inputSetData?.readonly}
             stepViewType={stepViewType}
@@ -118,8 +129,8 @@ export class BanditStep extends PipelineStep<BanditStepData> {
 
       case StepViewType.InputVariable:
         return (
-          <BanditStepVariables
-            {...(customStepProps as BanditStepVariablesProps)}
+          <SnykStepVariables
+            {...(customStepProps as SnykStepVariablesProps)}
             initialValues={initialValues}
             onUpdate={onUpdate}
           />
@@ -127,11 +138,15 @@ export class BanditStep extends PipelineStep<BanditStepData> {
     }
 
     return (
-      <BanditStepBaseWithRef
+      <SnykStepBaseWithRef
         initialValues={initialValues}
         allowableTypes={allowableTypes}
         onChange={onChange}
-        stepViewType={stepViewType || StepViewType.Edit}
+        stepViewType={
+          stepViewType ||
+          /* istanbul ignore next */
+          StepViewType.Edit
+        }
         onUpdate={onUpdate}
         readonly={readonly}
         isNewStep={isNewStep}
