@@ -33,7 +33,6 @@ import routes from '@common/RouteDefinitions'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { StringUtils } from '@common/exports'
 import type { ServiceDefinition, UserRepoResponse } from 'services/cd-ng'
-import { useQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { useGetServicesData } from '@cd/components/PipelineSteps/DeployServiceEntityStep/useGetServicesData'
@@ -65,16 +64,18 @@ const WizardStepOrder = [
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
   const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.RunPipeline } = props
   const {
-    state: { service: serviceData, selectedSectionId, infrastructure, environment },
-    setSelectedSectionId
+    state: { service: serviceData, infrastructure, environment }
   } = useCDOnboardingContext()
 
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
-  const query = useQueryParams()
   const history = useHistory()
   const { showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+
+  const [selectedSectionId, setSelectedSectionId] = React.useState<DeployProvisiongWizardStepId>(
+    DeployProvisiongWizardStepId.SelectDeploymentType
+  )
 
   const [disableBtn, setDisableBtn] = React.useState<boolean>(false)
   const [currentWizardStepId, setCurrentWizardStepId] =
@@ -128,9 +129,8 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   }
 
   React.useEffect(() => {
-    const sectionId = (query as any).sectionId || EMPTY_STRING
-    if (sectionId?.length && WizardStepOrder.includes(sectionId)) {
-      updateStepStatusFromContextTab(sectionId)
+    if (selectedSectionId?.length && WizardStepOrder.includes(selectedSectionId)) {
+      updateStepStatusFromContextTab(selectedSectionId)
     } else {
       setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)
       updateStepStatus([DeployProvisiongWizardStepId.SelectDeploymentType], StepStatus.InProgress)
@@ -463,6 +463,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
                 StepStatus.Success
               )
             }}
+            setSelectedSectionId={setSelectedSectionId}
           />
         ),
         onClickBack: () => {
