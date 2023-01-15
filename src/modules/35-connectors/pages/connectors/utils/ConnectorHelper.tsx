@@ -18,7 +18,8 @@ export const AuthTypes = {
   OIDC: 'OpenIdConnect',
   ANNONYMOUS: 'Anonymous',
   BEARER_TOKEN: 'Bearer Token(HTTP Header)',
-  PERSONAL_ACCESS_TOKEN: 'PersonalAccessToken'
+  PERSONAL_ACCESS_TOKEN: 'PersonalAccessToken',
+  ADFS: 'AdfsClientCredentialsWithCertificate'
 }
 
 export enum GitAuthTypes {

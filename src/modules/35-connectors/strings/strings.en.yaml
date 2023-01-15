@@ -201,6 +201,11 @@ validation:
   personalAccessToken: Personal Access Token is required
   connectorIsRequired: Connector is required.
   endpointUrl: Endpoint URL is required
+  adfsUrl: ADFS URL is required
+  certificate: Certificate is required
+  clientID: Client ID is required
+  resourceID: Resource ID is required
+  privateKey: Private Key is required
 httpHelm:
   httpHelmRepoUrl: 'Helm Repo URL'
 ociHelm:
@@ -209,6 +214,13 @@ jira:
   jiraUrl: 'Jira URL'
 serviceNow:
   serviceNowUrl: 'ServiceNow URL'
+  adfs: AdfsClientCredentialsWithCertificate
+  adfsUrl: ADFS URL
+  resourceID: Resource ID
+  clientID: Client ID
+  privateKey: Private Key
+  serviceNowViewPermissions: View ServiceNow permissions required
+
 k8:
   delegateOutClusterInfo: 'Specify master URL and credentials'
   delegateInClusterInfo: '{{ $.connectors.delegateInClusterInfo }}'

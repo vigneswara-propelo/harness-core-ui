@@ -2753,7 +2753,13 @@ export interface StringsMap {
   'connectors.selectConnector': string
   'connectors.selectConnectorLabel': string
   'connectors.selectConnectors': string
+  'connectors.serviceNow.adfs': string
+  'connectors.serviceNow.adfsUrl': string
+  'connectors.serviceNow.clientID': string
+  'connectors.serviceNow.privateKey': string
+  'connectors.serviceNow.resourceID': string
   'connectors.serviceNow.serviceNowUrl': string
+  'connectors.serviceNow.serviceNowViewPermissions': string
   'connectors.showInstructions': string
   'connectors.specifyArtifactRepo': string
   'connectors.specifyArtifactRepoType': string
@@ -2866,9 +2872,14 @@ export interface StringsMap {
   'connectors.unableToUpdateConnector': string
   'connectors.updatedSuccessfully': string
   'connectors.updating': string
+  'connectors.validation.adfsUrl': string
+  'connectors.validation.certificate': string
+  'connectors.validation.clientID': string
   'connectors.validation.connectorIsRequired': string
   'connectors.validation.endpointUrl': string
   'connectors.validation.personalAccessToken': string
+  'connectors.validation.privateKey': string
+  'connectors.validation.resourceID': string
   'connectors.validation.serviceNowUrl': string
   'connectors.validationPath': string
   'connectors.verifyConnection': string
