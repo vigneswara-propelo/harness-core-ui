@@ -10,10 +10,12 @@ import cx from 'classnames'
 import { connect, FormikContextType } from 'formik'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
-
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, Container, Text } from '@harness/uicore'
+import { Container, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import List from '@common/components/List/List'
+import { isValueRuntimeInput } from '@common/utils/utils'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
@@ -28,11 +30,10 @@ function TgPlanRemoteSectionRef(
     formik?: FormikContextType<any>
   }
 ): React.ReactElement {
-  const { remoteVar, index, allowableTypes, formik } = props
+  const { remoteVar, index, allowableTypes, formik, readonly, initialValues, path, inputSetData, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const { readonly, initialValues, path } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -57,12 +58,12 @@ function TgPlanRemoteSectionRef(
 
   return (
     <>
-      <Container flex width={300} padding={{ bottom: 'small' }}>
+      <Container flex width={150} padding={{ bottom: 'small' }}>
         <Text font={{ weight: 'bold' }}>{getString('cd.varFile')}:</Text>
         {get(remoteVar.varFile, 'identifier')}
       </Container>
 
-      {getMultiTypeFromValue(get(remoteVar.varFile, 'spec.store.spec.connectorRef')) === MultiTypeInputType.RUNTIME && (
+      {isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.connectorRef')) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField
             accountIdentifier={accountId}
@@ -73,7 +74,7 @@ function TgPlanRemoteSectionRef(
             )}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
-            width={445}
+            width={388}
             type={[get(remoteVar.varFile, 'spec.store.type')]}
             name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.connectorRef`}
             label={getString('connector')}
@@ -86,34 +87,43 @@ function TgPlanRemoteSectionRef(
         </div>
       )}
 
-      {getMultiTypeFromValue(get(remoteVar.varFile, 'spec.store.spec.branch')) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
-            name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.branch`}
-            label={getString('pipelineSteps.deploy.inputSet.branch')}
+      {isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.branch')) && (
+        <TextFieldInputSetView
+          name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.branch`}
+          label={getString('pipelineSteps.deploy.inputSet.branch')}
+          className={cx(stepCss.formGroup, stepCss.md)}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          disabled={readonly}
+          template={inputSetData?.template}
+          fieldPath={`spec.configuration.varFiles[${index}].varFile.spec.store.spec.branch`}
+        />
+      )}
+      {
+        /* istanbul ignore next */ isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.commitId')) && (
+          <TextFieldInputSetView
+            name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.commitId`}
+            label={getString('pipeline.manifestType.commitId')}
+            className={cx(stepCss.formGroup, stepCss.md)}
             multiTextInputProps={{
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            disabled={readonly}
+            template={inputSetData?.template}
+            fieldPath={`spec.configuration.varFiles[${index}].varFile.spec.store.spec.commitId`}
           />
-        </div>
-      )}
-      {
-        /* istanbul ignore next */ getMultiTypeFromValue(get(remoteVar.varFile, 'spec.store.spec.commitId')) ===
-          MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTextInput
-              name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.commitId`}
-              label={getString('pipeline.manifestType.commitId')}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-            />
-          </div>
         )
       }
-      {getMultiTypeFromValue(get(remoteVar.varFile, 'spec.store.spec.paths')) === MultiTypeInputType.RUNTIME && (
+      {isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.paths')) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <List
             label={getString('filePaths')}

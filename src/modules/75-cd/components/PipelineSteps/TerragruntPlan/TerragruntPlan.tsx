@@ -381,7 +381,7 @@ function TerragruntPlanWidget(
   const inlineBackendConfig = (formik: FormikProps<TGPlanFormData>): React.ReactElement => (
     <div className={cx(stepCss.formGroup, css.addMarginBottom)}>
       <MultiTypeFieldSelector
-        name="spec.configuration.backendConfig.spec.conten"
+        name="spec.configuration.backendConfig.spec.content"
         label={
           <Text style={{ color: 'rgb(11, 11, 13)' }}>
             {getString('optionalField', { name: getString('cd.backEndConfig') })}
@@ -761,7 +761,7 @@ function TerragruntPlanWidget(
                               {backendConfigFilePath && (
                                 <>
                                   <Text font="normal" lineClamp={1} width={200}>
-                                    /{backendConfigFilePath}
+                                    {`/${backendConfigFilePath}`}
                                   </Text>
                                   <Button
                                     minimal
@@ -797,7 +797,11 @@ function TerragruntPlanWidget(
                               </Text>
                             )
                           }}
-                          style={{ marginTop: 'var(--spacing-small)', marginBottom: 'var(--spacing-small)' }}
+                          style={{
+                            marginTop: 'var(--spacing-small)',
+                            marginBottom: 'var(--spacing-small)',
+                            width: 460
+                          }}
                           disabled={readonly}
                         />
                       </div>
@@ -1002,13 +1006,6 @@ export class TerragruntPlan extends PipelineStep<TGPlanFormData> {
         ...data.spec,
         configuration: {
           ...configData,
-          secretManagerRef: defaultTo(get(configData, 'secretManagerRef'), ''),
-          moduleConfig: {
-            terragruntRunType: 'RunModule',
-            path: defaultTo(get(configData.moduleConfig, 'path'), '')
-          },
-          configFiles: defaultTo(get(configData, 'configFiles'), {} as any),
-          command: defaultTo(configData.command, 'Apply'),
           targets: !isTargetRunTime
             ? Array.isArray(get(configData, 'targets'))
               ? (get(configData, 'targets') as string[]).map((target: string) => ({
@@ -1025,8 +1022,7 @@ export class TerragruntPlan extends PipelineStep<TGPlanFormData> {
                   id: uuid()
                 }))
               : [{ key: '', value: '', id: uuid() }]
-            : get(configData, 'environmentVariables'),
-          exportTerragruntPlanJson: get(configData, 'exportTerragruntPlanJson')
+            : get(configData, 'environmentVariables')
         }
       }
     }

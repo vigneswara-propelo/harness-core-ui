@@ -21,7 +21,7 @@ exports[`<TgVarFile /> tests snapshot test for tg var files 1`] = `
   </div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--padding-bottom-small"
-    style="width: 300px;"
+    style="width: 150px;"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"

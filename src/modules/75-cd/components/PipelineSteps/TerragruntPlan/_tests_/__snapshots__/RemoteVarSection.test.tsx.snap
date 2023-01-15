@@ -4,7 +4,7 @@ exports[`Config section tests initial render with basic data 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--padding-bottom-small"
-    style="width: 300px;"
+    style="width: 150px;"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
@@ -38,12 +38,12 @@ exports[`Config section tests initial render with basic data 1`] = `
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 445px;"
+              style="width: 388px;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-stages[0].stage.spec.execution.steps[0].step.spec.configuration.varFiles[0].varFile.spec.store.spec.connectorRef"
-                style="width: 445px;"
+                style="width: 388px;"
                 type="button"
               >
                 <span
@@ -111,7 +111,7 @@ exports[`Config section tests initial render with basic data 1`] = `
     </div>
   </div>
   <div
-    class="formGroup md"
+    class="fieldAndOptions formGroup md"
   >
     <div
       class="bp3-form-group"

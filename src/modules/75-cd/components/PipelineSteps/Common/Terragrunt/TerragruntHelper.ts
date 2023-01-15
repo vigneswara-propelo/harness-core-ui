@@ -22,7 +22,8 @@ import type { TerragruntData, TGPlanFormData } from './TerragruntInterface'
 export const onSubmitTerragruntData = (values: TerragruntData): TerragruntData => {
   const configObject: TerragruntExecutionData = {
     configFiles: {} as TerragruntConfigFilesWrapper,
-    moduleConfig: {} as TerragruntModuleConfig
+    moduleConfig: {} as TerragruntModuleConfig,
+    workspace: values.spec.configuration?.spec?.workspace
   }
   const envVars = values.spec.configuration?.spec?.environmentVariables
   const envMap: StringNGVariable[] = []

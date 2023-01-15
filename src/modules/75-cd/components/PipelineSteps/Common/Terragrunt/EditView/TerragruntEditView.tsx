@@ -322,6 +322,7 @@ export default function TerragruntEitView(
             formik.setValues(valObj)
             setConnectorView(false)
             setShowModal(false)
+            setShowBackendConfigRemoteWizard(false)
           }}
         />
       </StepWizard>
@@ -430,7 +431,6 @@ export default function TerragruntEitView(
         {(formik: FormikProps<TerragruntData>) => {
           const { values, setFieldValue } = formik
           setFormikRef(formikRef, formik)
-
           const configFile = formik.values.spec.configuration.spec?.configFiles
           const configFilePath = getConfigFilePath(configFile)
           const backendConfigFile =
@@ -693,7 +693,7 @@ export default function TerragruntEitView(
                                   {backendConfigFilePath && (
                                     <>
                                       <Text font="normal" lineClamp={1} width={200}>
-                                        {backendConfigFilePath}
+                                        /{backendConfigFilePath}
                                       </Text>
                                       <Button
                                         minimal
@@ -730,7 +730,11 @@ export default function TerragruntEitView(
                                   </Text>
                                 )
                               }}
-                              style={{ marginTop: 'var(--spacing-small)', marginBottom: 'var(--spacing-small)' }}
+                              style={{
+                                marginTop: 'var(--spacing-small)',
+                                marginBottom: 'var(--spacing-small)',
+                                width: 460
+                              }}
                             />
                           </div>
                           <div className={css.divider} />

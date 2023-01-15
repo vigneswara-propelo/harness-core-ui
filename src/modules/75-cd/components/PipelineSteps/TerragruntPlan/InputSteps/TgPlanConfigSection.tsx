@@ -9,12 +9,13 @@ import React from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType, Label, Layout } from '@harness/uicore'
+import { Label, Layout } from '@harness/uicore'
 import { connect } from 'formik'
 import { Color } from '@harness/design-system'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import { Connectors } from '@connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -32,7 +33,6 @@ function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.
   const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType, isBackendConfig } = props
   const template = inputSetData?.template
   const configPath = getPath(false, true, isBackendConfig)
-  const config = template?.spec?.configuration
   const configSpec = get(template, `${configPath}.store`)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -49,26 +49,8 @@ function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.
           }
         </Label>
       )}
-      {getMultiTypeFromValue(config?.workspace) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.spec.configuration.workspace`}
-            placeholder={getString('pipeline.terraformStep.workspace')}
-            label={getString('pipelineSteps.workspace')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            template={template}
-            fieldPath={`${path}.spec.configuration.workspace`}
-          />
-        </div>
-      )}
-      {getMultiTypeFromValue(configSpec?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && (
+
+      {isValueRuntimeInput(configSpec?.spec?.connectorRef) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField
             accountIdentifier={accountId}
@@ -79,7 +61,7 @@ function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
-            width={400}
+            width={388}
             type={[Connectors.GIT, Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET]}
             name={`${path}.${configPath}.store.spec.connectorRef`}
             label={getString('connector')}
@@ -90,112 +72,106 @@ function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.
           />
         </div>
       )}
-      {getMultiTypeFromValue(configSpec?.spec?.repoName) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            label={getString('pipelineSteps.repoName')}
-            name={`${path}.${configPath}.store.spec.repoName`}
-            placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            template={template}
-            fieldPath={`${path}.${configPath}.store.spec.repoName`}
-          />
-        </div>
+      {isValueRuntimeInput(configSpec?.spec?.repoName) && (
+        <TextFieldInputSetView
+          label={getString('pipelineSteps.repoName')}
+          name={`${path}.${configPath}.store.spec.repoName`}
+          placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={template}
+          fieldPath={`${configPath}.store.spec.repoName`}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
 
-      {getMultiTypeFromValue(configSpec?.spec?.branch) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            label={getString('pipelineSteps.deploy.inputSet.branch')}
-            name={`${path}.${configPath}.store.spec.branch`}
-            placeholder={getString('pipeline.manifestType.branchPlaceholder')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            template={template}
-            fieldPath={`${path}.${configPath}.store.spec.branch`}
-          />
-        </div>
+      {isValueRuntimeInput(configSpec?.spec?.branch) && (
+        <TextFieldInputSetView
+          label={getString('pipelineSteps.deploy.inputSet.branch')}
+          name={`${path}.${configPath}.store.spec.branch`}
+          placeholder={getString('pipeline.manifestType.branchPlaceholder')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={template}
+          fieldPath={`${configPath}.store.spec.branch`}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
 
-      {getMultiTypeFromValue(configSpec?.spec?.commitId) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            label={getString('pipeline.manifestType.commitId')}
-            name={`${path}.${configPath}.store.spec.commitId`}
-            placeholder={getString('pipeline.manifestType.commitPlaceholder')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            template={template}
-            fieldPath={`${path}.${configPath}.store.spec.commitId`}
-          />
-        </div>
+      {isValueRuntimeInput(configSpec?.spec?.commitId) && (
+        <TextFieldInputSetView
+          label={getString('pipeline.manifestType.commitId')}
+          name={`${path}.${configPath}.store.spec.commitId`}
+          placeholder={getString('pipeline.manifestType.commitPlaceholder')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={template}
+          fieldPath={`${configPath}.store.spec.commitId`}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
 
-      {getMultiTypeFromValue(configSpec?.spec?.folderPath) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            label={getString('common.git.folderPath')}
-            name={`${path}.${configPath}.store.spec.folderPath`}
-            placeholder={getString('pipeline.manifestType.pathPlaceholder')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            template={template}
-            fieldPath={`${path}.${configPath}.store.spec.folderPath`}
-          />
-        </div>
+      {isValueRuntimeInput(configSpec?.spec?.folderPath) && (
+        <TextFieldInputSetView
+          label={getString('common.git.folderPath')}
+          name={`${path}.${configPath}.store.spec.folderPath`}
+          placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          className={cx(stepCss.formGroup, stepCss.md)}
+          template={template}
+          fieldPath={`${configPath}.store.spec.folderPath`}
+        />
       )}
 
       {
-        /* istanbul ignore next */ configSpec?.type === 'Harness' &&
-          getMultiTypeFromValue(configSpec?.spec?.files) === MultiTypeInputType.RUNTIME && (
-            <Layout.Vertical className={cx(stepCss.inputWidth, stepCss.layoutVerticalSpacing)}>
-              <FileStoreList
-                name={`${path}.${configPath}.store.spec.files`}
-                type={fileTypes.FILE_STORE}
-                allowOnlyOne={true}
-                formik={formik}
-              />
-            </Layout.Vertical>
-          )
+        /* istanbul ignore next */ configSpec?.type === 'Harness' && isValueRuntimeInput(configSpec?.spec?.files) && (
+          <Layout.Vertical className={cx(stepCss.inputWidth, stepCss.layoutVerticalSpacing)}>
+            <FileStoreList
+              name={`${path}.${configPath}.store.spec.files`}
+              type={fileTypes.FILE_STORE}
+              allowOnlyOne={true}
+              formik={formik}
+            />
+          </Layout.Vertical>
+        )
       }
 
       {
-        /* istanbul ignore next */ configSpec?.type === 'Harness' &&
-          getMultiTypeFromValue(configSpec?.spec?.secretFiles) === MultiTypeInputType.RUNTIME && (
-            <Layout.Vertical className={cx(stepCss.inputWidth, stepCss.layoutVerticalSpacing)}>
-              <FileStoreList
-                name={`${path}.${configPath}.store.spec.secretFiles`}
-                type={fileTypes.ENCRYPTED}
-                allowOnlyOne={true}
-                formik={formik}
-              />
-            </Layout.Vertical>
-          )
+        /* istanbul ignore next */ configSpec?.type === 'Harness' && isValueRuntimeInput(configSpec?.spec?.secretFiles) && (
+          <Layout.Vertical className={cx(stepCss.inputWidth, stepCss.layoutVerticalSpacing)}>
+            <FileStoreList
+              name={`${path}.${configPath}.store.spec.secretFiles`}
+              type={fileTypes.ENCRYPTED}
+              allowOnlyOne={true}
+              formik={formik}
+            />
+          </Layout.Vertical>
+        )
       }
     </>
   )

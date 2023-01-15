@@ -98,7 +98,7 @@ export const formikOnChangeNames = (path: string) => ({
   repoName: `${path}.store.spec.repoName`,
   branch: `${path}.store.spec.branch`,
   commitId: `${path}.store.spec.commitId`,
-  folderPath: `formik.values.${path}.store.spec.folderPath`,
+  folderPath: `${path}.store.spec.folderPath`,
   useConnectorCredentials: `${path}.moduleSource.useConnectorCredentials`
 })
 
