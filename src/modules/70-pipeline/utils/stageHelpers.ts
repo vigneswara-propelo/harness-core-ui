@@ -714,13 +714,15 @@ export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefin
   return `${selectedDeploymentType}DeploymentTypeVariables`
 }
 
-export const getAzureNexusRepoOptions = (
+export const getAllowedRepoOptions = (
   deploymentType: string,
   azureFlag?: boolean,
   isTemplateContext?: boolean
 ): SelectOption[] => {
   return !!isTemplateContext ||
     isSSHWinRMDeploymentType(deploymentType) ||
+    isTASDeploymentType(deploymentType) ||
+    isCustomDeploymentType(deploymentType) ||
     (isAzureWebAppDeploymentType(deploymentType) && azureFlag)
     ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
     : k8sRepositoryFormatTypes

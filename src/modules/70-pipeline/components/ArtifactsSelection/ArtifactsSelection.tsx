@@ -62,7 +62,10 @@ import {
   allowedArtifactTypes,
   ModalViewFor,
   isAllowedCustomArtifactDeploymentTypes,
-  isSidecarAllowed
+  isSidecarAllowed,
+  isAllowedGithubPackageRegistryDeploymentTypes,
+  isAllowedAzureArtifactDeploymentTypes,
+  isAllowedAMIDeploymentTypes
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -113,21 +116,21 @@ export default function ArtifactsSelection({
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
     }
     if (
-      [ServiceDeploymentType.Kubernetes, ServiceDeploymentType.TAS].includes(deploymentType as ServiceDeploymentType) &&
+      isAllowedGithubPackageRegistryDeploymentTypes(deploymentType) &&
       GITHUB_PACKAGES &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     }
     if (
-      deploymentType === ServiceDeploymentType.Kubernetes &&
+      isAllowedAzureArtifactDeploymentTypes(deploymentType) &&
       AZURE_ARTIFACTS_NG &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
     }
     if (
-      deploymentType === ServiceDeploymentType.Kubernetes &&
+      isAllowedAMIDeploymentTypes(deploymentType) &&
       CD_AMI_ARTIFACTS_NG &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AmazonMachineImage)
     ) {

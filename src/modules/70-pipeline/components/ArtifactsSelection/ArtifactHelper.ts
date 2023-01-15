@@ -28,7 +28,27 @@ export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDe
     deploymentType === ServiceDeploymentType.Kubernetes ||
     deploymentType === ServiceDeploymentType.NativeHelm ||
     deploymentType === ServiceDeploymentType.ECS ||
-    deploymentType == ServiceDeploymentType.TAS
+    deploymentType === ServiceDeploymentType.TAS
+  )
+}
+
+export const isAllowedGithubPackageRegistryDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+  return (
+    deploymentType === ServiceDeploymentType.Kubernetes ||
+    deploymentType === ServiceDeploymentType.TAS ||
+    deploymentType === ServiceDeploymentType.CustomDeployment
+  )
+}
+
+export const isAllowedAzureArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+  return (
+    deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.CustomDeployment
+  )
+}
+
+export const isAllowedAMIDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+  return (
+    deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.CustomDeployment
   )
 }
 
@@ -203,6 +223,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Jenkins,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+    ENABLED_ARTIFACT_TYPES.Nexus2Registry,
     ENABLED_ARTIFACT_TYPES.AmazonS3,
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Ecr,

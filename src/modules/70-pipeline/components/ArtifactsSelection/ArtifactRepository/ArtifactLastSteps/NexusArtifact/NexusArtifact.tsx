@@ -47,7 +47,7 @@ import {
   Nexus2InitialValuesType,
   RepositoryPortOrServer
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { RepositoryFormatTypes, getAzureNexusRepoOptions } from '@pipeline/utils/stageHelpers'
+import { RepositoryFormatTypes, getAllowedRepoOptions } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -465,7 +465,7 @@ export function Nexus3Artifact({
                 <FormInput.Select
                   name="repositoryFormat"
                   label={getString('common.repositoryFormat')}
-                  items={getAzureNexusRepoOptions(
+                  items={getAllowedRepoOptions(
                     selectedDeploymentType,
                     AZURE_WEB_APP_NG_NEXUS_PACKAGE,
                     hideHeaderAndNavBtns

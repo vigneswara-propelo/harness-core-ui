@@ -76,7 +76,10 @@ import {
   ArtifactIconByType,
   ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES,
+  isAllowedAMIDeploymentTypes,
+  isAllowedAzureArtifactDeploymentTypes,
   isAllowedCustomArtifactDeploymentTypes,
+  isAllowedGithubPackageRegistryDeploymentTypes,
   isSidecarAllowed,
   ModalViewFor
 } from './ArtifactHelper'
@@ -172,21 +175,21 @@ export default function ServiceV2ArtifactsSelection({
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
     }
     if (
-      [ServiceDeploymentType.Kubernetes, ServiceDeploymentType.TAS].includes(deploymentType as ServiceDeploymentType) &&
+      isAllowedGithubPackageRegistryDeploymentTypes(deploymentType) &&
       GITHUB_PACKAGES &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     }
     if (
-      deploymentType === ServiceDeploymentType.Kubernetes &&
+      isAllowedAzureArtifactDeploymentTypes(deploymentType) &&
       AZURE_ARTIFACTS_NG &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
     }
     if (
-      deploymentType === ServiceDeploymentType.Kubernetes &&
+      isAllowedAMIDeploymentTypes(deploymentType) &&
       CD_AMI_ARTIFACTS_NG &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AmazonMachineImage)
     ) {
