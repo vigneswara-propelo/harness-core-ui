@@ -15,7 +15,7 @@ import { accountPathProps, orgPathProps, pipelineModuleParams, projectPathProps 
 import { TestWrapper } from '@common/utils/testUtils'
 import { mockBranches, gitConnectorMock, mockRepos } from '@gitsync/components/GitSyncForm/__tests__/mockdata'
 import { useStrings } from 'framework/strings'
-import useImportResource from '../useImportResource'
+import useMigrateResource from '../useMigrateResource'
 
 jest.mock('services/pipeline-ng', () => ({
   useImportPipeline: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' }))
@@ -57,7 +57,7 @@ const onFailure = jest.fn()
 
 function Component() {
   const { getString } = useStrings()
-  const { showImportResourceModal } = useImportResource({
+  const { showMigrateResourceModal: showImportResourceModal } = useMigrateResource({
     resourceType: ResourceType.PIPELINES,
     modalTitle: getString('common.importEntityFromGit', { entityType: getString('common.pipeline') }),
     onSuccess,
@@ -68,7 +68,7 @@ function Component() {
 }
 
 function ComponentWithoutTitleProp() {
-  const { showImportResourceModal } = useImportResource({
+  const { showMigrateResourceModal: showImportResourceModal } = useMigrateResource({
     resourceType: ResourceType.PIPELINES,
     onSuccess,
     onFailure

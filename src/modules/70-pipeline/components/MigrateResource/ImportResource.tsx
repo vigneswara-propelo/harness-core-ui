@@ -33,8 +33,8 @@ import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandl
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
-import type { ExtraQueryParams, InitialValuesType, ModifiedInitialValuesType } from './useImportResource'
-import css from './ImportResource.module.scss'
+import type { ExtraQueryParams, InitialValuesType, ModifiedInitialValuesType } from './MigrateUtils'
+import css from './MigrateResource.module.scss'
 
 export interface ImportResourceProps {
   resourceType: ResourceType
@@ -265,7 +265,7 @@ export default function ImportResource({
   }, [initialValues])
 
   return (
-    <Container className={css.importResourceForm}>
+    <Container className={css.migrateResourceForm}>
       <Formik<ModifiedInitialValuesType>
         initialValues={modifiedInitialValues}
         formName="importResource"
@@ -303,6 +303,7 @@ export default function ImportResource({
                         }
                       : undefined
                   }
+                  className={css.gitSyncForm}
                 />
 
                 <Container padding={{ top: 'xlarge' }}>

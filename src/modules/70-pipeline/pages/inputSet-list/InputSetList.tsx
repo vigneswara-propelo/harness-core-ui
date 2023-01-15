@@ -32,7 +32,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
-import useImportResource from '@pipeline/components/ImportResource/useImportResource'
+import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncInterface'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
@@ -78,7 +78,7 @@ function InputSetList(): React.ReactElement {
     debounce: !isEmpty(searchParam) ? 300 : false
   })
 
-  const { showImportResourceModal } = useImportResource({
+  const { showMigrateResourceModal: showImportResourceModal } = useMigrateResource({
     resourceType: ImportResourceType.INPUT_SETS,
     modalTitle: getString('common.importEntityFromGit', { resourceType: getString('inputSets.inputSetLabel') }),
     onSuccess: refetch,
@@ -353,6 +353,7 @@ function InputSetList(): React.ReactElement {
             gotoPage={setPage}
             pipelineHasRuntimeInputs={pipelineHasRuntimeInputs}
             isPipelineInvalid={isPipelineInvalid}
+            pipelineStoreType={pipelineMetadata?.data?.storeType as StoreType}
             goToInputSetDetail={inputSetTemp => {
               setSelectedInputSet({
                 identifier: inputSetTemp?.identifier,

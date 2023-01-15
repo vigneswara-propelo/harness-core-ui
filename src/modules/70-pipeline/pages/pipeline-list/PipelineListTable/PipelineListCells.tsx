@@ -39,6 +39,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { getReadableDateTime } from '@common/utils/dateUtils'
+import { ResourceType as GitResourceType } from '@common/interfaces/GitSyncInterface'
 import type { PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
@@ -47,12 +48,14 @@ import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
 import { killEvent } from '@common/utils/eventUtils'
 import RbacButton from '@rbac/components/Button/Button'
+import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
+import { MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import type { PipelineListColumnActions } from './PipelineListTable'
 import css from './PipelineListTable.module.scss'
 
-export const LabeValue = ({ label, value }: { label: string; value: ReactNode }) => {
+export const LabeValue = ({ label, value }: { label: string; value: ReactNode }): JSX.Element => {
   return (
     <Layout.Horizontal spacing="xsmall">
       <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
@@ -314,6 +317,14 @@ export const MenuCell: CellType = ({ row, column }) => {
     storeType: data.storeType as StoreType
   })
 
+  const { showMigrateResourceModal: showMoveResourceModal } = useMigrateResource({
+    resourceType: GitResourceType.PIPELINES,
+    modalTitle: getString('common.moveEntitytoGit', { resourceType: getString('common.pipeline') }),
+    migrationType: MigrationType.INLINE_TO_REMOTE,
+    extraQueryParams: { pipelineIdentifier: data.identifier, name: data?.name },
+    onSuccess: () => column.refetchList?.()
+  })
+
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }} onClick={killEvent}>
       <Popover className={Classes.DARK} position={Position.LEFT}>
@@ -341,6 +352,16 @@ export const MenuCell: CellType = ({ row, column }) => {
               column.onClonePipeline!(data)
             }}
           />
+          {data?.storeType === StoreType.INLINE ? (
+            <Menu.Item
+              icon="git-merge"
+              text={getString('common.moveToGit')}
+              onClick={() => {
+                showMoveResourceModal()
+              }}
+            />
+          ) : null}
+
           <Menu.Item
             icon="trash"
             text={getString('delete')}

@@ -31,6 +31,7 @@ import css from './PipelineListTable.module.scss'
 export interface PipelineListColumnActions {
   onDeletePipeline?: (commitMsg: string, pipeline: PMSPipelineSummaryResponse) => Promise<void>
   onClonePipeline?: (pipeline: PMSPipelineSummaryResponse) => void
+  refetchList?: () => void
 }
 
 export interface PipelineListTableProps extends PipelineListColumnActions {
@@ -46,6 +47,7 @@ export function PipelineListTable({
   gotoPage,
   onDeletePipeline,
   onClonePipeline,
+  refetchList,
   sortBy,
   setSortBy,
   minimal
@@ -121,7 +123,8 @@ export function PipelineListTable({
         Cell: MenuCell,
         disableSortBy: true,
         onDeletePipeline,
-        onClonePipeline
+        onClonePipeline,
+        refetchList
       },
       minimal && {
         Header: '',

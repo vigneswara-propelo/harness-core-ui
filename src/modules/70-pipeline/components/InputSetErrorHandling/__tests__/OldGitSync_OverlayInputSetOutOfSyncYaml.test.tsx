@@ -6,17 +6,17 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import { render, RenderResult, screen, waitFor, findByText as findByTextBody } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import userEvent from '@testing-library/user-event'
-import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
-import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
+import { accountPathProps, pipelineModuleParams, inputSetFormPathProps } from '@common/utils/routeUtils'
 import * as pipelineng from 'services/pipeline-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 import { OverlayInputSetForm } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
 import { gitHubMock } from '@gitsync/components/gitSyncRepoForm/__tests__/mockData'
 import {
@@ -29,9 +29,12 @@ import {
 } from '../../InputSetForm/__tests__/InputSetMocks'
 import {
   GetInputSetsInlineResponse,
+  GetInputSetsOldGitSyncResponse,
   GetInvalidInputSetInline,
-  GetInvalidOverlayISInline,
+  GetInvalidOverlayISOldGitSync,
+  GetInvalidOverlayOldGitSync,
   GetOverlayISYamlDiffInline,
+  GetOverlayISYamlDiffOldGitSync,
   GetYamlDiffDelResponse,
   mockBranches,
   mockRepos
@@ -44,7 +47,7 @@ function YamlMock({ children, bind }: { children: JSX.Element; bind: YamlBuilder
   const handler = React.useMemo(
     () =>
       ({
-        getLatestYaml: () => GetInvalidOverlayISInline.data?.data?.overlayInputSetYaml || '',
+        getLatestYaml: () => GetInvalidOverlayOldGitSync.data?.data?.overlayInputSetYaml || '',
         getYAMLValidationErrorMap: () => new Map()
       } as YamlBuilderHandlerBinding),
     []
@@ -128,7 +131,7 @@ jest.mock('services/pipeline-ng', () => ({
   useDeleteInputSetForPipeline: jest.fn(() => ({ mutate: jest.fn() })),
   useGetTemplateFromPipeline: jest.fn(() => TemplateResponse),
   useGetStagesExecutionList: jest.fn(() => ({})),
-  useGetOverlayInputSetForPipeline: jest.fn(() => GetInvalidOverlayISInline),
+  useGetOverlayInputSetForPipeline: jest.fn(() => GetInvalidOverlayOldGitSync),
   useCreateInputSetForPipeline: jest.fn(() => ({ mutate: jest.fn() })),
   useUpdateInputSetForPipeline: jest.fn().mockImplementation(() => ({ mutate: successResponse })),
   useUpdateOverlayInputSetForPipeline: jest.fn().mockImplementation(() => ({ mutate: successResponse })),
@@ -155,56 +158,104 @@ const intersectionObserverMock = (): any => ({
 
 window.IntersectionObserver = jest.fn().mockImplementation(intersectionObserverMock)
 
-const TEST_INPUT_SET_PATH = routes.toInputSetList({
+const TEST_INPUT_SET_FORM_PATH = routes.toInputSetForm({
   ...accountPathProps,
-  ...pipelinePathProps,
+  ...inputSetFormPathProps,
   ...pipelineModuleParams
 })
 
-const renderComponent = (): RenderResult => {
+const renderGitSyncComponent = (): RenderResult => {
   return render(
-    <TestWrapper
-      path={TEST_INPUT_SET_PATH}
+    <GitSyncTestWrapper
+      path={TEST_INPUT_SET_FORM_PATH}
       pathParams={{
         accountId: 'dummy',
         orgIdentifier: 'dummy',
         projectIdentifier: 'dummy',
         pipelineIdentifier: 'testpip',
+        inputSetIdentifier: 'test_input_set',
         module: 'cd'
       }}
       queryParams={{
-        storeType: 'INLINE'
+        repoIdentifier: 'oldgitsyncharness',
+        branch: 'master'
       }}
-      defaultAppStoreValues={defaultAppStoreValues}
+      defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
     >
-      <OverlayInputSetForm hideForm={jest.fn()} identifier="overlayInp1" />
-    </TestWrapper>
+      <OverlayInputSetForm
+        hideForm={jest.fn()}
+        identifier="overlayInpG1"
+        overlayInputSetBranch="master"
+        overlayInputSetRepoIdentifier="oldgitsyncharness"
+      />
+    </GitSyncTestWrapper>
   )
 }
 
-describe('Inline Overlay Input Set Error Exp', () => {
-  test('should open yaml view and render out of sync error strip ', async () => {
-    renderComponent()
-    jest.runOnlyPendingTimers()
+describe('Old Git Sync Input Set Error Exp', () => {
+  beforeAll(() => {
+    jest.mock('services/pipeline-ng', () => ({
+      useGetInputSetForPipeline: jest.fn(() => GetInvalidOverlayISOldGitSync),
+      useYamlDiffForInputSet: jest.fn(() => GetOverlayISYamlDiffOldGitSync),
+      useGetInputSetsListForPipeline: jest.fn(() => GetInputSetsOldGitSyncResponse)
+    }))
+  })
 
-    const container = findDialogContainer()
+  test('should open yaml view and render out of sync error strip ', async () => {
+    renderGitSyncComponent()
     expect(screen.getByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })).toBeDefined()
-    expect(container).toMatchSnapshot()
   })
 
   test('should open reconcile dialog on clicking reconcile button, when loading state is false & input set is not empty', async () => {
-    renderComponent()
+    jest.spyOn(pipelineng, 'useYamlDiffForInputSet').mockImplementation((): any => GetOverlayISYamlDiffOldGitSync)
+    renderGitSyncComponent()
     jest.runOnlyPendingTimers()
 
     const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
     userEvent.click(reconcileBtn)
     expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 
-    await screen.findByText('pipeline.inputSetErrorStrip.reconcileDialogTitle')
+    const reconcileDialog = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
+    await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
     const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
+    expect(reconcileDialog).toMatchSnapshot('Reconcile Dialog - Old Git Sync')
+
     userEvent.click(removeInvalidFieldBtn)
+    let gitSaveBtn: HTMLElement
+    await waitFor(async () => {
+      const portalDiv = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
+      const savePipelinesToGitHeader = await screen.findByText('common.git.saveResourceLabel')
+      expect(savePipelinesToGitHeader).toBeInTheDocument()
+      const gitSave = await findByTextBody(portalDiv, 'save')
+      gitSaveBtn = gitSave.parentElement as HTMLElement
+      expect(gitSaveBtn).toBeInTheDocument()
+    })
+    userEvent.click(gitSaveBtn!)
     await waitFor(() => expect(pipelineng.useUpdateOverlayInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
+  })
+
+  test('should not update overlay input set as status is ERROR', async () => {
+    jest.spyOn(pipelineng, 'useUpdateOverlayInputSetForPipeline').mockImplementation((): any => {
+      return {
+        mutate: () =>
+          Promise.reject({
+            status: 'ERROR'
+          })
+      }
+    })
+    renderGitSyncComponent()
+    jest.runOnlyPendingTimers()
+
+    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
+    userEvent.click(reconcileBtn)
+    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+
+    const reconcileDialog = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
+    await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
+    const removeInvalidFieldBtn = screen.getByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
+    userEvent.click(removeInvalidFieldBtn)
+    await waitFor(() => expect(pipelineng.useUpdateOverlayInputSetForPipeline).toHaveBeenCalled())
   })
 
   test('should open delete input set modal on clicking reconcile button, if input set is empty', async () => {
@@ -217,15 +268,18 @@ describe('Inline Overlay Input Set Error Exp', () => {
           })
       }
     })
-    renderComponent()
+    renderGitSyncComponent()
     jest.runOnlyPendingTimers()
 
     const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
     userEvent.click(reconcileBtn)
     expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 
-    await screen.findByText('pipeline.inputSets.invalidOverlayISDesc1')
+    const deleteInputSetModal = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
+    await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidOverlayISDesc1')
     const deleteOverlayISBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.deleteOverlayIS' })
+    expect(deleteInputSetModal).toMatchSnapshot('Delete Overlay Input Set Modal - OLd Git Sync')
+
     userEvent.click(deleteOverlayISBtn)
     await waitFor(() => expect(pipelineng.useDeleteInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())

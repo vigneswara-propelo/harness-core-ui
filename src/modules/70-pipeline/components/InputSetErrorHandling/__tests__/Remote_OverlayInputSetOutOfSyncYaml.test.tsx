@@ -6,18 +6,20 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import { render, RenderResult, screen, waitFor, findByText as findByTextBody, findByRole } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
+import gitSyncListResponse from '@common/utils/__tests__/mocks/gitSyncRepoListMock.json'
 import routes from '@common/RouteDefinitions'
-import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
+import { accountPathProps, pipelineModuleParams, inputSetFormPathProps } from '@common/utils/routeUtils'
 import * as pipelineng from 'services/pipeline-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { OverlayInputSetForm } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { gitHubMock } from '@gitsync/components/gitSyncRepoForm/__tests__/mockData'
 import {
   TemplateResponse,
@@ -29,9 +31,12 @@ import {
 } from '../../InputSetForm/__tests__/InputSetMocks'
 import {
   GetInputSetsInlineResponse,
+  GetInputSetsRemoteGitSyncResponse,
   GetInvalidInputSetInline,
   GetInvalidOverlayISInline,
+  GetInvalidOverlayISRemote,
   GetOverlayISYamlDiffInline,
+  GetOverlayISYamlDiffRemote,
   GetYamlDiffDelResponse,
   mockBranches,
   mockRepos
@@ -73,6 +78,8 @@ jest.mock('@common/components/MonacoEditor/MonacoEditor')
 jest.useFakeTimers()
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
+const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
+const getGitConnector = jest.fn(() => Promise.resolve(gitHubMock))
 const fetchRepos = jest.fn(() => Promise.resolve(mockRepos))
 const fetchBranches = jest.fn(() => Promise.resolve(mockBranches))
 
@@ -155,54 +162,96 @@ const intersectionObserverMock = (): any => ({
 
 window.IntersectionObserver = jest.fn().mockImplementation(intersectionObserverMock)
 
-const TEST_INPUT_SET_PATH = routes.toInputSetList({
+const TEST_INPUT_SET_FORM_PATH = routes.toInputSetForm({
   ...accountPathProps,
-  ...pipelinePathProps,
+  ...inputSetFormPathProps,
   ...pipelineModuleParams
 })
 
-const renderComponent = (): RenderResult => {
+const renderGitSimpComponent = (): RenderResult => {
   return render(
     <TestWrapper
-      path={TEST_INPUT_SET_PATH}
+      path={TEST_INPUT_SET_FORM_PATH}
       pathParams={{
         accountId: 'dummy',
         orgIdentifier: 'dummy',
         projectIdentifier: 'dummy',
         pipelineIdentifier: 'testpip',
+        inputSetIdentifier: 'test_input_set',
         module: 'cd'
       }}
       queryParams={{
-        storeType: 'INLINE'
+        repoName: 'git-sync-harness',
+        branch: 'master',
+        connectorRef: 'Eric_Git_Con',
+        storeType: StoreType.REMOTE
       }}
-      defaultAppStoreValues={defaultAppStoreValues}
+      defaultAppStoreValues={{
+        ...defaultAppStoreValues,
+        supportingGitSimplification: true
+      }}
     >
-      <OverlayInputSetForm hideForm={jest.fn()} identifier="overlayInp1" />
+      <OverlayInputSetForm hideForm={jest.fn()} identifier="testRemOverlayInp1" />
     </TestWrapper>
   )
 }
 
-describe('Inline Overlay Input Set Error Exp', () => {
-  test('should open yaml view and render out of sync error strip ', async () => {
-    renderComponent()
-    jest.runOnlyPendingTimers()
+describe('Remote Git Sync Input Set Error Exp', () => {
+  beforeAll(() => {
+    jest.mock('services/pipeline-ng', () => ({
+      useGetInputSetForPipeline: jest.fn(() => GetInvalidOverlayISRemote),
+      useYamlDiffForInputSet: jest.fn(() => GetOverlayISYamlDiffRemote),
+      useGetInputSetsListForPipeline: jest.fn(() => GetInputSetsRemoteGitSyncResponse),
+      useUpdateOverlayInputSetForPipeline: jest.fn().mockImplementation(() => ({ mutate: successResponse }))
+    }))
+    jest.mock('services/cd-ng', () => ({
+      useGetConnector: jest.fn().mockImplementation(() => {
+        return { data: gitHubMock.data.content[0], refetch: getGitConnector, loading: false }
+      })
+    }))
 
+    jest.mock('services/cd-ng-rq', () => ({
+      useListGitSyncQuery: jest.fn().mockImplementation(() => {
+        return { data: gitSyncListResponse, refetch: getListGitSync, loading: false }
+      }),
+      useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+        return { data: sourceCodeManagers, refetch: jest.fn() }
+      })
+    }))
+  })
+
+  test('should open yaml view and render out of sync error strip ', async () => {
+    renderGitSimpComponent()
+    jest.runOnlyPendingTimers()
     const container = findDialogContainer()
     expect(screen.getByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })).toBeDefined()
     expect(container).toMatchSnapshot()
   })
 
   test('should open reconcile dialog on clicking reconcile button, when loading state is false & input set is not empty', async () => {
-    renderComponent()
+    jest.spyOn(pipelineng, 'useYamlDiffForInputSet').mockImplementation((): any => GetOverlayISYamlDiffRemote)
+    renderGitSimpComponent()
     jest.runOnlyPendingTimers()
 
     const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
     userEvent.click(reconcileBtn)
     expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 
-    await screen.findByText('pipeline.inputSetErrorStrip.reconcileDialogTitle')
+    const reconcileDialog = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
+    await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
     const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
+    expect(reconcileDialog).toMatchSnapshot('Reconcile Dialog - Remote Git Sync')
+
     userEvent.click(removeInvalidFieldBtn)
+    let gitSaveBtn: HTMLElement
+    await waitFor(async () => {
+      const portalDiv = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
+      const savePipelinesToGitHeader = await findByTextBody(portalDiv, 'common.git.saveResourceLabel')
+      expect(savePipelinesToGitHeader).toBeInTheDocument()
+      gitSaveBtn = await findByRole(portalDiv, 'button', { name: 'save' })
+      expect(gitSaveBtn).toBeInTheDocument()
+    })
+    userEvent.click(gitSaveBtn!)
     await waitFor(() => expect(pipelineng.useUpdateOverlayInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })
@@ -217,16 +266,19 @@ describe('Inline Overlay Input Set Error Exp', () => {
           })
       }
     })
-    renderComponent()
+    renderGitSimpComponent()
     jest.runOnlyPendingTimers()
 
     const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
     userEvent.click(reconcileBtn)
     expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 
-    await screen.findByText('pipeline.inputSets.invalidOverlayISDesc1')
-    const deleteOverlayISBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.deleteOverlayIS' })
-    userEvent.click(deleteOverlayISBtn)
+    const deleteInputSetModal = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
+    await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidOverlayISDesc1')
+    const deleteInputSetBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.deleteOverlayIS' })
+    expect(deleteInputSetModal).toMatchSnapshot('Delete Input Set Modal - Remote Git Sync')
+
+    userEvent.click(deleteInputSetBtn)
     await waitFor(() => expect(pipelineng.useDeleteInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })

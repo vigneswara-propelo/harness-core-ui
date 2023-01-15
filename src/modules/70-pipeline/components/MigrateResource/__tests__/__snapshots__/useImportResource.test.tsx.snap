@@ -40,7 +40,7 @@ exports[`useImportEntity tests snapshot testing 1`] = `
     </button>
   </div>
   <div
-    class="StyledProps--font StyledProps--main importResourceForm"
+    class="StyledProps--font StyledProps--main migrateResourceForm"
   >
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -153,7 +153,7 @@ exports[`useImportEntity tests snapshot testing 1`] = `
             </div>
           </div>
           <div
-            class="StyledProps--font StyledProps--main gitSyncForm StyledProps--padding-top-large"
+            class="StyledProps--font StyledProps--main gitSyncForm gitSyncForm StyledProps--padding-top-large"
           >
             <div
               class="Layout--horizontal StyledProps--main"

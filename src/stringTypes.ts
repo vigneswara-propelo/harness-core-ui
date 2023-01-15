@@ -591,6 +591,8 @@ export interface StringsMap {
   'common.moreRefineSearch': string
   'common.mostActiveServices': string
   'common.move': string
+  'common.moveEntitytoGit': string
+  'common.moveToGit': string
   'common.myProfile': string
   'common.nameOnCard': string
   'common.namePlaceholder': string
@@ -3524,6 +3526,7 @@ export interface StringsMap {
   'pipeline.dashboards.totalBuilds': string
   'pipeline.dashboards.totalExecutions': string
   'pipeline.dashboards.workloads': string
+  'pipeline.defaultMoveCommitMsg': string
   'pipeline.delegate.DelegateSelectorOptional': string
   'pipeline.deploymentFrequency': string
   'pipeline.deploymentRepo': string
@@ -3788,6 +3791,8 @@ export interface StringsMap {
   'pipeline.inputSetErrorStrip.reconcileErrorInfo': string
   'pipeline.inputSetErrorStrip.updateRuntimeFields': string
   'pipeline.inputSetErrorStrip.validYaml': string
+  'pipeline.inputSetInvalidStoreTypeCallout': string
+  'pipeline.inputSetWithInvalidStoreType': string
   'pipeline.inputSets.aboutInputSets': string
   'pipeline.inputSets.applyInputSet': string
   'pipeline.inputSets.applyInputSets': string
@@ -4009,8 +4014,10 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.VarsYAML': string
   'pipeline.manuallyTriggered': string
   'pipeline.mostRecentDirection': string
+  'pipeline.moveInlieToRemote': string
   'pipeline.moveStage.description': string
   'pipeline.moveStage.title': string
+  'pipeline.moveSuccessMessage': string
   'pipeline.multiStageExecution': string
   'pipeline.myBuildsText': string
   'pipeline.myDeploymentsText': string

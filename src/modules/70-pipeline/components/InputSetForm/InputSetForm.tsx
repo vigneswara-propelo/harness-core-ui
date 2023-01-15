@@ -53,7 +53,7 @@ import { memoizedParse, parse } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, InputSetType, Pipeline, InputSet } from '@pipeline/utils/types'
-import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import { hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import GitPopover from '../GitPopover/GitPopover'
@@ -137,7 +137,8 @@ const getInputSet = (
       gitDetails: defaultTo(inputSetObj.gitDetails, {}),
       inputSetErrorWrapper: defaultTo(inputSetObj.inputSetErrorWrapper, {}),
       entityValidityDetails: defaultTo(inputSetObj.entityValidityDetails, {}),
-      outdated: inputSetObj.outdated
+      outdated: inputSetObj.outdated,
+      storeType: inputSetObj.storeType
     }
   }
   return getDefaultInputSet(
@@ -156,6 +157,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   >()
   const { repoIdentifier, branch, inputSetRepoIdentifier, inputSetBranch, connectorRef, repoName, storeType } =
     useQueryParams<InputSetGitQueryParams>()
+
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
     gitSyncEnabledOnlyForFF,
@@ -318,20 +320,25 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
 
   React.useEffect(() => {
     if (!isEmpty(inputSet)) setFilePath(getFilePath(inputSet))
-    if (!isInputSetInvalid(inputSet)) {
+    if (!isInputSetInvalid(inputSet) && !hasStoreTypeMismatch(storeType, inputSetResponse?.data?.storeType, isEdit)) {
       setSelectedView(SelectedView.VISUAL)
     } else {
       setSelectedView(SelectedView.YAML)
     }
-  }, [inputSet, inputSet.entityValidityDetails?.valid])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputSet, inputSet.entityValidityDetails?.valid, storeType, isEdit])
 
   React.useEffect(() => {
-    if (inputSet.entityValidityDetails?.valid === false || inputSet.outdated) {
+    if (
+      inputSet.entityValidityDetails?.valid === false ||
+      inputSet.outdated ||
+      hasStoreTypeMismatch(storeType, inputSetResponse?.data?.storeType, isEdit)
+    ) {
       setDisableVisualView(true)
     } else {
       setDisableVisualView(false)
     }
-  }, [inputSet.entityValidityDetails?.valid, inputSet.outdated])
+  }, [inputSet.entityValidityDetails?.valid, inputSet.outdated, storeType, inputSetResponse?.data?.storeType, isEdit])
 
   React.useEffect(() => {
     if (inputSetIdentifier !== '-1' && !isNewInModal) {
@@ -552,7 +559,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                   }}
                   disableToggle={disableVisualView}
                   disableToggleReasonIcon={'danger-icon'}
-                  showDisableToggleReason={true}
+                  showDisableToggleReason={!hasStoreTypeMismatch(storeType, inputSet?.storeType, isEdit)}
                 />
               </div>
             </Layout.Horizontal>

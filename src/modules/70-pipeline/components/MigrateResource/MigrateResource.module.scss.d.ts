@@ -7,6 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly importResourceForm: string
+  readonly commitMessage: string
+  readonly gitSyncForm: string
+  readonly migrateResourceForm: string
 }
 export default styles

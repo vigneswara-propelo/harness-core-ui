@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.importResourceForm {
+.migrateResourceForm {
   :global {
     [class*='InputWithIdentifier--txtNameContainer'] {
       width: 350px !important;
@@ -15,6 +15,18 @@
     .bp3-input-group,
     .bp3-menu {
       width: 350px !important;
+    }
+  }
+  .gitSyncForm {
+    padding-top: 0 !important;
+  }
+
+  .commitMessage {
+    width: 350px;
+    :global {
+      textarea {
+        max-height: 150px;
+      }
     }
   }
 }

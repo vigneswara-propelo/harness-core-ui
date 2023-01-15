@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, fireEvent, act } from '@testing-library/react'
+import { render, waitFor, fireEvent, act, findByRole } from '@testing-library/react'
 import { cloneDeep, noop } from 'lodash-es'
 import { VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import type { FormikProps } from 'formik'
@@ -27,6 +27,7 @@ import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineCon
 import type { InputSetDTO } from '@pipeline/utils/types'
 import type { ResponseInputSetTemplateWithReplacedExpressionsResponse } from 'services/pipeline-ng'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
 import { EnhancedInputSetForm } from '../InputSetForm'
@@ -77,9 +78,11 @@ jest.mock('react-monaco-editor', () => ({
 jest.mock('@common/components/MonacoEditor/MonacoEditor')
 
 jest.useFakeTimers()
+const branches = { data: ['master', 'devBranch', 'feature'], status: 'SUCCESS' }
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
 const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
+const fetchBranches = jest.fn(() => Promise.resolve(branches))
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
@@ -92,6 +95,9 @@ jest.mock('services/cd-ng', () => ({
   }),
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: getListGitSync }
+  }),
+  useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
+    return { data: branches, refetch: fetchBranches, error: null, loading: false }
   })
 }))
 
@@ -180,9 +186,45 @@ const renderSetup = (form = <EnhancedInputSetForm />) =>
     </TestWrapper>
   )
 
+const renderRemoteSetup = (form = <EnhancedInputSetForm />) =>
+  render(
+    <TestWrapper
+      path={TEST_INPUT_SET_FORM_PATH}
+      pathParams={{
+        accountId: 'testAcc',
+        orgIdentifier: 'testOrg',
+        projectIdentifier: 'test',
+        pipelineIdentifier: 'pipeline',
+        inputSetIdentifier: '-1',
+        module: 'cd'
+      }}
+      queryParams={{
+        repoName: 'gitSyncRepo',
+        branch: 'feature',
+        connectorRef: 'ValidGithubRepo',
+        storeType: StoreType.REMOTE
+      }}
+      defaultAppStoreValues={defaultAppStoreValues}
+    >
+      <PipelineContext.Provider
+        value={
+          {
+            state: { pipeline: { name: '', identifier: '' } } as any,
+            getStageFromPipeline: jest.fn((_stageId, pipeline) => ({
+              stage: pipeline.stages[0],
+              parent: undefined
+            }))
+          } as any
+        }
+      >
+        {form}
+      </PipelineContext.Provider>
+    </TestWrapper>
+  )
+
 describe('Render Forms - Snapshot Testing', () => {
   test('render Input Set Form view', async () => {
-    const { getByText, container } = renderSetup()
+    const { getByText, container } = renderRemoteSetup()
     jest.runOnlyPendingTimers()
     // // Switch Mode
     // fireEvent.click(getByText('YAML'))
@@ -232,7 +274,7 @@ describe('Render Forms - Snapshot Testing', () => {
   })
 
   test('name id validation on save click', async () => {
-    const { getByText, getAllByDisplayValue } = renderSetup()
+    const { getByText, getAllByDisplayValue } = renderRemoteSetup()
     jest.runOnlyPendingTimers()
 
     // find the name field and clear the existing name
@@ -258,6 +300,12 @@ describe('Render Forms - Snapshot Testing', () => {
           pipelineIdentifier: 'pipeline',
           inputSetIdentifier: 'asd',
           module: 'cd'
+        }}
+        queryParams={{
+          repoName: 'gitSyncRepo',
+          branch: 'feature',
+          connectorRef: 'ValidGithubRepo',
+          storeType: StoreType.REMOTE
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
@@ -289,7 +337,8 @@ describe('Render Forms - Snapshot Testing', () => {
     // Switch Mode
     fireEvent.click(getByText('YAML'))
     await waitFor(() => getAllByText('Yaml View'))
-    fireEvent.click(getByText('save'))
+    const saveBtn = await findByRole(container, 'button', { name: 'save' })
+    fireEvent.click(saveBtn)
     expect(container).toMatchSnapshot()
   })
   test('showPipelineInputSetForm function', async () => {

@@ -3,7 +3,7 @@
 exports[`ImportResource - Pipeline provide required values and click on import button 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main importResourceForm"
+    class="StyledProps--font StyledProps--main migrateResourceForm"
   >
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -118,7 +118,7 @@ exports[`ImportResource - Pipeline provide required values and click on import b
             </div>
           </div>
           <div
-            class="StyledProps--font StyledProps--main gitSyncForm StyledProps--padding-top-large"
+            class="StyledProps--font StyledProps--main gitSyncForm gitSyncForm StyledProps--padding-top-large"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -444,7 +444,7 @@ exports[`ImportResource - Pipeline provide required values and click on import b
 exports[`ImportResource - Pipeline snapshot testing 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main importResourceForm"
+    class="StyledProps--font StyledProps--main migrateResourceForm"
   >
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -557,7 +557,7 @@ exports[`ImportResource - Pipeline snapshot testing 1`] = `
             </div>
           </div>
           <div
-            class="StyledProps--font StyledProps--main gitSyncForm StyledProps--padding-top-large"
+            class="StyledProps--font StyledProps--main gitSyncForm gitSyncForm StyledProps--padding-top-large"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -843,7 +843,7 @@ exports[`ImportResource - Pipeline snapshot testing 1`] = `
 exports[`ImportResource - Pipeline when import throws error WITHOUT message and responseMessages 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main importResourceForm"
+    class="StyledProps--font StyledProps--main migrateResourceForm"
   >
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -958,7 +958,7 @@ exports[`ImportResource - Pipeline when import throws error WITHOUT message and 
             </div>
           </div>
           <div
-            class="StyledProps--font StyledProps--main gitSyncForm StyledProps--padding-top-large"
+            class="StyledProps--font StyledProps--main gitSyncForm gitSyncForm StyledProps--padding-top-large"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -1284,7 +1284,7 @@ exports[`ImportResource - Pipeline when import throws error WITHOUT message and 
 exports[`ImportResource - Pipeline when import throws error WITHOUT responseMessages 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main importResourceForm"
+    class="StyledProps--font StyledProps--main migrateResourceForm"
   >
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -1399,7 +1399,7 @@ exports[`ImportResource - Pipeline when import throws error WITHOUT responseMess
             </div>
           </div>
           <div
-            class="StyledProps--font StyledProps--main gitSyncForm StyledProps--padding-top-large"
+            class="StyledProps--font StyledProps--main gitSyncForm gitSyncForm StyledProps--padding-top-large"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -1725,7 +1725,7 @@ exports[`ImportResource - Pipeline when import throws error WITHOUT responseMess
 exports[`ImportResource - Pipeline when onSuccess prop is not passed - provide required values and click on import button 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main importResourceForm"
+    class="StyledProps--font StyledProps--main migrateResourceForm"
   >
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -1840,7 +1840,7 @@ exports[`ImportResource - Pipeline when onSuccess prop is not passed - provide r
             </div>
           </div>
           <div
-            class="StyledProps--font StyledProps--main gitSyncForm StyledProps--padding-top-large"
+            class="StyledProps--font StyledProps--main gitSyncForm gitSyncForm StyledProps--padding-top-large"
           >
             <div
               class="Layout--horizontal StyledProps--main"

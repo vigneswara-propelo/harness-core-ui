@@ -269,6 +269,7 @@ function _PipelineListPage(): React.ReactElement {
               data={pipelinesQuery.data.data}
               onDeletePipeline={onDeletePipeline}
               onClonePipeline={onClonePipeline}
+              refetchList={() => pipelinesQuery.refetch()}
               setSortBy={sortArray => {
                 setSortingPreference(JSON.stringify(sortArray))
                 updateQueryParams({ sort: sortArray })

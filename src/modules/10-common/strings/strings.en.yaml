@@ -49,6 +49,7 @@ templateStartLabel: Start with Template
 duplicateId: 'Duplicate Identifier'
 createPipeline: Create a Pipeline
 importFromGit: Import From Git
+moveToGit: Move to Git
 allEnvironments: All Environments
 allServices: All Services
 production: Production
@@ -991,6 +992,7 @@ freezeWindows: Freeze Windows
 oAuthLabel: OAuth
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git
+moveEntitytoGit: Move {{resourceType}} To Git
 environmentOverrides: Environment Overrides
 serviceOverrides: Service Overrides
 invalidIdentifiers: 'Identifier must not be one of the following values: {{identifiers}}'

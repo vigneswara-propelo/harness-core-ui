@@ -50,7 +50,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
-import useImportResource from '@pipeline/components/ImportResource/useImportResource'
+import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import css from './TemplatesPage.module.scss'
@@ -189,7 +189,7 @@ export default function TemplatesPage(): React.ReactElement {
     [templateIdentifierToSettings, reloadTemplates]
   )
 
-  const { showImportResourceModal } = useImportResource({
+  const { showMigrateResourceModal: showImportResourceModal } = useMigrateResource({
     resourceType: ResourceType.TEMPLATE,
     modalTitle: getString('common.importEntityFromGit', { resourceType: getString('common.template.label') }),
     onSuccess: reloadTemplates

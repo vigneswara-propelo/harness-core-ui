@@ -346,7 +346,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/input-sets"
+              href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/input-sets?connectorRef=ValidGithubRepo&repoName=gitSyncRepo&branch=feature&storeType=REMOTE"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
@@ -615,7 +615,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/input-sets"
+              href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/input-sets?connectorRef=ValidGithubRepo&repoName=gitSyncRepo&branch=feature&storeType=REMOTE"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
@@ -1386,7 +1386,7 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/input-sets"
+              href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/input-sets?connectorRef=ValidGithubRepo&repoName=gitSyncRepo&branch=feature&storeType=REMOTE"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"

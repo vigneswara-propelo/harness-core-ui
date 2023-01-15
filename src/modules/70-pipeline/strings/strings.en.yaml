@@ -3,6 +3,7 @@ estimatedTimeRemaining: 'Estimated time remaining:'
 progressPercentage: 'Progress percentage:'
 piplineDiffTitle: pipeline.yaml (saved) ↔ pipeline.yaml (updated)
 clone: Clone Pipeline
+moveInlieToRemote: Move {{resource}} Inline to Remote
 discard: '{{ $.common.discard }}'
 serviceDependencyText: Service Dependency
 serviceDependenciesText: Service Dependencies
@@ -1381,6 +1382,8 @@ errorFramework:
 delegate:
   DelegateSelectorOptional: 'Delegate Selector (optional)'
 cannotRunInvalidPipeline: Cannot run the pipeline because it's invalid, please review the configuration.
+inputSetWithInvalidStoreType: Cannot use this input set to run the pipeline as pipeline is “Remote” (stored in git) and Input Set is “Inline” (stored in Harness DB). Please make sure that both entities are either Remote or Inline.
+inputSetInvalidStoreTypeCallout: Pipeline is Remote (stored in git) and Input Set is Inline (stored in Harness DB). Please make sure that both entities are either Remote or Inline to edit the Input Set.
 cannotRunUnsavedPipeline: Please click Save and then run the pipeline.
 cannotAddTriggerInvalidPipeline: Cannot add a trigger because pipeline is invalid, please review the configuration.
 cannotAddInputSetInvalidPipeline: Cannot add an input set because pipeline is invalid, please review the configuration.
@@ -1443,6 +1446,8 @@ OverviewEmptyStates:
   runPipelineHeaderMsg: You haven’t tried running your pipelines yet.
   runPipelineInfo: Click the button below to select a pipeline and get your {{executionsLabel}} started.
 importSuccessMessage: '{{resourceType}} has been imported successfully'
+defaultMoveCommitMsg: Moving {{resourceType}} [{{name}}] to Git
+moveSuccessMessage: '{{resourceType}} has been moved successfully'
 duplicateImport: This file is already in use. Do you still want to proceed?
 duplicateImportPipeline: This file is already in use by another pipeline. Do you still want to proceed?
 duplicateImportInputset: This file is already in use by another pipeline or input set. Do you still want to proceed?
