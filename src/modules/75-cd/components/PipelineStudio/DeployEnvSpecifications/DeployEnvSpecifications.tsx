@@ -34,6 +34,7 @@ import { getAllowableTypesWithoutFixedValue } from '@pipeline/utils/runPipelineU
 import ErrorsStripBinded from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 import type { DeployEnvironmentEntityConfig } from '@cd/components/PipelineSteps/DeployEnvironmentEntityStep/types'
 
+import { isContextTypeTemplateType } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export default function DeployEnvSpecifications(props: PropsWithChildren<unknown>): JSX.Element {
@@ -60,6 +61,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     scope,
     isReadonly,
     allowableTypes,
+    contextType,
     getStageFromPipeline,
     updateStage
   } = usePipelineContext()
@@ -128,7 +130,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
 
     return {
       environment: {
-        environmentRef: scope !== Scope.PROJECT && !CDS_OrgAccountLevelServiceEnvEnvGroup ? RUNTIME_INPUT_VALUE : ''
+        environmentRef: !(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) ? RUNTIME_INPUT_VALUE : ''
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,10 +178,9 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
                   ...(get(stage, 'stage.spec.environment', false) && {
                     environment: get(stage, 'stage.spec.environment')
                   }),
-                  ...(scope !== Scope.PROJECT &&
-                    !CDS_OrgAccountLevelServiceEnvEnvGroup && {
-                      environment: { environmentRef: RUNTIME_INPUT_VALUE }
-                    }),
+                  ...(!(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) && {
+                    environment: { environmentRef: RUNTIME_INPUT_VALUE }
+                  }),
                   ...(get(stage, 'stage.spec.environmentGroup', false) && {
                     environmentGroup: get(stage, 'stage.spec.environmentGroup')
                   })

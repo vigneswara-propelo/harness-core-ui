@@ -20,9 +20,6 @@ import {
 
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import InputDatePicker from '@common/components/InputDatePicker/InputDatePicker'
-import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
 import css from './ExecutionListFilterForm.module.scss'
 
 export type FormView = 'PIPELINE-META'
@@ -46,8 +43,6 @@ export function ExecutionListFilterForm<
   const { getString } = useStrings()
   const { module } = useParams<ModulePathParams>()
   const { type, formikProps, isCDEnabled, isCIEnabled, initialValues } = props
-
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const getBuildTypeOptions = (): React.ReactElement => {
     let buildTypeField: JSX.Element = <></>
@@ -163,50 +158,28 @@ export function ExecutionListFilterForm<
               : NO_SELECTION
           }
         /> */}
-        {!CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-          <FormInput.MultiSelect
-            items={services || []}
-            name="services"
-            label={getString('services')}
-            key="services"
-            placeholder={getString('pipeline.filters.servicePlaceholder')}
-            multiSelectProps={{
-              allowCreatingNewItems: false
-            }}
-          />
-        ) : (
-          <MultiTypeServiceField
-            name="services"
-            label={getString('services')}
-            key="services"
-            placeholder={getString('pipeline.filters.servicePlaceholder')}
-            isMultiSelect={true}
-            width={300}
-            isOnlyFixedType
-          />
-        )}
-        {!CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-          <FormInput.MultiSelect
-            items={environments || []}
-            name="environments"
-            label={getString('environments')}
-            placeholder={getString('pipeline.filters.environmentPlaceholder')}
-            key="environments"
-            multiSelectProps={{
-              allowCreatingNewItems: false
-            }}
-          />
-        ) : (
-          <MultiTypeEnvironmentField
-            name="environments"
-            label={getString('environments')}
-            placeholder={getString('pipeline.filters.environmentPlaceholder')}
-            isOnlyFixedType
-            key="environments"
-            isMultiSelect
-            width={300}
-          />
-        )}
+
+        <FormInput.MultiSelect
+          items={services || []}
+          name="services"
+          label={getString('services')}
+          key="services"
+          placeholder={getString('pipeline.filters.servicePlaceholder')}
+          multiSelectProps={{
+            allowCreatingNewItems: false
+          }}
+        />
+
+        <FormInput.MultiSelect
+          items={environments || []}
+          name="environments"
+          label={getString('environments')}
+          placeholder={getString('pipeline.filters.environmentPlaceholder')}
+          key="environments"
+          multiSelectProps={{
+            allowCreatingNewItems: false
+          }}
+        />
       </>
     )
   }

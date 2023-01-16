@@ -34,6 +34,7 @@ import type {
 } from '@cd/components/PipelineSteps/DeployServiceEntityStep/DeployServiceEntityUtils'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isContextTypeTemplateType } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import PropagateFromServiceV2 from './PropagateWidget/PropagateFromServiceV2'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
@@ -56,6 +57,7 @@ export default function DeployServiceEntitySpecifications({
     allowableTypes,
     isReadonly,
     scope,
+    contextType,
     getStageFromPipeline,
     updateStage
   } = usePipelineContext()
@@ -145,7 +147,7 @@ export default function DeployServiceEntitySpecifications({
   )
 
   useEffect(() => {
-    if (typeof stage !== 'undefined' && scope !== Scope.PROJECT) {
+    if (typeof stage !== 'undefined') {
       setDefaultServiceSchema()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -183,8 +185,7 @@ export default function DeployServiceEntitySpecifications({
     if (setupModeType === setupMode.DIFFERENT) {
       return {
         ...pick(stage?.stage?.spec, ['service', 'services']),
-        ...(scope !== Scope.PROJECT &&
-          !CDS_OrgAccountLevelServiceEnvEnvGroup &&
+        ...(!(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) &&
           isEmpty(get(stage, 'stage.spec.service.serviceRef')) &&
           isEmpty(get(stage, 'stage.spec.services.values')) && {
             service: { serviceRef: RUNTIME_INPUT_VALUE }
@@ -197,7 +198,7 @@ export default function DeployServiceEntitySpecifications({
       )
       return {
         ...pick(propogatedFromStage?.stage?.spec, ['service', 'services']),
-        ...(scope !== Scope.PROJECT &&
+        ...(!(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) &&
           isEmpty(get(stage, 'stage.spec.service.useFromStage')) && {
             service: { serviceRef: RUNTIME_INPUT_VALUE }
           })

@@ -16,15 +16,11 @@ import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { FilterDTO, PipelineExecutionFilterProperties } from 'services/pipeline-ng'
 import { usePostFilter, useUpdateFilter, useDeleteFilter, useGetFilterList } from 'services/pipeline-ng'
-import {
-  useGetEnvironmentListForProject,
-  useGetServiceDefinitionTypes,
-  useGetServiceListForProject
-} from 'services/cd-ng'
+import { useGetEnvironmentListV2, useGetServiceDefinitionTypes, useGetServiceList } from 'services/cd-ng'
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 import type { FilterInterface, FilterDataInterface } from '@common/components/Filter/Constants'
-import { useBooleanStatus, useUpdateQueryParams } from '@common/hooks'
+import { useBooleanStatus, useMutateAsGet, useUpdateQueryParams } from '@common/hooks'
 import type { PipelineType, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import {
   PipelineExecutionFormType,
@@ -44,6 +40,7 @@ import {
   useFilterWithValidFieldsWithMetaInfo
 } from '@pipeline/pages/utils/Filters/filters'
 import { StringUtils } from '@common/exports'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ExecutionListPageQueryParams } from '../types'
 import { ExecutionListFilterForm } from '../ExecutionListFilterForm/ExecutionListFilterForm'
 import { useExecutionListQueryParams } from '../utils/executionListUtil'
@@ -66,19 +63,38 @@ export function ExecutionListFilter(): React.ReactElement {
   const isCDEnabled = (selectedProject?.modules && selectedProject.modules?.indexOf('CD') > -1) || false
   const isCIEnabled = (selectedProject?.modules && selectedProject.modules?.indexOf('CI') > -1) || false
 
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+
   /**Start Data hooks */
-  const { data: servicesResponse, loading: isServicesLoading } = useGetServiceListForProject({
-    queryParams: { accountId, orgIdentifier, projectIdentifier },
-    lazy: !filterDrawerOpenedRef.current
-  })
+
   const { data: deploymentTypeResponse, loading: isDeploymentTypesLoading } = useGetServiceDefinitionTypes({
     queryParams: { accountId },
     lazy: !filterDrawerOpenedRef.current
   })
-  const { data: environmentsResponse, loading: isEnvironmentsLoading } = useGetEnvironmentListForProject({
-    queryParams: { accountId, orgIdentifier, projectIdentifier },
+
+  const { data: servicesResponse, loading: isServicesLoading } = useGetServiceList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      includeAllServicesAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
+    },
     lazy: !filterDrawerOpenedRef.current
   })
+
+  const { data: environmentsResponse, loading: isEnvironmentsLoading } = useMutateAsGet(useGetEnvironmentListV2, {
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      includeAllAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
+    },
+    body: {
+      filterType: 'Environment'
+    },
+    lazy: !filterDrawerOpenedRef.current
+  })
+
   const { mutate: createFilter, loading: isCreateFilterLoading } = usePostFilter({
     queryParams: { accountIdentifier: accountId }
   })
@@ -238,8 +254,8 @@ export function ExecutionListFilter(): React.ReactElement {
             isCDEnabled={isCDEnabled}
             isCIEnabled={isCIEnabled}
             initialValues={{
-              environments: getMultiSelectFormOptions(environmentsResponse?.data?.content),
-              services: getMultiSelectFormOptions(servicesResponse?.data?.content),
+              environments: getMultiSelectFormOptions(environmentsResponse?.data?.content, 'environment'),
+              services: getMultiSelectFormOptions(servicesResponse?.data?.content, 'service'),
               deploymentType: deploymentTypeSelectOptions
             }}
             type="PipelineExecution"
@@ -259,8 +275,8 @@ export function ExecutionListFilter(): React.ReactElement {
             buildType,
             deploymentType: serviceDefinitionTypes,
             infrastructureType,
-            services: getMultiSelectFormOptions(serviceIdentifiers),
-            environments: getMultiSelectFormOptions(envIdentifiers)
+            services: getMultiSelectFormOptions(serviceIdentifiers, 'service'),
+            environments: getMultiSelectFormOptions(envIdentifiers, 'environment')
           },
           metadata: { name, filterVisibility, identifier, filterProperties: {} }
         }}

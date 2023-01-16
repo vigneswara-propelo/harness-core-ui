@@ -83,8 +83,8 @@ jest.mock('services/cd-ng', () => ({
   useGetOrganizationList: jest.fn().mockReturnValue({ data: null, loading: false }),
   useGetProjectAggregateDTOList: jest.fn().mockReturnValue({ data: null, loading: false }),
   useGetServiceDefinitionTypes: jest.fn(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() })),
-  useGetServiceListForProject: jest.fn(() => ({ loading: false, data: services, refetch: jest.fn() })),
-  useGetEnvironmentListForProject: jest.fn(() => ({ loading: false, data: environments, refetch: jest.fn() })),
+  useGetServiceList: jest.fn(() => ({ loading: false, data: services, refetch: jest.fn() })),
+  useGetEnvironmentListV2: jest.fn(() => ({ loading: false, data: environments, refetch: jest.fn() })),
   getListOfBranchesByGitConfigPromise: jest.fn().mockReturnValue({ loading: false, data: [], refetch: jest.fn() }),
   useGetListOfBranchesWithStatus: jest.fn(() => ({
     data: branchStatusMock,

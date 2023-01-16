@@ -17,7 +17,7 @@ import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterC
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 import { isObjectEmpty, UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import { StringUtils, useToaster } from '@common/exports'
-import { useBooleanStatus, useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { useBooleanStatus, useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
 import { getBuildType, getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import {
@@ -28,11 +28,7 @@ import {
 } from '@pipeline/utils/PipelineFilterRequestUtils'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
-import {
-  useGetEnvironmentListForProject,
-  useGetServiceDefinitionTypes,
-  useGetServiceListForProject
-} from 'services/cd-ng'
+import { useGetEnvironmentListV2, useGetServiceDefinitionTypes, useGetServiceList } from 'services/cd-ng'
 import type { FilterDTO, PipelineFilterProperties } from 'services/pipeline-ng'
 import { useDeleteFilter, useGetFilterList, usePostFilter, useUpdateFilter } from 'services/pipeline-ng'
 import { killEvent } from '@common/utils/eventUtils'
@@ -40,6 +36,7 @@ import {
   useFilterWithValidFieldsWithMetaInfo,
   usePipelineListFilterFieldToLabelMapping
 } from '@pipeline/pages/utils/Filters/filters'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ExecutionListFilterForm } from '../../execution-list/ExecutionListFilterForm/ExecutionListFilterForm'
 import type {
   PipelineListPagePathParams,
@@ -63,20 +60,38 @@ export function PipelineListFilter(): React.ReactElement {
   const isCDEnabled = !!selectedProject?.modules?.includes('CD')
   const isCIEnabled = !!selectedProject?.modules?.includes('CI')
 
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+
   /**Start Data hooks */
 
   const { data: deploymentTypeResponse, loading: isDeploymentTypesLoading } = useGetServiceDefinitionTypes({
     queryParams: { accountId },
     lazy: !filterDrawerOpenedRef.current
   })
-  const { data: servicesResponse, loading: isServicesLoading } = useGetServiceListForProject({
-    queryParams: { accountId, orgIdentifier, projectIdentifier },
+
+  const { data: servicesResponse, loading: isServicesLoading } = useGetServiceList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      includeAllServicesAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
+    },
     lazy: !filterDrawerOpenedRef.current
   })
-  const { data: environmentsResponse, loading: isEnvironmentsLoading } = useGetEnvironmentListForProject({
-    queryParams: { accountId, orgIdentifier, projectIdentifier },
+
+  const { data: environmentsResponse, loading: isEnvironmentsLoading } = useMutateAsGet(useGetEnvironmentListV2, {
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      includeAllAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
+    },
+    body: {
+      filterType: 'Environment'
+    },
     lazy: !filterDrawerOpenedRef.current
   })
+
   const { mutate: createFilter, loading: isCreateFilterLoading } = usePostFilter({
     queryParams: { accountIdentifier: accountId }
   })
@@ -225,8 +240,8 @@ export function PipelineListFilter(): React.ReactElement {
             isCDEnabled={isCDEnabled}
             isCIEnabled={isCIEnabled}
             initialValues={{
-              environments: getMultiSelectFormOptions(environmentsResponse?.data?.content),
-              services: getMultiSelectFormOptions(servicesResponse?.data?.content),
+              environments: getMultiSelectFormOptions(environmentsResponse?.data?.content, 'environment'),
+              services: getMultiSelectFormOptions(servicesResponse?.data?.content, 'service'),
               deploymentType: deploymentTypeSelectOptions
             }}
             type="PipelineSetup"
@@ -245,8 +260,8 @@ export function PipelineListFilter(): React.ReactElement {
             repositoryName: repoName ? repoName[0] : undefined,
             deploymentType: deploymentTypes,
             infrastructureType: infrastructureTypes ? infrastructureTypes[0] : undefined,
-            services: getMultiSelectFormOptions(serviceNames),
-            environments: getMultiSelectFormOptions(environmentNames)
+            services: getMultiSelectFormOptions(serviceNames, 'service'),
+            environments: getMultiSelectFormOptions(environmentNames, 'environment')
           },
           metadata: { name, filterVisibility, identifier, filterProperties: {} }
         }}

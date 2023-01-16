@@ -13,3 +13,6 @@ export const isContextTypeNotStepGroupTemplate = (contextType?: string) =>
 
 export const isContextTypeStageOrStepGroupTemplate = (contextType?: string) =>
   contextType === PipelineContextType.StageTemplate || contextType === PipelineContextType.StepGroupTemplate
+
+export const isContextTypeTemplateType = (contextType?: string) =>
+  contextType === PipelineContextType.PipelineTemplate || contextType === PipelineContextType.StageTemplate

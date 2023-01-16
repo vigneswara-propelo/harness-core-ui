@@ -121,10 +121,8 @@ jest.mock('services/cd-ng', () => ({
   useGetServiceDefinitionTypes: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() })),
-  useGetServiceListForProject: jest
-    .fn()
-    .mockImplementation(() => ({ loading: false, data: services, refetch: jest.fn() })),
-  useGetEnvironmentListForProject: jest
+  useGetServiceList: jest.fn().mockImplementation(() => ({ loading: false, data: services, refetch: jest.fn() })),
+  useGetEnvironmentListV2: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: environments, refetch: jest.fn() })),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
