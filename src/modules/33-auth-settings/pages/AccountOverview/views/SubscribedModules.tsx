@@ -95,8 +95,10 @@ const SubscribedModules: React.FC = () => {
   const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   function isModuleEnabled(moduleLicense: ModuleLicenseDTO): boolean | undefined {
     const moduleType = moduleLicense['moduleType']
+    const moduleTypeName = moduleType === ModuleName.SRM ? ModuleName.CV : moduleType
     const licenseStatus = moduleLicense['status']
-    switch (moduleType) {
+
+    switch (moduleTypeName) {
       case ModuleName.CD: {
         return CDNG_ENABLED
       }

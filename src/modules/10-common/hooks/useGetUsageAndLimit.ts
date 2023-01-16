@@ -28,7 +28,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { useGetLicenseUsage } from 'services/cv'
+import { useGetSRMLicenseUsage } from 'services/cv'
 
 export interface UsageAndLimitReturn {
   limitData: LimitReturn
@@ -287,7 +287,7 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     loading: loadingCVUsage,
     error: cvUsageError,
     refetch: refetchCVUsage
-  } = useGetLicenseUsage({
+  } = useGetSRMLicenseUsage({
     queryParams: {
       accountIdentifier: accountId,
       timestamp

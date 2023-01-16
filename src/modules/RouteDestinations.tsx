@@ -39,6 +39,7 @@ import NotFoundPage from '@common/pages/404/NotFoundPage'
 import DefaultSettingsRoutes from '@default-settings/RouteDestinations'
 import CODERouteDestinations from '@code/RouteDestinations'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { ModuleName } from 'framework/types/ModuleName'
 
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
@@ -59,6 +60,11 @@ export default function RouteDestinations(): React.ReactElement {
     IACM_ENABLED
   } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
+
+  const isCVModuleEnabled =
+    licenseInformation[ModuleName.CV]?.status === 'ACTIVE' ||
+    licenseInformation[ModuleName.CD]?.status === 'ACTIVE' ||
+    CVNG_ENABLED
 
   return (
     <Switch>
@@ -81,7 +87,7 @@ export default function RouteDestinations(): React.ReactElement {
       {CHAOS_ENABLED ? ChaosRoutes().props.children : null}
       {CING_ENABLED ? CIRoutes.props.children : null}
       {CDNG_ENABLED ? CDRoutes.props.children : null}
-      {CVNG_ENABLED ? CVRoutes.props.children : null}
+      {isCVModuleEnabled ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
       {licenseInformation['STO']?.status === 'ACTIVE' ? (
         <Route path="/account/:accountId/:module(sto)">

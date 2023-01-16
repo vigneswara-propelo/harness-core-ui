@@ -393,7 +393,8 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
         break
       }
 
-      case 'CV': {
+      case 'CV':
+      case 'SRM': {
         if (CV_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
           return (licenseInformation['CV']?.edition as Editions) || Editions.FREE
         }

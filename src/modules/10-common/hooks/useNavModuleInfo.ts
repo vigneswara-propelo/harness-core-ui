@@ -177,8 +177,17 @@ const shouldBeVisible = (
   module: NavModuleName,
   featureFlags: Partial<Record<FeatureFlag, boolean>>,
   licenseInformation: { [key: string]: ModuleLicenseDTO } | Record<string, undefined>
-) => {
+): boolean => {
   const featureFlagName = moduleInfoMap[module]?.featureFlagName
+
+  if (module === ModuleName.CV) {
+    return Boolean(
+      licenseInformation[ModuleName.CV]?.status === 'ACTIVE' ||
+        licenseInformation[ModuleName.CD]?.status === 'ACTIVE' ||
+        (featureFlagName && !!featureFlags[featureFlagName])
+    )
+  }
+
   return featureFlagName !== undefined
     ? !!featureFlags[featureFlagName]
     : licenseInformation[module]?.status === 'ACTIVE'

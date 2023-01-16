@@ -180,7 +180,7 @@ allowpaths:
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/log-records
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/metric-records
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/records
-  - /usage/CV
+  - /usage/SRM
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/logRecords
 
 operationIdOverrides:

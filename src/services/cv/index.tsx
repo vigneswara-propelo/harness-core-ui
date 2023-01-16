@@ -747,7 +747,7 @@ export interface ClusteredLog {
   verificationTaskId?: string
 }
 
-export interface CompositeServiceLevelObjectiveSpec {
+export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
   serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
 }
 
@@ -1654,6 +1654,7 @@ export interface Error {
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2080,6 +2081,7 @@ export interface Failure {
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2517,6 +2519,7 @@ export interface HostDTO {
 
 export interface HostData {
   anomalous?: boolean
+  appliedThresholdIds?: string[]
   controlData?: number[]
   hostName?: string
   nearestControlHost?: string
@@ -3165,8 +3168,8 @@ export interface MetricThresholdSpec {
 export interface MetricThresholdV2 {
   action?: 'Ignore' | 'FailImmediately' | 'FailAfterOccurrence' | 'FailAfterConsecutiveOccurrence'
   criteria?: MetricThresholdCriteriaV2
+  id?: string
   isUserDefined?: boolean
-  thresholdIdentifier?: string
   thresholdType?: 'IgnoreThreshold' | 'FailImmediately'
 }
 
@@ -3250,7 +3253,7 @@ export interface MonitoredServiceListItemDTO {
   historicalTrend?: HistoricalTrend
   identifier?: string
   name?: string
-  serviceLicenseEnabled?: boolean
+  serviceMonitoringEnabled?: boolean
   serviceName?: string
   serviceRef?: string
   sloHealthIndicators?: SloHealthIndicatorDTO[]
@@ -4478,6 +4481,7 @@ export interface ResponseMessage {
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5605,13 +5609,21 @@ export interface ServiceLevelObjectiveV2Response {
   serviceLevelObjectiveV2: ServiceLevelObjectiveV2DTO
 }
 
+export type ServiceNowADFSDTO = ServiceNowAuthCredentialsDTO & {
+  adfsUrl: string
+  certificateRef: string
+  clientIdRef: string
+  privateKeyRef: string
+  resourceIdRef: string
+}
+
 export interface ServiceNowAuthCredentialsDTO {
   [key: string]: any
 }
 
 export interface ServiceNowAuthenticationDTO {
   spec: ServiceNowAuthCredentialsDTO
-  type: 'UsernamePassword'
+  type: 'UsernamePassword' | 'AdfsClientCredentialsWithCertificate'
 }
 
 export type ServiceNowConnector = ConnectorConfigDTO & {
@@ -5962,6 +5974,7 @@ export interface TimeSeriesMetricDefinition {
   actionType?: 'IGNORE' | 'FAIL'
   comparisonType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
+  id?: string
   metricGroupName?: string
   metricIdentifier?: string
   metricName?: string
@@ -14783,51 +14796,51 @@ export const getMetricDefinitionsPromise = (
     signal
   )
 
-export interface GetLicenseUsageQueryParams {
+export interface GetSRMLicenseUsageQueryParams {
   accountIdentifier: string
   timestamp?: number
 }
 
-export type GetLicenseUsageProps = Omit<
-  GetProps<ResponseSRMLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+export type GetSRMLicenseUsageProps = Omit<
+  GetProps<ResponseSRMLicenseUsageDTO, unknown, GetSRMLicenseUsageQueryParams, void>,
   'path'
 >
 
 /**
- * Gets License Usage for CV
+ * Gets License Usage for SRM
  */
-export const GetLicenseUsage = (props: GetLicenseUsageProps) => (
-  <Get<ResponseSRMLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>
-    path={`/usage/CV`}
+export const GetSRMLicenseUsage = (props: GetSRMLicenseUsageProps) => (
+  <Get<ResponseSRMLicenseUsageDTO, unknown, GetSRMLicenseUsageQueryParams, void>
+    path={`/usage/SRM`}
     base={getConfig('cv/api')}
     {...props}
   />
 )
 
-export type UseGetLicenseUsageProps = Omit<
-  UseGetProps<ResponseSRMLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+export type UseGetSRMLicenseUsageProps = Omit<
+  UseGetProps<ResponseSRMLicenseUsageDTO, unknown, GetSRMLicenseUsageQueryParams, void>,
   'path'
 >
 
 /**
- * Gets License Usage for CV
+ * Gets License Usage for SRM
  */
-export const useGetLicenseUsage = (props: UseGetLicenseUsageProps) =>
-  useGet<ResponseSRMLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>(`/usage/CV`, {
+export const useGetSRMLicenseUsage = (props: UseGetSRMLicenseUsageProps) =>
+  useGet<ResponseSRMLicenseUsageDTO, unknown, GetSRMLicenseUsageQueryParams, void>(`/usage/SRM`, {
     base: getConfig('cv/api'),
     ...props
   })
 
 /**
- * Gets License Usage for CV
+ * Gets License Usage for SRM
  */
-export const getLicenseUsagePromise = (
-  props: GetUsingFetchProps<ResponseSRMLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+export const getSRMLicenseUsagePromise = (
+  props: GetUsingFetchProps<ResponseSRMLicenseUsageDTO, unknown, GetSRMLicenseUsageQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseSRMLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>(
+  getUsingFetch<ResponseSRMLicenseUsageDTO, unknown, GetSRMLicenseUsageQueryParams, void>(
     getConfig('cv/api'),
-    `/usage/CV`,
+    `/usage/SRM`,
     props,
     signal
   )

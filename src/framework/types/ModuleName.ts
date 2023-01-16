@@ -12,6 +12,7 @@ export enum ModuleName {
   CI = 'CI',
   CF = 'CF',
   CV = 'CV',
+  SRM = 'SRM',
   CODE = 'CODE',
   STO = 'STO',
   CHAOS = 'CHAOS',
