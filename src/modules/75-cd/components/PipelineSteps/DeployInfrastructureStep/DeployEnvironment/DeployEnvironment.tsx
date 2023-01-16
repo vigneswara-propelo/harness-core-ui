@@ -466,7 +466,6 @@ function DeployEnvironment({
               }
             },
             selectProps: {
-              addClearBtn: !readonly,
               items: defaultTo(environmentsSelectOptions, [])
             },
             allowableTypes,
