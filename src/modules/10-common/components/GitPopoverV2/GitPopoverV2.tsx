@@ -164,32 +164,32 @@ export const GitPopoverV2 = ({
   if (storeMetadata.storeType !== StoreType.REMOTE) return <></>
 
   return (
-    <Popover interactionKind={PopoverInteractionKind.HOVER} autoFocus={false}>
-      <div className={cx(css.customButton, btnClassName)}>
+    <div className={cx(css.customButton, btnClassName)}>
+      <Popover interactionKind={PopoverInteractionKind.HOVER} autoFocus={false}>
         <Icon name="git-popover" size={15} />
-        {customIcon || <Icon name="main-chevron-down" size={8} />}
-      </div>
-      <Layout.Vertical padding={{ top: 'large', bottom: 'large', left: 'xlarge', right: 'xlarge' }}>
-        {/* Heading */}
-        <Text font={{ size: 'small', weight: 'bold' }} color={Color.BLACK}>
-          {getString('common.gitDetailsTitle').toUpperCase()}
-        </Text>
+        <Layout.Vertical padding={{ top: 'large', bottom: 'large', left: 'xlarge', right: 'xlarge' }}>
+          {/* Heading */}
+          <Text font={{ size: 'small', weight: 'bold' }} color={Color.BLACK}>
+            {getString('common.gitDetailsTitle').toUpperCase()}
+          </Text>
 
-        {/* Repository */}
-        {repoName && <ItemUI label={getString('repository')} icon="repository" value={repoName} />}
+          {/* Repository */}
+          {repoName && <ItemUI label={getString('repository')} icon="repository" value={repoName} />}
 
-        {/* FilePath */}
-        {fileUrl && <ItemUI label={getString('common.git.filePath')} icon="repository" value={fileUrl} />}
+          {/* FilePath */}
+          {fileUrl && <ItemUI label={getString('common.git.filePath')} icon="repository" value={fileUrl} />}
 
-        {/* Branch */}
-        {selectedBranch.value && (
-          <ItemUI
-            label={getString('gitBranch')}
-            icon="git-new-branch"
-            value={branchChangeDisabled ? selectedBranch.value : branchUI}
-          />
-        )}
-      </Layout.Vertical>
-    </Popover>
+          {/* Branch */}
+          {selectedBranch.value && (
+            <ItemUI
+              label={getString('gitBranch')}
+              icon="git-new-branch"
+              value={branchChangeDisabled ? selectedBranch.value : branchUI}
+            />
+          )}
+        </Layout.Vertical>
+      </Popover>
+      {customIcon || <Icon name="main-chevron-down" size={8} />}
+    </div>
   )
 }

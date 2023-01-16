@@ -18,7 +18,8 @@ const errorNodeSummaryDummmyResponse = {
 }
 
 const baseProps: PipelineOutOfSyncErrorStripProps = {
-  updateRootEntity: jest.fn()
+  updateRootEntity: jest.fn(),
+  onRefreshEntity: jest.fn()
 }
 
 describe('<PipelineOutOfSyncErrorStrip /> tests', () => {

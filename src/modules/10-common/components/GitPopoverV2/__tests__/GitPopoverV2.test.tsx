@@ -75,7 +75,7 @@ describe('<GitPopoverV2 />', () => {
     )
 
     expect(container).toMatchSnapshot()
-    expect(container.querySelector('.customButton')).not.toBeInTheDocument()
+    expect(container.querySelector('[data-icon="git-popover"]')).not.toBeInTheDocument()
   })
 
   test('getActualTemplateValue', async () => {
@@ -91,7 +91,7 @@ describe('<GitPopoverV2 />', () => {
       </TestWrapper>
     )
 
-    fireEvent.mouseOver(container.querySelector('.customButton')!)
+    fireEvent.mouseOver(container.querySelector('[data-icon="git-popover"]')!)
     await waitFor(() => expect(getByText('COMMON.GITDETAILSTITLE')).toBeInTheDocument())
     expect(getByText('testRepo2')).toBeInTheDocument()
   })
@@ -108,7 +108,7 @@ describe('<GitPopoverV2 />', () => {
       </TestWrapper>
     )
 
-    fireEvent.mouseOver(container.querySelector('.customButton')!)
+    fireEvent.mouseOver(container.querySelector('[data-icon="git-popover"]')!)
     await waitFor(() => expect(getByText('COMMON.GITDETAILSTITLE')).toBeInTheDocument())
     expect(getByText('testRepo')).toBeInTheDocument()
     expect(getByText('https://harness.io')).toBeInTheDocument()
@@ -123,7 +123,7 @@ describe('<GitPopoverV2 />', () => {
       </TestWrapper>
     )
 
-    fireEvent.mouseOver(container.querySelector('.customButton')!)
+    fireEvent.mouseOver(container.querySelector('[data-icon="git-popover"]')!)
     await waitFor(() => expect(getByText('COMMON.GITDETAILSTITLE')).toBeInTheDocument())
 
     const dropdown = getByText('chevron-down')?.parentElement?.parentElement as HTMLInputElement
@@ -159,7 +159,7 @@ describe('<GitPopoverV2 />', () => {
       </TestWrapper>
     )
 
-    fireEvent.mouseOver(container.querySelector('.customButton')!)
+    fireEvent.mouseOver(container.querySelector('[data-icon="git-popover"]')!)
     await waitFor(() => expect(getByText('COMMON.GITDETAILSTITLE')).toBeInTheDocument())
 
     const dropdown = getByText('chevron-down')?.parentElement?.parentElement as HTMLInputElement

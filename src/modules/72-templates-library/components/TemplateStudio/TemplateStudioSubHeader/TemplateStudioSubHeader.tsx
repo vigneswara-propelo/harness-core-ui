@@ -76,6 +76,7 @@ function TemplateStudioSubHeader(
   const { supportingGitSimplification } = useAppStore()
   const isPipelineRemote = supportingGitSimplification && storeMetadata?.storeType === StoreType.REMOTE
   const [showBanner, setShowbanner] = React.useState(false)
+  const isNewTemplate = templateIdentifier === DefaultNewTemplateId
 
   //Banner Effect
   React.useEffect(() => {
@@ -179,57 +180,63 @@ function TemplateStudioSubHeader(
                   {!isReadonly && (
                     <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
                       <SaveTemplatePopoverWithRef getErrors={getErrors} ref={saveTemplateHandleRef} />
-                      {templateIdentifier !== DefaultNewTemplateId && (
-                        <Button
-                          disabled={!isUpdated}
-                          onClick={() => {
-                            fetchTemplate({ forceFetch: true, forceUpdate: true })
-                          }}
-                          variation={ButtonVariation.SECONDARY}
-                          text={getString('common.discard')}
-                        />
-                      )}
-                      <Popover className={Classes.DARK} position={Position.LEFT}>
-                        <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
-                        <Menu style={{ backgroundColor: 'unset' }}>
-                          {isPipelineRemote && isPipelineGitCacheEnabled ? (
-                            <RbacMenuItem
-                              icon="repeat"
-                              text={getString('common.reloadFromGit')}
-                              onClick={handleReloadFromGitClick}
-                              permission={{
-                                resourceScope: {
-                                  accountIdentifier: accountId,
-                                  orgIdentifier,
-                                  projectIdentifier
-                                },
-                                resource: {
-                                  resourceType: ResourceType.TEMPLATE,
-                                  resourceIdentifier: template?.identifier
-                                },
-                                permission: PermissionIdentifier.VIEW_TEMPLATE
-                              }}
-                            />
-                          ) : null}
-                          <RbacMenuItem
-                            icon="refresh"
-                            text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
-                            onClick={onReconcile}
-                            permission={{
-                              resourceScope: {
-                                accountIdentifier: accountId,
-                                orgIdentifier,
-                                projectIdentifier
-                              },
-                              resource: {
-                                resourceType: ResourceType.TEMPLATE,
-                                resourceIdentifier: template?.identifier
-                              },
-                              permission: PermissionIdentifier.EDIT_TEMPLATE
+                      {isNewTemplate ? null : (
+                        <React.Fragment>
+                          <Button
+                            disabled={!isUpdated}
+                            onClick={() => {
+                              fetchTemplate({ forceFetch: true, forceUpdate: true })
                             }}
+                            variation={ButtonVariation.SECONDARY}
+                            text={getString('common.discard')}
                           />
-                        </Menu>
-                      </Popover>
+                          <Popover className={Classes.DARK} position={Position.LEFT}>
+                            <Button
+                              variation={ButtonVariation.ICON}
+                              icon="Options"
+                              aria-label="pipeline menu actions"
+                            />
+                            <Menu style={{ backgroundColor: 'unset' }}>
+                              {isPipelineRemote && isPipelineGitCacheEnabled ? (
+                                <RbacMenuItem
+                                  icon="repeat"
+                                  text={getString('common.reloadFromGit')}
+                                  onClick={handleReloadFromGitClick}
+                                  permission={{
+                                    resourceScope: {
+                                      accountIdentifier: accountId,
+                                      orgIdentifier,
+                                      projectIdentifier
+                                    },
+                                    resource: {
+                                      resourceType: ResourceType.TEMPLATE,
+                                      resourceIdentifier: template?.identifier
+                                    },
+                                    permission: PermissionIdentifier.VIEW_TEMPLATE
+                                  }}
+                                />
+                              ) : null}
+                              <RbacMenuItem
+                                icon="refresh"
+                                text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
+                                onClick={onReconcile}
+                                permission={{
+                                  resourceScope: {
+                                    accountIdentifier: accountId,
+                                    orgIdentifier,
+                                    projectIdentifier
+                                  },
+                                  resource: {
+                                    resourceType: ResourceType.TEMPLATE,
+                                    resourceIdentifier: template?.identifier
+                                  },
+                                  permission: PermissionIdentifier.EDIT_TEMPLATE
+                                }}
+                              />
+                            </Menu>
+                          </Popover>
+                        </React.Fragment>
+                      )}
                     </Layout.Horizontal>
                   )}
                 </Layout.Horizontal>

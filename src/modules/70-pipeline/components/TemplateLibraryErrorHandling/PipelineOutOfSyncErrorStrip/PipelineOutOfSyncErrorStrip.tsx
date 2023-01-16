@@ -14,14 +14,14 @@ import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHa
 
 export interface PipelineOutOfSyncErrorStripProps {
   updateRootEntity: (entityYaml: string) => Promise<void>
+  onRefreshEntity(): void
   errorData?: ResponseValidateTemplateInputsResponseDto
 }
 export function PipelineOutOfSyncErrorStrip(props: PipelineOutOfSyncErrorStripProps): React.ReactElement {
-  const { updateRootEntity, errorData } = props
+  const { updateRootEntity, errorData, onRefreshEntity } = props
   const {
     state: { originalPipeline, gitDetails, storeMetadata },
-    isReadonly,
-    fetchPipeline
+    isReadonly
   } = usePipelineContext()
 
   const errorNodeSummary = React.useMemo((): ErrorNodeSummary | undefined => {
@@ -29,10 +29,6 @@ export function PipelineOutOfSyncErrorStrip(props: PipelineOutOfSyncErrorStripPr
       return errorData?.data.errorNodeSummary
     }
   }, [errorData?.data])
-
-  const onRefreshEntity = React.useCallback(() => {
-    fetchPipeline({ forceFetch: true, forceUpdate: true })
-  }, [fetchPipeline])
 
   return errorNodeSummary ? (
     <OutOfSyncErrorStrip

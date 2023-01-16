@@ -122,8 +122,8 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = params
   const { isYamlEditable } = pipelineView
   const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
-
   const [showBanner, setShowbanner] = React.useState<boolean>(false)
+  const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
   const pipelineCachedCopyRef = React.useRef<PipelineCachedCopyHandle | null>(null)
   const isCommunity = useGetCommunity()
@@ -143,9 +143,11 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
       onSuccess(data) {
         if (data?.data?.validYaml === false && data?.data.errorNodeSummary) {
           // This is handled by <PipelineOutOfSyncErrorStrip/>
+          clear()
         } else {
           clear()
           showSuccess(getString('pipeline.outOfSyncErrorStrip.noErrorText', { entity: TemplateErrorEntity.PIPELINE }))
+          setShouldShowOutOfSyncError(false)
         }
       }
     }
@@ -153,7 +155,13 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
 
   const updateEntity = React.useCallback(async (entityYaml: string) => {
     await savePipelineHandleRef.current?.updatePipeline(entityYaml)
+    setShouldShowOutOfSyncError(false)
   }, [])
+
+  const onRefreshEntity = React.useCallback(() => {
+    fetchPipeline({ forceFetch: true, forceUpdate: true })
+    setShouldShowOutOfSyncError(false)
+  }, [fetchPipeline])
 
   const isValidYaml = function (): boolean {
     if (yamlHandler) {
@@ -246,6 +254,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   function handleReconcileClick(): void {
     reconcilePipeline()
     showSuccess(getString('pipeline.outOfSyncErrorStrip.reconcileStarted'))
+    setShouldShowOutOfSyncError(true)
   }
 
   function handleReloadFromGitClick(): void {
@@ -276,6 +285,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
       }
     }
   }, [pipeline.stages, module])
+  const isNewPipeline = pipelineIdentifier === DefaultNewPipelineId
 
   return (
     <React.Fragment>
@@ -361,55 +371,55 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                 onChange={handleViewChange}
                 showDisableToggleReason={true}
               />
-              <div>
-                <div className={css.savePublishContainer}>
-                  {isUpdated && !isReadonly && (
-                    <Button
-                      variation={ButtonVariation.LINK}
-                      intent="warning"
-                      className={css.unsavedChanges}
-                      onClick={openDiffModal}
-                    >
-                      {getString('unsavedChanges')}
-                    </Button>
-                  )}
-                  <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
-                  {pipelineIdentifier !== DefaultNewPipelineId && !isReadonly && (
-                    <Button
-                      disabled={!isUpdated}
-                      onClick={handleDiscardClick}
-                      className={css.discardBtn}
-                      variation={ButtonVariation.SECONDARY}
-                      text={getString('pipeline.discard')}
-                    />
-                  )}
-                  <RbacButton
-                    data-testid="card-run-pipeline"
-                    variation={ButtonVariation.PRIMARY}
-                    icon="run-pipeline"
-                    intent="success"
-                    disabled={isUpdated || entityValidityDetails?.valid === false}
-                    className={css.runPipelineBtn}
-                    text={getString('runPipelineText')}
-                    tooltip={runTooltip}
-                    onClick={handleRunClick}
-                    featuresProps={getFeaturePropsForRunPipelineButton({
-                      modules,
-                      getString
-                    })}
-                    permission={{
-                      resourceScope: {
-                        accountIdentifier: accountId,
-                        orgIdentifier,
-                        projectIdentifier
-                      },
-                      resource: {
-                        resourceType: ResourceType.PIPELINE,
-                        resourceIdentifier: pipeline?.identifier
-                      },
-                      permission: PermissionIdentifier.EXECUTE_PIPELINE
-                    }}
+              <div className={css.savePublishContainer}>
+                {isUpdated && !isReadonly && (
+                  <Button
+                    variation={ButtonVariation.LINK}
+                    intent="warning"
+                    className={css.unsavedChanges}
+                    onClick={openDiffModal}
+                  >
+                    {getString('unsavedChanges')}
+                  </Button>
+                )}
+                <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
+                {!isNewPipeline && !isReadonly ? (
+                  <Button
+                    disabled={!isUpdated}
+                    onClick={handleDiscardClick}
+                    className={css.discardBtn}
+                    variation={ButtonVariation.SECONDARY}
+                    text={getString('pipeline.discard')}
                   />
+                ) : null}
+                <RbacButton
+                  data-testid="card-run-pipeline"
+                  variation={ButtonVariation.PRIMARY}
+                  icon="run-pipeline"
+                  intent="success"
+                  disabled={isUpdated || entityValidityDetails?.valid === false}
+                  className={css.runPipelineBtn}
+                  text={getString('runPipelineText')}
+                  tooltip={runTooltip}
+                  onClick={handleRunClick}
+                  featuresProps={getFeaturePropsForRunPipelineButton({
+                    modules,
+                    getString
+                  })}
+                  permission={{
+                    resourceScope: {
+                      accountIdentifier: accountId,
+                      orgIdentifier,
+                      projectIdentifier
+                    },
+                    resource: {
+                      resourceType: ResourceType.PIPELINE,
+                      resourceIdentifier: pipeline?.identifier
+                    },
+                    permission: PermissionIdentifier.EXECUTE_PIPELINE
+                  }}
+                />
+                {isNewPipeline ? null : (
                   <Popover className={Classes.DARK} position={Position.LEFT}>
                     <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
                     <Menu style={{ backgroundColor: 'unset' }}>
@@ -452,14 +462,20 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                       />
                     </Menu>
                   </Popover>
-                </div>
+                )}
               </div>
             </>
           )}
         </div>
       )}
       {showBanner && <EndOfLifeBanner />}
-      <PipelineOutOfSyncErrorStrip updateRootEntity={updateEntity} errorData={reconcileErrorData} />
+      {shouldShowOutOfSyncError ? (
+        <PipelineOutOfSyncErrorStrip
+          updateRootEntity={updateEntity}
+          errorData={reconcileErrorData}
+          onRefreshEntity={onRefreshEntity}
+        />
+      ) : null}
     </React.Fragment>
   )
 }
