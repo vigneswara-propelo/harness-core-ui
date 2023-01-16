@@ -9,7 +9,7 @@ import React from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
-import { Label, Layout } from '@harness/uicore'
+import { Label } from '@harness/uicore'
 import { connect } from 'formik'
 import { Color } from '@harness/design-system'
 import { useQueryParams } from '@common/hooks'
@@ -21,8 +21,6 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
-import { fileTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { TerragruntPlanProps } from '../../Common/Terragrunt/TerragruntInterface'
 import { getPath } from '../../Common/ConfigFileStore/ConfigFileStoreHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -30,7 +28,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.ReactElement {
   const { getString } = useStrings()
 
-  const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType, isBackendConfig } = props
+  const { inputSetData, readonly, initialValues, path, allowableTypes, stepViewType, isBackendConfig } = props
   const template = inputSetData?.template
   const configPath = getPath(false, true, isBackendConfig)
   const configSpec = get(template, `${configPath}.store`)
@@ -147,32 +145,6 @@ function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.
           fieldPath={`${configPath}.store.spec.folderPath`}
         />
       )}
-
-      {
-        /* istanbul ignore next */ configSpec?.type === 'Harness' && isValueRuntimeInput(configSpec?.spec?.files) && (
-          <Layout.Vertical className={cx(stepCss.inputWidth, stepCss.layoutVerticalSpacing)}>
-            <FileStoreList
-              name={`${path}.${configPath}.store.spec.files`}
-              type={fileTypes.FILE_STORE}
-              allowOnlyOne={true}
-              formik={formik}
-            />
-          </Layout.Vertical>
-        )
-      }
-
-      {
-        /* istanbul ignore next */ configSpec?.type === 'Harness' && isValueRuntimeInput(configSpec?.spec?.secretFiles) && (
-          <Layout.Vertical className={cx(stepCss.inputWidth, stepCss.layoutVerticalSpacing)}>
-            <FileStoreList
-              name={`${path}.${configPath}.store.spec.secretFiles`}
-              type={fileTypes.ENCRYPTED}
-              allowOnlyOne={true}
-              formik={formik}
-            />
-          </Layout.Vertical>
-        )
-      }
     </>
   )
 }

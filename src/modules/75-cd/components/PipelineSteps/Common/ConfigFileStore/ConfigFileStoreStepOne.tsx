@@ -77,9 +77,7 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
   }>()
 
   const storeTypes = isTerragrunt
-    ? isBackendConfig
-      ? [...TerragruntAllowedTypes, 'Harness']
-      : TerragruntAllowedTypes
+    ? TerragruntAllowedTypes
     : isBackendConfig
     ? [...AllowedTypes, 'Harness']
     : AllowedTypes
