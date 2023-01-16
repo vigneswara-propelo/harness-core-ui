@@ -22,13 +22,16 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
-import { String } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import DefaultSettingsFactory from './factories/DefaultSettingsFactory'
 import { SettingType } from './interfaces/SettingType.types'
 import {
   DefaultSettingCheckBoxWithTrueAndFalse,
+  DefaultSettingDurationField,
+  DefaultSettingNumberTextbox,
   DefaultSettingRadioBtnWithTrueAndFalse
 } from './components/ReusableHandlers'
 
@@ -111,6 +114,7 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.WEBHOOK_GITHUB_TRIGGER
 
 export default function DefaultSettingsRoutes(): React.ReactElement {
   const isForceDeleteSupported = useFeatureFlag(FeatureFlag.PL_FORCE_DELETE_CONNECTOR_SECRET)
+  const { getString } = useStrings()
   // Register  Category Factory only when Feature Flag is enabled
   if (isForceDeleteSupported) {
     DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_FORCE_DELETE, {
@@ -120,6 +124,33 @@ export default function DefaultSettingsRoutes(): React.ReactElement {
       settingCategory: 'CORE'
     })
   }
+
+  DefaultSettingsFactory.registerSettingHandler(SettingType.PIPELINE_TIMEOUT, {
+    label: 'defaultSettings.pipelineTimeout',
+    settingRenderer: props => <DefaultSettingDurationField {...props} />,
+    yupValidation: getDurationValidationSchema().required(getString('validation.timeout10SecMinimum')),
+    settingCategory: 'PMS'
+  })
+
+  DefaultSettingsFactory.registerSettingHandler(SettingType.STAGE_TIMEOUT, {
+    label: 'defaultSettings.stageTimeout',
+    settingRenderer: props => <DefaultSettingDurationField {...props} />,
+    yupValidation: getDurationValidationSchema().required(getString('validation.timeout10SecMinimum')),
+    settingCategory: 'PMS'
+  })
+
+  DefaultSettingsFactory.registerSettingHandler(SettingType.STEP_TIMEOUT, {
+    label: 'defaultSettings.stepTimeout',
+    settingRenderer: props => <DefaultSettingDurationField {...props} />,
+    yupValidation: getDurationValidationSchema().required(getString('validation.timeout10SecMinimum')),
+    settingCategory: 'PMS'
+  })
+
+  DefaultSettingsFactory.registerSettingHandler(SettingType.CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS, {
+    label: 'defaultSettings.concurrentActivePipelineExecutions',
+    settingRenderer: props => <DefaultSettingNumberTextbox {...props} />,
+    settingCategory: 'PMS'
+  })
 
   return (
     <>

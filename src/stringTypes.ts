@@ -1475,6 +1475,7 @@ export interface StringsMap {
   'rbac.youAreMissingTheFollowingPermission': string
   'rbac.youAreNotAuthorizedTo': string
   'defaultSettings.allowOverrides': string
+  'defaultSettings.concurrentActivePipelineExecutions': string
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
   'defaultSettings.harnessDefault': string
@@ -1482,7 +1483,10 @@ export interface StringsMap {
   'defaultSettings.mandateAuthorizationForCustomWebhookTriggers': string
   'defaultSettings.mandateWebhookSecretsGithubTriggers': string
   'defaultSettings.noSettingToDisplay': string
+  'defaultSettings.pipelineTimeout': string
   'defaultSettings.restoreToDefault': string
+  'defaultSettings.stageTimeout': string
+  'defaultSettings.stepTimeout': string
   'governance.permissions.governancePolicies': string
   'governance.permissions.governancePolicySets': string
   'delegates.GBRam': string
