@@ -4319,11 +4319,47 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                           </div>
                         </div>
                         <div
+                          class="bp3-form-group"
+                          data-id="webhookId-8"
+                        >
+                          <label
+                            class="bp3-label"
+                            for="webhookId"
+                          >
+                            <span
+                              class="Tooltip--acenter"
+                              data-tooltip-id="wizardForm_webhook_webhookId"
+                            >
+                              triggers.triggerConfigurationPanel.webhookId (optional)
+                            </span>
+                             
+                            <span
+                              class="bp3-text-muted"
+                            />
+                          </label>
+                          <div
+                            class="bp3-form-content"
+                          >
+                            <div
+                              class="bp3-input-group"
+                            >
+                              <input
+                                autocomplete="off"
+                                class="bp3-input"
+                                name="webhookId"
+                                placeholder="triggers.triggerConfigurationPanel.webhookIdPlaceholder"
+                                type="text"
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div
                           class="nameIdDescriptionTags secret"
                         >
                           <div
                             class="bp3-form-group"
-                            data-id="null-8"
+                            data-id="null-9"
                           >
                             <div
                               class="bp3-form-content"
@@ -5446,11 +5482,47 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                           </div>
                         </div>
                         <div
+                          class="bp3-form-group"
+                          data-id="webhookId-6"
+                        >
+                          <label
+                            class="bp3-label"
+                            for="webhookId"
+                          >
+                            <span
+                              class="Tooltip--acenter"
+                              data-tooltip-id="wizardForm_webhook_webhookId"
+                            >
+                              triggers.triggerConfigurationPanel.webhookId (optional)
+                            </span>
+                             
+                            <span
+                              class="bp3-text-muted"
+                            />
+                          </label>
+                          <div
+                            class="bp3-form-content"
+                          >
+                            <div
+                              class="bp3-input-group"
+                            >
+                              <input
+                                autocomplete="off"
+                                class="bp3-input"
+                                name="webhookId"
+                                placeholder="triggers.triggerConfigurationPanel.webhookIdPlaceholder"
+                                type="text"
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div
                           class="nameIdDescriptionTags secret"
                         >
                           <div
                             class="bp3-form-group"
-                            data-id="null-6"
+                            data-id="null-7"
                           >
                             <div
                               class="bp3-form-content"

@@ -519,6 +519,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       autoAbortPreviousExecutions = false,
       pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
       pollInterval,
+      webhookId,
       encryptedWebhookSecretIdentifier
     } = val
     const inputSetRefs = get(
@@ -603,6 +604,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         source: {
           type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
           pollInterval,
+          webhookId,
           spec: {
             type: formikValueSourceRepo, // Github
             spec: {
@@ -719,6 +721,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             inputSetRefs = [],
             source: {
               pollInterval,
+              webhookId,
               spec: {
                 type: sourceRepo,
                 spec: {
@@ -788,6 +791,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           triggerType: TriggerTypes.WEBHOOK as unknown as NGTriggerSourceV2['type'],
           event,
           pollInterval,
+          webhookId,
           autoAbortPreviousExecutions,
           connectorRef,
           repoName,
@@ -1385,7 +1389,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         autoAbortPreviousExecutions: false,
         pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType),
         // setDefaultValue only when polling is enabled and for Github Webhook Trigger
-        ...(isGitWebhookPollingEnabled && sourceRepoOnNew === GitSourceProviders.GITHUB.value && { pollInterval: '0' })
+        ...(isGitWebhookPollingEnabled &&
+          sourceRepoOnNew === GitSourceProviders.GITHUB.value && { pollInterval: '0', webhookId: '' })
       }
     } else if (triggerType === TriggerTypes.SCHEDULE) {
       return {

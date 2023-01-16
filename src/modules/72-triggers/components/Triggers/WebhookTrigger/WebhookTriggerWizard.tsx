@@ -341,7 +341,8 @@ export default function WebhookTriggerWizard(
       autoAbortPreviousExecutions: false,
       pipelineBranchName: getDefaultPipelineReferenceBranch(baseType) || branch,
       // setDefaultValue only when polling is enabled and for Github Webhook Trigger
-      ...(isGitWebhookPollingEnabled && sourceRepo === GitSourceProviders.GITHUB.value && { pollInterval: '0' })
+      ...(isGitWebhookPollingEnabled &&
+        sourceRepo === GitSourceProviders.GITHUB.value && { pollInterval: '0', webhookId: '' })
     }
   }
 
@@ -567,6 +568,7 @@ export default function WebhookTriggerWizard(
             inputSetRefs = [],
             source: {
               pollInterval,
+              webhookId,
               spec: {
                 type: sourceRepoForYaml,
                 spec: {
@@ -664,7 +666,8 @@ export default function WebhookTriggerWizard(
           jexlCondition,
           pipelineBranchName,
           inputSetRefs,
-          pollInterval
+          pollInterval,
+          webhookId
         }
 
         // connectorRef in Visual UI is an object (with the label), but in YAML is a string
@@ -814,7 +817,8 @@ export default function WebhookTriggerWizard(
       autoAbortPreviousExecutions = false,
       pipelineBranchName = getDefaultPipelineReferenceBranch(event),
       encryptedWebhookSecretIdentifier,
-      pollInterval
+      pollInterval,
+      webhookId
     } = val
     const inputSetRefs = get(
       val,
@@ -898,7 +902,7 @@ export default function WebhookTriggerWizard(
         source: {
           type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
           ...(isGitWebhookPollingEnabled &&
-            formikValueSourceRepo === GitSourceProviders.GITHUB.value && { pollInterval }),
+            formikValueSourceRepo === GitSourceProviders.GITHUB.value && { pollInterval, webhookId }),
           spec: {
             type: formikValueSourceRepo, // Github
             spec: {

@@ -382,7 +382,8 @@ export const getValidationSchema = (
           getString('common.validation.fieldIsRequired', {
             name: getString('triggers.triggerConfigurationPanel.pollingFrequency')
           })
-        )
+        ),
+        webhookId: string()
       }),
       connectorRef: object().test(
         getString('triggers.validation.connector'),
