@@ -27,6 +27,7 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ExecutionWrapperInputSetForm } from '@pipeline/components/PipelineInputSetForm/ExecutionWrapperInputSetForm'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeployInfrastructures from './DeployInfrastructures/DeployInfrastructures'
 import DeployClusters from './DeployClusters/DeployClusters'
@@ -61,6 +62,9 @@ function DeployInfrastructureInputStepInternal({
     stageIdentifier
   } = customStepProps
   const { serviceOverrideInputs } = inputSetData?.template?.environment || {}
+
+  // render Infra when Env is Fixed
+  const isEnvRuntime = isValueRuntimeInput(initialValues?.environment?.environmentRef)
 
   const shouldRenderInfrastructure =
     getMultiTypeFromValue(inputSetData?.template?.environment?.environmentRef) !== MultiTypeInputType.RUNTIME
@@ -269,6 +273,7 @@ function DeployInfrastructureInputStepInternal({
                 inputSetData?.allValues ||
                 (inputSetData?.template?.environment?.infrastructureDefinitions as unknown as string) ===
                   RUNTIME_INPUT_VALUE) &&
+              !isEnvRuntime &&
               (formik.values.isEnvInputLoaded || shouldRenderInfrastructure) && (
                 <Container margin={{ bottom: 'medium' }}>
                   <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
