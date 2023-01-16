@@ -3738,6 +3738,7 @@ export interface EntityDetail {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
 }
 
 export interface EntityDetailProtoDTO {
@@ -5244,6 +5245,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
+    | 'DRY_RUN_MANIFEST'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5326,6 +5328,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
+    | 'DRY_RUN_MANIFEST'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5424,6 +5427,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
+    | 'DRY_RUN_MANIFEST'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5530,6 +5534,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
+    | 'DRY_RUN_MANIFEST'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -6189,6 +6194,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   )[]
   moduleType?:
     | 'CD'
@@ -6392,6 +6398,7 @@ export interface GitEntityFilterProperties {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6666,6 +6673,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6863,6 +6871,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7181,6 +7190,7 @@ export interface GitSyncEntityDTO {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7372,6 +7382,7 @@ export interface GitSyncEntityListDTO {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7580,6 +7591,7 @@ export interface GitSyncErrorDTO {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -8719,6 +8731,10 @@ export interface K8sContainer {
 export type K8sDeleteStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   deleteResources: DeleteResourcesWrapper
+}
+
+export type K8sDryRunManifestStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
 }
 
 export type K8sGcpInfrastructure = Infrastructure & {
@@ -10790,6 +10806,7 @@ export interface ReferencedByDTO {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
 }
 
 export interface RefreshResponse {
@@ -12042,6 +12059,7 @@ export interface ResponseListEntityType {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -17393,6 +17411,7 @@ export interface ListActivitiesQueryParams {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17576,6 +17595,7 @@ export interface ListActivitiesQueryParams {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -17863,6 +17883,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -18046,6 +18067,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -33009,6 +33031,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
+    | 'DRY_RUN_MANIFEST'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -33161,6 +33184,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'AZURE_CREATE_BP_RESOURCE'
       | 'AZURE_ROLLBACK_ARM_RESOURCE'
       | 'SHELL_SCRIPT_PROVISION'
+      | 'DRY_RUN_MANIFEST'
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
@@ -33377,6 +33401,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -33621,6 +33646,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   searchTerm?: string
 }
 
@@ -36876,6 +36902,7 @@ export interface GetReferencedByQueryParams {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   searchTerm?: string
 }
 
@@ -39382,6 +39409,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -39633,6 +39661,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'GovernanceRuleAWS'
       | 'TasRollingDeploy'
       | 'TasRollingRollback'
+      | 'K8sDryRun'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -45583,6 +45612,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   yamlGroup?: string
 }
 
@@ -45894,6 +45924,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -59359,6 +59390,7 @@ export interface GetYamlSchemaQueryParams {
     | 'GovernanceRuleAWS'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'K8sDryRun'
   subtype?:
     | 'K8sCluster'
     | 'Git'

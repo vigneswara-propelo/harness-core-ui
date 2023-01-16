@@ -542,6 +542,7 @@ minimumHealthyPercentagePlaceholder: Minimum Healthy Percentage
 instanceWarmupLabel: Instance Warmup (Optional)
 instanceWarmupPlaceholder: Instance Warmup
 skipMatchingLabel: Skip Matching
+k8sDryRunStepDescription: Dry Run Apply the service manifests and leverage the dry run yaml as output for subsequent steps
 getStartedWithCD:
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
