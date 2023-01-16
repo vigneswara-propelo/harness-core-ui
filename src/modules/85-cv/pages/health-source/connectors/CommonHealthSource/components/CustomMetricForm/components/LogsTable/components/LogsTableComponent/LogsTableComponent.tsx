@@ -47,7 +47,9 @@ export default function LogsTableComponent(props: LogsTableComponentProps): JSX.
               </Text>
             </Layout.Vertical>
             <Layout.Vertical spacing="xsmall">
-              <Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('common.hostLabel')}</Text>
+              <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                {getString('cv.monitoringSources.commonHealthSource.logsTable.ServiceInstance')}
+              </Text>
               <Text font={{ variation: FontVariation.BODY }}>{rowData.serviceInstance}</Text>
             </Layout.Vertical>
           </Layout.Horizontal>
@@ -59,7 +61,8 @@ export default function LogsTableComponent(props: LogsTableComponentProps): JSX.
         </Layout.Vertical>
       )
     },
-    drawerOptions: { size: '40%', canOutsideClickClose: false }
+    drawerOptions: { size: '40%', canOutsideClickClose: true },
+    showConfirmationDuringClose: false
   })
 
   if (error) {

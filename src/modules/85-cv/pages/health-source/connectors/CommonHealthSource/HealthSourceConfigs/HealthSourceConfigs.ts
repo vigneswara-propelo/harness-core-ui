@@ -53,7 +53,7 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       fieldMappings: [
         {
           type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
-          label: 'Identifier service path',
+          label: 'Service Instance Identifier',
           identifier: 'serviceInstance',
           defaultValue: '_sourcehost'
         }

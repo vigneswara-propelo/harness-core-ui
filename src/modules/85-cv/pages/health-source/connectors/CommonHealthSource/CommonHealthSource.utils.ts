@@ -463,21 +463,35 @@ export function createHealthSourceConfigurationsData(
   let ignoreThresholds: MetricThresholdType[] = []
   let failFastThresholds: MetricThresholdType[] = []
 
-  if (isEdit && queryMetricsMap.size === 0) {
+  if (isEdit) {
     const currentHealthSource = healthSourceList.find(
       (healthSource: { identifier: string }) => healthSource?.identifier === healthSourceIdentifier
     )
     const { queryDefinitions = [] } = currentHealthSource?.spec || {}
-    queryMetricsMapData = cloneDeep(getUpdatedCustomMetrics(queryDefinitions))
 
-    if (!isTemplate) {
-      ignoreThresholds = getFilteredMetricThresholdValuesV2(MetricThresholdTypes.IgnoreThreshold, [], queryDefinitions)
-      failFastThresholds = getFilteredMetricThresholdValuesV2(
-        MetricThresholdTypes.FailImmediately,
-        [],
-        queryDefinitions
-      )
+    if (queryMetricsMap.size === 0) {
+      queryMetricsMapData = cloneDeep(getUpdatedCustomMetrics(queryDefinitions))
     }
+    if (!isTemplate) {
+      if (!sourceData?.ignoreThresholds?.length && !sourceData?.failFastThresholds?.length) {
+        ignoreThresholds = getFilteredMetricThresholdValuesV2(
+          MetricThresholdTypes.IgnoreThreshold,
+          [],
+          queryDefinitions
+        )
+        failFastThresholds = getFilteredMetricThresholdValuesV2(
+          MetricThresholdTypes.FailImmediately,
+          [],
+          queryDefinitions
+        )
+      } else {
+        ignoreThresholds = sourceData?.ignoreThresholds || []
+        failFastThresholds = sourceData?.failFastThresholds || []
+      }
+    }
+  } else {
+    ignoreThresholds = sourceData?.ignoreThresholds || []
+    failFastThresholds = sourceData?.failFastThresholds || []
   }
 
   return {
