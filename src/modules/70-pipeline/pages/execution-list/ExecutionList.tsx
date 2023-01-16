@@ -30,6 +30,7 @@ import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
 import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSubHeader'
 import { MemoisedExecutionListTable } from './ExecutionListTable/ExecutionListTable'
 import { getIsAnyFilterApplied, getIsSavedFilterApplied, useExecutionListQueryParams } from './utils/executionListUtil'
+import { prepareFiltersPayload } from '../utils/Filters/filters'
 import css from './ExecutionList.module.scss'
 
 export interface ExecutionListProps {
@@ -126,10 +127,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     },
     body:
       !isSavedFilterApplied && queryParams.filters
-        ? {
-            ...queryParams.filters,
-            filterType: 'PipelineExecution'
-          }
+        ? { ...prepareFiltersPayload(queryParams.filters), filterType: 'PipelineExecution' }
         : null
   })
 

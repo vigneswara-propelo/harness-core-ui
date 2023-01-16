@@ -136,8 +136,13 @@ export function ExecutionListFilter(): React.ReactElement {
         } as FilterDTO)
       : null
   const { name = '', filterVisibility, identifier = '', filterProperties } = appliedFilter || {}
-  const { pipelineName, status, moduleProperties, timeRange } =
-    (filterProperties as PipelineExecutionFilterProperties) || {}
+  const {
+    pipelineName,
+    status,
+    moduleProperties,
+    timeRange,
+    pipelineTags: _pipelineTags
+  } = (filterProperties as PipelineExecutionFilterProperties) || {}
   const { ci, cd } = moduleProperties || {}
   const { serviceDefinitionTypes, infrastructureType, serviceIdentifiers, envIdentifiers } = cd || {}
   const { branch, tag, ciExecutionInfoDTO, repoName } = ci || {}
@@ -243,6 +248,7 @@ export function ExecutionListFilter(): React.ReactElement {
         initialFilter={{
           formValues: {
             pipelineName,
+            pipelineTags: _pipelineTags?.reduce((obj, item) => Object.assign(obj, { [item.key]: item.value }), {}),
             repositoryName: repoName,
             status: getMultiSelectFormOptions(status),
             branch,

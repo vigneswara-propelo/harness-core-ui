@@ -7,8 +7,7 @@
 
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import { omit, startCase } from 'lodash-es'
-import type { PipelineExecutionFilterProperties, FilterDTO } from 'services/pipeline-ng'
-
+import type { PipelineExecutionFilterProperties, FilterDTO, NGTag } from 'services/pipeline-ng'
 import { EXECUTION_STATUS } from '@pipeline/utils/statusHelpers'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { StringUtils } from '@common/exports'
@@ -54,9 +53,13 @@ export const getValidFilterArguments = (formData: Record<string, any>): Pipeline
     services,
     environments,
     deploymentType,
-    infrastructureType
+    infrastructureType,
+    pipelineTags
   } = formData
   return Object.assign(omit(formData, ...exclusionList), {
+    pipelineTags: Object.keys(pipelineTags || {})?.map((key: string) => {
+      return { key, value: pipelineTags[key] } as NGTag
+    }),
     status: status?.map((statusOption: MultiSelectOption) => statusOption?.value),
     moduleProperties: {
       ci: getCIModuleProperties(buildType as BUILD_TYPE, {
@@ -76,8 +79,9 @@ export const getValidFilterArguments = (formData: Record<string, any>): Pipeline
   })
 }
 
-export type PipelineExecutionFormType = Omit<PipelineExecutionFilterProperties, 'status'> & {
+export type PipelineExecutionFormType = Omit<PipelineExecutionFilterProperties, 'status' | 'pipelineTags'> & {
   status?: MultiSelectOption[]
+  pipelineTags?: Record<string, any>
 } & BuildTypeContext &
   DeploymentTypeContext
 
@@ -120,6 +124,7 @@ export const createRequestBodyPayload = ({
   } = data
   const {
     pipelineName,
+    pipelineTags: _pipelineTags,
     status: _statuses,
     timeRange,
     moduleProperties: _moduleProperties
@@ -132,6 +137,7 @@ export const createRequestBodyPayload = ({
     orgIdentifier,
     filterProperties: {
       filterType: 'PipelineExecution',
+      pipelineTags: _pipelineTags || [],
       pipelineName: pipelineName || '',
       status: _statuses,
       timeRange: timeRange,

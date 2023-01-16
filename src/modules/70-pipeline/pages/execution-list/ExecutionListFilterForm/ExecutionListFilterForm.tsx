@@ -223,16 +223,15 @@ export function ExecutionListFilterForm<
           placeholder={getString('pipeline.filters.pipelineNamePlaceholder')}
         />
         {isPipeSetupType ? (
-          <>
-            <FormInput.Text
-              name={'description'}
-              label={getString('description')}
-              placeholder={getString('common.descriptionPlaceholder')}
-              key={'description'}
-            />
-            <FormInput.KVTagInput name="pipelineTags" label={getString('tagsLabel')} key="pipelineTags" />
-          </>
+          <FormInput.Text
+            name={'description'}
+            label={getString('description')}
+            placeholder={getString('common.descriptionPlaceholder')}
+            key={'description'}
+          />
         ) : null}
+        <FormInput.KVTagInput name="pipelineTags" label={getString('tagsLabel')} key="pipelineTags" />
+
         {type === 'PipelineExecution' ? (
           <FormInput.MultiSelect
             items={getExecutionStatusOptions()}

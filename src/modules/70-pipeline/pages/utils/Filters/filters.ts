@@ -10,7 +10,7 @@ import { pick } from 'lodash-es'
 import { useMemo } from 'react'
 import { flattenObject, removeNullAndEmpty } from '@common/components/Filter/utils/FilterUtils'
 import { useStrings } from 'framework/strings'
-import type { FilterProperties } from 'services/pipeline-ng'
+import type { FilterProperties, PipelineFilterProperties } from 'services/pipeline-ng'
 
 export const usePipelineListFilterFieldToLabelMapping = () => {
   const { getString } = useStrings()
@@ -40,6 +40,7 @@ export const useExecutionListFilterFieldToLabelMapping = () => {
   return useMemo(() => {
     return new Map<string, string>([
       ['pipelineName', getString('filters.executions.pipelineName')],
+      ['pipelineTags', getString('tagsLabel')],
       ['status', getString('status')],
       ['sourceBranch', getString('common.sourceBranch')],
       ['targetBranch', getString('common.targetBranch')],
@@ -74,4 +75,14 @@ export const useFilterWithValidFieldsWithMetaInfo = (
       : filterWithValidFields
 
   return filterWithValidFieldsWithMetaInfo
+}
+
+export const prepareFiltersPayload = (filters: PipelineFilterProperties) => {
+  if (filters?.pipelineTags) {
+    filters.pipelineTags = filters?.pipelineTags?.map(({ key, value }) => {
+      return { key, value: value ?? '' }
+    })
+  }
+
+  return filters
 }

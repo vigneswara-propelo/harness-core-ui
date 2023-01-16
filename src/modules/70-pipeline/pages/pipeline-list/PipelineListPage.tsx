@@ -43,7 +43,7 @@ import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
 import { CreatePipeline } from './CreatePipeline/CreatePipeline'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
-import { getEmptyStateIllustration, getFiltersRequestPayload, queryParamOptions } from './PipelineListUtils'
+import { getEmptyStateIllustration, queryParamOptions } from './PipelineListUtils'
 import type {
   PipelineListPagePathParams,
   PipelineListPageQueryParams,
@@ -51,6 +51,7 @@ import type {
 } from './types'
 import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
 import { getIsSavedFilterApplied } from '../execution-list/utils/executionListUtil'
+import { prepareFiltersPayload } from '../utils/Filters/filters'
 import css from './PipelineListPage.module.scss'
 
 function _PipelineListPage(): React.ReactElement {
@@ -91,7 +92,10 @@ function _PipelineListPage(): React.ReactElement {
   })
   const { globalFreezes } = useGlobalFreezeBanner()
   const pipelinesQuery = useMutateAsGet(useGetPipelineList, {
-    body: !isSavedFilterApplied && queryParams.filters ? getFiltersRequestPayload(queryParams.filters) : null,
+    body:
+      !isSavedFilterApplied && queryParams.filters
+        ? { ...prepareFiltersPayload(queryParams.filters), filterType: 'PipelineSetup' }
+        : null,
     queryParams: {
       filterIdentifier: isSavedFilterApplied ? filterIdentifier : undefined,
       accountIdentifier: accountId,
