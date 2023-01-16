@@ -827,7 +827,7 @@ exports[`Change table should verify changetable rendering with data 1`] = `
                       <p
                         class="StyledProps--font StyledProps--main sourceName StyledProps--font-size-small"
                       >
-                        HARNESS_FF
+                        HarnessFF
                       </p>
                     </div>
                   </div>

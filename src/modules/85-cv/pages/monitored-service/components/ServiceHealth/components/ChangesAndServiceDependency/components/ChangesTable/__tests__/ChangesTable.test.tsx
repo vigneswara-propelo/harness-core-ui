@@ -118,8 +118,7 @@ describe('Change table', () => {
           serviceIdentifiers: ['srv'],
           startTime: 0,
           changeSourceTypes: [],
-          changeCategories: [],
-          monitoredServiceIdentifiers: ['']
+          changeCategories: []
         },
         queryParamStringifyOptions: { arrayFormat: 'repeat' }
       })
@@ -173,8 +172,7 @@ describe('Change table', () => {
           startTime: 1,
           // Need to remove once these made as optional from BE
           changeCategories: [],
-          changeSourceTypes: [],
-          monitoredServiceIdentifiers: ['']
+          changeSourceTypes: []
         }
       })
     )
@@ -218,7 +216,7 @@ describe('Change table', () => {
     await waitFor(() => expect(getByText('HarnessCDNextGen')).toBeTruthy())
     await waitFor(() => expect(getByText('PagerDuty')).toBeTruthy())
     await waitFor(() => expect(getByText('K8sCluster')).toBeTruthy())
-    await waitFor(() => expect(getByText('HARNESS_FF')).toBeTruthy())
+    await waitFor(() => expect(getByText('HarnessFF')).toBeTruthy())
 
     // verify count on table title
     await waitFor(() => expect(getByText('changes(5)')).toBeTruthy())

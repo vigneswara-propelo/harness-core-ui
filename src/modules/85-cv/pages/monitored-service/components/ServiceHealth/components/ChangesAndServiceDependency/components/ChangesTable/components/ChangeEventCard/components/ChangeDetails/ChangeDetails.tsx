@@ -31,7 +31,7 @@ export default function ChangeDetails({
   const { color, backgroundColor } = statusToColorMapping(status, type) || {}
   if ([ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.K8sCluster].includes(type as ChangeSourceTypes)) {
     details = { source: type as string, ...details, executedBy: (executedBy as any) || null }
-  } else if ([ChangeSourceTypes.HARNESS_FF].includes(type as ChangeSourceTypes)) {
+  } else if ([ChangeSourceTypes.HarnessFF].includes(type as ChangeSourceTypes)) {
     details = { source: getSourceLabel(getString, type), ...details, updatedBy: (executedBy as any) || null }
   }
 
@@ -78,15 +78,13 @@ export const getChanges = (details: {
           </Text>
         ) : Array.isArray(item[1]) ? (
           <Layout.Vertical width="max-content">
-            {value.map((action: string, idx: number) => {
-              return (
-                <Layout.Horizontal key={idx} margin={{ bottom: 'small' }}>
-                  <Text key={idx} font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK_100}>
-                    {action}
-                  </Text>
-                </Layout.Horizontal>
-              )
-            })}
+            {value.map((action: string, idx: number) => (
+              <Layout.Horizontal key={idx} spacing="small">
+                <Text key={idx} font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK_100}>
+                  {action}
+                </Text>
+              </Layout.Horizontal>
+            ))}
           </Layout.Vertical>
         ) : (
           <Text

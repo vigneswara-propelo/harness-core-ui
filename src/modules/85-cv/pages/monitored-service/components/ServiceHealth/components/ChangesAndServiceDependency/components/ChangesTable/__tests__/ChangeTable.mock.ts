@@ -86,7 +86,7 @@ export const mockData = {
         changeSourceIdentifier: 'featureFlag',
         eventTime: 1633961702460,
         category: 'FeatureFlag',
-        type: 'HARNESS_FF'
+        type: 'HarnessFF'
       }
     ],
     pageIndex: 0,

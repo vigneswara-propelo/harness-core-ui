@@ -24,7 +24,7 @@ import ChangeDetails from '../../ChangeDetails/ChangeDetails'
 import YAMLDiffView from './components/YAMLDiffView'
 import css from '../../../ChangeEventCard.module.scss'
 
-export default function HarnessFFEventCard({ data }: { data: ChangeEventDTO }): JSX.Element {
+export default function InternalCSEventCard({ data }: { data: ChangeEventDTO }): JSX.Element {
   const { getString } = useStrings()
   const [timeStamps, setTimestamps] = useState<[number, number]>([0, 0])
   const changeTitleData: ChangeTitleData = useMemo(() => createChangeTitleDataForInternalCS(data), [])
@@ -71,6 +71,19 @@ export default function HarnessFFEventCard({ data }: { data: ChangeEventDTO }): 
         }}
       />
       <Divider className={css.divider} />
+      {internalChangeEvent?.changeEventDetailsLink?.url && (
+        <Container>
+          <Text
+            font={{ size: 'normal', weight: 'bold' }}
+            color={Color.GREY_800}
+            style={{ marginBottom: 'var(--spacing-medium)' }}
+          >
+            {getString('auditTrail.yamlDifference')}
+          </Text>
+          <YAMLDiffView url={internalChangeEvent?.changeEventDetailsLink?.url} />
+        </Container>
+      )}
+      <Divider className={css.divider} />
       {data.eventTime && data.monitoredServiceIdentifier && (
         <>
           <ChangeEventServiceHealth
@@ -89,19 +102,6 @@ export default function HarnessFFEventCard({ data }: { data: ChangeEventDTO }): 
             eventType={data.type}
           />
         </>
-      )}
-      <Divider className={css.divider} />
-      {internalChangeEvent?.changeEventDetailsLink?.url && (
-        <Container>
-          <Text
-            font={{ size: 'normal', weight: 'bold' }}
-            color={Color.GREY_800}
-            style={{ marginBottom: 'var(--spacing-medium)' }}
-          >
-            {getString('auditTrail.yamlDifference')}
-          </Text>
-          <YAMLDiffView url={internalChangeEvent?.changeEventDetailsLink?.url} />
-        </Container>
       )}
     </Card>
   )

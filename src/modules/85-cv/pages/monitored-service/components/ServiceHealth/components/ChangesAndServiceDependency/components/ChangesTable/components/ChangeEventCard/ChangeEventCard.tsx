@@ -46,7 +46,7 @@ export default function ChangeEventCard({ activityId }: { activityId: string }):
         return <HarnessNextGenEventCard data={data?.resource} />
       case ChangeSourceTypes.K8sCluster:
         return <K8sChangeEventCard data={data?.resource} />
-      case ChangeSourceTypes.HARNESS_FF:
+      case ChangeSourceTypes.HarnessFF:
         return <InternalCSEventCard data={data?.resource} />
       default:
         return <NoDataCard message={getString('cv.changeSource.noDataAvaiableForCard')} image={noDataImage} />

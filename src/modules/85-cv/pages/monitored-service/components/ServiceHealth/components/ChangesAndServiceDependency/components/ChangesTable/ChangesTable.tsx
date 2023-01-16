@@ -75,7 +75,9 @@ export default function ChangesTable({
   const changeEventListQueryParams = useMemo(() => {
     const monitoredServiceIdentifierProp = isAccountLevel
       ? { scopedMonitoredServiceIdentifiers: monitoredServiceIdentifiers }
-      : { monitoredServiceIdentifiers: [monitoredServiceIdentifier ?? ''] }
+      : monitoredServiceIdentifier
+      ? { monitoredServiceIdentifiers: [monitoredServiceIdentifier] }
+      : {}
     return {
       ...monitoredServiceIdentifierProp,
       ...(!monitoredServiceIdentifier && serviceIdentifier

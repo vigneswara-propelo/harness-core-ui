@@ -195,7 +195,6 @@ describe('Render ChangeTimeline', () => {
           changeSourceTypes: [],
           serviceIdentifiers: [serviceIdentifier],
           envIdentifiers: [environmentIdentifier],
-          monitoredServiceIdentifiers: [''],
           ...sliderTimeRange
         },
         queryParamStringifyOptions: {
@@ -229,7 +228,6 @@ describe('Render ChangeTimeline', () => {
           changeSourceTypes: [],
           serviceIdentifiers: [serviceIdentifier],
           envIdentifiers: [environmentIdentifier],
-          monitoredServiceIdentifiers: [''],
           ...sliderTimeRange
         },
         queryParamStringifyOptions: {

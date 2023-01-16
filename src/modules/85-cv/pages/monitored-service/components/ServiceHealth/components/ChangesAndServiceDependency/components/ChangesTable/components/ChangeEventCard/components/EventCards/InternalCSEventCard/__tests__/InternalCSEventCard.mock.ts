@@ -42,7 +42,7 @@ export const HarnessFFMockData = {
       eventStartTime: 1633961702460,
       eventEndTime: 1633962499782
     },
-    type: 'HARNESS_FF' as any
+    type: 'HarnessFF' as any
   },
   responseMessages: []
 }

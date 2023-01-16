@@ -115,7 +115,9 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
     /* istanbul ignore else */ if (!useMonitoredServiceChangeTimeline) {
       const monitoredServiceIdentifierProp = isAccountLevel
         ? { scopedMonitoredServiceIdentifiers: monitoredServiceIdentifiers }
-        : { monitoredServiceIdentifiers: [monitoredServiceIdentifier ?? ''] }
+        : monitoredServiceIdentifier
+        ? { monitoredServiceIdentifiers: [monitoredServiceIdentifier] }
+        : {}
       changeEventTimelineRefetch({
         queryParams: {
           ...monitoredServiceIdentifierProp,

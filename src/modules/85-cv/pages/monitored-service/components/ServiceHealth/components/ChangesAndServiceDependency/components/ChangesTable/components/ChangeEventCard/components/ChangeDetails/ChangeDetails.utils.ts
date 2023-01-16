@@ -168,7 +168,7 @@ export const statusToColorMapping = (
 
 export const getSourceLabel = (getString: UseStringsReturn['getString'], type: ChangeEventDTO['type']): string => {
   switch (type) {
-    case ChangeSourceTypes.HARNESS_FF:
+    case ChangeSourceTypes.HarnessFF:
       return getString('common.moduleTitles.cf')
     default:
       return ''

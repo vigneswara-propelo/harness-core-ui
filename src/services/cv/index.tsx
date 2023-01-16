@@ -639,7 +639,7 @@ export interface ChangeEventDTO {
   projectIdentifier: string
   serviceIdentifier?: string
   serviceName?: string
-  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF'
+  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
 }
 
 export interface ChangeEventMetadata {
@@ -662,7 +662,7 @@ export interface ChangeSourceDTO {
   identifier?: string
   name?: string
   spec: ChangeSourceSpec
-  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF'
+  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
 }
 
 export interface ChangeSourceSpec {
@@ -1051,7 +1051,7 @@ export interface DeepLink {
 
 export interface DemoChangeEventDTO {
   changeSourceIdentifier?: string
-  changeSourceType?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF'
+  changeSourceType?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
   monitoredServiceIdentifier?: string
 }
 
@@ -2418,7 +2418,6 @@ export interface HealthSourceRecordsRequest {
   endTime: number
   healthSourceParams?: HealthSourceParamsDTO
   healthSourceQueryParams?: QueryParamsDTO
-  healthSourceSpec?: HealthSourceSpec
   providerType:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -2467,6 +2466,9 @@ export interface HealthSourceRecordsResponse {
   rawRecords?: { [key: string]: any }[]
 }
 
+/**
+ * This is the Health Source entity defined in Harness
+ */
 export interface HealthSourceSpec {
   connectorRef?: string
 }
@@ -3312,6 +3314,9 @@ export interface NewRelicMetricDefinition {
   sli?: Slidto
 }
 
+/**
+ * This is the Health Source entity defined in Harness
+ */
 export interface NextGenHealthSourceSpec {
   connectorRef?: string
   healthSourceParams?: HealthSourceParamsDTO
@@ -3899,7 +3904,6 @@ export interface QueryRecordsRequest {
   endTime: number
   healthSourceParams?: HealthSourceParamsDTO
   healthSourceQueryParams?: QueryParamsDTO
-  healthSourceSpec?: HealthSourceSpec
   providerType:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -4791,6 +4795,14 @@ export interface RestResponseHealthSourceRecordsResponse {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseHealthSourceSpec {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: HealthSourceSpec
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseLearningEngineTask {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -5491,7 +5503,7 @@ export interface ServiceDependencyGraphDTO {
 }
 
 export interface ServiceDependencyMetadata {
-  supportedChangeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  supportedChangeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
   type?: 'KUBERNETES'
 }
 
@@ -6368,7 +6380,7 @@ export interface ChangeEventListForAccountQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6462,7 +6474,7 @@ export interface ChangeEventTimelineForAccountQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6557,7 +6569,7 @@ export interface ChangeEventListQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6645,7 +6657,7 @@ export interface ChangeEventTimelineQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
   searchText?: string
   startTime: number
   endTime: number
@@ -7751,7 +7763,7 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
   monitoredServiceIdentifiers?: string[]
   isMonitoredServiceIdentifierScoped?: boolean
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
   startTime: number
   endTime: number
 }
@@ -7810,7 +7822,7 @@ export interface GetMonitoredServiceChangeTimelineQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
   searchText?: string
   duration: 'FOUR_HOURS' | 'TWENTY_FOUR_HOURS' | 'THREE_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS'
   endTime: number

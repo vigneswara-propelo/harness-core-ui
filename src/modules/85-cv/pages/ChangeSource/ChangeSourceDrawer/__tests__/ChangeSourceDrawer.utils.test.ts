@@ -99,6 +99,10 @@ describe('Validate ChangeSource Utils', () => {
       {
         label: undefined,
         value: 'Alert'
+      },
+      {
+        label: undefined,
+        value: 'FeatureFlag'
       }
     ])
 
@@ -111,6 +115,10 @@ describe('Validate ChangeSource Utils', () => {
       {
         label: undefined,
         value: 'Alert'
+      },
+      {
+        label: undefined,
+        value: 'FeatureFlag'
       }
     ])
 
@@ -126,6 +134,10 @@ describe('Validate ChangeSource Utils', () => {
       {
         label: undefined,
         value: 'Alert'
+      },
+      {
+        label: undefined,
+        value: 'FeatureFlag'
       }
     ])
   })
