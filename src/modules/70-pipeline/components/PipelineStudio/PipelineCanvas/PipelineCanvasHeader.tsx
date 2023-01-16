@@ -19,7 +19,7 @@ import {
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle
 } from '@harness/uicore'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 
@@ -66,6 +66,7 @@ import EndOfLifeBanner from './EndOfLifeBanner'
 import css from './PipelineCanvas.module.scss'
 
 export interface PipelineCanvasHeaderProps {
+  module: string | undefined
   isPipelineRemote: boolean
   isGitSyncEnabled: boolean
   disableVisualView: boolean
@@ -79,6 +80,7 @@ export interface PipelineCanvasHeaderProps {
 
 export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.ReactElement {
   const {
+    module,
     isPipelineRemote,
     isGitSyncEnabled,
     onGitBranchChange,
@@ -121,6 +123,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const { isYamlEditable } = pipelineView
   const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
+  const [showBanner, setShowbanner] = React.useState<boolean>(false)
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
   const pipelineCachedCopyRef = React.useRef<PipelineCachedCopyHandle | null>(null)
   const isCommunity = useGetCommunity()
@@ -253,6 +256,26 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     updatePipelineView({ ...pipelineView, isYamlEditable: false })
     fetchPipeline({ forceFetch: true, forceUpdate: true, loadFromCache: false })
   }
+
+  //Banner Effect
+  React.useEffect(() => {
+    if (module === 'cd') {
+      setShowbanner(true)
+    } else {
+      const v1DeployStages = pipeline?.stages?.filter(
+        (stage: any) =>
+          get(stage, 'stage.spec.serviceConfig') !== undefined ||
+          get(stage, 'parallel')?.some(
+            (parallelStage: any) => get(parallelStage, 'stage.spec.serviceConfig') !== undefined
+          )
+      )
+      //check if non cd module pipeline has any deployment type stage
+      if (v1DeployStages) {
+        if (v1DeployStages.length > 0) setShowbanner(true)
+        else setShowbanner(false)
+      }
+    }
+  }, [pipeline.stages, module])
 
   return (
     <React.Fragment>
@@ -435,7 +458,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
           )}
         </div>
       )}
-      <EndOfLifeBanner />
+      {showBanner && <EndOfLifeBanner />}
       <PipelineOutOfSyncErrorStrip updateRootEntity={updateEntity} errorData={reconcileErrorData} />
     </React.Fragment>
   )

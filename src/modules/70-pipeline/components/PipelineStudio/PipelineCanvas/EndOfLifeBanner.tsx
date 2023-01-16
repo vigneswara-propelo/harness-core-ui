@@ -9,17 +9,19 @@ import React from 'react'
 import { Button, ButtonSize, ButtonVariation, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Callout } from '@blueprintjs/core'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { String } from 'framework/strings'
 import css from './PipelineCanvas.module.scss'
 
-export default function EndOfLifeBanner(): React.ReactElement {
+export interface EndOfLifeBannerProps {
+  isSvcOrEnv?: boolean
+}
+
+export default function EndOfLifeBanner({ isSvcOrEnv }: EndOfLifeBannerProps): React.ReactElement {
   const [hover, setHover] = React.useState(false)
-  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
-  const { preference: showBannerSession = true, setPreference: setShowBannerSession } = usePreferenceStore<
+  const { preference: showV2SvcEnvBanner = true, setPreference: setShowBannerSession } = usePreferenceStore<
     boolean | undefined
-  >(PreferenceScope.PROJECT, 'showBannerSession')
+  >(PreferenceScope.PROJECT, 'showV2SvcEnvBanner')
 
   const onHover = () => {
     setHover(true)
@@ -27,36 +29,46 @@ export default function EndOfLifeBanner(): React.ReactElement {
   const onLeave = () => {
     setHover(false)
   }
-
+  const closeButton = (
+    <Button
+      variation={ButtonVariation.ICON}
+      size={ButtonSize.SMALL}
+      icon="cross"
+      onClick={() => {
+        setShowBannerSession(false)
+      }}
+    />
+  )
+  const truncatedTextBanner = (
+    <Text color={Color.BLACK}>
+      <String stringID="common.svcEnvV2Truncated"></String>
+    </Text>
+  )
+  const fullTextBanner = (
+    <Text color={Color.BLACK}>
+      <String
+        stringID="common.svcEnv2Banner"
+        vars={{
+          support: 'https://support.harness.io/hc/en-us'
+        }}
+        useRichText
+      />
+    </Text>
+  )
   return (
     <>
-      {!NG_SVC_ENV_REDESIGN && showBannerSession ? (
-        <Callout className={css.callout} intent="success" icon={null} onMouseEnter={onHover} onMouseLeave={onLeave}>
-          {hover ? (
-            <Text color={Color.BLACK}>
-              <String
-                stringID="common.svcEnv2Banner"
-                vars={{
-                  support: 'https://support.harness.io/hc/en-us'
-                }}
-                useRichText
-              />
-            </Text>
-          ) : (
-            <Text color={Color.BLACK}>
-              <String stringID="common.svcEnvV2Truncated"></String>
-            </Text>
-          )}
-          <Button
-            variation={ButtonVariation.ICON}
-            size={ButtonSize.SMALL}
-            icon="cross"
-            onClick={() => {
-              setShowBannerSession(false)
-            }}
-          />
-        </Callout>
-      ) : null}
+      {showV2SvcEnvBanner &&
+        (!isSvcOrEnv ? (
+          <Callout className={css.callout} intent="success" icon={null} onMouseEnter={onHover} onMouseLeave={onLeave}>
+            {hover ? fullTextBanner : truncatedTextBanner}
+            {closeButton}
+          </Callout>
+        ) : (
+          <Callout className={css.callout} intent="success" icon={null}>
+            {fullTextBanner}
+            {closeButton}
+          </Callout>
+        ))}
     </>
   )
 }

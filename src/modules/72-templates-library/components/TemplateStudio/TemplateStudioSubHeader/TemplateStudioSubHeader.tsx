@@ -20,8 +20,9 @@ import {
 } from '@harness/uicore'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
+import { get, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
+import type { PipelineType, ProjectPathProps, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import {
@@ -44,7 +45,6 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-
 import css from './TemplateStudioSubHeader.module.scss'
 
 export interface TemplateStudioSubHeaderProps {
@@ -67,6 +67,7 @@ function TemplateStudioSubHeader(
   const { template, originalTemplate, isUpdated, entityValidityDetails, templateYamlError, storeMetadata } = state
   const { getString } = useStrings()
   const { templateIdentifier, accountId, projectIdentifier, orgIdentifier } = useParams<TemplateStudioPathProps>()
+  const { module } = useParams<PipelineType<ProjectPathProps>>()
   const isYaml = view === SelectedView.YAML
   const isVisualViewDisabled = React.useMemo(() => entityValidityDetails.valid === false, [entityValidityDetails.valid])
   const saveTemplateHandleRef = React.useRef<SaveTemplateHandle | null>(null)
@@ -74,6 +75,36 @@ function TemplateStudioSubHeader(
   const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const { supportingGitSimplification } = useAppStore()
   const isPipelineRemote = supportingGitSimplification && storeMetadata?.storeType === StoreType.REMOTE
+  const [showBanner, setShowbanner] = React.useState(false)
+
+  //Banner Effect
+  React.useEffect(() => {
+    if (!isEmpty(projectIdentifier)) {
+      if (module === 'cd' && (template.type === 'Pipeline' || template.type === 'Stage')) setShowbanner(true)
+
+      if (module !== 'cd' && template.spec) {
+        if (template.type === 'Pipeline') {
+          //check deployment type stages in non-cd module pipeline template
+          const pipelineTemplateCdStageCheck = get(template, 'spec.stages')?.filter(
+            (stage: any) =>
+              get(stage, 'stage.spec.serviceConfig') !== undefined ||
+              get(stage, 'parallel')?.some(
+                (parallelStage: any) => get(parallelStage, 'stage.spec.serviceConfig') !== undefined
+              )
+          )
+          if (pipelineTemplateCdStageCheck.length > 0) setShowbanner(true)
+          else setShowbanner(false)
+        }
+        if (template.type === 'Stage') {
+          //check deployment type stage in non-cd module stage template
+          const stageTemplateCdStageCheck = get(template, 'spec.spec.serviceConfig') !== undefined
+          if (stageTemplateCdStageCheck) setShowbanner(true)
+          else setShowbanner(false)
+        }
+      }
+    }
+  }, [template, template.spec, module, projectIdentifier])
+
   React.useImperativeHandle(
     ref,
     () => ({
@@ -207,7 +238,7 @@ function TemplateStudioSubHeader(
           </Container>
         </Layout.Horizontal>
       </Container>
-      <EndOfLifeBanner />
+      {showBanner && <EndOfLifeBanner />}
     </Layout.Vertical>
   )
 }
