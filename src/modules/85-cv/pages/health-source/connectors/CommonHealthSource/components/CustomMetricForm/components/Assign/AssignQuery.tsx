@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container } from '@harness/uicore'
+import { Card, Container } from '@harness/uicore'
 import { RiskProfile } from './components/RiskProfile/RiskProfile'
 import type { AssignQueryProps } from './AssignQuery.types'
 import AssignSection from './components/AssignSection/AssignSection'
@@ -27,13 +27,15 @@ export default function AssignQuery({
     <Container className={css.main}>
       <AssignSection hideCV={hideCV} showOnlySLI={showOnlySLI} hideSLIAndHealthScore={hideSLIAndHealthScore} />
       {(continuousVerification || healthScore) && (
-        <RiskProfile
-          continuousVerificationEnabled={continuousVerification && !hideServiceIdentifier}
-          serviceInstance={typeof serviceInstance === 'string' ? serviceInstance : (serviceInstance?.value as string)}
-          riskCategory={riskCategory}
-          riskProfileResponse={riskProfileResponse}
-          defaultServiceInstance={defaultServiceInstance}
-        />
+        <Card className={css.riskProfile}>
+          <RiskProfile
+            continuousVerificationEnabled={continuousVerification && !hideServiceIdentifier}
+            serviceInstance={typeof serviceInstance === 'string' ? serviceInstance : (serviceInstance?.value as string)}
+            riskCategory={riskCategory}
+            riskProfileResponse={riskProfileResponse}
+            defaultServiceInstance={defaultServiceInstance}
+          />
+        </Card>
       )}
     </Container>
   )
