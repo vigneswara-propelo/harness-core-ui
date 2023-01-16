@@ -3438,6 +3438,9 @@ export interface StringsMap {
   'pipeline.closeStepConfig': string
   'pipeline.codeSource': string
   'pipeline.collapseIsDisabledWhileStageIsRunning': string
+  'pipeline.commitsOn': string
+  'pipeline.commitsTab.youHaveNoCommits': string
+  'pipeline.commitsTab.youWillSeeYourCommitsHere': string
   'pipeline.commonApprovalStep.execution.allConditionsMsg': string
   'pipeline.commonApprovalStep.execution.anyConditionsMsg': string
   'pipeline.conditionalExecution.belowExpression': string
@@ -4028,6 +4031,7 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.ValuesYaml': string
   'pipeline.manifestTypeLabels.VarsYAML': string
   'pipeline.manuallyTriggered': string
+  'pipeline.moreCommitsLabel': string
   'pipeline.mostRecentDirection': string
   'pipeline.moveInlieToRemote': string
   'pipeline.moveStage.description': string
@@ -7226,9 +7230,6 @@ export interface StringsMap {
   'ci.clipboardCopyFail': string
   'ci.clipboardCopySuccess': string
   'ci.commitMessage': string
-  'ci.commitsOn': string
-  'ci.commitsTab.youHaveNoCommits': string
-  'ci.commitsTab.youWillSeeYourCommitsHere': string
   'ci.committed': string
   'ci.connectors': string
   'ci.containerPort': string
@@ -7324,7 +7325,6 @@ export interface StringsMap {
   'ci.infraLabel': string
   'ci.labels': string
   'ci.learnMore': string
-  'ci.moreCommitsLabel': string
   'ci.newConnectorButton': string
   'ci.newItem': string
   'ci.next': string
