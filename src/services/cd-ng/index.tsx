@@ -1872,6 +1872,7 @@ export interface CDPipelineModuleInfo {
 
 export interface CDStageMetaDataDTO {
   environmentRef?: string
+  serviceEnvRefList?: ServiceEnvRef[]
   serviceRef?: string
 }
 
@@ -3735,6 +3736,8 @@ export interface EntityDetail {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
 }
 
 export interface EntityDetailProtoDTO {
@@ -5245,6 +5248,12 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
     | 'STRATEGY_MAX_CONCURRENT'
+    | 'MAX_PARALLEL_STEP_IN_A_PIPELINE'
+    | 'PIPELINE_EXECUTION_DATA_RETENTION_DAYS'
+    | 'MAX_PIPELINE_TIMEOUT_SECONDS'
+    | 'MAX_STAGE_TIMEOUT_SECONDS'
+    | 'MAX_STEP_TIMEOUT_SECONDS'
+    | 'MAX_CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
     | 'TERRAGRUNT_PLAN'
@@ -5321,6 +5330,12 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
     | 'STRATEGY_MAX_CONCURRENT'
+    | 'MAX_PARALLEL_STEP_IN_A_PIPELINE'
+    | 'PIPELINE_EXECUTION_DATA_RETENTION_DAYS'
+    | 'MAX_PIPELINE_TIMEOUT_SECONDS'
+    | 'MAX_STAGE_TIMEOUT_SECONDS'
+    | 'MAX_STEP_TIMEOUT_SECONDS'
+    | 'MAX_CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
     | 'TERRAGRUNT_PLAN'
@@ -5413,6 +5428,12 @@ export interface FeatureRestrictionDetailsDTO {
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
     | 'STRATEGY_MAX_CONCURRENT'
+    | 'MAX_PARALLEL_STEP_IN_A_PIPELINE'
+    | 'PIPELINE_EXECUTION_DATA_RETENTION_DAYS'
+    | 'MAX_PIPELINE_TIMEOUT_SECONDS'
+    | 'MAX_STAGE_TIMEOUT_SECONDS'
+    | 'MAX_STEP_TIMEOUT_SECONDS'
+    | 'MAX_CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
     | 'TERRAGRUNT_PLAN'
@@ -5513,6 +5534,12 @@ export interface FeatureRestrictionMetadataDTO {
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
     | 'STRATEGY_MAX_CONCURRENT'
+    | 'MAX_PARALLEL_STEP_IN_A_PIPELINE'
+    | 'PIPELINE_EXECUTION_DATA_RETENTION_DAYS'
+    | 'MAX_PIPELINE_TIMEOUT_SECONDS'
+    | 'MAX_STAGE_TIMEOUT_SECONDS'
+    | 'MAX_STEP_TIMEOUT_SECONDS'
+    | 'MAX_CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
     | 'TERRAGRUNT_PLAN'
@@ -6160,6 +6187,8 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   )[]
   moduleType?:
     | 'CD'
@@ -6361,6 +6390,8 @@ export interface GitEntityFilterProperties {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6633,6 +6664,8 @@ export interface GitFullSyncEntityInfoDTO {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6828,6 +6861,8 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7144,6 +7179,8 @@ export interface GitSyncEntityDTO {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7333,6 +7370,8 @@ export interface GitSyncEntityListDTO {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7539,6 +7578,8 @@ export interface GitSyncErrorDTO {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -8829,7 +8870,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -8837,6 +8878,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -10226,6 +10268,18 @@ export interface ParameterFieldMapStringString {
   }
 }
 
+export interface ParameterFieldMatrixConfigInterface {
+  defaultValue?: MatrixConfigInterface
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: MatrixConfigInterface
+}
+
 export interface ParameterFieldString {
   defaultValue?: string
   executionInput?: boolean
@@ -10308,7 +10362,12 @@ export type PdcInfrastructure = Infrastructure & {
   connectorRef?: string
   credentialsRef: string
   delegateSelectors?: string[]
+  dynamicallyProvisioned?: boolean
+  hostAttributes?: {
+    [key: string]: string
+  }
   hostFilter: HostFilter
+  hostObjectArray?: JsonNode
   hosts?: string[]
 }
 
@@ -10729,6 +10788,8 @@ export interface ReferencedByDTO {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
 }
 
 export interface RefreshResponse {
@@ -11979,6 +12040,8 @@ export interface ResponseListEntityType {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -14492,6 +14555,11 @@ export interface ServiceDetailsInfoDTOV2 {
   serviceDeploymentDetailsList?: ServiceDetailsDTOV2[]
 }
 
+export interface ServiceEnvRef {
+  environmentRef?: string
+  serviceRef?: string
+}
+
 export interface ServiceExecutionSummary {
   artifacts?: ArtifactsSummary
   deploymentType?: string
@@ -15148,6 +15216,8 @@ export interface StepData {
     | 'ElastigroupSwapRoute'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
 }
 
 export interface StepElementConfig {
@@ -15222,7 +15292,7 @@ export interface StoreConfigWrapperParameters {
 }
 
 export interface StrategyConfig {
-  matrix?: MatrixConfigInterface
+  matrix?: ParameterFieldMatrixConfigInterface
   parallelism?: number
   repeat?: HarnessForConfig
 }
@@ -15485,10 +15555,6 @@ export interface TasInstanceSelectionBase {
   [key: string]: any
 }
 
-export interface TasInstanceValue {
-  value: number
-}
-
 export interface TasInstanceSelectionWrapper {
   spec?: TasInstanceSelectionBase
   type?: 'Percentage' | 'Count'
@@ -15514,6 +15580,15 @@ export type TasPercentageInstanceSelection = TasInstanceSelectionBase & {
 }
 
 export type TasRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type TasRollingDeployStepInfo = StepSpecType & {
+  additionalRoutes?: string[]
+  delegateSelectors?: string[]
+}
+
+export type TasRollingRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
 
@@ -16595,14 +16670,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
 export type DeleteManyFreezesBodyRequestBody = string[]
 
-export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
+export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
-
-export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -17319,6 +17391,8 @@ export interface ListActivitiesQueryParams {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17500,6 +17574,8 @@ export interface ListActivitiesQueryParams {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -17785,6 +17861,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17966,6 +18044,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -32933,6 +33013,12 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
     | 'STRATEGY_MAX_CONCURRENT'
+    | 'MAX_PARALLEL_STEP_IN_A_PIPELINE'
+    | 'PIPELINE_EXECUTION_DATA_RETENTION_DAYS'
+    | 'MAX_PIPELINE_TIMEOUT_SECONDS'
+    | 'MAX_STAGE_TIMEOUT_SECONDS'
+    | 'MAX_STEP_TIMEOUT_SECONDS'
+    | 'MAX_CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
     | 'TERRAGRUNT_PLAN'
@@ -33079,6 +33165,12 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
       | 'STRATEGY_MAX_CONCURRENT'
+      | 'MAX_PARALLEL_STEP_IN_A_PIPELINE'
+      | 'PIPELINE_EXECUTION_DATA_RETENTION_DAYS'
+      | 'MAX_PIPELINE_TIMEOUT_SECONDS'
+      | 'MAX_STAGE_TIMEOUT_SECONDS'
+      | 'MAX_STEP_TIMEOUT_SECONDS'
+      | 'MAX_CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS'
       | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
       | 'MAX_CHAOS_INFRASTRUCTURES'
       | 'TERRAGRUNT_PLAN'
@@ -33283,6 +33375,8 @@ export interface ListReferredByEntitiesQueryParams {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -33525,6 +33619,8 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   searchTerm?: string
 }
 
@@ -35115,8 +35211,8 @@ export const mergeEnvironmentInputsPromise = (
 export interface GetEnvironmentInputsQueryParams {
   environmentIdentifier: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type GetEnvironmentInputsProps = Omit<
@@ -35363,8 +35459,8 @@ export const upsertServiceOverridePromise = (
 export interface GetServiceOverrideInputsQueryParams {
   environmentIdentifier: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceIdentifier: string
 }
 
@@ -36778,6 +36874,8 @@ export interface GetReferencedByQueryParams {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   searchTerm?: string
 }
 
@@ -37234,7 +37332,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37248,7 +37346,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -37263,7 +37361,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37277,7 +37375,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -37289,7 +37387,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -37298,7 +37396,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -37804,7 +37902,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37818,7 +37916,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -37833,7 +37931,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37847,7 +37945,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -37859,7 +37957,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -37868,7 +37966,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -39282,6 +39380,8 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -39531,6 +39631,8 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'AsgRollingDeploy'
       | 'AsgRollingRollback'
       | 'GovernanceRuleAWS'
+      | 'TasRollingDeploy'
+      | 'TasRollingRollback'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -41950,8 +42052,8 @@ export const mergeInfraInputsPromise = (
 
 export interface GetInfrastructureInputsQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   environmentIdentifier: string
   infraIdentifiers?: string[]
   deployToAll?: boolean
@@ -45479,6 +45581,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   yamlGroup?: string
 }
 
@@ -45788,6 +45892,8 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -48133,6 +48239,55 @@ export const createPRPromise = (
     'POST',
     getConfig('ng/api'),
     `/scm/createPR`,
+    props,
+    signal
+  )
+
+export interface GetFileURLQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  repoName?: string
+  filePath: string
+  branch: string
+  connectorRef: string
+  commitId: string
+}
+
+export type GetFileURLProps = Omit<GetProps<ResponseString, Failure | Error, GetFileURLQueryParams, void>, 'path'>
+
+/**
+ * Get file url
+ */
+export const GetFileURL = (props: GetFileURLProps) => (
+  <Get<ResponseString, Failure | Error, GetFileURLQueryParams, void>
+    path={`/scm/file-url`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetFileURLProps = Omit<UseGetProps<ResponseString, Failure | Error, GetFileURLQueryParams, void>, 'path'>
+
+/**
+ * Get file url
+ */
+export const useGetFileURL = (props: UseGetFileURLProps) =>
+  useGet<ResponseString, Failure | Error, GetFileURLQueryParams, void>(`/scm/file-url`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get file url
+ */
+export const getFileURLPromise = (
+  props: GetUsingFetchProps<ResponseString, Failure | Error, GetFileURLQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseString, Failure | Error, GetFileURLQueryParams, void>(
+    getConfig('ng/api'),
+    `/scm/file-url`,
     props,
     signal
   )
@@ -51257,6 +51412,7 @@ export interface DeleteServiceV2QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  forceDelete?: boolean
 }
 
 export type DeleteServiceV2Props = Omit<
@@ -59201,6 +59357,8 @@ export interface GetYamlSchemaQueryParams {
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
     | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
   subtype?:
     | 'K8sCluster'
     | 'Git'

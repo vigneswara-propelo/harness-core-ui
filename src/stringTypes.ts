@@ -4378,6 +4378,8 @@ export interface StringsMap {
   'pipeline.stepDescription.ResourceConstraint': string
   'pipeline.stepDescription.RestoreCacheGCS': string
   'pipeline.stepDescription.RestoreCacheS3': string
+  'pipeline.stepDescription.RollingDeployment': string
+  'pipeline.stepDescription.RollingRollback': string
   'pipeline.stepDescription.Run': string
   'pipeline.stepDescription.RunTests': string
   'pipeline.stepDescription.S3': string
