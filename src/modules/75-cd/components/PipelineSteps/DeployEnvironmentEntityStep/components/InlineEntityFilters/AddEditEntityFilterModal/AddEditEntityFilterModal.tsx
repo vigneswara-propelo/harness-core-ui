@@ -157,7 +157,8 @@ export default function AddEditEntityFilterModal({
                       dataTooltipId: 'inlineEntityFilterMatchType'
                     }}
                     multiTypeInputProps={{
-                      allowableTypes
+                      allowableTypes,
+                      expressions
                     }}
                   />
                   <FormMultiTypeKVTagInput

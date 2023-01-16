@@ -13,7 +13,7 @@ import { Layout, RUNTIME_INPUT_VALUE, TagsPopover, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { FilterSpec, FilterYaml } from 'services/cd-ng'
 
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 
 import {
   EntityFilterMatchType,
@@ -39,33 +39,28 @@ export default function EntityFilterSpec({
     const isTagsRuntime = isValueRuntimeInput(spec?.tags)
 
     /**
-     * 4 conditions with matchType and tags
+     * 2 exclusive conditions with matchType and tags
      * 1. Both Runtime
-     * 2. Match Type Runtime
-     * 3. Tags Runtime
-     * 4. None Runtime
+     * 2. Any other combination
      *  */
 
     if (isMatchTypeRuntime && isTagsRuntime) {
       return <>{RUNTIME_INPUT_VALUE}</>
-    } else if (isMatchTypeRuntime) {
-      return (
-        <Layout.Horizontal>
-          {RUNTIME_INPUT_VALUE}
-          <TagsPopover tags={defaultTo(spec?.tags, {})} target={<TagsPopoverTarget tags={spec?.tags} />} />
-        </Layout.Horizontal>
-      )
-    } else if (isTagsRuntime) {
-      return (
-        <>
-          {getString(entityFilterMatchTypeStringsMap[spec?.matchType as EntityFilterMatchType])} - {RUNTIME_INPUT_VALUE}
-        </>
-      )
     } else {
+      const matchTypeValue = isValueFixed(spec?.matchType)
+        ? getString(entityFilterMatchTypeStringsMap[spec?.matchType as EntityFilterMatchType])
+        : spec?.matchType
+
+      const tagsValue = isValueFixed(spec?.tags) ? (
+        <TagsPopover tags={defaultTo(spec?.tags, {})} target={<TagsPopoverTarget tags={spec?.tags} />} />
+      ) : (
+        `\xa0-\xa0${spec.tags}`
+      )
+
       return (
         <Layout.Horizontal>
-          {getString(entityFilterMatchTypeStringsMap[spec?.matchType as EntityFilterMatchType])}
-          <TagsPopover tags={defaultTo(spec?.tags, {})} target={<TagsPopoverTarget tags={spec?.tags} />} />
+          {matchTypeValue}
+          {tagsValue}
         </Layout.Horizontal>
       )
     }
@@ -88,7 +83,7 @@ export function TagsPopoverTarget({
     const key = tagsKeys[i]
     const value = tags[key]
 
-    finalTagString += (standAlone ? '' : i === 0 ? '\xa0-\xa0' : ',\xa0') + (value ? `${key}:${value}` : key)
+    finalTagString += (i === 0 ? (standAlone ? '' : '\xa0-\xa0') : ',\xa0') + (value ? `${key}:${value}` : key)
   }
 
   return (

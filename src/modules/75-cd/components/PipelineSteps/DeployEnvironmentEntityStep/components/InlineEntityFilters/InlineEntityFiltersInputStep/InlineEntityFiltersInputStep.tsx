@@ -15,7 +15,7 @@ import { useStrings } from 'framework/strings'
 import type { FilterYaml } from 'services/cd-ng'
 
 import { FormMultiTypeKVTagInput } from '@common/components/MutliTypeKVTagInput/MultiTypeKVTagInput'
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
@@ -91,6 +91,8 @@ export default function InlineEntityFiltersInputStep({
                   }}
                   disabled={readonly}
                 />
+              ) : isValueExpression(filterStageValue.spec?.tags) ? (
+                filterStageValue.spec?.tags
               ) : (
                 <TagsPopover
                   tags={defaultTo(filterStageValue.spec?.tags, {})}
