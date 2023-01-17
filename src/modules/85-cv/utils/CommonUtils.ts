@@ -322,3 +322,16 @@ export const openWindowInNewTab = (url?: string): void => {
     window.open(targetUrl, '_blank')
   }
 }
+
+export const getMonitoredServiceIdentifierProp = (
+  isAccountLevel: boolean,
+  monitoredServiceIdentifiers?: string[],
+  monitoredServiceIdentifier?: string
+) => {
+  if (isAccountLevel) {
+    return { scopedMonitoredServiceIdentifiers: monitoredServiceIdentifiers }
+  } else if (monitoredServiceIdentifier) {
+    return { monitoredServiceIdentifiers: [monitoredServiceIdentifier] }
+  }
+  return {}
+}

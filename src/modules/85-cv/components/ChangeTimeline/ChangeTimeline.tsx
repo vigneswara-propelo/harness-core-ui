@@ -8,7 +8,7 @@
 import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { getErrorMessage } from '@cv/utils/CommonUtils'
+import { getErrorMessage, getMonitoredServiceIdentifierProp } from '@cv/utils/CommonUtils'
 import type { TimePeriodEnum } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -113,11 +113,11 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
   useEffect(() => {
     changeEventTimelineCancel()
     /* istanbul ignore else */ if (!useMonitoredServiceChangeTimeline) {
-      const monitoredServiceIdentifierProp = isAccountLevel
-        ? { scopedMonitoredServiceIdentifiers: monitoredServiceIdentifiers }
-        : monitoredServiceIdentifier
-        ? { monitoredServiceIdentifiers: [monitoredServiceIdentifier] }
-        : {}
+      const monitoredServiceIdentifierProp = getMonitoredServiceIdentifierProp(
+        isAccountLevel,
+        monitoredServiceIdentifiers,
+        monitoredServiceIdentifier
+      )
       changeEventTimelineRefetch({
         queryParams: {
           ...monitoredServiceIdentifierProp,

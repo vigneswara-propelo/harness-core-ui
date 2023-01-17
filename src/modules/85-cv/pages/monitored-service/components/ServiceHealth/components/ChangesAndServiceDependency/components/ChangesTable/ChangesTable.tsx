@@ -18,6 +18,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   getCVMonitoringServicesSearchParam,
   getErrorMessage,
+  getMonitoredServiceIdentifierProp,
   getMonitoredServiceIdentifiers
 } from '@cv/utils/CommonUtils'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
@@ -73,11 +74,11 @@ export default function ChangesTable({
   )
 
   const changeEventListQueryParams = useMemo(() => {
-    const monitoredServiceIdentifierProp = isAccountLevel
-      ? { scopedMonitoredServiceIdentifiers: monitoredServiceIdentifiers }
-      : monitoredServiceIdentifier
-      ? { monitoredServiceIdentifiers: [monitoredServiceIdentifier] }
-      : {}
+    const monitoredServiceIdentifierProp = getMonitoredServiceIdentifierProp(
+      isAccountLevel,
+      monitoredServiceIdentifiers,
+      monitoredServiceIdentifier
+    )
     return {
       ...monitoredServiceIdentifierProp,
       ...(!monitoredServiceIdentifier && serviceIdentifier
