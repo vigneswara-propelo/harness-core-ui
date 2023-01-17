@@ -36,9 +36,10 @@ import {
 import { TemplatePreview } from '@templates-library/components/TemplatePreview/TemplatePreview'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import useDeleteConfirmationDialog from '@pipeline/pages/utils/DeleteConfirmDialog'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
+import { FeatureFlag } from '@common/featureFlags'
 import css from './DeleteTemplateModal.module.scss'
 
 export interface DeleteTemplateProps {
@@ -74,7 +75,8 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { mutate: deleteTemplates, loading: deleteLoading } = useDeleteTemplateVersionsOfIdentifier({})
   const [templateVersionsToDelete, setTemplateVersionsToDelete] = React.useState<string[]>([])
-  const { CDS_FORCE_DELETE_ENTITIES } = useFeatureFlags()
+  const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
+
   const {
     data: templateData,
     loading,
@@ -133,7 +135,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
         throw getString('somethingWentWrong')
       }
     } catch (err) {
-      if (CDS_FORCE_DELETE_ENTITIES && err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+      if (isForceDeletedAllowed && err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
         openReferenceErrorDialog()
         return
       }
@@ -156,8 +158,9 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
       type: ResourceType.TEMPLATE,
       name: defaultTo(template?.name, '')
     },
+    hideReferencedByButton: true,
     redirectToReferencedBy: redirectToReferencedBy,
-    forceDeleteCallback: CDS_FORCE_DELETE_ENTITIES
+    forceDeleteCallback: isForceDeletedAllowed
       ? () => performDelete(commitMessage, templateVersionsToDelete, true)
       : undefined
   })
