@@ -84,7 +84,7 @@ exports[`Test Wait Step render edit view as edit step 1`] = `
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="stepStepForm_name"
+              data-tooltip-id="waitStepForm_name"
             >
               pipelineSteps.stepNameLabel
             </span>
@@ -124,7 +124,7 @@ exports[`Test Wait Step render edit view as edit step 1`] = `
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="stepStepForm_spec.duration"
+            data-tooltip-id="waitStepForm_spec.duration"
           >
             pipeline.duration
           </span>
@@ -245,7 +245,7 @@ exports[`Test Wait Step render edit view as new step 1`] = `
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="stepStepForm_name"
+              data-tooltip-id="waitStepForm_name"
             >
               pipelineSteps.stepNameLabel
             </span>
@@ -285,7 +285,7 @@ exports[`Test Wait Step render edit view as new step 1`] = `
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="stepStepForm_spec.duration"
+            data-tooltip-id="waitStepForm_spec.duration"
           >
             pipeline.duration
           </span>
@@ -408,7 +408,7 @@ exports[`Test Wait Step render runtime inputs in edit step 1`] = `
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="stepStepForm_name"
+              data-tooltip-id="waitStepForm_name"
             >
               pipelineSteps.stepNameLabel
             </span>
@@ -448,7 +448,7 @@ exports[`Test Wait Step render runtime inputs in edit step 1`] = `
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="stepStepForm_spec.duration"
+            data-tooltip-id="waitStepForm_spec.duration"
           >
             pipeline.duration
           </span>
@@ -761,13 +761,3 @@ exports[`Test Wait Step renders input sets 1`] = `
   </div>
 </div>
 `;
-
-exports[`validate policy step input sets validates default inputs set correctly 1`] = `
-Object {
-  "spec": Object {
-    "duration": "Invalid syntax provided",
-  },
-}
-`;
-
-exports[`validate policy step input sets validates timeout is min 10s 1`] = `Object {}`;
