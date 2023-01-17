@@ -13,6 +13,7 @@ import type {
   useGetEnvironmentListForProject
 } from 'services/cd-ng'
 import type { useConfirmAction, useQueryParams } from '@common/hooks'
+import type { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import type { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
 import type RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
@@ -36,6 +37,7 @@ export interface FFCustomMicroFrontendProps {
   customHooks: {
     useConfirmAction: typeof useConfirmAction
     useQueryParams: typeof useQueryParams
+    useQueryParamsState: typeof useQueryParamsState
     useLicenseStore: typeof useLicenseStore
     useSyncedEnvironment: typeof useSyncedEnvironment
     useActiveEnvironment: typeof useActiveEnvironment

@@ -17,6 +17,7 @@ import {
 } from 'services/cd-ng'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useConfirmAction, useQueryParams } from '@common/hooks'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
@@ -47,6 +48,7 @@ const FFUIApp: FC = () => (
       useActiveEnvironment,
       useLicenseStore,
       useQueryParams,
+      useQueryParamsState,
       useSyncedEnvironment,
       usePreferenceStore
     }}
