@@ -416,6 +416,9 @@ export function handleUpdateLicenseStore(
     }
   } else if (module.toUpperCase() === ModuleName.CHAOS) {
     newLicenseInformation[ModuleName.CHAOS] = data
+    licenseStoreData = {
+      licenseInformation: newLicenseInformation
+    }
   } else if (module.toUpperCase() === ModuleName.STO) {
     newLicenseInformation[ModuleName.STO] = data
     licenseStoreData = {

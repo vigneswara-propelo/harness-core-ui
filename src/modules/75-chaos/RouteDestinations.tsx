@@ -203,7 +203,7 @@ export default function ChaosRoutes(): React.ReactElement {
     // RBAC registrations
     RbacFactory.registerResourceCategory(ResourceCategory.CHAOS, {
       icon: 'chaos-main',
-      label: 'common.chaosText'
+      label: 'common.purpose.chaos.chaos'
     })
 
     RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_HUB, {
@@ -292,7 +292,7 @@ export default function ChaosRoutes(): React.ReactElement {
       <RouteWithLayout
         licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
-        path={routes.toModuleHome({ ...projectPathProps, ...chaosModuleParams })}
+        path={routes.toModuleHome({ ...accountPathProps, ...chaosModuleParams })}
         exact
         pageName={PAGE_NAME.ChaosHomePage}
       >

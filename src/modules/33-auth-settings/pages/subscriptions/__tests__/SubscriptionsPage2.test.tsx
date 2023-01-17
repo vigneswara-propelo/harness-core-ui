@@ -57,7 +57,8 @@ const featureFlags = {
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,
-  CFNG_ENABLED: true
+  CFNG_ENABLED: true,
+  CHAOS_ENABLED: true
 }
 
 describe('Subscriptions Page', () => {

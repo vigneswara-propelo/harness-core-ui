@@ -136,7 +136,6 @@ export interface StringsMap {
   'common.changeIntelligence': string
   'common.changesUnsaved': string
   'common.channel': string
-  'common.chaosText': string
   'common.city': string
   'common.clearSelection': string
   'common.clickToExpand': string
@@ -725,6 +724,12 @@ export interface StringsMap {
   'common.purpose.cf.subtitle': string
   'common.purpose.change': string
   'common.purpose.changeSelection': string
+  'common.purpose.chaos.chaos': string
+  'common.purpose.chaos.continuous': string
+  'common.purpose.chaos.description': string
+  'common.purpose.chaos.engineering': string
+  'common.purpose.chaos.moduleSelectionSubHeading': string
+  'common.purpose.chaos.subtitle': string
   'common.purpose.ci.continuous': string
   'common.purpose.ci.continuousLabel': string
   'common.purpose.ci.description': string
@@ -970,6 +975,8 @@ export interface StringsMap {
   'common.subscriptions.ccm.cloudSpend': string
   'common.subscriptions.cd.serviceInstances': string
   'common.subscriptions.cd.services': string
+  'common.subscriptions.chaos.experiments': string
+  'common.subscriptions.chaos.infrastructures': string
   'common.subscriptions.ci.developers': string
   'common.subscriptions.expired': string
   'common.subscriptions.expiryCountdown': string
@@ -3079,6 +3086,7 @@ export interface StringsMap {
   'projectsOrgs.gotoBuilds': string
   'projectsOrgs.gotoCD': string
   'projectsOrgs.gotoCF': string
+  'projectsOrgs.gotoCHAOS': string
   'projectsOrgs.gotoCI': string
   'projectsOrgs.gotoCV': string
   'projectsOrgs.gotoCloudCosts': string
@@ -3137,6 +3145,7 @@ export interface StringsMap {
   'projectsOrgs.purposeList.ce': string
   'projectsOrgs.purposeList.cf': string
   'projectsOrgs.purposeList.change': string
+  'projectsOrgs.purposeList.chaos': string
   'projectsOrgs.purposeList.ci': string
   'projectsOrgs.purposeList.continuous': string
   'projectsOrgs.purposeList.cv': string
@@ -3144,6 +3153,7 @@ export interface StringsMap {
   'projectsOrgs.purposeList.descriptionCD': string
   'projectsOrgs.purposeList.descriptionCE': string
   'projectsOrgs.purposeList.descriptionCF': string
+  'projectsOrgs.purposeList.descriptionCHAOS': string
   'projectsOrgs.purposeList.descriptionCI': string
   'projectsOrgs.purposeList.descriptionCV': string
   'projectsOrgs.purposeList.efficiency': string
@@ -7185,6 +7195,7 @@ export interface StringsMap {
   'chaos.chaosHub': string
   'chaos.chaosInfrastructure': string
   'chaos.chaosTrialHomePage.description': string
+  'chaos.continuous': string
   'chaos.environments.create.description': string
   'chaos.environments.create.duplicateName': string
   'chaos.environments.create.envTypeLabel': string

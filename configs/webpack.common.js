@@ -28,8 +28,7 @@ const ChildAppError = path.resolve(CONTEXT, './src/microfrontends/ChildAppError.
 
 const enableGovernance = process.env.ENABLE_GOVERNANCE !== 'false'
 const enableGitOpsUI = process.env.ENABLE_GITOPSUI !== 'false'
-// TODO: change condition to !== 'false' upon GA
-const enableChaosUI = process.env.ENABLE_CHAOS === 'true'
+const enableChaosUI = process.env.ENABLE_CHAOS !== 'false'
 const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
 const enableCIUI = process.env.ENABLE_CI_UI === 'true'
 const enableTIUI = process.env.ENABLE_TI_UI === 'true'

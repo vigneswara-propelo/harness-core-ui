@@ -33,7 +33,8 @@ const MODULE_ICONS: {
   CV: 'srm-with-dark-text',
   CF: 'ff-with-dark-text',
   CI: 'ci-with-dark-text',
-  STO: 'sto-with-dark-text'
+  STO: 'sto-with-dark-text',
+  CHAOS: 'chaos-with-dark-text'
 }
 
 const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
@@ -92,7 +93,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
 const SubscribedModules: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
   function isModuleEnabled(moduleLicense: ModuleLicenseDTO): boolean | undefined {
     const moduleType = moduleLicense['moduleType']
     const moduleTypeName = moduleType === ModuleName.SRM ? ModuleName.CV : moduleType
@@ -116,6 +117,9 @@ const SubscribedModules: React.FC = () => {
       }
       case ModuleName.STO: {
         return licenseStatus === 'ACTIVE'
+      }
+      case ModuleName.CHAOS: {
+        return CHAOS_ENABLED
       }
       default:
         return undefined

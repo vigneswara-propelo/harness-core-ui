@@ -83,9 +83,9 @@ const ChaosTrialHomePage: React.FC = () => {
     try {
       const data = await startPlan()
 
-      const expiryTime = data?.data?.expiryTime
+      const expiryTime = data.data?.expiryTime
 
-      const updatedLicenseInfo = data?.data && {
+      const updatedLicenseInfo = data.data && {
         ...licenseInformation?.[moduleType],
         ...pick(data?.data, ['licenseType', 'edition']),
         expiryTime
@@ -121,7 +121,7 @@ const ChaosTrialHomePage: React.FC = () => {
 
   return (
     <StartTrialTemplate
-      title={getString('chaos.homepage.chaosHomePageTitle')}
+      title={getString('common.purpose.chaos.continuous')}
       bgImageUrl={bgImageURL}
       startTrialProps={startTrialProps}
       module={module}

@@ -1947,6 +1947,11 @@ export type CVModuleLicenseDTO = ModuleLicenseDTO & {
   numberOfServices?: number
 }
 
+export type CHAOSLicenseSummaryDTO = LicensesWithSummaryDTO & {
+  totalChaosExperimentRuns?: number
+  totalChaosInfrastructures?: number
+}
+
 export interface CacheResponseMetadata {
   cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
   lastUpdatedAt: number
@@ -2009,7 +2014,7 @@ export interface ChangeRate {
   trend?: 'UP_TREND' | 'DOWN_TREND' | 'NO_CHANGE' | 'INVALID'
 }
 
-export type ChaosModuleLicenseDTO = ModuleLicenseDTO & {
+export type CHAOSModuleLicenseDTO = ModuleLicenseDTO & {
   totalChaosExperimentRuns?: number
   totalChaosInfrastructures?: number
 }

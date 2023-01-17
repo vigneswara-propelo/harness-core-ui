@@ -35,7 +35,7 @@ export const ChaosNavItem = () => {
             color={Color.WHITE}
             className={css.text}
           >
-            <String stringID="common.chaosText" />
+            <String stringID="common.purpose.chaos.chaos" />
           </Text>
         </Layout.Vertical>
       </Link>

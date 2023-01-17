@@ -9,7 +9,7 @@ import React, { useMemo, useState } from 'react'
 
 import { Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import type { ModuleName } from 'framework/types/ModuleName'
+import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import { useLisCDActiveServices, LisCDActiveServicesQueryParams } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -101,7 +101,9 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         trialInformation={trialInformation}
         refetchGetLicense={refetchGetLicense}
       />
-      {enabled && licenseData && <SubscriptionUsageCard module={module} licenseData={licenseData} />}
+      {enabled && licenseData && module !== ModuleName.CHAOS && (
+        <SubscriptionUsageCard module={module} licenseData={licenseData} />
+      )}
       {module === 'CD' && (licenseData as CDModuleLicenseDTO)?.cdLicenseType === 'SERVICES' ? (
         <ServiceLicenseTable
           gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}

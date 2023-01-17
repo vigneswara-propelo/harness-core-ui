@@ -35,6 +35,8 @@ export const getModuleTitle = (module: ModuleName): keyof StringsMap => {
       return 'common.purpose.cf.feature'
     case ModuleName.STO:
       return 'common.purpose.sto.security'
+    case ModuleName.CHAOS:
+      return 'common.purpose.chaos.chaos'
     case ModuleName.CD:
     case ModuleName.CI:
     default:
@@ -56,6 +58,8 @@ export const getModulePurpose = (module: ModuleName): keyof StringsMap | undefin
       return 'common.purpose.cf.flags'
     case ModuleName.STO:
       return 'common.purpose.sto.tests'
+    case ModuleName.CHAOS:
+      return 'common.purpose.chaos.engineering'
   }
 }
 export const getModuleDescriptionsForModuleSelectionDialog = (module: ModuleName): keyof StringsMap | undefined => {
@@ -72,6 +76,8 @@ export const getModuleDescriptionsForModuleSelectionDialog = (module: ModuleName
       return 'common.purpose.cf.moduleSelectionSubHeading'
     case ModuleName.STO:
       return 'common.purpose.sto.moduleSelectionSubHeading'
+    case ModuleName.CHAOS:
+      return 'common.purpose.chaos.moduleSelectionSubHeading'
   }
 }
 export const getModuleDescription = (module: ModuleName): StringKeys => {
@@ -86,6 +92,8 @@ export const getModuleDescription = (module: ModuleName): StringKeys => {
       return 'projectsOrgs.purposeList.descriptionCE'
     case ModuleName.CF:
       return 'projectsOrgs.purposeList.descriptionCF'
+    case ModuleName.CHAOS:
+      return 'projectsOrgs.purposeList.descriptionCHAOS'
   }
   return 'projectsOrgs.blank'
 }
@@ -137,6 +145,8 @@ export const getModuleFullLengthTitle = (module: ModuleName): keyof StringsMap =
       return 'common.purpose.ci.continuous'
     case ModuleName.STO:
       return 'common.purpose.sto.continuous'
+    case ModuleName.CHAOS:
+      return 'common.purpose.chaos.continuous'
     default:
       return 'common.purpose.cd.continuous'
   }

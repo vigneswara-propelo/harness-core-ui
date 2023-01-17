@@ -319,6 +319,13 @@ purpose:
     title: Error Tracking
   code:
     name: Code
+  chaos:
+    continuous: Chaos Engineering
+    chaos: Chaos
+    engineering: Engineering
+    subtitle: Build and validate the resilience of your service through controlled chaos experiments.
+    description: '{{$.common.purpose.chaos.subtitle}}'
+    moduleSelectionSubHeading: '{{$.common.purpose.chaos.subtitle}}'
 trialInProgress: Trial in progress
 trialInProgressDescription: A Project contains your pipelines, resources, and team members. Get started by creating your first Project.
 letsGetYouStarted: Let’s get you started
@@ -496,6 +503,9 @@ subscriptions:
     developers: '{{ developers }} Developers'
   sto:
     developers: '{{ developers }} Developers'
+  chaos:
+    experiments: '{{ experiments }} Experiments per month'
+    infrastructures: '{{ infrastructures }} Chaos Infrastructures'
   expiryCountdown: expires in {{ days }} days
   expired: expired {{ days }} days ago
   banner:
@@ -1018,9 +1028,6 @@ configureModuleList: Configure Module List
 codeErrorsAgents: Code Error Agents
 cdAndGitops: Continuous Delivery & GitOps
 stoText: Security Testing Orchestration
-
-# Chaos Module
-chaosText: Chaos
 
 # IACM Module
 iacm: IACM

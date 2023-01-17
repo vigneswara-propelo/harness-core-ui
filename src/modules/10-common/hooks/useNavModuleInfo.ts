@@ -110,7 +110,7 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   },
   [ModuleName.CHAOS]: {
     icon: 'chaos-main',
-    label: 'chaos.homepage.chaosHomePageTitle',
+    label: 'common.purpose.chaos.continuous',
     getHomePageUrl: (accountId: string) => routes.toChaos({ accountId }),
     featureFlagName: FeatureFlag.CHAOS_ENABLED,
     color: '--chaos-border',

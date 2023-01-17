@@ -18,7 +18,8 @@ import {
   STOLicenseSummaryDTO,
   useGetCDLicenseUsageForServiceInstances,
   useGetCDLicenseUsageForServices,
-  CVLicenseSummaryDTO
+  CVLicenseSummaryDTO,
+  CHAOSLicenseSummaryDTO
 } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useGetLicenseUsage as useGetFFUsage } from 'services/cf'
@@ -94,6 +95,10 @@ interface LimitProps {
   cv?: {
     totalServices?: number
   }
+  chaos?: {
+    totalChaosExperimentRuns?: number
+    totalChaosInfrastructures?: number
+  }
 }
 
 interface LimitReturn {
@@ -159,6 +164,15 @@ function useGetLimit(module: ModuleName): LimitReturn {
         moduleLimit = {
           cv: {
             totalServices: (limitData?.data as CVLicenseSummaryDTO)?.totalServices
+          }
+        }
+        break
+      }
+      case ModuleName.CHAOS: {
+        moduleLimit = {
+          chaos: {
+            totalChaosExperimentRuns: (limitData?.data as CHAOSLicenseSummaryDTO)?.totalChaosExperimentRuns,
+            totalChaosInfrastructures: (limitData?.data as CHAOSLicenseSummaryDTO)?.totalChaosInfrastructures
           }
         }
         break
