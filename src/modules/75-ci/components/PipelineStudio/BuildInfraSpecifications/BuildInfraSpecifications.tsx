@@ -382,7 +382,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<BuildInfraFormValues>>()
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
-  const { CIE_HOSTED_VMS, CI_DOCKER_INFRASTRUCTURE, CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS } = useFeatureFlags()
+  const { CIE_HOSTED_VMS, CI_DOCKER_INFRASTRUCTURE, CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS, ENABLE_K8_BUILDS } =
+    useFeatureFlags()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
   const { licenseInformation } = useLicenseStore()
@@ -409,7 +410,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           } as Item
         ]
       : []),
-    ...(!isFreeEdition || isSecurityEnterprise
+    ...(!isFreeEdition || isSecurityEnterprise || ENABLE_K8_BUILDS
       ? [
           {
             label: getString('pipeline.serviceDeploymentTypes.kubernetes'),
