@@ -319,7 +319,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
           <StepWidget<CustomVariablesData, CustomVariableInputSetExtraProps>
             factory={factory as unknown as AbstractStepFactory}
             initialValues={{
-              variables: (originalPipeline.variables || []) as AllNGVariables[],
+              variables: (originalPipeline?.variables || []) as AllNGVariables[],
               canAddVariable: true
             }}
             allowableTypes={getFilteredAllowableTypes(allowableTypes, viewType)}

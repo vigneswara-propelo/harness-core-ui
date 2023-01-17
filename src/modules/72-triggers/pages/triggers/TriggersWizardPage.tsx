@@ -182,7 +182,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     } as GetTriggerQueryParams
     // lazy: true
   })
-  const { data: pipelineResponse } = useGetPipeline({
+  const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
     pipelineIdentifier,
     queryParams: {
       accountIdentifier: accountId,
@@ -374,17 +374,16 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     )
   })
 
-  const originalPipeline: PipelineInfoConfig | undefined = memoizedParse<Pipeline>(
-    (pipelineResponse?.data?.yamlPipeline as any) || ''
-  )?.pipeline
+  const originalPipeline: PipelineInfoConfig | undefined =
+    memoizedParse<Pipeline>((pipelineResponse?.data?.yamlPipeline as any) || '')?.pipeline ?? {}
 
   const resolvedPipeline: PipelineInfoConfig | undefined = memoizedParse<Pipeline>(
     (pipelineResponse?.data?.resolvedTemplatesPipelineYaml as any) || ''
   )?.pipeline
 
   const shouldRenderWizard = useMemo(() => {
-    return !loadingGetTrigger && !fetchingTemplate
-  }, [loadingGetTrigger, fetchingTemplate])
+    return !loadingGetTrigger && !fetchingTemplate && !loadingPipeline
+  }, [loadingGetTrigger, fetchingTemplate, loadingPipeline])
 
   useDeepCompareEffect(() => {
     if (shouldRenderWizard && template?.data?.inputSetTemplateYaml !== undefined) {
