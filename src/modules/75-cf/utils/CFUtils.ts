@@ -15,7 +15,7 @@ import type { Feature, Variation } from 'services/cf'
 const LOCALE = 'en'
 
 /**
- * Format a timestamp to short format time (i.e: 7:41 AM)
+ * Format a timestamp to the short format time (i.e: 7:41 AM)
  * @param timestamp Timestamp
  * @param timeStyle Optional DateTimeFormat's `timeStyle` option.
  */
@@ -28,7 +28,7 @@ export function formatTime(timestamp: number, timeStyle = 'short'): string {
 }
 
 /**
- * Format a timestamp to medium format date (i.e: Jan 1, 2021)
+ * Format a timestamp to the medium format date (i.e: Jan 1, 2021)
  * @param timestamp Timestamp
  * @param dateStyle Optional DateTimeFormat's `dateStyle` option.
  */

@@ -61,7 +61,8 @@ describe('OnboardingDetailPage', () => {
     // Footer buttons
     expect(screen.getByText('next')).toBeVisible()
     expect(screen.getByText('next').closest('button')).toBeDisabled()
-    expect(screen.getByText('back')).toBeVisible()
+    //As it is on the first step the button should say 'Cancel'
+    expect(screen.getByText('cancel')).toBeVisible()
   })
 
   test('Should be able to create a flag', async () => {

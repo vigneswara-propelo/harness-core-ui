@@ -257,13 +257,17 @@ export const OnboardingDetailPage: React.FC = () => {
             flex={{ alignItems: 'flex-start' }}
           >
             <Button
-              text={getString('back')}
-              icon="chevron-left"
+              text={getString(selectedStep !== STEP.CREATE_A_FLAG ? 'back' : 'cancel')}
+              icon={selectedStep !== STEP.CREATE_A_FLAG ? 'chevron-left' : undefined}
               onClick={() => {
-                trackEvent(FeatureActions.GetStartedPrevious, {
-                  category: Category.FEATUREFLAG
-                })
-                onPrevious()
+                if (selectedStep !== STEP.CREATE_A_FLAG) {
+                  trackEvent(FeatureActions.GetStartedPrevious, {
+                    category: Category.FEATUREFLAG
+                  })
+                  onPrevious()
+                } else {
+                  handleClose()
+                }
               }}
             />
             <Button
