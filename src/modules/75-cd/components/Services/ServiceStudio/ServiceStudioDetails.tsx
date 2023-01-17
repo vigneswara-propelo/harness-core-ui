@@ -61,7 +61,8 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     isServiceCreateModalView,
     onServiceCreate,
     onCloseModal,
-    serviceResponse: serviceData
+    serviceResponse: serviceData,
+    setIsDeploymentTypeDisabled
   } = useServiceContext()
   const [selectedTabId, setSelectedTabId] = useState(tab ?? ServiceTabs.SUMMARY)
   const { showSuccess, showError, clear } = useToaster()
@@ -101,13 +102,12 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
 
     let updatedService
     const isVisualView = view === SelectedView.VISUAL
+    const newServiceDefinition = get(pipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
     if (!isVisualView) {
-      const stage = get(pipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
-
       updatedService = produce(props.serviceData, draft => {
         if (draft) {
           setNameIDDescription(draft.service as PipelineInfoConfig, pipeline as ServicePipelineConfig)
-          set(draft, 'service.serviceDefinition', stage)
+          set(draft, 'service.serviceDefinition', newServiceDefinition)
         }
       })
     }
@@ -146,6 +146,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
               : getString('common.serviceUpdated')
           )
           fetchPipeline({ forceFetch: true, forceUpdate: true })
+          setIsDeploymentTypeDisabled?.(!!newServiceDefinition.type)
         }
       } else {
         throw response
