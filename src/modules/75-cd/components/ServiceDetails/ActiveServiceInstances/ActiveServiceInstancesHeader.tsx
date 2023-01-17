@@ -14,7 +14,7 @@ import { Layout, Text } from '@harness/uicore'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import {
   ChangeRate,
-  GetActiveServiceInstanceSummaryQueryParams,
+  GetActiveServiceInstanceSummaryV2QueryParams,
   useGetActiveServiceInstanceSummary,
   useGetActiveServiceInstanceSummaryV2
 } from 'services/cd-ng'
@@ -33,7 +33,7 @@ export const ActiveServiceInstancesHeader: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { CDC_DASHBOARD_ENHANCEMENT_NG: flag } = useFeatureFlags()
 
-  const queryParams: GetActiveServiceInstanceSummaryQueryParams = useMemo(
+  const queryParams: GetActiveServiceInstanceSummaryV2QueryParams = useMemo(
     () => ({
       accountIdentifier: accountId,
       orgIdentifier,

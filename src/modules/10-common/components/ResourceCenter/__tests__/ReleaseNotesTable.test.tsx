@@ -8,12 +8,13 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { useGetAccountNG, useGetModulesVersion } from 'services/cd-ng'
+
+import { useGetAccountNG } from 'services/cd-ng'
+import * as cdNgOpenApiServices from 'services/cd-ng-open-api'
 import { ModuleVersionTable } from '../ReleaseNotesModal/ReleaseNotesTable'
 
 jest.mock('services/cd-ng')
 const useGetAccountNGMock = useGetAccountNG as jest.MockedFunction<any>
-const useGetModulesVersionMock = useGetModulesVersion as jest.MockedFunction<any>
 
 beforeEach(() => {
   window.deploymentType = 'SAAS'
@@ -36,20 +37,20 @@ beforeEach(() => {
 describe('module version table', () => {
   describe('Rendering', () => {
     test('module version table showing up', async () => {
-      useGetModulesVersionMock.mockImplementation(() => {
-        return {
-          data: [
-            {
-              name: 'testName',
-              display_name: 'testDisplayName',
-              version: '7800',
-              updated: 'testUpdate',
-              release_notes_link: 'link'
-            }
-          ],
-          refetch: jest.fn()
-        }
-      })
+      jest.spyOn(cdNgOpenApiServices, 'useListModuleVersions').mockReturnValue({
+        data: [
+          {
+            name: 'testName',
+            display_name: 'testDisplayName',
+            version: '7800',
+            updated: 'testUpdate',
+            release_notes_link: 'link'
+          }
+        ],
+        refetch: jest.fn(),
+        loading: false,
+        error: null
+      } as any)
 
       const { container } = render(
         <TestWrapper>
@@ -68,11 +69,9 @@ describe('module version table', () => {
     })
 
     test('module version table not showing up', async () => {
-      useGetModulesVersionMock.mockImplementation(() => {
-        return {
-          refetch: jest.fn()
-        }
-      })
+      jest.spyOn(cdNgOpenApiServices, 'useListModuleVersions').mockReturnValue({
+        refetch: jest.fn()
+      } as any)
       const { container } = render(
         <TestWrapper>
           <ModuleVersionTable />

@@ -57,6 +57,7 @@ import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/Exec
 import { mapToExecutionStatus } from '@pipeline/components/Dashboards/shared'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { calcTrend, RateTrend, TrendPopover } from '@cd/pages/dashboard/dashboardUtils'
+import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 
@@ -369,21 +370,15 @@ const RenderLastDeployment: Renderer<CellProps<ServiceListItem>> = ({ row }) => 
 const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   const data = row.original
   const [menuOpen, setMenuOpen] = useState(false)
-  const [deleteError, setDeleteError] = useState('')
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const { CDS_FORCE_DELETE_ENTITIES } = useFeatureFlags()
 
-  const { mutate: deleteService } = useDeleteServiceV2({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier: orgIdentifier,
-      projectIdentifier: projectIdentifier
-    }
-  })
+  const { mutate: deleteService } = useDeleteServiceV2({})
 
   const [showModal, hideModal] = useModalHook(
     () => (
@@ -412,28 +407,29 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
     [data, orgIdentifier, projectIdentifier]
   )
 
-  const { openDialog: openDeleteErrorDialog } = useConfirmationDialog({
-    titleText: getString('common.deleteServiceFailure'),
-    contentText: deleteError,
-    cancelButtonText: getString('close'),
-    confirmButtonText: getString('common.viewReferences'),
-    intent: Intent.DANGER,
-    onCloseDialog: async isConfirmed => {
-      setDeleteError('')
-      if (isConfirmed) {
-        history.push({
-          pathname: routes.toServiceStudio({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            serviceId: data.identifier,
-            module
-          }),
-          search: `tab=${ServiceTabs.REFERENCED_BY}`
-        })
+  const deleteHandler = async (forceDelete?: boolean): Promise<void> => {
+    try {
+      const response = await deleteService(data.identifier, {
+        headers: { 'content-type': 'application/json' },
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier: orgIdentifier,
+          projectIdentifier: projectIdentifier,
+          forceDelete
+        }
+      })
+      if (response.status === 'SUCCESS') {
+        showSuccess(getString('common.deleteServiceMessage'))
+        ;(column as any).reload?.()
+      }
+    } catch (err: any) {
+      if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+        openReferenceErrorDialog()
+      } else {
+        showError(getRBACErrorMessage(err as RBACError))
       }
     }
-  })
+  }
 
   const { openDialog } = useConfirmationDialog({
     titleText: getString('common.deleteService'),
@@ -442,26 +438,32 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
     confirmButtonText: getString('confirm'),
     intent: Intent.DANGER,
     onCloseDialog: async isConfirmed => {
-      if (isConfirmed) {
-        try {
-          const response = await deleteService(data.identifier, {
-            headers: { 'content-type': 'application/json' }
-          })
-          if (response.status === 'SUCCESS') {
-            showSuccess(getString('common.deleteServiceMessage'))
-            ;(column as any).reload?.()
-          }
-        } catch (err) {
-          if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
-            // showing reference by error in modal
-            setDeleteError(err?.data?.message || err?.message)
-            openDeleteErrorDialog()
-          } else {
-            showError(getRBACErrorMessage(err as RBACError))
-          }
-        }
+      if (isConfirmed && data.identifier) {
+        deleteHandler(false)
       }
     }
+  })
+
+  const redirectToReferencedBy = (): void => {
+    history.push({
+      pathname: routes.toServiceStudio({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        serviceId: data.identifier,
+        module
+      }),
+      search: `tab=${ServiceTabs.REFERENCED_BY}`
+    })
+  }
+
+  const { openDialog: openReferenceErrorDialog } = useEntityDeleteErrorHandlerDialog({
+    entity: {
+      type: ResourceType.SERVICE,
+      name: defaultTo(data?.name, '')
+    },
+    redirectToReferencedBy,
+    forceDeleteCallback: CDS_FORCE_DELETE_ENTITIES ? () => deleteHandler(true) : undefined
   })
 
   const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {

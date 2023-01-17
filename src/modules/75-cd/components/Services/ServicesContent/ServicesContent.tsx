@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Card, Layout } from '@harness/uicore'
 import { Page } from '@common/exports'
 import {
-  GetServiceDetailsQueryParams,
+  GetServiceDetailsV2QueryParams,
   ServiceDetailsDTO,
   ServiceDetailsDTOV2,
   useGetServiceDetails,
@@ -49,7 +49,7 @@ export const ServicesContent: React.FC = () => {
 
   const [startTime, endTime] = getFormattedTimeRange(timeRange)
 
-  const queryParams: GetServiceDetailsQueryParams = {
+  const queryParams: GetServiceDetailsV2QueryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,

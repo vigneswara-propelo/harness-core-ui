@@ -406,6 +406,7 @@ export interface AccessControlCheckError {
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -879,6 +880,11 @@ export interface ApplicationSettingsConfiguration {
 
 export interface ArtifactConfig {
   [key: string]: any
+}
+
+export interface ArtifactDeploymentDetail {
+  artifact?: string
+  lastDeployedAt?: number
 }
 
 export interface ArtifactFileMetadata {
@@ -1935,6 +1941,10 @@ export type CIModuleLicenseDTO = ModuleLicenseDTO & {
 
 export type CVLicenseSummaryDTO = LicensesWithSummaryDTO & {
   totalServices?: number
+}
+
+export type CVModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfServices?: number
 }
 
 export interface CacheResponseMetadata {
@@ -3953,6 +3963,18 @@ export interface EnvironmentInputsetYamlAndServiceOverridesMetadataInput {
   serviceIdentifiers: string[]
 }
 
+export interface EnvironmentInstanceDetail {
+  artifactDeploymentDetail: ArtifactDeploymentDetail
+  count?: number
+  envId: string
+  envName?: string
+  environmentType: 'PreProduction' | 'Production'
+}
+
+export interface EnvironmentInstanceDetails {
+  environmentInstanceDetails: EnvironmentInstanceDetail[]
+}
+
 export interface EnvironmentRequestDTO {
   color?: string
   description?: string
@@ -4378,6 +4400,7 @@ export interface Error {
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4744,6 +4767,7 @@ export interface ErrorMetadata {
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   errorMessage?: string
 }
 
@@ -5161,6 +5185,7 @@ export interface Failure {
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -5247,7 +5272,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
-    | 'DRY_RUN_MANIFEST'
+    | 'K8S_DRY_RUN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5330,7 +5355,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
-    | 'DRY_RUN_MANIFEST'
+    | 'K8S_DRY_RUN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5429,7 +5454,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
-    | 'DRY_RUN_MANIFEST'
+    | 'K8S_DRY_RUN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5536,7 +5561,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
-    | 'DRY_RUN_MANIFEST'
+    | 'K8S_DRY_RUN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -10949,21 +10974,6 @@ export interface ResponseAccountDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ModuleVersioningInfo {
-  name?: string
-  display_name?: string
-  version?: string
-  updated?: string
-  release_notes_link?: string
-  microservices_version_info?: MicroservicesVersionInfo[]
-}
-
-export interface MicroservicesVersionInfo {
-  name?: string
-  version_url?: string
-  version?: string
-}
-
 export interface ResponseAccountLicenseDTO {
   correlationId?: string
   data?: AccountLicenseDTO
@@ -11424,6 +11434,13 @@ export interface ResponseEnvironmentGroupResponse {
 export interface ResponseEnvironmentInputsMergedResponseDto {
   correlationId?: string
   data?: EnvironmentInputsMergedResponseDto
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseEnvironmentInstanceDetails {
+  correlationId?: string
+  data?: EnvironmentInstanceDetails
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -12729,6 +12746,7 @@ export interface ResponseMessage {
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -14611,13 +14629,21 @@ export interface ServiceInstanceUsageDTO {
   timestamp?: number
 }
 
+export type ServiceNowADFSDTO = ServiceNowAuthCredentialsDTO & {
+  adfsUrl: string
+  certificateRef: string
+  clientIdRef: string
+  privateKeyRef: string
+  resourceIdRef: string
+}
+
 export interface ServiceNowAuthCredentialsDTO {
   [key: string]: any
 }
 
 export interface ServiceNowAuthenticationDTO {
   spec: ServiceNowAuthCredentialsDTO
-  type: 'UsernamePassword'
+  type: 'UsernamePassword' | 'AdfsClientCredentialsWithCertificate'
 }
 
 export type ServiceNowConnector = ConnectorConfigDTO & {
@@ -16690,11 +16716,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -30122,8 +30148,8 @@ export const getDeploymentHealthV2Promise = (
 
 export interface GetActiveServiceDeploymentsQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
 }
 
@@ -30178,8 +30204,8 @@ export const getActiveServiceDeploymentsPromise = (
 
 export interface GetActiveServiceInstanceSummaryQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   timestamp: number
 }
@@ -30297,8 +30323,8 @@ export const getActiveServiceInstanceSummaryV2Promise = (
 
 export interface GetActiveServiceInstancesQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
 }
 
@@ -30406,8 +30432,8 @@ export const getDeploymentsPromise = (
 
 export interface GetDeploymentsByServiceIdQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   startTime: number
   endTime: number
@@ -30459,8 +30485,8 @@ export const getDeploymentsByServiceIdPromise = (
 
 export interface GetEnvArtifactDetailsByServiceIdQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
 }
 
@@ -30515,8 +30541,8 @@ export const getEnvArtifactDetailsByServiceIdPromise = (
 
 export interface GetEnvBuildInstanceCountQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
 }
 
@@ -30565,6 +30591,62 @@ export const getEnvBuildInstanceCountPromise = (
   getUsingFetch<ResponseEnvBuildIdAndInstanceCountInfoList, Failure | Error, GetEnvBuildInstanceCountQueryParams, void>(
     getConfig('ng/api'),
     `/dashboard/getEnvBuildInstanceCountByService`,
+    props,
+    signal
+  )
+
+export interface GetEnvironmentInstanceDetailsQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceId: string
+}
+
+export type GetEnvironmentInstanceDetailsProps = Omit<
+  GetProps<ResponseEnvironmentInstanceDetails, Failure | Error, GetEnvironmentInstanceDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get instance count and last artifact deployment detail in each environment for a particular service
+ */
+export const GetEnvironmentInstanceDetails = (props: GetEnvironmentInstanceDetailsProps) => (
+  <Get<ResponseEnvironmentInstanceDetails, Failure | Error, GetEnvironmentInstanceDetailsQueryParams, void>
+    path={`/dashboard/getEnvironmentInstanceDetails`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetEnvironmentInstanceDetailsProps = Omit<
+  UseGetProps<ResponseEnvironmentInstanceDetails, Failure | Error, GetEnvironmentInstanceDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get instance count and last artifact deployment detail in each environment for a particular service
+ */
+export const useGetEnvironmentInstanceDetails = (props: UseGetEnvironmentInstanceDetailsProps) =>
+  useGet<ResponseEnvironmentInstanceDetails, Failure | Error, GetEnvironmentInstanceDetailsQueryParams, void>(
+    `/dashboard/getEnvironmentInstanceDetails`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get instance count and last artifact deployment detail in each environment for a particular service
+ */
+export const getEnvironmentInstanceDetailsPromise = (
+  props: GetUsingFetchProps<
+    ResponseEnvironmentInstanceDetails,
+    Failure | Error,
+    GetEnvironmentInstanceDetailsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseEnvironmentInstanceDetails, Failure | Error, GetEnvironmentInstanceDetailsQueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/getEnvironmentInstanceDetails`,
     props,
     signal
   )
@@ -30644,8 +30726,8 @@ export const getActiveServiceInstanceCountBreakdownPromise = (
 
 export interface GetInstanceCountHistoryQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   startTime: number
   endTime: number
@@ -30760,8 +30842,8 @@ export const getInstanceGrowthTrendPromise = (
 
 export interface GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   envId: string
   buildIds: string[]
@@ -30837,8 +30919,8 @@ export const getActiveInstancesByServiceIdEnvIdAndBuildIdsPromise = (
 
 export interface GetInstancesDetailsQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   envId: string
   infraIdentifier?: string
@@ -30944,8 +31026,8 @@ export const getServiceHeaderInfoPromise = (
 
 export interface GetServicesGrowthTrendQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   startTime: number
   endTime: number
   timeGroupByType: 'HOUR' | 'DAY' | 'WEEK'
@@ -31162,8 +31244,8 @@ export const getServiceDeploymentsPromise = (
 
 export interface GetServiceDeploymentsInfoQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   startTime: number
   endTime: number
   serviceId?: string
@@ -31280,8 +31362,8 @@ export const getServiceDeploymentsInfoV2Promise = (
 
 export interface GetServiceDetailsQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   startTime: number
   endTime: number
   sort?: string[]
@@ -33127,7 +33209,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
-    | 'DRY_RUN_MANIFEST'
+    | 'K8S_DRY_RUN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -33280,7 +33362,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'AZURE_CREATE_BP_RESOURCE'
       | 'AZURE_ROLLBACK_ARM_RESOURCE'
       | 'SHELL_SCRIPT_PROVISION'
-      | 'DRY_RUN_MANIFEST'
+      | 'K8S_DRY_RUN'
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
@@ -36379,6 +36461,58 @@ export const downloadFilePromise = (
     signal
   )
 
+export interface GetFileStoreNodesOnPathQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  path: string
+  fileUsage?: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
+}
+
+export type GetFileStoreNodesOnPathProps = Omit<
+  GetProps<ResponseFolderNodeDTO, Failure | Error, GetFileStoreNodesOnPathQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get file store nodes on path
+ */
+export const GetFileStoreNodesOnPath = (props: GetFileStoreNodesOnPathProps) => (
+  <Get<ResponseFolderNodeDTO, Failure | Error, GetFileStoreNodesOnPathQueryParams, void>
+    path={`/file-store/folder`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetFileStoreNodesOnPathProps = Omit<
+  UseGetProps<ResponseFolderNodeDTO, Failure | Error, GetFileStoreNodesOnPathQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get file store nodes on path
+ */
+export const useGetFileStoreNodesOnPath = (props: UseGetFileStoreNodesOnPathProps) =>
+  useGet<ResponseFolderNodeDTO, Failure | Error, GetFileStoreNodesOnPathQueryParams, void>(`/file-store/folder`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get file store nodes on path
+ */
+export const getFileStoreNodesOnPathPromise = (
+  props: GetUsingFetchProps<ResponseFolderNodeDTO, Failure | Error, GetFileStoreNodesOnPathQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseFolderNodeDTO, Failure | Error, GetFileStoreNodesOnPathQueryParams, void>(
+    getConfig('ng/api'),
+    `/file-store/folder`,
+    props,
+    signal
+  )
+
 export interface GetFolderNodesQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -37455,7 +37589,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37469,7 +37603,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -37484,7 +37618,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37498,7 +37632,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -37510,7 +37644,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -37519,7 +37653,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -38025,7 +38159,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -38039,7 +38173,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -38054,7 +38188,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -38068,7 +38202,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -38080,7 +38214,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -38089,7 +38223,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -42562,18 +42696,18 @@ export const deleteGitOpsInstancesPromise = (
     void
   >('DELETE', getConfig('ng/api'), `/instancesync/gitops`, props, signal)
 
-export interface CreateGitOpsInstancesQueryParams {
+export interface ProcessGitOpsInstancesQueryParams {
   accountIdentifier?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   agentIdentifier?: string
 }
 
-export type CreateGitOpsInstancesProps = Omit<
+export type ProcessGitOpsInstancesProps = Omit<
   MutateProps<
     ResponseBoolean,
     Failure | Error,
-    CreateGitOpsInstancesQueryParams,
+    ProcessGitOpsInstancesQueryParams,
     GitOpsInstanceRequestArrayRequestBody,
     void
   >,
@@ -42581,13 +42715,13 @@ export type CreateGitOpsInstancesProps = Omit<
 >
 
 /**
- * Create instances and save in DB
+ * Process Gitops instances
  */
-export const CreateGitOpsInstances = (props: CreateGitOpsInstancesProps) => (
+export const ProcessGitOpsInstances = (props: ProcessGitOpsInstancesProps) => (
   <Mutate<
     ResponseBoolean,
     Failure | Error,
-    CreateGitOpsInstancesQueryParams,
+    ProcessGitOpsInstancesQueryParams,
     GitOpsInstanceRequestArrayRequestBody,
     void
   >
@@ -42598,11 +42732,11 @@ export const CreateGitOpsInstances = (props: CreateGitOpsInstancesProps) => (
   />
 )
 
-export type UseCreateGitOpsInstancesProps = Omit<
+export type UseProcessGitOpsInstancesProps = Omit<
   UseMutateProps<
     ResponseBoolean,
     Failure | Error,
-    CreateGitOpsInstancesQueryParams,
+    ProcessGitOpsInstancesQueryParams,
     GitOpsInstanceRequestArrayRequestBody,
     void
   >,
@@ -42610,25 +42744,25 @@ export type UseCreateGitOpsInstancesProps = Omit<
 >
 
 /**
- * Create instances and save in DB
+ * Process Gitops instances
  */
-export const useCreateGitOpsInstances = (props: UseCreateGitOpsInstancesProps) =>
+export const useProcessGitOpsInstances = (props: UseProcessGitOpsInstancesProps) =>
   useMutate<
     ResponseBoolean,
     Failure | Error,
-    CreateGitOpsInstancesQueryParams,
+    ProcessGitOpsInstancesQueryParams,
     GitOpsInstanceRequestArrayRequestBody,
     void
   >('POST', `/instancesync/gitops`, { base: getConfig('ng/api'), ...props })
 
 /**
- * Create instances and save in DB
+ * Process Gitops instances
  */
-export const createGitOpsInstancesPromise = (
+export const processGitOpsInstancesPromise = (
   props: MutateUsingFetchProps<
     ResponseBoolean,
     Failure | Error,
-    CreateGitOpsInstancesQueryParams,
+    ProcessGitOpsInstancesQueryParams,
     GitOpsInstanceRequestArrayRequestBody,
     void
   >,
@@ -42637,7 +42771,7 @@ export const createGitOpsInstancesPromise = (
   mutateUsingFetch<
     ResponseBoolean,
     Failure | Error,
-    CreateGitOpsInstancesQueryParams,
+    ProcessGitOpsInstancesQueryParams,
     GitOpsInstanceRequestArrayRequestBody,
     void
   >('POST', getConfig('ng/api'), `/instancesync/gitops`, props, signal)
@@ -59772,33 +59906,3 @@ export const schemafilePromise = (
   signal?: RequestInit['signal']
 ) =>
   getUsingFetch<void, void, SchemafileQueryParams, void>(getConfig('ng/api'), `/yamlschema/schemafile`, props, signal)
-
-export interface GetModulesVersionQueryParams {
-  pageIndex?: number
-  pageSize?: number
-  searchTerm?: string
-}
-
-export type GetModulesVersionProps = Omit<
-  GetProps<ModuleVersioningInfo[], unknown, GetModulesVersionQueryParams, void>,
-  'path'
->
-
-export const GetModulesVersion = (props: GetModulesVersionProps) => (
-  <Get<ModuleVersioningInfo[], unknown, GetModulesVersionQueryParams, void>
-    path={`/v1/module-versions`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetModulesVersionProps = Omit<
-  UseGetProps<ModuleVersioningInfo[], unknown, GetModulesVersionQueryParams, void>,
-  'path'
->
-
-export const useGetModulesVersion = (props: UseGetModulesVersionProps) =>
-  useGet<ModuleVersioningInfo[], unknown, GetModulesVersionQueryParams, void>(`/v1/module-versions`, {
-    base: getConfig('ng/api'),
-    ...props
-  })

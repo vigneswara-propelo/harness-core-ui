@@ -23,7 +23,7 @@ import { numberFormatter } from '@common/utils/utils'
 import DeploymentsEmptyState from '@cd/icons/DeploymentsEmptyState.svg'
 import {
   ChangeRate,
-  GetServiceDeploymentsInfoQueryParams,
+  GetServiceDeploymentsInfoV2QueryParams,
   ServiceDeployment,
   ServiceDeploymentListInfo,
   ServiceDeploymentListInfoV2,
@@ -69,7 +69,7 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
 
   const [startTime, endTime] = getFormattedTimeRange(timeRange)
 
-  const queryParams: GetServiceDeploymentsInfoQueryParams = useMemo(() => {
+  const queryParams: GetServiceDeploymentsInfoV2QueryParams = useMemo(() => {
     return {
       accountIdentifier: accountId,
       orgIdentifier,

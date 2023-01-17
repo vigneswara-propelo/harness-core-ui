@@ -7,20 +7,22 @@
 
 import React from 'react'
 import { HTMLTable } from '@blueprintjs/core'
-import { ModuleVersioningInfo, useGetModulesVersion } from 'services/cd-ng'
+import {
+  ModuleVersionsListResponseResponse,
+  ModuleVersionsResponse,
+  useListModuleVersions
+} from 'services/cd-ng-open-api'
 import css from './UseReleaseNotesModal.module.scss'
 
 export interface ModuleVersionTableProps {
-  modules?: ModuleVersioningInfo[]
+  moduleVersions?: ModuleVersionsListResponseResponse
 }
 
 export const ModuleVersionTable: React.FC<ModuleVersionTableProps> = () => {
-  const { data } = useGetModulesVersion(
+  const { data } = useListModuleVersions(
     {
       queryParams: {
-        pageIndex: 1,
-        pageSize: 10,
-        searchTerm: 'searchString'
+        page: 0
       }
     } || []
   )
@@ -36,7 +38,7 @@ export const ModuleVersionTable: React.FC<ModuleVersionTableProps> = () => {
         </tr>
       </thead>
       <tbody>
-        {data?.map((module: ModuleVersioningInfo, i: number) => (
+        {data?.map((module: ModuleVersionsResponse, i: number) => (
           <tr key={`${module?.name}-${i}`} className={css.tr}>
             <td className={css.td} data-testid="name">
               {module?.display_name}
