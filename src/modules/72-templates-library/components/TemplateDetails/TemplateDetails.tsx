@@ -360,6 +360,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                         }}
                         gitDetails={selectedTemplate.gitDetails!}
                         onGitBranchChange={onGitBranchChange}
+                        branchChangeDisabled={isStandAlone}
                         forceFetch
                         btnClassName={css.gitBtn}
                         customIcon={
