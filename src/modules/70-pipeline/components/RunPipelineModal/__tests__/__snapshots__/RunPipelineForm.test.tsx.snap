@@ -24,7 +24,7 @@ exports[`EXECUTION VIEW should should have the values prefilled and fields as di
             >
               <div>
                 <div
-                  class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container inputSetFormRunPipeline"
+                  class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container inputSetFormRunPipeline noInputSetSelectionRunPipeline"
                 >
                   <div
                     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"

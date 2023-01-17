@@ -374,7 +374,13 @@ function RunPipelineFormBasic({
     identifier: pipelineIdentifier
   })
   const { executionId } = useQueryParams<{ executionId?: string }>()
+
   const pipelineExecutionId = executionIdentifier ?? executionId
+  const isRerunPipeline = !isEmpty(pipelineExecutionId)
+  const formTitleText = isRerunPipeline
+    ? getString('pipeline.execution.actions.rerunPipeline')
+    : getString('runPipeline')
+
   const { mutate: reRunPipeline, loading: reRunPipelineLoading } = useRePostPipelineExecuteWithInputSetYaml({
     queryParams: {
       accountIdentifier: accountId,
@@ -564,7 +570,7 @@ function RunPipelineFormBasic({
           ? ''
           : yamlStringify({ pipeline: omitBy(valuesPipelineRef.current, (_val, key) => key.startsWith('_')) })
 
-        if (isEmpty(pipelineExecutionId)) {
+        if (!isRerunPipeline) {
           response = selectedStageData.allStagesSelected
             ? await runPipeline(finalYaml as any)
             : await runStage({
@@ -842,6 +848,7 @@ function RunPipelineFormBasic({
                     formErrors={formErrors}
                     stageExecutionData={stageExecutionData}
                     executionStageList={executionStageList}
+                    runModalHeaderTitle={formTitleText}
                   />
                   <RequiredStagesInfo
                     selectedStageData={selectedStageData}
@@ -919,7 +926,7 @@ function RunPipelineFormBasic({
                           variation={ButtonVariation.PRIMARY}
                           intent="success"
                           type="submit"
-                          text={getString('runPipeline')}
+                          text={formTitleText}
                           onClick={event => {
                             event.stopPropagation()
                             setRunClicked(true)
@@ -979,25 +986,27 @@ function RunPipelineFormBasic({
                           />
                         </div>
                       </Layout.Horizontal>
-                      <SaveAsInputSet
-                        key="saveasinput"
-                        pipeline={pipeline}
-                        currentPipeline={{ pipeline: values }}
-                        values={values}
-                        template={inputSetYamlResponse?.data?.inputSetTemplateYaml}
-                        canEdit={canSaveInputSet}
-                        accountId={accountId}
-                        projectIdentifier={projectIdentifier}
-                        orgIdentifier={orgIdentifier}
-                        connectorRef={connectorRef}
-                        repoIdentifier={repoIdentifier || pipelineResponse?.data?.gitDetails?.repoName}
-                        branch={branch || pipelineResponse?.data?.gitDetails?.branch}
-                        storeType={storeType}
-                        isGitSyncEnabled={isGitSyncEnabled}
-                        supportingGitSimplification={supportingGitSimplification}
-                        setFormErrors={setFormErrors}
-                        refetchParentData={handleInputSetSave}
-                      />
+                      {!isRerunPipeline && (
+                        <SaveAsInputSet
+                          key="saveasinput"
+                          pipeline={pipeline}
+                          currentPipeline={{ pipeline: values }}
+                          values={values}
+                          template={inputSetYamlResponse?.data?.inputSetTemplateYaml}
+                          canEdit={canSaveInputSet}
+                          accountId={accountId}
+                          projectIdentifier={projectIdentifier}
+                          orgIdentifier={orgIdentifier}
+                          connectorRef={connectorRef}
+                          repoIdentifier={repoIdentifier || pipelineResponse?.data?.gitDetails?.repoName}
+                          branch={branch || pipelineResponse?.data?.gitDetails?.branch}
+                          storeType={storeType}
+                          isGitSyncEnabled={isGitSyncEnabled}
+                          supportingGitSimplification={supportingGitSimplification}
+                          setFormErrors={setFormErrors}
+                          refetchParentData={handleInputSetSave}
+                        />
+                      )}
                     </Layout.Horizontal>
                   )}
                 </Layout.Vertical>

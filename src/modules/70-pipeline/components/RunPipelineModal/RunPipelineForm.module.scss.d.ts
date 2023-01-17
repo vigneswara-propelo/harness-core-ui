@@ -33,6 +33,7 @@ declare const styles: {
   readonly multiSelectDropDownSelected: string
   readonly multiSelectDropDownWithBorder: string
   readonly noDisplay: string
+  readonly noInputSetSelectionRunPipeline: string
   readonly noPipelineInputSetForm: string
   readonly noRuntimeInput: string
   readonly optionBtns: string
