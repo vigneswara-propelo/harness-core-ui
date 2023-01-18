@@ -33,7 +33,7 @@ interface K8sDryRunStepVariableStepProps {
 export class K8sDryRunStep extends PipelineStep<StepElementConfig> {
   protected type = StepType.K8sDryRun
   protected stepName = 'K8s Dry Run'
-  protected stepIcon: IconName = 'command-shell-script'
+  protected stepIcon: IconName = 'dry-run'
   protected stepDescription: keyof StringsMap = 'cd.k8sDryRunStepDescription'
   protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {
