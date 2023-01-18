@@ -99,14 +99,10 @@ describe('Validate ChangeSource Utils', () => {
       {
         label: undefined,
         value: 'Alert'
-      },
-      {
-        label: undefined,
-        value: 'FeatureFlag'
       }
     ])
 
-    // no deploymnt options should be return for infra type
+    // no deployment options should be return for infra type
     expect(getChangeSourceOptions(jest.fn(), 'Infrastructure')).toEqual([
       {
         label: undefined,
@@ -115,10 +111,6 @@ describe('Validate ChangeSource Utils', () => {
       {
         label: undefined,
         value: 'Alert'
-      },
-      {
-        label: undefined,
-        value: 'FeatureFlag'
       }
     ])
 

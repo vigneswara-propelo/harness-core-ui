@@ -55,3 +55,5 @@ export const ChangeSourceFieldNames = {
   CATEGORY: 'category',
   TYPE: 'type'
 }
+
+export const internalChangeSources = [ChangeSourceCategoryName.FEATURE_FLAG]
