@@ -28,6 +28,7 @@ import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
 import { getCategoryItems, ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils'
+import TriggerCatalogDrawer from './TriggerCatalogDrawer'
 import css from './TriggersList.module.scss'
 
 interface TriggersListPropsInterface {
@@ -48,7 +49,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
     size = DEFAULT_PAGE_SIZE,
     searchTerm
   } = useQueryParams<GitQueryParams & Pick<GetTriggerListForTargetQueryParams, 'page' | 'size' | 'searchTerm'>>()
-  const { CD_TRIGGER_V2 } = useFeatureFlags()
+  const { CD_TRIGGER_V2, CD_TRIGGER_CATALOG_API_ENABLED } = useFeatureFlags()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
   const { getString } = useStrings()
@@ -174,6 +175,10 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
           scheduleType: (val.categoryValue === TriggerTypes.SCHEDULE && val.value) || undefined
         })
       }
+    }
+
+    if (CD_TRIGGER_CATALOG_API_ENABLED) {
+      return <TriggerCatalogDrawer hideDrawer={hideDrawer} onSelect={onSelect} />
     }
 
     return (
