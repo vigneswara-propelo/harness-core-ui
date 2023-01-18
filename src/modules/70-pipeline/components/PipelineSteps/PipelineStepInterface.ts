@@ -9,7 +9,7 @@ import type { SelectOption } from '@harness/uicore'
 import type { PipelineInfrastructure } from 'services/cd-ng'
 
 export enum StepType {
-  StageRuntimeInput = 'StageRuntimeInput', // UI level step, only used in execution view
+  StageRuntimeInput = 'StageRuntimeInput',
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
   Container = 'Container',
@@ -151,7 +151,9 @@ export enum StepType {
   TasRollingRollback = 'TasRollingRollback',
   Asg = 'ASGServiceSpec',
   AsgInfraSpec = 'AsgInfraSpec',
+  Aquatrivy = 'AquaTrivy',
   Bandit = 'Bandit',
+  Burp = 'Burp',
   Snyk = 'Snyk',
   Sonarqube = 'Sonarqube',
   Zap = 'Zap',

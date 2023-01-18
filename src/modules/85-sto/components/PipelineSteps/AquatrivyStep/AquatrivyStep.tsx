@@ -15,43 +15,44 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
-import { SonarqubeStepBaseWithRef } from './SonarqubeStepBase'
-import { SonarqubeStepInputSet } from './SonarqubeStepInputSet'
-import { SonarqubeStepVariables, SonarqubeStepVariablesProps } from './SonarqubeStepVariables'
-import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SonarqubeStepFunctionConfigs'
+import { AquatrivyStepBaseWithRef } from './AquatrivyStepBase'
+import { AquatrivyStepInputSet } from './AquatrivyStepInputSet'
+import { AquatrivyStepVariables, AquatrivyStepVariablesProps } from './AquatrivyStepVariables'
+import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './AquatrivyStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 
-export type SonarqubeStepData = SecurityStepData<SecurityStepSpec>
-export interface SonarqubeStepProps {
-  initialValues: SonarqubeStepData
-  template?: SonarqubeStepData
+export type AquatrivyStepData = SecurityStepData<SecurityStepSpec>
+export interface AquatrivyStepProps {
+  initialValues: AquatrivyStepData
+  template?: AquatrivyStepData
   path?: string
   isNewStep?: boolean
   readonly?: boolean
   stepViewType: StepViewType
-  onUpdate?: (data: SonarqubeStepData) => void
-  onChange?: (data: SonarqubeStepData) => void
+  onUpdate?: (data: AquatrivyStepData) => void
+  onChange?: (data: AquatrivyStepData) => void
   allowableTypes: AllowedTypes
   formik?: any
 }
 
-export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
+export class AquatrivyStep extends PipelineStep<AquatrivyStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.Sonarqube
-  protected stepName = 'Configure Sonarqube'
-  protected stepIcon: IconName = 'SonarQube'
-  protected stepDescription: keyof StringsMap = 'sto.stepDescription.Sonarqube'
+  protected type = StepType.Aquatrivy
+  protected stepName = 'Configure Aqua Trivy'
+  protected stepIcon: IconName = 'AuqaTrivy'
+  protected stepDescription: keyof StringsMap = 'sto.stepDescription.AquaTrivy'
   protected stepPaletteVisible = false
 
-  protected defaultValues: SonarqubeStepData = {
+  protected defaultValues: AquatrivyStepData = {
     identifier: '',
-    type: StepType.Sonarqube as string,
+    type: StepType.Aquatrivy as string,
     spec: {
+      privileged: true,
       mode: 'orchestration',
       config: 'default',
       target: {
@@ -60,10 +61,13 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
         variant: '',
         workspace: '/harness'
       },
-      auth: {
+      image: {
+        type: 'docker_v2',
+        name: '',
         domain: '',
-        access_token: '<+secrets.getValue("your_sonarqube_token_secret")>',
-        ssl: true
+        access_id: '',
+        access_token: '<+secrets.getValue("your_aquatrivy_token_secret")>',
+        region: ''
       },
       advanced: {
         log: {
@@ -77,7 +81,7 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
   }
 
   /* istanbul ignore next */
-  processFormData(data: SonarqubeStepData): SonarqubeStepData {
+  processFormData(data: AquatrivyStepData): AquatrivyStepData {
     return getFormValuesInCorrectFormat(data, transformValuesFieldsConfig(data))
   }
 
@@ -86,7 +90,7 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<SonarqubeStepData>): FormikErrors<SonarqubeStepData> {
+  }: ValidateInputSetProps<AquatrivyStepData>): FormikErrors<AquatrivyStepData> {
     if (getString) {
       return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(data), { getString }, viewType)
     }
@@ -94,7 +98,7 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
     return {}
   }
 
-  renderStep(props: StepProps<SonarqubeStepData>): JSX.Element {
+  renderStep(props: StepProps<AquatrivyStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -112,7 +116,7 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
       case StepViewType.InputSet:
       case StepViewType.DeploymentForm:
         return (
-          <SonarqubeStepInputSet
+          <AquatrivyStepInputSet
             initialValues={initialValues}
             template={inputSetData?.template}
             path={inputSetData?.path || ''}
@@ -126,8 +130,8 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
 
       case StepViewType.InputVariable:
         return (
-          <SonarqubeStepVariables
-            {...(customStepProps as SonarqubeStepVariablesProps)}
+          <AquatrivyStepVariables
+            {...(customStepProps as AquatrivyStepVariablesProps)}
             initialValues={initialValues}
             onUpdate={onUpdate}
           />
@@ -135,7 +139,7 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
     }
 
     return (
-      <SonarqubeStepBaseWithRef
+      <AquatrivyStepBaseWithRef
         initialValues={initialValues}
         allowableTypes={allowableTypes}
         onChange={onChange}

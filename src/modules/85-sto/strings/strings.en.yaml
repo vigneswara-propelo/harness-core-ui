@@ -36,9 +36,9 @@ stepField:
   image:
     type: Image Type
     domain: Image Domain
-    token: Image Token
     region: Image Region
     accessId: Image Access Id
+    token: Image Access Token
   container:
     containerAccessToken: Container Access Token
     containerRegion: Container Region

@@ -702,7 +702,7 @@ exports[`Snyk Step Edit View edit mode works 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.auth.accessToken-8"
+                data-id="spec.auth.access_token-8"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -718,7 +718,7 @@ exports[`Snyk Step Edit View edit mode works 1`] = `
                       <input
                         autocomplete="off"
                         class="bp3-input"
-                        name="spec.auth.accessToken"
+                        name="spec.auth.access_token"
                         type="text"
                         value="token"
                       />
@@ -3548,7 +3548,7 @@ exports[`Snyk Step Edit View renders runtime inputs - Orchestration Repository 1
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.auth.accessToken-8"
+                data-id="spec.auth.access_token-8"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -3567,7 +3567,7 @@ exports[`Snyk Step Edit View renders runtime inputs - Orchestration Repository 1
                         <input
                           class="bp3-input"
                           disabled=""
-                          name="spec.auth.accessToken"
+                          name="spec.auth.access_token"
                           placeholder="<+input>"
                           type="text"
                           value="<+input>"
@@ -3614,7 +3614,7 @@ exports[`Snyk Step Edit View renders runtime inputs - Orchestration Repository 1
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withRightIcon"
-                    id="configureOptions_spec.auth.accessToken"
+                    id="configureOptions_spec.auth.access_token"
                     style="margin-bottom: 12px;"
                     tabindex="0"
                     type="button"
@@ -4882,7 +4882,7 @@ exports[`Snyk Step Edit View should render properly 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.auth.accessToken-8"
+                data-id="spec.auth.access_token-8"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -4904,7 +4904,7 @@ exports[`Snyk Step Edit View should render properly 1`] = `
                           <input
                             autocomplete="off"
                             class="bp3-input"
-                            name="spec.auth.accessToken"
+                            name="spec.auth.access_token"
                             placeholder="<+expression>"
                             type="text"
                             value="<+secrets.getValue(\\"your_snyk_token_secret\\")>"

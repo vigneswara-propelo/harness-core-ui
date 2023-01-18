@@ -102,7 +102,7 @@ describe('Snyk Step', () => {
           },
           auth: {
             domain: RUNTIME_INPUT_VALUE,
-            accessToken: RUNTIME_INPUT_VALUE,
+            access_token: RUNTIME_INPUT_VALUE,
             ssl: RUNTIME_INPUT_VALUE
           },
           mode: 'orchestration',
@@ -164,7 +164,7 @@ describe('Snyk Step', () => {
           },
           auth: {
             domain: 'auth domain',
-            accessToken: 'token',
+            access_token: 'token',
             ssl: true
           },
           config: 'default',
@@ -238,7 +238,7 @@ describe('Snyk Step', () => {
           },
           auth: {
             domain: RUNTIME_INPUT_VALUE,
-            accessToken: RUNTIME_INPUT_VALUE,
+            access_token: RUNTIME_INPUT_VALUE,
             ssl: RUNTIME_INPUT_VALUE
           },
           config: RUNTIME_INPUT_VALUE,
@@ -277,7 +277,7 @@ describe('Snyk Step', () => {
           },
           auth: {
             domain: RUNTIME_INPUT_VALUE,
-            accessToken: RUNTIME_INPUT_VALUE,
+            access_token: RUNTIME_INPUT_VALUE,
             ssl: RUNTIME_INPUT_VALUE
           },
           config: RUNTIME_INPUT_VALUE,

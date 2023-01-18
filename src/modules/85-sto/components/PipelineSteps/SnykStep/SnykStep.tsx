@@ -62,7 +62,7 @@ export class SnykStep extends PipelineStep<SnykStepData> {
       },
       auth: {
         domain: '',
-        accessToken: '<+secrets.getValue("your_snyk_token_secret")>',
+        access_token: '<+secrets.getValue("your_snyk_token_secret")>',
         ssl: true
       },
       advanced: {

@@ -1,7 +1,7 @@
 /*
  * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
- * that can be found in the licenses directory at the root of this repository, also available at
+ * that can be found in the licenses directory at the root of this container, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
@@ -12,19 +12,19 @@ import type { StringKeys } from 'framework/strings'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { SonarqubeStep, SonarqubeStepData } from '../SonarqubeStep'
+import { AquatrivyStep, AquatrivyStepData } from '../AquatrivyStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
-describe('Sonarqube Step', () => {
+describe('Aquatrivy Step', () => {
   beforeAll(() => {
-    factory.registerStep(new SonarqubeStep())
+    factory.registerStep(new AquatrivyStep())
   })
 
   describe('Edit View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.Sonarqube} stepViewType={StepViewType.Edit} />
+        <TestStepWidget initialValues={{}} type={StepType.Aquatrivy} stepViewType={StepViewType.Edit} />
       )
 
       expect(container).toMatchSnapshot()
@@ -32,14 +32,14 @@ describe('Sonarqube Step', () => {
 
     test('renders runtime inputs - Ingestion Container', async () => {
       const initialValues = {
-        identifier: 'My_Sonarqube_Step',
-        name: 'My Sonarqube Step',
+        identifier: 'My_Aquatrivy_Step',
+        name: 'My Aquatrivy Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
           privileged: RUNTIME_INPUT_VALUE,
           target: {
-            type: 'repository',
+            type: 'container',
             name: RUNTIME_INPUT_VALUE,
             variant: RUNTIME_INPUT_VALUE
           },
@@ -72,7 +72,7 @@ describe('Sonarqube Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.Sonarqube}
+          type={StepType.Aquatrivy}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -86,28 +86,28 @@ describe('Sonarqube Step', () => {
       expect(onUpdate).toHaveBeenCalledWith(initialValues)
     })
 
-    test('renders runtime inputs - Orchestration Repository', async () => {
+    test('renders runtime inputs - Orchestration container', async () => {
       const initialValues = {
-        identifier: 'My_Sonarqube_Step',
-        name: 'My Sonarqube Step',
+        identifier: 'My_Aquatrivy_Step',
+        name: 'My Aquatrivy Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
-          privileged: RUNTIME_INPUT_VALUE,
+          privileged: true,
           target: {
-            type: 'repository',
+            type: 'container',
             name: RUNTIME_INPUT_VALUE,
             variant: RUNTIME_INPUT_VALUE,
             workspace: RUNTIME_INPUT_VALUE
           },
-          auth: {
-            domain: RUNTIME_INPUT_VALUE,
-            access_token: RUNTIME_INPUT_VALUE,
-            ssl: RUNTIME_INPUT_VALUE
-          },
           mode: 'orchestration',
           config: 'default',
           settings: RUNTIME_INPUT_VALUE,
+          image: {
+            type: 'docker_v2',
+            name: RUNTIME_INPUT_VALUE,
+            access_token: '<+secrets.getValue("your_aquatrivy_token_secret")>'
+          },
           advanced: {
             args: {
               cli: RUNTIME_INPUT_VALUE
@@ -134,7 +134,7 @@ describe('Sonarqube Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.Sonarqube}
+          type={StepType.Aquatrivy}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -150,28 +150,31 @@ describe('Sonarqube Step', () => {
 
     test('edit mode works', async () => {
       const initialValues = {
-        identifier: 'My_Sonarqube_Stp',
-        name: 'My Sonarqube Step',
+        identifier: 'My_Aquatrivy_Stp',
+        name: 'My Aquatrivy Step',
         description: 'Description',
         timeout: '10s',
         spec: {
           privileged: true,
           target: {
-            type: 'repository',
-            name: 'Sonarqube Test',
+            type: 'container',
+            name: 'Aquatrivy Test',
             variant: 'variant',
             workspace: '~/workspace'
-          },
-          auth: {
-            domain: 'auth domain',
-            access_token: 'token',
-            ssl: true
           },
           config: 'default',
           mode: 'orchestration',
           settings: {
             setting_1: 'settings test value 1',
             setting_2: 'settings test value 1'
+          },
+          image: {
+            type: 'aws_ecr',
+            name: 'ubuntu:20.04',
+            domain: 'domain',
+            access_id: 'access_id',
+            access_token: '<+secrets.getValue("your_aquatrivy_token_secret")>',
+            region: 'region'
           },
           advanced: {
             log: {
@@ -197,7 +200,7 @@ describe('Sonarqube Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.Sonarqube}
+          type={StepType.Aquatrivy}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -215,7 +218,7 @@ describe('Sonarqube Step', () => {
   describe('InputSet View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.Sonarqube} stepViewType={StepViewType.InputSet} />
+        <TestStepWidget initialValues={{}} type={StepType.Aquatrivy} stepViewType={StepViewType.InputSet} />
       )
 
       expect(container).toMatchSnapshot()
@@ -223,26 +226,26 @@ describe('Sonarqube Step', () => {
 
     test('should render all fields', async () => {
       const template = {
-        type: StepType.Sonarqube,
-        identifier: 'My_Sonarqube_Step',
+        type: StepType.Aquatrivy,
+        identifier: 'My_Aquatrivy_Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
           target: {
-            type: 'repository',
+            type: 'container',
             name: RUNTIME_INPUT_VALUE,
             variant: RUNTIME_INPUT_VALUE,
             workspace: RUNTIME_INPUT_VALUE
           },
-          auth: {
-            domain: RUNTIME_INPUT_VALUE,
-            access_token: RUNTIME_INPUT_VALUE,
-            ssl: RUNTIME_INPUT_VALUE
-          },
           config: RUNTIME_INPUT_VALUE,
           mode: RUNTIME_INPUT_VALUE,
+          image: {
+            type: 'docker_v2',
+            name: RUNTIME_INPUT_VALUE,
+            access_token: RUNTIME_INPUT_VALUE
+          },
           advanced: {
             log: {
               level: RUNTIME_INPUT_VALUE,
@@ -261,27 +264,25 @@ describe('Sonarqube Step', () => {
       }
 
       const allValues = {
-        type: StepType.Sonarqube,
+        type: StepType.Aquatrivy,
         name: 'Test A',
-        identifier: 'My_Sonarqube_Step',
+        identifier: 'My_Aquatrivy_Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
-          privileged: RUNTIME_INPUT_VALUE,
+          privileged: true,
           settings: RUNTIME_INPUT_VALUE,
           target: {
-            type: 'repository',
+            type: 'container',
             name: RUNTIME_INPUT_VALUE,
             variant: RUNTIME_INPUT_VALUE,
             workspace: RUNTIME_INPUT_VALUE
           },
-          auth: {
-            domain: RUNTIME_INPUT_VALUE,
-            access_token: RUNTIME_INPUT_VALUE,
-            ssl: RUNTIME_INPUT_VALUE
-          },
           config: RUNTIME_INPUT_VALUE,
           mode: RUNTIME_INPUT_VALUE,
+          image: {
+            access_token: RUNTIME_INPUT_VALUE
+          },
           advanced: {
             log: {
               level: RUNTIME_INPUT_VALUE,
@@ -304,7 +305,7 @@ describe('Sonarqube Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.Sonarqube}
+          type={StepType.Aquatrivy}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -317,17 +318,18 @@ describe('Sonarqube Step', () => {
 
     test('should not render any fields', async () => {
       const template = {
-        type: StepType.Sonarqube,
-        identifier: 'My_Sonarqube_Step'
+        type: StepType.Aquatrivy,
+        identifier: 'My_Aquatrivy_Step'
       }
 
       const allValues = {
-        type: StepType.Sonarqube,
-        identifier: 'My_Sonarqube_Step',
-        name: 'My Sonarqube Step',
+        type: StepType.Aquatrivy,
+        identifier: 'My_Aquatrivy_Step',
+        name: 'My Aquatrivy Step',
         description: 'Description',
         timeout: '10s',
         spec: {
+          mode: 'ingestion',
           privileged: false,
           settings: {
             key1: 'value1',
@@ -350,7 +352,7 @@ describe('Sonarqube Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.Sonarqube}
+          type={StepType.Aquatrivy}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -369,7 +371,7 @@ describe('Sonarqube Step', () => {
           initialValues={{
             identifier: 'Test_A',
             name: 'Test A',
-            type: StepType.Sonarqube,
+            type: StepType.Aquatrivy,
             description: 'Description',
             timeout: '10s',
             spec: {
@@ -448,9 +450,9 @@ describe('Sonarqube Step', () => {
               }
             },
             variablesData: {
-              type: StepType.Sonarqube,
+              type: StepType.Aquatrivy,
               __uuid: 'step-identifier',
-              identifier: 'Sonarqube',
+              identifier: 'Aquatrivy',
               name: 'step-name',
               description: 'step-description',
               timeout: 'step-timeout',
@@ -468,7 +470,7 @@ describe('Sonarqube Step', () => {
               }
             }
           }}
-          type={StepType.Sonarqube}
+          type={StepType.Aquatrivy}
           stepViewType={StepViewType.InputVariable}
         />
       )
@@ -478,15 +480,15 @@ describe('Sonarqube Step', () => {
   })
 
   test('validates input set correctly', () => {
-    const data: SonarqubeStepData = {
+    const data: AquatrivyStepData = {
       identifier: 'id',
       name: 'name',
       description: 'desc',
-      type: StepType.Sonarqube,
+      type: StepType.Aquatrivy,
       timeout: '1h',
       spec: {
         target: {
-          type: 'repository',
+          type: 'container',
           name: 'target name',
           variant: 'target variant',
           workspace: 'target workspace'
@@ -499,7 +501,7 @@ describe('Sonarqube Step', () => {
         privileged: true,
         settings: {
           policy_type: 'orchestratedScan',
-          scan_type: 'repository',
+          scan_type: 'container',
           product_name: 'x',
           product_config_name: 'y'
         },
@@ -514,7 +516,7 @@ describe('Sonarqube Step', () => {
       }
     }
 
-    const result = new SonarqubeStep().validateInputSet({
+    const result = new AquatrivyStep().validateInputSet({
       data,
       template: data,
       getString: (key: StringKeys, _vars?: Record<string, any>) => key as string,

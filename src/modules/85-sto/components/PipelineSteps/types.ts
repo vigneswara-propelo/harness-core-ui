@@ -44,13 +44,13 @@ type Image = {
   type: 'local_image' | 'docker_v2' | 'jfrog_artifactory' | 'aws_ecr'
   name: string
   domain: string
+  access_id: string
   access_token: string
   region: string
-  access_id: string
 }
 
 type Auth = {
-  accessToken: string
+  access_token: string
   domain: string
   ssl: boolean
 }

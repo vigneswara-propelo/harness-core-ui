@@ -107,7 +107,7 @@ export const authFieldsTransformConfig = (data: SecurityStepData<SecurityStepSpe
   data.spec.mode === 'orchestration'
     ? [
         {
-          name: 'spec.auth.accessToken',
+          name: 'spec.auth.access_token',
           type: TransformValuesTypes.Text
         },
         {
@@ -211,18 +211,6 @@ export const commonFieldsTransformConfig = (data: SecurityStepData<SecurityStepS
       type: TransformValuesTypes.Text
     })
   }
-  if (data.spec.target.type === 'container' && data.spec.image?.type === 'local_image') {
-    transformValuesFieldsConfigValues.push(
-      {
-        name: 'spec.image.access_token',
-        type: TransformValuesTypes.Text
-      },
-      {
-        name: 'spec.image.access_id',
-        type: TransformValuesTypes.Text
-      }
-    )
-  }
 
   if (data.spec.target.type === 'container' && data.spec.mode === 'orchestration') {
     transformValuesFieldsConfigValues.push(
@@ -236,6 +224,14 @@ export const commonFieldsTransformConfig = (data: SecurityStepData<SecurityStepS
       },
       {
         name: 'spec.image.domain',
+        type: TransformValuesTypes.Text
+      },
+      {
+        name: 'spec.image.access_id',
+        type: TransformValuesTypes.Text
+      },
+      {
+        name: 'spec.image.access_token',
         type: TransformValuesTypes.Text
       }
     )
@@ -269,7 +265,7 @@ export const authFieldsValidationConfig = (
   data: SecurityStepData<SecurityStepSpec>
 ): InputSetViewValidateFieldsConfig[] => [
   {
-    name: 'spec.auth.accessToken',
+    name: 'spec.auth.access_token',
     type: ValidationFieldTypes.Text,
     label: 'sto.stepField.authToken',
     isRequired: data.spec.mode !== 'ingestion'
@@ -315,14 +311,12 @@ export const imageFieldsValidationConfig = (
   {
     name: 'spec.image.domain',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.image.domain',
-    isRequired: data.spec.target?.type === 'container' && data.spec.mode === 'orchestration'
+    label: 'sto.stepField.image.domain'
   },
   {
     name: 'spec.image.access_token',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.image.token',
-    isRequired: data.spec.target?.type === 'container' && data.spec.mode === 'orchestration'
+    label: 'sto.stepField.image.token'
   },
   {
     name: 'spec.image.region',
@@ -333,8 +327,7 @@ export const imageFieldsValidationConfig = (
   {
     name: 'spec.image.access_id',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.image.accessId',
-    isRequired: data.spec.image?.type === 'local_image'
+    label: 'sto.stepField.image.accessId'
   }
 ]
 
@@ -578,7 +571,7 @@ export const inputSetFields = (
         }),
 
         // Auth fields
-        ...(shouldRenderRunTimeInputView(template?.spec.auth?.accessToken) && {
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.access_token) && {
           [getInputSetFieldName(prefix, 'spec.auth.context')]: {
             label: 'sto.stepField.authToken'
           }

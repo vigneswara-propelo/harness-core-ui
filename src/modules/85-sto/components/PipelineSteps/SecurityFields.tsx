@@ -183,7 +183,7 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
         enableFields={{
-          'spec.auth.accessToken': {
+          'spec.auth.access_token': {
             label: 'sto.stepField.authToken'
           },
           'spec.auth.domain': {
@@ -207,7 +207,9 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
 export function SecurityImageFields(props: SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>) {
   const { allowableTypes, formik, stepViewType } = props
   const hideNonLocalImageFields = !(
-    formik.values.spec.image?.type === 'local_image' && formik.values.spec.mode === 'orchestration'
+    formik.values.spec.target.type === 'container' &&
+    formik.values.spec.image?.type !== 'local_image' &&
+    formik.values.spec.mode === 'orchestration'
   )
 
   return (
@@ -233,18 +235,22 @@ export function SecurityImageFields(props: SecurityFieldsProps<SecurityStepData<
         },
         'spec.image.domain': {
           label: 'sto.stepField.image.domain',
+          optional: true,
           hide: !(formik.values.spec.target.type === 'container' && formik.values.spec.mode === 'orchestration')
-        },
-        'spec.image.access_token': {
-          label: 'sto.stepField.image.token',
-          hide: hideNonLocalImageFields
         },
         'spec.image.access_id': {
           label: 'sto.stepField.image.accessId',
+          optional: true,
           hide: hideNonLocalImageFields
+        },
+        'spec.image.access_token': {
+          label: 'sto.stepField.image.token',
+          hide: hideNonLocalImageFields,
+          optional: true
         },
         'spec.image.region': {
           label: 'sto.stepField.image.region',
+          optional: true,
           hide: formik.values.spec.image?.type !== 'aws_ecr'
         }
       }}
