@@ -50,7 +50,7 @@ import {
 import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
-import { memoizedParse, parse } from '@common/utils/YamlHelperMethods'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
@@ -61,11 +61,11 @@ import { StepViewType } from '../AbstractSteps/Step'
 import css from './InputSetForm.module.scss'
 
 export const showPipelineInputSetForm = (
-  resolvedTemplatesPipelineYaml: string | undefined,
+  resolvedPipeline: PipelineInfoConfig | undefined,
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
 ): boolean => {
   return !!(
-    resolvedTemplatesPipelineYaml &&
+    resolvedPipeline &&
     template?.data?.inputSetTemplateYaml &&
     parse<Pipeline>(template.data.inputSetTemplateYaml)
   )
@@ -95,7 +95,7 @@ interface FormikInputSetFormProps {
   inputSet: InputSetDTO | InputSetType
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
   pipeline: ResponsePMSPipelineResponseDTO | null
-  resolvedTemplatesPipelineYaml?: string
+  resolvedPipeline?: PipelineInfoConfig
   handleSubmit: (
     inputSetObjWithGitInfo: InputSetDTO,
     gitDetails?: EntityGitDetails,
@@ -222,7 +222,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     inputSet,
     template,
     pipeline,
-    resolvedTemplatesPipelineYaml,
+    resolvedPipeline,
     handleSubmit,
     formErrors,
     setFormErrors,
@@ -246,10 +246,6 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   const { repoIdentifier, branch, connectorRef, storeType, repoName } = useQueryParams<InputSetGitQueryParams>()
   const inputSetStoreType = isGitSyncEnabled ? undefined : inputSet.storeType
   const history = useHistory()
-  const resolvedPipeline = defaultTo(
-    memoizedParse<Pipeline>(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline,
-    {} as PipelineInfoConfig
-  )
 
   useEffect(() => {
     if (!isUndefined(inputSet?.outdated) && yamlHandler?.setLatestYaml) {
@@ -316,7 +312,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     return mergeTemplateWithInputSetData({
       templatePipeline: omittedPipeline,
       inputSetPortion: omittedPipeline,
-      allValues: { pipeline: resolvedPipeline },
+      allValues: { pipeline: resolvedPipeline as PipelineInfoConfig },
       shouldUseDefaultValues: !isEdit
     })
   }
@@ -435,13 +431,11 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                                 ></GitSyncForm>
                               </Container>
                             )}
-                            {showPipelineInputSetForm(resolvedTemplatesPipelineYaml, template) && (
+                            {showPipelineInputSetForm(resolvedPipeline, template) && (
                               <PipelineInputSetForm
                                 path="pipeline"
                                 readonly={!isEditable}
-                                originalPipeline={
-                                  parse<Pipeline>(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline
-                                }
+                                originalPipeline={resolvedPipeline as PipelineInfoConfig}
                                 template={parse<Pipeline>(get(template, 'data.inputSetTemplateYaml', '')).pipeline}
                                 viewType={StepViewType.InputSet}
                                 disableRuntimeInputConfigureOptions

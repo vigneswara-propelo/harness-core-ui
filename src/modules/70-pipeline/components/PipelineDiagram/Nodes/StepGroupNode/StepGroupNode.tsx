@@ -267,7 +267,7 @@ export function StepGroupNode(props: any): JSX.Element {
                     e.stopPropagation()
                   }}
                   flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-                  width={'100%'}
+                  width={showExecutionMetaDataForChainedPipeline ? '50%' : '100%'}
                 >
                   <Icon
                     className={css.collapseIcon}

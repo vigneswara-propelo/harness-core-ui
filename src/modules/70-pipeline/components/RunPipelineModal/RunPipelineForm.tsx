@@ -6,7 +6,6 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import produce from 'immer'
 import { Dialog, Classes } from '@blueprintjs/core'
 import {
   Button,
@@ -23,7 +22,7 @@ import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { useHistory } from 'react-router-dom'
-import { isEmpty, defaultTo, keyBy, omitBy, get } from 'lodash-es'
+import { isEmpty, defaultTo, keyBy, omitBy } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import type { GetDataError } from 'restful-react'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -38,8 +37,7 @@ import {
   useRunStagesWithRuntimeInputYaml,
   useRerunStagesWithRuntimeInputYaml,
   useGetStagesExecutionList,
-  Failure,
-  PipelineStageConfig
+  Failure
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -83,8 +81,8 @@ import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import { StageType } from '@pipeline/utils/stageHelpers'
-import { getChildPipelineMetadata, getPromisesForChildPipeline, validatePipeline } from '../PipelineStudio/StepUtil'
+import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
 
 import factory from '../PipelineSteps/PipelineStepFactory'
@@ -180,10 +178,6 @@ function RunPipelineFormBasic({
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [isInputSetApplied, setIsInputSetApplied] = useState(true)
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
-  const [resolvedChildPipelineMap, setResolvedChildPipelineMap] = useState<Map<string, PipelineInfoConfig>>(
-    new Map<string, PipelineInfoConfig>()
-  )
-  const [loadingResolvedChildPipeline, setLoadingResolvedChildPipeline] = useState<boolean>(false)
 
   const [canSaveInputSet, canEditYaml] = usePermission(
     {
@@ -252,63 +246,11 @@ function RunPipelineFormBasic({
     )
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
-  const childPipelinesMetaData = React.useMemo(() => getChildPipelineMetadata(pipeline), [pipeline])
-
-  const getResolvedTemplatesPipelineYamlForChildPipelines = async (): Promise<void> => {
-    setLoadingResolvedChildPipeline(true)
-    const promises = getPromisesForChildPipeline(
-      { accountId, repoIdentifier, branch, connectorRef },
-      childPipelinesMetaData
-    )
-    return await Promise.all(promises)
-      .then(responses => {
-        const resolvedChildPipelines = new Map<string, PipelineInfoConfig>()
-        responses.forEach(response => {
-          if (response?.data?.resolvedTemplatesPipelineYaml) {
-            const resolvedChildPipeline = yamlParse<PipelineConfig>(
-              response.data.resolvedTemplatesPipelineYaml
-            )?.pipeline
-            if (resolvedChildPipeline)
-              resolvedChildPipelines.set(resolvedChildPipeline.identifier, resolvedChildPipeline)
-          }
-        })
-        if (!isEmpty(resolvedChildPipelines)) {
-          setResolvedChildPipelineMap(resolvedChildPipelines)
-        }
-        setLoadingResolvedChildPipeline(false)
-      })
-      .catch(_e => {
-        setLoadingResolvedChildPipeline(false)
-      })
-  }
-
-  useEffect(() => {
-    if (!isEmpty(childPipelinesMetaData)) getResolvedTemplatesPipelineYamlForChildPipelines()
-  }, [childPipelinesMetaData])
-
-  useEffect(() => {
-    if (resolvedPipeline?.stages && !isEmpty(resolvedChildPipelineMap)) {
-      setResolvedPipeline(
-        produce(resolvedPipeline, (draft: PipelineInfoConfig) => {
-          draft.stages?.forEach(item => {
-            if (item.stage) {
-              const childPipelineId = get(item, 'stage.spec.pipeline')
-              if (item.stage.type === StageType.PIPELINE && childPipelineId) {
-                ;(item.stage.spec as PipelineStageConfig).inputs = resolvedChildPipelineMap.get(childPipelineId)
-              }
-            } else if (item.parallel) {
-              item.parallel.forEach(node => {
-                const childPipelineId = get(node, 'stage.spec.pipeline')
-                if (node.stage?.type === StageType.PIPELINE && childPipelineId) {
-                  ;(node.stage.spec as PipelineStageConfig).inputs = resolvedChildPipelineMap.get(childPipelineId)
-                }
-              })
-            }
-          })
-        })
-      )
-    }
-  }, [resolvedChildPipelineMap])
+  const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
+    { accountId, repoIdentifier, branch, connectorRef },
+    pipeline,
+    resolvedPipeline
+  )
 
   const {
     inputSet,
@@ -334,7 +276,7 @@ function RunPipelineFormBasic({
     connectorRef,
     executionIdentifier,
     inputSetSelected: selectedInputSets,
-    resolvedPipeline,
+    resolvedPipeline: resolvedMergedPipeline,
     executionInputSetTemplateYaml,
     executionView,
     setSelectedInputSets
@@ -495,23 +437,23 @@ function RunPipelineFormBasic({
   const valuesPipelineRef = useRef<PipelineInfoConfig>()
 
   useDeepCompareEffect(() => {
-    if (resolvedPipeline) {
-      updatePipelineInVaribalesContext(resolvedPipeline)
+    if (resolvedMergedPipeline) {
+      updatePipelineInVaribalesContext(resolvedMergedPipeline)
     }
-  }, [resolvedPipeline])
+  }, [resolvedMergedPipeline])
 
   useEffect(() => {
     // only applied for CI, Not cloned codebase
     if (
       formikRef?.current?.values?.template?.templateInputs &&
       isCodebaseFieldsRuntimeInputs(formikRef.current.values.template.templateInputs as PipelineInfoConfig) &&
-      resolvedPipeline &&
-      !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
+      resolvedMergedPipeline &&
+      !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline)
     ) {
       const newPipeline = getPipelineWithoutCodebaseInputs(formikRef.current.values)
       formikRef.current.setValues({ ...formikRef.current.values, ...newPipeline })
     }
-  }, [formikRef?.current?.values?.template?.templateInputs, resolvedPipeline])
+  }, [formikRef?.current?.values?.template?.templateInputs, resolvedMergedPipeline])
 
   useEffect(() => {
     setSkipPreFlightCheck(defaultTo(supportingGitSimplification && storeType === StoreType.REMOTE, false))
@@ -739,7 +681,7 @@ function RunPipelineFormBasic({
             pipeline: { ...clearRuntimeInput(latestPipeline.pipeline) },
             template: latestYamlTemplate,
             originalPipeline: orgPipeline,
-            resolvedPipeline,
+            resolvedPipeline: resolvedMergedPipeline,
             getString,
             viewType: StepViewType.DeploymentForm,
             selectedStageData: selectedStages
@@ -875,7 +817,7 @@ function RunPipelineFormBasic({
                       pipeline={pipeline}
                       currentPipeline={{ pipeline: values }}
                       getTemplateError={inputSetsError}
-                      resolvedPipeline={resolvedPipeline}
+                      resolvedPipeline={resolvedMergedPipeline}
                       submitForm={submitForm}
                       setRunClicked={setRunClicked}
                       hasInputSets={hasInputSets}

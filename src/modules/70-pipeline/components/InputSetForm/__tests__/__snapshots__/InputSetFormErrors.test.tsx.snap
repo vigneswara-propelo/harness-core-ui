@@ -448,7 +448,6 @@ exports[`Input Set - error scenarios if API errors are displayed in yellow accor
                                       >
                                         <div
                                           class="bp3-form-group connectorMargin"
-                                          data-id="undefined-2"
                                           style="margin-bottom: 0px;"
                                         >
                                           <div
@@ -584,7 +583,6 @@ exports[`Input Set - error scenarios if API errors are displayed in yellow accor
                                   >
                                     <div
                                       class="bp3-form-group"
-                                      data-id="pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition.spec.namespace-3"
                                     >
                                       <label
                                         class="bp3-label"
@@ -657,7 +655,6 @@ exports[`Input Set - error scenarios if API errors are displayed in yellow accor
                                   >
                                     <div
                                       class="bp3-form-group"
-                                      data-id="pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition.spec.releaseName-4"
                                     >
                                       <label
                                         class="bp3-label"
