@@ -91,11 +91,15 @@ function _PipelineListPage(): React.ReactElement {
     lazy: isGitSyncEnabled
   })
   const { globalFreezes } = useGlobalFreezeBanner()
+
+  const requestBody = {
+    filterType: 'PipelineSetup',
+    ...(repoName ? { repoName } : {}),
+    ...(!isSavedFilterApplied && queryParams.filters ? { ...prepareFiltersPayload(queryParams.filters) } : {})
+  }
+
   const pipelinesQuery = useMutateAsGet(useGetPipelineList, {
-    body:
-      !isSavedFilterApplied && queryParams.filters
-        ? { ...prepareFiltersPayload(queryParams.filters), filterType: 'PipelineSetup' }
-        : null,
+    body: requestBody,
     queryParams: {
       filterIdentifier: isSavedFilterApplied ? filterIdentifier : undefined,
       accountIdentifier: accountId,

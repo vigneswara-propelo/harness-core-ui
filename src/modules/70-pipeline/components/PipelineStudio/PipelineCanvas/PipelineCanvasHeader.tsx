@@ -78,6 +78,10 @@ export interface PipelineCanvasHeaderProps {
   toPipelineStudio: PathFn<PipelineType<PipelinePathProps> & PipelineStudioQueryParams>
 }
 
+function getStudioSelectedView(isYaml: boolean, disableVisualView: boolean): SelectedView {
+  return isYaml || disableVisualView ? SelectedView.YAML : SelectedView.VISUAL
+}
+
 export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.ReactElement {
   const {
     module,
@@ -257,6 +261,16 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     setShouldShowOutOfSyncError(true)
   }
 
+  // Need to show reload option only when we are showing a cached response and it is not valid
+  function showReloadFromGitoption(): boolean {
+    return Boolean(
+      isPipelineRemote &&
+        isPipelineGitCacheEnabled &&
+        pipelineCacheResponse &&
+        pipelineCacheResponse?.cacheState !== 'VALID_CACHE'
+    )
+  }
+
   function handleReloadFromGitClick(): void {
     pipelineCachedCopyRef.current?.showConfirmationModal()
   }
@@ -286,6 +300,65 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     }
   }, [pipeline.stages, module])
   const isNewPipeline = pipelineIdentifier === DefaultNewPipelineId
+
+  function renderDiscardUnsavedChangeButton(): JSX.Element | null {
+    return !isNewPipeline && !isReadonly ? (
+      <Button
+        disabled={!isUpdated}
+        onClick={handleDiscardClick}
+        className={css.discardBtn}
+        variation={ButtonVariation.SECONDARY}
+        text={getString('pipeline.discard')}
+      />
+    ) : null
+  }
+
+  function renderPipelineMenuActions(): JSX.Element | null {
+    return isNewPipeline ? null : (
+      <Popover className={Classes.DARK} position={Position.LEFT}>
+        <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
+        <Menu style={{ backgroundColor: 'unset' }}>
+          {showReloadFromGitoption() ? (
+            <RbacMenuItem
+              icon="repeat"
+              text={getString('common.reloadFromGit')}
+              onClick={handleReloadFromGitClick}
+              permission={{
+                resourceScope: {
+                  accountIdentifier: accountId,
+                  orgIdentifier,
+                  projectIdentifier
+                },
+                resource: {
+                  resourceType: ResourceType.PIPELINE,
+                  resourceIdentifier: pipeline?.identifier
+                },
+                permission: PermissionIdentifier.VIEW_PIPELINE
+              }}
+            />
+          ) : null}
+          <RbacMenuItem
+            icon="refresh"
+            text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
+            disabled={isCommunity}
+            onClick={handleReconcileClick}
+            permission={{
+              resourceScope: {
+                accountIdentifier: accountId,
+                orgIdentifier,
+                projectIdentifier
+              },
+              resource: {
+                resourceType: ResourceType.PIPELINE,
+                resourceIdentifier: pipeline?.identifier
+              },
+              permission: PermissionIdentifier.EDIT_PIPELINE
+            }}
+          />
+        </Menu>
+      </Popover>
+    )
+  }
 
   return (
     <React.Fragment>
@@ -350,13 +423,12 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     readOnly: pipelineIdentifier === DefaultNewPipelineId
                   }}
                 />
-                {isPipelineGitCacheEnabled && !isEmpty(pipelineCacheResponse) && (
+                {isPipelineGitCacheEnabled && !isEmpty(pipelineCacheResponse) && !remoteFetchError && (
                   <PipelineCachedCopy
                     ref={pipelineCachedCopyRef}
                     reloadContent={getString('common.pipeline')}
                     cacheResponse={pipelineCacheResponse as CacheResponseMetadata}
                     reloadFromCache={handleReloadFromCache}
-                    fetchError={remoteFetchError}
                   />
                 )}
               </div>
@@ -366,7 +438,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
             <>
               <VisualYamlToggle
                 className={css.visualYamlToggle}
-                selectedView={isYaml || disableVisualView ? SelectedView.YAML : SelectedView.VISUAL}
+                selectedView={getStudioSelectedView(isYaml, disableVisualView)}
                 disableToggle={disableVisualView}
                 onChange={handleViewChange}
                 showDisableToggleReason={true}
@@ -383,15 +455,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                   </Button>
                 )}
                 <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
-                {!isNewPipeline && !isReadonly ? (
-                  <Button
-                    disabled={!isUpdated}
-                    onClick={handleDiscardClick}
-                    className={css.discardBtn}
-                    variation={ButtonVariation.SECONDARY}
-                    text={getString('pipeline.discard')}
-                  />
-                ) : null}
+                {renderDiscardUnsavedChangeButton()}
                 <RbacButton
                   data-testid="card-run-pipeline"
                   variation={ButtonVariation.PRIMARY}
@@ -419,50 +483,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     permission: PermissionIdentifier.EXECUTE_PIPELINE
                   }}
                 />
-                {isNewPipeline ? null : (
-                  <Popover className={Classes.DARK} position={Position.LEFT}>
-                    <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
-                    <Menu style={{ backgroundColor: 'unset' }}>
-                      {isPipelineRemote && isPipelineGitCacheEnabled ? (
-                        <RbacMenuItem
-                          icon="repeat"
-                          text={getString('common.reloadFromGit')}
-                          onClick={handleReloadFromGitClick}
-                          permission={{
-                            resourceScope: {
-                              accountIdentifier: accountId,
-                              orgIdentifier,
-                              projectIdentifier
-                            },
-                            resource: {
-                              resourceType: ResourceType.PIPELINE,
-                              resourceIdentifier: pipeline?.identifier
-                            },
-                            permission: PermissionIdentifier.VIEW_PIPELINE
-                          }}
-                        />
-                      ) : null}
-                      <RbacMenuItem
-                        icon="refresh"
-                        text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
-                        disabled={isCommunity}
-                        onClick={handleReconcileClick}
-                        permission={{
-                          resourceScope: {
-                            accountIdentifier: accountId,
-                            orgIdentifier,
-                            projectIdentifier
-                          },
-                          resource: {
-                            resourceType: ResourceType.PIPELINE,
-                            resourceIdentifier: pipeline?.identifier
-                          },
-                          permission: PermissionIdentifier.EDIT_PIPELINE
-                        }}
-                      />
-                    </Menu>
-                  </Popover>
-                )}
+                {renderPipelineMenuActions()}
               </div>
             </>
           )}
