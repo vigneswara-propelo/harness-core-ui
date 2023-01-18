@@ -361,6 +361,7 @@ export interface AccessControlCheckError {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -1050,6 +1051,24 @@ export type ArtifactoryUsernamePasswordAuth = ArtifactoryAuthCredentials & {
 export interface ArtifactsSummary {
   primary?: ArtifactSummary
   sidecars?: ArtifactSummary[]
+}
+
+export type AsgBlueGreenDeployStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  loadBalancer: string
+  prodListener: string
+  prodListenerRuleArn: string
+  stageListener: string
+  stageListenerRuleArn: string
+}
+
+export type AsgBlueGreenRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type AsgBlueGreenSwapServiceStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  downsizeOldAsg: boolean
 }
 
 export type AsgCanaryDeleteStepInfo = StepSpecType & {
@@ -3756,6 +3775,9 @@ export interface EntityDetail {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4360,6 +4382,7 @@ export interface Error {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -4727,6 +4750,7 @@ export interface ErrorMetadata {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -5145,6 +5169,7 @@ export interface Failure {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -6227,6 +6252,9 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   )[]
   moduleType?:
     | 'CD'
@@ -6431,6 +6459,9 @@ export interface GitEntityFilterProperties {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6706,6 +6737,9 @@ export interface GitFullSyncEntityInfoDTO {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6904,6 +6938,9 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7223,6 +7260,9 @@ export interface GitSyncEntityDTO {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7415,6 +7455,9 @@ export interface GitSyncEntityListDTO {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7624,6 +7667,9 @@ export interface GitSyncErrorDTO {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -7981,6 +8027,11 @@ export interface HelmManifestCommandFlag {
     | 'Update'
     | 'Version'
   flag?: string
+}
+
+export type HelmRepoOverrideManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
 }
 
 export type HelmRollbackStepInfo = StepSpecType & {
@@ -9205,6 +9256,7 @@ export interface ManifestConfig {
   spec: ManifestAttributes
   type:
     | 'HelmChart'
+    | 'HelmRepoOverride'
     | 'K8sManifest'
     | 'Kustomize'
     | 'KustomizePatches'
@@ -10839,6 +10891,9 @@ export interface ReferencedByDTO {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export interface RefreshResponse {
@@ -12084,6 +12139,9 @@ export interface ResponseListEntityType {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12706,6 +12764,7 @@ export interface ResponseMessage {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -15269,6 +15328,9 @@ export interface StepData {
     | 'AsgRollingRollback'
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export interface StepElementConfig {
@@ -16721,11 +16783,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
+export type DeleteManyFreezesBodyRequestBody = string[]
+
 export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
-
-export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -17445,6 +17507,9 @@ export interface ListActivitiesQueryParams {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17629,6 +17694,9 @@ export interface ListActivitiesQueryParams {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -17917,6 +17985,9 @@ export interface GetActivitiesSummaryQueryParams {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -18101,6 +18172,9 @@ export interface GetActivitiesSummaryQueryParams {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -32421,6 +32495,53 @@ export const updateSelectorsNgPromise = (
     UpdateSelectorsNgPathParams
   >('PUT', getConfig('ng/api'), `/delegate-profiles/ng/${delegateProfileId}/selectors`, props, signal)
 
+export interface GenerateTerraformModuleQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GenerateTerraformModuleProps = Omit<GetProps<void, void, GenerateTerraformModuleQueryParams, void>, 'path'>
+
+/**
+ * Generate delegate terraform example module file
+ */
+export const GenerateTerraformModule = (props: GenerateTerraformModuleProps) => (
+  <Get<void, void, GenerateTerraformModuleQueryParams, void>
+    path={`/delegate-setup/delegate-terraform-module-file`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGenerateTerraformModuleProps = Omit<
+  UseGetProps<void, void, GenerateTerraformModuleQueryParams, void>,
+  'path'
+>
+
+/**
+ * Generate delegate terraform example module file
+ */
+export const useGenerateTerraformModule = (props: UseGenerateTerraformModuleProps) =>
+  useGet<void, void, GenerateTerraformModuleQueryParams, void>(`/delegate-setup/delegate-terraform-module-file`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Generate delegate terraform example module file
+ */
+export const generateTerraformModulePromise = (
+  props: GetUsingFetchProps<void, void, GenerateTerraformModuleQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<void, void, GenerateTerraformModuleQueryParams, void>(
+    getConfig('ng/api'),
+    `/delegate-setup/delegate-terraform-module-file`,
+    props,
+    signal
+  )
+
 export interface DeleteDelegateQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -33585,6 +33706,9 @@ export interface ListReferredByEntitiesQueryParams {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -33830,6 +33954,9 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   searchTerm?: string
 }
 
@@ -35803,6 +35930,7 @@ export interface DeleteEnvironmentV2QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  forceDelete?: boolean
 }
 
 export type DeleteEnvironmentV2Props = Omit<
@@ -37138,6 +37266,9 @@ export interface GetReferencedByQueryParams {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   searchTerm?: string
 }
 
@@ -37594,7 +37725,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37608,7 +37739,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -37623,7 +37754,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37637,7 +37768,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -37649,7 +37780,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -37658,7 +37789,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -38164,7 +38295,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -38178,7 +38309,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -38193,7 +38324,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -38207,7 +38338,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -38219,7 +38350,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -38228,7 +38359,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -39645,6 +39776,9 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -39897,6 +40031,9 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'TasRollingDeploy'
       | 'TasRollingRollback'
       | 'K8sDryRun'
+      | 'AsgBlueGreenSwapService'
+      | 'AsgBlueGreenDeploy'
+      | 'AsgBlueGreenRollback'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -45848,6 +45985,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   yamlGroup?: string
 }
 
@@ -46160,6 +46300,9 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -59626,6 +59769,9 @@ export interface GetYamlSchemaQueryParams {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   subtype?:
     | 'K8sCluster'
     | 'Git'
