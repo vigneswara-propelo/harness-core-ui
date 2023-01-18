@@ -1338,7 +1338,7 @@ ci:
     invalidSize: Invalid Size. To learn more, hover over the Size tooltip.
     pathRequiredForHostPath: 'Path is required for Type Host Path'
 imageVersionDeprecated: Image version outdated
-unsupportedImagesWarning: 'You are using unsupported Harness CI images. Harness allows builds to use these images, but we cannot ensure that builds will not fail. Please update the versions of the following image(s) {{summary}}'
+unsupportedImagesWarning: 'You are using unsupported Harness CI images. Harness allows builds to use these images, but we cannot ensure that builds will not fail. Please update the versions of the following image(s):'
 invalidRequest: Invalid Request
 serviceDeploymentTypes:
   elastigroup: Elastigroup
@@ -1594,3 +1594,4 @@ commitsTab:
   youHaveNoCommits: You have no commits
   youWillSeeYourCommitsHere: You will see your commits here
 commitsOn: 'Commits on'
+vmLabel: VM

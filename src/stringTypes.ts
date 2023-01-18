@@ -4593,6 +4593,7 @@ export interface StringsMap {
   'pipeline.viewFreeze': string
   'pipeline.viewLatestExecution': string
   'pipeline.viewPipeline': string
+  'pipeline.vmLabel': string
   'pipeline.waitStep.validation.duration10SecMinimum': string
   'pipeline.warningForInvalidYAMLDiscard': string
   'freezeWindows.deploymentFreeze': string
