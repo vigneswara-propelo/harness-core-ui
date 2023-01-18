@@ -163,7 +163,8 @@ export enum StepType {
   ElastigroupBGStageSetup = 'ElastigroupBGStageSetup',
   AsgCanaryDeploy = 'AsgCanaryDeploy',
   AsgRollingRollback = 'AsgRollingRollback',
-  AsgRollingDeploy = 'AsgRollingDeploy'
+  AsgRollingDeploy = 'AsgRollingDeploy',
+  PrismaCloud = 'PrismaCloud'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

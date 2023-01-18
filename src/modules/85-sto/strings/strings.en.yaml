@@ -16,6 +16,7 @@ stepDescription:
   Veracode: Use Veracode to test for vulnerabilities.
   WhiteSource: Use WhiteSource to test for vulnerabilities.
   Zap: Use Zap to test for vulnerabilities.
+  PrismaCloud: Use Prisma Cloud to test for vulnerabilities.
 stepField:
   mode: Scan Mode
   config: Scan Configuration
@@ -26,6 +27,7 @@ stepField:
     workspace: Target Workspace
   authToken: Auth Token
   authDomain: Auth Domain
+  authAccessId: Auth Access Id
   authSsl: Enforce SSL
   toolInclude: Include
   tool:
@@ -33,6 +35,7 @@ stepField:
     javaBinaries: Java Binaries
     context: Tool Context Name
     port: Tool Port
+    imageName: Tool Image Name
   image:
     type: Image Type
     domain: Image Domain

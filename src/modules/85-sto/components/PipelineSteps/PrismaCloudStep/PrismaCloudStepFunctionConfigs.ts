@@ -18,78 +18,62 @@ import {
   ingestionFieldValidationConfig
 } from '../constants'
 import type { Field, InputSetViewValidateFieldsConfig } from '../types'
-import type { SonarqubeStepData } from './SonarqubeStep'
+import type { PrismaCloudStepData } from './PrismaCloudStep'
 
-const toolFieldsTransformConfig = (data: SonarqubeStepData) =>
-  data.spec.mode === 'orchestration'
+const toolFieldsTransformConfig = (data: PrismaCloudStepData) =>
+  data.spec.mode === 'extraction'
     ? [
         {
-          name: 'spec.tool.include',
-          type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.tool.java.libraries',
-          type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.tool.java.binaries',
+          name: 'spec.tool.image_name',
           type: TransformValuesTypes.Text
         }
       ]
     : []
 
-const toolFieldsValidationConfig = (data: SonarqubeStepData) =>
-  data.spec.mode === 'orchestration'
+const toolFieldsValidationConfig = (data: PrismaCloudStepData) =>
+  data.spec.mode === 'extraction'
     ? [
         {
-          name: 'spec.tool.include',
+          name: 'spec.tool.image_name',
           type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.toolInclude'
-        },
-        {
-          name: 'spec.tool.java.libraries',
-          type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.tool.javaLibraries'
-        },
-        {
-          name: 'spec.tool.java.binaries',
-          type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.tool.javaBinaries'
+          label: 'sto.stepField.tool.imageName',
+          isRequired: true
         }
       ]
     : []
 
-const extraAuthFieldsTransformConfig = (data: SonarqubeStepData) =>
+const extraAuthFieldsTransformConfig = (data: PrismaCloudStepData) =>
   data.spec.mode === 'orchestration'
     ? [
+        {
+          name: 'spec.auth.access_id',
+          type: TransformValuesTypes.Text
+        },
         {
           name: 'spec.auth.domain',
           type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.auth.ssl',
-          type: TransformValuesTypes.Boolean
         }
       ]
     : []
-
-const extraAuthFieldsValidationConfig = (data: SonarqubeStepData) =>
-  data.spec.mode !== 'orchestration'
+const extraAuthFieldsValidationConfig = (data: PrismaCloudStepData) =>
+  data.spec.mode === 'orchestration'
     ? [
+        {
+          name: 'spec.auth.access_id',
+          type: ValidationFieldTypes.Text,
+          label: 'sto.stepField.authAccessId',
+          isRequired: true
+        },
         {
           name: 'spec.auth.domain',
           type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.authDomain'
-        },
-        {
-          name: 'spec.auth.ssl',
-          type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.authSsl'
+          label: 'sto.stepField.authAccessId',
+          isRequired: true
         }
       ]
     : []
 
-export const transformValuesFieldsConfig = (data: SonarqubeStepData): Field[] => {
+export const transformValuesFieldsConfig = (data: PrismaCloudStepData): Field[] => {
   const transformValuesFieldsConfigValues = [
     ...commonFieldsTransformConfig(data),
     ...authFieldsTransformConfig(data),
@@ -100,38 +84,29 @@ export const transformValuesFieldsConfig = (data: SonarqubeStepData): Field[] =>
   return transformValuesFieldsConfigValues
 }
 
-export const editViewValidateFieldsConfig = (data: SonarqubeStepData) => {
-  const customAuthDomainConfig = authFieldsValidationConfig(data)
-
-  customAuthDomainConfig.map(obj => {
-    if (obj.name === 'spec.auth.domain') {
-      obj.isRequired = data.spec.mode !== 'ingestion'
-    }
-    return obj
-  })
-
+export const editViewValidateFieldsConfig = (data: PrismaCloudStepData) => {
   const editViewValidationConfig = [
     ...commonFieldsValidationConfig,
     ...authFieldsValidationConfig(data),
     ...extraAuthFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
-    ...additionalFieldsValidationConfigEitView,
-    ...toolFieldsValidationConfig(data)
+    ...toolFieldsValidationConfig(data),
+    ...additionalFieldsValidationConfigEitView
   ]
 
   return editViewValidationConfig
 }
 
-export function getInputSetViewValidateFieldsConfig(data: SonarqubeStepData): InputSetViewValidateFieldsConfig[] {
+export function getInputSetViewValidateFieldsConfig(data: PrismaCloudStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
     ...commonFieldsValidationConfig,
     ...authFieldsValidationConfig(data),
     ...extraAuthFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
-    ...additionalFieldsValidationConfigInputSet,
-    ...toolFieldsValidationConfig(data)
+    ...toolFieldsValidationConfig(data),
+    ...additionalFieldsValidationConfigInputSet
   ]
 
   return inputSetViewValidateFieldsConfig

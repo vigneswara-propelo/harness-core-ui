@@ -44,21 +44,23 @@ type Image = {
   type: 'local_image' | 'docker_v2' | 'jfrog_artifactory' | 'aws_ecr'
   name: string
   domain: string
-  access_id: string
+  access_id?: string
   access_token: string
-  region: string
+  region?: string
 }
 
 type Auth = {
+  access_id?: string
   access_token: string
-  domain: string
-  ssl: boolean
+  domain?: string
+  ssl?: boolean
 }
 
 type Tool = {
   include?: string
   exclude?: string
   context?: string
+  image_name?: string
   port?: number
   java?: {
     libraries?: string

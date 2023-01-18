@@ -13,6 +13,7 @@ import { BanditStep } from './BanditStep/BanditStep'
 import { SnykStep } from './SnykStep/SnykStep'
 import { SonarqubeStep } from './SonarqubeStep/SonarqubeStep'
 import { ZapStep } from './ZapStep/ZapStep'
+import { PrismaCloudStep } from './PrismaCloudStep/PrismaCloudStep'
 
 factory.registerStep(new ZeroNorthStep())
 factory.registerStep(new AquatrivyStep())
@@ -20,3 +21,4 @@ factory.registerStep(new BanditStep())
 factory.registerStep(new SnykStep())
 factory.registerStep(new SonarqubeStep())
 factory.registerStep(new ZapStep())
+factory.registerStep(new PrismaCloudStep())

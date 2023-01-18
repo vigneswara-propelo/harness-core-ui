@@ -15,53 +15,64 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
-import { SnykStepBaseWithRef } from './SnykStepBase'
-import { SnykStepInputSet } from './SnykStepInputSet'
-import { SnykStepVariables, SnykStepVariablesProps } from './SnykStepVariables'
-import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SnykStepFunctionConfigs'
+import { PrismaCloudStepBaseWithRef } from './PrismaCloudStepBase'
+import { PrismaCloudStepInputSet } from './PrismaCloudStepInputSet'
+import { PrismaCloudStepVariables, PrismaCloudStepVariablesProps } from './PrismaCloudStepVariables'
+import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './PrismaCloudStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 
-export type SnykStepData = SecurityStepData<SecurityStepSpec>
-export interface SnykStepProps {
-  initialValues: SnykStepData
-  template?: SnykStepData
+export type PrismaCloudStepData = SecurityStepData<SecurityStepSpec>
+export interface PrismaCloudStepProps {
+  initialValues: PrismaCloudStepData
+  template?: PrismaCloudStepData
   path?: string
   isNewStep?: boolean
   readonly?: boolean
   stepViewType: StepViewType
-  onUpdate?: (data: SnykStepData) => void
-  onChange?: (data: SnykStepData) => void
+  onUpdate?: (data: PrismaCloudStepData) => void
+  onChange?: (data: PrismaCloudStepData) => void
   allowableTypes: AllowedTypes
   formik?: any
 }
 
-export class SnykStep extends PipelineStep<SnykStepData> {
+export class PrismaCloudStep extends PipelineStep<PrismaCloudStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.Snyk
-  protected stepName = 'Configure Snyk'
-  protected stepIcon: IconName = 'Snyk'
-  protected stepDescription: keyof StringsMap = 'sto.stepDescription.Snyk'
+  protected type = StepType.PrismaCloud
+  protected stepName = 'Configure Prisma Cloud'
+  protected stepIcon: IconName = 'PrismaCloud'
+  protected stepDescription: keyof StringsMap = 'sto.stepDescription.PrismaCloud'
   protected stepPaletteVisible = false
 
-  protected defaultValues: SnykStepData = {
+  protected defaultValues: PrismaCloudStepData = {
     identifier: '',
-    type: StepType.Snyk as string,
+    type: StepType.PrismaCloud as string,
     spec: {
       mode: 'orchestration',
       config: 'default',
       target: {
-        type: 'repository',
+        type: 'container',
         name: '',
         variant: '',
         workspace: '/harness'
       },
+      image: {
+        type: 'docker_v2',
+        domain: '',
+        access_token: '',
+        name: ''
+      },
+      tool: {
+        image_name: ''
+      },
       auth: {
-        access_token: '<+secrets.getValue("your_snyk_token_secret")>'
+        domain: '',
+        access_id: '',
+        access_token: '<+secrets.getValue("your_prismacloud_token_secret")>'
       },
       advanced: {
         log: {
@@ -75,7 +86,7 @@ export class SnykStep extends PipelineStep<SnykStepData> {
   }
 
   /* istanbul ignore next */
-  processFormData(data: SnykStepData): SnykStepData {
+  processFormData(data: PrismaCloudStepData): PrismaCloudStepData {
     return getFormValuesInCorrectFormat(data, transformValuesFieldsConfig(data))
   }
 
@@ -84,7 +95,7 @@ export class SnykStep extends PipelineStep<SnykStepData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<SnykStepData>): FormikErrors<SnykStepData> {
+  }: ValidateInputSetProps<PrismaCloudStepData>): FormikErrors<PrismaCloudStepData> {
     if (getString) {
       return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(data), { getString }, viewType)
     }
@@ -93,7 +104,7 @@ export class SnykStep extends PipelineStep<SnykStepData> {
     return {}
   }
 
-  renderStep(props: StepProps<SnykStepData>): JSX.Element {
+  renderStep(props: StepProps<PrismaCloudStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -111,7 +122,7 @@ export class SnykStep extends PipelineStep<SnykStepData> {
       case StepViewType.InputSet:
       case StepViewType.DeploymentForm:
         return (
-          <SnykStepInputSet
+          <PrismaCloudStepInputSet
             initialValues={initialValues}
             /* istanbul ignore next */
             template={inputSetData?.template}
@@ -127,8 +138,8 @@ export class SnykStep extends PipelineStep<SnykStepData> {
 
       case StepViewType.InputVariable:
         return (
-          <SnykStepVariables
-            {...(customStepProps as SnykStepVariablesProps)}
+          <PrismaCloudStepVariables
+            {...(customStepProps as PrismaCloudStepVariablesProps)}
             initialValues={initialValues}
             onUpdate={onUpdate}
           />
@@ -136,7 +147,7 @@ export class SnykStep extends PipelineStep<SnykStepData> {
     }
 
     return (
-      <SnykStepBaseWithRef
+      <PrismaCloudStepBaseWithRef
         initialValues={initialValues}
         allowableTypes={allowableTypes}
         onChange={onChange}

@@ -170,6 +170,7 @@ interface ISecurityAuthFields extends SecurityFieldsProps<SecurityStepData<Secur
   showFields?: {
     ssl?: boolean
     domain?: boolean
+    access_id?: boolean
   }
 }
 
@@ -196,6 +197,10 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
             hide:
               !showFields?.ssl ||
               (!isEmpty(formik.values.spec.auth?.domain) && formik.values.spec.auth?.domain === initialAuthDomain)
+          },
+          'spec.auth.access_id': {
+            label: 'sto.stepField.authAccessId',
+            hide: !showFields?.access_id
           }
         }}
       />

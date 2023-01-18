@@ -109,15 +109,15 @@ export const authFieldsTransformConfig = (data: SecurityStepData<SecurityStepSpe
         {
           name: 'spec.auth.access_token',
           type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.auth.domain',
-          type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.auth.ssl',
-          type: TransformValuesTypes.Boolean
         }
+        // {
+        //   name: 'spec.auth.domain',
+        //   type: TransformValuesTypes.Text
+        // },
+        // {
+        //   name: 'spec.auth.ssl',
+        //   type: TransformValuesTypes.Boolean
+        // }
       ]
     : []
 
@@ -205,7 +205,11 @@ export const commonFieldsTransformConfig = (data: SecurityStepData<SecurityStepS
     }
   ]
 
-  if (data.spec.target.type === 'container' && data.spec.image?.type === 'aws_ecr') {
+  if (
+    data.spec.target.type === 'container' &&
+    data.spec.image?.type === 'aws_ecr' &&
+    data.spec.mode === 'orchestration'
+  ) {
     transformValuesFieldsConfigValues.push({
       name: 'spec.image.region',
       type: TransformValuesTypes.Text
@@ -269,17 +273,17 @@ export const authFieldsValidationConfig = (
     type: ValidationFieldTypes.Text,
     label: 'sto.stepField.authToken',
     isRequired: data.spec.mode !== 'ingestion'
-  },
-  {
-    name: 'spec.auth.domain',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.authDomain'
-  },
-  {
-    name: 'spec.auth.ssl',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.authSsl'
   }
+  // {
+  //   name: 'spec.auth.domain',
+  //   type: ValidationFieldTypes.Text,
+  //   label: 'sto.stepField.authDomain'
+  // },
+  // {
+  //   name: 'spec.auth.ssl',
+  //   type: ValidationFieldTypes.Text,
+  //   label: 'sto.stepField.authSsl'
+  // }
 ]
 
 export const ingestionFieldValidationConfig = (

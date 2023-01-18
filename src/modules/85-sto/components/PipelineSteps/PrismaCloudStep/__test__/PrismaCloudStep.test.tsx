@@ -12,19 +12,19 @@ import type { StringKeys } from 'framework/strings'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { SnykStep, SnykStepData } from '../SnykStep'
+import { PrismaCloudStep, PrismaCloudStepData } from '../PrismaCloudStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
-describe('Snyk Step', () => {
+describe('PrismaCloud Step', () => {
   beforeAll(() => {
-    factory.registerStep(new SnykStep())
+    factory.registerStep(new PrismaCloudStep())
   })
 
   describe('Edit View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.Snyk} stepViewType={StepViewType.Edit} />
+        <TestStepWidget initialValues={{}} type={StepType.PrismaCloud} stepViewType={StepViewType.Edit} />
       )
 
       expect(container).toMatchSnapshot()
@@ -32,8 +32,8 @@ describe('Snyk Step', () => {
 
     test('renders runtime inputs - Ingestion Container', async () => {
       const initialValues = {
-        identifier: 'My_Snyk_Step',
-        name: 'My Snyk Step',
+        identifier: 'My_PrismaCloud_Step',
+        name: 'My PrismaCloud Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
@@ -72,7 +72,7 @@ describe('Snyk Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.Snyk}
+          type={StepType.PrismaCloud}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -86,22 +86,30 @@ describe('Snyk Step', () => {
       expect(onUpdate).toHaveBeenCalledWith(initialValues)
     })
 
-    test('renders runtime inputs - Orchestration Repository', async () => {
+    test('renders runtime inputs - Orchestration container', async () => {
       const initialValues = {
-        identifier: 'My_Snyk_Step',
-        name: 'My Snyk Step',
+        identifier: 'My_PrismaCloud_Step',
+        name: 'My PrismaCloud Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
           privileged: RUNTIME_INPUT_VALUE,
           target: {
-            type: 'repository',
+            type: 'container',
             name: RUNTIME_INPUT_VALUE,
             variant: RUNTIME_INPUT_VALUE,
             workspace: RUNTIME_INPUT_VALUE
           },
           auth: {
-            access_token: RUNTIME_INPUT_VALUE
+            domain: RUNTIME_INPUT_VALUE,
+            access_token: RUNTIME_INPUT_VALUE,
+            access_id: RUNTIME_INPUT_VALUE
+          },
+          image: {
+            type: RUNTIME_INPUT_VALUE,
+            domain: RUNTIME_INPUT_VALUE,
+            access_token: RUNTIME_INPUT_VALUE,
+            name: RUNTIME_INPUT_VALUE
           },
           mode: 'orchestration',
           config: 'default',
@@ -132,7 +140,7 @@ describe('Snyk Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.Snyk}
+          type={StepType.PrismaCloud}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -148,20 +156,28 @@ describe('Snyk Step', () => {
 
     test('edit mode works', async () => {
       const initialValues = {
-        identifier: 'My_Snyk_Stp',
-        name: 'My Snyk Step',
+        identifier: 'My_PrismaCloud_Stp',
+        name: 'My PrismaCloud Step',
         description: 'Description',
         timeout: '10s',
         spec: {
           privileged: true,
           target: {
-            type: 'repository',
-            name: 'Snyk Test',
+            type: 'container',
+            name: 'PrismaCloud Test',
             variant: 'variant',
             workspace: '~/workspace'
           },
+          image: {
+            type: 'docker_v2',
+            domain: 'image domain',
+            access_token: 'image access_token',
+            name: 'image name'
+          },
           auth: {
-            access_token: 'token'
+            domain: 'auth domain',
+            access_id: 'auth access id',
+            access_token: '<+secrets.getValue("your_prismacloud_token_secret")>'
           },
           config: 'default',
           mode: 'orchestration',
@@ -193,7 +209,7 @@ describe('Snyk Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.Snyk}
+          type={StepType.PrismaCloud}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -211,7 +227,7 @@ describe('Snyk Step', () => {
   describe('InputSet View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.Snyk} stepViewType={StepViewType.InputSet} />
+        <TestStepWidget initialValues={{}} type={StepType.PrismaCloud} stepViewType={StepViewType.InputSet} />
       )
 
       expect(container).toMatchSnapshot()
@@ -219,8 +235,8 @@ describe('Snyk Step', () => {
 
     test('should render all fields', async () => {
       const template = {
-        type: StepType.Snyk,
-        identifier: 'My_Snyk_Step',
+        type: StepType.PrismaCloud,
+        identifier: 'My_PrismaCloud_Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
@@ -257,9 +273,9 @@ describe('Snyk Step', () => {
       }
 
       const allValues = {
-        type: StepType.Snyk,
+        type: StepType.PrismaCloud,
         name: 'Test A',
-        identifier: 'My_Snyk_Step',
+        identifier: 'My_PrismaCloud_Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
@@ -300,7 +316,7 @@ describe('Snyk Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.Snyk}
+          type={StepType.PrismaCloud}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -313,14 +329,14 @@ describe('Snyk Step', () => {
 
     test('should not render any fields', async () => {
       const template = {
-        type: StepType.Snyk,
-        identifier: 'My_Snyk_Step'
+        type: StepType.PrismaCloud,
+        identifier: 'My_PrismaCloud_Step'
       }
 
       const allValues = {
-        type: StepType.Snyk,
-        identifier: 'My_Snyk_Step',
-        name: 'My Snyk Step',
+        type: StepType.PrismaCloud,
+        identifier: 'My_PrismaCloud_Step',
+        name: 'My PrismaCloud Step',
         description: 'Description',
         timeout: '10s',
         spec: {
@@ -346,7 +362,7 @@ describe('Snyk Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.Snyk}
+          type={StepType.PrismaCloud}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -365,7 +381,7 @@ describe('Snyk Step', () => {
           initialValues={{
             identifier: 'Test_A',
             name: 'Test A',
-            type: StepType.Snyk,
+            type: StepType.PrismaCloud,
             description: 'Description',
             timeout: '10s',
             spec: {
@@ -444,9 +460,9 @@ describe('Snyk Step', () => {
               }
             },
             variablesData: {
-              type: StepType.Snyk,
+              type: StepType.PrismaCloud,
               __uuid: 'step-identifier',
-              identifier: 'Snyk',
+              identifier: 'PrismaCloud',
               name: 'step-name',
               description: 'step-description',
               timeout: 'step-timeout',
@@ -464,7 +480,7 @@ describe('Snyk Step', () => {
               }
             }
           }}
-          type={StepType.Snyk}
+          type={StepType.PrismaCloud}
           stepViewType={StepViewType.InputVariable}
         />
       )
@@ -474,15 +490,15 @@ describe('Snyk Step', () => {
   })
 
   test('validates input set correctly', () => {
-    const data: SnykStepData = {
+    const data: PrismaCloudStepData = {
       identifier: 'id',
       name: 'name',
       description: 'desc',
-      type: StepType.Snyk,
+      type: StepType.PrismaCloud,
       timeout: '1h',
       spec: {
         target: {
-          type: 'repository',
+          type: 'container',
           name: 'target name',
           variant: 'target variant',
           workspace: 'target workspace'
@@ -495,7 +511,7 @@ describe('Snyk Step', () => {
         privileged: true,
         settings: {
           policy_type: 'orchestratedScan',
-          scan_type: 'repository',
+          scan_type: 'container',
           product_name: 'x',
           product_config_name: 'y'
         },
@@ -510,7 +526,7 @@ describe('Snyk Step', () => {
       }
     }
 
-    const result = new SnykStep().validateInputSet({
+    const result = new PrismaCloudStep().validateInputSet({
       data,
       template: data,
       getString: (key: StringKeys, _vars?: Record<string, any>) => key as string,

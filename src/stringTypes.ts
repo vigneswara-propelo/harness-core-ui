@@ -8385,6 +8385,7 @@ export interface StringsMap {
   'sto.stepDescription.Fortify': string
   'sto.stepDescription.FortifyOnDemand': string
   'sto.stepDescription.Owasp': string
+  'sto.stepDescription.PrismaCloud': string
   'sto.stepDescription.ScoutSuite': string
   'sto.stepDescription.Snyk': string
   'sto.stepDescription.Sonarqube': string
@@ -8399,6 +8400,7 @@ export interface StringsMap {
   'sto.stepField.advanced.logLevel': string
   'sto.stepField.advanced.passthrough': string
   'sto.stepField.advanced.serializer': string
+  'sto.stepField.authAccessId': string
   'sto.stepField.authDomain': string
   'sto.stepField.authSsl': string
   'sto.stepField.authToken': string
@@ -8422,6 +8424,7 @@ export interface StringsMap {
   'sto.stepField.target.variant': string
   'sto.stepField.target.workspace': string
   'sto.stepField.tool.context': string
+  'sto.stepField.tool.imageName': string
   'sto.stepField.tool.javaBinaries': string
   'sto.stepField.tool.javaLibraries': string
   'sto.stepField.tool.port': string
