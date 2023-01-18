@@ -59,6 +59,7 @@ export default function DeployServiceEntitySpecifications({
     scope,
     contextType,
     getStageFromPipeline,
+    setSelection,
     updateStage
   } = usePipelineContext()
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
@@ -178,6 +179,18 @@ export default function DeployServiceEntitySpecifications({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [stage]
   )
+
+  useEffect(() => {
+    if (setupModeType === setupMode.PROPAGATE) {
+      if (!previousStageList?.find(item => item === selectedPropagatedState)) {
+        onStageServiceChange(setupMode.DIFFERENT)
+        setSelection({
+          sectionId: null,
+          stageId: null
+        })
+      }
+    }
+  }, [stageIndex])
 
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
