@@ -1610,8 +1610,10 @@ export interface StringsMap {
   'delegates.successVerification.addHelmRepoLabel': string
   'delegates.successVerification.applyYAMLTitleForHelm': string
   'delegates.successVerification.checkingForHeartbeat': string
+  'delegates.successVerification.helmRepoUpdate': string
   'delegates.successVerification.installHelmChartCmd': string
   'delegates.successVerification.installHelmChartLabel': string
+  'delegates.successVerification.updateHelmRepoLabel': string
   'delegates.successfullyUpdatedConfig': string
   'delegates.tokens.createdBySystem': string
   'delegates.tokens.delegateTokens': string
