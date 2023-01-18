@@ -739,7 +739,7 @@ exports[`Bandit Step Edit View edit mode works 1`] = `
                             placeholder="select"
                             style="padding-right: 0px;"
                             type="text"
-                            value=""
+                            value="sto.stepField.optionLabels.logLevel.debug"
                           />
                           <span
                             class="bp3-input-action"

@@ -8,6 +8,7 @@
 import React from 'react'
 import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@harness/uicore'
 import { connect } from 'formik'
+import { isEmpty } from 'lodash-es'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { CIStep } from '@ci/components/PipelineSteps/CIStep/CIStep'
 import {
@@ -15,7 +16,10 @@ import {
   CIStepOptionalConfigProps
 } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
+import { useStrings } from 'framework/strings'
 import type { BanditStepProps } from './BanditStep'
+import SecurityField from '../SecurityField'
+import { inputSetFields } from '../constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const BanditStepInputSetBasic: React.FC<BanditStepProps> = ({
@@ -26,6 +30,8 @@ export const BanditStepInputSetBasic: React.FC<BanditStepProps> = ({
   allowableTypes,
   formik
 }) => {
+  const prefix = isEmpty(path) ? '' : `${path}.`
+  const { getString } = useStrings()
   const enableFields: CIStepOptionalConfigProps['enableFields'] = {
     ...(shouldRenderRunTimeInputView(template?.spec?.settings) && {
       'spec.settings': {}
@@ -44,6 +50,12 @@ export const BanditStepInputSetBasic: React.FC<BanditStepProps> = ({
           })
         }}
         path={path || ''}
+      />
+      <SecurityField
+        stepViewType={stepViewType}
+        allowableTypes={allowableTypes}
+        formik={formik}
+        enableFields={inputSetFields(getString, prefix, template)}
       />
       <CIStepOptionalConfig
         readonly={readonly}

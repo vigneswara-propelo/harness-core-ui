@@ -21,28 +21,22 @@ import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidate
 import { CIStep } from '@ci/components/PipelineSteps/CIStep/CIStep'
 import { useGetPropagatedStageById } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
-import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './SonarqubeStepFunctionConfigs'
-import type { SonarqubeStepProps, SonarqubeStepData } from './SonarqubeStep'
+import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './ZapStepFunctionConfigs'
+import type { ZapStepProps, ZapStepData } from './ZapStep'
 import {
   AdditionalFields,
-  SecurityAuthFields,
   SecurityImageFields,
   SecurityIngestionFields,
+  SecurityInstanceFields,
   SecurityScanFields,
   SecurityTargetFields
 } from '../SecurityFields'
-import {
-  INGESTION_SCAN_MODE,
-  ORCHESTRATION_SCAN_MODE,
-  EXTRACTION_SCAN_MODE,
-  REPOSITORY_TARGET_TYPE,
-  dividerBottomMargin
-} from '../constants'
+import { dividerBottomMargin, INGESTION_SCAN_MODE, INSTANCE_TARGET_TYPE, ORCHESTRATION_SCAN_MODE } from '../constants'
 import SecurityField from '../SecurityField'
 
-export const SonarqubeStepBase = (
-  { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, allowableTypes, onChange }: SonarqubeStepProps,
-  formikRef: StepFormikFowardRef<SonarqubeStepData>
+export const ZapStepBase = (
+  { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, allowableTypes, onChange }: ZapStepProps,
+  formikRef: StepFormikFowardRef<ZapStepData>
 ): JSX.Element => {
   const {
     state: {
@@ -54,7 +48,7 @@ export const SonarqubeStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const valuesInCorrectFormat = getInitialValuesInCorrectFormat<SonarqubeStepData, SonarqubeStepData>(
+  const valuesInCorrectFormat = getInitialValuesInCorrectFormat<ZapStepData, ZapStepData>(
     initialValues,
     transformValuesFieldsConfig(initialValues),
     { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
@@ -63,9 +57,9 @@ export const SonarqubeStepBase = (
   return (
     <Formik
       initialValues={valuesInCorrectFormat}
-      formName="SonarqubeStep"
+      formName="ZapStep"
       validate={valuesToValidate => {
-        const schemaValues = getFormValuesInCorrectFormat<SonarqubeStepData, SonarqubeStepData>(
+        const schemaValues = getFormValuesInCorrectFormat<ZapStepData, ZapStepData>(
           valuesToValidate,
           transformValuesFieldsConfig(valuesToValidate)
         )
@@ -82,8 +76,8 @@ export const SonarqubeStepBase = (
           stepViewType
         )
       }}
-      onSubmit={(_values: SonarqubeStepData) => {
-        const schemaValues = getFormValuesInCorrectFormat<SonarqubeStepData, SonarqubeStepData>(
+      onSubmit={(_values: ZapStepData) => {
+        const schemaValues = getFormValuesInCorrectFormat<ZapStepData, ZapStepData>(
           _values,
           transformValuesFieldsConfig(_values)
         )
@@ -91,15 +85,9 @@ export const SonarqubeStepBase = (
         onUpdate?.(schemaValues)
       }}
     >
-      {(formik: FormikProps<SonarqubeStepData>) => {
+      {(formik: FormikProps<ZapStepData>) => {
         // This is required
         setFormikRef?.(formikRef, formik)
-
-        const targetTypeSelectItems = [REPOSITORY_TARGET_TYPE]
-
-        if (targetTypeSelectItems.length === 1 && formik.values.spec.target.type !== 'repository') {
-          formik.setFieldValue('spec.target.type', 'repository')
-        }
 
         return (
           <FormikForm>
@@ -119,29 +107,21 @@ export const SonarqubeStepBase = (
               formik={formik}
               stepViewType={stepViewType}
               scanConfigReadonly
-              scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, EXTRACTION_SCAN_MODE, INGESTION_SCAN_MODE]}
+              scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, INGESTION_SCAN_MODE]}
             />
 
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
               stepViewType={stepViewType}
-              targetTypeSelectItems={targetTypeSelectItems}
+              targetTypeSelectItems={[INSTANCE_TARGET_TYPE]}
             />
 
             <SecurityImageFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
 
             <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
 
-            <SecurityAuthFields
-              showFields={{
-                ssl: true,
-                domain: true
-              }}
-              allowableTypes={allowableTypes}
-              formik={formik}
-              stepViewType={stepViewType}
-            />
+            <SecurityInstanceFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
 
             {formik.values.spec.mode === 'orchestration' && (
               <>
@@ -150,16 +130,12 @@ export const SonarqubeStepBase = (
                   allowableTypes={allowableTypes}
                   formik={formik}
                   enableFields={{
-                    'spec.tool.include': {
-                      label: 'sto.stepField.toolInclude',
+                    'spec.tool.context': {
+                      label: 'sto.stepField.tool.context',
                       optional: true
                     },
-                    'spec.tool.java.libraries': {
-                      label: 'sto.stepField.tool.javaLibraries',
-                      optional: true
-                    },
-                    'spec.tool.java.binaries': {
-                      label: 'sto.stepField.tool.javaBinaries',
+                    'spec.tool.port': {
+                      label: 'sto.stepField.tool.port',
                       optional: true
                     }
                   }}
@@ -182,4 +158,4 @@ export const SonarqubeStepBase = (
   )
 }
 
-export const SonarqubeStepBaseWithRef = React.forwardRef(SonarqubeStepBase)
+export const ZapStepBaseWithRef = React.forwardRef(ZapStepBase)

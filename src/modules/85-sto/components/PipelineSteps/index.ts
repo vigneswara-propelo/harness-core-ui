@@ -11,8 +11,10 @@ import { ZeroNorthStep } from './ZeroNorthStep/ZeroNorthStep'
 import { BanditStep } from './BanditStep/BanditStep'
 import { SnykStep } from './SnykStep/SnykStep'
 import { SonarqubeStep } from './SonarqubeStep/SonarqubeStep'
+import { ZapStep } from './ZapStep/ZapStep'
 
 factory.registerStep(new ZeroNorthStep())
 factory.registerStep(new BanditStep())
 factory.registerStep(new SnykStep())
 factory.registerStep(new SonarqubeStep())
+factory.registerStep(new ZapStep())

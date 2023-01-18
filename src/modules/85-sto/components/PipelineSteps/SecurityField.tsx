@@ -23,7 +23,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface SelectItems extends SelectOption {
   disabled?: boolean
 }
-interface SecurityFieldProps<T> {
+export interface SecurityFieldProps<T> {
   enableFields: {
     [key: string]: {
       [key: string]: any
@@ -85,6 +85,7 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
+  if (!enableFields) return null
   return (
     <>
       {stepViewType !== StepViewType.Template &&

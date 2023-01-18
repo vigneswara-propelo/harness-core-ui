@@ -58,10 +58,19 @@ type Auth = {
 type Tool = {
   include?: string
   exclude?: string
+  context?: string
+  port?: number
   java?: {
     libraries?: string
     binaries?: string
   }
+}
+
+type Instance = {
+  domain?: string
+  protocol?: string
+  port?: number
+  path?: string
 }
 
 type LogLevel = 'info' | 'debug' | 'warning' | 'error'
@@ -90,6 +99,7 @@ export interface SecurityStepSpec {
   tool?: Tool
   ingestion?: Ingestion
   advanced?: AdvancedSettings // TODO verify that this is optional
+  instance?: Instance
   privileged?: boolean
   imagePullPolicy?: MultiTypeSelectOption
   resources?: Resources

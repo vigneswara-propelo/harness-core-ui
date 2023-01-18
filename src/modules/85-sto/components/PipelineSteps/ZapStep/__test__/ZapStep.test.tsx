@@ -1,7 +1,7 @@
 /*
  * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
- * that can be found in the licenses directory at the root of this repository, also available at
+ * that can be found in the licenses directory at the root of this instance, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
@@ -12,41 +12,112 @@ import type { StringKeys } from 'framework/strings'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { BanditStep, BanditStepData } from '../BanditStep'
+import { ZapStep, ZapStepData } from '../ZapStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
-describe('Bandit Step', () => {
+describe('Zap Step', () => {
   beforeAll(() => {
-    factory.registerStep(new BanditStep())
+    factory.registerStep(new ZapStep())
   })
 
   describe('Edit View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.Bandit} stepViewType={StepViewType.Edit} />
+        <TestStepWidget initialValues={{}} type={StepType.Zap} stepViewType={StepViewType.Edit} />
       )
 
       expect(container).toMatchSnapshot()
     })
 
-    test('renders runtime inputs', async () => {
+    test('renders runtime inputs - Ingestion Instance', async () => {
       const initialValues = {
-        identifier: 'My_Bandit_Step',
-        name: 'My Bandit Step',
+        identifier: 'My_Zap_Step',
+        name: 'My Zap Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
           privileged: RUNTIME_INPUT_VALUE,
           target: {
-            type: 'repository',
+            type: 'instance',
+            name: RUNTIME_INPUT_VALUE,
+            variant: RUNTIME_INPUT_VALUE
+          },
+          ingestion: {
+            file: RUNTIME_INPUT_VALUE
+          },
+          mode: 'ingestion',
+          config: 'default',
+          settings: RUNTIME_INPUT_VALUE,
+          instance: {
+            domain: 'auth domain',
+            protocol: 'token',
+            path: 'true',
+            port: 8080
+          },
+          advanced: {
+            fail_on_severity: RUNTIME_INPUT_VALUE,
+            log: {
+              level: RUNTIME_INPUT_VALUE,
+              serializer: RUNTIME_INPUT_VALUE
+            }
+          },
+          // Right now we do not support Image Pull Policy but will do in the future
+          // pull: RUNTIME_INPUT_VALUE,
+          resources: {
+            limits: {
+              cpu: RUNTIME_INPUT_VALUE,
+              memory: RUNTIME_INPUT_VALUE
+            }
+          }
+        }
+      }
+
+      const onUpdate = jest.fn()
+      const ref = React.createRef<StepFormikRef<unknown>>()
+      const { container } = render(
+        <TestStepWidget
+          initialValues={initialValues}
+          type={StepType.Zap}
+          stepViewType={StepViewType.Edit}
+          onUpdate={onUpdate}
+          ref={ref}
+        />
+      )
+
+      expect(container).toMatchSnapshot()
+
+      await act(() => ref.current?.submitForm()!)
+
+      expect(onUpdate).toHaveBeenCalledWith(initialValues)
+    })
+
+    test('renders runtime inputs - Orchestration instance', async () => {
+      const initialValues = {
+        identifier: 'My_Zap_Step',
+        name: 'My Zap Step',
+        description: RUNTIME_INPUT_VALUE,
+        timeout: RUNTIME_INPUT_VALUE,
+        spec: {
+          privileged: RUNTIME_INPUT_VALUE,
+          target: {
+            type: 'instance',
             name: RUNTIME_INPUT_VALUE,
             variant: RUNTIME_INPUT_VALUE,
             workspace: RUNTIME_INPUT_VALUE
           },
+          instance: {
+            domain: RUNTIME_INPUT_VALUE,
+            protocol: RUNTIME_INPUT_VALUE,
+            path: RUNTIME_INPUT_VALUE,
+            port: RUNTIME_INPUT_VALUE
+          },
           mode: 'orchestration',
           config: 'default',
           settings: RUNTIME_INPUT_VALUE,
+          tool: {
+            port: RUNTIME_INPUT_VALUE
+          },
           advanced: {
             args: {
               cli: RUNTIME_INPUT_VALUE
@@ -73,7 +144,7 @@ describe('Bandit Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.Bandit}
+          type={StepType.Zap}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -89,17 +160,23 @@ describe('Bandit Step', () => {
 
     test('edit mode works', async () => {
       const initialValues = {
-        identifier: 'My_Bandit_Step',
-        name: 'My Bandit Step',
+        identifier: 'My_Zap_Stp',
+        name: 'My Zap Step',
         description: 'Description',
         timeout: '10s',
         spec: {
           privileged: true,
           target: {
-            type: 'repository',
-            name: 'Bandit Test',
+            type: 'instance',
+            name: 'Zap Test',
             variant: 'variant',
             workspace: '~/workspace'
+          },
+          instance: {
+            domain: 'auth domain',
+            protocol: 'token',
+            path: true,
+            port: 8080
           },
           config: 'default',
           mode: 'orchestration',
@@ -107,10 +184,17 @@ describe('Bandit Step', () => {
             setting_1: 'settings test value 1',
             setting_2: 'settings test value 1'
           },
+          tool: {
+            context: 'tool context',
+            port: 'tool port'
+          },
           advanced: {
             log: {
               level: 'debug',
-              serializer: 'SIMPLE_ONPREM' // Remove From UI
+              serializer: 'simple_onprem'
+            },
+            args: {
+              cli: 'additional cli args'
             }
           },
           // Right now we do not support Image Pull Policy but will do in the future
@@ -128,7 +212,7 @@ describe('Bandit Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.Bandit}
+          type={StepType.Zap}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -146,7 +230,7 @@ describe('Bandit Step', () => {
   describe('InputSet View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.Bandit} stepViewType={StepViewType.InputSet} />
+        <TestStepWidget initialValues={{}} type={StepType.Zap} stepViewType={StepViewType.InputSet} />
       )
 
       expect(container).toMatchSnapshot()
@@ -154,19 +238,37 @@ describe('Bandit Step', () => {
 
     test('should render all fields', async () => {
       const template = {
-        type: StepType.Bandit,
-        identifier: 'My_Bandit_Step',
+        type: StepType.Zap,
+        identifier: 'My_Zap_Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
-          target: {
-            type: 'repository',
-            name: 'Bandit Test',
-            variant: 'variant',
-            workspace: '~/workspace'
-          },
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
+          target: {
+            type: 'instance',
+            name: RUNTIME_INPUT_VALUE,
+            variant: RUNTIME_INPUT_VALUE,
+            workspace: RUNTIME_INPUT_VALUE
+          },
+          instance: {
+            domain: RUNTIME_INPUT_VALUE,
+            protocol: RUNTIME_INPUT_VALUE,
+            path: RUNTIME_INPUT_VALUE,
+            port: RUNTIME_INPUT_VALUE
+          },
+          config: RUNTIME_INPUT_VALUE,
+          mode: RUNTIME_INPUT_VALUE,
+          tool: {
+            context: RUNTIME_INPUT_VALUE,
+            port: RUNTIME_INPUT_VALUE
+          },
+          advanced: {
+            log: {
+              level: RUNTIME_INPUT_VALUE,
+              serializer: RUNTIME_INPUT_VALUE // Remove From UI
+            }
+          },
           // Right now we do not support Image Pull Policy but will do in the future
           // pull: RUNTIME_INPUT_VALUE,
           resources: {
@@ -179,14 +281,38 @@ describe('Bandit Step', () => {
       }
 
       const allValues = {
-        type: StepType.Bandit,
+        type: StepType.Zap,
         name: 'Test A',
-        identifier: 'My_Bandit_Step',
+        identifier: 'My_Zap_Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
+          target: {
+            type: 'instance',
+            name: RUNTIME_INPUT_VALUE,
+            variant: RUNTIME_INPUT_VALUE,
+            workspace: RUNTIME_INPUT_VALUE
+          },
+          instance: {
+            domain: RUNTIME_INPUT_VALUE,
+            protocol: RUNTIME_INPUT_VALUE,
+            path: RUNTIME_INPUT_VALUE,
+            port: RUNTIME_INPUT_VALUE
+          },
+          config: RUNTIME_INPUT_VALUE,
+          mode: RUNTIME_INPUT_VALUE,
+          tool: {
+            context: RUNTIME_INPUT_VALUE,
+            port: RUNTIME_INPUT_VALUE
+          },
+          advanced: {
+            log: {
+              level: RUNTIME_INPUT_VALUE,
+              serializer: RUNTIME_INPUT_VALUE // Remove From UI
+            }
+          },
           // Right now we do not support Image Pull Policy but will do in the future
           // pull: RUNTIME_INPUT_VALUE,
           resources: {
@@ -203,7 +329,7 @@ describe('Bandit Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.Bandit}
+          type={StepType.Zap}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -216,25 +342,19 @@ describe('Bandit Step', () => {
 
     test('should not render any fields', async () => {
       const template = {
-        type: StepType.Bandit,
-        identifier: 'My_Bandit_Step'
+        type: StepType.Zap,
+        identifier: 'My_Zap_Step'
       }
 
       const allValues = {
-        type: StepType.Bandit,
-        identifier: 'My_Bandit_Step',
-        name: 'My Bandit Step',
+        type: StepType.Zap,
+        identifier: 'My_Zap_Step',
+        name: 'My Zap Step',
         description: 'Description',
         timeout: '10s',
         spec: {
+          mode: 'orchestration',
           privileged: false,
-          config: 'default',
-          target: {
-            type: 'repository',
-            name: 'Bandit Test',
-            variant: 'variant',
-            workspace: '~/workspace'
-          },
           settings: {
             key1: 'value1',
             key2: 'value2',
@@ -256,7 +376,7 @@ describe('Bandit Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.Bandit}
+          type={StepType.Zap}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -275,7 +395,7 @@ describe('Bandit Step', () => {
           initialValues={{
             identifier: 'Test_A',
             name: 'Test A',
-            type: StepType.Bandit,
+            type: StepType.Zap,
             description: 'Description',
             timeout: '10s',
             spec: {
@@ -354,9 +474,9 @@ describe('Bandit Step', () => {
               }
             },
             variablesData: {
-              type: StepType.Bandit,
+              type: StepType.Zap,
               __uuid: 'step-identifier',
-              identifier: 'Bandit',
+              identifier: 'Zap',
               name: 'step-name',
               description: 'step-description',
               timeout: 'step-timeout',
@@ -374,7 +494,7 @@ describe('Bandit Step', () => {
               }
             }
           }}
-          type={StepType.Bandit}
+          type={StepType.Zap}
           stepViewType={StepViewType.InputVariable}
         />
       )
@@ -384,18 +504,28 @@ describe('Bandit Step', () => {
   })
 
   test('validates input set correctly', () => {
-    const data: BanditStepData = {
+    const data: ZapStepData = {
       identifier: 'id',
       name: 'name',
       description: 'desc',
-      type: StepType.Bandit,
+      type: StepType.Zap,
       timeout: '1h',
       spec: {
         target: {
-          type: 'repository',
+          type: 'instance',
           name: 'target name',
           variant: 'target variant',
           workspace: 'target workspace'
+        },
+        tool: {
+          context: 'tool context',
+          port: 8010
+        },
+        instance: {
+          domain: 'auth domain',
+          protocol: 'token',
+          path: 'true',
+          port: 8080
         },
         advanced: {
           include_raw: false
@@ -405,7 +535,7 @@ describe('Bandit Step', () => {
         privileged: true,
         settings: {
           policy_type: 'orchestratedScan',
-          scan_type: 'repository',
+          scan_type: 'instance',
           product_name: 'x',
           product_config_name: 'y'
         },
@@ -420,7 +550,7 @@ describe('Bandit Step', () => {
       }
     }
 
-    const result = new BanditStep().validateInputSet({
+    const result = new ZapStep().validateInputSet({
       data,
       template: data,
       getString: (key: StringKeys, _vars?: Record<string, any>) => key as string,

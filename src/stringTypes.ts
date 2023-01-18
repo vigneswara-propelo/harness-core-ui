@@ -8411,14 +8411,20 @@ export interface StringsMap {
   'sto.stepField.image.token': string
   'sto.stepField.image.type': string
   'sto.stepField.ingestion.file': string
+  'sto.stepField.instance.domain': string
+  'sto.stepField.instance.path': string
+  'sto.stepField.instance.port': string
+  'sto.stepField.instance.protocol': string
   'sto.stepField.mode': string
   'sto.stepField.optionLabels.logLevel.debug': string
   'sto.stepField.target.name': string
   'sto.stepField.target.type': string
   'sto.stepField.target.variant': string
   'sto.stepField.target.workspace': string
+  'sto.stepField.tool.context': string
   'sto.stepField.tool.javaBinaries': string
   'sto.stepField.tool.javaLibraries': string
+  'sto.stepField.tool.port': string
   'sto.stepField.toolInclude': string
   'sto.stoExemption': string
   'sto.targets.testTargets': string

@@ -20,7 +20,7 @@ import {
 import type { Field, InputSetViewValidateFieldsConfig } from '../types'
 import type { SonarqubeStepData } from './SonarqubeStep'
 
-export const toolFieldsTransformConfig = (data: SonarqubeStepData) =>
+const toolFieldsTransformConfig = (data: SonarqubeStepData) =>
   data.spec.mode === 'orchestration'
     ? [
         {
@@ -38,23 +38,26 @@ export const toolFieldsTransformConfig = (data: SonarqubeStepData) =>
       ]
     : []
 
-const toolFieldsValidationConfig = [
-  {
-    name: 'spec.tool.include',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.toolInclude'
-  },
-  {
-    name: 'spec.tool.java.libraries',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.tool.javaLibraries'
-  },
-  {
-    name: 'spec.tool.java.binaries',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.tool.javaBinaries'
-  }
-]
+const toolFieldsValidationConfig = (data: SonarqubeStepData) =>
+  data.spec.mode === 'orchestration'
+    ? [
+        {
+          name: 'spec.tool.include',
+          type: ValidationFieldTypes.Text,
+          label: 'sto.stepField.toolInclude'
+        },
+        {
+          name: 'spec.tool.java.libraries',
+          type: ValidationFieldTypes.Text,
+          label: 'sto.stepField.tool.javaLibraries'
+        },
+        {
+          name: 'spec.tool.java.binaries',
+          type: ValidationFieldTypes.Text,
+          label: 'sto.stepField.tool.javaBinaries'
+        }
+      ]
+    : []
 
 export const transformValuesFieldsConfig = (data: SonarqubeStepData): Field[] => {
   const transformValuesFieldsConfigValues = [
@@ -82,7 +85,7 @@ export const editViewValidateFieldsConfig = (data: SonarqubeStepData) => {
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
     ...additionalFieldsValidationConfigEitView,
-    ...toolFieldsValidationConfig
+    ...toolFieldsValidationConfig(data)
   ]
 
   return editViewValidationConfig
@@ -95,7 +98,7 @@ export function getInputSetViewValidateFieldsConfig(data: SonarqubeStepData): In
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
     ...additionalFieldsValidationConfigInputSet,
-    ...toolFieldsValidationConfig
+    ...toolFieldsValidationConfig(data)
   ]
 
   return inputSetViewValidateFieldsConfig

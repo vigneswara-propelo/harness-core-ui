@@ -17,12 +17,12 @@ import {
 } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import { useStrings } from 'framework/strings'
-import type { SnykStepProps } from './SnykStep'
+import type { ZapStepProps } from './ZapStep'
 import SecurityField from '../SecurityField'
-import { inputSetFields } from '../constants'
+import { getInputSetFieldName, inputSetFields } from '../constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export const SnykStepInputSetBasic: React.FC<SnykStepProps> = ({
+export const ZapStepInputSetBasic: React.FC<ZapStepProps> = ({
   template,
   path,
   readonly,
@@ -35,7 +35,7 @@ export const SnykStepInputSetBasic: React.FC<SnykStepProps> = ({
 
   const enableFields: CIStepOptionalConfigProps['enableFields'] = {
     ...(shouldRenderRunTimeInputView(template?.spec?.settings) && {
-      'spec.settings': {}
+      [getInputSetFieldName(prefix, 'spec.settings')]: {}
     })
   }
 
@@ -79,5 +79,5 @@ export const SnykStepInputSetBasic: React.FC<SnykStepProps> = ({
   )
 }
 
-const SnykStepInputSet = connect(SnykStepInputSetBasic)
-export { SnykStepInputSet }
+const ZapStepInputSet = connect(ZapStepInputSetBasic)
+export { ZapStepInputSet }

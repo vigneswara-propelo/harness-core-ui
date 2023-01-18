@@ -8,9 +8,11 @@
 import type { UseStringsReturn } from 'framework/strings'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
+import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import type { InputSetViewValidateFieldsConfig, SecurityStepData, SecurityStepSpec } from './types'
+import type { SecurityFieldProps } from './SecurityField'
 
-type optionsProps = UseStringsReturn['getString']
+type getStringProp = UseStringsReturn['getString']
 
 export const dividerBottomMargin = 'var(--spacing-6)'
 
@@ -34,6 +36,10 @@ export const CONTAINER_TARGET_TYPE = {
   value: 'container',
   label: 'Container Image'
 }
+export const INSTANCE_TARGET_TYPE = {
+  value: 'instance',
+  label: 'Instance'
+}
 export const LOCAL_IMAGE_CONTAINER_TYPE = {
   value: 'local_image',
   label: 'Local Image'
@@ -51,7 +57,7 @@ export const AWS_ECR_CONTAINER_TYPE = {
   label: 'AWS ECR'
 }
 
-export const logLevelOptions = (getString: optionsProps) => [
+export const logLevelOptions = (getString: getStringProp) => [
   {
     label: getString('sto.stepField.optionLabels.logLevel.debug'),
     value: 'debug'
@@ -70,7 +76,7 @@ export const logLevelOptions = (getString: optionsProps) => [
   }
 ]
 
-export const severityOptions = (getString: optionsProps) => [
+export const severityOptions = (getString: getStringProp) => [
   {
     label: getString('sto.Critical'),
     value: 'critical'
@@ -446,3 +452,177 @@ export const additionalFieldsValidationConfigInputSet = [
     type: ValidationFieldTypes.LimitCPU
   }
 ]
+
+export function getInputSetFieldName(prefix: string, field: string): string {
+  return `${prefix}${field}`
+}
+
+export const inputSetFields = (
+  getString: getStringProp,
+  prefix: string,
+  template?: SecurityStepData<SecurityStepSpec>
+): SecurityFieldProps<SecurityStepSpec>['enableFields'] =>
+  template?.spec
+    ? {
+        ...(shouldRenderRunTimeInputView(template?.spec.mode) && {
+          [getInputSetFieldName(prefix, 'spec.mode')]: {
+            label: 'sto.stepField.mode'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.config) && {
+          [getInputSetFieldName(prefix, 'spec.mode')]: {
+            label: 'sto.stepField.config'
+          }
+        }),
+
+        ...(shouldRenderRunTimeInputView(template?.spec.target.name) && {
+          [getInputSetFieldName(prefix, 'spec.target.name')]: {
+            label: 'sto.stepField.target.name'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.target.type) && {
+          [getInputSetFieldName(prefix, 'spec.target.type')]: {
+            label: 'sto.stepField.target.type'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.target.variant) && {
+          [getInputSetFieldName(prefix, 'spec.target.variant')]: {
+            label: 'sto.stepField.target.variant'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.target.workspace) && {
+          [getInputSetFieldName(prefix, 'spec.target.workspace')]: {
+            label: 'sto.stepField.target.workspace'
+          }
+        }),
+
+        ...(shouldRenderRunTimeInputView(template?.spec.ingestion?.file) && {
+          [getInputSetFieldName(prefix, 'spec.ingestion.file')]: {
+            label: 'sto.stepField.ingestion.file'
+          }
+        }),
+
+        ...(shouldRenderRunTimeInputView(template?.spec.image?.name) && {
+          [getInputSetFieldName(prefix, 'spec.image.name')]: {
+            label: 'imageNameLabel'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.image?.domain) && {
+          [getInputSetFieldName(prefix, 'spec.image.domain')]: {
+            label: 'sto.stepField.image.domain'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.image?.access_token) && {
+          [getInputSetFieldName(prefix, 'spec.image.access_token')]: {
+            label: 'sto.stepField.image.token'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.image?.access_id) && {
+          [getInputSetFieldName(prefix, 'spec.image.access_id')]: {
+            label: 'sto.stepField.image.accessId'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.image?.region) && {
+          [getInputSetFieldName(prefix, 'spec.image.region')]: {
+            label: 'sto.stepField.image.region'
+          }
+        }),
+
+        ...(shouldRenderRunTimeInputView(template?.spec.instance?.domain) && {
+          [getInputSetFieldName(prefix, 'spec.instance.domain')]: {
+            label: 'sto.stepField.instance.domain'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.instance?.protocol) && {
+          [getInputSetFieldName(prefix, 'spec.instance.protocol')]: {
+            label: 'sto.stepField.instance.protocol'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.instance?.port) && {
+          [getInputSetFieldName(prefix, 'spec.instance.port')]: {
+            label: 'sto.stepField.instance.port'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.instance?.path) && {
+          [getInputSetFieldName(prefix, 'spec.instance.path')]: {
+            label: 'sto.stepField.instance.path'
+          }
+        }),
+
+        // Tool fields
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.include) && {
+          [getInputSetFieldName(prefix, 'spec.tool.include')]: {
+            label: 'sto.stepField.toolInclude'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.java?.libraries) && {
+          [getInputSetFieldName(prefix, 'spec.tool.java.libraries')]: {
+            label: 'sto.stepField.tool.javaLibraries'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.java?.binaries) && {
+          [getInputSetFieldName(prefix, 'spec.tool.java.binaries')]: {
+            label: 'sto.stepField.tool.javaBinaries',
+            fieldType: 'checkbox'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.context) && {
+          [getInputSetFieldName(prefix, 'spec.tool.context')]: {
+            label: 'sto.stepField.tool.context'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.port) && {
+          [getInputSetFieldName(prefix, 'spec.tool.port')]: {
+            label: 'sto.stepField.tool.port'
+          }
+        }),
+
+        // Auth fields
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.accessToken) && {
+          [getInputSetFieldName(prefix, 'spec.auth.context')]: {
+            label: 'sto.stepField.authToken'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.domain) && {
+          [getInputSetFieldName(prefix, 'spec.auth.port')]: {
+            label: 'sto.stepField.authDomain'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.ssl) && {
+          [getInputSetFieldName(prefix, 'spec.auth.context')]: {
+            label: 'sto.stepField.authSsl',
+            fieldType: 'checkbox'
+          }
+        }),
+
+        // Advanced fields
+
+        ...(shouldRenderRunTimeInputView(template?.spec.advanced?.log?.level) && {
+          [getInputSetFieldName(prefix, 'spec.advanced.log.level')]: {
+            label: 'sto.stepField.advanced.logLevel'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.advanced?.log?.serializer) && {
+          [getInputSetFieldName(prefix, 'spec.advanced.log.serializer')]: {
+            label: 'sto.stepField.instance.protocol'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.advanced?.args?.cli) && {
+          [getInputSetFieldName(prefix, 'spec.advanced.args.cli')]: {
+            label: 'sto.stepField.advanced.cli'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.advanced?.fail_on_severity) && {
+          [getInputSetFieldName(prefix, 'spec.advanced.fail_on_severity')]: {
+            label: 'sto.stepField.advanced.failOnSeverity',
+            selectItems: severityOptions(getString),
+            fieldType: 'dropdown'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.advanced?.include_raw) && {
+          [getInputSetFieldName(prefix, 'spec.advanced.include_raw')]: {
+            label: 'sto.stepField.advanced.includeRaw'
+          }
+        })
+      }
+    : {}

@@ -90,7 +90,6 @@ export function SecurityTargetFields(props: ISecurityTargetFields) {
             fieldType: 'dropdown',
             label: 'sto.stepField.target.type',
             selectItems: targetTypeSelectItems,
-            multiTypeInputProps: { defaultValue: 'repository' },
             inputProps: { disabled: targetTypeSelectItems.length === 1 }
           },
           'spec.target.name': {
@@ -309,6 +308,36 @@ export const AdditionalFields = (props: AdditionalFieldsProps) => {
           }
         />
       </Accordion>
+    </>
+  )
+}
+
+export function SecurityInstanceFields(props: SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>) {
+  const { allowableTypes, formik, stepViewType } = props
+  return (
+    <>
+      <SecurityField
+        stepViewType={stepViewType}
+        allowableTypes={allowableTypes}
+        formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
+        enableFields={{
+          'spec.instance.domain': {
+            label: 'sto.stepField.instance.domain'
+          },
+          'spec.instance.protocol': {
+            label: 'sto.stepField.instance.protocol'
+          },
+          'spec.instance.port': {
+            label: 'sto.stepField.instance.port',
+            optional: true
+          },
+          'spec.instance.path': {
+            label: 'sto.stepField.instance.path',
+            optional: true
+          }
+        }}
+      />
+      <Divider style={{ marginBottom: dividerBottomMargin }} />
     </>
   )
 }

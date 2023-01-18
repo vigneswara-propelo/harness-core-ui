@@ -15,55 +15,53 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
-import { SonarqubeStepBaseWithRef } from './SonarqubeStepBase'
-import { SonarqubeStepInputSet } from './SonarqubeStepInputSet'
-import { SonarqubeStepVariables, SonarqubeStepVariablesProps } from './SonarqubeStepVariables'
-import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SonarqubeStepFunctionConfigs'
+import { ZapStepBaseWithRef } from './ZapStepBase'
+import { ZapStepInputSet } from './ZapStepInputSet'
+import { ZapStepVariables, ZapStepVariablesProps } from './ZapStepVariables'
+import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './ZapStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 
-export type SonarqubeStepData = SecurityStepData<SecurityStepSpec>
-export interface SonarqubeStepProps {
-  initialValues: SonarqubeStepData
-  template?: SonarqubeStepData
+export type ZapStepData = SecurityStepData<SecurityStepSpec>
+export interface ZapStepProps {
+  initialValues: ZapStepData
+  template?: ZapStepData
   path?: string
   isNewStep?: boolean
   readonly?: boolean
   stepViewType: StepViewType
-  onUpdate?: (data: SonarqubeStepData) => void
-  onChange?: (data: SonarqubeStepData) => void
+  onUpdate?: (data: ZapStepData) => void
+  onChange?: (data: ZapStepData) => void
   allowableTypes: AllowedTypes
   formik?: any
 }
 
-export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
+export class ZapStep extends PipelineStep<ZapStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.Sonarqube
-  protected stepName = 'Configure Sonarqube'
-  protected stepIcon: IconName = 'SonarQube'
-  protected stepDescription: keyof StringsMap = 'sto.stepDescription.Sonarqube'
+  protected type = StepType.Zap
+  protected stepName = 'Configure Zap'
+  protected stepIcon: IconName = 'ZAP'
+  protected stepDescription: keyof StringsMap = 'sto.stepDescription.Zap'
   protected stepPaletteVisible = false
 
-  protected defaultValues: SonarqubeStepData = {
+  protected defaultValues: ZapStepData = {
     identifier: '',
-    type: StepType.Sonarqube as string,
+    type: StepType.Zap as string,
     spec: {
       mode: 'orchestration',
       config: 'default',
       target: {
-        type: 'repository',
+        type: 'instance',
         name: '',
         variant: '',
         workspace: '/harness'
       },
-      auth: {
-        domain: '',
-        accessToken: '<+secrets.getValue("your_sonarqube_token_secret")>',
-        ssl: true
+      tool: {
+        port: 8981
       },
       advanced: {
         log: {
@@ -77,7 +75,7 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
   }
 
   /* istanbul ignore next */
-  processFormData(data: SonarqubeStepData): SonarqubeStepData {
+  processFormData(data: ZapStepData): ZapStepData {
     return getFormValuesInCorrectFormat(data, transformValuesFieldsConfig(data))
   }
 
@@ -86,15 +84,16 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<SonarqubeStepData>): FormikErrors<SonarqubeStepData> {
+  }: ValidateInputSetProps<ZapStepData>): FormikErrors<ZapStepData> {
     if (getString) {
       return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(data), { getString }, viewType)
     }
 
+    /* istanbul ignore next */
     return {}
   }
 
-  renderStep(props: StepProps<SonarqubeStepData>): JSX.Element {
+  renderStep(props: StepProps<ZapStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -112,9 +111,11 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
       case StepViewType.InputSet:
       case StepViewType.DeploymentForm:
         return (
-          <SonarqubeStepInputSet
+          <ZapStepInputSet
             initialValues={initialValues}
+            /* istanbul ignore next */
             template={inputSetData?.template}
+            /* istanbul ignore next */
             path={inputSetData?.path || ''}
             readonly={!!inputSetData?.readonly}
             stepViewType={stepViewType}
@@ -126,8 +127,8 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
 
       case StepViewType.InputVariable:
         return (
-          <SonarqubeStepVariables
-            {...(customStepProps as SonarqubeStepVariablesProps)}
+          <ZapStepVariables
+            {...(customStepProps as ZapStepVariablesProps)}
             initialValues={initialValues}
             onUpdate={onUpdate}
           />
@@ -135,11 +136,15 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
     }
 
     return (
-      <SonarqubeStepBaseWithRef
+      <ZapStepBaseWithRef
         initialValues={initialValues}
         allowableTypes={allowableTypes}
         onChange={onChange}
-        stepViewType={stepViewType || StepViewType.Edit}
+        stepViewType={
+          stepViewType ||
+          /* istanbul ignore next */
+          StepViewType.Edit
+        }
         onUpdate={onUpdate}
         readonly={readonly}
         isNewStep={isNewStep}

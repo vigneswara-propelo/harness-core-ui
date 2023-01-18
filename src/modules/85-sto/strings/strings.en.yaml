@@ -31,6 +31,8 @@ stepField:
   tool:
     javaLibraries: Java Libraries
     javaBinaries: Java Binaries
+    context: Tool Context Name
+    port: Tool Port
   image:
     type: Image Type
     domain: Image Domain
@@ -40,6 +42,11 @@ stepField:
   container:
     containerAccessToken: Container Access Token
     containerRegion: Container Region
+  instance:
+    domain: Instance Domain
+    protocol: Instance Protocol
+    port: Instance Port
+    path: Instance Path
   advanced:
     logLevel: Log Level
     serializer: Log Serializer

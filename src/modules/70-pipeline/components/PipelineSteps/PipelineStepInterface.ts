@@ -154,6 +154,7 @@ export enum StepType {
   Bandit = 'Bandit',
   Snyk = 'Snyk',
   Sonarqube = 'Sonarqube',
+  Zap = 'Zap',
   AsgCanaryDelete = 'AsgCanaryDelete',
   ElastigroupDeploy = 'ElastigroupDeploy',
   ElastigroupSwapRoute = 'ElastigroupSwapRoute',
