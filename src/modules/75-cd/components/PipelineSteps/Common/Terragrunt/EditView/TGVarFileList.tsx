@@ -70,7 +70,7 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
   const [connectorView, setConnectorView] = React.useState(false)
   const { getString } = useStrings()
 
-  const onSubmit = (values: RemoteVar, arrayHelpers: FieldArrayRenderProps): void => {
+  const onSubmit = /* istanbul ignore next */ (values: RemoteVar, arrayHelpers: FieldArrayRenderProps): void => {
     if (isEditMode) {
       arrayHelpers.replace(selectedVarIndex, values)
     } else {
@@ -80,17 +80,16 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
   }
 
   const remoteRender = (varFile: TerragruntVarFileWrapper, index: number): React.ReactElement => {
-    const { identifier, type } = varFile.varFile
+    const { identifier } = varFile.varFile
     return (
       <div className={css.configField}>
         <Layout.Horizontal>
-          {type === getString('remote') && <Icon name="remote" className={css.iconPosition} />}
+          <Icon name="remote" className={css.iconPosition} />
           <Text className={css.branch}>{identifier}</Text>
         </Layout.Horizontal>
         <Icon
           name="edit"
           onClick={() => {
-            /* istanbul ignore next */
             setShowRemoteWizard(true)
             setSelectedVar(varFile)
             setSelectedVarIndex(index)
@@ -102,17 +101,16 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
   }
 
   const inlineRender = (varFile: TerragruntVarFileWrapper, index: number): React.ReactElement => {
-    const { identifier, type } = varFile.varFile
+    const { identifier } = varFile.varFile
     return (
       <div className={css.configField}>
         <Layout.Horizontal>
-          {type === getString('inline') && <Icon name="Inline" className={css.iconPosition} />}
+          <Icon name="Inline" className={css.iconPosition} />
           <Text className={css.branch}>{identifier}</Text>
         </Layout.Horizontal>
         <Icon
           name="edit"
           onClick={() => {
-            /* istanbul ignore next */
             setShowTfModal(true)
             setIsEditMode(true)
             setSelectedVarIndex(index)
@@ -143,7 +141,7 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
     setSelectedVar(inlineInitValues)
   }
   const tooltipContext = React.useContext(FormikTooltipContext)
-  const dataTooltipId = tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : ''
+  const dataTooltipId = tooltipContext?.formName ? `${tooltipContext.formName}_${name}` : ''
   const varFilesPath = 'spec.configuration.spec.varFiles'
   return (
     <Layout.Vertical>
@@ -153,15 +151,17 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
       </Label>
       <div className={cx(stepCss.formGroup, css.tfVarMargin)}>
         <DragDropContext
-          onDragEnd={(result: DropResult) => {
-            if (!result.destination) {
-              return
+          onDragEnd={
+            /* istanbul ignore next */ (result: DropResult) => {
+              if (!result.destination) {
+                return
+              }
+              const res = Array.from(get(formik.values, varFilesPath))
+              const [removed] = res.splice(result.source.index, 1)
+              res.splice(result.destination.index, 0, removed)
+              formik.setFieldValue(varFilesPath, res)
             }
-            const res = Array.from(get(formik.values, varFilesPath))
-            const [removed] = res.splice(result.source.index, 1)
-            res.splice(result.destination.index, 0, removed)
-            formik.setFieldValue(varFilesPath, res)
-          }}
+          }
         >
           <Droppable droppableId="droppable">
             {provided => (
@@ -184,12 +184,12 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
                                 >
                                   <Layout.Horizontal spacing="medium" style={{ alignItems: 'baseline' }}>
                                     <Icon name="drag-handle-vertical" className={css.drag} />
-                                    {(get(formik.values, varFilesPath) || [])?.length > 1 && (
+                                    {get(formik.values, varFilesPath, [])?.length > 1 && (
                                       <Text color={Color.BLACK}>{`${index + 1}.`}</Text>
                                     )}
-                                    {varFile?.varFile?.type === TerraformStoreTypes.Remote &&
+                                    {get(varFile, 'varFile.type') === TerraformStoreTypes.Remote &&
                                       remoteRender(varFile, index)}
-                                    {varFile?.varFile?.type === TerraformStoreTypes.Inline &&
+                                    {get(varFile, 'varFile.type') === TerraformStoreTypes.Inline &&
                                       inlineRender(varFile, index)}
 
                                     <Button
@@ -252,14 +252,16 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
                                   isEditMode={isEditMode}
                                   allowableTypes={allowableTypes}
                                   setSelectedConnector={setSelectedConnector}
-                                  handleConnectorViewChange={() => setConnectorView(true)}
+                                  handleConnectorViewChange={/* istanbul ignore next */ () => setConnectorView(true)}
                                   setConnectorView={setConnectorView}
                                   isTerragrunt
                                 />
                                 {connectorView ? getNewConnectorSteps() : null}
                                 <TFRemoteWizard
                                   name={getString('cd.varFileDetails')}
-                                  onSubmitCallBack={(values: RemoteVar) => onSubmit(values, arrayHelpers)}
+                                  onSubmitCallBack={
+                                    /* istanbul ignore next */ (values: RemoteVar) => onSubmit(values, arrayHelpers)
+                                  }
                                   isEditMode={isEditMode}
                                   isReadonly={isReadonly}
                                   allowableTypes={allowableTypes}

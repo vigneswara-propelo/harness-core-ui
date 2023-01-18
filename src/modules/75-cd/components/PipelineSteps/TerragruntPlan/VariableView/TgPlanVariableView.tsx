@@ -22,8 +22,14 @@ export function TerragruntPlanVariableStep(props: TerragruntPlanVariableStepProp
   return (
     <>
       <VariablesListTable
-        data={variablesData.spec.provisionerIdentifier}
-        originalData={initialValues.spec.provisionerIdentifier}
+        data={variablesData.spec}
+        originalData={initialValues.spec}
+        metadataMap={metadataMap}
+        className={pipelineVariableCss.variablePaddingL3}
+      />
+      <VariablesListTable
+        data={variablesData.spec?.configuration?.moduleConfig}
+        originalData={initialValues.spec?.configuration?.moduleConfig}
         metadataMap={metadataMap}
         className={pipelineVariableCss.variablePaddingL3}
       />

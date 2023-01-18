@@ -9,12 +9,12 @@ import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import { v4 as uuid } from 'uuid'
-import { isEmpty } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 import { yupToFormErrors, FormikErrors } from 'formik'
 import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import { InputSetData, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import type { StringsMap } from 'stringTypes'
 import type { StringNGVariable } from 'services/pipeline-ng'
 import TerragruntInputStep from '../Common/Terragrunt/InputSteps/TerragruntInputStep'
@@ -60,7 +60,7 @@ export class TerragruntDestroy extends PipelineStep<TerragruntData> {
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
 
-    if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
+    if (getMultiTypeFromValue(get(template, 'timeout')) === MultiTypeInputType.RUNTIME) {
       let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
       if (isRequired) {
         /* istanbul ignore next */
@@ -89,21 +89,25 @@ export class TerragruntDestroy extends PipelineStep<TerragruntData> {
     return errors
   }
   private getInitialValues(data: TerragruntData): TerragruntData {
-    const envVars = data.spec?.configuration?.spec?.environmentVariables as StringNGVariable[]
+    const configData = data.spec.configuration
+    const envVars = configData?.spec?.environmentVariables as StringNGVariable[]
+    const isTargetRunTime = getMultiTypeFromValue(get(configData, 'spec.targets') as any) === MultiTypeInputType.RUNTIME
     const formData = {
       ...data,
       spec: {
         ...data.spec,
         configuration: {
-          ...data.spec?.configuration,
+          ...configData,
           spec: {
-            ...data.spec?.configuration?.spec,
-            targets: Array.isArray(data.spec?.configuration?.spec?.targets)
-              ? data.spec?.configuration?.spec?.targets.map(target => ({
-                  value: target,
-                  id: uuid()
-                }))
-              : [{ value: '', id: uuid() }],
+            ...configData?.spec,
+            targets: !isTargetRunTime
+              ? Array.isArray(get(configData, 'spec.targets'))
+                ? (get(configData, 'spec.targets') as string[]).map((target: string) => ({
+                    value: target,
+                    id: uuid()
+                  }))
+                : [{ value: '', id: uuid() }]
+              : get(configData, 'spec.targets'),
             environmentVariables: Array.isArray(envVars)
               ? envVars.map(variable => ({
                   key: variable.name,
@@ -136,15 +140,15 @@ export class TerragruntDestroy extends PipelineStep<TerragruntData> {
     } = props
 
     if (this.isTemplatizedView(stepViewType)) {
+      const { readonly, path } = inputSetData as InputSetData<TerragruntData>
       return (
         <TerragruntInputStep
           initialValues={initialValues}
           onUpdate={onUpdate}
-          allValues={inputSetData?.allValues}
           stepViewType={stepViewType}
-          readonly={inputSetData?.readonly}
+          readonly={readonly}
           inputSetData={inputSetData}
-          path={inputSetData?.path}
+          path={path}
           allowableTypes={allowableTypes}
         />
       )

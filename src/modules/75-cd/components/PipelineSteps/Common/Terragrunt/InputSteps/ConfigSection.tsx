@@ -31,21 +31,22 @@ function ConfigSectionRef<T extends TerragruntData>(
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { inputSetData, readonly, initialValues, path, allowableTypes, isBackendConfig, stepViewType } = props
-
+  const template = inputSetData?.template
   const configPath = getPath(false, false, isBackendConfig)
-  const configSpec = get(inputSetData?.template, configPath)
+  const configSpec = get(template, configPath)
+  const store = configSpec?.store
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   return (
     <>
-      {configSpec?.store?.spec && (
+      {store?.spec && (
         <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
           {isBackendConfig ? getString('pipelineSteps.backendConfig') : getString('cd.configurationFile')}
         </Label>
       )}
 
-      {isValueRuntimeInput(configSpec?.store?.spec?.connectorRef) && (
+      {isValueRuntimeInput(store?.spec?.connectorRef) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField
             accountIdentifier={accountId}
@@ -65,7 +66,7 @@ function ConfigSectionRef<T extends TerragruntData>(
         </div>
       )}
 
-      {isValueRuntimeInput(configSpec?.store?.spec?.branch) && (
+      {isValueRuntimeInput(store?.spec?.branch) && (
         <TextFieldInputSetView
           label={getString('pipelineSteps.deploy.inputSet.branch')}
           name={`${path}.${configPath}.store.spec.branch`}
@@ -79,12 +80,12 @@ function ConfigSectionRef<T extends TerragruntData>(
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          template={inputSetData?.template}
+          template={template}
           fieldPath={`${configPath}.store.spec.branch`}
         />
       )}
 
-      {isValueRuntimeInput(configSpec?.store?.spec?.commitId) && (
+      {isValueRuntimeInput(store?.spec?.commitId) && (
         <TextFieldInputSetView
           label={getString('pipeline.manifestType.commitId')}
           name={`${path}.${configPath}.store.spec.commitId`}
@@ -98,12 +99,12 @@ function ConfigSectionRef<T extends TerragruntData>(
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          template={inputSetData?.template}
+          template={template}
           fieldPath={`${configPath}.store.spec.commitId`}
         />
       )}
 
-      {isValueRuntimeInput(configSpec?.store?.spec?.folderPath) && (
+      {isValueRuntimeInput(store?.spec?.folderPath) && (
         <TextFieldInputSetView
           label={getString('common.git.folderPath')}
           name={`${path}.${configPath}.store.spec.folderPath`}
@@ -117,7 +118,7 @@ function ConfigSectionRef<T extends TerragruntData>(
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          template={inputSetData?.template}
+          template={template}
           fieldPath={`${configPath}.store.spec.folderPath`}
         />
       )}

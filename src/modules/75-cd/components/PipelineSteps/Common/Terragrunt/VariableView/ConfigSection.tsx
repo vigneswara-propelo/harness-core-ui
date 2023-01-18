@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { defaultTo, get } from 'lodash-es'
 import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
@@ -21,48 +22,44 @@ export function ConfigVariables(props: TerragruntVariableStepProps): React.React
   return (
     <>
       <VariablesListTable
-        data={variablesData?.spec?.configuration?.spec}
-        originalData={initialValues.spec?.configuration?.spec}
+        data={variablesData.spec.configuration?.spec}
+        originalData={initialValues.spec.configuration?.spec}
         metadataMap={metadataMap}
-        className={pipelineVariableCss.variablePaddingL3}
+        className={pipelineVariableCss.variablePaddingL4}
       />
-      {variablesData?.spec?.configuration?.spec?.configFiles?.store?.spec && (
+      {get(variablesData.spec, 'configuration.spec.configFiles.store.spec') && (
         <>
           <Text className={css.stepTitle}>{getString('pipelineSteps.configFiles')}</Text>
           <VariablesListTable
-            data={variablesData?.spec?.configuration?.spec?.configFiles?.store?.spec}
-            originalData={initialValues.spec?.configuration?.spec?.configFiles?.store?.spec}
+            data={get(variablesData.spec, 'configuration.spec.configFiles.store.spec')}
+            originalData={get(initialValues.spec, 'configuration.spec.configFiles.store.spec')}
             metadataMap={metadataMap}
-            className={pipelineVariableCss.variablePaddingL3}
+            className={pipelineVariableCss.variablePaddingL4}
           />
         </>
       )}
-      {variablesData?.spec?.configuration?.spec?.varFiles?.length && (
+      {get(variablesData.spec, 'configuration.spec.varFiles')?.length && (
         <>
           <Text className={css.stepTitle}>{getString('cd.terraformVarFiles')}</Text>
-          {variablesData?.spec?.configuration?.spec?.varFiles?.map((varFile, index) => {
-            if (varFile?.varFile?.type === 'Inline') {
+          {get(variablesData.spec, 'configuration.spec.varFiles')?.map((varFile: any, index: number) => {
+            const remoteSpec = get(variablesData.spec.configuration, `spec.varFiles[${index}].varFile.spec`)
+            const initVarSpec = get(initialValues.spec.configuration, `spec.varFiles[${index}].varFile.spec`)
+            if (get(varFile, 'varFile.type') === 'Inline') {
               return (
                 <VariablesListTable
                   key={index}
-                  data={variablesData?.spec?.configuration?.spec?.varFiles?.[index]?.varFile?.spec}
-                  originalData={
-                    initialValues?.spec?.configuration?.spec?.varFiles?.[index]?.varFile?.spec || ({} as any)
-                  }
+                  data={remoteSpec}
+                  originalData={defaultTo(initVarSpec, {})}
                   metadataMap={metadataMap}
                   className={pipelineVariableCss.variablePaddingL4}
                 />
               )
-            } else if (varFile?.varFile?.type === 'Remote') {
-              const remoteSpec = variablesData?.spec?.configuration?.spec?.varFiles?.[index]?.varFile
-                ?.spec as RemoteTerragruntVarFileSpec
-              const initVarSpec = initialValues?.spec?.configuration?.spec?.varFiles?.[index]?.varFile
-                ?.spec as RemoteTerragruntVarFileSpec
+            } else if (get(varFile, 'varFile.type') === 'Remote') {
               return (
                 <VariablesListTable
                   key={index}
-                  data={remoteSpec?.store?.spec}
-                  originalData={initVarSpec?.store?.spec || ({} as any)}
+                  data={get(remoteSpec as RemoteTerragruntVarFileSpec, 'store.spec')}
+                  originalData={get(initVarSpec as RemoteTerragruntVarFileSpec, 'store.spec') || {}}
                   metadataMap={metadataMap}
                   className={pipelineVariableCss.variablePaddingL4}
                 />

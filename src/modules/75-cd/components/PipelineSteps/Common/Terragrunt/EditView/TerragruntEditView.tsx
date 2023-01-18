@@ -82,7 +82,7 @@ interface StepChangeData<SharedObject> {
   prevStepData: SharedObject
 }
 
-export default function TerragruntEitView(
+export default function TerragruntEditView(
   props: TerragruntProps,
   formikRef: StepFormikFowardRef<TerragruntData>
 ): React.ReactElement {

@@ -47,15 +47,9 @@ export function ConfigVariables(props: TerragruntPlanVariableStepProps): React.R
         <>
           <Text className={css.stepTitle}>{getString('cd.terraformVarFiles')}</Text>
           {get(variablesData.spec.configuration, 'varFiles')?.map((varFile, index) => {
-            const remoteSpec = get(
-              variablesData.spec.configuration,
-              `varFiles[${index}].varFile.spec`
-            ) as RemoteTerragruntVarFileSpec
+            const remoteSpec = get(variablesData.spec.configuration, `varFiles[${index}].varFile.spec`)
 
-            const initVarSpec = get(
-              initialValues.spec.configuration,
-              `varFiles[${index}].varFile.spec`
-            ) as RemoteTerragruntVarFileSpec
+            const initVarSpec = get(initialValues.spec.configuration, `varFiles[${index}].varFile.spec`)
 
             if (get(varFile, 'varFile.type') === 'Inline') {
               return (
@@ -71,8 +65,8 @@ export function ConfigVariables(props: TerragruntPlanVariableStepProps): React.R
               return (
                 <VariablesListTable
                   key={index}
-                  data={get(remoteSpec, 'store.spec')}
-                  originalData={get(initVarSpec, 'store.spec')}
+                  data={get(remoteSpec as RemoteTerragruntVarFileSpec, 'store.spec')}
+                  originalData={get(initVarSpec as RemoteTerragruntVarFileSpec, 'store.spec')}
                   metadataMap={metadataMap}
                   className={pipelineVariableCss.variablePaddingL4}
                 />

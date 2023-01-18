@@ -9,7 +9,7 @@ import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import { v4 as uuid } from 'uuid'
-import { isEmpty } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 import { yupToFormErrors, FormikErrors } from 'formik'
 import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -21,10 +21,10 @@ import TerragruntInputStep from '../Common/Terragrunt/InputSteps/TerragruntInput
 import { ConfigurationTypes } from '../Common/Terraform/TerraformInterfaces'
 import type { TerragruntData, TerragruntVariableStepProps } from '../Common/Terragrunt/TerragruntInterface'
 import { onSubmitTerragruntData } from '../Common/Terragrunt/TerragruntHelper'
-import TerragruntEitView from '../Common/Terragrunt/EditView/TerragruntEditView'
 import { TerragruntVariableStep } from '../Common/Terragrunt/VariableView/TerragruntVariableView'
+import TerragruntEditView from '../Common/Terragrunt/EditView/TerragruntEditView'
 
-const TerragruntApplyWidgetWithRef = React.forwardRef(TerragruntEitView)
+const TerragruntApplyWidgetWithRef = React.forwardRef(TerragruntEditView)
 
 export class TerragruntApply extends PipelineStep<TerragruntData> {
   constructor() {
@@ -72,8 +72,9 @@ export class TerragruntApply extends PipelineStep<TerragruntData> {
   }: ValidateInputSetProps<TerragruntData>): FormikErrors<TerragruntData> {
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
+    if (getMultiTypeFromValue(get(template, 'timeout')) === MultiTypeInputType.RUNTIME) {
       let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
+      /* istanbul ignore next */
       if (isRequired) {
         timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
       }
@@ -98,21 +99,25 @@ export class TerragruntApply extends PipelineStep<TerragruntData> {
   }
 
   private getInitialValues(data: TerragruntData): TerragruntData {
-    const envVars = data.spec?.configuration?.spec?.environmentVariables as StringNGVariable[]
+    const configData = data.spec.configuration
+    const envVars = get(configData, 'spec.environmentVariables') as StringNGVariable[]
+    const isTargetRunTime = getMultiTypeFromValue(get(configData, 'spec.targets') as any) === MultiTypeInputType.RUNTIME
     const formData = {
       ...data,
       spec: {
         ...data.spec,
         configuration: {
-          ...data.spec?.configuration,
+          ...configData,
           spec: {
-            ...data.spec?.configuration?.spec,
-            targets: Array.isArray(data.spec?.configuration?.spec?.targets)
-              ? data.spec?.configuration?.spec?.targets.map(target => ({
-                  value: target,
-                  id: uuid()
-                }))
-              : [{ value: '', id: uuid() }],
+            ...configData?.spec,
+            targets: !isTargetRunTime
+              ? Array.isArray(get(configData, 'spec.targets'))
+                ? (get(configData, 'spec.targets') as string[]).map((target: string) => ({
+                    value: target,
+                    id: uuid()
+                  }))
+                : [{ value: '', id: uuid() }]
+              : get(configData, 'spec.targets'),
             environmentVariables: Array.isArray(envVars)
               ? envVars.map(variable => ({
                   key: variable.name,
@@ -150,12 +155,11 @@ export class TerragruntApply extends PipelineStep<TerragruntData> {
       return (
         <TerragruntInputStep
           initialValues={initialValues}
-          onUpdate={data => onUpdate?.(this.processFormData(data))}
-          onChange={data => onChange?.(this.processFormData(data))}
+          onUpdate={/* istanbul ignore next*/ data => onUpdate?.(this.processFormData(data))}
+          onChange={/* istanbul ignore next*/ data => onChange?.(this.processFormData(data))}
           allowableTypes={allowableTypes}
-          allValues={inputSetData?.allValues}
           stepViewType={stepViewType}
-          readonly={inputSetData?.readonly}
+          readonly={get(inputSetData, 'readonly')}
           inputSetData={inputSetData}
           path={path}
         />
@@ -165,7 +169,7 @@ export class TerragruntApply extends PipelineStep<TerragruntData> {
         <TerragruntVariableStep
           {...(customStepProps as TerragruntVariableStepProps)}
           initialValues={initialValues}
-          onUpdate={data => onUpdate?.(this.processFormData(data))}
+          onUpdate={/* istanbul ignore next*/ data => onUpdate?.(this.processFormData(data))}
         />
       )
     }

@@ -31,34 +31,21 @@ function TgRemoteSectionRef<T extends TerragruntData>(
     formik?: FormikContextType<any>
   }
 ): React.ReactElement {
-  const { remoteVar, index, allowableTypes, formik, readonly, initialValues, path, inputSetData, stepViewType } = props
+  const { remoteVar, index, allowableTypes, readonly, initialValues, path, inputSetData, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-
-  let connectorVal = get(
-    formik?.values,
-    `${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.connectorRef`
-  )
-  if (!connectorVal) {
-    const varFiles = get(props?.allValues, 'spec.configuration.spec.varFiles', [])
-    const varID = get(formik?.values, `${path}.spec.configuration.spec.varFiles[${index}].varFile.identifier`, '')
-    varFiles.forEach((file: any) => {
-      if (file?.varFile?.identifier === varID) {
-        connectorVal = get(file?.varFile, 'spec.store.spec.connectorRef')
-      }
-    })
-  }
+  const template = inputSetData?.template
 
   return (
     <>
       <Container flex width={150}>
         <Text font={{ weight: 'bold' }}>{getString('cd.varFile')}:</Text>
-        {remoteVar?.varFile?.identifier}
+        {remoteVar.varFile?.identifier}
       </Container>
 
-      {isValueRuntimeInput(remoteVar?.varFile?.spec?.store?.spec?.connectorRef) && (
+      {isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.connectorRef')) && (
         <FormMultiTypeConnectorField
           accountIdentifier={accountId}
           selected={get(
@@ -70,7 +57,7 @@ function TgRemoteSectionRef<T extends TerragruntData>(
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           width={388}
-          type={[remoteVar?.varFile?.spec?.store?.type]}
+          type={[remoteVar.varFile?.spec?.store?.type]}
           name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.connectorRef`}
           label={getString('connector')}
           placeholder={getString('select')}
@@ -80,7 +67,7 @@ function TgRemoteSectionRef<T extends TerragruntData>(
         />
       )}
 
-      {isValueRuntimeInput(remoteVar?.varFile?.spec?.store?.spec?.branch) && (
+      {isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.branch')) && (
         <TextFieldInputSetView
           name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.branch`}
           label={getString('pipelineSteps.deploy.inputSet.branch')}
@@ -92,11 +79,11 @@ function TgRemoteSectionRef<T extends TerragruntData>(
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
           className={cx(stepCss.formGroup, stepCss.md)}
-          template={inputSetData?.template}
+          template={template}
           fieldPath={`spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.branch`}
         />
       )}
-      {isValueRuntimeInput(remoteVar?.varFile?.spec?.store?.spec?.commitId) && (
+      {isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.commitId')) && (
         <TextFieldInputSetView
           name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.commitId`}
           label={getString('pipeline.manifestType.commitId')}
@@ -108,11 +95,11 @@ function TgRemoteSectionRef<T extends TerragruntData>(
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
           className={cx(stepCss.formGroup, stepCss.md)}
-          template={inputSetData?.template}
+          template={template}
           fieldPath={`spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.commitId`}
         />
       )}
-      {isValueRuntimeInput(remoteVar?.varFile?.spec?.store?.spec?.paths) && (
+      {isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.paths')) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <List
             label={getString('filePaths')}

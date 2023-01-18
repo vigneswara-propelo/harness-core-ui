@@ -20,43 +20,49 @@ export function TerragruntVariableStep(props: TerragruntVariableStepProps): Reac
 
   const { getString } = useStrings()
 
-  if (initialValues?.spec?.configuration?.type === 'Inline') {
+  if (initialValues.spec.configuration?.type === 'Inline') {
     return (
       <>
         <VariablesListTable
-          data={variablesData.spec?.provisionerIdentifier}
-          originalData={initialValues.spec?.provisionerIdentifier}
+          data={variablesData.spec}
+          originalData={initialValues.spec}
+          metadataMap={metadataMap}
+          className={pipelineVariableCss.variablePaddingL3}
+        />
+        <VariablesListTable
+          data={variablesData.spec.configuration?.spec?.moduleConfig}
+          originalData={initialValues.spec?.configuration?.spec?.moduleConfig}
           metadataMap={metadataMap}
           className={pipelineVariableCss.variablePaddingL3}
         />
         <ConfigVariables {...props} />
-        {(get(variablesData?.spec, 'configuration.spec.backendConfig.spec.content') ||
-          get(variablesData?.spec, 'configuration.spec.backendConfig.spec.store.spec')) && (
+        {(get(variablesData.spec, 'configuration.spec.backendConfig.spec.content') ||
+          get(variablesData.spec, 'configuration.spec.backendConfig.spec.store.spec')) && (
           <>
             <Text className={css.stepTitle}>{getString('pipelineSteps.backendConfig')}</Text>
             <VariablesListTable
-              data={get(variablesData?.spec, 'configuration.spec.backendConfig.spec')}
+              data={get(variablesData.spec, 'configuration.spec.backendConfig.spec')}
               originalData={get(initialValues.spec, 'configuration.spec.backendConfig.spec')}
               metadataMap={metadataMap}
               className={pipelineVariableCss.variablePaddingL4}
             />
             <VariablesListTable
-              data={get(variablesData?.spec, 'configuration.spec.backendConfig.spec.store.spec')}
+              data={get(variablesData.spec, 'configuration.spec.backendConfig.spec.store.spec')}
               originalData={get(initialValues.spec, 'configuration.spec.backendConfig.spec.store.spec')}
               metadataMap={metadataMap}
               className={pipelineVariableCss.variablePaddingL4}
             />
           </>
         )}
-        {variablesData.spec?.configuration?.spec?.environmentVariables && (
+        {variablesData.spec.configuration?.spec?.environmentVariables && (
           <Text className={css.stepTitle}>{getString('environmentVariables')}</Text>
         )}
-        {((variablesData?.spec?.configuration?.spec?.environmentVariables as []) || [])?.map((envVar, index) => {
+        {((variablesData.spec.configuration?.spec?.environmentVariables as []) || [])?.map((envVar, index) => {
           return (
             <VariablesListTable
               key={envVar}
-              data={variablesData.spec?.configuration?.spec?.environmentVariables?.[index]}
-              originalData={initialValues.spec?.configuration?.spec?.environmentVariables?.[index]}
+              data={variablesData.spec.configuration?.spec?.environmentVariables?.[index]}
+              originalData={initialValues.spec.configuration?.spec?.environmentVariables?.[index]}
               metadataMap={metadataMap}
               className={pipelineVariableCss.variablePaddingL4}
             />
@@ -75,8 +81,8 @@ export function TerragruntVariableStep(props: TerragruntVariableStepProps): Reac
         />
 
         <VariablesListTable
-          data={variablesData.spec?.configuration?.type}
-          originalData={initialValues.spec?.configuration?.type}
+          data={variablesData.spec.configuration?.type}
+          originalData={initialValues.spec.configuration?.type}
           metadataMap={metadataMap}
           className={pipelineVariableCss.variablePaddingL3}
         />

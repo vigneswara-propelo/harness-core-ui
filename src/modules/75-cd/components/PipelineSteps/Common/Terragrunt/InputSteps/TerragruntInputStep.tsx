@@ -7,11 +7,12 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { isEmpty } from 'lodash-es'
 import { FormikForm, Label, Text, FormInput, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { get } from 'lodash-es'
 import type { FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
+import type { TerraformBackendConfigSpec } from 'services/cd-ng'
 import List from '@common/components/List/List'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -32,7 +33,8 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
   const { getString } = useStrings()
   const { inputSetData, readonly, path, allowableTypes, stepViewType, onUpdate, onChange } = props
   const { expressions } = useVariablesExpression()
-  const config = inputSetData?.template?.spec?.configuration
+  const template = get(inputSetData, 'template')
+  const config = get(template, 'spec.configuration')
   /* istanbul ignore next */
   const onUpdateRef = (arg: TerragruntData): void => {
     onUpdate?.(arg as T)
@@ -43,11 +45,11 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
   }
   return (
     <FormikForm>
-      {isValueRuntimeInput(inputSetData?.template?.timeout) && (
+      {isValueRuntimeInput(get(template, 'timeout')) && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             label={getString('pipelineSteps.timeoutLabel')}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+            name={`${path}.timeout`}
             disabled={readonly}
             multiTypeDurationProps={{
               configureOptionsProps: {
@@ -58,11 +60,12 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
               disabled: readonly
             }}
             fieldPath={'timeout'}
-            template={inputSetData?.template}
+            template={template}
           />
         </div>
       )}
-      {isValueRuntimeInput((inputSetData?.template as TerragruntData)?.spec?.provisionerIdentifier) && (
+
+      {isValueRuntimeInput(get(template, 'spec.provisionerIdentifier')) && (
         <TextFieldInputSetView
           name={`${path}.spec.provisionerIdentifier`}
           placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
@@ -77,18 +80,18 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
           fieldPath={'spec.provisionerIdentifier'}
-          template={inputSetData?.template}
+          template={template}
         />
       )}
 
-      {isValueRuntimeInput(config?.spec?.moduleConfig?.path) && (
+      {isValueRuntimeInput(get(config, 'spec.moduleConfig.path')) && (
         <TextFieldInputSetView
           placeholder={'Enter path'}
           label={getString('common.path')}
           name={`${path}.spec.configuration.spec.moduleConfig.path`}
           disabled={readonly}
           className={cx(stepCss.formGroup, stepCss.md)}
-          template={inputSetData?.template}
+          template={template}
           fieldPath={'spec.configuration.spec.moduleConfig.path'}
           multiTextInputProps={{
             expressions,
@@ -98,18 +101,20 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
       )}
 
       <ConfigInputs {...props} onUpdate={onUpdateRef} onChange={onChangeRef} />
-      {config?.spec?.varFiles?.length && (
+
+      {get(config, 'spec.varFiles')?.length && (
         <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
           {getString('cd.terraformVarFiles')}
         </Label>
       )}
-      {config?.spec?.varFiles?.map((varFile: any, index) => {
-        if (varFile?.varFile?.type === TerraformStoreTypes.Inline) {
+
+      {get(config, 'spec.varFiles')?.map((varFile: any, index: number) => {
+        if (varFile.varFile?.type === TerraformStoreTypes.Inline) {
           return (
             <React.Fragment key={`${path}.spec.configuration.spec.varFiles[${index}]`}>
               <Container flex width={120} padding={{ bottom: 'small' }}>
                 <Text font={{ weight: 'bold' }}>{getString('cd.varFile')}:</Text>
-                {varFile?.varFile?.identifier}
+                {varFile.varFile?.identifier}
               </Container>
 
               {isValueRuntimeInput(varFile?.varFile?.spec?.content) && (
@@ -140,7 +145,7 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
         return <></>
       })}
 
-      {isValueRuntimeInput(config?.spec?.workspace) && (
+      {isValueRuntimeInput(get(config, 'spec.workspace')) && (
         <TextFieldInputSetView
           name={`${path}.spec.configuration.spec.workspace`}
           placeholder={getString('pipeline.terraformStep.workspace')}
@@ -153,18 +158,20 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          template={inputSetData?.template}
+          template={template}
           className={cx(stepCss.formGroup, stepCss.md)}
           fieldPath={`spec.configuration.spec.workspace`}
         />
       )}
 
-      {isValueRuntimeInput(config?.spec?.backendConfig?.spec?.content) && (
+      {isValueRuntimeInput((config?.spec?.backendConfig?.spec as TerraformBackendConfigSpec)?.content) && (
         <div
           className={cx(stepCss.formGroup, stepCss.md)}
-          onKeyDown={e => {
-            e.stopPropagation()
-          }}
+          onKeyDown={
+            /* istanbul ignore next */ e => {
+              e.stopPropagation()
+            }
+          }
         >
           <MultiTypeFieldSelector
             name={`${path}.spec.configuration.spec.backendConfig.spec.content`}
@@ -173,11 +180,14 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
             allowedTypes={allowableTypes}
             skipRenderValueInExpressionLabel
             disabled={readonly}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             expressionRender={
               /* istanbul ignore next */ () => {
                 return (
                   <MonacoTextField
-                    name={`${path}.spec.configuration.backendConfig.spec.content`}
+                    name={`${path}.spec.configuration.spec.backendConfig.spec.content`}
                     expressions={expressions}
                     height={300}
                     disabled={readonly}
@@ -189,7 +199,7 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
             }
           >
             <MonacoTextField
-              name={`${path}.spec.configuration.backendConfig.spec.content`}
+              name={`${path}.spec.configuration.spec.backendConfig.spec.content`}
               expressions={expressions}
               height={300}
               fullScreenAllowed
@@ -198,8 +208,10 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
           </MultiTypeFieldSelector>
         </div>
       )}
+
       <ConfigInputs {...props} isBackendConfig={true} onUpdate={onUpdateRef} onChange={onChangeRef} />
-      {isValueRuntimeInput(config?.spec?.targets as string) && (
+
+      {isValueRuntimeInput(get(config, 'spec.targets') as string) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <List
             name={`${path}.spec.configuration.spec.targets`}
