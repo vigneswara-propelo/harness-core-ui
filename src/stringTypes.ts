@@ -2507,6 +2507,7 @@ export interface StringsMap {
   'connectors.ceK8.chooseRequirements.visibility.subheading': string
   'connectors.ceK8.featureWarning': string
   'connectors.ceK8.infoText': string
+  'connectors.ceK8.overview.ccmConnectorNameLabel': string
   'connectors.ceK8.overview.createNewConnectorCta': string
   'connectors.ceK8.providePermissionsStep.applyDelegateText': string
   'connectors.ceK8.providePermissionsStep.downloadComplete': string

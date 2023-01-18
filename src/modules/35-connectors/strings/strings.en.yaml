@@ -523,10 +523,11 @@ delegate:
   couldNotFetch: Failed to update the Delegate list, Will try again in {{pollingInterval}}
   delegateSelectors: Delegate Selectors
 ceK8:
-  infoText: 'If you have previously created a connector to the preferred cluster for any of the other modules, you may reference the same connector here and create a connector for Cloud cost management. If this is the first time creating a connector to this cluster, you may proceed without referencing.'
-  selectConnectorLabel: 'Reference an existing CD Kubernetes connector'
+  infoText: 'If you have previously created a connector to the preferred cluster for any other modules (Deployments, Builds etc.), you may reference the same here to upgrade to support Cloud Cost Management, If this is your first time creating a connector to the cluster, click on “+ Create new Connector”'
+  selectConnectorLabel: 'Select the existing Kubernetes connector'
   overview:
     createNewConnectorCta: 'Create a new connector'
+    ccmConnectorNameLabel: Name of the Cloud Cost Connector
   chooseRequirements:
     heading: '{{ $.connectors.ceAws.steps.req }}'
     subheading: '{{ $.connectors.ceAws.crossAccountRoleStep1.description }}'
