@@ -155,6 +155,7 @@ export enum StepType {
   Bandit = 'Bandit',
   Burp = 'Burp',
   Snyk = 'Snyk',
+  Grype = 'Grype',
   Sonarqube = 'Sonarqube',
   Zap = 'Zap',
   AsgCanaryDelete = 'AsgCanaryDelete',

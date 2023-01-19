@@ -8392,6 +8392,7 @@ export interface StringsMap {
   'sto.stepDescription.Checkmarx': string
   'sto.stepDescription.Fortify': string
   'sto.stepDescription.FortifyOnDemand': string
+  'sto.stepDescription.Grype': string
   'sto.stepDescription.Owasp': string
   'sto.stepDescription.PrismaCloud': string
   'sto.stepDescription.ScoutSuite': string
