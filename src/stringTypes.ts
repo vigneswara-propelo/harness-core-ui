@@ -6937,6 +6937,7 @@ export interface StringsMap {
   'cf.gitSync.goToGit': string
   'cf.gitSync.invalidYaml': string
   'cf.gitSync.saveFlagToGit': string
+  'cf.gitSync.setUpGitConnection': string
   'cf.gitSync.syncingPaused': string
   'cf.gitSync.toggleGitSyncPause': string
   'cf.gitSync.turnOffGitAndContinue': string

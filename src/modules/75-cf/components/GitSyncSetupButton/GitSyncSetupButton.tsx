@@ -9,14 +9,22 @@ import React from 'react'
 import { Button, ButtonVariation, Layout } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import ServicesGithubIcon from '@cf/images/icons/ServicesGithubIcon'
 
-export const GitSyncSetupRedirect: React.FC = () => {
+export interface GitSyncSetupButtonProps {
+  showModal?: () => void
+}
+
+const GitSyncSetupButton: React.FC<GitSyncSetupButtonProps> = ({ showModal }) => {
   const { getString } = useStrings()
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const history = useHistory()
+
+  const GIT_EX_ENABLED = useFeatureFlag(FeatureFlag.FFM_5332_GIT_EX_ENABLED)
 
   return (
     <Button
@@ -29,10 +37,14 @@ export const GitSyncSetupRedirect: React.FC = () => {
         </Layout.Horizontal>
       }
       onClick={() => {
-        history.push(routes.toGitSyncAdmin({ accountId, orgIdentifier, projectIdentifier, module: 'cf' }))
+        if (GIT_EX_ENABLED && showModal) {
+          showModal()
+        } else {
+          history.push(routes.toGitSyncAdmin({ accountId, orgIdentifier, projectIdentifier, module: 'cf' }))
+        }
       }}
     />
   )
 }
 
-export default GitSyncSetupRedirect
+export default GitSyncSetupButton
