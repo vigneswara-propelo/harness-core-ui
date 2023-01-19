@@ -60,6 +60,7 @@ import CVCodeErrorsSettings from './pages/code-errors-agent-control/CVCodeErrors
 import CVCreateSLOV2 from './pages/slos/components/CVCreateSLOV2/CVCreateSLOV2'
 import { getIsValuePresent } from './utils/licenseBannerUtils'
 import { ThresholdPercentageToShowBanner } from './constants'
+import SLODowntimePage from './pages/slos/SLODowntimePage/SLODowntimePage'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -364,6 +365,14 @@ export default (
       <CVCodeErrorsSettings>
         <CVCodeErrorsAgents pathComponentLocation={'/criticalevents'} />
       </CVCodeErrorsSettings>
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
+      path={[routes.toCVSLODowntime({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]}
+    >
+      <SLODowntimePage />
     </RouteWithLayout>
 
     <RouteWithLayout

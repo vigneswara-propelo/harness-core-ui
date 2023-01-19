@@ -63,6 +63,7 @@ export interface StringsMap {
   'common.apply': string
   'common.approve': string
   'common.artifactTag': string
+  'common.askUs': string
   'common.assignedAt': string
   'common.assignedThrough': string
   'common.at': string
@@ -925,6 +926,7 @@ export interface StringsMap {
   'common.singularLabels.testTarget': string
   'common.skip': string
   'common.slack': string
+  'common.sloDowntimeLabel': string
   'common.sloNoData': string
   'common.smtp.configured': string
   'common.smtp.conifg': string
@@ -8219,6 +8221,9 @@ export interface StringsMap {
   'cv.showingLogsFor': string
   'cv.sliMissingDataTypeIsRequired': string
   'cv.sloAnalysisTakingLong': string
+  'cv.sloDowntime.info': string
+  'cv.sloDowntime.label': string
+  'cv.sloDowntime.noData': string
   'cv.sloGraphUserHint': string
   'cv.sloRecalculationInProgress': string
   'cv.slos.backToSLI': string

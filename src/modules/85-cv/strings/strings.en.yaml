@@ -914,6 +914,10 @@ CompositeSLO:
     minSLOCount: Should have minimun 2 SLOs
     maxSLOCount: Should have maximum 20 SLOs
     weightMinMax: SLO weight should be between 0.01 to 99.99
+sloDowntime:
+  label: Downtime
+  noData: No SLO downtime configured
+  info: During downtime, SLO status and error budget calculations will be excluded for that specific time period.
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on

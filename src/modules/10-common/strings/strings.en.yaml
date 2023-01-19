@@ -96,6 +96,7 @@ My: My
 ok: OK
 ID: Id
 org: Org
+askUs: ask us
 variables: Variables
 copyVariableName: Copy variable name
 copyFqn: Copy fully qualified name
@@ -1204,6 +1205,7 @@ noNotifications: No Notifications
 createFlag: Create a Flag
 learnMore: Learn more
 sloNoData: You don’t have any SLO created yet
+sloDowntimeLabel: SLO Downtime
 connectGitRepo: Connect to Git Repository
 clickToExpand: Click to expand
 configureService: Configure Service
