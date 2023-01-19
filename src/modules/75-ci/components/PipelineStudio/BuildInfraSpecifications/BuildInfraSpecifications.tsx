@@ -1207,6 +1207,10 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       {
         label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
         value: ArchTypes.Amd64
+      },
+      {
+        label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
+        value: ArchTypes.Arm64
       }
     ]
 
@@ -1243,12 +1247,6 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           }
         ]
     }
-
-    if (CIE_HOSTED_VMS_MAC)
-      buildArchSelectOptions.push({
-        label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
-        value: ArchTypes.Arm64
-      })
 
     return (
       <>

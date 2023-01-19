@@ -472,6 +472,10 @@ export function StageInputSetFormInternal({
     {
       label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
       value: ArchTypes.Amd64
+    },
+    {
+      label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
+      value: ArchTypes.Arm64
     }
   ]
 
@@ -479,10 +483,6 @@ export function StageInputSetFormInternal({
     buildInfraSelectOptions.push({
       label: getString('pipeline.infraSpecifications.osTypes.macos'),
       value: OsTypes.MacOS
-    })
-    buildArchSelectOptions.push({
-      label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
-      value: ArchTypes.Arm64
     })
   }
 
