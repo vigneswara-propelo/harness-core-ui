@@ -1068,11 +1068,11 @@ metricThresholds:
   noThresholdsMessage: No thresholds created yet
   metricPacksDeletePromptContent: Unchecking the metric pack will also remove the corresponding metric thresholds settings. This action cannot be undone.
   customMetricsDeletePromptContent: Deleting the custom metric will also remove the corresponding metric thresholds settings. This action cannot be undone.
-codeErrors: Code Errors
-codeErrorsHeading: Review code errors related to your project
-codeErrorsAgents: '{{projectName}} Code Error Agents'
-codeErrorsAgentsHeading: Agents running on your machines connected to Code Errors.
-codeErrorsAgentsTokens: '{{projectName}} Code Error Tokens'
+codeErrors:
+  title: Code Errors
+  agents: '{{ $.common.agents }}'
+  agentTokens: '{{ $.common.tokens }}'
+  criticalEvents: 'Critical Events'
 CVStepper:
   StepError: Required fields are missing or incorrect data
 licenseBanner:

@@ -1557,7 +1557,12 @@ const routes = {
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/tokens`
   ),
 
-  toCVCodeErrorsAgentsControl: withAccountId(
+  toCVCodeErrorsCriticalEvents: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/criticalevents`
+  ),
+
+  toCVCodeErrorsSettings: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et`
   ),

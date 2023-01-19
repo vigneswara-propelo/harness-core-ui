@@ -1025,7 +1025,7 @@ moduleConfig:
   restoreDefault: Restore Default Settings
 selectModules: Select Modules
 configureModuleList: Configure Module List
-codeErrorsAgents: Code Error Agents
+codeErrorsSettings: Code Error Settings
 cdAndGitops: Continuous Delivery & GitOps
 stoText: Security Testing Orchestration
 

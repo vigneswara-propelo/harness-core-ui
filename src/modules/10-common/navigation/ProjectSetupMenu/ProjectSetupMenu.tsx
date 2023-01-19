@@ -125,8 +125,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
 
         {SRM_ET_EXPERIMENTAL && module === 'cv' && !showGetStartedTabInMainMenu && (
           <SidebarLink
-            label={getString('common.codeErrorsAgents')}
-            to={routes.toCVCodeErrorsAgentsControl({ ...params })}
+            label={getString('common.codeErrorsSettings')}
+            to={routes.toCVCodeErrorsSettings({ ...params })}
           />
         )}
       </Layout.Vertical>

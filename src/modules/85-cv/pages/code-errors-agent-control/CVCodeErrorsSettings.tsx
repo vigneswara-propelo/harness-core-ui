@@ -17,38 +17,46 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useStrings } from 'framework/strings'
 import ScopedTitle from '@common/components/Title/ScopedTitle'
 
-const CVCodeErrorsAgentsControl: React.FC = ({ children }) => {
+const CVCodeErrorsSettings: React.FC = ({ children }) => {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   const SRM_ET_EXPERIMENTAL = useFeatureFlag(FeatureFlag.SRM_ET_EXPERIMENTAL)
+  const SRM_ET_CRITICAL_EVENTS = useFeatureFlag(FeatureFlag.SRM_ET_CRITICAL_EVENTS)
 
-  interface AgentTokenLink {
+  interface SettingsLink {
     label: string
     to: string
   }
 
-  const agentTokenLinks: AgentTokenLink[] = [
+  const settingsLinks: SettingsLink[] = [
     {
-      label: getString('cv.codeErrorsAgents'),
+      label: getString('cv.codeErrors.agents'),
       to: routes.toCVCodeErrorsAgents({ accountId, orgIdentifier, projectIdentifier })
     },
     {
-      label: getString('common.tokens'),
+      label: getString('cv.codeErrors.agentTokens'),
       to: routes.toCVCodeErrorsAgentsTokens({ accountId, orgIdentifier, projectIdentifier })
     }
   ]
 
-  useDocumentTitle([getString('cv.srmTitle'), getString('cv.codeErrorsAgents')])
+  if (SRM_ET_CRITICAL_EVENTS) {
+    settingsLinks.push({
+      label: getString('cv.codeErrors.criticalEvents'),
+      to: routes.toCVCodeErrorsCriticalEvents({ accountId, orgIdentifier, projectIdentifier })
+    })
+  }
+
+  useDocumentTitle([getString('cv.srmTitle'), getString('common.codeErrorsSettings')])
 
   if (SRM_ET_EXPERIMENTAL) {
     return (
       <>
         <Page.Header
           breadcrumbs={<NGBreadcrumbs />}
-          title={<ScopedTitle title={getString('cv.codeErrorsAgents')} />}
+          title={<ScopedTitle title={getString('common.codeErrorsSettings')} />}
           toolbar={
-            <TabNavigation size={'small'} links={agentTokenLinks.map(link => ({ label: link.label, to: link.to }))} />
+            <TabNavigation size={'small'} links={settingsLinks.map(link => ({ label: link.label, to: link.to }))} />
           }
         />
         <Page.Body>{children}</Page.Body>
@@ -59,4 +67,4 @@ const CVCodeErrorsAgentsControl: React.FC = ({ children }) => {
   }
 }
 
-export default CVCodeErrorsAgentsControl
+export default CVCodeErrorsSettings

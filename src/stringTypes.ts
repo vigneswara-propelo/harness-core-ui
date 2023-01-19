@@ -145,7 +145,7 @@ export interface StringsMap {
   'common.cluster': string
   'common.clusterName': string
   'common.clusters': string
-  'common.codeErrorsAgents': string
+  'common.codeErrorsSettings': string
   'common.comingSoon': string
   'common.comingSoon2': string
   'common.commentModal.addCommentPlaceholder': string
@@ -7519,11 +7519,10 @@ export interface StringsMap {
   'cv.changesPage.eventCount': string
   'cv.changesPage.viewKubernetesEvents': string
   'cv.clusterType': string
-  'cv.codeErrors': string
-  'cv.codeErrorsAgents': string
-  'cv.codeErrorsAgentsHeading': string
-  'cv.codeErrorsAgentsTokens': string
-  'cv.codeErrorsHeading': string
+  'cv.codeErrors.agentTokens': string
+  'cv.codeErrors.agents': string
+  'cv.codeErrors.criticalEvents': string
+  'cv.codeErrors.title': string
   'cv.componentValidations.queryType': string
   'cv.componentValidations.queryTypeLabel': string
   'cv.componentValidations.requestMethod': string
