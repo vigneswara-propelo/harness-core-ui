@@ -6,7 +6,6 @@
  */
 
 .ScriptWizard {
-  min-width: 40vw;
   height: 700px;
   border-left: 0;
   padding: 0;
@@ -24,6 +23,7 @@
 
 .optionsViewContainer {
   margin: var(--spacing-small) 0 0 var(--spacing-small) !important;
+  min-width: 600px;
 }
 
 .thumbnailSelect {
