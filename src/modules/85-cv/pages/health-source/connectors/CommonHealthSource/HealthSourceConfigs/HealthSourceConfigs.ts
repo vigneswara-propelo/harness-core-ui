@@ -45,7 +45,7 @@ export const healthSourcesConfig: HealthSourcesConfig = {
   },
   [HealthSourceTypes.SumologicLogs]: {
     addQuery: {
-      label: 'Log',
+      label: 'Query',
       enableDefaultGroupName: true
     },
     customMetrics: {

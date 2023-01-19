@@ -5,40 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName } from '@harness/uicore'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
-import type { TransactionMetricInfo } from 'services/cv'
 import type { HostControlTestData, HostTestData } from './DeploymentMetricsAnalysisRow.constants'
 import type { DeploymentMetricsAnalysisRowChartSeries } from './DeploymentMetricsAnalysisRow.types'
-
-export function healthSourceTypeToLogo(healthSourceType: TransactionMetricInfo['dataSourceType']): IconName {
-  switch (healthSourceType) {
-    case 'APP_DYNAMICS':
-      return 'service-appdynamics'
-    case 'NEW_RELIC':
-      return 'service-newrelic'
-    case 'PROMETHEUS':
-    case 'AWS_PROMETHEUS':
-      return 'service-prometheus'
-    case 'SPLUNK':
-      return 'service-splunk'
-    case 'STACKDRIVER':
-    case 'STACKDRIVER_LOG':
-      return 'service-stackdriver'
-    case 'DATADOG_METRICS':
-    case 'DATADOG_LOG':
-      return 'service-datadog'
-    case 'CUSTOM_HEALTH_METRIC':
-    case 'CUSTOM_HEALTH_LOG':
-      return 'service-custom-connector'
-    case 'DYNATRACE':
-      return 'service-dynatrace'
-    case 'CLOUDWATCH_METRICS':
-      return 'service-aws'
-    default:
-      return 'circle'
-  }
-}
 
 export function transformControlAndTestDataToHighChartsSeries(
   controlData: HostControlTestData[],

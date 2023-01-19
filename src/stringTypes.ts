@@ -7658,6 +7658,7 @@ export interface StringsMap {
   'cv.healthSource.connectors.customMetrics': string
   'cv.healthSource.connectors.customMetricsTooltip': string
   'cv.healthSource.connectors.customMetricsWithoutOptional': string
+  'cv.healthSource.connectors.customQueries': string
   'cv.healthSource.connectors.gco.selectDashboardTab': string
   'cv.healthSource.connectors.selectConnector': string
   'cv.healthSource.dataSourceTypeValidation': string
@@ -7907,6 +7908,8 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.metric': string
   'cv.monitoringSources.commonHealthSource.metricName': string
   'cv.monitoringSources.commonHealthSource.metricsChart.fetchingCharts': string
+  'cv.monitoringSources.commonHealthSource.metricsChart.runQueryToFetchResults': string
+  'cv.monitoringSources.commonHealthSource.noQueries': string
   'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle': string
   'cv.monitoringSources.commonHealthSource.records.fetchingRecords': string
   'cv.monitoringSources.commonHealthSource.records.runQueryToSeeRecords': string

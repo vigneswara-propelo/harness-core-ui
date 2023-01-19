@@ -225,11 +225,13 @@ monitoringSources:
     defineQueryDescriptionMetrics: Queries can only be defined for a single timeseries.
     defineQuerySubDescription: Learn how to find the query to monitor your data source with Harness.
     querySectionSecondaryTitle: Query Section
+    noQueries: 'There are no {{name}}'
     records:
       fetchingRecords: Fetching records ...
-      runQueryToSeeRecords: Please run the query to see the records.
+      runQueryToSeeRecords: Run query to fetch the records
     metricsChart:
       fetchingCharts: Fetching charts data ...
+      runQueryToFetchResults: Run query to fetch the results
     logsTable:
       title: Field Mapping
       subTitle: Choose the data to display the logs from the fields below
@@ -242,7 +244,7 @@ monitoringSources:
       validationMessage: '{{fieldName}} is required'
       fetchLogDataButtonDisableMessage: Records are not available
     assign:
-      subHeader: Select services to which the metric and custom metric will be applied.
+      subHeader: Select services to which the custom metric will be applied.
       riskProfileSubHeader: Harness will verify and rate your events based on your selected risk category and deviation.
       continuousVerification:
         title: Continuous Verification (Applied to the pipelines in the Continuous Deployment)
@@ -489,7 +491,7 @@ monitoringSources:
     newGCOLogsMessage: New GCO Logs Message
     records: Records
     submitQueryToSeeRecords: Submit query to see records from Stackdriver Logs
-    noRecordsForQuery: No records for provided query
+    noRecordsForQuery: No records found for the provided query
     gcoLogsQuery: GCO Logs Query
     addQueryTooltip: Fill all required fields before adding a new query
     serviceInstance: Identify Service Instance
@@ -716,6 +718,7 @@ healthSource:
     selectConnector: Select {{sourceType}} Connector
     customMetrics: Custom Metrics (optional)
     customMetricsWithoutOptional: Custom Metrics
+    customQueries: Custom Queries
     customMetricsTooltip: Add custom metrics
     buildChart: Build Chart
     CloudWatch:

@@ -10,8 +10,8 @@ import { Container, Icon, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'
+import { getIconBySourceType } from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
 import type { MetricsAccordionPanelSummaryProps } from './MetricsAccordionPanelSummary.types'
-import { healthSourceTypeToLogo } from '../DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow.utils'
 import NodeCount from './components/NodesCount'
 import { getRiskDisplayName } from './MetricsAccordionPanelSummary.utils'
 import css from '../DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow.module.scss'
@@ -22,7 +22,6 @@ const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> 
   } = props
 
   const { getString } = useStrings()
-
   const riskDisplayName = getRiskDisplayName(risk, getString)
 
   return (
@@ -32,7 +31,7 @@ const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> 
       </Text>
       <Text tooltip={transactionName}>{transactionName}</Text>
       <Text>
-        <Icon name={healthSourceTypeToLogo(healthSourceType)} margin={{ right: 'small' }} size={16} />
+        <Icon name={getIconBySourceType(healthSourceType as string)} margin={{ right: 'small' }} size={16} />
         {connectorName}
       </Text>
       <Text

@@ -7,7 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly labelText: string
+  readonly loadingContainer: string
   readonly main: string
+  readonly noDataContainer: string
 }
 export default styles
