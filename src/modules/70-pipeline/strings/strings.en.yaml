@@ -1045,7 +1045,7 @@ stepCommonFields:
     notIn: '{{label}} must not be one of the following values: {{notAllowedValues}}'
 ciCodebase:
   prCloneStrategy: Pull Request Clone Strategy
-  ciCodebaseBuildType: CI Codebase Build Type
+  ciCodebaseBuildType: CI Codebase build type
   pullRequestNumber: Pull Request Number
   validation:
     oneOfValues: Value must be one of these values [{{values}}]
