@@ -160,7 +160,7 @@ export default function EnvironmentDetails(): React.ReactElement {
   const { name, identifier, description, tags, type } = defaultTo(parsedYamlEnvironment, {}) as NGEnvironmentInfoConfig
   const variables = defaultTo(parsedYamlEnvironment?.variables, [])
   const overrides = parsedYamlEnvironment?.overrides
-
+  const hideGitopsCluster = !projectIdentifier || (!gitopsOnPremEnabled && isOnPrem())
   const validate = (values: NGEnvironmentInfoConfig): void => {
     const {
       name: newName,
@@ -274,7 +274,7 @@ export default function EnvironmentDetails(): React.ReactElement {
                         id: EnvironmentDetailsTab.GITOPS,
                         title: getString('cd.gitOpsCluster'),
                         panel: <GitOpsCluster envRef={identifier} />,
-                        hidden: !gitopsOnPremEnabled && isOnPrem()
+                        hidden: hideGitopsCluster
                       },
                       {
                         id: EnvironmentDetailsTab.REFERENCED_BY,

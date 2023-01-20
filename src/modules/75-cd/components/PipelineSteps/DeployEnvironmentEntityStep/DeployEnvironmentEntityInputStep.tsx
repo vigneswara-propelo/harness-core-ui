@@ -276,7 +276,7 @@ export default function DeployEnvironmentEntityInputStep({
     <>
       <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
         {getMultiTypeFromValue(inputSetData?.template?.environment?.environmentRef) === MultiTypeInputType.RUNTIME ? (
-          CDS_OrgAccountLevelServiceEnvEnvGroup ? (
+          CDS_OrgAccountLevelServiceEnvEnvGroup && !gitOpsEnabled ? (
             <MultiTypeEnvironmentField
               {...commonProps}
               placeholder={placeHolderForEnvironment}
@@ -311,7 +311,7 @@ export default function DeployEnvironmentEntityInputStep({
           and we are deploying to all environments from pipeline studio.
           Then we should hide this field and just update the formik values */}
         {isMultiEnvironment && deployToAllEnvironments !== true ? (
-          CDS_OrgAccountLevelServiceEnvEnvGroup && !envGroupIdentifier ? (
+          CDS_OrgAccountLevelServiceEnvEnvGroup && !envGroupIdentifier && !gitOpsEnabled ? (
             <MultiTypeEnvironmentField
               {...commonProps}
               placeholder={placeHolderForEnvironments}

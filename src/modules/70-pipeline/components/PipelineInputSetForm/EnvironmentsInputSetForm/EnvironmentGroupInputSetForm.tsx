@@ -105,6 +105,9 @@ export function EnvironmentGroupInputSetForm({
                 stepViewType={viewType}
                 path={path}
                 readonly={readonly}
+                customStepProps={{
+                  gitOpsEnabled: deploymentStage.gitOpsEnabled
+                }}
               />
             )}
             <Container padding={{ left: 'medium' }}>

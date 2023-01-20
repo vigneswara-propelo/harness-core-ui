@@ -407,7 +407,7 @@ export default function DeployEnvironment({
         margin={{ bottom: isMultiEnvironment ? 'medium' : 'none' }}
       >
         {isMultiEnvironment ? (
-          CDS_OrgAccountLevelServiceEnvEnvGroup && !isUnderEnvGroup ? (
+          CDS_OrgAccountLevelServiceEnvEnvGroup && !isUnderEnvGroup && !gitOpsEnabled ? (
             /*** This condition is added as entities one step down the entity tree
               will be following the parent scope so no need of the new component here ***/
             <MultiTypeEnvironmentField
@@ -446,25 +446,7 @@ export default function DeployEnvironment({
               }}
             />
           )
-        ) : !CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-          <FormInput.MultiTypeInput
-            {...commonProps}
-            useValue
-            placeholder={placeHolderForEnvironment}
-            multiTypeInputProps={{
-              onTypeChange: setEnvironmentsType,
-              width: 300,
-              selectProps: { items: selectOptions },
-              allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,
-              defaultValueToReset: '',
-              onChange: item => {
-                setSelectedEnvironments(getSelectedEnvironmentsFromOptions(item as SelectOption))
-              },
-              expressions
-            }}
-            selectItems={selectOptions}
-          />
-        ) : (
+        ) : CDS_OrgAccountLevelServiceEnvEnvGroup && !gitOpsEnabled ? (
           <MultiTypeEnvironmentField
             {...commonProps}
             placeholder={placeHolderForEnvironment}
@@ -483,6 +465,24 @@ export default function DeployEnvironment({
               allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,
               defaultValueToReset: ''
             }}
+          />
+        ) : (
+          <FormInput.MultiTypeInput
+            {...commonProps}
+            useValue
+            placeholder={placeHolderForEnvironment}
+            multiTypeInputProps={{
+              onTypeChange: setEnvironmentsType,
+              width: 300,
+              selectProps: { items: selectOptions },
+              allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,
+              defaultValueToReset: '',
+              onChange: item => {
+                setSelectedEnvironments(getSelectedEnvironmentsFromOptions(item as SelectOption))
+              },
+              expressions
+            }}
+            selectItems={selectOptions}
           />
         )}
         {isFixed && !isUnderEnvGroup && (
