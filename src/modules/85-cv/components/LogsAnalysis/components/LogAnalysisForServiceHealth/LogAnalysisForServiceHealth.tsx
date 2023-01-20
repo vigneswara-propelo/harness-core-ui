@@ -11,14 +11,15 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import noDataImage from '@cv/assets/noData.svg'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import type { LogAnalysisProps, LogAnalysisRowData } from './LogAnalysis.types'
-import LogAnalysisRadarChartHeader from './components/LogAnalysisRadarChartHeader'
-import LogAnalysisRadarChart from './components/LogAnalysisRadarChart'
-import { getLogAnalysisData } from './LogAnalysis.utils'
-import { LogAnalysisRow } from './components/LogAnalysisRow/LogAnalysisRow'
-import styles from './LogAnalysis.module.scss'
+import LogAnalysisRadarChartHeader from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/components/LogAnalysisRadarChartHeader'
+import type { LogAnalysisProps } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
+import LogAnalysisRadarChart from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/components/LogAnalysisRadarChart'
+import { LogAnalysisRow } from '@cv/components/LogsAnalysis/components/LogAnalysisRow/LogAnalysisRow'
+import type { LogAnalysisRowData } from './LogAnalysisForServiceHealth.types'
+import { getLogAnalysisData } from './LogAnalysisForServiceHealth.utils'
+import styles from './LogAnalysisForServiceHealth.module.scss'
 
-export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
+export default function LogAnalysisForServiceHealth(props: LogAnalysisProps): JSX.Element {
   const {
     data,
     clusterChartData,
@@ -41,7 +42,7 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
   const { getString } = useStrings()
 
   const logAnalysisData = useMemo((): LogAnalysisRowData[] => {
-    return getLogAnalysisData(data)
+    return getLogAnalysisData(data, isServicePage)
   }, [data, isServicePage])
 
   const [selectedLog, setSelectedLog] = useState<string | null>(null)
@@ -57,7 +58,7 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
   const renderLogsData = useCallback(() => {
     if (logsLoading) {
       return (
-        <Container className={styles.loading}>
+        <Container data-testid="logAnalysisForServiceHealth-loadingLogs" className={styles.loading}>
           <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
         </Container>
       )

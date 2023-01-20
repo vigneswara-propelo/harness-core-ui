@@ -6,8 +6,9 @@
  */
 
 import React, { useMemo, useCallback, useState, useEffect } from 'react'
-import { Container, Text, Icon, Layout, Pagination } from '@harness/uicore'
+import { Container, Text } from '@harness/uicore'
 import cx from 'classnames'
+import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import {
@@ -15,22 +16,13 @@ import {
   useGetAllRadarChartLogsData,
   useGetVerifyStepDeploymentLogAnalysisRadarChartResult
 } from 'services/cv'
-import type { PipelinePathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getEventTypeColor, getEventTypeLightColor } from '@cv/utils/CommonUtils'
-import { LogAnalysisRiskAndJiraModal } from './components/LogAnalysisRiskAndJiraModal/LogAnalysisRiskAndJiraModal'
-import type {
-  LogAnalysisDataRowProps,
-  LogAnalysisRowProps,
-  CompareLogEventsInfo,
-  LogAnalysisRowData
-} from './LogAnalysisRow.types'
-import {
-  getCorrectLogsData,
-  getEventTypeFromClusterType,
-  isNoLogSelected,
-  onClickErrorTrackingRow
-} from './LogAnalysisRow.utils'
-import { getSingleLogData } from '../LogAnalysisForServiceHealth/LogAnalysisForServiceHealth.utils'
+import { getSingleLogData } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.utils'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { LogAnalysisDetailsDrawer } from './components/LogAnalysisDetailsDrawer/LogAnalysisDetailsDrawer'
+import type { LogAnalysisRowProps, CompareLogEventsInfo, LogAnalysisRowData } from './LogAnalysisRow.types'
+import { getCorrectLogsData, isNoLogSelected } from './LogAnalysisRow.utils'
+import LogAnalysisDataRow from './components/LogAnalysisDataRow/LogAnalysisDataRow'
+import LogAnalysisPagination from './components/LogAnalysisPagination'
 import css from './LogAnalysisRow.module.scss'
 
 function ColumnHeaderRow(): JSX.Element {
@@ -39,69 +31,9 @@ function ColumnHeaderRow(): JSX.Element {
     <Container className={cx(css.mainRow, css.columnHeader)}>
       <Text padding={{ left: 'small' }}>{getString('pipeline.verification.logs.eventType')}</Text>
       <Text>{getString('cv.sampleMessage')}</Text>
-      {/* <Container>
-        <Text>{getString('common.frequency')}</Text>
-        <Text className={css.secondaryText}>({getString('pipeline.verification.logs.countPerMin')})</Text>
-      </Container> */}
-
-      {/* BELOW TWO COLUMNS HAS NO TITLE */}
-      {/* LOG UPDATED INFO */}
       <span />
 
-      {/* LOG ACTIONS */}
       <span />
-    </Container>
-  )
-}
-
-function DataRow(props: LogAnalysisDataRowProps): JSX.Element {
-  const { rowData, isErrorTracking, onDrawOpen, index } = props
-  // const chartOptions = useMemo(
-  //   () => getLogAnalysisLineChartOptions(rowData?.messageFrequency || []),
-  //   [rowData?.messageFrequency]
-  // )
-  const { getString } = useStrings()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
-  const onShowRiskEditModalCallback = useCallback(() => {
-    if (isErrorTracking) {
-      onClickErrorTrackingRow(rowData.message, accountId, projectIdentifier, orgIdentifier)
-    } else {
-      onDrawOpen(index)
-    }
-  }, [isErrorTracking, rowData.message, accountId, projectIdentifier, orgIdentifier, index, onDrawOpen])
-
-  return (
-    <Container
-      className={cx(css.mainRow, css.dataRow)}
-      onClick={onShowRiskEditModalCallback}
-      data-testid={'logs-data-row'}
-    >
-      <Container padding={{ left: 'small' }} className={cx(css.openModalColumn, css.compareDataColumn)}>
-        {rowData.clusterType && (
-          <Text
-            className={css.eventTypeTag}
-            font="xsmall"
-            style={{
-              color: getEventTypeColor(rowData.clusterType),
-              background: getEventTypeLightColor(rowData.clusterType)
-            }}
-          >
-            {getEventTypeFromClusterType(rowData.clusterType, getString)}
-          </Text>
-        )}
-      </Container>
-      <Container className={cx(css.logText, css.openModalColumn)}>
-        <p className={css.logRowText}>
-          {isErrorTracking ? rowData.message.split('|').slice(0, 4).join('|') : rowData.message}
-        </p>
-      </Container>
-      {/* <Container className={cx(css.lineChartContainer)}>
-        <HighchartsReact highchart={Highcharts} options={chartOptions} />
-      </Container> */}
-      <span />
-      <Layout.Horizontal margin={{ top: 'xsmall' }} style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
-        <Icon name="description" size={24} />
-      </Layout.Horizontal>
     </Container>
   )
 }
@@ -169,7 +101,7 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
   })
 
   const logsDataToDrawer = useMemo(() => {
-    return getCorrectLogsData(
+    return getCorrectLogsData({
       serviceScreenLogsData,
       verifyStepLogsData,
       serviceScreenLogsLoading,
@@ -177,7 +109,7 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
       serviceScreenLogsError,
       verifyStepLogsError,
       isServicePage
-    )
+    })
   }, [
     isServicePage,
     serviceScreenLogsData,
@@ -198,7 +130,7 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
       // @ts-ignore
       const dataToDrawer = logsData.resource?.logAnalysisRadarCharts?.content[0]
 
-      drawerData = getSingleLogData(dataToDrawer as LogAnalysisRadarChartListDTO, isServicePage)
+      drawerData = getSingleLogData(dataToDrawer as LogAnalysisRadarChartListDTO)
 
       setRiskEditModalData({
         showDrawer: true,
@@ -287,11 +219,9 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     <Container className={cx(css.main, props.className)}>
       <ColumnHeaderRow />
       {riskEditModalData.showDrawer ? (
-        <LogAnalysisRiskAndJiraModal
+        <LogAnalysisDetailsDrawer
           onHide={onDrawerHide}
-          rowData={
-            riskEditModalData.selectedRowData !== null ? riskEditModalData.selectedRowData : ({} as LogAnalysisRowData)
-          }
+          rowData={riskEditModalData.selectedRowData || ({} as LogAnalysisRowData)}
           isDataLoading={logsLoading}
           logsError={logsError}
           retryLogsCall={retryLogsCall}
@@ -299,10 +229,10 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
       ) : null}
       <Container className={css.dataContainer}>
         {data.map((row, index) => {
-          if (!row) return null
+          if (!row || isEmpty(row)) return null
           const { clusterType, count, message } = row
           return (
-            <DataRow
+            <LogAnalysisDataRow
               key={`${clusterType}-${count}-${message.substring(0, 10)}-${index}`}
               rowData={row}
               index={index}
@@ -314,14 +244,7 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
         })}
       </Container>
       {logResourceData && logResourceData.totalPages && goToPage ? (
-        <Pagination
-          pageSize={logResourceData.pageSize as number}
-          pageCount={logResourceData.totalPages}
-          itemCount={logResourceData.totalItems as number}
-          pageIndex={logResourceData.pageIndex}
-          gotoPage={goToPage}
-          hidePageNumbers
-        />
+        <LogAnalysisPagination logResourceData={logResourceData} goToPage={goToPage} />
       ) : null}
     </Container>
   )

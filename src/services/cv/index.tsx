@@ -47,6 +47,8 @@ export interface AnalysedDeploymentTestDataNode {
   controlDataType?: 'AVERAGE' | 'MINIMUM_DEVIATION'
   controlNodeIdentifier?: string
   nodeIdentifier?: string
+  normalisedControlData?: MetricValueV2[]
+  normalisedTestData?: MetricValueV2[]
   testData?: MetricValueV2[]
 }
 
@@ -2874,17 +2876,15 @@ export interface LogAnalysisRadarChartClusterDTO {
 }
 
 export interface LogAnalysisRadarChartListDTO {
-  averageFrequencyData?: TimestampFrequencyCount[]
-  baseline?: LogAnalysisRadarChartListDTO
+  averageControlFrequencyData?: TimestampFrequencyCount[]
   clusterId?: string
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
-  frequencyData?: number[]
-  hasControlData?: boolean
-  hostFrequencyData?: HostFrequencyData[]
   label?: number
   message?: string
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  testHostFrequencyData?: HostFrequencyData[]
+  totalTestFrequencyData?: TimestampFrequencyCount[]
 }
 
 export interface LogAnalysisRadarChartListWithCountDTO {

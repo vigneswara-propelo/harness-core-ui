@@ -1,6 +1,7 @@
 continuous: '{{$.common.purpose.cv.serviceReliability}}'
 srmTitle: SRM
 methodLabel: Method Label
+count: count
 request: '{{ $.common.request }}'
 response: Response
 responseBody: Response Body
@@ -33,6 +34,14 @@ trend: Trend
 known: Known
 unknown: Unknown
 unexpected: Unexpected
+knownEvents: Known events
+baselineEvents: Baseline events
+unknownEvents: Unknown events
+unexpectedEvents: Unexpected events
+knownEvent: Known event
+baselineEvent: Baseline event
+unknownEvent: Unknown event
+unexpectedEvent: Unexpected event
 unexpectedFrequency: Unexpected Frequency
 copyURL: Copy URL
 urlCopied: URL Copied
@@ -1052,6 +1061,7 @@ logs:
   notARisk: Not a Risk
   reportedBy: Reported by
   radarChartInfo: Each point in the graph above represents a log message. The region inside innermost circle represents logs from baseline/control nodes. The region between outermost circle and second circle is used for unknown logs seen in canary nodes while  the region between second circle and innermost circle is used for logs with unexpected frequency. The points that are related (logs observed in both canary and baseline nodes) will be shown on the same radii.The circle is divided into several sectors with each sector having several log messages. Use the slider to narrow down to the specific sector.
+  baselineLegendTooltip: Average of the event counts across all of the control hosts
 externalAPICalls: External API Calls
 somethingWentWrongWhileParsingTheData: Something went wrong while parsing the data
 fetchingDataFrom: Fetching data from

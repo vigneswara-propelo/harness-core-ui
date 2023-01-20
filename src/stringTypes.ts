@@ -7482,6 +7482,8 @@ export interface StringsMap {
   'cv.anomalous': string
   'cv.anomalousMetrics': string
   'cv.bad': string
+  'cv.baselineEvent': string
+  'cv.baselineEvents': string
   'cv.bottom': string
   'cv.burnRatePerDay': string
   'cv.changeSource.FeatureFlag.label': string
@@ -7537,6 +7539,7 @@ export interface StringsMap {
   'cv.considerMissingMetricDataAs': string
   'cv.continuous': string
   'cv.copyURL': string
+  'cv.count': string
   'cv.createdOn': string
   'cv.currentProductionRisk': string
   'cv.customHealthSource.Querymapping.endTimeLabel': string
@@ -7700,6 +7703,8 @@ export interface StringsMap {
   'cv.initiated': string
   'cv.jobNamePlaceholder': string
   'cv.known': string
+  'cv.knownEvent': string
+  'cv.knownEvents': string
   'cv.last12Hours': string
   'cv.lastModifiedOn': string
   'cv.lastOneHour': string
@@ -7710,6 +7715,7 @@ export interface StringsMap {
   'cv.licenseBanner.limitExceedMessage': string
   'cv.licenseBanner.teamPlanUsageMessage': string
   'cv.logCluster': string
+  'cv.logs.baselineLegendTooltip': string
   'cv.logs.eventMarkedAs': string
   'cv.logs.eventPriorityUpdate': string
   'cv.logs.notARisk': string
@@ -8334,9 +8340,13 @@ export interface StringsMap {
   'cv.tuesday': string
   'cv.turnService': string
   'cv.unexpected': string
+  'cv.unexpectedEvent': string
+  'cv.unexpectedEvents': string
   'cv.unexpectedFrequency': string
   'cv.unit': string
   'cv.unknown': string
+  'cv.unknownEvent': string
+  'cv.unknownEvents': string
   'cv.updatedErrorBudget': string
   'cv.updatedRemainingErrorBudget': string
   'cv.urlCopied': string
