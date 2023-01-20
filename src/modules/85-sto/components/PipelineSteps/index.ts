@@ -10,6 +10,7 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { ZeroNorthStep } from './ZeroNorthStep/ZeroNorthStep'
 import { AquatrivyStep } from './AquatrivyStep/AquatrivyStep'
 import { BanditStep } from './BanditStep/BanditStep'
+import { BlackduckStep } from './Blackduck/BlackduckStep'
 import { GrypeStep } from './GrypeStep/GrypeStep'
 import { SnykStep } from './SnykStep/SnykStep'
 import { SonarqubeStep } from './SonarqubeStep/SonarqubeStep'
@@ -19,6 +20,7 @@ import { CheckmarxStep } from './CheckmarxStep/CheckmarxStep'
 
 factory.registerStep(new ZeroNorthStep())
 factory.registerStep(new AquatrivyStep())
+factory.registerStep(new BlackduckStep())
 factory.registerStep(new BanditStep())
 factory.registerStep(new GrypeStep())
 factory.registerStep(new SnykStep())

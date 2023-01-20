@@ -19,13 +19,15 @@ import type { BuildStageElementConfig, StageElementWrapper } from '@pipeline/uti
 import type { SecurityStepData, SecurityStepSpec } from './types'
 import SecurityField from './SecurityField'
 import {
+  API_KEY_AUTH_TYPE,
   AWS_ECR_CONTAINER_TYPE,
   dividerBottomMargin,
   DOCKER_V2_CONTAINER_TYPE,
   JFROG_ARTIFACTORY_CONTAINER_TYPE,
   LOCAL_IMAGE_CONTAINER_TYPE,
   logLevelOptions,
-  severityOptions
+  severityOptions,
+  USER_PASSWORD_AUTH_TYPE
 } from './constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface SelectItems extends SelectOption {
@@ -168,6 +170,7 @@ export function SecurityAdvancedFields(props: SecurityFieldsProps<SecurityStepDa
 interface ISecurityAuthFields extends SecurityFieldsProps<SecurityStepData<SecurityStepSpec>> {
   initialAuthDomain?: string
   showFields?: {
+    type?: boolean
     ssl?: boolean
     domain?: boolean
     access_id?: boolean
@@ -195,9 +198,15 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
               !showFields?.ssl ||
               (!isEmpty(formik.values.spec.auth?.domain) && formik.values.spec.auth?.domain === initialAuthDomain)
           },
+          'spec.auth.type': {
+            label: 'sto.stepField.authType',
+            hide: !showFields?.type,
+            fieldType: 'dropdown',
+            selectItems: [API_KEY_AUTH_TYPE, USER_PASSWORD_AUTH_TYPE]
+          },
           'spec.auth.access_id': {
             label: 'sto.stepField.authAccessId',
-            hide: !showFields?.access_id
+            hide: !(showFields?.access_id && formik.values.spec.auth?.type !== API_KEY_AUTH_TYPE.value)
           },
           'spec.auth.access_token': {
             label: 'sto.stepField.authToken'

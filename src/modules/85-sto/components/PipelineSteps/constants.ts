@@ -57,6 +57,29 @@ export const AWS_ECR_CONTAINER_TYPE = {
   label: 'AWS ECR'
 }
 
+export const API_KEY_AUTH_TYPE = {
+  value: 'apiKey',
+  label: 'API Key'
+}
+export const USER_PASSWORD_AUTH_TYPE = {
+  value: 'usernamePassword',
+  label: 'Username & Password'
+}
+
+export const API_VERSION_5_0_2 = {
+  value: '5.0.2',
+  label: '5.0.2'
+}
+export const API_VERSION_4_1_0 = {
+  value: '4.1.0',
+  label: '4.1.0'
+}
+
+export const API_VERSION_4_2_0 = {
+  value: '4.2.0',
+  label: '4.2.0'
+}
+
 export const logLevelOptions = (getString: getStringProp) => [
   {
     label: getString('sto.stepField.optionLabels.logLevel.debug'),
@@ -591,6 +614,11 @@ export const inputSetFields = (
             label: 'sto.stepField.tool.projectName'
           }
         }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_version) && {
+          [getInputSetFieldName(prefix, 'spec.tool.project_version')]: {
+            label: 'sto.stepField.tool.projectVersion'
+          }
+        }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.team_name) && {
           [getInputSetFieldName(prefix, 'spec.tool.team_name')]: {
             label: 'sto.stepField.tool.teamName'
@@ -611,6 +639,16 @@ export const inputSetFields = (
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.access_id) && {
           [getInputSetFieldName(prefix, 'spec.auth.access_id')]: {
             label: 'sto.stepField.authAccessId'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.type) && {
+          [getInputSetFieldName(prefix, 'spec.auth.type')]: {
+            label: 'sto.stepField.authType'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.version) && {
+          [getInputSetFieldName(prefix, 'spec.auth.version')]: {
+            label: 'sto.stepField.authVersion'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.ssl) && {

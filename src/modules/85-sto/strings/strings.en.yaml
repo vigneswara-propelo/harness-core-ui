@@ -1,7 +1,7 @@
 stepDescription:
   ZeroNorth: Run a security tool to test for vulnerabilities.
   Bandit: Use Bandit to test for vulnerabilities.
-  Blackduckhub: Use Black Duck Hub to test for vulnerabilities.
+  Blackduck: Use Black Duck to test for vulnerabilities.
   Brakeman: Use Brakeman to test for vulnerabilities.
   Burp: Use Burp to test for vulnerabilities.
   Grype: Use Anchore Grype to test for vulnerabilities.
@@ -30,6 +30,8 @@ stepField:
   authDomain: Auth Domain
   authAccessId: Auth Access Id
   authSsl: Enforce SSL
+  authVersion: Auth API Version
+  authType: Authentication type
   toolInclude: Include
   tool:
     javaLibraries: Java Libraries
@@ -39,6 +41,7 @@ stepField:
     imageName: Tool Image Name
     teamName: Tool Team Name
     projectName: Tool Project Name
+    projectVersion: Tool Project Version
   image:
     type: Image Type
     domain: Image Domain

@@ -53,6 +53,8 @@ type Auth = {
   access_id?: string
   access_token: string
   domain?: string
+  version?: string
+  type?: string
   ssl?: boolean
 }
 
@@ -62,6 +64,7 @@ type Tool = {
   context?: string
   image_name?: string
   project_name?: string
+  project_version?: string
   team_name?: string
   port?: number
   java?: {

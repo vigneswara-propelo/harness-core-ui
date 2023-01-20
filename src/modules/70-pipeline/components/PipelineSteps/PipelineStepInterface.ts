@@ -153,6 +153,7 @@ export enum StepType {
   AsgInfraSpec = 'AsgInfraSpec',
   Aquatrivy = 'AquaTrivy',
   Bandit = 'Bandit',
+  BlackDuck = 'BlackDuck',
   Burp = 'Burp',
   Snyk = 'Snyk',
   Grype = 'Grype',

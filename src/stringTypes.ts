@@ -8402,7 +8402,7 @@ export interface StringsMap {
   'sto.securityStage.description': string
   'sto.stepDescription.AquaTrivy': string
   'sto.stepDescription.Bandit': string
-  'sto.stepDescription.Blackduckhub': string
+  'sto.stepDescription.Blackduck': string
   'sto.stepDescription.Brakeman': string
   'sto.stepDescription.Burp': string
   'sto.stepDescription.Checkmarx': string
@@ -8429,6 +8429,8 @@ export interface StringsMap {
   'sto.stepField.authDomain': string
   'sto.stepField.authSsl': string
   'sto.stepField.authToken': string
+  'sto.stepField.authType': string
+  'sto.stepField.authVersion': string
   'sto.stepField.config': string
   'sto.stepField.container.containerAccessToken': string
   'sto.stepField.container.containerRegion': string
@@ -8454,6 +8456,7 @@ export interface StringsMap {
   'sto.stepField.tool.javaLibraries': string
   'sto.stepField.tool.port': string
   'sto.stepField.tool.projectName': string
+  'sto.stepField.tool.projectVersion': string
   'sto.stepField.tool.teamName': string
   'sto.stepField.toolInclude': string
   'sto.stoExemption': string
