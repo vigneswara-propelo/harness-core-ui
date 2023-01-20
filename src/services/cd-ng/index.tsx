@@ -34195,6 +34195,7 @@ export interface DeleteEnvironmentGroupQueryParams {
   filePath?: string
   commitMsg?: string
   lastObjectId?: string
+  forceDelete?: boolean
 }
 
 export type DeleteEnvironmentGroupProps = Omit<
