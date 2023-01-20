@@ -114,9 +114,10 @@ export default function EnvironmentsList({ response, refetch }: any) {
             projectIdentifier,
             module,
             environmentIdentifier: get(row, 'environment.identifier', ''),
-            sectionId: CDC_ENVIRONMENT_DASHBOARD_NG
-              ? EnvironmentDetailsTab.SUMMARY
-              : EnvironmentDetailsTab.CONFIGURATION
+            sectionId:
+              CDC_ENVIRONMENT_DASHBOARD_NG && projectIdentifier
+                ? EnvironmentDetailsTab.SUMMARY
+                : EnvironmentDetailsTab.CONFIGURATION
           })
         )
       }}

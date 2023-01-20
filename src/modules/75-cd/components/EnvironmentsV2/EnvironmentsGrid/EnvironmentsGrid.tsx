@@ -70,7 +70,10 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
         projectIdentifier,
         module,
         environmentIdentifier: defaultTo(id, ''),
-        sectionId: CDC_ENVIRONMENT_DASHBOARD_NG ? EnvironmentDetailsTab.SUMMARY : EnvironmentDetailsTab.CONFIGURATION
+        sectionId:
+          CDC_ENVIRONMENT_DASHBOARD_NG && projectIdentifier
+            ? EnvironmentDetailsTab.SUMMARY
+            : EnvironmentDetailsTab.CONFIGURATION
       })
     )
   }
