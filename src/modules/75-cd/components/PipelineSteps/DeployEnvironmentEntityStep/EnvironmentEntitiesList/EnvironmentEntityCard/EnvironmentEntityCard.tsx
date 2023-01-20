@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { Collapse, Divider } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
@@ -24,7 +24,7 @@ import {
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import type { NGEnvironmentInfoConfig, ServiceSpec } from 'services/cd-ng'
+import type { NGEnvironmentInfoConfig } from 'services/cd-ng'
 
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -33,7 +33,6 @@ import RbacButton from '@rbac/components/Button/Button'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
-import { getStepTypeByDeploymentType } from '@pipeline/utils/stageHelpers'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import { getIdentifierFromName } from '@common/utils/StringUtils'
@@ -42,15 +41,18 @@ import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
   EnvironmentData
-} from '../types'
-import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
-import DeployCluster from '../DeployCluster/DeployCluster'
+} from '../../types'
+import DeployInfrastructure from '../../DeployInfrastructure/DeployInfrastructure'
+import DeployCluster from '../../DeployCluster/DeployCluster'
 import {
   InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
-} from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
+} from '../../components/InlineEntityFilters/InlineEntityFiltersUtils'
+import { EnvironmentInputs } from './EnvironmentInputs'
+import ServiceOverrideInputs from './ServiceOverrideInputs'
+import { getToggleTextStringKey } from './EnvironmentEntityCardUtils'
 
-import css from './EnvironmentEntitiesList.module.scss'
+import css from '../EnvironmentEntitiesList.module.scss'
 
 export interface EnvironmentEntityCardProps extends EnvironmentData, Required<DeployEnvironmentEntityCustomStepProps> {
   readonly: boolean
@@ -61,7 +63,7 @@ export interface EnvironmentEntityCardProps extends EnvironmentData, Required<De
 }
 
 const getScopedRefUsingIdentifier = (
-  values: any,
+  values: DeployEnvironmentEntityFormState,
   environment: NGEnvironmentInfoConfig & {
     yaml: string
   }
@@ -72,16 +74,18 @@ const getScopedRefUsingIdentifier = (
   }
   return get(values, 'environments', []).find(
     (env: SelectOption) => getIdentifierFromName(env.label) === environment?.identifier
-  )?.value
+  )?.value as string
 }
 
 export function EnvironmentEntityCard({
   environment,
   environmentInputs,
+  serviceOverrideInputs,
   readonly,
   allowableTypes,
   onEditClick,
   onDeleteClick,
+  serviceIdentifiers,
   initialValues,
   stageIdentifier,
   deploymentType,
@@ -101,7 +105,15 @@ export function EnvironmentEntityCard({
     }
   }
 
+  const showEnvironmentInputs = !isNil(environmentInputs)
+  const showServiceOverrideInputs = !isEmpty(serviceOverrideInputs[scopedEnvRef])
+
   const [showInputs, setShowInputs] = useState(false)
+  const toggleText = useMemo(
+    () => getString(getToggleTextStringKey(showInputs, showEnvironmentInputs, showServiceOverrideInputs)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [showInputs, showEnvironmentInputs, showServiceOverrideInputs]
+  )
 
   function toggle(): void {
     setShowInputs(show => !show)
@@ -157,64 +169,37 @@ export function EnvironmentEntityCard({
         </Container>
       </Layout.Horizontal>
 
-      {environmentInputs ? (
+      {showEnvironmentInputs || showServiceOverrideInputs ? (
         <>
           <Container flex={{ justifyContent: 'center' }}>
             <Button
               icon={showInputs ? 'chevron-up' : 'chevron-down'}
               data-testid="toggle-environment-inputs"
-              text={getString(
-                showInputs
-                  ? 'cd.pipelineSteps.environmentTab.hideEnvironmentInputs'
-                  : 'cd.pipelineSteps.environmentTab.viewEnvironmentInputs'
-              )}
+              text={toggleText}
               variation={ButtonVariation.LINK}
               size={ButtonSize.SMALL}
               onClick={toggle}
             />
           </Container>
           <Collapse keepChildrenMounted={false} isOpen={showInputs}>
-            {!isEmpty(environmentInputs.variables) && (
-              <Container border={{ top: true }} margin={{ top: 'medium' }} padding={{ top: 'large' }}>
-                <Text color={Color.GREY_800} font={{ size: 'normal', weight: 'bold' }} margin={{ bottom: 'medium' }}>
-                  {getString('common.environmentInputs')}
-                </Text>
-                <StepWidget<ServiceSpec>
-                  factory={factory}
-                  initialValues={values.environmentInputs?.[scopedEnvRef] || {}}
-                  allowableTypes={allowableTypes}
-                  template={environmentInputs}
-                  type={getStepTypeByDeploymentType(deploymentType)}
-                  stepViewType={StepViewType.TemplateUsage}
-                  path={`environmentInputs.['${scopedEnvRef}']`}
-                  readonly={readonly}
-                  customStepProps={{
-                    stageIdentifier
-                  }}
-                />
-              </Container>
-            )}
+            <EnvironmentInputs
+              environmentRef={scopedEnvRef}
+              environmentInputs={environmentInputs}
+              allowableTypes={allowableTypes}
+              deploymentType={deploymentType}
+              stageIdentifier={stageIdentifier}
+              readonly={readonly}
+            />
 
-            {!isEmpty(environmentInputs.overrides) && (
-              <Container border={{ top: true }} margin={{ top: 'medium' }} padding={{ top: 'large' }}>
-                <Text color={Color.GREY_800} font={{ size: 'normal', weight: 'bold' }} margin={{ bottom: 'medium' }}>
-                  {getString('common.environmentOverrides')}
-                </Text>
-                <StepWidget<ServiceSpec>
-                  factory={factory}
-                  initialValues={values.environmentInputs?.[scopedEnvRef]?.overrides || {}}
-                  allowableTypes={allowableTypes}
-                  template={environmentInputs.overrides}
-                  type={getStepTypeByDeploymentType(deploymentType)}
-                  stepViewType={StepViewType.TemplateUsage}
-                  path={`environmentInputs.['${scopedEnvRef}'].overrides`}
-                  readonly={readonly}
-                  customStepProps={{
-                    stageIdentifier
-                  }}
-                />
-              </Container>
-            )}
+            <ServiceOverrideInputs
+              environmentRef={scopedEnvRef}
+              serviceIdentifiers={serviceIdentifiers}
+              serviceOverrideInputs={serviceOverrideInputs}
+              allowableTypes={allowableTypes}
+              deploymentType={deploymentType}
+              stageIdentifier={stageIdentifier}
+              readonly={readonly}
+            />
           </Collapse>
         </>
       ) : null}

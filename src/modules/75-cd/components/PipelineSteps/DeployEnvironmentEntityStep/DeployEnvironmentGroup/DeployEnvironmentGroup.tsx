@@ -91,6 +91,7 @@ export default function DeployEnvironmentGroup({
   initialValues,
   readonly,
   allowableTypes,
+  serviceIdentifiers,
   stageIdentifier,
   deploymentType,
   customDeploymentRef,
@@ -286,6 +287,7 @@ export default function DeployEnvironmentGroup({
             allowableTypes={allowableTypes}
             onEnvironmentGroupEntityUpdate={onEnvironmentGroupEntityUpdate}
             onRemoveEnvironmentGroupFromList={onRemoveEnvironmentGroupFromList}
+            serviceIdentifiers={serviceIdentifiers}
             initialValues={initialValues}
             stageIdentifier={stageIdentifier}
             deploymentType={deploymentType}
@@ -316,6 +318,7 @@ export default function DeployEnvironmentGroup({
                   allowableTypes={allowableTypes}
                   isMultiEnvironment
                   isUnderEnvGroup
+                  serviceIdentifiers={serviceIdentifiers}
                   stageIdentifier={stageIdentifier}
                   deploymentType={deploymentType}
                   customDeploymentRef={customDeploymentRef}
