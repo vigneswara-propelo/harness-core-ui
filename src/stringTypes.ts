@@ -8453,6 +8453,8 @@ export interface StringsMap {
   'sto.stepField.tool.javaBinaries': string
   'sto.stepField.tool.javaLibraries': string
   'sto.stepField.tool.port': string
+  'sto.stepField.tool.projectName': string
+  'sto.stepField.tool.teamName': string
   'sto.stepField.toolInclude': string
   'sto.stoExemption': string
   'sto.targets.testTargets': string

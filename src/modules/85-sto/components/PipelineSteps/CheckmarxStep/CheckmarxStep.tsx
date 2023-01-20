@@ -15,59 +15,56 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
-import { AquatrivyStepBaseWithRef } from './AquatrivyStepBase'
-import { AquatrivyStepInputSet } from './AquatrivyStepInputSet'
-import { AquatrivyStepVariables, AquatrivyStepVariablesProps } from './AquatrivyStepVariables'
-import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './AquatrivyStepFunctionConfigs'
+import { CheckmarxStepBaseWithRef } from './CheckmarxStepBase'
+import { CheckmarxStepInputSet } from './CheckmarxStepInputSet'
+import { CheckmarxStepVariables, CheckmarxStepVariablesProps } from './CheckmarxStepVariables'
+import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './CheckmarxStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 
-export type AquatrivyStepData = SecurityStepData<SecurityStepSpec>
-export interface AquatrivyStepProps {
-  initialValues: AquatrivyStepData
-  template?: AquatrivyStepData
+export type CheckmarxStepData = SecurityStepData<SecurityStepSpec>
+export interface CheckmarxStepProps {
+  initialValues: CheckmarxStepData
+  template?: CheckmarxStepData
   path?: string
   isNewStep?: boolean
   readonly?: boolean
   stepViewType: StepViewType
-  onUpdate?: (data: AquatrivyStepData) => void
-  onChange?: (data: AquatrivyStepData) => void
+  onUpdate?: (data: CheckmarxStepData) => void
+  onChange?: (data: CheckmarxStepData) => void
   allowableTypes: AllowedTypes
   formik?: any
 }
 
-export class AquatrivyStep extends PipelineStep<AquatrivyStepData> {
+export class CheckmarxStep extends PipelineStep<CheckmarxStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.Aquatrivy
-  protected stepName = 'Configure Aqua Trivy'
-  protected stepIcon: IconName = 'AuqaTrivy'
-  protected stepDescription: keyof StringsMap = 'sto.stepDescription.AquaTrivy'
+  protected type = StepType.Checkmarx
+  protected stepName = 'Configure Checkmarx'
+  protected stepIcon: IconName = 'Checkmarx'
+  protected stepDescription: keyof StringsMap = 'sto.stepDescription.Checkmarx'
   protected stepPaletteVisible = false
 
-  protected defaultValues: AquatrivyStepData = {
+  protected defaultValues: CheckmarxStepData = {
     identifier: '',
-    type: StepType.Aquatrivy as string,
+    type: StepType.Checkmarx as string,
     spec: {
-      privileged: true,
       mode: 'orchestration',
       config: 'default',
       target: {
-        type: 'container',
+        type: 'repository',
         name: '',
         variant: '',
         workspace: '/harness'
       },
-      image: {
-        type: 'docker_v2',
-        name: '',
+      auth: {
         domain: '',
         access_id: '',
-        access_token: '<+secrets.getValue("your_aquatrivy_token_secret")>',
-        region: ''
+        access_token: '<+secrets.getValue("your_checkmarx_token_secret")>',
+        ssl: true
       },
       advanced: {
         log: {
@@ -81,7 +78,7 @@ export class AquatrivyStep extends PipelineStep<AquatrivyStepData> {
   }
 
   /* istanbul ignore next */
-  processFormData(data: AquatrivyStepData): AquatrivyStepData {
+  processFormData(data: CheckmarxStepData): CheckmarxStepData {
     return getFormValuesInCorrectFormat(data, transformValuesFieldsConfig(data))
   }
 
@@ -90,15 +87,15 @@ export class AquatrivyStep extends PipelineStep<AquatrivyStepData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<AquatrivyStepData>): FormikErrors<AquatrivyStepData> {
+  }: ValidateInputSetProps<CheckmarxStepData>): FormikErrors<CheckmarxStepData> {
     if (getString) {
       return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(data), { getString }, viewType)
     }
-
+    /* istanbul ignore next */
     return {}
   }
 
-  renderStep(props: StepProps<AquatrivyStepData>): JSX.Element {
+  renderStep(props: StepProps<CheckmarxStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -116,9 +113,10 @@ export class AquatrivyStep extends PipelineStep<AquatrivyStepData> {
       case StepViewType.InputSet:
       case StepViewType.DeploymentForm:
         return (
-          <AquatrivyStepInputSet
+          <CheckmarxStepInputSet
             initialValues={initialValues}
             template={inputSetData?.template}
+            /* istanbul ignore next */
             path={inputSetData?.path || ''}
             readonly={!!inputSetData?.readonly}
             stepViewType={stepViewType}
@@ -130,8 +128,8 @@ export class AquatrivyStep extends PipelineStep<AquatrivyStepData> {
 
       case StepViewType.InputVariable:
         return (
-          <AquatrivyStepVariables
-            {...(customStepProps as AquatrivyStepVariablesProps)}
+          <CheckmarxStepVariables
+            {...(customStepProps as CheckmarxStepVariablesProps)}
             initialValues={initialValues}
             onUpdate={onUpdate}
           />
@@ -139,10 +137,11 @@ export class AquatrivyStep extends PipelineStep<AquatrivyStepData> {
     }
 
     return (
-      <AquatrivyStepBaseWithRef
+      <CheckmarxStepBaseWithRef
         initialValues={initialValues}
         allowableTypes={allowableTypes}
         onChange={onChange}
+        /* istanbul ignore next */
         stepViewType={stepViewType || StepViewType.Edit}
         onUpdate={onUpdate}
         readonly={readonly}

@@ -104,7 +104,7 @@ const specSettings = 'spec.settings'
 const specRunAsUser = 'spec.runAsUser'
 
 export const authFieldsTransformConfig = (data: SecurityStepData<SecurityStepSpec>) =>
-  data.spec.mode === 'orchestration'
+  data.spec.mode !== 'ingestion'
     ? [
         {
           name: 'spec.auth.access_token',
@@ -467,11 +467,12 @@ export const inputSetFields = (
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.config) && {
-          [getInputSetFieldName(prefix, 'spec.mode')]: {
+          [getInputSetFieldName(prefix, 'spec.config')]: {
             label: 'sto.stepField.config'
           }
         }),
 
+        // target fields
         ...(shouldRenderRunTimeInputView(template?.spec.target.name) && {
           [getInputSetFieldName(prefix, 'spec.target.name')]: {
             label: 'sto.stepField.target.name'
@@ -493,12 +494,14 @@ export const inputSetFields = (
           }
         }),
 
+        // Ingestion fields
         ...(shouldRenderRunTimeInputView(template?.spec.ingestion?.file) && {
           [getInputSetFieldName(prefix, 'spec.ingestion.file')]: {
             label: 'sto.stepField.ingestion.file'
           }
         }),
 
+        // Image fields
         ...(shouldRenderRunTimeInputView(template?.spec.image?.name) && {
           [getInputSetFieldName(prefix, 'spec.image.name')]: {
             label: 'imageNameLabel'
@@ -524,7 +527,13 @@ export const inputSetFields = (
             label: 'sto.stepField.image.region'
           }
         }),
+        ...(shouldRenderRunTimeInputView(template?.spec.image?.type) && {
+          [getInputSetFieldName(prefix, 'spec.image.type')]: {
+            label: 'sto.stepField.image.type'
+          }
+        }),
 
+        // Instance fields
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.domain) && {
           [getInputSetFieldName(prefix, 'spec.instance.domain')]: {
             label: 'sto.stepField.instance.domain'
@@ -559,8 +568,7 @@ export const inputSetFields = (
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.java?.binaries) && {
           [getInputSetFieldName(prefix, 'spec.tool.java.binaries')]: {
-            label: 'sto.stepField.tool.javaBinaries',
-            fieldType: 'checkbox'
+            label: 'sto.stepField.tool.javaBinaries'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.context) && {
@@ -573,27 +581,46 @@ export const inputSetFields = (
             label: 'sto.stepField.tool.port'
           }
         }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.image_name) && {
+          [getInputSetFieldName(prefix, 'spec.tool.image_name')]: {
+            label: 'sto.stepField.tool.imageName'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_name) && {
+          [getInputSetFieldName(prefix, 'spec.tool.project_name')]: {
+            label: 'sto.stepField.tool.projectName'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.team_name) && {
+          [getInputSetFieldName(prefix, 'spec.tool.team_name')]: {
+            label: 'sto.stepField.tool.teamName'
+          }
+        }),
 
         // Auth fields
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.access_token) && {
-          [getInputSetFieldName(prefix, 'spec.auth.context')]: {
+          [getInputSetFieldName(prefix, 'spec.auth.access_token')]: {
             label: 'sto.stepField.authToken'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.domain) && {
-          [getInputSetFieldName(prefix, 'spec.auth.port')]: {
+          [getInputSetFieldName(prefix, 'spec.auth.domain')]: {
             label: 'sto.stepField.authDomain'
           }
         }),
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.access_id) && {
+          [getInputSetFieldName(prefix, 'spec.auth.access_id')]: {
+            label: 'sto.stepField.authAccessId'
+          }
+        }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.ssl) && {
-          [getInputSetFieldName(prefix, 'spec.auth.context')]: {
+          [getInputSetFieldName(prefix, 'spec.auth.ssl')]: {
             label: 'sto.stepField.authSsl',
             fieldType: 'checkbox'
           }
         }),
 
         // Advanced fields
-
         ...(shouldRenderRunTimeInputView(template?.spec.advanced?.log?.level) && {
           [getInputSetFieldName(prefix, 'spec.advanced.log.level')]: {
             label: 'sto.stepField.advanced.logLevel'

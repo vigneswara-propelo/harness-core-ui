@@ -61,6 +61,8 @@ type Tool = {
   exclude?: string
   context?: string
   image_name?: string
+  project_name?: string
+  team_name?: string
   port?: number
   java?: {
     libraries?: string

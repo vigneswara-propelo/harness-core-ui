@@ -18,50 +18,45 @@ import {
   ingestionFieldValidationConfig
 } from '../constants'
 import type { Field, InputSetViewValidateFieldsConfig } from '../types'
-import type { SonarqubeStepData } from './SonarqubeStep'
+import type { CheckmarxStepData } from './CheckmarxStep'
 
-const toolFieldsTransformConfig = (data: SonarqubeStepData) =>
-  data.spec.mode === 'orchestration'
+const toolFieldsTransformConfig = (data: CheckmarxStepData) =>
+  data.spec.mode !== 'ingestion'
     ? [
         {
-          name: 'spec.tool.include',
+          name: 'spec.tool.team_name',
           type: TransformValuesTypes.Text
         },
         {
-          name: 'spec.tool.java.libraries',
-          type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.tool.java.binaries',
+          name: 'spec.tool.project_name',
           type: TransformValuesTypes.Text
         }
       ]
     : []
 
-const toolFieldsValidationConfig = (data: SonarqubeStepData) =>
-  data.spec.mode === 'orchestration'
+const toolFieldsValidationConfig = (data: CheckmarxStepData) =>
+  data.spec.mode !== 'ingestion'
     ? [
         {
-          name: 'spec.tool.include',
+          name: 'spec.tool.team_name',
           type: ValidationFieldTypes.Text,
           label: 'sto.stepField.toolInclude'
         },
         {
-          name: 'spec.tool.java.libraries',
+          name: 'spec.tool.project_name',
           type: ValidationFieldTypes.Text,
           label: 'sto.stepField.tool.javaLibraries'
-        },
-        {
-          name: 'spec.tool.java.binaries',
-          type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.tool.javaBinaries'
         }
       ]
     : []
 
-const extraAuthFieldsTransformConfig = (data: SonarqubeStepData) =>
+const extraAuthFieldsTransformConfig = (data: CheckmarxStepData) =>
   data.spec.mode !== 'ingestion'
     ? [
+        {
+          name: 'spec.auth.access_id',
+          type: TransformValuesTypes.Text
+        },
         {
           name: 'spec.auth.domain',
           type: TransformValuesTypes.Text
@@ -73,13 +68,20 @@ const extraAuthFieldsTransformConfig = (data: SonarqubeStepData) =>
       ]
     : []
 
-const extraAuthFieldsValidationConfig = (data: SonarqubeStepData) =>
+const extraAuthFieldsValidationConfig = (data: CheckmarxStepData) =>
   data.spec.mode !== 'ingestion'
     ? [
         {
+          name: 'spec.auth.access_id',
+          type: ValidationFieldTypes.Text,
+          label: 'sto.stepField.authAccessId',
+          isRequired: true
+        },
+        {
           name: 'spec.auth.domain',
           type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.authDomain'
+          label: 'sto.stepField.authDomain',
+          isRequired: true
         },
         {
           name: 'spec.auth.ssl',
@@ -89,7 +91,7 @@ const extraAuthFieldsValidationConfig = (data: SonarqubeStepData) =>
       ]
     : []
 
-export const transformValuesFieldsConfig = (data: SonarqubeStepData): Field[] => {
+export const transformValuesFieldsConfig = (data: CheckmarxStepData): Field[] => {
   const transformValuesFieldsConfigValues = [
     ...commonFieldsTransformConfig(data),
     ...authFieldsTransformConfig(data),
@@ -100,7 +102,7 @@ export const transformValuesFieldsConfig = (data: SonarqubeStepData): Field[] =>
   return transformValuesFieldsConfigValues
 }
 
-export const editViewValidateFieldsConfig = (data: SonarqubeStepData) => {
+export const editViewValidateFieldsConfig = (data: CheckmarxStepData) => {
   const customAuthDomainConfig = authFieldsValidationConfig(data)
 
   customAuthDomainConfig.map(obj => {
@@ -123,7 +125,7 @@ export const editViewValidateFieldsConfig = (data: SonarqubeStepData) => {
   return editViewValidationConfig
 }
 
-export function getInputSetViewValidateFieldsConfig(data: SonarqubeStepData): InputSetViewValidateFieldsConfig[] {
+export function getInputSetViewValidateFieldsConfig(data: CheckmarxStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
     ...commonFieldsValidationConfig,
     ...authFieldsValidationConfig(data),

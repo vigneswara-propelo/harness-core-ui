@@ -165,7 +165,8 @@ export enum StepType {
   AsgCanaryDeploy = 'AsgCanaryDeploy',
   AsgRollingRollback = 'AsgRollingRollback',
   AsgRollingDeploy = 'AsgRollingDeploy',
-  PrismaCloud = 'PrismaCloud'
+  PrismaCloud = 'PrismaCloud',
+  Checkmarx = 'Checkmarx'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

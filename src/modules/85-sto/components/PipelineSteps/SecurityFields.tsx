@@ -184,9 +184,6 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
         enableFields={{
-          'spec.auth.access_token': {
-            label: 'sto.stepField.authToken'
-          },
           'spec.auth.domain': {
             label: 'sto.stepField.authDomain',
             hide: !showFields?.domain
@@ -201,6 +198,9 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
           'spec.auth.access_id': {
             label: 'sto.stepField.authAccessId',
             hide: !showFields?.access_id
+          },
+          'spec.auth.access_token': {
+            label: 'sto.stepField.authToken'
           }
         }}
       />

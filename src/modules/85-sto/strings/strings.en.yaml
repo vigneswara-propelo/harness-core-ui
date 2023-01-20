@@ -37,6 +37,8 @@ stepField:
     context: Tool Context Name
     port: Tool Port
     imageName: Tool Image Name
+    teamName: Tool Team Name
+    projectName: Tool Project Name
   image:
     type: Image Type
     domain: Image Domain
