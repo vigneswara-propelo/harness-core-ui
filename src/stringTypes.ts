@@ -925,6 +925,7 @@ export interface StringsMap {
   'common.singularLabels.repositoryCertificate': string
   'common.singularLabels.scan': string
   'common.singularLabels.testTarget': string
+  'common.singularLabels.ticket': string
   'common.skip': string
   'common.slack': string
   'common.sloDowntimeLabel': string
@@ -8455,6 +8456,7 @@ export interface StringsMap {
   'sto.stepField.toolInclude': string
   'sto.stoExemption': string
   'sto.targets.testTargets': string
+  'sto.tickets': string
   'sto.zeroNorthImagePlaceholder': string
   /**
    * @deprecated migrate this string to module level file

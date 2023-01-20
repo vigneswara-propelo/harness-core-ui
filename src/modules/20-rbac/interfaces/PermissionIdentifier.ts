@@ -161,6 +161,9 @@ export enum PermissionIdentifier {
   VIEW_STO_EXEMPTION = 'sto_exemption_view',
   CREATE_STO_EXEMPTION = 'sto_exemption_create',
   APPROVE_STO_EXEMPTION = 'sto_exemption_approve',
+  VIEW_STO_TICKET = 'sto_ticket_view',
+  EDIT_STO_TICKET = 'sto_ticket_edit',
+  DELETE_STO_TICKET = 'sto_ticket_delete',
 
   // Default Settings
   VIEW_CORE_SETTING = 'core_setting_view',

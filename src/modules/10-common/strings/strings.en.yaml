@@ -1151,6 +1151,7 @@ singularLabels:
   testTarget: Test Target
   scan: Scan
   issue: Issue
+  ticket: Ticket
 pipelineExecution: Pipeline Executions
 platformServiceVersions: Platform Service Versions
 executionTab:
