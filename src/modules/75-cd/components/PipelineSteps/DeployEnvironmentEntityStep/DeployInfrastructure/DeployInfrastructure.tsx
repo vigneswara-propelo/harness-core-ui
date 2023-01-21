@@ -57,9 +57,7 @@ import { useGetInfrastructuresData } from './useGetInfrastructuresData'
 import css from './DeployInfrastructure.module.scss'
 
 interface DeployInfrastructureProps
-  extends Required<
-    Omit<DeployEnvironmentEntityCustomStepProps, 'gitOpsEnabled' | 'stageIdentifier' | 'serviceIdentifiers'>
-  > {
+  extends Required<Omit<DeployEnvironmentEntityCustomStepProps, 'gitOpsEnabled' | 'stageIdentifier'>> {
   initialValues: DeployEnvironmentEntityFormState
   readonly: boolean
   allowableTypes: AllowedTypes

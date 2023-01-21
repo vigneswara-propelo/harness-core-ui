@@ -161,7 +161,7 @@ export default function DeployServiceEntityWidget({
   const [allServices, setAllServices] = useState(
     setupModeType === setupMode.DIFFERENT ? getAllFixedServices(initialValues) : ['']
   )
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+  const { MULTI_SERVICE_INFRA, CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const {
     state: {
       selectionState: { selectedStageId }
@@ -622,13 +622,15 @@ export default function DeployServiceEntityWidget({
                           />
                         ) : null}
                       </Layout.Horizontal>
-                      <Toggle
-                        className={css.serviceActionWrapper}
-                        checked={isMultiSvc}
-                        onToggle={getMultiSvcToggleHandler(values)}
-                        label={getString('cd.pipelineSteps.serviceTab.multiServicesText')}
-                        tooltipId={'multiServiceToggle'}
-                      />
+                      {MULTI_SERVICE_INFRA ? (
+                        <Toggle
+                          className={css.serviceActionWrapper}
+                          checked={isMultiSvc}
+                          onToggle={getMultiSvcToggleHandler(values)}
+                          label={getString('cd.pipelineSteps.serviceTab.multiServicesText')}
+                          tooltipId={'multiServiceToggle'}
+                        />
+                      ) : null}
                     </Layout.Horizontal>
 
                     {isMultiSvc ? (

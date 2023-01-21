@@ -9,11 +9,7 @@ import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '
 import { defaultTo, set } from 'lodash-es'
 import type { EnvironmentYamlV2, FilterYaml } from 'services/cd-ng'
 import { getIdentifierFromScopedRef, isValueRuntimeInput } from '@common/utils/utils'
-import type {
-  DeployEnvironmentEntityConfig,
-  DeployEnvironmentEntityCustomStepProps,
-  DeployEnvironmentEntityFormState
-} from '../types'
+import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../types'
 
 export function processFiltersInitialValues(
   filters?: FilterYaml[]
@@ -23,10 +19,9 @@ export function processFiltersInitialValues(
 
 export function processSingleEnvironmentInitialValues(
   environment: DeployEnvironmentEntityConfig['environment'],
-  customStepProps: DeployEnvironmentEntityCustomStepProps
+  gitOpsEnabled: boolean
 ): DeployEnvironmentEntityFormState {
   const formState: DeployEnvironmentEntityFormState = {}
-  const { gitOpsEnabled, serviceIdentifiers } = customStepProps
 
   if (environment) {
     if (getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.RUNTIME) {
@@ -41,18 +36,6 @@ export function processSingleEnvironmentInitialValues(
         'environmentInputs',
         getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED
           ? { [environment.environmentRef]: environment?.environmentInputs }
-          : {}
-      )
-
-      set(
-        formState,
-        'serviceOverrideInputs',
-        getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED && serviceIdentifiers?.length
-          ? {
-              [environment.environmentRef]: {
-                [serviceIdentifiers?.[0] as string]: environment?.serviceOverrideInputs
-              }
-            }
           : {}
       )
 
@@ -139,10 +122,9 @@ export function processSingleEnvironmentGitOpsInitialValues(
 export function getEnvironmentsFormStateFromInitialValues(
   environments?: EnvironmentYamlV2[],
   deployToAll?: boolean,
-  customStepProps: DeployEnvironmentEntityCustomStepProps = {}
+  gitOpsEnabled?: boolean
 ): DeployEnvironmentEntityFormState {
   const formState = {}
-  const { gitOpsEnabled } = customStepProps
 
   if (getMultiTypeFromValue(environments as unknown as string) !== MultiTypeInputType.FIXED) {
     if (deployToAll !== true) {
@@ -208,19 +190,19 @@ export function getEnvironmentsFormStateFromInitialValues(
 
 export function processMultiEnvironmentInitialValues(
   initialValues: DeployEnvironmentEntityConfig,
-  customStepProps: DeployEnvironmentEntityCustomStepProps
+  gitOpsEnabled: boolean
 ): DeployEnvironmentEntityFormState {
   const environmentValues = getEnvironmentsFormStateFromInitialValues(
     initialValues.environments?.values,
     false,
-    customStepProps
+    gitOpsEnabled
   )
   const environmentFilters = processFiltersInitialValues((initialValues.environments as any)?.filters)
 
   return {
     parallel: defaultTo(initialValues.environments?.metadata?.parallel, true),
     category: 'multi',
-    ...getEnvironmentsFormStateFromInitialValues(initialValues.environments?.values, false, customStepProps),
+    ...getEnvironmentsFormStateFromInitialValues(initialValues.environments?.values, false, gitOpsEnabled),
     ...(environmentFilters.length &&
       (isValueRuntimeInput(environmentValues.environments) || !initialValues.environments?.values) && {
         environmentFilters: {
@@ -232,7 +214,7 @@ export function processMultiEnvironmentInitialValues(
 
 export function processEnvironmentGroupInitialValues(
   initialValues: DeployEnvironmentEntityConfig,
-  customStepProps: DeployEnvironmentEntityCustomStepProps
+  gitOpsEnabled: boolean
 ): DeployEnvironmentEntityFormState {
   let formState: DeployEnvironmentEntityFormState = {}
 
@@ -248,7 +230,7 @@ export function processEnvironmentGroupInitialValues(
         ...getEnvironmentsFormStateFromInitialValues(
           initialValues.environmentGroup.environments,
           initialValues.environmentGroup.deployToAll,
-          customStepProps
+          gitOpsEnabled
         )
       }
     }

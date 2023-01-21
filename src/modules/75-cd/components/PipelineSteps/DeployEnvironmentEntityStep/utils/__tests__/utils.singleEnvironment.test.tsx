@@ -37,7 +37,7 @@ describe('process single environment initial values', () => {
           }
         ]
       },
-      { gitOpsEnabled: false }
+      false
     )
     expect(output).toEqual({
       category: 'single',
@@ -53,7 +53,6 @@ describe('process single environment initial values', () => {
           ]
         }
       },
-      serviceOverrideInputs: {},
       infrastructure: 'Infra_1',
       infrastructureInputs: {
         Env_1: {
@@ -75,7 +74,7 @@ describe('process single environment initial values', () => {
         environmentRef: 'Env_1',
         infrastructureDefinitions: '<+input>' as any
       },
-      { gitOpsEnabled: false }
+      false
     )
     expect(output).toEqual({
       category: 'single',
@@ -83,7 +82,6 @@ describe('process single environment initial values', () => {
       environmentInputs: {
         Env_1: undefined
       },
-      serviceOverrideInputs: {},
       infrastructure: '<+input>',
       infrastructureInputs: {}
     } as DeployEnvironmentEntityFormState)
@@ -95,7 +93,7 @@ describe('process single environment initial values', () => {
         environmentRef: '<+input>',
         infrastructureDefinitions: '<+input>' as any
       },
-      { gitOpsEnabled: false }
+      false
     )
     expect(output).toEqual({
       category: 'single',
@@ -113,13 +111,12 @@ describe('process single environment initial values', () => {
           }
         ]
       },
-      { gitOpsEnabled: true }
+      true
     )
     expect(output).toEqual({
       category: 'single',
       environment: 'Env_1',
       environmentInputs: {},
-      serviceOverrideInputs: {},
       cluster: 'Cluster_1'
     } as DeployEnvironmentEntityFormState)
   })
@@ -130,7 +127,7 @@ describe('process single environment initial values', () => {
         environmentRef: 'Env_1',
         gitOpsClusters: '<+input>' as any
       },
-      { gitOpsEnabled: true }
+      true
     )
     expect(output).toEqual({
       category: 'single',
@@ -138,7 +135,6 @@ describe('process single environment initial values', () => {
       environmentInputs: {
         Env_1: undefined
       },
-      serviceOverrideInputs: {},
       cluster: '<+input>'
     } as DeployEnvironmentEntityFormState)
   })
@@ -149,7 +145,7 @@ describe('process single environment initial values', () => {
         environmentRef: '<+input>',
         gitOpsClusters: '<+input>' as any
       },
-      { gitOpsEnabled: true }
+      true
     )
     expect(output).toEqual({
       category: 'single',
@@ -158,7 +154,7 @@ describe('process single environment initial values', () => {
   })
 
   test('no env', () => {
-    const output = processSingleEnvironmentInitialValues('' as any, { gitOpsEnabled: false })
+    const output = processSingleEnvironmentInitialValues('' as any, false)
     expect(output).toEqual({
       category: 'single'
     } as DeployEnvironmentEntityFormState)
@@ -183,7 +179,7 @@ describe('process single environment form values', () => {
           }
         }
       },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -232,7 +228,7 @@ describe('process single environment form values', () => {
           }
         }
       },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -286,7 +282,7 @@ describe('process single environment form values', () => {
           }
         }
       },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -316,7 +312,7 @@ describe('process single environment form values', () => {
         },
         cluster: 'Cluster_1'
       },
-      { gitOpsEnabled: true }
+      true
     )
 
     expect(output).toEqual({
@@ -351,7 +347,7 @@ describe('process single environment form values', () => {
         },
         cluster: '<+input>'
       },
-      { gitOpsEnabled: true }
+      true
     )
 
     expect(output).toEqual({
@@ -393,7 +389,7 @@ describe('process single environment form values', () => {
           }
         }
       },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -425,7 +421,7 @@ describe('process single environment form values', () => {
         },
         cluster: 'Cluster_1'
       },
-      { gitOpsEnabled: true }
+      true
     )
 
     expect(output).toEqual({
@@ -439,7 +435,7 @@ describe('process single environment form values', () => {
   })
 
   test('no environment in form state', () => {
-    const output = processSingleEnvironmentFormValues({}, { gitOpsEnabled: false })
+    const output = processSingleEnvironmentFormValues({}, false)
 
     expect(output).toEqual({})
   })

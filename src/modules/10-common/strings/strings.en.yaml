@@ -1088,7 +1088,6 @@ directly: Directly
 noAvailableTags: No available tags
 loadBalancer: Load Balancer
 environmentInputs: Environment inputs
-serviceOverrideInputs: Service Override inputs
 infrastructures: Infrastructures
 infrastructureInputs: Infrastructure inputs
 environmentPrefix: 'Environment: {{ name }}'

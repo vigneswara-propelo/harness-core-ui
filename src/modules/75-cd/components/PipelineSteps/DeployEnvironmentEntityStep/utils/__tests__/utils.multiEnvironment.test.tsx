@@ -16,7 +16,7 @@ import { getEnvironmentsFormValuesFromFormState, processMultiEnvironmentFormValu
 
 describe('process multi environment initial values', () => {
   test('parallel defaults to true', () => {
-    const output = processMultiEnvironmentInitialValues({}, { gitOpsEnabled: false })
+    const output = processMultiEnvironmentInitialValues({}, false)
     expect(output).toEqual({
       parallel: true,
       category: 'multi'
@@ -32,7 +32,7 @@ describe('process multi environment initial values', () => {
           }
         }
       },
-      { gitOpsEnabled: false }
+      false
     )
     expect(output).toEqual({
       parallel: false,
@@ -85,7 +85,7 @@ describe('get environments form state from initial values', () => {
         }
       ],
       false,
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -146,9 +146,7 @@ describe('get environments form state from initial values', () => {
   })
 
   test('environments as runtime value and GitOps disabled', () => {
-    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, false, {
-      gitOpsEnabled: false
-    })
+    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, false, false)
 
     expect(output).toEqual({
       environments: RUNTIME_INPUT_VALUE as any,
@@ -164,7 +162,7 @@ describe('get environments form state from initial values', () => {
      *    envGroupRef: EG_1
      *    deployToAll: true
      *    environments: RUNTIME_INPUT_VALUE */
-    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, true, { gitOpsEnabled: false })
+    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, true, false)
 
     expect(output).toEqual({
       environmentInputs: {},
@@ -202,7 +200,7 @@ describe('get environments form state from initial values', () => {
         }
       ],
       false,
-      { gitOpsEnabled: true }
+      true
     )
 
     expect(output).toEqual({
@@ -245,7 +243,7 @@ describe('get environments form state from initial values', () => {
   })
 
   test('environments as runtime value and GitOps enabled', () => {
-    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, false, { gitOpsEnabled: true })
+    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, false, true)
 
     expect(output).toEqual({
       environments: RUNTIME_INPUT_VALUE as any,
@@ -260,7 +258,7 @@ describe('get environments form state from initial values', () => {
      *    envGroupRef: EG_1
      *    deployToAll: true
      *    environments: RUNTIME_INPUT_VALUE */
-    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, true, { gitOpsEnabled: true })
+    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, true, true)
 
     expect(output).toEqual({
       environmentInputs: {},
@@ -277,7 +275,7 @@ describe('process multi environment form values', () => {
         parallel: false,
         environments: RUNTIME_INPUT_VALUE as any
       },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -295,7 +293,7 @@ describe('process multi environment form values', () => {
       {
         category: 'multi'
       },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -366,7 +364,7 @@ describe('get environments form values from form state', () => {
           }
         }
       },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual([
@@ -456,7 +454,7 @@ describe('get environments form values from form state', () => {
           ]
         }
       },
-      { gitOpsEnabled: true }
+      true
     )
 
     expect(output).toEqual([
@@ -495,7 +493,7 @@ describe('get environments form values from form state', () => {
   })
 
   test('environments are empty and GitOps disabled', () => {
-    const output = getEnvironmentsFormValuesFromFormState({}, { gitOpsEnabled: false })
+    const output = getEnvironmentsFormValuesFromFormState({}, false)
 
     expect(output).toEqual([])
   })

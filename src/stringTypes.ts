@@ -896,7 +896,6 @@ export interface StringsMap {
   'common.serviceId': string
   'common.serviceInputs': string
   'common.serviceName': string
-  'common.serviceOverrideInputs': string
   'common.serviceOverrides': string
   'common.servicePrefix': string
   'common.serviceReliabilityManagement': string
@@ -5222,9 +5221,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.environmentOrEnvGroupIsRequired': string
   'cd.pipelineSteps.environmentTab.environmentsAreRequired': string
   'cd.pipelineSteps.environmentTab.hideEnvironmentInputs': string
-  'cd.pipelineSteps.environmentTab.hideEnvironmentServiceOverrideInputs': string
   'cd.pipelineSteps.environmentTab.hideInfrastructureInputs': string
-  'cd.pipelineSteps.environmentTab.hideServiceOverrideInputs': string
   'cd.pipelineSteps.environmentTab.infrastructureIsRequired': string
   'cd.pipelineSteps.environmentTab.infrastructuresAreRequired': string
   'cd.pipelineSteps.environmentTab.multiEnvToggleText': string
@@ -5250,9 +5247,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.specifyYourInfrastructure': string
   'cd.pipelineSteps.environmentTab.specifyYourInfrastructures': string
   'cd.pipelineSteps.environmentTab.viewEnvironmentInputs': string
-  'cd.pipelineSteps.environmentTab.viewEnvironmentServiceOverrideInputs': string
   'cd.pipelineSteps.environmentTab.viewInfrastructureInputs': string
-  'cd.pipelineSteps.environmentTab.viewServiceOverrideInputs': string
   'cd.pipelineSteps.infraTab.clusterError': string
   'cd.pipelineSteps.infraTab.deploymentType': string
   'cd.pipelineSteps.infraTab.stageIsRequired': string

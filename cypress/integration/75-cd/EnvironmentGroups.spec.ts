@@ -1,3 +1,4 @@
+import { contains } from 'cypress/types/jquery'
 import {
   createEnvironmentGroupsCall,
   environmentGroupRoute,

@@ -49,7 +49,7 @@ describe('process environment group initial values', () => {
           ]
         }
       },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -111,7 +111,7 @@ describe('process environment group initial values', () => {
           environments: RUNTIME_INPUT_VALUE as any
         }
       },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -133,7 +133,7 @@ describe('process environment group initial values', () => {
           environments: RUNTIME_INPUT_VALUE as any
         }
       },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -150,7 +150,7 @@ describe('process environment group initial values', () => {
           envGroupRef: ''
         }
       },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -164,7 +164,7 @@ describe('process environment group form values', () => {
   test('env group is selected and environments are marked as runtime', () => {
     const output = processEnvironmentGroupFormValues(
       { category: 'group', parallel: false, environmentGroup: 'Env_Group_1', environments: RUNTIME_INPUT_VALUE as any },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -182,7 +182,7 @@ describe('process environment group form values', () => {
   test('env group is selected and all environments are selected', () => {
     const output = processEnvironmentGroupFormValues(
       { category: 'group', parallel: false, environmentGroup: 'Env_Group_1' },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -200,7 +200,7 @@ describe('process environment group form values', () => {
   test('env group is marked as runtime', () => {
     const output = processEnvironmentGroupFormValues(
       { category: 'group', parallel: true, environmentGroup: RUNTIME_INPUT_VALUE },
-      { gitOpsEnabled: false }
+      false
     )
 
     expect(output).toEqual({
@@ -216,7 +216,7 @@ describe('process environment group form values', () => {
   })
 
   test('env group is not selected', () => {
-    const output = processEnvironmentGroupFormValues({ category: 'group' }, { gitOpsEnabled: false })
+    const output = processEnvironmentGroupFormValues({ category: 'group' }, false)
 
     expect(output).toEqual({
       environmentGroup: {

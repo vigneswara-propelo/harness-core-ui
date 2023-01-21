@@ -40,7 +40,6 @@ describe('process initial values', () => {
       environmentInputs: {
         Env_1: undefined
       },
-      serviceOverrideInputs: {},
       infrastructure: 'Infra_1',
       infrastructureInputs: {
         Env_1: {

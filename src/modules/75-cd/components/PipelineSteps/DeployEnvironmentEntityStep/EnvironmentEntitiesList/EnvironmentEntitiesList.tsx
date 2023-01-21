@@ -20,7 +20,7 @@ import type {
   EnvironmentData
 } from '../types'
 import AddEditEnvironmentModal from '../../DeployInfrastructureStep/AddEditEnvironmentModal'
-import { EnvironmentEntityCard } from './EnvironmentEntityCard/EnvironmentEntityCard'
+import { EnvironmentEntityCard } from './EnvironmentEntityCard'
 
 import css from './EnvironmentEntitiesList.module.scss'
 
@@ -41,7 +41,6 @@ export default function EnvironmentEntitiesList({
   allowableTypes,
   onEnvironmentEntityUpdate,
   onRemoveEnvironmentFromList,
-  serviceIdentifiers,
   stageIdentifier,
   deploymentType,
   customDeploymentRef,
@@ -96,7 +95,6 @@ export default function EnvironmentEntitiesList({
               key={row.environment.identifier}
               environment={row.environment}
               environmentInputs={row.environmentInputs}
-              serviceOverrideInputs={row.serviceOverrideInputs}
               onDeleteClick={setEnvironmentToDelete}
               onEditClick={setEnvironmentToEdit}
               allowableTypes={allowableTypes}
@@ -106,7 +104,6 @@ export default function EnvironmentEntitiesList({
               deploymentType={deploymentType}
               customDeploymentRef={customDeploymentRef}
               initialValues={initialValues}
-              serviceIdentifiers={serviceIdentifiers}
             />
           )
         })}

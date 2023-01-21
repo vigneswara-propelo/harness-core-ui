@@ -38,7 +38,7 @@ export function EnvironmentGroupInputSetForm({
   allowableTypes
 }: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier'>): React.ReactElement | null {
   const { getString } = useStrings()
-  const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled, MULTI_SERVICE_INFRA: isMultiSvcInfraEnabled } = useFeatureFlags()
   const formik = useFormikContext<DeploymentStageConfig>()
   // This is the value of allValues
   const deploymentStageInputSet = get(formik?.values, path, {})
@@ -67,45 +67,68 @@ export function EnvironmentGroupInputSetForm({
     : deploymentStage?.environmentGroup?.envGroupRef
 
   return (
-    <div id={`Stage.${stageIdentifier}.EnvironmentGroup`} className={cx(css.accordionSummary)}>
-      <div className={css.inputheader}>
-        {getString('common.environmentGroup.label')}
-        {environmentGroupLabel}
-      </div>
-      <div className={css.nestedAccordions}>
-        {showEnvironmentGroupSelectionInputField && (
+    <>
+      {/* This will be removed once environment group as runtime is accepted or multi infra changes go through */}
+      {!isMultiSvcInfraEnabled && (
+        <div id={`Stage.${stageIdentifier}.EnvironmentGroup`} className={cx(css.accordionSummary)}>
           <StepWidget
             factory={factory}
-            initialValues={pick(deploymentStage, ['environmentGroup'])}
+            initialValues={deploymentStage}
             allowableTypes={allowableTypes}
-            template={pick(deploymentStageTemplate, 'environmentGroup')}
-            type={StepType.DeployEnvironmentGroup}
-            allValues={pick(deploymentStageInputSet, 'environmentGroup')}
+            template={deploymentStageTemplate}
+            type={StepType.DeployInfrastructure}
             stepViewType={viewType}
             path={path}
             readonly={readonly}
             customStepProps={{
-              gitOpsEnabled: deploymentStage.gitOpsEnabled
+              stageIdentifier
             }}
           />
-        )}
-        <Container padding={{ left: 'medium' }}>
-          {envGroupRef && (
-            <MultiEnvironmentsInputSetForm
-              deploymentStage={deploymentStage}
-              deploymentStageTemplate={deploymentStageTemplate}
-              allowableTypes={allowableTypes}
-              path={path}
-              viewType={viewType}
-              readonly={readonly}
-              stageIdentifier={stageIdentifier}
-              pathToEnvironments="environmentGroup.environments"
-              envGroupRef={envGroupRef}
-              entityType="environmentGroup"
-            />
-          )}
-        </Container>
-      </div>
-    </div>
+        </div>
+      )}
+
+      {isMultiSvcInfraEnabled && (
+        <div id={`Stage.${stageIdentifier}.EnvironmentGroup`} className={cx(css.accordionSummary)}>
+          <div className={css.inputheader}>
+            {getString('common.environmentGroup.label')}
+            {environmentGroupLabel}
+          </div>
+          <div className={css.nestedAccordions}>
+            {showEnvironmentGroupSelectionInputField && (
+              <StepWidget
+                factory={factory}
+                initialValues={pick(deploymentStage, ['environmentGroup'])}
+                allowableTypes={allowableTypes}
+                template={pick(deploymentStageTemplate, 'environmentGroup')}
+                type={StepType.DeployEnvironmentGroup}
+                allValues={pick(deploymentStageInputSet, 'environmentGroup')}
+                stepViewType={viewType}
+                path={path}
+                readonly={readonly}
+                customStepProps={{
+                  gitOpsEnabled: deploymentStage.gitOpsEnabled
+                }}
+              />
+            )}
+            <Container padding={{ left: 'medium' }}>
+              {envGroupRef && (
+                <MultiEnvironmentsInputSetForm
+                  deploymentStage={deploymentStage}
+                  deploymentStageTemplate={deploymentStageTemplate}
+                  allowableTypes={allowableTypes}
+                  path={path}
+                  viewType={viewType}
+                  readonly={readonly}
+                  stageIdentifier={stageIdentifier}
+                  pathToEnvironments="environmentGroup.environments"
+                  envGroupRef={envGroupRef}
+                  entityType="environmentGroup"
+                />
+              )}
+            </Container>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
