@@ -461,6 +461,7 @@ failureStrategies:
     PolicyEvaluationFailure: Policy Evaluation Failures
     InputTimeoutError: Execution-time Inputs Timeout Errors
     ApprovalRejection: Approval Rejection
+    DelegateRestart: Delegate Restart
   validation:
     arrayOrUndefined: Value must be an array if defined.
     strategyRequired: 'At least 1 strategy is required'

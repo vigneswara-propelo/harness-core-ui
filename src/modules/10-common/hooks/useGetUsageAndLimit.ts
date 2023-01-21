@@ -19,7 +19,7 @@ import {
   useGetCDLicenseUsageForServiceInstances,
   useGetCDLicenseUsageForServices,
   CVLicenseSummaryDTO,
-  CHAOSLicenseSummaryDTO
+  LicensesWithSummaryDTO
 } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useGetLicenseUsage as useGetFFUsage } from 'services/cf'
@@ -30,6 +30,11 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useGetSRMLicenseUsage } from 'services/cv'
+
+export type CHAOSLicenseSummaryDTO = LicensesWithSummaryDTO & {
+  totalChaosExperimentRuns?: number
+  totalChaosInfrastructures?: number
+}
 
 export interface UsageAndLimitReturn {
   limitData: LimitReturn
