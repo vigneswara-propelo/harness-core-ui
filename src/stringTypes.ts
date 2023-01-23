@@ -7719,6 +7719,7 @@ export interface StringsMap {
   'cv.logs.priorityOrRiskSelectionRequired': string
   'cv.logs.radarChartInfo': string
   'cv.logs.reportedBy': string
+  'cv.logs.totalCount': string
   'cv.logsCluster': string
   'cv.maxValue': string
   'cv.messageFrequency': string

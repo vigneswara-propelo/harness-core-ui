@@ -83,7 +83,11 @@ export function getChartsConfigForDrawer({
           color: Utils.getRealCSSColor(Color.GREY_600)
         }
       },
-      categories: getChartCategories(chartDetails?.data)
+      categories: getChartCategories(chartDetails?.data),
+      crosshair: {
+        width: 1,
+        color: 'var(--primary-9-dark)'
+      }
     },
     yAxis: {
       title: {
@@ -128,7 +132,7 @@ export function getChartsConfigForDrawer({
         }
 
         return `
-        <div style="width: 220px; height: ${tooltipHeight}px; font-size: var(--font-size-small); color: var(--grey-250)"}>
+        <div style="width: 200px; height: ${tooltipHeight}px; font-size: var(--font-size-small); color: var(--grey-250)"}>
         ${testTooltipData}
         </br>
         ${baselineTooltipData}
@@ -136,10 +140,11 @@ export function getChartsConfigForDrawer({
         `
       },
       positioner: (_, __, point) => {
-        const xPosition = point.plotX
+        const { plotX } = point || {}
+        const xPosition = plotX < 50 ? plotX - 20 : plotX - 100
 
         return {
-          x: xPosition - 80,
+          x: xPosition,
           y: 0
         }
       },

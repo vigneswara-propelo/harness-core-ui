@@ -30,7 +30,7 @@ describe('Unit tests for LogAnalysisRiskAndJiraModal', () => {
     const { getByText } = render(<WrapperComponent {...initialProps} />)
 
     await waitFor(() => {
-      expect(getByText('instanceFieldOptions.instanceHolder')).toBeInTheDocument()
+      expect(getByText('cv.logs.totalCount')).toBeInTheDocument()
       expect(getByText('Known')).toBeInTheDocument()
 
       expect(getByText(initialProps.rowData.count.toString())).toBeInTheDocument()

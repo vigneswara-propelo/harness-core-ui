@@ -61,7 +61,23 @@ describe('LogAnalysisDetailsDrawer utils test', () => {
     const tooltipPositioner = result.tooltip?.positioner?.bind(thisValueForTooltip)
 
     if (tooltipPositioner) {
-      expect(tooltipPositioner(10, 100, { plotX: 20 } as TooltipPositionerPointObject)).toEqual({ x: -60, y: 0 })
+      expect(tooltipPositioner(10, 100, { plotX: 20 } as TooltipPositionerPointObject)).toEqual({ x: 0, y: 0 })
+    }
+  })
+
+  test('getChartsConfigForDrawer should return correct tooltip positioner for x axis value greater than 50', () => {
+    const messageFrequency = null
+
+    const result = getChartsConfigForDrawer({
+      getString: a => a,
+      chartDetails: messageFrequency as unknown as LogAnalysisMessageFrequency,
+      eventType: 'UNKNOWN'
+    })
+
+    const tooltipPositioner = result.tooltip?.positioner?.bind(thisValueForTooltip)
+
+    if (tooltipPositioner) {
+      expect(tooltipPositioner(10, 100, { plotX: 80 } as TooltipPositionerPointObject)).toEqual({ x: -20, y: 0 })
     }
   })
 })

@@ -50,7 +50,7 @@ export function ActivityHeadingContent(props: ActivityHeadingContentProps): JSX.
             </Text>
           </Container>
           <Container>
-            <Text>{getString('instanceFieldOptions.instanceHolder')}</Text>
+            <Text>{getString('cv.logs.totalCount')}</Text>
             <Text color={Color.BLACK} data-testid="ActivityHeadingContent_count">
               {count}
             </Text>
