@@ -18,48 +18,81 @@ import {
   ingestionFieldValidationConfig
 } from '../constants'
 import type { Field, InputSetViewValidateFieldsConfig } from '../types'
-import type { SonarqubeStepData } from './SonarqubeStep'
+import type { MendStepData } from './MendStep'
 
-const toolFieldsTransformConfig = (data: SonarqubeStepData) =>
-  data.spec.mode === 'orchestration'
-    ? [
-        {
-          name: 'spec.tool.include',
-          type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.tool.java.libraries',
-          type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.tool.java.binaries',
-          type: TransformValuesTypes.Text
-        }
-      ]
-    : []
+const toolFieldsTransformConfig = (data: MendStepData) => {
+  if (data.spec.mode === 'ingestion') return []
 
-const toolFieldsValidationConfig = (data: SonarqubeStepData): InputSetViewValidateFieldsConfig[] =>
-  data.spec.mode === 'orchestration'
-    ? [
-        {
-          name: 'spec.tool.include',
-          type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.toolInclude'
-        },
-        {
-          name: 'spec.tool.java.libraries',
-          type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.tool.javaLibraries'
-        },
-        {
-          name: 'spec.tool.java.binaries',
-          type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.tool.javaBinaries'
-        }
-      ]
-    : []
+  // extraction
+  const config = [
+    {
+      name: 'spec.tool.project_token',
+      type: TransformValuesTypes.Text
+    },
+    {
+      name: 'spec.tool.project_name',
+      type: TransformValuesTypes.Text
+    }
+  ]
 
-const extraAuthFieldsTransformConfig = (data: SonarqubeStepData) =>
+  // extraction || orchestration
+  if (data.spec.mode === 'extraction') {
+    config.push(
+      {
+        name: 'spec.tool.include',
+        type: TransformValuesTypes.Text
+      },
+      {
+        name: 'spec.tool.product_token',
+        type: TransformValuesTypes.Text
+      },
+      {
+        name: 'spec.tool.product_name',
+        type: TransformValuesTypes.Text
+      }
+    )
+  }
+
+  return config
+}
+
+const toolFieldsValidationConfig = (data: MendStepData): InputSetViewValidateFieldsConfig[] => {
+  if (data.spec.mode === 'ingestion') return []
+
+  // extraction
+  const config = [
+    {
+      name: 'spec.tool.project_token',
+      type: ValidationFieldTypes.Text
+    },
+    {
+      name: 'spec.tool.project_name',
+      type: ValidationFieldTypes.Text
+    }
+  ]
+
+  // extraction || orchestration
+  if (data.spec.mode === 'extraction') {
+    config.push(
+      {
+        name: 'spec.tool.include',
+        type: ValidationFieldTypes.Text
+      },
+      {
+        name: 'spec.tool.product_token',
+        type: ValidationFieldTypes.Text
+      },
+      {
+        name: 'spec.tool.product_name',
+        type: ValidationFieldTypes.Text
+      }
+    )
+  }
+
+  return config
+}
+
+const extraAuthFieldsTransformConfig = (data: MendStepData) =>
   data.spec.mode !== 'ingestion'
     ? [
         {
@@ -73,7 +106,7 @@ const extraAuthFieldsTransformConfig = (data: SonarqubeStepData) =>
       ]
     : []
 
-const extraAuthFieldsValidationConfig = (data: SonarqubeStepData): InputSetViewValidateFieldsConfig[] =>
+const extraAuthFieldsValidationConfig = (data: MendStepData): InputSetViewValidateFieldsConfig[] =>
   data.spec.mode !== 'ingestion'
     ? [
         {
@@ -89,7 +122,7 @@ const extraAuthFieldsValidationConfig = (data: SonarqubeStepData): InputSetViewV
       ]
     : []
 
-export const transformValuesFieldsConfig = (data: SonarqubeStepData): Field[] => {
+export const transformValuesFieldsConfig = (data: MendStepData): Field[] => {
   const transformValuesFieldsConfigValues = [
     ...commonFieldsTransformConfig(data),
     ...authFieldsTransformConfig(data),
@@ -100,7 +133,7 @@ export const transformValuesFieldsConfig = (data: SonarqubeStepData): Field[] =>
   return transformValuesFieldsConfigValues
 }
 
-export const editViewValidateFieldsConfig = (data: SonarqubeStepData) => {
+export const editViewValidateFieldsConfig = (data: MendStepData) => {
   const customAuthDomainConfig = authFieldsValidationConfig(data)
 
   customAuthDomainConfig.map(obj => {
@@ -123,7 +156,7 @@ export const editViewValidateFieldsConfig = (data: SonarqubeStepData) => {
   return editViewValidationConfig
 }
 
-export function getInputSetViewValidateFieldsConfig(data: SonarqubeStepData): InputSetViewValidateFieldsConfig[] {
+export function getInputSetViewValidateFieldsConfig(data: MendStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
     ...commonFieldsValidationConfig,
     ...authFieldsValidationConfig(data),

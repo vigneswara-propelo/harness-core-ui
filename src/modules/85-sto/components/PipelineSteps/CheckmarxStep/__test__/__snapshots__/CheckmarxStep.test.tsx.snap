@@ -1060,7 +1060,7 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.tool.projectName
+                projectCard.projectName
               </p>
                
               <p
@@ -4447,7 +4447,7 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.tool.projectName
+                projectCard.projectName
               </p>
                
               <p
@@ -6177,7 +6177,7 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.tool.projectName
+                projectCard.projectName
               </p>
                
               <p

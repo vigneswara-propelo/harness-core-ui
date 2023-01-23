@@ -18,6 +18,7 @@ stepDescription:
   WhiteSource: Use WhiteSource to test for vulnerabilities.
   Zap: Use Zap to test for vulnerabilities.
   PrismaCloud: Use Prisma Cloud to test for vulnerabilities.
+  Mend: Use Mend to test for vulnerabilities.
 stepField:
   mode: Scan Mode
   config: Scan Configuration
@@ -40,8 +41,10 @@ stepField:
     port: Tool Port
     imageName: Tool Image Name
     teamName: Tool Team Name
-    projectName: Tool Project Name
     projectVersion: Tool Project Version
+    productToken: Product token
+    productName: Product Name
+    projectToken: Project token
   image:
     type: Image Type
     domain: Image Domain

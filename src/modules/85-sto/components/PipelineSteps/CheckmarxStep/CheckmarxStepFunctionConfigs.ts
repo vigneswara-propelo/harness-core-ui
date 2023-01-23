@@ -34,7 +34,7 @@ const toolFieldsTransformConfig = (data: CheckmarxStepData) =>
       ]
     : []
 
-const toolFieldsValidationConfig = (data: CheckmarxStepData) =>
+const toolFieldsValidationConfig = (data: CheckmarxStepData): InputSetViewValidateFieldsConfig[] =>
   data.spec.mode !== 'ingestion'
     ? [
         {
@@ -68,7 +68,7 @@ const extraAuthFieldsTransformConfig = (data: CheckmarxStepData) =>
       ]
     : []
 
-const extraAuthFieldsValidationConfig = (data: CheckmarxStepData) =>
+const extraAuthFieldsValidationConfig = (data: CheckmarxStepData): InputSetViewValidateFieldsConfig[] =>
   data.spec.mode !== 'ingestion'
     ? [
         {

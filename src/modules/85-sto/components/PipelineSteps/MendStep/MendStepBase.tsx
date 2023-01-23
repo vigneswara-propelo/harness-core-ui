@@ -21,8 +21,8 @@ import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidate
 import { CIStep } from '@ci/components/PipelineSteps/CIStep/CIStep'
 import { useGetPropagatedStageById } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
-import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './CheckmarxStepFunctionConfigs'
-import type { CheckmarxStepProps, CheckmarxStepData } from './CheckmarxStep'
+import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './MendStepFunctionConfigs'
+import type { MendStepProps, MendStepData } from './MendStep'
 import {
   AdditionalFields,
   SecurityAuthFields,
@@ -40,9 +40,9 @@ import {
 } from '../constants'
 import SecurityField from '../SecurityField'
 
-export const CheckmarxStepBase = (
-  { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, allowableTypes, onChange }: CheckmarxStepProps,
-  formikRef: StepFormikFowardRef<CheckmarxStepData>
+export const MendStepBase = (
+  { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, allowableTypes, onChange }: MendStepProps,
+  formikRef: StepFormikFowardRef<MendStepData>
 ): JSX.Element => {
   const {
     state: {
@@ -54,7 +54,7 @@ export const CheckmarxStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const valuesInCorrectFormat = getInitialValuesInCorrectFormat<CheckmarxStepData, CheckmarxStepData>(
+  const valuesInCorrectFormat = getInitialValuesInCorrectFormat<MendStepData, MendStepData>(
     initialValues,
     transformValuesFieldsConfig(initialValues),
     { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
@@ -63,9 +63,9 @@ export const CheckmarxStepBase = (
   return (
     <Formik
       initialValues={valuesInCorrectFormat}
-      formName="CheckmarxStep"
+      formName="MendStep"
       validate={valuesToValidate => {
-        const schemaValues = getFormValuesInCorrectFormat<CheckmarxStepData, CheckmarxStepData>(
+        const schemaValues = getFormValuesInCorrectFormat<MendStepData, MendStepData>(
           valuesToValidate,
           transformValuesFieldsConfig(valuesToValidate)
         )
@@ -82,8 +82,8 @@ export const CheckmarxStepBase = (
           stepViewType
         )
       }}
-      onSubmit={(_values: CheckmarxStepData) => {
-        const schemaValues = getFormValuesInCorrectFormat<CheckmarxStepData, CheckmarxStepData>(
+      onSubmit={(_values: MendStepData) => {
+        const schemaValues = getFormValuesInCorrectFormat<MendStepData, MendStepData>(
           _values,
           transformValuesFieldsConfig(_values)
         )
@@ -91,7 +91,7 @@ export const CheckmarxStepBase = (
         onUpdate?.(schemaValues)
       }}
     >
-      {(formik: FormikProps<CheckmarxStepData>) => {
+      {(formik: FormikProps<MendStepData>) => {
         // This is required
         setFormikRef?.(formikRef, formik)
 
@@ -129,35 +129,53 @@ export const CheckmarxStepBase = (
 
             <SecurityAuthFields
               showFields={{
+                access_id: true,
                 ssl: true,
-                domain: true,
-                access_id: true
+                domain: true
               }}
               allowableTypes={allowableTypes}
               formik={formik}
               stepViewType={stepViewType}
             />
-
-            {(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction') && (
-              <>
-                <SecurityField
-                  stepViewType={stepViewType}
-                  allowableTypes={allowableTypes}
-                  formik={formik}
-                  enableFields={{
-                    'spec.tool.team_name': {
-                      label: 'sto.stepField.tool.teamName',
-                      optional: true
-                    },
-                    'spec.tool.project_name': {
-                      label: 'projectCard.projectName',
-                      optional: true
-                    }
-                  }}
-                />
-                <Divider style={{ marginBottom: dividerBottomMargin }} />
-              </>
-            )}
+            {/* <DropDown
+              onChange={(item)=>{ 
+                setLookupType(item.value as lookupTypeValues)
+              }
+              }
+              value={lookupType}
+              items={getLookupTypes()} /> */}
+            <>
+              <SecurityField
+                stepViewType={stepViewType}
+                allowableTypes={allowableTypes}
+                formik={formik}
+                enableFields={{
+                  'spec.tool.include': {
+                    label: 'sto.stepField.toolInclude',
+                    optional: true,
+                    hide: !(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction')
+                  },
+                  'spec.tool.product_token': {
+                    label: 'sto.stepField.tool.productToken',
+                    hide: !(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction')
+                  },
+                  'spec.tool.product_name': {
+                    label: 'sto.stepField.tool.productName',
+                    hide: !(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction')
+                  },
+                  'spec.tool.project_token': {
+                    label: 'sto.stepField.tool.projectToken',
+                    hide: formik.values.spec.mode !== 'extraction'
+                  },
+                  'spec.tool.project_name': {
+                    label: 'projectCard.projectName',
+                    hide: formik.values.spec.mode !== 'extraction',
+                    optional: true
+                  }
+                }}
+              />
+              <Divider style={{ marginBottom: dividerBottomMargin }} />
+            </>
 
             <AdditionalFields
               readonly={readonly}
@@ -173,4 +191,4 @@ export const CheckmarxStepBase = (
   )
 }
 
-export const CheckmarxStepBaseWithRef = React.forwardRef(CheckmarxStepBase)
+export const MendStepBaseWithRef = React.forwardRef(MendStepBase)

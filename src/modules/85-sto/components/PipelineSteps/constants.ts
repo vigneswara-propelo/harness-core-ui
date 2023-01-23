@@ -80,6 +80,23 @@ export const API_VERSION_4_2_0 = {
   label: '4.2.0'
 }
 
+export const ZAP_STANDARD_CONFIG = {
+  value: 'standard',
+  label: 'Standard'
+}
+export const ZAP_ATTACK_CONFIG = {
+  value: 'attack',
+  label: 'Attack'
+}
+export const ZAP_QUICK_CONFIG = {
+  value: 'quick',
+  label: 'Quick'
+}
+export const ZAP_DEFAULT_CONFIG = {
+  value: 'default',
+  label: 'Default'
+}
+
 export const logLevelOptions = (getString: getStringProp) => [
   {
     label: getString('sto.stepField.optionLabels.logLevel.debug'),
@@ -133,14 +150,6 @@ export const authFieldsTransformConfig = (data: SecurityStepData<SecurityStepSpe
           name: 'spec.auth.access_token',
           type: TransformValuesTypes.Text
         }
-        // {
-        //   name: 'spec.auth.domain',
-        //   type: TransformValuesTypes.Text
-        // },
-        // {
-        //   name: 'spec.auth.ssl',
-        //   type: TransformValuesTypes.Boolean
-        // }
       ]
     : []
 
@@ -186,10 +195,6 @@ export const commonFieldsTransformConfig = (data: SecurityStepData<SecurityStepS
       name: 'spec.advanced.log.serializer',
       type: TransformValuesTypes.Text
     },
-    // { // for future implementation
-    //   name: 'spec.advanced.args.passthrough',
-    //   type: TransformValuesTypes.Text
-    // },
     {
       name: 'spec.advanced.fail_on_severity',
       type: TransformValuesTypes.Text
@@ -297,16 +302,6 @@ export const authFieldsValidationConfig = (
     label: 'sto.stepField.authToken',
     isRequired: data.spec.mode !== 'ingestion'
   }
-  // {
-  //   name: 'spec.auth.domain',
-  //   type: ValidationFieldTypes.Text,
-  //   label: 'sto.stepField.authDomain'
-  // },
-  // {
-  //   name: 'spec.auth.ssl',
-  //   type: ValidationFieldTypes.Text,
-  //   label: 'sto.stepField.authSsl'
-  // }
 ]
 
 export const ingestionFieldValidationConfig = (
@@ -409,11 +404,6 @@ export const commonFieldsValidationConfig: InputSetViewValidateFieldsConfig[] = 
     type: ValidationFieldTypes.Text,
     label: 'sto.stepField.advanced.cli'
   },
-  // { // for future implementation
-  //   name: 'spec.advanced.args.passthrough',
-  //   type: ValidationFieldTypes.Text,
-  //   label: 'sto.stepField.advanced.passthrough'
-  // },
   {
     name: 'spec.advanced.fail_on_severity',
     type: ValidationFieldTypes.Text,
@@ -462,7 +452,7 @@ export const additionalFieldsValidationConfigEitView = [
   }
 ]
 
-export const additionalFieldsValidationConfigInputSet = [
+export const additionalFieldsValidationConfigInputSet: InputSetViewValidateFieldsConfig[] = [
   {
     name: 'spec.limitMemory',
     type: ValidationFieldTypes.LimitMemory
@@ -495,7 +485,7 @@ export const inputSetFields = (
           }
         }),
 
-        // target fields
+        // Target fields
         ...(shouldRenderRunTimeInputView(template?.spec.target.name) && {
           [getInputSetFieldName(prefix, 'spec.target.name')]: {
             label: 'sto.stepField.target.name'
@@ -611,7 +601,7 @@ export const inputSetFields = (
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_name) && {
           [getInputSetFieldName(prefix, 'spec.tool.project_name')]: {
-            label: 'sto.stepField.tool.projectName'
+            label: 'projectCard.projectName'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_version) && {
@@ -622,6 +612,21 @@ export const inputSetFields = (
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.team_name) && {
           [getInputSetFieldName(prefix, 'spec.tool.team_name')]: {
             label: 'sto.stepField.tool.teamName'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.product_token) && {
+          [getInputSetFieldName(prefix, 'spec.tool.product_token')]: {
+            label: 'sto.stepField.tool.productToken'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.product_name) && {
+          [getInputSetFieldName(prefix, 'spec.tool.product_name')]: {
+            label: 'sto.stepField.tool.productName'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_token) && {
+          [getInputSetFieldName(prefix, 'spec.tool.project_token')]: {
+            label: 'sto.stepField.tool.projectToken'
           }
         }),
 

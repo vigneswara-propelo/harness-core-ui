@@ -8410,6 +8410,7 @@ export interface StringsMap {
   'sto.stepDescription.Fortify': string
   'sto.stepDescription.FortifyOnDemand': string
   'sto.stepDescription.Grype': string
+  'sto.stepDescription.Mend': string
   'sto.stepDescription.Owasp': string
   'sto.stepDescription.PrismaCloud': string
   'sto.stepDescription.ScoutSuite': string
@@ -8456,7 +8457,9 @@ export interface StringsMap {
   'sto.stepField.tool.javaBinaries': string
   'sto.stepField.tool.javaLibraries': string
   'sto.stepField.tool.port': string
-  'sto.stepField.tool.projectName': string
+  'sto.stepField.tool.productName': string
+  'sto.stepField.tool.productToken': string
+  'sto.stepField.tool.projectToken': string
   'sto.stepField.tool.projectVersion': string
   'sto.stepField.tool.teamName': string
   'sto.stepField.toolInclude': string

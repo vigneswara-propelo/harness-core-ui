@@ -163,7 +163,7 @@ export const BlackduckStepBase = (
                       selectItems: [API_VERSION_5_0_2, API_VERSION_4_2_0, API_VERSION_4_1_0]
                     },
                     'spec.tool.project_name': {
-                      label: 'sto.stepField.tool.projectName',
+                      label: 'projectCard.projectName',
                       optional: false
                     },
                     'spec.tool.project_version': {

@@ -28,10 +28,18 @@ import {
   SecurityImageFields,
   SecurityIngestionFields,
   SecurityInstanceFields,
-  SecurityScanFields,
   SecurityTargetFields
 } from '../SecurityFields'
-import { dividerBottomMargin, INGESTION_SCAN_MODE, INSTANCE_TARGET_TYPE, ORCHESTRATION_SCAN_MODE } from '../constants'
+import {
+  dividerBottomMargin,
+  INGESTION_SCAN_MODE,
+  INSTANCE_TARGET_TYPE,
+  ORCHESTRATION_SCAN_MODE,
+  ZAP_ATTACK_CONFIG,
+  ZAP_DEFAULT_CONFIG,
+  ZAP_QUICK_CONFIG,
+  ZAP_STANDARD_CONFIG
+} from '../constants'
 import SecurityField from '../SecurityField'
 
 export const ZapStepBase = (
@@ -54,6 +62,7 @@ export const ZapStepBase = (
     { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
   )
 
+  const scanModeSelectItems = [ORCHESTRATION_SCAN_MODE, INGESTION_SCAN_MODE]
   return (
     <Formik
       initialValues={valuesInCorrectFormat}
@@ -102,13 +111,30 @@ export const ZapStepBase = (
               formik={formik}
             />
 
-            <SecurityScanFields
-              allowableTypes={allowableTypes}
-              formik={formik}
-              stepViewType={stepViewType}
-              scanConfigReadonly
-              scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, INGESTION_SCAN_MODE]}
-            />
+            <>
+              <SecurityField
+                stepViewType={stepViewType}
+                allowableTypes={allowableTypes}
+                formik={formik}
+                enableFields={{
+                  'spec.mode': {
+                    label: 'sto.stepField.mode',
+                    fieldType: 'dropdown',
+                    inputProps: {
+                      disabled: scanModeSelectItems.length === 1
+                    },
+                    selectItems: scanModeSelectItems
+                  },
+                  'spec.config': {
+                    label: 'sto.stepField.config',
+                    fieldType: 'dropdown',
+                    selectItems: [ZAP_DEFAULT_CONFIG, ZAP_STANDARD_CONFIG, ZAP_ATTACK_CONFIG, ZAP_QUICK_CONFIG]
+                  }
+                }}
+              />
+
+              <Divider style={{ marginBottom: dividerBottomMargin }} />
+            </>
 
             <SecurityTargetFields
               allowableTypes={allowableTypes}

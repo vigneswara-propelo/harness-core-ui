@@ -73,13 +73,13 @@ export const transformValuesFieldsConfig = (data: BlackduckStepData): Field[] =>
   return transformValuesFieldsConfigValues
 }
 
-const toolFieldsValidationConfig = (data: BlackduckStepData) =>
+const toolFieldsValidationConfig = (data: BlackduckStepData): InputSetViewValidateFieldsConfig[] =>
   data.spec.mode !== INGESTION_SCAN_MODE.value
     ? [
         {
           name: 'spec.tool.project_name',
           type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.tool.projectName',
+          label: 'projectCard.projectName',
           isRequired: true
         },
         {
@@ -91,7 +91,7 @@ const toolFieldsValidationConfig = (data: BlackduckStepData) =>
       ]
     : []
 
-const extraAuthFieldsValidationConfig = (data: BlackduckStepData) =>
+const extraAuthFieldsValidationConfig = (data: BlackduckStepData): InputSetViewValidateFieldsConfig[] =>
   data.spec.mode !== 'ingestion'
     ? [
         {

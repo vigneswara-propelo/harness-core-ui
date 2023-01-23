@@ -71,6 +71,9 @@ type Tool = {
     libraries?: string
     binaries?: string
   }
+  product_token?: string
+  product_name?: string
+  project_token?: string
 }
 
 type Instance = {
