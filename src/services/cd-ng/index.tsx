@@ -5248,6 +5248,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'CCM_AUTOSTOPPING_RULES'
     | 'MULTIPLE_ORGANIZATIONS'
     | 'MULTIPLE_PROJECTS'
+    | 'MULTIPLE_SECRETS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -5331,6 +5332,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'CCM_AUTOSTOPPING_RULES'
     | 'MULTIPLE_ORGANIZATIONS'
     | 'MULTIPLE_PROJECTS'
+    | 'MULTIPLE_SECRETS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -5430,6 +5432,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'CCM_AUTOSTOPPING_RULES'
     | 'MULTIPLE_ORGANIZATIONS'
     | 'MULTIPLE_PROJECTS'
+    | 'MULTIPLE_SECRETS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -5537,6 +5540,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'CCM_AUTOSTOPPING_RULES'
     | 'MULTIPLE_ORGANIZATIONS'
     | 'MULTIPLE_PROJECTS'
+    | 'MULTIPLE_SECRETS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -9705,6 +9709,7 @@ export interface OAuthSignupDTO {
   referer?: string
   signupAction?: 'REGULAR' | 'TRIAL' | 'SUBSCRIBE'
   utmInfo?: UtmInfo
+  visitorToken?: string
 }
 
 export interface OauthAccessTokenDTO {
@@ -15600,7 +15605,7 @@ export type TasBGAppSetupStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   existingVersionToKeep: number
   tasInstanceCountType: 'FromManifest' | 'MatchRunningInstances'
-  tempRoutes: string[]
+  tempRoutes?: string[]
 }
 
 export type TasBasicAppSetupStepInfo = StepSpecType & {
@@ -16780,11 +16785,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -33283,6 +33288,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'CCM_AUTOSTOPPING_RULES'
     | 'MULTIPLE_ORGANIZATIONS'
     | 'MULTIPLE_PROJECTS'
+    | 'MULTIPLE_SECRETS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -33436,6 +33442,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'CCM_AUTOSTOPPING_RULES'
       | 'MULTIPLE_ORGANIZATIONS'
       | 'MULTIPLE_PROJECTS'
+      | 'MULTIPLE_SECRETS'
       | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
       | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
       | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -37723,7 +37730,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37737,7 +37744,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -37752,7 +37759,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37766,7 +37773,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -37778,7 +37785,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -37787,7 +37794,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -38293,7 +38300,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -38307,7 +38314,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -38322,7 +38329,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -38336,7 +38343,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -38348,7 +38355,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -38357,7 +38364,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -46649,7 +46656,13 @@ export const getExecutionStrategyListPromise = (
   )
 
 export interface GetProvisionerExecutionStrategyYamlQueryParams {
-  provisionerType: 'TERRAFORM' | 'CLOUD_FORMATION' | 'AZURE_ARM' | 'AZURE_BLUEPRINT' | 'SHELL_SCRIPT_PROVISIONER'
+  provisionerType:
+    | 'TERRAFORM'
+    | 'CLOUD_FORMATION'
+    | 'AZURE_ARM'
+    | 'AZURE_BLUEPRINT'
+    | 'SHELL_SCRIPT_PROVISIONER'
+    | 'TERRAGRUNT'
 }
 
 export type GetProvisionerExecutionStrategyYamlProps = Omit<
@@ -52220,6 +52233,7 @@ export const communitySignupPromise = (
 export interface CompleteSignupInviteQueryParams {
   referer?: string
   gaClientId?: string
+  visitorToken?: string
 }
 
 export interface CompleteSignupInvitePathParams {
