@@ -198,7 +198,7 @@ describe('Test DeployService Step', () => {
         container: dialog!,
         fieldId: 'name',
         type: InputTypes.TEXTFIELD,
-        value: 'ljdlkcjv vldjvldkj dlvjdlvkj vljdlkvjd vlmdlfvm vlmdlkvj dlvdkll'
+        value: 'ljdlkcjv vldjvldkj dlvjdlvkj vljdlkvjd vlmdlfvm vlmdlkvj dlvdkla'
       }
     ])
 

@@ -54,7 +54,7 @@ describe('Cloud watch health source', () => {
 
     cy.get('input[name="healthSourceName"]').clear().type(longInvalidName)
 
-    cy.findByText(/Limit of 63 characters is reached for Health Source Name/).should('exist')
+    cy.findByText(/Limit of 64 characters is reached for Health Source Name/).should('exist')
   })
 
   it('should add cloud watch health source, if correct values are given', () => {

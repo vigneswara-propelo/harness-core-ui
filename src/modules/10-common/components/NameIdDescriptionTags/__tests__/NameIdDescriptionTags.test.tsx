@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { Formik, FormikForm } from '@harness/uicore'
 import { renderHook } from '@testing-library/react-hooks'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -61,7 +61,7 @@ describe('NameIdDescriptionTags  tests', () => {
       const { getByText } = render(
         <WrapperComponent
           initialValues={{
-            name: 'name-123 vldjvldkj dlvjdlvkj vljdlkvjd vlmdlfvm vlmdlkvj dlvdkll',
+            name: 'name-123 vldjvldkj dlvjdlvkj vljdlkvjd vlmdlfvm vlmdlkvj dlvdkas',
             identifier: 'name123',
             description: 'test description',
             tags: {
@@ -72,7 +72,9 @@ describe('NameIdDescriptionTags  tests', () => {
       )
 
       expect(result.current.getString('name')).not.toBeNull()
-      expect(getByText('Limit of 64 characters is reached for name')).not.toBeNull()
+      await waitFor(() => {
+        expect(getByText('Limit of 64 characters is reached for name')).toBeInTheDocument()
+      })
     })
   })
 })
