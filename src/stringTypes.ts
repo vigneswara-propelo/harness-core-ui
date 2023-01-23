@@ -4878,6 +4878,7 @@ export interface StringsMap {
   'cd.asgRollingRollbackStepDescription': string
   'cd.attributeFilters': string
   'cd.awsCli': string
+  'cd.awsClusterCreate': string
   'cd.azureArm.description': string
   'cd.azureArm.location': string
   'cd.azureArm.managementGroup': string
@@ -5052,6 +5053,8 @@ export interface StringsMap {
   'cd.filePathRequired': string
   'cd.gCloud': string
   'cd.gcloudClusterCmd': string
+  'cd.gcloudClusterCreate': string
+  'cd.gcloudClusterList': string
   'cd.getStartedWithCD.allSet': string
   'cd.getStartedWithCD.artifactLocation': string
   'cd.getStartedWithCD.artifactManifest': string
@@ -5059,6 +5062,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.artifactStorage': string
   'cd.getStartedWithCD.artifactToDeploy': string
   'cd.getStartedWithCD.awsElasticK8s': string
+  'cd.getStartedWithCD.awsRegionHelperText': string
+  'cd.getStartedWithCD.azureAKSHelperText': string
   'cd.getStartedWithCD.azureK8s': string
   'cd.getStartedWithCD.checkDelegateInstalled': string
   'cd.getStartedWithCD.closeOnboarding.subtitle': string
@@ -5067,6 +5072,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.configureRepo': string
   'cd.getStartedWithCD.connectHarnessEnv': string
   'cd.getStartedWithCD.connectTo': string
+  'cd.getStartedWithCD.createCluster': string
   'cd.getStartedWithCD.delegateDescription': string
   'cd.getStartedWithCD.delegateInfo1': string
   'cd.getStartedWithCD.delegateInfo2': string
@@ -5083,6 +5089,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.environmentDetails': string
   'cd.getStartedWithCD.gitopsRedirect.subtitle': string
   'cd.getStartedWithCD.gitopsRedirect.title': string
+  'cd.getStartedWithCD.googleGKEHelperText': string
   'cd.getStartedWithCD.googleK8s': string
   'cd.getStartedWithCD.harnessFileStore': string
   'cd.getStartedWithCD.helm': string
