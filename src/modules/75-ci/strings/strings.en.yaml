@@ -121,6 +121,11 @@ buildInfra:
     isRequiredWhen: '{{field1}} is required in case {{field2}} is provided'
   cloud: Cloud
   hostNames: Host Names
+  info:
+    cloud: Choose Cloud to execute the stage in a Harness Hosted environment.
+    local1: Choose Local to run builds in your own machine.
+    local2: Please refer to our documentation to learn how to
+    localLink: configure a local build environment.
 pipelineSteps:
   build:
     infraSpecifications:

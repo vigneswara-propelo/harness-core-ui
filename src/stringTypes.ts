@@ -7243,6 +7243,10 @@ export interface StringsMap {
   'ci.buildInfra.awsVM.os': string
   'ci.buildInfra.cloud': string
   'ci.buildInfra.hostNames': string
+  'ci.buildInfra.info.cloud': string
+  'ci.buildInfra.info.local1': string
+  'ci.buildInfra.info.local2': string
+  'ci.buildInfra.info.localLink': string
   'ci.buildInfra.infrastructureTypesLabel': string
   'ci.buildInfra.k8sLabel': string
   'ci.buildInfra.kubernetesHelpText': string
