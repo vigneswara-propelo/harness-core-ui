@@ -228,7 +228,7 @@ monitoringSources:
     addGroupName: Add group Name
     runQuery: Run Query
     confirmDeleteMetric: 'Are you sure you want to delete metric {{name}}'
-    submitQueryToSeeRecords: Run query to see records ...
+    submitQueryToSeeRecords: Enter your query
     searchMetric: Search ...
     defineQuery: Define Query
     defineQueryDescriptionMetrics: Queries can only be defined for a single timeseries.
