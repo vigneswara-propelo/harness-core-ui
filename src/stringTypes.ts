@@ -184,6 +184,7 @@ export interface StringsMap {
   'common.configureService': string
   'common.confirmAction': string
   'common.confirmText': string
+  'common.connect': string
   'common.connectEnvironment': string
   'common.connectGitRepo': string
   'common.connectThroughDelegate': string
@@ -5094,15 +5095,21 @@ export interface StringsMap {
   'cd.getStartedWithCD.deployToGitops': string
   'cd.getStartedWithCD.deploymentType': string
   'cd.getStartedWithCD.directK8s': string
+  'cd.getStartedWithCD.doesntHaveGitRepo': string
   'cd.getStartedWithCD.entityCreationTitle': string
   'cd.getStartedWithCD.envName': string
   'cd.getStartedWithCD.environmentDetails': string
   'cd.getStartedWithCD.gitOpsAgent': string
+  'cd.getStartedWithCD.gitopsOnboardingAgentStep': string
+  'cd.getStartedWithCD.gitopsOnboardingConfigureStep': string
+  'cd.getStartedWithCD.gitopsOnboardingDeployStep': string
+  'cd.getStartedWithCD.gitopsOnboardingSource': string
   'cd.getStartedWithCD.gitopsRedirect.subtitle': string
   'cd.getStartedWithCD.gitopsRedirect.title': string
   'cd.getStartedWithCD.googleGKEHelperText': string
   'cd.getStartedWithCD.googleK8s': string
   'cd.getStartedWithCD.harnessFileStore': string
+  'cd.getStartedWithCD.haveGitRepo': string
   'cd.getStartedWithCD.helm': string
   'cd.getStartedWithCD.helpAndTroubleshoot': string
   'cd.getStartedWithCD.hideDelegateDetails': string
