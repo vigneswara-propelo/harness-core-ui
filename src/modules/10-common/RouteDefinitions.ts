@@ -1978,6 +1978,14 @@ const routes = {
   toIACMStacks: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/stacks`
+  ),
+  toIACMSetup: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/`
+  ),
+  toIACMPipelines: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
   )
 }
 
