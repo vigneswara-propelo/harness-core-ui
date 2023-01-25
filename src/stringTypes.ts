@@ -147,6 +147,7 @@ export interface StringsMap {
   'common.clusterName': string
   'common.clusters': string
   'common.codeErrorsSettings': string
+  'common.collapse': string
   'common.comingSoon': string
   'common.comingSoon2': string
   'common.commentModal.addCommentPlaceholder': string
@@ -283,6 +284,7 @@ export interface StringsMap {
   'common.execute': string
   'common.executedBy': string
   'common.executionTab.stepsCount': string
+  'common.expand': string
   'common.expiration': string
   'common.expiryDate': string
   'common.exploreAllPlans': string
@@ -6216,14 +6218,12 @@ export interface StringsMap {
   'ce.commitmentOrchestration.sideNavLabel': string
   'ce.common.and': string
   'ce.common.budget': string
-  'ce.common.collapse': string
   'ce.common.containerService': string
   'ce.common.copied': string
   'ce.common.database': string
   'ce.common.detailsCtaLabel': string
   'ce.common.disabled': string
   'ce.common.emissionUnitHTML': string
-  'ce.common.expand': string
   'ce.common.hoverErrorHeader': string
   'ce.common.hoverWarningHeader': string
   'ce.common.interval': string
