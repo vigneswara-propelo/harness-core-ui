@@ -164,7 +164,8 @@ export const ZapStepBase = (
                     },
                     'spec.tool.port': {
                       label: 'sto.stepField.tool.port',
-                      optional: true
+                      optional: true,
+                      inputProps: { placeholder: '8981' }
                     }
                   }}
                 />

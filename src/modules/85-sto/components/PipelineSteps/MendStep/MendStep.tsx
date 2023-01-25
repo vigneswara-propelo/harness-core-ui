@@ -58,12 +58,15 @@ export class MendStep extends PipelineStep<MendStepData> {
         type: 'repository',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
       auth: {
         domain: '',
-        access_token: '<+secrets.getValue("your_mend_token_secret")>',
+        access_token: '',
         ssl: true
+      },
+      tool: {
+        product_lookup_type: 'appendToProductByToken'
       },
       advanced: {
         log: {

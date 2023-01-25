@@ -20,9 +20,13 @@ import type { SecurityStepData, SecurityStepSpec } from './types'
 import SecurityField from './SecurityField'
 import {
   API_KEY_AUTH_TYPE,
+  API_VERSION_4_1_0,
+  API_VERSION_4_2_0,
+  API_VERSION_5_0_2,
   AWS_ECR_CONTAINER_TYPE,
   dividerBottomMargin,
   DOCKER_V2_CONTAINER_TYPE,
+  instanceProtocolSelectItems,
   JFROG_ARTIFACTORY_CONTAINER_TYPE,
   LOCAL_IMAGE_CONTAINER_TYPE,
   logLevelOptions,
@@ -103,7 +107,8 @@ export function SecurityTargetFields(props: ISecurityTargetFields) {
           'spec.target.workspace': {
             optional: true,
             label: 'sto.stepField.target.workspace',
-            hide: formik.values.spec.target.type === 'container' || formik.values.spec.mode === 'ingestion'
+            hide: formik.values.spec.target.type === 'container' || formik.values.spec.mode === 'ingestion',
+            inputProps: { placeholder: '/harness' }
           }
         }}
       />
@@ -174,11 +179,13 @@ interface ISecurityAuthFields extends SecurityFieldsProps<SecurityStepData<Secur
     ssl?: boolean
     domain?: boolean
     access_id?: boolean
+    version?: boolean
   }
+  authDomainPlaceHolder?: string
 }
 
 export function SecurityAuthFields(props: ISecurityAuthFields) {
-  const { allowableTypes, formik, stepViewType, initialAuthDomain, showFields } = props
+  const { allowableTypes, formik, stepViewType, initialAuthDomain, showFields, authDomainPlaceHolder } = props
   if (formik.values.spec.mode === 'ingestion') return null
   return (
     <>
@@ -189,7 +196,8 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
         enableFields={{
           'spec.auth.domain': {
             label: 'sto.stepField.authDomain',
-            hide: !showFields?.domain
+            hide: !showFields?.domain,
+            inputProps: { placeholder: authDomainPlaceHolder }
           },
           'spec.auth.ssl': {
             label: 'sto.stepField.authSsl',
@@ -197,6 +205,13 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
             hide:
               !showFields?.ssl ||
               (!isEmpty(formik.values.spec.auth?.domain) && formik.values.spec.auth?.domain === initialAuthDomain)
+          },
+          'spec.auth.version': {
+            label: 'sto.stepField.authVersion',
+            fieldType: 'dropdown',
+            optional: false,
+            hide: !showFields?.version,
+            selectItems: [API_VERSION_5_0_2, API_VERSION_4_2_0, API_VERSION_4_1_0]
           },
           'spec.auth.type': {
             label: 'sto.stepField.authType',
@@ -206,10 +221,12 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
           },
           'spec.auth.access_id': {
             label: 'sto.stepField.authAccessId',
-            hide: !(showFields?.access_id && formik.values.spec.auth?.type !== API_KEY_AUTH_TYPE.value)
+            hide: !(showFields?.access_id && formik.values.spec.auth?.type !== API_KEY_AUTH_TYPE.value),
+            inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' }
           },
           'spec.auth.access_token': {
-            label: 'sto.stepField.authToken'
+            label: 'sto.stepField.authToken',
+            inputProps: { placeholder: '<+secrets.getValue("project.access_token")>' }
           }
         }}
       />
@@ -220,55 +237,64 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
 
 export function SecurityImageFields(props: SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>) {
   const { allowableTypes, formik, stepViewType } = props
+  if (!(formik.values.spec.target.type === 'container' && formik.values.spec.mode === 'orchestration')) return null
   const hideNonLocalImageFields = !(
-    formik.values.spec.target.type === 'container' &&
-    formik.values.spec.image?.type !== 'local_image' &&
-    formik.values.spec.mode === 'orchestration'
+    formik.values.spec.target.type === 'container' && formik.values.spec.image?.type !== 'local_image'
   )
 
   return (
-    <SecurityField
-      stepViewType={stepViewType}
-      allowableTypes={allowableTypes}
-      formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
-      enableFields={{
-        'spec.image.type': {
-          label: 'sto.stepField.image.type',
-          hide: !(formik.values.spec.target.type === 'container' && formik.values.spec.mode === 'orchestration'),
-          fieldType: 'dropdown',
-          selectItems: [
-            LOCAL_IMAGE_CONTAINER_TYPE,
-            DOCKER_V2_CONTAINER_TYPE,
-            JFROG_ARTIFACTORY_CONTAINER_TYPE,
-            AWS_ECR_CONTAINER_TYPE
-          ]
-        },
-        'spec.image.name': {
-          label: 'imageNameLabel',
-          hide: !(formik.values.spec.target.type === 'container' && formik.values.spec.mode === 'orchestration')
-        },
-        'spec.image.domain': {
-          label: 'sto.stepField.image.domain',
-          optional: true,
-          hide: !(formik.values.spec.target.type === 'container' && formik.values.spec.mode === 'orchestration')
-        },
-        'spec.image.access_id': {
-          label: 'sto.stepField.image.accessId',
-          optional: true,
-          hide: hideNonLocalImageFields
-        },
-        'spec.image.access_token': {
-          label: 'sto.stepField.image.token',
-          hide: hideNonLocalImageFields,
-          optional: true
-        },
-        'spec.image.region': {
-          label: 'sto.stepField.image.region',
-          optional: true,
-          hide: formik.values.spec.image?.type !== 'aws_ecr'
-        }
-      }}
-    />
+    <>
+      <SecurityField
+        stepViewType={stepViewType}
+        allowableTypes={allowableTypes}
+        formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
+        enableFields={{
+          'spec.image.type': {
+            label: 'sto.stepField.image.type',
+
+            fieldType: 'dropdown',
+            selectItems: [
+              LOCAL_IMAGE_CONTAINER_TYPE,
+              DOCKER_V2_CONTAINER_TYPE,
+              JFROG_ARTIFACTORY_CONTAINER_TYPE,
+              AWS_ECR_CONTAINER_TYPE
+            ]
+          },
+          'spec.image.domain': {
+            label: 'sto.stepField.image.domain',
+            optional: true,
+            inputProps: { placeholder: 'docker.io' }
+          },
+          'spec.image.name': {
+            label: 'imageNameLabel',
+            inputProps: { placeholder: 'harness/todolist-sample' }
+          },
+          'spec.image.tag': {
+            label: 'sto.stepField.image.tag',
+            inputProps: { placeholder: 'latest' }
+          },
+          'spec.image.access_id': {
+            label: 'sto.stepField.image.accessId',
+            optional: true,
+            hide: hideNonLocalImageFields,
+            inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' }
+          },
+          'spec.image.access_token': {
+            label: 'sto.stepField.image.token',
+            hide: hideNonLocalImageFields,
+            optional: true,
+            inputProps: { placeholder: '<+secrets.getValue("project.access_token")>' }
+          },
+          'spec.image.region': {
+            label: 'sto.stepField.image.region',
+            optional: true,
+            hide: formik.values.spec.image?.type !== 'aws_ecr',
+            inputProps: { placeholder: 'us-east-1' }
+          }
+        }}
+      />
+      <Divider style={{ marginBottom: dividerBottomMargin }} />
+    </>
   )
 }
 
@@ -345,14 +371,18 @@ export function SecurityInstanceFields(props: SecurityFieldsProps<SecurityStepDa
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
         enableFields={{
           'spec.instance.domain': {
-            label: 'sto.stepField.instance.domain'
+            label: 'sto.stepField.instance.domain',
+            inputProps: { placeholder: 'app.harness.io' }
           },
           'spec.instance.protocol': {
-            label: 'sto.stepField.instance.protocol'
+            label: 'sto.stepField.instance.protocol',
+            fieldType: 'dropdown',
+            selectItems: instanceProtocolSelectItems
           },
           'spec.instance.port': {
             label: 'sto.stepField.instance.port',
-            optional: true
+            optional: true,
+            inputProps: { placeholder: '443' }
           },
           'spec.instance.path': {
             label: 'sto.stepField.instance.path',

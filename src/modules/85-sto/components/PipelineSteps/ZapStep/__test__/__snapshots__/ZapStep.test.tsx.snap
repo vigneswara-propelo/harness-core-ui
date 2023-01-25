@@ -685,6 +685,7 @@ exports[`Zap Step Edit View edit mode works 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.target.workspace"
+                        placeholder="/harness"
                         type="text"
                         value="~/workspace"
                       />
@@ -758,6 +759,7 @@ exports[`Zap Step Edit View edit mode works 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.instance.domain"
+                        placeholder="app.harness.io"
                         type="text"
                         value="auth domain"
                       />
@@ -822,15 +824,48 @@ exports[`Zap Step Edit View edit mode works 1`] = `
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
                     <div
-                      class="bp3-input-group MultiTypeInput--input"
+                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
                     >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        name="spec.instance.protocol"
-                        type="text"
-                        value="token"
-                      />
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="spec.instance.protocol"
+                            placeholder="select"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value="https"
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
                     <span
                       class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -909,6 +944,7 @@ exports[`Zap Step Edit View edit mode works 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.instance.port"
+                        placeholder="443"
                         type="text"
                         value="8080"
                       />
@@ -1155,6 +1191,7 @@ exports[`Zap Step Edit View edit mode works 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.tool.port"
+                        placeholder="8981"
                         type="text"
                         value="tool port"
                       />
@@ -2724,6 +2761,7 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.instance.domain"
+                        placeholder="app.harness.io"
                         type="text"
                         value="auth domain"
                       />
@@ -2788,15 +2826,48 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
                     <div
-                      class="bp3-input-group MultiTypeInput--input"
+                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
                     >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        name="spec.instance.protocol"
-                        type="text"
-                        value="token"
-                      />
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="spec.instance.protocol"
+                            placeholder="select"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value="http"
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
                     <span
                       class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -2875,6 +2946,7 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.instance.port"
+                        placeholder="443"
                         type="text"
                         value="8080"
                       />
@@ -6073,8 +6145,9 @@ exports[`Zap Step Edit View should render properly 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.target.workspace"
+                        placeholder="/harness"
                         type="text"
-                        value="/harness"
+                        value=""
                       />
                     </div>
                     <span
@@ -6146,6 +6219,7 @@ exports[`Zap Step Edit View should render properly 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.instance.domain"
+                        placeholder="app.harness.io"
                         type="text"
                         value=""
                       />
@@ -6210,15 +6284,48 @@ exports[`Zap Step Edit View should render properly 1`] = `
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
                     <div
-                      class="bp3-input-group MultiTypeInput--input"
+                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
                     >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        name="spec.instance.protocol"
-                        type="text"
-                        value=""
-                      />
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="spec.instance.protocol"
+                            placeholder="select"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value="https"
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
                     <span
                       class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -6297,6 +6404,7 @@ exports[`Zap Step Edit View should render properly 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.instance.port"
+                        placeholder="443"
                         type="text"
                         value=""
                       />
@@ -6543,8 +6651,9 @@ exports[`Zap Step Edit View should render properly 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.tool.port"
+                        placeholder="8981"
                         type="text"
-                        value="8981"
+                        value=""
                       />
                     </div>
                     <span

@@ -32,7 +32,7 @@ stepField:
   authAccessId: Auth Access Id
   authSsl: Enforce SSL
   authVersion: Auth API Version
-  authType: Authentication type
+  authType: Auth type
   toolInclude: Include
   tool:
     javaLibraries: Java Libraries
@@ -40,19 +40,20 @@ stepField:
     context: Tool Context Name
     port: Tool Port
     imageName: Tool Image Name
-    teamName: Tool Team Name
-    projectVersion: Tool Project Version
+    teamName: Team Name
+    projectVersion: Project Version
     productToken: Product Token
     productName: Product Name
     projectToken: Project Token
     productLookupType: Product Lookup Type
-    exclude: Product Tool Exclude
+    exclude: Exclude
   image:
     type: Image Type
     domain: Image Domain
     region: Image Region
     accessId: Image Access Id
     token: Image Access Token
+    tag: Image Tag
   container:
     containerAccessToken: Container Access Token
     containerRegion: Container Region

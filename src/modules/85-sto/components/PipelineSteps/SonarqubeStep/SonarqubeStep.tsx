@@ -58,11 +58,11 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
         type: 'repository',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
       auth: {
         domain: '',
-        access_token: '<+secrets.getValue("your_sonarqube_token_secret")>',
+        access_token: '',
         ssl: true
       },
       advanced: {

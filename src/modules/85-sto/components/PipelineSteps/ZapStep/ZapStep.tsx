@@ -58,10 +58,10 @@ export class ZapStep extends PipelineStep<ZapStepData> {
         type: 'instance',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
-      tool: {
-        port: 8981
+      instance: {
+        protocol: 'https'
       },
       advanced: {
         log: {

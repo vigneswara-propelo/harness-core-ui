@@ -58,12 +58,12 @@ export class CheckmarxStep extends PipelineStep<CheckmarxStepData> {
         type: 'repository',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
       auth: {
         domain: '',
         access_id: '',
-        access_token: '<+secrets.getValue("your_checkmarx_token_secret")>',
+        access_token: '',
         ssl: true
       },
       advanced: {

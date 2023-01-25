@@ -58,10 +58,10 @@ export class SnykStep extends PipelineStep<SnykStepData> {
         type: 'repository',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
       auth: {
-        access_token: '<+secrets.getValue("your_snyk_token_secret")>'
+        access_token: ''
       },
       advanced: {
         log: {

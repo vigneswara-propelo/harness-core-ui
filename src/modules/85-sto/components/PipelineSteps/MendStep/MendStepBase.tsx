@@ -87,9 +87,6 @@ export const MendStepBase = (
       value: 'byNames'
     }
   ]
-  // BlackduckStep
-  // mend
-  // prisma
 
   return (
     <Formik
@@ -126,15 +123,15 @@ export const MendStepBase = (
         // This is required
         setFormikRef?.(formikRef, formik)
 
-        const getProductLookupType = () => {
-          if (formik.values.spec.mode === 'orchestration') {
-            return orchestrationLookupTypes
-          }
-          if (formik.values.spec.mode === 'extraction') {
-            return extractionLookupTypes
-          }
-          return []
-        }
+        // const getProductLookupType = () => {
+        //   if (formik.values.spec.mode === 'orchestration') {
+        //     return orchestrationLookupTypes
+        //   }
+        //   if (formik.values.spec.mode === 'extraction') {
+        //     return extractionLookupTypes
+        //   }
+        //   return []
+        // }
 
         const show_product_token_field =
           formik.values.spec.mode != 'ingestion' &&
@@ -204,6 +201,7 @@ export const MendStepBase = (
               allowableTypes={allowableTypes}
               formik={formik}
               stepViewType={stepViewType}
+              authDomainPlaceHolder="https://saas.whitesourcesoftware.com/"
             />
 
             <SecurityField
@@ -214,8 +212,10 @@ export const MendStepBase = (
                 'spec.tool.product_lookup_type': {
                   label: 'sto.stepField.tool.productLookupType',
                   fieldType: 'dropdown',
-                  selectItems: getProductLookupType(),
-                  readonly: formik.values.spec.mode === 'ingestion'
+                  // selectItems: getProductLookupType(),
+                  selectItems:
+                    formik.values.spec.mode === 'orchestration' ? orchestrationLookupTypes : extractionLookupTypes,
+                  hide: formik.values.spec.mode === 'ingestion'
                 }
               }}
             />
@@ -241,13 +241,13 @@ export const MendStepBase = (
                     label: 'projectCard.projectName',
                     hide: !show_project_name_field
                   },
-                  'spec.tool.exclude': {
-                    label: 'sto.stepField.tool.exclude',
+                  'spec.tool.include': {
+                    label: 'sto.stepField.toolInclude',
                     optional: true,
                     hide: !(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction')
                   },
-                  'spec.tool.include': {
-                    label: 'sto.stepField.toolInclude',
+                  'spec.tool.exclude': {
+                    label: 'sto.stepField.tool.exclude',
                     optional: true,
                     hide: !(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction')
                   }

@@ -97,6 +97,17 @@ export const ZAP_DEFAULT_CONFIG = {
   label: 'Default'
 }
 
+export const instanceProtocolSelectItems = [
+  {
+    value: 'https',
+    label: 'https'
+  },
+  {
+    value: 'http',
+    label: 'http'
+  }
+]
+
 export const logLevelOptions = (getString: getStringProp) => [
   {
     label: getString('sto.stepField.optionLabels.logLevel.debug'),
@@ -265,6 +276,10 @@ export const commonFieldsTransformConfig = (data: SecurityStepData<SecurityStepS
       {
         name: 'spec.image.access_token',
         type: TransformValuesTypes.Text
+      },
+      {
+        name: 'spec.image.tag',
+        type: TransformValuesTypes.Text
       }
     )
   }
@@ -350,6 +365,12 @@ export const imageFieldsValidationConfig = (
     name: 'spec.image.access_id',
     type: ValidationFieldTypes.Text,
     label: 'sto.stepField.image.accessId'
+  },
+  {
+    name: 'spec.image.tag',
+    type: ValidationFieldTypes.Text,
+    label: 'sto.stepField.image.tag',
+    isRequired: data.spec.target?.type === 'container' && data.spec.mode === 'orchestration'
   }
 ]
 
@@ -543,6 +564,11 @@ export const inputSetFields = (
         ...(shouldRenderRunTimeInputView(template?.spec.image?.type) && {
           [getInputSetFieldName(prefix, 'spec.image.type')]: {
             label: 'sto.stepField.image.type'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.image?.tag) && {
+          [getInputSetFieldName(prefix, 'spec.image.tag')]: {
+            label: 'sto.stepField.image.tag'
           }
         }),
 

@@ -59,13 +59,13 @@ export class BlackduckStep extends PipelineStep<BlackduckStepData> {
         type: 'repository',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
       auth: {
         domain: '',
         type: API_KEY_AUTH_TYPE.value,
         access_id: '',
-        access_token: '<+secrets.getValue("your_token_secret")>',
+        access_token: '',
         version: API_VERSION_5_0_2.value,
         ssl: true
       },

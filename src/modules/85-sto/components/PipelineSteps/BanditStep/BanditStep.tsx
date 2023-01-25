@@ -58,7 +58,7 @@ export class BanditStep extends PipelineStep<BanditStepData> {
         type: 'repository',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
       advanced: {
         log: {

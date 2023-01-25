@@ -59,15 +59,16 @@ export class AquatrivyStep extends PipelineStep<AquatrivyStepData> {
         type: 'container',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
       image: {
         type: 'docker_v2',
         name: '',
         domain: '',
         access_id: '',
-        access_token: '<+secrets.getValue("your_aquatrivy_token_secret")>',
-        region: ''
+        access_token: '',
+        region: '',
+        tag: ''
       },
       advanced: {
         log: {

@@ -58,13 +58,14 @@ export class PrismaCloudStep extends PipelineStep<PrismaCloudStepData> {
         type: 'container',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
       image: {
         type: 'docker_v2',
         domain: '',
         access_token: '',
-        name: ''
+        name: '',
+        tag: ''
       },
       tool: {
         image_name: ''
@@ -72,7 +73,7 @@ export class PrismaCloudStep extends PipelineStep<PrismaCloudStepData> {
       auth: {
         domain: '',
         access_id: '',
-        access_token: '<+secrets.getValue("your_prismacloud_token_secret")>'
+        access_token: ''
       },
       advanced: {
         log: {

@@ -8485,6 +8485,7 @@ export interface StringsMap {
   'sto.stepField.image.accessId': string
   'sto.stepField.image.domain': string
   'sto.stepField.image.region': string
+  'sto.stepField.image.tag': string
   'sto.stepField.image.token': string
   'sto.stepField.image.type': string
   'sto.stepField.ingestion.file': string
