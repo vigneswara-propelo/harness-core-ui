@@ -192,7 +192,9 @@ export default function EnvironmentDetails(): React.ReactElement {
         <Page.Header
           className={cx({ [css.environmentDetailsHeader]: Boolean(description) })}
           size={'large'}
-          title={<PageHeaderTitle {...data?.data?.environment} />}
+          title={
+            <PageHeaderTitle name={name} identifier={identifier} description={description} tags={tags} type={type} />
+          }
           toolbar={<PageHeaderToolbar createdAt={createdAt} lastModifiedAt={lastModifiedAt} />}
         />
       )}
