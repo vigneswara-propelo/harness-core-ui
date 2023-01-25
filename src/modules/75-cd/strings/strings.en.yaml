@@ -623,6 +623,15 @@ getStartedWithCD:
   installDelegateToTargetEnv: Install a Harness Delegate in your target environment.
   delegateDescription: A Delegate is a service that runs on your infrastructure to execute tasks on behalf of the Harness platform.
   helpAndTroubleshoot: Help & Troubleshoot
+  hostedAgentExplain: What is it?
+  hostedAgentExplainContent: Sample Text
+  hostedAgentInstall: What will be installed
+  hostedAgentInfoTitle: What you need to do
+  gitOpsAgent: GitOps agent
+  repoServer: Repo server
+  redisCache: Redis cache
+  applicationController: Application controller
+  provisioningText: Provisioning these components will take up to 1 minute
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment

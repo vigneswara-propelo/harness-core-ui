@@ -5062,6 +5062,7 @@ export interface StringsMap {
   'cd.gcloudClusterCreate': string
   'cd.gcloudClusterList': string
   'cd.getStartedWithCD.allSet': string
+  'cd.getStartedWithCD.applicationController': string
   'cd.getStartedWithCD.artifactLocation': string
   'cd.getStartedWithCD.artifactManifest': string
   'cd.getStartedWithCD.artifactManifestContent': string
@@ -5094,6 +5095,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.entityCreationTitle': string
   'cd.getStartedWithCD.envName': string
   'cd.getStartedWithCD.environmentDetails': string
+  'cd.getStartedWithCD.gitOpsAgent': string
   'cd.getStartedWithCD.gitopsRedirect.subtitle': string
   'cd.getStartedWithCD.gitopsRedirect.title': string
   'cd.getStartedWithCD.googleGKEHelperText': string
@@ -5102,6 +5104,10 @@ export interface StringsMap {
   'cd.getStartedWithCD.helm': string
   'cd.getStartedWithCD.helpAndTroubleshoot': string
   'cd.getStartedWithCD.hideDelegateDetails': string
+  'cd.getStartedWithCD.hostedAgentExplain': string
+  'cd.getStartedWithCD.hostedAgentExplainContent': string
+  'cd.getStartedWithCD.hostedAgentInfoTitle': string
+  'cd.getStartedWithCD.hostedAgentInstall': string
   'cd.getStartedWithCD.inHarnessFileStore': string
   'cd.getStartedWithCD.inManifest': string
   'cd.getStartedWithCD.inManifestContent': string
@@ -5114,6 +5120,9 @@ export interface StringsMap {
   'cd.getStartedWithCD.onBoardingSubTitle': string
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.provideManifest': string
+  'cd.getStartedWithCD.provisioningText': string
+  'cd.getStartedWithCD.redisCache': string
+  'cd.getStartedWithCD.repoServer': string
   'cd.getStartedWithCD.reposubheading': string
   'cd.getStartedWithCD.runDelegateSubtitle': string
   'cd.getStartedWithCD.selectArtifactRepo': string
