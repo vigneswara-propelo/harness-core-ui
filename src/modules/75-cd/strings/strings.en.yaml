@@ -233,8 +233,12 @@ pipelineSteps:
     clusterIsRequired: 'Cluster is required'
     multiEnvToggleText: 'Deploy to multiple Environments or {{name}}'
     envGroupToggleText: 'Deploy to Environment Group'
-    viewEnvironmentInputs: View environment inputs
-    hideEnvironmentInputs: Hide environment inputs
+    viewEnvironmentInputs: View Environment inputs
+    hideEnvironmentInputs: Hide Environment inputs
+    viewServiceOverrideInputs: View Service Override inputs
+    hideServiceOverrideInputs: Hide Service Override inputs
+    viewEnvironmentServiceOverrideInputs: View Environment inputs & Service Override inputs
+    hideEnvironmentServiceOverrideInputs: Hide Environment inputs & Service Override inputs
     viewInfrastructureInputs: View infrastructure inputs
     hideInfrastructureInputs: Hide infrastructure inputs
     multiEnvironmentsParallelDeployLabel: Deploy to Environments or Infrastructures in parallel?

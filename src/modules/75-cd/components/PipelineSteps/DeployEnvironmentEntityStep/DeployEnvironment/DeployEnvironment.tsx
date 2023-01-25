@@ -72,7 +72,6 @@ interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomS
   readonly: boolean
   allowableTypes: AllowedTypes
   isMultiEnvironment: boolean
-  identifiersToLoad?: string[]
   /** env group specific props */
   isUnderEnvGroup?: boolean
   envGroupIdentifier?: string
@@ -105,6 +104,7 @@ export default function DeployEnvironment({
   readonly,
   allowableTypes,
   isMultiEnvironment,
+  serviceIdentifiers,
   envGroupIdentifier,
   isUnderEnvGroup,
   stageIdentifier,
@@ -149,7 +149,8 @@ export default function DeployEnvironment({
     prependEnvironmentToEnvironmentList
   } = useGetEnvironmentsData({
     envIdentifiers: selectedEnvironments,
-    envGroupIdentifier
+    envGroupIdentifier,
+    serviceIdentifiers
   })
 
   useEffect(() => {
@@ -211,11 +212,29 @@ export default function DeployEnvironment({
             environmentData => getScopedValueFromDTO(environmentData.environment) === values.environment
           )
 
+          const environmentServiceOverrideInputs: Record<string, any> = {}
+          const existingServiceOverrideInputs = values.serviceOverrideInputs?.[values.environment]
+
+          serviceIdentifiers?.forEach(serviceIdentifier => {
+            const serviceOverrideValueForService = get(
+              existingServiceOverrideInputs,
+              serviceIdentifier,
+              environment?.serviceOverrideInputs[values.environment as string][serviceIdentifier]
+            )
+
+            if (!isNil(serviceOverrideValueForService)) {
+              environmentServiceOverrideInputs[serviceIdentifier] = serviceOverrideValueForService
+            }
+          })
+
           setValues({
             ...values,
             // if environment input is not found, add it, else use the existing one
             environmentInputs: {
               [values.environment]: get(values.environmentInputs, [values.environment], environment?.environmentInputs)
+            },
+            serviceOverrideInputs: {
+              [values.environment]: environmentServiceOverrideInputs
             }
           })
         } else if (Array.isArray(values.environments)) {
@@ -499,6 +518,7 @@ export default function DeployEnvironment({
               permission: PermissionIdentifier.EDIT_ENVIRONMENT
             }}
             text={getString('common.plusNewName', { name: getString('environment') })}
+            id={'add-new-environment'}
           />
         )}
       </Layout.Horizontal>
@@ -518,6 +538,8 @@ export default function DeployEnvironment({
             allowableTypes={allowableTypes}
             onEnvironmentEntityUpdate={onEnvironmentEntityUpdate}
             onRemoveEnvironmentFromList={onRemoveEnvironmentFromList}
+            // Temporary Condition - Will remove it with multi service service override change
+            serviceIdentifiers={serviceIdentifiers.length === 1 ? serviceIdentifiers : []}
             initialValues={initialValues}
             stageIdentifier={stageIdentifier}
             deploymentType={deploymentType}

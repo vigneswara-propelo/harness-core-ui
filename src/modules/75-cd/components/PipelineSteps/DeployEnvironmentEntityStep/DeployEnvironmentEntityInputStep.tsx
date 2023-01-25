@@ -107,7 +107,7 @@ export default function DeployEnvironmentEntityInputStep({
     loadingEnvironmentsData,
     // This is required only when updating the entities list
     updatingEnvironmentsData
-  } = useGetEnvironmentsData({ envIdentifiers: environmentIdentifiers, envGroupIdentifier })
+  } = useGetEnvironmentsData({ envIdentifiers: environmentIdentifiers, envGroupIdentifier, serviceIdentifiers: [] })
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */
