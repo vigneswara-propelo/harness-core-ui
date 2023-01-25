@@ -382,6 +382,10 @@ manifestType:
   customRemoteExtractedFileLocation: Extracted Manifest File Location
   customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
   paramsYamlPath: Openshift Parameters
+  helmRepoOverride:
+    locationText: Chart Location Referenced From Service
+    allowedLimitForEnvironment: You cannot configure multiple Helm Repo Overrides at the Environment Level.
+    allowedLimitForService: You cannot configure multiple Helm Repo Overrides for the Service.
   http:
     chartName: 'Chart Name'
     chartVersion: 'Chart Version'
@@ -422,6 +426,7 @@ manifestTypeLabels:
   TASManifest: TAS Manifest
   VarsYAML: Vars
   Autoscaler: AutoScaler
+  HelmRepoOverride: Helm Repo Override
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
 failureStrategies:

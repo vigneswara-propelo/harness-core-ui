@@ -9276,6 +9276,7 @@ export interface ManifestConfig {
     | 'AsgScalingPolicy'
     | 'AsgScheduledUpdateGroupAction'
     | 'GoogleCloudFunctionDefinition'
+    | 'HelmRepoOverride'
 }
 
 export interface ManifestConfigWrapper {
