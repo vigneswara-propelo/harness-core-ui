@@ -126,6 +126,7 @@ interface KubernetesBuildInfraFormValues {
   harnessImageConnectorRef?: string
   os?: string
   hostNames?: MultiTypeListUIType
+  arch?: string
 }
 
 interface ContainerSecurityContext {
@@ -141,6 +142,7 @@ interface AWSVMInfraFormValues {
   poolName?: string
   harnessImageConnectorRef?: string
   os?: string
+  arch?: string
 }
 
 interface CloudInfraFormValues {
@@ -1194,18 +1196,23 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       </>
     )
 
-  const renderPlatformInfraSection = (): React.ReactElement => {
+  const renderPlatformInfraSection = (formik: FormikProps<BuildInfraFormValues>): React.ReactElement => {
     let buildInfraSelectOptions = []
     const buildArchSelectOptions = [
-      {
-        label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
-        value: ArchTypes.Amd64
-      },
       {
         label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
         value: ArchTypes.Arm64
       }
     ]
+
+    if (formik.values.os !== OsTypes.MacOS) {
+      buildArchSelectOptions.push({
+        label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
+        value: ArchTypes.Amd64
+      })
+    } else if (formik.values.os === OsTypes.MacOS && formik.values?.arch === ArchTypes.Amd64) {
+      formik.setValues({ ...formik.values, arch: ArchTypes.Arm64 })
+    }
 
     switch (buildInfraType) {
       case CIBuildInfrastructureType.KubernetesDirect:
@@ -2217,7 +2224,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           </Layout.Horizontal>
           {currentMode === Modes.NewConfiguration ? (
             <>
-              <Container margin={{ top: 'large' }}>{renderPlatformInfraSection()}</Container>
+              <Container margin={{ top: 'large' }}>{renderPlatformInfraSection(formik)}</Container>
               <Container margin={{ top: 'large' }}>{renderBuildInfraMainSection()}</Container>
             </>
           ) : null}
@@ -2311,9 +2318,10 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                               fetchDelegateDetails()
                             }
 
-                            // macOs is only supported for VMs - default to linux
+                            // macOs is not supported for K8s - default to linux
                             const os =
-                              formik?.values?.os === OsTypes.MacOS && infraType !== CIBuildInfrastructureType.VM
+                              formik?.values?.os === OsTypes.MacOS &&
+                              infraType === CIBuildInfrastructureType.KubernetesDirect
                                 ? OsTypes.Linux
                                 : formik?.values?.os
 
@@ -2333,8 +2341,10 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                         {getString('auditTrail.Platform')}
                       </Text>
                       <Card disabled={isReadonly} className={cx(css.sectionCard)}>
-                        {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted && renderPlatformInfraSection()}
-                        {![
+                        {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted &&
+                          renderPlatformInfraSection(formik)}
+                        {buildInfraType &&
+                        ![
                           CIBuildInfrastructureType.Cloud,
                           CIBuildInfrastructureType.Docker,
                           CIBuildInfrastructureType.KubernetesHosted

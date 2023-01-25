@@ -894,17 +894,6 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra initializes
                     </div>
                   </div>
                 </div>
-                <div>
-                  <div
-                    style="min-height: 10px;"
-                  />
-                  <div
-                    class="separator"
-                  />
-                  <div
-                    style="min-height: 0;"
-                  />
-                </div>
                 <div
                   class="StyledProps--font StyledProps--main StyledProps--margin-top-large"
                 />
@@ -6389,17 +6378,6 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra initializes
                       </div>
                     </div>
                   </div>
-                </div>
-                <div>
-                  <div
-                    style="min-height: 10px;"
-                  />
-                  <div
-                    class="separator"
-                  />
-                  <div
-                    style="min-height: 0;"
-                  />
                 </div>
                 <div
                   class="StyledProps--font StyledProps--main StyledProps--margin-top-large"
