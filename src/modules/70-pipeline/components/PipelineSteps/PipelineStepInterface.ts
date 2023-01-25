@@ -170,8 +170,7 @@ export enum StepType {
   Checkmarx = 'Checkmarx',
   Mend = 'Mend',
   AsgBlueGreenRollback = 'AsgBlueGreenRollback',
-  AsgBlueGreenSwapService = 'AsgBlueGreenSwapService',
-  AsgBlueGreenDeploy = 'AsgBlueGreenDeploy'
+  AsgBlueGreenSwapService = 'AsgBlueGreenSwapService'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

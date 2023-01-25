@@ -540,7 +540,6 @@ asgRollingRollbackStepDescription: Asg Rolling Rollback
 asgBlueGreenRollbackStepDescription: Asg Blue Green Rollback
 asgBlueGreenSwapServiceStepDescription: Asg Blue Green Swap Service
 downsizeOldAsg: Downsize old ASG
-asgBlueGreenDeployStepDescription: Asg Blue Green Deploy
 minimumHealthyPercentageMaxLimit: Minimum Healthy Percentage should be less than 100%
 minimumHealthyPercentageMinLimit: Minimum Healthy Percentage should be positive percentage
 instanceWarmupError: Instance Warmup must be a positive number
@@ -550,7 +549,6 @@ minimumHealthyPercentageLabel: Minimum Healthy Percentage (Optional)
 minimumHealthyPercentagePlaceholder: Minimum Healthy Percentage
 instanceWarmupLabel: Instance Warmup (Optional)
 instanceWarmupPlaceholder: Instance Warmup
-loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Dry Run Apply the service manifests and leverage the dry run yaml as output for subsequent steps
 getStartedWithCD:
