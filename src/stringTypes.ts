@@ -4878,6 +4878,7 @@ export interface StringsMap {
   'cd.artifactRepoTooltip': string
   'cd.artifactSource.artifactRepositoryTypeIsRequired': string
   'cd.artifactVersion': string
+  'cd.asgBlueGreenDeployStepDescription': string
   'cd.asgBlueGreenRollbackStepDescription': string
   'cd.asgBlueGreenSwapServiceStepDescription': string
   'cd.asgCanaryDeleteStepDescription': string
@@ -5189,6 +5190,7 @@ export interface StringsMap {
   'cd.learnMore': string
   'cd.learnMoreAboutHarnessAdapter': string
   'cd.learnMoreDelegate': string
+  'cd.loadBalancerConfig': string
   'cd.loadingDelegate': string
   'cd.logoOfName': string
   'cd.manifestId': string
