@@ -17,7 +17,6 @@ import type { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import type { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { MultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type IACMResourceStackWizard from '@iacm/components/IACMResourceStackWizard'
 import type { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import type ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
 import type RbacButton from '@rbac/components/Button/Button'
@@ -43,7 +42,6 @@ export interface IACMCustomMicroFrontendProps {
     ApprovalAdvancedSpecifications: typeof ApprovalAdvancedSpecifications
     SaveTemplateButton: typeof SaveTemplateButton
     MultiTypeConnectorField: typeof MultiTypeConnectorField
-    IACMResourceStackWizard: typeof IACMResourceStackWizard
     MultiTypeFieldSelector: typeof MultiTypeFieldSelector
     ExecutionGraph: typeof ExecutionGraph
     RbacOptionsMenuButton: typeof RbacOptionsMenuButton
