@@ -45,6 +45,7 @@ steps:
     attributesPlaceholder: Specify list of comma separated attributes and values. E.g. hostType:DB, region:west
     specifyHostsOption: Specify hosts
     preconfiguredHostsOption: Select preconfigured hosts from Physical Data Center
+    dynamicProvision: Map Dynamically Provisioned Infrastructure
     pdcConnectorLabel: Physical Datacentar Connector
     includeAllHosts: Include all hosts
     filterHostName: Filter by host name
@@ -54,6 +55,11 @@ steps:
     specificAttributes: Specific Attributes
     specificAttributesOptional: Specific Attributes (Optional)
     hostsOptional: Hosts (Optional)
+    hostDataMapping: Host Data Mapping
+    hostDataMappingEmptyKey: Field cannot have empty key entry
+    hostnameRqrd: A hostname key attribute is required
+    hostObjectPath: Host Object Array Path
+    hostObjectPathPlaceholder: Path value
     previewHosts: Preview Hosts
     noHosts: No hosts provided
     title: Select Hosts
@@ -176,7 +182,7 @@ cdSwitchToFirstGen:
 chooseProvisionerText: What type of provisioner do you want to use?
 setUpProvisionerBtnText: Set Up Provisioner
 
-filePathRequired: Atleast one file path is required
+filePathRequired: At least one file path is required
 pathCannotBeEmpty: File Path cannot be empty
 configFilePlaceHolder: 'Specify Config File...'
 backendConfigFilePlaceHolder: 'Specify Backend Config File...'

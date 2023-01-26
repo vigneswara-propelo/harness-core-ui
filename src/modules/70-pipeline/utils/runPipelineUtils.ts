@@ -32,7 +32,7 @@ export interface MergeStageProps {
  * Loops over the pipeline and clears all the runtime inputs i.e. <+input>
  */
 export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAlsoClearRuntimeInputs?: boolean): T {
-  const runtimeCollectionFieldsWhiteList = ['files', 'encryptedFiles']
+  const runtimeCollectionFieldsWhiteList = ['files', 'encryptedFiles', 'hostAttributes']
 
   const RUNTIME_INPUT_REGEX = new RegExp(`"${INPUT_EXPRESSION_REGEX_STRING}"`, 'g')
   const INPUT_EXPRESSION_REGEX = `${RUNTIME_INPUT_REGEX.source.slice(1).slice(0, -1)}`

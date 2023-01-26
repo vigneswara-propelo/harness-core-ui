@@ -5502,8 +5502,14 @@ export interface StringsMap {
   'cd.steps.emailStep.timeout1DayMinimum': string
   'cd.steps.kubernetesGcpStep.stepName': string
   'cd.steps.pdcStep.attributesPlaceholder': string
+  'cd.steps.pdcStep.dynamicProvision': string
   'cd.steps.pdcStep.filterHostAttributes': string
   'cd.steps.pdcStep.filterHostName': string
+  'cd.steps.pdcStep.hostDataMapping': string
+  'cd.steps.pdcStep.hostDataMappingEmptyKey': string
+  'cd.steps.pdcStep.hostObjectPath': string
+  'cd.steps.pdcStep.hostObjectPathPlaceholder': string
+  'cd.steps.pdcStep.hostnameRqrd': string
   'cd.steps.pdcStep.hostsOptional': string
   'cd.steps.pdcStep.hostsPlaceholder': string
   'cd.steps.pdcStep.includeAllHosts': string
