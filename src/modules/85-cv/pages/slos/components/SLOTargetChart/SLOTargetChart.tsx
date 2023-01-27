@@ -111,13 +111,11 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
   } = convertServiceLevelIndicatorToSLIFormData(serviceLevelIndicator)
 
   const emptyState = (
-    <Container flex={{ justifyContent: 'center' }}>
-      <NoDataCard
-        image={NoChartDataImage}
-        containerClassName={css.noData}
-        message={getString('cv.pleaseFillTheRequiredFieldsToSeeTheSLIData')}
-      />
-    </Container>
+    <NoDataCard
+      image={NoChartDataImage}
+      containerClassName={css.noData}
+      message={getString('cv.pleaseFillTheRequiredFieldsToSeeTheSLIData')}
+    />
   )
 
   if (

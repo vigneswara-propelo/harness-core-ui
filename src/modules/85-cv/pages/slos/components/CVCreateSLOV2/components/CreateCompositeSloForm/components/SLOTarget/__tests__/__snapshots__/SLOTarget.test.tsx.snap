@@ -82,7 +82,7 @@ exports[`Valiate SLOTarget should render SLOTarget 1`] = `
     </div>
   </div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+    class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-flex-start"
   >
     <div
       class="StyledProps--font StyledProps--main"
@@ -549,7 +549,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 1`] = `
     </div>
   </div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+    class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-flex-start"
   >
     <div
       class="StyledProps--font StyledProps--main"
@@ -1016,7 +1016,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 2`] = `
     </div>
   </div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+    class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-flex-start"
   >
     <div
       class="StyledProps--font StyledProps--main"
@@ -1469,7 +1469,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 3`] = `
     </div>
   </div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+    class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-flex-start"
   >
     <div
       class="StyledProps--font StyledProps--main"
@@ -1922,7 +1922,7 @@ exports[`Valiate SLOTarget should render SLOTarget for rolling 1`] = `
     </div>
   </div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+    class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-flex-start"
   >
     <div
       class="StyledProps--font StyledProps--main"

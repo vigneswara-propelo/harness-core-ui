@@ -908,7 +908,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
           </div>
         </div>
         <div
-          class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+          class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard footer StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
           data-testid="page-header"
         >
           <div

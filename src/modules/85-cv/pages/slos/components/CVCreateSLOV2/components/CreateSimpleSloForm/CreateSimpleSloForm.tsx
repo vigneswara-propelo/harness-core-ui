@@ -33,6 +33,7 @@ import { getErrorMessageByTabId, isFormDataValid } from './CreateSimpleSloForm.u
 import useCreateCompositeSloWarningModal from '../CreateCompositeSloForm/useCreateCompositeSloWarningModal'
 import { CreateSimpleSLOSteps } from './CreateSimpleSloForm.types'
 import { CompositeSLOContext } from '../CreateCompositeSloForm/CompositeSLOContext'
+import css from './CreateSimpleSloForm.module.scss'
 
 export interface CreateSimpleSLOFormInterface {
   loading: boolean
@@ -176,12 +177,18 @@ export default function CreateSimpleSLOForm({
 
   const debounceFetchSliGraphData = useCallback(debounce(fetchSliGraphData, 2000), [])
 
-  const notificationsTableData = notificationData?.data?.content?.map(notification => {
-    notification.enabled = formikProps.values.notificationRuleRefs?.find(
-      item => item.notificationRuleRef === notification.notificationRule.identifier
-    )?.enabled
-    return notification
-  })
+  const notificationsTableData = useMemo(
+    () =>
+      formikProps.values.notificationRuleRefs?.length
+        ? notificationData?.data?.content?.map(notification => {
+            notification.enabled = formikProps.values.notificationRuleRefs?.find(
+              item => item.notificationRuleRef === notification.notificationRule.identifier
+            )?.enabled
+            return notification
+          })
+        : [],
+    [formikProps.values.notificationRuleRefs, notificationData?.data?.content]
+  )
 
   return (
     <>
@@ -256,7 +263,6 @@ export default function CreateSimpleSLOForm({
                 {
                   id: CreateSimpleSLOSteps.Set_SLO,
                   title: 'Set your SLO',
-                  helpPanelReferenceId: 'defineCompositeSLO',
                   subTitle: getString('cv.slos.setSLOSubtitle'),
                   panel: (
                     <SLOTargetAndBudgetPolicy
@@ -274,7 +280,6 @@ export default function CreateSimpleSLOForm({
                 {
                   id: CreateSimpleSLOSteps.Error_Budget_Policy,
                   title: getString('cv.CompositeSLO.ErrorBudgetPolicy'),
-                  helpPanelReferenceId: 'setErrorErrorBudgetAndNotification',
                   isOptional: true,
                   subTitle: getString('cv.slos.errorBudgetPolicySubtitle'),
                   panel: (
@@ -296,6 +301,7 @@ export default function CreateSimpleSLOForm({
               ]}
             />
             <Page.Header
+              className={css.footer}
               title={
                 <Layout.Horizontal spacing="medium">
                   <Button text={getString('cancel')} variation={ButtonVariation.SECONDARY} onClick={onCancel} />
@@ -305,8 +311,6 @@ export default function CreateSimpleSLOForm({
                     variation={ButtonVariation.PRIMARY}
                     onClick={() => {
                       setValidateAllSteps(true)
-                      // add check to check errors aprt from formik
-                      // fields
                       formikProps.submitForm()
                     }}
                   />

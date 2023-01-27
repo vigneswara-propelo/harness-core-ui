@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { LegacyRef, useCallback, useEffect, useMemo, useRef } from 'react'
+import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import {
   FormInput,
@@ -40,7 +41,6 @@ import {
 } from '../../components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import { defaultOption } from './SLI.constants'
 import { SLIMetricTypes, SLOV2FormFields } from '../../components/CVCreateSLOV2/CVCreateSLOV2.types'
-import css from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.module.scss'
 import sliCss from './SLI.module.scss'
 
 const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
@@ -151,13 +151,37 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monitoredService, serviceRef, environmentRef, healthSources, changeSources, formikProps])
 
+  const {
+    healthSourceRef,
+    SLIMetricType,
+    validRequestMetric,
+    objectiveValue,
+    objectiveComparator,
+    SLIMissingDataType,
+    serviceLevelIndicatorType
+  } = values
+
+  const showChart =
+    healthSourceRef &&
+    SLIMetricType &&
+    validRequestMetric &&
+    objectiveValue &&
+    objectiveComparator &&
+    SLIMissingDataType &&
+    serviceLevelIndicatorType
+
   const sliContainerBorder = values.healthSourceRef ? { border: { right: true } } : undefined
   const chartContainerBorder = !values.healthSourceRef ? { border: { left: true } } : undefined
+  const chartPositionProp = !showChart ? { flex: { alignItems: 'center' as any } } : undefined
+  const sliFormContainerRef: LegacyRef<HTMLDivElement> = useRef(null)
+  const sliFormContainerHeight = parseInt(
+    defaultTo(sliFormContainerRef.current?.getClientRects()?.[0]?.height, 0).toFixed(0)
+  )
 
   return (
     <>
       <Layout.Horizontal flex={{ justifyContent: FLEX_START, alignItems: FLEX_START }}>
-        <Container width="50%" padding={{ right: 'xlarge' }} {...sliContainerBorder}>
+        <Container width="50%" padding={{ right: 'xlarge' }} ref={sliFormContainerRef} {...sliContainerBorder}>
           {/* Select Healthsource start */}
           <Layout.Vertical spacing="xsmall">
             <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'semi-bold' }}>
@@ -233,10 +257,10 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
           )}
         </Container>
         <Container
-          height="inherit"
+          height={sliFormContainerHeight}
           width="50%"
-          className={css.graphContainer}
           padding={{ left: 'xxlarge' }}
+          {...chartPositionProp}
           {...chartContainerBorder}
         >
           <SLOTargetChartWrapper

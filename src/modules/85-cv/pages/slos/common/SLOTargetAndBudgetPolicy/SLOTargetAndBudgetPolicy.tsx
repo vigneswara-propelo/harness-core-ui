@@ -156,6 +156,7 @@ const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ chi
                 margin={{ top: 'large', left: 'xxxlarge' }}
                 icon="symbol-square"
                 iconProps={{ color: Color.PRIMARY_4 }}
+                flex={{ alignItems: 'center' }}
               >
                 {getString('cv.SLIMetricRatio')}
               </Text>

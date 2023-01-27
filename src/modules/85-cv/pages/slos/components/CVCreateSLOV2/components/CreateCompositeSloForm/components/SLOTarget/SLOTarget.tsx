@@ -57,7 +57,7 @@ const SLOTarget = ({ formikProps, dataPoints }: SLOTargetProps): JSX.Element => 
           }}
         />
       </Container>
-      <Layout.Horizontal spacing="xxxlarge" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+      <Layout.Horizontal spacing="large" flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }}>
         <Container width={500}>
           <SLOTargetChart
             bottomLabel={
