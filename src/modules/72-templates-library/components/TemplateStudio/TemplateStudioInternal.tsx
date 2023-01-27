@@ -51,6 +51,8 @@ import { RightBar } from '@templates-library/components/TemplateStudio/RightBar/
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { ErrorNodeSummary, useValidateTemplateInputs } from 'services/template-ng'
 import { TemplateContext } from './TemplateContext/TemplateContext'
 import { getContentAndTitleStringKeys, isValidYaml } from './TemplateStudioUtils'
@@ -89,6 +91,7 @@ export function TemplateStudioInternal(): React.ReactElement {
   } = state
   const { isYamlEditable } = templateView
   const { getString } = useStrings()
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const [blockNavigation, setBlockNavigation] = React.useState(false)
   const [selectedBranch, setSelectedBranch] = React.useState(defaultTo(branch, ''))
   const [isYamlError, setYamlError] = React.useState(false)
@@ -273,7 +276,8 @@ export function TemplateStudioInternal(): React.ReactElement {
         branch,
         versionLabel: defaultTo(template.versionLabel, versionLabel),
         getDefaultFromOtherRepo: true
-      }
+      },
+      requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
     })
     showSuccess(getString('pipeline.outOfSyncErrorStrip.reconcileStarted'))
     setShouldShowOutOfSyncError(true)

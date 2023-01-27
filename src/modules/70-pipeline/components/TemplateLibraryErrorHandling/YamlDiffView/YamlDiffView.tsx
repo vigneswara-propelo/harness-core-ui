@@ -38,6 +38,8 @@ import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import css from './YamlDiffView.module.scss'
 
 export interface YamlDiffViewProps {
@@ -61,6 +63,7 @@ export function YamlDiffView({
   const params = useParams<ProjectPathProps>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const editorRef = useRef<MonacoDiffEditor>(null)
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<any>()
   const [originalYaml, setOriginalYaml] = React.useState<string>('')
@@ -101,6 +104,7 @@ export function YamlDiffView({
             params
           })
         },
+        requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
         body: { yaml: originalEntityYaml }
       })
       if (response && response.status === 'SUCCESS') {
@@ -136,7 +140,8 @@ export function YamlDiffView({
             },
             params
           })
-        }
+        },
+        requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
       })
       if (response && response.status === 'SUCCESS') {
         setOriginalYaml(yamlStringify(yamlParse(defaultTo(response.data?.originalYaml, ''))))
