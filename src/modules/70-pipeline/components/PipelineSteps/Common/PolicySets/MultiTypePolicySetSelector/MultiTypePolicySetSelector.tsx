@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { connect, FormikContextType } from 'formik'
+import { FormikContextType, useFormikContext } from 'formik'
 import { get } from 'lodash-es'
 
 import { AllowedTypes, Button, MultiTypeInputType } from '@harness/uicore'
@@ -17,29 +17,33 @@ import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ExpressionsListInput } from '@common/components/ExpressionsListInput/ExpressionsListInput'
 
-import type { PolicyStepFormData } from '../../PolicyStepTypes'
 import { PolicySetModal } from '../PolicySetModal/PolicySetModal'
 import { MiniPolicySetRenderer } from '../PolicySetListRenderer/MiniPolicySetRenderer'
 
 import css from './MultiTypePolicySetSelector.module.scss'
 
-export interface MultiTypePolicySetSelectorInternalProps extends Omit<IFormGroupProps, 'label'> {
-  formik?: FormikContextType<PolicyStepFormData>
+export interface MultiTypePolicySetSelectorProps extends Omit<IFormGroupProps, 'label'> {
   name: string
   label: string
   expressions?: string[]
   allowableTypes?: AllowedTypes
 }
 
-export function MultiTypePolicySetSelectorInternal(props: MultiTypePolicySetSelectorInternalProps): React.ReactElement {
+interface PolicySetFixedTypeSelectorProps<T> extends IFormGroupProps {
+  name: string
+  policySetIds: string[]
+  formik?: FormikContextType<T>
+}
+
+export default function MultiTypePolicySetSelector<T>(props: MultiTypePolicySetSelectorProps): React.ReactElement {
   const {
-    formik,
     name,
     label,
     expressions = [],
     allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
     disabled
   } = props
+  const formik = useFormikContext<T>()
 
   const policySetIds = get(formik?.values, name) || []
 
@@ -60,30 +64,22 @@ export function MultiTypePolicySetSelectorInternal(props: MultiTypePolicySetSele
       )}
       onTypeChange={onTypeChange}
     >
-      <PolicySetFixedTypeSelector name={name} disabled={disabled} formik={formik} policySetIds={policySetIds} />
+      <PolicySetFixedTypeSelector<T> name={name} disabled={disabled} formik={formik} policySetIds={policySetIds} />
     </MultiTypeFieldSelector>
   )
 }
 
-export const MultiTypePolicySetSelector = connect(MultiTypePolicySetSelectorInternal)
-
-interface PolicySetFixedTypeSelectorProps extends IFormGroupProps {
-  name: string
-  policySetIds: string[]
-  formik?: FormikContextType<PolicyStepFormData>
-}
-
-function PolicySetFixedTypeSelector({
+function PolicySetFixedTypeSelector<T>({
   formik,
   name,
   policySetIds,
   disabled
-}: PolicySetFixedTypeSelectorProps): React.ReactElement {
+}: PolicySetFixedTypeSelectorProps<T>): React.ReactElement {
   const { getString } = useStrings()
 
   const [showModal, closeModal] = useModalHook(
     () => (
-      <PolicySetModal
+      <PolicySetModal<T>
         name={name}
         formikProps={formik}
         policySetIds={policySetIds}

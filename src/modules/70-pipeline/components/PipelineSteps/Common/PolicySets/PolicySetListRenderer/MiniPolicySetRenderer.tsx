@@ -18,7 +18,7 @@ import { LinkedPolicy, useGetPolicySet } from 'services/pm'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 
-import { PolicySetType } from '../../PolicyStepTypes'
+import { PolicySetType } from '../utils'
 
 import css from './PolicySetListRenderer.module.scss'
 
@@ -27,7 +27,10 @@ interface MiniPolicySetRendererProps {
   deletePolicySet: (policySetId: string) => void
 }
 
-export function MiniPolicySetRenderer({ policySetId, deletePolicySet }: MiniPolicySetRendererProps) {
+export function MiniPolicySetRenderer({
+  policySetId,
+  deletePolicySet
+}: MiniPolicySetRendererProps): React.ReactElement {
   const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getRBACErrorMessage } = useRBACError()
 
@@ -50,7 +53,7 @@ export function MiniPolicySetRenderer({ policySetId, deletePolicySet }: MiniPoli
     policyset: policySetId
   })
 
-  const onDelete = () => {
+  const onDelete = (): void => {
     deletePolicySet(policySetId)
   }
 
@@ -99,7 +102,7 @@ interface MiniPoliciesRendererProps {
   alignRight?: boolean
 }
 
-export function MiniPoliciesRenderer({ policies, alignRight }: MiniPoliciesRendererProps) {
+export function MiniPoliciesRenderer({ policies, alignRight }: MiniPoliciesRendererProps): React.ReactElement | null {
   const length = policies.length
   // istanbul ignore else
   if (length === 0) {

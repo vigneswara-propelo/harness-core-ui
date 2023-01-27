@@ -19,7 +19,7 @@ import { DEFAULT_DATE_FORMAT } from '@common/utils/StringUtils'
 
 import { MiniPoliciesRenderer } from './MiniPolicySetRenderer'
 import { NewPolicySetButton } from '../NewPolicySetButton/NewPolicySetButton'
-import { PolicySetType } from '../../PolicyStepTypes'
+import { PolicySetType } from '../utils'
 
 import css from './PolicySetListRenderer.module.scss'
 
@@ -43,7 +43,7 @@ export function PolicySetListRenderer({
   policySetList,
   selectedTabId,
   showModal
-}: PolicySetListRendererProps) {
+}: PolicySetListRendererProps): React.ReactElement {
   const { getString } = useStrings()
 
   return (

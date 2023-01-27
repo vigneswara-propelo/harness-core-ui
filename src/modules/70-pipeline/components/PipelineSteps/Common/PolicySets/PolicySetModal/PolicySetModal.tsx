@@ -35,14 +35,13 @@ import { PolicySetWizard } from '@governance/PolicySetWizard'
 
 import { PolicySetListRenderer } from '../PolicySetListRenderer/PolicySetListRenderer'
 import { NewPolicySetButton } from '../NewPolicySetButton/NewPolicySetButton'
-import { PolicySetType, PolicyStepFormData } from '../../PolicyStepTypes'
-import { getErrorMessage } from '../../utils'
+import { PolicySetType, getErrorMessage } from '../utils'
 
 import css from './PolicySetModal.module.scss'
 
-export interface PolicySetModalProps {
+export interface PolicySetModalProps<T> {
   name: string
-  formikProps?: FormikProps<PolicyStepFormData>
+  formikProps?: FormikProps<T>
   policySetIds: string[]
   closeModal: (action?: string) => void
 }
@@ -60,7 +59,12 @@ const modalProps: IDialogProps = {
   }
 }
 
-export function PolicySetModal({ name, formikProps, policySetIds, closeModal }: PolicySetModalProps): JSX.Element {
+export function PolicySetModal<T>({
+  name,
+  formikProps,
+  policySetIds,
+  closeModal
+}: PolicySetModalProps<T>): JSX.Element {
   const { getString } = useStrings()
   const { showError } = useToaster()
 
@@ -131,7 +135,7 @@ export function PolicySetModal({ name, formikProps, policySetIds, closeModal }: 
   } = useGetPolicySetList({
     queryParams: {
       ...reqQueryParams,
-      type: formikProps?.values?.spec?.type?.toLowerCase(),
+      type: defaultTo((formikProps?.values as any)?.spec?.type?.toLowerCase(), 'custom'),
       action: 'onstep'
     },
     debounce: 300
@@ -186,7 +190,7 @@ export function PolicySetModal({ name, formikProps, policySetIds, closeModal }: 
   }
 
   // This component renders the title for the tabs in the modal
-  const TabTitle = ({
+  function TabTitle({
     icon,
     type,
     count,
@@ -196,7 +200,7 @@ export function PolicySetModal({ name, formikProps, policySetIds, closeModal }: 
     type: StringKeys
     count: number
     identifier?: string
-  }) => {
+  }): JSX.Element {
     return (
       <Container>
         <Text font={{ size: 'normal' }} icon={icon}>
@@ -225,55 +229,57 @@ export function PolicySetModal({ name, formikProps, policySetIds, closeModal }: 
   }
 
   // This component renders the tab panel in the modal
-  const TabPanel = () => (
-    <>
-      <ExpandingSearchInput
-        alwaysExpanded
-        placeholder={getString('common.searchPlaceholder')}
-        onChange={text => {
-          setsearchTerm(text.trim())
-        }}
-        width={'100%'}
-        autoFocus={false}
-        defaultValue={searchTerm}
-        throttle={300}
-      />
-      <PolicySetListRenderer
-        newPolicySetIds={newPolicySetIds}
-        setNewPolicySetIds={setNewPolicySetIds}
-        policySetList={policySetList}
-        loading={loading}
-        error={error}
-        refetch={refetch}
-        selectedTabId={selectedTabId}
-        showModal={showModal}
-      />
-      <Pagination
-        itemCount={itemCount}
-        pageCount={pageCount}
-        pageSize={pageSize}
-        pageSizeOptions={[5, 10, 20, 40]}
-        onPageSizeChange={size => setPageSize(size)}
-        pageIndex={pageIndex}
-        gotoPage={index => setPageIndex(index)}
-        hidePageNumbers
-      />
-      <hr className={css.separator} />
-      <Container margin={{ top: 'large' }}>
-        <Layout.Horizontal spacing="medium">
-          <Button
-            text="Apply"
-            intent="primary"
-            onClick={() => {
-              formikProps?.setFieldValue(name, newPolicySetIds)
-              closeModal(getString('common.apply'))
-            }}
-          />
-          <Button text="Cancel" onClick={() => closeModal()} />
-        </Layout.Horizontal>
-      </Container>
-    </>
-  )
+  function TabPanel(): JSX.Element {
+    return (
+      <>
+        <ExpandingSearchInput
+          alwaysExpanded
+          placeholder={getString('common.searchPlaceholder')}
+          onChange={text => {
+            setsearchTerm(text.trim())
+          }}
+          width={'100%'}
+          autoFocus={false}
+          defaultValue={searchTerm}
+          throttle={300}
+        />
+        <PolicySetListRenderer
+          newPolicySetIds={newPolicySetIds}
+          setNewPolicySetIds={setNewPolicySetIds}
+          policySetList={policySetList}
+          loading={loading}
+          error={error}
+          refetch={refetch}
+          selectedTabId={selectedTabId}
+          showModal={showModal}
+        />
+        <Pagination
+          itemCount={itemCount}
+          pageCount={pageCount}
+          pageSize={pageSize}
+          pageSizeOptions={[5, 10, 20, 40]}
+          onPageSizeChange={size => setPageSize(size)}
+          pageIndex={pageIndex}
+          gotoPage={index => setPageIndex(index)}
+          hidePageNumbers
+        />
+        <hr className={css.separator} />
+        <Container margin={{ top: 'large' }}>
+          <Layout.Horizontal spacing="medium">
+            <Button
+              text="Apply"
+              intent="primary"
+              onClick={() => {
+                formikProps?.setFieldValue(name, newPolicySetIds)
+                closeModal(getString('common.apply'))
+              }}
+            />
+            <Button text="Cancel" onClick={() => closeModal()} />
+          </Layout.Horizontal>
+        </Container>
+      </>
+    )
+  }
 
   return (
     <>
