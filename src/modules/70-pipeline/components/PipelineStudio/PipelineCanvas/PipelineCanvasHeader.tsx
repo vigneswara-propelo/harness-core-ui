@@ -139,8 +139,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
         projectIdentifier,
         identifier: pipelineIdentifier,
         ...getGitQueryParamsWithParentScope({ storeMetadata, params })
-      },
-      headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) }
+      }
     },
     {
       enabled: false,

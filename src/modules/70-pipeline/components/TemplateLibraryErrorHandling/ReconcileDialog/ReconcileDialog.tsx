@@ -31,8 +31,6 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { getFirstLeafNode, getTitleFromErrorNodeSummary, TemplateErrorEntity } from '../utils'
 import css from './ReconcileDialog.module.scss'
 
@@ -70,7 +68,6 @@ export function ReconcileDialog({
   const isGitSyncEnabled = isGitSyncEnabledForProject && /* istanbul ignore next */ !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
   const [canEditTemplate] = usePermission({
     resource: {
@@ -121,7 +118,6 @@ export function ReconcileDialog({
             lastObjectId: gitDetails?.objectId,
             ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {})
           },
-          requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
           body: undefined
         })
         if (response && response.status === 'SUCCESS') {
@@ -145,7 +141,6 @@ export function ReconcileDialog({
             lastObjectId: gitDetails?.objectId,
             ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {})
           },
-          requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
           body: undefined
         })
         if (response && response.status === 'SUCCESS') {
