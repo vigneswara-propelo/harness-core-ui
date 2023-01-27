@@ -117,7 +117,7 @@ declare module 'chaos/MicroFrontendApp' {
   export default ChildApp
 }
 
-declare module 'chaos/PipelineExperimentSelect' {
+declare module 'chaos/SelectPipelineExperiment' {
   import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent
   export default ChildApp
