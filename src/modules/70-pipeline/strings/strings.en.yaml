@@ -404,7 +404,6 @@ manifestType:
 manifestTypeLabels:
   K8sManifest: K8s Manifest
   ValuesYaml: Values YAML
-  HelmChartLabel: Helm Chart
   KustomizeLabel: Kustomize
   OpenshiftTemplate: OpenShift Template
   OpenshiftParam: OpenShift Param

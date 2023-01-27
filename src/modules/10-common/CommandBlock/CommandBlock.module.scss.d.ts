@@ -8,5 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly commandBlock: string
+  readonly downloadBtn: string
+  readonly ignoreWhiteSpaces: string
 }
 export default styles

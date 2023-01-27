@@ -12,12 +12,12 @@ import { useStrings } from 'framework/strings'
 
 interface CopyButtonProps extends ButtonProps {
   textToCopy: string
+  onCopySuccess?: () => void
 }
 
-const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy, ...rest }) => {
+const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy, onCopySuccess, ...rest }) => {
   const { getString } = useStrings()
   const [openTooltip, setOpenTooltip] = useState(false)
-
   const showCopySuccess = () => {
     setOpenTooltip(true)
     setTimeout(
@@ -35,8 +35,11 @@ const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy, ...rest }) => {
       onClick={() => {
         copy(textToCopy)
         showCopySuccess()
+        if (onCopySuccess) {
+          onCopySuccess()
+        }
       }}
-      tooltip={getString('ce.common.copied')}
+      tooltip={getString('common.copied')}
       tooltipProps={{ isOpen: openTooltip, isDark: true }}
       {...rest}
     />
