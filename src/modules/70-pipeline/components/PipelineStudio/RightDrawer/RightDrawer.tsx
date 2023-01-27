@@ -770,7 +770,7 @@ export function RightDrawer(): React.ReactElement {
 
   const { onSearchInputChange } = usePipelineVariables()
 
-  const getStepNameSuffix = (stepType: string, stepName: string, isProvisioner = false) => {
+  const getStepNameSuffix = (stepType: string, stepName: string, isProvisioner = false): string => {
     let maxId = 0
     const suffixNameArray: string[] = []
     const stepsMap = data?.paletteData?.stepsMap
@@ -781,7 +781,7 @@ export function RightDrawer(): React.ReactElement {
           : selectedStage?.stage?.spec?.execution,
         key
       )
-      if (stepDetails?.node?.type === stepType) {
+      if (get(stepDetails, 'node.template.templateInputs.type', stepDetails?.node?.type) === stepType) {
         const stepNodeName = stepDetails?.node?.name
         if (stepNodeName.length > stepName.length) {
           const suffix = stepNodeName.slice(stepName.length)
