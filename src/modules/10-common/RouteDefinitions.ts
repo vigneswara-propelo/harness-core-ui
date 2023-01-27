@@ -1902,6 +1902,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/getting-started`
   ),
+  toSTOProjectTicketSummary: withAccountId(
+    ({ orgIdentifier, projectIdentifier, ticketId }: ProjectPathProps & { ticketId: string }) =>
+      `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/ticket-summary/${ticketId}`
+  ),
   /********************************************************************************************************************/
   toOldCustomDashboard: withAccountId(() => '/home/dashboards*'),
   toCustomDashboard: withAccountId(() => '/dashboards'),
