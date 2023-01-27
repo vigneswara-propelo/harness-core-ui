@@ -1990,6 +1990,17 @@ const routes = {
   toIACMPipelines: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
+  ),
+  toIACMPipelineResources: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      executionIdentifier,
+      source
+    }: PipelineType<ExecutionPathProps>) => {
+      return `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/resources`
+    }
   )
 }
 
