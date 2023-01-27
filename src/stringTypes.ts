@@ -7065,6 +7065,7 @@ export interface StringsMap {
   'cf.homepage.learnMore': string
   'cf.homepage.slogan': string
   'cf.learnMore': string
+  'cf.loading': string
   'cf.messages.flagCreated': string
   'cf.messages.flagDeleted': string
   'cf.messages.flagUpdated': string
