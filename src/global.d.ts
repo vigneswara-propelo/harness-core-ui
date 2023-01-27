@@ -202,6 +202,8 @@ declare module 'iacm/IACMPipelineResources' {
 
 declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
+declare type RequiredPick<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
+
 declare type Mutable<T> = {
   -readonly [K in keyof T]: T[K]
 }

@@ -95,6 +95,7 @@ export enum CIBuildInfrastructureType {
 
 export const DEFAULT_PAGE_INDEX = 0
 export const DEFAULT_PAGE_SIZE = 20
+export const PAGE_SIZE_OPTIONS = [10, 20, 50, 100]
 export const DEFAULT_PIPELINE_LIST_TABLE_SORT = ['lastUpdatedAt', 'DESC']
 export const DEFAULT_EXECUTION_LIST_TABLE_SORT = ['startTs', 'DESC']
 
