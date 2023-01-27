@@ -7494,6 +7494,8 @@ export interface StringsMap {
   'cv.SLOPerformanceTrend': string
   'cv.SLOTarget': string
   'cv.SLOWithName': string
+  'cv.ThresholdSLIValueGoodIf': string
+  'cv.ThresholdValidrequests': string
   'cv.aMaximumOfThreeSLOCanBeComparedWithTheServiceHealth': string
   'cv.abbreviatedCategories.errors': string
   'cv.abbreviatedCategories.infrastructure': string
@@ -8224,6 +8226,7 @@ export interface StringsMap {
   'cv.overall': string
   'cv.overviewPage.recentChangeVerifications': string
   'cv.perHeatMapCell': string
+  'cv.percentageValidrequests': string
   'cv.periodLength': string
   'cv.periodLengthDays': string
   'cv.periodLengthIsRequired': string
@@ -8285,15 +8288,19 @@ export interface StringsMap {
   'cv.showingLogsFor': string
   'cv.sliMissingDataTypeIsRequired': string
   'cv.sloAnalysisTakingLong': string
+  'cv.sloCreateInfo': string
   'cv.sloDowntime.info': string
   'cv.sloDowntime.label': string
   'cv.sloDowntime.noData': string
+  'cv.sloGraphInitialState': string
   'cv.sloGraphUserHint': string
   'cv.sloRecalculationInProgress': string
   'cv.slos.backToSLI': string
   'cv.slos.burnRate': string
   'cv.slos.completeTitle': string
+  'cv.slos.configureSLI': string
   'cv.slos.configureSLIQueries': string
+  'cv.slos.configureSLISubtitle': string
   'cv.slos.confirmDeleteSLO': string
   'cv.slos.contextualHelp.sli.availabilityDescription': string
   'cv.slos.contextualHelp.sli.healthSource': string
@@ -8317,25 +8324,37 @@ export interface StringsMap {
   'cv.slos.createCompositeSLO': string
   'cv.slos.createMonitoredService': string
   'cv.slos.createSLO': string
+  'cv.slos.defineSLOSubttitle': string
   'cv.slos.deleteSLO': string
+  'cv.slos.errorBudgetPolicySubtitle': string
+  'cv.slos.evaluationMethod': string
+  'cv.slos.evaluationMethodSubtitle': string
+  'cv.slos.goodRequestMetric': string
   'cv.slos.healthSource': string
   'cv.slos.healthSourceForSLI': string
   'cv.slos.latencySLI': string
   'cv.slos.monitoredService': string
+  'cv.slos.monitoredServiceSubTitle': string
   'cv.slos.monitoredServiceText': string
   'cv.slos.noDataMS': string
   'cv.slos.noMatchingData': string
   'cv.slos.noMatchingDataForSearch': string
   'cv.slos.noSLOsStateMessage': string
   'cv.slos.pickMetricsSLI': string
+  'cv.slos.requestType': string
   'cv.slos.reviewChanges': string
   'cv.slos.searchSLO': string
   'cv.slos.selectHealthsource': string
   'cv.slos.selectMonitoredService': string
   'cv.slos.selectMonitoredServiceForSlo': string
+  'cv.slos.setSLOSubtitle': string
   'cv.slos.sli': string
   'cv.slos.sliType': string
   'cv.slos.sliTypeChooseMetric': string
+  'cv.slos.sliTypeSubtitle': string
+  'cv.slos.slis.HealthSource': string
+  'cv.slos.slis.HealthSourceSubTitle': string
+  'cv.slos.slis.SLIChartTitle': string
   'cv.slos.slis.metricOptions.ratioBased': string
   'cv.slos.slis.metricOptions.thresholdBased': string
   'cv.slos.slis.ratioMetricType.badRequestsMetrics': string
@@ -8366,6 +8385,8 @@ export interface StringsMap {
   'cv.slos.userJourney': string
   'cv.slos.userJourneyCreated': string
   'cv.slos.userJourneyPlaceholder': string
+  'cv.slos.userJourneySubTitle': string
+  'cv.slos.validRequestMetric': string
   'cv.slos.validations.healthSourceRequired': string
   'cv.slos.validations.nameValidation': string
   'cv.slos.validations.specialCharacters': string
