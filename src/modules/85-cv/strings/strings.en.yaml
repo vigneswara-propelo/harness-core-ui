@@ -941,8 +941,17 @@ CompositeSLO:
     weightMinMax: SLO weight should be between 0.01 to 99.99
 sloDowntime:
   label: Downtime
+  downtimeName: Downtime Name
+  downtimeCategory: Downtime category
   noData: No SLO downtime configured
+  addDowntime: Add a SLO Downtime
   info: During downtime, SLO status and error budget calculations will be excluded for that specific time period.
+  scheduledMaintenance: Scheduled Maintenance
+  selectCategory: Select downtime category
+  validations:
+    nameValidation: SLO Downtime is required
+  steps:
+    identification: Define SLO downtime identification
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on

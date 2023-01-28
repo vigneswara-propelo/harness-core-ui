@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreateDowntimePreview should render CreateDowntimePreview with correct values 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        style="width: 100px;"
+        title="cv.sloDowntime.downtimeName"
+      >
+        cv.sloDowntime.downtimeName
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+      >
+        SLO Downtime
+      </p>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        style="width: 100px;"
+        title="description"
+      >
+        description
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+      >
+        Weekly downtime
+      </p>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        style="width: 100px;"
+        title="cv.slos.userJourney"
+      >
+        cv.slos.userJourney
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+      >
+        Deployment
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CreateDowntimePreview should render CreateDowntimePreview with empty value 1`] = `<div />`;
+
+exports[`CreateDowntimePreview should render CreateDowntimePreview with init value 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        style="width: 100px;"
+        title="cv.sloDowntime.downtimeName"
+      >
+        cv.sloDowntime.downtimeName
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+      >
+        
+      </p>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        style="width: 100px;"
+        title="cv.slos.userJourney"
+      >
+        cv.slos.userJourney
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+      >
+        
+      </p>
+    </div>
+  </div>
+</div>
+`;

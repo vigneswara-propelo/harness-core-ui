@@ -8358,9 +8358,16 @@ export interface StringsMap {
   'cv.sliMissingDataTypeIsRequired': string
   'cv.sloAnalysisTakingLong': string
   'cv.sloCreateInfo': string
+  'cv.sloDowntime.addDowntime': string
+  'cv.sloDowntime.downtimeCategory': string
+  'cv.sloDowntime.downtimeName': string
   'cv.sloDowntime.info': string
   'cv.sloDowntime.label': string
   'cv.sloDowntime.noData': string
+  'cv.sloDowntime.scheduledMaintenance': string
+  'cv.sloDowntime.selectCategory': string
+  'cv.sloDowntime.steps.identification': string
+  'cv.sloDowntime.validations.nameValidation': string
   'cv.sloGraphInitialState': string
   'cv.sloGraphUserHint': string
   'cv.sloRecalculationInProgress': string
