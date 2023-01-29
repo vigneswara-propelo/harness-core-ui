@@ -7,16 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly analysisReason: string
-  readonly graphs: string
+  readonly label: string
   readonly main: string
-  readonly metricInfo: string
-  readonly metricPanelLabels: string
-  readonly metricRisk: string
-  readonly node: string
-  readonly nodeDetails: string
-  readonly scrollArrow: string
-  readonly scrollArrowPlaceholder: string
-  readonly showDetailsText: string
 }
 export default styles

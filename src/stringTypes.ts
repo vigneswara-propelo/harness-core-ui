@@ -4628,6 +4628,7 @@ export interface StringsMap {
   'pipeline.verification.anomalousMetricsFilterLabel': string
   'pipeline.verification.baselineTest': string
   'pipeline.verification.collapseAll': string
+  'pipeline.verification.controlData': string
   'pipeline.verification.controlHost': string
   'pipeline.verification.controlHostName': string
   'pipeline.verification.currentTest': string
@@ -4671,6 +4672,7 @@ export interface StringsMap {
   'pipeline.verification.tableHeaders.group': string
   'pipeline.verification.tableHeaders.metricName': string
   'pipeline.verification.tableHeaders.nodes': string
+  'pipeline.verification.testData': string
   'pipeline.verification.testHost': string
   'pipeline.verification.testHostName': string
   'pipeline.verification.testsRan': string
@@ -7860,6 +7862,16 @@ export interface StringsMap {
   'cv.metricThresholds.validations.percentageValidation': string
   'cv.metricVerificationModal.modalTitle': string
   'cv.metricVerificationModal.viewCalls': string
+  'cv.metricsAnalysis.analysisReason.customFailFastThreshold': string
+  'cv.metricsAnalysis.analysisReason.mlAnalysis': string
+  'cv.metricsAnalysis.analysisReason.noControlData': string
+  'cv.metricsAnalysis.analysisReason.noTestData': string
+  'cv.metricsAnalysis.controlDataType.minDeviation': string
+  'cv.metricsAnalysis.metricThresholds.applied': string
+  'cv.metricsAnalysis.metricThresholds.criteria': string
+  'cv.metricsAnalysis.metricThresholds.thresholdType': string
+  'cv.metricsAnalysis.metricThresholds.value': string
+  'cv.metricsAnalysis.showDetails': string
   'cv.minValueN': string
   'cv.mins': string
   'cv.minutes': string

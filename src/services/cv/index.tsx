@@ -21,7 +21,8 @@ export interface AdditionalInfo {
 }
 
 export interface AffectedEntity {
-  [key: string]: any
+  envRef?: string
+  serviceRef?: string
 }
 
 export type AnalysedDeploymentNode = AbstractAnalysedNode & {
@@ -766,7 +767,7 @@ export interface ClusteredLog {
   verificationTaskId?: string
 }
 
-export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
+export interface CompositeServiceLevelObjectiveSpec {
   serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
 }
 
@@ -830,6 +831,7 @@ export interface ConnectorInfoDTO {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'TerraformCloud'
 }
 
 export interface ControlClusterSummary {
@@ -1213,9 +1215,9 @@ export interface DowntimeDTO {
   entityRefs: EntityDetails[]
   identifier: string
   name: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  scope: 'Project' | 'Entity'
+  orgIdentifier: string
+  projectIdentifier: string
+  scope?: 'Project' | 'Entity'
   spec: DowntimeSpecDTO
   tags?: {
     [key: string]: string
@@ -1230,13 +1232,11 @@ export interface DowntimeDuration {
 export interface DowntimeHistoryView {
   affectedEntities?: AffectedEntity[]
   category?: 'ScheduledMaintenance' | 'Deployment' | 'Other'
-  description?: string
   duration?: DowntimeDuration
-  endTime?: string
+  endTime?: number
   identifier?: string
   name?: string
-  startTime?: string
-  status?: 'Active' | 'Scheduled'
+  startTime?: number
 }
 
 export interface DowntimeListView {
@@ -1248,6 +1248,7 @@ export interface DowntimeListView {
   identifier?: string
   lastModified?: LastModified
   name?: string
+  spec?: DowntimeSpecDTO
   status?: 'Active' | 'Scheduled'
 }
 
@@ -1263,7 +1264,7 @@ export interface DowntimeResponse {
 }
 
 export interface DowntimeSpec {
-  startTime?: number
+  startTime: number
   timezone: string
 }
 
@@ -2799,7 +2800,8 @@ export type KubernetesUserNamePasswordDTO = KubernetesAuthCredentialDTO & {
 }
 
 export interface LastModified {
-  [key: string]: any
+  lastModifiedAt?: number
+  lastModifiedBy?: string
 }
 
 export interface LearningEngineTask {
@@ -3236,7 +3238,7 @@ export interface MetricThresholdCriteriaV2 {
   actionableCount?: number
   greaterThanThreshold?: number
   lessThanThreshold?: number
-  measurementType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  measurementType?: 'ratio' | 'delta' | 'absolute-value'
 }
 
 export interface MetricThresholdSpec {
@@ -4020,9 +4022,9 @@ export type RatioSLIMetricSpec = SLIMetricSpec & {
 }
 
 export type RecurringDowntimeSpec = DowntimeSpec & {
-  downtimeDuration?: DowntimeDuration
-  downtimeRecurrence?: DowntimeRecurrence
-  recurrenceEndTime?: number
+  downtimeDuration: DowntimeDuration
+  downtimeRecurrence: DowntimeRecurrence
+  recurrenceEndTime: number
 }
 
 export interface ReferenceDTO {
@@ -5915,6 +5917,26 @@ export interface TemporalUnit {
   timeBased?: boolean
 }
 
+export type TerraformCloudConnector = ConnectorConfigDTO & {
+  credential: TerraformCloudCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+  terraformCloudUrl: string
+}
+
+export interface TerraformCloudCredential {
+  spec?: TerraformCloudCredentialSpec
+  type: 'ApiToken'
+}
+
+export interface TerraformCloudCredentialSpec {
+  [key: string]: any
+}
+
+export type TerraformCloudTokenCredentials = TerraformCloudCredentialSpec & {
+  apiToken: string
+}
+
 export type ThresholdSLIMetricSpec = SLIMetricSpec & {
   metric1: string
   thresholdType: '>' | '<' | '>=' | '<='
@@ -6063,7 +6085,7 @@ export interface TimeSeriesMetricDataDTO {
 export interface TimeSeriesMetricDefinition {
   action?: 'FAIL_IMMEDIATELY' | 'FAIL_AFTER_OCCURRENCES' | 'FAIL_AFTER_CONSECUTIVE_OCCURRENCES' | 'IGNORE'
   actionType?: 'IGNORE' | 'FAIL'
-  comparisonType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  comparisonType?: 'ratio' | 'delta' | 'absolute-value'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   id?: string
   metricGroupName?: string
@@ -6177,7 +6199,7 @@ export interface TimeSeriesThresholdCriteria {
   criteria?: string
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   occurrenceCount?: number
-  type?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  type?: 'ratio' | 'delta' | 'absolute-value'
 }
 
 export interface TimeSeriesThresholdDTO {
@@ -6482,7 +6504,7 @@ export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type UpdateMonitoredServiceFromYamlBodyRequestBody = string
+export type SaveMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface ChangeEventListForAccountQueryParams {
   serviceIdentifiers?: string[]
@@ -7041,8 +7063,10 @@ export const saveDowntimePromise = (
   )
 
 export interface GetHistoryQueryParams {
-  offset: number
-  pageSize: number
+  pageNumber?: number
+  pageSize?: number
+  monitoredServiceIdentifier?: string
+  filter?: string
 }
 
 export interface GetHistoryPathParams {
@@ -7349,8 +7373,10 @@ export const updateDowntimeDataPromise = (
   )
 
 export interface ListDowntimesQueryParams {
-  offset: number
-  pageSize: number
+  pageNumber?: number
+  pageSize?: number
+  monitoredServiceIdentifier?: string
+  filter?: string
 }
 
 export interface ListDowntimesPathParams {
@@ -7730,6 +7756,364 @@ export const getSampleRawRecordPromise = (
     'POST',
     getConfig('cv/api'),
     `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/records`,
+    props,
+    signal
+  )
+
+export interface GetMetricsAnalysisForVerifyStepExecutionIdQueryParams {
+  anomalousMetricsOnly?: boolean
+  healthSource?: string[]
+  transactionGroup?: string[]
+  node?: string[]
+  limit?: number
+  page?: number
+}
+
+export interface GetMetricsAnalysisForVerifyStepExecutionIdPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  verifyStepExecutionId: string
+}
+
+export type GetMetricsAnalysisForVerifyStepExecutionIdProps = Omit<
+  GetProps<
+    PageMetricsAnalysis,
+    unknown,
+    GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+    GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+  >,
+  'path'
+> &
+  GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+
+/**
+ * get metrics analysis for given verifyStepExecutionId
+ */
+export const GetMetricsAnalysisForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: GetMetricsAnalysisForVerifyStepExecutionIdProps) => (
+  <Get<
+    PageMetricsAnalysis,
+    unknown,
+    GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+    GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+  >
+    path={`/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/analysis/metrics`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetMetricsAnalysisForVerifyStepExecutionIdProps = Omit<
+  UseGetProps<
+    PageMetricsAnalysis,
+    unknown,
+    GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+    GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+  >,
+  'path'
+> &
+  GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+
+/**
+ * get metrics analysis for given verifyStepExecutionId
+ */
+export const useGetMetricsAnalysisForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: UseGetMetricsAnalysisForVerifyStepExecutionIdProps) =>
+  useGet<
+    PageMetricsAnalysis,
+    unknown,
+    GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+    GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+  >(
+    (paramsInPath: GetMetricsAnalysisForVerifyStepExecutionIdPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/orgs/${paramsInPath.orgIdentifier}/projects/${paramsInPath.projectIdentifier}/verifications/${paramsInPath.verifyStepExecutionId}/analysis/metrics`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, verifyStepExecutionId },
+      ...props
+    }
+  )
+
+/**
+ * get metrics analysis for given verifyStepExecutionId
+ */
+export const getMetricsAnalysisForVerifyStepExecutionIdPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    PageMetricsAnalysis,
+    unknown,
+    GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+    GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string; verifyStepExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    PageMetricsAnalysis,
+    unknown,
+    GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+    GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+  >(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/analysis/metrics`,
+    props,
+    signal
+  )
+
+export interface GetHealthSourcesForVerifyStepExecutionIdPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  verifyStepExecutionId: string
+}
+
+export type GetHealthSourcesForVerifyStepExecutionIdProps = Omit<
+  GetProps<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetHealthSourcesForVerifyStepExecutionIdPathParams
+
+/**
+ * get all the health sources
+ */
+export const GetHealthSourcesForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: GetHealthSourcesForVerifyStepExecutionIdProps) => (
+  <Get<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>
+    path={`/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/health-sources`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetHealthSourcesForVerifyStepExecutionIdProps = Omit<
+  UseGetProps<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetHealthSourcesForVerifyStepExecutionIdPathParams
+
+/**
+ * get all the health sources
+ */
+export const useGetHealthSourcesForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: UseGetHealthSourcesForVerifyStepExecutionIdProps) =>
+  useGet<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>(
+    (paramsInPath: GetHealthSourcesForVerifyStepExecutionIdPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/orgs/${paramsInPath.orgIdentifier}/projects/${paramsInPath.projectIdentifier}/verifications/${paramsInPath.verifyStepExecutionId}/health-sources`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, verifyStepExecutionId },
+      ...props
+    }
+  )
+
+/**
+ * get all the health sources
+ */
+export const getHealthSourcesForVerifyStepExecutionIdPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId,
+    ...props
+  }: GetUsingFetchProps<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+    verifyStepExecutionId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/health-sources`,
+    props,
+    signal
+  )
+
+export interface GetVerificationOverviewForVerifyStepExecutionIdPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  verifyStepExecutionId: string
+}
+
+export type GetVerificationOverviewForVerifyStepExecutionIdProps = Omit<
+  GetProps<VerificationOverview, unknown, void, GetVerificationOverviewForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetVerificationOverviewForVerifyStepExecutionIdPathParams
+
+/**
+ * get verification overview for given verifyStepExecutionId
+ */
+export const GetVerificationOverviewForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: GetVerificationOverviewForVerifyStepExecutionIdProps) => (
+  <Get<VerificationOverview, unknown, void, GetVerificationOverviewForVerifyStepExecutionIdPathParams>
+    path={`/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/overview`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetVerificationOverviewForVerifyStepExecutionIdProps = Omit<
+  UseGetProps<VerificationOverview, unknown, void, GetVerificationOverviewForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetVerificationOverviewForVerifyStepExecutionIdPathParams
+
+/**
+ * get verification overview for given verifyStepExecutionId
+ */
+export const useGetVerificationOverviewForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: UseGetVerificationOverviewForVerifyStepExecutionIdProps) =>
+  useGet<VerificationOverview, unknown, void, GetVerificationOverviewForVerifyStepExecutionIdPathParams>(
+    (paramsInPath: GetVerificationOverviewForVerifyStepExecutionIdPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/orgs/${paramsInPath.orgIdentifier}/projects/${paramsInPath.projectIdentifier}/verifications/${paramsInPath.verifyStepExecutionId}/overview`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, verifyStepExecutionId },
+      ...props
+    }
+  )
+
+/**
+ * get verification overview for given verifyStepExecutionId
+ */
+export const getVerificationOverviewForVerifyStepExecutionIdPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    VerificationOverview,
+    unknown,
+    void,
+    GetVerificationOverviewForVerifyStepExecutionIdPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string; verifyStepExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<VerificationOverview, unknown, void, GetVerificationOverviewForVerifyStepExecutionIdPathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/overview`,
+    props,
+    signal
+  )
+
+export interface GetTransactionGroupsForVerifyStepExecutionIdPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  verifyStepExecutionId: string
+}
+
+export type GetTransactionGroupsForVerifyStepExecutionIdProps = Omit<
+  GetProps<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetTransactionGroupsForVerifyStepExecutionIdPathParams
+
+/**
+ * get all the transaction groups
+ */
+export const GetTransactionGroupsForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: GetTransactionGroupsForVerifyStepExecutionIdProps) => (
+  <Get<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>
+    path={`/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/transaction-groups`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetTransactionGroupsForVerifyStepExecutionIdProps = Omit<
+  UseGetProps<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetTransactionGroupsForVerifyStepExecutionIdPathParams
+
+/**
+ * get all the transaction groups
+ */
+export const useGetTransactionGroupsForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: UseGetTransactionGroupsForVerifyStepExecutionIdProps) =>
+  useGet<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>(
+    (paramsInPath: GetTransactionGroupsForVerifyStepExecutionIdPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/orgs/${paramsInPath.orgIdentifier}/projects/${paramsInPath.projectIdentifier}/verifications/${paramsInPath.verifyStepExecutionId}/transaction-groups`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, verifyStepExecutionId },
+      ...props
+    }
+  )
+
+/**
+ * get all the transaction groups
+ */
+export const getTransactionGroupsForVerifyStepExecutionIdPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId,
+    ...props
+  }: GetUsingFetchProps<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+    verifyStepExecutionId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/transaction-groups`,
     props,
     signal
   )
@@ -10912,7 +11296,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -10926,7 +11310,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -10941,7 +11325,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -10955,7 +11339,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -10967,7 +11351,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -10976,7 +11360,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 
