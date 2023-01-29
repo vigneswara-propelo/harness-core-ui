@@ -126,6 +126,7 @@ export const initialState: CDOnboardingReducerState = {
 
 export const CDOnboardingReducer = (state = initialState, data: ActionReturnType): CDOnboardingReducerState => {
   const { type, response } = data
+
   switch (type) {
     case CDOnboardingActions.Initialize:
       return {

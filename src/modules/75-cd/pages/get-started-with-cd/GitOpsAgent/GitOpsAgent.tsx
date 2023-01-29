@@ -9,6 +9,7 @@ import React from 'react'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
+import { v4 as uuid } from 'uuid'
 import { Button, ButtonVariation, Container, HarnessDocTooltip, Layout, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 // import { HelpPanel } from '@harness/help-panel'
@@ -99,21 +100,19 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
   const { getString } = useStrings()
   // isProvisioningScreen is 2nd screen
   const [isProvisioningScreen, setIsProvisioningScreen] = React.useState(false)
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId } = useParams<ProjectPathProps>()
   const { mutate: createAgent, loading, error } = useAgentServiceForServerCreate({})
   const onProvisionAgent = async () => {
     setIsProvisioningScreen(true)
+    const _uuid = uuid()
     const payload = {
-      name: 'Hosted Agent uuid',
-      identifier: 'Hosted_Agent_uuid',
+      name: `HostedAgent${_uuid}`,
+      identifier: `HostedAgent${_uuid}`,
       type: 'HOSTED_ARGO_PROVIDER' as V1AgentType,
       metadata: {
         highAvailability: false,
         existingInstallation: false
       },
-      projectIdentifier: projectIdentifier,
-      orgIdentifier: orgIdentifier,
-
       accountIdentifier: accountId
     }
     await createAgent(payload).then(noop).catch(noop)

@@ -27,6 +27,7 @@ import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { RepoDataType } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
+import { DestinationStep } from './DestinationStep'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 import moduleCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
@@ -191,7 +192,7 @@ const ConfigureGitopsRef = (): JSX.Element => {
                 }
               />
             </Accordion>
-
+            <DestinationStep />
             <div className={css.marginTopClass} />
           </Container>
         </Layout.Vertical>

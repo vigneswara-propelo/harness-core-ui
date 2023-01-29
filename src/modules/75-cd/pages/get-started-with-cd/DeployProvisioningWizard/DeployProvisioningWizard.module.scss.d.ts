@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly accordianForm: string
   readonly accordion: string
   readonly accordionPadding: string
   readonly accordionStatus: string
@@ -32,8 +33,10 @@ declare const styles: {
   readonly header: string
   readonly helpPanelContainer: string
   readonly icons: string
+  readonly keyTextArea: string
   readonly learnMore: string
   readonly main: string
+  readonly marginBottom25: string
   readonly modalCard: string
   readonly modalContent: string
   readonly noDelegateWarning: string
@@ -56,6 +59,7 @@ declare const styles: {
   readonly text1: string
   readonly uppercase: string
   readonly verticalSeparation: string
+  readonly width50: string
   readonly workloadTypeCard: string
   readonly workloadTypeIcon: string
 }

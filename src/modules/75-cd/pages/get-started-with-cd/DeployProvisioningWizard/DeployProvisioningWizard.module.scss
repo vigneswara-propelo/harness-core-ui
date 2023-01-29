@@ -315,3 +315,26 @@
     flex: none !important;
   }
 }
+
+.accordianForm {
+  background: #fafcff;
+  border-radius: 8px;
+  padding: 12px 32px 40px;
+  margin-top: 24px !important;
+}
+
+.width50 {
+  width: 50%;
+}
+
+.marginBottom25 {
+  margin-bottom: var(--spacing-xlarge);
+}
+
+.keyTextArea {
+  :global(.bp3-input) {
+    width: 500px;
+    //resize: none;
+    min-height: 140px !important;
+  }
+}

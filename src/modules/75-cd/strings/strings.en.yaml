@@ -569,6 +569,7 @@ getStartedWithCD:
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
   gitopsOnboardingAgentStep: Connect to Harness by provisioning hosted Agent
   gitopsOnboardingSource: Where is your source?
+  gitopsOnboardingDestination: Where to deploy to?
   gitopsOnboardingConfigureStep: Configure the source and destination
   gitopsOnboardingDeployStep: You are all set!
   runDelegateSubtitle: You can install the Delegate in your target environment.
@@ -650,6 +651,9 @@ getStartedWithCD:
   agentProvisionedSuccessfully: Your agent has been provisioned successfully
   agentSetupTimeInfo: This process may take up to 1 minutes to complete. While the agent is being provisioned, please set up IP Whitelisting so Harness can connect to your cluster
   ensureFullConnectivity: To ensure the full connectivity, please make sure you have set up IP Whitelisting before moving to the next step
+  harnessHosted: Harness hosted
+  selfManaged: Self-managed
+  nameYourCluster: Name your cluster
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment
