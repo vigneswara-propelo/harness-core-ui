@@ -21,6 +21,7 @@ import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { UserLabel } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { MinimalLayout } from '@common/layouts'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
@@ -337,7 +338,8 @@ const RouteDestinations: React.FC = () => {
         exact
         licenseRedirectData={licenseRedirectData}
         sidebarProps={STOSideNavProps}
-        path={[routes.toSTOProjectTicketSummary({ ...accountPathProps, ...projectPathProps, ticketId: ':ticketId' })]}
+        layout={MinimalLayout}
+        path={[routes.toSTOProjectTicketSummary({ ...accountPathProps, ...projectPathProps, issueId: ':issueId' })]}
       >
         <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel }} />
       </RouteWithLayout>
