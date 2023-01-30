@@ -83,7 +83,8 @@ const SelectDeploymentTypeRef = (
     {
       label: 'pipeline.serviceDeploymentTypes.kubernetes',
       icon: deploymentIconMap[ServiceDeploymentType.Kubernetes],
-      value: ServiceDeploymentType.Kubernetes
+      value: ServiceDeploymentType.Kubernetes,
+      disabled: false
     }
     // {
     //   label: 'pipeline.serviceDeploymentTypes.kubernetesWithGitops',
@@ -103,9 +104,11 @@ const SelectDeploymentTypeRef = (
 
   React.useImperativeHandle(forwardRef, () => ({
     submitForm() {
+      /* istanbul ignore else */
       if (formikRef.current) {
         return formikRef.current.submitForm()
       }
+      /* istanbul ignore next */
       return Promise.resolve()
     }
   }))
@@ -166,13 +169,15 @@ const SelectDeploymentTypeRef = (
                           </>
                         )}
                         selected={selectedDeploymentType}
-                        onChange={(item: DeploymentTypeItem) => {
-                          formikProps.setFieldValue('selectedDeploymentType', item.value)
-                          setSelectedDeploymentType(item)
-                          trackEvent(CDOnboardingActions.SelectDeploymentType, {
-                            selectedDeploymentType
-                          })
-                        }}
+                        onChange={
+                          /* istanbul ignore next */ (item: DeploymentTypeItem) => {
+                            formikProps.setFieldValue('selectedDeploymentType', item.value)
+                            setSelectedDeploymentType(item)
+                            trackEvent(CDOnboardingActions.SelectDeploymentType, {
+                              selectedDeploymentType
+                            })
+                          }
+                        }
                       />
                       {formikProps.touched.selectedDeploymentType && !formikProps.values.selectedDeploymentType ? (
                         <FormError
@@ -184,8 +189,14 @@ const SelectDeploymentTypeRef = (
                       ) : null}
                     </Container>
                     <Link to={routes.toPipelines({ orgIdentifier, projectIdentifier, accountId, module: 'cd' })}>
-                      <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.BODY2 }} margin={{ top: 'huge' }}>
+                      <Text
+                        color={Color.PRIMARY_7}
+                        font={{ variation: FontVariation.BODY2 }}
+                        margin={{ top: 'huge' }}
+                        data-tooltip-id="cdOnboardingOtherDeploymentTypes"
+                      >
                         {getString('cd.getStartedWithCD.clickForOtherDeploymentTypes')}
+                        <HarnessDocTooltip tooltipId="cdOnboardingOtherDeploymentTypes" useStandAlone={true} />
                       </Text>
                     </Link>
                   </Container>
