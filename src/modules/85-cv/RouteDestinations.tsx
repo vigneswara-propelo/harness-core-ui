@@ -60,6 +60,7 @@ import CVCreateSLOV2 from './pages/slos/components/CVCreateSLOV2/CVCreateSLOV2'
 import { getIsValuePresent } from './utils/licenseBannerUtils'
 import { ThresholdPercentageToShowBanner } from './constants'
 import SLODowntimePage from './pages/slos/SLODowntimePage/SLODowntimePage'
+import CVCreateDowntime from './pages/slos/components/CVCreateDowntime/CVCreateDowntime'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -372,6 +373,17 @@ export default (
       path={[routes.toCVSLODowntime({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]}
     >
       <SLODowntimePage />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
+      path={[
+        routes.toCVCreateSLODowntime({ ...accountPathProps, ...projectPathProps }),
+        routes.toCVEditSLODowntime({ ...accountPathProps, ...projectPathProps, ...editParams })
+      ]}
+    >
+      <CVCreateDowntime />
     </RouteWithLayout>
 
     <RouteWithLayout

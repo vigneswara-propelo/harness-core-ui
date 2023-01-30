@@ -1623,6 +1623,14 @@ const routes = {
       })
     }
   ),
+  toCVCreateSLODowntime: withAccountId(({ orgIdentifier, projectIdentifier }: ProjectPathProps) => {
+    return `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create/downtime`
+  }),
+  toCVEditSLODowntime: withAccountId(
+    ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps & { identifier: string }>) => {
+      return `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/edit/downtime/${identifier}`
+    }
+  ),
   toCVAddMonitoringServicesSetup: withAccountId(
     ({ projectIdentifier, orgIdentifier }: Partial<ProjectPathProps & { identifier: string }>) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices/setup`
