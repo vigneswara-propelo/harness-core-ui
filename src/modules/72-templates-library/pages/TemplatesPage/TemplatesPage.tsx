@@ -77,8 +77,7 @@ export default function TemplatesPage(): React.ReactElement {
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountIdentifier: accountId })
-  const { CVNG_TEMPLATE_MONITORED_SERVICE, NG_SVC_ENV_REDESIGN, ARTIFACT_SOURCE_TEMPLATE, CDS_STEPGROUP_TEMPLATE } =
-    useFeatureFlags()
+  const { CVNG_TEMPLATE_MONITORED_SERVICE, NG_SVC_ENV_REDESIGN, CDS_STEPGROUP_TEMPLATE } = useFeatureFlags()
   const { enabled: templateFeatureEnabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.TEMPLATE_SERVICE
@@ -87,7 +86,6 @@ export default function TemplatesPage(): React.ReactElement {
   const allowedTemplateTypes = getAllowedTemplateTypes(scope, {
     [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE,
     [TemplateType.CustomDeployment]: !!NG_SVC_ENV_REDESIGN,
-    [TemplateType.ArtifactSource]: !!ARTIFACT_SOURCE_TEMPLATE,
     [TemplateType.StepGroup]: !!CDS_STEPGROUP_TEMPLATE
   }).filter(item => !item.disabled)
 

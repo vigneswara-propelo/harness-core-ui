@@ -10,8 +10,6 @@ import { Layout, Text, Button, ButtonSize, ButtonVariation } from '@harness/uico
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { ArtifactSource, PrimaryArtifact } from 'services/cd-ng'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { isPrimaryAdditionAllowed, ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
@@ -74,7 +72,6 @@ function ArtifactListView({
     fetchedConnectorResponse,
     editArtifact
   }
-  const areArtifactSourceTemplatesEnabled = useFeatureFlag(FeatureFlag.ARTIFACT_SOURCE_TEMPLATE)
 
   return (
     <Layout.Vertical style={{ width: '100%' }}>
@@ -122,7 +119,7 @@ function ArtifactListView({
                       : getString('pipeline.artifactsSelection.addPrimaryArtifact')
                   }
                 />
-                {areArtifactSourceTemplatesEnabled && handleUseArtifactSourceTemplate && (
+                {handleUseArtifactSourceTemplate && (
                   <AddArtifactSourceTemplateSection
                     handleClick={() => {
                       handleUseArtifactSourceTemplate(ModalViewFor.PRIMARY)
@@ -150,7 +147,7 @@ function ArtifactListView({
                   onClick={() => addNewArtifact(ModalViewFor.SIDECAR)}
                   text={getString('pipeline.artifactsSelection.addSidecar')}
                 />
-                {areArtifactSourceTemplatesEnabled && handleUseArtifactSourceTemplate && (
+                {handleUseArtifactSourceTemplate && (
                   <AddArtifactSourceTemplateSection
                     handleClick={() => {
                       handleUseArtifactSourceTemplate(ModalViewFor.SIDECAR)
