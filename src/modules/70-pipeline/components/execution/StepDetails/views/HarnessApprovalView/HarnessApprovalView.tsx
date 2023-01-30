@@ -30,6 +30,7 @@ import { ManualInterventionTab } from '@pipeline/components/execution/StepDetail
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs/ExecutionInputs/ExecutionInputs'
 
+import { PolicyEvaluationContent } from '../../common/ExecutionContent/PolicyEvaluationContent/PolicyEvaluationContent'
 import tabCss from '../DefaultView/DefaultView.module.scss'
 
 export interface HarnessApprovalViewProps extends StepDetailProps {
@@ -43,7 +44,8 @@ enum ApprovalStepTab {
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
   MANUAL_INTERVENTION = 'MANUAL_INTERVENTION',
-  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS'
+  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS',
+  POLICY_ENFORCEMENT = 'POLICY_ENFORCEMENT'
 }
 
 export function HarnessApprovalView(props: HarnessApprovalViewProps): React.ReactElement {
@@ -54,6 +56,7 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
   const isWaitingOnApproval = isExecutionWaitingForApproval(step.status)
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
   const shouldShowExecutionInputs = !!step.executionInputConfigured
+  const shouldShowPolicyEnforcement = !!step?.outcomes?.policyOutput?.policySetDetails
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
 
   useEffect(() => {
@@ -180,6 +183,20 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
           key={ApprovalStepTab.MANUAL_INTERVENTION}
           title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
           panel={<ManualInterventionTab step={step} stageType={stageType} executionMetadata={executionMetadata} />}
+        />
+      )}
+      {shouldShowPolicyEnforcement && (
+        <Tabs.Tab
+          id={ApprovalStepTab.POLICY_ENFORCEMENT}
+          key={ApprovalStepTab.POLICY_ENFORCEMENT}
+          title={getString('pipeline.policyEnforcement.title')}
+          panel={
+            <PolicyEvaluationContent
+              step={step}
+              executionMetadata={executionMetadata}
+              policySetOutputPath={'outcomes.policyOutput'}
+            />
+          }
         />
       )}
       {activeTab === ApprovalStepTab.APPROVAL && (

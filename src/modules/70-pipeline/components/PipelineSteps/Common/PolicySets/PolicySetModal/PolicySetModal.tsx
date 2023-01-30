@@ -33,9 +33,10 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 
 import { PolicySetWizard } from '@governance/PolicySetWizard'
 
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { PolicySetListRenderer } from '../PolicySetListRenderer/PolicySetListRenderer'
 import { NewPolicySetButton } from '../NewPolicySetButton/NewPolicySetButton'
-import { PolicySetType, getErrorMessage } from '../utils'
+import { PolicySetType } from '../utils'
 
 import css from './PolicySetModal.module.scss'
 
@@ -67,6 +68,7 @@ export function PolicySetModal<T>({
 }: PolicySetModalProps<T>): JSX.Element {
   const { getString } = useStrings()
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
 
   const [selectedTabId, setSelectedTabId] = useState(PolicySetType.ACCOUNT)
   const [policySetList, setPolicySetList] = useState<PolicySet[]>([])
@@ -94,7 +96,7 @@ export function PolicySetModal<T>({
 
   useEffect(() => {
     // istanbul ignore else
-    if (policySetIds.length > 0) {
+    if (Array.isArray(policySetIds) && policySetIds.length > 0) {
       setNewPolicySetIds(policySetIds)
     }
   }, [])
@@ -154,7 +156,7 @@ export function PolicySetModal<T>({
   useEffect(() => {
     // istanbul ignore else
     if (error) {
-      showError(getErrorMessage(error))
+      showError(getRBACErrorMessage(error as RBACError))
     }
     // istanbul ignore else
     if (!policySets && !error) {

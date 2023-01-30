@@ -103,9 +103,10 @@ function PolicySetFixedTypeSelector<T>({
 
   return (
     <>
-      {policySetIds.map(policySetId => {
-        return <MiniPolicySetRenderer policySetId={policySetId} key={policySetId} deletePolicySet={deletePolicySet} />
-      })}
+      {Array.isArray(policySetIds) &&
+        policySetIds.map(policySetId => {
+          return <MiniPolicySetRenderer policySetId={policySetId} key={policySetId} deletePolicySet={deletePolicySet} />
+        })}
       <Button
         minimal
         text={getString('common.policiesSets.addOrModifyPolicySet')}

@@ -18,13 +18,15 @@ import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/
 import { ManualInterventionTab } from '@pipeline/components/execution/StepDetails/tabs/ManualInterventionTab/ManualInterventionTab'
 import { StageType } from '@pipeline/utils/stageHelpers'
 
+import { PolicyEvaluationContent } from '../../common/ExecutionContent/PolicyEvaluationContent/PolicyEvaluationContent'
 import css from '../DefaultView/DefaultView.module.scss'
 
 enum StepDetailTab {
   STEP_DETAILS = 'STEP_DETAILS',
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
-  MANUAL_INTERVENTION = 'MANUAL_INTERVENTION'
+  MANUAL_INTERVENTION = 'MANUAL_INTERVENTION',
+  POLICY_ENFORCEMENT = 'POLICY_ENFORCEMENT'
 }
 
 export function PolicyEvaluationView(props: StepDetailProps): React.ReactElement {
@@ -33,6 +35,7 @@ export function PolicyEvaluationView(props: StepDetailProps): React.ReactElement
   const [activeTab, setActiveTab] = React.useState(StepDetailTab.STEP_DETAILS)
   const manuallySelected = React.useRef(false)
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
+  const shouldShowPolicyEnforcement = !!step?.outcomes?.policyOutput?.policySetDetails
 
   React.useEffect(() => {
     // istanbul ignore else
@@ -78,6 +81,19 @@ export function PolicyEvaluationView(props: StepDetailProps): React.ReactElement
             id={StepDetailTab.MANUAL_INTERVENTION}
             title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
             panel={<ManualInterventionTab step={step} stageType={stageType} executionMetadata={executionMetadata} />}
+          />
+        ) : null}
+        {shouldShowPolicyEnforcement ? (
+          <Tab
+            id={StepDetailTab.POLICY_ENFORCEMENT}
+            title={getString('pipeline.policyEnforcement.title')}
+            panel={
+              <PolicyEvaluationContent
+                step={step}
+                executionMetadata={executionMetadata}
+                policySetOutputPath={'outcomes.policyOutput'}
+              />
+            }
           />
         ) : null}
       </Tabs>

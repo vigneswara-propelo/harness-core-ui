@@ -18,6 +18,7 @@ import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/
 import { ManualInterventionTab } from '@pipeline/components/execution/StepDetails/tabs/ManualInterventionTab/ManualInterventionTab'
 import { StageType } from '@pipeline/utils/stageHelpers'
 
+import { PolicyEvaluationContent } from '../../common/ExecutionContent/PolicyEvaluationContent/PolicyEvaluationContent'
 import css from './DefaultView.module.scss'
 
 enum StepDetailTab {
@@ -25,7 +26,8 @@ enum StepDetailTab {
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
   MANUAL_INTERVENTION = 'MANUAL_INTERVENTION',
-  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS'
+  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS',
+  POLICY_ENFORCEMENT = 'POLICY_ENFORCEMENT'
 }
 
 export function DefaultView(props: StepDetailProps): React.ReactElement {
@@ -38,6 +40,7 @@ export function DefaultView(props: StepDetailProps): React.ReactElement {
   const shouldShowInputOutput =
     ((step?.stepType ?? '') as string) !== 'liteEngineTask' && !isStageExecutionInputConfigured
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
+  const shouldShowPolicyEnforcement = !!step?.outcomes?.policyOutput?.policySetDetails
 
   React.useEffect(() => {
     if (!manuallySelected.current) {
@@ -111,6 +114,19 @@ export function DefaultView(props: StepDetailProps): React.ReactElement {
             id={StepDetailTab.MANUAL_INTERVENTION}
             title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
             panel={<ManualInterventionTab step={step} stageType={stageType} executionMetadata={executionMetadata} />}
+          />
+        ) : null}
+        {shouldShowPolicyEnforcement ? (
+          <Tab
+            id={StepDetailTab.POLICY_ENFORCEMENT}
+            title={getString('pipeline.policyEnforcement.title')}
+            panel={
+              <PolicyEvaluationContent
+                step={step}
+                executionMetadata={executionMetadata}
+                policySetOutputPath={'outcomes.policyOutput'}
+              />
+            }
           />
         ) : null}
       </Tabs>
