@@ -8471,6 +8471,8 @@ export interface StringsMap {
   'cv.slos.sloDefinition': string
   'cv.slos.sloDeleted': string
   'cv.slos.sloEditWarningMessage': string
+  'cv.slos.sloFormula.subHeader': string
+  'cv.slos.sloFormula.title': string
   'cv.slos.sloName': string
   'cv.slos.sloTargetAndBudget.complianceTimePeriodTitle': string
   'cv.slos.sloTargetAndBudget.periodType': string

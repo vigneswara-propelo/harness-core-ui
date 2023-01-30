@@ -869,6 +869,9 @@ slos:
   requestType: RequestType
   goodRequestMetric: Good request metric
   validRequestMetric: Valid request metric
+  sloFormula:
+    title: How we do the SLI calculation?
+    subHeader: The SLI equation is the number of good requests divided by the total number of valid requests, multiplied by 100 to keep it a uniform percentage.
   validations:
     nameValidation: SLO name is required
     userJourneyRequired: User journey is required

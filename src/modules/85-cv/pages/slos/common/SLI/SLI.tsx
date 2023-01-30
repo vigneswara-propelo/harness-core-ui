@@ -33,6 +33,7 @@ import { HealthSource, useGetMonitoredService } from 'services/cv'
 import { createHealthsourceList } from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
 import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import SliFormula from '@cv/assets/sliFormula.svg'
 import PickMetric from './views/PickMetric'
 import { getHealthSourceToEdit } from './SLI.utils'
 import {
@@ -277,6 +278,17 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
               yAxis: { min: 0, max: 100, tickInterval: 25 }
             }}
           />
+          {showChart && (
+            <Layout.Vertical spacing="xsmall" margin={{ top: 'xxlarge' }}>
+              <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'semi-bold' }}>
+                {getString('cv.slos.sloFormula.title')}
+              </Text>
+              <Text margin={{ bottom: 'large' }} font={{ size: 'normal', weight: 'light' }}>
+                {getString('cv.slos.sloFormula.subHeader')}
+              </Text>
+              <img src={SliFormula} alt="" />
+            </Layout.Vertical>
+          )}
         </Container>
       </Layout.Horizontal>
     </>
