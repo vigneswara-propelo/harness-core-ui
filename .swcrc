@@ -17,7 +17,7 @@
     },
     "paths": {
       "@common/*": ["modules/10-common/*"],
-      "@audit-trail/*": ["modules/18-audit-trail/*"],
+      "@audit-trail/*": ["modules/38-audit-trail/*"],
       "@rbac/*": ["modules/20-rbac/*"],
       "@default-settings/*": ["modules/23-default-settings/*"],
       "@governance/*": ["modules/25-governance/*"],

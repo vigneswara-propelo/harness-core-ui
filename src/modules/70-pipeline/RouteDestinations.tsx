@@ -66,7 +66,7 @@ import { CustomApprovalView } from '@pipeline/components/execution/StepDetails/v
 import { PolicyEvaluationView } from '@pipeline/components/execution/StepDetails/views/PolicyEvaluationView/PolicyEvaluationView'
 import { QueueStepView } from '@pipeline/components/execution/StepDetails/views/QueueStepView/QueueStepView'
 import type { ResourceDTO } from 'services/audit'
-import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
+import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import routes from '@common/RouteDefinitions'
 import { ServiceNowCreateUpdateView } from '@pipeline/components/execution/StepDetails/views/ServiceNowCreateUpdateView/ServiceNowCreateUpdateView'
 import { ModuleName } from 'framework/types/ModuleName'

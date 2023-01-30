@@ -40,7 +40,7 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String as LocaleString } from 'framework/strings'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
-import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
+import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import {
   getActiveUsageNumber,
   getPercentageNumber,

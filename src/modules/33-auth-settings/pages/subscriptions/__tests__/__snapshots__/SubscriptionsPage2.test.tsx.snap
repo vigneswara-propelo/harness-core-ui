@@ -481,7 +481,7 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
                   class="StyledProps--font StyledProps--main"
                 >
                    
-                  auditTrail.actions.updated
+                  common.updated
                    -
                 </p>
                 <p

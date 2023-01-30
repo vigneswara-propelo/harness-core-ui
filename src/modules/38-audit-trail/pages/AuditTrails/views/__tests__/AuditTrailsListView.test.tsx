@@ -11,7 +11,7 @@ import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, orgPathProps } from '@common/utils/routeUtils'
-import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
+import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import AuditTrailsListView from '../AuditTrailsListView'
 import { data } from './mockData'
 

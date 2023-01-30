@@ -11,7 +11,6 @@
  * Use the command `yarn strings` to regenerate this file.
  */
 import common from '@common/strings/strings.en.yaml'
-import auditTrail from '@audit-trail/strings/strings.en.yaml'
 import rbac from '@rbac/strings/strings.en.yaml'
 import defaultSettings from '@default-settings/strings/strings.en.yaml'
 import governance from '@governance/strings/strings.en.yaml'
@@ -23,6 +22,7 @@ import variables from '@variables/strings/strings.en.yaml'
 import authSettings from '@auth-settings/strings/strings.en.yaml'
 import connectors from '@connectors/strings/strings.en.yaml'
 import userProfile from '@user-profile/strings/strings.en.yaml'
+import auditTrail from '@audit-trail/strings/strings.en.yaml'
 import gitsync from '@gitsync/strings/strings.en.yaml'
 import dashboards from '@dashboards/strings/strings.en.yaml'
 import projectsOrgs from '@projects-orgs/strings/strings.en.yaml'
@@ -44,7 +44,6 @@ import gitops from '@gitops/strings/strings.en.yaml'
 export default function languageLoader() {
   return {
     common,
-    auditTrail,
     rbac,
     defaultSettings,
     governance,
@@ -56,6 +55,7 @@ export default function languageLoader() {
     authSettings,
     connectors,
     userProfile,
+    auditTrail,
     gitsync,
     dashboards,
     projectsOrgs,

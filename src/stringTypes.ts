@@ -1116,6 +1116,7 @@ export interface StringsMap {
   'common.unlimited': string
   'common.unsavedChanges': string
   'common.unsavedChangesLong': string
+  'common.updated': string
   'common.updatedBy': string
   'common.updating': string
   'common.upgrade': string
@@ -1185,38 +1186,6 @@ export interface StringsMap {
   'common.without': string
   'common.yearly': string
   'common.zipCode': string
-  'auditTrail.Platform': string
-  'auditTrail.actions.added_collaborator': string
-  'auditTrail.actions.added_membership': string
-  'auditTrail.actions.create_token': string
-  'auditTrail.actions.force_deleted': string
-  'auditTrail.actions.invite_resent': string
-  'auditTrail.actions.invite_revoked': string
-  'auditTrail.actions.invited': string
-  'auditTrail.actions.login': string
-  'auditTrail.actions.login2fa': string
-  'auditTrail.actions.removed_collaborator': string
-  'auditTrail.actions.removed_membership': string
-  'auditTrail.actions.restored': string
-  'auditTrail.actions.revoke_token': string
-  'auditTrail.actions.unsuccessfullLogin': string
-  'auditTrail.actions.updated': string
-  'auditTrail.actions.upserted': string
-  'auditTrail.allEvents': string
-  'auditTrail.auditLogAPI': string
-  'auditTrail.delegateGroups': string
-  'auditTrail.emptyStateMessage': string
-  'auditTrail.emptyStateMessageTitle': string
-  'auditTrail.eventSource': string
-  'auditTrail.eventSummary': string
-  'auditTrail.excludeLoginEvents': string
-  'auditTrail.excludeSystemEvents': string
-  'auditTrail.externalDataText': string
-  'auditTrail.http': string
-  'auditTrail.noYamlDifference': string
-  'auditTrail.resourceNameLabel': string
-  'auditTrail.supplementaryDetails': string
-  'auditTrail.yamlDifference': string
   'rbac.UserGroupRoleAssignmentForm.assignmentValidation': string
   'rbac.accessControlTitle.resourceGroups': string
   'rbac.accessControlTitle.roles': string
@@ -3030,6 +2999,37 @@ export interface StringsMap {
   'userProfile.userEditFail': string
   'userProfile.userEditSuccess': string
   'userProfile.yourCurrentPasswordIncorrect': string
+  'auditTrail.Platform': string
+  'auditTrail.actions.added_collaborator': string
+  'auditTrail.actions.added_membership': string
+  'auditTrail.actions.create_token': string
+  'auditTrail.actions.force_deleted': string
+  'auditTrail.actions.invite_resent': string
+  'auditTrail.actions.invite_revoked': string
+  'auditTrail.actions.invited': string
+  'auditTrail.actions.login': string
+  'auditTrail.actions.login2fa': string
+  'auditTrail.actions.removed_collaborator': string
+  'auditTrail.actions.removed_membership': string
+  'auditTrail.actions.restored': string
+  'auditTrail.actions.revoke_token': string
+  'auditTrail.actions.unsuccessfullLogin': string
+  'auditTrail.actions.upserted': string
+  'auditTrail.allEvents': string
+  'auditTrail.auditLogAPI': string
+  'auditTrail.delegateGroups': string
+  'auditTrail.emptyStateMessage': string
+  'auditTrail.emptyStateMessageTitle': string
+  'auditTrail.eventSource': string
+  'auditTrail.eventSummary': string
+  'auditTrail.excludeLoginEvents': string
+  'auditTrail.excludeSystemEvents': string
+  'auditTrail.externalDataText': string
+  'auditTrail.http': string
+  'auditTrail.noYamlDifference': string
+  'auditTrail.resourceNameLabel': string
+  'auditTrail.supplementaryDetails': string
+  'auditTrail.yamlDifference': string
   'gitsync.PRTitle': string
   'gitsync.addFolder': string
   'gitsync.addNewHarnessFolderLabel': string

@@ -362,7 +362,7 @@ exports[`Audit trail list view render 1`] = `
                 class="StyledProps--font Text--lineclamp StyledProps--main"
                 style="--text-line-clamp: 1;"
               >
-                auditTrail.actions.updated
+                common.updated
               </p>
             </div>
           </div>
@@ -1111,7 +1111,7 @@ exports[`Audit trail list view render 1`] = `
                 class="StyledProps--font Text--lineclamp StyledProps--main"
                 style="--text-line-clamp: 1;"
               >
-                auditTrail.actions.updated
+                common.updated
               </p>
             </div>
           </div>
@@ -1437,7 +1437,7 @@ exports[`Audit trail list view render 1`] = `
                 class="StyledProps--font Text--lineclamp StyledProps--main"
                 style="--text-line-clamp: 1;"
               >
-                auditTrail.actions.updated
+                common.updated
               </p>
             </div>
           </div>
@@ -1614,7 +1614,7 @@ exports[`Audit trail list view render 1`] = `
                 class="StyledProps--font Text--lineclamp StyledProps--main"
                 style="--text-line-clamp: 1;"
               >
-                auditTrail.actions.updated
+                common.updated
               </p>
             </div>
           </div>
@@ -2427,7 +2427,7 @@ exports[`Audit trail list view render in org scope 1`] = `
                 class="StyledProps--font Text--lineclamp StyledProps--main"
                 style="--text-line-clamp: 1;"
               >
-                auditTrail.actions.updated
+                common.updated
               </p>
             </div>
           </div>
@@ -3128,7 +3128,7 @@ exports[`Audit trail list view render in org scope 1`] = `
                 class="StyledProps--font Text--lineclamp StyledProps--main"
                 style="--text-line-clamp: 1;"
               >
-                auditTrail.actions.updated
+                common.updated
               </p>
             </div>
           </div>
@@ -3430,7 +3430,7 @@ exports[`Audit trail list view render in org scope 1`] = `
                 class="StyledProps--font Text--lineclamp StyledProps--main"
                 style="--text-line-clamp: 1;"
               >
-                auditTrail.actions.updated
+                common.updated
               </p>
             </div>
           </div>
@@ -3595,7 +3595,7 @@ exports[`Audit trail list view render in org scope 1`] = `
                 class="StyledProps--font Text--lineclamp StyledProps--main"
                 style="--text-line-clamp: 1;"
               >
-                auditTrail.actions.updated
+                common.updated
               </p>
             </div>
           </div>

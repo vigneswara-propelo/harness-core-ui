@@ -2,7 +2,6 @@ supplementaryDetails: Supplementary Details
 eventSource: Event Source
 http: 'HTTP {{method}} (Client IP: {{clientIP}})'
 actions:
-  updated: Updated
   upserted: Upserted
   restored: Restored
   invited: Invited

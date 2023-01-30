@@ -12,7 +12,6 @@ rules:
             - microfrontends/*
             - '!microfrontends/ChildAppMounter'
         - group:
-            - modules/18-audit-trail/*
             - modules/20-rbac/*
             - modules/23-default-settings/*
             - modules/25-governance/*
@@ -24,6 +23,7 @@ rules:
             - modules/33-auth-settings/*
             - modules/35-connectors/*
             - modules/35-user-profile/*
+            - modules/38-audit-trail/*
             - modules/40-gitsync/*
             - modules/45-dashboards/*
             - modules/45-projects-orgs/*
@@ -41,7 +41,6 @@ rules:
             - modules/85-iacm/*
             - modules/85-sto/*
             - modules/90-gitops/*
-            - '@audit-trail/*'
             - '@rbac/*'
             - '@default-settings/*'
             - '@governance/*'
@@ -53,6 +52,7 @@ rules:
             - '@auth-settings/*'
             - '@connectors/*'
             - '@user-profile/*'
+            - '@audit-trail/*'
             - '@gitsync/*'
             - '@dashboards/*'
             - '@projects-orgs/*'

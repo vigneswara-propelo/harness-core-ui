@@ -38,7 +38,7 @@ src/modules/10-common/modals/ExtendTrial @harness/ui-plg
 src/modules/10-common/modals/ContactSales @harness/ui-plg
 src/modules/10-common/modals/StartTrial @harness/ui-plg
 src/modules/10-common/pages/welcome @harness/ui-plg
-src/modules/18-audit-trail @harness/ui-platform
+src/modules/38-audit-trail @harness/ui-platform
 src/modules/20-rbac @harness/ui-platform
 src/modules/20-rbac/components/TrialHomePageTemplate @harness/ui-plg
 src/modules/28-et @harness/error-tracking

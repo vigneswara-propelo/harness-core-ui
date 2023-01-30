@@ -17,7 +17,7 @@ import { actionToLabelMap, getModuleNameFromAuditModule, moduleInfoMap } from '@
 import type { AuditEventDTO, PageAuditEventDTO, ResourceDTO } from 'services/audit'
 import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
-import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
+import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
 import EventSummary from '@audit-trail/components/EventSummary/EventSummary'
 

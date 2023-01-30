@@ -13,11 +13,11 @@ import type { AuditEventDTO, AuditFilterProperties, ResourceScopeDTO } from 'ser
 import type { StringKeys } from 'framework/strings'
 import type { OrganizationAggregateDTO, ProjectResponse } from 'services/cd-ng'
 import type { Module } from '@common/interfaces/RouteInterfaces'
-import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
+import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 
 export const actionToLabelMap: Record<AuditEventDTO['action'], StringKeys> = {
   CREATE: 'created',
-  UPDATE: 'auditTrail.actions.updated',
+  UPDATE: 'common.updated',
   RESTORE: 'auditTrail.actions.restored',
   DELETE: 'deleted',
   UPSERT: 'auditTrail.actions.upserted',
