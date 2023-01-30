@@ -903,6 +903,7 @@ artifactsSelection:
   feedPlaceholder: Select Feed
   artifactSourceName: Artifact Source Name
   projectPlaceholder: Enter Project
+  projectIDPlaceholder: Enter Project ID
   repositoryTypePlaceholder: Select Repository Type
   delegateselectionPlaceholder: Add specific selectors or leave empty to target any delegate
   repositoryPort: Repository Port

@@ -3437,6 +3437,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.orgNamePlaceholder': string
   'pipeline.artifactsSelection.packageName': string
   'pipeline.artifactsSelection.packageNamePlaceholder': string
+  'pipeline.artifactsSelection.projectIDPlaceholder': string
   'pipeline.artifactsSelection.projectPlaceholder': string
   'pipeline.artifactsSelection.repositoryPlaceholder': string
   'pipeline.artifactsSelection.repositoryPort': string
