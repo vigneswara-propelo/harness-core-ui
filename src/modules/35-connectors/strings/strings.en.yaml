@@ -316,7 +316,6 @@ azure:
     certificate: '{{ $.common.certificate }}'
 GCS:
   name: GCS
-  fullName: Google Cloud Storage
 S3: S3
 docker:
   dockerRegistryURL: 'Docker Registry URL'

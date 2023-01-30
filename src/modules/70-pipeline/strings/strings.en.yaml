@@ -193,7 +193,6 @@ jiraCreateStep:
   fetchingFields: Fetching your fields
   fieldsSelectorPlaceholder: Your fields will be populated here
   unsupportedRequiredFieldsError: "Changes can't be saved as unsupported fields are present - {{ fields }}"
-  selectProject: Select Project
   validations:
     summary: Summary is required
 jiraUpdateStep:

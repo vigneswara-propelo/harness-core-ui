@@ -289,7 +289,7 @@ export const ManifestStoreTitle: Record<ManifestStores, StringKeys> = {
   Http: 'pipeline.manifestType.httpHelmRepoConnectorLabel',
   OciHelmChart: 'pipeline.manifestType.ociHelmConnectorLabel',
   S3: 'connectors.S3',
-  Gcs: 'connectors.GCS.fullName',
+  Gcs: 'common.artifacts.googleCloudStorage.title',
   InheritFromManifest: 'pipeline.manifestType.InheritFromManifest',
   Inline: 'inline',
   Harness: 'harness',

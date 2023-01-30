@@ -64,6 +64,13 @@ export interface StringsMap {
   'common.apply': string
   'common.approve': string
   'common.artifactTag': string
+  'common.artifacts.googleCloudSourceRepositories.cloudSourceRepository': string
+  'common.artifacts.googleCloudSourceRepositories.cloudSourceRepositoryPlaceholder': string
+  'common.artifacts.googleCloudSourceRepositories.sourceDirectory': string
+  'common.artifacts.googleCloudSourceRepositories.sourceDirectoryPlaceholder': string
+  'common.artifacts.googleCloudSourceRepositories.title': string
+  'common.artifacts.googleCloudStorage.bucketPlaceholder': string
+  'common.artifacts.googleCloudStorage.title': string
   'common.askUs': string
   'common.assignedAt': string
   'common.assignedThrough': string
@@ -461,6 +468,7 @@ export interface StringsMap {
   'common.gitopsAgents': string
   'common.gnupgKeys': string
   'common.goBack': string
+  'common.googleCloudPlatform': string
   'common.governance': string
   'common.gpgkey': string
   'common.harnessClusterHostingAccount': string
@@ -894,6 +902,7 @@ export interface StringsMap {
   'common.selectModules': string
   'common.selectName': string
   'common.selectNameManually': string
+  'common.selectProject': string
   'common.selectRepository': string
   'common.selectService': string
   'common.selectServices': string
@@ -2141,7 +2150,6 @@ export interface StringsMap {
   'connectors.GCR.name': string
   'connectors.GCR.registryHostname': string
   'connectors.GCR.stepTwoName': string
-  'connectors.GCS.fullName': string
   'connectors.GCS.name': string
   'connectors.S3': string
   'connectors.addConnectorDetails': string
@@ -3985,7 +3993,6 @@ export interface StringsMap {
   'pipeline.jiraCreateStep.selectFieldListHelp': string
   'pipeline.jiraCreateStep.selectFieldsHeading': string
   'pipeline.jiraCreateStep.selectFromFieldList': string
-  'pipeline.jiraCreateStep.selectProject': string
   'pipeline.jiraCreateStep.summaryPlaceholder': string
   'pipeline.jiraCreateStep.unsupportedRequiredFieldsError': string
   'pipeline.jiraCreateStep.validations.summary': string
