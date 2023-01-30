@@ -20,8 +20,9 @@ import {
   ButtonSize
 } from '@harness/uicore'
 
+import { useGetOrganizationsQuery } from '@harnessio/react-ng-manager-client'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
-import { useGetOrganizationList, useGetProjectAggregateDTOList } from 'services/cd-ng'
+import { useGetProjectAggregateDTOList } from 'services/cd-ng'
 import type { Project } from 'services/cd-ng'
 import { useProjectModal } from '@projects-orgs/modals/ProjectModal/useProjectModal'
 import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useCollaboratorModal'
@@ -76,11 +77,21 @@ const ProjectsListPage: React.FC = () => {
     []
   )
 
-  const { data: orgsData } = useGetOrganizationList({
-    queryParams: {
-      accountIdentifier: accountId
+  const { data: orgsData, refetch: refetchQuery } = useGetOrganizationsQuery(
+    {
+      queryParams: {
+        limit: 100
+      }
+    },
+    {
+      staleTime: 60 * 1000
     }
-  })
+  )
+
+  useEffect(() => {
+    refetchQuery()
+  }, [refetchQuery])
+
   const { showSuccess } = useToaster()
 
   useEffect(
@@ -93,17 +104,22 @@ const ProjectsListPage: React.FC = () => {
     [verify]
   )
 
-  const organizations: SelectOption[] = useMemo(() => {
-    return [
-      allOrgsSelectOption,
-      ...(orgsData?.data?.content?.map(org => {
-        return {
-          label: org.organization.name,
-          value: org.organization.identifier
-        }
-      }) || [])
-    ]
-  }, [orgsData?.data?.content, allOrgsSelectOption])
+  const organizations: SelectOption[] = useMemo(
+    () =>
+      orgsData?.reduce(
+        (orgList, item) => {
+          if (item?.org) {
+            orgList.push({
+              label: item?.org?.name,
+              value: item?.org?.identifier
+            })
+          }
+          return orgList
+        },
+        [allOrgsSelectOption]
+      ) || [],
+    [orgsData, allOrgsSelectOption]
+  )
 
   const { data, loading, refetch, error } = useGetProjectAggregateDTOList({
     queryParams: {
