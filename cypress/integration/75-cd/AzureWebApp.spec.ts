@@ -4,7 +4,8 @@ import {
   postServiceCall,
   cdFailureStrategiesYaml,
   azureStrategiesYamlSnippets,
-  featureFlagsCall
+  featureFlagsCall,
+  servicesYaml
 } from '../../support/70-pipeline/constants'
 import { environmentFetchCall, environmentSaveCall } from '../../support/75-cd/constants'
 
@@ -51,6 +52,7 @@ describe('Azure web app end to end test', () => {
     cy.intercept('POST', environmentSaveCall, {
       fixture: 'ng/api/environmentsV2.post.json'
     }).as('environmentCreationCall')
+    cy.intercept('POST', servicesYaml, { fixture: 'ng/api/servicesV2/serviceYamlAzureWebApp' }).as('serviceYaml')
     cy.intercept('GET', azureStrategiesYamlSnippets, { fixture: 'ng/api/pipelines/kubernetesYamlSnippet' }).as(
       'azureYamlSnippet'
     )
@@ -112,7 +114,7 @@ describe('Azure web app end to end test', () => {
     //save services
     cy.get('[class*="Dialog--children"] > div:nth-child(2) > button:nth-child(1)').contains('Save').click()
 
-    cy.wait(500)
+    cy.wait(1000)
     //Add Environment
     cy.contains('Continue').click()
     cy.get('#add-new-environment').click()
