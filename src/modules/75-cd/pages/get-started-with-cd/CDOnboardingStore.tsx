@@ -22,7 +22,7 @@ import {
   DelegateDataType,
   DrawerMode,
   InfrastructureDataType,
-  RepoDataType,
+  RepositoryInterface,
   ServiceDataType
 } from './CDOnboardingUtils'
 
@@ -42,7 +42,7 @@ export interface CDOnboardingContextInterface {
   saveEnvironmentData: (data: EnvironmentRequestDTO) => void
   saveInfrastructureData: (data: InfrastructureDataType) => void
   saveDelegateData: (data: DelegateDataType) => void
-  saveRepositoryData: (data: RepoDataType) => void
+  saveRepositoryData: (data: RepositoryInterface) => void
 }
 const initialDrawerData = { fileContent: undefined, mode: DrawerMode.Preview }
 
@@ -107,8 +107,8 @@ export function CDOnboardingProvider({
     dispatch(CDOnboardingContextActions.updateDelegate({ delegate: data }))
   }, [])
 
-  const saveRepositoryData = React.useCallback((data: RepoDataType) => {
-    dispatch(CDOnboardingContextActions.updateDelegate({ repository: data }))
+  const saveRepositoryData = React.useCallback((data: RepositoryInterface) => {
+    dispatch(CDOnboardingContextActions.UpdateRepository({ repository: data }))
   }, [])
 
   return (

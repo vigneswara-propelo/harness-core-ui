@@ -17,7 +17,7 @@ import {
   InfrastructureDataType,
   newDelegateState,
   DelegateDataType,
-  RepoDataType
+  RepositoryInterface
 } from './CDOnboardingUtils'
 
 export const DefaultPipeline: PipelineInfoConfig = {
@@ -30,7 +30,7 @@ export interface CDOnboardingReducerState {
   service?: ServiceDataType
   environment?: EnvironmentRequestDTO
   infrastructure?: InfrastructureDataType
-  repository?: RepoDataType
+  repository?: RepositoryInterface
   delegate?: DelegateDataType
   error?: string
   schemaErrors?: boolean
@@ -58,7 +58,7 @@ export interface ActionResponse {
   isUpdated?: boolean
   pipeline?: PipelineInfoConfig
   service?: ServiceDataType
-  repository?: RepoDataType
+  repository?: RepositoryInterface
   environment?: EnvironmentRequestDTO
   infrastructure?: InfrastructureDataType
   delegate?: DelegateDataType

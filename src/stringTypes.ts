@@ -622,6 +622,7 @@ export interface StringsMap {
   'common.newLines': string
   'common.newName': string
   'common.newVersion': string
+  'common.nextStep': string
   'common.noAPIKeys': string
   'common.noActiveServiceData': string
   'common.noAvailableTags': string
@@ -5249,6 +5250,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.successfullyAuthenticated': string
   'cd.getStartedWithCD.targetRevision': string
   'cd.getStartedWithCD.testConnection': string
+  'cd.getStartedWithCD.tryAnotherCreds': string
   'cd.getStartedWithCD.usernameAndPassword': string
   'cd.getStartedWithCD.viewDelegateDetails': string
   'cd.getStartedWithCD.workloadDeploy': string

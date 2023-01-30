@@ -223,21 +223,20 @@ export type RepositoryInterface = RepositoriesRepository & {
   path?: string
 }
 
-export const newRepositoryData = {
-  accountIdentifier: '',
-  agentIdentifier: '',
-  identifier: '',
-  orgIdentifier: '',
-  projectIdentifier: '',
-  hasRepo: true,
-  repository: {
-    targetRevision: '',
-    revisionType: RevisionType.Branch,
-    path: '',
-    repo: DEFAULT_SAMPLE_REPO,
-    type: 'git'
-  } as RepositoryInterface
+export interface APIError extends Error {
+  data: {
+    message: string
+    error?: string
+  }
 }
+
+export const newRepositoryData = {
+  targetRevision: '',
+  revisionType: RevisionType.Branch,
+  path: '',
+  repo: DEFAULT_SAMPLE_REPO,
+  type: 'git'
+} as RepositoryInterface
 
 export const newServiceState = {
   name: 'sample_service',

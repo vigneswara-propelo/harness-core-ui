@@ -560,6 +560,7 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Dry Run Apply the service manifests and leverage the dry run yaml as output for subsequent steps
 getStartedWithCD:
+  tryAnotherCreds: Not the right authentication? Switch account here!
   master: master
   targetRevision: Target Revision
   anonymous: anonymous

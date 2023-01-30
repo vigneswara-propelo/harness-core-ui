@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useRef, useState } from 'react'
+import React, { ReactElement, useRef, useState, useEffect } from 'react'
 import {
   Accordion,
+  AccordionHandle,
   Button,
   ButtonSize,
+  ButtonVariation,
   CardSelect,
   Container,
   Formik,
@@ -21,10 +23,12 @@ import {
   Layout,
   Select,
   SelectOption,
-  Text
+  Text,
+  useToaster
 } from '@harness/uicore'
 import { Color, FontVariation, PopoverProps } from '@harness/design-system'
 import cx from 'classnames'
+import Yup from 'yup'
 import type { FormikContextType } from 'formik'
 import { defaultTo, get, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -42,7 +46,9 @@ import {
   useAgentRepositoryServiceListApps,
   useAgentRepositoryServiceListRefs
 } from 'services/gitops'
+import { getLastURLPathParam } from '@common/utils/utils'
 import {
+  APIError,
   DEFAULT_SAMPLE_REPO,
   getFullAgentWithScope,
   RepositoryInterface,
@@ -120,21 +126,25 @@ export interface RepoTypeItem {
 
 const ConfigureGitopsRef = (props: any): JSX.Element => {
   const {
+    saveRepositoryData,
     state: { repository: repositoryData }
   } = useCDOnboardingContext()
-  const [loading, setLoading] = useState(false)
-  const { name, agent: agentIdentifier, identifier, scope } = props.prevStepData as any
+  const toast = useToaster()
+  const { agent: agentIdentifier, scope } = props.prevStepData as any
   const connectionStatus = false
   const [testConnectionStatus, setTestConnectionStatus] = useState<TestStatus>(
     connectionStatus || TestStatus.NOT_INITIATED
   )
 
+  const accordionRef = React.useRef<AccordionHandle>({} as AccordionHandle)
   const [revisionType, setRevisionType] = React.useState<string>(RevisionType.Branch)
   const [testConnectionErrors, setTestConnectionErrors] = useState<ResponseMessage[]>()
+  const [isDestinationStepEnabled, setDestinationStepEnabled] = useState<boolean>(true)
+
   const { getString } = useStrings()
   const formikRef = useRef<FormikContextType<RepositoryInterface>>()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-
+  const repoURL = formikRef.current?.values?.repo
   const defaultQueryParams = {
     ...(scope === Scope.ACCOUNT ? {} : { projectIdentifier, orgIdentifier }),
     accountIdentifier: accountId
@@ -167,7 +177,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
           accountIdentifier: accountId,
           projectIdentifier,
           orgIdentifier,
-          identifier: identifier
+          identifier: getLastURLPathParam(defaultTo(repoURL, ''))
         },
         pathParams: {
           agentIdentifier: fullAgentName
@@ -189,11 +199,11 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
   const {
     data: revisions,
     loading: loadingRevisions,
-    refetch: fetchRevisions
-    // error: revisionsLoadingError
+    refetch: fetchRevisions,
+    error: revisionsLoadingError
   } = useAgentRepositoryServiceListRefs({
     queryParams: defaultQueryParams,
-    identifier: defaultTo(identifier, ''),
+    identifier: getLastURLPathParam(defaultTo(repoURL, '')),
     ...defaultRevisionsParams,
     lazy: true
   })
@@ -202,16 +212,56 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
   const {
     data: paths,
     loading: loadingPaths,
-    // error: appsFetchError,
+    error: appsFetchError,
     refetch: fetchAppsList
   } = useAgentRepositoryServiceListApps({
-    identifier: defaultTo(identifier, ''),
+    identifier: getLastURLPathParam(defaultTo(repoURL, '')),
     queryParams: { ...defaultRevisionsParams, ...defaultQueryParams },
     ...defaultPathParams,
     lazy: true
   })
+  useEffect(() => {
+    if (revisionsLoadingError) {
+      toast.showError(`Failed loading revisions: ${(revisionsLoadingError as APIError).data.error}`)
+    }
+  }, [revisionsLoadingError])
+
+  useEffect(() => {
+    if (appsFetchError) {
+      toast.showError(`Failed loading paths: ${(appsFetchError as APIError).data.error}`)
+    }
+  }, [appsFetchError])
 
   const pathsArr = getPathArr(paths)
+
+  const isTestConnectionDisabled = (): boolean => {
+    if (formikRef.current?.values?.repo === DEFAULT_SAMPLE_REPO) {
+      return false
+    } else {
+      if (formikRef.current?.values?.authType === getString('cd.getStartedWithCD.usernameAndPassword')) {
+        return !formikRef.current?.values?.username || !formikRef.current?.values?.password
+      } else {
+        return !formikRef.current?.values?.authType || !formikRef.current?.values?.connectionType
+      }
+    }
+  }
+
+  const getRepoPayloadData = (data: RepositoryInterface): RepositoryInterface => {
+    if (
+      (data.authType === getString('cd.getStartedWithCD.anonymous') && data.connectionType === getString('HTTPS')) ||
+      data.repo === DEFAULT_SAMPLE_REPO
+    ) {
+      data = { ...data, connectionType: 'HTTPS_ANONYMOUS' }
+    }
+    if (data.repo === DEFAULT_SAMPLE_REPO) {
+      data = { ...data, authType: getString('cd.getStartedWithCD.anonymous') }
+    }
+    if (data.authType === getString('cd.getStartedWithCD.anonymous')) {
+      const { username, password, ...restData } = data
+      return restData
+    }
+    return data
+  }
 
   const TestConnection = (): React.ReactElement => {
     switch (testConnectionStatus) {
@@ -223,31 +273,21 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
               text={getString('cd.getStartedWithCD.testConnection')}
               size={ButtonSize.SMALL}
               width={200}
-              disabled={loading}
+              disabled={isTestConnectionDisabled()}
               type="submit"
               onClick={() => {
                 const fullAgentName = getFullAgentWithScope(agentIdentifier, scope)
                 setTestConnectionStatus(TestStatus.IN_PROGRESS)
                 setTestConnectionErrors([])
-                let data: RepositoryInterface = formikRef.current?.values || {}
-                if (
-                  (data.authType === getString('cd.getStartedWithCD.anonymous') &&
-                    data.connectionType === getString('HTTPS')) ||
-                  data.repo === DEFAULT_SAMPLE_REPO
-                ) {
-                  data = { ...data, connectionType: 'HTTPS_ANONYMOUS' }
-                }
-                if (data.repo === DEFAULT_SAMPLE_REPO) {
-                  data = { ...data, authType: getString('cd.getStartedWithCD.anonymous') }
-                }
+                const data: RepositoryInterface = getRepoPayloadData(formikRef.current?.values || {})
+
                 const repoPayload = {
                   ...data,
-                  name,
+                  name: getLastURLPathParam(defaultTo(repoURL, '')),
                   insecure: false,
                   ...defaultQueryParams,
-                  identifier
+                  identifier: getLastURLPathParam(defaultTo(repoURL, ''))
                 }
-                setLoading(true)
                 createRepo({ inheritedCreds: false, ...repoPayload }, fullAgentName, false)
                   .then((response: Servicev1Repository) => {
                     if (response.repository?.connectionState?.status === 'Successful') {
@@ -270,10 +310,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                         }
                       ])
                     }
-                    setLoading(false)
                   })
                   .catch(err => {
-                    setLoading(false)
                     setTestConnectionStatus(TestStatus.FAILED)
                     setTestConnectionErrors((err?.data as any)?.responseMessages)
                   })
@@ -347,6 +385,18 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
     }
   }
 
+  const getValidationSchema: Yup.ObjectSchema = Yup.object().shape({
+    repo: Yup.string().required(getString('common.validation.repository')),
+    username: Yup.string().when('authType', {
+      is: getString('cd.getStartedWithCD.usernameAndPassword'),
+      then: Yup.string().required(getString('validation.username'))
+    }),
+    password: Yup.string().when('authType', {
+      is: getString('cd.getStartedWithCD.usernameAndPassword'),
+      then: Yup.string().required(getString('validation.password'))
+    })
+  })
+
   return (
     <Layout.Vertical width={'100%'} margin={{ left: 'small' }}>
       <Layout.Horizontal>
@@ -362,13 +412,14 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
               <HarnessDocTooltip tooltipId="cdOnboardingConfigureStep" useStandAlone={true} />
             </Text>
             <div className={css.borderBottomClass} />
-            <Accordion collapseProps={{ keepChildrenMounted: false }}>
+            <Accordion ref={accordionRef} collapseProps={{ keepChildrenMounted: false }}>
               <Accordion.Panel
                 details={
                   <Formik<RepositoryInterface>
                     initialValues={{
-                      ...repositoryData?.repository
+                      ...repositoryData
                     }}
+                    validationSchema={getValidationSchema}
                     formName="select-deployment-type-cd"
                     onSubmit={noop}
                   >
@@ -420,19 +471,28 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                   {getString('authentication').toLocaleUpperCase()}
                                 </Text>
                                 {testConnectionStatus === TestStatus.SUCCESS && formikProps.values.repo ? (
-                                  <Layout.Vertical className={css.success}>
-                                    <Layout.Horizontal className={css.textPadding}>
-                                      <Icon name="success-tick" size={25} className={css.iconPadding} />
-                                      <Text
-                                        className={css.success}
-                                        font={{ variation: FontVariation.H6 }}
-                                        color={Color.GREEN_800}
-                                      >
-                                        {`${getString('cd.getStartedWithCD.successfullyAuthenticated')} ${
-                                          formikRef.current?.values.repo
-                                        }`}
-                                      </Text>
-                                    </Layout.Horizontal>
+                                  <Layout.Vertical>
+                                    <Layout.Vertical className={css.success}>
+                                      <Layout.Horizontal className={css.textPadding}>
+                                        <Icon name="success-tick" size={25} className={css.iconPadding} />
+                                        <Text
+                                          className={css.success}
+                                          font={{ variation: FontVariation.H6 }}
+                                          color={Color.GREEN_800}
+                                        >
+                                          {`${getString('cd.getStartedWithCD.successfullyAuthenticated')} ${
+                                            formikRef.current?.values.repo
+                                          }`}
+                                        </Text>
+                                      </Layout.Horizontal>
+                                    </Layout.Vertical>
+                                    <Text
+                                      style={{ cursor: 'pointer' }}
+                                      onClick={() => setTestConnectionStatus(TestStatus.NOT_INITIATED)}
+                                      color={Color.PRIMARY_7}
+                                    >
+                                      {getString('cd.getStartedWithCD.tryAnotherCreds')}
+                                    </Text>
                                   </Layout.Vertical>
                                 ) : (
                                   <>
@@ -612,7 +672,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                                   fetchAppsList({
                                                     pathParams: {
                                                       agentIdentifier: getFullAgentWithScope(agentIdentifier, scope),
-                                                      identifier: identifier
+                                                      identifier: getLastURLPathParam(defaultTo(repoURL, ''))
                                                     },
                                                     queryParams: {
                                                       ...defaultQueryParams,
@@ -662,12 +722,17 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                             !loadingPaths
                                               ? {
                                                   label: defaultTo(formikProps.values?.path, ''),
-                                                  value: defaultTo(formikProps?.values?.path, '')
+                                                  value: defaultTo(formikProps.values?.path, '')
                                                 }
                                               : null
                                           }
                                           name="path"
                                           disabled={loadingRevisions}
+                                          onChange={item => {
+                                            if (item.value !== formikProps?.values?.path) {
+                                              formikProps.setFieldValue('path', item.value)
+                                            }
+                                          }}
                                         />
                                       </FormGroup>
                                     </Layout.Horizontal>
@@ -676,27 +741,55 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                               </li>
                             </ul>
                           </Layout.Vertical>
+                          <Button
+                            variation={ButtonVariation.SECONDARY}
+                            rightIcon="chevron-right"
+                            style={{ marginTop: '20px' }}
+                            minimal
+                            onClick={() => {
+                              saveRepositoryData(formikProps.values)
+                              setDestinationStepEnabled(false)
+                              accordionRef.current.open('application-repo-destination-step')
+                            }}
+                          >
+                            {getString('common.nextStep')}
+                          </Button>
                           <div className={css.marginTopClass} />
                         </FormikForm>
                       )
                     }}
                   </Formik>
                 }
-                id={'application-repo'}
+                id={'application-repo-source-step'}
                 summary={
                   <Text
                     font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
                     margin={{ bottom: 'small' }}
                     color={Color.GREY_600}
-                    data-tooltip-id="cdOnboardingInstallDelegate"
+                    data-tooltip-id="gitopsOnboardingSource"
                   >
                     {getString('cd.getStartedWithCD.gitopsOnboardingSource')}
                     <HarnessDocTooltip tooltipId="gitopsOnboardingSource" useStandAlone={true} />
                   </Text>
                 }
               />
+              <Accordion.Panel
+                details={<DestinationStep />}
+                disabled={isDestinationStepEnabled}
+                id={'application-repo-destination-step'}
+                summary={
+                  <Text
+                    font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
+                    margin={{ bottom: 'small' }}
+                    color={Color.GREY_600}
+                  >
+                    {getString('cd.getStartedWithCD.gitopsOnboardingDestination')}
+                    <HarnessDocTooltip tooltipId="gitopsOnboardingDestination" useStandAlone={true} />
+                  </Text>
+                }
+              />
             </Accordion>
-            <DestinationStep />
+
             <div className={css.marginTopClass} />
           </Container>
         </Layout.Vertical>

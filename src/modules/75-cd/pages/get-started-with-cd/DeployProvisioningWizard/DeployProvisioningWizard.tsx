@@ -415,9 +415,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           <ConfigureGitops
             ref={delegateSelectorRef}
             prevStepData={{
-              name: 'testRepo1',
               agent: 'meenaaccagent',
-              identifier: 'testRepo1',
               scope: 'account'
             }}
           />

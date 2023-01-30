@@ -25,6 +25,7 @@ gnupgKeys: GnuPG Keys
 featureComingSoon: This feature is coming soon.
 skip: Skip
 sync: Sync
+nextStep: Next Step
 schedule: Schedule
 coverage: Coverage
 selectService: Select Service
