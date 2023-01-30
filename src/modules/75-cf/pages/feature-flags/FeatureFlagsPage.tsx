@@ -434,6 +434,7 @@ const FeatureFlagsPage: React.FC = () => {
       metrics: !enableMetricsEndpoint,
       flagCounts: true,
       name: searchTerm,
+      summary: true,
       [flagFilter.queryProps?.key]: flagFilter.queryProps?.value
     }
   }, [
