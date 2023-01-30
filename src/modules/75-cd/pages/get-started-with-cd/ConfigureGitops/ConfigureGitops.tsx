@@ -28,7 +28,7 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation, PopoverProps } from '@harness/design-system'
 import cx from 'classnames'
-import Yup from 'yup'
+import * as Yup from 'yup'
 import type { FormikContextType } from 'formik'
 import { defaultTo, get, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
