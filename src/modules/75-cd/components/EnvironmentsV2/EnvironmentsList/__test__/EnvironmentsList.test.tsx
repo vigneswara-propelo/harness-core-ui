@@ -71,7 +71,7 @@ describe('EnvironmentsList', () => {
     await waitFor(() => getByTestId('location'))
 
     expect(getByTestId('location')).toHaveTextContent(
-      '/account/dummy/cd/orgs/dummy/projects/dummy/environment/gjhjghjhg/details?sectionId=CONFIGURATION'
+      '/account/dummy/cd/orgs/dummy/projects/dummy/environments/gjhjghjhg/details?sectionId=CONFIGURATION'
     )
   })
 
@@ -90,7 +90,7 @@ describe('EnvironmentsList', () => {
     await waitFor(() => getByTestId('location'))
 
     expect(getByTestId('location')).toHaveTextContent(
-      '/account/dummy/cd/orgs/dummy/projects/dummy/environment/gjhjghjhg/details?sectionId=CONFIGURATION'
+      '/account/dummy/cd/orgs/dummy/projects/dummy/environments/gjhjghjhg/details?sectionId=CONFIGURATION'
     )
   })
 

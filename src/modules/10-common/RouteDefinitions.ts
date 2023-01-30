@@ -881,7 +881,7 @@ const routes = {
           projectIdentifier,
           module
         },
-        path: 'environment',
+        path: 'environments',
         accountRoutePlacement
       })
     }
@@ -899,7 +899,7 @@ const routes = {
           projectIdentifier,
           module
         },
-        path: 'environment-group',
+        path: 'environments/groups',
         accountRoutePlacement
       })
     }
@@ -923,7 +923,7 @@ const routes = {
           projectIdentifier,
           module
         },
-        path: `environment/${environmentIdentifier}/details`,
+        path: `environments/${environmentIdentifier}/details`,
         accountRoutePlacement
       })
 
@@ -949,7 +949,7 @@ const routes = {
           projectIdentifier,
           module
         },
-        path: `environment-group/${environmentGroupIdentifier}/details`,
+        path: `environments/groups/${environmentGroupIdentifier}/details`,
         accountRoutePlacement
       })
 

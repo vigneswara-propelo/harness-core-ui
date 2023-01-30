@@ -65,7 +65,7 @@ describe('Environment Groups CRUD', () => {
 
     cy.location().should(loc => {
       expect(loc.href).contains(
-        `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/environment-group/testEnvGroup/details?sectionId=ENVIRONMENTS`
+        `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/environments/groups/testEnvGroup/details?sectionId=ENVIRONMENTS`
       )
     })
   })
@@ -137,7 +137,7 @@ describe('Environment Groups CRUD', () => {
 
     cy.location().should(loc => {
       expect(loc.href).contains(
-        `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/environment-group/testEnvGroup/details?sectionId=CONFIGURATION`
+        `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/environments/groups/testEnvGroup/details?sectionId=CONFIGURATION`
       )
     })
 
