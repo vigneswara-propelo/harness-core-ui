@@ -12,6 +12,9 @@ console.log('\nProxy env vars')
 console.table({ baseUrl, targetLocalHost })
 
 module.exports = {
+  '/v1/orgs': {
+    target: targetLocalHost ? 'http://localhost:7457' : `${baseUrl}`
+  },
   '/v1': {
     target: `${baseUrl}` // localhost is not supported for OpenAPI yet
   },
