@@ -27,11 +27,12 @@ import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import type { PmsAbstractStepNode, PolicyConfig, TemplateStepNode } from 'services/pipeline-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import DelegateSelectorPanel from './DelegateSelectorPanel/DelegateSelectorPanel'
 import FailureStrategyPanel from './FailureStrategyPanel/FailureStrategyPanel'
 import type { AllFailureStrategyConfig } from './FailureStrategyPanel/utils'
 import { getFailureStrategiesValidationSchema } from './FailureStrategyPanel/validation'
-import type { StepType } from '../PipelineStepInterface'
+import { StepType } from '../PipelineStepInterface'
 import ConditionalExecutionPanel from './ConditionalExecutionPanel/ConditionalExecutionPanel'
 import CommandFlagsPanel from './CommandFlagsPanel/CommandFlagsPanel'
 import MultiTypePolicySetSelector from '../Common/PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
@@ -126,6 +127,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
   const { getString } = useStrings()
   const isFailureStrategyDisabled = getIsFailureStrategyDisabled({ stageType, stepType })
   const { NG_K8_COMMAND_FLAGS } = useFeatureFlags()
+  const { expressions } = useVariablesExpression()
 
   React.useEffect(() => {
     if (formikProps.isSubmitting) {
@@ -227,7 +229,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
               details={<CommandFlagsPanel formik={formikProps} step={step} deploymentType={deploymentType} />}
             />
           ) : null}
-          {!hiddenPanels.includes(AdvancedPanels.PolicyEnforcement) ? (
+          {!hiddenPanels.includes(AdvancedPanels.PolicyEnforcement) && stepType !== StepType.StepGroup ? (
             <Accordion.Panel
               id={AdvancedPanels.PolicyEnforcement}
               summary={getString('pipeline.policyEnforcement.title')}
@@ -236,10 +238,11 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
                   <Text color={Color.GREY_700} font={{ size: 'small' }} margin={{ bottom: 'medium' }}>
                     {getString('pipeline.policyEnforcement.description')}
                   </Text>
-                  <MultiTypePolicySetSelector<FormValues['policySets']>
+                  <MultiTypePolicySetSelector<FormValues>
                     name={'policySets'}
                     label={getString('common.policy.policysets')}
                     disabled={isReadonly}
+                    expressions={expressions}
                   />
                 </Container>
               }

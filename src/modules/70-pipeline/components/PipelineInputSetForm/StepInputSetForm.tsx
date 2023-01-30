@@ -142,7 +142,7 @@ function StepFormInternal({
       {renderCommandFlags('step.spec.commandFlags')}
       {getMultiTypeFromValue((template?.step as PmsAbstractStepNode)?.enforce?.policySets) ===
         MultiTypeInputType.RUNTIME && (
-        <Container>
+        <Container width={'55%'}>
           <Text
             color={Color.GREY_600}
             font={{ size: 'small', weight: 'bold' }}
