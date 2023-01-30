@@ -58,7 +58,7 @@ export default function ServiceOverrideInputs({
                   template={serviceOverrideInputs?.[environmentRef][serviceIdentifier]}
                   type={getStepTypeByDeploymentType(deploymentType)}
                   stepViewType={StepViewType.TemplateUsage}
-                  path={`serviceOverrideInputs.['${environmentRef}'].[${serviceIdentifier}]`}
+                  path={`serviceOverrideInputs.['${environmentRef}'].['${serviceIdentifier}']`}
                   readonly={readonly}
                   customStepProps={{
                     stageIdentifier

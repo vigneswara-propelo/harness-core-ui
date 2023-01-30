@@ -23,7 +23,7 @@ import {
   useGetEnvironmentsInputYamlAndServiceOverrides
 } from 'services/cd-ng'
 
-import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { getScopedValueFromDTO, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getIdentifierFromScopedRef } from '@common/utils/utils'
 import type { EnvironmentData } from '../types'
@@ -172,7 +172,7 @@ export function useGetEnvironmentsData({
             environment,
             environmentInputs,
             serviceOverrideInputs: {
-              [environment.identifier as string]: serviceOverrideInputs
+              [getScopedValueFromDTO(environment)]: serviceOverrideInputs
             }
           }
         })

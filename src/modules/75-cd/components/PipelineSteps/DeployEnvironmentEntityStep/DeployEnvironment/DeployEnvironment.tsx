@@ -222,7 +222,7 @@ export default function DeployEnvironment({
             const serviceOverrideValueForService = get(
               existingServiceOverrideInputs,
               serviceIdentifier,
-              environment?.serviceOverrideInputs[values.environment as string][serviceIdentifier]
+              environment?.serviceOverrideInputs[values.environment as string]?.[serviceIdentifier]
             )
 
             if (!isNil(serviceOverrideValueForService)) {
