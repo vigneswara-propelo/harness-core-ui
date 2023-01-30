@@ -53,6 +53,7 @@ declare const styles: {
   readonly selectedCard: string
   readonly serviceDeploymentTypeCard: string
   readonly serviceDeploymentTypeIcon: string
+  readonly serviceDeploymentTypeSmallCard: string
   readonly stepWizardText: string
   readonly testConnectionBtn: string
   readonly text: string

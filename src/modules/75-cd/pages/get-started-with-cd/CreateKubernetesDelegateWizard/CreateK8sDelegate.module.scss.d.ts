@@ -26,15 +26,20 @@ declare const styles: {
   readonly descriptionVerificationWrapper: string
   readonly docker: string
   readonly downloadButton: string
+  readonly error: string
   readonly footer: string
+  readonly formLabel: string
   readonly hover: string
   readonly iconPadding: string
+  readonly inputWidth: string
   readonly kubernetes: string
   readonly marginBottomClass: string
   readonly marginTop: string
   readonly marginTopClass: string
   readonly page: string
   readonly panelLeft: string
+  readonly pathContainer: string
+  readonly pathInput: string
   readonly podCmndVerification: string
   readonly previewButton: string
   readonly progress: string
@@ -43,7 +48,10 @@ declare const styles: {
   readonly progressItem: string
   readonly progressItemActive: string
   readonly progressTitle: string
+  readonly revisionTypeNewApp: string
+  readonly revisionTypeWrapper: string
   readonly secondaryHeader: string
+  readonly smallMarginBottomClass: string
   readonly spacing: string
   readonly spinner: string
   readonly subHeading: string

@@ -10,6 +10,52 @@
   color: var(--white) !important;
 }
 
+.inputWidth {
+  width: 320px;
+}
+
+.revisionTypeWrapper {
+  width: 100px;
+}
+
+.pathInput {
+  width: 100% !important;
+}
+
+.formLabel {
+  color: var(--grey-600);
+  font-size: var(--form-input-font-size);
+  font-weight: 500;
+}
+
+.error {
+  color: var(--red-500);
+  margin: 4px 0;
+  font-size: 12px;
+  padding-top: 1% !important;
+}
+
+.revisionTypeNewApp {
+  :global(.bp3-form-content > div > div) {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.pathContainer {
+  width: 45% !important;
+
+  :global {
+    .bp3-input-group {
+      margin-top: 5px;
+    }
+
+    .bp3-form-group {
+      width: 64%;
+    }
+  }
+}
+
 .docker {
   border-radius: 20px !important;
   margin-left: 20px !important;
@@ -270,6 +316,10 @@
 
 .marginBottomClass {
   margin-bottom: 20px !important;
+}
+
+.smallMarginBottomClass {
+  margin-bottom: 10px !important;
 }
 
 .marginTopClass {

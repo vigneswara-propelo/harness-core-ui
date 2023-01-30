@@ -8,6 +8,7 @@
 import { set } from 'lodash-es'
 import { customAlphabet } from 'nanoid'
 import type { IconName } from '@harness/icons'
+import type { SelectOption } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
 import { gitStoreTypes } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestStores } from '@pipeline/components/ManifestSelection/ManifestInterface'
@@ -47,6 +48,11 @@ export interface PipelineRefPayload {
   deploymentType: string
 }
 
+export enum Scope {
+  PROJECT = 'project',
+  ORG = 'org',
+  ACCOUNT = 'account'
+}
 export interface DelegateSuccessHandler {
   delegateCreated: boolean
   delegateInstalled?: boolean
@@ -68,6 +74,7 @@ export const SAMPLE_MANIFEST_FOLDER = 'Sample Manifest Onboarding'
 export const DEFAULT_PIPELINE_NAME = 'Sample Pipeline'
 export const EMPTY_STRING = ''
 export const ONBOARDING_PREFIX = 'onboarding'
+export const DEFAULT_SAMPLE_REPO = 'https://github.com/sample-repo-appln'
 
 const DEFAULT_STAGE_ID = 'Stage'
 const DEFAULT_STAGE_TYPE = 'Deployment'
@@ -91,27 +98,15 @@ export interface ServiceData {
 }
 
 export interface RepoDataType {
-  /**
-   * Account Identifier for the Entity.
-   */
   accountIdentifier?: string
-  /**
-   * Agent identifier for entity.
-   */
   agentIdentifier?: string
   createdAt?: string
   hasRepo?: boolean
   identifier?: string
   lastModifiedAt?: string
-  /**
-   * Organization Identifier for the Entity.
-   */
   orgIdentifier?: string
-  /**
-   * Project Identifier for the Entity.
-   */
   projectIdentifier?: string
-  repository?: RepositoriesRepository
+  repository?: RepositoryInterface
   repositoryCredentialsId?: string
   stale?: boolean
 }
@@ -173,19 +168,25 @@ export const defaultArtifactConfig = {
   }
 } as ArtifactListConfig
 
-export const newRepositoryData = {
-  accountIdentifier: '',
-  agentIdentifier: '',
-  identifier: '',
-  orgIdentifier: '',
-  projectIdentifier: '',
-  hasRepo: true,
-  repository: {
-    type: 'git'
-  } as RepositoriesRepository
+export enum RevisionType {
+  Branch = 'Branch',
+  Tags = 'Tags'
 }
+
+export const revisionTypeArray: SelectOption[] = [
+  {
+    label: RevisionType.Branch,
+    value: RevisionType.Branch
+  },
+  {
+    label: RevisionType.Tags,
+    value: RevisionType.Tags
+  }
+]
+
 export interface RepositoriesRepository {
   connectionType?: string
+  authType?: string
   /**
    * EnableLFS specifies whether git-lfs support should be enabled for this repo. Only valid for Git repositories.
    */
@@ -214,6 +215,28 @@ export interface RepositoriesRepository {
    */
   type?: string
   username?: string
+}
+
+export type RepositoryInterface = RepositoriesRepository & {
+  targetRevision?: string
+  revisionType?: RevisionType
+  path?: string
+}
+
+export const newRepositoryData = {
+  accountIdentifier: '',
+  agentIdentifier: '',
+  identifier: '',
+  orgIdentifier: '',
+  projectIdentifier: '',
+  hasRepo: true,
+  repository: {
+    targetRevision: '',
+    revisionType: RevisionType.Branch,
+    path: '',
+    repo: DEFAULT_SAMPLE_REPO,
+    type: 'git'
+  } as RepositoryInterface
 }
 
 export const newServiceState = {
@@ -448,6 +471,10 @@ const OAuthConnectorPayload: ConnectorRequestBody = {
       type: 'Account'
     }
   }
+}
+
+export function getFullAgentWithScope(agent: string, scope?: Scope): string {
+  return scope === Scope.PROJECT || !scope ? agent : `${scope}.${agent}`
 }
 
 export const getOAuthConnectorPayload = ({

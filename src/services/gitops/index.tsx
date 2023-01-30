@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useMutate, UseMutateProps } from 'restful-react'
+import { UseGetProps, useMutate, UseMutateProps, useGet } from 'restful-react'
 
 export interface V1Time {
   /**
@@ -180,3 +180,270 @@ export const useAgentServiceForServerCreate = (props: UseAgentServiceForServerCr
   })
 
 export type V1AgentRequestBody = V1Agent
+
+export interface RepositoriesRefs {
+  branches?: string[]
+  tags?: string[]
+}
+export interface AgentRepositoryServiceListRefsQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  /**
+   * Repo URL for query.
+   */
+  'query.repo'?: string
+  /**
+   * Whether to force a cache refresh on repo's connection state.
+   */
+  'query.forceRefresh'?: boolean
+  /**
+   * The associated project project.
+   */
+  'query.project'?: string
+}
+
+export interface AgentRepositoryServiceListRefsPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+  identifier: string
+}
+
+export type UseAgentRepositoryServiceListRefsProps = Omit<
+  UseGetProps<
+    RepositoriesRefs,
+    GatewayruntimeError,
+    AgentRepositoryServiceListRefsQueryParams,
+    AgentRepositoryServiceListRefsPathParams
+  >,
+  'path'
+> &
+  AgentRepositoryServiceListRefsPathParams
+
+/**
+ * Returns a list of refs (e.g. branches and tags) in the repo
+ *
+ * Returns a list of refs (e.g. branches and tags) in the repo.
+ */
+export const useAgentRepositoryServiceListRefs = ({
+  agentIdentifier,
+  identifier,
+  ...props
+}: UseAgentRepositoryServiceListRefsProps) =>
+  useGet<
+    RepositoriesRefs,
+    GatewayruntimeError,
+    AgentRepositoryServiceListRefsQueryParams,
+    AgentRepositoryServiceListRefsPathParams
+  >(
+    (paramsInPath: AgentRepositoryServiceListRefsPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/repositories/${paramsInPath.identifier}/refs`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, identifier }, ...props }
+  )
+
+export interface CommonsConnectionState {
+  attemptedAt?: V1Time
+  message?: string
+  status?: string
+}
+
+export interface RepositoriesRepository {
+  connectionState?: CommonsConnectionState
+  connectionType?: string
+  /**
+   * EnableLFS specifies whether git-lfs support should be enabled for this repo. Only valid for Git repositories.
+   */
+  enableLfs?: boolean
+  enableOCI?: boolean
+  githubAppEnterpriseBaseUrl?: string
+  githubAppID?: string
+  githubAppInstallationID?: string
+  githubAppPrivateKey?: string
+  inheritedCreds?: boolean
+  insecure?: boolean
+  insecureIgnoreHostKey?: boolean
+  name?: string
+  password?: string
+  project?: string
+  proxy?: string
+  repo?: string
+  /**
+   * SSHPrivateKey contains the PEM data for authenticating at the repo server. Only used with Git repos.
+   */
+  sshPrivateKey?: string
+  tlsClientCertData?: string
+  tlsClientCertKey?: string
+  /**
+   * Type specifies the type of the repo. Can be either "git" or "helm. "git" is assumed if empty or absent.
+   */
+  type?: string
+  username?: string
+}
+
+export interface Servicev1Repository {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier?: string
+  createdAt?: string
+  identifier?: string
+  lastModifiedAt?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  repository?: RepositoriesRepository
+  repositoryCredentialsId?: string
+  stale?: boolean
+}
+
+export interface AgentRepositoryServiceCreateRepositoryQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  identifier?: string
+  repoCredsId?: string
+}
+
+export interface RepositoriesRepoCreateRequest {
+  credsOnly?: boolean
+  repo?: RepositoriesRepository
+  upsert?: boolean
+}
+
+export interface AgentRepositoryServiceCreateRepositoryPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+}
+
+export type UseAgentRepositoryServiceCreateRepositoryProps = Omit<
+  UseMutateProps<
+    Servicev1Repository,
+    GatewayruntimeError,
+    AgentRepositoryServiceCreateRepositoryQueryParams,
+    RepositoriesRepoCreateRequest,
+    AgentRepositoryServiceCreateRepositoryPathParams
+  >,
+  'path' | 'verb'
+> &
+  AgentRepositoryServiceCreateRepositoryPathParams
+
+/**
+ * CreateRepository creates a new repository configuration
+ *
+ * CreateRepository creates a new repository configuration.
+ */
+export const useAgentRepositoryServiceCreateRepository = ({
+  agentIdentifier,
+  ...props
+}: UseAgentRepositoryServiceCreateRepositoryProps) =>
+  useMutate<
+    Servicev1Repository,
+    GatewayruntimeError,
+    AgentRepositoryServiceCreateRepositoryQueryParams,
+    RepositoriesRepoCreateRequest,
+    AgentRepositoryServiceCreateRepositoryPathParams
+  >(
+    'POST',
+    (paramsInPath: AgentRepositoryServiceCreateRepositoryPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/repositories`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier }, ...props }
+  )
+
+export interface RepositoriesAppInfo {
+  path?: string
+  type?: string
+}
+
+export interface AgentRepositoryServiceListAppsQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  'query.repo'?: string
+  'query.revision'?: string
+  'query.appName'?: string
+  'query.appProject'?: string
+}
+
+export interface RepositoriesRepoAppsResponse {
+  items?: RepositoriesAppInfo[]
+}
+
+export interface AgentRepositoryServiceListAppsPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+  identifier: string
+}
+
+export type UseAgentRepositoryServiceListAppsProps = Omit<
+  UseGetProps<
+    RepositoriesRepoAppsResponse,
+    GatewayruntimeError,
+    AgentRepositoryServiceListAppsQueryParams,
+    AgentRepositoryServiceListAppsPathParams
+  >,
+  'path'
+> &
+  AgentRepositoryServiceListAppsPathParams
+
+/**
+ * ListApps returns list of apps in the repo
+ *
+ * ListApps returns list of apps in the repo.
+ */
+export const useAgentRepositoryServiceListApps = ({
+  agentIdentifier,
+  identifier,
+  ...props
+}: UseAgentRepositoryServiceListAppsProps) =>
+  useGet<
+    RepositoriesRepoAppsResponse,
+    GatewayruntimeError,
+    AgentRepositoryServiceListAppsQueryParams,
+    AgentRepositoryServiceListAppsPathParams
+  >(
+    (paramsInPath: AgentRepositoryServiceListAppsPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/repositories/${paramsInPath.identifier}/apps`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, identifier }, ...props }
+  )
