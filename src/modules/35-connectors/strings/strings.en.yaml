@@ -214,7 +214,7 @@ jira:
   jiraUrl: 'Jira URL'
 serviceNow:
   serviceNowUrl: 'ServiceNow URL'
-  adfs: AdfsClientCredentialsWithCertificate
+  adfs: ADFS Client Credentials with Certificate
   adfsUrl: ADFS URL
   resourceID: Resource ID
   clientID: Client ID
