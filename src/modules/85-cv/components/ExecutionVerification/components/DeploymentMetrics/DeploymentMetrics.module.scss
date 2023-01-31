@@ -166,6 +166,15 @@
   .metricsPagination {
     padding-bottom: 0 !important;
   }
+
+  :global {
+    .Accordion--panel:first-child {
+      padding-top: var(--spacing-medium) !important;
+    }
+    .Accordion--panel:last-child {
+      padding-bottom: var(--spacing-medium) !important;
+    }
+  }
 }
 
 .maxDropDownWidth {
@@ -181,7 +190,6 @@
   div[class*='Accordion--details'] {
     padding-top: var(--spacing-large) !important;
     padding-bottom: var(--spacing-none) !important;
-    background: #f8f8fe !important;
   }
 }
 

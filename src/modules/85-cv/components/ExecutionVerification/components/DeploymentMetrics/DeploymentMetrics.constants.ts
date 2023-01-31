@@ -57,4 +57,4 @@ export const DEFAULT_NODE_RISK_COUNTS = [
   }
 ]
 
-export const INITIAL_PAGE_NUMBER = 1
+export const INITIAL_PAGE_NUMBER = 0

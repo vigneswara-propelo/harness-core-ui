@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getRiskColorValue } from '@cv/utils/CommonUtils'
+import { getRiskColorValue, RiskValues } from '@cv/utils/CommonUtils'
 import type { UseStringsReturn } from 'framework/strings'
 import type { AnalysedDeploymentTestDataNode } from 'services/cv'
 import { HostControlTestData, HostTestData, MINIMUM_DEVIATION } from './DeploymentMetricsAnalysisRow.constants'
@@ -81,5 +81,17 @@ export function getControlDataType(
     return getString('cv.metricsAnalysis.controlDataType.minDeviation')
   } else {
     return ''
+  }
+}
+
+export const getVerificationType = (risk: RiskValues, getString: UseStringsReturn['getString']): string => {
+  switch (risk) {
+    case RiskValues.HEALTHY:
+      return getString('passed').toLocaleUpperCase()
+    case RiskValues.WARNING:
+    case RiskValues.FAILED:
+      return getString('failed').toLocaleUpperCase()
+    default:
+      return getString('passed').toLocaleUpperCase()
   }
 }

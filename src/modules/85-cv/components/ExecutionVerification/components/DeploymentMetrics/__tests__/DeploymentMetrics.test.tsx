@@ -218,9 +218,9 @@ describe('Unit tests for Deployment metrics ', () => {
       queryParams: {
         anomalousMetricsOnly: false,
         healthSources: undefined,
-        limit: 10,
+        pageSize: 10,
         node: undefined,
-        page: 1,
+        pageIndex: 0,
         transactionGroup: undefined
       },
       verifyStepExecutionId: '1234_activityId'
@@ -241,9 +241,9 @@ describe('Unit tests for Deployment metrics ', () => {
         queryParams: {
           anomalousMetricsOnly: true,
           healthSources: undefined,
-          limit: 10,
+          pageSize: 10,
           node: undefined,
-          page: 1,
+          pageIndex: 0,
           transactionGroup: undefined
         },
         verifyStepExecutionId: '1234_activityId'
@@ -307,9 +307,9 @@ describe('Unit tests for Deployment metrics ', () => {
         queryParams: {
           anomalousMetricsOnly: false,
           healthSources: undefined,
-          limit: 10,
+          pageSize: 10,
           node: ['V'],
-          page: 1,
+          pageIndex: 0,
           transactionGroup: undefined
         },
         verifyStepExecutionId: '1234_activityId'
@@ -471,9 +471,9 @@ describe('Unit tests for Deployment metrics ', () => {
       queryParams: {
         anomalousMetricsOnly: false,
         healthSources: undefined,
-        limit: 10,
+        pageSize: 10,
         node: undefined,
-        page: 1,
+        pageIndex: 0,
         transactionGroup: undefined
       },
       verifyStepExecutionId: '1234_activityId'
@@ -711,9 +711,9 @@ describe('Unit tests for Deployment metrics ', () => {
         queryParams: {
           anomalousMetricsOnly: true,
           healthSources: undefined,
-          limit: 10,
+          pageSize: 10,
           node: undefined,
-          page: 1,
+          pageIndex: 0,
           transactionGroup: undefined
         },
         verifyStepExecutionId: '1234_activityId'

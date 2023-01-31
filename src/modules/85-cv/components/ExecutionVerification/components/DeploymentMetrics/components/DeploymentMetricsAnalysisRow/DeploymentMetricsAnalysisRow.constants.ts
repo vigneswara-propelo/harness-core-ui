@@ -13,6 +13,7 @@ export type HostTestData = {
   points: Highcharts.SeriesLineOptions['data']
   name: string
   analysisReason?: AnalysedDeploymentTestDataNode['analysisReason']
+  appliedThresholds?: AnalysedDeploymentTestDataNode['appliedThresholds']
   initialXvalue: number
 }
 

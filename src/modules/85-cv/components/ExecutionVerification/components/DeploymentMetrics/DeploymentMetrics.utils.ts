@@ -71,36 +71,48 @@ export function transformMetricData(
         controlNodeIdentifier,
         controlDataType,
         normalisedControlData,
-        normalisedTestData
+        normalisedTestData,
+        appliedThresholds
       } = hostInfo || {}
 
       // Generating points for control host
-      generatePointsForNodes(
-        controlData,
-        controlPoints,
-        testAnalysisResult,
+      generatePointsForNodes({
+        inputTestData: controlData,
+        points: controlPoints,
+        analysisResult: testAnalysisResult,
         analysisReason,
-        controlNodeIdentifier,
+        nodeIdentifier: controlNodeIdentifier,
         controlDataType
-      )
-      generatePointsForNodes(
-        normalisedControlData,
-        normalisedControlPoints,
-        testAnalysisResult,
+      })
+
+      generatePointsForNodes({
+        inputTestData: normalisedControlData,
+        points: normalisedControlPoints,
+        analysisResult: testAnalysisResult,
         analysisReason,
-        controlNodeIdentifier,
+        nodeIdentifier: controlNodeIdentifier,
         controlDataType
-      )
+      })
 
       // generating points for testHost
-      generatePointsForNodes(testData, testPoints, testAnalysisResult, analysisReason, nodeIdentifier)
-      generatePointsForNodes(
-        normalisedTestData,
-        normalisedTestPoints,
-        testAnalysisResult,
+      generatePointsForNodes({
+        inputTestData: testData,
+        points: testPoints,
+        analysisResult: testAnalysisResult,
         analysisReason,
-        nodeIdentifier
-      )
+        nodeIdentifier,
+        controlDataType,
+        appliedThresholds
+      })
+      generatePointsForNodes({
+        inputTestData: normalisedTestData,
+        points: normalisedTestPoints,
+        analysisResult: testAnalysisResult,
+        analysisReason,
+        nodeIdentifier,
+        controlDataType,
+        appliedThresholds
+      })
 
       nodeRiskCountDTO = getNodeRiskCountDTO(testAnalysisResult, nodeRiskCountDTO)
     }
@@ -122,14 +134,23 @@ export function transformMetricData(
   return graphData
 }
 
-function generatePointsForNodes(
-  inputTestData: MetricValueV2[] | undefined,
-  points: HostTestData[] | HostControlTestData[],
-  analysisResult: string | undefined,
-  analysisReason: AnalysedDeploymentTestDataNode['analysisReason'],
-  nodeIdentifier: string | undefined,
+function generatePointsForNodes({
+  inputTestData,
+  points,
+  analysisResult,
+  analysisReason,
+  nodeIdentifier,
+  controlDataType,
+  appliedThresholds
+}: {
+  inputTestData: MetricValueV2[] | undefined
+  points: HostTestData[] | HostControlTestData[]
+  analysisResult: string | undefined
+  analysisReason: AnalysedDeploymentTestDataNode['analysisReason']
+  nodeIdentifier: string | undefined
   controlDataType?: AnalysedDeploymentTestDataNode['controlDataType']
-): void {
+  appliedThresholds?: AnalysedDeploymentTestDataNode['appliedThresholds']
+}): void {
   const hostData: Highcharts.SeriesLineOptions['data'] = []
   const sortedTestData = inputTestData
     ?.slice()
@@ -145,6 +166,7 @@ function generatePointsForNodes(
     analysisReason,
     name: nodeIdentifier as string,
     initialXvalue: testDataInitialXValue,
+    appliedThresholds,
     ...(controlDataType && { controlDataType })
   })
 }
@@ -282,7 +304,7 @@ export function generateHealthSourcesOptionsData(
 export function getPaginationInfo(data: PageMetricsAnalysis | null): {
   pageIndex?: number
   pageItemCount?: number
-  limit?: number
+  pageSize?: number
   totalPages?: number
   totalItems?: number
 } {
@@ -291,7 +313,7 @@ export function getPaginationInfo(data: PageMetricsAnalysis | null): {
     {
       pageIndex,
       pageItemCount,
-      limit: pageSize,
+      pageSize: pageSize,
       totalPages,
       totalItems
     } || DEFAULT_PAGINATION_VALUEE

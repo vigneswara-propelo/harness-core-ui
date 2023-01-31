@@ -7,9 +7,9 @@
 
 .main {
   width: 100% !important;
-
-  .transactionMetric {
-  }
+  border: 1px solid #effbff;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16);
+  border-radius: var(--spacing-xsmall);
 
   .scrollArrow {
     flex-basis: 20px;
@@ -143,4 +143,8 @@
   font-size: 12px !important;
   line-height: 18px !important;
   color: var(--black) !important;
+}
+
+.metricDetails {
+  background: #f8f8fe !important;
 }

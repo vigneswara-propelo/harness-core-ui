@@ -10,6 +10,7 @@ declare const styles: {
   readonly analysisReason: string
   readonly graphs: string
   readonly main: string
+  readonly metricDetails: string
   readonly metricInfo: string
   readonly metricPanelLabels: string
   readonly metricRisk: string

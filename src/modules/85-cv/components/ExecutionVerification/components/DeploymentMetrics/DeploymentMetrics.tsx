@@ -96,8 +96,8 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
   const [queryParams, setQueryParams] = useState<GetMetricsAnalysisForVerifyStepExecutionIdQueryParams>({
     anomalousMetricsOnly: anomalousMetricsFilterChecked,
     node: getQueryParamForHostname(selectedNode?.hostName),
-    page: INITIAL_PAGE_NUMBER,
-    limit: PAGE_SIZE
+    pageIndex: INITIAL_PAGE_NUMBER,
+    pageSize: PAGE_SIZE
   })
   const accordionRef = useRef<AccordionHandle>(null)
   const [pollingIntervalId, setPollingIntervalId] = useState(-1)
@@ -180,7 +180,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     setQueryParams(oldParams => ({
       ...oldParams,
       node: undefined,
-      page: INITIAL_PAGE_NUMBER
+      pageIndex: INITIAL_PAGE_NUMBER
     }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activityId])
@@ -237,7 +237,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
   useEffect(() => {
     setQueryParams(oldQueryParams => ({
       ...oldQueryParams,
-      page: INITIAL_PAGE_NUMBER,
+      pageIndex: INITIAL_PAGE_NUMBER,
       anomalousMetricsOnly: anomalousMetricsFilterChecked
     }))
     setUpdateViewInfo(oldInfo => ({ ...oldInfo, shouldUpdateView: true, showSpinner: true }))
@@ -250,7 +250,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
 
     setQueryParams(prevQueryParams => ({
       ...prevQueryParams,
-      page: INITIAL_PAGE_NUMBER,
+      pageIndex: INITIAL_PAGE_NUMBER,
       healthSource: getQueryParamFromFilters(healthSourceQueryParams),
       transactionGroup: getQueryParamFromFilters(transactionNameParams),
       node: getQueryParamFromFilters(nodeNameParams)
@@ -446,12 +446,12 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
       </Container>
       <Pagination
         className={css.metricsPagination}
-        pageSize={paginationInfo.limit as number}
+        pageSize={paginationInfo.pageSize as number}
         pageCount={paginationInfo.totalPages as number}
         itemCount={paginationInfo.totalItems as number}
         pageIndex={paginationInfo.pageIndex}
         gotoPage={selectedPage => {
-          setQueryParams(oldQueryParams => ({ ...oldQueryParams, page: selectedPage }))
+          setQueryParams(oldQueryParams => ({ ...oldQueryParams, pageIndex: selectedPage }))
           setUpdateViewInfo(oldInfo => ({ ...oldInfo, shouldUpdateView: true, showSpinner: true }))
         }}
       />
