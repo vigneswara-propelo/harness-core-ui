@@ -105,9 +105,8 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 jest.mock('@harnessio/react-ng-manager-client', () => ({
-  useGetOrganizationsQuery: jest.fn().mockImplementation(args => {
-    getOrg(args)
-    return { ...OrgMockData, refetch: jest.fn(), error: null, loading: false }
+  getOrganizations: jest.fn().mockImplementation(() => {
+    return Promise.resolve({ ...OrgMockData })
   })
 }))
 

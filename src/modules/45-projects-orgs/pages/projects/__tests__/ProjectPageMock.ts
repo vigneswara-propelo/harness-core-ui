@@ -197,12 +197,17 @@ export const projectMockDataWithModules = {
 
 export const OrgMockData = [
   {
-    organization: {
+    org: {
       identifier: 'testOrg',
       name: 'Org Name',
       description: 'Description',
       tags: { tag1: '', tag2: 'tag3' }
     },
+    createdAt: null,
+    lastModifiedAt: 1629882239962,
+    harnessManaged: false
+  },
+  {
     createdAt: null,
     lastModifiedAt: 1629882239962,
     harnessManaged: false

@@ -5,22 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   Layout,
-  SelectOption,
   ExpandingSearchInput,
   Container,
   GridListToggle,
   Views,
   ButtonVariation,
-  DropDown,
   Page,
   ButtonSize
 } from '@harness/uicore'
 
-import { useGetOrganizationsQuery } from '@harnessio/react-ng-manager-client'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useGetProjectAggregateDTOList } from 'services/cd-ng'
 import type { Project } from 'services/cd-ng'
@@ -35,14 +32,11 @@ import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { projectsPageQueryParamOptions, ProjectsPageQueryParams } from '@projects-orgs/utils/utils'
+import OrgDropdown from '@projects-orgs/components/OrgDropdown/OrgDropdown'
 import ProjectsListView from './views/ProjectListView/ProjectListView'
 import ProjectsGridView from './views/ProjectGridView/ProjectGridView'
 import ProjectsEmptyState from './projects-empty-state.png'
 import css from './ProjectsPage.module.scss'
-
-enum OrgFilter {
-  ALL = '$$ALL$$'
-}
 
 const ProjectsListPage: React.FC = () => {
   const { getString } = useStrings()
@@ -68,30 +62,6 @@ const ProjectsListPage: React.FC = () => {
   const { updateQueryParams } = useUpdateQueryParams<ProjectsPageQueryParams>()
   const orgFilter = orgIdentifierQuery || orgFilterPreference
 
-  const allOrgsSelectOption: SelectOption = useMemo(
-    () => ({
-      label: getString('all'),
-      value: OrgFilter.ALL
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
-
-  const { data: orgsData, refetch: refetchQuery } = useGetOrganizationsQuery(
-    {
-      queryParams: {
-        limit: 100
-      }
-    },
-    {
-      staleTime: 60 * 1000
-    }
-  )
-
-  useEffect(() => {
-    refetchQuery()
-  }, [refetchQuery])
-
   const { showSuccess } = useToaster()
 
   useEffect(
@@ -103,24 +73,6 @@ const ProjectsListPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [verify]
   )
-
-  const organizations: SelectOption[] = useMemo(
-    () =>
-      orgsData?.reduce(
-        (orgList, item) => {
-          if (item?.org) {
-            orgList.push({
-              label: item?.org?.name,
-              value: item?.org?.identifier
-            })
-          }
-          return orgList
-        },
-        [allOrgsSelectOption]
-      ) || [],
-    [orgsData, allOrgsSelectOption]
-  )
-
   const { data, loading, refetch, error } = useGetProjectAggregateDTOList({
     queryParams: {
       accountIdentifier: accountId,
@@ -170,21 +122,16 @@ const ProjectsListPage: React.FC = () => {
             icon="plus"
             onClick={() => openProjectModal()}
           />
-          <DropDown
-            disabled={loading}
-            filterable={false}
-            items={organizations}
-            value={orgFilter || OrgFilter.ALL}
+          <OrgDropdown
+            value={{ value: orgFilter, label: orgFilter }}
             onChange={item => {
-              if (item.value === OrgFilter.ALL) {
+              if (item.value === '') {
                 clearOrgFilterPreference()
-                updateQueryParams({ orgIdentifier: undefined, page: 0 })
               } else {
                 setOrgFilterPreference(item.value as string)
-                updateQueryParams({ orgIdentifier: item.value as string, page: 0 })
               }
+              updateQueryParams({ orgIdentifier: item.value.toString() })
             }}
-            getCustomLabel={item => getString('common.tabOrgs', { name: item.label })}
           />
           <div style={{ flex: 1 }}></div>
           <ExpandingSearchInput

@@ -119,7 +119,7 @@ exports[`Project Page List Create Project and Close 1`] = `
           >
             <div
               class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder DropDown--minWidth StyledProps--flex"
-              data-testid="dropdown-button"
+              data-testid="org-select"
               style="min-width: 130px;"
             >
               <div
@@ -130,7 +130,7 @@ exports[`Project Page List Create Project and Close 1`] = `
                   data-testid="dropdown-value"
                   style="--text-line-clamp: 1;"
                 >
-                  Select
+                  orgsText
                 </p>
               </div>
               <div
@@ -3919,7 +3919,7 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
           >
             <div
               class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder DropDown--minWidth StyledProps--flex"
-              data-testid="dropdown-button"
+              data-testid="org-select"
               style="min-width: 130px;"
             >
               <div
@@ -3930,7 +3930,7 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                   data-testid="dropdown-value"
                   style="--text-line-clamp: 1;"
                 >
-                  Select
+                  orgsText
                 </p>
               </div>
               <div
@@ -7719,7 +7719,7 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
           >
             <div
               class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder DropDown--minWidth StyledProps--flex"
-              data-testid="dropdown-button"
+              data-testid="org-select"
               style="min-width: 130px;"
             >
               <div
@@ -7730,7 +7730,7 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                   data-testid="dropdown-value"
                   style="--text-line-clamp: 1;"
                 >
-                  Select
+                  orgsText
                 </p>
               </div>
               <div
@@ -11519,7 +11519,7 @@ exports[`Project Page List Whole Modal Test 1`] = `
           >
             <div
               class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder DropDown--minWidth StyledProps--flex"
-              data-testid="dropdown-button"
+              data-testid="org-select"
               style="min-width: 130px;"
             >
               <div
@@ -11530,7 +11530,7 @@ exports[`Project Page List Whole Modal Test 1`] = `
                   data-testid="dropdown-value"
                   style="--text-line-clamp: 1;"
                 >
-                  Select
+                  orgsText
                 </p>
               </div>
               <div
