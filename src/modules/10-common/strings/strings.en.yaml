@@ -749,6 +749,7 @@ perMonth: /month
 perMonthWithoutSlash: per Month
 perYearWithoutSlash: per year
 perYear: /year
+currentUTCTime: 'Current UTC Time:'
 hourly: Hourly
 daily: Daily
 yearly: Yearly
@@ -1100,6 +1101,7 @@ infrastructureInputs: Infrastructure inputs
 environmentPrefix: 'Environment: {{ name }}'
 infrastructurePrefix: 'Infrastructure: {{ name }}'
 schedulePanel:
+  currentUTCTime: '{{$.common.currentUTCTime}}'
   minutesLabel: 'Minutes'
   hourlyTabTitle: '{{$.common.hourly}}'
   dailyTabTitle: '{{$.common.daily}}'

@@ -6414,6 +6414,15 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
                       class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
                     >
                       common.schedule
+                      <p
+                        class="StyledProps--font StyledProps--main"
+                      >
+                        triggers.schedulePanel.currentUTCTime
+                         
+                        10
+                        :
+                        00
+                      </p>
                     </span>
                     <div
                       class="Layout--vertical StyledProps--main formContent"

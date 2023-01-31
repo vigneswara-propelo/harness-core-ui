@@ -213,6 +213,7 @@ export interface StringsMap {
   'common.createPipeline': string
   'common.creating': string
   'common.current': string
+  'common.currentUTCTime': string
   'common.currentlyAvailable': string
   'common.currentlySupportedOn': string
   'common.customPricing': string
@@ -855,6 +856,7 @@ export interface StringsMap {
   'common.schedulePanel.WED': string
   'common.schedulePanel.cronExpression': string
   'common.schedulePanel.cronExpressionRequired': string
+  'common.schedulePanel.currentUTCTime': string
   'common.schedulePanel.dailyTabTitle': string
   'common.schedulePanel.dayOfMonthLabel': string
   'common.schedulePanel.dayOfWeekLabel': string
@@ -4852,6 +4854,7 @@ export interface StringsMap {
   'triggers.schedulePanel.TUE': string
   'triggers.schedulePanel.WED': string
   'triggers.schedulePanel.cronExpression': string
+  'triggers.schedulePanel.currentUTCTime': string
   'triggers.schedulePanel.dailyTabTitle': string
   'triggers.schedulePanel.dayOfMonthLabel': string
   'triggers.schedulePanel.dayOfWeekLabel': string
