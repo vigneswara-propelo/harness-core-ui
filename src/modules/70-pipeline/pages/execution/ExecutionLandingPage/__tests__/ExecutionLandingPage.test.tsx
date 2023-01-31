@@ -57,7 +57,8 @@ jest.mock('services/pipeline-ng', () => ({
         data: {}
       }
     })
-  }))
+  })),
+  useGetExecutionData: jest.fn(() => ({ data: null }))
 }))
 
 jest.mock('services/ti-service', () => ({

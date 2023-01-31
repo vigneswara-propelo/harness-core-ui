@@ -34,6 +34,8 @@ import { PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED } from '@pipeline/utils/c
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
+import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import css from './ExecutionHeader.module.scss'
 
@@ -75,6 +77,7 @@ export function ExecutionHeader(): React.ReactElement {
     [orgIdentifier, projectIdentifier, accountId, pipelineIdentifier]
   )
   const hasCI = hasCIStage(pipelineExecutionSummary)
+  const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
 
   useDocumentTitle([
     `${pipelineExecutionSummary?.status ? pipelineExecutionSummary?.status + ' | ' : ''} ${
@@ -213,6 +216,7 @@ export function ExecutionHeader(): React.ReactElement {
                 ? () => openRunPipelineModal()
                 : undefined
             }
+            onViewCompiledYaml={() => setViewCompiledYaml(pipelineExecutionSummary)}
           />
         </div>
       </div>
@@ -254,6 +258,7 @@ export function ExecutionHeader(): React.ReactElement {
             </GitSyncStoreProvider>
           )
         ) : null}
+        <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
       </div>
     </header>
   )
