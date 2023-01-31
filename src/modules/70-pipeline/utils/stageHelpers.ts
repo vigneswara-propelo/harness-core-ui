@@ -728,3 +728,23 @@ export const getAllowedRepoOptions = (
     ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
     : k8sRepositoryFormatTypes
 }
+
+export function hasChainedPipelineStage(stages?: StageElementWrapperConfig[]): boolean {
+  let containsChainedPipelineStage = false
+  if (stages) {
+    for (const item of stages) {
+      if (item?.stage?.type === StageType.PIPELINE) {
+        containsChainedPipelineStage = true
+      } else if (!containsChainedPipelineStage && item?.parallel) {
+        for (const node of item.parallel) {
+          if (node?.stage?.type === StageType.PIPELINE) {
+            containsChainedPipelineStage = true
+          }
+          if (containsChainedPipelineStage) break
+        }
+      }
+      if (containsChainedPipelineStage) break
+    }
+  }
+  return containsChainedPipelineStage
+}

@@ -56,7 +56,7 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
 
   const { getString } = useStrings()
   const { licenseInformation } = useLicenseStore()
-  const { CDNG_ENABLED, CING_ENABLED, CFNG_ENABLED, PIPELINE_CHAINING } = useFeatureFlags()
+  const { CDNG_ENABLED, CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const selectedStage = getStageFromPipeline(selectedStageId).stage
   const originalStage = getStageFromPipeline(selectedStageId, originalPipeline).stage
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
@@ -83,9 +83,6 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
     tempStages.push(
       stagesCollection.getStage(StageType.SECURITY, licenseInformation['STO']?.status === 'ACTIVE', getString)
         ?.props as PipelineStageProps
-    )
-    tempStages.push(
-      stagesCollection.getStage(StageType.PIPELINE, !!PIPELINE_CHAINING, getString)?.props as PipelineStageProps
     )
     tempStages.push(stagesCollection.getStage(StageType.APPROVAL, true, getString)?.props as PipelineStageProps)
 

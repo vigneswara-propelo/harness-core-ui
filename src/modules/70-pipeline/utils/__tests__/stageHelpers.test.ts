@@ -6,6 +6,7 @@
  */
 
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 import type { DeploymentStageElementConfig } from '../pipelineTypes'
 import {
   changeEmptyValuesToRunTimeInput,
@@ -35,9 +36,12 @@ import {
   RepositoryFormatTypes,
   isAzureWebAppOrSshWinrmGenericDeploymentType,
   isCustomDTGenericDeploymentType,
-  isTasGenericDeploymentType
+  isTasGenericDeploymentType,
+  hasChainedPipelineStage
 } from '../stageHelpers'
 import inputSetPipeline from './inputset-pipeline.json'
+import chainedPipeline from './mockJson/chainedPipeline.json'
+
 test('if empty values are being replaced with <+input> except for tags', () => {
   const outputCriteria = changeEmptyValuesToRunTimeInput(inputSetPipeline, '')
 
@@ -304,4 +308,9 @@ test('getCustomStepProps', () => {
   expect(getCustomStepProps(ServiceDeploymentType.AmazonSAM, (str: string) => str)).toStrictEqual({
     formInfo: {}
   })
+})
+
+test('hasChainedPipelineStage', () => {
+  expect(hasChainedPipelineStage([])).toBe(false)
+  expect(hasChainedPipelineStage(chainedPipeline.pipeline.stages as StageElementWrapperConfig[])).toBe(true)
 })
