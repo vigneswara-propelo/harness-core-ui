@@ -16,7 +16,7 @@ import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/Steps
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
 import { MendStepBaseWithRef } from './MendStepBase'
-import { MendStepInputSet } from './MendStepInputSet'
+import { SecurityStepInputSet } from '../SecurityStepInputSet'
 import { MendStepVariables, MendStepVariablesProps } from './MendStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './MendStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
@@ -113,7 +113,7 @@ export class MendStep extends PipelineStep<MendStepData> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <MendStepInputSet
+        <SecurityStepInputSet
           initialValues={initialValues}
           template={inputSetData?.template}
           path={inputSetData?.path || ''}

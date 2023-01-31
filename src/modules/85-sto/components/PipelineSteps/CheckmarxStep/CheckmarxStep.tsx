@@ -16,7 +16,7 @@ import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/Steps
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
 import { CheckmarxStepBaseWithRef } from './CheckmarxStepBase'
-import { CheckmarxStepInputSet } from './CheckmarxStepInputSet'
+import { SecurityStepInputSet } from '../SecurityStepInputSet'
 import { CheckmarxStepVariables, CheckmarxStepVariablesProps } from './CheckmarxStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './CheckmarxStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
@@ -111,7 +111,7 @@ export class CheckmarxStep extends PipelineStep<CheckmarxStepData> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <CheckmarxStepInputSet
+        <SecurityStepInputSet
           initialValues={initialValues}
           template={inputSetData?.template}
           /* istanbul ignore next */

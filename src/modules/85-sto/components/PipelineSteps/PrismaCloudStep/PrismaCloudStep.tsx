@@ -16,7 +16,7 @@ import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/Steps
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
 import { PrismaCloudStepBaseWithRef } from './PrismaCloudStepBase'
-import { PrismaCloudStepInputSet } from './PrismaCloudStepInputSet'
+import { SecurityStepInputSet } from '../SecurityStepInputSet'
 import { PrismaCloudStepVariables, PrismaCloudStepVariablesProps } from './PrismaCloudStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './PrismaCloudStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
@@ -121,7 +121,7 @@ export class PrismaCloudStep extends PipelineStep<PrismaCloudStepData> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <PrismaCloudStepInputSet
+        <SecurityStepInputSet
           initialValues={initialValues}
           /* istanbul ignore next */
           template={inputSetData?.template}

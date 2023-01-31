@@ -16,7 +16,7 @@ import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/Steps
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
 import { AquatrivyStepBaseWithRef } from './AquatrivyStepBase'
-import { AquatrivyStepInputSet } from './AquatrivyStepInputSet'
+import { SecurityStepInputSet } from '../SecurityStepInputSet'
 import { AquatrivyStepVariables, AquatrivyStepVariablesProps } from './AquatrivyStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './AquatrivyStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
@@ -115,7 +115,7 @@ export class AquatrivyStep extends PipelineStep<AquatrivyStepData> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <AquatrivyStepInputSet
+        <SecurityStepInputSet
           initialValues={initialValues}
           template={inputSetData?.template}
           path={inputSetData?.path || ''}

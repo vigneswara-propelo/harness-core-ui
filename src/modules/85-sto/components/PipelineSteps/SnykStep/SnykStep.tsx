@@ -16,7 +16,7 @@ import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/Steps
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
 import { SnykStepBaseWithRef } from './SnykStepBase'
-import { SnykStepInputSet } from './SnykStepInputSet'
+import { SecurityStepInputSet } from '../SecurityStepInputSet'
 import { SnykStepVariables, SnykStepVariablesProps } from './SnykStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SnykStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
@@ -109,7 +109,7 @@ export class SnykStep extends PipelineStep<SnykStepData> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <SnykStepInputSet
+        <SecurityStepInputSet
           initialValues={initialValues}
           /* istanbul ignore next */
           template={inputSetData?.template}

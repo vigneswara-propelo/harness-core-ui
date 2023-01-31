@@ -16,7 +16,7 @@ import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/Steps
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
 import { SonarqubeStepBaseWithRef } from './SonarqubeStepBase'
-import { SonarqubeStepInputSet } from './SonarqubeStepInputSet'
+import { SecurityStepInputSet } from '../SecurityStepInputSet'
 import { SonarqubeStepVariables, SonarqubeStepVariablesProps } from './SonarqubeStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SonarqubeStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
@@ -110,7 +110,7 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <SonarqubeStepInputSet
+        <SecurityStepInputSet
           initialValues={initialValues}
           template={inputSetData?.template}
           path={inputSetData?.path || ''}

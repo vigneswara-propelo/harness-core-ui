@@ -16,7 +16,7 @@ import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/Steps
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
 import { ZapStepBaseWithRef } from './ZapStepBase'
-import { ZapStepInputSet } from './ZapStepInputSet'
+import { SecurityStepInputSet } from '../SecurityStepInputSet'
 import { ZapStepVariables, ZapStepVariablesProps } from './ZapStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './ZapStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
@@ -109,7 +109,7 @@ export class ZapStep extends PipelineStep<ZapStepData> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <ZapStepInputSet
+        <SecurityStepInputSet
           initialValues={initialValues}
           /* istanbul ignore next */
           template={inputSetData?.template}

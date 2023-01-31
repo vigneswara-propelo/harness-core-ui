@@ -123,16 +123,6 @@ export const MendStepBase = (
         // This is required
         setFormikRef?.(formikRef, formik)
 
-        // const getProductLookupType = () => {
-        //   if (formik.values.spec.mode === 'orchestration') {
-        //     return orchestrationLookupTypes
-        //   }
-        //   if (formik.values.spec.mode === 'extraction') {
-        //     return extractionLookupTypes
-        //   }
-        //   return []
-        // }
-
         const show_product_token_field =
           formik.values.spec.mode != 'ingestion' &&
           (formik.values.spec.tool?.product_lookup_type === 'byTokens' ||

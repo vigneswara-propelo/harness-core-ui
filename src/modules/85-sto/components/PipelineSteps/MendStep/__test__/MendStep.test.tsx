@@ -102,7 +102,12 @@ describe('Mend Step', () => {
           auth: {
             domain: RUNTIME_INPUT_VALUE,
             access_token: RUNTIME_INPUT_VALUE,
+            access_id: RUNTIME_INPUT_VALUE,
             ssl: RUNTIME_INPUT_VALUE
+          },
+          tool: {
+            product_lookup_type: RUNTIME_INPUT_VALUE,
+            product_token: RUNTIME_INPUT_VALUE
           },
           mode: 'orchestration',
           config: 'default',
@@ -163,10 +168,15 @@ describe('Mend Step', () => {
           auth: {
             domain: 'auth domain',
             access_token: 'token',
+            access_id: 'access id',
             ssl: true
           },
           config: 'default',
           mode: 'orchestration',
+          tool: {
+            product_lookup_type: 'appendToProductByToken',
+            product_token: 'access token'
+          },
           settings: {
             setting_1: 'settings test value 1',
             setting_2: 'settings test value 1'

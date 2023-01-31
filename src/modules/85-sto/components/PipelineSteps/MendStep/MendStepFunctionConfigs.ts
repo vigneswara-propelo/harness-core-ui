@@ -32,26 +32,34 @@ const toolFieldsTransformConfig = (data: MendStepData) => {
     {
       name: 'spec.tool.project_name',
       type: TransformValuesTypes.Text
+    },
+    {
+      name: 'spec.tool.product_lookup_type',
+      type: TransformValuesTypes.Text
     }
   ]
 
   // extraction || orchestration
-  if (data.spec.mode === 'extraction') {
-    config.push(
-      {
-        name: 'spec.tool.include',
-        type: TransformValuesTypes.Text
-      },
-      {
-        name: 'spec.tool.product_token',
-        type: TransformValuesTypes.Text
-      },
-      {
-        name: 'spec.tool.product_name',
-        type: TransformValuesTypes.Text
-      }
-    )
-  }
+  // if (data.spec.mode === 'extraction') {
+  config.push(
+    {
+      name: 'spec.tool.include',
+      type: TransformValuesTypes.Text
+    },
+    {
+      name: 'spec.tool.exclude',
+      type: TransformValuesTypes.Text
+    },
+    {
+      name: 'spec.tool.product_token',
+      type: TransformValuesTypes.Text
+    },
+    {
+      name: 'spec.tool.product_name',
+      type: TransformValuesTypes.Text
+    }
+  )
+  // }
 
   return config
 }
@@ -105,6 +113,10 @@ const extraAuthFieldsTransformConfig = (data: MendStepData) =>
         {
           name: 'spec.auth.ssl',
           type: TransformValuesTypes.Boolean
+        },
+        {
+          name: 'spec.auth.access_id',
+          type: TransformValuesTypes.Text
         }
       ]
     : []
@@ -121,6 +133,12 @@ const extraAuthFieldsValidationConfig = (data: MendStepData): InputSetViewValida
           name: 'spec.auth.ssl',
           type: ValidationFieldTypes.Text,
           label: 'sto.stepField.authSsl'
+        },
+        {
+          name: 'spec.auth.access_id',
+          type: ValidationFieldTypes.Text,
+          label: 'sto.stepField.authAccessId',
+          isRequired: true // todo verify
         }
       ]
     : []

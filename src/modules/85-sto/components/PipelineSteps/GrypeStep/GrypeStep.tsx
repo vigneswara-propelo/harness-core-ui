@@ -16,7 +16,7 @@ import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/Steps
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
 import { GrypeStepBaseWithRef } from './GrypeStepBase'
-import { GrypeStepInputSet } from './GrypeStepInputSet'
+import { SecurityStepInputSet } from '../SecurityStepInputSet'
 import { GrypeStepVariables, GrypeStepVariablesProps } from './GrypeStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './GrypeStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
@@ -115,7 +115,7 @@ export class GrypeStep extends PipelineStep<GrypeStepData> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <GrypeStepInputSet
+        <SecurityStepInputSet
           initialValues={initialValues}
           template={inputSetData?.template}
           path={inputSetData?.path || ''}

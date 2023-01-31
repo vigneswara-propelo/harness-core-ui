@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, AllowedTypes } from '@harness/uicore'
 import { connect } from 'formik'
 import { isEmpty } from 'lodash-es'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
@@ -16,11 +16,26 @@ import {
   CIStepOptionalConfigProps
 } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
-import type { BlackduckStepProps } from './BlackduckStep'
-import { InputSetFields } from '../SecurityFields'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { getInputSetFieldName } from './constants'
+import { InputSetFields } from './SecurityFields'
+import type { SecurityStepData, SecurityStepSpec } from './types'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export const BlackduckStepInputSetBasic: React.FC<BlackduckStepProps> = ({
+export interface SecurityStepProps {
+  initialValues: SecurityStepData<SecurityStepSpec>
+  template?: SecurityStepData<SecurityStepSpec>
+  path?: string
+  isNewStep?: boolean
+  readonly?: boolean
+  stepViewType: StepViewType
+  onUpdate?: (data: SecurityStepData<SecurityStepSpec>) => void
+  onChange?: (data: SecurityStepData<SecurityStepSpec>) => void
+  allowableTypes: AllowedTypes
+  formik?: any
+}
+
+export const SecurityStepInputSetBasic: React.FC<SecurityStepProps> = ({
   template,
   path,
   readonly,
@@ -32,7 +47,7 @@ export const BlackduckStepInputSetBasic: React.FC<BlackduckStepProps> = ({
 
   const enableFields: CIStepOptionalConfigProps['enableFields'] = {
     ...(shouldRenderRunTimeInputView(template?.spec?.settings) && {
-      'spec.settings': {}
+      [getInputSetFieldName(prefix, 'spec.settings')]: {}
     })
   }
 
@@ -77,5 +92,5 @@ export const BlackduckStepInputSetBasic: React.FC<BlackduckStepProps> = ({
   )
 }
 
-const BlackduckStepInputSet = connect(BlackduckStepInputSetBasic)
-export { BlackduckStepInputSet }
+const SecurityStepInputSet = connect(SecurityStepInputSetBasic)
+export { SecurityStepInputSet }

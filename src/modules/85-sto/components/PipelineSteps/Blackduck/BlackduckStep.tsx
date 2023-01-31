@@ -16,7 +16,7 @@ import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/Steps
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
 import { BlackduckStepBaseWithRef } from './BlackduckStepBase'
-import { BlackduckStepInputSet } from './BlackduckStepInputSet'
+import { SecurityStepInputSet } from '../SecurityStepInputSet'
 import { BlackduckStepVariables, BlackduckStepVariablesProps } from './BlackduckStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './BlackduckStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
@@ -115,7 +115,7 @@ export class BlackduckStep extends PipelineStep<BlackduckStepData> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <BlackduckStepInputSet
+        <SecurityStepInputSet
           initialValues={initialValues}
           /* istanbul ignore next */
           template={inputSetData?.template}
