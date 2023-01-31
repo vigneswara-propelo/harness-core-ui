@@ -71,14 +71,14 @@ exports[`Unit tests for LogAnalysisContainer Verify if LogAnalysisContainer rend
         >
           <input
             checked=""
-            data-testid="cv.unknown"
+            data-testid="cd.getStartedWithCD.healthStatus.unknown"
             type="checkbox"
             value="UNKNOWN_EVENT"
           />
           <span
             class="bp3-control-indicator"
           />
-          cv.unknown
+          cd.getStartedWithCD.healthStatus.unknown
         </label>
         <label
           class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"

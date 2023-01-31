@@ -665,6 +665,17 @@ getStartedWithCD:
   harnessHosted: Harness hosted
   selfManaged: Self-managed
   nameYourCluster: Name your cluster
+  connectionStatus: Connection Status
+  healthStatusLabel: Health Status
+  mappedHarnessProjects: Mapped Harness projects
+  disconnected: Disconnected
+  healthStatus:
+    degraded: Degraded
+    healthy: Healthy
+    missing: Missing
+    progressing: Progressing
+    suspended: Suspended
+    unknown: Unknown
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment

@@ -123,7 +123,7 @@ export const getRiskLabelStringId = (
     case RiskValues.NO_ANALYSIS:
       return 'cv.noAnalysis'
     case RiskValues.HEALTHY:
-      return 'cv.monitoredServices.serviceHealth.serviceDependencies.states.healthy'
+      return 'cd.getStartedWithCD.healthStatus.healthy'
     case RiskValues.OBSERVE:
       return 'cv.monitoredServices.serviceHealth.serviceDependencies.states.observe'
     case RiskValues.WARNING:

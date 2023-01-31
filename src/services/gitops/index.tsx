@@ -447,3 +447,51 @@ export const useAgentRepositoryServiceListApps = ({
       `/api/v1/agents/${paramsInPath.agentIdentifier}/repositories/${paramsInPath.identifier}/apps`,
     { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, identifier }, ...props }
   )
+
+export interface AgentServiceForServerListQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  identifier?: string
+  name?: string
+  type?: 'AGENT_TYPE_UNSET' | 'CONNECTED_ARGO_PROVIDER' | 'MANAGED_ARGO_PROVIDER'
+  tags?: string[]
+  searchTerm?: string
+  pageSize?: number
+  pageIndex?: number
+  scope?: 'AGENT_SCOPE_UNSET' | 'ACCOUNT' | 'ORG' | 'PROJECT'
+  drIdentifier?: string
+}
+
+export interface V1AgentList {
+  content?: V1Agent[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export type UseAgentServiceForServerListProps = Omit<
+  UseGetProps<V1AgentList, GatewayruntimeError, AgentServiceForServerListQueryParams, void>,
+  'path'
+>
+
+/**
+ * List agents.
+ */
+export const useAgentServiceForServerList = (props: UseAgentServiceForServerListProps) =>
+  useGet<V1AgentList, GatewayruntimeError, AgentServiceForServerListQueryParams, void>(`/api/v1/agents`, {
+    base: window.getApiBaseUrl('gitops'),
+    ...props
+  })

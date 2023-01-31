@@ -177,3 +177,8 @@
 .error {
   color: var(--error);
 }
+
+.agentsLoadingSpinner {
+  justify-content: flex-start;
+  margin-bottom: var(--spacing-medium);
+}

@@ -32,7 +32,6 @@ sampleEvent: Sample Event
 messageFrequency: Message Frequency
 trend: Trend
 known: Known
-unknown: Unknown
 unexpected: Unexpected
 knownEvents: Known events
 baselineEvents: Baseline events
@@ -608,7 +607,6 @@ monitoredServices:
         unhealthy: Unhealthy
         needsAttention: Needs attention
         observe: Observe
-        healthy: Healthy
         exhausted: Exhausted
   monitoredServiceTabs:
     serviceHealth: Service Health

@@ -16,7 +16,8 @@ import { FontVariation, Color } from '@harness/design-system'
 import { Spinner } from '@blueprintjs/core'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import { useAgentServiceForServerCreate, V1AgentType } from 'services/gitops'
+import { useAgentServiceForServerCreate, V1AgentType, useAgentServiceForServerList } from 'services/gitops'
+import { GitOpsAgentCard } from './GitOpsAgentCard'
 import css from '../GetStartedWithCD.module.scss'
 import createK8sCSS from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
@@ -57,14 +58,14 @@ const AgentStaticInfo = ({ getString }: { getString: UseStringsReturn['getString
           </div>
         </div>
       </li>
-      <li className={classnames(createK8sCSS.progressItem, createK8sCSS.progressItemActive, css.progressItem)}>
-        <div className={css.agentThirdSection}>
-          <Text className={css.aboutHarnessAdapterAnswer}>{getString('cd.getStartedWithCD.hostedAgentInfoTitle')}</Text>
-        </div>
-        <div className={classnames(css.installedComponent, css.provisioningText)}>
-          {getString('cd.getStartedWithCD.setupIPWhiteListing')}
-        </div>
-      </li>
+      {/*<li className={classnames(createK8sCSS.progressItem, createK8sCSS.progressItemActive, css.progressItem)}>*/}
+      {/*<div className={css.agentThirdSection}>*/}
+      {/*<Text className={css.aboutHarnessAdapterAnswer}>{getString('cd.getStartedWithCD.hostedAgentInfoTitle')}</Text>*/}
+      {/*</div>*/}
+      {/*<div className={classnames(css.installedComponent, css.provisioningText)}>*/}
+      {/*{getString('cd.getStartedWithCD.setupIPWhiteListing')}*/}
+      {/*</div>*/}
+      {/*</li>*/}
     </ul>
   </Container>
 )
@@ -88,11 +89,11 @@ const ProvisioningStaticInfo = ({
         <div>{getString('cd.getStartedWithCD.agentProvisionedSuccessfully')}</div>
       )}
     </div>
-    <div className={css.provisioningSecondaryInfo}>
-      {loading
-        ? getString('cd.getStartedWithCD.agentSetupTimeInfo')
-        : getString('cd.getStartedWithCD.ensureFullConnectivity')}
-    </div>
+    {/*<div className={css.provisioningSecondaryInfo}>*/}
+    {/*{loading*/}
+    {/*? getString('cd.getStartedWithCD.agentSetupTimeInfo')*/}
+    {/*: getString('cd.getStartedWithCD.ensureFullConnectivity')}*/}
+    {/*</div>*/}
   </Container>
 )
 
@@ -118,6 +119,46 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
     await createAgent(payload).then(noop).catch(noop)
   }
 
+  const {
+    data: agentList,
+    loading: loadingAgentsList
+    // error: agentFetchError,
+    // refetch: refetchAgentsList
+  } = useAgentServiceForServerList({
+    queryParams: {
+      pageIndex: 0,
+      pageSize: 10,
+      searchTerm: '',
+      accountIdentifier: accountId
+    },
+    debounce: 500
+  })
+
+  const renderContent = () => {
+    if (loadingAgentsList) {
+      return <Spinner className={css.agentsLoadingSpinner} size={24} />
+    }
+    if (agentList?.content?.length) {
+      return (
+        <div>
+          {agentList.content.map(agent => (
+            <GitOpsAgentCard key={agent.identifier} agent={agent} />
+          ))}
+        </div>
+      )
+    }
+    return (
+      <>
+        <div className={css.agentDiagram} />
+        {isProvisioningScreen ? (
+          <ProvisioningStaticInfo loading={loading} errorMessage={error?.message} getString={getString} />
+        ) : (
+          <AgentStaticInfo getString={getString} />
+        )}
+      </>
+    )
+  }
+
   return (
     <>
       <Container flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
@@ -126,12 +167,7 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
             {getString('cd.getStartedWithCD.gitopsOnboardingAgentStep')}
             <HarnessDocTooltip tooltipId="cdOnboardGitopsAgent" useStandAlone={true} />
           </Text>
-          <div className={css.agentDiagram} />
-          {isProvisioningScreen ? (
-            <ProvisioningStaticInfo loading={loading} errorMessage={error?.message} getString={getString} />
-          ) : (
-            <AgentStaticInfo getString={getString} />
-          )}
+          {renderContent()}
         </Layout.Vertical>
 
         {/*<Container className={css.helpPanelContainer}>*/}

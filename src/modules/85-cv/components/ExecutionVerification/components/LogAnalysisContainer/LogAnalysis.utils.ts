@@ -39,7 +39,7 @@ export const mapClusterType = (type: string): LogData['tag'] => {
 export const getClusterTypes = (getString: UseStringsReturn['getString']): SelectOption[] => {
   return [
     { label: getString('cv.known'), value: EventTypeFullName.KNOWN_EVENT },
-    { label: getString('cv.unknown'), value: EventTypeFullName.UNKNOWN_EVENT },
+    { label: getString('cd.getStartedWithCD.healthStatus.unknown'), value: EventTypeFullName.UNKNOWN_EVENT },
     { label: getString('cv.unexpectedFrequency'), value: EventTypeFullName.UNEXPECTED_FREQUENCY }
   ]
 }

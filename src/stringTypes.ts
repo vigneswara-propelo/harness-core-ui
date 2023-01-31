@@ -5175,6 +5175,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.configureRepo': string
   'cd.getStartedWithCD.connectHarnessEnv': string
   'cd.getStartedWithCD.connectTo': string
+  'cd.getStartedWithCD.connectionStatus': string
   'cd.getStartedWithCD.createCluster': string
   'cd.getStartedWithCD.delegateDescription': string
   'cd.getStartedWithCD.delegateInfo1': string
@@ -5187,6 +5188,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.deployToGitops': string
   'cd.getStartedWithCD.deploymentType': string
   'cd.getStartedWithCD.directK8s': string
+  'cd.getStartedWithCD.disconnected': string
   'cd.getStartedWithCD.doesntHaveGitRepo': string
   'cd.getStartedWithCD.ensureFullConnectivity': string
   'cd.getStartedWithCD.entityCreationTitle': string
@@ -5207,6 +5209,13 @@ export interface StringsMap {
   'cd.getStartedWithCD.harnessFileStore': string
   'cd.getStartedWithCD.harnessHosted': string
   'cd.getStartedWithCD.haveGitRepo': string
+  'cd.getStartedWithCD.healthStatus.degraded': string
+  'cd.getStartedWithCD.healthStatus.healthy': string
+  'cd.getStartedWithCD.healthStatus.missing': string
+  'cd.getStartedWithCD.healthStatus.progressing': string
+  'cd.getStartedWithCD.healthStatus.suspended': string
+  'cd.getStartedWithCD.healthStatus.unknown': string
+  'cd.getStartedWithCD.healthStatusLabel': string
   'cd.getStartedWithCD.helm': string
   'cd.getStartedWithCD.helpAndTroubleshoot': string
   'cd.getStartedWithCD.hideDelegateDetails': string
@@ -5223,6 +5232,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.manifestStorage': string
   'cd.getStartedWithCD.manifestStoreLabel': string
   'cd.getStartedWithCD.manifestTypeSelection': string
+  'cd.getStartedWithCD.mappedHarnessProjects': string
   'cd.getStartedWithCD.master': string
   'cd.getStartedWithCD.nameYourCluster': string
   'cd.getStartedWithCD.onBoardingSubTitle': string
@@ -7954,7 +7964,6 @@ export interface StringsMap {
   'cv.monitoredServices.serviceHealth.selectTimeline': string
   'cv.monitoredServices.serviceHealth.selectTimelineErrorTracking': string
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.exhausted': string
-  'cv.monitoredServices.serviceHealth.serviceDependencies.states.healthy': string
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.needsAttention': string
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.observe': string
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.unhealthy': string
@@ -8532,7 +8541,6 @@ export interface StringsMap {
   'cv.unexpectedEvents': string
   'cv.unexpectedFrequency': string
   'cv.unit': string
-  'cv.unknown': string
   'cv.unknownEvent': string
   'cv.unknownEvents': string
   'cv.updatedErrorBudget': string

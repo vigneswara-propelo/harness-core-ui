@@ -23,7 +23,7 @@ exports[`Unit tests for ErrorTrackingAnalysisContainer Verify if ErrorTrackingAn
               placeholder="pipeline.verification.logs.filterByClusterType"
               style="padding-right: 0px;"
               type="text"
-              value="cv.unknown"
+              value="cd.getStartedWithCD.healthStatus.unknown"
             />
             <span
               class="bp3-input-action"

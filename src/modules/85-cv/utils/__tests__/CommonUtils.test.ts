@@ -174,9 +174,7 @@ describe('Test for getRiskLabelStringId', () => {
   test('test for getting correct risk label string id', () => {
     expect(getRiskLabelStringId(RiskValues.NO_DATA)).toEqual('noData')
     expect(getRiskLabelStringId(RiskValues.NO_ANALYSIS)).toEqual('cv.noAnalysis')
-    expect(getRiskLabelStringId(RiskValues.HEALTHY)).toEqual(
-      'cv.monitoredServices.serviceHealth.serviceDependencies.states.healthy'
-    )
+    expect(getRiskLabelStringId(RiskValues.HEALTHY)).toEqual('cd.getStartedWithCD.healthStatus.healthy')
     expect(getRiskLabelStringId(RiskValues.OBSERVE)).toEqual(
       'cv.monitoredServices.serviceHealth.serviceDependencies.states.observe'
     )
