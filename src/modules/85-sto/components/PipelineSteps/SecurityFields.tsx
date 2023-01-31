@@ -304,7 +304,6 @@ export function SecurityImageFields(props: SecurityFieldsProps<SecurityStepData<
           },
           'spec.image.region': {
             label: 'regionLabel',
-            optional: true,
             hide: formik.values.spec.image?.type !== 'aws_ecr',
             inputProps: { placeholder: 'us-east-1' }
           }

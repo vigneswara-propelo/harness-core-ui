@@ -1134,22 +1134,11 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <div
-              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
+            <p
+              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-              >
-                regionLabel
-              </p>
-               
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
-              >
-                common.optionalLabel
-              </p>
-            </div>
+              regionLabel
+            </p>
             <div
               style="display: flex; align-items: center;"
             >
