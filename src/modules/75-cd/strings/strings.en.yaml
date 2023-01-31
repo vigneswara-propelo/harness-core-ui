@@ -558,7 +558,7 @@ instanceWarmupLabel: Instance Warmup (Optional)
 instanceWarmupPlaceholder: Instance Warmup
 loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
-k8sDryRunStepDescription: Dry Run Apply the service manifests and leverage the dry run yaml as output for subsequent steps
+k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
   tryAnotherCreds: Not the right authentication? Switch account here!
   master: master
