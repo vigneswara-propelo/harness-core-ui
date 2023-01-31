@@ -15,7 +15,7 @@ import { String, useStrings } from 'framework/strings'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepMode as Modes } from '@pipeline/utils/stepUtils'
 
-import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import { ErrorType, Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import FailureTypeMultiSelect from './FailureTypeMultiSelect'
 import { allowedStrategiesAsPerStep, errorTypesForStages } from './StrategySelection/StrategyConfig'
@@ -54,8 +54,9 @@ export default function FailureStrategyPanel(props: FailureStrategyPanelProps): 
     flatMap(defaultTo(formValues.failureStrategies, []), e => defaultTo(e.onFailure?.errors, []))
   )
   const currentTabHasErrors = !isEmpty(get(errors, `failureStrategies[${selectedStrategyNum}]`))
+  const addedAllErrors = filterTypes.includes(ErrorType.AllErrors)
   const addedAllStratgies = filterTypes.length === errorTypesForStages[stageType].length
-  const isAddBtnDisabled = addedAllStratgies || isReadonly || currentTabHasErrors
+  const isAddBtnDisabled = addedAllErrors || addedAllStratgies || isReadonly || currentTabHasErrors
   const { NG_EXECUTION_INPUT, PIPELINE_ROLLBACK } = useFeatureFlags()
 
   async function handleTabChange(n: number): Promise<void> {
