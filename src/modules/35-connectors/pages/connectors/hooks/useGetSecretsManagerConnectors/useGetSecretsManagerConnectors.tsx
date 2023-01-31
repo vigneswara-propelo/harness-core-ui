@@ -9,9 +9,6 @@ import { useState } from 'react'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
-
 interface SecretManagersConnectors {
   secretsManager: ConnectorInfoDTO['type'][]
 }
@@ -28,9 +25,7 @@ export const useGetSecretsManagerConnectorsHook = (): SecretManagersConnectors =
     CUSTOM_SECRET_MANAGER
   ])
 
-  const isGcpSMEnabled = useFeatureFlag(FeatureFlag.PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG)
-
-  if (isGcpSMEnabled && !connectorsTypes.includes(GcpSecretManager)) {
+  if (!connectorsTypes.includes(GcpSecretManager)) {
     setConnectorsTypes([...connectorsTypes, GcpSecretManager])
   }
 
