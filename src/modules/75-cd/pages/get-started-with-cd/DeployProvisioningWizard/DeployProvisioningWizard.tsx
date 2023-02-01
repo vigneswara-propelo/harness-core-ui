@@ -38,6 +38,7 @@ import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { useGetServicesData } from '@cd/components/PipelineSteps/DeployServiceEntityStep/useGetServicesData'
 import { RunPipelineForm } from '@pipeline/components/RunPipelineModal/RunPipelineForm'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { useAgentApplicationServiceCreate } from 'services/gitops'
 import { WizardStep, StepStatus, DeployProvisiongWizardStepId, DeployProvisioningWizardProps } from './Constants'
 import { SelectDeploymentType, SelectDeploymentTypeRefInstance } from '../SelectWorkload/SelectDeploymentType'
 import type { SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
@@ -48,13 +49,17 @@ import {
   DEFAULT_PIPELINE_PAYLOAD,
   DOCUMENT_URL,
   EMPTY_STRING,
+  getAppPayload,
+  getFullAgentWithScope,
   getUniqueEntityIdentifier,
-  PipelineRefPayload
+  PipelineRefPayload,
+  Scope
 } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import RunPipelineSummary from '../RunPipelineSummary/RunPipelineSummary'
 import { ConfigureGitops } from '../ConfigureGitops/ConfigureGitops'
 import { GitOpsAgent } from '../GitOpsAgent/GitOpsAgent'
+import { Deploy } from '../Deploy/Deploy'
 import commonCss from '../GetStartedWithCD.module.scss'
 import css from './DeployProvisioningWizard.module.scss'
 
@@ -69,13 +74,15 @@ const WizardStepOrder = [
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
   const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.Deploy } = props
   const {
-    state: { service: serviceData, infrastructure, environment }
+    saveApplicationData,
+    state: { service: serviceData, infrastructure, environment, repository: repositoryData, cluster: clusterData }
   } = useCDOnboardingContext()
 
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const history = useHistory()
   const { showError } = useToaster()
+  const toast = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const selectedDeploymentType: string | undefined = get(serviceData, 'serviceDefinition.type')
 
@@ -112,6 +119,17 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       headers: {
         'content-type': 'application/yaml'
       }
+    }
+  })
+
+  const fullAgentName = getFullAgentWithScope('meenaaccagent', Scope.ACCOUNT)
+  const { mutate: createApplication } = useAgentApplicationServiceCreate({
+    agentIdentifier: fullAgentName,
+    queryParams: {
+      projectIdentifier,
+      orgIdentifier,
+      accountIdentifier: accountId,
+      repoIdentifier: `account.${repositoryData?.identifier}`
     }
   })
 
@@ -413,6 +431,8 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       {
         stepRender: (
           <ConfigureGitops
+            disableNextBtn={() => setDisableBtn(true)}
+            enableNextBtn={() => setDisableBtn(false)}
             ref={delegateSelectorRef}
             prevStepData={{
               agent: 'meenaaccagent',
@@ -426,21 +446,49 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.ToDo)
           trackEvent(CDOnboardingActions.MovetoConfigureEnvironment, {})
         },
-        onClickNext: async () => {
-          const { submitForm } = configureServiceRef.current || {}
-          try {
-            submitForm?.()
-          } catch (_e) {
-            // catch any errors and do nothing
+        onClickNext: () => {
+          const payload = getAppPayload({
+            repositoryData,
+            clusterData,
+            name: 'testapp'
+          })
+          const data: any = {
+            ...payload,
+            projectIdentifier: projectIdentifier,
+            orgIdentifier: orgIdentifier,
+            accountIdentifier: accountId
           }
+
+          createApplication(data, {
+            queryParams: {
+              clusterIdentifier: `account.${clusterData?.identifier}`,
+              projectIdentifier,
+              orgIdentifier,
+              accountIdentifier: accountId,
+              repoIdentifier: `account.${repositoryData?.identifier}`
+            }
+          }).then(response => {
+            toast.showSuccess(
+              getString('common.entitycreatedSuccessfully', {
+                entity: getString('common.application'),
+                name: response?.name
+              }),
+              undefined
+            )
+            saveApplicationData(response)
+            setSelectedSectionId(DeployProvisiongWizardStepId.Deploy)
+            setCurrentWizardStepId(DeployProvisiongWizardStepId.Deploy)
+            updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
+            updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.Success)
+          })
         },
-        stepFooterLabel: 'common.createPipeline'
+        stepFooterLabel: 'review'
       }
     ],
     [
       DeployProvisiongWizardStepId.Deploy,
       {
-        stepRender: <div>{getString('cd.getStartedWithCD.gitopsOnboardingDeployStep')}</div>,
+        stepRender: <Deploy />,
         onClickBack: () => {
           setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
           updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)

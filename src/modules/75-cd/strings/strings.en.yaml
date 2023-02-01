@@ -567,6 +567,13 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  clusterSpec1: 4GB Memory
+  clusterSpec2: 2 CPU
+  clusterSpec3: 1 worker node
+  clusterSpecInfo: This specification is sufficient for you to host a basic hello world application
+  clusterspec: Cluster Specifications
+  managedCluster: Make use of our managed cluster to facilitate your deployment if you’re trying out Harness CD-GitOps for the first time, this will expire after X days! Learn more
+  ipWhitelist: You will be required to Set up IP Whitelisting for Harness to connect to your cluster
   tryAnotherCreds: Not the right authentication? Switch account here!
   master: master
   targetRevision: Target Revision
@@ -575,6 +582,7 @@ getStartedWithCD:
   clickForOtherDeploymentTypes: Click here for other deployment types
   createCluster: Create a cluster if needed
   failedToAuthenticate: Failed to authenticate to
+  clusterCreatedSuccessfully: created successfully
   successfullyAuthenticated: Successfully authenticated to
   failedSourceText: Still failed to authenticate despite having entered the correct credentials? Here’s what you can try to do..
   checkAnnonymously: Connect Annonymously

@@ -53,8 +53,7 @@ import {
   getFullAgentWithScope,
   RepositoryInterface,
   RevisionType,
-  revisionTypeArray,
-  Scope
+  revisionTypeArray
 } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { DestinationStep } from './DestinationStep'
@@ -143,10 +142,9 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
 
   const { getString } = useStrings()
   const formikRef = useRef<FormikContextType<RepositoryInterface>>()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId } = useParams<ProjectPathProps>()
   const repoURL = formikRef.current?.values?.repo
   const defaultQueryParams = {
-    ...(scope === Scope.ACCOUNT ? {} : { projectIdentifier, orgIdentifier }),
     accountIdentifier: accountId
   }
 
@@ -154,9 +152,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
     agentIdentifier: '',
     queryParams: {
       accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      identifier: ''
+      identifier: getLastURLPathParam(defaultTo(repoURL, ''))
     }
   })
 
@@ -175,8 +171,6 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
       {
         queryParams: {
           accountIdentifier: accountId,
-          projectIdentifier,
-          orgIdentifier,
           identifier: getLastURLPathParam(defaultTo(repoURL, ''))
         },
         pathParams: {
@@ -747,7 +741,10 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                             style={{ marginTop: '20px' }}
                             minimal
                             onClick={() => {
-                              saveRepositoryData(formikProps.values)
+                              saveRepositoryData({
+                                ...formikProps.values,
+                                identifier: getLastURLPathParam(defaultTo(repoURL, ''))
+                              })
                               setDestinationStepEnabled(false)
                               accordionRef.current.open('application-repo-destination-step')
                             }}
@@ -774,7 +771,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                 }
               />
               <Accordion.Panel
-                details={<DestinationStep />}
+                details={<DestinationStep {...props} />}
                 disabled={isDestinationStepEnabled}
                 id={'application-repo-destination-step'}
                 summary={

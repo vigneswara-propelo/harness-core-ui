@@ -268,6 +268,7 @@ export interface StringsMap {
   'common.entityReferenceSubTitle': string
   'common.entityReferenceTitle': string
   'common.entityType': string
+  'common.entitycreatedSuccessfully': string
   'common.environmentCreated': string
   'common.environmentGroup.createNew': string
   'common.environmentGroup.created': string
@@ -5181,6 +5182,12 @@ export interface StringsMap {
   'cd.getStartedWithCD.clickForOtherDeploymentTypes': string
   'cd.getStartedWithCD.closeOnboarding.subtitle': string
   'cd.getStartedWithCD.closeOnboarding.title': string
+  'cd.getStartedWithCD.clusterCreatedSuccessfully': string
+  'cd.getStartedWithCD.clusterSpec1': string
+  'cd.getStartedWithCD.clusterSpec2': string
+  'cd.getStartedWithCD.clusterSpec3': string
+  'cd.getStartedWithCD.clusterSpecInfo': string
+  'cd.getStartedWithCD.clusterspec': string
   'cd.getStartedWithCD.codeRepos': string
   'cd.getStartedWithCD.configureRepo': string
   'cd.getStartedWithCD.connectHarnessEnv': string
@@ -5238,6 +5245,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.inManifestContent': string
   'cd.getStartedWithCD.infraName': string
   'cd.getStartedWithCD.installDelegateToTargetEnv': string
+  'cd.getStartedWithCD.ipWhitelist': string
+  'cd.getStartedWithCD.managedCluster': string
   'cd.getStartedWithCD.manifestFile': string
   'cd.getStartedWithCD.manifestStorage': string
   'cd.getStartedWithCD.manifestStoreLabel': string

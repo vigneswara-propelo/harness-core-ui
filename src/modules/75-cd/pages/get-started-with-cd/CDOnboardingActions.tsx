@@ -9,6 +9,7 @@ import { clone } from 'lodash-es'
 import { DefaultNewPipelineId } from '@templates-library/components/TemplateStudio/PipelineTemplateCanvas/PipelineTemplateCanvasWrapper'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { EnvironmentRequestDTO } from 'services/cd-ng'
+import type { Servicev1Application } from 'services/gitops'
 import {
   newServiceState as initialServiceState,
   newEnvironmentState as initialEnvironmentState,
@@ -17,7 +18,10 @@ import {
   InfrastructureDataType,
   newDelegateState,
   DelegateDataType,
-  RepositoryInterface
+  RepositoryInterface,
+  intialClusterData,
+  ClusterInterface,
+  initialApplicationData
 } from './CDOnboardingUtils'
 
 export const DefaultPipeline: PipelineInfoConfig = {
@@ -31,6 +35,8 @@ export interface CDOnboardingReducerState {
   environment?: EnvironmentRequestDTO
   infrastructure?: InfrastructureDataType
   repository?: RepositoryInterface
+  application?: Servicev1Application
+  cluster?: ClusterInterface
   delegate?: DelegateDataType
   error?: string
   schemaErrors?: boolean
@@ -44,6 +50,8 @@ export enum CDOnboardingActions {
   Fetching = 'Fetching',
   UpdatePipeline = 'UpdatePipeline',
   UpdateRepository = 'UpdateRepository',
+  UpdateApplication = 'UpdateApplication',
+  UpdateCluster = 'UpdateCluster',
   UpdateService = 'UpdateService',
   UpdateEnvironment = 'UpdateEnvironment',
   UpdateInfrastructure = 'UpdateInfrastructure',
@@ -59,6 +67,8 @@ export interface ActionResponse {
   pipeline?: PipelineInfoConfig
   service?: ServiceDataType
   repository?: RepositoryInterface
+  application?: Servicev1Application
+  cluster?: ClusterInterface
   environment?: EnvironmentRequestDTO
   infrastructure?: InfrastructureDataType
   delegate?: DelegateDataType
@@ -94,6 +104,16 @@ const UpdateRepository = (response: ActionResponse): ActionReturnType => ({
   response
 })
 
+const UpdateCluster = (response: ActionResponse): ActionReturnType => ({
+  type: CDOnboardingActions.UpdateCluster,
+  response
+})
+
+const updateApplication = (response: ActionResponse): ActionReturnType => ({
+  type: CDOnboardingActions.UpdateApplication,
+  response
+})
+
 const fetching = (): ActionReturnType => ({ type: CDOnboardingActions.Fetching })
 const success = (response: ActionResponse): ActionReturnType => ({ type: CDOnboardingActions.Success, response })
 const error = (response: ActionResponse): ActionReturnType => ({ type: CDOnboardingActions.Error, response })
@@ -104,8 +124,10 @@ export const CDOnboardingContextActions = {
   updateService,
   updateEnvironment,
   updateInfrastructure,
+  updateApplication,
   updateDelegate,
   UpdateRepository,
+  UpdateCluster,
   fetching,
   success,
   error
@@ -115,6 +137,8 @@ export const initialState: CDOnboardingReducerState = {
   pipeline: { ...DefaultPipeline },
   service: initialServiceState,
   repository: initialRepositoryData,
+  cluster: intialClusterData,
+  application: initialApplicationData,
   environment: initialEnvironmentState.environment,
   infrastructure: initialEnvironmentState.infrastructure,
   delegate: newDelegateState.delegate,
@@ -145,6 +169,12 @@ export const CDOnboardingReducer = (state = initialState, data: ActionReturnType
         isUpdated: response?.isUpdated ?? true,
         repository: response?.repository ? clone(response?.repository) : state.repository
       }
+    case CDOnboardingActions.UpdateCluster:
+      return {
+        ...state,
+        isUpdated: response?.isUpdated ?? true,
+        cluster: response?.cluster ? clone(response?.cluster) : state.cluster
+      }
     case CDOnboardingActions.UpdateService:
       return {
         ...state,
@@ -166,6 +196,11 @@ export const CDOnboardingReducer = (state = initialState, data: ActionReturnType
       return {
         ...state,
         delegate: response?.delegate ? clone(response?.delegate) : state.delegate
+      }
+    case CDOnboardingActions.UpdateApplication:
+      return {
+        ...state,
+        application: response?.application ? clone(response?.application) : state.application
       }
     case CDOnboardingActions.Fetching:
       return {

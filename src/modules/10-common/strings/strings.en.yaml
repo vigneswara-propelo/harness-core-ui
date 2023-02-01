@@ -1058,6 +1058,7 @@ executedBy: Executed By
 updatedBy: Updated By
 headerWithOptionalText: '{{header}} (Optional)'
 selectWorkload: Select Workload
+entitycreatedSuccessfully: '{{entity}} {{name}} created successfully'
 
 # Onboarding
 getStarted:
