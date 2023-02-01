@@ -334,6 +334,18 @@ export const imageFieldsValidationConfig = (
   data: SecurityStepData<SecurityStepSpec>
 ): InputSetViewValidateFieldsConfig[] => [
   {
+    name: 'identifier',
+    type: ValidationFieldTypes.Identifier,
+    label: 'identifier',
+    isRequired: true
+  },
+  {
+    name: 'name',
+    type: ValidationFieldTypes.Name,
+    label: 'pipelineSteps.stepNameLabel',
+    isRequired: true
+  },
+  {
     name: 'spec.image.type',
     type: ValidationFieldTypes.Text,
     label: 'typeLabel',
