@@ -8663,6 +8663,7 @@ export interface StringsMap {
   'sto.stepField.tool.javaBinaries': string
   'sto.stepField.tool.javaLibraries': string
   'sto.stepField.tool.productLookupType': string
+  'sto.stepField.tool.productToken': string
   'sto.stepField.tool.projectToken': string
   'sto.stepField.tool.projectVersion': string
   'sto.stepField.tool.teamName': string
