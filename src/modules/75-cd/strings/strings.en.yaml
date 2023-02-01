@@ -152,6 +152,12 @@ steps:
     tempRouteMandatory: Temp route is mandatory
     upscaleNewFirstLabel: Add new instances first, then downsize old instances
     downScaleOldFirstLabel: Downsize old instances first, then add new instances
+  googleCloudFunctionCommon:
+    fieldMask: Field Mask
+    fieldMaskPlaceholder: Enter Field Mask
+    trafficPercent: Traffic Percent
+    trafficPercentPlaceholder: Enter Traffic Percent
+
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -281,6 +287,7 @@ pipelineSteps:
       serviceDefinition: Service Definition
       scalingPolicy: Scaling Policy
       scalableTarget: Scalable Target
+      functionDefinition: Function Definition
     newServiceOverride: New configuration overrides
     multiServicesText: Deploy multiple Services
     multiServicesTitleText: Deploy multiple Services?

@@ -56,7 +56,8 @@ export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isRe
       deploymentType === ServiceDeploymentType.Elastigroup ||
       deploymentType === ServiceDeploymentType.CustomDeployment ||
       deploymentType === ServiceDeploymentType.TAS ||
-      deploymentType === ServiceDeploymentType.Asg
+      deploymentType === ServiceDeploymentType.Asg ||
+      deploymentType === ServiceDeploymentType.GoogleCloudFunctions
     )
   )
 }
@@ -122,7 +123,9 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   GoogleArtifactRegistry: 'GoogleArtifactRegistry',
   GithubPackageRegistry: 'GithubPackageRegistry',
   AmazonMachineImage: 'AmazonMachineImage',
-  AzureArtifacts: 'AzureArtifacts'
+  AzureArtifacts: 'AzureArtifacts',
+  GoogleCloudStorage: 'GoogleCloudStorage',
+  GoogleCloudSource: 'GoogleCloudSource'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -138,7 +141,9 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   GoogleArtifactRegistry: Connectors.GCP,
   GithubPackageRegistry: Connectors.GITHUB,
   AzureArtifacts: Connectors.AZURE_ARTIFACTS,
-  AmazonMachineImage: Connectors.AWS
+  AmazonMachineImage: Connectors.AWS,
+  GoogleCloudStorage: Connectors.GCP,
+  GoogleCloudSource: Connectors.GCP
 }
 
 export const ArtifactConnectorLabelMap: Record<string, string> = {
@@ -154,7 +159,9 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   GoogleArtifactRegistry: 'GCP',
   GithubPackageRegistry: 'Github',
   AzureArtifacts: 'Azure Artifacts',
-  AmazonMachineImage: 'AWS'
+  AmazonMachineImage: 'AWS',
+  GoogleCloudStorage: 'GCP',
+  GoogleCloudSource: 'GCP'
 }
 
 export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<ArtifactType>> = {
@@ -242,7 +249,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Acr,
     ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
   ],
-  GoogleCloudFunctions: []
+  GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage, ENABLED_ARTIFACT_TYPES.GoogleCloudSource]
 }
 
 export const tagOptions: IOptionProps[] = [

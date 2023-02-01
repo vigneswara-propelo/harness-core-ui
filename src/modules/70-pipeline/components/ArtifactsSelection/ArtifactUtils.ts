@@ -535,6 +535,13 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         tagType: TagTypes.Value,
         filePath: ''
       }
+    case ENABLED_ARTIFACT_TYPES.GoogleCloudStorage:
+      return {
+        identifier: '',
+        project: '',
+        bucket: '',
+        artifactPath: ''
+      }
     case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
       return {
         repositoryFormat: 'generic',

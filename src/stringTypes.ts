@@ -4129,6 +4129,7 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition': string
   'pipeline.manifestTypeLabels.EcsServiceDefinition': string
   'pipeline.manifestTypeLabels.EcsTaskDefinition': string
+  'pipeline.manifestTypeLabels.GoogleCloudFunctionDefinition': string
   'pipeline.manifestTypeLabels.HelmRepoOverride': string
   'pipeline.manifestTypeLabels.K8sManifest': string
   'pipeline.manifestTypeLabels.KustomizeLabel': string
@@ -4161,6 +4162,7 @@ export interface StringsMap {
   'pipeline.noArtifactPaths': string
   'pipeline.noBuckets': string
   'pipeline.noBucketsFound': string
+  'pipeline.noCloudSourceRepositoriesFound': string
   'pipeline.noClustersFound': string
   'pipeline.noEnvironmentGroupsFound': string
   'pipeline.noFilePathsFound': string
@@ -4265,6 +4267,7 @@ export interface StringsMap {
   'pipeline.poweredByHarness': string
   'pipeline.previewTemplateLabel': string
   'pipeline.progressPercentage': string
+  'pipeline.projectHelperText': string
   'pipeline.provisionerSteps': string
   'pipeline.queueStep.keyPlaceholder': string
   'pipeline.queueStep.keyRequired': string
@@ -4456,6 +4459,10 @@ export interface StringsMap {
   'pipeline.stepDescription.BitrisePlugin': string
   'pipeline.stepDescription.Container': string
   'pipeline.stepDescription.CustomApproval': string
+  'pipeline.stepDescription.DeployCloudFunction': string
+  'pipeline.stepDescription.DeployCloudFunctionNoTrafficShift': string
+  'pipeline.stepDescription.DeployCloudFunctionRollback': string
+  'pipeline.stepDescription.DeployCloudFunctionTrafficShift': string
   'pipeline.stepDescription.DockerHub': string
   'pipeline.stepDescription.ECR': string
   'pipeline.stepDescription.ECSBlueGreenCreateService': string
@@ -5412,6 +5419,7 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.deploymentTypeRequired': string
   'cd.pipelineSteps.serviceTab.differentService': string
   'cd.pipelineSteps.serviceTab.hideServiceInputs': string
+  'cd.pipelineSteps.serviceTab.manifest.functionDefinition': string
   'cd.pipelineSteps.serviceTab.manifest.scalableTarget': string
   'cd.pipelineSteps.serviceTab.manifest.scalingPolicy': string
   'cd.pipelineSteps.serviceTab.manifest.serviceDefinition': string
@@ -5608,6 +5616,10 @@ export interface StringsMap {
   'cd.steps.elastigroup.infraDetailHeader': string
   'cd.steps.emailStep.ccOptionalLabel': string
   'cd.steps.emailStep.timeout1DayMinimum': string
+  'cd.steps.googleCloudFunctionCommon.fieldMask': string
+  'cd.steps.googleCloudFunctionCommon.fieldMaskPlaceholder': string
+  'cd.steps.googleCloudFunctionCommon.trafficPercent': string
+  'cd.steps.googleCloudFunctionCommon.trafficPercentPlaceholder': string
   'cd.steps.kubernetesGcpStep.stepName': string
   'cd.steps.pdcStep.attributesPlaceholder': string
   'cd.steps.pdcStep.dynamicProvision': string
