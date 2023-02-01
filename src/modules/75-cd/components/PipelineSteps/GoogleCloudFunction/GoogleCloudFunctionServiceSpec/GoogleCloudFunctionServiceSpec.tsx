@@ -135,7 +135,7 @@ export class GoogleCloudFunctionServiceSpec extends Step<ServiceSpec> {
             includeAllConnectorsAvailableAtScope: true
           },
           body: {
-            types: [ArtifactToConnectorMap.GoogleCloudStorage, ArtifactToConnectorMap.GoogleCloudSource],
+            types: [ArtifactToConnectorMap.GoogleCloudStorage],
             filterType: 'Connector'
           }
         }).then(this.returnConnectorListFromResponse)
@@ -242,6 +242,34 @@ export class GoogleCloudFunctionServiceSpec extends Step<ServiceSpec> {
         errors,
         `${dataPathToField}.artifactPath`,
         getString?.('fieldRequired', { field: getString('pipeline.artifactPathLabel') })
+      )
+    }
+
+    // Google Cloud Source artifact
+    if (
+      isEmpty(get(data, `${dataPathToField}.repository`)) &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `${templatePathToField}.repository`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `${dataPathToField}.repository`,
+        getString?.('fieldRequired', {
+          field: getString('common.artifacts.googleCloudSourceRepositories.cloudSourceRepository')
+        })
+      )
+    }
+    if (
+      isEmpty(get(data, `${dataPathToField}.sourceDirectory`)) &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `${templatePathToField}.sourceDirectory`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `${dataPathToField}.sourceDirectory`,
+        getString?.('fieldRequired', {
+          field: getString('common.artifacts.googleCloudSourceRepositories.sourceDirectory')
+        })
       )
     }
   }

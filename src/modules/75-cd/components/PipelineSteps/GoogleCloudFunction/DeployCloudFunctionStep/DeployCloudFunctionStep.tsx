@@ -7,8 +7,8 @@
 
 import React from 'react'
 import type { FormikErrors } from 'formik'
-import { isEmpty } from 'lodash-es'
-import type { IconName } from '@harness/uicore'
+import { get, isEmpty, set } from 'lodash-es'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
@@ -107,12 +107,26 @@ export class DeployCloudFunctionStep extends PipelineStep<CloudFunctionExecution
     getString,
     viewType
   }: ValidateInputSetProps<CloudFunctionExecutionStepInitialValues>): FormikErrors<CloudFunctionExecutionStepInitialValues> {
+    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+
     const errors = validateGenericFields({
       data,
       template,
       getString,
       viewType
     }) as FormikErrors<CloudFunctionExecutionStepInitialValues>
+
+    if (
+      isEmpty(get(data, `spec.updateFieldMask`)) &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `spec.updateFieldMask`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `spec.updateFieldMask`,
+        getString?.('fieldRequired', { field: getString('cd.steps.googleCloudFunctionCommon.fieldMask') })
+      )
+    }
 
     if (isEmpty(errors.spec)) {
       delete errors.spec

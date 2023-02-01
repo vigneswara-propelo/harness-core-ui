@@ -249,7 +249,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Acr,
     ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
   ],
-  GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage, ENABLED_ARTIFACT_TYPES.GoogleCloudSource]
+  GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage]
 }
 
 export const tagOptions: IOptionProps[] = [
