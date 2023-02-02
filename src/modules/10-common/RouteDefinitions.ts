@@ -2034,7 +2034,24 @@ const routes = {
     }: PipelineType<ExecutionPathProps>) => {
       return `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/resources`
     }
-  )
+  ),
+  // SSCS
+  toSSCS: withAccountId(() => '/sscs'),
+  toSSCSOverview: withAccountId(() => '/sscs/overview'),
+  toAllowDenyList: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `allow-deny-list`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+  toSSCSGettingStarted: withAccountId(() => '/sscs/getting-started')
 }
 
 export default routes

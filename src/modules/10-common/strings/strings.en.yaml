@@ -1331,3 +1331,7 @@ artifacts:
     sourceDirectoryPlaceholder: Enter Source Directory
 updated: Updated
 python: Python
+
+# SSCS module
+sscs: SSCS
+sscsText: Software Supply Chain Security
