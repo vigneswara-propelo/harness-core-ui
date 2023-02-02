@@ -265,6 +265,7 @@ export interface StringsMap {
   'common.editVariableType': string
   'common.editYaml': string
   'common.enableGitSyncPipeline': string
+  'common.endTime': string
   'common.entityReferenceSubTitle': string
   'common.entityReferenceTitle': string
   'common.entityType': string
@@ -643,6 +644,8 @@ export interface StringsMap {
   'common.notification': string
   'common.notificationPreferences': string
   'common.oAuthLabel': string
+  'common.occurrence.oneTime': string
+  'common.occurrence.recurring': string
   'common.ok': string
   'common.on': string
   'common.onPremSaaSPlansMsg': string
@@ -8290,6 +8293,7 @@ export interface StringsMap {
   'cv.monitoringSources.splunk.submitQueryToSeeRecords': string
   'cv.monitoringSources.totalMappedQueries': string
   'cv.monitoringSources.uniqueIdentifierValidation': string
+  'cv.months': string
   'cv.nDays': string
   'cv.navLinks.activities': string
   'cv.navLinks.adminSideNavLinks.activitySources': string
@@ -8430,14 +8434,20 @@ export interface StringsMap {
   'cv.sloAnalysisTakingLong': string
   'cv.sloCreateInfo': string
   'cv.sloDowntime.addDowntime': string
-  'cv.sloDowntime.downtimeCategory': string
+  'cv.sloDowntime.category': string
   'cv.sloDowntime.downtimeName': string
+  'cv.sloDowntime.durationText': string
   'cv.sloDowntime.info': string
   'cv.sloDowntime.label': string
   'cv.sloDowntime.noData': string
+  'cv.sloDowntime.repeatEndsOn': string
+  'cv.sloDowntime.repeatEvery': string
   'cv.sloDowntime.scheduledMaintenance': string
   'cv.sloDowntime.selectCategory': string
+  'cv.sloDowntime.steps.downtimeWindow': string
   'cv.sloDowntime.steps.identification': string
+  'cv.sloDowntime.steps.monitoredServices': string
+  'cv.sloDowntime.validations.categoryValidation': string
   'cv.sloDowntime.validations.nameValidation': string
   'cv.sloGraphInitialState': string
   'cv.sloGraphUserHint': string
@@ -8575,6 +8585,7 @@ export interface StringsMap {
   'cv.verificationStatus': string
   'cv.verifications': string
   'cv.wednesday': string
+  'cv.weeks': string
   'cv.widowEnds': string
   'cv.windowEndsDay': string
   'cv.windowsEndIsRequired': string

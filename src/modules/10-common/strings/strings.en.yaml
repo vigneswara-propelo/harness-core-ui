@@ -1224,6 +1224,10 @@ createFlag: Create a Flag
 learnMore: Learn more
 sloNoData: You don’t have any SLO created yet
 sloDowntimeLabel: SLO Downtime
+occurrence:
+  oneTime: One time
+  recurring: Recurring
+endTime: End time
 connectGitRepo: Connect to Git Repository
 clickToExpand: Click to expand
 configureService: Configure Service
