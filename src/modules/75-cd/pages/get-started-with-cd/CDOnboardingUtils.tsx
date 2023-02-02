@@ -402,6 +402,7 @@ export interface DelegateDataType {
   delegateInstalled: boolean
   environmentEntities: EnvironmentEntities
   delegateYAMLResponse?: RestResponseDelegateSetupDetails
+  delegateIdentifier?: string
 }
 export const newDelegateState = {
   delegate: {
