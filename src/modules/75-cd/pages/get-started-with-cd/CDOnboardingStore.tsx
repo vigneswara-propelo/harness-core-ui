@@ -12,7 +12,7 @@ import type { EnvironmentRequestDTO } from 'services/cd-ng'
 import type { GetPipelineQueryParams } from 'services/pipeline-ng'
 
 import type { FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
-import type { Servicev1Application } from 'services/gitops'
+import type { Servicev1Application, V1Agent } from 'services/gitops'
 import {
   CDOnboardingContextActions,
   CDOnboardingReducer,
@@ -47,6 +47,7 @@ export interface CDOnboardingContextInterface {
   saveDelegateData: (data: DelegateDataType) => void
   saveRepositoryData: (data: RepositoryInterface) => void
   saveClusterData: (data: ClusterInterface) => void
+  saveAgentData: (data: V1Agent) => void
 }
 const initialDrawerData = { fileContent: undefined, mode: DrawerMode.Preview }
 
@@ -59,6 +60,7 @@ export const CDOnboardingContext = React.createContext<CDOnboardingContextInterf
   saveApplicationData: () => new Promise<void>(() => undefined),
   saveRepositoryData: () => new Promise<void>(() => undefined),
   saveClusterData: () => new Promise<void>(() => undefined),
+  saveAgentData: () => new Promise<void>(() => undefined),
   saveInfrastructureData: () => new Promise<void>(() => undefined),
   saveDelegateData: () => new Promise<void>(() => undefined)
 })
@@ -125,6 +127,10 @@ export function CDOnboardingProvider({
     dispatch(CDOnboardingContextActions.updateApplication({ cluster: data }))
   }, [])
 
+  const saveAgentData = React.useCallback((data: V1Agent) => {
+    dispatch(CDOnboardingContextActions.updateAgent({ agent: data }))
+  }, [])
+
   return (
     <CDOnboardingContext.Provider
       value={{
@@ -132,6 +138,7 @@ export function CDOnboardingProvider({
         saveClusterData,
         saveRepositoryData,
         saveApplicationData,
+        saveAgentData,
         saveServiceData,
         saveEnvironmentData,
         saveInfrastructureData,

@@ -390,7 +390,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           // catch any errors and do nothing
         }
       },
-      stepFooterLabel: 'common.connectEnvironment'
+      stepFooterLabel: 'common.connect'
     }
   ]
 

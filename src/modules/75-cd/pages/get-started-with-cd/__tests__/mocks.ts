@@ -370,5 +370,6 @@ export const contextValues: CDOnboardingContextInterface = {
   saveDelegateData: jest.fn(),
   saveRepositoryData: jest.fn(),
   saveClusterData: jest.fn(),
+  saveAgentData: jest.fn(),
   saveApplicationData: jest.fn()
 }
