@@ -5361,6 +5361,7 @@ export interface StringsMap {
   'cd.noEnvironment.title': string
   'cd.noGitOpsServerText': string
   'cd.noLinkedClusters': string
+  'cd.noService': string
   'cd.notReachable': string
   'cd.oauthPlugin': string
   'cd.oauthPluginCmd': string

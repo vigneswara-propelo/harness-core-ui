@@ -368,10 +368,11 @@ serviceDashboard:
   elastigroupId: Elastigroup Id
   ec2InstanceId: EC2 Instance Id
 noEnvironment:
-  title: No Environments Available
+  title: You have no Environments
   message: Create an environment and let’s start configuring the deployment
 gitOps: '{{ $.common.gitOps }}'
 addService: Add Service
+noService: You have no Services
 addEnvironment: Add Environment
 editIdError: 'ID: {{id}} cannot be edited'
 typeError: 'Type should not be empty and contain either "Production" or "PreProduction"'
