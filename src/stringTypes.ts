@@ -5499,6 +5499,7 @@ export interface StringsMap {
   'cd.serviceDashboard.executionId': string
   'cd.serviceDashboard.frequency': string
   'cd.serviceDashboard.function': string
+  'cd.serviceDashboard.functionName': string
   'cd.serviceDashboard.headers.artifactVersion': string
   'cd.serviceDashboard.headers.clusters': string
   'cd.serviceDashboard.headers.environment': string
@@ -5518,6 +5519,7 @@ export interface StringsMap {
   'cd.serviceDashboard.lastDeployment': string
   'cd.serviceDashboard.lastPipelineExecution': string
   'cd.serviceDashboard.manageServiceLabel': string
+  'cd.serviceDashboard.memorySize': string
   'cd.serviceDashboard.moreDetails': string
   'cd.serviceDashboard.noActiveServiceInstances': string
   'cd.serviceDashboard.noActiveServices': string
@@ -5531,17 +5533,21 @@ export interface StringsMap {
   'cd.serviceDashboard.pod': string
   'cd.serviceDashboard.prod': string
   'cd.serviceDashboard.recentDeployments': string
+  'cd.serviceDashboard.revision': string
+  'cd.serviceDashboard.runTime': string
   'cd.serviceDashboard.runningServiceInstancesLabel': string
   'cd.serviceDashboard.seeMore': string
   'cd.serviceDashboard.serviceInstances': string
   'cd.serviceDashboard.serviceInstancesInLast': string
   'cd.serviceDashboard.servicesInLast': string
+  'cd.serviceDashboard.source': string
   'cd.serviceDashboard.taskArn': string
   'cd.serviceDashboard.taskDefinitionArn': string
   'cd.serviceDashboard.totalDeployments': string
   'cd.serviceDashboard.totalPipelines': string
   'cd.serviceDashboard.totalServices': string
   'cd.serviceDashboard.unitDay': string
+  'cd.serviceDashboard.updatedTime': string
   'cd.serviceDashboard.webApp': string
   'cd.serviceList.noIdentifier': string
   'cd.serviceName': string
