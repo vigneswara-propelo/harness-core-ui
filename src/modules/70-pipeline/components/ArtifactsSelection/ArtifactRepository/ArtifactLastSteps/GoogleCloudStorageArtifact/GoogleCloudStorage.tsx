@@ -162,9 +162,9 @@ export function GoogleCloudStorage(
     if (fetchBucketsError) {
       return []
     }
-    return Object.keys(bucketsData?.data || {}).map(bucket => ({
-      label: bucket,
-      value: bucket
+    return defaultTo(bucketsData?.data?.buckets, []).map(bucket => ({
+      label: bucket.id as string,
+      value: bucket.name as string
     }))
   }, [bucketsData, fetchBucketsError, loadingBuckets])
 

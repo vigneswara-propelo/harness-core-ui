@@ -441,6 +441,14 @@ export const getManifestsHeaderTooltipId = (selectedDeploymentType: ServiceDefin
   return `${selectedDeploymentType}DeploymentTypeManifests`
 }
 
+export const getManifestsFirstStepTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
+  return `${selectedDeploymentType}FirstManifestStep`
+}
+
+export const getManifestsSecondStepTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
+  return `${selectedDeploymentType}SecondManifestStep`
+}
+
 const getConnectorRef = (prevStepData: ConnectorConfigDTO): string => {
   return getMultiTypeFromValue(prevStepData.connectorRef) !== MultiTypeInputType.FIXED
     ? prevStepData.connectorRef

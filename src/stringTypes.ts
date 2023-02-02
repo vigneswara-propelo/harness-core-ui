@@ -5434,6 +5434,9 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.differentService': string
   'cd.pipelineSteps.serviceTab.hideServiceInputs': string
   'cd.pipelineSteps.serviceTab.manifest.functionDefinition': string
+  'cd.pipelineSteps.serviceTab.manifest.googleCloudFunctionDefinitionLearnMore': string
+  'cd.pipelineSteps.serviceTab.manifest.manifestFirstStepTitle': string
+  'cd.pipelineSteps.serviceTab.manifest.manifestSecondStepTitle': string
   'cd.pipelineSteps.serviceTab.manifest.scalableTarget': string
   'cd.pipelineSteps.serviceTab.manifest.scalingPolicy': string
   'cd.pipelineSteps.serviceTab.manifest.serviceDefinition': string

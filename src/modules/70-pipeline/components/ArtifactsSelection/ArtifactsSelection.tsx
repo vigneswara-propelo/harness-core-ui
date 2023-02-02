@@ -67,7 +67,8 @@ import {
   isSidecarAllowed,
   isAllowedGithubPackageRegistryDeploymentTypes,
   isAllowedAzureArtifactDeploymentTypes,
-  isAllowedAMIDeploymentTypes
+  isAllowedAMIDeploymentTypes,
+  shouldAllowOnlyOneArtifact
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -588,6 +589,7 @@ export default function ArtifactsSelection({
       refetchConnectors={refetchConnectorList}
       isReadonly={readonly}
       isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
+      allowOnlyOneArtifactAddition={shouldAllowOnlyOneArtifact(deploymentType)}
     />
   )
 }

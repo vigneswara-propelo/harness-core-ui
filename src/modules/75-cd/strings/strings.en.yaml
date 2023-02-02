@@ -288,6 +288,9 @@ pipelineSteps:
       scalingPolicy: Scaling Policy
       scalableTarget: Scalable Target
       functionDefinition: Function Definition
+      manifestFirstStepTitle: Copy the template manifest file to create your own
+      googleCloudFunctionDefinitionLearnMore: Learn more about YAML format for Google cloud function creation
+      manifestSecondStepTitle: Link the function file from your Git repository
     newServiceOverride: New configuration overrides
     multiServicesText: Deploy multiple Services
     multiServicesTitleText: Deploy multiple Services?

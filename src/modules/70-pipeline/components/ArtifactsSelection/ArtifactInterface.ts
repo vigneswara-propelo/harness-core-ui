@@ -43,6 +43,7 @@ export interface ArtifactListViewProps {
   removeArtifactSource?: (index: number) => void
   isSidecarAllowed?: boolean
   isMultiArtifactSource?: boolean
+  allowOnlyOneArtifactAddition?: boolean
 }
 export interface ArtifactsSelectionProps {
   isPropagating?: boolean

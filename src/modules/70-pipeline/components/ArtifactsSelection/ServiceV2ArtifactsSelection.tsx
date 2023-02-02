@@ -84,7 +84,8 @@ import {
   isAllowedCustomArtifactDeploymentTypes,
   isAllowedGithubPackageRegistryDeploymentTypes,
   isSidecarAllowed,
-  ModalViewFor
+  ModalViewFor,
+  shouldAllowOnlyOneArtifact
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -727,6 +728,7 @@ export default function ServiceV2ArtifactsSelection({
         isReadonly={readonly}
         isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
         isMultiArtifactSource
+        allowOnlyOneArtifactAddition={shouldAllowOnlyOneArtifact(deploymentType)}
       />
       <ArtifactConfigDrawer
         onCloseDrawer={handleCloseDrawer}
