@@ -25,7 +25,7 @@ exports[`Delegate Command line creation failure troubleShoot click for Kubernete
         delegates.commandLineCreation.installDelegateSubText
          
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -356,7 +356,13 @@ exports[`Delegate Command line creation failure troubleShoot click for Kubernete
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-primary8"
                 >
-                  delegates.commandLineCreation.kubernetesFourthDirectionPartThree
+                  <a
+                    href="/account/dummy/settings/resources/delegates/tokens"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    delegates.commandLineCreation.kubernetesFourthDirectionPartThree
+                  </a>
                 </p>
               </div>
             </li>
@@ -495,7 +501,7 @@ exports[`Delegate Command line creation failure troubleShoot click for Kubernete
         style="display: flex; align-items: center;"
       >
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -732,7 +738,7 @@ exports[`Delegate Command line creation failure troubleShoot click for docker 1`
         delegates.commandLineCreation.installDelegateSubText
          
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -1530,7 +1536,7 @@ exports[`Delegate Command line creation failure troubleShoot click for docker 1`
         style="display: flex; align-items: center;"
       >
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -1585,7 +1591,7 @@ exports[`Delegate Command line creation failure troubleShoot click for helm 1`] 
         delegates.commandLineCreation.installDelegateSubText
          
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -2552,7 +2558,7 @@ exports[`Delegate Command line creation failure troubleShoot click for helm 1`] 
         style="display: flex; align-items: center;"
       >
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -2607,7 +2613,7 @@ exports[`Delegate Command line creation failure troubleShoot click for terraform
         delegates.commandLineCreation.installDelegateSubText
          
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -3601,7 +3607,7 @@ exports[`Delegate Command line creation failure troubleShoot click for terraform
         style="display: flex; align-items: center;"
       >
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
