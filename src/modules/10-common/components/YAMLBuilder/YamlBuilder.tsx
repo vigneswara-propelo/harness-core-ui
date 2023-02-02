@@ -57,7 +57,8 @@ import {
   META_EVENT_KEY_CODE,
   SHIFT_EVENT_KEY_CODE,
   navigationKeysMap,
-  allowedKeysInEditModeMap
+  allowedKeysInEditModeMap,
+  allowedKeysInReadOnlyModeMap
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -438,22 +439,27 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       })
 
   const handleEditorKeyDownEvent = (event: IKeyboardEvent, editor: any): void => {
+    const { keyCode, code, ctrlKey, metaKey, shiftKey } = event
+    const isMetaOrControlKeyPressed = [CONTROL_EVENT_KEY_CODE, META_EVENT_KEY_CODE, SHIFT_EVENT_KEY_CODE].includes(
+      keyCode
+    )
+    const navigationKeysPressed = navigationKeysMap.includes(code)
     if (isHarnessManaged) {
       showHarnessManagedError()
     } else if (props.isReadOnlyMode && isEditModeSupported) {
-      const { keyCode, code, ctrlKey, metaKey, shiftKey } = event
-      const isMetaOrControlKeyPressed = [CONTROL_EVENT_KEY_CODE, META_EVENT_KEY_CODE, SHIFT_EVENT_KEY_CODE].includes(
-        keyCode
-      )
       const isMetaOrControlKeyPressedForCopyPaste =
         (ctrlKey || metaKey || shiftKey) && allowedKeysInEditModeMap.includes(code)
-      const navigationKeysPressed = navigationKeysMap.includes(code)
       if (!(isMetaOrControlKeyPressed || isMetaOrControlKeyPressedForCopyPaste || navigationKeysPressed)) {
         // this is to avoid showing warning dialog if user just wants to copy paste
         openDialog()
       }
     } else if (props.isReadOnlyMode && !isEditModeSupported && !hideErrorMesageOnReadOnlyMode) {
-      showNoPermissionError()
+      const isMetaOrControlKeyPressedForCopy =
+        (ctrlKey || metaKey || shiftKey) && allowedKeysInReadOnlyModeMap.includes(code)
+      if (!(isMetaOrControlKeyPressed || isMetaOrControlKeyPressedForCopy || navigationKeysPressed)) {
+        // this is to avoid showing warning dialog if user just wants to copy paste
+        showNoPermissionError()
+      }
     }
     try {
       const { shiftKey, code, ctrlKey, metaKey } = event
