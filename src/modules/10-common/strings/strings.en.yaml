@@ -333,6 +333,10 @@ purpose:
     subtitle: Build and validate the resilience of your service through controlled chaos experiments.
     description: '{{$.common.purpose.chaos.subtitle}}'
     moduleSelectionSubHeading: '{{$.common.purpose.chaos.subtitle}}'
+  idp:
+    name: Developer Portal
+    fullName: Internal Developer Portal
+    shortName: IDP
 trialInProgress: Trial in progress
 trialInProgressDescription: A Project contains your pipelines, resources, and team members. Get started by creating your first Project.
 letsGetYouStarted: Let’s get you started

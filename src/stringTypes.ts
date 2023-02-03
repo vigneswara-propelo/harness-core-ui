@@ -776,6 +776,9 @@ export interface StringsMap {
   'common.purpose.cv.verification': string
   'common.purpose.errorTracking.title': string
   'common.purpose.howToProceed': string
+  'common.purpose.idp.fullName': string
+  'common.purpose.idp.name': string
+  'common.purpose.idp.shortName': string
   'common.purpose.moduleSuccess': string
   'common.purpose.selectAModule': string
   'common.purpose.service': string
@@ -7600,6 +7603,7 @@ export interface StringsMap {
   'ci.titleSettings': string
   'ci.usesLabel': string
   'ci.welcome': string
+  'idp.idpAdmin': string
   'sscs.allowDenyList': string
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string

@@ -115,6 +115,18 @@ module.exports = {
     pathRewrite: { '^/code': '' },
     target: process.env.CODE_UI_URL || 'http://localhost:3020'
   },
+  '/idp-admin': {
+    pathRewrite: { '^/idp-admin': '' },
+    target: process.env.IDP_SETTINGS_URL || 'https://localhost:8185'
+  },
+  '/idp/api': {
+    pathRewrite: { '^/idp/api': '/api' },
+    target: process.env.IDP_BE_URL || 'http://localhost:7007'
+  },
+  '/idp': {
+    pathRewrite: { '^/idp': '' },
+    target: process.env.IDP_UI_URL || 'http://localhost:3000'
+  },
   '/sto/api': {
     pathRewrite: { '^/sto': '' },
     target: process.env.STO_API_URL || 'http://localhost:4000'

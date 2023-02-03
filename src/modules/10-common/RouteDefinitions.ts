@@ -2051,7 +2051,9 @@ const routes = {
       })
     }
   ),
-  toSSCSGettingStarted: withAccountId(() => '/sscs/getting-started')
+  toSSCSGettingStarted: withAccountId(() => '/sscs/getting-started'),
+  toIDP: withAccountId(() => '/idp'),
+  toIDPAdmin: withAccountId(() => '/idp-admin')
 }
 
 export default routes
