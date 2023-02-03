@@ -8471,6 +8471,7 @@ export interface StringsMap {
   'cv.sloGraphUserHint': string
   'cv.sloRecalculationInProgress': string
   'cv.slos.backToSLI': string
+  'cv.slos.badRequestMetric': string
   'cv.slos.burnRate': string
   'cv.slos.completeTitle': string
   'cv.slos.configureSLI': string
