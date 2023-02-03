@@ -29,6 +29,7 @@ export enum FeatureFlag {
   FFM_1827 = 'FFM_1827',
   FFM_3959_FF_MFE_Environment_Detail = 'FFM_3959_FF_MFE_Environment_Detail',
   FFM_5939_MFE_TARGET_GROUPS_LISTING = 'FFM_5939_MFE_TARGET_GROUPS_LISTING',
+  FFM_6666_FF_MFE_Target_Group_Detail = 'FFM_6666_FF_MFE_Target_Group_Detail',
   FFM_5256_FF_MFE_Environment_Listing = 'FFM_5256_FF_MFE_Environment_Listing',
   FFM_5951_FF_MFE_Targets_Listing = 'FFM_5951_FF_MFE_Targets_Listing',
   FFM_6665_FF_MFE_Target_Detail = 'FFM_6665_FF_MFE_Target_Detail',
