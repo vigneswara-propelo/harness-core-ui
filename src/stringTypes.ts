@@ -3774,6 +3774,8 @@ export interface StringsMap {
   'pipeline.executionStatus.Paused': string
   'pipeline.executionStatus.Pausing': string
   'pipeline.executionStatus.Queued': string
+  'pipeline.executionStatus.QueuedExecutionConcurrencyReached': string
+  'pipeline.executionStatus.QueuedLicenseLimitReached': string
   'pipeline.executionStatus.Running': string
   'pipeline.executionStatus.Skipped': string
   'pipeline.executionStatus.Starting': string

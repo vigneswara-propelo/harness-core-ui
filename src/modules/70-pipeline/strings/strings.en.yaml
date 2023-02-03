@@ -614,6 +614,8 @@ executionStatus:
   Suspended: SUSPENDED
   NotStarted: NOT STARTED
   ApprovalRejected: REJECTED
+  QueuedLicenseLimitReached: QUEUED LICENSE LIMIT REACHED
+  QueuedExecutionConcurrencyReached: QUEUED EXECUTION CONCURRENCY REACHED
   Unknown: UNKNOWN
 executionFilters:
   labels:
