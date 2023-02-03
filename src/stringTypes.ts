@@ -1100,6 +1100,13 @@ export interface StringsMap {
   'common.test.connectionSuccessful': string
   'common.test.inProgress': string
   'common.test.retest': string
+  'common.tickets.connector': string
+  'common.tickets.defaultProjectName': string
+  'common.tickets.selectConnector': string
+  'common.tickets.selectProjectName': string
+  'common.tickets.ticketComment': string
+  'common.tickets.ticketExemption': string
+  'common.tickets.tickets': string
   'common.timeRange.calendarMonths': string
   'common.timeRange.recommended': string
   'common.timeRange.relativeDates': string
@@ -8704,7 +8711,6 @@ export interface StringsMap {
   'sto.stepField.toolInclude': string
   'sto.stoExemption': string
   'sto.targets.testTargets': string
-  'sto.tickets': string
   'sto.zeroNorthImagePlaceholder': string
   /**
    * @deprecated migrate this string to module level file
