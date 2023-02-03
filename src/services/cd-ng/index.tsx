@@ -5669,6 +5669,16 @@ export type FetchLinkedAppsStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
 
+export interface FfSubscriptionDTO {
+  accountId?: string
+  customer?: CustomerDTO
+  edition?: string
+  numberOfDevelopers?: number
+  numberOfMau?: number
+  paymentFreq?: string
+  premiumSupport?: boolean
+}
+
 export interface FieldValues {
   fieldValues?: {
     [key: string]: string[]
@@ -15626,30 +15636,6 @@ export interface StripeBillingDTO {
   zipCode?: string
 }
 
-export interface SubscriptionCreateParams {
-  accountId?: string
-  customer?: CustomerDTO
-  edition?: string
-  items?: SubscriptionItemParams[]
-  moduleType?:
-    | 'CD'
-    | 'CI'
-    | 'CV'
-    | 'CF'
-    | 'CE'
-    | 'STO'
-    | 'CHAOS'
-    | 'SRM'
-    | 'CODE'
-    | 'CORE'
-    | 'PMS'
-    | 'TEMPLATESERVICE'
-    | 'GOVERNANCE'
-    | 'IACM'
-  paymentFreq?: string
-  premiumSupport?: boolean
-}
-
 export interface SubscriptionDTO {
   customerId?: string
   items?: ItemParams[]
@@ -15697,12 +15683,6 @@ export interface SubscriptionDetailDTO {
   pendingUpdate?: PendingUpdateDetailDTO
   status?: string
   subscriptionId?: string
-}
-
-export interface SubscriptionItemParams {
-  quantity?: number
-  quantityIncludedInPrice?: boolean
-  type?: string
 }
 
 export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
@@ -53630,26 +53610,20 @@ export const listSubscriptionsPromise = (
     signal
   )
 
-export interface CreateSubscriptionQueryParams {
+export interface CreateFfSubscriptionQueryParams {
   accountIdentifier: string
 }
 
-export type CreateSubscriptionProps = Omit<
-  MutateProps<
-    ResponseSubscriptionDetailDTO,
-    Failure | Error,
-    CreateSubscriptionQueryParams,
-    SubscriptionCreateParams,
-    void
-  >,
+export type CreateFfSubscriptionProps = Omit<
+  MutateProps<ResponseSubscriptionDetailDTO, Failure | Error, CreateFfSubscriptionQueryParams, FfSubscriptionDTO, void>,
   'path' | 'verb'
 >
 
 /**
- * Creates a subscription
+ * Creates a feature flag subscription
  */
-export const CreateSubscription = (props: CreateSubscriptionProps) => (
-  <Mutate<ResponseSubscriptionDetailDTO, Failure | Error, CreateSubscriptionQueryParams, SubscriptionCreateParams, void>
+export const CreateFfSubscription = (props: CreateFfSubscriptionProps) => (
+  <Mutate<ResponseSubscriptionDetailDTO, Failure | Error, CreateFfSubscriptionQueryParams, FfSubscriptionDTO, void>
     verb="POST"
     path={`/subscriptions`}
     base={getConfig('ng/api')}
@@ -53657,38 +53631,36 @@ export const CreateSubscription = (props: CreateSubscriptionProps) => (
   />
 )
 
-export type UseCreateSubscriptionProps = Omit<
+export type UseCreateFfSubscriptionProps = Omit<
   UseMutateProps<
     ResponseSubscriptionDetailDTO,
     Failure | Error,
-    CreateSubscriptionQueryParams,
-    SubscriptionCreateParams,
+    CreateFfSubscriptionQueryParams,
+    FfSubscriptionDTO,
     void
   >,
   'path' | 'verb'
 >
 
 /**
- * Creates a subscription
+ * Creates a feature flag subscription
  */
-export const useCreateSubscription = (props: UseCreateSubscriptionProps) =>
-  useMutate<
-    ResponseSubscriptionDetailDTO,
-    Failure | Error,
-    CreateSubscriptionQueryParams,
-    SubscriptionCreateParams,
-    void
-  >('POST', `/subscriptions`, { base: getConfig('ng/api'), ...props })
+export const useCreateFfSubscription = (props: UseCreateFfSubscriptionProps) =>
+  useMutate<ResponseSubscriptionDetailDTO, Failure | Error, CreateFfSubscriptionQueryParams, FfSubscriptionDTO, void>(
+    'POST',
+    `/subscriptions`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 /**
- * Creates a subscription
+ * Creates a feature flag subscription
  */
-export const createSubscriptionPromise = (
+export const createFfSubscriptionPromise = (
   props: MutateUsingFetchProps<
     ResponseSubscriptionDetailDTO,
     Failure | Error,
-    CreateSubscriptionQueryParams,
-    SubscriptionCreateParams,
+    CreateFfSubscriptionQueryParams,
+    FfSubscriptionDTO,
     void
   >,
   signal?: RequestInit['signal']
@@ -53696,8 +53668,8 @@ export const createSubscriptionPromise = (
   mutateUsingFetch<
     ResponseSubscriptionDetailDTO,
     Failure | Error,
-    CreateSubscriptionQueryParams,
-    SubscriptionCreateParams,
+    CreateFfSubscriptionQueryParams,
+    FfSubscriptionDTO,
     void
   >('POST', getConfig('ng/api'), `/subscriptions`, props, signal)
 
