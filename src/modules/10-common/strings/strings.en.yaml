@@ -61,6 +61,7 @@ preProduction: 'Pre-Production'
 addVariable: Add Variable
 advanced: '{{ $.advancedTitle }}'
 editVariable: Edit variable
+noTags: No tags found
 editVariableType: Edit variable type
 removeThisVariable: Remove This variable
 optionalConfig: Optional Configuration

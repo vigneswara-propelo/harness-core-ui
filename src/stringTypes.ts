@@ -638,6 +638,7 @@ export interface StringsMap {
   'common.noRecentProjects': string
   'common.noRefData': string
   'common.noSearchResultsFound': string
+  'common.noTags': string
   'common.noexpiration': string
   'common.notEnabled': string
   'common.note': string
