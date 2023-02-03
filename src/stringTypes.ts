@@ -600,6 +600,7 @@ export interface StringsMap {
   'common.moduleList.deployChanges': string
   'common.moduleList.manageImpact': string
   'common.moduleList.optimize': string
+  'common.moduleList.optimizeProcesses': string
   'common.moduleList.title': string
   'common.moduleOverviewLabel.ce': string
   'common.moduleOverviewLabel.chaos': string

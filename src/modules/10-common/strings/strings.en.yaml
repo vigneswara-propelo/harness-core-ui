@@ -1028,6 +1028,7 @@ moduleList:
   deployChanges: Deploy Changes
   manageImpact: Manage Impact
   optimize: Optimize
+  optimizeProcesses: Optimize Processes
 moduleConfig:
   customize: Customize your navigation
   selectModules: Select which modules you want readily available on
