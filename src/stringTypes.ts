@@ -5500,7 +5500,9 @@ export interface StringsMap {
   'cd.serviceDashboard.activeInstanceCount': string
   'cd.serviceDashboard.activeServiceInstancesLabel': string
   'cd.serviceDashboard.artifact': string
+  'cd.serviceDashboard.asgName': string
   'cd.serviceDashboard.awsRegion': string
+  'cd.serviceDashboard.bgEnv': string
   'cd.serviceDashboard.buildName': string
   'cd.serviceDashboard.containerList': string
   'cd.serviceDashboard.deployedAt': string
@@ -5529,6 +5531,7 @@ export interface StringsMap {
   'cd.serviceDashboard.instanceCountHistory': string
   'cd.serviceDashboard.instanceDataEmpty': string
   'cd.serviceDashboard.instanceDetails': string
+  'cd.serviceDashboard.instanceId': string
   'cd.serviceDashboard.instancesDetails': string
   'cd.serviceDashboard.lastDeployment': string
   'cd.serviceDashboard.lastPipelineExecution': string
@@ -5555,6 +5558,7 @@ export interface StringsMap {
   'cd.serviceDashboard.serviceInstancesInLast': string
   'cd.serviceDashboard.servicesInLast': string
   'cd.serviceDashboard.source': string
+  'cd.serviceDashboard.strategy': string
   'cd.serviceDashboard.taskArn': string
   'cd.serviceDashboard.taskDefinitionArn': string
   'cd.serviceDashboard.totalDeployments': string
