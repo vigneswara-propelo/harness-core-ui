@@ -5238,6 +5238,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.gitopsOnboardingConfigureStep': string
   'cd.getStartedWithCD.gitopsOnboardingDeployStep': string
   'cd.getStartedWithCD.gitopsOnboardingDestination': string
+  'cd.getStartedWithCD.gitopsOnboardingSelectAgent': string
   'cd.getStartedWithCD.gitopsOnboardingSource': string
   'cd.getStartedWithCD.gitopsRedirect.subtitle': string
   'cd.getStartedWithCD.gitopsRedirect.title': string
@@ -5297,6 +5298,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.setupaNewDelegate': string
   'cd.getStartedWithCD.successFull': string
   'cd.getStartedWithCD.successfullyAuthenticated': string
+  'cd.getStartedWithCD.syncApplication': string
   'cd.getStartedWithCD.targetRevision': string
   'cd.getStartedWithCD.testConnection': string
   'cd.getStartedWithCD.tryAnotherCreds': string
@@ -5734,6 +5736,10 @@ export interface StringsMap {
   'cd.useAlreadyRunningInstance': string
   'cd.useConnectorCredentials': string
   'cd.useStepTemplatesForYourDeploymentType': string
+  'cd.validation.authType': string
+  'cd.validation.certData': string
+  'cd.validation.clusterType': string
+  'cd.validation.keyData': string
   'cd.validation.specifyFilter': string
   'cd.valuesYamlValidation': string
   'cd.varFile': string

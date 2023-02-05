@@ -127,8 +127,8 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
     setIsProvisioningScreen(true)
     const _uuid = uuid().split('-')[0]
     const payload = {
-      name: `Hosted Agent${_uuid}`,
-      identifier: `HostedAgent${_uuid}`,
+      name: `hostedagent${_uuid}`,
+      identifier: `hostedagent${_uuid}`,
       type: 'HOSTED_ARGO_PROVIDER' as V1AgentType,
       metadata: {
         highAvailability: false,
@@ -171,21 +171,25 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
     }
     if (agentList?.content?.length) {
       return (
-        <div>
-          {agentList.content.map(agent => (
-            <GitOpsAgentCard
-              key={agent.identifier}
-              agent={agent}
-              selectedAgent={selectedAgent as V1Agent}
-              setSelectedAgent={setSelectedAgent}
-            />
-          ))}
-        </div>
+        <>
+          <Text padding={{ bottom: 'medium' }} color={Color.GREY_800}>
+            {getString('cd.getStartedWithCD.gitopsOnboardingSelectAgent')}
+          </Text>
+          <div>
+            {agentList.content.map(agent => (
+              <GitOpsAgentCard
+                key={agent.identifier}
+                agent={agent}
+                selectedAgent={selectedAgent as V1Agent}
+                setSelectedAgent={setSelectedAgent}
+              />
+            ))}
+          </div>
+        </>
       )
     }
     return (
       <>
-        <div className={css.agentDiagram} />
         {isProvisioningScreen ? (
           <ProvisioningStaticInfo
             loading={agentCreateLoading}

@@ -591,7 +591,7 @@ getStartedWithCD:
   tryAnotherCreds: Not the right authentication? Switch account here!
   master: master
   targetRevision: Target Revision
-  anonymous: anonymous
+  anonymous: Anonymous
   usernameAndPassword: Username & Password
   clickForOtherDeploymentTypes: Click here for other deployment types
   createCluster: Create a cluster if needed
@@ -607,6 +607,7 @@ getStartedWithCD:
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
   gitopsOnboardingAgentStep: Connect to Harness by provisioning hosted Agent
+  gitopsOnboardingSelectAgent: Select existing agent
   gitopsOnboardingSource: Where is your source?
   gitopsOnboardingDestination: Where to deploy to?
   gitopsOnboardingConfigureStep: Configure the source and destination
@@ -679,8 +680,8 @@ getStartedWithCD:
   delegateDescription: A Delegate is a service that runs on your infrastructure to execute tasks on behalf of the Harness platform.
   helpAndTroubleshoot: Help & Troubleshoot
   hostedAgentExplain: What is it?
-  hostedAgentExplainContent: Sample Text
-  hostedAgentInstall: What will be installed
+  hostedAgentExplainContent: Harness hosts and manages your GitOps agent, making set up easy with zero maintenance
+  hostedAgentInstall: What will be Provisioned
   hostedAgentInfoTitle: What you need to do
   gitOpsAgent: GitOps agent
   repoServer: Repo server
@@ -698,6 +699,7 @@ getStartedWithCD:
   healthStatusLabel: Health Status
   mappedHarnessProjects: Mapped Harness projects
   disconnected: Disconnected
+  syncApplication: Sync Application
   healthStatus:
     degraded: Degraded
     healthy: Healthy
@@ -733,6 +735,10 @@ azureBlueprint:
   managementGroup: Management Group
   templateFolderPath: Template Folder Path
 validation:
+  keyData: Key data is required
+  certData: Cert data is required
+  authType: Auth Type is required
+  clusterType: Cluster Type is required
   specifyFilter: Specify the filter condition
 welcomeMessage: Welcome to Harness
 welcomeToHarnessCD: Welcome to Harness Continuous Delivery!

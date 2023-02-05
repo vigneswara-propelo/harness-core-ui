@@ -8,8 +8,6 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly aboutHarnessAdapterAnswer: string
-  readonly aboutHarnessAdapterContainer: string
-  readonly agentDiagram: string
   readonly agentFirstSection: string
   readonly agentSecondSection: string
   readonly agentThirdSection: string

@@ -45,6 +45,11 @@
   text-align: center;
 }
 
+.text2 {
+  padding-top: var(--spacing-large) !important;
+  text-align: center;
+}
+
 .formInput {
   width: 320px;
 }
@@ -74,8 +79,8 @@
 }
 
 .serviceDeploymentTypeIcon {
-  margin-top: var(--spacing-medium) !important;
-  margin-bottom: var(--spacing-xsmall) !important;
+  margin-top: var(--spacing-small) !important;
+  margin-bottom: var(--spacing-small) !important;
 }
 
 .icons {
