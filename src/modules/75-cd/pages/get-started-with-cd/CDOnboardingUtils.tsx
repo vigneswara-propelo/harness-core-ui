@@ -8,7 +8,7 @@
 import { set } from 'lodash-es'
 import { customAlphabet } from 'nanoid'
 import type { IconName } from '@harness/icons'
-import type { SelectOption } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
 import { gitStoreTypes } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestStores } from '@pipeline/components/ManifestSelection/ManifestInterface'
@@ -71,6 +71,8 @@ export enum DrawerMode {
   Edit = 'EDIT',
   Preview = 'PREVIEW'
 }
+
+export const ALLOWABLE_TYPES = [MultiTypeInputType.FIXED] as AllowedTypesWithRunTime[]
 
 // FILE STORE
 export const SAMPLE_MANIFEST_FOLDER = 'Sample Manifest Onboarding'
