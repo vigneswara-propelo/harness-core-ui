@@ -18,6 +18,11 @@ import Button from '@rbac/components/Button/Button'
 import { mockData } from './data-mocks/ChangeEventListMock'
 import { CVChanges } from '../CVChanges'
 
+jest.mock('@common/hooks/useFeatureFlag', () => ({
+  useFeatureFlag: jest.fn(() => true),
+  useFeatureFlags: jest.fn(() => ({}))
+}))
+
 const mockFetch = jest.fn()
 
 beforeEach(() => {
@@ -377,10 +382,19 @@ describe('Unit tests for CVChanges', () => {
     render(<WrapperComponent />)
 
     await waitFor(() => {
-      expect(refetch).toHaveBeenLastCalledWith({
+      expect(refetch).toHaveBeenNthCalledWith(1, {
         queryParams: expect.objectContaining({
           changeCategories: ['Deployment', 'Infrastructure', 'Alert', 'FeatureFlag'],
-          changeSourceTypes: ['HarnessCDNextGen', 'HarnessCD', 'K8sCluster', 'PagerDuty', 'HarnessFF']
+          changeSourceTypes: [
+            'HarnessCDNextGen',
+            'HarnessCD',
+            'K8sCluster',
+            'PagerDuty',
+            'CustomDeploy',
+            'CustomInfrastructure',
+            'CustomIncident',
+            'CustomFF'
+          ]
         }),
         queryParamStringifyOptions: {
           arrayFormat: 'repeat'

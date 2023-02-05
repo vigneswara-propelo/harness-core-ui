@@ -7705,6 +7705,7 @@ export interface StringsMap {
   'cv.baselineEvents': string
   'cv.bottom': string
   'cv.burnRatePerDay': string
+  'cv.cURLCopied': string
   'cv.changeSource.FeatureFlag.label': string
   'cv.changeSource.FeatureFlag.noDataAvailableForYAMLDiff': string
   'cv.changeSource.HarnessCDCurrentGen.applicationId': string
@@ -7758,6 +7759,7 @@ export interface StringsMap {
   'cv.considerMissingMetricDataAs': string
   'cv.continuous': string
   'cv.copyURL': string
+  'cv.copycURL': string
   'cv.count': string
   'cv.createdOn': string
   'cv.currentProductionRisk': string
@@ -8358,6 +8360,10 @@ export interface StringsMap {
   'cv.onboarding.activitySources.changeSourceInfo': string
   'cv.onboarding.activitySources.dontHaveChangeSource': string
   'cv.onboarding.activitySources.infrastructureProvider': string
+  'cv.onboarding.changeSourceTypes.Custom.copyCURL': string
+  'cv.onboarding.changeSourceTypes.Custom.curl': string
+  'cv.onboarding.changeSourceTypes.Custom.note': string
+  'cv.onboarding.changeSourceTypes.Custom.title': string
   'cv.onboarding.changeSourceTypes.HarnessCDCurrentGen.name': string
   'cv.onboarding.changeSourceTypes.HarnessCDNextGen.icon': string
   'cv.onboarding.changeSourceTypes.HarnessCDNextGen.name': string

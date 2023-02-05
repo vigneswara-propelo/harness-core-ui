@@ -7,11 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly alignHorizontal: string
-  readonly divider: string
-  readonly formFullheight: string
-  readonly outerCard: string
-  readonly removeEditButton: string
-  readonly selectChangeSource: string
+  readonly floatingCopyToClipboard: string
+  readonly webhookUrl: string
 }
 export default styles
