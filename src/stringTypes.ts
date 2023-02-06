@@ -4136,6 +4136,8 @@ export interface StringsMap {
   'pipeline.manifestType.serverlessConfigFilePathPlaceholder': string
   'pipeline.manifestType.specifyManifestRepoType': string
   'pipeline.manifestType.specifyManifestStore': string
+  'pipeline.manifestType.subChart': string
+  'pipeline.manifestType.subChartPlaceholder': string
   'pipeline.manifestType.valuesYamlPath': string
   'pipeline.manifestType.varsPathRequired': string
   'pipeline.manifestType.varsYAMLPath': string
