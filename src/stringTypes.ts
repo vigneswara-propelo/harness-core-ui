@@ -5176,6 +5176,7 @@ export interface StringsMap {
   'cd.featureRestriction.banners.serviceLevelUpTeamEnterprise': string
   'cd.featureRestriction.banners.serviceOveruseTeamEnterprise': string
   'cd.featureRestriction.banners.serviceWarningActive': string
+  'cd.fetchingAgent': string
   'cd.fetchingDelegate': string
   'cd.fetchingRepository': string
   'cd.filePathPlaceholder': string
