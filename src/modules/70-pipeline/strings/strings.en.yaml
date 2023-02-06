@@ -106,7 +106,7 @@ approvalStep:
   ensureUserGroups: To use Harness Approvals, please make sure your project has user groups.
   approversWithColon: '{{$.pipeline.approvalStep.approvers}}:'
   approverInputs: 'Inputs to be provided by approver'
-  includePipelineExecutionHistory: 'Include pipeline execution history in approval details'
+  includeStageExecutionDetails: 'Include stage execution details in approval'
   addUserGroups: Enter User Group
   fetchingUserGroups: Select User Group
   fetchUserGroupsFailed: Failed to fetch User Groups

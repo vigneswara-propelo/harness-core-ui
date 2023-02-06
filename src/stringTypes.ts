@@ -3372,7 +3372,7 @@ export interface StringsMap {
   'pipeline.approvalStep.execution.statusMsg': string
   'pipeline.approvalStep.fetchUserGroupsFailed': string
   'pipeline.approvalStep.fetchingUserGroups': string
-  'pipeline.approvalStep.includePipelineExecutionHistory': string
+  'pipeline.approvalStep.includeStageExecutionDetails': string
   'pipeline.approvalStep.message': string
   'pipeline.approvalStep.minimumCount': string
   'pipeline.approvalStep.notAuthorizedExecution': string
