@@ -283,7 +283,7 @@ purpose:
     subtitle: Deploy in peace - verify activities that take place in your system. Identify risk early.
     description: 'Measure overall service health with always-on change impact analysis.'
     continuous: '{{ $.common.serviceReliabilityManagement }}'
-    moduleSelectionSubHeading: Take your software build verification  process to the next level usng our Change Intelligence
+    moduleSelectionSubHeading: Take your software build verification  process to the next level using our Change Intelligence
 
   ci:
     continuousLabel: Continuous
