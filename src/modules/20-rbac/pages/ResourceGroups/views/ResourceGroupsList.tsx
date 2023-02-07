@@ -25,8 +25,7 @@ import { rbacQueryParamOptions } from '@rbac/utils/utils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByEmail, sortByLastModified, sortByName } from '@common/utils/sortUtils'
-import css from '@rbac/components/ResourceGroupList/ResourceGroupList.module.scss'
+import { sortByCreated, sortByLastModified, sortByName } from '@common/utils/sortUtils'
 
 const ResourceGroupsList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
@@ -121,10 +120,9 @@ const ResourceGroupsList: React.FC = () => {
       <PageBody loading={loading} retryOnError={() => refetch()} error={error ? getRBACErrorMessage(error) : ''}>
         <ListHeader
           value={sort}
-          sortOptions={[...sortByName, ...sortByEmail, ...sortByCreated, ...sortByLastModified]}
+          sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
           onChange={option => setSort(option.value as string)}
           totalCount={data?.data?.totalItems}
-          className={css.listHeader}
         />
         <ResourceGroupListView data={data?.data} reload={refetch} openResourceGroupModal={openResourceGroupModal} />
       </PageBody>
