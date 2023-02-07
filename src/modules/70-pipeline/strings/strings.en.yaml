@@ -1554,6 +1554,10 @@ phasesForm:
     website: 'IIS Website'
     virtualDir: 'IIS Virtual directory'
 draft: 'Draft'
+logLevelSettings: 'Show Log Level'
+logDateTimeSettings: 'Show Date and Time Information'
+configureLogSettings: 'Configure Logs Settings'
+logSettingsHeader: 'Configure the following Logs Settings at the User Scope'
 duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always
 warningForInvalidYAMLDiscard: Enabling this option lets you edit and save changes to the YAML code of the pipelines you are viewing. You can toggle this setting on or off in any pipeline.

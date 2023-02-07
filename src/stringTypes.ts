@@ -3600,6 +3600,7 @@ export interface StringsMap {
   'pipeline.configFiles.title': string
   'pipeline.configSource': string
   'pipeline.configureArtifactSource': string
+  'pipeline.configureLogSettings': string
   'pipeline.createANewPipeline': string
   'pipeline.createPipeline.choosePipelineSetupHeader': string
   'pipeline.createPipeline.learnMore': string
@@ -4035,6 +4036,9 @@ export interface StringsMap {
   'pipeline.lastExecution': string
   'pipeline.lastSevenDays': string
   'pipeline.linuxOnly': string
+  'pipeline.logDateTimeSettings': string
+  'pipeline.logLevelSettings': string
+  'pipeline.logSettingsHeader': string
   'pipeline.logs.errorText': string
   'pipeline.logs.retry': string
   'pipeline.logs.sectionName': string
