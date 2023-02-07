@@ -7,46 +7,41 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly activeInstanceStyle: string
   readonly cardGrid: string
-  readonly collapseBody: string
+  readonly collapse: string
   readonly collapseHeader: string
   readonly cursor: string
   readonly detailSummaryView: string
   readonly dialogBase: string
   readonly dialogWrap: string
+  readonly envCardTitle: string
+  readonly envCardViewEmptyState: string
+  readonly envCards: string
+  readonly envColumnStyle: string
+  readonly environmentType: string
   readonly fullViewTableStyle: string
-  readonly hex: string
-  readonly hexContainer: string
-  readonly infraContainer: string
-  readonly infraViewTableStyle: string
+  readonly instanceCountStyle: string
+  readonly instanceDetail: string
   readonly instanceDetailTitle: string
   readonly instanceDetailView: string
-  readonly instanceEmptyState: string
-  readonly instanceHeaderStyle: string
   readonly instanceViewHeader: string
-  readonly lastDeploymentText: string
-  readonly latestArtifact: string
-  readonly latestBadgeStyle: string
-  readonly loadingContainer: string
-  readonly main: string
-  readonly marginBottom1: string
+  readonly marginBottom12: string
   readonly nextButton: string
-  readonly nonCollapseRow: string
+  readonly openExecBtn: string
   readonly overflow: string
-  readonly paddedContainer: string
-  readonly paddedInfraContainer: string
-  readonly plusMore: string
+  readonly overflowScroll: string
+  readonly paddingLeft12: string
+  readonly pillToggle: string
+  readonly pipelineExecCardStyle: string
+  readonly pipelineIdTitle: string
   readonly prevButton: string
+  readonly production: string
   readonly searchIconStyle: string
+  readonly sectionValue: string
   readonly selected: string
   readonly separatorStyle: string
-  readonly serviceCardTitle: string
-  readonly serviceCards: string
-  readonly serviceColumnStyle: string
-  readonly serviceDetailDialogEmptyState: string
-  readonly serviceDetailEmptyState: string
   readonly slideStyle: string
-  readonly summaryTableStyle: string
   readonly titleStyle: string
 }
 export default styles

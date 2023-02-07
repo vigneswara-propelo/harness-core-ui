@@ -835,7 +835,6 @@ environmentDetailPage:
   noServiceArtifactMsg: 'There is no service and artifact details present'
   emptyInstanceDetailMsg: 'Empty instance detail'
   emptyServiceDetailMsg: 'There are no services with instances in this environment.'
-  emptyExecutionListMsg: 'There are no executions for this given criteria.'
 ElastigroupStep:
   appName: App Name
   minInstances: Min Instances
@@ -873,3 +872,6 @@ trendMessage:
   invalidTrend: 'No trend data in the previous time interval'
 envChanges: 'Environment Changes'
 valuesYamlValidation: 'Values.yaml file path cannot be empty'
+infra: infra
+pipelineId: 'Pipeline ID: '
+openExecution: 'Open Execution'

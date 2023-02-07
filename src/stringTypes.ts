@@ -3321,6 +3321,7 @@ export interface StringsMap {
   'pipeline.OverviewEmptyStates.createPipelineInfo': string
   'pipeline.OverviewEmptyStates.runPipelineHeaderMsg': string
   'pipeline.OverviewEmptyStates.runPipelineInfo': string
+  'pipeline.ServiceDetail.envCardEmptyStateMsg': string
   'pipeline.aboutYourStage.stageNamePlaceholder': string
   'pipeline.addDeploymenteRepo': string
   'pipeline.addReleaseRepo': string
@@ -3689,6 +3690,7 @@ export interface StringsMap {
   'pipeline.duplicateImportTemplate': string
   'pipeline.duplicateStepIdentifiers': string
   'pipeline.duration': string
+  'pipeline.emptyExecutionListMsg': string
   'pipeline.enableVerificationHelpText': string
   'pipeline.enableVerificationOptions': string
   'pipeline.enableVerificationTitle': string
@@ -4033,6 +4035,7 @@ export interface StringsMap {
   'pipeline.jiraUpdateStep.validations.status': string
   'pipeline.keyPlaceholder': string
   'pipeline.kubernetesStep.workload': string
+  'pipeline.lastDeployed': string
   'pipeline.lastExecution': string
   'pipeline.lastSevenDays': string
   'pipeline.linuxOnly': string
@@ -5161,7 +5164,6 @@ export interface StringsMap {
   'cd.environmentCreated': string
   'cd.environmentDelete': string
   'cd.environmentDeleteMessage': string
-  'cd.environmentDetailPage.emptyExecutionListMsg': string
   'cd.environmentDetailPage.emptyInstanceDetailMsg': string
   'cd.environmentDetailPage.emptyServiceDetailMsg': string
   'cd.environmentDetailPage.infraSlashCluster': string
@@ -5336,6 +5338,7 @@ export interface StringsMap {
   'cd.hostFilters': string
   'cd.hosts': string
   'cd.ignoreReleaseHistFailStatus': string
+  'cd.infra': string
   'cd.infrastructure.createNew': string
   'cd.infrastructure.created': string
   'cd.infrastructure.delete': string
@@ -5406,11 +5409,13 @@ export interface StringsMap {
   'cd.oauthPlugin': string
   'cd.oauthPluginCmd': string
   'cd.oldService': string
+  'cd.openExecution': string
   'cd.overrideType': string
   'cd.overrideValue': string
   'cd.overrideYaml': string
   'cd.pathCannotBeEmpty': string
   'cd.pipelineCreation': string
+  'cd.pipelineId': string
   'cd.pipelineSteps.environmentTab.allClustersSelected': string
   'cd.pipelineSteps.environmentTab.allInfrastructures': string
   'cd.pipelineSteps.environmentTab.clusterIsRequired': string
