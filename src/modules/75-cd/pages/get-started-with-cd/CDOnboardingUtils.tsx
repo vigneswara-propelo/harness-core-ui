@@ -179,6 +179,11 @@ export enum RevisionType {
   Tags = 'Tags'
 }
 
+export enum SourceCodeType {
+  PROVIDE_MY_OWN = 'provideMyOwn',
+  USE_SAMPLE = 'useSample'
+}
+
 export const revisionTypeArray: SelectOption[] = [
   {
     label: RevisionType.Branch,
@@ -227,6 +232,8 @@ export type RepositoryInterface = RepositoriesRepository & {
   targetRevision?: string
   revisionType?: RevisionType
   path?: string
+  sourceCodeType?: string
+  isNewRepository?: boolean
   identifier?: string
 }
 
@@ -256,6 +263,7 @@ export interface ClusterInterface {
   namespaces?: string[]
   project?: string
   server?: string
+  isNewCluster?: boolean
   serverVersion?: string
 }
 
@@ -271,8 +279,10 @@ export const newRepositoryData = {
   revisionType: RevisionType.Branch,
   path: '',
   repo: DEFAULT_SAMPLE_REPO,
+  sourceCodeType: SourceCodeType.USE_SAMPLE,
   type: 'git',
-  identifier: ''
+  identifier: '',
+  isNewRepository: false
 } as RepositoryInterface
 
 export const intialClusterData = {
@@ -287,7 +297,8 @@ export const intialClusterData = {
   identifier: '',
   agent: '',
   scope: '',
-  clusterType: CIBuildInfrastructureType.Cloud
+  clusterType: CIBuildInfrastructureType.Cloud,
+  isNewCluster: false
 } as ClusterInterface
 
 export const initialApplicationData = {
@@ -746,3 +757,11 @@ export const ArtifactIconByType: Record<string, IconName> = {
   Ecr: 'ecr-step',
   Acr: 'service-azure'
 }
+
+export const sampleRepositorySourceSteps = [
+  'cd.getStartedWithCD.sampleRule1',
+  'cd.getStartedWithCD.sampleRule2',
+  'cd.getStartedWithCD.sampleRule3',
+  'cd.getStartedWithCD.sampleRule4',
+  'cd.getStartedWithCD.sampleRule5'
+]

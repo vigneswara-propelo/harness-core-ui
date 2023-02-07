@@ -43,6 +43,8 @@ export interface StringsMap {
   'common.addAccountName': string
   'common.addAttribute': string
   'common.addName': string
+  'common.addNewCluster': string
+  'common.addNewRepo': string
   'common.addVariable': string
   'common.additionalAttributes': string
   'common.advanced': string
@@ -5199,17 +5201,19 @@ export interface StringsMap {
   'cd.getStartedWithCD.awsRegionHelperText': string
   'cd.getStartedWithCD.azureAKSHelperText': string
   'cd.getStartedWithCD.azureK8s': string
+  'cd.getStartedWithCD.backToClusterList': string
+  'cd.getStartedWithCD.backToRepoList': string
   'cd.getStartedWithCD.checkAnnonymously': string
   'cd.getStartedWithCD.checkAuthSettings': string
   'cd.getStartedWithCD.checkDelegateInstalled': string
   'cd.getStartedWithCD.clickForOtherDeploymentTypes': string
   'cd.getStartedWithCD.closeOnboarding.subtitle': string
   'cd.getStartedWithCD.closeOnboarding.title': string
-  'cd.getStartedWithCD.clusterCreatedSuccessfully': string
   'cd.getStartedWithCD.clusterSpec1': string
   'cd.getStartedWithCD.clusterSpec2': string
   'cd.getStartedWithCD.clusterSpec3': string
   'cd.getStartedWithCD.clusterSpecInfo': string
+  'cd.getStartedWithCD.clustersCount': string
   'cd.getStartedWithCD.clusterspec': string
   'cd.getStartedWithCD.codeRepos': string
   'cd.getStartedWithCD.configureRepo': string
@@ -5217,6 +5221,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.connectTo': string
   'cd.getStartedWithCD.connectionStatus': string
   'cd.getStartedWithCD.createCluster': string
+  'cd.getStartedWithCD.createdSuccessfully': string
   'cd.getStartedWithCD.delegateDescription': string
   'cd.getStartedWithCD.delegateInfo1': string
   'cd.getStartedWithCD.delegateInfo2': string
@@ -5281,11 +5286,18 @@ export interface StringsMap {
   'cd.getStartedWithCD.onBoardingSubTitle': string
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.provideManifest': string
+  'cd.getStartedWithCD.provideMyOwn': string
   'cd.getStartedWithCD.provisioningText': string
   'cd.getStartedWithCD.redisCache': string
   'cd.getStartedWithCD.repoServer': string
   'cd.getStartedWithCD.reposubheading': string
   'cd.getStartedWithCD.runDelegateSubtitle': string
+  'cd.getStartedWithCD.sampleRepoLink': string
+  'cd.getStartedWithCD.sampleRule1': string
+  'cd.getStartedWithCD.sampleRule2': string
+  'cd.getStartedWithCD.sampleRule3': string
+  'cd.getStartedWithCD.sampleRule4': string
+  'cd.getStartedWithCD.sampleRule5': string
   'cd.getStartedWithCD.selectArtifactRepo': string
   'cd.getStartedWithCD.selectAuthMethod': string
   'cd.getStartedWithCD.selectAuthType': string
@@ -5299,12 +5311,15 @@ export interface StringsMap {
   'cd.getStartedWithCD.setupDelegate': string
   'cd.getStartedWithCD.setupIPWhiteListing': string
   'cd.getStartedWithCD.setupaNewDelegate': string
+  'cd.getStartedWithCD.sourceOrSampleCode': string
   'cd.getStartedWithCD.successFull': string
   'cd.getStartedWithCD.successfullyAuthenticated': string
   'cd.getStartedWithCD.syncApplication': string
   'cd.getStartedWithCD.targetRevision': string
   'cd.getStartedWithCD.testConnection': string
+  'cd.getStartedWithCD.testesSuccessfully': string
   'cd.getStartedWithCD.tryAnotherCreds': string
+  'cd.getStartedWithCD.useSample': string
   'cd.getStartedWithCD.usernameAndPassword': string
   'cd.getStartedWithCD.viewDelegateDetails': string
   'cd.getStartedWithCD.workloadDeploy': string

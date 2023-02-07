@@ -581,6 +581,18 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  clustersCount: 'You currently have {{target}} cluster(s), would you like to connect it to?'
+  backToRepoList: < Back to existing repo selection
+  backToClusterList: < Back to existing cluster selection
+  sampleRule1: Login to your git account and clone the sample app repository below.
+  sampleRule2: Set your repository name any as you desire
+  sampleRule3: Under Privacy, Select "Public"
+  sampleRule4: Click "Begin Import"
+  sampleRule5: Tell us your new repository
+  sampleRepoLink: https://github.com/wings-software/gitops-demo.git
+  useSample: Use sample file
+  provideMyOwn: Provide my own
+  sourceOrSampleCode: Would you like to use your own source code or sample code?
   clusterSpec1: 4GB Memory
   clusterSpec2: 2 CPU
   clusterSpec3: 1 worker node
@@ -596,7 +608,8 @@ getStartedWithCD:
   clickForOtherDeploymentTypes: Click here for other deployment types
   createCluster: Create a cluster if needed
   failedToAuthenticate: Failed to authenticate to
-  clusterCreatedSuccessfully: created successfully
+  createdSuccessfully: created successfully
+  testesSuccessfully: tested successfully
   successfullyAuthenticated: Successfully authenticated to
   failedSourceText: Still failed to authenticate despite having entered the correct credentials? Here’s what you can try to do..
   checkAnnonymously: Connect Annonymously

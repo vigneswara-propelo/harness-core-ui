@@ -48,6 +48,10 @@ declare const styles: {
   readonly repoCard: string
   readonly repoborderBottom: string
   readonly repositories: string
+  readonly repositoriesIcon: string
+  readonly repositoryHeader: string
+  readonly repositoryListCard: string
+  readonly repositoryListItem: string
   readonly repositoryRow: string
   readonly repositorySearch: string
   readonly repositoryTable: string
@@ -61,6 +65,7 @@ declare const styles: {
   readonly text: string
   readonly text1: string
   readonly text2: string
+  readonly text3: string
   readonly uppercase: string
   readonly verticalSeparation: string
   readonly width50: string
