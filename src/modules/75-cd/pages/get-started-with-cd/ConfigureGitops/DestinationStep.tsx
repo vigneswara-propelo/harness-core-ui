@@ -195,14 +195,15 @@ export const DestinationStep = (props: any) => {
               style={{ marginTop: '20px' }}
               type="submit"
               onClick={e => {
+                const data = formikRef.current?.values
                 if (!formikRef.current?.values?.isNewCluster) {
                   setTestConnectionStatus(TestStatus.IN_PROGRESS)
                   setTestConnectionErrors([])
+                  saveClusterData({ ...data, ...selectedCluster?.cluster, identifier: selectedCluster?.identifier })
                   refreshConnectionStatus(e)
                 } else {
                   setTestConnectionStatus(TestStatus.IN_PROGRESS)
                   setTestConnectionErrors([])
-                  const data = formikRef.current?.values
                   saveClusterData(data || {})
                   onClusterCreate(data)
                     .then((response: Servicev1Cluster) => {
@@ -375,16 +376,18 @@ export const DestinationStep = (props: any) => {
                     </>
                   ) : (
                     <>
-                      {isNewCluster ? (
+                      {isNewCluster || clusterListdata.length === 0 ? (
                         <Layout.Vertical>
-                          <Text
-                            style={{ cursor: 'pointer', marginTop: '20px' }}
-                            className={css.marginBottomClass}
-                            onClick={() => formikProps.setFieldValue('isNewCluster', false)}
-                            color={Color.PRIMARY_7}
-                          >
-                            {getString('cd.getStartedWithCD.backToClusterList')}
-                          </Text>
+                          {clusterListdata.length !== 0 && (
+                            <Text
+                              style={{ cursor: 'pointer', marginTop: '20px' }}
+                              className={css.marginBottomClass}
+                              onClick={() => formikProps.setFieldValue('isNewCluster', false)}
+                              color={Color.PRIMARY_7}
+                            >
+                              {getString('cd.getStartedWithCD.backToClusterList')}
+                            </Text>
+                          )}
                           <ul className={css.progress}>
                             <li className={`${css.progressItem} ${css.progressItemActive}`}>
                               <Text

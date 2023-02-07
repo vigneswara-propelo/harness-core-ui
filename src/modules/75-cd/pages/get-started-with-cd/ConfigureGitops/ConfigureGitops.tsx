@@ -355,7 +355,10 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
               disabled={isTestConnectionDisabled()}
               type="submit"
               onClick={e => {
-                if (!formikRef.current?.values?.isNewRepository) {
+                if (
+                  !formikRef.current?.values?.isNewRepository &&
+                  formikRef.current?.values?.sourceCodeType === SourceCodeType.PROVIDE_MY_OWN
+                ) {
                   setTestConnectionStatus(TestStatus.IN_PROGRESS)
                   setTestConnectionErrors([])
                   refreshConnectionStatus(e)
@@ -552,15 +555,6 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                 </Text>
                                 <Layout.Horizontal spacing="medium" margin={{ bottom: 'xxlarge' }}>
                                   <Button
-                                    onClick={() => handleSourceCodeTypeChange(SourceCodeType.PROVIDE_MY_OWN)}
-                                    className={cx(
-                                      css.kubernetes,
-                                      sourceCodeType === SourceCodeType.PROVIDE_MY_OWN ? css.active : undefined
-                                    )}
-                                  >
-                                    {getString('cd.getStartedWithCD.provideMyOwn')}
-                                  </Button>
-                                  <Button
                                     onClick={() => {
                                       handleSourceCodeTypeChange(SourceCodeType.USE_SAMPLE)
                                     }}
@@ -570,6 +564,15 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                     )}
                                   >
                                     {getString('cd.getStartedWithCD.useSample')}
+                                  </Button>
+                                  <Button
+                                    onClick={() => handleSourceCodeTypeChange(SourceCodeType.PROVIDE_MY_OWN)}
+                                    className={cx(
+                                      css.kubernetes,
+                                      sourceCodeType === SourceCodeType.PROVIDE_MY_OWN ? css.active : undefined
+                                    )}
+                                  >
+                                    {getString('cd.getStartedWithCD.provideMyOwn')}
                                   </Button>
                                 </Layout.Horizontal>
                                 <ul className={css.progress}>
@@ -695,16 +698,18 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                           </Layout.Vertical>
                                         ) : (
                                           sourceCodeType === SourceCodeType.PROVIDE_MY_OWN &&
-                                          (isNewRepository ? (
+                                          (isNewRepository || repositoryListdata.length === 0 ? (
                                             <Layout.Vertical>
-                                              <Text
-                                                style={{ cursor: 'pointer' }}
-                                                className={css.marginBottomClass}
-                                                onClick={() => formikProps.setFieldValue('isNewRepository', false)}
-                                                color={Color.PRIMARY_7}
-                                              >
-                                                {getString('cd.getStartedWithCD.backToRepoList')}
-                                              </Text>
+                                              {repositoryListdata.length !== 0 && (
+                                                <Text
+                                                  style={{ cursor: 'pointer' }}
+                                                  className={css.marginBottomClass}
+                                                  onClick={() => formikProps.setFieldValue('isNewRepository', false)}
+                                                  color={Color.PRIMARY_7}
+                                                >
+                                                  {getString('cd.getStartedWithCD.backToRepoList')}
+                                                </Text>
+                                              )}
                                               <FormInput.Text
                                                 name="repo"
                                                 style={{ width: '400px' }}
