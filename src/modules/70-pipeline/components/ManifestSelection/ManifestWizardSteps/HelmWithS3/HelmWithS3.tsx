@@ -45,7 +45,12 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { HelmWithGcsDataType } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
-import { helmVersions, ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
+import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
+  helmVersions,
+  ManifestDataType,
+  ManifestIdentifierValidation
+} from '../../Manifesthelper'
 import { handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
@@ -184,6 +189,7 @@ function HelmWithS3({
         chartVersion: initialValues.spec?.chartVersion,
         subChartName: initialValues.spec?.subChartName,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
@@ -213,6 +219,7 @@ function HelmWithS3({
       chartVersion: '',
       subChartName: '',
       skipResourceVersioning: false,
+      enableDeclarativeRollback: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
     }
   }
@@ -242,7 +249,11 @@ function HelmWithS3({
           chartVersion: formData?.chartVersion,
           subChartName: formData?.subChartName,
           helmVersion: formData?.helmVersion,
-          skipResourceVersioning: formData?.skipResourceVersioning
+          skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
+            formData?.skipResourceVersioning,
+            formData?.enableDeclarativeRollback
+          ),
+          enableDeclarativeRollback: formData?.enableDeclarativeRollback
         }
       }
     }

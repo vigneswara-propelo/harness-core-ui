@@ -4088,6 +4088,7 @@ export interface StringsMap {
   'pipeline.manifestType.customRemoteExtractedFileLocation': string
   'pipeline.manifestType.customRemoteExtractedFileLocationPlaceholder': string
   'pipeline.manifestType.customRemoteExtractionScript': string
+  'pipeline.manifestType.enableDeclarativeRollback': string
   'pipeline.manifestType.filePathPlaceholder': string
   'pipeline.manifestType.folderPathPlaceholder': string
   'pipeline.manifestType.folderPathRequired': string

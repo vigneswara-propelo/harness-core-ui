@@ -35,6 +35,7 @@ import type { ModalViewFor } from '@pipeline/components/ArtifactsSelection/Artif
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 import type { HelmWithGITDataType } from '../../ManifestInterface'
 import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
   gitFetchTypeList,
   GitFetchTypes,
   GitRepoName,
@@ -109,6 +110,7 @@ function HelmWithGIT({
         helmVersion: initialValues.spec?.helmVersion,
         subChartName: initialValues.spec?.subChartName,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
@@ -132,6 +134,7 @@ function HelmWithGIT({
       subChartName: '',
       helmVersion: 'V2',
       skipResourceVersioning: false,
+      enableDeclarativeRollback: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
       repoName: getRepositoryName(prevStepData, initialValues)
     }
@@ -156,7 +159,11 @@ function HelmWithGIT({
             typeof formData?.valuesPaths === 'string'
               ? formData?.valuesPaths
               : formData?.valuesPaths?.map((path: { path: string }) => path.path),
-          skipResourceVersioning: formData?.skipResourceVersioning,
+          skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
+            formData?.skipResourceVersioning,
+            formData?.enableDeclarativeRollback
+          ),
+          enableDeclarativeRollback: formData?.enableDeclarativeRollback,
           helmVersion: formData?.helmVersion
         }
       }

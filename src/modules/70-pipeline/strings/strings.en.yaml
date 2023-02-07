@@ -402,6 +402,7 @@ manifestType:
   optimizedKustomizeManifestCollection: Optimized Kustomize Manifest Collection
   kustomizeYamlFolderPath: Kustomize YAML Folder Path
   kustomizeYamlFolderPathRequired: Kustomize YAML Folder Path is required
+  enableDeclarativeRollback: Enable Declarative Rollback
 manifestTypeLabels:
   K8sManifest: K8s Manifest
   ValuesYaml: Values YAML

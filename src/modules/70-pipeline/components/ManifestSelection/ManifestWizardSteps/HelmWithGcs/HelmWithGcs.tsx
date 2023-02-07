@@ -38,7 +38,12 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { HelmWithGcsDataType } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
-import { helmVersions, ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
+import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
+  helmVersions,
+  ManifestDataType,
+  ManifestIdentifierValidation
+} from '../../Manifesthelper'
 import { filePathWidth, handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
@@ -117,6 +122,7 @@ function HelmWithGcs({
         chartName: initialValues.spec?.chartName,
         subChartName: initialValues.spec?.subChartName,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
@@ -138,6 +144,7 @@ function HelmWithGcs({
       chartVersion: '',
       subChartName: '',
       skipResourceVersioning: false,
+      enableDeclarativeRollback: false,
       bucketName: '',
       folderPath: '/',
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
@@ -165,7 +172,11 @@ function HelmWithGcs({
           chartVersion: formData?.chartVersion,
           subChartName: formData?.subChartName,
           helmVersion: formData?.helmVersion,
-          skipResourceVersioning: formData?.skipResourceVersioning
+          skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
+            formData?.skipResourceVersioning,
+            formData?.enableDeclarativeRollback
+          ),
+          enableDeclarativeRollback: formData?.enableDeclarativeRollback
         }
       }
     }
