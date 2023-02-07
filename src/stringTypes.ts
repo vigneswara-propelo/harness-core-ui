@@ -5193,10 +5193,12 @@ export interface StringsMap {
   'cd.gcloudClusterCmd': string
   'cd.gcloudClusterCreate': string
   'cd.gcloudClusterList': string
+  'cd.getStartedWithCD.agentInstalled': string
   'cd.getStartedWithCD.agentProvisionedSuccessfully': string
   'cd.getStartedWithCD.agentSetupTimeInfo': string
   'cd.getStartedWithCD.allSet': string
   'cd.getStartedWithCD.anonymous': string
+  'cd.getStartedWithCD.appControllerInstalled': string
   'cd.getStartedWithCD.applicationController': string
   'cd.getStartedWithCD.artifactLocation': string
   'cd.getStartedWithCD.artifactManifest': string
@@ -5209,6 +5211,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.azureK8s': string
   'cd.getStartedWithCD.backToClusterList': string
   'cd.getStartedWithCD.backToRepoList': string
+  'cd.getStartedWithCD.checkAgentStatus': string
   'cd.getStartedWithCD.checkAnnonymously': string
   'cd.getStartedWithCD.checkAuthSettings': string
   'cd.getStartedWithCD.checkDelegateInstalled': string
@@ -5295,7 +5298,9 @@ export interface StringsMap {
   'cd.getStartedWithCD.provideMyOwn': string
   'cd.getStartedWithCD.provisioningText': string
   'cd.getStartedWithCD.redisCache': string
+  'cd.getStartedWithCD.redisCacheInstalled': string
   'cd.getStartedWithCD.repoServer': string
+  'cd.getStartedWithCD.repoServerInstalled': string
   'cd.getStartedWithCD.reposubheading': string
   'cd.getStartedWithCD.runDelegateSubtitle': string
   'cd.getStartedWithCD.sampleRepoLink': string

@@ -27,6 +27,7 @@ import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useAgentServiceForServerCreate, V1AgentType, useAgentServiceForServerList, V1Agent } from 'services/gitops'
 import { useCDOnboardingContext } from '@cd/pages/get-started-with-cd/CDOnboardingStore'
 import { GitOpsAgentCard } from './GitOpsAgentCard'
+import { AgentProvision } from './AgentProvision'
 import css from '../GetStartedWithCD.module.scss'
 import createK8sCSS from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 import deployCSS from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
@@ -188,6 +189,12 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
         </>
       )
     }
+
+    // Agent is provisioned
+    if (provisionedAgent?.identifier) {
+      return <AgentProvision agent={provisionedAgent} />
+    }
+
     return (
       <>
         {isProvisioningScreen ? (

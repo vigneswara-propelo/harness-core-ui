@@ -700,7 +700,7 @@ getStartedWithCD:
   repoServer: Repo server
   redisCache: Redis cache
   applicationController: Application controller
-  provisioningText: Provisioning these components will take up to 1 minute
+  provisioningText: Provisioning these components will take up to 5 minutes
   setupIPWhiteListing: Set up IP Whitelisting for Harness to connect to your cluster
   agentProvisionedSuccessfully: Your agent has been provisioned successfully
   agentSetupTimeInfo: This process may take up to 1 minutes to complete. While the agent is being provisioned, please set up IP Whitelisting so Harness can connect to your cluster
@@ -720,6 +720,11 @@ getStartedWithCD:
     progressing: Progressing
     suspended: Suspended
     unknown: Unknown
+  checkAgentStatus: Checking if the agent has been installed. This process may take upto 2 minutes to complete
+  agentInstalled: GitOps agent installed
+  repoServerInstalled: Repo server installed
+  redisCacheInstalled: Redis cache installed
+  appControllerInstalled: Application controller installed
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment

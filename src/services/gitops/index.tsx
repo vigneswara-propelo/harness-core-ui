@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { UseGetProps, useMutate, UseMutateProps, useGet } from 'restful-react'
+import React from 'react'
+import { UseGetProps, useMutate, UseMutateProps, useGet, GetProps, Get } from 'restful-react'
 
 export interface V1Time {
   /**
@@ -132,6 +133,65 @@ export interface GatewayruntimeError {
   error?: string
   message?: string
 }
+
+export interface AgentServiceForServerGetQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  name?: string
+  type?: 'AGENT_TYPE_UNSET' | 'CONNECTED_ARGO_PROVIDER' | 'MANAGED_ARGO_PROVIDER' | 'HOSTED_ARGO_PROVIDER'
+  tags?: string[]
+  searchTerm?: string
+  pageSize?: number
+  pageIndex?: number
+  scope?: 'AGENT_SCOPE_UNSET' | 'ACCOUNT' | 'ORG' | 'PROJECT'
+  drIdentifier?: string
+}
+
+export interface AgentServiceForServerGetPathParams {
+  identifier: string
+}
+
+export type AgentServiceForServerGetProps = Omit<
+  GetProps<V1Agent, GatewayruntimeError, AgentServiceForServerGetQueryParams, AgentServiceForServerGetPathParams>,
+  'path'
+> &
+  AgentServiceForServerGetPathParams
+
+/**
+ * Get agents.
+ */
+export const AgentServiceForServerGet = ({ identifier, ...props }: AgentServiceForServerGetProps) => (
+  <Get<V1Agent, GatewayruntimeError, AgentServiceForServerGetQueryParams, AgentServiceForServerGetPathParams>
+    path={`/api/v1/agents/${identifier}`}
+    base={window.getApiBaseUrl('gitops')}
+    {...props}
+  />
+)
+
+export type UseAgentServiceForServerGetProps = Omit<
+  UseGetProps<V1Agent, GatewayruntimeError, AgentServiceForServerGetQueryParams, AgentServiceForServerGetPathParams>,
+  'path'
+> &
+  AgentServiceForServerGetPathParams
+
+/**
+ * Get agents.
+ */
+export const useAgentServiceForServerGet = ({ identifier, ...props }: UseAgentServiceForServerGetProps) =>
+  useGet<V1Agent, GatewayruntimeError, AgentServiceForServerGetQueryParams, AgentServiceForServerGetPathParams>(
+    (paramsInPath: AgentServiceForServerGetPathParams) => `/api/v1/agents/${paramsInPath.identifier}`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { identifier }, ...props }
+  )
 
 export interface ProtobufAny {
   /**

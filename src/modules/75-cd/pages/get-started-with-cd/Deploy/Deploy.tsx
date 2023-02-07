@@ -16,6 +16,7 @@ import { useStrings } from 'framework/strings'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import successSetup from '../../home/images/success_setup.svg'
 import css from '../RunPipelineSummary/RunPipelineSummary.module.scss'
+import deployCSS from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 export const Deploy = ({ onBack }: { onBack: () => void }) => {
   const {
@@ -85,20 +86,22 @@ export const Deploy = ({ onBack }: { onBack: () => void }) => {
           )
         }}
       </Formik>
-      <Layout.Horizontal spacing="medium" padding={{ top: 'medium', bottom: 'large' }} width="100%">
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          text={getString('back')}
-          icon="chevron-left"
-          minimal
-          onClick={onBack}
-        />
-        <Button
-          text={getString('cd.getStartedWithCD.syncApplication')}
-          variation={ButtonVariation.PRIMARY}
-          onClick={goToAppDetailPage}
-        />
-      </Layout.Horizontal>
+      <Layout.Vertical className={deployCSS.footer}>
+        <Layout.Horizontal spacing="medium" padding={{ top: 'medium', bottom: 'large' }} width="100%">
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            text={getString('back')}
+            icon="chevron-left"
+            minimal
+            onClick={onBack}
+          />
+          <Button
+            text={getString('cd.getStartedWithCD.syncApplication')}
+            variation={ButtonVariation.PRIMARY}
+            onClick={goToAppDetailPage}
+          />
+        </Layout.Horizontal>
+      </Layout.Vertical>
     </>
   )
 }
