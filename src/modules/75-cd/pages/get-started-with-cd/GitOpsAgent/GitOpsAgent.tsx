@@ -10,18 +10,8 @@ import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
-import {
-  Button,
-  ButtonSize,
-  ButtonVariation,
-  Container,
-  HarnessDocTooltip,
-  Layout,
-  PageSpinner,
-  Text
-} from '@harness/uicore'
+import { Button, ButtonVariation, Container, HarnessDocTooltip, Layout, PageSpinner, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { Spinner } from '@blueprintjs/core'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useAgentServiceForServerCreate, V1AgentType, useAgentServiceForServerList, V1Agent } from 'services/gitops'
@@ -73,45 +63,12 @@ const AgentStaticInfo = ({ getString }: { getString: UseStringsReturn['getString
   </Container>
 )
 
-const ProvisioningStaticInfo = ({
-  loading,
-  errorMessage,
-  getString,
-  onProvisionAgent
-}: {
-  loading: boolean
-  errorMessage?: string
-  getString: UseStringsReturn['getString']
-  onProvisionAgent: () => void
-}) => (
-  <Container>
-    <div className={css.provisioningInfo}>
-      {loading ? (
-        <Spinner size={24} />
-      ) : errorMessage ? (
-        <>
-          <div className={css.error}>{errorMessage}</div>
-          <Button
-            text={getString('retry')}
-            variation={ButtonVariation.SECONDARY}
-            onClick={onProvisionAgent}
-            margin={{ left: 'medium' }}
-            size={ButtonSize.SMALL}
-          />
-        </>
-      ) : (
-        <div>{getString('cd.getStartedWithCD.agentProvisionedSuccessfully')}</div>
-      )}
-    </div>
-  </Container>
-)
-
 export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: () => void }) => {
   const { getString } = useStrings()
   // isProvisioningScreen is 2nd screen
   const [isProvisioningScreen, setIsProvisioningScreen] = React.useState(false)
   const [selectedAgent, setSelectedAgent] = React.useState<V1Agent | null>(null)
-  const [provisionedAgent, setProvisionedAgent] = React.useState<V1Agent | null>(null)
+  const [provisionedAgent, setProvisionedAgent] = React.useState<V1Agent | undefined>()
   const { accountId } = useParams<ProjectPathProps>()
   const { saveAgentData } = useCDOnboardingContext()
 
@@ -190,20 +147,10 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
       )
     }
 
-    // Agent is provisioned
-    if (provisionedAgent?.identifier) {
-      return <AgentProvision agent={provisionedAgent} />
-    }
-
     return (
       <>
         {isProvisioningScreen ? (
-          <ProvisioningStaticInfo
-            loading={agentCreateLoading}
-            errorMessage={agentCreateError?.message}
-            getString={getString}
-            onProvisionAgent={onProvisionAgent}
-          />
+          <AgentProvision agent={provisionedAgent} loading={agentCreateLoading} error={agentCreateError?.message} />
         ) : (
           <AgentStaticInfo getString={getString} />
         )}
@@ -232,7 +179,7 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
                   text={getString('back')}
                   icon="chevron-left"
                   minimal
-                  onClick={onBack}
+                  onClick={() => setIsProvisioningScreen(false)}
                 />
                 <Button
                   text={`${getString('next')}: ${getString('connectors.ceAws.curExtention.stepB.step1.p1')}`}
