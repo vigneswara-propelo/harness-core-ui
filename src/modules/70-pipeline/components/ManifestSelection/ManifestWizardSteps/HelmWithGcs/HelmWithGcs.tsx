@@ -73,7 +73,7 @@ function HelmWithGcs({
   deploymentType
 }: StepProps<ConnectorConfigDTO> & HelmWithGcsPropType): React.ReactElement {
   const { getString } = useStrings()
-  const { CDP_HELM_SUB_CHARTS } = useFeatureFlags()
+  const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const { showError } = useToaster()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
   const [selectedHelmVersion, setHelmVersion] = useState(initialValues?.spec?.helmVersion ?? 'V2')
@@ -404,7 +404,7 @@ function HelmWithGcs({
                   />
                 </div>
               </Layout.Horizontal>
-              {CDP_HELM_SUB_CHARTS && (
+              {NG_CDS_HELM_SUB_CHARTS && (
                 <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
                   <div
                     className={cx(helmcss.halfWidth, {
@@ -417,6 +417,7 @@ function HelmWithGcs({
                       placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
                       name="subChartName"
                       multiTextInputProps={{ expressions, allowableTypes }}
+                      isOptional
                     />
                     {getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions

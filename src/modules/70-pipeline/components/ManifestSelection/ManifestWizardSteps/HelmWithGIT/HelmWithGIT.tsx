@@ -81,7 +81,7 @@ function HelmWithGIT({
   context
 }: StepProps<ConnectorConfigDTO> & HelmWithGITPropType): React.ReactElement {
   const { getString } = useStrings()
-  const { CDP_HELM_SUB_CHARTS } = useFeatureFlags()
+  const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const hideHeaderAndNavBtns = context ? shouldHideHeaderAndNavBtns(context) : false
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
   const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
@@ -378,7 +378,7 @@ function HelmWithGIT({
                   <FormInput.Select name="helmVersion" label={getString('helmVersion')} items={helmVersions} />
                 </div>
               </Layout.Horizontal>
-              {CDP_HELM_SUB_CHARTS && (
+              {NG_CDS_HELM_SUB_CHARTS && (
                 <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
                   <div
                     className={cx(helmcss.halfWidth, {
@@ -391,6 +391,7 @@ function HelmWithGIT({
                       placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
                       name="subChartName"
                       multiTextInputProps={{ expressions, allowableTypes }}
+                      isOptional
                     />
                     {getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions

@@ -81,7 +81,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     pipelineIdentifier
   } = props
   const { getString } = useStrings()
-  const { CDP_HELM_SUB_CHARTS } = useFeatureFlags()
+  const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const [showRepoName, setShowRepoName] = useState(true)
   const { getRBACErrorMessage } = useRBACError()
@@ -721,7 +721,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
         )}
       </div>
 
-      {CDP_HELM_SUB_CHARTS && isFieldRuntime(`${manifestPath}.spec.subChartName`, template) && (
+      {NG_CDS_HELM_SUB_CHARTS && isFieldRuntime(`${manifestPath}.spec.subChartName`, template) && (
         <TextFieldInputSetView
           template={template}
           fieldPath={`${manifestPath}.spec.subChartName`}
