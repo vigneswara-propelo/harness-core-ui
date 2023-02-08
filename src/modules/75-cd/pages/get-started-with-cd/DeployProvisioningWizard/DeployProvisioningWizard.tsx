@@ -519,6 +519,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
             data-testid={'close-cd-onboarding-wizard'}
           />
         </Container>
+        <hr className={css.divider} />
         {/* content */}
         <Layout.Vertical
           padding={{ left: 'huge', right: 'huge', top: 'huge' }}
