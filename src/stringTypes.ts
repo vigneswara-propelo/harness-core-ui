@@ -2792,6 +2792,7 @@ export interface StringsMap {
   'connectors.name_labels.Splunk': string
   'connectors.name_labels.Spot': string
   'connectors.name_labels.TAS': string
+  'connectors.name_labels.Terraform': string
   'connectors.name_labels.gcpKms': string
   'connectors.newArtifactRepository': string
   'connectors.newRelic.accountIdFieldLabel': string
@@ -2876,6 +2877,8 @@ export interface StringsMap {
   'connectors.sumologic.urlValidation': string
   'connectors.tenantId': string
   'connectors.tenantIdRequired': string
+  'connectors.terraformCloud.url': string
+  'connectors.terraformCloud.urlValidation': string
   'connectors.testConnectionStep.errorDetails': string
   'connectors.testConnectionStep.executingOn': string
   'connectors.testConnectionStep.installNewDelegate': string
@@ -2920,6 +2923,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.spot': string
   'connectors.testConnectionStep.validationText.sumologic': string
   'connectors.testConnectionStep.validationText.tas': string
+  'connectors.testConnectionStep.validationText.terraform': string
   'connectors.testConnectionStep.validationText.testingURLReachability': string
   'connectors.testConnectionStep.validationText.vault': string
   'connectors.testConnectionStep.verificationSuccessful': string
@@ -2961,6 +2965,7 @@ export interface StringsMap {
   'connectors.title.spot': string
   'connectors.title.sumologic': string
   'connectors.title.tas': string
+  'connectors.title.terraform': string
   'connectors.unableToCreateConnector': string
   'connectors.unableToUpdateConnector': string
   'connectors.updatedSuccessfully': string
