@@ -408,6 +408,9 @@ export function getManifestLocation(manifestType: ManifestTypes, manifestStore: 
       ManifestDataType.AsgConfiguration,
       ManifestDataType.AsgScalingPolicy,
       ManifestDataType.AsgScheduledUpdateGroupAction,
+      ManifestDataType.TasManifest,
+      ManifestDataType.TasAutoScaler,
+      ManifestDataType.TasVars,
       ManifestDataType.GoogleCloudFunctionDefinition
     ].includes(manifestType):
       return 'store.spec.paths'
