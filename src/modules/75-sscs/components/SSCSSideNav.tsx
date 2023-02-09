@@ -48,15 +48,13 @@ export default function SSCSSideNav(): React.ReactElement {
         }}
       />
       {showLinks && (
-        <React.Fragment>
-          <>
-            <SidebarLink label={getString('overview')} to={routes.toProjectOverview(params)} />
-            <SidebarLink label={getString('common.pipelineExecution')} to={routes.toDeployments(params)} />
-            <SidebarLink label={getString('pipelines')} to={routes.toPipelines(params)} />
-            <SidebarLink label={getString('sscs.allowDenyList')} to={routes.toAllowDenyList(params)} />
-            <ProjectSetupMenu module={module} />
-          </>
-        </React.Fragment>
+        <>
+          <SidebarLink label={getString('overview')} to={routes.toProjectOverview(params)} />
+          <SidebarLink label={getString('common.pipelineExecution')} to={routes.toDeployments(params)} />
+          <SidebarLink label={getString('pipelines')} to={routes.toPipelines(params)} />
+          <SidebarLink label={getString('sscs.allowDenyList')} to={routes.toAllowDenyList(params)} />
+          <ProjectSetupMenu module={module} />
+        </>
       )}
     </Layout.Vertical>
   )

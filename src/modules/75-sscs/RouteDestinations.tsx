@@ -40,7 +40,7 @@ const RedirectToProjectOverviewPage = (): React.ReactElement => {
           accountId,
           orgIdentifier: selectedProject.orgIdentifier || 'default',
           projectIdentifier: selectedProject.identifier,
-          ...moduleParams
+          module: 'sscs'
         })}
       />
     )
@@ -59,9 +59,9 @@ export default (
       exact
       sidebarProps={SSCSSideNavProps}
       path={[
-        routes.toAllowDenyList({ ...accountPathProps, ...projectPathProps, ...moduleParams }),
         routes.toSSCSOverview({ ...accountPathProps }),
-        routes.toProjectOverview({ ...accountPathProps, ...projectPathProps, ...moduleParams })
+        routes.toAllowDenyList({ ...projectPathProps, ...moduleParams }),
+        routes.toProjectOverview({ ...projectPathProps, ...moduleParams })
       ]}
     >
       <SSCSApp />
