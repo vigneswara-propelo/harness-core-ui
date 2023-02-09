@@ -93,11 +93,13 @@ export default function CDSideNav(): React.ReactElement {
   }, [selectedProject?.identifier])
 
   React.useEffect(() => {
+    /* istanbul ignore else */
     if (!fetchingPipelines && fetchPipelinesData) {
       const { data, status } = fetchPipelinesData
       const isGettingStartedEnabled =
         status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0
       setShowGetStartedCDTabInMainMenu(isGettingStartedEnabled)
+      /* istanbul ignore else */
       if (isGettingStartedEnabled) {
         isDeploymentPage && history.replace(routes.toGetStartedWithCD({ ...params, module }))
       }
@@ -111,6 +113,7 @@ export default function CDSideNav(): React.ReactElement {
       <ProjectSelector
         moduleFilter={ModuleName.CD}
         onSelect={data => {
+          setShowGetStartedCDTabInMainMenu(false)
           updateAppStore({ selectedProject: data })
           if (connectorId) {
             history.push(
@@ -177,13 +180,25 @@ export default function CDSideNav(): React.ReactElement {
             )
           } else if (projectIdentifier && !pipelineIdentifier) {
             // changing project
-            history.push(
-              compile(routeMatch.path)({
-                ...routeMatch.params,
-                projectIdentifier: data.identifier,
-                orgIdentifier: data.orgIdentifier
-              })
-            )
+            if (!showGetStartedCDTabInMainMenu) {
+              history.push(
+                compile(routeMatch.path)({
+                  ...routeMatch.params,
+                  projectIdentifier: data.identifier,
+                  orgIdentifier: data.orgIdentifier
+                })
+              )
+            } else {
+              // If redirecting from blank project to populated project, move to deployments
+              history.push(
+                routes.toDeployments({
+                  projectIdentifier: data.identifier,
+                  orgIdentifier: data.orgIdentifier as string,
+                  accountId,
+                  module
+                })
+              )
+            }
           } else if (experience) {
             // when it's on trial page, forward to get-started (behind FF)/ pipeline
             history.push(
