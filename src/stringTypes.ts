@@ -3865,7 +3865,7 @@ export interface StringsMap {
   'pipeline.failureStrategies.tabHasErrors': string
   'pipeline.failureStrategies.title': string
   'pipeline.failureStrategies.validation.actionRequired': string
-  'pipeline.failureStrategies.validation.arrayOrUndefined': string
+  'pipeline.failureStrategies.validation.arrayOrRuntime': string
   'pipeline.failureStrategies.validation.ciCodebaseRequired': string
   'pipeline.failureStrategies.validation.errorsMinimum': string
   'pipeline.failureStrategies.validation.errorsRequired': string

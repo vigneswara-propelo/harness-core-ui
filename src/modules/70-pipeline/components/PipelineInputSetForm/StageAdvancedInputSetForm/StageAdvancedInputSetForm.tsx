@@ -30,7 +30,10 @@ import { useStrings } from 'framework/strings'
 import { getDefaultMonacoConfig } from '@common/components/MonacoTextField/MonacoTextField'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
-import css from './PipelineInputSetForm.module.scss'
+import type { StageType } from '@pipeline/utils/stageHelpers'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { FailureStrategiesInputSetForm } from './FailureStrategiesInputSetForm'
+import css from '../PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface StageAdvancedInputSetFormProps {
@@ -41,6 +44,8 @@ interface StageAdvancedInputSetFormProps {
   allowableTypes?: AllowedTypes
   delegateSelectors?: string[] | string
   skipInstances?: string | boolean
+  stageType: StageType
+  viewType?: StepViewType
 }
 
 interface ConditionalExecutionFormProps {
@@ -195,7 +200,9 @@ export function StageAdvancedInputSetForm({
   stageIdentifier,
   allowableTypes,
   delegateSelectors = [],
-  skipInstances
+  skipInstances,
+  stageType,
+  viewType
 }: StageAdvancedInputSetFormProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -222,6 +229,16 @@ export function StageAdvancedInputSetForm({
             />
           </div>
         )}
+        {!isEmpty(deploymentStageTemplate?.failureStrategies) ? (
+          <div className={cx(css.nestedAccordions, stepCss.formGroup, stepCss.md)}>
+            <FailureStrategiesInputSetForm
+              stageType={stageType}
+              readonly={readonly}
+              path={`${path}.failureStrategies`}
+              viewType={viewType}
+            />
+          </div>
+        ) : null}
         {!isEmpty(deploymentStageTemplate?.strategy) && (
           <div className={cx(css.nestedAccordions, stepCss.formGroup, css.runTimeWidth)}>
             <StrategyForm readonly={readonly} path={`${path}.strategy`} />

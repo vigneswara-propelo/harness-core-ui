@@ -39,6 +39,7 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 import type { ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -189,13 +190,17 @@ const processNodeImpl = (
       addReplace(item, node)
 
       // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
-      if (Array.isArray(item.failureStrategies)) {
+      if (Array.isArray(item.failureStrategies) || isValueRuntimeInput(item.failureStrategies as any)) {
         node.failureStrategies = item.failureStrategies
-        const telemetryData = item.failureStrategies.map(strategy => ({
-          onError: strategy.onFailure?.errors?.join(', '),
-          action: strategy.onFailure?.action?.type
-        }))
-        telemetryData.length && trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
+
+        if (Array.isArray(item.failureStrategies)) {
+          const telemetryData = item.failureStrategies.map(strategy => ({
+            onError: strategy.onFailure?.errors?.join(', '),
+            action: strategy.onFailure?.action?.type
+          }))
+          telemetryData.length &&
+            trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
+        }
       }
       if (!data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
         set(node, 'spec.delegateSelectors', item.delegateSelectors)
@@ -547,7 +552,7 @@ export function RightDrawer(): React.ReactElement {
   const executionStrategyRef = React.useRef<ExecutionStrategyRefInterface | null>(null)
   const { getString } = useStrings()
   const isFullScreenDrawer = FullscreenDrawers.includes(type)
-  let title: React.ReactNode | null = null
+  let title: React.ReactNode | undefined = undefined
   if (data?.stepConfig?.isStepGroup) {
     stepData = stepsFactory.getStepData(StepType.StepGroup)
   }
@@ -605,8 +610,6 @@ export function RightDrawer(): React.ReactElement {
         }
       ></RightDrawerTitle>
     )
-  } else {
-    title = null
   }
 
   React.useEffect(() => {
