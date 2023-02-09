@@ -41,7 +41,7 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 
 import EnvironmentConfiguration from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentConfiguration/EnvironmentConfiguration'
 
-import css from './DeployInfrastructureStep.module.scss'
+import css from './DeployEnvironmentEntityStep.module.scss'
 
 export interface AddEditEnvironmentModalProps {
   data: NGEnvironmentConfig
