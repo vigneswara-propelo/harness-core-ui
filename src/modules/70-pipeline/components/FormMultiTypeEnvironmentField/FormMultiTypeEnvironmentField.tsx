@@ -19,6 +19,7 @@ import {
   HarnessDocTooltip,
   Layout,
   MultiTypeInputType,
+  MultiTypeInputValue,
   SelectOption,
   Tag,
   Text
@@ -56,7 +57,7 @@ export interface EnvironmentReferenceFieldProps extends Omit<IFormGroupProps, 'l
   multitypeInputValue?: MultiTypeInputType
   multiTypeProps?: Omit<MultiTypeReferenceInputProps<EnvironmentResponseDTO>, 'name' | 'referenceSelectProps'>
   setRefValue?: boolean
-  onChange?: (service: any) => void
+  onChange?: (environment: any, valueType?: MultiTypeInputValue, type?: MultiTypeInputType) => void
   selected?: string
   defaultScope?: Scope
   width?: number
@@ -224,7 +225,7 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
             } else {
               formik?.setFieldValue(name, defaultTo(val, ''))
               setSelectedValue(defaultTo(val, ''))
-              onChange?.(val)
+              onChange?.(val, undefined, type1)
             }
           }}
           value={Array.isArray(selectedValue) ? '' : selectedValue}
