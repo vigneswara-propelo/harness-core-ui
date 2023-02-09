@@ -8524,17 +8524,24 @@ export interface StringsMap {
   'cv.sliMissingDataTypeIsRequired': string
   'cv.sloAnalysisTakingLong': string
   'cv.sloCreateInfo': string
+  'cv.sloDowntime.NoData': string
+  'cv.sloDowntime.NoDataSuggestion': string
   'cv.sloDowntime.addDowntime': string
   'cv.sloDowntime.category': string
+  'cv.sloDowntime.downtimeCreated': string
   'cv.sloDowntime.downtimeName': string
+  'cv.sloDowntime.downtimeUpdated': string
   'cv.sloDowntime.durationText': string
   'cv.sloDowntime.info': string
   'cv.sloDowntime.label': string
+  'cv.sloDowntime.msList': string
   'cv.sloDowntime.noData': string
+  'cv.sloDowntime.numberOfSLOs': string
   'cv.sloDowntime.repeatEndsOn': string
   'cv.sloDowntime.repeatEvery': string
   'cv.sloDowntime.scheduledMaintenance': string
   'cv.sloDowntime.selectCategory': string
+  'cv.sloDowntime.selectMonitoredServices': string
   'cv.sloDowntime.steps.downtimeWindow': string
   'cv.sloDowntime.steps.identification': string
   'cv.sloDowntime.steps.monitoredServices': string
