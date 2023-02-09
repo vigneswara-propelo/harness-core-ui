@@ -17,7 +17,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
@@ -117,7 +117,11 @@ const ResourceGroupsList: React.FC = () => {
           </Layout.Horizontal>
         }
       />
-      <PageBody loading={loading} retryOnError={() => refetch()} error={error ? getRBACErrorMessage(error) : ''}>
+      <PageBody
+        loading={loading}
+        retryOnError={() => refetch()}
+        error={error ? getRBACErrorMessage(error as RBACError) : ''}
+      >
         <ListHeader
           value={sort}
           sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
