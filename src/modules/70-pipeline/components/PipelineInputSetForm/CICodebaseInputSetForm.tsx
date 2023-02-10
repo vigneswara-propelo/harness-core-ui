@@ -626,6 +626,12 @@ function CICodebaseInputSetFormInternal({
       : [MultiTypeInputType.FIXED]
   }, [viewTypeMetadata?.isTemplateBuilder])
 
+  const AllowableTypesForCodebaseRepoName = useMemo((): AllowedTypesWithRunTime[] => {
+    return viewTypeMetadata?.isTemplateBuilder || viewTypeMetadata?.isTemplateDetailDrawer
+      ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+      : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+  }, [viewTypeMetadata?.isTemplateBuilder, viewTypeMetadata?.isTemplateDetailDrawer])
+
   const disableBuildRadioBtnSelection = useMemo(() => {
     return readonly || (codeBaseType === CodebaseTypes.BRANCH && isFetchingBranches)
   }, [readonly, codeBaseType, isFetchingBranches])
@@ -747,7 +753,7 @@ function CICodebaseInputSetFormInternal({
                             multiTextInputProps={{
                               multiTextInputProps: {
                                 expressions,
-                                allowableTypes: AllowableTypesForCodebaseProperties
+                                allowableTypes: AllowableTypesForCodebaseRepoName
                               },
                               disabled: readonly || isFetchingBranches,
                               onChange: debouncedFetchBranchesForRepo
