@@ -229,8 +229,7 @@ function OpenShiftTemplateWithGit({
                   placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                   className={templateCss.halfWidth}
                 />
-
-                {!!(connectionType === GitRepoName.Account && accountUrl) && (
+                {!!(connectionType === GitRepoName.Account || accountUrl) && (
                   <GitRepositoryName
                     accountUrl={accountUrl}
                     expressions={expressions}

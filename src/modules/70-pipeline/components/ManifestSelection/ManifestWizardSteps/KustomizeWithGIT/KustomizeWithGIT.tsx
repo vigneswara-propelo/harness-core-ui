@@ -250,8 +250,7 @@ function KustomizeWithGIT({
                   placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                   className={helmcss.halfWidth}
                 />
-
-                {!!(connectionType === GitRepoName.Account && accountUrl) && (
+                {!!(connectionType === GitRepoName.Account || accountUrl) && (
                   <GitRepositoryName
                     accountUrl={accountUrl}
                     expressions={expressions}
@@ -261,7 +260,6 @@ function KustomizeWithGIT({
                     isReadonly={isReadonly}
                   />
                 )}
-
                 <Layout.Horizontal flex spacing="huge" margin={{ top: 'small', bottom: 'small' }}>
                   <div className={helmcss.halfWidth}>
                     <FormInput.Select

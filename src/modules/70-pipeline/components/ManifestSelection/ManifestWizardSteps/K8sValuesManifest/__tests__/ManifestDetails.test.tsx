@@ -535,4 +535,45 @@ describe('Manifest Details tests', () => {
       })
     })
   })
+
+  test('when connector is expression repoName should be visible', async () => {
+    const prevStepData = {
+      connectorRef: '<+account.connector>',
+      store: 'Git'
+    }
+    const { container } = render(
+      <TestWrapper>
+        <K8sValuesManifest {...props} prevStepData={prevStepData} initialValues={initialValues} />
+      </TestWrapper>
+    )
+    expect(queryByNameAttribute('repoName', container)!).toBeDefined()
+    await act(async () => {
+      fireEvent.change(queryByNameAttribute('identifier', container)!, { target: { value: 'testidentifier' } })
+      fireEvent.change(queryByNameAttribute('gitFetchType', container)!, { target: { value: 'Branch' } })
+      fireEvent.change(queryByNameAttribute('branch', container)!, { target: { value: 'testBranch' } })
+      fireEvent.change(queryByNameAttribute('paths[0].path', container)!, { target: { value: 'test-path' } })
+      fireEvent.change(queryByNameAttribute('repoName', container)!, { target: { value: 'repo-name' } })
+    })
+    fireEvent.click(container.querySelector('button[type="submit"]')!)
+    await waitFor(() => {
+      expect(props.handleSubmit).toHaveBeenCalledWith({
+        manifest: {
+          identifier: 'testidentifier',
+          type: 'Values',
+          spec: {
+            store: {
+              spec: {
+                branch: 'testBranch',
+                connectorRef: '<+account.connector>',
+                gitFetchType: 'Branch',
+                paths: ['test-path'],
+                repoName: 'repo-name'
+              },
+              type: 'Git'
+            }
+          }
+        }
+      })
+    })
+  })
 })

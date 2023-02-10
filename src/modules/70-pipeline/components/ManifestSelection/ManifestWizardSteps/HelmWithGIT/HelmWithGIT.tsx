@@ -268,8 +268,7 @@ function HelmWithGIT({
                 placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                 className={helmcss.halfWidth}
               />
-
-              {!!(connectionType === GitRepoName.Account && accountUrl) && (
+              {!!(connectionType === GitRepoName.Account || accountUrl) && (
                 <GitRepositoryName
                   accountUrl={accountUrl}
                   expressions={expressions}
