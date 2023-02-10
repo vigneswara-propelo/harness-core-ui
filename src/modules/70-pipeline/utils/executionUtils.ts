@@ -87,7 +87,8 @@ export enum StepNodeType {
   INFRASTRUCTURE_V2 = 'INFRASTRUCTURE_V2',
   INFRASTRUCTURE_TASKSTEP_V2 = 'INFRASTRUCTURE_TASKSTEP_V2',
   SERVICE_V3 = 'SERVICE_V3',
-  PIPELINE_STAGE = 'PIPELINE_STAGE'
+  PIPELINE_STAGE = 'PIPELINE_STAGE',
+  INTEGRATION_STAGE_STEP_PMS = 'IntegrationStageStepPMS'
 }
 
 export const NonSelectableStepNodes: StepNodeType[] = [
@@ -99,7 +100,10 @@ export const NonSelectableStepNodes: StepNodeType[] = [
   StepNodeType.NG_EXECUTION,
   StepNodeType.PIPELINE_STAGE,
   StepNodeType.STRATEGY,
-  StepNodeType.STEP_GROUP
+  StepNodeType.STEP_GROUP,
+  StepNodeType.NG_SECTION_WITH_ROLLBACK_INFO,
+  StepNodeType.ROLLBACK_OPTIONAL_CHILD_CHAIN,
+  StepNodeType.INTEGRATION_STAGE_STEP_PMS
 ]
 
 export const TopLevelStepNodes: StepNodeType[] = [
@@ -132,7 +136,8 @@ export const StepTypeIconsMap: { [key in StepNodeType]: IconName } = {
   'GITOPS CLUSTERS': 'gitops-clusters',
   STRATEGY: 'step-group',
   RUNTIME_INPUT: 'runtime-input',
-  PIPELINE_STAGE: 'chained-pipeline'
+  PIPELINE_STAGE: 'chained-pipeline',
+  IntegrationStageStepPMS: 'step-group'
 }
 
 export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
