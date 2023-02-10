@@ -416,7 +416,7 @@ export const validateStage = ({
           )
           const serviceStepErrorResponse = serviceStep?.validateInputSet({
             data: serviceInput.serviceInputs?.serviceDefinition.spec,
-            template: templateStageConfig?.services?.values?.[index].serviceInputs?.serviceDefinition.spec,
+            template: templateStageConfig?.services?.values?.[index]?.serviceInputs?.serviceDefinition?.spec,
             getString,
             viewType
           })
