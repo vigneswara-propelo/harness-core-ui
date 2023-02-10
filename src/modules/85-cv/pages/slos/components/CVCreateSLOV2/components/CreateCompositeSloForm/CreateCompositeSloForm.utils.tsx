@@ -196,11 +196,13 @@ export const RenderProject: Renderer<CellProps<SLOObjective | SLOConsumptionBrea
 export const getProjectAndOrgColumn = ({ getString }: { getString: UseStringsReturn['getString'] }) => [
   {
     Header: getString('orgLabel').toUpperCase(),
-    Cell: RenderOrg
+    Cell: RenderOrg,
+    width: '15%'
   },
   {
     Header: getString('projectLabel').toUpperCase(),
-    Cell: RenderProject
+    Cell: RenderProject,
+    width: '15%'
   }
 ]
 

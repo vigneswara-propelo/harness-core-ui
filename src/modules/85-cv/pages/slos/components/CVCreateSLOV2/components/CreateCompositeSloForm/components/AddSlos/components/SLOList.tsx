@@ -206,23 +206,28 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
     ...(getProjectAndOrgColumn({ getString }) as Column<SLOHealthListView>[]),
     {
       Header: getString('cv.slos.monitoredService').toUpperCase(),
-      Cell: RenderMonitoredService
+      Cell: RenderMonitoredService,
+      width: '17%'
     },
     {
       Header: getString('cv.slos.userJourney').toUpperCase(),
-      Cell: RenderUserJourney
+      Cell: RenderUserJourney,
+      width: '15%'
     },
     {
       Header: getString('tagsLabel').toUpperCase(),
-      Cell: RenderTags
+      Cell: RenderTags,
+      width: '10%'
     },
     {
       Header: getString('cv.slos.sliType'),
-      Cell: RenderSLIType
+      Cell: RenderSLIType,
+      width: '15%'
     },
     {
       Header: getString('cv.slos.target').toUpperCase(),
-      Cell: RenderTarget
+      Cell: RenderTarget,
+      width: '15%'
     }
   ]
 
