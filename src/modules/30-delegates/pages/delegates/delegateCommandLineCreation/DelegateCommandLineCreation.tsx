@@ -125,7 +125,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
           setTerraFormDataToCommand()
         }
       } else {
-        refetch({ queryParams: { accountId, commandType } })
+        refetch({ queryParams: { accountId, commandType, orgId: orgIdentifier, projectId: projectIdentifier } })
       }
     }
   }, [commandType])
@@ -156,6 +156,12 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
   }
   const onDelegateError = () => {
     setShowVerifyButton(false)
+  }
+  const checkIfErrorBlockAlreadyVisible = () => {
+    if (!showVerifyButton && verifyButtonClicked) {
+      setShowVerifyButton(true)
+    }
+    setVerifyButtonClicked(false)
   }
   const kubernetesDelegateButtons = (
     <Layout.Horizontal spacing="none" margin={{ bottom: 'xlarge', top: 'none' }}>
@@ -250,7 +256,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
           const validTextLength = delegateLengthSchema.isValidSync({ name: latestValue })
           setErrorDelegateNameLength(!validTextLength)
           setErrorDelegateName(!validText)
-          setVerifyButtonClicked(false)
+          checkIfErrorBlockAlreadyVisible()
           setDelegateName(latestValue)
           setCommand(originalCommand.replace(new RegExp(delegateDefaultName, 'g'), latestValue))
         }}
@@ -282,6 +288,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
                   text={getString('verify')}
                   onClick={() => {
                     setVerifyButtonClicked(true)
+                    setShowVerifyButton(false)
                   }}
                   margin={{ right: 'xlarge' }}
                 />

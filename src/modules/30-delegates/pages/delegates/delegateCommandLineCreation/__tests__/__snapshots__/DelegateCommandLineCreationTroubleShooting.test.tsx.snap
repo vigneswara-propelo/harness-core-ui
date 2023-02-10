@@ -355,7 +355,6 @@ exports[`Delegate Command line creation failure troubleShoot click for Kubernete
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-primary8"
                 >
                   <a
-                    href="/account/dummy/settings/resources/delegates/tokens"
                     rel="noreferrer"
                     target="_blank"
                   >
@@ -376,7 +375,7 @@ exports[`Delegate Command line creation failure troubleShoot click for Kubernete
             <p
               class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--font-variation-yaml"
             >
-              delegate.verifyDelegateYamlCmnd
+              delegates.commandLineCreation.lastCommandKubernetesLastLine
             </p>
             <div
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center"
