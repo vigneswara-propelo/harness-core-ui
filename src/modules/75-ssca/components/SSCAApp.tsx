@@ -6,20 +6,20 @@
  */
 
 import React, { lazy } from 'react'
-import type { SSCSCustomMicroFrontendProps } from '@sscs/interfaces/SSCSCustomMicroFrontendProps.types'
+import type { SSCACustomMicroFrontendProps } from '@ssca/interfaces/SSCACustomMicroFrontendProps.types'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
-import * as sscsService from 'services/sscs'
+import * as sscaService from 'services/ssca'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { Duration } from '@common/components'
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteSSCSApp = lazy(() => import('sscs/MicroFrontendApp'))
+const RemoteSSCAApp = lazy(() => import('ssca/MicroFrontendApp'))
 
-export const SSCSApp = (): React.ReactElement => (
-  <ChildAppMounter<SSCSCustomMicroFrontendProps>
-    ChildApp={RemoteSSCSApp}
+export const SSCAApp = (): React.ReactElement => (
+  <ChildAppMounter<SSCACustomMicroFrontendProps>
+    ChildApp={RemoteSSCAApp}
     customHooks={{ useQueryParams, useUpdateQueryParams }}
     customComponents={{ Duration }}
-    services={sscsService}
+    services={sscaService}
   />
 )

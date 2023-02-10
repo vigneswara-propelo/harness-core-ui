@@ -1,9 +1,9 @@
 import type { Duration } from '@common/components'
 import type { useQueryParams, useUpdateQueryParams } from '@common/hooks'
-import type * as sscsService from 'services/sscs'
+import type * as sscaService from 'services/ssca'
 
-export interface SSCSCustomMicroFrontendProps {
-  services: typeof sscsService
+export interface SSCACustomMicroFrontendProps {
+  services: typeof sscaService
   customHooks: {
     useQueryParams: typeof useQueryParams
     useUpdateQueryParams: typeof useUpdateQueryParams

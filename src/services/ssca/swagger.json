@@ -1589,7 +1589,7 @@
           "minLength": 3
         }
       },
-      "description": "A sbom process request on sscs",
+      "description": "A sbom process request on ssca",
       "example": {
         "AccountID": "log4Jj",
         "ArtifactID": "log4Jj",
@@ -2108,7 +2108,7 @@
           "minLength": 3
         }
       },
-      "description": "A package search request on sscs",
+      "description": "A package search request on ssca",
       "example": {
         "AccountName": "log4Jj",
         "Originator": "log4Jj",

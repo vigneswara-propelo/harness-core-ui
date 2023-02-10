@@ -887,7 +887,7 @@ export interface SbomprocessorProcesssbomNotFoundResponseBody {
 }
 
 /**
- * A sbom process request on sscs
+ * A sbom process request on ssca
  */
 export interface SbomprocessorProcesssbomRequestBody {
   /**
@@ -1270,7 +1270,7 @@ export interface SystemVersionResponseBody {
 }
 
 /**
- * A package search request on sscs
+ * A package search request on ssca
  */
 export interface PackageReferenceResponseBody {
   /**
@@ -1349,7 +1349,7 @@ export const DevLogin = (props: DevLoginProps) => (
   >
     verb="POST"
     path={`/api/login`}
-    base={getConfig('sscs/api/v1')}
+    base={getConfig('ssca/api/v1')}
     {...props}
   />
 )
@@ -1382,7 +1382,7 @@ export const useDevLogin = (props: UseDevLoginProps) =>
     DevLoginQueryParams,
     DevLoginRequestBody,
     void
-  >('POST', `/api/login`, { base: getConfig('sscs/api/v1'), ...props })
+  >('POST', `/api/login`, { base: getConfig('ssca/api/v1'), ...props })
 
 export interface PullrequestsListQueryParams {
   /**
@@ -1433,7 +1433,7 @@ export const PullrequestsList = (props: PullrequestsListProps) => (
     void
   >
     path={`/api/v1/pullrequests`}
-    base={getConfig('sscs/api/v1')}
+    base={getConfig('ssca/api/v1')}
     {...props}
   />
 )
@@ -1470,7 +1470,7 @@ export const usePullrequestsList = (props: UsePullrequestsListProps) =>
     | PullrequestsListBadGatewayResponseBody,
     PullrequestsListQueryParams,
     void
-  >(`/api/v1/pullrequests`, { base: getConfig('sscs/api/v1'), ...props })
+  >(`/api/v1/pullrequests`, { base: getConfig('ssca/api/v1'), ...props })
 
 export interface PullrequestsFindQueryParams {
   /**
@@ -1533,7 +1533,7 @@ export const PullrequestsFind = ({ source_identifier, number, ...props }: Pullre
     PullrequestsFindPathParams
   >
     path={`/api/v1/pullrequests/${source_identifier}/${number}`}
-    base={getConfig('sscs/api/v1')}
+    base={getConfig('ssca/api/v1')}
     {...props}
   />
 )
@@ -1574,7 +1574,7 @@ export const usePullrequestsFind = ({ source_identifier, number, ...props }: Use
   >(
     (paramsInPath: PullrequestsFindPathParams) =>
       `/api/v1/pullrequests/${paramsInPath.source_identifier}/${paramsInPath.number}`,
-    { base: getConfig('sscs/api/v1'), pathParams: { source_identifier, number }, ...props }
+    { base: getConfig('ssca/api/v1'), pathParams: { source_identifier, number }, ...props }
   )
 
 export type SbomprocessorProcesssbomProps = Omit<
@@ -1611,7 +1611,7 @@ export const SbomprocessorProcesssbom = (props: SbomprocessorProcesssbomProps) =
   >
     verb="POST"
     path={`/api/v1/sbomprocessor`}
-    base={getConfig('sscs/api/v1')}
+    base={getConfig('ssca/api/v1')}
     {...props}
   />
 )
@@ -1647,7 +1647,7 @@ export const useSbomprocessorProcesssbom = (props: UseSbomprocessorProcesssbomPr
     void,
     SbomprocessorProcesssbomRequestBody,
     void
-  >('POST', `/api/v1/sbomprocessor`, { base: getConfig('sscs/api/v1'), ...props })
+  >('POST', `/api/v1/sbomprocessor`, { base: getConfig('ssca/api/v1'), ...props })
 
 export interface SearchFindQueryParams {
   /**
@@ -1706,7 +1706,7 @@ export const SearchFind = ({ packagename, ...props }: SearchFindProps) => (
     SearchFindPathParams
   >
     path={`/api/v1/search/${packagename}`}
-    base={getConfig('sscs/api/v1')}
+    base={getConfig('ssca/api/v1')}
     {...props}
   />
 )
@@ -1745,7 +1745,7 @@ export const useSearchFind = ({ packagename, ...props }: UseSearchFindProps) =>
     SearchFindQueryParams,
     SearchFindPathParams
   >((paramsInPath: SearchFindPathParams) => `/api/v1/search/${paramsInPath.packagename}`, {
-    base: getConfig('sscs/api/v1'),
+    base: getConfig('ssca/api/v1'),
     pathParams: { packagename },
     ...props
   })
@@ -1761,7 +1761,7 @@ export type SystemHealthProps = Omit<
 export const SystemHealth = (props: SystemHealthProps) => (
   <Get<void, SystemHealthInternalServerResponseBody | SystemHealthBadGatewayResponseBody, void, void>
     path={`/api/v1/system/health`}
-    base={getConfig('sscs/api/v1')}
+    base={getConfig('ssca/api/v1')}
     {...props}
   />
 )
@@ -1777,7 +1777,7 @@ export type UseSystemHealthProps = Omit<
 export const useSystemHealth = (props: UseSystemHealthProps) =>
   useGet<void, SystemHealthInternalServerResponseBody | SystemHealthBadGatewayResponseBody, void, void>(
     `/api/v1/system/health`,
-    { base: getConfig('sscs/api/v1'), ...props }
+    { base: getConfig('ssca/api/v1'), ...props }
   )
 
 export type SystemVersionProps = Omit<
@@ -1801,7 +1801,7 @@ export const SystemVersion = (props: SystemVersionProps) => (
     void
   >
     path={`/api/v1/system/version`}
-    base={getConfig('sscs/api/v1')}
+    base={getConfig('ssca/api/v1')}
     {...props}
   />
 )
@@ -1825,4 +1825,4 @@ export const useSystemVersion = (props: UseSystemVersionProps) =>
     SystemVersionInternalServerResponseBody | SystemVersionBadGatewayResponseBody,
     void,
     void
-  >(`/api/v1/system/version`, { base: getConfig('sscs/api/v1'), ...props })
+  >(`/api/v1/system/version`, { base: getConfig('ssca/api/v1'), ...props })

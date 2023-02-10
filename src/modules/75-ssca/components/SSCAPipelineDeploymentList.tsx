@@ -13,7 +13,7 @@ import { useQueryParams } from '@common/hooks'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import { ExecutionList } from '@pipeline/pages/execution-list/ExecutionList'
 
-export default function SSCSPipelineDeploymentList(): React.ReactElement {
+export default function SSCAPipelineDeploymentList(): React.ReactElement {
   const { pipelineIdentifier, orgIdentifier, projectIdentifier, accountId, module } =
     useParams<PipelineType<PipelinePathProps>>()
 

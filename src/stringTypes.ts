@@ -997,8 +997,8 @@ export interface StringsMap {
   'common.sourceBranchPlaceholder': string
   'common.specified': string
   'common.specify': string
-  'common.sscs': string
-  'common.sscsText': string
+  'common.ssca': string
+  'common.sscaText': string
   'common.stable': string
   'common.stage': string
   'common.stageName': string
@@ -7672,7 +7672,7 @@ export interface StringsMap {
   'ci.usesLabel': string
   'ci.welcome': string
   'idp.idpAdmin': string
-  'sscs.allowDenyList': string
+  'ssca.allowDenyList': string
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string
   'cv.CompositeSLO.AddSLOMessage': string

@@ -15,18 +15,18 @@ import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'
-import SSCSSideNav from './components/SSCSSideNav'
-import SSCSPipelineDeploymentList from './components/SSCSPipelineDeploymentList'
-import { SSCSApp } from './components/SSCSApp'
+import SSCASideNav from './components/SSCASideNav'
+import SSCAPipelineDeploymentList from './components/SSCAPipelineDeploymentList'
+import { SSCAApp } from './components/SSCAApp'
 
-const SSCSSideNavProps: SidebarContext = {
-  navComponent: SSCSSideNav,
-  title: 'Software Supply Chain Security',
+const SSCASideNavProps: SidebarContext = {
+  navComponent: SSCASideNav,
+  title: 'Software Supply Chain Assurance',
   icon: 'sscs-main'
 }
 
 const moduleParams: ModulePathParams = {
-  module: ':module(sscs)'
+  module: ':module(ssca)'
 }
 
 const RedirectToProjectOverviewPage = (): React.ReactElement => {
@@ -40,39 +40,39 @@ const RedirectToProjectOverviewPage = (): React.ReactElement => {
           accountId,
           orgIdentifier: selectedProject.orgIdentifier || 'default',
           projectIdentifier: selectedProject.identifier,
-          module: 'sscs'
+          module: 'ssca'
         })}
       />
     )
   } else {
-    return <Redirect to={routes.toSSCSOverview({ accountId })} />
+    return <Redirect to={routes.toSSCAOverview({ accountId })} />
   }
 }
 
 export default (
   <>
-    <RouteWithLayout exact path={routes.toSSCS({ ...accountPathProps })}>
+    <RouteWithLayout exact path={routes.toSSCA({ ...accountPathProps })}>
       <RedirectToProjectOverviewPage />
     </RouteWithLayout>
 
     <RouteWithLayout
       exact
-      sidebarProps={SSCSSideNavProps}
+      sidebarProps={SSCASideNavProps}
       path={[
-        routes.toSSCSOverview({ ...accountPathProps }),
+        routes.toSSCAOverview({ ...accountPathProps }),
         routes.toAllowDenyList({ ...projectPathProps, ...moduleParams }),
         routes.toProjectOverview({ ...projectPathProps, ...moduleParams })
       ]}
     >
-      <SSCSApp />
+      <SSCAApp />
     </RouteWithLayout>
 
-    <Route path="/account/:accountId/:module(sscs)">
+    <Route path="/account/:accountId/:module(ssca)">
       <PipelineRouteDestinations
         moduleParams={moduleParams}
-        sidebarProps={SSCSSideNavProps}
+        sidebarProps={SSCASideNavProps}
         pipelineStudioComponent={PipelineStudio}
-        pipelineDeploymentListComponent={SSCSPipelineDeploymentList}
+        pipelineDeploymentListComponent={SSCAPipelineDeploymentList}
       />
     </Route>
   </>

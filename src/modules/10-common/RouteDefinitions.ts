@@ -2045,9 +2045,9 @@ const routes = {
       return `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/resources`
     }
   ),
-  // SSCS
-  toSSCS: withAccountId(() => '/sscs'),
-  toSSCSOverview: withAccountId(() => '/sscs/overview'),
+  // SSCA
+  toSSCA: withAccountId(() => '/ssca'),
+  toSSCAOverview: withAccountId(() => '/ssca/overview'),
   toAllowDenyList: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
       const path = `allow-deny-list`
@@ -2061,7 +2061,7 @@ const routes = {
       })
     }
   ),
-  toSSCSGettingStarted: withAccountId(() => '/sscs/getting-started'),
+  toSSCAGettingStarted: withAccountId(() => '/ssca/getting-started'),
   toIDP: withAccountId(() => '/idp'),
   toIDPAdmin: withAccountId(() => '/idp-admin')
 }

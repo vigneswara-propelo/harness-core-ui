@@ -1339,9 +1339,9 @@ artifacts:
 updated: Updated
 python: Python
 
-# SSCS module
-sscs: SSCS
-sscsText: Software Supply Chain Security
+# SSCA module
+ssca: SSCA
+sscaText: Software Supply Chain Assurance
 tickets:
   selectConnector: '[Select] Ticket Provider Connector'
   selectProjectName: '[Select] Project Name'

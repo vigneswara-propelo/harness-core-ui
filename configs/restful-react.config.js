@@ -229,13 +229,13 @@ module.exports = {
       base: `{getConfig("pm/api/v1")}`
     }
   },
-  sscs: {
-    output: 'src/services/sscs/index.tsx',
-    file: 'src/services/sscs/swagger.json',
+  ssca: {
+    output: 'src/services/ssca/index.tsx',
+    file: 'src/services/ssca/swagger.json',
     transformer: 'scripts/swagger-transform.js',
     customImport: `import { getConfig } from "../config";`,
     customProps: {
-      base: `{getConfig("sscs/api/v1")}`
+      base: `{getConfig("ssca/api/v1")}`
     }
   }
 }

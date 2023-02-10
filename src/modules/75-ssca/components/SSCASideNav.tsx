@@ -16,9 +16,9 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
 
-const module = 'sscs'
+const module = 'ssca'
 
-export default function SSCSSideNav(): React.ReactElement {
+export default function SSCASideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { updateAppStore } = useAppStore()
@@ -52,7 +52,7 @@ export default function SSCSSideNav(): React.ReactElement {
           <SidebarLink label={getString('overview')} to={routes.toProjectOverview(params)} />
           <SidebarLink label={getString('common.pipelineExecution')} to={routes.toDeployments(params)} />
           <SidebarLink label={getString('pipelines')} to={routes.toPipelines(params)} />
-          <SidebarLink label={getString('sscs.allowDenyList')} to={routes.toAllowDenyList(params)} />
+          <SidebarLink label={getString('ssca.allowDenyList')} to={routes.toAllowDenyList(params)} />
           <ProjectSetupMenu module={module} />
         </>
       )}

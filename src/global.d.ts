@@ -211,7 +211,7 @@ declare module 'iacm/IACMPipelineResources' {
   export default ChildApp
 }
 
-declare module 'sscs/MicroFrontendApp' {
+declare module 'ssca/MicroFrontendApp' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
