@@ -211,7 +211,7 @@ export const IACNavItem = (): JSX.Element => {
             color={Color.WHITE}
             className={css.text}
           >
-            <String stringID="common.iacm" />
+            <String stringID="common.infrastructures" />
           </Text>
         </Layout.Vertical>
       </Link>
