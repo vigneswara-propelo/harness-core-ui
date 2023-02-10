@@ -1625,5 +1625,6 @@ commitsOn: 'Commits on'
 vmLabel: VM
 emptyExecutionListMsg: 'There are no executions for this given criteria.'
 lastDeployed: 'Last deployed'
+prTitle: PR Title
 ServiceDetail:
   envCardEmptyStateMsg: 'There are no environments with instances in this service.'

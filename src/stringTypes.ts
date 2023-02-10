@@ -4304,6 +4304,7 @@ export interface StringsMap {
   'pipeline.policyEvaluations.policySetsApplied': string
   'pipeline.policyEvaluations.title': string
   'pipeline.poweredByHarness': string
+  'pipeline.prTitle': string
   'pipeline.previewTemplateLabel': string
   'pipeline.progressPercentage': string
   'pipeline.projectHelperText': string
@@ -7634,7 +7635,6 @@ export interface StringsMap {
   'ci.portBindings': string
   'ci.postCommandLabel': string
   'ci.prSymbol': string
-  'ci.prTitle': string
   'ci.preCommandLabel': string
   'ci.previous': string
   'ci.remoteCacheImage.dockerInfo': string
