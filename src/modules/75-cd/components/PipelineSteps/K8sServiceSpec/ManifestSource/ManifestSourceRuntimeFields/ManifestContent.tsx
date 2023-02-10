@@ -44,7 +44,8 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
     formik,
     stageIdentifier,
     pathFieldlabel,
-    stepViewType
+    stepViewType,
+    fileUsage
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -69,7 +70,7 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
       className={cx(css.inputWidth, css.layoutVerticalSpacing)}
     >
       <ManifestGitStoreRuntimeFields {...props} />
-      <ManifestCommonRuntimeFields {...props} />
+      <ManifestCommonRuntimeFields {...props} fileUsage={fileUsage} />
       <CustomRemoteManifestRuntimeFields {...props} />
       {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
         <div className={css.verticalSpacingInput}>
@@ -100,6 +101,7 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
               expressions={expressions}
               isNameOfArrayType
               type={SELECT_FILES_TYPE.FILE_STORE}
+              fileUsage={fileUsage}
               formik={formik}
             />
           ) : (

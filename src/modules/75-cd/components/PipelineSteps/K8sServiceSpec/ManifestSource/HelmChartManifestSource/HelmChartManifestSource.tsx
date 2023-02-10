@@ -39,6 +39,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { FileUsage } from '@filestore/interfaces/FileStore'
 import {
   getDefaultQueryParam,
   getFinalQueryParamData,
@@ -78,7 +79,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     stageIdentifier,
     serviceIdentifier,
     stepViewType,
-    pipelineIdentifier
+    pipelineIdentifier,
+    fileUsage = FileUsage.MANIFEST_FILE
   } = props
   const { getString } = useStrings()
   const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
@@ -750,6 +752,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               expressions={expressions}
               isNameOfArrayType
               type={SELECT_FILES_TYPE.FILE_STORE}
+              fileUsage={fileUsage}
               formik={formik}
             />
           ) : (
@@ -767,7 +770,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
         </div>
       )}
       <CustomRemoteManifestRuntimeFields {...props} />
-      <ManifestCommonRuntimeFields {...props} />
+      <ManifestCommonRuntimeFields {...props} fileUsage={fileUsage} />
 
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.enableDeclarativeRollback`, template) && (

@@ -169,6 +169,7 @@ function AttachPathYamlFlow({
                         name="valuesPaths"
                         allowableTypes={allowableTypes}
                         fileType={FILE_TYPE_VALUES.FILE_STORE}
+                        fileUsage={FileUsage.MANIFEST_FILE}
                         formik={formik}
                         expressions={expressions}
                         values={(formik.values.valuesPaths as string | string[]) || ['']}
