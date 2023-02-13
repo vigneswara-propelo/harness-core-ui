@@ -433,10 +433,6 @@ function RunPipelineFormBasic({
   }, [inputSetSelected])
 
   useEffect(() => {
-    !isEmpty(formikRef?.current?.values) && setCurrentPipeline(formikRef?.current?.values)
-  }, [selectedStageData])
-
-  useEffect(() => {
     if (inputSetYAML) {
       setExistingProvide('provide')
     } else {
@@ -651,6 +647,13 @@ function RunPipelineFormBasic({
     return areDependentStagesSelected
   }, [selectedStageData])
 
+  const selectedStagesHandler = (selectedStages: StageSelectionData): void => {
+    setSelectedStageData(selectedStages)
+
+    // setting up the current pipeline to pass to input sets for merge API call to retain the existing values
+    !isEmpty(formikRef?.current?.values) && setCurrentPipeline(formikRef?.current?.values)
+  }
+
   useEffect(() => {
     if (shouldValidateForm) {
       formikRef.current?.validateForm(inputSet.pipeline)
@@ -788,7 +791,7 @@ function RunPipelineFormBasic({
                   <RunModalHeader
                     pipelineExecutionId={pipelineExecutionId}
                     selectedStageData={selectedStageData}
-                    setSelectedStageData={setSelectedStageData}
+                    setSelectedStageData={selectedStagesHandler}
                     setSkipPreFlightCheck={setSkipPreFlightCheck}
                     handleModeSwitch={handleModeSwitch}
                     runClicked={runClicked}
