@@ -1,8 +1,16 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import type {
   ResponseArtifactInstanceDetails,
   ResponseEnvironmentInstanceDetails,
   ResponseInstanceDetailGroupedByPipelineExecutionList,
-  ResponseInstanceGroupedByEnvironmentList
+  ResponseInstanceGroupedByEnvironmentList,
+  ResponseInstanceGroupedOnArtifactList
 } from 'services/cd-ng'
 
 export const envInstanceDetailsMock: ResponseEnvironmentInstanceDetails = {
@@ -255,6 +263,78 @@ export const artifactInstanceDetailsMock: ResponseArtifactInstanceDetails = {
             }
           ]
         }
+      }
+    ]
+  },
+  metaData: undefined,
+  correlationId: 'test'
+}
+
+export const artifactTableMock: ResponseInstanceGroupedOnArtifactList = {
+  status: 'SUCCESS',
+  data: {
+    instanceGroupedOnArtifactList: [
+      {
+        artifact: 'testArtifactName',
+        lastDeployedAt: 1675925501095,
+        instanceGroupedOnEnvironmentList: [
+          {
+            envId: 'sampleEnv',
+            envName: 'sampleEnv',
+            lastDeployedAt: 1675925501095,
+            instanceGroupedOnEnvironmentTypeList: [
+              {
+                environmentType: 'PreProduction',
+                lastDeployedAt: 1675925501095,
+                instanceGroupedOnInfrastructureList: [
+                  {
+                    infrastructureId: 'infra',
+                    infrastructureName: 'infra',
+                    clusterId: undefined,
+                    agentId: undefined,
+                    lastDeployedAt: 1675925501095,
+                    count: 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        artifact: 'testArtifactName2',
+        lastDeployedAt: 1675925501095,
+        instanceGroupedOnEnvironmentList: [
+          {
+            envId: 'sampleEnv2',
+            envName: 'sampleEnv2',
+            lastDeployedAt: 1675925501095,
+            instanceGroupedOnEnvironmentTypeList: [
+              {
+                environmentType: 'Production',
+                lastDeployedAt: 1675925501095,
+                instanceGroupedOnInfrastructureList: [
+                  {
+                    infrastructureId: undefined,
+                    infrastructureName: undefined,
+                    clusterId: 'clusterId',
+                    agentId: undefined,
+                    lastDeployedAt: 1675925501095,
+                    count: 1
+                  },
+                  {
+                    infrastructureId: undefined,
+                    infrastructureName: undefined,
+                    clusterId: undefined,
+                    agentId: undefined,
+                    lastDeployedAt: 1675925501095,
+                    count: 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   },

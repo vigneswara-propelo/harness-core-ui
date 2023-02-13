@@ -239,6 +239,7 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
               collapseHeaderClassName={css.collapseHeader}
               heading={<Text font={{ variation: FontVariation.SMALL }}>{`Instance - ${index + 1}`}</Text>} //todo text to decided later
               expandedHeading={<Text font={{ variation: FontVariation.SMALL }}>{`Instance - ${index + 1}`}</Text>}
+              isOpen={!index}
               collapsedIcon={'main-chevron-right'}
               expandedIcon={'main-chevron-down'}
             >

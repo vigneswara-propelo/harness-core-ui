@@ -8,7 +8,6 @@
 import React, { useEffect, useMemo } from 'react'
 import { defaultTo, isEmpty, isEqual, isUndefined } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import cx from 'classnames'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Color } from '@harness/design-system'
 import { Container, getErrorInfoFromErrorObject, Icon, PageError, Text } from '@harness/uicore'
@@ -17,36 +16,22 @@ import { DialogEmptyState } from '@cd/components/EnvironmentsV2/EnvironmentDetai
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { Table } from '@common/components'
 import {
-  GetActiveInstanceGroupedByEnvironmentQueryParams,
-  InstanceGroupedByEnvironment,
-  useGetActiveInstanceGroupedByEnvironment
+  GetActiveInstanceGroupedByArtifactQueryParams,
+  InstanceGroupedOnArtifact,
+  useGetActiveInstanceGroupedByArtifact
 } from 'services/cd-ng'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
-import { numberFormatter } from '@common/utils/utils'
 import type { ServiceDetailInstanceViewProps } from './ServiceDetailsInstanceView'
+import { RenderEnv, RenderEnvType, RenderInstanceCount, TableRowData } from './ServiceDetailsEnvTable'
 
 import css from './ServiceDetailsSummaryV2.module.scss'
 
-interface ServiceDetailsEnvTableProps {
+interface ServiceDetailsArtifactTableProps {
+  artifactFilter?: string
   envFilter?: string
   resetSearch: () => void
   setRowClickFilter: React.Dispatch<React.SetStateAction<ServiceDetailInstanceViewProps>>
   searchTerm: string
-}
-export interface TableRowData {
-  artifact?: string
-  envId?: string
-  envName?: string
-  environmentType?: string
-  infrastructureId?: string
-  infrastructureName?: string
-  clusterId?: string
-  instanceCount?: number
-  lastDeployedAt?: number
-  showInfra?: boolean
-  showEnv?: boolean
-  showEnvType?: boolean
-  showArtifact?: boolean
 }
 
 /* istanbul ignore next */
@@ -57,192 +42,153 @@ export const convertToEnvType = (envType: string): StringKeys => {
   return 'cd.preProduction'
 }
 
-const getEnvTableData = (envTableData: InstanceGroupedByEnvironment[], envFilter?: string): TableRowData[] => {
+const getArtifactTableData = (
+  artifactTableData: InstanceGroupedOnArtifact[],
+  envFilter?: string,
+  artifactFilter?: string
+): TableRowData[] => {
   const tableData: TableRowData[] = []
-  envTableData.forEach(env => {
+  artifactTableData.forEach(artifact => {
     /* istanbul ignore else */
-    if ((envFilter && env.envId === envFilter) || !envFilter) {
-      const envName = defaultTo(env.envName, '-')
-      const envId = env.envId
-      const lastDeployedAt = defaultTo(env.lastDeployedAt, 0)
+    if ((artifactFilter && artifact.artifact === artifactFilter) || !artifactFilter) {
+      const artifactName = artifact.artifact
+      const lastDeployedAt = defaultTo(artifact.lastDeployedAt, 0)
       let showEnv = true
-      let showEnvType = true
-      let showInfra = true
+      let showArtifact = true
 
       /* istanbul ignore else */
-      if (env.envId && env.instanceGroupedByEnvironmentTypeList) {
-        env.instanceGroupedByEnvironmentTypeList.forEach(envDetail => {
-          const envType = envDetail.environmentType
-          envDetail.instanceGroupedByInfrastructureList.forEach(infraDetail => {
-            const infraId = infraDetail.infrastructureId
-            const infraName = infraDetail.infrastructureName
-            const clusterId = infraDetail.clusterId
-            infraDetail.instanceGroupedByArtifactList.forEach(artifactDetail => {
-              const artifact = artifactDetail.artifact
-              const instanceCount = defaultTo(artifactDetail.count, 0)
-              tableData.push({
-                artifact: artifact,
-                clusterId: clusterId,
-                envId,
-                envName,
-                lastDeployedAt,
-                environmentType: envType,
-                infrastructureId: infraId,
-                infrastructureName: infraName,
-                instanceCount: instanceCount,
-                showEnv,
-                showEnvType,
-                showInfra
-              })
-              showEnv = false
-              showEnvType = false
-              showInfra = false
+      if (artifact.artifact && artifact.instanceGroupedOnEnvironmentList) {
+        artifact.instanceGroupedOnEnvironmentList.forEach(env => {
+          const envId = env.envId
+          const envName = defaultTo(env.envName, '-')
+          if (
+            env.envId &&
+            env.instanceGroupedOnEnvironmentTypeList &&
+            ((envFilter && env.envId === envFilter) || !envFilter)
+          ) {
+            env.instanceGroupedOnEnvironmentTypeList.forEach(envDetail => {
+              const envType = envDetail.environmentType
+              if (envType && envDetail.instanceGroupedOnInfrastructureList) {
+                envDetail.instanceGroupedOnInfrastructureList.forEach((infraDetail, infraDetailIdx) => {
+                  const infraId = infraDetail.infrastructureId
+                  const infraName = infraDetail.infrastructureName
+                  const clusterId = infraDetail.clusterId
+                  const instanceCount = defaultTo(infraDetail.count, 0)
+                  tableData.push({
+                    artifact: artifactName,
+                    clusterId: clusterId,
+                    envId,
+                    envName,
+                    lastDeployedAt,
+                    environmentType: envType,
+                    infrastructureId: infraId,
+                    infrastructureName: infraName,
+                    instanceCount: instanceCount,
+                    showEnv,
+                    showEnvType: !infraDetailIdx,
+                    showArtifact
+                  })
+                  showEnv = false
+                  showArtifact = false
+                })
+              }
             })
-            showInfra = true
-          })
-          showEnvType = true
+            showEnv = true
+          }
         })
+        showArtifact = true
       }
-      showEnv = true
     }
   })
   return tableData
 }
 
-export const RenderEnv: Renderer<CellProps<TableRowData>> = ({
-  row: {
-    original: { showEnv, envName }
-  }
-}) => {
-  return showEnv ? (
-    <Container>
-      <Text lineClamp={1} tooltipProps={{ isDark: true }} className={css.envColumnStyle}>
-        {envName}
-      </Text>
-    </Container>
-  ) : (
-    <></>
-  )
-}
-
-export const RenderEnvType: Renderer<CellProps<TableRowData>> = ({
-  row: {
-    original: { showEnvType, environmentType }
-  }
-}) => {
-  const { getString } = useStrings()
-  return showEnvType ? (
-    <Text
-      className={cx(css.environmentType, {
-        [css.production]: environmentType === EnvironmentType.PRODUCTION
-      })}
-      font={{ size: 'small' }}
-    >
-      {environmentType
-        ? getString(
-            environmentType === EnvironmentType.PRODUCTION ? 'cd.serviceDashboard.prod' : 'cd.preProductionType'
-          )
-        : '-'}
-    </Text>
-  ) : (
-    <></>
-  )
-}
-
-export const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
-  row: {
-    original: { instanceCount }
-  }
-}) => {
-  return instanceCount ? (
-    <Container>
-      <Text font={{ size: 'small' }} color={Color.GREY_600} className={css.overflow}>
-        {numberFormatter(instanceCount)}
-      </Text>
-    </Container>
-  ) : (
-    <></>
-  )
-}
-
 export const RenderInfra: Renderer<CellProps<TableRowData>> = ({
   row: {
-    original: { showInfra, infrastructureId, infrastructureName, clusterId }
+    original: { infrastructureId, infrastructureName, clusterId }
   }
 }) => {
   const name = !isUndefined(infrastructureId) ? infrastructureName : clusterId
-  return showInfra ? (
+  return name ? (
     <Container>
       <Text lineClamp={1} tooltipProps={{ isDark: true }} className={css.envColumnStyle}>
-        {name ? name : '-'}
+        {name}
       </Text>
     </Container>
   ) : (
-    <></>
+    <>{'-'}</>
   )
 }
 
 export const RenderArtifact: Renderer<CellProps<TableRowData>> = ({
   row: {
-    original: { artifact }
+    original: { artifact, showArtifact }
   }
 }) => {
-  return (
+  return showArtifact ? (
     <Container>
       <Text lineClamp={1} tooltipProps={{ isDark: true }} className={css.envColumnStyle}>
         {artifact ? artifact : '-'}
       </Text>
     </Container>
+  ) : (
+    <></>
   )
 }
 
-export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProps): React.ReactElement {
-  const { envFilter, resetSearch, setRowClickFilter, searchTerm } = props
+export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifactTableProps): React.ReactElement {
+  const { artifactFilter, envFilter, resetSearch, setRowClickFilter, searchTerm } = props
   const { getString } = useStrings()
   const [selectedRow, setSelectedRow] = React.useState<string>()
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
 
-  const queryParams: GetActiveInstanceGroupedByEnvironmentQueryParams = {
+  const queryParams: GetActiveInstanceGroupedByArtifactQueryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
     serviceId,
+    artifact: artifactFilter ? artifactFilter : undefined,
     environmentIdentifier: envFilter ? envFilter : undefined
   }
 
-  const { data, loading, error, refetch } = useGetActiveInstanceGroupedByEnvironment({ queryParams })
+  const { data, loading, error, refetch } = useGetActiveInstanceGroupedByArtifact({ queryParams })
 
-  const envTableDetailData = data?.data?.instanceGroupedByEnvironmentList
+  const artifactTableDetailData = data?.data?.instanceGroupedOnArtifactList
 
   const filteredTableData = useMemo(() => {
     if (!searchTerm) {
-      return envTableDetailData
+      return artifactTableDetailData
     }
 
     const searchValue = searchTerm.toLocaleLowerCase()
     /* istanbul ignore next */
-    return envTableDetailData?.filter(
-      envDetail =>
-        envDetail.envName?.toLocaleLowerCase().includes(searchValue) ||
-        envDetail.instanceGroupedByEnvironmentTypeList.some(
-          envType =>
-            (envType.environmentType &&
-              getString(convertToEnvType(envType.environmentType))?.toLocaleLowerCase().includes(searchValue)) ||
-            envType.instanceGroupedByInfrastructureList.some(
-              infraOrCluster =>
-                infraOrCluster.clusterId?.toLocaleLowerCase().includes(searchValue) ||
-                infraOrCluster.infrastructureName?.toLocaleLowerCase().includes(searchValue) ||
-                infraOrCluster.instanceGroupedByArtifactList.some(artifact =>
-                  artifact.artifact?.toLocaleLowerCase().includes(searchValue)
+    return artifactTableDetailData?.filter(
+      artifactDetail =>
+        artifactDetail.artifact?.toLocaleLowerCase().includes(searchValue) ||
+        artifactDetail.instanceGroupedOnEnvironmentList.some(
+          envDetail =>
+            envDetail.envName?.toLocaleLowerCase().includes(searchValue) ||
+            envDetail.instanceGroupedOnEnvironmentTypeList?.some(
+              envType =>
+                (envType.environmentType &&
+                  getString(convertToEnvType(envType.environmentType))?.toLocaleLowerCase().includes(searchValue)) ||
+                envType.instanceGroupedOnInfrastructureList?.some(
+                  infraOrCluster =>
+                    infraOrCluster.clusterId?.toLocaleLowerCase().includes(searchValue) ||
+                    infraOrCluster.infrastructureName?.toLocaleLowerCase().includes(searchValue)
                 )
             )
         )
     )
-  }, [searchTerm, envTableDetailData])
+  }, [searchTerm, artifactTableDetailData])
 
   const tableData: TableRowData[] = useMemo(() => {
-    return getEnvTableData(defaultTo(filteredTableData, [] as InstanceGroupedByEnvironment[]), envFilter)
-  }, [envFilter, filteredTableData])
+    return getArtifactTableData(
+      defaultTo(filteredTableData, [] as InstanceGroupedOnArtifact[]),
+      envFilter,
+      artifactFilter
+    )
+  }, [envFilter, artifactFilter, filteredTableData])
 
   const searchApplied = !isEmpty(searchTerm.trim())
 
@@ -254,6 +200,12 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
 
   const columns: Column<TableRowData>[] = useMemo(() => {
     const columnsArray = [
+      {
+        Header: getString('cd.serviceDashboard.artifact'),
+        id: 'artifact',
+        width: '30%',
+        Cell: RenderArtifact
+      },
       {
         Header: getString('environment'),
         id: 'environment',
@@ -269,14 +221,8 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       {
         Header: getString('cd.infra'),
         id: 'infra',
-        width: '22%',
+        width: '27%',
         Cell: RenderInfra
-      },
-      {
-        Header: getString('cd.serviceDashboard.artifact'),
-        id: 'artifact',
-        width: '35%',
-        Cell: RenderArtifact
       },
       {
         Header: getString('cd.serviceDashboard.headers.instances'),
@@ -312,7 +258,7 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       <Container
         flex={{ justifyContent: 'center', alignItems: 'center' }}
         height={730}
-        data-test="ServiceEnvTableLoading"
+        data-test="ServiceArtifactTableLoading"
       >
         <Icon name="spinner" color={Color.BLUE_500} size={30} />
       </Container>
@@ -320,7 +266,7 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
   }
   if (error) {
     return (
-      <Container data-test="ServiceEnvTableError" height={730} flex={{ justifyContent: 'center' }}>
+      <Container data-test="ServiceArtifactTableError" height={730} flex={{ justifyContent: 'center' }}>
         <PageError onClick={() => refetch?.()} message={getErrorInfoFromErrorObject(error)} />
       </Container>
     )

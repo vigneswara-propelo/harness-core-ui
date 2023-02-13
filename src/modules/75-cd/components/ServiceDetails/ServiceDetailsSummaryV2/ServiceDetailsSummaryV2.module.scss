@@ -362,3 +362,9 @@
     justify-self: end;
   }
 }
+
+.hoverUnderline {
+  &:hover {
+    text-decoration: underline;
+  }
+}

@@ -25,6 +25,7 @@ declare const styles: {
   readonly envColumnStyle: string
   readonly environmentType: string
   readonly fullViewTableStyle: string
+  readonly hoverUnderline: string
   readonly instanceCountStyle: string
   readonly instanceDetail: string
   readonly instanceDetailTitle: string
