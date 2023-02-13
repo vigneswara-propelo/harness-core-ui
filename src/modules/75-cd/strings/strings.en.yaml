@@ -152,6 +152,7 @@ steps:
     tempRouteMandatory: Temp route is mandatory
     upscaleNewFirstLabel: Add new instances first, then downsize old instances
     downScaleOldFirstLabel: Downsize old instances first, then add new instances
+    zeroOldInstancesWarning: There can be a downtime as the old instances are downsized first with instance value as zero
   googleCloudFunctionCommon:
     fieldMask: Field Mask
     fieldMaskPlaceholder: Enter Field Mask
