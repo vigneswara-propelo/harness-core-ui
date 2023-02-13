@@ -91,7 +91,7 @@ export function getStageFromPipeline(
   return
 }
 
-export function getChildPipelineMetadata(pipeline?: PipelineInfoConfig): childPipelineMetadata[] {
+export function getChildPipelinesMetadata(pipeline?: PipelineInfoConfig): childPipelineMetadata[] {
   const childPipelinesMetaData: childPipelineMetadata[] = []
   if (pipeline?.stages) {
     pipeline.stages.forEach(item => {
