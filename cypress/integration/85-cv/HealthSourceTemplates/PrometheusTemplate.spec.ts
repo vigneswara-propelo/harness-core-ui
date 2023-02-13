@@ -125,6 +125,8 @@ describe('Health Source - Prometheus', () => {
 
     cy.fillField('metricName', 'Prometheus Metric')
 
+    cy.get('input[name="metricName"]').blur()
+
     cy.contains('span', 'Metric name must be unique.').should('be.visible')
     cy.fillField('metricName', 'Prometheus Metric 123')
     cy.contains('span', 'Metric name must be unique.').should('not.exist')

@@ -218,13 +218,6 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
             metricDefinition.metricName === mappedMetrics.get(selectedMetric || '')?.metricName
         )
 
-        if (!formikProps.touched?.identifier) {
-          formikProps.setTouched({
-            ...formikProps.touched,
-            [PrometheusMonitoringSourceFieldNames.METRIC_IDENTIFIER]: true,
-            [PrometheusMonitoringSourceFieldNames.METRIC_NAME]: true
-          })
-        }
         return (
           <FormikForm>
             <CustomMetric

@@ -66,6 +66,7 @@ describe('Health Source - Prometheus', () => {
 
     cy.get('input[name="metricName"]').should('contain.value', 'Prometheus Metric')
     cy.get('input[name="metricName"]').clear()
+    cy.get('input[name="metricName"]').blur()
 
     cy.contains('span', 'Metric Name is required.').should('be.visible')
     cy.fillField('metricName', 'Prometheus Metric')
@@ -137,6 +138,8 @@ describe('Health Source - Prometheus', () => {
     cy.contains('div', 'Map Metric(s) to Harness Services').click()
 
     cy.fillField('metricName', 'Prometheus Metric')
+
+    cy.get('input[name="metricName"]').blur()
 
     cy.contains('span', 'Metric name must be unique.').should('be.visible')
     cy.fillField('metricName', 'Prometheus Metric 123')
@@ -572,6 +575,7 @@ describe('AWS Prometheus', () => {
 
     cy.get('input[name="metricName"]').should('contain.value', 'Prometheus Metric')
     cy.get('input[name="metricName"]').clear()
+    cy.get('input[name="metricName"]').blur()
 
     cy.contains('span', 'Metric Name is required.').should('be.visible')
     cy.fillField('metricName', 'Prometheus Metric')
