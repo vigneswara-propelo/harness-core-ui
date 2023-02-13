@@ -66,7 +66,8 @@ export default function DeployEnvironmentEntityInputStep({
   gitOpsEnabled,
   stepViewType,
   areFiltersAdded,
-  setEnvironmentRefType
+  setEnvironmentRefType,
+  serviceIdentifiers
 }: DeployEnvironmentEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -119,7 +120,7 @@ export default function DeployEnvironmentEntityInputStep({
     loadingEnvironmentsData,
     // This is required only when updating the entities list
     updatingEnvironmentsData
-  } = useGetEnvironmentsData({ envIdentifiers: environmentIdentifiers, envGroupIdentifier, serviceIdentifiers: [] })
+  } = useGetEnvironmentsData({ envIdentifiers: environmentIdentifiers, envGroupIdentifier, serviceIdentifiers })
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */
@@ -217,7 +218,7 @@ export default function DeployEnvironmentEntityInputStep({
           const newEnvironmentObject = {
             environmentRef: valueToReset,
             environmentInputs: valueToReset,
-            // serviceOverrideInputs: valueToReset,
+            serviceOverrideInputs: valueToReset,
             infrastructureDefinitions: valueToReset
           }
 
@@ -244,7 +245,8 @@ export default function DeployEnvironmentEntityInputStep({
       existingTemplate as EnvironmentYamlV2[],
       environmentIdentifiers,
       cloneDeep(environmentsData),
-      gitOpsEnabled ? 'gitOpsClusters' : 'infrastructureDefinitions'
+      gitOpsEnabled ? 'gitOpsClusters' : 'infrastructureDefinitions',
+      serviceIdentifiers
     )
 
     // updated values based on selected environments
@@ -255,6 +257,8 @@ export default function DeployEnvironmentEntityInputStep({
       cloneDeep(environmentsData),
       deployToAllEnvironments,
       gitOpsEnabled ? 'gitOpsClusters' : 'infrastructureDefinitions',
+      serviceIdentifiers,
+      isMultiEnvironment,
       stepViewType
     )
 

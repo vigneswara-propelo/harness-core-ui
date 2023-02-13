@@ -935,6 +935,7 @@ export interface StringsMap {
   'common.serviceInputs': string
   'common.serviceName': string
   'common.serviceOverrideInputs': string
+  'common.serviceOverridePrefix': string
   'common.serviceOverrides': string
   'common.servicePrefix': string
   'common.serviceReliabilityManagement': string

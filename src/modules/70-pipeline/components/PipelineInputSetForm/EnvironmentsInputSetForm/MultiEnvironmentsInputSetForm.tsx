@@ -101,7 +101,8 @@ export function MultiEnvironmentsInputSetForm({
              * If the question arises why another condition for this scenario?
              * Because we need to repeat the same selection steps without the field*/
             deployToAllEnvironments: deploymentStage?.environmentGroup?.deployToAll,
-            areFiltersAdded
+            areFiltersAdded,
+            serviceIdentifiers: []
           }}
           onUpdate={data => {
             unstable_batchedUpdates(() => {

@@ -1110,6 +1110,7 @@ infrastructures: Infrastructures
 infrastructureInputs: Infrastructure inputs
 environmentPrefix: 'Environment: {{ name }}'
 infrastructurePrefix: 'Infrastructure: {{ name }}'
+serviceOverridePrefix: 'Service Override: {{ name }}'
 schedulePanel:
   currentUTCTime: '{{$.common.currentUTCTime}}'
   minutesLabel: 'Minutes'
