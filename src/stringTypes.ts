@@ -5209,6 +5209,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.anonymous': string
   'cd.getStartedWithCD.appControllerInstalled': string
   'cd.getStartedWithCD.applicationController': string
+  'cd.getStartedWithCD.applicationDetails': string
   'cd.getStartedWithCD.artifactLocation': string
   'cd.getStartedWithCD.artifactManifest': string
   'cd.getStartedWithCD.artifactManifestContent': string
@@ -5227,6 +5228,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.clickForOtherDeploymentTypes': string
   'cd.getStartedWithCD.closeOnboarding.subtitle': string
   'cd.getStartedWithCD.closeOnboarding.title': string
+  'cd.getStartedWithCD.clusterRepo': string
   'cd.getStartedWithCD.clusterSpec1': string
   'cd.getStartedWithCD.clusterSpec2': string
   'cd.getStartedWithCD.clusterSpec3': string
@@ -5251,6 +5253,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.delegateSuccess': string
   'cd.getStartedWithCD.deployToGitops': string
   'cd.getStartedWithCD.deploymentType': string
+  'cd.getStartedWithCD.destinationDetails': string
   'cd.getStartedWithCD.directK8s': string
   'cd.getStartedWithCD.disconnected': string
   'cd.getStartedWithCD.doesntHaveGitRepo': string
@@ -5262,6 +5265,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.failedToAuthenticate': string
   'cd.getStartedWithCD.failedToProvisionCluster': string
   'cd.getStartedWithCD.gitOpsAgent': string
+  'cd.getStartedWithCD.gitURL': string
   'cd.getStartedWithCD.gitopsOnboardingAgentStep': string
   'cd.getStartedWithCD.gitopsOnboardingConfigureStep': string
   'cd.getStartedWithCD.gitopsOnboardingDeployStep': string
@@ -5289,6 +5293,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.hostedAgentExplainContent': string
   'cd.getStartedWithCD.hostedAgentInfoTitle': string
   'cd.getStartedWithCD.hostedAgentInstall': string
+  'cd.getStartedWithCD.hostedGitopsAgent': string
   'cd.getStartedWithCD.inHarnessFileStore': string
   'cd.getStartedWithCD.inManifest': string
   'cd.getStartedWithCD.inManifestContent': string
@@ -5337,6 +5342,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.setupDelegate': string
   'cd.getStartedWithCD.setupIPWhiteListing': string
   'cd.getStartedWithCD.setupaNewDelegate': string
+  'cd.getStartedWithCD.sourceDetails': string
   'cd.getStartedWithCD.sourceOrSampleCode': string
   'cd.getStartedWithCD.successFull': string
   'cd.getStartedWithCD.successfullyAuthenticated': string
