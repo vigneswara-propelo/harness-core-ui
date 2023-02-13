@@ -102,7 +102,8 @@ export function Nexus2Artifact({
         })
       })
       .when('repositoryFormat', {
-        is: RepositoryFormatTypes.NPM || RepositoryFormatTypes.NuGet,
+        is: repositoryFormat =>
+          repositoryFormat === RepositoryFormatTypes.NPM || repositoryFormat === RepositoryFormatTypes.NuGet,
         then: Yup.object().shape({
           packageName: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.packageName'))
         })
