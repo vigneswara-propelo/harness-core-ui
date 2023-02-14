@@ -170,7 +170,7 @@ export const RenderInfra: Renderer<CellProps<TableRowData>> = ({
     original: { showInfra, infrastructureId, infrastructureName, clusterId }
   }
 }) => {
-  const name = !isUndefined(infrastructureId) ? infrastructureName : clusterId
+  const name = !infrastructureId ? clusterId : infrastructureName
   return showInfra ? (
     <Container>
       <Text lineClamp={1} tooltipProps={{ isDark: true }} className={css.envColumnStyle}>
