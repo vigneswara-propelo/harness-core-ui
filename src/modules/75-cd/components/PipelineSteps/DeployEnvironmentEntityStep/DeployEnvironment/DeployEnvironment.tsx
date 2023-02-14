@@ -32,7 +32,13 @@ import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
-import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
+import {
+  isMultiTypeExpression,
+  isMultiTypeFixed,
+  isMultiTypeRuntime,
+  isValueExpression,
+  isValueRuntimeInput
+} from '@common/utils/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 
@@ -136,8 +142,10 @@ export default function DeployEnvironment({
   const isExpression = isMultiTypeExpression(environmentsType)
   const filterPrefix = 'environmentFilters.runtime'
 
-  const shouldRenderEnvironmentEntitiesList =
-    (isFixed && !isEmpty(selectedEnvironments)) || (isExpression && values.environment)
+  const shouldRenderEnvironmentEntitiesList = isFixed && !isEmpty(selectedEnvironments)
+  const shouldRenderChildEntity = isExpression
+    ? isValueExpression(values.environment)
+    : shouldRenderEnvironmentEntitiesList
 
   // API
   const {
@@ -178,7 +186,7 @@ export default function DeployEnvironment({
     return []
   }, [environmentsList])
 
-  const loading = loadingEnvironmentsList || loadingEnvironmentsData
+  const loading = isFixed && (loadingEnvironmentsList || loadingEnvironmentsData)
 
   useEffect(() => {
     // This condition is required to clear the list when switching from multi environment to single environment
@@ -415,7 +423,7 @@ export default function DeployEnvironment({
     disabled: disabled
   }
 
-  const onMultiSelectChangeForEnvironments = (items: SelectOption[]) => {
+  const onMultiSelectChangeForEnvironments = (items: SelectOption[]): void => {
     setFieldTouched(uniquePathForEnvironments.current, true)
     if (items?.at(0)?.value === 'All') {
       setFieldValue(`environments`, undefined)
@@ -481,8 +489,10 @@ export default function DeployEnvironment({
             setRefValue={true}
             openAddNewModal={openAddNewModal}
             isNewConnectorLabelVisible
-            onChange={item => {
-              if (getMultiTypeFromValue(item) === MultiTypeInputType.FIXED && (item as string)?.length) {
+            onChange={(item, _valueType, type) => {
+              if (isMultiTypeExpression(type as MultiTypeInputType)) {
+                setSelectedEnvironments([])
+              } else if (getMultiTypeFromValue(item) === MultiTypeInputType.FIXED && (item as string)?.length) {
                 setSelectedEnvironments([item as string])
               } else setSelectedEnvironments([])
             }}
@@ -559,7 +569,7 @@ export default function DeployEnvironment({
         {!(isFixed && isEmpty(selectedEnvironments)) && !isMultiEnvironment && CD_NG_DYNAMIC_PROVISIONING_ENV_V2 ? (
           <DeployProvisioner initialValues={initialValues} allowableTypes={allowableTypes} />
         ) : null}
-        {shouldRenderEnvironmentEntitiesList && !loading && !isMultiEnvironment && (
+        {shouldRenderChildEntity && !loading && !isMultiEnvironment && (
           <>
             <Divider />
             {gitOpsEnabled ? (

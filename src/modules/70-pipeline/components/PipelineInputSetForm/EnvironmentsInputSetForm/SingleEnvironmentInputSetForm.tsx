@@ -297,7 +297,7 @@ export default function SingleEnvironmentInputSetForm({
                   const infraInputs = infrastructureDefinitionTemplate.inputs
 
                   return infraInputs?.identifier ? (
-                    <>
+                    <React.Fragment key={infraInputs.identifier}>
                       <Text font={{ size: 'normal', weight: 'bold' }} color={Color.GREY_700}>
                         {getString('common.infrastructurePrefix', {
                           name: infraInputs.identifier
@@ -347,7 +347,7 @@ export default function SingleEnvironmentInputSetForm({
                           }}
                         />
                       </Container>
-                    </>
+                    </React.Fragment>
                   ) : null
                 })
               : null}
