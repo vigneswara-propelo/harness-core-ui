@@ -14,6 +14,7 @@ import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'
 import {
+  ServiceLevelIndicatorDTO,
   useGetAllMonitoredServicesWithTimeSeriesHealthSources,
   useGetNotificationRuleData,
   useGetSliOnboardingGraphs
@@ -153,6 +154,21 @@ export default function CreateSimpleSLOForm({
     error: sliGraphError
   } = useMutateAsGet(useGetSliOnboardingGraphs, { lazy: true })
 
+  const retryfetchSliGraphData = (
+    serviceLevelIndicator: ServiceLevelIndicatorDTO,
+    monitoredServiceIdentifier?: string
+  ): void => {
+    fetchSliGraphData({
+      body: serviceLevelIndicator,
+      queryParams: {
+        accountId,
+        orgIdentifier,
+        projectIdentifier
+      },
+      pathParams: { monitoredServiceIdentifier }
+    })
+  }
+
   const debounceFetchSliGraphData = useCallback(debounce(fetchSliGraphData, 2000), [])
 
   const notificationsTableData = useMemo(
@@ -200,17 +216,6 @@ export default function CreateSimpleSLOForm({
   useEffect(() => {
     if (showChart) {
       debounceFetchSliGraphData({
-        body: serviceLevelIndicator,
-        queryParams: {
-          accountId,
-          orgIdentifier,
-          projectIdentifier
-        },
-        pathParams: {
-          monitoredServiceIdentifier: formikProps.values.monitoredServiceRef as string
-        }
-      })
-      debounceFetchSliGraphData?.({
         body: serviceLevelIndicator,
         queryParams: {
           accountId,
@@ -277,10 +282,12 @@ export default function CreateSimpleSLOForm({
                     <SLI
                       formikProps={formikProps}
                       sliGraphData={sliGraphData?.resource?.sliGraph}
+                      metricGraphData={sliGraphData?.resource?.metricGraphs}
                       loading={sliGraphLoading}
                       error={getErrorMessage(sliGraphError)}
-                      retryOnError={fetchSliGraphData}
+                      retryOnError={retryfetchSliGraphData}
                       showChart={showChart}
+                      showMetricChart
                     />
                   ),
                   errorMessage: getErrorMessageByTabId(
@@ -303,8 +310,9 @@ export default function CreateSimpleSLOForm({
                       formikProps={formikProps}
                       loading={sliGraphLoading}
                       error={getErrorMessage(sliGraphError)}
-                      retryOnError={fetchSliGraphData}
+                      retryOnError={retryfetchSliGraphData}
                       sliGraphData={sliGraphData?.resource?.sliGraph}
+                      showMetricChart={false}
                     />
                   ),
                   errorMessage: getErrorMessageByTabId(formikProps, CreateSimpleSLOSteps.Set_SLO),

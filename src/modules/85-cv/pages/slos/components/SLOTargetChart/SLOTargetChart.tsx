@@ -7,7 +7,6 @@
 
 import React, { useMemo } from 'react'
 import { merge } from 'lodash-es'
-import type Highcharts from 'highcharts'
 import { Container, Icon, Text, PageError, NoDataCard, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -17,6 +16,7 @@ import { SLIMetricTypes } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreate
 import { getDefaultChartOptions } from './SLOTargetChart.utils'
 import type { SLOTargetChartProps, SLOTargetChartWithAPIGetSliGraphProps } from './SLOTargetChart.types'
 import { convertServiceLevelIndicatorToSLIFormData } from '../CVCreateSLOV2/CVCreateSLOV2.utils'
+import { SliMetricGraph } from './components/SLIMetricChart/SLIMetricChart'
 import css from './SLOTargetChart.module.scss'
 
 export const SLOTargetChart: React.FC<SLOTargetChartProps> = ({
@@ -52,16 +52,19 @@ const SLOTargetChartWithAPIGetSliGraph: React.FC<SLOTargetChartWithAPIGetSliGrap
   sliGraphData,
   loading,
   error,
-  retryOnError
+  retryOnError,
+  showMetricChart
 }) => {
   const dataPoints = useMemo(
     () => sliGraphData?.dataPoints?.map(point => [Number(point.timeStamp) || 0, Number(point.value) || 0]),
     [sliGraphData?.dataPoints]
   )
 
+  const containerHeight = showMetricChart ? '250px' : '100%'
+
   if (loading) {
     return (
-      <Container flex={{ justifyContent: 'center' }} height="100%">
+      <Container flex={{ justifyContent: 'center' }} height={containerHeight}>
         <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
       </Container>
     )
@@ -69,11 +72,13 @@ const SLOTargetChartWithAPIGetSliGraph: React.FC<SLOTargetChartWithAPIGetSliGrap
 
   if (error) {
     return (
-      <PageError
-        width={400}
-        message={error}
-        onClick={() => retryOnError(serviceLevelIndicator, monitoredServiceIdentifier)}
-      />
+      <Container flex={{ justifyContent: 'center' }} height={containerHeight}>
+        <PageError
+          width={400}
+          message={error}
+          onClick={() => retryOnError(serviceLevelIndicator, monitoredServiceIdentifier)}
+        />
+      </Container>
     )
   }
 
@@ -89,7 +94,7 @@ const SLOTargetChartWithAPIGetSliGraph: React.FC<SLOTargetChartWithAPIGetSliGrap
 
 const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = props => {
   const { getString } = useStrings()
-  const { serviceLevelIndicator, monitoredServiceIdentifier } = props
+  const { serviceLevelIndicator, monitoredServiceIdentifier, showMetricChart = false } = props
 
   const {
     healthSourceRef,
@@ -104,7 +109,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
   } = convertServiceLevelIndicatorToSLIFormData(serviceLevelIndicator)
 
   const emptyState = (
-    <Container flex={{ justifyContent: 'center' }}>
+    <Container flex={{ justifyContent: 'center' }} width={'100%'}>
       <NoDataCard
         image={NoChartDataImage}
         containerClassName={css.noData}
@@ -129,7 +134,29 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
       }
     }
 
-    return (
+    return showMetricChart ? (
+      <Layout.Vertical spacing="small">
+        <Layout.Vertical spacing="xsmall" margin={{ bottom: 'xlarge' }}>
+          <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'semi-bold' }}>
+            {getString(
+              SLIMetricType === SLIMetricTypes.RATIO
+                ? 'cv.slos.sliMetricChartRatioBasedHeader'
+                : 'cv.slos.slis.ratioMetricType.validRequestsMetrics'
+            )}
+          </Text>
+          <Text margin={{ bottom: 'large' }} font={{ size: 'normal', weight: 'light' }}>
+            {getString('cv.slos.sliMetricChartSubHeader')}
+          </Text>
+          <SliMetricGraph {...props} />
+        </Layout.Vertical>
+        <Layout.Vertical spacing="small">
+          <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'semi-bold' }} margin={{ bottom: 'small' }}>
+            {getString('cv.slos.slis.SLIChartTitle')}
+          </Text>
+          <SLOTargetChartWithAPIGetSliGraph {...props} />
+        </Layout.Vertical>
+      </Layout.Vertical>
+    ) : (
       <Layout.Vertical spacing="small">
         <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'semi-bold' }} margin={{ bottom: 'small' }}>
           {getString('cv.slos.slis.SLIChartTitle')}

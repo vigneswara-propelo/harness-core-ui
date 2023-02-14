@@ -8033,6 +8033,7 @@ export interface StringsMap {
   'cv.metricsAnalysis.metricThresholds.value': string
   'cv.metricsAnalysis.showDetails': string
   'cv.minValueN': string
+  'cv.minimum': string
   'cv.mins': string
   'cv.minutes': string
   'cv.minutesRemaining': string
@@ -8596,6 +8597,7 @@ export interface StringsMap {
   'cv.slos.evaluationMethod': string
   'cv.slos.evaluationMethodSubtitle': string
   'cv.slos.goodRequestMetric': string
+  'cv.slos.goodRequests': string
   'cv.slos.healthSource': string
   'cv.slos.healthSourceForSLI': string
   'cv.slos.latencySLI': string
@@ -8615,6 +8617,8 @@ export interface StringsMap {
   'cv.slos.selectMonitoredServiceForSlo': string
   'cv.slos.setSLOSubtitle': string
   'cv.slos.sli': string
+  'cv.slos.sliMetricChartRatioBasedHeader': string
+  'cv.slos.sliMetricChartSubHeader': string
   'cv.slos.sliType': string
   'cv.slos.sliTypeChooseMetric': string
   'cv.slos.sliTypeSubtitle': string
@@ -8655,6 +8659,7 @@ export interface StringsMap {
   'cv.slos.userJourneyPlaceholder': string
   'cv.slos.userJourneySubTitle': string
   'cv.slos.validRequestMetric': string
+  'cv.slos.validRequests': string
   'cv.slos.validations.healthSourceRequired': string
   'cv.slos.validations.nameValidation': string
   'cv.slos.validations.specialCharacters': string
