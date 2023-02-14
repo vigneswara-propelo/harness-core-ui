@@ -400,7 +400,7 @@ exports[`helm with GIT tests expand advanced section 1`] = `
                             placeholder="- Select -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="Version 2"
+                            value="Version 3"
                           />
                           <span
                             class="bp3-input-action"
@@ -1408,7 +1408,7 @@ exports[`helm with GIT tests renders correctly in edit case 1`] = `
                             placeholder="- Select -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="Version 2"
+                            value="Version 3"
                           />
                           <span
                             class="bp3-input-action"
@@ -3065,7 +3065,7 @@ exports[`helm with GIT tests renders without crashing 1`] = `
                             placeholder="- Select -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="Version 2"
+                            value="Version 3"
                           />
                           <span
                             class="bp3-input-action"

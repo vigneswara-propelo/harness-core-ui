@@ -2139,7 +2139,7 @@ exports[`helm with S3 tests expand advanced section 1`] = `
                             placeholder="- Select -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="Version 2"
+                            value="Version 3"
                           />
                           <span
                             class="bp3-input-action"
@@ -4099,7 +4099,7 @@ exports[`helm with S3 tests renders without crashing 1`] = `
                             placeholder="- Select -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="Version 2"
+                            value="Version 3"
                           />
                           <span
                             class="bp3-input-action"

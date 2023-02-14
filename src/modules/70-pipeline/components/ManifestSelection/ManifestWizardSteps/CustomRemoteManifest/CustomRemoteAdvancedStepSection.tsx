@@ -59,7 +59,7 @@ function CustomRemoteAdvancedStepSection({
   const defaultValueToReset = [{ commandType: '', flag: '', id: uuid('', nameSpace()) }]
   const [commandFlagOptions, setCommandFlagOptions] = useState<Record<string, SelectOption[]>>({ V2: [], V3: [] })
 
-  const [selectedHelmVersion, setHelmVersion] = useState(get(initialValues, 'spec.helmVersion') ?? 'V2')
+  const [selectedHelmVersion, setHelmVersion] = useState(get(initialValues, 'spec.helmVersion') ?? 'V3')
   const isSkipVersioningDisabled =
     isBoolean(formik?.values?.enableDeclarativeRollback) && !!formik?.values?.enableDeclarativeRollback
   const { data: commandFlags, refetch: refetchCommandFlags } = useHelmCmdFlags({

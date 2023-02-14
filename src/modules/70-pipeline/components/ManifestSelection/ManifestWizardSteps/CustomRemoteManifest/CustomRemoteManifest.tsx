@@ -156,7 +156,7 @@ function CustomRemoteManifest({
       enableDeclarativeRollback: false,
       valuesPaths: [{ path: '', uuid: uuid('', nameSpace()) } as PathsInterface],
       paramsPaths: [{ path: '', uuid: uuid('', nameSpace()) } as PathsInterface],
-      helmVersion: 'V2',
+      helmVersion: 'V3',
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
       delegateSelectors: [],
       ...(showTASAdditionalPaths(selectedManifest as ManifestTypes) && { cfCliVersion: 'V7' })

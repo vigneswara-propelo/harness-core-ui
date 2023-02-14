@@ -255,7 +255,7 @@ exports[`helm with http tests expand advanced section 1`] = `
                             placeholder="- Select -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="Version 2"
+                            value="Version 3"
                           />
                           <span
                             class="bp3-input-action"
@@ -1633,7 +1633,7 @@ exports[`helm with http tests renders without crashing 1`] = `
                             placeholder="- Select -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="Version 2"
+                            value="Version 3"
                           />
                           <span
                             class="bp3-input-action"

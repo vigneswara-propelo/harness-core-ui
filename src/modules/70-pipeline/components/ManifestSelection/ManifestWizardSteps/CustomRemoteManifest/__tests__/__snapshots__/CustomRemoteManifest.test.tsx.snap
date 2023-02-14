@@ -759,7 +759,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
                                         placeholder="- Select -"
                                         style="padding-right: 0px;"
                                         type="text"
-                                        value="Version 2"
+                                        value="Version 3"
                                       />
                                       <span
                                         class="bp3-input-action"

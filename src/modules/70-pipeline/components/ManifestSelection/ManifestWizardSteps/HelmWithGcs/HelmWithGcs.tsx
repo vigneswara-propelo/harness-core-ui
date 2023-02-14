@@ -76,7 +76,7 @@ function HelmWithGcs({
   const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const { showError } = useToaster()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
-  const [selectedHelmVersion, setHelmVersion] = useState(initialValues?.spec?.helmVersion ?? 'V2')
+  const [selectedHelmVersion, setHelmVersion] = useState(initialValues?.spec?.helmVersion ?? 'V3')
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
 
   const {
@@ -139,7 +139,7 @@ function HelmWithGcs({
     }
     return {
       identifier: '',
-      helmVersion: 'V2',
+      helmVersion: 'V3',
       chartName: '',
       chartVersion: '',
       subChartName: '',

@@ -159,7 +159,7 @@ function HelmWithS3({
     initialValues?.spec?.skipResourceVersioning,
     initialValues?.spec?.commandFlags
   )
-  const [selectedHelmVersion, setHelmVersion] = useState(defaultTo(initialValues?.spec?.helmVersion, 'V2'))
+  const [selectedHelmVersion, setHelmVersion] = useState(defaultTo(initialValues?.spec?.helmVersion, 'V3'))
 
   const setBucketNameInitialValue = (
     values: HelmWithGcsDataType & { region: SelectOption | string },
@@ -214,7 +214,7 @@ function HelmWithS3({
       bucketName: '',
       region: '',
       folderPath: '/',
-      helmVersion: 'V2',
+      helmVersion: 'V3',
       chartName: '',
       chartVersion: '',
       subChartName: '',

@@ -132,7 +132,7 @@ function HelmWithGIT({
       gitFetchType: 'Branch',
       folderPath: '/',
       subChartName: '',
-      helmVersion: 'V2',
+      helmVersion: 'V3',
       skipResourceVersioning: false,
       enableDeclarativeRollback: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],

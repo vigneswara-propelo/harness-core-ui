@@ -81,7 +81,7 @@ function HelmWithHarnessStore({
 }: StepProps<ConnectorConfigDTO> & HelmWithHarnessStorePropType): React.ReactElement {
   const { getString } = useStrings()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
-  const [selectedHelmVersion, setHelmVersion] = useState(initialValues?.spec?.helmVersion ?? 'V2')
+  const [selectedHelmVersion, setHelmVersion] = useState(initialValues?.spec?.helmVersion ?? 'V3')
 
   const getInitialValues = (): HelmWithHarnessStoreDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -106,7 +106,7 @@ function HelmWithHarnessStore({
       valuesPaths: [''],
       skipResourceVersioning: false,
       enableDeclarativeRollback: false,
-      helmVersion: 'V2',
+      helmVersion: 'V3',
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
     }
   }
