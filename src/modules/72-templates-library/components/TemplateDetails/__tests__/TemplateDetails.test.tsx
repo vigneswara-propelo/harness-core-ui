@@ -59,6 +59,11 @@ jest.mock('services/template-ng', () => ({
   useGetTemplate: jest.fn().mockImplementation((...args) => {
     useGetTemplateMock(...args)
     return {}
+  }),
+  useListTemplateUsage: () => ({
+    loading: false,
+    data: {},
+    refetch: jest.fn()
   })
 }))
 

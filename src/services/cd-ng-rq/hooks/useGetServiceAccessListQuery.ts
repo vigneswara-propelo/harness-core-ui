@@ -33,6 +33,7 @@ export interface GetServiceAccessListQueryQueryParams {
   sort?: string[]
   type?:
     | 'Asg'
+    | 'AwsLambda'
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'

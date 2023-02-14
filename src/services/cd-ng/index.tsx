@@ -410,6 +410,7 @@ export interface AccessControlCheckError {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -1335,6 +1336,27 @@ export type AwsKmsCredentialSpecManualConfig = AwsKmsCredentialSpec & {
   secretKey: string
 }
 
+export type AwsLambdaDefinitionManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
+}
+
+export type AwsLambdaDeployStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type AwsLambdaInfrastructure = Infrastructure & {
+  connectorRef: string
+  metadata?: string
+  region: string
+}
+
+export type AwsLambdaInfrastructureDetails = InfrastructureDetails & {
+  region?: string
+}
+
+export type AwsLambdaServiceSpec = ServiceSpec & {}
+
 export interface AwsListInstancesFilter {
   autoScalingGroupName?: string
   region: string
@@ -1370,6 +1392,12 @@ export type AwsSMCredentialSpecAssumeSTS = AwsSecretManagerCredentialSpec & {
 export type AwsSMCredentialSpecManualConfig = AwsSecretManagerCredentialSpec & {
   accessKey: string
   secretKey: string
+}
+
+export type AwsSamInfrastructure = Infrastructure & {
+  connectorRef: string
+  metadata?: string
+  region: string
 }
 
 export interface AwsSecretManagerCredential {
@@ -3191,6 +3219,7 @@ export type DeploymentStageConfig = StageInfoConfig & {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   environment?: EnvironmentYamlV2
   environmentGroup?: EnvironmentGroupYaml
   environments?: EnvironmentsYaml
@@ -3469,7 +3498,7 @@ export type EcsRollingRollbackStepInfo = StepSpecType & {
 
 export type EcsRunTaskStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  runTaskRequestDefinition?: StoreConfigWrapper
+  runTaskRequestDefinition: StoreConfigWrapper
   skipSteadyStateCheck?: boolean
   taskDefinition?: StoreConfigWrapper
   taskDefinitionArn?: string
@@ -3819,6 +3848,7 @@ export interface EntityDetail {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4475,6 +4505,7 @@ export interface Error {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4845,6 +4876,7 @@ export interface ErrorMetadata {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   errorMessage?: string
 }
 
@@ -5266,6 +5298,7 @@ export interface Failure {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -6334,6 +6367,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   )[]
   moduleType?:
     | 'CD'
@@ -6546,6 +6580,7 @@ export interface GitEntityFilterProperties {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6564,6 +6599,12 @@ export interface GitEntityFilterProperties {
     | 'GOVERNANCE'
     | 'IACM'
   searchTerm?: string
+}
+
+export interface GitErrorMetadata {
+  branch?: string
+  filepath?: string
+  type?: string
 }
 
 export type GitErrorMetadataDTO = ErrorMetadataDTO & {
@@ -6829,6 +6870,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -7035,6 +7077,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7362,6 +7405,7 @@ export interface GitSyncEntityDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7562,6 +7606,7 @@ export interface GitSyncEntityListDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7779,6 +7824,7 @@ export interface GitSyncErrorDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -8400,6 +8446,8 @@ export interface InfrastructureDef {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AWS_SAM'
+    | 'AwsLambda'
 }
 
 export interface InfrastructureDefinitionConfig {
@@ -8417,6 +8465,7 @@ export interface InfrastructureDefinitionConfig {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -8443,6 +8492,8 @@ export interface InfrastructureDefinitionConfig {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AWS_SAM'
+    | 'AwsLambda'
 }
 
 export interface InfrastructureDetails {
@@ -8484,6 +8535,8 @@ export interface InfrastructureRequestDTO {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AWS_SAM'
+    | 'AwsLambda'
   yaml?: string
 }
 
@@ -8508,6 +8561,7 @@ export interface InfrastructureResponseDTO {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -8532,6 +8586,8 @@ export interface InfrastructureResponseDTO {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AWS_SAM'
+    | 'AwsLambda'
   yaml?: string
 }
 
@@ -8824,12 +8880,6 @@ export interface ItemDTO {
   description?: string
   price?: PriceDTO
   proration?: boolean
-  quantity?: number
-}
-
-export interface ItemParams {
-  lookupKey?: string
-  priceId?: string
   quantity?: number
 }
 
@@ -9225,7 +9275,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -9233,6 +9283,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -9534,6 +9585,7 @@ export interface ManifestConfig {
     | 'AsgScalingPolicy'
     | 'AsgScheduledUpdateGroupAction'
     | 'GoogleCloudFunctionDefinition'
+    | 'AwsLambda'
 }
 
 export interface ManifestConfigWrapper {
@@ -9943,9 +9995,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -10242,14 +10295,10 @@ export interface PageConnectorResponse {
 export interface PageEntitySetupUsageDTO {
   content?: EntitySetupUsageDTO[]
   empty?: boolean
-  first?: boolean
-  last?: boolean
-  number?: number
-  numberOfElements?: number
-  pageable?: Pageable
-  size?: number
-  sort?: Sort
-  totalElements?: number
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
   totalPages?: number
 }
 
@@ -10818,6 +10867,10 @@ export interface PipelinesExecutionDashboardInfo {
   runningExecutions?: PipelineExecutionDashboardInfo[]
 }
 
+export interface PolicyConfig {
+  policySets: string[]
+}
+
 export interface PriceCollectionDTO {
   prices?: PriceDTO[]
 }
@@ -11174,6 +11227,7 @@ export interface ReferencedByDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export interface RefreshResponse {
@@ -12470,6 +12524,7 @@ export interface ResponseListEntityType {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12662,6 +12717,7 @@ export interface ResponseListServiceDefinitionType {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -13143,6 +13199,7 @@ export interface ResponseMessage {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -14256,6 +14313,7 @@ export interface Role {
 export interface RoleAssignment {
   disabled?: boolean
   identifier?: string
+  internal?: boolean
   managed?: boolean
   principal: Principal
   resourceGroupIdentifier: string
@@ -14604,7 +14662,9 @@ export interface ScmConnectorResponse {
 export interface ScmErrorDetails {
   error?: string
   explanation?: string
+  gitErrorMetadata?: GitErrorMetadata
   hint?: string
+  statusCode?: number
 }
 
 export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
@@ -14962,6 +15022,7 @@ export interface ServiceDefinition {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
 }
 
 export interface ServiceDeployment {
@@ -15740,10 +15801,12 @@ export interface StepData {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export interface StepElementConfig {
   description?: string
+  enforce?: PolicyConfig
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
@@ -15867,33 +15930,15 @@ export interface StripeBillingDTO {
   zipCode?: string
 }
 
-export interface SubscriptionCreateParams {
-  accountIdentifier?: string
-  customer?: CustomerDTO
-  edition?: string
-  items?: SubscriptionItemParams[]
-  moduleType?:
-    | 'CD'
-    | 'CI'
-    | 'CV'
-    | 'CF'
-    | 'CE'
-    | 'STO'
-    | 'CHAOS'
-    | 'SRM'
-    | 'CODE'
-    | 'CORE'
-    | 'PMS'
-    | 'TEMPLATESERVICE'
-    | 'GOVERNANCE'
-    | 'IACM'
-  paymentFrequency?: string
-  premiumSupport?: boolean
+export interface StripeItemRequest {
+  priceId?: string
+  quantity?: number
+  quantityIncludedInPrice?: boolean
 }
 
 export interface SubscriptionDTO {
-  customerId?: string
-  items?: ItemParams[]
+  customer?: CustomerDTO
+  items?: StripeItemRequest[]
   moduleType?:
     | 'CD'
     | 'CI'
@@ -15940,10 +15985,34 @@ export interface SubscriptionDetailDTO {
   subscriptionId?: string
 }
 
-export interface SubscriptionItemParams {
+export interface SubscriptionItemRequest {
   quantity?: number
   quantityIncludedInPrice?: boolean
   type?: string
+}
+
+export interface SubscriptionRequest {
+  accountIdentifier?: string
+  customer?: CustomerDTO
+  edition?: string
+  items?: SubscriptionItemRequest[]
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'SRM'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'IACM'
+  paymentFrequency?: string
+  premiumSupport?: boolean
 }
 
 export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
@@ -16076,7 +16145,7 @@ export type TasConnector = ConnectorConfigDTO & {
 }
 
 export type TasCountInstanceSelection = TasInstanceSelectionBase & {
-  value?: ParameterFieldString
+  value: ParameterFieldString
 }
 
 export interface TasCredential {
@@ -16128,7 +16197,7 @@ export type TasManualDetails = TasCredentialSpec & {
 }
 
 export type TasPercentageInstanceSelection = TasInstanceSelectionBase & {
-  value?: ParameterFieldString
+  value: ParameterFieldString
 }
 
 export type TasRollbackStepInfo = StepSpecType & {
@@ -16146,12 +16215,12 @@ export type TasRollingRollbackStepInfo = StepSpecType & {
 
 export type TasSwapRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  upsizeInActiveApp?: boolean
+  upsizeInActiveApp: boolean
 }
 
 export type TasSwapRoutesStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  downSizeOldApplication?: boolean
+  downSizeOldApplication: boolean
 }
 
 export interface TaskSelectorYaml {
@@ -16677,6 +16746,7 @@ export interface TypeInfo {
 
 export type UpdateReleaseRepoStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  prTitle?: string
   stringMap?: ParameterFieldMapStringString
   variables?: NGVariable[]
 }
@@ -17294,9 +17364,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = void
+export type SecretRequestWrapperRequestBody = SecretRequestWrapper
 
-export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
+export type SecretRequestWrapper2RequestBody = void
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -17324,11 +17394,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
+export type DeleteManyFreezesBodyRequestBody = string[]
+
+export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
-
-export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -18056,6 +18126,7 @@ export interface ListActivitiesQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -18248,6 +18319,7 @@ export interface ListActivitiesQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -18544,6 +18616,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -18736,6 +18809,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -20341,7 +20415,7 @@ export type GetBuildDetailsForAcrArtifactWithYamlProps = Omit<
     ResponseAcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20355,7 +20429,7 @@ export const GetBuildDetailsForAcrArtifactWithYaml = (props: GetBuildDetailsForA
     ResponseAcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -20370,7 +20444,7 @@ export type UseGetBuildDetailsForAcrArtifactWithYamlProps = Omit<
     ResponseAcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20384,7 +20458,7 @@ export const useGetBuildDetailsForAcrArtifactWithYaml = (props: UseGetBuildDetai
     ResponseAcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/acr/getBuildDetailsV2`, { base: getConfig('ng/api'), ...props })
 
@@ -20396,7 +20470,7 @@ export const getBuildDetailsForAcrArtifactWithYamlPromise = (
     ResponseAcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -20405,7 +20479,7 @@ export const getBuildDetailsForAcrArtifactWithYamlPromise = (
     ResponseAcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/acr/getBuildDetailsV2`, props, signal)
 
@@ -20600,7 +20674,7 @@ export type GetAzureSubscriptionsForAcrArtifactWithYamlProps = Omit<
     ResponseAzureSubscriptionsDTO,
     Failure | Error,
     GetAzureSubscriptionsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20616,7 +20690,7 @@ export const GetAzureSubscriptionsForAcrArtifactWithYaml = (
     ResponseAzureSubscriptionsDTO,
     Failure | Error,
     GetAzureSubscriptionsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -20631,7 +20705,7 @@ export type UseGetAzureSubscriptionsForAcrArtifactWithYamlProps = Omit<
     ResponseAzureSubscriptionsDTO,
     Failure | Error,
     GetAzureSubscriptionsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20647,7 +20721,7 @@ export const useGetAzureSubscriptionsForAcrArtifactWithYaml = (
     ResponseAzureSubscriptionsDTO,
     Failure | Error,
     GetAzureSubscriptionsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/acr/v2/subscriptions`, { base: getConfig('ng/api'), ...props })
 
@@ -20659,7 +20733,7 @@ export const getAzureSubscriptionsForAcrArtifactWithYamlPromise = (
     ResponseAzureSubscriptionsDTO,
     Failure | Error,
     GetAzureSubscriptionsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -20668,7 +20742,7 @@ export const getAzureSubscriptionsForAcrArtifactWithYamlPromise = (
     ResponseAzureSubscriptionsDTO,
     Failure | Error,
     GetAzureSubscriptionsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/acr/v2/subscriptions`, props, signal)
 
@@ -20697,7 +20771,7 @@ export type GetACRRegistriesForServiceWithYamlProps = Omit<
     ResponseAcrRegistriesDTO,
     Failure | Error,
     GetACRRegistriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20711,7 +20785,7 @@ export const GetACRRegistriesForServiceWithYaml = (props: GetACRRegistriesForSer
     ResponseAcrRegistriesDTO,
     Failure | Error,
     GetACRRegistriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -20726,7 +20800,7 @@ export type UseGetACRRegistriesForServiceWithYamlProps = Omit<
     ResponseAcrRegistriesDTO,
     Failure | Error,
     GetACRRegistriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20740,7 +20814,7 @@ export const useGetACRRegistriesForServiceWithYaml = (props: UseGetACRRegistries
     ResponseAcrRegistriesDTO,
     Failure | Error,
     GetACRRegistriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/acr/v3/container-registries`, { base: getConfig('ng/api'), ...props })
 
@@ -20752,7 +20826,7 @@ export const getACRRegistriesForServiceWithYamlPromise = (
     ResponseAcrRegistriesDTO,
     Failure | Error,
     GetACRRegistriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -20761,7 +20835,7 @@ export const getACRRegistriesForServiceWithYamlPromise = (
     ResponseAcrRegistriesDTO,
     Failure | Error,
     GetACRRegistriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/acr/v3/container-registries`, props, signal)
 
@@ -20791,7 +20865,7 @@ export type GetACRRepositoriesForServiceWithYamlProps = Omit<
     ResponseAcrRepositoriesDTO,
     Failure | Error,
     GetACRRepositoriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20805,7 +20879,7 @@ export const GetACRRepositoriesForServiceWithYaml = (props: GetACRRepositoriesFo
     ResponseAcrRepositoriesDTO,
     Failure | Error,
     GetACRRepositoriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -20820,7 +20894,7 @@ export type UseGetACRRepositoriesForServiceWithYamlProps = Omit<
     ResponseAcrRepositoriesDTO,
     Failure | Error,
     GetACRRepositoriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20834,7 +20908,7 @@ export const useGetACRRepositoriesForServiceWithYaml = (props: UseGetACRReposito
     ResponseAcrRepositoriesDTO,
     Failure | Error,
     GetACRRepositoriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/acr/v3/repositories`, { base: getConfig('ng/api'), ...props })
 
@@ -20846,7 +20920,7 @@ export const getACRRepositoriesForServiceWithYamlPromise = (
     ResponseAcrRepositoriesDTO,
     Failure | Error,
     GetACRRepositoriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -20855,7 +20929,7 @@ export const getACRRepositoriesForServiceWithYamlPromise = (
     ResponseAcrRepositoriesDTO,
     Failure | Error,
     GetACRRepositoriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/acr/v3/repositories`, props, signal)
 
@@ -23180,7 +23254,7 @@ export type GetBuildDetailsForEcrWithYamlProps = Omit<
     ResponseEcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForEcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -23194,7 +23268,7 @@ export const GetBuildDetailsForEcrWithYaml = (props: GetBuildDetailsForEcrWithYa
     ResponseEcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForEcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -23209,7 +23283,7 @@ export type UseGetBuildDetailsForEcrWithYamlProps = Omit<
     ResponseEcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForEcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -23223,7 +23297,7 @@ export const useGetBuildDetailsForEcrWithYaml = (props: UseGetBuildDetailsForEcr
     ResponseEcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForEcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/ecr/getBuildDetailsV2`, { base: getConfig('ng/api'), ...props })
 
@@ -23235,7 +23309,7 @@ export const getBuildDetailsForEcrWithYamlPromise = (
     ResponseEcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForEcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -23244,7 +23318,7 @@ export const getBuildDetailsForEcrWithYamlPromise = (
     ResponseEcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForEcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/ecr/getBuildDetailsV2`, props, signal)
 
@@ -23273,7 +23347,7 @@ export type GetImagesListForEcrProps = Omit<
     ResponseEcrListImagesDTO,
     Failure | Error,
     GetImagesListForEcrQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -23287,7 +23361,7 @@ export const GetImagesListForEcr = (props: GetImagesListForEcrProps) => (
     ResponseEcrListImagesDTO,
     Failure | Error,
     GetImagesListForEcrQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -23302,7 +23376,7 @@ export type UseGetImagesListForEcrProps = Omit<
     ResponseEcrListImagesDTO,
     Failure | Error,
     GetImagesListForEcrQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -23316,7 +23390,7 @@ export const useGetImagesListForEcr = (props: UseGetImagesListForEcrProps) =>
     ResponseEcrListImagesDTO,
     Failure | Error,
     GetImagesListForEcrQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/ecr/getImages`, { base: getConfig('ng/api'), ...props })
 
@@ -23328,7 +23402,7 @@ export const getImagesListForEcrPromise = (
     ResponseEcrListImagesDTO,
     Failure | Error,
     GetImagesListForEcrQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -23337,7 +23411,7 @@ export const getImagesListForEcrPromise = (
     ResponseEcrListImagesDTO,
     Failure | Error,
     GetImagesListForEcrQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/ecr/getImages`, props, signal)
 
@@ -23893,7 +23967,7 @@ export type GetBuildDetailsForGcrWithYamlProps = Omit<
     ResponseGcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForGcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -23907,7 +23981,7 @@ export const GetBuildDetailsForGcrWithYaml = (props: GetBuildDetailsForGcrWithYa
     ResponseGcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForGcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -23922,7 +23996,7 @@ export type UseGetBuildDetailsForGcrWithYamlProps = Omit<
     ResponseGcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForGcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -23936,7 +24010,7 @@ export const useGetBuildDetailsForGcrWithYaml = (props: UseGetBuildDetailsForGcr
     ResponseGcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForGcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/gcr/getBuildDetailsV2`, { base: getConfig('ng/api'), ...props })
 
@@ -23948,7 +24022,7 @@ export const getBuildDetailsForGcrWithYamlPromise = (
     ResponseGcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForGcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -23957,7 +24031,7 @@ export const getBuildDetailsForGcrWithYamlPromise = (
     ResponseGcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForGcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/gcr/getBuildDetailsV2`, props, signal)
 
@@ -28763,7 +28837,7 @@ export type ListBucketsWithServiceV2Props = Omit<
     ResponseListBucketResponse,
     Failure | Error,
     ListBucketsWithServiceV2QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -28777,7 +28851,7 @@ export const ListBucketsWithServiceV2 = (props: ListBucketsWithServiceV2Props) =
     ResponseListBucketResponse,
     Failure | Error,
     ListBucketsWithServiceV2QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -28792,7 +28866,7 @@ export type UseListBucketsWithServiceV2Props = Omit<
     ResponseListBucketResponse,
     Failure | Error,
     ListBucketsWithServiceV2QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -28806,7 +28880,7 @@ export const useListBucketsWithServiceV2 = (props: UseListBucketsWithServiceV2Pr
     ResponseListBucketResponse,
     Failure | Error,
     ListBucketsWithServiceV2QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/buckets/s3/v2/getBuckets`, { base: getConfig('ng/api'), ...props })
 
@@ -28818,7 +28892,7 @@ export const listBucketsWithServiceV2Promise = (
     ResponseListBucketResponse,
     Failure | Error,
     ListBucketsWithServiceV2QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -28827,7 +28901,7 @@ export const listBucketsWithServiceV2Promise = (
     ResponseListBucketResponse,
     Failure | Error,
     ListBucketsWithServiceV2QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/buckets/s3/v2/getBuckets`, props, signal)
 
@@ -28847,7 +28921,7 @@ export type GetBucketsInManifestsProps = Omit<
     ResponseMapStringString,
     Failure | Error,
     GetBucketsInManifestsQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -28861,7 +28935,7 @@ export const GetBucketsInManifests = (props: GetBucketsInManifestsProps) => (
     ResponseMapStringString,
     Failure | Error,
     GetBucketsInManifestsQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -28876,7 +28950,7 @@ export type UseGetBucketsInManifestsProps = Omit<
     ResponseMapStringString,
     Failure | Error,
     GetBucketsInManifestsQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -28890,7 +28964,7 @@ export const useGetBucketsInManifests = (props: UseGetBucketsInManifestsProps) =
     ResponseMapStringString,
     Failure | Error,
     GetBucketsInManifestsQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/buckets/s3/v2/getBucketsInManifests`, { base: getConfig('ng/api'), ...props })
 
@@ -28902,7 +28976,7 @@ export const getBucketsInManifestsPromise = (
     ResponseMapStringString,
     Failure | Error,
     GetBucketsInManifestsQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -28911,7 +28985,7 @@ export const getBucketsInManifestsPromise = (
     ResponseMapStringString,
     Failure | Error,
     GetBucketsInManifestsQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/buckets/s3/v2/getBucketsInManifests`, props, signal)
 
@@ -28942,7 +29016,7 @@ export type GetFilePathsV2ForS3Props = Omit<
     ResponseListFilePaths,
     Failure | Error,
     GetFilePathsV2ForS3QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -28956,7 +29030,7 @@ export const GetFilePathsV2ForS3 = (props: GetFilePathsV2ForS3Props) => (
     ResponseListFilePaths,
     Failure | Error,
     GetFilePathsV2ForS3QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -28971,7 +29045,7 @@ export type UseGetFilePathsV2ForS3Props = Omit<
     ResponseListFilePaths,
     Failure | Error,
     GetFilePathsV2ForS3QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -28985,7 +29059,7 @@ export const useGetFilePathsV2ForS3 = (props: UseGetFilePathsV2ForS3Props) =>
     ResponseListFilePaths,
     Failure | Error,
     GetFilePathsV2ForS3QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/buckets/s3/v2/getFilePaths`, { base: getConfig('ng/api'), ...props })
 
@@ -28997,7 +29071,7 @@ export const getFilePathsV2ForS3Promise = (
     ResponseListFilePaths,
     Failure | Error,
     GetFilePathsV2ForS3QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -29006,7 +29080,7 @@ export const getFilePathsV2ForS3Promise = (
     ResponseListFilePaths,
     Failure | Error,
     GetFilePathsV2ForS3QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/buckets/s3/v2/getFilePaths`, props, signal)
 
@@ -34658,6 +34732,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -34911,6 +34986,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   searchTerm?: string
 }
 
@@ -38229,6 +38305,7 @@ export interface GetReferencedByQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   searchTerm?: string
 }
 
@@ -38685,7 +38762,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -38699,7 +38776,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -38714,7 +38791,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -38728,7 +38805,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -38740,7 +38817,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -38749,7 +38826,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -39255,7 +39332,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -39269,7 +39346,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -39284,7 +39361,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -39298,7 +39375,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -39310,7 +39387,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -39319,7 +39396,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -40838,6 +40915,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -41098,6 +41176,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'DeployCloudFunctionWithNoTraffic'
       | 'CloudFunctionTrafficShift'
       | 'CloudFunctionRollback'
+      | 'AwsLambdaDeploy'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -43015,6 +43094,7 @@ export interface GetInfrastructureListQueryParams {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   sort?: string[]
@@ -43655,6 +43735,7 @@ export interface DeleteInfrastructureQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   environmentIdentifier?: string
+  forceDelete?: boolean
 }
 
 export type DeleteInfrastructureProps = Omit<
@@ -47057,6 +47138,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   yamlGroup?: string
 }
 
@@ -47377,6 +47459,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -47637,6 +47720,7 @@ export interface GetStepsQueryParams {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
 }
 
 export type GetStepsProps = Omit<GetProps<ResponseStepCategory, Failure | Error, GetStepsQueryParams, void>, 'path'>
@@ -47793,6 +47877,7 @@ export interface GetExecutionStrategyYamlQueryParams {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
   accountIdentifier?: string
@@ -47857,6 +47942,7 @@ export interface PostExecutionStrategyYamlQueryParams {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -51983,6 +52069,7 @@ export interface GetServiceListQueryParams {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -52598,6 +52685,7 @@ export interface GetServiceAccessListQueryParams {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -54210,13 +54298,7 @@ export interface CreateSubscriptionQueryParams {
 }
 
 export type CreateSubscriptionProps = Omit<
-  MutateProps<
-    ResponseSubscriptionDetailDTO,
-    Failure | Error,
-    CreateSubscriptionQueryParams,
-    SubscriptionCreateParams,
-    void
-  >,
+  MutateProps<ResponseSubscriptionDetailDTO, Failure | Error, CreateSubscriptionQueryParams, SubscriptionRequest, void>,
   'path' | 'verb'
 >
 
@@ -54224,7 +54306,7 @@ export type CreateSubscriptionProps = Omit<
  * Creates a subscription
  */
 export const CreateSubscription = (props: CreateSubscriptionProps) => (
-  <Mutate<ResponseSubscriptionDetailDTO, Failure | Error, CreateSubscriptionQueryParams, SubscriptionCreateParams, void>
+  <Mutate<ResponseSubscriptionDetailDTO, Failure | Error, CreateSubscriptionQueryParams, SubscriptionRequest, void>
     verb="POST"
     path={`/subscriptions`}
     base={getConfig('ng/api')}
@@ -54237,7 +54319,7 @@ export type UseCreateSubscriptionProps = Omit<
     ResponseSubscriptionDetailDTO,
     Failure | Error,
     CreateSubscriptionQueryParams,
-    SubscriptionCreateParams,
+    SubscriptionRequest,
     void
   >,
   'path' | 'verb'
@@ -54247,13 +54329,11 @@ export type UseCreateSubscriptionProps = Omit<
  * Creates a subscription
  */
 export const useCreateSubscription = (props: UseCreateSubscriptionProps) =>
-  useMutate<
-    ResponseSubscriptionDetailDTO,
-    Failure | Error,
-    CreateSubscriptionQueryParams,
-    SubscriptionCreateParams,
-    void
-  >('POST', `/subscriptions`, { base: getConfig('ng/api'), ...props })
+  useMutate<ResponseSubscriptionDetailDTO, Failure | Error, CreateSubscriptionQueryParams, SubscriptionRequest, void>(
+    'POST',
+    `/subscriptions`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 /**
  * Creates a subscription
@@ -54263,7 +54343,7 @@ export const createSubscriptionPromise = (
     ResponseSubscriptionDetailDTO,
     Failure | Error,
     CreateSubscriptionQueryParams,
-    SubscriptionCreateParams,
+    SubscriptionRequest,
     void
   >,
   signal?: RequestInit['signal']
@@ -54272,7 +54352,7 @@ export const createSubscriptionPromise = (
     ResponseSubscriptionDetailDTO,
     Failure | Error,
     CreateSubscriptionQueryParams,
-    SubscriptionCreateParams,
+    SubscriptionRequest,
     void
   >('POST', getConfig('ng/api'), `/subscriptions`, props, signal)
 
@@ -54849,12 +54929,18 @@ export const retrieveRecommendationPromise = (
   )
 
 export type SyncStripeEventProps = Omit<
-  MutateProps<RestResponseVoid, Failure | Error, void, GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody, void>,
+  MutateProps<
+    RestResponseVoid,
+    Failure | Error,
+    void,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 export const SyncStripeEvent = (props: SyncStripeEventProps) => (
-  <Mutate<RestResponseVoid, Failure | Error, void, GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody, void>
+  <Mutate<RestResponseVoid, Failure | Error, void, GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody, void>
     verb="POST"
     path={`/subscriptions/sync_event`}
     base={getConfig('ng/api')}
@@ -54863,12 +54949,18 @@ export const SyncStripeEvent = (props: SyncStripeEventProps) => (
 )
 
 export type UseSyncStripeEventProps = Omit<
-  UseMutateProps<RestResponseVoid, Failure | Error, void, GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody, void>,
+  UseMutateProps<
+    RestResponseVoid,
+    Failure | Error,
+    void,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 export const useSyncStripeEvent = (props: UseSyncStripeEventProps) =>
-  useMutate<RestResponseVoid, Failure | Error, void, GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody, void>(
+  useMutate<RestResponseVoid, Failure | Error, void, GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody, void>(
     'POST',
     `/subscriptions/sync_event`,
     { base: getConfig('ng/api'), ...props }
@@ -54879,18 +54971,18 @@ export const syncStripeEventPromise = (
     RestResponseVoid,
     Failure | Error,
     void,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<RestResponseVoid, Failure | Error, void, GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody, void>(
-    'POST',
-    getConfig('ng/api'),
-    `/subscriptions/sync_event`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    RestResponseVoid,
+    Failure | Error,
+    void,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/subscriptions/sync_event`, props, signal)
 
 export interface CancelSubscriptionQueryParams {
   accountIdentifier: string
@@ -55113,8 +55205,8 @@ export const updateSubscriptionPromise = (
 export interface GetTasOrganizationsQueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   envId?: string
   infraDefinitionId?: string
 }
@@ -55167,8 +55259,8 @@ export interface GetTasSpacesQueryParams {
   connectorRef: string
   organization: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type GetTasSpacesProps = Omit<
@@ -58260,6 +58352,68 @@ export const getAccessibleProjectsCountPromise = (
     signal
   )
 
+export interface ResetTwoFactorAuthQueryParams {
+  accountIdentifier?: string
+}
+
+export interface ResetTwoFactorAuthPathParams {
+  userId: string
+}
+
+export type ResetTwoFactorAuthProps = Omit<
+  GetProps<RestResponseBoolean, Failure | Error, ResetTwoFactorAuthQueryParams, ResetTwoFactorAuthPathParams>,
+  'path'
+> &
+  ResetTwoFactorAuthPathParams
+
+/**
+ * resend email for two factor authorization
+ */
+export const ResetTwoFactorAuth = ({ userId, ...props }: ResetTwoFactorAuthProps) => (
+  <Get<RestResponseBoolean, Failure | Error, ResetTwoFactorAuthQueryParams, ResetTwoFactorAuthPathParams>
+    path={`/user/reset-two-factor-auth/${userId}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseResetTwoFactorAuthProps = Omit<
+  UseGetProps<RestResponseBoolean, Failure | Error, ResetTwoFactorAuthQueryParams, ResetTwoFactorAuthPathParams>,
+  'path'
+> &
+  ResetTwoFactorAuthPathParams
+
+/**
+ * resend email for two factor authorization
+ */
+export const useResetTwoFactorAuth = ({ userId, ...props }: UseResetTwoFactorAuthProps) =>
+  useGet<RestResponseBoolean, Failure | Error, ResetTwoFactorAuthQueryParams, ResetTwoFactorAuthPathParams>(
+    (paramsInPath: ResetTwoFactorAuthPathParams) => `/user/reset-two-factor-auth/${paramsInPath.userId}`,
+    { base: getConfig('ng/api'), pathParams: { userId }, ...props }
+  )
+
+/**
+ * resend email for two factor authorization
+ */
+export const resetTwoFactorAuthPromise = (
+  {
+    userId,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseBoolean,
+    Failure | Error,
+    ResetTwoFactorAuthQueryParams,
+    ResetTwoFactorAuthPathParams
+  > & { userId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseBoolean, Failure | Error, ResetTwoFactorAuthQueryParams, ResetTwoFactorAuthPathParams>(
+    getConfig('ng/api'),
+    `/user/reset-two-factor-auth/${userId}`,
+    props,
+    signal
+  )
+
 export interface GetTwoFactorAuthSettingsQueryParams {
   accountIdentifier?: string
 }
@@ -59399,7 +59553,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -59409,7 +59563,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -59422,7 +59576,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -59436,7 +59590,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -59448,7 +59602,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -59457,7 +59611,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -59850,7 +60004,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -59864,7 +60018,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >
     verb="POST"
@@ -59879,7 +60033,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -59893,7 +60047,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -59905,7 +60059,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -59914,7 +60068,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -60050,7 +60204,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -60065,7 +60219,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -60080,7 +60234,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -60095,7 +60249,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -60114,7 +60268,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -60123,7 +60277,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -60142,7 +60296,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -60157,7 +60311,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -60172,7 +60326,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -60187,7 +60341,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -60206,7 +60360,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -60215,7 +60369,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -61078,6 +61232,7 @@ export interface GetYamlSchemaQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   subtype?:
     | 'K8sCluster'
     | 'Git'

@@ -303,10 +303,10 @@ const EntityUsageList: React.FC<EntityUsageListProps> = ({ entityData, gotoPage,
       columns={columns}
       data={data}
       pagination={{
-        itemCount: entityData?.data?.totalElements || 0,
-        pageSize: entityData?.data?.size || 10,
+        itemCount: entityData?.data?.totalItems || 0,
+        pageSize: entityData?.data?.pageSize || 10,
         pageCount: entityData?.data?.totalPages || 0,
-        pageIndex: entityData?.data?.pageable?.pageNumber || 0,
+        pageIndex: entityData?.data?.pageIndex || 0,
         gotoPage
       }}
     />
