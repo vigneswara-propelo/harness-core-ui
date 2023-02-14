@@ -6,43 +6,65 @@
  */
 
 import React, { useRef } from 'react'
-import { Container, Layout, Text, PageError } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
-import { get } from 'lodash-es'
+import { Container, Layout, Text, PageError, PageSpinner, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
 import type { MonacoDiffEditor as MonacoDiffEditorType } from 'react-monaco-editor'
+import { FontVariation } from '@harness/design-system'
+import { defaultTo, get } from 'lodash-es'
 import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { useStrings } from 'framework/strings'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import css from './YamlDiffView.module.scss'
 
-interface YamlDiffViewProps {
-  oldYaml: string
-  newYaml: string
-  error: any
-  refetchYamlDiff: () => void
+interface TemplateErrorUtils {
+  isTemplateResolved?: boolean
+  buttonLabel?: string
+  onNodeUpdate?: () => Promise<void>
+  isYamlDiffForTemplate?: boolean
 }
 
-export function YamlDiffView({ oldYaml, newYaml, error, refetchYamlDiff }: YamlDiffViewProps): React.ReactElement {
+interface YamlDiffViewProps {
+  originalYaml: string
+  refreshedYaml: string
+  error: any
+  refetchYamlDiff: () => void
+  loading?: boolean
+  templateErrorUtils?: TemplateErrorUtils
+}
+
+export function YamlDiffView({
+  originalYaml,
+  refreshedYaml,
+  error,
+  refetchYamlDiff,
+  loading,
+  templateErrorUtils
+}: YamlDiffViewProps): React.ReactElement {
   const editorRef = useRef<MonacoDiffEditorType>(null)
   const { getString } = useStrings()
 
+  const { isTemplateResolved, buttonLabel, onNodeUpdate, isYamlDiffForTemplate } = defaultTo(templateErrorUtils, {})
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+
   return (
     <Container className={css.mainContainer}>
-      {error && (
+      {loading && <PageSpinner />}
+      {!loading && error && (
         <PageError message={get(error.data as Error, 'message') || error.message} onClick={() => refetchYamlDiff()} />
       )}
-      {!error && oldYaml && newYaml && (
+      {!error && originalYaml && refreshedYaml && (
         <Layout.Vertical height={'100%'}>
           <Container height={56}>
             <Layout.Horizontal height={'100%'}>
-              <Container width={604} border={{ right: true }}>
+              <Container className={css.leftHeader} border={{ right: true }}>
                 <Layout.Horizontal
                   height={'100%'}
                   flex={{ justifyContent: 'space-between', alignItems: 'center' }}
                   padding={{ left: 'xlarge', right: 'xlarge' }}
                 >
                   <Text font={{ variation: FontVariation.H6 }}>
-                    {getString('pipeline.inputSetErrorStrip.existingYaml')}
+                    {getString('common.yamlDiffView.originalYamlLabel')}
                   </Text>
                 </Layout.Horizontal>
               </Container>
@@ -53,16 +75,26 @@ export function YamlDiffView({ oldYaml, newYaml, error, refetchYamlDiff }: YamlD
                   padding={{ left: 'xlarge', right: 'xlarge' }}
                 >
                   <Text font={{ variation: FontVariation.H6 }}>
-                    {getString('pipeline.inputSetErrorStrip.validYaml')}
+                    {getString('common.yamlDiffView.refreshedYamlLabel')}
                   </Text>
-                  <CopyToClipboard content={newYaml} showFeedback={true} />
+                  {isTemplateResolved || (isYamlDiffForTemplate && isGitSyncEnabled) ? (
+                    <CopyToClipboard content={refreshedYaml} showFeedback={true} />
+                  ) : (
+                    <Button
+                      variation={ButtonVariation.PRIMARY}
+                      text={buttonLabel}
+                      onClick={onNodeUpdate}
+                      size={ButtonSize.SMALL}
+                      data-testid={'yaml-update-button'}
+                    />
+                  )}
                 </Layout.Horizontal>
               </Container>
             </Layout.Horizontal>
           </Container>
           <MonacoDiffEditor
-            original={oldYaml}
-            value={newYaml}
+            original={originalYaml}
+            value={refreshedYaml}
             width={'100%'}
             height={'calc(100% - 56px)'}
             language="yaml"

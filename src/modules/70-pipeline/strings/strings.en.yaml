@@ -1430,8 +1430,6 @@ reconcileDialog:
   subtitle: Error Trace
   unsyncedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from unsynced entities.
   updatedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from updated entities.
-  originalYamlLabel: Original
-  refreshedYamlLabel: Refreshed
   updateAllLabel: Update all unsynced entities
   updateEntityLabel: 'Update {{entity}}'
 inputSetErrorStrip:

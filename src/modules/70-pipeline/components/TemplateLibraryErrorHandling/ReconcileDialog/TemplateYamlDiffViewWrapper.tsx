@@ -5,23 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef } from 'react'
-import {
-  Button,
-  ButtonSize,
-  ButtonVariation,
-  Container,
-  Layout,
-  Text,
-  useIsMounted,
-  PageError,
-  PageSpinner
-} from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import React from 'react'
+import { useIsMounted } from '@harness/uicore'
 import { defaultTo, isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import type { MonacoDiffEditor as MonacoDiffEditorType } from 'react-monaco-editor'
-import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import {
   ErrorNodeSummary,
   getRefreshedYamlPromise,
@@ -36,12 +23,10 @@ import {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
-import css from './YamlDiffView.module.scss'
+import { YamlDiffView } from '@common/components/YamlDiffView/YamlDiffView'
 
-export interface YamlDiffViewProps {
+export interface TemplateYamlDiffViewWrapperProps {
   errorNodeSummary?: ErrorNodeSummary
   rootErrorNodeSummary: ErrorNodeSummary
   originalEntityYaml: string
@@ -49,19 +34,16 @@ export interface YamlDiffViewProps {
   onUpdate: (refreshedYaml: string) => Promise<void>
 }
 
-export function YamlDiffView({
+export function TemplateYamlDiffViewWrapper({
   errorNodeSummary,
   rootErrorNodeSummary,
   originalEntityYaml,
   resolvedTemplateResponses = [],
   onUpdate
-}: YamlDiffViewProps) {
+}: TemplateYamlDiffViewWrapperProps): React.ReactElement {
   const { getString } = useStrings()
-  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
-  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const params = useParams<ProjectPathProps>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const editorRef = useRef<MonacoDiffEditorType>(null)
   const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<any>()
   const [originalYaml, setOriginalYaml] = React.useState<string>('')
@@ -177,74 +159,13 @@ export function YamlDiffView({
   }, [errorNodeSummary])
 
   return (
-    <Container className={css.mainContainer} height={'100%'} background={Color.WHITE} border={{ radius: 4 }}>
-      {loading && <PageSpinner />}
-      {!loading && error && (
-        <PageError message={(error.data as Error)?.message || error.message} onClick={() => refetch()} />
-      )}
-      {!error && originalYaml && refreshedYaml && (
-        <Layout.Vertical height={'100%'}>
-          <Container height={56}>
-            <Layout.Horizontal height={'100%'}>
-              <Container className={css.leftHeader} border={{ right: true }}>
-                <Layout.Horizontal
-                  height={'100%'}
-                  flex={{ justifyContent: 'space-between', alignItems: 'center' }}
-                  padding={{ left: 'xlarge', right: 'xlarge' }}
-                >
-                  <Text font={{ variation: FontVariation.H6 }}>
-                    {getString('pipeline.reconcileDialog.originalYamlLabel')}
-                  </Text>
-                </Layout.Horizontal>
-              </Container>
-              <Container className={css.refreshedHeader}>
-                <Layout.Horizontal
-                  height={'100%'}
-                  flex={{ justifyContent: 'space-between', alignItems: 'center' }}
-                  padding={{ left: 'xlarge', right: 'xlarge' }}
-                >
-                  <Text font={{ variation: FontVariation.H6 }}>
-                    {getString('pipeline.reconcileDialog.refreshedYamlLabel')}
-                  </Text>
-                  {!isTemplateResolved ? (
-                    isGitSyncEnabled ? (
-                      <CopyToClipboard content={refreshedYaml} showFeedback={true} />
-                    ) : (
-                      <Button
-                        variation={ButtonVariation.PRIMARY}
-                        text={buttonLabel}
-                        onClick={onNodeUpdate}
-                        size={ButtonSize.SMALL}
-                      />
-                    )
-                  ) : null}
-                </Layout.Horizontal>
-              </Container>
-            </Layout.Horizontal>
-          </Container>
-          <MonacoDiffEditor
-            width={'100%'}
-            height={'calc(100% - 56px)'}
-            language="yaml"
-            original={originalYaml}
-            value={refreshedYaml}
-            options={{
-              ignoreTrimWhitespace: true,
-              minimap: { enabled: true },
-              codeLens: true,
-              renderSideBySide: true,
-              lineNumbers: 'on',
-              readOnly: true,
-              inDiffEditor: true,
-              scrollBeyondLastLine: false,
-              enableSplitViewResizing: false,
-              fontFamily: "'Roboto Mono', monospace",
-              fontSize: 13
-            }}
-            ref={editorRef}
-          />
-        </Layout.Vertical>
-      )}
-    </Container>
+    <YamlDiffView
+      originalYaml={originalYaml}
+      refreshedYaml={refreshedYaml}
+      error={error}
+      refetchYamlDiff={refetch}
+      loading={loading}
+      templateErrorUtils={{ isTemplateResolved, buttonLabel, onNodeUpdate, isYamlDiffForTemplate: true }}
+    />
   )
 }

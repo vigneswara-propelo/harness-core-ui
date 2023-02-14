@@ -1208,6 +1208,8 @@ export interface StringsMap {
   'common.whose': string
   'common.with': string
   'common.without': string
+  'common.yamlDiffView.originalYamlLabel': string
+  'common.yamlDiffView.refreshedYamlLabel': string
   'common.yearly': string
   'common.zipCode': string
   'rbac.UserGroupRoleAssignmentForm.assignmentValidation': string
@@ -4322,8 +4324,6 @@ export interface StringsMap {
   'pipeline.queueStep.scopeRequired': string
   'pipeline.recentExecutionText': string
   'pipeline.recentExecutions': string
-  'pipeline.reconcileDialog.originalYamlLabel': string
-  'pipeline.reconcileDialog.refreshedYamlLabel': string
   'pipeline.reconcileDialog.subtitle': string
   'pipeline.reconcileDialog.title': string
   'pipeline.reconcileDialog.unsyncedTemplateInfo': string

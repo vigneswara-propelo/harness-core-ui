@@ -1045,6 +1045,9 @@ configureModuleList: Configure Module List
 codeErrorsSettings: Code Error Settings
 cdAndGitops: Continuous Delivery & GitOps
 stoText: Security Testing Orchestration
+yamlDiffView:
+  originalYamlLabel: Original
+  refreshedYamlLabel: Refreshed
 
 # IACM Module
 iacm: IACM

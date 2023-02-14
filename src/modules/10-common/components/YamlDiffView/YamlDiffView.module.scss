@@ -9,7 +9,10 @@
   position: relative;
   height: 700px;
   background-color: var(--white) !important;
-  border-radius: 4px;
+  border-radius: var(--spacing-2);
+  .leftHeader {
+    width: calc(50% - 15px);
+  }
   .refreshedHeader {
     flex: 1;
   }

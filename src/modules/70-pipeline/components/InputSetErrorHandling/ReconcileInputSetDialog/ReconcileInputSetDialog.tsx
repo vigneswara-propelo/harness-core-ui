@@ -10,7 +10,6 @@ import { Container, Layout, PageSpinner, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get } from 'lodash-es'
-import { YamlDiffView } from '@pipeline/components/InputSetErrorHandling/YamlDiffView/YamlDiffView'
 import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
@@ -22,8 +21,9 @@ import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { EntityGitDetails } from 'services/pipeline-ng'
+import { YamlDiffView } from '@common/components/YamlDiffView/YamlDiffView'
 
-interface ReconcileDialogProps {
+interface ReconcileInputSetDialogProps {
   inputSet: InputSetDTO
   overlayInputSetIdentifier?: string
   oldYaml: string
@@ -37,7 +37,7 @@ interface ReconcileDialogProps {
   yamlDiffGitDetails?: EntityGitDetails
 }
 
-export function ReconcileDialog({
+export function ReconcileInputSetDialog({
   inputSet,
   overlayInputSetIdentifier,
   oldYaml,
@@ -49,7 +49,7 @@ export function ReconcileDialog({
   isOverlayInputSet,
   handleSubmit,
   yamlDiffGitDetails
-}: ReconcileDialogProps): React.ReactElement {
+}: ReconcileInputSetDialogProps): React.ReactElement {
   const { getString } = useStrings()
   const [renderCount, setRenderCount] = useState<boolean>(true)
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
@@ -104,7 +104,13 @@ export function ReconcileDialog({
           background={Color.FORM_BG}
           padding={{ top: 'large', right: 'xxxlarge', bottom: 'xxxlarge', left: 'xxxlarge' }}
         >
-          <YamlDiffView oldYaml={oldYaml} newYaml={newYaml} error={error} refetchYamlDiff={refetchYamlDiff} />
+          <YamlDiffView
+            originalYaml={oldYaml}
+            refreshedYaml={newYaml}
+            error={error}
+            refetchYamlDiff={refetchYamlDiff}
+            templateErrorUtils={{ isTemplateResolved: true, isYamlDiffForTemplate: false }}
+          />
         </Container>
         <Container
           border={{ bottom: true }}
