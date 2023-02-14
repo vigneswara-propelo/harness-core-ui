@@ -3307,6 +3307,7 @@ export interface StringsMap {
   'projectsOrgs.welcome': string
   'projectsOrgs.welcomeSecondLine': string
   'projectsOrgs.whyCreateProject': string
+  'projectsOrgs.yesIamSure': string
   'projectsOrgs.youHaveNoProjects': string
   'code.branches': string
   'code.homepageHeading': string
