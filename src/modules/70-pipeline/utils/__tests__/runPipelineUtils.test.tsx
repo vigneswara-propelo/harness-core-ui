@@ -416,62 +416,74 @@ describe('clearRuntimeInput tests', () => {
           { name: 'var10', type: 'String', value: '<+input>' }
         ]
       } as any)
-    ).toMatchInlineSnapshot(`
-      Object {
-        "variables": Array [
-          Object {
-            "name": "var1",
-            "type": "String",
-            "value": "",
-          },
-          Object {
-            "name": "var2",
-            "type": "String",
-            "value": "",
-          },
-          Object {
-            "name": "var3",
-            "type": "String",
-            "value": "<+input>.allowedValues(1,2).executionInput()",
-          },
-          Object {
-            "name": "var4",
-            "type": "String",
-            "value": "<+input>.executionInput().allowedValues(1,2)",
-          },
-          Object {
-            "name": "var5",
-            "type": "String",
-            "value": "",
-          },
-          Object {
-            "name": "var6",
-            "type": "String",
-            "value": "myDefaultValue",
-          },
-          Object {
-            "name": "var7",
-            "type": "String",
-            "value": "",
-          },
-          Object {
-            "name": "var8",
-            "type": "String",
-            "value": "<+input>.executionInput()",
-          },
-          Object {
-            "name": "var9",
-            "type": "String",
-            "value": "",
-          },
-          Object {
-            "name": "var10",
-            "type": "String",
-            "value": "",
-          },
-        ],
-      }
-    `)
+    ).toEqual({
+      variables: [
+        {
+          name: 'var1',
+          type: 'String',
+          value: ''
+        },
+        {
+          name: 'var2',
+          type: 'String',
+          value: ''
+        },
+        {
+          name: 'var3',
+          type: 'String',
+          value: '<+input>.allowedValues(1,2).executionInput()'
+        },
+        {
+          name: 'var4',
+          type: 'String',
+          value: '<+input>.executionInput().allowedValues(1,2)'
+        },
+        {
+          name: 'var5',
+          type: 'String',
+          value: ''
+        },
+        {
+          name: 'var6',
+          type: 'String',
+          value: 'myDefaultValue'
+        },
+        {
+          name: 'var7',
+          type: 'String',
+          value: ''
+        },
+        {
+          name: 'var8',
+          type: 'String',
+          value: '<+input>.executionInput()'
+        },
+        {
+          name: 'var9',
+          type: 'String',
+          value: ''
+        },
+        {
+          name: 'var10',
+          type: 'String',
+          value: ''
+        }
+      ]
+    })
+  })
+
+  test('clear runtime inputs array fields', () => {
+    expect(clearRuntimeInput({ files: '<+input>', encryptedFiles: '<+input>', hostAttributes: '<+input>' })).toEqual({
+      encryptedFiles: [''],
+      files: [''],
+      hostAttributes: ['']
+    })
+  })
+
+  test('clear runtime removes specific fields', () => {
+    expect(clearRuntimeInput({ when: '<+input>', failureStrategies: '<+input>', value: '<+input>' })).toEqual({
+      value: ''
+    })
   })
 })
 

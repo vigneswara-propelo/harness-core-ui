@@ -5,15 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, defaultTo, first, get, isEmpty, set, trim, uniqBy } from 'lodash-es'
-import type { AllowedTypes, MultiTypeInputType, IconName, SelectOption } from '@harness/uicore'
+import { cloneDeep, defaultTo, get, isEmpty, set, unset, uniqBy } from 'lodash-es'
+import { AllowedTypes, MultiTypeInputType, IconName, SelectOption, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import produce from 'immer'
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { FeaturesProps } from 'framework/featureStore/featureStoreUtil'
 import type { UseStringsReturn } from 'framework/strings'
 import type { InputSetErrorResponse, PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
-import { INPUT_EXPRESSION_REGEX_STRING, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
+import { parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime } from '@common/utils/utils'
 import cdExecutionListIllustration from '../pages/execution-list/images/cd-execution-illustration.svg'
@@ -28,48 +29,55 @@ export interface MergeStageProps {
   shouldUseDefaultValues: boolean
 }
 
+export function walkObjectRecursively(
+  obj: unknown,
+  callback: (key: string, value: unknown, path: string[]) => void,
+  path: string[] = []
+): void {
+  if (typeof obj === 'object' && obj !== null) {
+    Object.entries(obj).forEach(([key, value]) => {
+      callback(key, value, [...path, key])
+      walkObjectRecursively(value, callback, [...path, key])
+    })
+  }
+}
+
+const RUNTIME_COLLECTION_FIELDS_WHITE_LIST = ['files', 'encryptedFiles', 'hostAttributes']
+const RUNTIME_FIELD_REMOVAL_LIST = ['when', 'failureStrategies']
+
 /**
  * Loops over the pipeline and clears all the runtime inputs i.e. <+input>
  */
 export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAlsoClearRuntimeInputs?: boolean): T {
-  const runtimeCollectionFieldsWhiteList = ['files', 'encryptedFiles', 'hostAttributes']
+  return produce(template, draft => {
+    walkObjectRecursively(draft, (key, value, path) => {
+      if (typeof value === 'string' && value.startsWith(RUNTIME_INPUT_VALUE)) {
+        const isCollectionField = RUNTIME_COLLECTION_FIELDS_WHITE_LIST.includes(key)
 
-  const RUNTIME_INPUT_REGEX = new RegExp(`"${INPUT_EXPRESSION_REGEX_STRING}"`, 'g')
-  const INPUT_EXPRESSION_REGEX = `${RUNTIME_INPUT_REGEX.source.slice(1).slice(0, -1)}`
+        if (RUNTIME_FIELD_REMOVAL_LIST.includes(key)) {
+          unset(draft, path)
+          return
+        }
 
-  const canonicalClearRegExp = new RegExp(
-    `("(${runtimeCollectionFieldsWhiteList.join('|')})":")`
-      .concat(INPUT_EXPRESSION_REGEX)
-      .concat(`"|"${INPUT_EXPRESSION_REGEX}"`),
-    'g'
-  )
+        const parsed = parseInput(value)
 
-  const emptyString = '""'
-  const emptyArray = '[""]'
+        if (!parsed) {
+          return
+        }
 
-  return JSON.parse(
-    JSON.stringify(template || {}).replace(canonicalClearRegExp, value => {
-      const isCollectionField = runtimeCollectionFieldsWhiteList.some(element => value.indexOf(element) !== -1)
-      const valueToParse = isCollectionField ? first(value.match(INPUT_EXPRESSION_REGEX)) : value
+        if (parsed.executionInput && !shouldAlsoClearRuntimeInputs) {
+          return value
+        }
 
-      const parsed = parseInput(trim(valueToParse, '"'))
+        if (parsed.default !== null) {
+          set(draft as any, path, parsed.default)
+          return
+        }
 
-      if (!parsed) {
-        return value
+        set(draft as any, path, isCollectionField ? [''] : '')
       }
-
-      if (parsed.executionInput && !shouldAlsoClearRuntimeInputs) {
-        return value
-      }
-
-      if (parsed.default !== null) {
-        // retain a number value as number instead of converting it to a string
-        return typeof parsed.default === 'number' ? `${parsed.default}` : `"${parsed.default}"`
-      }
-
-      return isCollectionField ? value.replace(new RegExp(`"${INPUT_EXPRESSION_REGEX}"`), emptyArray) : emptyString
     })
-  )
+  })
 }
 
 function mergeStage(props: MergeStageProps): StageElementWrapperConfig {
