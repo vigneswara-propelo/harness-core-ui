@@ -15,7 +15,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import type { DeploymentStageConfig, ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
-import type { PipelineInfoConfig, PmsAbstractStepNode, TemplateStepNode } from 'services/pipeline-ng'
+import type { PipelineInfoConfig, TemplateStepNode } from 'services/pipeline-ng'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { isValueRuntimeInput } from '@common/utils/utils'
@@ -141,7 +141,7 @@ function StepFormInternal({
         </div>
       )}
       {renderCommandFlags('step.spec.commandFlags')}
-      {isValueRuntimeInput((template?.step as PmsAbstractStepNode)?.enforce?.policySets) && (
+      {isValueRuntimeInput((template?.step as StepElementConfig)?.enforce?.policySets) && (
         <Container width={'55%'}>
           <Text
             color={Color.GREY_600}

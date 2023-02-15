@@ -35,7 +35,7 @@ import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
 import { getIsFailureStrategyDisabled } from '@pipeline/utils/CIUtils'
 import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
-import type { PmsAbstractStepNode, PolicyConfig, TemplateStepNode } from 'services/pipeline-ng'
+import type { PolicyConfig, TemplateStepNode } from 'services/pipeline-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -87,8 +87,8 @@ export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: Step
     (step as StepGroupElementConfig)?.delegateSelectors
 
   const policySets =
-    ((step as TemplateStepNode)?.template?.templateInputs as PmsAbstractStepNode)?.enforce?.policySets ||
-    (step as PmsAbstractStepNode)?.enforce?.policySets
+    ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.enforce?.policySets ||
+    (step as StepElementConfig)?.enforce?.policySets
 
   const when = ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.when || (step as Step)?.when
 

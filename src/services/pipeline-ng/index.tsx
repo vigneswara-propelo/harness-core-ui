@@ -392,6 +392,7 @@ export interface AccessControlCheckError {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -1471,6 +1472,7 @@ export interface Error {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1835,6 +1837,7 @@ export interface ErrorMetadata {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   errorMessage?: string
 }
 
@@ -2406,6 +2409,7 @@ export interface Failure {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -3838,10 +3842,10 @@ export interface PipelineStageOutputs {
   value: string
 }
 
-export interface PipelineValidationResponseBody {
-  end_ts?: number
-  policy_eval?: { [key: string]: any }
-  start_ts?: number
+export interface PipelineValidationResponseDTO {
+  endTs?: number
+  policyEval?: GovernanceMetadata
+  startTs?: number
   status?: string
 }
 
@@ -4830,6 +4834,7 @@ export interface ResponseMessage {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5010,9 +5015,9 @@ export interface ResponsePipelineSaveResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponsePipelineValidationResponseBody {
+export interface ResponsePipelineValidationResponseDTO {
   correlationId?: string
-  data?: PipelineValidationResponseBody
+  data?: PipelineValidationResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -5624,6 +5629,7 @@ export interface StepData {
 
 export interface StepElementConfig {
   description?: string
+  enforce?: PolicyConfig
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
@@ -13490,14 +13496,13 @@ export interface GetPipelineValidateResultPathParams {
 }
 
 export type GetPipelineValidateResultProps = Omit<
-  MutateProps<
-    ResponsePipelineValidationResponseBody,
+  GetProps<
+    ResponsePipelineValidationResponseDTO,
     Failure | Error,
     GetPipelineValidateResultQueryParams,
-    void,
     GetPipelineValidateResultPathParams
   >,
-  'path' | 'verb'
+  'path'
 > &
   GetPipelineValidateResultPathParams
 
@@ -13505,14 +13510,12 @@ export type GetPipelineValidateResultProps = Omit<
  * Get Pipeline validation event data
  */
 export const GetPipelineValidateResult = ({ uuid, ...props }: GetPipelineValidateResultProps) => (
-  <Mutate<
-    ResponsePipelineValidationResponseBody,
+  <Get<
+    ResponsePipelineValidationResponseDTO,
     Failure | Error,
     GetPipelineValidateResultQueryParams,
-    void,
     GetPipelineValidateResultPathParams
   >
-    verb="POST"
     path={`/pipelines/validate/${uuid}`}
     base={getConfig('pipeline/api')}
     {...props}
@@ -13520,14 +13523,13 @@ export const GetPipelineValidateResult = ({ uuid, ...props }: GetPipelineValidat
 )
 
 export type UseGetPipelineValidateResultProps = Omit<
-  UseMutateProps<
-    ResponsePipelineValidationResponseBody,
+  UseGetProps<
+    ResponsePipelineValidationResponseDTO,
     Failure | Error,
     GetPipelineValidateResultQueryParams,
-    void,
     GetPipelineValidateResultPathParams
   >,
-  'path' | 'verb'
+  'path'
 > &
   GetPipelineValidateResultPathParams
 
@@ -13535,13 +13537,12 @@ export type UseGetPipelineValidateResultProps = Omit<
  * Get Pipeline validation event data
  */
 export const useGetPipelineValidateResult = ({ uuid, ...props }: UseGetPipelineValidateResultProps) =>
-  useMutate<
-    ResponsePipelineValidationResponseBody,
+  useGet<
+    ResponsePipelineValidationResponseDTO,
     Failure | Error,
     GetPipelineValidateResultQueryParams,
-    void,
     GetPipelineValidateResultPathParams
-  >('POST', (paramsInPath: GetPipelineValidateResultPathParams) => `/pipelines/validate/${paramsInPath.uuid}`, {
+  >((paramsInPath: GetPipelineValidateResultPathParams) => `/pipelines/validate/${paramsInPath.uuid}`, {
     base: getConfig('pipeline/api'),
     pathParams: { uuid },
     ...props
@@ -13554,22 +13555,20 @@ export const getPipelineValidateResultPromise = (
   {
     uuid,
     ...props
-  }: MutateUsingFetchProps<
-    ResponsePipelineValidationResponseBody,
+  }: GetUsingFetchProps<
+    ResponsePipelineValidationResponseDTO,
     Failure | Error,
     GetPipelineValidateResultQueryParams,
-    void,
     GetPipelineValidateResultPathParams
   > & { uuid: string },
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<
-    ResponsePipelineValidationResponseBody,
+  getUsingFetch<
+    ResponsePipelineValidationResponseDTO,
     Failure | Error,
     GetPipelineValidateResultQueryParams,
-    void,
     GetPipelineValidateResultPathParams
-  >('POST', getConfig('pipeline/api'), `/pipelines/validate/${uuid}`, props, signal)
+  >(getConfig('pipeline/api'), `/pipelines/validate/${uuid}`, props, signal)
 
 export interface CreateVariablesQueryParams {
   accountIdentifier: string
@@ -16175,6 +16174,7 @@ export interface GetSchemaYamlQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -16467,6 +16467,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
