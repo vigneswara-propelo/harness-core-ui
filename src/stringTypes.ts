@@ -5243,6 +5243,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.createCluster': string
   'cd.getStartedWithCD.createHostedCluster': string
   'cd.getStartedWithCD.createdSuccessfully': string
+  'cd.getStartedWithCD.creatingApp': string
   'cd.getStartedWithCD.delegateDescription': string
   'cd.getStartedWithCD.delegateInfo1': string
   'cd.getStartedWithCD.delegateInfo2': string
@@ -5300,6 +5301,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.infraName': string
   'cd.getStartedWithCD.installDelegateToTargetEnv': string
   'cd.getStartedWithCD.ipWhitelist': string
+  'cd.getStartedWithCD.main': string
   'cd.getStartedWithCD.managedCluster': string
   'cd.getStartedWithCD.manifestFile': string
   'cd.getStartedWithCD.manifestStorage': string
