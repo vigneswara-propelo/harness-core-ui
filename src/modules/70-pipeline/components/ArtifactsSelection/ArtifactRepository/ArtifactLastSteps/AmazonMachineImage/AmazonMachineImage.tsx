@@ -72,7 +72,7 @@ function FormComponent({
 
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
-  const { data: regionData } = useListAwsRegions({
+  const { data: regionData, loading: fetchingRegions } = useListAwsRegions({
     queryParams: {
       accountId
     }
@@ -147,12 +147,14 @@ function FormComponent({
   }
 
   useEffect(() => {
-    const tagOption = get(tagsData, 'data', []).map((tagItem: string) => ({
-      value: tagItem,
-      label: tagItem
-    }))
-    setTags(tagOption)
-  }, [tagsData])
+    if (!isTagsLoading && tagsData && !tags) {
+      const tagOption = get(tagsData, 'data', []).map((tagItem: string) => ({
+        value: tagItem,
+        label: tagItem
+      }))
+      setTags(tagOption)
+    }
+  }, [tagsData, isTagsLoading])
 
   useEffect(() => {
     if (
@@ -164,12 +166,14 @@ function FormComponent({
   }, [formik.values?.spec?.region])
 
   useEffect(() => {
-    const regionValues = defaultTo(regionData?.resource, []).map(region => ({
-      value: region.value,
-      label: region.name
-    }))
-    setRegions(regionValues as SelectOption[])
-  }, [regionData?.resource])
+    if (!fetchingRegions && regionData?.resource && !regions) {
+      const regionValues = defaultTo(regionData?.resource, []).map(region => ({
+        value: region.value,
+        label: region.name
+      }))
+      setRegions(regionValues as SelectOption[])
+    }
+  }, [regionData?.resource, fetchingRegions])
 
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
@@ -230,7 +234,7 @@ function FormComponent({
             name="spec.tags"
             className="tags-select"
             expressions={expressions}
-            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
             tags={tags}
             label={'AMI Tags'}
             isLoadingTags={isTagsLoading}
@@ -260,7 +264,7 @@ function FormComponent({
             name="spec.filters"
             className="tags-select"
             expressions={expressions}
-            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
             tags={amiFilters}
             label={'AMI Filters'}
             initialTags={formik?.initialValues?.spec?.filters || {}}
