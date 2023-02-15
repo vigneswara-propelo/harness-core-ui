@@ -2725,7 +2725,6 @@ export interface StringsMap {
   'connectors.hashiCorpVault.secretEngine': string
   'connectors.hashiCorpVault.secretId': string
   'connectors.hashiCorpVault.serverIdHeader': string
-  'connectors.hashiCorpVault.serverIdHeaderRequired': string
   'connectors.hashiCorpVault.serviceAccountRequired': string
   'connectors.hashiCorpVault.serviceAccountTokenPath': string
   'connectors.hashiCorpVault.setupEngine': string
