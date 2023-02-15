@@ -28,10 +28,11 @@ interface VerifyDelegateConnectionProps {
   onSuccessHandler?: () => void
   onErrorHandler: () => void
   onDone: HideModal
+  showDoneButton?: boolean
 }
 
 const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
-  const { name, onSuccessHandler, delegateType, onDone, onErrorHandler } = props
+  const { name, onSuccessHandler, delegateType, onDone, onErrorHandler, showDoneButton = true } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const [startTroubleShoot, setStartTroubleShoot] = useState<boolean>(false)
@@ -94,8 +95,8 @@ const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
                   {getString('common.delegateFailed')}
                 </Text>
               </Layout.Horizontal>
-              <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center' }}>
-                <Layout.Vertical spacing="medium">
+              <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center' }} width={'100%'}>
+                <Layout.Vertical spacing="medium" width={'85%'}>
                   <Text font={{ variation: FontVariation.SMALL }}>
                     {getString('common.delegateFailText1Part1')}{' '}
                     <a href={getString('common.harnessURL')}>{getString('common.harnessURL')}</a>
@@ -182,17 +183,19 @@ const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
         </Layout.Horizontal>
       )}
       {getVerifyDelegateDetails()}
-      <Button
-        text={getString('done')}
-        onClick={() => {
-          trackEvent(DelegateActions.DelegateCommandLineDone, {
-            category: Category.DELEGATE
-          })
-          onDone()
-        }}
-        variation={ButtonVariation.PRIMARY}
-        width={100}
-      />
+      {showDoneButton && (
+        <Button
+          text={getString('done')}
+          onClick={() => {
+            trackEvent(DelegateActions.DelegateCommandLineDone, {
+              category: Category.DELEGATE
+            })
+            onDone()
+          }}
+          variation={ButtonVariation.PRIMARY}
+          width={100}
+        />
+      )}
     </Layout.Vertical>
   )
 }
