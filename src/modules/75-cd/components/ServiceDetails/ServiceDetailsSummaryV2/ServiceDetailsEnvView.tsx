@@ -67,19 +67,28 @@ function createGroups(
   return new Array(numGroups).fill('').map((_, i) => arr.slice(i * groupSize, (i + 1) * groupSize))
 }
 
-const EnvCard = (
-  setSelectedEnv: React.Dispatch<React.SetStateAction<string | undefined>>,
-  setEnvId: React.Dispatch<React.SetStateAction<string | undefined>>,
-  setIsDetailsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>,
-  setEnv: React.Dispatch<React.SetStateAction<string>>,
-  env?: EnvCardProps,
+interface EnvCardComponentProps {
+  setSelectedEnv: React.Dispatch<React.SetStateAction<string | undefined>>
+  setEnvId: React.Dispatch<React.SetStateAction<string | undefined>>
+  setIsDetailsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setEnvFilter: React.Dispatch<React.SetStateAction<string>>
+  env?: EnvCardProps
   selectedEnv?: string
-): JSX.Element => {
+}
+
+function EnvCard({
+  setSelectedEnv,
+  setEnvId,
+  setIsDetailsDialogOpen,
+  setEnvFilter,
+  env,
+  selectedEnv
+}: EnvCardComponentProps): JSX.Element | null {
   const { getString } = useStrings()
   const envName = env?.envName
   const envId = env?.envId
   if (isUndefined(envId)) {
-    return <></>
+    return null
   }
   return (
     <Card
@@ -129,7 +138,7 @@ const EnvCard = (
           <Text
             onClick={e => {
               e.stopPropagation()
-              setEnv(env.envId)
+              setEnvFilter(env.envId)
               setIsDetailsDialogOpen(true)
             }}
             color={Color.PRIMARY_7}
@@ -153,21 +162,31 @@ const EnvCard = (
   )
 }
 
-const ArtifactCard = (
-  setArtifactName: React.Dispatch<React.SetStateAction<string | undefined>>,
-  setSelectedArtifact: React.Dispatch<React.SetStateAction<string | undefined>>,
-  setIsDetailsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>,
-  setEnvFilter: React.Dispatch<React.SetStateAction<string>>,
-  setArtifactFilter: React.Dispatch<React.SetStateAction<string>>,
-  artifact?: ArtifactInstanceDetail | null,
+interface ArtifactCardProps {
+  setArtifactName: React.Dispatch<React.SetStateAction<string | undefined>>
+  setSelectedArtifact: React.Dispatch<React.SetStateAction<string | undefined>>
+  setIsDetailsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setEnvFilter: React.Dispatch<React.SetStateAction<string>>
+  setArtifactFilter: React.Dispatch<React.SetStateAction<string>>
+  artifact?: ArtifactInstanceDetail | null
   selectedArtifact?: string
-): JSX.Element => {
+}
+
+function ArtifactCard({
+  setArtifactName,
+  setSelectedArtifact,
+  setIsDetailsDialogOpen,
+  setEnvFilter,
+  setArtifactFilter,
+  artifact,
+  selectedArtifact
+}: ArtifactCardProps): JSX.Element | null {
   const artifactName = artifact?.artifact
   const { getString } = useStrings()
   const envList = artifact?.environmentInstanceDetails.environmentInstanceDetails || []
 
   if (isUndefined(artifactName) && !envList.length) {
-    return <></>
+    return null
   }
 
   return (
@@ -313,16 +332,24 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
   const artifactSlide = [0, 1, 2, 3]
   const envSlide = [0, 1, 2, 3, 4]
 
-  const CardSlides =
+  const cardSlides =
     cardView === CardView.ENV
       ? renderCards.map((item, idx) => {
           const envInfo = item as EnvCardProps[]
           return (
             <Layout.Horizontal key={idx} className={css.envCardGrid}>
               {envSlide.map(i => {
+                if (!envInfo[i]) return null
                 return (
-                  envInfo[i] &&
-                  EnvCard(setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnvFilter, envInfo[i], selectedEnv)
+                  <EnvCard
+                    key={i}
+                    setSelectedEnv={setSelectedEnv}
+                    setEnvId={setEnvId}
+                    setIsDetailsDialogOpen={setIsDetailsDialogOpen}
+                    setEnvFilter={setEnvFilter}
+                    env={envInfo[i]}
+                    selectedEnv={selectedEnv}
+                  />
                 )
               })}
             </Layout.Horizontal>
@@ -333,17 +360,19 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
           return (
             <Layout.Horizontal key={idx} className={css.artifactCardGrid}>
               {artifactSlide.map(i => {
+                if (!artifactInfo[i]) return null
+
                 return (
-                  artifactInfo[i] &&
-                  ArtifactCard(
-                    setArtifactName,
-                    setSelectedArtifact,
-                    setIsDetailsDialogOpen,
-                    setEnvFilter,
-                    setArtifactFilter,
-                    artifactInfo[i],
-                    selectedArtifact
-                  )
+                  <ArtifactCard
+                    key={i}
+                    setArtifactName={setArtifactName}
+                    setSelectedArtifact={setSelectedArtifact}
+                    setIsDetailsDialogOpen={setIsDetailsDialogOpen}
+                    setEnvFilter={setEnvFilter}
+                    setArtifactFilter={setArtifactFilter}
+                    artifact={artifactInfo[i]}
+                    selectedArtifact={selectedArtifact}
+                  />
                 )
               })}
             </Layout.Horizontal>
@@ -446,7 +475,7 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
           onChange={setActiveSlide}
           slideClassName={cx(css.slideStyle, { [css.paddingLeft12]: activeSlide === 1 })}
         >
-          {CardSlides}
+          {cardSlides}
         </Carousel>
       )}
     </Container>

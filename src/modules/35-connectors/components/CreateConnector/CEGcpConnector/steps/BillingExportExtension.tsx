@@ -7,12 +7,10 @@
 
 import React from 'react'
 import { Container, Layout } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings'
 import css from '../CreateCeGcpConnector.module.scss'
 
-const BillingExportExtention: React.FC = () => {
-  const { getString } = useStrings()
-
+export const renderBillingExportExtension = (getString: UseStringsReturn['getString']): JSX.Element => {
   return (
     <Container className={css.extention}>
       <Layout.Vertical spacing="medium">
@@ -35,7 +33,7 @@ const BillingExportExtention: React.FC = () => {
           <li>{getString('connectors.ceGcp.billingExtention.step7')}</li>
         </ol>
         <div>
-          <div> {getString('connectors.ceGcp.billingExtention.otherLinks')}</div>
+          <div>{getString('connectors.ceGcp.billingExtention.otherLinks')}</div>
           <ul>
             <li>
               <a>{getString('connectors.ceGcp.billingExtention.link1')}</a>
@@ -49,5 +47,3 @@ const BillingExportExtention: React.FC = () => {
     </Container>
   )
 }
-
-export default BillingExportExtention

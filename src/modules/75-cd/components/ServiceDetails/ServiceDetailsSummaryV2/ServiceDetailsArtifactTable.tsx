@@ -232,7 +232,7 @@ export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifac
       }
     ]
     return columnsArray as unknown as Column<TableRowData>[]
-  }, [])
+  }, [getString])
 
   if (isUndefined(selectedRow) && tableData.length) {
     setRowClickFilter({

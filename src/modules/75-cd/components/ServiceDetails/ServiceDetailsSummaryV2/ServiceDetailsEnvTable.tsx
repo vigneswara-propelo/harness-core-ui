@@ -286,7 +286,7 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       }
     ]
     return columnsArray as unknown as Column<TableRowData>[]
-  }, [])
+  }, [getString])
 
   if (isUndefined(selectedRow) && tableData.length) {
     setRowClickFilter({

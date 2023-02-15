@@ -1001,7 +1001,6 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
             </ol>
             <div>
               <div>
-                 
                 connectors.ceGcp.billingExtention.otherLinks
               </div>
               <ul>
