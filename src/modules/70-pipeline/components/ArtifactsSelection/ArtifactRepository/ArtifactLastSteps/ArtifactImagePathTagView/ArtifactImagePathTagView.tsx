@@ -14,7 +14,7 @@ import type { GetDataError } from 'restful-react'
 
 import type { Failure, Error, ArtifactoryBuildDetailsDTO, DockerBuildDetailsDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
@@ -161,6 +161,7 @@ function ArtifactImagePathTagView({
                   formik.setFieldValue('artifactPath', value)
                 }}
                 isReadonly={isReadonly}
+                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
               />
             </div>
           )}
@@ -189,6 +190,7 @@ function ArtifactImagePathTagView({
                     formik.setFieldValue('imagePath', value)
                   }}
                   isReadonly={isReadonly}
+                  allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                 />
               </div>
             )}

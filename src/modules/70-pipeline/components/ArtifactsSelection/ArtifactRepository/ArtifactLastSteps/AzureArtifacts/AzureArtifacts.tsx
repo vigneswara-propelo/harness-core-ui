@@ -26,7 +26,7 @@ import { defaultTo, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import type { FormikProps } from 'formik'
-import { useStrings } from 'framework/strings'
+import { StringKeys, useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 
@@ -53,11 +53,12 @@ import type {
   ImagePathProps
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { isValueFixed } from '@common/utils/utils'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ArtifactIdentifierValidation, ModalViewFor, scopeOptions, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -100,9 +101,10 @@ function FormComponent(
   const packageValue = defaultTo(getGenuineValue(formik.values.package), '')
   const packageTypeValue = defaultTo(getGenuineValue(formik.values.packageType), '')
 
-  const getItems = (isFetching: boolean, label: string, items: SelectOption[]): SelectOption[] => {
+  const getItems = (isFetching: boolean, label: StringKeys, items: SelectOption[]): SelectOption[] => {
     if (isFetching) {
-      return [{ label: `Loading ${label}...`, value: `Loading ${label}...` }]
+      const labelStr = getString('common.loadingFieldOptions', { fieldName: getString(label) })
+      return [{ label: labelStr, value: labelStr }]
     }
     return defaultTo(items, [])
   }
@@ -267,7 +269,7 @@ function FormComponent(
         {formik.values?.scope === 'project' && (
           <div className={css.imagePathContainer}>
             <FormInput.MultiTypeInput
-              selectItems={getItems(fetchingProjects, 'Projects', projectItems)}
+              selectItems={getItems(fetchingProjects, 'projectLabel', projectItems)}
               label={getString('projectLabel')}
               placeholder={getString('pipeline.artifactsSelection.projectPlaceholder')}
               name="project"
@@ -277,7 +279,7 @@ function FormComponent(
                 allowableTypes,
                 selectProps: {
                   itemRenderer: projectItemRenderer,
-                  items: getItems(fetchingProjects, 'Projects', projectItems),
+                  items: getItems(fetchingProjects, 'projectLabel', projectItems),
                   allowCreatingNewItems: true,
                   addClearBtn: true
                 },
@@ -312,7 +314,9 @@ function FormComponent(
               }}
             />
             {getMultiTypeFromValue(formik.values.project) === MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={getItems(fetchingProjects, 'projectLabel', projectItems)}
+                loading={fetchingProjects}
                 style={{ marginTop: 22 }}
                 value={defaultTo(formik.values.project, '')}
                 type="String"
@@ -328,7 +332,7 @@ function FormComponent(
         )}
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
-            selectItems={getItems(fetchingFeeds, 'Feeds', feedItems)}
+            selectItems={getItems(fetchingFeeds, 'pipeline.artifactsSelection.feed', feedItems)}
             disabled={isReadonly}
             label={getString('pipeline.artifactsSelection.feed')}
             placeholder={getString('pipeline.artifactsSelection.feedPlaceholder')}
@@ -346,7 +350,7 @@ function FormComponent(
                   />
                 ),
                 itemRenderer: feedItemRenderer,
-                items: getItems(fetchingFeeds, 'Feeds', feedItems),
+                items: getItems(fetchingFeeds, 'pipeline.artifactsSelection.feed', feedItems),
                 allowCreatingNewItems: true,
                 addClearBtn: true
               },
@@ -381,7 +385,9 @@ function FormComponent(
             }}
           />
           {getMultiTypeFromValue(formik.values.feed) === MultiTypeInputType.RUNTIME && (
-            <ConfigureOptions
+            <SelectConfigureOptions
+              options={getItems(fetchingFeeds, 'pipeline.artifactsSelection.feed', feedItems)}
+              loading={fetchingFeeds}
               style={{ marginTop: 22 }}
               value={defaultTo(formik.values.feed, '')}
               type="String"
@@ -410,7 +416,7 @@ function FormComponent(
         </div>
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
-            selectItems={getItems(fetchingPackages, 'Packages', packageItems)}
+            selectItems={getItems(fetchingPackages, 'pipeline.testsReports.callgraphField.package', packageItems)}
             disabled={isReadonly}
             label={getString('pipeline.artifactsSelection.packageName')}
             placeholder={getString('pipeline.artifactsSelection.packageNamePlaceholder')}
@@ -428,7 +434,7 @@ function FormComponent(
                   />
                 ),
                 itemRenderer: packageItemRenderer,
-                items: getItems(fetchingPackages, 'Packages', packageItems),
+                items: getItems(fetchingPackages, 'pipeline.testsReports.callgraphField.package', packageItems),
                 allowCreatingNewItems: true,
                 addClearBtn: true
               },
@@ -464,7 +470,9 @@ function FormComponent(
             }}
           />
           {getMultiTypeFromValue(formik.values.package) === MultiTypeInputType.RUNTIME && (
-            <ConfigureOptions
+            <SelectConfigureOptions
+              options={getItems(fetchingPackages, 'pipeline.testsReports.callgraphField.package', packageItems)}
+              loading={fetchingPackages}
               style={{ marginTop: 22 }}
               value={defaultTo(formik.values.package, '')}
               type="String"
@@ -489,7 +497,7 @@ function FormComponent(
         {formik.values.versionType === 'value' ? (
           <div className={css.imagePathContainer}>
             <FormInput.MultiTypeInput
-              selectItems={getItems(fetchingVersions, 'Versions', versionItems)}
+              selectItems={getItems(fetchingVersions, 'version', versionItems)}
               disabled={isReadonly}
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
@@ -507,7 +515,7 @@ function FormComponent(
                     />
                   ),
                   itemRenderer: versionItemRenderer,
-                  items: getItems(fetchingVersions, 'Versions', versionItems),
+                  items: getItems(fetchingVersions, 'version', versionItems),
                   allowCreatingNewItems: true,
                   addClearBtn: true
                 },
@@ -533,7 +541,9 @@ function FormComponent(
               }}
             />
             {getMultiTypeFromValue(formik.values.version) === MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={getItems(fetchingVersions, 'version', versionItems)}
+                loading={fetchingVersions}
                 style={{ marginTop: 22 }}
                 value={defaultTo(formik.values.version, '')}
                 type="String"
@@ -569,6 +579,7 @@ function FormComponent(
                 showAdvanced={true}
                 onChange={/* istanbul ignore next */ value => formik.setFieldValue('versionRegex', value)}
                 isReadonly={isReadonly}
+                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
               />
             )}
           </div>

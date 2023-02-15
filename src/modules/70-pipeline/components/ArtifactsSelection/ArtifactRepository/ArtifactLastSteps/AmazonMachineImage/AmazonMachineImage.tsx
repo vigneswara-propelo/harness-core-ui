@@ -43,12 +43,13 @@ import {
   TagTypes,
   VariableInterface
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useListAwsRegions } from 'services/portal'
 import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { useMutateAsGet } from '@common/hooks'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -213,7 +214,9 @@ function FormComponent({
 
           {getMultiTypeFromValue(formik.values?.spec?.region) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={regions}
+                loading={fetchingRegions}
                 style={{ alignSelf: 'center' }}
                 value={formik.values?.spec?.region as string}
                 type="String"
@@ -343,7 +346,9 @@ function FormComponent({
               }}
             />
             {getMultiTypeFromValue(formik.values.spec?.version) === MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={getVersions()}
+                loading={isVersionLoading}
                 style={{ marginTop: 22 }}
                 value={defaultTo(formik.values.spec?.version, '')}
                 type="String"
@@ -379,6 +384,7 @@ function FormComponent({
                 showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.versionRegex', value)}
                 isReadonly={isReadonly}
+                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
               />
             )}
           </div>
