@@ -224,6 +224,7 @@ Cypress.Commands.add('fillName', (value: string) => {
 
 Cypress.Commands.add('initializeRoute', () => {
   localStorage.setItem('token', 'JTIydG9rZW4lMjI=')
+  localStorage.setItem('email', 'JTIyYWJoaW5hdi5yYXN0b2dpJTQwaGFybmVzcy5pbyUyMg==')
 })
 
 Cypress.Commands.add('visitVerifyStepInPipeline', () => {

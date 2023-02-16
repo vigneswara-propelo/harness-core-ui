@@ -1,5 +1,5 @@
 import {
-  inputSetListAPI,
+  inputSetListAPIWithoutSort,
   inputSetsTemplateCall,
   pipelineSummaryCallAPI,
   routingDataAPI,
@@ -114,7 +114,7 @@ describe('Triggers for Pipeline', () => {
     cy.contains('span', 'triggerTag').should('be.visible')
     cy.contains('span', 'Continue').should('be.visible').click()
 
-    cy.intercept('GET', inputSetListAPI, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' })
+    cy.intercept('GET', inputSetListAPIWithoutSort, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' })
     cy.intercept('GET', servicesCallV2, servicesV2AccessResponse).as('servicesCallV2')
 
     // Schedule Tab
