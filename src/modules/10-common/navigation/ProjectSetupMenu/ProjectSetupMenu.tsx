@@ -35,7 +35,6 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
   } = useParams<PipelineType<ProjectPathProps>>()
 
   const {
-    OPA_PIPELINE_GOVERNANCE,
     CVNG_TEMPLATE_MONITORED_SERVICE,
     NG_SETTINGS,
     USE_OLD_GIT_SYNC,
@@ -102,10 +101,10 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
             to={routes.toTemplates({ ...params, templateType: 'MonitoredService' })}
           />
         )}
-        {OPA_PIPELINE_GOVERNANCE && isCIorCDorSTO && canUsePolicyEngine && (
+        {isCIorCDorSTO && canUsePolicyEngine && (
           <SidebarLink label={getString('common.governance')} to={routes.toGovernance(params as GovernancePathProps)} />
         )}
-        {OPA_PIPELINE_GOVERNANCE && isCV && canUsePolicyEngine && (
+        {isCV && canUsePolicyEngine && (
           <SidebarLink label={getString('common.governance')} to={routes.toGovernance(params as GovernancePathProps)} />
         )}
         {showDeploymentFreeze ? (

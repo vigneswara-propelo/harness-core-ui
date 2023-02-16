@@ -22,13 +22,7 @@ import { useGetAccountNG } from 'services/cd-ng'
 export default function AccountSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const {
-    NG_LICENSES_ENABLED,
-    OPA_PIPELINE_GOVERNANCE,
-    OPA_FF_GOVERNANCE,
-    NG_DEPLOYMENT_FREEZE,
-    STO_JIRA_INTEGRATION
-  } = useFeatureFlags()
+  const { NG_LICENSES_ENABLED, NG_DEPLOYMENT_FREEZE, STO_JIRA_INTEGRATION } = useFeatureFlags()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
   const { licenseInformation } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
@@ -42,7 +36,7 @@ export default function AccountSideNav(): React.ReactElement {
       <SidebarLink exact label={getString('overview')} to={routes.toAccountSettingsOverview({ accountId })} />
       <SidebarLink label={getString('authentication')} to={routes.toAuthenticationSettings({ accountId })} />
       <SidebarLink label={getString('common.accountResources')} to={routes.toAccountResources({ accountId })} />
-      {canUsePolicyEngine && (OPA_PIPELINE_GOVERNANCE || OPA_FF_GOVERNANCE) && (
+      {canUsePolicyEngine && (
         <SidebarLink label={getString('common.governance')} to={routes.toGovernance({ accountId })} />
       )}
       {showDeploymentFreeze ? (

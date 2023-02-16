@@ -33,10 +33,10 @@ import css from './OrganizationDetailsPage.module.scss'
 
 const OrganizationDetailsPage: React.FC = () => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
-  const { OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE, NG_DEPLOYMENT_FREEZE } = useFeatureFlags()
+  const { NG_DEPLOYMENT_FREEZE } = useFeatureFlags()
   const history = useHistory()
   const { getString } = useStrings()
-  const canUsePolicyEngine = useAnyEnterpriseLicense()
+  const showGovCard = useAnyEnterpriseLicense()
   const { licenseInformation } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
   const showDeploymentFreeze = isEnterpriseEdition && NG_DEPLOYMENT_FREEZE
@@ -118,8 +118,6 @@ const OrganizationDetailsPage: React.FC = () => {
       colorClass: css.governance
     }
   ]
-
-  const showGovCard = canUsePolicyEngine && (OPA_PIPELINE_GOVERNANCE || OPA_FF_GOVERNANCE)
 
   return (
     <>

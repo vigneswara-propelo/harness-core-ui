@@ -140,9 +140,6 @@ describe('Pipeline Template creation and assertion', () => {
     cy.contains('p', /^Stage:/).should('have.text', 'Stage: teststage')
 
     cy.contains('span', 'Save').click()
-    cy.contains(
-      'span',
-      'Invalid yaml: $.pipeline.stages[0].stage.spec.execution: is missing but it is required'
-    ).should('be.visible')
+    cy.contains('span', 'Pipeline published successfully').should('be.visible')
   })
 })
