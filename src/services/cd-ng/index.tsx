@@ -473,6 +473,7 @@ export interface AccountDTO {
   authenticationMechanism?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   cluster?: string
   companyName?: string
+  createdAt?: number
   defaultExperience?: 'NG' | 'CG'
   identifier?: string
   name?: string
@@ -1394,11 +1395,18 @@ export type AwsSMCredentialSpecManualConfig = AwsSecretManagerCredentialSpec & {
   secretKey: string
 }
 
+export type AwsSamDirectoryManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
+}
+
 export type AwsSamInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
   region: string
 }
+
+export type AwsSamServiceSpec = ServiceSpec & {}
 
 export interface AwsSecretManagerCredential {
   spec?: AwsSecretManagerCredentialSpec
@@ -3220,6 +3228,7 @@ export type DeploymentStageConfig = StageInfoConfig & {
     | 'Asg'
     | 'GoogleCloudFunctions'
     | 'AwsLambda'
+    | 'AWS_SAM'
   environment?: EnvironmentYamlV2
   environmentGroup?: EnvironmentGroupYaml
   environments?: EnvironmentsYaml
@@ -5316,6 +5325,7 @@ export interface FailureStrategyActionConfig {
     | 'PipelineRollback'
     | 'ManualIntervention'
     | 'ProceedWithDefaultValues'
+    | 'MarkAsFailure'
 }
 
 export interface FailureStrategyConfig {
@@ -8466,6 +8476,7 @@ export interface InfrastructureDefinitionConfig {
     | 'Asg'
     | 'GoogleCloudFunctions'
     | 'AwsLambda'
+    | 'AWS_SAM'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -8562,6 +8573,7 @@ export interface InfrastructureResponseDTO {
     | 'Asg'
     | 'GoogleCloudFunctions'
     | 'AwsLambda'
+    | 'AWS_SAM'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -8941,7 +8953,17 @@ export type JenkinsUserNamePasswordDTO = JenkinsAuthCredentialsDTO & {
   usernameRef?: string
 }
 
+export interface JiraAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface JiraAuthenticationDTO {
+  spec: JiraAuthCredentialsDTO
+  type: 'UsernamePassword'
+}
+
 export type JiraConnector = ConnectorConfigDTO & {
+  auth?: JiraAuthenticationDTO
   delegateSelectors?: string[]
   jiraUrl: string
   passwordRef: string
@@ -9027,6 +9049,12 @@ export interface JiraUserData {
   displayName?: string
   emailAddress?: string
   name?: string
+}
+
+export type JiraUserNamePasswordDTO = JiraAuthCredentialsDTO & {
+  passwordRef: string
+  username?: string
+  usernameRef?: string
 }
 
 export interface JobDetails {
@@ -9586,6 +9614,7 @@ export interface ManifestConfig {
     | 'AsgScheduledUpdateGroupAction'
     | 'GoogleCloudFunctionDefinition'
     | 'AwsLambda'
+    | 'AwsSamDirectory'
 }
 
 export interface ManifestConfigWrapper {
@@ -9609,6 +9638,10 @@ export interface ManualFailureSpecConfig {
 export type ManualInterventionFailureActionConfig = FailureStrategyActionConfig & {
   spec: ManualFailureSpecConfig
   type: 'ManualIntervention'
+}
+
+export type MarkAsFailFailureActionConfig = FailureStrategyActionConfig & {
+  type: 'MarkAsFailure'
 }
 
 export type MarkAsSuccessFailureActionConfig = FailureStrategyActionConfig & {
@@ -10120,6 +10153,10 @@ export interface OnRetryFailureConfig {
 
 export interface OnTimeoutConfig {
   action?: FailureStrategyActionConfig
+}
+
+export interface OpenTaskDetails {
+  pipelineDeploymentDetails?: ServicePipelineInfo[]
 }
 
 export type OpenshiftManifest = ManifestAttributes & {
@@ -12718,6 +12755,7 @@ export interface ResponseListServiceDefinitionType {
     | 'Asg'
     | 'GoogleCloudFunctions'
     | 'AwsLambda'
+    | 'AWS_SAM'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -13264,6 +13302,13 @@ export interface ResponseNexusResponseDTO {
 export interface ResponseNgSmtpDTO {
   correlationId?: string
   data?: NgSmtpDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseOpenTaskDetails {
+  correlationId?: string
+  data?: OpenTaskDetails
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -15023,6 +15068,7 @@ export interface ServiceDefinition {
     | 'Asg'
     | 'GoogleCloudFunctions'
     | 'AwsLambda'
+    | 'AWS_SAM'
 }
 
 export interface ServiceDeployment {
@@ -17364,9 +17410,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -17394,11 +17440,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -31155,10 +31201,10 @@ export interface GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryP
   projectIdentifier: string
   serviceId: string
   envId: string
-  environmentType: 'PreProduction' | 'Production'
+  environmentType?: 'PreProduction' | 'Production'
   infraIdentifier?: string
   clusterIdentifier?: string
-  artifact: string
+  artifact?: string
 }
 
 export type GetActiveServiceInstanceDetailsGroupedByPipelineExecutionProps = Omit<
@@ -32054,6 +32100,58 @@ export const getInstancesDetailsPromise = (
   getUsingFetch<ResponseInstanceDetailsByBuildId, Failure | Error, GetInstancesDetailsQueryParams, void>(
     getConfig('ng/api'),
     `/dashboard/getInstancesDetails`,
+    props,
+    signal
+  )
+
+export interface GetOpenTasksQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceId: string
+  startTime?: number
+}
+
+export type GetOpenTasksProps = Omit<
+  GetProps<ResponseOpenTaskDetails, Failure | Error, GetOpenTasksQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get list of pipelines failed and waiting for approval in 5 days
+ */
+export const GetOpenTasks = (props: GetOpenTasksProps) => (
+  <Get<ResponseOpenTaskDetails, Failure | Error, GetOpenTasksQueryParams, void>
+    path={`/dashboard/getOpenTasks`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetOpenTasksProps = Omit<
+  UseGetProps<ResponseOpenTaskDetails, Failure | Error, GetOpenTasksQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get list of pipelines failed and waiting for approval in 5 days
+ */
+export const useGetOpenTasks = (props: UseGetOpenTasksProps) =>
+  useGet<ResponseOpenTaskDetails, Failure | Error, GetOpenTasksQueryParams, void>(`/dashboard/getOpenTasks`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get list of pipelines failed and waiting for approval in 5 days
+ */
+export const getOpenTasksPromise = (
+  props: GetUsingFetchProps<ResponseOpenTaskDetails, Failure | Error, GetOpenTasksQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseOpenTaskDetails, Failure | Error, GetOpenTasksQueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/getOpenTasks`,
     props,
     signal
   )
@@ -38762,7 +38860,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -38776,7 +38874,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -38791,7 +38889,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -38805,7 +38903,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -38817,7 +38915,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -38826,7 +38924,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -39332,7 +39430,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -39346,7 +39444,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -39361,7 +39459,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -39375,7 +39473,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -39387,7 +39485,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -39396,7 +39494,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -43095,6 +43193,7 @@ export interface GetInfrastructureListQueryParams {
     | 'Asg'
     | 'GoogleCloudFunctions'
     | 'AwsLambda'
+    | 'AWS_SAM'
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   sort?: string[]
@@ -45665,6 +45764,60 @@ export const searchLdapGroupsPromise = (
     SearchLdapGroupsPathParams
   >(getConfig('ng/api'), `/ldap/${ldapId}/search/group`, props, signal)
 
+export interface GetAllServicesQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  searchTerm?: string
+  page?: number
+  size?: number
+  sort?: string[]
+}
+
+export type GetAllServicesProps = Omit<
+  GetProps<ResponsePageServiceResponse, Failure | Error, GetAllServicesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all services
+ */
+export const GetAllServices = (props: GetAllServicesProps) => (
+  <Get<ResponsePageServiceResponse, Failure | Error, GetAllServicesQueryParams, void>
+    path={`/license-usage-cd/services`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetAllServicesProps = Omit<
+  UseGetProps<ResponsePageServiceResponse, Failure | Error, GetAllServicesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all services
+ */
+export const useGetAllServices = (props: UseGetAllServicesProps) =>
+  useGet<ResponsePageServiceResponse, Failure | Error, GetAllServicesQueryParams, void>(`/license-usage-cd/services`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get all services
+ */
+export const getAllServicesPromise = (
+  props: GetUsingFetchProps<ResponsePageServiceResponse, Failure | Error, GetAllServicesQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageServiceResponse, Failure | Error, GetAllServicesQueryParams, void>(
+    getConfig('ng/api'),
+    `/license-usage-cd/services`,
+    props,
+    signal
+  )
+
 export interface GetAccountLicensesQueryParams {
   accountIdentifier?: string
 }
@@ -47721,6 +47874,7 @@ export interface GetStepsQueryParams {
     | 'Asg'
     | 'GoogleCloudFunctions'
     | 'AwsLambda'
+    | 'AWS_SAM'
 }
 
 export type GetStepsProps = Omit<GetProps<ResponseStepCategory, Failure | Error, GetStepsQueryParams, void>, 'path'>
@@ -47878,6 +48032,7 @@ export interface GetExecutionStrategyYamlQueryParams {
     | 'Asg'
     | 'GoogleCloudFunctions'
     | 'AwsLambda'
+    | 'AWS_SAM'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
   accountIdentifier?: string
@@ -47943,6 +48098,7 @@ export interface PostExecutionStrategyYamlQueryParams {
     | 'Asg'
     | 'GoogleCloudFunctions'
     | 'AwsLambda'
+    | 'AWS_SAM'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -52070,6 +52226,7 @@ export interface GetServiceListQueryParams {
     | 'Asg'
     | 'GoogleCloudFunctions'
     | 'AwsLambda'
+    | 'AWS_SAM'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -52686,6 +52843,7 @@ export interface GetServiceAccessListQueryParams {
     | 'Asg'
     | 'GoogleCloudFunctions'
     | 'AwsLambda'
+    | 'AWS_SAM'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -59553,7 +59711,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -59563,7 +59721,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -59576,7 +59734,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -59590,7 +59748,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -59602,7 +59760,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -59611,7 +59769,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -60004,7 +60162,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -60018,7 +60176,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -60033,7 +60191,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -60047,7 +60205,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -60059,7 +60217,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -60068,7 +60226,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -60204,7 +60362,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -60219,7 +60377,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -60234,7 +60392,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -60249,7 +60407,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -60268,7 +60426,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -60277,7 +60435,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -60296,7 +60454,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -60311,7 +60469,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -60326,7 +60484,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -60341,7 +60499,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -60360,7 +60518,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -60369,7 +60527,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 

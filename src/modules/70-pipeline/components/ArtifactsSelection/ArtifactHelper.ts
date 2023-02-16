@@ -251,7 +251,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
   ],
   GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage],
-  AwsLambda: []
+  AwsLambda: [],
+  AWS_SAM: []
 }
 
 export const tagOptions: IOptionProps[] = [

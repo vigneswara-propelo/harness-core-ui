@@ -154,7 +154,8 @@ export const allowedManifestTypes: Record<ServiceDefinition['type'], Array<Manif
   CustomDeployment: [],
   Elastigroup: [],
   GoogleCloudFunctions: [ManifestDataType.GoogleCloudFunctionDefinition],
-  AwsLambda: []
+  AwsLambda: [],
+  AWS_SAM: []
 }
 
 export const gitStoreTypes: Array<ManifestStores> = [

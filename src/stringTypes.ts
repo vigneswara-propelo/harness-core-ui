@@ -3883,6 +3883,7 @@ export interface StringsMap {
   'pipeline.failureStrategies.strategiesLabel.Ignore': string
   'pipeline.failureStrategies.strategiesLabel.ManualIntervention': string
   'pipeline.failureStrategies.strategiesLabel.MarkAsFail': string
+  'pipeline.failureStrategies.strategiesLabel.MarkAsFailure': string
   'pipeline.failureStrategies.strategiesLabel.MarkAsSuccess': string
   'pipeline.failureStrategies.strategiesLabel.MarkedAsFail': string
   'pipeline.failureStrategies.strategiesLabel.MarkedAsSuccess': string

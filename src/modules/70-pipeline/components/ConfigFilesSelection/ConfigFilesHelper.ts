@@ -48,7 +48,8 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
   TAS: [ConfigFilesMap.Harness],
   Asg: [ConfigFilesMap.Harness],
   GoogleCloudFunctions: [ConfigFilesMap.Harness],
-  AwsLambda: [ConfigFilesMap.Harness]
+  AwsLambda: [ConfigFilesMap.Harness],
+  AWS_SAM: [ConfigFilesMap.Harness]
 }
 
 export const ConfigFilesToConnectorLabelMap: Record<ConfigFileType, StringKeys> = {

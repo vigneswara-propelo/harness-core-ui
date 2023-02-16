@@ -24,7 +24,8 @@ export const deploymentTypeLabel: Record<ServiceDefinition['type'], StringKeys> 
   TAS: 'pipeline.serviceDeploymentTypes.tas',
   Asg: 'pipeline.serviceDeploymentTypes.asg',
   GoogleCloudFunctions: 'pipeline.serviceDeploymentTypes.googleCloudFunctions',
-  AwsLambda: 'pipeline.serviceDeploymentTypes.awsLambda'
+  AwsLambda: 'pipeline.serviceDeploymentTypes.awsLambda',
+  AWS_SAM: 'pipeline.serviceDeploymentTypes.awsSAM'
 }
 
 export const deploymentTypeIcon: Record<ServiceTypes, IconName> = {
@@ -55,5 +56,6 @@ export const executionStrategyTypes: Record<ServiceDefinition['type'], StringKey
   Asg: 'pipeline.serviceDeploymentTypes.asg',
   TAS: 'pipeline.serviceDeploymentTypes.tas',
   GoogleCloudFunctions: 'pipeline.serviceDeploymentTypes.googleCloudFunctions',
-  AwsLambda: 'pipeline.serviceDeploymentTypes.awsLambda'
+  AwsLambda: 'pipeline.serviceDeploymentTypes.awsLambda',
+  AWS_SAM: 'pipeline.serviceDeploymentTypes.awsSAM'
 }

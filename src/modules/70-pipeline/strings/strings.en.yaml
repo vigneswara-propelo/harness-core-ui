@@ -458,6 +458,7 @@ failureStrategies:
     PipelineRollback: Rollback Pipeline
     ProceedWithDefaultValues: Proceed with Default Values
     StepGroupRollback: Rollback Step Group
+    MarkAsFailure: Mark As Failure
   errorTypeLabels:
     Authentication: Authentication Errors
     Authorization: Authorization Errors

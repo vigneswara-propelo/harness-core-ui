@@ -456,6 +456,7 @@ export interface AdviserIssuer {
     | 'MARK_SUCCESS'
     | 'IGNORE_FAILURE'
     | 'PROCEED_WITH_DEFAULT'
+    | 'MARK_AS_FAILURE'
     | 'UNRECOGNIZED'
 }
 
@@ -2446,6 +2447,7 @@ export interface FailureStrategyActionConfig {
     | 'PipelineRollback'
     | 'ManualIntervention'
     | 'ProceedWithDefaultValues'
+    | 'MarkAsFailure'
 }
 
 export interface FailureStrategyConfig {
@@ -3056,6 +3058,10 @@ export interface ManualIssuer {
   user_id: string
 }
 
+export type MarkAsFailFailureActionConfig = FailureStrategyActionConfig & {
+  type: 'MarkAsFailure'
+}
+
 export type MarkAsSuccessFailureActionConfig = FailureStrategyActionConfig & {
   type: 'MarkAsSuccess'
 }
@@ -3368,6 +3374,10 @@ export interface OverlayInputSetResponse {
   }
 }
 
+export interface PMSInputSetListRepoResponse {
+  repositories?: string[]
+}
+
 export interface PMSPipelineListBranchesResponse {
   branches?: string[]
 }
@@ -3383,6 +3393,7 @@ export interface PMSPipelineResponseDTO {
   governanceMetadata?: GovernanceMetadata
   modules?: string[]
   resolvedTemplatesPipelineYaml?: string
+  storeType?: 'INLINE' | 'REMOTE'
   validateTemplateInputsResponse?: ValidateTemplateInputsResponseDTO
   validationUuid?: string
   yamlPipeline?: string
@@ -4903,6 +4914,13 @@ export interface ResponseOverlayInputSetResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponsePMSInputSetListRepoResponse {
+  correlationId?: string
+  data?: PMSInputSetListRepoResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponsePMSPipelineListBranchesResponse {
   correlationId?: string
   data?: PMSPipelineListBranchesResponse
@@ -5123,6 +5141,13 @@ export interface ResponseTemplatesResolvedPipelineResponseDTO {
 export interface ResponseTriggerCatalogResponse {
   correlationId?: string
   data?: TriggerCatalogResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseTriggerUpdateCount {
+  correlationId?: string
+  data?: TriggerUpdateCount
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -5904,6 +5929,11 @@ export interface TriggerStatus {
   webhookInfo?: WebhookInfo
 }
 
+export interface TriggerUpdateCount {
+  failureCount?: number
+  successCount?: number
+}
+
 export interface UnitProgress {
   [key: string]: any
 }
@@ -6133,6 +6163,7 @@ export interface PipelineExecutionInterrupt {
     | 'MarkAsSuccess'
     | 'ExpireAll'
     | 'Retry'
+    | 'MarkAsFailure'
 }
 
 export type FilterDTORequestBody = FilterDTO
@@ -7285,6 +7316,62 @@ export const importInputSetPromise = (
     ImportInputSetPathParams
   >('POST', getConfig('pipeline/api'), `/inputSets/import/${inputSetIdentifier}`, props, signal)
 
+export interface GetInputSetRepositoryListQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier: string
+}
+
+export type GetInputSetRepositoryListProps = Omit<
+  GetProps<ResponsePMSInputSetListRepoResponse, Failure | Error, GetInputSetRepositoryListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets InputSet Repository list
+ */
+export const GetInputSetRepositoryList = (props: GetInputSetRepositoryListProps) => (
+  <Get<ResponsePMSInputSetListRepoResponse, Failure | Error, GetInputSetRepositoryListQueryParams, void>
+    path={`/inputSets/list-repos`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetInputSetRepositoryListProps = Omit<
+  UseGetProps<ResponsePMSInputSetListRepoResponse, Failure | Error, GetInputSetRepositoryListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets InputSet Repository list
+ */
+export const useGetInputSetRepositoryList = (props: UseGetInputSetRepositoryListProps) =>
+  useGet<ResponsePMSInputSetListRepoResponse, Failure | Error, GetInputSetRepositoryListQueryParams, void>(
+    `/inputSets/list-repos`,
+    { base: getConfig('pipeline/api'), ...props }
+  )
+
+/**
+ * Gets InputSet Repository list
+ */
+export const getInputSetRepositoryListPromise = (
+  props: GetUsingFetchProps<
+    ResponsePMSInputSetListRepoResponse,
+    Failure | Error,
+    GetInputSetRepositoryListQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePMSInputSetListRepoResponse, Failure | Error, GetInputSetRepositoryListQueryParams, void>(
+    getConfig('pipeline/api'),
+    `/inputSets/list-repos`,
+    props,
+    signal
+  )
+
 export interface GetMergeInputSetFromPipelineTemplateWithListInputQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -7761,6 +7848,7 @@ export interface GetOverlayInputSetForPipelineQueryParams {
   pipelineIdentifier: string
   pipelineBranch?: string
   pipelineRepoID?: string
+  loadFromFallbackBranch?: boolean
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -8120,6 +8208,7 @@ export interface GetInputSetForPipelineQueryParams {
   pipelineIdentifier: string
   pipelineBranch?: string
   pipelineRepoID?: string
+  loadFromFallbackBranch?: boolean
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -9230,6 +9319,7 @@ export interface HandleInterruptQueryParams {
     | 'MarkAsSuccess'
     | 'ExpireAll'
     | 'Retry'
+    | 'MarkAsFailure'
 }
 
 export interface HandleInterruptPathParams {
@@ -9333,6 +9423,7 @@ export interface HandleStageInterruptQueryParams {
     | 'MarkAsSuccess'
     | 'ExpireAll'
     | 'Retry'
+    | 'MarkAsFailure'
 }
 
 export interface HandleStageInterruptPathParams {
@@ -9531,6 +9622,7 @@ export interface HandleManualInterventionInterruptQueryParams {
     | 'MarkAsSuccess'
     | 'ExpireAll'
     | 'Retry'
+    | 'MarkAsFailure'
 }
 
 export interface HandleManualInterventionInterruptPathParams {
@@ -14546,6 +14638,53 @@ export const generateWebhookTokenPromise = (
   getUsingFetch<RestResponseString, Failure | Error, void, void>(
     getConfig('pipeline/api'),
     `/triggers/regenerateToken`,
+    props,
+    signal
+  )
+
+export interface UpdateBranchName1QueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  targetIdentifier: string
+  operationType?: 'RemoteToInline' | 'InlineToRemote'
+  pipelineBranchName?: string
+}
+
+export type UpdateBranchName1Props = Omit<
+  MutateProps<ResponseTriggerUpdateCount, Failure | Error, UpdateBranchName1QueryParams, void, void>,
+  'path' | 'verb'
+>
+
+export const UpdateBranchName1 = (props: UpdateBranchName1Props) => (
+  <Mutate<ResponseTriggerUpdateCount, Failure | Error, UpdateBranchName1QueryParams, void, void>
+    verb="PUT"
+    path={`/triggers/update-branch-name`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateBranchName1Props = Omit<
+  UseMutateProps<ResponseTriggerUpdateCount, Failure | Error, UpdateBranchName1QueryParams, void, void>,
+  'path' | 'verb'
+>
+
+export const useUpdateBranchName1 = (props: UseUpdateBranchName1Props) =>
+  useMutate<ResponseTriggerUpdateCount, Failure | Error, UpdateBranchName1QueryParams, void, void>(
+    'PUT',
+    `/triggers/update-branch-name`,
+    { base: getConfig('pipeline/api'), ...props }
+  )
+
+export const updateBranchName1Promise = (
+  props: MutateUsingFetchProps<ResponseTriggerUpdateCount, Failure | Error, UpdateBranchName1QueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseTriggerUpdateCount, Failure | Error, UpdateBranchName1QueryParams, void, void>(
+    'PUT',
+    getConfig('pipeline/api'),
+    `/triggers/update-branch-name`,
     props,
     signal
   )

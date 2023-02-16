@@ -32,6 +32,7 @@ export interface GetServiceAccessListQueryQueryParams {
   serviceIdentifiers?: string[]
   sort?: string[]
   type?:
+    | 'AWS_SAM'
     | 'Asg'
     | 'AwsLambda'
     | 'AzureWebApp'
