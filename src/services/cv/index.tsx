@@ -1370,7 +1370,7 @@ export interface EntityDetails {
 }
 
 export type EntityIdentifiersRule = EntitiesRule & {
-  entityIdentifiers?: EntityDetails[]
+  entityIdentifiers: EntityDetails[]
 }
 
 export interface EnvironmentResponse {
@@ -1751,6 +1751,7 @@ export interface Error {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2181,6 +2182,7 @@ export interface Failure {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2770,9 +2772,25 @@ export type JenkinsUserNamePasswordDTO = JenkinsAuthCredentialsDTO & {
   usernameRef?: string
 }
 
+export interface JiraAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface JiraAuthenticationDTO {
+  spec: JiraAuthCredentialsDTO
+  type: 'UsernamePassword'
+}
+
 export type JiraConnector = ConnectorConfigDTO & {
+  auth?: JiraAuthenticationDTO
   delegateSelectors?: string[]
   jiraUrl: string
+  passwordRef: string
+  username?: string
+  usernameRef?: string
+}
+
+export type JiraUserNamePasswordDTO = JiraAuthCredentialsDTO & {
   passwordRef: string
   username?: string
   usernameRef?: string
@@ -4629,6 +4647,7 @@ export interface ResponseMessage {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -7153,6 +7172,125 @@ export const saveDowntimePromise = (
     signal
   )
 
+export interface EnablesDisablesDowntimeQueryParams {
+  enable: boolean
+}
+
+export interface EnablesDisablesDowntimePathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  identifier: string
+}
+
+export type EnablesDisablesDowntimeProps = Omit<
+  MutateProps<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >,
+  'path' | 'verb'
+> &
+  EnablesDisablesDowntimePathParams
+
+/**
+ * Enables disables downtime
+ */
+export const EnablesDisablesDowntime = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: EnablesDisablesDowntimeProps) => (
+  <Mutate<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >
+    verb="PUT"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/flag/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseEnablesDisablesDowntimeProps = Omit<
+  UseMutateProps<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >,
+  'path' | 'verb'
+> &
+  EnablesDisablesDowntimePathParams
+
+/**
+ * Enables disables downtime
+ */
+export const useEnablesDisablesDowntime = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: UseEnablesDisablesDowntimeProps) =>
+  useMutate<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >(
+    'PUT',
+    (paramsInPath: EnablesDisablesDowntimePathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/flag/${paramsInPath.identifier}`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, identifier },
+      ...props
+    }
+  )
+
+/**
+ * Enables disables downtime
+ */
+export const enablesDisablesDowntimePromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string; identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >(
+    'PUT',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/flag/${identifier}`,
+    props,
+    signal
+  )
+
 export interface GetHistoryQueryParams {
   pageNumber?: number
   pageSize?: number
@@ -7542,54 +7680,157 @@ export const listDowntimesPromise = (
     signal
   )
 
+export interface GetDowntimeAssociatedMonitoredServicesQueryParams {
+  pageNumber?: number
+  pageSize?: number
+}
+
 export interface GetDowntimeAssociatedMonitoredServicesPathParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  identifier: string
 }
 
 export type GetDowntimeAssociatedMonitoredServicesProps = Omit<
-  GetProps<RestResponseListMonitoredServiceDetail, unknown, void, GetDowntimeAssociatedMonitoredServicesPathParams>,
+  GetProps<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >,
   'path'
 > &
   GetDowntimeAssociatedMonitoredServicesPathParams
 
 /**
- * get associated Monitored Services
+ * get all monitored services associated with the downtime
  */
 export const GetDowntimeAssociatedMonitoredServices = ({
   accountIdentifier,
   orgIdentifier,
   projectIdentifier,
-  identifier,
   ...props
 }: GetDowntimeAssociatedMonitoredServicesProps) => (
-  <Get<RestResponseListMonitoredServiceDetail, unknown, void, GetDowntimeAssociatedMonitoredServicesPathParams>
-    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services/${identifier}`}
+  <Get<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services`}
     base={getConfig('cv/api')}
     {...props}
   />
 )
 
 export type UseGetDowntimeAssociatedMonitoredServicesProps = Omit<
-  UseGetProps<RestResponseListMonitoredServiceDetail, unknown, void, GetDowntimeAssociatedMonitoredServicesPathParams>,
+  UseGetProps<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >,
   'path'
 > &
   GetDowntimeAssociatedMonitoredServicesPathParams
 
 /**
- * get associated Monitored Services
+ * get all monitored services associated with the downtime
  */
 export const useGetDowntimeAssociatedMonitoredServices = ({
   accountIdentifier,
   orgIdentifier,
   projectIdentifier,
-  identifier,
   ...props
 }: UseGetDowntimeAssociatedMonitoredServicesProps) =>
-  useGet<RestResponseListMonitoredServiceDetail, unknown, void, GetDowntimeAssociatedMonitoredServicesPathParams>(
+  useGet<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >(
     (paramsInPath: GetDowntimeAssociatedMonitoredServicesPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/monitored-services`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * get all monitored services associated with the downtime
+ */
+export const getDowntimeAssociatedMonitoredServicesPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services`,
+    props,
+    signal
+  )
+
+export interface GetAssociatedMonitoredServicesPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  identifier: string
+}
+
+export type GetAssociatedMonitoredServicesProps = Omit<
+  GetProps<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>,
+  'path'
+> &
+  GetAssociatedMonitoredServicesPathParams
+
+/**
+ * get associated Monitored Services
+ */
+export const GetAssociatedMonitoredServices = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: GetAssociatedMonitoredServicesProps) => (
+  <Get<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetAssociatedMonitoredServicesProps = Omit<
+  UseGetProps<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>,
+  'path'
+> &
+  GetAssociatedMonitoredServicesPathParams
+
+/**
+ * get associated Monitored Services
+ */
+export const useGetAssociatedMonitoredServices = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: UseGetAssociatedMonitoredServicesProps) =>
+  useGet<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>(
+    (paramsInPath: GetAssociatedMonitoredServicesPathParams) =>
       `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/monitored-services/${paramsInPath.identifier}`,
     {
       base: getConfig('cv/api'),
@@ -7601,7 +7842,7 @@ export const useGetDowntimeAssociatedMonitoredServices = ({
 /**
  * get associated Monitored Services
  */
-export const getDowntimeAssociatedMonitoredServicesPromise = (
+export const getAssociatedMonitoredServicesPromise = (
   {
     accountIdentifier,
     orgIdentifier,
@@ -7612,16 +7853,11 @@ export const getDowntimeAssociatedMonitoredServicesPromise = (
     RestResponseListMonitoredServiceDetail,
     unknown,
     void,
-    GetDowntimeAssociatedMonitoredServicesPathParams
+    GetAssociatedMonitoredServicesPathParams
   > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string; identifier: string },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<
-    RestResponseListMonitoredServiceDetail,
-    unknown,
-    void,
-    GetDowntimeAssociatedMonitoredServicesPathParams
-  >(
+  getUsingFetch<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>(
     getConfig('cv/api'),
     `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services/${identifier}`,
     props,

@@ -54,6 +54,19 @@
   }
 }
 
+.previewLabelAndValue {
+  .label {
+    color: var(--grey-1000) !important;
+    font-weight: 500 !important;
+    font-size: 13.5px !important;
+  }
+
+  .value {
+    color: var(--grey-1000) !important;
+    font-size: 13.5px !important;
+  }
+}
+
 .addMonitoredServices {
   :global {
     .bp3-tag {
@@ -61,6 +74,18 @@
       background: var(--grey-100);
       padding: var(--spacing-2) var(--spacing-3);
     }
+  }
+
+  .checkbox {
+    font-size: 13px;
+    color: var(--grey-1000);
+  }
+
+  .tagBox {
+    display: flex;
+    flex-wrap: wrap !important;
+    gap: var(--spacing-xsmall);
+    margin-top: var(--spacing-xsmall) !important;
   }
 }
 

@@ -189,6 +189,8 @@ allowpaths:
   - /account/{accountIdentifier}/orgs/{orgIdentifier}/projects/{projectIdentifier}/verifications/{verifyStepExecutionId}/transaction-groups
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/identifier/{identifier}
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/flag/{identifier}
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/monitored-services
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/monitored-services/{identifier}
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/list
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/history

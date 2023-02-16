@@ -35,7 +35,7 @@ jest.mock(
 )
 
 jest.mock('services/cv', () => ({
-  useGetDowntimeAssociatedMonitoredServices: jest.fn().mockImplementation(() => ({
+  useGetAssociatedMonitoredServices: jest.fn().mockImplementation(() => ({
     error: null,
     loading: false,
     data: downtimeAssociatedMSs,
@@ -79,7 +79,7 @@ describe('CVCreateDowntime', () => {
           loading: false
         } as any)
     )
-    jest.spyOn(cvServices, 'useGetDowntimeAssociatedMonitoredServices').mockImplementationOnce(
+    jest.spyOn(cvServices, 'useGetAssociatedMonitoredServices').mockImplementationOnce(
       () =>
         ({
           data: null,

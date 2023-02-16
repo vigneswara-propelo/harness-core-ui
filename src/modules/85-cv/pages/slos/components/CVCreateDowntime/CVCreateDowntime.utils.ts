@@ -11,6 +11,7 @@ import moment from 'moment'
 import type { UseStringsReturn } from 'framework/strings'
 import type {
   DowntimeDTO,
+  EntitiesRule,
   EntityDetails,
   EntityIdentifiersRule,
   MonitoredServiceDetail,
@@ -20,7 +21,13 @@ import type {
   OnetimeSpec,
   RecurringDowntimeSpec
 } from 'services/cv'
-import { DowntimeCategory, DowntimeForm, DowntimeFormFields, EndTimeMode } from './CVCreateDowntime.types'
+import {
+  DowntimeCategory,
+  DowntimeForm,
+  DowntimeFormFields,
+  EndTimeMode,
+  EntitiesRuleType
+} from './CVCreateDowntime.types'
 import { DATE_PARSE_FORMAT } from './CVCreateDowntime.constants'
 import { DowntimeWindowToggleViews } from './components/CreateDowntimeForm/CreateDowntimeForm.types'
 
@@ -63,6 +70,7 @@ export const getDowntimeInitialFormData = (sloDowntime?: DowntimeDTO): DowntimeF
       DowntimeFormFields.RECURRENCE_END_TIME,
       recurringDowntimeSpec?.recurrenceEndTime
     ),
+    [DowntimeFormFields.ENTITIES_RULE_TYPE]: sloDowntime?.entitiesRule.type || 'Identifiers',
     [DowntimeFormFields.MS_LIST]: []
   }
 }
@@ -137,17 +145,37 @@ const getOneTimeBasedDowntimeSpec = (values: DowntimeForm): OnetimeSpec => {
 const getEntityDetails = (msList: MonitoredServiceDetail[]): EntityDetails[] =>
   msList.map(msDetail => ({ entityRef: msDetail.monitoredServiceIdentifier || '', enabled: true }))
 
-const getEntitiesRule = (msList: MonitoredServiceDetail[]): EntityIdentifiersRule => ({
-  type: 'Identifiers',
-  entityIdentifiers: getEntityDetails(msList)
-})
+const getEntitiesRule = (msList: MonitoredServiceDetail[], entitiesRuleType: EntitiesRule['type']): EntitiesRule => {
+  if (entitiesRuleType === EntitiesRuleType.ALL) {
+    return {
+      type: EntitiesRuleType.ALL
+    }
+  } else {
+    return {
+      type: EntitiesRuleType.IDENTIFIERS,
+      entityIdentifiers: getEntityDetails(msList)
+    } as EntityIdentifiersRule
+  }
+}
 
 export const createSLODowntimeRequestPayload = (
   values: DowntimeForm,
   orgIdentifier: string,
   projectIdentifier: string
 ): DowntimeDTO => {
-  const { name, identifier, description, tags, category, msList, type, startTime, timezone, endTimeMode } = values
+  const {
+    name,
+    identifier,
+    description,
+    tags,
+    category,
+    msList,
+    type,
+    startTime,
+    timezone,
+    endTimeMode,
+    entitiesRuleType
+  } = values
   if (values.type === DowntimeWindowToggleViews.ONE_TIME) {
     return {
       name,
@@ -159,7 +187,7 @@ export const createSLODowntimeRequestPayload = (
       category,
       scope: 'Project',
       enabled: true,
-      entitiesRule: getEntitiesRule(msList),
+      entitiesRule: getEntitiesRule(msList, entitiesRuleType),
       spec: {
         type,
         spec: {
@@ -182,7 +210,7 @@ export const createSLODowntimeRequestPayload = (
       category,
       scope: 'Project',
       enabled: true,
-      entitiesRule: getEntitiesRule(msList),
+      entitiesRule: getEntitiesRule(msList, entitiesRuleType),
       spec: {
         type,
         spec: {

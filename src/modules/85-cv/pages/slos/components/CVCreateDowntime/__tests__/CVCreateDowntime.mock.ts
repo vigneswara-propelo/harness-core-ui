@@ -114,12 +114,16 @@ export const oneTimeEndTimeBasedDowntimeResponse = {
       category: 'Deployment',
       scope: 'Project',
       enabled: true,
-      entityRefs: [
-        {
-          entityRef: 'test_run',
-          enabled: true
-        }
-      ],
+      entitiesRule: {
+        type: 'Identifiers',
+        entityIdentifiers: [
+          {
+            entityRef: 'test_run',
+            enabled: true
+          }
+        ],
+        affectedEntity: null
+      },
       spec: {
         type: 'Onetime',
         spec: {
@@ -150,12 +154,16 @@ export const oneTimeDurationBasedDowntimeResponse = {
       scope: 'Project',
       category: 'Deployment',
       enabled: true,
-      entityRefs: [
-        {
-          entityRef: 'test_run',
-          enabled: true
-        }
-      ],
+      entitiesRule: {
+        type: 'Identifiers',
+        entityIdentifiers: [
+          {
+            entityRef: 'test_run',
+            enabled: true
+          }
+        ],
+        affectedEntity: null
+      },
       spec: {
         type: 'Onetime',
         spec: {
@@ -205,12 +213,16 @@ export const recurrenceBasedDowntimeResponse = {
           }
         }
       },
-      entityRefs: [
-        {
-          entityRef: 'test_run',
-          enabled: true
-        }
-      ],
+      entitiesRule: {
+        type: 'Identifiers',
+        entityIdentifiers: [
+          {
+            entityRef: 'test_run',
+            enabled: true
+          }
+        ],
+        affectedEntity: null
+      },
       enabled: true
     },
     createdAt: 1675159069035,

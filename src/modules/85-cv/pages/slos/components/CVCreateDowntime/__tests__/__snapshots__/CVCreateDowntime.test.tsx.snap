@@ -738,10 +738,10 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                 >
                   <div
-                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+                      class="StyledProps--font StyledProps--main label"
                       style="width: 120px;"
                       title="cv.sloDowntime.downtimeName"
                     >
@@ -751,17 +751,17 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
                       class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
                     >
                       <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+                        class="StyledProps--font StyledProps--main value"
                       >
                         SLO Downtime
                       </p>
                     </div>
                   </div>
                   <div
-                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+                      class="StyledProps--font StyledProps--main label"
                       style="width: 120px;"
                       title="description"
                     >
@@ -771,17 +771,17 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
                       class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
                     >
                       <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+                        class="StyledProps--font StyledProps--main value"
                       >
                         Weekly downtime
                       </p>
                     </div>
                   </div>
                   <div
-                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+                      class="StyledProps--font StyledProps--main label"
                       style="width: 120px;"
                       title="cv.sloDowntime.category"
                     >
@@ -791,7 +791,7 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
                       class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
                     >
                       <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+                        class="StyledProps--font StyledProps--main value"
                       >
                         deploymentText
                       </p>
@@ -852,10 +852,10 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                 >
                   <div
-                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+                      class="StyledProps--font StyledProps--main label"
                       style="width: 120px;"
                       title="summary"
                     >
@@ -865,7 +865,7 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
                       class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
                     >
                       <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+                        class="StyledProps--font StyledProps--main value"
                       >
                         Starting on 2023-08-11 09:47 AM (Asia/Calcutta) till 2023-11-12 02:47 AM
                       </p>
@@ -930,10 +930,29 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
                     data-testid="page-body"
                   >
                     <div
-                      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main addMonitoredServices"
+                      class="Layout--vertical Layout--layout-spacing-small StyledProps--main addMonitoredServices"
                     >
                       <div
-                        class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-left-xsmall StyledProps--margin-top-xsmall"
+                        class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-left-xsmall StyledProps--margin-top-xsmall StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                      >
+                        <label
+                          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+                        >
+                          <input
+                            type="checkbox"
+                          />
+                          <span
+                            class="bp3-control-indicator"
+                          />
+                        </label>
+                        <p
+                          class="StyledProps--font StyledProps--main checkbox"
+                        >
+                          cv.sloDowntime.selectAllMonitoredServices
+                        </p>
+                      </div>
+                      <div
+                        class="Layout--vertical StyledProps--main StyledProps--margin-left-xsmall StyledProps--margin-top-xsmall"
                       >
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
@@ -942,8 +961,7 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
                           cv.sloDowntime.msList
                         </p>
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                          style="display: flex; flex-wrap: nowrap;"
+                          class="Layout--horizontal StyledProps--main tagBox"
                         >
                           <span
                             class="Tag--main"

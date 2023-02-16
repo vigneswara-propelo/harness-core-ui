@@ -493,6 +493,7 @@ export interface StringsMap {
   'common.headers': string
   'common.help': string
   'common.hideAll': string
+  'common.history': string
   'common.home': string
   'common.hostLabel': string
   'common.hourly': string
@@ -7759,6 +7760,7 @@ export interface StringsMap {
   'cv.addNew': string
   'cv.adjustTheErrorBudgetToContinueWithDeployments': string
   'cv.admin.activitySources.dialogDeleteTitle': string
+  'cv.affectedServices': string
   'cv.allMetrics': string
   'cv.analysisScreens.totalClusters': string
   'cv.andYouHave': string
@@ -8392,6 +8394,7 @@ export interface StringsMap {
   'cv.monitoringSources.splunk.submitQueryToSeeRecords': string
   'cv.monitoringSources.totalMappedQueries': string
   'cv.monitoringSources.uniqueIdentifierValidation': string
+  'cv.month': string
   'cv.months': string
   'cv.nDays': string
   'cv.navLinks.activities': string
@@ -8539,19 +8542,26 @@ export interface StringsMap {
   'cv.sloDowntime.NoData': string
   'cv.sloDowntime.NoDataSuggestion': string
   'cv.sloDowntime.addDowntime': string
+  'cv.sloDowntime.allMonitoredServices': string
   'cv.sloDowntime.category': string
+  'cv.sloDowntime.confirmDeleteDowntime': string
   'cv.sloDowntime.downtimeCreated': string
   'cv.sloDowntime.downtimeName': string
+  'cv.sloDowntime.downtimeToggle': string
   'cv.sloDowntime.downtimeUpdated': string
+  'cv.sloDowntime.downtimeWindow': string
   'cv.sloDowntime.durationText': string
   'cv.sloDowntime.info': string
   'cv.sloDowntime.label': string
   'cv.sloDowntime.msList': string
   'cv.sloDowntime.noData': string
   'cv.sloDowntime.numberOfSLOs': string
+  'cv.sloDowntime.oneMinute': string
+  'cv.sloDowntime.oneWeek': string
   'cv.sloDowntime.repeatEndsOn': string
   'cv.sloDowntime.repeatEvery': string
   'cv.sloDowntime.scheduledMaintenance': string
+  'cv.sloDowntime.selectAllMonitoredServices': string
   'cv.sloDowntime.selectCategory': string
   'cv.sloDowntime.selectMonitoredServices': string
   'cv.sloDowntime.steps.downtimeWindow': string
@@ -8700,6 +8710,7 @@ export interface StringsMap {
   'cv.verificationStatus': string
   'cv.verifications': string
   'cv.wednesday': string
+  'cv.week': string
   'cv.weeks': string
   'cv.widowEnds': string
   'cv.windowEndsDay': string
