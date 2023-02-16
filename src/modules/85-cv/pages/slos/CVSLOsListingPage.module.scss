@@ -103,7 +103,7 @@ $headerHeight: 146px;
 }
 
 .cardSloAndSliForCardView {
-  width: 200px;
+  width: 180px;
   height: 80px;
   padding: var(--spacing-large) !important;
   border-radius: var(--spacing-small);
@@ -185,4 +185,11 @@ $headerHeight: 146px;
   padding: var(--spacing-2) !important;
   border-radius: var(--spacing-2);
   background-color: var(--grey-100) !important;
+}
+
+.main {
+  position: relative;
+  .slider {
+    height: 85% !important;
+  }
 }

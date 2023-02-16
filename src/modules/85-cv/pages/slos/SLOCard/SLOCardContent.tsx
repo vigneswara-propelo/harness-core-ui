@@ -129,7 +129,7 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
                   </Heading>
                 </Container>
               </Layout.Vertical>
-              <Container style={{ overflow: 'auto' }} className={css.flexGrowOne}>
+              <Container className={css.flexGrowOne}>
                 {showUserHint && (
                   <UserHint userMessage={getString('cv.sloGraphUserHint')} dataTestId="SLOCard_UserHint_SLO" />
                 )}

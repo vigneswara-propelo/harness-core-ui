@@ -186,6 +186,7 @@ export default function CreateSimpleSLOForm({
 
   const serviceLevelIndicator = convertSLOFormDataToServiceLevelIndicatorDTO(formikProps.values)
   const {
+    eventType,
     healthSourceRef,
     SLIMetricType,
     validRequestMetric,
@@ -197,7 +198,7 @@ export default function CreateSimpleSLOForm({
   } = formikProps.values
 
   const isRatioBased = SLIMetricType === SLIMetricTypes.RATIO
-  const metricList = isRatioBased ? [validRequestMetric, goodRequestMetric] : [validRequestMetric]
+  const metricList = isRatioBased ? [eventType, validRequestMetric, goodRequestMetric] : [validRequestMetric]
 
   const valuesToDetermineReload = [
     healthSourceRef,

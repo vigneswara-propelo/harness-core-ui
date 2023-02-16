@@ -506,7 +506,7 @@ describe('Create SLO', () => {
     cy.contains('span', 'SLO created successfully').should('be.visible')
   })
 
-  it.only('should be able to add new Health Source while editing a SLO and back button should redirect to the SLOs in MS service page', () => {
+  it('should be able to add new Health Source while editing a SLO and back button should redirect to the SLOs in MS service page', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetail)
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse).as('getMonitoredService')
     cy.intercept('GET', listSLOsCallWithCVNGProd, updatedListSLOsCallResponse)

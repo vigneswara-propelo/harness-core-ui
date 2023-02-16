@@ -16,7 +16,7 @@ import type { DataPoints } from 'services/cv'
 import NoChartDataImage from '@cv/assets/noChartData.svg'
 import { getChartSeriesValues } from '@cv/pages/health-source/common/CommonMetricLineChart/CommonMetricLineChart.utils'
 import type { SLOTargetChartWithAPIGetSliGraphProps } from '../../SLOTargetChart.types'
-import { Legend } from './SLIMetricChartLegend'
+import { SLIMetricChartLegend } from './SLIMetricChartLegend'
 import { legendSliMetricChart } from './SLIMetricChartLegend.utils'
 import css from './SLIMetricChart.module.scss'
 
@@ -29,6 +29,7 @@ export const SliMetricGraph: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = (
   retryOnError,
   showMetricChart
 }) => {
+  const eventType = serviceLevelIndicator.spec.spec?.eventType
   const { getString } = useStrings()
   const metricColor = ['red', 'green']
   const metricKeys = Object.keys(metricGraphData || {})
@@ -83,7 +84,7 @@ export const SliMetricGraph: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = (
   return (
     <div>
       <HighchartsReact highcharts={Highcharts} options={chartSeriesValues} />
-      <Legend hasMultipleMetric={hasMultipleMetric} legendData={legendData} />
+      <SLIMetricChartLegend hasMultipleMetric={hasMultipleMetric} eventType={eventType} legendData={legendData} />
     </div>
   )
 }

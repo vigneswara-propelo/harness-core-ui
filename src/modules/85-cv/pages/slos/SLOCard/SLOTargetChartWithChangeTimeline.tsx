@@ -81,7 +81,7 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
 
   return (
     <Container
-      style={{ position: 'relative' }}
+      className={css.main}
       onClick={() => {
         if (!showTimelineSlider) {
           setShowTimelineSlider(true)

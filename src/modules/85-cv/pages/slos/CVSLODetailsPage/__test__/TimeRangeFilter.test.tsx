@@ -91,13 +91,16 @@ const renderComponent = (): RenderResult => {
 }
 
 describe('Test cases for TimeRangeFilter', () => {
+  const refetchChangeEventSummary = jest.fn()
   beforeEach(() => {
     jest
       .spyOn(cvServices, 'useChangeEventList')
       .mockImplementation(() => ({ data: null, loading: false, error: null, refetch: jest.fn() } as any))
     jest
       .spyOn(cvServices, 'useGetMonitoredServiceChangeEventSummary')
-      .mockImplementation(() => ({ data: null, loading: false, error: null, refetch: jest.fn() } as any))
+      .mockImplementation(
+        () => ({ data: null, loading: false, error: null, refetch: refetchChangeEventSummary } as any)
+      )
   })
   test('it should render all the time range filters without reset button', async () => {
     renderComponent()
@@ -108,7 +111,7 @@ describe('Test cases for TimeRangeFilter', () => {
           queryParams: SLODetailsResetParams
         })
       )
-      expect(cvServices.useGetMonitoredServiceChangeEventSummary).toHaveBeenCalledWith(
+      expect(refetchChangeEventSummary).toHaveBeenCalledWith(
         expect.objectContaining({
           queryParams: {
             ...changeEventSummaryRestParams,
@@ -143,12 +146,12 @@ describe('Test cases for TimeRangeFilter', () => {
           }
         })
       )
-      expect(cvServices.useGetMonitoredServiceChangeEventSummary).toHaveBeenCalledWith(
+      expect(refetchChangeEventSummary).toHaveBeenCalledWith(
         expect.objectContaining({
           queryParams: {
             ...changeEventSummaryRestParams,
-            startTime: 1639989840000,
-            endTime: 1639993440000
+            startTime: 1648857600000,
+            endTime: 1649462400000
           }
         })
       )
@@ -176,12 +179,12 @@ describe('Test cases for TimeRangeFilter', () => {
           }
         })
       )
-      expect(cvServices.useGetMonitoredServiceChangeEventSummary).toHaveBeenCalledWith(
+      expect(refetchChangeEventSummary).toHaveBeenCalledWith(
         expect.objectContaining({
           queryParams: {
             ...changeEventSummaryRestParams,
-            startTime: 1639907040000,
-            endTime: 1639993440000
+            startTime: 1648857600000,
+            endTime: 1649462400000
           }
         })
       )
@@ -208,12 +211,12 @@ describe('Test cases for TimeRangeFilter', () => {
           }
         })
       )
-      expect(cvServices.useGetMonitoredServiceChangeEventSummary).toHaveBeenCalledWith(
+      expect(refetchChangeEventSummary).toHaveBeenCalledWith(
         expect.objectContaining({
           queryParams: {
             ...changeEventSummaryRestParams,
-            startTime: 1639388640000,
-            endTime: 1639993440000
+            startTime: 1648857600000,
+            endTime: 1649462400000
           }
         })
       )
@@ -237,7 +240,7 @@ describe('Test cases for TimeRangeFilter', () => {
           queryParams: SLODetailsResetParams
         })
       )
-      expect(cvServices.useGetMonitoredServiceChangeEventSummary).toHaveBeenCalledWith(
+      expect(refetchChangeEventSummary).toHaveBeenCalledWith(
         expect.objectContaining({
           queryParams: {
             ...changeEventSummaryRestParams,

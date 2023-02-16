@@ -836,6 +836,7 @@ slos:
   evaluationMethod: Evaluation method
   evaluationMethodSubtitle: The evaluation method will determine how your events are measured
   goodRequests: Good requests
+  badRequests: Bad requests
   validRequests: Valid requests
   status: STATUS
   target: TARGET

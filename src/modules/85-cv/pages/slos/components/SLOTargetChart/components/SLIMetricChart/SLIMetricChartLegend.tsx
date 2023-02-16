@@ -6,84 +6,79 @@
  */
 
 import React from 'react'
-import { Container, Text, Layout } from '@harness/uicore'
+import { Container, Text, Layout, IconName } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import type { RatioSLIMetricSpec } from 'services/cv'
+import { SLIEventTypes } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { ThresholdLegend, RatioLegend } from './SLIMetricChartLegend.types'
 import css from './SLIMetricChart.module.scss'
 
-export const Legend = ({
+interface LegendConfig {
+  label: string
+  value: string
+  icon?: IconName
+  color?: string
+}
+
+export const SLIMetricChartLegend = ({
   hasMultipleMetric,
-  legendData
+  legendData,
+  eventType
 }: {
   hasMultipleMetric: boolean
   legendData: ThresholdLegend | RatioLegend
+  eventType?: RatioSLIMetricSpec['eventType']
 }): JSX.Element => {
   const { getString } = useStrings()
-
-  let legendElement = <></>
-
+  let legendElement = undefined
+  let legendConfig: LegendConfig[] = []
   if (hasMultipleMetric) {
-    legendElement = (
-      <>
-        <Layout.Horizontal spacing={'small'}>
-          <Text
-            font={{ variation: FontVariation.SMALL }}
-            icon="symbol-square"
-            iconProps={{ color: Color.MAGENTA_700 }}
-            color={Color.GREY_300}
-          >
-            {getString('cv.slos.goodRequests')}:
-          </Text>
-          <Text inline font={{ variation: FontVariation.FORM_HELP }}>
-            {(legendData as RatioLegend).goodMetric.toFixed(1)}s
-          </Text>
-        </Layout.Horizontal>
-        <Layout.Horizontal spacing={'small'}>
-          <Text
-            font={{ variation: FontVariation.SMALL }}
-            icon="symbol-square"
-            iconProps={{ color: Color.GREEN_700 }}
-            color={Color.GREY_300}
-          >
-            {getString('cv.slos.validRequests')}:
-          </Text>
-          <Text inline font={{ variation: FontVariation.FORM_HELP }}>
-            {(legendData as RatioLegend).validMetric.toFixed(1)}s
-          </Text>
-        </Layout.Horizontal>
-      </>
-    )
+    legendConfig = [
+      {
+        label: eventType === SLIEventTypes.GOOD ? getString('cv.slos.goodRequests') : getString('cv.slos.badRequests'),
+        value: (legendData as RatioLegend).goodMetric.toFixed(1),
+        icon: 'symbol-square' as IconName,
+        color: Color.MAGENTA_700
+      },
+      {
+        label: getString('cv.slos.validRequests'),
+        value: (legendData as RatioLegend).validMetric.toFixed(1),
+        icon: 'symbol-square' as IconName,
+        color: Color.GREEN_700
+      }
+    ]
   } else {
-    legendElement = (
-      <>
-        <Layout.Horizontal spacing={'small'}>
-          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_300}>
-            {getString('cv.minimum')}:
-          </Text>
-          <Text inline font={{ variation: FontVariation.FORM_HELP }}>
-            {(legendData as ThresholdLegend).max.toFixed(1)}s
-          </Text>
-        </Layout.Horizontal>
-        <Layout.Horizontal spacing={'small'}>
-          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_300}>
-            {getString('ce.perspectives.nodeDetails.aggregation.maximum')}:
-          </Text>
-          <Text inline font={{ variation: FontVariation.FORM_HELP }}>
-            {(legendData as ThresholdLegend).min.toFixed(1)}s
-          </Text>
-        </Layout.Horizontal>
-        <Layout.Horizontal spacing={'small'}>
-          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_300}>
-            {getString('ce.perspectives.nodeDetails.aggregation.average')}:
-          </Text>
-          <Text inline font={{ variation: FontVariation.FORM_HELP }}>
-            {(legendData as ThresholdLegend).avg.toFixed(1)}s
-          </Text>
-        </Layout.Horizontal>
-      </>
-    )
+    legendConfig = [
+      { label: getString('cv.minimum'), value: (legendData as ThresholdLegend).max.toFixed(1) },
+      {
+        label: getString('ce.perspectives.nodeDetails.aggregation.maximum'),
+        value: (legendData as ThresholdLegend).min.toFixed(1)
+      },
+      {
+        label: getString('ce.perspectives.nodeDetails.aggregation.average'),
+        value: (legendData as ThresholdLegend).avg.toFixed(1)
+      }
+    ]
   }
+
+  legendElement = legendConfig.map(legendObject => {
+    return (
+      <Layout.Horizontal spacing={'small'} key={legendObject.label}>
+        <Text
+          icon={legendObject.icon}
+          font={{ variation: FontVariation.SMALL }}
+          iconProps={{ color: legendObject.color }}
+          color={Color.GREY_300}
+        >
+          {legendObject.label}:
+        </Text>
+        <Text inline font={{ variation: FontVariation.FORM_HELP }}>
+          {legendObject.value}s
+        </Text>
+      </Layout.Horizontal>
+    )
+  })
 
   return (
     <Container>

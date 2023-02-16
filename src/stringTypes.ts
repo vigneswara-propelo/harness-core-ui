@@ -8600,6 +8600,7 @@ export interface StringsMap {
   'cv.sloRecalculationInProgress': string
   'cv.slos.backToSLI': string
   'cv.slos.badRequestMetric': string
+  'cv.slos.badRequests': string
   'cv.slos.burnRate': string
   'cv.slos.completeTitle': string
   'cv.slos.configureSLI': string

@@ -9,6 +9,7 @@ import React from 'react'
 import { cloneDeep } from 'lodash-es'
 import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { SLIEventTypes } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { SliMetricGraph } from '../SLIMetricChart'
 import type { SLOTargetChartWithAPIGetSliGraphProps } from '../../../SLOTargetChart.types'
 import { ServiceLevelIndicator, OnboardingAPIMock } from './SLIMetricChart.mock'
@@ -55,6 +56,34 @@ describe('Validate SLI Metric chart', () => {
     )
     expect(getByText('cv.slos.validRequests:')).toBeInTheDocument()
     expect(getByText('cv.slos.goodRequests:')).toBeInTheDocument()
+  })
+
+  test('should render with data for ratio based', () => {
+    const retryOnError = jest.fn()
+    const { getByText } = render(
+      <Wrapper
+        serviceLevelIndicator={ServiceLevelIndicator}
+        retryOnError={retryOnError}
+        metricGraphData={OnboardingAPIMock.resource.metricGraphs}
+      />
+    )
+    expect(getByText('cv.slos.validRequests:')).toBeInTheDocument()
+    expect(getByText('cv.slos.goodRequests:')).toBeInTheDocument()
+  })
+
+  test('should render with data for ratio based with Bad Metric', () => {
+    const clonedServiceLevelIndicator = cloneDeep(ServiceLevelIndicator)
+    clonedServiceLevelIndicator.spec.spec.eventType = SLIEventTypes.BAD
+    const retryOnError = jest.fn()
+    const { getByText } = render(
+      <Wrapper
+        retryOnError={retryOnError}
+        serviceLevelIndicator={clonedServiceLevelIndicator}
+        metricGraphData={OnboardingAPIMock.resource.metricGraphs}
+      />
+    )
+    expect(getByText('cv.slos.validRequests:')).toBeInTheDocument()
+    expect(getByText('cv.slos.badRequests:')).toBeInTheDocument()
   })
 
   test('should render with data for threshold based', () => {
