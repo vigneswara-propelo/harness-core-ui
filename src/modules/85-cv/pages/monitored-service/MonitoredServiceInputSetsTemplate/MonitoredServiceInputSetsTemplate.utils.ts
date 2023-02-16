@@ -36,6 +36,7 @@ export const getLabelByName = (name: string, getString: UseStringsReturn['getStr
     case 'query':
     case 'nrql':
     case 'jsonMetricDefinition':
+    case 'jsonMetricDefinitionString':
       return getString('cv.query')
     case 'category':
       return `Category for ${getString('cv.monitoringSources.riskCategoryLabel')}`
@@ -175,14 +176,10 @@ export const getPopulateSource = (
   const clonedSource = cloneDeep(value.sources)
   const populateSource = clonedSource ? { sources: clonedSource } : {}
   const valueList = getPathForKey(populateSource, [], '', GcoQueryKey)
+
   if (valueList.length) {
     valueList.forEach(item => {
-      let stringToObjectValue = {}
-      try {
-        stringToObjectValue = JSON.parse(get(populateSource, item.path))
-      } catch (_) {
-        stringToObjectValue = get(populateSource, item.path)
-      }
+      const stringToObjectValue = get(populateSource, item.path)
       set(populateSource, item.path, stringToObjectValue)
     })
   }

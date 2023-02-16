@@ -153,6 +153,7 @@ export default function MonitoredServiceInputSetsTemplate({
     if (monitoredServiceInputSet?.serviceRef !== undefined) {
       monitoredServiceInputSet.serviceRef = value.serviceRef
     }
+
     if (monitoredServiceInputSet?.environmentRef !== undefined) {
       monitoredServiceInputSet.environmentRef = value.environmentRef
     }

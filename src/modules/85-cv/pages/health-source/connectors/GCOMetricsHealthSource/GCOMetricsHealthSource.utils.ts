@@ -127,11 +127,13 @@ export function transformGCOMetricHealthSourceToGCOMetricSetupSource(
       metricTags[tag] = ''
     }
 
+    const { jsonMetricDefinition, jsonMetricDefinitionString } = metricDefinition
+
     const parsedQuery =
-      getMultiTypeFromValue(JSON.stringify(defaultTo(metricDefinition.jsonMetricDefinition, ''))) ===
+      getMultiTypeFromValue(JSON.stringify(defaultTo(jsonMetricDefinition || jsonMetricDefinitionString, ''))) ===
       MultiTypeInputType.FIXED
-        ? JSON.stringify(defaultTo(metricDefinition.jsonMetricDefinition, ''), null, 2)
-        : metricDefinition.jsonMetricDefinition?.toString()
+        ? JSON.stringify(defaultTo(jsonMetricDefinition || jsonMetricDefinitionString, ''), null, 2)
+        : (jsonMetricDefinition || jsonMetricDefinitionString)?.toString()
     setupSource.metricDefinition.set(metricDefinition.metricName, {
       metricName: metricDefinition.metricName,
       identifier: metricDefinition.identifier,
@@ -212,7 +214,7 @@ export function transformGCOMetricSetupSourceToGCOHealthSource(
       metricTags: Object.keys(metricInfo.metricTags || {}),
       identifier: metricInfo.identifier,
       isManualQuery: metricInfo.isManualQuery,
-      jsonMetricDefinition: shouldParseQuery ? JSON.parse(metricInfo.query || '') : metricInfo.query,
+      jsonMetricDefinitionString: shouldParseQuery ? JSON.parse(metricInfo.query || '') : metricInfo.query,
       riskProfile: {
         ...assignComponentPayload.analysis?.riskProfile
       },
