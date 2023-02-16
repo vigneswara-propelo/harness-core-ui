@@ -78,8 +78,7 @@ import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
@@ -145,8 +144,11 @@ function RunPipelineFormBasic({
   executionIdentifier,
   isDebugMode
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
-  const isNgDeploymentFreezeEnabled = useFeatureFlag(FeatureFlag.NG_DEPLOYMENT_FREEZE)
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
+  const {
+    NG_DEPLOYMENT_FREEZE: isNgDeploymentFreezeEnabled,
+    PIE_NG_GITX_CACHING: isGitCacheEnabled,
+    FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed
+  } = useFeatureFlags()
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [notifyOnlyMe, setNotifyOnlyMe] = useState<boolean>(false)
@@ -704,7 +706,8 @@ function RunPipelineFormBasic({
             resolvedPipeline: resolvedMergedPipeline,
             getString,
             viewType: StepViewType.DeploymentForm,
-            selectedStageData: selectedStages
+            selectedStageData: selectedStages,
+            isOptionalVariableAllowed
           }) as any) || formErrors
         resolve(validatedErrors)
       })
