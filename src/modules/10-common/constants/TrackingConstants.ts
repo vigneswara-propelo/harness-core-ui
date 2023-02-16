@@ -324,6 +324,7 @@ export enum CDOnboardingActions {
   SelectManifestStore = 'Manifest store selection',
   SelectArtifactType = 'Select artifact type',
   MovetoConfigureEnvironment = 'Move to Configure Environment Step',
+  MovetoConfigureEnvironmentWithDelegateNotConnected = 'Move to Configure Environment Step with delegate status not successful',
   SelectDeploymentType = 'Select deployment type',
   MoveToServiceSelection = 'Move to Service Selection Step',
   MoveToDeploymentSelection = 'Move to Deployment type',

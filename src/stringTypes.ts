@@ -5323,6 +5323,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.inManifestContent': string
   'cd.getStartedWithCD.infraName': string
   'cd.getStartedWithCD.installDelegateToTargetEnv': string
+  'cd.getStartedWithCD.installationInstructions': string
   'cd.getStartedWithCD.ipWhitelist': string
   'cd.getStartedWithCD.main': string
   'cd.getStartedWithCD.managedCluster': string
@@ -5347,6 +5348,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.reposubheading': string
   'cd.getStartedWithCD.retryProvisioningHostedCluster': string
   'cd.getStartedWithCD.runDelegateSubtitle': string
+  'cd.getStartedWithCD.sampleManifest': string
+  'cd.getStartedWithCD.sampleManifests': string
   'cd.getStartedWithCD.sampleRepoLink': string
   'cd.getStartedWithCD.sampleRule1': string
   'cd.getStartedWithCD.sampleRule2': string
