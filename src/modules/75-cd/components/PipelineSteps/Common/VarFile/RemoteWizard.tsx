@@ -35,18 +35,18 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 
 import { isMultiTypeRuntime } from '@common/utils/utils'
-import { Connector, PathInterface, RemoteVar, TerraformStoreTypes } from '../TerraformInterfaces'
+import { Connector, PathInterface, RemoteVar, TerraformStoreTypes } from '../Terraform/TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-import css from './TerraformVarfile.module.scss'
+import css from './VarFile.module.scss'
 
-interface TFRemoteProps {
+interface RemoteWizardProps {
   onSubmitCallBack: (data: RemoteVar) => void
   isEditMode: boolean
   isReadonly?: boolean
   allowableTypes: AllowedTypes
 }
-export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
+export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
   previousStep,
   prevStepData,
   onSubmitCallBack,
@@ -55,6 +55,7 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
   allowableTypes
 }) => {
   const { getString } = useStrings()
+  const prevStepDataSpec = prevStepData?.varFile?.spec?.store?.spec
   const initialValues = isEditMode
     ? {
         varFile: {
@@ -63,14 +64,14 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
           spec: {
             store: {
               spec: {
-                gitFetchType: prevStepData?.varFile?.spec?.store?.spec?.gitFetchType,
-                repoName: prevStepData?.varFile?.spec?.store?.spec?.repoName,
-                branch: prevStepData?.varFile?.spec?.store?.spec?.branch,
-                commitId: prevStepData?.varFile?.spec?.store?.spec?.commitId,
+                gitFetchType: prevStepDataSpec?.gitFetchType,
+                repoName: prevStepDataSpec?.repoName,
+                branch: prevStepDataSpec?.branch,
+                commitId: prevStepDataSpec?.commitId,
                 paths:
-                  getMultiTypeFromValue(prevStepData?.varFile?.spec?.store?.spec?.paths) === MultiTypeInputType.RUNTIME
-                    ? prevStepData?.varFile?.spec?.store?.spec?.paths
-                    : (prevStepData?.varFile?.spec?.store?.spec?.paths || []).map((item: string) => ({
+                  getMultiTypeFromValue(prevStepDataSpec?.paths) === MultiTypeInputType.RUNTIME
+                    ? prevStepDataSpec?.paths
+                    : (prevStepDataSpec?.paths || []).map((item: string) => ({
                         path: item,
                         id: uuid()
                       }))
@@ -109,13 +110,13 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
         {getString('cd.varFileDetails')}
       </Heading>
       <Formik
-        formName="tfRemoteWizardForm"
+        formName="RemoteWizardForm"
         initialValues={initialValues}
         onSubmit={values => {
           /* istanbul ignore next */
           const payload = {
             ...values,
-            connectorRef: prevStepData?.varFile?.spec?.store?.spec?.connectorRef
+            connectorRef: prevStepDataSpec?.connectorRef
           }
           /* istanbul ignore next */
           const data = {
@@ -190,18 +191,19 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
         })}
       >
         {formik => {
-          const connectorValue = prevStepData?.varFile?.spec?.store?.spec?.connectorRef as Connector
+          const connectorValue = prevStepDataSpec?.connectorRef as Connector
           const connectionType =
             connectorValue?.connector?.spec?.connectionType === 'Account' ||
             connectorValue?.connector?.spec?.type === 'Account' ||
             prevStepData?.urlType === 'Account'
+
+          const varFileSpec = formik.values?.varFile?.spec?.store?.spec
           return (
             <Form>
               <div className={css.tfRemoteForm}>
                 <div className={cx(stepCss.formGroup, stepCss.md)}>
                   <FormInput.Text name="varFile.identifier" label={getString('identifier')} />
                 </div>
-
                 {connectionType && (
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.MultiTextInput
@@ -210,19 +212,18 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
                       placeholder={getString('pipelineSteps.repoName')}
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />
-                    {getMultiTypeFromValue(formik.values?.varFile?.spec?.store?.spec?.repoName) ===
-                      MultiTypeInputType.RUNTIME && (
+                    {getMultiTypeFromValue(varFileSpec?.repoName) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
                         style={{ alignSelf: 'center' }}
-                        value={formik.values?.varFile?.spec?.store?.spec?.repoName as string}
+                        value={varFileSpec?.repoName as string}
                         type="String"
                         variableName="varFile.spec.store.spec.repoName"
                         showRequiredField={false}
                         showDefaultField={false}
                         showAdvanced={true}
-                        onChange={value =>
-                          /* istanbul ignore next */
-                          formik.setFieldValue('varFile.spec.store.spec.repoName', value)
+                        onChange={
+                          /* istanbul ignore next */ value =>
+                            formik.setFieldValue('varFile.spec.store.spec.repoName', value)
                         }
                       />
                     )}
@@ -236,7 +237,8 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
                     placeholder={getString('pipeline.manifestType.gitFetchTypeLabel')}
                   />
                 </div>
-                {formik.values?.varFile?.spec?.store?.spec?.gitFetchType === gitFetchTypes[0].value && (
+
+                {varFileSpec?.gitFetchType === gitFetchTypes[0].value && (
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.MultiTextInput
                       label={getString('pipelineSteps.deploy.inputSet.branch')}
@@ -244,24 +246,25 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
                       name="varFile.spec.store.spec.branch"
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />
-                    {getMultiTypeFromValue(formik.values?.varFile?.spec?.store?.spec?.branch) ===
-                      MultiTypeInputType.RUNTIME && (
+                    {getMultiTypeFromValue(varFileSpec?.branch) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
                         style={{ alignSelf: 'center' }}
-                        value={formik.values?.varFile?.spec?.store?.spec?.branch as string}
+                        value={varFileSpec?.branch as string}
                         type="String"
                         variableName="varFile.spec.store.spec.branch"
                         showRequiredField={false}
                         showDefaultField={false}
                         showAdvanced={true}
-                        onChange={value => formik.setFieldValue('varFile.spec.store.spec.branch', value)}
+                        onChange={
+                          /* istanbul ignore next */ value =>
+                            formik.setFieldValue('varFile.spec.store.spec.branch', value)
+                        }
                         isReadonly={isReadonly}
                       />
                     )}
                   </div>
                 )}
-
-                {formik.values?.varFile?.spec?.store?.spec?.gitFetchType === gitFetchTypes[1].value && (
+                {varFileSpec?.gitFetchType === gitFetchTypes[1].value && (
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.MultiTextInput
                       label={getString('pipeline.manifestType.commitId')}
@@ -269,17 +272,19 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
                       name="varFile.spec.store.spec.commitId"
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />
-                    {getMultiTypeFromValue(formik.values?.varFile?.spec?.store?.spec?.commitId) ===
-                      MultiTypeInputType.RUNTIME && (
+                    {getMultiTypeFromValue(varFileSpec?.commitId) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
                         style={{ alignSelf: 'center' }}
-                        value={formik.values?.varFile?.spec?.store?.spec?.commitId as string}
+                        value={varFileSpec?.commitId as string}
                         type="String"
                         variableName="varFile.spec.store.spec.commitId"
                         showRequiredField={false}
                         showDefaultField={false}
                         showAdvanced={true}
-                        onChange={value => formik.setFieldValue('varFile.spec.store.spec.commitId', value)}
+                        onChange={
+                          /* istanbul ignore next */ value =>
+                            formik.setFieldValue('varFile.spec.store.spec.commitId', value)
+                        }
                         isReadonly={isReadonly}
                       />
                     )}
@@ -287,15 +292,17 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
                 )}
                 <div className={cx(stepCss.formGroup)}>
                   <DragDropContext
-                    onDragEnd={(result: DropResult) => {
-                      if (!result.destination) {
-                        return
+                    onDragEnd={
+                      /* istanbul ignore next */ (result: DropResult) => {
+                        if (!result.destination) {
+                          return
+                        }
+                        const res = Array.from(get(formik.values, 'varFile.spec.store.spec.paths'))
+                        const [removed] = res.splice(result.source.index, 1)
+                        res.splice(result.destination.index, 0, removed)
+                        formik.setFieldValue('varFile.spec.store.spec.paths', res)
                       }
-                      const res = Array.from(get(formik.values, 'varFile.spec.store.spec.paths'))
-                      const [removed] = res.splice(result.source.index, 1)
-                      res.splice(result.destination.index, 0, removed)
-                      formik.setFieldValue('varFile.spec.store.spec.paths', res)
-                    }}
+                    }
                   >
                     <Droppable droppableId="droppable">
                       {(provided, _snapshot) => (
@@ -314,9 +321,7 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
                             <FieldArray
                               name="varFile.spec.store.spec.paths"
                               render={arrayHelpers => {
-                                const paths = defaultTo(formik.values?.varFile?.spec?.store?.spec?.paths, [
-                                  { path: '', uuid: uuid() }
-                                ])
+                                const paths = defaultTo(varFileSpec?.paths, [{ path: '', uuid: uuid() }])
                                 return (
                                   <div>
                                     {map(paths, (_, index: number) => (
@@ -377,17 +382,18 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
                     </Droppable>
                   </DragDropContext>
 
-                  {getMultiTypeFromValue(formik.values?.varFile?.spec?.store?.spec?.paths) ===
-                    MultiTypeInputType.RUNTIME && (
+                  {getMultiTypeFromValue(varFileSpec?.paths) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
                       style={{ marginTop: 6 }}
-                      value={formik.values?.varFile?.spec?.store?.spec?.paths}
+                      value={varFileSpec?.paths}
                       type={getString('list')}
                       variableName={'varFile.spec.store.spec.paths'}
                       showRequiredField={false}
                       showDefaultField={false}
                       showAdvanced={true}
-                      onChange={val => formik?.setFieldValue('varFile.spec.store.spec.paths', val)}
+                      onChange={
+                        /* istanbul ignore next */ val => formik?.setFieldValue('varFile.spec.store.spec.paths', val)
+                      }
                       isReadonly={isReadonly}
                     />
                   )}

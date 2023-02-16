@@ -7,46 +7,26 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly addMarginBottom: string
   readonly addMarginTop: string
   readonly addTfVarFile: string
   readonly branch: string
-  readonly configBtn: string
   readonly configField: string
-  readonly configFile: string
-  readonly configFileLabel: string
-  readonly configLabel: string
-  readonly configPlaceHolder: string
-  readonly configWizard: string
-  readonly contentTextArea: string
   readonly createTfWizard: string
   readonly crossIcon: string
   readonly dialog: string
-  readonly divider: string
   readonly drag: string
   readonly dragOver: string
   readonly dragging: string
-  readonly editBtn: string
-  readonly fieldBorder: string
-  readonly fileDropdown: string
-  readonly fileSelect: string
   readonly formComponent: string
   readonly formContainerStepOne: string
   readonly headerContainer: string
   readonly iconMargin: string
   readonly iconPosition: string
-  readonly inputField: string
-  readonly label: string
   readonly manifestIcon: string
   readonly manifestWizard: string
   readonly modal: string
   readonly newConnectorButton: string
-  readonly optionalConfigDetails: string
   readonly optionsViewContainer: string
-  readonly path: string
-  readonly pathRow: string
-  readonly radioBtns: string
-  readonly remoteIcon: string
   readonly squareCardContainer: string
   readonly tfArtifactoryStepTwo: string
   readonly tfContainer: string

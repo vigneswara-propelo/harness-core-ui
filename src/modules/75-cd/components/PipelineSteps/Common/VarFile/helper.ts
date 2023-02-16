@@ -1,14 +1,27 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
+
+import type { IDialogProps } from '@blueprintjs/core'
+
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import { cloneDeep, unset, size, isUndefined, set, get } from 'lodash-es'
 import { IdentifierSchema } from '@common/utils/Validation'
-import { TerraformStoreTypes, PathInterface } from '../TerraformInterfaces'
+import { TerraformStoreTypes, PathInterface } from '../Terraform/TerraformInterfaces'
+
+export const DIALOG_PROPS: IDialogProps = {
+  isOpen: true,
+  usePortal: true,
+  autoFocus: true,
+  canEscapeKeyClose: true,
+  canOutsideClickClose: true,
+  enforceFocus: false,
+  style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
+}
 
 const formatPaths = (paths: any) => {
   return getMultiTypeFromValue(paths) === MultiTypeInputType.RUNTIME
@@ -23,46 +36,45 @@ export const formatInitialValues = (
   isTerraformPlan: boolean,
   isTerragruntPlan?: boolean
 ) => {
-  if (isBackendConfig && (isTerraformPlan || isTerragruntPlan)) {
-    return {
-      spec: {
-        configuration: {
-          backendConfig: {
-            spec: {
-              store: {
-                spec: {
-                  repositoryName:
-                    prevStepData?.formValues?.spec?.configuration?.backendConfig?.spec?.store?.spec?.repositoryName ||
-                    '',
-                  artifactPaths: formatPaths(
-                    prevStepData?.formValues?.spec?.configuration?.backendConfig?.spec?.store?.spec?.artifactPaths || [
-                      ''
-                    ]
-                  )
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
   if (isBackendConfig) {
-    return {
-      spec: {
-        configuration: {
-          backendConfig: {
-            spec: {
-              store: {
-                spec: {
-                  repositoryName:
-                    prevStepData?.formValues?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec
-                      ?.repositoryName || '',
-                  artifactPaths: formatPaths(
-                    prevStepData?.formValues?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec
-                      ?.artifactPaths || ['']
-                  )
+    if (isTerraformPlan || isTerragruntPlan) {
+      return {
+        spec: {
+          configuration: {
+            backendConfig: {
+              spec: {
+                store: {
+                  spec: {
+                    repositoryName:
+                      prevStepData?.formValues?.spec?.configuration?.backendConfig?.spec?.store?.spec?.repositoryName ||
+                      '',
+                    artifactPaths: formatPaths(
+                      prevStepData?.formValues?.spec?.configuration?.backendConfig?.spec?.store?.spec
+                        ?.artifactPaths || ['']
+                    )
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    } else {
+      return {
+        spec: {
+          configuration: {
+            backendConfig: {
+              spec: {
+                store: {
+                  spec: {
+                    repositoryName:
+                      prevStepData?.formValues?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec
+                        ?.repositoryName || '',
+                    artifactPaths: formatPaths(
+                      prevStepData?.formValues?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec
+                        ?.artifactPaths || ['']
+                    )
+                  }
                 }
               }
             }
@@ -71,38 +83,38 @@ export const formatInitialValues = (
       }
     }
   }
-  if (isConfig && (isTerraformPlan || isTerragruntPlan)) {
-    return {
-      spec: {
-        configuration: {
-          configFiles: {
-            store: {
-              spec: {
-                repositoryName:
-                  prevStepData?.formValues?.spec?.configuration?.configFiles?.store?.spec?.repositoryName || '',
-                artifactPaths: formatPaths(
-                  prevStepData?.formValues?.spec?.configuration?.configFiles?.store?.spec?.artifactPaths || ['']
-                )
+  if (isConfig) {
+    if (isTerraformPlan || isTerragruntPlan) {
+      return {
+        spec: {
+          configuration: {
+            configFiles: {
+              store: {
+                spec: {
+                  repositoryName:
+                    prevStepData?.formValues?.spec?.configuration?.configFiles?.store?.spec?.repositoryName || '',
+                  artifactPaths: formatPaths(
+                    prevStepData?.formValues?.spec?.configuration?.configFiles?.store?.spec?.artifactPaths || ['']
+                  )
+                }
               }
             }
           }
         }
       }
-    }
-  }
-
-  if (isConfig) {
-    return {
-      spec: {
-        configuration: {
-          configFiles: {
-            store: {
-              spec: {
-                repositoryName:
-                  prevStepData?.formValues?.spec?.configuration?.spec?.configFiles?.store?.spec?.repositoryName || '',
-                artifactPaths: formatPaths(
-                  prevStepData?.formValues?.spec?.configuration?.spec?.configFiles?.store?.spec?.artifactPaths || ['']
-                )
+    } else {
+      return {
+        spec: {
+          configuration: {
+            configFiles: {
+              store: {
+                spec: {
+                  repositoryName:
+                    prevStepData?.formValues?.spec?.configuration?.spec?.configFiles?.store?.spec?.repositoryName || '',
+                  artifactPaths: formatPaths(
+                    prevStepData?.formValues?.spec?.configuration?.spec?.configFiles?.store?.spec?.artifactPaths || ['']
+                  )
+                }
               }
             }
           }
@@ -135,14 +147,19 @@ export const getConnectorRef = (
   isTerragruntPlan?: boolean
 ) => {
   let connectorValue
-  if (isConfig && (isTerraformPlan || isTerragruntPlan)) {
-    connectorValue = prevStepData?.formValues.spec?.configuration?.configFiles?.store?.spec?.connectorRef
-  } else if (isConfig) {
-    connectorValue = prevStepData?.formValues?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef
-  } else if (isBackendConfig && (isTerraformPlan || isTerragruntPlan)) {
-    connectorValue = prevStepData?.formValues.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+  if (isConfig) {
+    if (isTerraformPlan || isTerragruntPlan) {
+      connectorValue = prevStepData?.formValues.spec?.configuration?.configFiles?.store?.spec?.connectorRef
+    } else {
+      connectorValue = prevStepData?.formValues?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef
+    }
   } else if (isBackendConfig) {
-    connectorValue = prevStepData?.formValues?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
+    if (isTerraformPlan || isTerragruntPlan) {
+      connectorValue = prevStepData?.formValues.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+    } else {
+      connectorValue =
+        prevStepData?.formValues?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
+    }
   } else connectorValue = prevStepData?.varFile?.spec?.store?.spec?.connectorRef
 
   if (size(prevStepData) > 5) {

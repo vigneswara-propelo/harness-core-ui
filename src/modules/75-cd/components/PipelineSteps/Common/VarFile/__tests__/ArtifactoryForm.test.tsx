@@ -9,8 +9,7 @@ import React from 'react'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { render, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-
-import { TFArtifactoryForm } from '../Editview/TerraformArtifactoryForm'
+import { ArtifactoryForm } from '../ArtifactoryForm'
 
 const props = {
   onSubmitCallBack: jest.fn(),
@@ -65,7 +64,7 @@ const renderForm = (prevStepData: any) => {
       path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier"
       pathParams={{ accountId: 'account', orgIdentifier: 'org', projectIdentifier: 'project' }}
     >
-      <TFArtifactoryForm {...props} prevStepData={prevStepData} />
+      <ArtifactoryForm {...props} prevStepData={prevStepData} />
     </TestWrapper>
   )
 }

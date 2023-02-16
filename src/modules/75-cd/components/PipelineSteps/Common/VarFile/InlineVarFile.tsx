@@ -20,16 +20,14 @@ import {
   AllowedTypes
 } from '@harness/uicore'
 import cx from 'classnames'
-
+import { get } from 'lodash-es'
 import { Classes, Dialog } from '@blueprintjs/core'
 
 import { useStrings } from 'framework/strings'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-
-import type { InlineVar } from '../TerraformInterfaces'
-import { TFMonaco } from './TFMonacoEditor'
-
+import { TFMonaco } from '../Terraform/Editview/TFMonacoEditor'
+import type { InlineVar } from '../Terraform/TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface InlineVarFileProps {
@@ -72,15 +70,12 @@ const InlineVarFile = (props: InlineVarFileProps) => {
           formName="inlineVarFileForm"
           initialValues={selectedVar}
           onSubmit={(values: any) => {
-            /* istanbul ignore next */
             if (!isEditMode) {
-              /* istanbul ignore next */
               arrayHelpers && arrayHelpers.push(values)
             } else {
               /* istanbul ignore next */
               arrayHelpers && arrayHelpers.replace(selectedVarIndex, values)
             }
-            /* istanbul ignore next */
             onSubmit()
           }}
           validationSchema={Yup.object().shape({
@@ -105,16 +100,17 @@ const InlineVarFile = (props: InlineVarFileProps) => {
                     defaultValueToReset=""
                     allowedTypes={allowableTypes}
                     formik={formikProps}
-                    expressionRender={() => {
-                      /* istanbul ignore next */
-                      return (
-                        <TFMonaco
-                          name="varFile.spec.content"
-                          formik={formikProps as FormikProps<unknown>}
-                          title={getString('pipelineSteps.content')}
-                        />
-                      )
-                    }}
+                    expressionRender={
+                      /* istanbul ignore next */ () => {
+                        return (
+                          <TFMonaco
+                            name="varFile.spec.content"
+                            formik={formikProps as FormikProps<unknown>}
+                            title={getString('pipelineSteps.content')}
+                          />
+                        )
+                      }
+                    }
                     skipRenderValueInExpressionLabel
                   >
                     <TFMonaco
@@ -123,19 +119,23 @@ const InlineVarFile = (props: InlineVarFileProps) => {
                       title={getString('pipelineSteps.content')}
                     />
                   </MultiTypeFieldSelector>
-                  {getMultiTypeFromValue(formikProps.values.varFile?.spec?.content) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      style={{ marginTop: 7 }}
-                      value={formikProps.values.varFile?.spec?.content as string}
-                      type="String"
-                      variableName="varFile.spec.content"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      showAdvanced={true}
-                      onChange={value => formikProps.setFieldValue('varFile.spec.content', value)}
-                      isReadonly={isReadonly}
-                    />
-                  )}
+                  {
+                    /* istanbul ignore next */ getMultiTypeFromValue(
+                      get(formikProps.values.varFile, 'spec.content')
+                    ) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        style={{ marginTop: 7 }}
+                        value={formikProps.values.varFile?.spec?.content as string}
+                        type="String"
+                        variableName="varFile.spec.content"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => formikProps.setFieldValue('varFile.spec.content', value)}
+                        isReadonly={isReadonly}
+                      />
+                    )
+                  }
                 </div>
 
                 <Layout.Horizontal spacing={'medium'} margin={{ top: 'huge' }}>

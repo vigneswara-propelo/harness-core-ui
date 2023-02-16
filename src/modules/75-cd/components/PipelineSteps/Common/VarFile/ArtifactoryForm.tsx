@@ -41,11 +41,10 @@ import {
   tfArtifactoryFormInputNames,
   getConnectorRef,
   formatOnSubmitData
-} from './TerraformArtifactoryFormHelper'
-import type { PathInterface } from '../TerraformInterfaces'
+} from './helper'
+import type { PathInterface } from '../Terraform/TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-
-import css from './TerraformVarfile.module.scss'
+import css from './VarFile.module.scss'
 
 const onDragStart = (event: React.DragEvent<HTMLDivElement>, index: number): void => {
   event.dataTransfer.setData('data', index.toString())
@@ -83,7 +82,7 @@ const onDrop = (
   }
   event.currentTarget.classList.remove(css.dragOver)
 }
-interface TFArtifactoryProps {
+interface ArtifactoryFormProps {
   onSubmitCallBack: (data: any, prevStepData?: any) => void
   isConfig: boolean
   isTerraformPlan: boolean
@@ -92,7 +91,7 @@ interface TFArtifactoryProps {
   isBackendConfig?: boolean
 }
 
-export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = ({
+export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = ({
   previousStep,
   prevStepData,
   onSubmitCallBack,

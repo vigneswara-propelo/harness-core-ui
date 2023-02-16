@@ -7,15 +7,16 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import userEvent from '@testing-library/user-event'
-import { render, fireEvent, screen, getByText as getByTextBody, waitFor, act } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, getByText as getByTextBody, act } from '@testing-library/react'
 import { MultiTypeInputType, Formik } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
-import TGVarFileList from '../EditView/TGVarFileList'
-import { formikValues } from './TerragruntTestHelper'
+import VarFileList from '../VarFileList'
+import { formikValues, formikValuesforArtifactoryForm } from './VarFileTestHelper'
 
 const mockGetFunction = jest.fn()
 const defaultProps = {
+  varFilePath: 'spec.configuration.spec.varFiles',
   formik: formikValues,
   isReadonly: false,
   getNewConnectorSteps: mockGetFunction,
@@ -26,14 +27,14 @@ const defaultProps = {
 const renderComponent = (props: any) => {
   return render(
     <TestWrapper>
-      <Formik formName="TgVarFileList" onSubmit={noop} initialValues={{}}>
-        <TGVarFileList {...props} />
+      <Formik formName="varFileList" onSubmit={noop} initialValues={{}}>
+        <VarFileList {...props} />
       </Formik>
     </TestWrapper>
   )
 }
 
-describe('Test TgPlanVarFileList', () => {
+describe('Test VarFileList', () => {
   test(`renders inline var file dialog`, async () => {
     renderComponent(defaultProps)
     const addButton = await screen.findByText('plusAdd')
@@ -65,7 +66,7 @@ describe('Test TgPlanVarFileList', () => {
 
   test('remove terraform var file', () => {
     const { getByTestId, container } = renderComponent(defaultProps)
-    const removeLabel = getByTestId('remove-header-0')
+    const removeLabel = getByTestId('remove-varFile-0')
     act(() => {
       userEvent.click(removeLabel)
     })
@@ -99,5 +100,36 @@ describe('Test TgPlanVarFileList', () => {
     await waitFor(() => getByTextBody(dialog, 'Add Inline Terraform Var File'))
     fireEvent.click(document.querySelector('[data-icon="small-cross"]') as HTMLElement)
     waitFor(() => expect(dialog).toBeFalsy())
+  })
+
+  test(`renders with Artifactory connector`, async () => {
+    const props = {
+      varFilePath: 'spec.configuration.spec.varFiles',
+      formik: formikValuesforArtifactoryForm,
+      isReadonly: false,
+      getNewConnectorSteps: mockGetFunction,
+      setSelectedConnector: mockGetFunction,
+      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME],
+      selectedConnector: 'Artifactory'
+    } as any
+    const { container, getByText } = renderComponent(props)
+
+    const editVarFile = container.querySelector('[data-icon="edit"]')
+    fireEvent.click(editVarFile!)
+
+    const addButton = await getByText('plusAdd')
+    fireEvent.click(addButton)
+
+    expect(getByText('cd.addInline')).toBeTruthy()
+    fireEvent.click(getByText('cd.addInline'))
+
+    expect(getByText('cd.addRemote')).toBeTruthy()
+    fireEvent.click(getByText('cd.addRemote'))
+
+    const dailog = findDialogContainer()
+
+    //close
+    fireEvent.click(document.querySelector('[data-icon="cross"]') as HTMLElement)
+    waitFor(() => expect(dailog).toBeFalsy())
   })
 })

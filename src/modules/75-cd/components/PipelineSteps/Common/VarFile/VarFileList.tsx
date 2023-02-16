@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import cx from 'classnames'
 import {
   Layout,
@@ -26,48 +26,62 @@ import type { FormikProps } from 'formik'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import type { TerragruntVarFileWrapper } from 'services/cd-ng'
-import type { TerragruntData } from '../TerragruntInterface'
-import { RemoteVar, TerraformStoreTypes } from '../../Terraform/TerraformInterfaces'
-import { TFRemoteWizard } from '../../Terraform/Editview/TFRemoteWizard'
-import { TFVarStore } from '../../Terraform/Editview/TFVarStore'
-import InlineVarFile from '../../Terraform/Editview/InlineVarFile'
-import { DIALOG_PROPS } from '../TerragruntHelper'
+import { RemoteVar, TerraformStoreTypes } from '../Terraform/TerraformInterfaces'
+import InlineVarFile from './InlineVarFile'
+import { DIALOG_PROPS } from './helper'
+import { RemoteVarStore } from './RemoteVarStore'
+import { RemoteWizard } from './RemoteWizard'
+import { ArtifactoryForm } from './ArtifactoryForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import css from '../../Terraform/Editview/TerraformVarfile.module.scss'
+import css from './VarFile.module.scss'
 
-interface TGVarFileProps {
-  formik: FormikProps<TerragruntData>
+interface VarFileProps<T> {
+  formik: FormikProps<T>
   isReadonly: boolean
+  varFilePath: string
   allowableTypes: AllowedTypes
   getNewConnectorSteps?: any
   setSelectedConnector?: any
   selectedConnector?: string
+  isTerragrunt?: boolean
+  isTerraformPlan?: boolean
 }
 
-export default function TgVarFileList(props: TGVarFileProps): React.ReactElement {
-  const { formik, isReadonly = false, allowableTypes, getNewConnectorSteps, setSelectedConnector } = props
-  const inlineInitValues: TerragruntVarFileWrapper = {
+export default function VarFileList<T, U>(props: VarFileProps<T>): React.ReactElement {
+  const {
+    formik,
+    isReadonly = false,
+    allowableTypes,
+    getNewConnectorSteps,
+    setSelectedConnector,
+    selectedConnector,
+    varFilePath,
+    isTerragrunt,
+    isTerraformPlan
+  } = props
+  const inlineInitValues = {
     varFile: {
-      spec: {},
+      spec: {
+        content: ''
+      },
       identifier: '',
       type: TerraformStoreTypes.Inline
     }
-  }
-  const remoteInitialValues: TerragruntVarFileWrapper = {
+  } as unknown as U
+  const remoteInitialValues = {
     varFile: {
       spec: {},
       identifier: '',
       type: TerraformStoreTypes.Remote
     }
-  }
+  } as unknown as U
 
-  const [showTfModal, setShowTfModal] = React.useState(false)
-  const [isEditMode, setIsEditMode] = React.useState(false)
-  const [selectedVar, setSelectedVar] = React.useState(inlineInitValues)
-  const [selectedVarIndex, setSelectedVarIndex] = React.useState(-1)
-  const [showRemoteWizard, setShowRemoteWizard] = React.useState(false)
-  const [connectorView, setConnectorView] = React.useState(false)
+  const [showTfModal, setShowTfModal] = useState(false)
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [selectedVar, setSelectedVar] = useState(inlineInitValues)
+  const [selectedVarIndex, setSelectedVarIndex] = useState(-1)
+  const [showRemoteWizard, setShowRemoteWizard] = useState(false)
+  const [connectorView, setConnectorView] = useState(false)
   const { getString } = useStrings()
 
   const onSubmit = /* istanbul ignore next */ (values: RemoteVar, arrayHelpers: FieldArrayRenderProps): void => {
@@ -79,8 +93,8 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
     onCloseOfRemoteWizard()
   }
 
-  const remoteRender = (varFile: TerragruntVarFileWrapper, index: number): React.ReactElement => {
-    const { identifier } = varFile.varFile
+  const remoteRender = (varFile: U, index: number): React.ReactElement => {
+    const { identifier } = get(varFile, 'varFile')
     return (
       <div className={css.configField}>
         <Layout.Horizontal>
@@ -100,8 +114,8 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
     )
   }
 
-  const inlineRender = (varFile: TerragruntVarFileWrapper, index: number): React.ReactElement => {
-    const { identifier } = varFile.varFile
+  const inlineRender = (varFile: U, index: number): React.ReactElement => {
+    const { identifier } = get(varFile, 'varFile')
     return (
       <div className={css.configField}>
         <Layout.Horizontal>
@@ -123,7 +137,7 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
 
   const getTitle = () => (
     <Layout.Vertical flex style={{ justifyContent: 'center', alignItems: 'center' }} margin={{ bottom: 'xlarge' }}>
-      <Icon name="service-terraform" className={css.remoteIcon} size={50} padding={{ bottom: 'large' }} />
+      <Icon name="service-terraform" size={50} padding={{ bottom: 'large' }} />
       <Text color={Color.WHITE}>{getString('pipelineSteps.remoteFile')}</Text>
     </Layout.Vertical>
   )
@@ -142,7 +156,7 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
   }
   const tooltipContext = React.useContext(FormikTooltipContext)
   const dataTooltipId = tooltipContext?.formName ? `${tooltipContext.formName}_${name}` : ''
-  const varFilesPath = 'spec.configuration.spec.varFiles'
+
   return (
     <Layout.Vertical>
       <Label style={{ color: Color.GREY_900 }} className={css.tfVarLabel} data-tooltip-id={dataTooltipId}>
@@ -156,10 +170,10 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
               if (!result.destination) {
                 return
               }
-              const res = Array.from(get(formik.values, varFilesPath))
+              const res = Array.from(get(formik.values, varFilePath))
               const [removed] = res.splice(result.source.index, 1)
               res.splice(result.destination.index, 0, removed)
-              formik.setFieldValue(varFilesPath, res)
+              formik.setFieldValue(varFilePath, res)
             }
           }
         >
@@ -167,11 +181,11 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
             {provided => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 <FieldArray
-                  name={varFilesPath}
+                  name={varFilePath}
                   render={arrayHelpers => {
                     return (
                       <div>
-                        {get(formik.values, varFilesPath)?.map((varFile: TerragruntVarFileWrapper, index: number) => {
+                        {get(formik.values, varFilePath)?.map((varFile: U, index: number) => {
                           return (
                             <Draggable key={index} draggableId={`${index}`} index={index}>
                               {providedDrag => (
@@ -184,7 +198,7 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
                                 >
                                   <Layout.Horizontal spacing="medium" style={{ alignItems: 'baseline' }}>
                                     <Icon name="drag-handle-vertical" className={css.drag} />
-                                    {get(formik.values, varFilesPath, [])?.length > 1 && (
+                                    {get(formik.values, varFilePath, [])?.length > 1 && (
                                       <Text color={Color.BLACK}>{`${index + 1}.`}</Text>
                                     )}
                                     {get(varFile, 'varFile.type') === TerraformStoreTypes.Remote &&
@@ -195,7 +209,7 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
                                     <Button
                                       minimal
                                       icon="main-trash"
-                                      data-testid={`remove-header-${index}`}
+                                      data-testid={`remove-varFile-${index}`}
                                       onClick={() => arrayHelpers.remove(index)}
                                     />
                                   </Layout.Horizontal>
@@ -245,7 +259,7 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
                           >
                             <div className={css.createTfWizard}>
                               <StepWizard title={getTitle()} initialStep={1} className={css.manifestWizard}>
-                                <TFVarStore
+                                <RemoteVarStore
                                   isReadonly={isReadonly}
                                   name={getString('cd.tfVarStore')}
                                   initialValues={isEditMode ? selectedVar : remoteInitialValues}
@@ -254,18 +268,28 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
                                   setSelectedConnector={setSelectedConnector}
                                   handleConnectorViewChange={/* istanbul ignore next */ () => setConnectorView(true)}
                                   setConnectorView={setConnectorView}
-                                  isTerragrunt
+                                  isTerragrunt={!!isTerragrunt}
                                 />
                                 {connectorView ? getNewConnectorSteps() : null}
-                                <TFRemoteWizard
-                                  name={getString('cd.varFileDetails')}
-                                  onSubmitCallBack={
-                                    /* istanbul ignore next */ (values: RemoteVar) => onSubmit(values, arrayHelpers)
-                                  }
-                                  isEditMode={isEditMode}
-                                  isReadonly={isReadonly}
-                                  allowableTypes={allowableTypes}
-                                />
+                                {selectedConnector === 'Artifactory' ? (
+                                  <ArtifactoryForm
+                                    isConfig={false}
+                                    isTerraformPlan={!!isTerraformPlan}
+                                    allowableTypes={allowableTypes}
+                                    name={getString('cd.varFileDetails')}
+                                    onSubmitCallBack={(values: RemoteVar) => onSubmit(values, arrayHelpers)}
+                                  />
+                                ) : (
+                                  <RemoteWizard
+                                    name={getString('cd.varFileDetails')}
+                                    onSubmitCallBack={
+                                      /* istanbul ignore next */ (values: RemoteVar) => onSubmit(values, arrayHelpers)
+                                    }
+                                    isEditMode={isEditMode}
+                                    isReadonly={isReadonly}
+                                    allowableTypes={allowableTypes}
+                                  />
+                                )}
                               </StepWizard>
                             </div>
                             <Button

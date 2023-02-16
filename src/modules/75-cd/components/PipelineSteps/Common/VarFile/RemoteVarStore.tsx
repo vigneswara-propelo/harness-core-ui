@@ -38,10 +38,10 @@ import {
   ConnectorTypes,
   TerragruntAllowedTypes,
   tfVarIcons
-} from '../../ConfigFileStore/ConfigFileStoreHelper'
-import css from './TerraformVarfile.module.scss'
+} from '../ConfigFileStore/ConfigFileStoreHelper'
+import css from './VarFile.module.scss'
 
-interface TFVarStoreProps {
+interface RemoteVarStoreProps {
   initialValues: any
   isEditMode: boolean
   allowableTypes: MultiTypeAllowedTypes
@@ -52,7 +52,7 @@ interface TFVarStoreProps {
   isTerragrunt: boolean
 }
 
-export const TFVarStore: React.FC<StepProps<any> & TFVarStoreProps> = ({
+export const RemoteVarStore: React.FC<StepProps<any> & RemoteVarStoreProps> = ({
   prevStepData,
   nextStep,
   initialValues,
