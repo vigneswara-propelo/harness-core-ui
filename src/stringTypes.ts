@@ -128,6 +128,7 @@ export interface StringsMap {
   'common.billingAddress': string
   'common.blank': string
   'common.branchName': string
+  'common.bucketName': string
   'common.by': string
   'common.byType': string
   'common.cantDeleteEntity': string
@@ -3050,6 +3051,8 @@ export interface StringsMap {
   'auditTrail.actions.upserted': string
   'auditTrail.allEvents': string
   'auditTrail.auditLogAPI': string
+  'auditTrail.auditLogStreaming': string
+  'auditTrail.auditLogs': string
   'auditTrail.delegateGroups': string
   'auditTrail.emptyStateMessage': string
   'auditTrail.emptyStateMessageTitle': string
@@ -3059,8 +3062,27 @@ export interface StringsMap {
   'auditTrail.excludeSystemEvents': string
   'auditTrail.externalDataText': string
   'auditTrail.http': string
+  'auditTrail.logStreaming.activeDestinations': string
+  'auditTrail.logStreaming.amazonS3Bucket': string
+  'auditTrail.logStreaming.deleteSDDialogContent': string
+  'auditTrail.logStreaming.deleteSDDialogTitle': string
+  'auditTrail.logStreaming.deleteSuccessful': string
+  'auditTrail.logStreaming.destinationName': string
+  'auditTrail.logStreaming.duplicateIdError': string
+  'auditTrail.logStreaming.errorWhileDeleting': string
+  'auditTrail.logStreaming.errorsInDestinations': string
+  'auditTrail.logStreaming.failedStreaming': string
+  'auditTrail.logStreaming.inactiveDestinations': string
+  'auditTrail.logStreaming.lastStreamed': string
+  'auditTrail.logStreaming.newStreamingDestination': string
+  'auditTrail.logStreaming.notStreamedYet': string
+  'auditTrail.logStreaming.streamingConnector': string
+  'auditTrail.logStreaming.streamingDestinationCreated': string
+  'auditTrail.logStreaming.streamingDestinationSaved': string
   'auditTrail.noYamlDifference': string
   'auditTrail.resourceNameLabel': string
+  'auditTrail.streamingDestination': string
+  'auditTrail.streamingDestinations': string
   'auditTrail.supplementaryDetails': string
   'auditTrail.yamlDifference': string
   'gitsync.PRTitle': string

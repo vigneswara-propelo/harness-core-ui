@@ -21,10 +21,10 @@ import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
 import EventSummary from '@audit-trail/components/EventSummary/EventSummary'
 
-import css from './AuditTrailsListView.module.scss'
+import css from './AuditLogsListView.module.scss'
 
 const DEFAULT_CELL_PLACEHOLDER = 'N/A'
-interface AuditTrailsListViewProps {
+interface AuditLogsListViewProps {
   data: PageAuditEventDTO
   setPage: (page: number) => void
 }
@@ -75,7 +75,7 @@ const getModuleIconAndLabel = (module: AuditEventDTO['module'], resourceType: Re
   return { label, icon }
 }
 
-const AuditTrailsListView: React.FC<AuditTrailsListViewProps> = ({ data, setPage }) => {
+const AuditLogsListView: React.FC<AuditLogsListViewProps> = ({ data, setPage }) => {
   const { orgIdentifier } = useParams<OrgPathProps>()
   const [showEventSummary, setShowEventSummary] = useState<boolean>(true)
   const [selectedAuditEvent, setSelectedAuditEvent] = useState<AuditEventDTO | undefined>()
@@ -261,4 +261,4 @@ const AuditTrailsListView: React.FC<AuditTrailsListViewProps> = ({ data, setPage
   )
 }
 
-export default AuditTrailsListView
+export default AuditLogsListView

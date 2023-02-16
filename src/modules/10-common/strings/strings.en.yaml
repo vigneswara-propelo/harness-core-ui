@@ -1343,6 +1343,7 @@ artifacts:
     sourceDirectoryPlaceholder: Enter Source Directory
 updated: Updated
 python: Python
+bucketName: Bucket Name
 
 # SSCA module
 ssca: SSCA
