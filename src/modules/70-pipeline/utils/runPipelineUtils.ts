@@ -157,9 +157,9 @@ export interface MergeTemplateWithInputSetDataProps {
 export const mergeTemplateWithInputSetData = (props: MergeTemplateWithInputSetDataProps): Pipeline => {
   const { templatePipeline, inputSetPortion, allValues, shouldUseDefaultValues } = props
   // Replace all the matching stages in parsedTemplate with the stages received in input set portion
-  const stages = templatePipeline.pipeline.template
+  const stages = templatePipeline.pipeline?.template
     ? (templatePipeline.pipeline.template.templateInputs as PipelineInfoConfig)?.stages
-    : templatePipeline.pipeline.stages
+    : templatePipeline.pipeline?.stages
   const mergedStages = stages?.map(stage => {
     if (stage.parallel) {
       /*
@@ -183,7 +183,7 @@ export const mergeTemplateWithInputSetData = (props: MergeTemplateWithInputSetDa
   })
 
   const toBeUpdated = cloneDeep(templatePipeline)
-  if (toBeUpdated.pipeline.template) {
+  if (toBeUpdated.pipeline?.template) {
     if (Array.isArray(mergedStages)) {
       set(toBeUpdated, 'pipeline.template.templateInputs.stages', mergedStages)
     }
