@@ -86,7 +86,8 @@ const JsonDrawerMultiType = ({
         displayText: displayText,
         icon: 'plus',
         isDisabled: disabled,
-        className: className
+        className: className,
+        name
       }}
       fixedTypeComponent={JsonSelectorButton}
     />

@@ -39,13 +39,14 @@ import {
   getHealthSourceConfigDetails,
   getUpdatedMappedMetricsData,
   initHealthSourceCustomFormValue,
+  setVisibleFieldsTouched,
   updateParentFormikWithLatestData,
   validateAddMetricForm
 } from './CustomMetricFormContainer.utils'
 import { resetShowCustomMetric } from '../../CommonHealthSource.utils'
 import AddMetric from './components/AddMetric/AddMetric'
 import CustomMetricForm from './CustomMetricForm'
-import { CommonConfigurationsFormFieldNames, CustomMetricFormFieldNames } from '../../CommonHealthSource.constants'
+import { CommonConfigurationsFormFieldNames } from '../../CommonHealthSource.constants'
 import { useCommonHealthSource } from './components/CommonHealthSourceContext/useCommonHealthSource'
 import css from './CustomMetricForm.module.scss'
 
@@ -117,7 +118,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
             selectedMetricName,
             formValuesData
           )
-          setFieldTouched(CustomMetricFormFieldNames.QUERY)
+          setVisibleFieldsTouched(healthSourceConfig, setFieldTouched)
           await validateForm()
           updateParentFormikWithLatestData(updateParentFormik, updatedMappedMetricsData, selectedMetricName)
 

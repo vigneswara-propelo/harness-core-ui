@@ -119,7 +119,7 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       metricName: 'M1',
       query: '*',
       riskCategory: 'Errors',
-      serviceInstance: undefined,
+      serviceInstanceField: undefined,
       sli: false
     })
 
@@ -146,7 +146,7 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       metricName: 'M1',
       query: '*',
       riskCategory: 'Errors',
-      serviceInstance: 'test',
+      serviceInstanceField: 'test',
       sli: false
     })
 

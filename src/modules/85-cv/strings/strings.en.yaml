@@ -245,9 +245,18 @@ monitoringSources:
     defineQuerySubDescription: Learn how to find the query to monitor your data source with Harness.
     querySectionSecondaryTitle: Query Section
     noQueries: 'There are no {{name}}'
+    query:
+      enterQuery: Please enter query
+      selectQueryField: 'Please select {{queryFieldIdentifier}}'
+      enterQueryAndQueryField: 'Please enter query and select {{queryFieldIdentifier}}'
     records:
       fetchingRecords: Fetching records ...
       runQueryToSeeRecords: Run query to fetch the records
+    fields:
+      timestampFormat: Timestamp format
+      timestampIdentifier: Timestamp identifier
+      serviceInstance: Service Instance identifer
+      messageIdentifier: Message identifer
     metricsChart:
       fetchingCharts: Fetching charts data ...
       runQueryToFetchResults: Run query to fetch the results

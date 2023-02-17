@@ -1,6 +1,6 @@
 import type { QueryRecordsRequest } from 'services/cv'
 import { HealthSourceTypes } from '../../types'
-import type { HealthSourceProductsType } from './CommonHealthSource.types'
+import type { CommonCustomMetricFormikInterface, HealthSourceProductsType } from './CommonHealthSource.types'
 
 export const HealthSourceProducts: HealthSourceProductsType = {
   [HealthSourceTypes.SumologicMetrics]: {
@@ -35,18 +35,19 @@ export const ThresholdTypes: Record<string, 'IgnoreThreshold' | 'FailImmediately
   FailImmediately: 'FailImmediately'
 }
 
-export const CustomMetricFormFieldNames = {
+export const CustomMetricFormFieldNames: { [x: string]: keyof CommonCustomMetricFormikInterface } = {
   METRIC_NAME: 'metricName',
   METRIC_IDENTIFIER: 'identifier',
   GROUP_NAME: 'groupName',
 
   QUERY: 'query',
   RECORD_COUNT: 'recordCount',
+  INDEX: 'index',
 
-  METRIC_VALUE: 'metricValue',
-  TIMESTAMP_LOCATOR: 'timestamp',
-  TIMESTAMP_FORMAT: 'timestampFormat',
-  SERVICE_INSTANCE: 'serviceInstance',
+  TIMESTAMP_IDENTIFIER: 'timeStampIdentifier',
+  TIMESTAMP_FORMAT: 'timeStampFormat',
+  SERVICE_INSTANCE: 'serviceInstanceField',
+  MESSAGE_IDENTIFIER: 'messageIdentifier',
 
   SLI: 'sli',
   HEALTH_SCORE: 'healthScore',

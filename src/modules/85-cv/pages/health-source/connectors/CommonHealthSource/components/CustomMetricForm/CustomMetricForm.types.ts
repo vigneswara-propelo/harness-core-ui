@@ -24,7 +24,7 @@ export interface AddMetricForm {
 }
 
 export interface GetMultiTypeRecordInitialValueParams {
-  filteredFieldsMapping?: FieldMapping[]
+  jsonSelectorFields?: FieldMapping[]
   isTemplate?: boolean
   formValues: CommonCustomMetricFormikInterface
 }

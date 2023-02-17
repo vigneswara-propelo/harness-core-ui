@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ButtonProps, IconName } from '@harness/uicore'
+import { Button, ButtonProps, FormInput, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 export type JsonSelectorButtonProps = ButtonProps & {
@@ -8,6 +8,7 @@ export type JsonSelectorButtonProps = ButtonProps & {
   className?: string
   isDisabled?: boolean
   icon?: IconName
+  name: string
 }
 
 export default function JsonSelectorButton({
@@ -16,25 +17,33 @@ export default function JsonSelectorButton({
   isDisabled,
   icon,
   className,
+  name,
   ...otherProps
 }: JsonSelectorButtonProps): JSX.Element {
   return (
-    <Button
-      minimal
-      className={className}
-      width="100%"
-      withoutCurrentColor={true}
-      rightIcon={icon}
-      iconProps={{ size: 14, color: isDisabled ? Color.GREEN_300 : Color.PRIMARY_5 }}
-      disabled={isDisabled}
-      onClick={() => {
-        if (!isDisabled) {
-          onClick()
-        }
+    <FormInput.CustomRender
+      name={name}
+      render={() => {
+        return (
+          <Button
+            minimal
+            className={className}
+            width="100%"
+            withoutCurrentColor={true}
+            rightIcon={icon}
+            iconProps={{ size: 14, color: isDisabled ? Color.GREEN_300 : Color.PRIMARY_5 }}
+            disabled={isDisabled}
+            onClick={() => {
+              if (!isDisabled) {
+                onClick()
+              }
+            }}
+            {...otherProps}
+          >
+            {displayText}
+          </Button>
+        )
       }}
-      {...otherProps}
-    >
-      {displayText}
-    </Button>
+    />
   )
 }

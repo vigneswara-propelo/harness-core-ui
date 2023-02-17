@@ -17,7 +17,6 @@ export interface QueryContentProps {
   isDialogOpen?: boolean
   onEditQuery?: () => void
   textAreaProps?: TextAreaProps['textArea']
-  textAreaName?: string
   onClickExpand?: (isOpen: boolean) => void
   isAutoFetch?: boolean
   mandatoryFields?: any[]
@@ -28,6 +27,9 @@ export interface QueryContentProps {
   isConnectorRuntimeOrExpression?: boolean
   fetchButtonText?: string
   isFetchButtonDisabled?: boolean
+  isQueryButtonDisabled: boolean
+  queryFieldIdentifier?: string
+  isQueryFieldNotPresent: boolean
 }
 
 export interface CommonQueryViewerProps {
@@ -48,6 +50,7 @@ export interface CommonQueryViewerProps {
   isConnectorRuntimeOrExpression?: boolean
   queryTextareaName?: string
   querySectionTitle?: string
+  queryFieldIdentifier?: string
 }
 
 export interface CommonQueryViewDialogProps extends RecordsProps {
@@ -56,6 +59,9 @@ export interface CommonQueryViewDialogProps extends RecordsProps {
   query?: string
   fetchRecords: () => void
   isOpen: boolean
+  isQueryButtonDisabled: boolean
+  isQueryFieldNotPresent: boolean
+  queryFieldIdentifier?: string
 }
 
 export const DrawerProps: IDrawerProps = {

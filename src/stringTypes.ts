@@ -8232,6 +8232,10 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.defineQuery': string
   'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics': string
   'cv.monitoringSources.commonHealthSource.defineQuerySubDescription': string
+  'cv.monitoringSources.commonHealthSource.fields.messageIdentifier': string
+  'cv.monitoringSources.commonHealthSource.fields.serviceInstance': string
+  'cv.monitoringSources.commonHealthSource.fields.timestampFormat': string
+  'cv.monitoringSources.commonHealthSource.fields.timestampIdentifier': string
   'cv.monitoringSources.commonHealthSource.logsTable.ServiceInstance': string
   'cv.monitoringSources.commonHealthSource.logsTable.fetchLogDataButtonDisableMessage': string
   'cv.monitoringSources.commonHealthSource.logsTable.jsonSelectorDrawerTitlePrefix': string
@@ -8247,6 +8251,9 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.metricsChart.fetchingCharts': string
   'cv.monitoringSources.commonHealthSource.metricsChart.runQueryToFetchResults': string
   'cv.monitoringSources.commonHealthSource.noQueries': string
+  'cv.monitoringSources.commonHealthSource.query.enterQuery': string
+  'cv.monitoringSources.commonHealthSource.query.enterQueryAndQueryField': string
+  'cv.monitoringSources.commonHealthSource.query.selectQueryField': string
   'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle': string
   'cv.monitoringSources.commonHealthSource.records.fetchingRecords': string
   'cv.monitoringSources.commonHealthSource.records.runQueryToSeeRecords': string

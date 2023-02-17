@@ -6,6 +6,7 @@ import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/C
 import CVMultiTypeQuery from '@cv/components/CVMultiTypeQuery/CVMultiTypeQuery'
 import { useStrings } from 'framework/strings'
 import type { QueryContentProps } from '../../types'
+import { getRunQueryButtonTooltip } from './CommonQueryContent.utils'
 import css from '../../CommonQueryViewer.module.scss'
 
 export function CommonQueryContent(props: QueryContentProps): JSX.Element {
@@ -15,10 +16,12 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
     loading,
     onClickExpand,
     isDialogOpen,
-    textAreaName,
     isTemplate,
     expressions,
-    isConnectorRuntimeOrExpression
+    isConnectorRuntimeOrExpression,
+    isQueryButtonDisabled,
+    isQueryFieldNotPresent,
+    queryFieldIdentifier
   } = props
   const { getString } = useStrings()
 
@@ -27,7 +30,7 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
       {isTemplate ? (
         <>
           <CVMultiTypeQuery
-            name={textAreaName || CustomMetricFormFieldNames.QUERY}
+            name={CustomMetricFormFieldNames.QUERY}
             expressions={defaultTo(expressions, [])}
             fetchRecords={handleFetchRecords}
             disableFetchButton={isEmpty(query) || isConnectorRuntimeOrExpression || loading}
@@ -51,7 +54,7 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
             )}
           </Layout.Horizontal>
           <FormInput.TextArea
-            name={textAreaName || CustomMetricFormFieldNames.QUERY}
+            name={CustomMetricFormFieldNames.QUERY}
             className={cx(css.formQueryBox)}
             placeholder={getString('cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords')}
           />
@@ -60,7 +63,8 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
               variation={ButtonVariation.SECONDARY}
               text={getString('cv.monitoringSources.commonHealthSource.runQuery')}
               onClick={handleFetchRecords}
-              disabled={isEmpty(query) || loading}
+              disabled={isQueryButtonDisabled}
+              tooltip={getRunQueryButtonTooltip(query, isQueryFieldNotPresent, queryFieldIdentifier, getString)}
             />
           </Layout.Horizontal>
         </>

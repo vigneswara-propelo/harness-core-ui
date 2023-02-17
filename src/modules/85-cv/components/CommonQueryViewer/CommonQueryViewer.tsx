@@ -5,23 +5,28 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useMemo } from 'react'
 import cx from 'classnames'
 import { Container, getMultiTypeFromValue, MultiTypeInputType, Text, ButtonVariation } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo, isEmpty } from 'lodash-es'
+import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import CustomMetricsSectionHeader from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CustomMetricsSectionHeader'
 import { useCommonHealthSource } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
+import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import CVMultiTypeQuery from '../CVMultiTypeQuery/CVMultiTypeQuery'
 import { CommonQueryViewDialog } from './components/CommonQueryViewerDialog/CommonQueryViewDialog'
 import { CommonQueryContent } from './components/CommonQueryContent/CommonQueryContent'
 import { SetupSourceTabsContext } from '../CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { CommonRecords } from '../CommonRecords/CommonRecords'
 import type { CommonQueryViewerProps } from './types'
+import { getIsQueryButtonDisabled, getIsQueryFieldNotPresent } from './CommonQueryViewer.utils'
 
 export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
+  const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
+
   const {
     className,
     records,
@@ -33,15 +38,21 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
     postFetchingRecords,
     isConnectorRuntimeOrExpression,
     dataTooltipId,
-    querySectionTitle
+    querySectionTitle,
+    queryFieldIdentifier
   } = props
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-
   const { getString } = useStrings()
-
   const { isTemplate, expressions } = useContext(SetupSourceTabsContext)
   const { updateHelperContext, isQueryRuntimeOrExpression } = useCommonHealthSource()
+  const isQueryButtonDisabled = useMemo(() => {
+    return getIsQueryButtonDisabled({ query, loading, queryFieldIdentifier, values })
+  }, [loading, query, queryFieldIdentifier, values])
+
+  const isQueryFieldNotPresent = useMemo(() => {
+    return getIsQueryFieldNotPresent(queryFieldIdentifier, values)
+  }, [queryFieldIdentifier, values])
 
   useEffect(() => {
     if (isTemplate) {
@@ -104,9 +115,11 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
           isDialogOpen={isDialogOpen}
           loading={loading}
           handleFetchRecords={handleFetchRecords}
+          isQueryButtonDisabled={isQueryButtonDisabled}
+          isQueryFieldNotPresent={isQueryFieldNotPresent}
+          queryFieldIdentifier={queryFieldIdentifier}
         />
       )}
-      {/* {isQueryExecuted ? ( */}
       {!(isQueryRuntimeOrExpression || isConnectorRuntimeOrExpression) ? (
         <CommonRecords
           fetchRecords={handleFetchRecords}
@@ -117,8 +130,6 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
           isQueryExecuted={isQueryExecuted}
         />
       ) : null}
-
-      {/* ) : null} */}
       <CommonQueryViewDialog
         isOpen={isDialogOpen}
         onHide={() => setIsDialogOpen(false)}
@@ -128,6 +139,9 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
         data={records}
         error={error}
         isQueryExecuted={isQueryExecuted}
+        isQueryFieldNotPresent={isQueryFieldNotPresent}
+        isQueryButtonDisabled={isQueryButtonDisabled}
+        queryFieldIdentifier={queryFieldIdentifier}
       />
     </Container>
   )

@@ -57,8 +57,8 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
       data = { selectedMetric: selectedMetric, mappedMetrics: mappedMetrics }
     }
 
-    if (formikValues?.continuousVerification && !formikValues.serviceInstance) {
-      formikValues.serviceInstance = defaultServiceInstance
+    if (formikValues?.continuousVerification && !formikValues.serviceInstanceField) {
+      formikValues.serviceInstanceField = defaultServiceInstance
     }
 
     data = updateSelectedMetricsMap({
@@ -75,12 +75,12 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
 
   useEffect(() => {
     let isUpdated = false
-    const isServiceInstanceFixed = getMultiTypeFromValue(formikValues.serviceInstance) === MultiTypeInputType.FIXED
+    const isServiceInstanceFixed = getMultiTypeFromValue(formikValues.serviceInstanceField) === MultiTypeInputType.FIXED
 
     if (isQueryRuntimeOrExpression) {
-      const canMakeRuntime = !formikValues.serviceInstance || isServiceInstanceFixed
+      const canMakeRuntime = !formikValues.serviceInstanceField || isServiceInstanceFixed
       if (canMakeRuntime) {
-        formikValues.serviceInstance = RUNTIME_INPUT_VALUE
+        formikValues.serviceInstanceField = RUNTIME_INPUT_VALUE
         isUpdated = true
       }
     }

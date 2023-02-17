@@ -8066,6 +8066,113 @@ export const getSampleMetricDataPromise = (
     signal
   )
 
+export interface GetParamValuesPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetParamValuesProps = Omit<
+  MutateProps<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetParamValuesPathParams
+
+/**
+ * Fetch possible values for healthSourceParams and healthSourceQueryParams
+ */
+export const GetParamValues = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: GetParamValuesProps) => (
+  <Mutate<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >
+    verb="POST"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/param-values`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetParamValuesProps = Omit<
+  UseMutateProps<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetParamValuesPathParams
+
+/**
+ * Fetch possible values for healthSourceParams and healthSourceQueryParams
+ */
+export const useGetParamValues = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseGetParamValuesProps) =>
+  useMutate<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >(
+    'POST',
+    (paramsInPath: GetParamValuesPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/health-source/param-values`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * Fetch possible values for healthSourceParams and healthSourceQueryParams
+ */
+export const getParamValuesPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/param-values`,
+    props,
+    signal
+  )
+
 export interface GetSampleRawRecordPathParams {
   accountIdentifier: string
   orgIdentifier: string
