@@ -9,6 +9,8 @@ import React from 'react'
 import { useFormikContext } from 'formik'
 import { Button, ButtonVariation, Checkbox, Container, Layout, Page, Tag, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { Divider } from '@blueprintjs/core'
+import type { GetDataError } from 'restful-react'
 import { useStrings } from 'framework/strings'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import {
@@ -17,14 +19,15 @@ import {
   EntitiesRuleType
 } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types'
 import type { RestResponseListMonitoredServiceDetail } from 'services/cv'
+import { getErrorMessage } from '@cv/utils/CommonUtils'
 import MSList from './components/MSList'
 import css from '../../CreateDowntimeForm.module.scss'
 
 interface AddMonitoredServicesProp {
   msListData?: RestResponseListMonitoredServiceDetail | null
-  msListLoading?: boolean
-  refetchMsList?: (props?: any) => Promise<void> | undefined
-  msListError?: string
+  msListLoading: boolean
+  refetchMsList: (props?: any) => Promise<void>
+  msListError?: GetDataError<unknown> | null
   isCreateFlow: boolean
 }
 
@@ -64,50 +67,52 @@ const AddMonitoredServices = ({
   return (
     <Page.Body
       loading={msListLoading}
-      error={msListError}
+      error={getErrorMessage(msListError)}
       className={css.minHeight}
-      retryOnError={() => refetchMsList?.()}
+      retryOnError={() => refetchMsList()}
     >
-      <Layout.Vertical spacing={'small'} className={css.addMonitoredServices}>
-        <Layout.Horizontal
-          margin={{ left: 'xsmall', top: 'xsmall' }}
-          spacing={'xsmall'}
-          flex={{ justifyContent: 'flex-start' }}
-        >
-          <Checkbox checked={entitiesRuleType === EntitiesRuleType.ALL} onChange={onChange} />
-          <Text className={css.checkbox}>{getString('cv.sloDowntime.selectAllMonitoredServices')}</Text>
-        </Layout.Horizontal>
-        {entitiesRuleType === EntitiesRuleType.IDENTIFIERS &&
-          (!!msListData?.resource?.length || (isCreateFlow && !!msList.length)) && (
-            <Layout.Vertical margin={{ left: 'xsmall', top: 'xsmall' }}>
-              <Text font={{ weight: 'semi-bold' }} color={Color.GREY_1000} style={{ lineHeight: '20px' }}>
-                {getString('cv.sloDowntime.msList')}
-              </Text>
-              <Layout.Horizontal className={css.tagBox}>
-                {msList.map(ms => (
-                  <Tag
-                    id={ms.monitoredServiceIdentifier}
-                    key={ms.monitoredServiceIdentifier}
-                    onRemove={e => {
-                      e.stopPropagation()
-                      onRemove(e.currentTarget.parentElement?.getAttribute('id'))
-                    }}
-                  >
-                    <b>{ms.serviceName}</b> - {ms.environmentName}
-                  </Tag>
-                ))}
-              </Layout.Horizontal>
-            </Layout.Vertical>
-          )}
+      <Layout.Vertical spacing={'large'} className={css.addMonitoredServices}>
+        {(!!msListData?.resource?.length || (isCreateFlow && !!msList.length)) && (
+          <Layout.Vertical
+            margin={{ top: 'small', left: 'small' }}
+            spacing={'medium'}
+            className={entitiesRuleType === EntitiesRuleType.ALL ? css.disabled : ''}
+          >
+            <Text font={{ weight: 'semi-bold' }} color={Color.GREY_1000}>
+              {getString('cv.sloDowntime.msList')}
+            </Text>
+            <Layout.Horizontal className={css.tagBox}>
+              {msList.map(ms => (
+                <Tag
+                  id={ms.monitoredServiceIdentifier}
+                  key={ms.monitoredServiceIdentifier}
+                  onRemove={e => {
+                    e.stopPropagation()
+                    onRemove(e.currentTarget.parentElement?.getAttribute('id'))
+                  }}
+                >
+                  <span className={css.serviceName}>{ms.serviceName}</span> - {ms.environmentName}
+                </Tag>
+              ))}
+            </Layout.Horizontal>
+          </Layout.Vertical>
+        )}
         <Container>
           <Button
             disabled={entitiesRuleType === EntitiesRuleType.ALL}
-            margin={'xsmall'}
+            margin={{ bottom: 'xsmall', left: 'small' }}
             onClick={showDrawer}
             text={getString('cv.sloDowntime.selectMonitoredServices')}
             variation={ButtonVariation.SECONDARY}
           />
         </Container>
+        <Divider />
+        <Layout.Horizontal className={css.checkbox} flex={{ justifyContent: 'flex-start' }}>
+          <Checkbox checked={entitiesRuleType === EntitiesRuleType.ALL} onChange={onChange} />
+          <Text font={{ size: 'small' }} color={Color.GREY_1000}>
+            {getString('cv.sloDowntime.selectAllMonitoredServices')}
+          </Text>
+        </Layout.Horizontal>
       </Layout.Vertical>
     </Page.Body>
   )

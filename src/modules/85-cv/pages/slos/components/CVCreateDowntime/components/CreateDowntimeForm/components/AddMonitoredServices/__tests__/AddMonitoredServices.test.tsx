@@ -32,7 +32,11 @@ describe('AddMonitoredServices', () => {
             <AddMonitoredServices
               isCreateFlow={true}
               refetchMsList={jest.fn()}
-              msListError={'Oops, something went wrong on our end. Please contact Harness Support.'}
+              msListLoading={false}
+              msListError={{
+                message: '',
+                data: { message: 'Oops, something went wrong on our end. Please contact Harness Support.' }
+              }}
             />
           )}
         </Formik>
@@ -55,7 +59,7 @@ describe('AddMonitoredServices', () => {
           onSubmit={jest.fn()}
           formName={'addMSForm'}
         >
-          {() => <AddMonitoredServices isCreateFlow={true} />}
+          {() => <AddMonitoredServices msListLoading={false} refetchMsList={jest.fn()} isCreateFlow={true} />}
         </Formik>
       </TestWrapper>
     )

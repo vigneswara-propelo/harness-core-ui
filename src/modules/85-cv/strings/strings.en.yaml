@@ -1009,6 +1009,12 @@ sloDowntime:
   validations:
     nameValidation: SLO Downtime is required
     categoryValidation: Category is required
+    timezoneValidation: Timezone is required
+    startTimeValidation: Start time is required
+    startTimeGreaterThanNow: Downtimes can only be created in the future
+    endTimeValidation: End time is required
+    endTimeGreaterThanStartTime: End time should be greater than start time
+    msListValidation: At least one monitored service should be selected
   steps:
     identification: Define SLO downtime identification
     downtimeWindow: Select the SLO downtime window

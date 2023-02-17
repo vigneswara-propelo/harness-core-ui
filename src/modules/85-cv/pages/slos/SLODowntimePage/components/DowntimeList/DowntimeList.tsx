@@ -33,7 +33,10 @@ import routes from '@common/RouteDefinitions'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { DowntimeWindowToggleViews } from '@cv/pages/slos/components/CVCreateDowntime/components/CreateDowntimeForm/CreateDowntimeForm.types'
 import { EndTimeMode } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types'
-import { getDowntimeCategoryLabel } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.utils'
+import {
+  getDowntimeCategoryLabel,
+  getFormattedTime
+} from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.utils'
 import DowntimeActions from './components/DowntimeActions/DowntimeActions'
 import { getDowntimeStatusLabel, getDuration, getIsSetPreviousPage, getRecurrenceType } from './DowntimeList.utils'
 import { DowntimeStatus } from '../../SLODowntimePage.types'
@@ -235,33 +238,35 @@ const DowntimeList = ({
       const { type: oneTimeDowntimeType = EndTimeMode.DURATION } = onetimeDowntimeSpec || {}
 
       if (oneTimeDowntimeType === EndTimeMode.DURATION) {
-        const { durationValue = 30 } = (onetimeDowntimeSpec?.spec as OnetimeDurationBasedSpec)?.downtimeDuration || {}
-        timeFrame = `${moment(startTime * 1000)
-          .utcOffset(timezone)
-          .format('lll')} - ${moment(startTime * 1000)
-          .utcOffset(timezone)
-          .add(durationValue, 'm')
+        const { durationValue = 30, durationType = 'Minutes' } =
+          (onetimeDowntimeSpec?.spec as OnetimeDurationBasedSpec)?.downtimeDuration || {}
+        timeFrame = `${getFormattedTime({ time: startTime, timezone, format: 'lll' })} - ${moment(
+          getFormattedTime({ time: startTime, timezone, format: 'lll' })
+        )
+          .add(durationValue, durationType.toLowerCase() as any)
           .format('lll')} (${timezone})`
       } else {
         const { endTime = 1 } = onetimeDowntimeSpec?.spec || ({} as OnetimeEndTimeBasedSpec)
-        timeFrame = `${moment(startTime * 1000)
-          .utcOffset(timezone)
-          .format('lll')} - ${moment(endTime * 1000)
-          .utcOffset(timezone)
-          .format('lll')} ${timezone}`
+        timeFrame = `${getFormattedTime({ time: startTime, timezone, format: 'lll' })} - ${getFormattedTime({
+          time: endTime,
+          timezone,
+          format: 'lll'
+        })} ${timezone}`
       }
       downtimeType = getString('common.occurrence.oneTime').toUpperCase()
     } else {
       const { downtimeDuration, downtimeRecurrence, recurrenceEndTime } = downtime?.spec?.spec as RecurringDowntimeSpec
 
-      timeFrame = `Every ${getRecurrenceType(downtimeRecurrence, getString)} at ${moment(startTime * 1000)
-        .utcOffset(timezone)
-        .format('LT')} (${timezone}) for ${getDuration(getString, downtimeDuration)}`
-      downtimeType = `${getString('common.occurrence.recurring').toUpperCase()}: Starts from ${moment(startTime * 1000)
-        .utcOffset(timezone)
-        .format('ll')} until ${moment(recurrenceEndTime * 1000)
-        .utcOffset(timezone)
-        .format('ll')}`
+      timeFrame = `Every ${getRecurrenceType(downtimeRecurrence, getString)} at ${getFormattedTime({
+        time: startTime,
+        timezone,
+        format: 'LT'
+      })} (${timezone}) for ${getDuration(getString, downtimeDuration)}`
+      downtimeType = `${getString('common.occurrence.recurring').toUpperCase()}: Starts from ${getFormattedTime({
+        time: startTime,
+        timezone,
+        format: 'll'
+      })} until ${getFormattedTime({ time: recurrenceEndTime, timezone, format: 'll' })}`
     }
 
     return (

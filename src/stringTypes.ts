@@ -8601,7 +8601,13 @@ export interface StringsMap {
   'cv.sloDowntime.steps.identification': string
   'cv.sloDowntime.steps.monitoredServices': string
   'cv.sloDowntime.validations.categoryValidation': string
+  'cv.sloDowntime.validations.endTimeGreaterThanStartTime': string
+  'cv.sloDowntime.validations.endTimeValidation': string
+  'cv.sloDowntime.validations.msListValidation': string
   'cv.sloDowntime.validations.nameValidation': string
+  'cv.sloDowntime.validations.startTimeGreaterThanNow': string
+  'cv.sloDowntime.validations.startTimeValidation': string
+  'cv.sloDowntime.validations.timezoneValidation': string
   'cv.sloGraphInitialState': string
   'cv.sloGraphUserHint': string
   'cv.sloRecalculationInProgress': string

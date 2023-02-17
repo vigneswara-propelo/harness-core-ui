@@ -10,6 +10,7 @@ declare const styles: {
   readonly addMonitoredServices: string
   readonly cardTitle: string
   readonly checkbox: string
+  readonly disabled: string
   readonly downtimeWindow: string
   readonly endTime: string
   readonly footer: string
@@ -18,6 +19,7 @@ declare const styles: {
   readonly picker: string
   readonly pillToggle: string
   readonly previewLabelAndValue: string
+  readonly serviceName: string
   readonly tagBox: string
   readonly text: string
   readonly value: string

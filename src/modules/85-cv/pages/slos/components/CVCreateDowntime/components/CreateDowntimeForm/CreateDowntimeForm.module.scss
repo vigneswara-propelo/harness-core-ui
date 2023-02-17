@@ -76,16 +76,25 @@
     }
   }
 
-  .checkbox {
-    font-size: 13px;
-    color: var(--grey-1000);
+  .serviceName {
+    font-weight: 600;
+  }
+
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
   }
 
   .tagBox {
     display: flex;
     flex-wrap: wrap !important;
     gap: var(--spacing-xsmall);
-    margin-top: var(--spacing-xsmall) !important;
+    margin-top: var(--spacing-small) !important;
+  }
+
+  .checkbox {
+    margin: var(--spacing-medium) 0 var(--spacing-small) var(--spacing-small) !important;
   }
 }
 

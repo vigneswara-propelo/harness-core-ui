@@ -1088,9 +1088,9 @@ exports[`SLO Downtime page should render downtime list view 1`] = `
                           >
                             <p
                               class="StyledProps--font StyledProps--main windowFirstLine"
-                              title="Every 2 cv.weeks at 4:30 AM (Asia/Calcutta) for 30 cv.minutes"
+                              title="Every 2 cv.weeks at 10:00 AM (Asia/Calcutta) for 30 cv.minutes"
                             >
-                              Every 2 cv.weeks at 4:30 AM (Asia/Calcutta) for 30 cv.minutes
+                              Every 2 cv.weeks at 10:00 AM (Asia/Calcutta) for 30 cv.minutes
                             </p>
                             <p
                               class="StyledProps--font StyledProps--main windowSecondLine"
@@ -1330,9 +1330,9 @@ exports[`SLO Downtime page should render downtime list view 1`] = `
                           >
                             <p
                               class="StyledProps--font StyledProps--main windowFirstLine"
-                              title="Feb 13, 2023 8:46 PM - Feb 13, 2023 9:16 PM (Asia/Calcutta)"
+                              title="Feb 14, 2023 2:16 AM - Feb 14, 2023 2:46 AM (Asia/Calcutta)"
                             >
-                              Feb 13, 2023 8:46 PM - Feb 13, 2023 9:16 PM (Asia/Calcutta)
+                              Feb 14, 2023 2:16 AM - Feb 14, 2023 2:46 AM (Asia/Calcutta)
                             </p>
                             <p
                               class="StyledProps--font StyledProps--main windowSecondLine"
@@ -1552,9 +1552,9 @@ exports[`SLO Downtime page should render downtime list view 1`] = `
                           >
                             <p
                               class="StyledProps--font StyledProps--main windowFirstLine"
-                              title="Every 2 cv.weeks at 4:30 AM (Asia/Calcutta) for 30 cv.minutes"
+                              title="Every 2 cv.weeks at 10:00 AM (Asia/Calcutta) for 30 cv.minutes"
                             >
-                              Every 2 cv.weeks at 4:30 AM (Asia/Calcutta) for 30 cv.minutes
+                              Every 2 cv.weeks at 10:00 AM (Asia/Calcutta) for 30 cv.minutes
                             </p>
                             <p
                               class="StyledProps--font StyledProps--main windowSecondLine"
@@ -1774,9 +1774,9 @@ exports[`SLO Downtime page should render downtime list view 1`] = `
                           >
                             <p
                               class="StyledProps--font StyledProps--main windowFirstLine"
-                              title="Jan 1, 1970 12:00 AM - Jan 1, 1970 12:30 AM (Asia/Calcutta)"
+                              title="Jan 1, 1970 5:30 AM - Jan 1, 1970 6:00 AM (Asia/Calcutta)"
                             >
-                              Jan 1, 1970 12:00 AM - Jan 1, 1970 12:30 AM (Asia/Calcutta)
+                              Jan 1, 1970 5:30 AM - Jan 1, 1970 6:00 AM (Asia/Calcutta)
                             </p>
                             <p
                               class="StyledProps--font StyledProps--main windowSecondLine"
