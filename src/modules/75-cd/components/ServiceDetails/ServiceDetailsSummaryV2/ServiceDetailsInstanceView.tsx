@@ -27,7 +27,7 @@ import {
   useToaster
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import {
   GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
   InstanceDetailGroupedByPipelineExecution,
@@ -44,7 +44,7 @@ import type {
 import { DialogEmptyState } from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetailSummary/EnvironmentDetailsUtils'
 import routes from '@common/RouteDefinitions'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
-import { CommonActiveInstanceData } from '../ActiveServiceInstances/ActiveServiceInstancePopover'
+import { commonActiveInstanceData } from '../ActiveServiceInstances/ActiveServiceInstancePopover'
 
 import css from './ServiceDetailsSummaryV2.module.scss'
 
@@ -67,6 +67,7 @@ interface PipelineExecInfoProps {
 
 interface ActiveInstanceInfoProp {
   instanceData: InstanceDetailsDTO
+  getString: UseStringsReturn['getString']
 }
 
 interface InstanceViewProp {
@@ -74,8 +75,8 @@ interface InstanceViewProp {
 }
 
 const ActiveInstanceInfo = (prop: ActiveInstanceInfoProp): React.ReactElement => {
-  const { instanceData } = prop
-  const sectionData = CommonActiveInstanceData(instanceData)
+  const { instanceData, getString } = prop
+  const sectionData = commonActiveInstanceData(instanceData, getString)
 
   return (
     <Layout.Vertical padding={{ top: 'medium' }}>
@@ -243,7 +244,7 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
               collapsedIcon={'main-chevron-right'}
               expandedIcon={'main-chevron-down'}
             >
-              {<ActiveInstanceInfo instanceData={instance} />}
+              {<ActiveInstanceInfo instanceData={instance} getString={getString} />}
             </Collapse>
           ))}
         </div>
