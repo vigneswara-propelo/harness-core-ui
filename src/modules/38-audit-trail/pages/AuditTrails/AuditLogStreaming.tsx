@@ -24,6 +24,8 @@ import AuditLogStreamingListView from './views/AuditLogStreamingListView'
 import AuditTrailsEmptyState from './audit_trails_empty_state.png'
 import css from './AuditTrailsPage.module.scss'
 
+export const POLL_INTERVAL = 10 * 60 * 1000 // 10 minutes
+
 const AuditLogStreaming: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -33,14 +35,21 @@ const AuditLogStreaming: React.FC = () => {
     }
   })
 
-  const { data: cardsData, refetch: refetchCards } = useGetStreamingDestinationsCardsQuery({})
+  const {
+    data: cardsData,
+    refetch: refetchCards,
+    isFetching: isFetchingCards
+  } = useGetStreamingDestinationsCardsQuery({}, { refetchInterval: POLL_INTERVAL })
 
   const {
     data: streamingDestinationsData,
     error,
     isFetching,
     refetch
-  } = useGetStreamingDestinationsAggregateQuery({ queryParams: { sort: 'created' } })
+  } = useGetStreamingDestinationsAggregateQuery(
+    { queryParams: { sort: 'created' } },
+    { refetchInterval: POLL_INTERVAL }
+  )
 
   const refetchListingPageAPIs = (): void => {
     refetch()
@@ -84,7 +93,7 @@ const AuditLogStreaming: React.FC = () => {
         }}
         error={(error as any)?.data?.message || (error as any)?.message}
         retryOnError={() => refetchListingPageAPIs()}
-        loading={isFetching}
+        loading={isFetching || isFetchingCards}
       >
         <AuditLogStreamingListView
           data={streamingDestinationsData}
