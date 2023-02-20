@@ -215,6 +215,7 @@ export const CreateK8sDelegateV2 = ({
               name={delegateName}
               delegateType={DelegateCommonProblemTypes.HELM_CHART}
               showDoneButton={false}
+              verificationInProgressLabel={'delegate.successVerification.checkDelegateInstalled'}
             />
           )}
         </>

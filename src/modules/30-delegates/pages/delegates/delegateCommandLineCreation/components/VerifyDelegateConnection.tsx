@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Layout, Icon, Text, Container, Button, ButtonVariation } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { HideModal } from '@harness/use-modal'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
 import { useGetDelegatesHeartbeatDetailsV2 } from 'services/portal'
@@ -17,6 +18,7 @@ import { DelegateCommonProblemTypes, POLL_INTERVAL, DELEGATE_COMMAND_LINE_TIME_O
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
+import type { StringsMap } from 'stringTypes'
 import delegateError from './delegateError.svg'
 import happyGroup from './happyGroup.svg'
 import happyPeople from './happyPeople.svg'
@@ -29,10 +31,19 @@ interface VerifyDelegateConnectionProps {
   onErrorHandler: () => void
   onDone: HideModal
   showDoneButton?: boolean
+  verificationInProgressLabel?: keyof StringsMap
 }
 
 const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
-  const { name, onSuccessHandler, delegateType, onDone, onErrorHandler, showDoneButton = true } = props
+  const {
+    name,
+    onSuccessHandler,
+    delegateType,
+    onDone,
+    onErrorHandler,
+    showDoneButton = true,
+    verificationInProgressLabel
+  } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const [startTroubleShoot, setStartTroubleShoot] = useState<boolean>(false)
@@ -157,7 +168,9 @@ const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
       return (
         <Layout.Horizontal padding="large">
           <Icon size={16} name="steps-spinner" color={Color.BLUE_800} style={{ marginRight: '12px' }} />
-          <Text font="small">{getString('delegates.commandLineCreation.clickDoneAndCheckLater')}</Text>
+          <Text font="small">
+            {getString(defaultTo(verificationInProgressLabel, 'delegates.commandLineCreation.clickDoneAndCheckLater'))}
+          </Text>
         </Layout.Horizontal>
       )
   }
