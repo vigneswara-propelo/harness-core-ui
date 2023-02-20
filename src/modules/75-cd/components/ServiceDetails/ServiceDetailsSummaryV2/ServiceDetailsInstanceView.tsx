@@ -267,14 +267,14 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
     serviceId,
     envId,
     environmentType,
-    artifact,
+    artifact: !isEmpty(artifact) ? artifact : undefined,
     clusterIdentifier,
     infraIdentifier
   }
 
   const { data, loading, error, refetch } = useGetActiveServiceInstanceDetailsGroupedByPipelineExecution({
     queryParams,
-    lazy: !(envId && artifact)
+    lazy: !envId
   })
 
   const instanceDetailData = data?.data?.instanceDetailGroupedByPipelineExecutionList

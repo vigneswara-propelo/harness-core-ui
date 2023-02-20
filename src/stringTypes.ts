@@ -5470,6 +5470,19 @@ export interface StringsMap {
   'cd.oauthPluginCmd': string
   'cd.oldService': string
   'cd.openExecution': string
+  'cd.openTask.bannerMsg': string
+  'cd.openTask.notificationImgAlt': string
+  'cd.openTask.notificationPopoverBtn': string
+  'cd.openTask.notificationPopoverExpression': string
+  'cd.openTask.notificationPopoverMsg': string
+  'cd.openTask.openTaskEmptyStateMsg': string
+  'cd.openTask.openTaskStatusMsgAborted': string
+  'cd.openTask.openTaskStatusMsgAbortedByFreeze': string
+  'cd.openTask.openTaskStatusMsgApprovalWaiting': string
+  'cd.openTask.openTaskStatusMsgExpired': string
+  'cd.openTask.openTaskStatusMsgFailed': string
+  'cd.openTask.seeOpenTask': string
+  'cd.openTask.title': string
   'cd.overrideType': string
   'cd.overrideValue': string
   'cd.overrideYaml': string
@@ -5669,6 +5682,7 @@ export interface StringsMap {
   'cd.serviceUpdated': string
   'cd.setUpProvisionerBtnText': string
   'cd.setupGitOpsServerStep': string
+  'cd.since': string
   'cd.skipMatchingLabel': string
   'cd.skipRendering': string
   'cd.specifyTargetHost': string

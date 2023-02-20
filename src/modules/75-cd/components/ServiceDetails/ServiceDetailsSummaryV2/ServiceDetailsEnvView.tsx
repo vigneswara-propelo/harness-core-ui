@@ -216,7 +216,7 @@ function ArtifactCard({
           setIsDetailsDialogOpen(true)
         }}
       >
-        {artifactName}
+        {defaultTo(artifactName, '--')}
       </Text>
       <div className={css.artifactViewEnvList}>
         {envList.map(envInfo => (

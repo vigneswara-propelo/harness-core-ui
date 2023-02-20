@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { findByText, getAllByText, render, waitFor, getByText } from '@testing-library/react'
+import { findByText, getAllByText, render, waitFor, getByText, screen } from '@testing-library/react'
 import * as routerMock from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
@@ -28,7 +28,8 @@ import {
   activeInstanceGroupByEnv,
   artifactInstanceDetailsMock,
   artifactTableMock,
-  envInstanceDetailsMock
+  envInstanceDetailsMock,
+  openTaskMock
 } from './ServiceDetailsMocks'
 
 const mockGetCallFunction = jest.fn()
@@ -60,7 +61,10 @@ jest.mock('services/cd-ng', () => ({
   useGetActiveServiceInstanceDetailsGroupedByPipelineExecution: jest.fn().mockImplementation(() => {
     return { data: activeInstanceDetail, refetch: jest.fn(), loading: false, error: false }
   }),
-  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false }),
+  useGetOpenTasks: jest.fn().mockImplementation(() => {
+    return { data: openTaskMock, refetch: jest.fn(), loading: false, error: false }
+  })
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
@@ -276,6 +280,17 @@ describe('Service Detail Summary - ', () => {
     userEvent.click(artifactName)
 
     await waitFor(() => expect(useGetActiveServiceInstanceDetailsGroupedByPipelineExecution).toHaveBeenCalled())
+  })
+
+  test('Test OpenTasks', async () => {
+    render(
+      <TestWrapper path={TEST_PATH} pathParams={getModuleParams()}>
+        <ServiceDetailsSummaryV2 />
+      </TestWrapper>
+    )
+
+    //banner visible
+    expect(screen.getByText('cd.openTask.seeOpenTask')).toBeInTheDocument()
   })
 })
 

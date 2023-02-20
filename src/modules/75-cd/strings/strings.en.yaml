@@ -899,3 +899,18 @@ valuesYamlValidation: 'Values.yaml file path cannot be empty'
 infra: infra
 pipelineId: 'Pipeline ID: '
 openExecution: 'Open Execution'
+openTask:
+  notificationImgAlt: Notification Image
+  notificationPopoverExpression: Psst!
+  notificationPopoverMsg: You can still access and manage your open tasks here.
+  notificationPopoverBtn: Got it
+  bannerMsg: '{{count}} Open tasks requiring your attention.'
+  seeOpenTask: See Open Tasks
+  title: Open Tasks
+  openTaskEmptyStateMsg: Hurray! You have no open tasks.
+  openTaskStatusMsgFailed: 'deployment failed'
+  openTaskStatusMsgExpired: 'deployment expired'
+  openTaskStatusMsgAbortedByFreeze: 'deployment aborted by freeze'
+  openTaskStatusMsgAborted: 'deployment aborted'
+  openTaskStatusMsgApprovalWaiting: 'deployment waiting for approval'
+since: Since

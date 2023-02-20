@@ -34,7 +34,12 @@ declare const styles: {
   readonly marginBottom12: string
   readonly nextButton: string
   readonly openExecBtn: string
+  readonly openTaskBannerStyle: string
+  readonly openTaskCardStyle: string
+  readonly openTaskEmptyState: string
+  readonly openTasksBgColor: string
   readonly overflow: string
+  readonly overflowOpenTasks: string
   readonly overflowScroll: string
   readonly paddingLeft12: string
   readonly pillToggle: string

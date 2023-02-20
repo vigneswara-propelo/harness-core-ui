@@ -10,7 +10,8 @@ import type {
   ResponseEnvironmentInstanceDetails,
   ResponseInstanceDetailGroupedByPipelineExecutionList,
   ResponseInstanceGroupedByEnvironmentList,
-  ResponseInstanceGroupedOnArtifactList
+  ResponseInstanceGroupedOnArtifactList,
+  ResponseOpenTaskDetails
 } from 'services/cd-ng'
 
 export const envInstanceDetailsMock: ResponseEnvironmentInstanceDetails = {
@@ -340,4 +341,34 @@ export const artifactTableMock: ResponseInstanceGroupedOnArtifactList = {
   },
   metaData: undefined,
   correlationId: 'test'
+}
+
+export const openTaskMock: ResponseOpenTaskDetails = {
+  status: 'SUCCESS',
+  data: {
+    pipelineDeploymentDetails: [
+      {
+        pipelineExecutionId: 'testPipeExecId',
+        planExecutionId: 'testPlanExecId',
+        identifier: 'activeInstance_Clone',
+        name: 'activeInstance - Clone',
+        status: 'FAILED',
+        deployedById: 'testUser',
+        deployedByName: undefined,
+        lastExecutedAt: 1676713790901
+      },
+      {
+        pipelineExecutionId: 'testPipeExecId2',
+        planExecutionId: 'testPlanExecId2',
+        identifier: 'activeInstance_Clone',
+        name: 'activeInstance - Clone',
+        status: 'FAILED',
+        deployedById: 'testUser',
+        deployedByName: undefined,
+        lastExecutedAt: 1676712208865
+      }
+    ]
+  },
+  metaData: undefined,
+  correlationId: 'd9c0ce00-6485-4603-ab74-a6a3aa6d1006'
 }

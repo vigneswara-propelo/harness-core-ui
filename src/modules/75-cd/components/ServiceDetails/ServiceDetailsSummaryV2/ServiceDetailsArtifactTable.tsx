@@ -57,7 +57,7 @@ const getArtifactTableData = (
       let showArtifact = true
 
       /* istanbul ignore else */
-      if (artifact.artifact && artifact.instanceGroupedOnEnvironmentList) {
+      if (artifact.instanceGroupedOnEnvironmentList) {
         artifact.instanceGroupedOnEnvironmentList.forEach(env => {
           const envId = env.envId
           const envName = defaultTo(env.envName, '-')
