@@ -173,6 +173,10 @@ module.exports = {
     pathRewrite: { '^/tiui': '' },
     target: process.env.TI_UI_URL || 'https://localhost:9200'
   },
+  '/iacm/api': {
+    pathRewrite: { '^/iacm': '' },
+    target: targetLocalHost ? process.env.IAC_API_URL || 'http://localhost:8185' : `${baseUrl}/iacm`
+  },
   '/iacm': {
     pathRewrite: { '^/iacm': '' },
     target: process.env.IAC_UI_URL || 'https://localhost:8185'
