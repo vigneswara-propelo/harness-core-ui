@@ -4216,6 +4216,7 @@ export interface StringsMap {
   'pipeline.moveStage.description': string
   'pipeline.moveStage.title': string
   'pipeline.moveSuccessMessage': string
+  'pipeline.multiRequiredToFetch': string
   'pipeline.multiStageExecution': string
   'pipeline.myBuildsText': string
   'pipeline.myDeploymentsText': string

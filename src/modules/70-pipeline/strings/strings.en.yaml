@@ -1303,6 +1303,7 @@ numOfEnvs: '{{numOfEnvironments}} Environments'
 numOfApps: '{{numOfApps}} Applications'
 numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironments}} Environment(s)'
 requiredToFetch: '{{requiredField}} is required to fetch {{dependentField}}'
+multiRequiredToFetch: '{{requiredField}} are required to fetch {{dependentField}}'
 executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
   servicesDeployed: 'Services deployed'

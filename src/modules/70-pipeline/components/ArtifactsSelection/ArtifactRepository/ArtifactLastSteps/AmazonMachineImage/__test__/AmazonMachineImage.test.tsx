@@ -56,9 +56,6 @@ jest.mock('services/portal', () => ({
 
 jest.mock('services/cd-ng', () => ({
   ...jest.requireActual('services/cd-ng'),
-  useTags: jest.fn().mockImplementation(() => {
-    return { data: [], refetch: jest.fn(), error: null, loading: false }
-  }),
   useListVersionsForAMIArtifact: jest.fn().mockImplementation(() => {
     return {
       data: [],
@@ -66,6 +63,13 @@ jest.mock('services/cd-ng', () => ({
       error: null,
       loading: false
     }
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  ...jest.requireActual('services/cd-ng-rq'),
+  useListTagsForAmiArtifactMutation: jest.fn().mockImplementation(() => {
+    return { data: [], mutate: jest.fn(), error: null, isLoading: false }
   })
 }))
 

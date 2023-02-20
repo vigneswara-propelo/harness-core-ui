@@ -145,7 +145,7 @@ exports[`AMI Artifact tests should render form without any issues 1`] = `
                       class="Tooltip--acenter"
                       data-tooltip-id="imagePath_spec.tags"
                     >
-                      AMI Tags
+                      pipeline.amiTags
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -328,7 +328,7 @@ exports[`AMI Artifact tests should render form without any issues 1`] = `
                     <span
                       class="bp3-button-text"
                     >
-                      AMI Tags
+                      pipeline.amiTags
                     </span>
                   </button>
                 </div>
@@ -353,7 +353,7 @@ exports[`AMI Artifact tests should render form without any issues 1`] = `
                       class="Tooltip--acenter"
                       data-tooltip-id="imagePath_spec.filters"
                     >
-                      AMI Filters
+                      pipeline.amiFilters
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -536,7 +536,7 @@ exports[`AMI Artifact tests should render form without any issues 1`] = `
                     <span
                       class="bp3-button-text"
                     >
-                      AMI Filters
+                      pipeline.amiFilters
                     </span>
                   </button>
                 </div>
@@ -941,7 +941,7 @@ exports[`AMI Artifact tests should render the runtime fields correctly 1`] = `
                       class="Tooltip--acenter"
                       data-tooltip-id="imagePath_spec.tags"
                     >
-                      AMI Tags
+                      pipeline.amiTags
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -1073,7 +1073,7 @@ exports[`AMI Artifact tests should render the runtime fields correctly 1`] = `
                       class="Tooltip--acenter"
                       data-tooltip-id="imagePath_spec.filters"
                     >
-                      AMI Filters
+                      pipeline.amiFilters
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -1256,7 +1256,7 @@ exports[`AMI Artifact tests should render the runtime fields correctly 1`] = `
                     <span
                       class="bp3-button-text"
                     >
-                      AMI Filters
+                      pipeline.amiFilters
                     </span>
                   </button>
                 </div>
@@ -1668,7 +1668,7 @@ exports[`AMI Artifact tests should render when versiontype is regex 1`] = `
                       class="Tooltip--acenter"
                       data-tooltip-id="imagePath_spec.tags"
                     >
-                      AMI Tags
+                      pipeline.amiTags
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -1800,7 +1800,7 @@ exports[`AMI Artifact tests should render when versiontype is regex 1`] = `
                       class="Tooltip--acenter"
                       data-tooltip-id="imagePath_spec.filters"
                     >
-                      AMI Filters
+                      pipeline.amiFilters
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"

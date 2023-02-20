@@ -43,7 +43,7 @@ export function NoTagResults({
   }, [isServerlessDeploymentTypeSelected, getString])
 
   return (
-    <Text lineClamp={1} width={400}>
+    <Text lineClamp={1} width={384} margin="small">
       {get(tagError, 'data.message', null) || getErrorText()}
     </Text>
   )

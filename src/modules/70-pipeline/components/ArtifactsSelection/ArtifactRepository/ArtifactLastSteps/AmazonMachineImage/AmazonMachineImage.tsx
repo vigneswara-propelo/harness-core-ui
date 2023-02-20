@@ -28,7 +28,7 @@ import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
-import { BuildDetails, ConnectorConfigDTO, useListVersionsForAMIArtifact, useTags } from 'services/cd-ng'
+import { AMITagObject, BuildDetails, ConnectorConfigDTO, useListVersionsForAMIArtifact } from 'services/cd-ng'
 import {
   getConnectorIdValue,
   getArtifactFormData,
@@ -50,6 +50,7 @@ import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraAp
 import { useMutateAsGet } from '@common/hooks'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { useListTagsForAmiArtifactMutation } from 'services/cd-ng-rq'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -83,18 +84,18 @@ function FormComponent({
 
   const {
     data: tagsData,
-    loading: isTagsLoading,
-    refetch: refetchTags,
+    isLoading: isTagsLoading,
+    mutate: refetchTags,
     error: tagsError
-  } = useTags({
+  } = useListTagsForAmiArtifactMutation({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
       region: get(formik, 'values.spec.region'),
-      awsConnectorRef: connectorRefValue || ''
+      connectorRef: connectorRefValue || ''
     },
-    lazy: true
+    body: ''
   })
 
   const {
@@ -148,14 +149,15 @@ function FormComponent({
   }
 
   useEffect(() => {
-    if (!isTagsLoading && tagsData && !tags) {
-      const tagOption = get(tagsData, 'data', []).map((tagItem: string) => ({
-        value: tagItem,
-        label: tagItem
-      }))
+    if (!isTagsLoading && tagsData?.data) {
+      const tagOption = get(tagsData, 'data', []).map((tag: AMITagObject) => {
+        const tagName = tag?.tagName as string
+        return { label: tagName, value: tagName }
+      })
+
       setTags(tagOption)
     }
-  }, [tagsData, isTagsLoading])
+  }, [tagsData?.data, isTagsLoading])
 
   useEffect(() => {
     if (
@@ -167,7 +169,7 @@ function FormComponent({
   }, [formik.values?.spec?.region])
 
   useEffect(() => {
-    if (!fetchingRegions && regionData?.resource && !regions) {
+    if (!fetchingRegions && regionData?.resource) {
       const regionValues = defaultTo(regionData?.resource, []).map(region => ({
         value: region.value,
         label: region.name
@@ -239,7 +241,7 @@ function FormComponent({
             expressions={expressions}
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
             tags={tags}
-            label={'AMI Tags'}
+            label={getString('pipeline.amiTags')}
             isLoadingTags={isTagsLoading}
             initialTags={formik?.initialValues?.spec?.tags || {}}
             errorMessage={get(tagsError, 'data.message', '')}
@@ -269,7 +271,7 @@ function FormComponent({
             expressions={expressions}
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
             tags={amiFilters}
-            label={'AMI Filters'}
+            label={getString('pipeline.amiFilters')}
             initialTags={formik?.initialValues?.spec?.filters || {}}
             errorMessage={get(tagsError, 'data.message', '')}
           />
@@ -463,8 +465,8 @@ export function AmazonMachineImage(
       spec: {
         connectorRef: connectorId,
         region: formData.spec?.region,
-        tags: getInSelectOptionForm(formData.spec.tags as { [key: string]: any }),
-        filters: getInSelectOptionForm(formData.spec?.filters as { [key: string]: any }),
+        tags: getInSelectOptionForm(formData.spec.tags as { [key: string]: any } | string),
+        filters: getInSelectOptionForm(formData.spec?.filters as { [key: string]: any } | string),
         ...versionData
       }
     })
