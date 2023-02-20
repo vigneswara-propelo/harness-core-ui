@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import {
   Formik,
   Layout,
@@ -86,6 +86,9 @@ function FormComponent(
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const [feedsData, setFeedsData] = React.useState<SelectOption[]>([])
+  const [packageData, setPackageData] = React.useState<SelectOption[]>([])
+  const [versionData, setVersionData] = React.useState<SelectOption[]>([])
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -161,6 +164,12 @@ function FormComponent(
     )
   }, [feedsResponse?.data])
 
+  useEffect(() => {
+    if (feedItems && feedItems.length) {
+      setFeedsData(feedItems)
+    }
+  }, [feedsResponse?.data, feedItems])
+
   const {
     refetch: refetchPackages,
     data: packagesResponse,
@@ -188,6 +197,12 @@ function FormComponent(
       ) || []
     )
   }, [packagesResponse?.data])
+
+  React.useEffect(() => {
+    if (packageItems && packagesResponse?.data) {
+      setPackageData(packageItems)
+    }
+  }, [packagesResponse?.data, packageItems])
 
   const {
     refetch: refetchVersions,
@@ -217,6 +232,12 @@ function FormComponent(
       ) || []
     )
   }, [versionResponse?.data])
+
+  React.useEffect(() => {
+    if (versionResponse?.data && versionItems) {
+      setVersionData(versionItems)
+    }
+  }, [versionResponse?.data, versionItems])
 
   const versionItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingVersions} />
@@ -248,6 +269,12 @@ function FormComponent(
     hasFixedDefiniteValue(connectorRefValue) ||
     hasFixedDefiniteValue(feedValue) ||
     hasFixedDefiniteValue(packageValue)
+
+  const resetFormFields = (): void => {
+    setFeedsData([])
+    setPackageData([])
+    setVersionData([])
+  }
 
   return (
     <FormikForm>
@@ -309,6 +336,7 @@ function FormComponent(
                       ...(isValueFixed(formik.values?.package) && { package: '' }),
                       ...(isValueFixed(formik.values?.version) && { version: '' })
                     })
+                    resetFormFields()
                   }
                 }
               }}
@@ -350,7 +378,7 @@ function FormComponent(
                   />
                 ),
                 itemRenderer: feedItemRenderer,
-                items: getItems(fetchingFeeds, 'pipeline.artifactsSelection.feed', feedItems),
+                items: getItems(fetchingFeeds, 'pipeline.artifactsSelection.feed', feedsData),
                 allowCreatingNewItems: true,
                 addClearBtn: true
               },
@@ -380,6 +408,8 @@ function FormComponent(
                     ...(isValueFixed(formik.values?.package) && { package: '' }),
                     ...(isValueFixed(formik.values?.version) && { version: '' })
                   })
+                  setPackageData([])
+                  setVersionData([])
                 }
               }
             }}
@@ -434,7 +464,7 @@ function FormComponent(
                   />
                 ),
                 itemRenderer: packageItemRenderer,
-                items: getItems(fetchingPackages, 'pipeline.testsReports.callgraphField.package', packageItems),
+                items: getItems(fetchingPackages, 'pipeline.testsReports.callgraphField.package', packageData),
                 allowCreatingNewItems: true,
                 addClearBtn: true
               },
@@ -465,6 +495,7 @@ function FormComponent(
                     package: updatedValue,
                     ...(isValueFixed(formik.values?.version) && { version: '' })
                   })
+                  setVersionData([])
                 }
               }
             }}
@@ -515,7 +546,7 @@ function FormComponent(
                     />
                   ),
                   itemRenderer: versionItemRenderer,
-                  items: getItems(fetchingVersions, 'version', versionItems),
+                  items: getItems(fetchingVersions, 'version', versionData),
                   allowCreatingNewItems: true,
                   addClearBtn: true
                 },
