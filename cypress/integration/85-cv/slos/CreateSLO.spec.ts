@@ -39,11 +39,6 @@ import {
 
 describe('Create SLO', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.login('test', 'test')
 
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse).as('updatedListSLOsCallResponse')

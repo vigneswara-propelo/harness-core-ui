@@ -13,11 +13,6 @@ describe('Azure web app end to end test', () => {
   const serviceV2AzureWebApp = `/ng/api/servicesV2/list/access?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&type=AzureWebApp&gitOpsEnabled=false`
   const environmentCall = `/ng/api/environmentsV2/upsert?routingId=accountId&accountIdentifier=accountId`
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
       cy.intercept('GET', featureFlagsCall, {
         ...featureFlagsData,

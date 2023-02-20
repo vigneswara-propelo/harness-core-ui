@@ -44,11 +44,6 @@ import { getIdentifierFromName } from '../../utils/stringHelpers'
 
 describe('GIT SYNC DISABLED', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('GET', cdFailureStrategiesYaml, {
       fixture: 'pipeline/api/pipelines/failureStrategiesYaml'
@@ -139,11 +134,6 @@ describe('GIT SYNC DISABLED', () => {
 
 describe('APPROVAL STAGE', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.login('test', 'test')
 
@@ -222,11 +212,6 @@ describe('APPROVAL STAGE', () => {
 
 describe('GIT SYNC ENABLED', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: true })
     cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.postsuccess' })
 
@@ -265,11 +250,6 @@ describe('Execution Stages', () => {
   }
 
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post' })
@@ -356,11 +336,6 @@ describe('Execution Stages', () => {
 
 describe('ServerlessAwsLambda as deployment type', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post' })
@@ -543,11 +518,6 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
 describe('Input Sets', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.intercept('GET', inputSetsCall, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' }).as('emptyInputSetList')
     cy.intercept('GET', pipelineYAMLAPI, { fixture: 'pipeline/api/inputSet/pipelineYAML' }).as('pipelineYAML')
@@ -642,11 +612,6 @@ describe('Input Sets', () => {
 
 describe('Add stage view with enabled licences', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.initializeRoute()
     cy.visit(pipelinesRoute, {
@@ -677,11 +642,6 @@ describe('Add stage view with enabled licences', () => {
 
 describe('Add stage view with disabled licences', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
 
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {

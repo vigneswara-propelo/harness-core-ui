@@ -22,11 +22,6 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     '/ng/api/jira/statuses?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=Jira_cloud'
   const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('GET', jirayamlSnippetCall, { fixture: 'pipeline/api/jiraStage/stageYamlSnippet' }).as('stageYaml')
     cy.intercept('POST', stepsCall, { fixture: 'pipeline/api/approvals/steps' })

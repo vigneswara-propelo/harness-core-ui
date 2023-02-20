@@ -17,10 +17,6 @@ import {
 
 describe('Org Level Freeze', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      return false
-    })
-
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
       cy.intercept('GET', featureFlagsCall, {
         ...featureFlagsData,

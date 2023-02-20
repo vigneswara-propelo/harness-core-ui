@@ -3,10 +3,6 @@ import { featureFlagsCall, overviewPage, orgOverviewPage, projectOverviewPage, g
 
 describe('check if Route is available if FF is enabled', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      return false
-    })
-
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
       cy.intercept('GET', featureFlagsCall, {
         ...featureFlagsData,

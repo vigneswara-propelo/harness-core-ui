@@ -40,9 +40,6 @@ import { Connectors } from '../../../utils/connctors-utils'
 
 describe('Health Source - Prometheus', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      return false
-    })
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
@@ -297,9 +294,6 @@ describe('Prometheus metric thresholds', () => {
       })
     })
 
-    cy.on('uncaught:exception', () => {
-      return false
-    })
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
@@ -487,9 +481,6 @@ describe('Prometheus metric thresholds', () => {
 
 describe('AWS Prometheus', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      return false
-    })
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })

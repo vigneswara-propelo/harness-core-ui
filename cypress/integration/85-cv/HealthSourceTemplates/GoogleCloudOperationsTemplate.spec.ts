@@ -23,9 +23,6 @@ import { Connectors } from '../../../utils/connctors-utils'
 
 describe('Health Source - Google Cloud Operations', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      return false
-    })
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
       cy.intercept('GET', featureFlagsCall, {
         ...featureFlagsData,

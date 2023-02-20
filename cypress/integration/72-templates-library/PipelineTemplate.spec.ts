@@ -44,11 +44,6 @@ describe('Pipeline Template creation and assertion', () => {
   const afterUseTemplatePipelineTemplateInputsEndpoint =
     '/template/api/templates/templateInputs/testPipelineTemplate?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&versionLabel=v1.0&getDefaultFromOtherRepo=true'
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.initializeRoute()
   })

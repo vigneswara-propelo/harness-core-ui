@@ -73,7 +73,6 @@ describe.skip('Verify step', () => {
     cy.intercept('GET', sourceCodeManagerCall, {}).as('sourceCodeManagerCall')
     cy.intercept('GET', aggregateProjectsCall, {}).as('aggregateProjectsCall')
 
-    cy.on('uncaught:exception', () => false)
     cy.login('test', 'test')
     cy.visitPageAssertion('[class^=SideNav-module_main]')
     cy.contains('p', 'Projects').click()

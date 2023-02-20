@@ -165,6 +165,7 @@ Cypress.Commands.add('login', (emailValue: string, password: string) => {
   cy.get('[data-id="email-0"] input').clear().type(emailValue)
   cy.get('[data-id="password-1"] input').clear().type(password)
   cy.clickSubmit()
+  cy.initializeRoute()
 })
 
 /**

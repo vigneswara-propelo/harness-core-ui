@@ -21,7 +21,7 @@
     "typecheck": "tsc",
     "strings-check": "node ./scripts/yaml-strings-check.js",
     "clean": "rm -rf dist && rm -rf node_modules/.cache",
-    "dev:cypress": "NODE_ENV=development TARGET_LOCALHOST=false CYPRESS=true BASE_URL=http://localhost:8080 NODE_OPTIONS=\"--max-old-space-size=6144\" webpack serve --progress --config configs/webpack.dev.js",
+    "dev:cypress": "NODE_ENV=development TARGET_LOCALHOST=false CYPRESS=true BASE_URL=http://localhost:8080 NODE_OPTIONS=\"--max-old-space-size=6144\" webpack serve --progress --config configs/webpack.dev.js --config configs/webpack.monaco.js",
     "dev:cypress-cov": "NODE_ENV=development TARGET_LOCALHOST=false CYPRESS=true CYPRESS_COVERAGE=true BASE_URL=http://localhost:8080 NODE_OPTIONS=\"--max-old-space-size=6144\" webpack serve --progress --config configs/webpack.dev.js",
     "dev": "NODE_ENV=development webpack serve --progress --config configs/webpack.dev.js --config configs/webpack.monaco.js",
     "watch": "yarn clean && NODE_ENV=development webpack --watch --progress --config configs/webpack.dev.js --config configs/webpack.monaco.js",
