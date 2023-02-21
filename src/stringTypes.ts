@@ -2753,6 +2753,7 @@ export interface StringsMap {
   'connectors.jenkins.passwordAPIToken': string
   'connectors.jenkins.usernamePasswordAPIToken': string
   'connectors.jira.jiraUrl': string
+  'connectors.jira.usernameAPIKey': string
   'connectors.k8.OIDCClientId': string
   'connectors.k8.OIDCIssuerUrl': string
   'connectors.k8.OIDCPassword': string
@@ -2863,6 +2864,7 @@ export interface StringsMap {
   'connectors.serviceNow.resourceID': string
   'connectors.serviceNow.serviceNowUrl': string
   'connectors.serviceNow.serviceNowViewPermissions': string
+  'connectors.serviceNow.usernamePasswordAPIKey': string
   'connectors.showInstructions': string
   'connectors.specifyArtifactRepo': string
   'connectors.specifyArtifactRepoType': string
