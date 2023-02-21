@@ -21,7 +21,10 @@ import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
+import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
+import { EvaluationModal } from '@governance/EvaluationModal'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import routes from '@common/RouteDefinitions'
@@ -52,9 +55,16 @@ const FFUIApp: FC = () => (
       useSyncedEnvironment,
       usePreferenceStore
     }}
-    customComponents={{ RbacOptionsMenuButton, ContainerSpinner, Description }}
+    customComponents={{
+      ContainerSpinner,
+      Description,
+      EvaluationModal,
+      FeatureWarningTooltip,
+      RbacOptionsMenuButton,
+      RBACTooltip
+    }}
     customRoutes={routes}
-    customUtils={{ NameSchema, getIdentifierFromName, IdentifierSchema }}
+    customUtils={{ getIdentifierFromName, IdentifierSchema, NameSchema }}
     customEnums={{ FeatureIdentifier, PreferenceScope, trackingConstants }}
   />
 )

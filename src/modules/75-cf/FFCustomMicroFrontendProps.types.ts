@@ -16,10 +16,13 @@ import type { useConfirmAction, useQueryParams } from '@common/hooks'
 import type { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import type { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
+import type { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import type RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
+import type RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import type routes from '@common/RouteDefinitions'
 import type { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { IdentifierSchema, NameSchema } from '@common/utils/Validation'
+import type { EvaluationModal } from '@governance/EvaluationModal'
 import type { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
@@ -44,9 +47,12 @@ export interface FFCustomMicroFrontendProps {
     usePreferenceStore: typeof usePreferenceStore
   }
   customComponents: {
-    RbacOptionsMenuButton: typeof RbacOptionsMenuButton
     ContainerSpinner: typeof ContainerSpinner
     Description: typeof Description
+    EvaluationModal: typeof EvaluationModal
+    FeatureWarningTooltip: typeof FeatureWarningTooltip
+    RbacOptionsMenuButton: typeof RbacOptionsMenuButton
+    RBACTooltip: typeof RBACTooltip
   }
   customRoutes: typeof routes
   customUtils: {
