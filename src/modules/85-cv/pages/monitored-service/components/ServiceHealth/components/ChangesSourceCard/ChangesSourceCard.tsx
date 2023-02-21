@@ -97,6 +97,7 @@ export default function ChangeSourceCard(props: ChangeSourceCardInterface): JSX.
                 color={Color.BLACK}
                 font={{ weight: 'bold', size: 'large' }}
                 margin={{ right: 'small' }}
+                data-testid={ticker.id}
               >
                 {numberFormatter(Math.abs(ticker.count), {
                   truncate: true
