@@ -22,6 +22,7 @@ interface FiltersContextParams {
   hideResetFilterButton: boolean
   queryParams: QueryParamsProps
   pathParams: PathParamsProps
+  appliedSearchAndFilter: boolean
 }
 
 export const FiltersContext = createContext<FiltersContextParams>({} as FiltersContextParams)

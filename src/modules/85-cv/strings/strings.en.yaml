@@ -24,6 +24,7 @@ changeTimeline: Change Timeline
 selectedTimeInterval: Selected time interval
 anomalous: Anomalous
 nonAnomalous: Non-Anomalous
+ends: 'Ends:'
 share: Share
 healthScore: Health Score
 clusterType: Cluster Type
@@ -1003,6 +1004,8 @@ sloDowntime:
   downtimeCreated: SLO Downtime created successfully
   downtimeUpdated: SLO Downtime updated successfully
   downtimeToggle: SLO Downtime {{ name }} turned {{ off }}
+  timeFrame: Every {{ recurrenceType }} at {{ time }} for {{ duration }}
+  recurringDowntime: 'RECURRING: Starts from {{ startTime }} until {{ endTime }}'
   msList: Downtime will be applied to the following monitored services
   NoData: You don’t have any matching monitored services
   NoDataSuggestion: Try changing the filter or clearing your search input.
@@ -1012,9 +1015,9 @@ sloDowntime:
     categoryValidation: Category is required
     timezoneValidation: Timezone is required
     startTimeValidation: Start time is required
-    startTimeGreaterThanNow: Downtimes can only be created in the future
     endTimeValidation: End time is required
     endTimeGreaterThanStartTime: End time should be greater than start time
+    endTimeNotMoreThan3Years: End time can't be more than 3 years from start time
     msListValidation: At least one monitored service should be selected
   steps:
     identification: Define SLO downtime identification
@@ -1079,6 +1082,7 @@ month: month
 week: week
 day: day
 oneDay: 1 day
+oneHour: 1 hour
 days: days
 nDays: '{{ n }} days'
 resetErrorBudget: Reset Error Budget

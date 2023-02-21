@@ -146,7 +146,7 @@ describe('SLO Downtime page', () => {
       userEvent.click(getByText('demoservice_demoenv'))
     })
 
-    const clearFilters = getByText('cv.cvChanges.clearFilters')
+    const clearFilters = getByText('common.filters.clearFilter')
     await expect(clearFilters).toBeDefined()
     expect(clearFilters).toBeInTheDocument()
 
@@ -305,10 +305,8 @@ describe('DowntimeList utils', () => {
 
   test('getDuration should return correct values for durationValue equal to 1', async () => {
     expect(getDuration(getString, { durationValue: 1, durationType: 'Weeks' })).toEqual('cv.sloDowntime.oneWeek')
-    expect(getDuration(getString, { durationValue: 1, durationType: 'Days' })).toEqual('cv.serviceDashboardPage.oneDay')
-    expect(getDuration(getString, { durationValue: 1, durationType: 'Hours' })).toEqual(
-      'cv.serviceDashboardPage.oneHour'
-    )
+    expect(getDuration(getString, { durationValue: 1, durationType: 'Days' })).toEqual('cv.oneDay')
+    expect(getDuration(getString, { durationValue: 1, durationType: 'Hours' })).toEqual('cv.oneHour')
     expect(getDuration(getString, { durationValue: 1, durationType: 'Minutes' })).toEqual('cv.sloDowntime.oneMinute')
   })
 

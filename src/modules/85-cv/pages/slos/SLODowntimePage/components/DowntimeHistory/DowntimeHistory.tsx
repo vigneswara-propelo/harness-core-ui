@@ -6,13 +6,15 @@
  */
 
 import React, { useContext } from 'react'
-import moment from 'moment'
 import { Container, Layout, NoDataCard, Page, TableV2, Text } from '@harness/uicore'
 import type { CellProps, Renderer } from 'react-table'
 import { useStrings } from 'framework/strings'
 import { DowntimeHistoryView, useGetHistory } from 'services/cv'
 import { DowntimeWindowToggleViews } from '@cv/pages/slos/components/CVCreateDowntime/components/CreateDowntimeForm/CreateDowntimeForm.types'
-import { getDowntimeCategoryLabel } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.utils'
+import {
+  getDowntimeCategoryLabel,
+  getFormattedTime
+} from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.utils'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import emptyData from '@cv/assets/emptyData.svg'
 import DowntimeFilters from '../DowntimeFilters/DowntimeFilters'
@@ -23,7 +25,7 @@ import css from '../DowntimeList/DowntimeList.module.scss'
 
 const DowntimeHistory = (): JSX.Element => {
   const { getString } = useStrings()
-  const { queryParams, setPageNumber, pathParams } = useContext(FiltersContext)
+  const { queryParams, setPageNumber, pathParams, appliedSearchAndFilter } = useContext(FiltersContext)
 
   const { data: downtimeHistoryData, refetch, loading, error } = useGetHistory({ ...pathParams, queryParams })
 
@@ -62,9 +64,8 @@ const DowntimeHistory = (): JSX.Element => {
   }): JSX.Element => {
     const { timezone = 'Asia/Calcutta' } = downtimeHistory?.spec?.spec || {}
 
-    const time = moment(_time * 1000)
-    const date = time.format('LL')
-    const timeLabel = `${time.format('LT')} (${timezone})`
+    const date = getFormattedTime({ time: _time, timezone, format: 'LL' })
+    const timeLabel = `${getFormattedTime({ time: _time, timezone, format: 'LT' })} (${timezone})`
 
     return (
       <Layout.Vertical spacing={'xsmall'}>
@@ -183,7 +184,14 @@ const DowntimeHistory = (): JSX.Element => {
             />
           </Container>
         ) : (
-          <NoDataCard image={emptyData} message={getString('cv.changeSource.noDataAvaiableForCard')} />
+          <NoDataCard
+            image={emptyData}
+            message={
+              appliedSearchAndFilter
+                ? getString('common.filters.noMatchingFilterData')
+                : getString('cv.changeSource.noDataAvaiableForCard')
+            }
+          />
         )}
       </Page.Body>
     </Container>

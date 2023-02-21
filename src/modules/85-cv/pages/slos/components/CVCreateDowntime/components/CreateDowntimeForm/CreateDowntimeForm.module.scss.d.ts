@@ -11,6 +11,7 @@ declare const styles: {
   readonly cardTitle: string
   readonly checkbox: string
   readonly disabled: string
+  readonly disabledText: string
   readonly downtimeWindow: string
   readonly endTime: string
   readonly footer: string
@@ -19,6 +20,8 @@ declare const styles: {
   readonly picker: string
   readonly pillToggle: string
   readonly previewLabelAndValue: string
+  readonly radioGroup: string
+  readonly selectMsButton: string
   readonly serviceName: string
   readonly tagBox: string
   readonly text: string

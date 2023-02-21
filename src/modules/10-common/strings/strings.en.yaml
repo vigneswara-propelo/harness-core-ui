@@ -623,6 +623,7 @@ filters:
   noMatchingFilterData: No results found matching the filter criteria
   noResultsFound: No results found
   clearFilters: Clear Filters
+  clearFilter: Clear Filter
   noFilterSaved: No Filter Saved
 in: in
 on: on

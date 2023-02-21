@@ -97,7 +97,7 @@ const AddMonitoredServices = ({
             </Layout.Horizontal>
           </Layout.Vertical>
         )}
-        <Container>
+        <Container margin={msList.length === 0 && { top: 'small' }}>
           <Button
             disabled={entitiesRuleType === EntitiesRuleType.ALL}
             margin={{ bottom: 'xsmall', left: 'small' }}

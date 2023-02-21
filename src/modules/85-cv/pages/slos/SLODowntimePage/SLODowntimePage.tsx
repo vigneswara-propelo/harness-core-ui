@@ -139,7 +139,8 @@ export const SLODowntimePage = (): JSX.Element => {
           setPageNumber,
           hideResetFilterButton,
           queryParams,
-          pathParams
+          pathParams,
+          appliedSearchAndFilter
         }}
       >
         <Page.Body className={css.pageBody} loading={!appliedSearchAndFilter && downtimeDataLoading}>

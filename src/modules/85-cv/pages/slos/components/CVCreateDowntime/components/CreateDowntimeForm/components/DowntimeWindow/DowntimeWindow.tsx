@@ -9,6 +9,7 @@ import React, { useState } from 'react'
 import { Container, FormInput, Layout, PillToggle, PillToggleProps, SelectOption, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useFormikContext } from 'formik'
+import classNames from 'classnames'
 import { useStrings } from 'framework/strings'
 import { DateTimePicker } from '@common/components/DateTimePicker/DateTimePicker'
 import {
@@ -94,7 +95,11 @@ const DowntimeWindow = (): JSX.Element => {
         disabled={text ? endTimeMode === EndTimeMode.END_TIME : false}
         items={recurrenceDuration ? getRecurrenceTypeOptions(getString) : getDurationOptions(getString)}
       />
-      {text && <span className={css.text}>{text}</span>}
+      {text && (
+        <span className={classNames(css.text, { [css.disabledText]: endTimeMode === EndTimeMode.END_TIME })}>
+          {text}
+        </span>
+      )}
     </Layout.Horizontal>
   )
 
@@ -129,6 +134,7 @@ const DowntimeWindow = (): JSX.Element => {
             getString('common.endTime'),
             <FormInput.RadioGroup
               name={DowntimeFormFields.END_TIME_MODE}
+              className={css.radioGroup}
               items={[
                 {
                   label: renderDurationDropdown(false, getString('cv.sloDowntime.durationText')),

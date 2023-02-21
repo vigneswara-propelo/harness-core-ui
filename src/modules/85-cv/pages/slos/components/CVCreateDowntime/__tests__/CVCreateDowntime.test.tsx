@@ -57,6 +57,7 @@ describe('CVCreateDowntime', () => {
         <CVCreateDowntime />
       </TestWrapper>
     )
+
     await waitFor(() => {
       expect(getByText('cv.sloDowntime.addDowntime')).toBeInTheDocument()
       expect(getByText('cv.sloDowntime.steps.identification')).toBeInTheDocument()
@@ -67,6 +68,10 @@ describe('CVCreateDowntime', () => {
     })
 
     expect(container).toMatchSnapshot()
+
+    act(() => {
+      userEvent.click(getByText('next'))
+    })
   })
 
   test('should render error on edit page', async () => {
@@ -147,7 +152,7 @@ describe('CVCreateDowntime', () => {
 
     expect(container).toMatchSnapshot()
 
-    await act(() => {
+    act(() => {
       userEvent.click(getByText('save'))
       waitFor(() => expect(getByText('cv.sloDowntime.downtimeUpdated')).toBeInTheDocument())
     })

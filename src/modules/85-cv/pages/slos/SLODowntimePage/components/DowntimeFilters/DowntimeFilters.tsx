@@ -56,7 +56,7 @@ const DowntimeFilters = (): JSX.Element => {
           <Button
             variation={ButtonVariation.LINK}
             onClick={() => onOptionChange()}
-            text={getString('cv.cvChanges.clearFilters')}
+            text={getString('common.filters.clearFilter')}
           />
         )}
       </Layout.Horizontal>

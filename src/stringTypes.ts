@@ -341,6 +341,7 @@ export interface StringsMap {
   'common.files': string
   'common.filter': string
   'common.filterOnName': string
+  'common.filters.clearFilter': string
   'common.filters.clearFilters': string
   'common.filters.noFilterSaved': string
   'common.filters.noMatchingFilterData': string
@@ -7929,6 +7930,7 @@ export interface StringsMap {
   'cv.deploymentVerification.failed': string
   'cv.displayOnlyErrors': string
   'cv.download': string
+  'cv.ends': string
   'cv.errorBudget': string
   'cv.errorBudgetBurnDown': string
   'cv.errorBudgetIsSuccessfullyReset': string
@@ -8535,6 +8537,7 @@ export interface StringsMap {
   'cv.onboarding.verificationJobs.setupInfo': string
   'cv.onboarding.verificationJobs.subHeading': string
   'cv.oneDay': string
+  'cv.oneHour': string
   'cv.overall': string
   'cv.overviewPage.recentChangeVerifications': string
   'cv.perHeatMapCell': string
@@ -8621,6 +8624,7 @@ export interface StringsMap {
   'cv.sloDowntime.numberOfSLOs': string
   'cv.sloDowntime.oneMinute': string
   'cv.sloDowntime.oneWeek': string
+  'cv.sloDowntime.recurringDowntime': string
   'cv.sloDowntime.repeatEndsOn': string
   'cv.sloDowntime.repeatEvery': string
   'cv.sloDowntime.scheduledMaintenance': string
@@ -8630,12 +8634,13 @@ export interface StringsMap {
   'cv.sloDowntime.steps.downtimeWindow': string
   'cv.sloDowntime.steps.identification': string
   'cv.sloDowntime.steps.monitoredServices': string
+  'cv.sloDowntime.timeFrame': string
   'cv.sloDowntime.validations.categoryValidation': string
   'cv.sloDowntime.validations.endTimeGreaterThanStartTime': string
+  'cv.sloDowntime.validations.endTimeNotMoreThan3Years': string
   'cv.sloDowntime.validations.endTimeValidation': string
   'cv.sloDowntime.validations.msListValidation': string
   'cv.sloDowntime.validations.nameValidation': string
-  'cv.sloDowntime.validations.startTimeGreaterThanNow': string
   'cv.sloDowntime.validations.startTimeValidation': string
   'cv.sloDowntime.validations.timezoneValidation': string
   'cv.sloGraphInitialState': string

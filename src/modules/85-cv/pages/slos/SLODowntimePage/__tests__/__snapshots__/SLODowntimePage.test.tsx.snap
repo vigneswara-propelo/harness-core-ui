@@ -71,14 +71,14 @@ exports[`DowntimeHistory page should render downtime history view and change fil
           </div>
         </div>
         <button
-          aria-label="cv.cvChanges.clearFilters"
+          aria-label="common.filters.clearFilter"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
           type="button"
         >
           <span
             class="bp3-button-text"
           >
-            cv.cvChanges.clearFilters
+            common.filters.clearFilter
           </span>
         </button>
       </div>
@@ -266,9 +266,9 @@ exports[`DowntimeHistory page should render downtime history view and change fil
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main secondLine"
-                      title="2:45 PM (Asia/Baghdad)"
+                      title="5:45 PM (Asia/Baghdad)"
                     >
-                      2:45 PM (Asia/Baghdad)
+                      5:45 PM (Asia/Baghdad)
                     </p>
                   </div>
                 </div>
@@ -288,9 +288,9 @@ exports[`DowntimeHistory page should render downtime history view and change fil
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main secondLine"
-                      title="2:50 PM (Asia/Baghdad)"
+                      title="5:50 PM (Asia/Baghdad)"
                     >
-                      2:50 PM (Asia/Baghdad)
+                      5:50 PM (Asia/Baghdad)
                     </p>
                   </div>
                 </div>
@@ -392,9 +392,9 @@ exports[`DowntimeHistory page should render downtime history view and change fil
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main secondLine"
-                      title="2:30 PM (Asia/Bangkok)"
+                      title="9:30 PM (Asia/Bangkok)"
                     >
-                      2:30 PM (Asia/Bangkok)
+                      9:30 PM (Asia/Bangkok)
                     </p>
                   </div>
                 </div>
@@ -414,9 +414,9 @@ exports[`DowntimeHistory page should render downtime history view and change fil
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main secondLine"
-                      title="2:35 PM (Asia/Bangkok)"
+                      title="9:35 PM (Asia/Bangkok)"
                     >
-                      2:35 PM (Asia/Bangkok)
+                      9:35 PM (Asia/Bangkok)
                     </p>
                   </div>
                 </div>
@@ -524,9 +524,9 @@ exports[`DowntimeHistory page should render downtime history view and change fil
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main secondLine"
-                      title="12:00 AM (Asia/Calcutta)"
+                      title="5:30 AM (Asia/Calcutta)"
                     >
-                      12:00 AM (Asia/Calcutta)
+                      5:30 AM (Asia/Calcutta)
                     </p>
                   </div>
                 </div>
@@ -546,9 +546,9 @@ exports[`DowntimeHistory page should render downtime history view and change fil
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main secondLine"
-                      title="12:00 AM (Asia/Calcutta)"
+                      title="5:30 AM (Asia/Calcutta)"
                     >
-                      12:00 AM (Asia/Calcutta)
+                      5:30 AM (Asia/Calcutta)
                     </p>
                   </div>
                 </div>
@@ -1088,15 +1088,15 @@ exports[`SLO Downtime page should render downtime list view 1`] = `
                           >
                             <p
                               class="StyledProps--font StyledProps--main windowFirstLine"
-                              title="Every 2 cv.weeks at 10:00 AM (Asia/Calcutta) for 30 cv.minutes"
+                              title="cv.sloDowntime.timeFrame (Asia/Calcutta)"
                             >
-                              Every 2 cv.weeks at 10:00 AM (Asia/Calcutta) for 30 cv.minutes
+                              cv.sloDowntime.timeFrame (Asia/Calcutta)
                             </p>
                             <p
                               class="StyledProps--font StyledProps--main windowSecondLine"
-                              title="COMMON.OCCURRENCE.RECURRING: Starts from Jan 17, 2023 until Jan 17, 2025"
+                              title="cv.sloDowntime.recurringDowntime"
                             >
-                              COMMON.OCCURRENCE.RECURRING: Starts from Jan 17, 2023 until Jan 17, 2025
+                              cv.sloDowntime.recurringDowntime
                             </p>
                           </div>
                         </div>
@@ -1552,15 +1552,15 @@ exports[`SLO Downtime page should render downtime list view 1`] = `
                           >
                             <p
                               class="StyledProps--font StyledProps--main windowFirstLine"
-                              title="Every 2 cv.weeks at 10:00 AM (Asia/Calcutta) for 30 cv.minutes"
+                              title="cv.sloDowntime.timeFrame (Asia/Calcutta)"
                             >
-                              Every 2 cv.weeks at 10:00 AM (Asia/Calcutta) for 30 cv.minutes
+                              cv.sloDowntime.timeFrame (Asia/Calcutta)
                             </p>
                             <p
                               class="StyledProps--font StyledProps--main windowSecondLine"
-                              title="COMMON.OCCURRENCE.RECURRING: Starts from Feb 18, 2023 until Jan 17, 2025"
+                              title="cv.sloDowntime.recurringDowntime"
                             >
-                              COMMON.OCCURRENCE.RECURRING: Starts from Feb 18, 2023 until Jan 17, 2025
+                              cv.sloDowntime.recurringDowntime
                             </p>
                           </div>
                         </div>

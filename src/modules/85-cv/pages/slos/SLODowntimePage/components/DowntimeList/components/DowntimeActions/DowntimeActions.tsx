@@ -18,7 +18,7 @@ export interface DowntimeActionsProps {
   title: string
 }
 
-export default function DowntimeActions(props: DowntimeActionsProps) {
+export default function DowntimeActions(props: DowntimeActionsProps): JSX.Element {
   const { onDelete, onEdit, identifier, title } = props
   const { getString } = useStrings()
 

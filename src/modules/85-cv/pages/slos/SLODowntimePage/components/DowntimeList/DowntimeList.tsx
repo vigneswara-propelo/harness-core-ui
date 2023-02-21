@@ -17,10 +17,6 @@ import {
   DowntimeDuration,
   DowntimeListView,
   DowntimeStatusDetails,
-  OnetimeDowntimeSpec,
-  OnetimeDurationBasedSpec,
-  OnetimeEndTimeBasedSpec,
-  RecurringDowntimeSpec,
   ResponsePageDowntimeListView,
   useDeleteDowntimeData,
   useEnablesDisablesDowntime,
@@ -31,14 +27,12 @@ import emptyData from '@cv/assets/emptyData.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import { DowntimeWindowToggleViews } from '@cv/pages/slos/components/CVCreateDowntime/components/CreateDowntimeForm/CreateDowntimeForm.types'
-import { EndTimeMode } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types'
 import {
   getDowntimeCategoryLabel,
   getFormattedTime
 } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.utils'
 import DowntimeActions from './components/DowntimeActions/DowntimeActions'
-import { getDowntimeStatusLabel, getDuration, getIsSetPreviousPage, getRecurrenceType } from './DowntimeList.utils'
+import { getDowntimeStatusLabel, getDowntimeWindowInfo, getDuration, getIsSetPreviousPage } from './DowntimeList.utils'
 import { DowntimeStatus } from '../../SLODowntimePage.types'
 import { getAddDowntimeButton } from '../../SLODowntimePage.utils'
 import { FiltersContext } from '../../FiltersContext'
@@ -164,17 +158,15 @@ const DowntimeList = ({
     downtimeStatusDetails: DowntimeStatusDetails
     timezone: string
   }): JSX.Element => {
-    const { status, endTime = 1 } = downtimeStatusDetails
+    const { status, endTime = Date.now() / 1000 } = downtimeStatusDetails
 
     return (
       <Layout.Vertical padding={'medium'} spacing={'xsmall'} className={css.tooltip}>
         <Text>{getDowntimeStatusLabel(getString, status)}</Text>
         {status === DowntimeStatus.ACTIVE && (
           <Text>
-            <b>Ends:</b>{' '}
-            {moment(endTime * 1000)
-              .utcOffset(timezone)
-              .format('LLLL')}
+            <span className={css.bolder}>{getString('cv.ends')}</span>{' '}
+            {getFormattedTime({ time: endTime, timezone, format: 'LLLL' })} ({timezone})
           </Text>
         )}
       </Layout.Vertical>
@@ -227,47 +219,7 @@ const DowntimeList = ({
 
   const RenderDowntimeWindow: Renderer<CellProps<DowntimeListView>> = ({ row }) => {
     const downtime = row?.original
-    const { type = DowntimeWindowToggleViews.ONE_TIME } = downtime?.spec || {}
-    const { startTime = 1, timezone = 'Asia/Calcutta' } = downtime?.spec?.spec || {}
-
-    let timeFrame = null
-    let downtimeType = null
-
-    if (type === DowntimeWindowToggleViews.ONE_TIME) {
-      const onetimeDowntimeSpec = downtime?.spec?.spec as OnetimeDowntimeSpec
-      const { type: oneTimeDowntimeType = EndTimeMode.DURATION } = onetimeDowntimeSpec || {}
-
-      if (oneTimeDowntimeType === EndTimeMode.DURATION) {
-        const { durationValue = 30, durationType = 'Minutes' } =
-          (onetimeDowntimeSpec?.spec as OnetimeDurationBasedSpec)?.downtimeDuration || {}
-        timeFrame = `${getFormattedTime({ time: startTime, timezone, format: 'lll' })} - ${moment(
-          getFormattedTime({ time: startTime, timezone, format: 'lll' })
-        )
-          .add(durationValue, durationType.toLowerCase() as any)
-          .format('lll')} (${timezone})`
-      } else {
-        const { endTime = 1 } = onetimeDowntimeSpec?.spec || ({} as OnetimeEndTimeBasedSpec)
-        timeFrame = `${getFormattedTime({ time: startTime, timezone, format: 'lll' })} - ${getFormattedTime({
-          time: endTime,
-          timezone,
-          format: 'lll'
-        })} ${timezone}`
-      }
-      downtimeType = getString('common.occurrence.oneTime').toUpperCase()
-    } else {
-      const { downtimeDuration, downtimeRecurrence, recurrenceEndTime } = downtime?.spec?.spec as RecurringDowntimeSpec
-
-      timeFrame = `Every ${getRecurrenceType(downtimeRecurrence, getString)} at ${getFormattedTime({
-        time: startTime,
-        timezone,
-        format: 'LT'
-      })} (${timezone}) for ${getDuration(getString, downtimeDuration)}`
-      downtimeType = `${getString('common.occurrence.recurring').toUpperCase()}: Starts from ${getFormattedTime({
-        time: startTime,
-        timezone,
-        format: 'll'
-      })} until ${getFormattedTime({ time: recurrenceEndTime, timezone, format: 'll' })}`
-    }
+    const { timeFrame, downtimeType } = getDowntimeWindowInfo(downtime, getString)
 
     return (
       <Layout.Vertical spacing={'xsmall'}>
@@ -298,7 +250,7 @@ const DowntimeList = ({
 
   const RenderDowntimeCategory: Renderer<CellProps<DowntimeListView>> = ({ row }) => {
     const downtime = row?.original
-    const { category = 'Other' } = downtime || {}
+    const { category = 'Other' } = downtime
 
     return (
       <Text title={category} className={css.firstLine}>
@@ -323,7 +275,8 @@ const DowntimeList = ({
 
   const RenderDowntimeActions: Renderer<CellProps<DowntimeListView>> = ({ row }) => {
     const downtime = row?.original
-    const { identifier = '', name = '' } = downtime || {}
+    const { identifier = '', name = '' } = downtime
+
     return (
       <DowntimeActions identifier={identifier} title={name} onDelete={onDelete} onEdit={(id: string) => onEdit(id)} />
     )
@@ -367,7 +320,7 @@ const DowntimeList = ({
       Cell: RenderDowntimeCategory
     },
     {
-      Header: getString('filestore.view.lastModifiedBy').replace(/'/g, '').toUpperCase(),
+      Header: getString('filestore.view.lastModifiedBy').toUpperCase(),
       width: '10%',
       Cell: RenderLastModifiedBy
     },
@@ -408,7 +361,7 @@ const DowntimeList = ({
               />
             </Container>
           ) : (
-            <NoDataCard image={emptyData} message={getString('cv.changeSource.noDataAvaiableForCard')} />
+            <NoDataCard image={emptyData} message={getString('common.filters.noMatchingFilterData')} />
           )}
         </Page.Body>
       </Container>
