@@ -69,6 +69,7 @@ describe('Test ContinousVerificationStep Step', () => {
       name: 'CV Step',
       type: 'ContinousVerification',
       identifier: 'ContinousVerification',
+      isMultiServicesOrEnvs: false,
       timeout: '2h',
       spec: {
         monitoredServiceRef: 'monitored-service',

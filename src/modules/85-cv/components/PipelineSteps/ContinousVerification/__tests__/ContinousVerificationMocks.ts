@@ -107,6 +107,7 @@ export const verifyStepInitialValues = {
   timeout: '2h',
   spec: {
     monitoredServiceRef: '',
+    isMultiServicesOrEnvs: false,
     type: '',
     healthSources: [],
     spec: {
@@ -150,5 +151,6 @@ export const monitoredServiceYamlData = {
   },
   monitoredServiceRef: '<+input>',
   healthSources: [],
-  initialMonitoredService: { type: 'Default', spec: {} }
+  initialMonitoredService: { type: 'Default', spec: {} },
+  isMultiServicesOrEnvs: false
 }

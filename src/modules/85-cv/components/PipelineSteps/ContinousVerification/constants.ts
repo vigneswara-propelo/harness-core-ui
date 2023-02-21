@@ -66,6 +66,7 @@ export const cvDefaultValues: ContinousVerificationData = {
   timeout: '2h',
   spec: {
     monitoredServiceRef: '',
+    isMultiServicesOrEnvs: false,
     type: '',
     healthSources: [],
     monitoredService: {

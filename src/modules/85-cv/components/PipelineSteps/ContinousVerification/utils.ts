@@ -16,6 +16,7 @@ import { getConnectorTypeName } from '@cv/pages/health-source/HealthSourceDrawer
 import type { ConnectorInfoDTO, HealthSource } from 'services/cv'
 import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { ContinousVerificationData, spec, VerifyStepMonitoredService } from './types'
 import {
   VerificationSensitivityOptions,
@@ -359,4 +360,12 @@ export function shouldRenderField(input: { name: string; path: string }): boolea
 }
 export function getScopedIdentifier(templateScope: string | undefined, identifier: string): string {
   return templateScope !== Scope.PROJECT ? `${templateScope}.${identifier}` : identifier
+}
+
+export const getIsMultiServiceOrEnvs = (
+  selectedStage: StageElementWrapper<DeploymentStageElementConfig> | undefined
+): boolean => {
+  const services = selectedStage?.stage?.spec?.services?.values || []
+  const envs = selectedStage?.stage?.spec?.environments?.values || []
+  return Boolean(services.length || envs.length)
 }
