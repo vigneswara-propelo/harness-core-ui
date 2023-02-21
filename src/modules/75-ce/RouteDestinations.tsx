@@ -332,6 +332,43 @@ AuditTrailFactory.registerResourceHandler('PERSPECTIVE_FOLDER', {
   }
 })
 
+AuditTrailFactory.registerResourceHandler('CLOUD_ASSET_GOVERNANCE_RULE', {
+  moduleIcon: { name: 'ccm-solid' },
+  moduleLabel: 'common.purpose.ce.continuous',
+  resourceLabel: 'ce.governance.rule',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier } = resourceScope
+    return routes.toCEGovernanceRuleEditor({
+      accountId: accountIdentifier,
+      ruleId: resource.identifier
+    })
+  }
+})
+
+AuditTrailFactory.registerResourceHandler('CLOUD_ASSET_GOVERNANCE_RULE_SET', {
+  moduleIcon: { name: 'ccm-solid' },
+  moduleLabel: 'common.purpose.ce.continuous',
+  resourceLabel: 'ce.governance.ruleSet',
+  resourceUrl: (_resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier } = resourceScope
+    return `${routes.toCEGovernanceRules({
+      accountId: accountIdentifier
+    })}?tab="RuleSets"`
+  }
+})
+
+AuditTrailFactory.registerResourceHandler('CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT', {
+  moduleIcon: { name: 'ccm-solid' },
+  moduleLabel: 'common.purpose.ce.continuous',
+  resourceLabel: 'ce.governance.enforcement',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier } = resourceScope
+    return `${routes.toCEGovernanceEnforcements({
+      accountId: accountIdentifier
+    })}?s="${resource.labels?.resourceName}"`
+  }
+})
+
 const CESideNavProps: SidebarContext = {
   navComponent: CESideNav,
   subtitle: 'CLOUD COST',
