@@ -60,7 +60,7 @@ selectConnector: Select Connector
 selectConnectors: Select Connectors
 showInstructions: Show instructions
 apiKey: '{{$.common.apikey}}'
-apiKeyOrPassword: Password/Api Key
+apiKeyOrPassword: Password/API Key
 costVisibility: Cost Visibility
 chooseMethodForConnection: 'Choose the method for Harness to use when connecting to {{name}}.'
 k8sConnection: the cluster
