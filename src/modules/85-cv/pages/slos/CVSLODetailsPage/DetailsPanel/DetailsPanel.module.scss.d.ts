@@ -8,6 +8,9 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly changesCard: string
+  readonly downtimeBanner: string
+  readonly iconWithText: string
+  readonly infoIcon: string
   readonly serviceDetailsCard: string
   readonly tabLink: string
 }

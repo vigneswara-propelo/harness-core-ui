@@ -8603,6 +8603,7 @@ export interface StringsMap {
   'cv.sloDowntime.NoDataSuggestion': string
   'cv.sloDowntime.addDowntime': string
   'cv.sloDowntime.allMonitoredServices': string
+  'cv.sloDowntime.bannerText': string
   'cv.sloDowntime.category': string
   'cv.sloDowntime.confirmDeleteDowntime': string
   'cv.sloDowntime.downtimeCreated': string

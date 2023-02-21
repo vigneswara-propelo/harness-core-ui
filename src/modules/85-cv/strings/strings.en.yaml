@@ -990,6 +990,7 @@ sloDowntime:
   noData: No SLO downtime configured
   addDowntime: Add a SLO Downtime
   info: During downtime, SLO status and error budget calculations will be excluded for that specific time period.
+  bannerText: SLO status and error budget calculations will be excluded from {{ startTime }} until {{ endTime }}
   scheduledMaintenance: Scheduled Maintenance
   selectCategory: Select downtime category
   selectMonitoredServices: Select Monitored Services

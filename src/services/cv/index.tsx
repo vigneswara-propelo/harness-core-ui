@@ -749,6 +749,8 @@ export interface ClusterHostFrequencyData {
 export interface ClusterSummary {
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
+  feedback?: LogFeedback
+  feedbackApplied?: LogFeedback
   frequencyData?: HostFrequencyData[]
   label?: number
   risk?: number
@@ -2557,7 +2559,26 @@ export interface HealthSourceRecordsRequest {
   endTime: number
   healthSourceParams?: HealthSourceParamsDTO
   healthSourceQueryParams?: QueryParamsDTO
-  providerType:
+  healthSourceType?:
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
+  providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
     | 'SPLUNK_METRIC'
@@ -3036,9 +3057,13 @@ export interface LogAnalysisRadarChartListDTO {
   clusterId?: string
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
+  feedback?: LogFeedback
+  feedbackApplied?: LogFeedback
   hasControlData?: boolean
   label?: number
   message?: string
+  previousClusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  previousRisk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
   testHostFrequencyData?: HostFrequencyData[]
   totalTestFrequencyData?: TimestampFrequencyCount[]
@@ -3098,6 +3123,27 @@ export interface LogData {
   tag?: 'KNOWN' | 'UNEXPECTED' | 'UNKNOWN'
   text?: string
   trend?: FrequencyDTO[]
+}
+
+export interface LogFeedback {
+  clusterId?: string
+  createdAt?: number
+  createdBy?: string
+  description?: string
+  environmentIdentifier?: string
+  feedbackId?: string
+  feedbackScore?: 'NO_RISK_IGNORE_FREQUENCY' | 'NO_RISK_CONSIDER_FREQUENCY' | 'MEDIUM_RISK' | 'HIGH_RISK' | 'DEFAULT'
+  lastUpdatedAt?: number
+  lastUpdatedBy?: string
+  sampleMessage?: string
+  serviceIdentifier?: string
+  verificationJobInstanceId?: string
+}
+
+export interface LogFeedbackHistory {
+  createdBy?: string
+  logFeedback?: LogFeedback
+  updatedBy?: string
 }
 
 export interface LogRecord {
@@ -4063,7 +4109,26 @@ export interface QueryRecordsRequest {
   endTime: number
   healthSourceParams?: HealthSourceParamsDTO
   healthSourceQueryParams?: QueryParamsDTO
-  providerType:
+  healthSourceType?:
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
+  providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
     | 'SPLUNK_METRIC'
@@ -5088,6 +5153,22 @@ export interface RestResponseListLogClusterDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseListLogFeedback {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LogFeedback[]
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseListLogFeedbackHistory {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LogFeedbackHistory[]
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseListMetricDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -5213,6 +5294,14 @@ export interface RestResponseLogAnalysisRadarChartListWithCountDTO {
     [key: string]: { [key: string]: any }
   }
   resource?: LogAnalysisRadarChartListWithCountDTO
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseLogFeedback {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LogFeedback
   responseMessages?: ResponseMessage[]
 }
 
@@ -6176,6 +6265,25 @@ export interface TimeSeriesMetricDataDTO {
   metricDataList?: MetricData[]
   metricName?: string
   metricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
+  monitoredServiceDataSourceType?:
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
   monitoredServiceIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -6591,6 +6699,8 @@ export type ChangeEventDTORequestBody = ChangeEventDTO
 export type CompositeServiceLevelObjectiveSpecRequestBody = CompositeServiceLevelObjectiveSpec
 
 export type DowntimeDTORequestBody = DowntimeDTO
+
+export type LogFeedbackRequestBody = LogFeedback
 
 export type LogSampleRequestDTORequestBody = LogSampleRequestDTO
 
@@ -14449,6 +14559,93 @@ export const getServiceLevelObjectivesRiskCountPromise = (
     props,
     signal
   )
+
+export interface GetUnavailabilityInstancesQueryParams {
+  startTime: number
+  endTime: number
+  accountId: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetUnavailabilityInstancesPathParams {
+  identifier: string
+}
+
+export type GetUnavailabilityInstancesProps = Omit<
+  GetProps<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >,
+  'path'
+> &
+  GetUnavailabilityInstancesPathParams
+
+/**
+ * Get Unavailability Instances for SLO
+ */
+export const GetUnavailabilityInstances = ({ identifier, ...props }: GetUnavailabilityInstancesProps) => (
+  <Get<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >
+    path={`/slo-dashboard/unavailable-instances/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetUnavailabilityInstancesProps = Omit<
+  UseGetProps<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >,
+  'path'
+> &
+  GetUnavailabilityInstancesPathParams
+
+/**
+ * Get Unavailability Instances for SLO
+ */
+export const useGetUnavailabilityInstances = ({ identifier, ...props }: UseGetUnavailabilityInstancesProps) =>
+  useGet<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >(
+    (paramsInPath: GetUnavailabilityInstancesPathParams) =>
+      `/slo-dashboard/unavailable-instances/${paramsInPath.identifier}`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * Get Unavailability Instances for SLO
+ */
+export const getUnavailabilityInstancesPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >(getConfig('cv/api'), `/slo-dashboard/unavailable-instances/${identifier}`, props, signal)
 
 export interface GetSLODetailsQueryParams {
   startTime?: number
