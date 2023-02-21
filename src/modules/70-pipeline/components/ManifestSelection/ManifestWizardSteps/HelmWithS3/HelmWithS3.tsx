@@ -244,7 +244,7 @@ function HelmWithS3({
           valuesPaths:
             typeof formData?.valuesPaths === 'string'
               ? formData?.valuesPaths
-              : formData?.valuesPaths?.map((path: { path: string }) => path.path),
+              : removeEmptyFieldsFromStringArray(formData?.valuesPaths?.map((path: { path: string }) => path.path)),
           chartName: formData?.chartName,
           chartVersion: formData?.chartVersion,
           subChartName: formData?.subChartName,

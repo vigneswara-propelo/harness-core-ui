@@ -202,7 +202,11 @@ function CustomRemoteManifest({
           'manifest.spec.valuesPaths',
           typeof formData.valuesPaths === 'string'
             ? formData.valuesPaths
-            : defaultTo(formData.valuesPaths as Array<{ path: string }>, []).map((path: { path: string }) => path.path)
+            : removeEmptyFieldsFromStringArray(
+                defaultTo(formData.valuesPaths as Array<{ path: string }>, []).map(
+                  (path: { path: string }) => path.path
+                )
+              )
         )
       }
       if (showParamsPaths(selectedManifest as ManifestTypes)) {
@@ -211,7 +215,11 @@ function CustomRemoteManifest({
           'manifest.spec.paramsPaths',
           typeof formData.paramsPaths === 'string'
             ? formData.paramsPaths
-            : defaultTo(formData.paramsPaths as Array<{ path: string }>, []).map((path: { path: string }) => path.path)
+            : removeEmptyFieldsFromStringArray(
+                defaultTo(formData.paramsPaths as Array<{ path: string }>, []).map(
+                  (path: { path: string }) => path.path
+                )
+              )
         )
       }
       handleCommandFlagsSubmitData(manifestObj, formData)

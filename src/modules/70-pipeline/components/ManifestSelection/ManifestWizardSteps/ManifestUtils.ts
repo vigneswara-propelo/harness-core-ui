@@ -100,8 +100,13 @@ export const handleCommandFlagsSubmitData = (
   }
 }
 
-export const removeEmptyFieldsFromStringArray = (inputArray: string[] | undefined): string[] | undefined => {
-  return inputArray?.filter((path: string) => !!path)
+export const removeEmptyFieldsFromStringArray = (
+  inputArray: string[] | undefined,
+  defaultValue?: boolean
+): string[] | undefined => {
+  const filteredValue = inputArray?.filter((path: string) => !!path)
+
+  return isEmpty(filteredValue) && defaultValue ? [''] : filteredValue
 }
 
 export const getConnectorPath = (type: string, data: any): string => {

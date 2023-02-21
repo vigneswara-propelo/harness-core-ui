@@ -81,7 +81,7 @@ function HelmAdvancedStepSection({
       [helmVersion]: commandFlags?.data?.map(commandFlag => ({ label: commandFlag, value: commandFlag }))
     }
     setCommandFlagOptions(commandFlagSelectOption as Record<string, SelectOption[]>)
-  }, [commandFlags?.data])
+  }, [commandFlags?.data, helmVersion])
 
   const commandFlagLabel = (): React.ReactElement => {
     return (
@@ -201,16 +201,14 @@ function HelmAdvancedStepSection({
                             />
                           </MultiTypeFieldSelector>
 
-                          {index !== 0 && (
-                            <Button
-                              minimal
-                              icon="main-trash"
-                              className={cx({
-                                [helmcss.delBtn]: index === 0
-                              })}
-                              onClick={() => remove(index)}
-                            />
-                          )}
+                          <Button
+                            minimal
+                            icon="main-trash"
+                            className={cx({
+                              [helmcss.delBtn]: index === 0
+                            })}
+                            onClick={() => remove(index)}
+                          />
                         </Layout.Horizontal>
                       </div>
                     </Layout.Horizontal>

@@ -43,7 +43,7 @@ import type {
   ManifestTypes
 } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
-import { handleCommandFlagsSubmitData } from '../ManifestUtils'
+import { handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 
@@ -91,7 +91,8 @@ function HelmWithHarnessStore({
         ...specValues,
         identifier: initialValues.identifier,
         helmVersion: initialValues.spec?.helmVersion,
-        valuesPaths,
+        valuesPaths:
+          typeof valuesPaths === 'string' ? valuesPaths : removeEmptyFieldsFromStringArray(valuesPaths, true),
         skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
         enableDeclarativeRollback: get(initialValues, 'spec.enableDeclarativeRollback'),
         commandFlags: initialValues.spec?.commandFlags?.map((commandFlag: { commandType: string; flag: string }) => ({
@@ -125,7 +126,11 @@ function HelmWithHarnessStore({
                 files: formData.files
               }
             },
-            valuesPaths: formData.valuesPaths,
+            valuesPaths:
+              typeof formData?.valuesPaths === 'string'
+                ? formData?.valuesPaths
+                : removeEmptyFieldsFromStringArray(formData.valuesPaths),
+            // formData.valuesPaths,
             helmVersion: formData?.helmVersion,
             skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
               formData?.skipResourceVersioning,
