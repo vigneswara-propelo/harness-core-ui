@@ -171,6 +171,49 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_CURRENCYPREFERENCE, {
   }
 })
 
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_CLOUD_ASSET_GOVERNANCE_RULE, {
+  icon: 'ccm-solid',
+  label: 'ce.governance.rules',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_CLOUD_ASSET_GOVERNANCE_RULE]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_CCM_CLOUD_ASSET_GOVERNANCE_RULE]: (
+      <LocaleString stringID="rbac.permissionLabels.createEdit" />
+    ),
+    [PermissionIdentifier.DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE]: <LocaleString stringID="delete" />
+  }
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET, {
+  icon: 'ccm-solid',
+  label: 'ce.governance.ruleSets',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET]: (
+      <LocaleString stringID="rbac.permissionLabels.view" />
+    ),
+    [PermissionIdentifier.EDIT_CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET]: (
+      <LocaleString stringID="rbac.permissionLabels.createEdit" />
+    ),
+    [PermissionIdentifier.DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET]: <LocaleString stringID="delete" />
+  }
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT, {
+  icon: 'ccm-solid',
+  label: 'ce.governance.enforcements',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT]: (
+      <LocaleString stringID="rbac.permissionLabels.view" />
+    ),
+    [PermissionIdentifier.EDIT_CCM_CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT]: (
+      <LocaleString stringID="rbac.permissionLabels.createEdit" />
+    ),
+    [PermissionIdentifier.DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT]: <LocaleString stringID="delete" />
+  }
+})
+
 featureFactory.registerFeaturesByModule('ce', {
   features: [FeatureIdentifier.PERSPECTIVES],
   renderMessage: (_, getString, additionalLicenseProps, usageAndLimitInfo) => {
