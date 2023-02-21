@@ -1321,6 +1321,7 @@ export interface StringsMap {
   'rbac.permissionLabels.manage': string
   'rbac.permissionLabels.pipelineExecution': string
   'rbac.permissionLabels.view': string
+  'rbac.permissionOn': string
   'rbac.planEnforcement.ff.teamEnterprisePlan.approachingLimit': string
   'rbac.planEnforcement.ff.teamEnterprisePlan.upgradeRequired': string
   'rbac.project': string
@@ -1417,6 +1418,7 @@ export interface StringsMap {
   'rbac.unableToEditInheritedMembership': string
   'rbac.unableToEditInheritedMembershipDetailed': string
   'rbac.unableToEditSCIMMembership': string
+  'rbac.unauthorizedText': string
   'rbac.updateNotificationSuccess': string
   'rbac.userDetails.errorFetchingOrgs': string
   'rbac.userDetails.groupMemberships': string
