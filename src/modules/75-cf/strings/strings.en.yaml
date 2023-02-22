@@ -691,32 +691,42 @@ onboarding:
           <title>Feature Flags</title>
         </head>
         <body>
-          <script type="module">
+          <p>The value of flag "{{flagIdentifier}}" is: <pre>...</pre></p>
 
+          <script type="module">
             import {
               initialize,
-              Event as SDKEvent,
-            } from "https://unpkg.com/@harnessio/ff-javascript-client-sdk@1.4.14/dist/sdk.client.js";
+              Event as SDKEvent
+            } from 'https://unpkg.com/@harnessio/ff-javascript-client-sdk/dist/sdk.client.js'
 
             const target = {
-              identifier: "MyTargetID",
-              name: "MyTargetName",
-            };
+              identifier: 'MyTargetID',
+              name: 'MyTargetName'
+            }
 
-            const client = initialize("{{apiKey}}", target);
+            const client = initialize('{{apiKey}}', target)
 
             // Listen for events
-
             // Event happens when connection to server is established
             client.on(SDKEvent.READY, (flags) => {
-              console.log("READY", flags);
-            });
+              console.log('READY', flags)
+
+              // update the value on screen every 5 seconds
+              const updateValue = () => {
+                document.querySelector('pre').innerText = JSON.stringify(
+                  client.variation('{{flagIdentifier}}', 'DEFAULT')
+                )
+
+                setTimeout(updateValue, 5000)
+              }
+
+              updateValue()
+            })
 
             // Event happens when a changed event is pushed
             client.on(SDKEvent.CHANGED, (changeInfo) => {
-              console.log("CHANGED", changeInfo);
-            });
-            
+              console.log('CHANGED', changeInfo)
+            })
           </script>
         </body>
       </html>
