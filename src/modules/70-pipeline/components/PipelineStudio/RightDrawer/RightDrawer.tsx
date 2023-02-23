@@ -769,11 +769,11 @@ export function RightDrawer(): React.ReactElement {
 
   const { onSearchInputChange } = usePipelineVariables()
 
-  const getStepNameSuffix = (stepType: string, stepName: string, isProvisioner: boolean): string => {
+  const getStepNameSuffix = (stepType: string, isProvisioner: boolean): string => {
     let maxId = 0
     const suffixNameArray: string[] = []
     const stepsMap = data?.paletteData?.stepsMap
-    const _stepName = stepName.split(' ').join('')
+    const _stepName = stepType.split(' ').join('')
     stepsMap?.forEach((_value, key: string) => {
       const stepDetails = getStepFromId(
         isProvisioner
@@ -808,7 +808,7 @@ export function RightDrawer(): React.ReactElement {
 
   const onStepSelection = async (item: StepData): Promise<void> => {
     const paletteData = data?.paletteData
-    const suffixString = getStepNameSuffix(item.type, item.name, false)
+    const suffixString = getStepNameSuffix(item.type, false)
     const stepName = `${item.name}${suffixString}`
     if (paletteData?.entity) {
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(defaultTo(selectedStageId, '')))
@@ -1109,7 +1109,7 @@ export function RightDrawer(): React.ReactElement {
             const paletteData = data.paletteData
             if (paletteData?.entity) {
               const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
-              const suffixString = getStepNameSuffix(item.type, item.name, true)
+              const suffixString = getStepNameSuffix(item.type, true)
               const stepName = `${item.name}${suffixString}`
               const newStepData = {
                 step: {
