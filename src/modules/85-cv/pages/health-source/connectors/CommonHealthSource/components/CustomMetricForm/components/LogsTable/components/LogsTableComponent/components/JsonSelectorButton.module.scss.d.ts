@@ -7,10 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly inputText: string
   readonly jsonSelectorButton: string
-  readonly logsTableJsonDrawer: string
-  readonly noRecords: string
-  readonly placeholder: string
 }
 export default styles
