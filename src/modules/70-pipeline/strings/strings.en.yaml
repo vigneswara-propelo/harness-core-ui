@@ -95,6 +95,9 @@ utilitiesStep:
 terraformStep:
   provisionerIdentifier: Enter Provisioner Identifier
   workspace: Enter Workspace
+  messageLabel: Run Message
+  messagePlaceholder: Enter Message
+  discardPendingRuns: Discard Pending Runs
 kubernetesStep:
   workload: Enter Workload
 waitStep:

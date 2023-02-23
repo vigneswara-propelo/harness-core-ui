@@ -4625,6 +4625,9 @@ export interface StringsMap {
   'pipeline.targets.title': string
   'pipeline.templateInputs': string
   'pipeline.templateSaved': string
+  'pipeline.terraformStep.discardPendingRuns': string
+  'pipeline.terraformStep.messageLabel': string
+  'pipeline.terraformStep.messagePlaceholder': string
   'pipeline.terraformStep.provisionerIdentifier': string
   'pipeline.terraformStep.workspace': string
   'pipeline.testsReports.callgraphField.class': string

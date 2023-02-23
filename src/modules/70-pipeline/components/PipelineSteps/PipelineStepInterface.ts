@@ -177,7 +177,8 @@ export enum StepType {
   Mend = 'Mend',
   AsgBlueGreenRollback = 'AsgBlueGreenRollback',
   AsgBlueGreenSwapService = 'AsgBlueGreenSwapService',
-  AsgBlueGreenDeploy = 'AsgBlueGreenDeploy'
+  AsgBlueGreenDeploy = 'AsgBlueGreenDeploy',
+  TerraformCloudRollback = 'TerraformCloudRollback'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

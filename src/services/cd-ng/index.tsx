@@ -434,6 +434,7 @@ export interface Account {
   createdAt?: number
   createdBy?: EmbeddedUser
   createdFromNG?: boolean
+  crossGenerationAccessEnabled?: boolean
   dataRetentionDurationMs?: number
   defaultExperience?: 'NG' | 'CG'
   defaults?: {
@@ -474,6 +475,7 @@ export interface AccountDTO {
   cluster?: string
   companyName?: string
   createdAt?: number
+  crossGenerationAccessEnabled?: boolean
   defaultExperience?: 'NG' | 'CG'
   identifier?: string
   name?: string
@@ -3853,6 +3855,7 @@ export interface EntityDetail {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -5402,6 +5405,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'SHELL_SCRIPT_PROVISION'
     | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
+    | 'TERRAFORM_CLOUD_ROLLBACK'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5491,6 +5495,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'SHELL_SCRIPT_PROVISION'
     | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
+    | 'TERRAFORM_CLOUD_ROLLBACK'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5596,6 +5601,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'SHELL_SCRIPT_PROVISION'
     | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
+    | 'TERRAFORM_CLOUD_ROLLBACK'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5709,6 +5715,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'SHELL_SCRIPT_PROVISION'
     | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
+    | 'TERRAFORM_CLOUD_ROLLBACK'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -6373,6 +6380,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -6586,6 +6594,7 @@ export interface GitEntityFilterProperties {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -6876,6 +6885,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -7083,6 +7093,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -7411,6 +7422,7 @@ export interface GitSyncEntityDTO {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -7612,6 +7624,7 @@ export interface GitSyncEntityListDTO {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -7830,6 +7843,7 @@ export interface GitSyncErrorDTO {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -8963,10 +8977,10 @@ export interface JiraAuthenticationDTO {
 }
 
 export type JiraConnector = ConnectorConfigDTO & {
-  auth?: JiraAuthenticationDTO
+  auth: JiraAuthenticationDTO
   delegateSelectors?: string[]
   jiraUrl: string
-  passwordRef: string
+  passwordRef?: string
   username?: string
   usernameRef?: string
 }
@@ -11260,6 +11274,7 @@ export interface ReferencedByDTO {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -12557,6 +12572,7 @@ export interface ResponseListEntityType {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -15794,6 +15810,7 @@ export interface StepData {
     | 'RollbackStack'
     | 'SHELL_SCRIPT_PROVISIONER'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'JIRA'
     | 'SERVICENOW'
     | 'EMAIL'
@@ -16472,6 +16489,13 @@ export type TerraformCloudRefreshSpec = TerraformCloudRunExecutionSpec & {
   organization: string
   variables?: NGVariable[]
   workspace: string
+}
+
+export type TerraformCloudRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  discardPendingRuns?: boolean
+  message?: string
+  provisionerIdentifier: string
 }
 
 export interface TerraformCloudRunExecutionSpec {
@@ -17765,6 +17789,99 @@ export const getAccountNGPromise = (
     signal
   )
 
+export interface UpdateAccountCrossGenerationAccessEnabledNGPathParams {
+  accountIdentifier: string
+}
+
+export type UpdateAccountCrossGenerationAccessEnabledNGProps = Omit<
+  MutateProps<
+    ResponseAccountDTO,
+    Failure | Error,
+    void,
+    AccountDTORequestBody,
+    UpdateAccountCrossGenerationAccessEnabledNGPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateAccountCrossGenerationAccessEnabledNGPathParams
+
+/**
+ * Update Cross Generation Access Enabled
+ */
+export const UpdateAccountCrossGenerationAccessEnabledNG = ({
+  accountIdentifier,
+  ...props
+}: UpdateAccountCrossGenerationAccessEnabledNGProps) => (
+  <Mutate<
+    ResponseAccountDTO,
+    Failure | Error,
+    void,
+    AccountDTORequestBody,
+    UpdateAccountCrossGenerationAccessEnabledNGPathParams
+  >
+    verb="PUT"
+    path={`/accounts/${accountIdentifier}/cross-generation-access`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateAccountCrossGenerationAccessEnabledNGProps = Omit<
+  UseMutateProps<
+    ResponseAccountDTO,
+    Failure | Error,
+    void,
+    AccountDTORequestBody,
+    UpdateAccountCrossGenerationAccessEnabledNGPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateAccountCrossGenerationAccessEnabledNGPathParams
+
+/**
+ * Update Cross Generation Access Enabled
+ */
+export const useUpdateAccountCrossGenerationAccessEnabledNG = ({
+  accountIdentifier,
+  ...props
+}: UseUpdateAccountCrossGenerationAccessEnabledNGProps) =>
+  useMutate<
+    ResponseAccountDTO,
+    Failure | Error,
+    void,
+    AccountDTORequestBody,
+    UpdateAccountCrossGenerationAccessEnabledNGPathParams
+  >(
+    'PUT',
+    (paramsInPath: UpdateAccountCrossGenerationAccessEnabledNGPathParams) =>
+      `/accounts/${paramsInPath.accountIdentifier}/cross-generation-access`,
+    { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * Update Cross Generation Access Enabled
+ */
+export const updateAccountCrossGenerationAccessEnabledNGPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseAccountDTO,
+    Failure | Error,
+    void,
+    AccountDTORequestBody,
+    UpdateAccountCrossGenerationAccessEnabledNGPathParams
+  > & { accountIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseAccountDTO,
+    Failure | Error,
+    void,
+    AccountDTORequestBody,
+    UpdateAccountCrossGenerationAccessEnabledNGPathParams
+  >('PUT', getConfig('ng/api'), `/accounts/${accountIdentifier}/cross-generation-access`, props, signal)
+
 export interface UpdateAccountDefaultExperienceNGPathParams {
   accountIdentifier: string
 }
@@ -18168,6 +18285,7 @@ export interface ListActivitiesQueryParams {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -18361,6 +18479,7 @@ export interface ListActivitiesQueryParams {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -18658,6 +18777,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -18851,6 +18971,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -34446,6 +34567,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'SHELL_SCRIPT_PROVISION'
     | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
+    | 'TERRAFORM_CLOUD_ROLLBACK'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -34605,6 +34727,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'SHELL_SCRIPT_PROVISION'
       | 'K8S_DRY_RUN'
       | 'TERRAFORM_CLOUD_RUN'
+      | 'TERRAFORM_CLOUD_ROLLBACK'
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
@@ -34826,6 +34949,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -35080,6 +35204,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -38399,6 +38524,7 @@ export interface GetReferencedByQueryParams {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -41009,6 +41135,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -41270,6 +41397,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'AsgBlueGreenDeploy'
       | 'AsgBlueGreenRollback'
       | 'TerraformCloudRun'
+      | 'TerraformCloudRollback'
       | 'DeployCloudFunction'
       | 'DeployCloudFunctionWithNoTraffic'
       | 'CloudFunctionTrafficShift'
@@ -47287,6 +47415,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -47608,6 +47737,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -61386,6 +61516,7 @@ export interface GetYamlSchemaQueryParams {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
