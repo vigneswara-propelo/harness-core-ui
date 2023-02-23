@@ -275,7 +275,7 @@ export function Nexus2Artifact({
       : !checkIfQueryParamsisNotEmpty([
           formikValue.repositoryFormat,
           formikValue.repository,
-          formikValue.spec.packageName
+          formikValue?.spec?.packageName
         ])
   }, [])
 
