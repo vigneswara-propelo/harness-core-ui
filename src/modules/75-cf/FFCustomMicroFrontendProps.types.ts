@@ -27,42 +27,44 @@ import type { Description } from '@common/components/NameIdDescriptionTags/NameI
 import type { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { getIdentifierFromName } from '@common/utils/StringUtils'
+import type { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import type * as trackingConstants from '@common/constants/TrackingConstants'
 import type useActiveEnvironment from './hooks/useActiveEnvironment'
 
 export interface FFCustomMicroFrontendProps {
   ffServices: typeof ffServices & {
-    useCDGetEnvironment: typeof useGetEnvironment
-    useCDGetEnvironmentListForProject: typeof useGetEnvironmentListForProject
     useCDCreateEnvironment: typeof useCreateEnvironment
     useCDDeleteEnvironment: typeof useDeleteEnvironmentV2
+    useCDGetEnvironment: typeof useGetEnvironment
+    useCDGetEnvironmentListForProject: typeof useGetEnvironmentListForProject
   }
   customHooks: {
+    useActiveEnvironment: typeof useActiveEnvironment
     useConfirmAction: typeof useConfirmAction
+    useLicenseStore: typeof useLicenseStore
     useQueryParams: typeof useQueryParams
     useQueryParamsState: typeof useQueryParamsState
-    useLicenseStore: typeof useLicenseStore
-    useSyncedEnvironment: typeof useSyncedEnvironment
-    useActiveEnvironment: typeof useActiveEnvironment
     usePreferenceStore: typeof usePreferenceStore
+    useSyncedEnvironment: typeof useSyncedEnvironment
   }
   customComponents: {
     ContainerSpinner: typeof ContainerSpinner
     Description: typeof Description
     EvaluationModal: typeof EvaluationModal
     FeatureWarningTooltip: typeof FeatureWarningTooltip
+    GitSyncForm: typeof GitSyncForm
     RbacOptionsMenuButton: typeof RbacOptionsMenuButton
     RBACTooltip: typeof RBACTooltip
   }
   customRoutes: typeof routes
   customUtils: {
+    getIdentifierFromName: typeof getIdentifierFromName
     IdentifierSchema: typeof IdentifierSchema
     NameSchema: typeof NameSchema
-    getIdentifierFromName: typeof getIdentifierFromName
   }
   customEnums: {
     FeatureIdentifier: typeof FeatureIdentifier
-    trackingConstants: typeof trackingConstants
     PreferenceScope: typeof PreferenceScope
+    trackingConstants: typeof trackingConstants
   }
 }

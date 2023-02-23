@@ -31,6 +31,7 @@ import routes from '@common/RouteDefinitions'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
+import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import * as trackingConstants from '@common/constants/TrackingConstants'
 
 // eslint-disable-next-line import/no-unresolved
@@ -41,14 +42,14 @@ const FFUIApp: FC = () => (
     ChildApp={FFUIMFEApp}
     ffServices={{
       ...ffServices,
-      useCDGetEnvironmentListForProject,
-      useCDGetEnvironment,
+      useCDCreateEnvironment,
       useCDDeleteEnvironment,
-      useCDCreateEnvironment
+      useCDGetEnvironment,
+      useCDGetEnvironmentListForProject
     }}
     customHooks={{
-      useConfirmAction,
       useActiveEnvironment,
+      useConfirmAction,
       useLicenseStore,
       useQueryParams,
       useQueryParamsState,
@@ -60,6 +61,7 @@ const FFUIApp: FC = () => (
       Description,
       EvaluationModal,
       FeatureWarningTooltip,
+      GitSyncForm,
       RbacOptionsMenuButton,
       RBACTooltip
     }}
