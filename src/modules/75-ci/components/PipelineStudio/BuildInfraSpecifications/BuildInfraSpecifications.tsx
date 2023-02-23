@@ -1250,15 +1250,6 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             value: OsTypes.Windows
           })
         break
-      case CIBuildInfrastructureType.Docker:
-        buildInfraSelectOptions = [
-          { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
-          {
-            label: getString('pipeline.infraSpecifications.osTypes.macos'),
-            value: OsTypes.MacOS
-          }
-        ]
-        break
       default:
         buildInfraSelectOptions = [
           { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
