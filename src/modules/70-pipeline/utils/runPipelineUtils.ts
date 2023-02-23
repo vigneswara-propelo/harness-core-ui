@@ -35,6 +35,15 @@ export function walkObjectRecursively(
   path: string[] = []
 ): void {
   if (typeof obj === 'object' && obj !== null) {
+    // if we have both default key and <+input>.default() then use the later else use default provided as key
+    if (
+      get(obj, 'default') &&
+      get(obj, 'value')?.startsWith(RUNTIME_INPUT_VALUE) &&
+      !get(obj, 'value')?.includes('default')
+    ) {
+      set(obj, 'value', get(obj, 'default'))
+    }
+
     Object.entries(obj).forEach(([key, value]) => {
       callback(key, value, [...path, key])
       walkObjectRecursively(value, callback, [...path, key])
