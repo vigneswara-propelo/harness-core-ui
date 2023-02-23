@@ -170,21 +170,18 @@ export const getCodebaseRepoNameFromConnector = (codebaseConnector: ConnectorInf
   return repoName
 }
 
+const GIT_REPO_URL_REGEX = /(http|https|git|ssh)(:\/\/|@)([^/:]+(:d+)?)[/:](vd\/)?([^/:]+)\/(.+)?(.git)?/gm
+
 export const extractRepoNameFromUrl = (repoURL: string): string => {
-  if (!repoURL) {
+  if (!repoURL || !repoURL.match(GIT_REPO_URL_REGEX)) {
     return ''
   }
-  if (!repoURL.includes('://')) {
-    // proper git repo url should have a protocol
-    return ''
-  }
-  const repoURLWithoutProtocol = repoURL.split('://')[1] // remove (git://) / (https://) / (ssh://) from git repo url
-  if (repoURLWithoutProtocol.includes('/')) {
-    // remaining url should have a namespace/project and actual repo name, separated by a '/'
-    // some git providers can have other metadata in the middle as well, but the last token has to be repo name for a valid git repo url
-    const tokens = repoURLWithoutProtocol.split('/')
+  if (repoURL.includes('/')) {
+    // A valid git repo url should have a protocol, a namespace/project and actual repo name, all separated by '/'.
+    // Some git providers can have other metadata in the middle as well, but the last token has to be repo name if it matches above regex
+    const tokens = repoURL.split('/')
     const repoName = tokens.length > 0 ? tokens[tokens.length - 1] : ''
-    return repoName.endsWith('.git') ? repoName.replace('.git', '') : repoName
+    return repoName.endsWith(GIT_EXTENSION) ? repoName.replace(GIT_EXTENSION, '') : repoName
   }
   return ''
 }

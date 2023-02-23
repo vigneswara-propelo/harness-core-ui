@@ -117,14 +117,18 @@ describe('Test CIUtils', () => {
   })
 
   test('Test extractRepoNameFromUrl method', () => {
+    // Invalid urls
     expect(extractRepoNameFromUrl('https://github.com')).toBe('')
-    expect(extractRepoNameFromUrl('https://github.com/springboot.git')).toBe('springboot')
+    expect(extractRepoNameFromUrl('https://github.com/springboot.git')).toBe('')
     // SaaS
     expect(extractRepoNameFromUrl('https://github.com/harness/springboot')).toBe('springboot')
-    // SaaS
-    expect(extractRepoNameFromUrl('https://github.com/harness/springboot')).toBe('springboot')
+    expect(extractRepoNameFromUrl('http://github.com/harness/springboot')).toBe('springboot')
     expect(extractRepoNameFromUrl('https://github.com/harness/springboot.git')).toBe('springboot')
     expect(extractRepoNameFromUrl('https://gitlab.com/autouser1/springboot.git')).toBe('springboot')
+    expect(extractRepoNameFromUrl('https://gitlab.com/autouser1/springboot.git')).toBe('springboot')
+    expect(extractRepoNameFromUrl('git@github.com:harness/springboot.git')).toBe('springboot')
+    expect(extractRepoNameFromUrl('git@gitlab.com:autouser1/springboot.git')).toBe('springboot')
+    expect(extractRepoNameFromUrl('ssh://login@server.com:12345/springboot.git')).toBe('springboot')
     // Onprem
     expect(extractRepoNameFromUrl('https://bitbucket.dev.harness.io/scm/~harnessadmin/springboot.git')).toBe(
       'springboot'
