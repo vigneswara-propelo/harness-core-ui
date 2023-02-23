@@ -112,4 +112,28 @@ describe('RightDrawer test', () => {
     //By default name and id should be steptype_3
     cy.get('div[class*="InputWithIdentifier--idValue"]').contains('K8sDelete_3').should('be.visible')
   })
+
+  it('right drawer should be closed on clicking browser back button when stepId is present', () => {
+    // select pipeline
+    cy.get(`div[data-testid="pipeline-studio"]`, { timeout: 5000 }).should('be.visible')
+    cy.contains('p', 'testStage_Cypress').click({ force: true })
+    cy.contains('span', 'Execution').click()
+    addDeleteStep()
+    cy.contains('span', 'Apply Changes').click()
+
+    cy.contains('p', 'K8sDelete_1').click({ force: true })
+    cy.get('div[class="bp3-drawer-header"] span').contains('span', 'Discard').should('be.visible').click()
+
+    addDeleteStep()
+    cy.contains('span', 'Apply Changes').click()
+    cy.contains('p', 'K8sDelete_2').click({ force: true })
+
+    cy.go('back')
+    cy.url().should('not.contain', 'stepId')
+    cy.get('.bp3-drawer').should('not.be.visible')
+    cy.go('back')
+    cy.go('back')
+    cy.url().should('contain', 'stepId').and('contain', 'K8sDelete_1')
+    cy.get('.bp3-drawer').should('be.visible')
+  })
 })

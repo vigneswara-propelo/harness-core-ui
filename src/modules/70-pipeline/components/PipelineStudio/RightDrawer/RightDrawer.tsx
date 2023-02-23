@@ -40,6 +40,7 @@ import type { ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { usePrevious } from '@common/hooks/usePrevious'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -937,7 +938,8 @@ export function RightDrawer(): React.ReactElement {
     await updateNode(processNode, drawerType, isRollback)
   }
 
-  const onDiscard = (): void => {
+  const previousStepId = usePrevious(selectedStepId)
+  const onDiscard = React.useCallback((): void => {
     updatePipelineView({
       ...pipelineView,
       isDrawerOpened: false,
@@ -945,7 +947,13 @@ export function RightDrawer(): React.ReactElement {
         type: DrawerTypes.AddStep
       }
     })
-  }
+  }, [pipelineView, updatePipelineView])
+
+  React.useEffect(() => {
+    if (!selectedStepId && previousStepId) {
+      onDiscard()
+    }
+  }, [previousStepId, selectedStepId, onDiscard])
 
   const showHelpPanel = () => {
     setHelpPanel(!helpPanelVisible)
