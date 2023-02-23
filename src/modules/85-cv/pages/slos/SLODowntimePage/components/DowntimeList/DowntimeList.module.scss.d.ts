@@ -11,6 +11,7 @@ declare const styles: {
   readonly downtimeList: string
   readonly firstLine: string
   readonly msBox: string
+  readonly popover: string
   readonly secondLine: string
   readonly statusIcon: string
   readonly tooltip: string

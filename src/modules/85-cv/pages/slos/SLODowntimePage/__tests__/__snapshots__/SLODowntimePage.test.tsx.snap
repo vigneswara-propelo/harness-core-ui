@@ -455,12 +455,21 @@ exports[`DowntimeHistory page should render downtime history view and change fil
                         demo-env
                       </p>
                     </div>
-                    <div
-                      class="StyledProps--font StyledProps--main msBox StyledProps--padding-small StyledProps--margin-right-xlarge"
+                    <span
+                      class="bp3-popover-wrapper bp3-dark"
                     >
-                      +
-                      1
-                    </div>
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="StyledProps--font StyledProps--main msBox StyledProps--padding-small StyledProps--margin-right-xlarge"
+                          tabindex="0"
+                        >
+                          +
+                          1
+                        </div>
+                      </span>
+                    </span>
                   </div>
                 </div>
                 <div
@@ -1377,12 +1386,21 @@ exports[`SLO Downtime page should render downtime list view 1`] = `
                                 demo-env
                               </p>
                             </div>
-                            <div
-                              class="StyledProps--font StyledProps--main msBox StyledProps--padding-small StyledProps--margin-right-xlarge"
+                            <span
+                              class="bp3-popover-wrapper bp3-dark"
                             >
-                              +
-                              2
-                            </div>
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main msBox StyledProps--padding-small StyledProps--margin-right-xlarge"
+                                  tabindex="0"
+                                >
+                                  +
+                                  2
+                                </div>
+                              </span>
+                            </span>
                           </div>
                         </div>
                         <div
@@ -1599,12 +1617,21 @@ exports[`SLO Downtime page should render downtime list view 1`] = `
                                 datadog
                               </p>
                             </div>
-                            <div
-                              class="StyledProps--font StyledProps--main msBox StyledProps--padding-small StyledProps--margin-right-xlarge"
+                            <span
+                              class="bp3-popover-wrapper bp3-dark"
                             >
-                              +
-                              2
-                            </div>
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main msBox StyledProps--padding-small StyledProps--margin-right-xlarge"
+                                  tabindex="0"
+                                >
+                                  +
+                                  2
+                                </div>
+                              </span>
+                            </span>
                           </div>
                         </div>
                         <div

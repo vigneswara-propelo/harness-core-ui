@@ -54,3 +54,11 @@
     font-weight: 600;
   }
 }
+
+.popover {
+  min-width: 225px !important;
+
+  div:not(:first-child) {
+    margin-top: var(--spacing-small);
+  }
+}
