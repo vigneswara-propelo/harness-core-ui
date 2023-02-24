@@ -7,11 +7,10 @@
 
 import React from 'react'
 import { isEmpty } from 'lodash-es'
-import * as Yup from 'yup'
 import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'
-import { AllowedTypes, Formik, FormInput, getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
-import type { StepElementConfig, TerraformCloudRollbackStepInfo } from 'services/cd-ng'
+import { Formik, FormInput, getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import type { StepElementConfig } from 'services/cd-ng'
 import {
   setFormikRef,
   StepFormikFowardRef,
@@ -20,49 +19,29 @@ import {
 } from '@pipeline/components/AbstractSteps/Step'
 import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
+import type { StringsMap } from 'stringTypes'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { FormMultiTypeTextArea } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
-import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
-import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { FormMultiTypeCheckboxField, FormMultiTypeTextAreaField } from '@common/components'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { validateGenericFields } from '../Common/GenericExecutionStep/utils'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
+import {
+  getValidationSchema,
+  TerraformCloudRollbackData,
+  TerraformCloudRollbackProps,
+  TerraformCloudRollbackVariableStepProps
+} from './helper'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import css from './TerraformCloudRollbackStep.module.scss'
-
-export interface TerraformCloudRollbackData extends StepElementConfig {
-  spec: TerraformCloudRollbackStepInfo
-}
-
-export interface TerraformCloudRollbackVariableStepProps {
-  initialValues: TerraformCloudRollbackData
-  onUpdate?(data: TerraformCloudRollbackData): void
-  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: TerraformCloudRollbackData
-}
-
-interface TerraformCloudRollbackProps {
-  initialValues: TerraformCloudRollbackData
-  onUpdate?: (data: TerraformCloudRollbackData) => void
-  onChange?: (data: TerraformCloudRollbackData) => void
-  allowableTypes: AllowedTypes
-  stepViewType?: StepViewType
-  isNewStep?: boolean
-  template?: TerraformCloudRollbackData
-  readonly?: boolean
-  path?: string
-}
 
 function TerraformCloudRollbackWidget(
   props: TerraformCloudRollbackProps,
@@ -82,23 +61,7 @@ function TerraformCloudRollbackWidget(
         }}
         formName="terraformCloudRollback"
         initialValues={initialValues}
-        validationSchema={Yup.object().shape({
-          ...getNameAndIdentifierSchema(getString, stepViewType),
-          timeout: getDurationValidationSchema({ minimum: '10s' }).required(
-            getString('validation.timeout10SecMinimum')
-          ),
-          spec: Yup.object().shape({
-            provisionerIdentifier: Yup.lazy((value): Yup.Schema<unknown> => {
-              if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-                return IdentifierSchemaWithOutName(getString, {
-                  requiredErrorMsg: getString('common.validation.provisionerIdentifierIsRequired'),
-                  regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
-                })
-              }
-              return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
-            })
-          })
-        })}
+        validationSchema={getValidationSchema(getString, stepViewType)}
       >
         {(formik: FormikProps<TerraformCloudRollbackData>) => {
           const { values, setFieldValue } = formik
@@ -211,21 +174,22 @@ const TerraformCloudRollbackInputStep: React.FC<TerraformCloudRollbackProps> = (
   return (
     <>
       {isValueRuntimeInput(template?.timeout) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeDurationField
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}timeout`}
-            disabled={readonly}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}timeout`}
+          disabled={readonly}
+          fieldPath={'timeout'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
       {isValueRuntimeInput(template?.spec?.message) && (
         <FormMultiTypeTextArea
@@ -315,6 +279,7 @@ export class TerraformCloudRollback extends PipelineStep<any> {
   }
   protected stepIcon: IconName = 'terraform-cloud-rollback'
   protected stepName = 'Terraform Cloud Rollback'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.TerraformCloudRollback'
 
   validateInputSet({
     data,

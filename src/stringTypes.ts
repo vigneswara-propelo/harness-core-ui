@@ -4611,6 +4611,8 @@ export interface StringsMap {
   'pipeline.stepDescription.TanzuCommandScript': string
   'pipeline.stepDescription.TasRollback': string
   'pipeline.stepDescription.TerraformApply': string
+  'pipeline.stepDescription.TerraformCloudRollback': string
+  'pipeline.stepDescription.TerraformCloudRun': string
   'pipeline.stepDescription.TerraformDestroy': string
   'pipeline.stepDescription.TerraformPlan': string
   'pipeline.stepDescription.TerraformRollback': string
@@ -4634,7 +4636,14 @@ export interface StringsMap {
   'pipeline.terraformStep.messageLabel': string
   'pipeline.terraformStep.messagePlaceholder': string
   'pipeline.terraformStep.provisionerIdentifier': string
+  'pipeline.terraformStep.runTypeLabel': string
+  'pipeline.terraformStep.runTypePlaceholder': string
+  'pipeline.terraformStep.terraformVersion': string
+  'pipeline.terraformStep.terraformVersionPlaceholder': string
   'pipeline.terraformStep.workspace': string
+  'pipeline.terraformStep.workspaceError': string
+  'pipeline.terraformStep.workspaceName': string
+  'pipeline.terraformStep.workspacePlaceholder': string
   'pipeline.testsReports.callgraphField.class': string
   'pipeline.testsReports.callgraphField.file': string
   'pipeline.testsReports.callgraphField.method': string
