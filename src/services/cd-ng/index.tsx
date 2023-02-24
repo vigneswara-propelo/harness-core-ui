@@ -944,6 +944,7 @@ export interface ArtifactSource {
     | 'GithubPackageRegistry'
     | 'AzureArtifacts'
     | 'AmazonMachineImage'
+    | 'Bamboo'
     | 'GoogleCloudStorage'
     | 'GoogleCloudSource'
 }
@@ -965,6 +966,7 @@ export interface ArtifactSourceConfig {
     | 'GithubPackageRegistry'
     | 'AzureArtifacts'
     | 'AmazonMachineImage'
+    | 'Bamboo'
     | 'GoogleCloudStorage'
     | 'GoogleCloudSource'
 }
@@ -1827,6 +1829,63 @@ export type AzureWebAppTrafficShiftStepInfo = StepSpecType & {
   traffic: ParameterFieldString
 }
 
+export type BambooArtifactConfig = ArtifactConfig & {
+  artifactPath?: string[]
+  build?: string
+  connectorRef: string
+  planKey: string
+}
+
+export type BambooArtifactSummary = ArtifactSummary & {
+  build?: string
+  planKey?: string
+}
+
+export interface BambooAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface BambooAuthenticationDTO {
+  spec?: BambooAuthCredentialsDTO
+  type: 'UsernamePassword' | 'Anonymous' | 'Bearer Token(HTTP Header)'
+}
+
+export type BambooBuildStepInfo = StepSpecType & {
+  connectorRef: string
+  delegateSelectors?: string[]
+  metadata?: string
+  planName: string
+  planParameter?: BambooParameterField[]
+}
+
+export type BambooConnectorDTO = ConnectorConfigDTO & {
+  auth?: BambooAuthenticationDTO
+  bambooUrl: string
+  delegateSelectors?: string[]
+}
+
+export interface BambooParameterField {
+  metadata?: string
+  name?: string
+  type?: 'String' | 'Number'
+  value: string
+}
+
+export interface BambooPlanKeysDTO {
+  planKeys?: BambooPlanNames[]
+}
+
+export interface BambooPlanNames {
+  name?: string
+  value?: string
+}
+
+export type BambooUserNamePasswordDTO = BambooAuthCredentialsDTO & {
+  passwordRef: string
+  username?: string
+  usernameRef?: string
+}
+
 export interface BaseSSHSpecDTO {
   [key: string]: any
 }
@@ -2388,6 +2447,7 @@ export interface ConnectorCatalogueItem {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'Bamboo'
     | 'TerraformCloud'
   )[]
 }
@@ -2472,6 +2532,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'Bamboo'
     | 'TerraformCloud'
   )[]
 }
@@ -2532,6 +2593,7 @@ export interface ConnectorInfoDTO {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'Bamboo'
     | 'TerraformCloud'
 }
 
@@ -2609,6 +2671,7 @@ export interface ConnectorTypeStatistics {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'Bamboo'
     | 'TerraformCloud'
 }
 
@@ -3860,6 +3923,7 @@ export interface EntityDetail {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
 }
 
@@ -6385,6 +6449,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   )[]
   moduleType?:
@@ -6599,6 +6664,7 @@ export interface GitEntityFilterProperties {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   )[]
   gitSyncConfigIdentifiers?: string[]
@@ -6890,6 +6956,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   errorMessage?: string
   filePath?: string
@@ -7098,6 +7165,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
@@ -7427,6 +7495,7 @@ export interface GitSyncEntityDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   entityUrl?: string
   folderPath?: string
@@ -7629,6 +7698,7 @@ export interface GitSyncEntityListDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
@@ -7848,6 +7918,7 @@ export interface GitSyncErrorDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
@@ -9791,12 +9862,6 @@ export interface NGTag {
   value: string
 }
 
-export type NGTemplateReference = EntityReference & {
-  isDefault?: boolean
-  scope?: 'account' | 'org' | 'project' | 'unknown'
-  versionLabel?: string
-}
-
 export interface NGVariable {
   description?: string
   metadata?: string
@@ -10959,6 +11024,7 @@ export interface PrimaryArtifact {
     | 'GithubPackageRegistry'
     | 'AzureArtifacts'
     | 'AmazonMachineImage'
+    | 'Bamboo'
     | 'GoogleCloudStorage'
     | 'GoogleCloudSource'
 }
@@ -11279,6 +11345,7 @@ export interface ReferencedByDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
 }
 
@@ -11620,6 +11687,13 @@ export interface ResponseAzureTagsDTO {
 export interface ResponseAzureWebAppNamesDTO {
   correlationId?: string
   data?: AzureWebAppNamesDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseBambooPlanKeysDTO {
+  correlationId?: string
+  data?: BambooPlanKeysDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -12577,6 +12651,7 @@ export interface ResponseListEntityType {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   )[]
   metaData?: { [key: string]: any }
@@ -15556,6 +15631,7 @@ export interface SidecarArtifact {
     | 'GithubPackageRegistry'
     | 'AzureArtifacts'
     | 'AmazonMachineImage'
+    | 'Bamboo'
     | 'GoogleCloudStorage'
     | 'GoogleCloudSource'
 }
@@ -15864,6 +15940,7 @@ export interface StepData {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
 }
 
@@ -18290,6 +18367,7 @@ export interface ListActivitiesQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   referredByEntityType?:
     | 'CreatePR'
@@ -18484,6 +18562,7 @@ export interface ListActivitiesQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
 }
 
@@ -18782,6 +18861,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   referredByEntityType?:
     | 'CreatePR'
@@ -18976,6 +19056,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
 }
 
@@ -22676,6 +22757,239 @@ export const listVersionsFromPackagePromise = (
   getUsingFetch<ResponseListBuildDetails, Failure | Error, ListVersionsFromPackageQueryParams, void>(
     getConfig('ng/api'),
     `/artifacts/azureartifacts/versions`,
+    props,
+    signal
+  )
+
+export interface GetBuildsForBambooQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  artifactPath?: string[]
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  fqnPath?: string
+  serviceId?: string
+}
+
+export interface GetBuildsForBambooPathParams {
+  planName: string
+}
+
+export type GetBuildsForBambooProps = Omit<
+  GetProps<ResponseListBuildDetails, Failure | Error, GetBuildsForBambooQueryParams, GetBuildsForBambooPathParams>,
+  'path'
+> &
+  GetBuildsForBambooPathParams
+
+/**
+ * Gets Builds details for Bamboo
+ */
+export const GetBuildsForBamboo = ({ planName, ...props }: GetBuildsForBambooProps) => (
+  <Get<ResponseListBuildDetails, Failure | Error, GetBuildsForBambooQueryParams, GetBuildsForBambooPathParams>
+    path={`/artifacts/bamboo/plan/${planName}/builds`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetBuildsForBambooProps = Omit<
+  UseGetProps<ResponseListBuildDetails, Failure | Error, GetBuildsForBambooQueryParams, GetBuildsForBambooPathParams>,
+  'path'
+> &
+  GetBuildsForBambooPathParams
+
+/**
+ * Gets Builds details for Bamboo
+ */
+export const useGetBuildsForBamboo = ({ planName, ...props }: UseGetBuildsForBambooProps) =>
+  useGet<ResponseListBuildDetails, Failure | Error, GetBuildsForBambooQueryParams, GetBuildsForBambooPathParams>(
+    (paramsInPath: GetBuildsForBambooPathParams) => `/artifacts/bamboo/plan/${paramsInPath.planName}/builds`,
+    { base: getConfig('ng/api'), pathParams: { planName }, ...props }
+  )
+
+/**
+ * Gets Builds details for Bamboo
+ */
+export const getBuildsForBambooPromise = (
+  {
+    planName,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForBambooQueryParams,
+    GetBuildsForBambooPathParams
+  > & { planName: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListBuildDetails, Failure | Error, GetBuildsForBambooQueryParams, GetBuildsForBambooPathParams>(
+    getConfig('ng/api'),
+    `/artifacts/bamboo/plan/${planName}/builds`,
+    props,
+    signal
+  )
+
+export interface GetArtifactPathsForBambooQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  fqnPath?: string
+  serviceId?: string
+}
+
+export interface GetArtifactPathsForBambooPathParams {
+  planName: string
+}
+
+export type GetArtifactPathsForBambooProps = Omit<
+  GetProps<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathsForBambooQueryParams,
+    GetArtifactPathsForBambooPathParams
+  >,
+  'path'
+> &
+  GetArtifactPathsForBambooPathParams
+
+/**
+ * Get Artifact Paths for Bamboo
+ */
+export const GetArtifactPathsForBamboo = ({ planName, ...props }: GetArtifactPathsForBambooProps) => (
+  <Get<ResponseListString, Failure | Error, GetArtifactPathsForBambooQueryParams, GetArtifactPathsForBambooPathParams>
+    path={`/artifacts/bamboo/plan/${planName}/paths`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetArtifactPathsForBambooProps = Omit<
+  UseGetProps<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathsForBambooQueryParams,
+    GetArtifactPathsForBambooPathParams
+  >,
+  'path'
+> &
+  GetArtifactPathsForBambooPathParams
+
+/**
+ * Get Artifact Paths for Bamboo
+ */
+export const useGetArtifactPathsForBamboo = ({ planName, ...props }: UseGetArtifactPathsForBambooProps) =>
+  useGet<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathsForBambooQueryParams,
+    GetArtifactPathsForBambooPathParams
+  >((paramsInPath: GetArtifactPathsForBambooPathParams) => `/artifacts/bamboo/plan/${paramsInPath.planName}/paths`, {
+    base: getConfig('ng/api'),
+    pathParams: { planName },
+    ...props
+  })
+
+/**
+ * Get Artifact Paths for Bamboo
+ */
+export const getArtifactPathsForBambooPromise = (
+  {
+    planName,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathsForBambooQueryParams,
+    GetArtifactPathsForBambooPathParams
+  > & { planName: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathsForBambooQueryParams,
+    GetArtifactPathsForBambooPathParams
+  >(getConfig('ng/api'), `/artifacts/bamboo/plan/${planName}/paths`, props, signal)
+
+export interface GetPlansKeyQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  fqnPath?: string
+  serviceId?: string
+}
+
+export type GetPlansKeyProps = Omit<
+  GetProps<ResponseBambooPlanKeysDTO, Failure | Error, GetPlansKeyQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Plan Keys for Bamboo
+ */
+export const GetPlansKey = (props: GetPlansKeyProps) => (
+  <Get<ResponseBambooPlanKeysDTO, Failure | Error, GetPlansKeyQueryParams, void>
+    path={`/artifacts/bamboo/plans`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetPlansKeyProps = Omit<
+  UseGetProps<ResponseBambooPlanKeysDTO, Failure | Error, GetPlansKeyQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Plan Keys for Bamboo
+ */
+export const useGetPlansKey = (props: UseGetPlansKeyProps) =>
+  useGet<ResponseBambooPlanKeysDTO, Failure | Error, GetPlansKeyQueryParams, void>(`/artifacts/bamboo/plans`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Gets Plan Keys for Bamboo
+ */
+export const getPlansKeyPromise = (
+  props: GetUsingFetchProps<ResponseBambooPlanKeysDTO, Failure | Error, GetPlansKeyQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseBambooPlanKeysDTO, Failure | Error, GetPlansKeyQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/bamboo/plans`,
     props,
     signal
   )
@@ -29351,6 +29665,7 @@ export interface GetConnectorListQueryParams {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'Bamboo'
     | 'TerraformCloud'
   category?:
     | 'CLOUD_PROVIDER'
@@ -29754,6 +30069,7 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'Bamboo'
     | 'TerraformCloud'
 }
 
@@ -34954,6 +35270,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   searchTerm?: string
   branch?: string
@@ -35209,6 +35526,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   searchTerm?: string
 }
@@ -38529,6 +38847,7 @@ export interface GetReferencedByQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   searchTerm?: string
 }
@@ -41140,6 +41459,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
 }
 
@@ -41402,6 +41722,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'DeployCloudFunctionWithNoTraffic'
       | 'CloudFunctionTrafficShift'
       | 'CloudFunctionRollback'
+      | 'BambooBuild'
       | 'AwsLambdaDeploy'
   },
   signal?: RequestInit['signal']
@@ -47420,6 +47741,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   yamlGroup?: string
 }
@@ -47742,6 +48064,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
 }
 
@@ -61521,6 +61844,7 @@ export interface GetYamlSchemaQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'BambooBuild'
     | 'AwsLambdaDeploy'
   subtype?:
     | 'K8sCluster'
@@ -61568,6 +61892,7 @@ export interface GetYamlSchemaQueryParams {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'Bamboo'
     | 'TerraformCloud'
   projectIdentifier?: string
   orgIdentifier?: string
