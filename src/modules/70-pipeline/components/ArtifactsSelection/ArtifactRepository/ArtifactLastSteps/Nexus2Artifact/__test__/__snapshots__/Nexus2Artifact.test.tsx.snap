@@ -594,7 +594,7 @@ exports[`Nexus Artifact tests able to submit form when the form is non empty 1`]
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus2-tag"
                   >
                     tagLabel
                   </span>
@@ -2246,7 +2246,7 @@ exports[`Nexus Artifact tests render form correctly when repositoryFormat is Mav
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus2-tag"
                   >
                     tagLabel
                   </span>
@@ -2845,7 +2845,7 @@ exports[`Nexus Artifact tests render form correctly when repositoryFormat is NPM
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus2-tag"
                   >
                     tagLabel
                   </span>
@@ -3444,7 +3444,7 @@ exports[`Nexus Artifact tests render form correctly when repositoryFormat is NuG
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus2-tag"
                   >
                     tagLabel
                   </span>
@@ -4716,7 +4716,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus2-tag"
                   >
                     tagLabel
                   </span>

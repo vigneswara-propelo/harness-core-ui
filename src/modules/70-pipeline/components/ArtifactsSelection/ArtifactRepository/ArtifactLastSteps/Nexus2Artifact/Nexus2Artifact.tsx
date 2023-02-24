@@ -607,6 +607,7 @@ export function Nexus2Artifact({
                     formik?.values?.spec?.artifactId
                   )
                 }
+                tooltipId="nexus2-tag"
               />
             </div>
             {!hideHeaderAndNavBtns && (
