@@ -17117,6 +17117,7 @@ export interface UserMetadataDTO {
   externallyManaged?: boolean
   locked?: boolean
   name?: string
+  twoFactorAuthenticationEnabled?: boolean
   uuid: string
 }
 

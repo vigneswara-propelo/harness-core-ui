@@ -1490,6 +1490,9 @@ export interface StringsMap {
   'rbac.usersPage.pendingInvitation': string
   'rbac.usersPage.resendInvite': string
   'rbac.usersPage.resendInviteSuccess': string
+  'rbac.usersPage.resendTwoFactorEmailSuccess': string
+  'rbac.usersPage.resetTwoFactorAuth': string
+  'rbac.usersPage.resetTwoFactorAuthConfirmation': string
   'rbac.usersPage.roleAssignSuccess': string
   'rbac.usersPage.roleBinding': string
   'rbac.usersPage.search': string
