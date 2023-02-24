@@ -901,7 +901,8 @@ export function RightDrawer(): React.ReactElement {
     try {
       const stepType =
         (data?.stepConfig?.node as StepElementConfig)?.type ||
-        get(templateTypes, (data?.stepConfig?.node as TemplateStepNode).template.templateRef)
+        get(templateTypes, (data?.stepConfig?.node as TemplateStepNode).template.templateRef) ||
+        (stageType as string)
 
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',

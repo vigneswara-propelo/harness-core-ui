@@ -226,6 +226,16 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   }, [templates])
 
   React.useEffect(() => {
+    if (
+      templateYamlError &&
+      (selectedTemplate as TemplateResponse).storeType === 'REMOTE' &&
+      !isEmpty((selectedTemplate as TemplateResponse).cacheResponseMetadata)
+    ) {
+      setSelectedTemplate({ ...selectedTemplate, cacheResponseMetadata: undefined } as TemplateResponse)
+    }
+  }, [templateYamlError])
+
+  React.useEffect(() => {
     if (selectedTemplate) {
       refetchTemplateInputSetYaml()
     }
@@ -234,7 +244,6 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   React.useEffect(() => {
     if (selectedTemplate) {
       setTemplate?.(selectedTemplate)
-
       if (isEmpty(selectedTemplate?.yaml)) {
         refetchTemplateYaml()
       }
@@ -311,7 +320,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         templateIdentifier: selectedTemplate.identifier,
         versionLabel: selectedTemplate.versionLabel,
         repoIdentifier: selectedTemplate.gitDetails?.repoIdentifier,
-        branch: !isStandAlone ? selectedTemplate.gitDetails?.branch || selectedBranch : storeMetadata?.branch
+        branch: !isStandAlone ? selectedBranch || selectedTemplate.gitDetails?.branch : storeMetadata?.branch
       })
       if (isStandAlone) {
         window.open(`${windowLocationUrlPartBeforeHash()}#${url}`, '_blank')
