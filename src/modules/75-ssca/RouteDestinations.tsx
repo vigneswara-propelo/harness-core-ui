@@ -14,9 +14,9 @@ import { RouteWithLayout } from '@common/router'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
+import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'
 import SSCASideNav from './components/SSCASideNav'
-import SSCAPipelineDeploymentList from './components/SSCAPipelineDeploymentList'
 import { SSCAApp } from './components/SSCAApp'
 
 const SSCASideNavProps: SidebarContext = {
@@ -72,7 +72,7 @@ export default (
         moduleParams={moduleParams}
         sidebarProps={SSCASideNavProps}
         pipelineStudioComponent={PipelineStudio}
-        pipelineDeploymentListComponent={SSCAPipelineDeploymentList}
+        pipelineDeploymentListComponent={PipelineDeploymentList}
       />
     </Route>
   </>
