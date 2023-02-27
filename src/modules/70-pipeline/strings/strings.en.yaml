@@ -1643,3 +1643,6 @@ lastDeployed: 'Last deployed'
 prTitle: PR Title
 ServiceDetail:
   envCardEmptyStateMsg: 'There are no environments with instances in this service.'
+iacm:
+  workflow: Workflow
+  resourceStack: Resource Stack

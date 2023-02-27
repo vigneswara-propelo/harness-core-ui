@@ -3967,6 +3967,8 @@ export interface StringsMap {
   'pipeline.gitPullRequest': string
   'pipeline.gitPullRequestNumber': string
   'pipeline.gitRepo': string
+  'pipeline.iacm.resourceStack': string
+  'pipeline.iacm.workflow': string
   'pipeline.imagePathHelperText': string
   'pipeline.imagePathLabel': string
   'pipeline.imageTag': string
