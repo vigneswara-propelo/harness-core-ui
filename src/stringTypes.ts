@@ -4315,6 +4315,8 @@ export interface StringsMap {
   'pipeline.pipelineChaining.enterOutputName': string
   'pipeline.pipelineChaining.newOutput': string
   'pipeline.pipelineChaining.noPipelineSelected': string
+  'pipeline.pipelineChaining.noPipelinesInSearchCriteria': string
+  'pipeline.pipelineChaining.noPipelinesInSelectedScope': string
   'pipeline.pipelineChaining.noProjectSelected': string
   'pipeline.pipelineChaining.outputAlreadyExists': string
   'pipeline.pipelineChaining.outputTabSummaryDetail': string
