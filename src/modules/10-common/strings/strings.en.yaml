@@ -189,7 +189,7 @@ datePickerShortcuts:
 validation:
   connectorRef: Connector is a required field
   namePatternIsNotValid: 'Name can only contain alphanumerics, . _ and -'
-  provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier should not contain special characters and spaces'
+  provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier must start with a letter or _ and can then be followed by alphanumerics, _, or $'
   provisionerIdentifierIsRequired: 'Provisioner Identifier is required'
   harnessFolderNamePatternIsNotValid: 'Harness Folder name can only contain alphanumerics, underscore, hyphen or a whitespace'
   nameIsRequired: '{{$.validation.nameRequired}}'
