@@ -5058,6 +5058,7 @@ export interface StringsMap {
   'cd.addRemote': string
   'cd.addService': string
   'cd.addTFVarFileLabel': string
+  'cd.agentID': string
   'cd.allowSimultaneousDeployments': string
   'cd.amazonElasticCmd': string
   'cd.amazonElasticK8sService': string
