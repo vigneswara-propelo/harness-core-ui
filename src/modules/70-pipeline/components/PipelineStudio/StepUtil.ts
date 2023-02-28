@@ -42,7 +42,7 @@ import { StepViewType } from '../AbstractSteps/Step'
 import type { StageSelectionData } from '../../utils/runPipelineUtils'
 import { getSelectedStagesFromPipeline } from './CommonUtils/CommonUtils'
 import type { CustomVariablesData } from '../PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
-import type { DeployServiceEntityData } from '../PipelineInputSetForm/StageInputSetForm'
+import type { DeployServiceEntityData } from '../PipelineInputSetForm/ServicesInputSetForm/ServicesInputSetForm'
 import { validateOutputPanelInputSet } from '../CommonPipelineStages/PipelineStage/PipelineStageOutputSection/utils'
 
 interface childPipelineMetadata {
