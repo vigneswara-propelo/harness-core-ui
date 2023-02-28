@@ -827,7 +827,6 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                   isReadonly={readonly}
                   showDefaultField={true}
                   isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                  showAdvanced={true}
                   onChange={value => {
                     formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.artifactPath`, value)
                   }}

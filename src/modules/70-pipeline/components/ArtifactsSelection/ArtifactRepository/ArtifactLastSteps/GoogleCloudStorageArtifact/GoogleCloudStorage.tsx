@@ -382,7 +382,6 @@ export function GoogleCloudStorage(
                       variableName="project"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('project', value)
                       }}
@@ -437,7 +436,6 @@ export function GoogleCloudStorage(
                       variableName="bucket"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('bucket', value)}
                       isReadonly={isReadonly}
                     />
@@ -465,7 +463,6 @@ export function GoogleCloudStorage(
                       variableName="artifactPath"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('artifactPath', value)
                       }}

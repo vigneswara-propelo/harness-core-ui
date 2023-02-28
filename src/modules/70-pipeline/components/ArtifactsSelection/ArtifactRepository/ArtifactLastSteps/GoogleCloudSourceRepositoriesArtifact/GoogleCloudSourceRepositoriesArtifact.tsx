@@ -311,7 +311,6 @@ export function GoogleCloudSourceRepositories(
                       variableName="project"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('project', value)
                       }}
@@ -343,7 +342,6 @@ export function GoogleCloudSourceRepositories(
                       variableName="repository"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('repository', value)}
                       isReadonly={isReadonly}
                     />
@@ -371,7 +369,6 @@ export function GoogleCloudSourceRepositories(
                       variableName="sourceDirectory"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('sourceDirectory', value)
                       }}

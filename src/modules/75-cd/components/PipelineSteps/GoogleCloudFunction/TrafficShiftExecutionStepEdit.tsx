@@ -106,7 +106,6 @@ const TrafficShiftExecutionStepEdit = (
                     variableName="spec.trafficPercent"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('spec.trafficPercent', value)
                     }}

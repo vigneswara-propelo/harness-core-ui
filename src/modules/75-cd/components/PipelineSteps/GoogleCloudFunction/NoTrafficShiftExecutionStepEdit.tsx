@@ -99,7 +99,6 @@ const NoTrafficShiftExecutionStepEdit = (
                       variableName="spec.updateFieldMask"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('spec.updateFieldMask', value)
                       }}

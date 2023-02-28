@@ -212,7 +212,6 @@ export const GoogleCloudFunctionInfraSpecEditable: React.FC<GoogleCloudFunctionI
                     variableName="connectorRef"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('connectorRef', value)
                     }}
@@ -283,7 +282,6 @@ export const GoogleCloudFunctionInfraSpecEditable: React.FC<GoogleCloudFunctionI
                     variableName="project"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('project', value)
                     }}
@@ -320,7 +318,6 @@ export const GoogleCloudFunctionInfraSpecEditable: React.FC<GoogleCloudFunctionI
                     variableName="region"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('region', value)
                     }}
