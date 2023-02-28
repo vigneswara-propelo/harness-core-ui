@@ -3402,6 +3402,7 @@ export interface StringsMap {
   'pipeline.approvalCriteria.allConditions': string
   'pipeline.approvalCriteria.anyCondition': string
   'pipeline.approvalCriteria.approvalCriteria': string
+  'pipeline.approvalCriteria.approvalWindow': string
   'pipeline.approvalCriteria.fetchingFields': string
   'pipeline.approvalCriteria.field': string
   'pipeline.approvalCriteria.jexlExpressionLabelApproval': string
@@ -3626,6 +3627,7 @@ export interface StringsMap {
   'pipeline.commitsTab.youWillSeeYourCommitsHere': string
   'pipeline.commonApprovalStep.execution.allConditionsMsg': string
   'pipeline.commonApprovalStep.execution.anyConditionsMsg': string
+  'pipeline.commonApprovalStep.execution.approvalWindowMsg': string
   'pipeline.conditionalExecution.belowExpression': string
   'pipeline.conditionalExecution.condition': string
   'pipeline.conditionalExecution.conditionLabel': string

@@ -226,6 +226,7 @@ approvalCriteria:
   match: Match
   approvalCriteria: Approval Criteria
   rejectionCriteria: Rejection Criteria
+  approvalWindow: Approval Window
   rejectionCriteriaOptional: Rejection Criteria (optional)
   validations:
     approvalCriteriaCondition: At least one condition is required
@@ -300,6 +301,7 @@ commonApprovalStep:
   execution:
     allConditionsMsg: 'If all of the following conditions are met:'
     anyConditionsMsg: 'If any of the following conditions is met:'
+    approvalWindowMsg: 'On Approval the execution will be performed within the specified Start and End Time'
 customApprovalStep:
   scriptTimeout: Script Timeout
   retryInterval: Retry interval
