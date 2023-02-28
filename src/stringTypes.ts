@@ -4620,6 +4620,7 @@ export interface StringsMap {
   'pipeline.stepDescription.ServiceNowImportSet': string
   'pipeline.stepDescription.ServiceNowUpdate': string
   'pipeline.stepDescription.ShellScriptProvision': string
+  'pipeline.stepDescription.SscaOrchestration': string
   'pipeline.stepDescription.SwapRollback': string
   'pipeline.stepDescription.SwapRoute': string
   'pipeline.stepDescription.TASBGAppSetup': string
@@ -7780,6 +7781,15 @@ export interface StringsMap {
   'ci.welcome': string
   'idp.idpAdmin': string
   'ssca.allowDenyList': string
+  'ssca.enforcementStep.abortOn.sbomComponentPartOfDenyList': string
+  'ssca.enforcementStep.abortOn.sbomPartOfDenyList': string
+  'ssca.enforcementStep.abortOn.signatureVerificaionFailure': string
+  'ssca.enforcementStep.abortOn.sourceNotPartOfAllowList': string
+  'ssca.orchestrationStep.artifactSource': string
+  'ssca.orchestrationStep.sbomAttestation': string
+  'ssca.orchestrationStep.sbomFormat': string
+  'ssca.orchestrationStep.sbomGeneration': string
+  'ssca.orchestrationStep.sbomTool': string
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string
   'cv.CompositeSLO.AddSLOMessage': string

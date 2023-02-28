@@ -183,7 +183,8 @@ export enum StepType {
   AwsLambdaDeploy = 'AwsLambdaDeploy',
   AwsLambdaDeployRollback = 'AwsLambdaDeployRollback',
   TerraformCloudRun = 'TerraformCloudRun',
-  TerraformCloudRollback = 'TerraformCloudRollback'
+  TerraformCloudRollback = 'TerraformCloudRollback',
+  SscaOrchestration = 'SscaOrchestration'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

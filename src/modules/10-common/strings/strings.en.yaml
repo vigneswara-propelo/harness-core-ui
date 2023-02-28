@@ -1355,7 +1355,7 @@ python: Python
 bucketName: Bucket Name
 
 # SSCA module
-ssca: SSCA
+ssca: Supply Chain Assurance
 sscaText: Software Supply Chain Assurance
 tickets:
   selectConnector: '[Select] Ticket Provider Connector'
