@@ -15,8 +15,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   AllowedTypes,
-  SelectOption,
-  FormError
+  SelectOption
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { debounce, defaultTo, get, noop } from 'lodash-es'
@@ -137,21 +136,15 @@ export const GoogleCloudFunctionInfraSpecEditable: React.FC<GoogleCloudFunctionI
   // Validation
   const validationSchema = getGoogleCloudFunctionInfraValidationSchema(getString)
 
-  const getProjectHelperText = React.useCallback(
-    (formik: FormikProps<GoogleCloudFunctionInfrastructure>) => {
-      if (fetchProjectsError) {
-        return <FormError name={`project`} errorMessage={getRBACErrorMessage(fetchProjectsError as RBACError)} />
-      }
-      const connectorRef = get(formik?.values, `connectorRef`)
-      if (
-        getMultiTypeFromValue(get(formik?.values, `project`)) === MultiTypeInputType.FIXED &&
-        (getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME || connectorRef?.length === 0)
-      ) {
-        return getString('pipeline.projectHelperText')
-      }
-    },
-    [fetchProjectsError]
-  )
+  const getProjectHelperText = React.useCallback((formik: FormikProps<GoogleCloudFunctionInfrastructure>) => {
+    const connectorRef = get(formik?.values, `connectorRef`)
+    if (
+      getMultiTypeFromValue(get(formik?.values, `project`)) === MultiTypeInputType.FIXED &&
+      (getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME || connectorRef?.length === 0)
+    ) {
+      return getString('pipeline.projectHelperText')
+    }
+  }, [])
 
   // Item Renderer
   const itemRenderer = React.useCallback(
@@ -254,8 +247,8 @@ export const GoogleCloudFunctionInfraSpecEditable: React.FC<GoogleCloudFunctionI
                       allowCreatingNewItems: true,
                       itemRenderer,
                       noResults: (
-                        <Text lineClamp={1} width={500} height={35} padding="small">
-                          {getString('noProjects')}
+                        <Text lineClamp={1} width={500} height={32} padding="small">
+                          {getRBACErrorMessage(fetchProjectsError as RBACError) || getString('noProjects')}
                         </Text>
                       )
                     },

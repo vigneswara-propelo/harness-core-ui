@@ -15,7 +15,6 @@ import type { IItemRendererProps } from '@blueprintjs/select'
 import {
   Button,
   ButtonVariation,
-  FormError,
   Formik,
   FormikForm,
   FormInput,
@@ -225,9 +224,6 @@ export function GoogleCloudSourceRepositories(
 
   const getProjectHelperText = React.useCallback(
     (formik: FormikProps<GoogleCloudSourceRepositoriesInitialValuesType>) => {
-      if (fetchProjectsError) {
-        return <FormError name={`project`} errorMessage={getRBACErrorMessage(fetchProjectsError as RBACError)} />
-      }
       const prevStepConnectorRef = getConnectorIdValue(prevStepData)
       if (
         getMultiTypeFromValue(get(formik?.values, `project`)) === MultiTypeInputType.FIXED &&
@@ -237,7 +233,7 @@ export function GoogleCloudSourceRepositories(
         return getString('pipeline.projectHelperText')
       }
     },
-    [prevStepData, fetchProjectsError]
+    [prevStepData]
   )
 
   const itemRenderer = useCallback(
@@ -285,8 +281,8 @@ export function GoogleCloudSourceRepositories(
                     selectProps: {
                       items: projectOptions,
                       noResults: (
-                        <Text lineClamp={1} width={400} height={35} padding="small">
-                          {getString('noProjects')}
+                        <Text lineClamp={1} width={400} height={32} padding="small">
+                          {getRBACErrorMessage(fetchProjectsError as RBACError) || getString('noProjects')}
                         </Text>
                       ),
                       itemRenderer: itemRenderer,

@@ -84,6 +84,7 @@ const NoTrafficShiftExecutionStepEdit = (
                   label={getString('cd.steps.googleCloudFunctionCommon.fieldMask')}
                   placeholder={getString('cd.steps.googleCloudFunctionCommon.fieldMaskPlaceholder')}
                   disabled={readonly}
+                  isOptional={true}
                   multiTextInputProps={{
                     expressions,
                     disabled: readonly,

@@ -62,7 +62,19 @@ const TrafficShiftExecutionStepEdit = (
         }}
         validationSchema={Yup.object().shape({
           ...getNameAndIdentifierSchema(getString, stepViewType),
-          timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum'))
+          timeout: getDurationValidationSchema({ minimum: '10s' }).required(
+            getString('validation.timeout10SecMinimum')
+          ),
+          spec: Yup.object().shape({
+            trafficPercent: Yup.number()
+              .min(0)
+              .max(100)
+              .typeError(
+                getString('common.validation.fieldIsRequired', {
+                  name: getString('cd.steps.googleCloudFunctionCommon.trafficPercent')
+                })
+              )
+          })
         })}
       >
         {(formik: FormikProps<CloudFunctionTrafficShiftExecutionStepInitialValues>) => {
