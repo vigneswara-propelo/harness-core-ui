@@ -4214,6 +4214,8 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.AsgScalingPolicy': string
   'pipeline.manifestTypeLabels.AsgScheduledUpdateGroupAction': string
   'pipeline.manifestTypeLabels.Autoscaler': string
+  'pipeline.manifestTypeLabels.AwsLambdaFunctionAliasDefinition': string
+  'pipeline.manifestTypeLabels.AwsLambdaFunctionDefinition': string
   'pipeline.manifestTypeLabels.AwsSAM': string
   'pipeline.manifestTypeLabels.AzureFunctions': string
   'pipeline.manifestTypeLabels.EcsScalableTargetDefinition': string
@@ -4545,6 +4547,8 @@ export interface StringsMap {
   'pipeline.stepDescription.ACR': string
   'pipeline.stepDescription.AdvancedCommandFlags': string
   'pipeline.stepDescription.AppResize': string
+  'pipeline.stepDescription.AwsLambdaDeploy': string
+  'pipeline.stepDescription.AwsLambdaDeployRollback': string
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Background': string

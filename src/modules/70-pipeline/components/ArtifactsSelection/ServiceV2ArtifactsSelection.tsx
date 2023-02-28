@@ -748,6 +748,7 @@ export default function ServiceV2ArtifactsSelection({
   return (
     <>
       <ArtifactListView
+        deploymentType={deploymentType}
         primaryArtifact={artifacts?.primary?.sources as ArtifactSource[]}
         sideCarArtifact={artifacts?.sidecars}
         addNewArtifact={addNewArtifact}

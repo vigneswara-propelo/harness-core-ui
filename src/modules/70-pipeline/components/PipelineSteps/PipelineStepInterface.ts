@@ -178,6 +178,10 @@ export enum StepType {
   AsgBlueGreenRollback = 'AsgBlueGreenRollback',
   AsgBlueGreenSwapService = 'AsgBlueGreenSwapService',
   AsgBlueGreenDeploy = 'AsgBlueGreenDeploy',
+  AwsLambdaService = 'AwsLambdaService',
+  AwsLambdaInfra = 'AwsLambdaInfra',
+  AwsLambdaDeploy = 'AwsLambdaDeploy',
+  AwsLambdaDeployRollback = 'AwsLambdaDeployRollback',
   TerraformCloudRun = 'TerraformCloudRun',
   TerraformCloudRollback = 'TerraformCloudRollback'
 }
