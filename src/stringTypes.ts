@@ -8520,6 +8520,7 @@ export interface StringsMap {
   'cv.noPreviousErrorBudgetResetHistoryAvailable': string
   'cv.noSLOHasBeenCreated': string
   'cv.nonAnomalous': string
+  'cv.notificationTimestampError': string
   'cv.notifications.changeType': string
   'cv.notifications.condition': string
   'cv.notifications.deleteNotification': string
