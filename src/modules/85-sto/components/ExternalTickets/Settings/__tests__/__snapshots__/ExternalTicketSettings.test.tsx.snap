@@ -8,7 +8,7 @@ exports[`Ticket Settings Page matches snapshot 1`] = `
     <p
       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--margin-bottom-xlarge"
     >
-      common.tickets.tickets
+      common.tickets.externalTickets
     </p>
     <div
       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-right StyledProps--margin-bottom-large"

@@ -18,7 +18,7 @@ import {
   useSettingsSaveSetting
 } from 'services/ticket-service/ticketServiceComponents'
 import type { Setting } from 'services/ticket-service/ticketServiceSchemas'
-import TicketSettings from '../TicketSettings'
+import ExternalTicketSettings from '../ExternalTicketSettings'
 
 jest.mock('services/ticket-service/ticketServiceComponents')
 jest.mock('@connectors/components/ConnectorReferenceField/ConnectorReferenceField', () => ({
@@ -60,7 +60,7 @@ describe('Ticket Settings Page', () => {
   test('matches snapshot', () => {
     const { container } = render(
       <TestWrapper>
-        <TicketSettings />
+        <ExternalTicketSettings />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -69,7 +69,7 @@ describe('Ticket Settings Page', () => {
   test('settings are updated', async () => {
     const { findByTitle } = render(
       <TestWrapper>
-        <TicketSettings debounceDelay={10} />
+        <ExternalTicketSettings debounceDelay={10} />
       </TestWrapper>
     )
 

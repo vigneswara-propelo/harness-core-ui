@@ -1115,11 +1115,11 @@ export interface StringsMap {
   'common.test.retest': string
   'common.tickets.connector': string
   'common.tickets.defaultProjectName': string
+  'common.tickets.externalTickets': string
   'common.tickets.selectConnector': string
   'common.tickets.selectProjectName': string
   'common.tickets.ticketComment': string
   'common.tickets.ticketExemption': string
-  'common.tickets.tickets': string
   'common.timeRange.calendarMonths': string
   'common.timeRange.recommended': string
   'common.timeRange.relativeDates': string

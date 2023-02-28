@@ -19,13 +19,13 @@ import { useSettingsGetSetting, useSettingsSaveSetting } from 'services/ticket-s
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import css from './TicketSettings.module.scss'
+import css from './ExternalTicketSettings.module.scss'
 
 type Settings = {
   connector?: ConnectorSelectedValue | string
   projectKey?: string
 }
-const TicketSettings: React.FC<{ debounceDelay?: number }> = ({ debounceDelay = 1000 }) => {
+const ExternalTicketSettings: React.FC<{ debounceDelay?: number }> = ({ debounceDelay = 1000 }) => {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier, module } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
@@ -71,7 +71,7 @@ const TicketSettings: React.FC<{ debounceDelay?: number }> = ({ debounceDelay = 
   return (
     <Container margin="xlarge" padding="xlarge" className={css.container}>
       <Text color={Color.BLACK} font={{ weight: 'semi-bold', size: 'medium' }} margin={{ bottom: 'xlarge' }}>
-        {getString('common.tickets.tickets')}
+        {getString('common.tickets.externalTickets')}
       </Text>
       <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'right' }} margin={{ bottom: 'large' }}>
         <Text className={css.minWidth}>{getString('common.tickets.connector')}</Text>
@@ -128,4 +128,4 @@ const TicketSettings: React.FC<{ debounceDelay?: number }> = ({ debounceDelay = 
   }
 }
 
-export default TicketSettings
+export default ExternalTicketSettings

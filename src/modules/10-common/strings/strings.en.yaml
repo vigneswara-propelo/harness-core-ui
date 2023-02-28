@@ -1362,6 +1362,6 @@ tickets:
   selectProjectName: '[Select] Project Name'
   connector: 'Ticket Provider Connector'
   defaultProjectName: 'Default Project Name'
-  tickets: 'Tickets'
+  externalTickets: 'External Tickets'
   ticketComment: 'Append comment to ticket when Security Issue changes are detected (coming soon)'
   ticketExemption: 'Create a ticket when an Exemption is created (coming soon)'
