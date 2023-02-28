@@ -258,7 +258,6 @@ export const RunStepBase = (
                       enableFields={{
                         'spec.privileged': {
                           shouldHide: [
-                            CIBuildInfrastructureType.Cloud,
                             CIBuildInfrastructureType.VM,
                             CIBuildInfrastructureType.KubernetesHosted,
                             CIBuildInfrastructureType.Docker
