@@ -108,6 +108,9 @@ export enum PermissionIdentifier {
   VIEW_SLO_SERVICE = 'chi_slo_view',
   EDIT_SLO_SERVICE = 'chi_slo_edit',
   DELETE_SLO_SERVICE = 'chi_slo_delete',
+  VIEW_DOWNTIME = 'chi_downtime_view',
+  EDIT_DOWNTIME = 'chi_downtime_edit',
+  DELETE_DOWNTIME = 'chi_downtime_delete',
 
   // Governance Permissions
   GOV_VIEW_POLICY = 'core_governancePolicy_view',
