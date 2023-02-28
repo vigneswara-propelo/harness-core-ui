@@ -396,7 +396,9 @@ export interface StringsMap {
   'common.git.azureReposUrlPlaceholderRepoHttp': string
   'common.git.bitbucketAccountUrl': string
   'common.git.bitbucketPlaceholderSSH': string
+  'common.git.bitbucketRepoPlaceholderSSH': string
   'common.git.bitbucketRepoUrl': string
+  'common.git.bitbucketRepoUrlPlaceholder': string
   'common.git.bitbucketUrlPlaceholder': string
   'common.git.branchName': string
   'common.git.branchSelectHeader': string
@@ -412,10 +414,14 @@ export interface StringsMap {
   'common.git.gitHubAccountUrl': string
   'common.git.gitHubApp': string
   'common.git.gitHubRepoUrl': string
+  'common.git.gitHubRepoUrlPlaceholder': string
+  'common.git.gitHubRepoUrlPlaceholderSSH': string
   'common.git.gitHubUrlPlaceholder': string
   'common.git.gitHubUrlPlaceholderSSH': string
   'common.git.gitLabAccountUrl': string
   'common.git.gitLabRepoUrl': string
+  'common.git.gitLabRepoUrlPlaceholder': string
+  'common.git.gitLabRepoUrlPlaceholderSSH': string
   'common.git.gitLabUrlPlaceholder': string
   'common.git.gitLabUrlPlaceholderSSH': string
   'common.git.gitRepoUrl': string
