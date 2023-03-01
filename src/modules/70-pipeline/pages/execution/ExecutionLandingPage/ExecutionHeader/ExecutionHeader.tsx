@@ -34,6 +34,7 @@ import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRu
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
+import { isSimplifiedYAMLEnabledForCI } from '@pipeline/utils/CIUtils'
 import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
@@ -111,6 +112,20 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     stagesExecuted: pipelineExecutionSummary?.stagesExecuted,
     isDebugMode: hasCI
   })
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
+
+  const pipelineStudioRoutingProps = {
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    accountId,
+    module,
+    repoIdentifier,
+    connectorRef,
+    repoName,
+    branch,
+    storeType: pipelineMetadata?.data?.storeType
+  }
 
   const { openRunPipelineModalV1 } = useRunPipelineModalV1({
     pipelineIdentifier,
@@ -185,18 +200,11 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
           )}
           <Link
             className={css.view}
-            to={routes.toPipelineStudio({
-              orgIdentifier,
-              projectIdentifier,
-              pipelineIdentifier,
-              accountId,
-              module,
-              repoIdentifier,
-              connectorRef,
-              repoName,
-              branch,
-              storeType: pipelineMetadata?.data?.storeType
-            })}
+            to={
+              isSimplifiedYAMLEnabledForCI(module, CI_YAML_VERSIONING)
+                ? routes.toPipelineStudioV1(pipelineStudioRoutingProps)
+                : routes.toPipelineStudio(pipelineStudioRoutingProps)
+            }
           >
             <Icon name="Edit" size={12} />
             <String stringID="editPipeline" />

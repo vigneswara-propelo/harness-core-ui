@@ -1352,6 +1352,8 @@ artifacts:
     sourceDirectoryPlaceholder: Enter Source Directory
 updated: Updated
 python: Python
+seeAdvancedOptions: See Advanced Options
+addedEntityLabel: 'Added {{entity}}'
 bucketName: Bucket Name
 
 # SSCA module

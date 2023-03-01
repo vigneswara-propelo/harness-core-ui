@@ -34,6 +34,7 @@ import {
   isRetryPipelineAllowed
 } from '@pipeline/utils/statusHelpers'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
+import { isSimplifiedYAMLEnabledForCI } from '@pipeline/utils/CIUtils'
 import { useStrings } from 'framework/strings'
 import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
@@ -204,6 +205,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
       }
     }
   })
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   const { canAbort, canPause, canRerun, canResume } = getValidExecutionActions(canExecute, executionStatus)
   const { abortText, pauseText, rerunText, resumeText } = getActionTexts(stageId)
@@ -224,7 +226,9 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   }
 
   const executionDetailsView = routes.toExecutionPipelineView({ ...commonRouteProps, source, executionIdentifier })
-  const pipelineDetailsView = routes.toPipelineStudio(commonRouteProps)
+  const pipelineDetailsView = isSimplifiedYAMLEnabledForCI(module, CI_YAML_VERSIONING)
+    ? routes.toPipelineStudioV1(commonRouteProps)
+    : routes.toPipelineStudio(commonRouteProps)
 
   async function executeAction(interruptType: HandleInterruptQueryParams['interruptType']): Promise<void> {
     clear()
