@@ -92,7 +92,7 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
           endTime: defaultTo(item?.endTime, 0) * 1000
         }
       }),
-    [downtimeInstanceUnavailability]
+    [downtimeInstanceUnavailability, maxXLimit]
   )
 
   return (

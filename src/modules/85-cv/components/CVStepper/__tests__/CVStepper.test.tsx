@@ -109,7 +109,7 @@ describe('Validate CVStepper', () => {
     // load with status with status
     expect(container.querySelector('[data-testid="steptitle_Step1"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step2"] [icon="tick-circle"]')).toBeInTheDocument()
-    expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="error"]')).toBeInTheDocument()
+    expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="warning-sign"]')).toBeInTheDocument()
 
     // directly jump to step 3 in error state
     userEvent.click(container.querySelector('[data-testid="steptitle_Step3"]')!)

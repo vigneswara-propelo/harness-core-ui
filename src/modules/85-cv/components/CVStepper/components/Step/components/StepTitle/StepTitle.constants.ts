@@ -16,10 +16,10 @@ export const SuccessState = {
 }
 
 export const ErrorState = {
-  icon: 'error',
+  icon: 'warning-sign',
   cursor: 'not-allowed',
   iconColor: 'error',
-  labelColor: Color.ERROR
+  labelColor: Color.PRIMARY_10
 }
 
 export const DefaultState = {
