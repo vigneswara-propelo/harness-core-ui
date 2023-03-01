@@ -302,7 +302,6 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   /*--------------------------------------Retry Pipeline---------------------------------------------*/
 
   /*--------------------------------------Run Pipeline---------------------------------------------*/
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
   const reRunPipeline = (): void => {
     CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
       ? openRunPipelineModalV1()

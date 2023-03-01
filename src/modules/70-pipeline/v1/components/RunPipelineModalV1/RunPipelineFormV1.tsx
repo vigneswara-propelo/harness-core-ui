@@ -54,7 +54,6 @@ import type { InputSetDTO } from '@pipeline/utils/types'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PreFlightCheckModal } from '../../../components/PreFlightCheckModal/PreFlightCheckModal'
 import { PipelineVariablesContextProvider } from '../../../components/PipelineVariablesContext/PipelineVariablesContext'
 import { PipelineInvalidRequestContent } from '../../../components/RunPipelineModal/PipelineInvalidRequestContent'
@@ -91,7 +90,6 @@ function RunPipelineFormV1Basic({
   executionIdentifier,
   isDebugMode
 }: RunPipelineFormV1Props & InputSetGitQueryParams): React.ReactElement {
-  const { PIE_NG_GITX_CACHING: isGitCacheEnabled } = useFeatureFlags()
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
   const [notifyOnlyMe, setNotifyOnlyMe] = useState<boolean>(false)
   const [formErrors] = useState<FormikErrors<InputSetDTO>>({})
@@ -135,7 +133,7 @@ function RunPipelineFormV1Basic({
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const pipeline = React.useMemo(

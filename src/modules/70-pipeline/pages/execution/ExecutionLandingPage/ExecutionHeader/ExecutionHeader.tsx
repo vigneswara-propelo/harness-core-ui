@@ -137,7 +137,6 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     isDebugMode: hasCI
   })
 
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
   return (
     <header className={css.header}>
       <div className={css.headerTopRow}>
