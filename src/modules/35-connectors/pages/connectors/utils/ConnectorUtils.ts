@@ -1478,14 +1478,22 @@ export const buildJiraPayload = (formData: FormData) => {
       jiraUrl: formData.jiraUrl,
 
       auth: {
-        type: AuthTypes.USER_PASSWORD,
+        type: formData.authType,
         spec: {
-          username: formData.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
-          usernameRef: formData.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
-          passwordRef: formData.passwordRef.referenceString
+          username: formData?.username?.type === ValueType.TEXT ? formData?.username?.value : undefined,
+          usernameRef: formData?.username?.type === ValueType.ENCRYPTED ? formData?.username?.value : undefined,
+          passwordRef: formData?.passwordRef?.referenceString,
+          patRef: formData?.patRef?.referenceString
         }
       }
     }
+  }
+  if (formData.authType === AuthTypes.USER_PASSWORD) {
+    delete savedData.spec.auth.spec.patRef
+  } else {
+    delete savedData.spec.auth.spec.username
+    delete savedData.spec.auth.spec.usernameRef
+    delete savedData.spec.auth.spec.passwordRef
   }
   return { connector: savedData }
 }
@@ -1503,16 +1511,20 @@ export const setupJiraFormData = async (connectorInfo: ConnectorInfoDTO, account
 
     username:
       connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD &&
-      (connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef)
+      (connectorInfo.spec.auth.spec?.username || connectorInfo.spec.auth.spec?.usernameRef)
         ? {
-            value: connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef,
-            type: connectorInfo.spec.auth.spec.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+            value: connectorInfo.spec.auth.spec?.username || connectorInfo.spec.auth.spec?.usernameRef,
+            type: connectorInfo.spec.auth.spec?.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
           }
         : undefined,
 
     passwordRef:
       connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD
-        ? await setSecretField(connectorInfo.spec.auth.spec.passwordRef, scopeQueryParams)
+        ? await setSecretField(connectorInfo.spec.auth.spec?.passwordRef, scopeQueryParams)
+        : undefined,
+    patRef:
+      connectorInfo.spec.auth.type === AuthTypes.PERSONAL_ACCESS_TOKEN
+        ? await setSecretField(connectorInfo.spec.auth.spec?.patRef, scopeQueryParams)
         : undefined
   }
   return formData
