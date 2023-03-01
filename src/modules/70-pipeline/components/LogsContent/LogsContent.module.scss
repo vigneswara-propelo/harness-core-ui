@@ -31,7 +31,7 @@
 
     & .errorMsgContainer {
       display: grid;
-      grid-template-columns: 1fr 2fr 2fr;
+      grid-auto-flow: column;
       column-gap: var(--spacing-5);
     }
 
