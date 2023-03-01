@@ -170,6 +170,7 @@ const BasicTemplateDetails = (
   const scope = getScopeFromDTO(pathParams)
   const [selectedScope, setSelectedScope] = React.useState<Scope>(scope)
   const allowedScopes = templateFactory.getTemplateAllowedScopes(initialValues.type)
+  const isInlineRemoteSelectionApplicable = templateFactory.getTemplateIsRemoteEnabled(initialValues.type)
   const formikRef = useRef<FormikProps<TemplateConfigValues>>()
   const scopeOptions = React.useMemo(
     () =>
@@ -181,11 +182,8 @@ const BasicTemplateDetails = (
   )
 
   const cardDisabledStatus = React.useMemo(
-    () =>
-      intent === Intent.EDIT ||
-      !!disabledFields?.includes(Fields.StoreType) ||
-      !templateFactory.getTemplateIsRemoteEnabled(initialValues.type),
-    [initialValues.type, intent, disabledFields]
+    () => intent === Intent.EDIT || !!disabledFields?.includes(Fields.StoreType),
+    [intent, disabledFields]
   )
 
   const gitDisabledFields = pick(
@@ -556,7 +554,7 @@ const BasicTemplateDetails = (
                           )}
                       </Layout.Vertical>
                     </Container>
-                    {supportingTemplatesGitx && (
+                    {supportingTemplatesGitx && isInlineRemoteSelectionApplicable && (
                       <>
                         <Divider />
                         <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
