@@ -271,6 +271,12 @@ AuditTrailFactory.registerResourceHandler('SERVICE', {
         accountId: accountIdentifier,
         serviceId: service.identifier
       })
+    } else if (service.identifier) {
+      return routes.toServiceStudio({
+        module,
+        accountId: accountIdentifier,
+        serviceId: service.identifier
+      })
     }
     return undefined
   }
@@ -310,6 +316,12 @@ AuditTrailFactory.registerResourceHandler('ENVIRONMENT', {
         module,
         orgIdentifier,
         projectIdentifier,
+        accountId: accountIdentifier,
+        environmentIdentifier: environment.identifier
+      })
+    } else if (environment.identifier) {
+      return routes.toEnvironmentDetails({
+        module,
         accountId: accountIdentifier,
         environmentIdentifier: environment.identifier
       })
