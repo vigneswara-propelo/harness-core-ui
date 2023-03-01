@@ -111,7 +111,7 @@ describe('Sidenav', () => {
   })
 
   test('should go to onboarding page when project is selected with no pipeline', async () => {
-    const testPath = routes.toDeployments({
+    const testPath = routes.toProjectOverview({
       accountId: ':accountId',
       orgIdentifier: ':orgIdentifier',
       projectIdentifier: ':projectIdentifier',

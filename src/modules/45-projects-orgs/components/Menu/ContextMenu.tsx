@@ -72,7 +72,7 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
     event.stopPropagation()
     setMenuOpen?.(false)
     history.push(
-      routes.toDeployments({
+      routes.toProjectOverview({
         orgIdentifier: project.orgIdentifier || /* istanbul ignore next */ '',
         projectIdentifier: project.identifier,
         accountId,
