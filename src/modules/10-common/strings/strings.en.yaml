@@ -143,6 +143,7 @@ switchAccountError: Unable to switch accounts. Please try again.
 logs:
   noLogsText: 'No logs found'
   delegateSelectionLogs: Delegate selection logs
+  delegateTaskLogs: Delegate Tasks Logs
 execute: Execute
 commentModal:
   addCommentPlaceholder: Add a comment
