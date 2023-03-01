@@ -866,7 +866,7 @@ export const TemplateProvider: React.FC<{
   const { repoIdentifier, branch } = queryParams
   const { supportingTemplatesGitx } = useAppStore()
   const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED, PIE_NG_GITX_CACHING } = useFeatureFlags()
+  const { CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)
@@ -901,7 +901,7 @@ export const TemplateProvider: React.FC<{
       branch
     },
     templateType,
-    isGitCacheEnabled: !!PIE_NG_GITX_CACHING
+    isGitCacheEnabled: true
   })
 
   const fetchTemplateV2 = _fetchTemplateV2.bind(null, {
@@ -913,7 +913,7 @@ export const TemplateProvider: React.FC<{
       branch
     },
     templateType,
-    isGitCacheEnabled: !!PIE_NG_GITX_CACHING
+    isGitCacheEnabled: true
   })
 
   const fetchTemplate = supportingTemplatesGitx ? fetchTemplateV2 : fetchTemplateV1
