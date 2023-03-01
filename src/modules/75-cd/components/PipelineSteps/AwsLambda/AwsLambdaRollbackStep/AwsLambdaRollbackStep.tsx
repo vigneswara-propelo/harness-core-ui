@@ -30,9 +30,9 @@ interface AwsLambdaDeployRollbackVariableStepProps {
   variablesData: StepElementConfig
 }
 
-export class AwsLambdaDeployRollbackStep extends PipelineStep<StepElementConfig> {
+export class AwsLambdaRollbackStep extends PipelineStep<StepElementConfig> {
   protected type = StepType.AwsLambdaRollback
-  protected stepName = 'AWS Lambda Deploy Rollback'
+  protected stepName = 'AWS Lambda Rollback'
   protected stepIcon: IconName = 'aws-lambda-rollback'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AwsLambdaDeployRollback'
   protected isHarnessSpecific = false

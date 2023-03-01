@@ -156,7 +156,7 @@ export const allowedManifestTypes: Record<ServiceDefinition['type'], Array<Manif
   CustomDeployment: [],
   Elastigroup: [],
   GoogleCloudFunctions: [ManifestDataType.GoogleCloudFunctionDefinition],
-  AwsLambda: [ManifestDataType.AwsLambdaFunctionDefinition],
+  AwsLambda: [ManifestDataType.AwsLambdaFunctionDefinition, ManifestDataType.AwsLambdaFunctionAliasDefinition],
   AWS_SAM: []
 }
 

@@ -181,7 +181,7 @@ export enum StepType {
   AwsLambdaService = 'AwsLambdaService',
   AwsLambdaInfra = 'AwsLambdaInfra',
   AwsLambdaDeploy = 'AwsLambdaDeploy',
-  AwsLambdaDeployRollback = 'AwsLambdaDeployRollback',
+  AwsLambdaRollback = 'AwsLambdaRollback',
   TerraformCloudRun = 'TerraformCloudRun',
   TerraformCloudRollback = 'TerraformCloudRollback',
   SscaOrchestration = 'SscaOrchestration'
