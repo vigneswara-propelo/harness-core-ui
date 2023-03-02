@@ -11,7 +11,7 @@ import { Card, Container, Formik, FormikForm, Heading, Layout, PageError } from 
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import type { FormikProps } from 'formik'
+import type { FormikErrors, FormikProps } from 'formik'
 import { produce } from 'immer'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { Error, StageElementConfig } from 'services/cd-ng'
@@ -66,7 +66,9 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   const templateRef = getIdentifierFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
   const templateVersionLabel = getIdentifierFromValue(defaultTo(stage?.stage?.template?.versionLabel, ''))
   const templateScope = getScopeFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
-  const [formValues, setFormValues] = React.useState<StageElementConfig | undefined>(stage?.stage)
+  const [formValues, setFormValues] = React.useState<StageElementConfig | undefined>(
+    defaultTo(stage?.stage, stage?.stage?.template?.templateInputs as StageElementConfig)
+  )
   const [allValues, setAllValues] = React.useState<StageElementConfig>()
   const [templateInputs, setTemplateInputs] = React.useState<StageElementConfig>()
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
@@ -74,6 +76,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { getString } = useStrings()
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
+
+  const { addOrUpdateTemplate, removeTemplate, isTemplateUpdated, setIsTemplateUpdated } = useStageTemplateActions()
 
   const onChange = React.useCallback(
     debounce(async (values: StageElementConfig): Promise<void> => {
@@ -102,6 +106,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
       ...parse<{ template: { spec: StageElementConfig } }>(defaultTo(templateResponse?.data?.yaml, ''))?.template.spec,
       identifier: defaultTo(stage?.stage?.identifier, '')
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [templateResponse?.data?.yaml])
 
   const {
@@ -119,7 +124,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
-  const updateFormValues = (newTemplateInputs?: StageElementConfig) => {
+  const updateFormValues = (newTemplateInputs?: StageElementConfig): void => {
     const updatedStage = produce(stage?.stage as StageElementConfig, draft => {
       set(
         draft,
@@ -131,7 +136,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     updateStage(updatedStage)
   }
 
-  const retainInputsAndUpdateFormValues = (newTemplateInputs?: StageElementConfig) => {
+  const retainInputsAndUpdateFormValues = (newTemplateInputs?: StageElementConfig): void => {
     if (isEmpty(newTemplateInputs)) {
       updateFormValues(newTemplateInputs)
     } else {
@@ -158,6 +163,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
         updateFormValues(newTemplateInputs)
       }
     }
+
+    setIsTemplateUpdated(false)
   }
 
   React.useEffect(() => {
@@ -167,8 +174,13 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     } else {
       const newTemplateInputs = parse<StageElementConfig>(defaultTo(templateInputSetYaml?.data, ''))
       setTemplateInputs(newTemplateInputs)
-      retainInputsAndUpdateFormValues(newTemplateInputs)
+
+      // istanbul ignore else
+      if (isTemplateUpdated) {
+        retainInputsAndUpdateFormValues(newTemplateInputs)
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [templateInputSetLoading])
 
   React.useEffect(() => {
@@ -180,7 +192,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     submitFormsForTab(TemplateTabs.OVERVIEW)
   })
 
-  const validateForm = (values: StageElementConfig) => {
+  const validateForm = (values: StageElementConfig): FormikErrors<StageElementConfig> => {
     if (
       isEqual(values.template?.templateRef, stage?.stage?.template?.templateRef) &&
       isEqual(values.template?.versionLabel, stage?.stage?.template?.versionLabel)
@@ -200,12 +212,10 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     }
   }
 
-  const refetch = () => {
+  const refetch = (): void => {
     refetchTemplate()
     refetchTemplateInputSet()
   }
-
-  const { addOrUpdateTemplate, removeTemplate } = useStageTemplateActions()
 
   const formRefDom = React.useRef<HTMLElement | undefined>()
 

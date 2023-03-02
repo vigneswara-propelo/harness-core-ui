@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { debounce, defaultTo, isEmpty, isEqual, noop, set } from 'lodash-es'
+import { debounce, defaultTo, isEmpty, isEqual, isNil, noop, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Container, Formik, FormikForm, Heading, Layout, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -40,7 +40,15 @@ import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './TemplatePipelineSpecifications.module.scss'
 
-export function TemplatePipelineSpecifications(): JSX.Element {
+interface TemplatePipelineSpecificationsProps {
+  isTemplateUpdated?: boolean
+  setIsTemplateUpdated?(isTemplateUpdated: boolean): void
+}
+
+export function TemplatePipelineSpecifications({
+  isTemplateUpdated,
+  setIsTemplateUpdated
+}: TemplatePipelineSpecificationsProps): JSX.Element {
   const {
     state: { pipeline, schemaErrors, gitDetails, storeMetadata },
     allowableTypes,
@@ -54,7 +62,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   const templateVersionLabel = getIdentifierFromValue(defaultTo(pipeline.template?.versionLabel, ''))
   const templateScope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
   const pipelineScope = getScopeFromDTO(pipeline)
-  const [formValues, setFormValues] = React.useState<PipelineInfoConfig | undefined>()
+  const [formValues, setFormValues] = React.useState<PipelineInfoConfig | undefined>(pipeline)
   const [allValues, setAllValues] = React.useState<PipelineInfoConfig>()
   const [templateInputs, setTemplateInputs] = React.useState<PipelineInfoConfig | undefined>()
   const { getString } = useStrings()
@@ -64,6 +72,8 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   const [showFormError, setShowFormError] = React.useState<boolean>()
   const viewTypeMetadata = { isTemplateBuilder: true }
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
+  // originalEntityYaml is the reference to fetch the latest mergedResolvedPipeline
+  const [originalEntityYaml, setOriginalEntityYaml] = React.useState<string>('')
 
   const onChange = React.useCallback(
     debounce(async (values: PipelineInfoConfig): Promise<void> => {
@@ -92,14 +102,6 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
-  const originalEntityYaml = React.useMemo(() => {
-    const updatedPipelineWithOriginalInputs = produce(pipeline, draft => {
-      set(draft, 'template.templateInputs', templateInputs)
-    })
-
-    return yamlStringify({ pipeline: updatedPipelineWithOriginalInputs })
-  }, [pipeline, templateInputs])
-
   const {
     data: pipelineResponse,
     error: pipelineError,
@@ -127,9 +129,35 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     if (!pipelineLoading) {
       setAllValues(parse<Pipeline>(defaultTo(pipelineResponse?.data?.mergedPipelineYaml, ''))?.pipeline)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pipelineResponse?.data?.mergedPipelineYaml, pipelineLoading])
 
-  const updateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
+  /**
+   * This function is used to set the original entity yaml with the newly updated template inputs
+   * @param newTemplateInputs - this is the newly updated templates
+   * @param updateFormValue - this indicates if form values should be updated
+   */
+  const setOriginalEntityYamlWithNewInputs = (
+    newTemplateInputs: PipelineInfoConfig,
+    updateFormValue?: boolean
+  ): void => {
+    if (isEmpty(newTemplateInputs)) {
+      setFormValues(undefined)
+    } else {
+      const updatedPipelineWithOriginalInputs = produce(pipeline, draft => {
+        set(draft, 'template.templateInputs', newTemplateInputs)
+      })
+
+      setOriginalEntityYaml(yamlStringify({ pipeline: updatedPipelineWithOriginalInputs }))
+
+      if (updateFormValue) {
+        setFormValues(updatedPipelineWithOriginalInputs)
+        updatePipeline(updatedPipelineWithOriginalInputs)
+      }
+    }
+  }
+
+  const updateFormValues = (newTemplateInputs: PipelineInfoConfig): void => {
     const updatedPipeline = produce(pipeline, draft => {
       set(
         draft,
@@ -137,17 +165,13 @@ export function TemplatePipelineSpecifications(): JSX.Element {
         !isEmpty(newTemplateInputs) ? replaceDefaultValues(newTemplateInputs) : undefined
       )
     })
+
     setFormValues(updatedPipeline)
+    setOriginalEntityYamlWithNewInputs(newTemplateInputs)
     updatePipeline(updatedPipeline)
   }
 
-  React.useEffect(() => {
-    if (!isEmpty(formValues) && !allValues) {
-      refetchPipeline()
-    }
-  }, [formValues])
-
-  const retainInputsAndUpdateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
+  const retainInputsAndUpdateFormValues = (newTemplateInputs: PipelineInfoConfig): void => {
     if (isEmpty(newTemplateInputs)) {
       updateFormValues(newTemplateInputs)
     } else {
@@ -174,6 +198,8 @@ export function TemplatePipelineSpecifications(): JSX.Element {
         updateFormValues(newTemplateInputs)
       }
     }
+
+    setIsTemplateUpdated?.(false)
   }
 
   React.useEffect(() => {
@@ -181,13 +207,28 @@ export function TemplatePipelineSpecifications(): JSX.Element {
       setTemplateInputs(undefined)
       setFormikErrors({})
       setAllValues(undefined)
-      setFormValues(undefined)
     } else {
-      const newTemplateInputs = parse<PipelineInfoConfig>(defaultTo(templateInputSetYaml?.data, ''))
+      const newTemplateInputs = parse<PipelineInfoConfig>(defaultTo(templateInputSetYaml?.data, '{}'))
       setTemplateInputs(newTemplateInputs)
-      retainInputsAndUpdateFormValues(newTemplateInputs)
+
+      // retain the inputs and update form values accordingly iff template has been updated
+      if (isTemplateUpdated) {
+        retainInputsAndUpdateFormValues(newTemplateInputs)
+      } else {
+        // else set original entity yaml
+        // We also need to set form values and update the pipeline when a template is first linked to a pipeline
+        setOriginalEntityYamlWithNewInputs(newTemplateInputs, isNil(formValues?.template?.templateInputs))
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [templateInputSetLoading])
+
+  React.useEffect(() => {
+    if (!isEmpty(formValues) && !allValues && !isEmpty(originalEntityYaml)) {
+      refetchPipeline()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [originalEntityYaml])
 
   React.useEffect(() => {
     if (schemaErrors) {
@@ -196,7 +237,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     }
   }, [schemaErrors])
 
-  const validateForm = (values: PipelineInfoConfig) => {
+  const validateForm = (values: PipelineInfoConfig): FormikErrors<PipelineInfoConfig> => {
     if (
       isEqual(values.template?.templateRef, pipeline.template?.templateRef) &&
       isEqual(values.template?.versionLabel, pipeline.template?.versionLabel) &&
@@ -221,7 +262,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     }
   }
 
-  const refetch = () => {
+  const refetch = (): void => {
     refetchPipeline()
     refetchTemplateInputSet()
   }
