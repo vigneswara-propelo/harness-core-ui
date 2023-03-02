@@ -582,6 +582,7 @@ export default function ArtifactsSelection({
   return (
     <ArtifactListView
       deploymentType={deploymentType}
+      stage={stage}
       primaryArtifact={primaryArtifact}
       sideCarArtifact={sideCarArtifact}
       addNewArtifact={addNewArtifact}

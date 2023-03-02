@@ -218,6 +218,7 @@ describe('ArtifactsSelection tests', () => {
         type: 'DockerRegistry' as 'DockerRegistry' | 'Gcr' | 'Ecr'
       },
       sideCarArtifact: [],
+      stage: pipelineContextMock.state.pipeline.stages[0] as any,
       addNewArtifact: jest.fn(),
       editArtifact: jest.fn(),
       removePrimary: jest.fn(),
@@ -244,6 +245,7 @@ describe('ArtifactsSelection tests', () => {
         type: 'Gcr' as 'DockerRegistry' | 'Gcr' | 'Ecr'
       },
       sideCarArtifact: [],
+      stage: pipelineContextMock.state.pipeline.stages[0] as any,
       addNewArtifact: jest.fn(),
       editArtifact: jest.fn(),
       removePrimary: jest.fn(),
@@ -286,6 +288,7 @@ describe('ArtifactsSelection tests', () => {
           }
         }
       ],
+      stage: pipelineContextMock.state.pipeline.stages[0] as any,
       addNewArtifact: jest.fn(),
       editArtifact: jest.fn(),
       removePrimary: jest.fn(),
@@ -318,6 +321,7 @@ describe('ArtifactsSelection tests', () => {
         type: 'Gcr' as 'DockerRegistry' | 'Gcr' | 'Ecr'
       },
       sideCarArtifact: [],
+      stage: pipelineContextMock.state.pipeline.stages[0] as any,
       addNewArtifact: jest.fn(),
       editArtifact: jest.fn(),
       removePrimary: jest.fn(),
@@ -350,6 +354,7 @@ describe('ArtifactsSelection tests', () => {
         type: 'Gcr' as 'DockerRegistry' | 'Gcr' | 'Ecr'
       },
       sideCarArtifact: [],
+      stage: pipelineContextMock.state.pipeline.stages[0] as any,
       addNewArtifact: jest.fn(),
       editArtifact: jest.fn(),
       removePrimary: jest.fn(),
