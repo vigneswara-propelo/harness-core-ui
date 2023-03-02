@@ -389,6 +389,7 @@ gitOps: '{{ $.common.gitOps }}'
 addService: Add Service
 noService: You have no Services
 addEnvironment: Add Environment
+existingEnvironment: 'Existing Environment'
 editIdError: 'ID: {{id}} cannot be edited'
 typeError: 'Type should not be empty and contain either "Production" or "PreProduction"'
 newAdapter: New Adapter

@@ -5255,6 +5255,7 @@ export interface StringsMap {
   'cd.environmentDetailPage.selectArtifactMsg': string
   'cd.environmentDetailPage.viewInTable': string
   'cd.environmentUpdated': string
+  'cd.existingEnvironment': string
   'cd.exportTerraformHumanReadablePlan': string
   'cd.exportTerraformPlanJson': string
   'cd.exportTerragruntPlanJson': string
