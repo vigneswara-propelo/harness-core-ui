@@ -46,9 +46,13 @@ export const RenderColumnProject: Renderer<CellProps<ProjectAggregateDTO>> = ({ 
   const project = row.original.projectResponse.project
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+    <Layout.Horizontal
+      spacing="small"
+      flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+      padding={{ right: 'medium' }}
+    >
       <div className={css.colorbox} style={{ backgroundColor: `${project.color}` }} />
-      <Layout.Vertical spacing="xsmall" padding={{ left: 'small' }} className={css.verticalCenter}>
+      <Layout.Vertical spacing="xsmall" padding={{ left: 'small' }} className={css.projectTextContainer}>
         <Layout.Horizontal spacing="small">
           <Text color={Color.BLACK} lineClamp={1} className={css.project}>
             {project.name}
