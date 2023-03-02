@@ -420,7 +420,7 @@ git:
   bitbucketRepoPlaceholderSSH: 'git@bitbucket.org/repo'
   azureReposUrlPlaceholder: 'https://dev.azure.com/<organizationName>/<projectName>'
   azureReposUrlPlaceholderRepoHttp: 'https://dev.azure.com/<organizationName>/<projectName>/_git/<repositoryName>'
-  azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organizationName>'
+  azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organizationName>/<projectName>'
   azureReposPlaceholderRepoSSH: 'git@ssh.dev.azure.com:v3/<organizationName>/<projectName>/<repositoryName>'
   enableAPIAccess: 'Enable API access (recommended)'
   APIAccessDescription: 'API Access is required for using “Git Experience”, for creation of Git based triggers, Webhooks management and updating Git statuses'
