@@ -22,11 +22,9 @@ import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import routes from '@common/RouteDefinitions'
 import {
   ConnectorInfoDTO,
-  generateYamlPromise,
   ResponseConnectorResponse,
   ResponseMessage,
   ResponseScmConnectorResponse,
-  ResponseString,
   useCreateDefaultScmConnector,
   UserRepoResponse,
   useUpdateConnector
@@ -41,7 +39,7 @@ import {
   CreatePipelineV2QueryParams
 } from 'services/pipeline-ng'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { yamlStringify, parse } from '@common/utils/YamlHelperMethods'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { Status } from '@common/utils/Constants'
 import { Connectors } from '@connectors/constants'
 import {
@@ -143,6 +141,48 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     queryParams: { accountIdentifier: accountId }
   })
 
+  // TODO enable this back once api is merged to develop
+  // useEffect(() => {
+  //   if (
+  //     configuredGitConnector &&
+  //     configurePipelineRef.current?.configuredOption &&
+  //     selectRepositoryRef.current?.repository &&
+  //     StarterConfigIdToOptionMap[configurePipelineRef.current?.configuredOption.id] ===
+  //       PipelineConfigurationOption.GenerateYAML
+  //   ) {
+  //     setDisableBtn(true)
+  //     try {
+  //       generateYamlPromise({
+  //         queryParams: {
+  //           accountIdentifier: accountId,
+  //           projectIdentifier,
+  //           orgIdentifier,
+  //           connectorIdentifier: getScopedValueFromDTO(configuredGitConnector),
+  //           repo: getFullRepoName(selectRepositoryRef.current.repository)
+  //         }
+  //       }).then((response: ResponseString) => {
+  //         const { status, data } = response || {}
+  //         const newPipelineName = `${DefaultCIPipelineName}_${new Date().getTime().toString()}`
+  //         if (status === Status.SUCCESS && data) {
+  //           setGeneratedYAMLAsJSON(set(parse<PipelineInfoConfig>(data), 'name', newPipelineName))
+  //         } else {
+  //           setGeneratedYAMLAsJSON(set(getCIStarterPipelineV1() as PipelineInfoConfig, 'name', newPipelineName))
+  //         }
+  //         setDisableBtn(false)
+  //       })
+  //     } catch (e) {
+  //       setDisableBtn(false)
+  //     }
+  //   }
+  // }, [
+  //   configuredGitConnector,
+  //   accountId,
+  //   projectIdentifier,
+  //   orgIdentifier,
+  //   configurePipelineRef.current?.configuredOption,
+  //   selectRepositoryRef.current?.repository
+  // ])
+
   useEffect(() => {
     if (
       configuredGitConnector &&
@@ -151,29 +191,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       StarterConfigIdToOptionMap[configurePipelineRef.current?.configuredOption.id] ===
         PipelineConfigurationOption.GenerateYAML
     ) {
-      setDisableBtn(true)
-      try {
-        generateYamlPromise({
-          queryParams: {
-            accountIdentifier: accountId,
-            projectIdentifier,
-            orgIdentifier,
-            connectorIdentifier: getScopedValueFromDTO(configuredGitConnector),
-            repo: getFullRepoName(selectRepositoryRef.current.repository)
-          }
-        }).then((response: ResponseString) => {
-          const { status, data } = response || {}
-          const newPipelineName = `${DefaultCIPipelineName}_${new Date().getTime().toString()}`
-          if (status === Status.SUCCESS && data) {
-            setGeneratedYAMLAsJSON(set(parse<PipelineInfoConfig>(data), 'name', newPipelineName))
-          } else {
-            setGeneratedYAMLAsJSON(set(getCIStarterPipelineV1() as PipelineInfoConfig, 'name', newPipelineName))
-          }
-          setDisableBtn(false)
-        })
-      } catch (e) {
-        setDisableBtn(false)
-      }
+      const newPipelineName = `${DefaultCIPipelineName}_${new Date().getTime().toString()}`
+      setGeneratedYAMLAsJSON(set(getCIStarterPipelineV1() as PipelineInfoConfig, 'name', newPipelineName))
     }
   }, [
     configuredGitConnector,
