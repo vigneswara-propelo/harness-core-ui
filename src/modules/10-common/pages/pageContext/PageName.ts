@@ -7,6 +7,7 @@
 
 export enum PAGE_NAME {
   AccountResources = 'AccountResources',
+  ProjectListing = 'ProjectListing',
   SmtpDetails = 'SmtpDetails',
   AuditTrailsPage = 'AuditTrailsPage',
   ServiceAccountsPage = 'ServiceAccountsPage',

@@ -39,6 +39,9 @@ import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationPro
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
 import { sortByCreated, sortByEmail, sortByLastModified, sortByName } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import css from './UserListView.module.scss'
 
 interface PendingUserListViewProps {
@@ -202,7 +205,8 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { page, size } = useQueryParams(rbacQueryParamOptions)
   const isCommunity = useGetCommunity()
-  const [sort, setSort] = useState<string>(sortByLastModified[0].value as string)
+  const { preference: sortPreference = sortByLastModified[0].value as string, setPreference: setSortPreference } =
+    usePreferenceStore<string>(PreferenceScope.USER, `sort-${PAGE_NAME.UsersPage}`)
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetPendingUsersAggregated, {
     body: {},
@@ -212,8 +216,10 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
       projectIdentifier,
       pageIndex: page,
       pageSize: size,
-      searchTerm: searchTerm
+      searchTerm: searchTerm,
+      sortOrders: [sortPreference]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -314,9 +320,11 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
       }
     >
       <ListHeader
-        value={sort}
+        selectedSortMethod={sortPreference}
         sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName, ...sortByEmail]}
-        onChange={option => setSort(option.value as string)}
+        onSortMethodChange={option => {
+          setSortPreference(option.value as string)
+        }}
         totalCount={data?.data?.totalItems}
       />
       <TableV2<Invite>

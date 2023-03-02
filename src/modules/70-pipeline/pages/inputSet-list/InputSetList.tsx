@@ -39,13 +39,17 @@ import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import ListHeader from '@common/components/ListHeader/ListHeader'
 import { sortByCreated, sortByName } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import { InputSetListView } from './InputSetListView'
 import css from './InputSetList.module.scss'
 
 function InputSetList(): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [page, setPage] = React.useState(0)
-  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
+  const { preference: sortPreference = sortByCreated[0].value as string, setPreference: setSortPreference } =
+    usePreferenceStore<string>(PreferenceScope.USER, `sort-${PAGE_NAME.InputSetList}`)
   const { connectorRef, repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<PipelinePathProps> & { accountId: string }
@@ -77,7 +81,7 @@ function InputSetList(): React.ReactElement {
             getDefaultFromOtherRepo: true
           }
         : {}),
-      sortOrders: [sort]
+      sortOrders: [sortPreference]
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: !isEmpty(searchParam) ? 300 : false
@@ -355,9 +359,11 @@ function InputSetList(): React.ReactElement {
         ) : (
           <>
             <ListHeader
-              value={sort}
+              selectedSortMethod={sortPreference}
               sortOptions={[...sortByCreated, ...sortByName]}
-              onChange={option => setSort(option.value as string)}
+              onSortMethodChange={option => {
+                setSortPreference(option.value as string)
+              }}
               totalCount={inputSet?.data?.totalItems}
               className={css.listHeader}
             />
