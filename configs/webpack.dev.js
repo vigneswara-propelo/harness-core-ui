@@ -231,7 +231,7 @@ if (!(DISABLE_TYPECHECK || isCI || isCypress)) {
   mergedConfig.plugins.push(
     new ForkTsCheckerWebpackPlugin({
       typescript: {
-        memoryLimit: 4096
+        memoryLimit: 6144
       }
     })
   )
