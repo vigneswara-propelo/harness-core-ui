@@ -4818,6 +4818,8 @@ export interface StringsMap {
   'pipeline.waitStep.validation.duration10SecMinimum': string
   'pipeline.warningForInvalidYAMLDiscard': string
   'freezeWindows.deploymentFreeze': string
+  'freezeWindows.freezeNotifications.customMessageTitle': string
+  'freezeWindows.freezeNotifications.customizedMessagePlaceholder': string
   'freezeWindows.freezeNotifications.rejectedDeployments': string
   'freezeWindows.freezeNotifications.windowEnabled': string
   'freezeWindows.freezeStudio.activeFreeze': string
