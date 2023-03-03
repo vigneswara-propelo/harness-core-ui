@@ -881,7 +881,7 @@ export const validatePipeline = ({
         set(errors, 'variables', errorsResponse.variables)
       }
     }
-    pipeline.stages?.forEach((stageObj, index) => {
+    pipeline?.stages?.forEach((stageObj, index) => {
       if (stageObj.stage) {
         const originalStage = getStageFromPipeline(stageObj.stage.identifier, originalPipeline)
         if (stageObj.stage.type === StageType.PIPELINE) {
