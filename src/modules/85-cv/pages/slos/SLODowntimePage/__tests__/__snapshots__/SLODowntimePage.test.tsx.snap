@@ -116,7 +116,7 @@ exports[`DowntimeHistory page should render downtime history view and change fil
       data-testid="page-body"
     >
       <div
-        class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
+        class="StyledProps--font StyledProps--main StyledProps--margin-top-large"
       >
         <div
           class="TableV2--table"
@@ -891,7 +891,7 @@ exports[`SLO Downtime page should render downtime list view 1`] = `
               data-testid="page-body"
             >
               <div
-                class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-large"
               >
                 <div
                   class="TableV2--table"
