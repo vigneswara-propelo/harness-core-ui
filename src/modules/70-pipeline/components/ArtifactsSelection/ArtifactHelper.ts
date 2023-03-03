@@ -215,8 +215,9 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.AmazonS3,
     ENABLED_ARTIFACT_TYPES.Nexus2Registry,
     ENABLED_ARTIFACT_TYPES.AzureArtifacts,
-    ENABLED_ARTIFACT_TYPES.DockerRegistry,
-    ENABLED_ARTIFACT_TYPES.Gcr
+    ENABLED_ARTIFACT_TYPES.Gcr,
+    ENABLED_ARTIFACT_TYPES.Acr,
+    ENABLED_ARTIFACT_TYPES.DockerRegistry
   ],
   WinRm: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -226,8 +227,9 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.AmazonS3,
     ENABLED_ARTIFACT_TYPES.Nexus2Registry,
     ENABLED_ARTIFACT_TYPES.AzureArtifacts,
-    ENABLED_ARTIFACT_TYPES.DockerRegistry,
-    ENABLED_ARTIFACT_TYPES.Gcr
+    ENABLED_ARTIFACT_TYPES.Gcr,
+    ENABLED_ARTIFACT_TYPES.Acr,
+    ENABLED_ARTIFACT_TYPES.DockerRegistry
   ],
   AzureWebApp: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
