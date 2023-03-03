@@ -1830,6 +1830,15 @@
     "@types/qs" "^6.9.7"
     qs "^6.9.4"
 
+"@harnessio/react-idp-service-client@0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-idp-service-client/-/react-idp-service-client-0.4.0.tgz#5516d7435785ad50f07ac658332c4c6e029c2096"
+  integrity sha512-RkjFCJFXU+VXhdXFNYt8xaa7tJwHfKbxtV+P7ywA7z6NxLGvPUPRliVaeLvqAHRSTU3glK2HhsTyxVIUgiDRzg==
+  dependencies:
+    "@tanstack/react-query" "4.20.4"
+    "@types/qs" "^6.9.7"
+    qs "^6.9.4"
+
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.9.5.tgz#2cbaf9a89460da24b5ca6531b8bbfc23e1df50c7"

@@ -78,6 +78,8 @@ module.exports = {
       lines: 65
     }
   },
-  transformIgnorePatterns: ['node_modules/(?!(date-fns|lodash-es|@harnessio/react-audit-service-client|p-debounce)/)'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(date-fns|lodash-es|@harnessio/react-audit-service-client|@harnessio/react-idp-service-client|p-debounce)/)'
+  ],
   testPathIgnorePatterns: ['<rootDir>/dist']
 }

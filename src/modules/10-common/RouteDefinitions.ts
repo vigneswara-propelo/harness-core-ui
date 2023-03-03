@@ -2069,6 +2069,7 @@ const routes = {
     }
   ),
   toSSCAGettingStarted: withAccountId(() => '/ssca/getting-started'),
+  toIDPDefaultPath: withAccountId(() => '/idp-default'),
   toIDP: withAccountId(() => '/idp'),
   toIDPAdmin: withAccountId(() => '/idp-admin')
 }

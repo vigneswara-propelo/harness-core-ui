@@ -143,7 +143,7 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.IDP]: {
     icon: 'idp',
     label: 'common.purpose.idp.fullName',
-    getHomePageUrl: (accountId: string) => routes.toIDP({ accountId }),
+    getHomePageUrl: (accountId: string) => routes.toIDPDefaultPath({ accountId }),
     featureFlagName: FeatureFlag.IDP_ENABLED,
     color: '--default-module-border'
   }

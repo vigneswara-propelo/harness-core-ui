@@ -6,8 +6,12 @@
  */
 
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { useGetUserGroupAggregate } from 'services/cd-ng'
 
 export interface IDPCustomMicroFrontendProps {
+  idpServices: {
+    useGetUserGroupAggregate: typeof useGetUserGroupAggregate
+  }
   customComponents: {
     ConnectorReferenceField: React.ComponentType<ConnectorReferenceFieldProps>
   }
