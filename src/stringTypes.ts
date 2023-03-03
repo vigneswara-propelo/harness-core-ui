@@ -7063,11 +7063,11 @@ export interface StringsMap {
   'cf.auditLogs.createdMessageSegment': string
   'cf.auditLogs.empty': string
   'cf.auditLogs.events.addClause': string
+  'cf.auditLogs.events.addPercentageRollout': string
   'cf.auditLogs.events.addPrerequisite': string
   'cf.auditLogs.events.addRule': string
   'cf.auditLogs.events.addSegmentToVariationTargetMap': string
   'cf.auditLogs.events.addService': string
-  'cf.auditLogs.events.addTargetsToVariationTargetMap': string
   'cf.auditLogs.events.addToExcludeList': string
   'cf.auditLogs.events.addToIncludeList': string
   'cf.auditLogs.events.addVariation': string
@@ -7086,6 +7086,7 @@ export interface StringsMap {
   'cf.auditLogs.events.setFeatureFlagStateOff': string
   'cf.auditLogs.events.setFeatureFlagStateOn': string
   'cf.auditLogs.events.tagUpdated': string
+  'cf.auditLogs.events.targetAddedForVariation': string
   'cf.auditLogs.events.updateClause': string
   'cf.auditLogs.events.updateDefaultServe.bucketBy': string
   'cf.auditLogs.events.updateDefaultServe.variation': string
