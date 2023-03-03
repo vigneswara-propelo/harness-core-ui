@@ -84,7 +84,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const connectorRefValue = defaultTo(
+  const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
