@@ -237,7 +237,7 @@ monitoringSources:
     chart: Chart
     addMetric: Add metric
     metricName: '{{name}} name'
-    addGroupName: Add group Name
+    addGroupName: Add Group Name
     runQuery: Run Query
     confirmDeleteMetric: 'Are you sure you want to delete metric {{name}}'
     submitQueryToSeeRecords: Enter your query
