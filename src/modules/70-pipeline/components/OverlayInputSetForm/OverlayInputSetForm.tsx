@@ -44,7 +44,10 @@ import {
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   ResponseMergeInputSetResponse
 } from 'services/pipeline-ng'
-
+import { useGetSettingValue } from 'services/cd-ng'
+import { SettingType } from '@default-settings/interfaces/SettingType.types'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { useToaster } from '@common/exports'
 import { NameSchema } from '@common/utils/Validation'
 import type {
@@ -72,8 +75,9 @@ import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { getOverlayErrors } from '@pipeline/utils/runPipelineUtils'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
-import { hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import { shouldDisableGitDetailsFields, hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
 import {
@@ -118,6 +122,8 @@ export interface OverlayInputSetFormProps {
   isReadOnly?: boolean
   overlayInputSetRepoIdentifier?: string
   overlayInputSetBranch?: string
+  overlayInputSetRepoName?: string
+  overlayInputSetConnectorRef?: string
 }
 
 const dialogProps: Omit<IDialogProps, 'isOpen'> = {
@@ -149,7 +155,9 @@ export function OverlayInputSetForm({
   identifier,
   isReadOnly = false,
   overlayInputSetRepoIdentifier,
-  overlayInputSetBranch
+  overlayInputSetBranch,
+  overlayInputSetRepoName,
+  overlayInputSetConnectorRef
 }: OverlayInputSetFormProps): React.ReactElement {
   const { getString } = useStrings()
   const [isOpen, setIsOpen] = React.useState(true)
@@ -167,8 +175,15 @@ export function OverlayInputSetForm({
     accountId: string
     pipelineIdentifier: string
   }>()
-  const { repoIdentifier, branch, connectorRef, storeType, repoName } = useQueryParams<InputSetGitQueryParams>()
-
+  const {
+    repoIdentifier,
+    branch,
+    connectorRef: pipelineConnectorRef,
+    storeType,
+    repoName: pipelineRepoName
+  } = useQueryParams<InputSetGitQueryParams>()
+  const repoName = overlayInputSetRepoName || pipelineRepoName
+  const connectorRef = overlayInputSetConnectorRef || pipelineConnectorRef
   const [initialGitDetails, setInitialGitDetails] = React.useState<EntityGitDetails>({ repoIdentifier, branch })
   const [initialStoreMetadata, setInitialStoreMetadata] = React.useState<StoreMetadata>({
     repoName,
@@ -194,10 +209,9 @@ export function OverlayInputSetForm({
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
-      repoIdentifier,
-      branch
+      repoIdentifier
     }
-  }, [accountId, orgIdentifier, pipelineIdentifier, projectIdentifier, repoIdentifier, branch])
+  }, [accountId, orgIdentifier, pipelineIdentifier, projectIdentifier, repoIdentifier])
 
   const {
     data: overlayInputSetResponse,
@@ -214,18 +228,33 @@ export function OverlayInputSetForm({
           }
         : {}),
       repoIdentifier: isGitSyncEnabled ? overlayInputSetRepoIdentifier : repoName,
-      branch: isGitSyncEnabled ? overlayInputSetBranch : branch
+      ...(isGitSyncEnabled
+        ? { branch: overlayInputSetBranch }
+        : { ...(overlayInputSetRepoName !== pipelineRepoName ? { loadFromFallbackBranch: true } : { branch }) })
     },
     inputSetIdentifier: defaultTo(identifier, ''),
     lazy: true
   })
 
+  const isSettingEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
+  const { data: allowDifferentRepoSettings, error: allowDifferentRepoSettingsError } = useGetSettingValue({
+    identifier: SettingType.ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS,
+    queryParams: { accountIdentifier: accountId },
+    lazy: !isSettingEnabled
+  })
+
+  React.useEffect(() => {
+    if (allowDifferentRepoSettingsError) {
+      showError(getRBACErrorMessage(allowDifferentRepoSettingsError))
+    }
+  }, [allowDifferentRepoSettingsError, getRBACErrorMessage, showError])
+
   const { mutate: createOverlayInputSet, loading: createOverlayInputSetLoading } = useCreateOverlayInputSetForPipeline({
-    queryParams: commonQueryParams,
+    queryParams: { ...commonQueryParams, branch },
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })
   const { mutate: updateOverlayInputSet, loading: updateOverlayInputSetLoading } = useUpdateOverlayInputSetForPipeline({
-    queryParams: commonQueryParams,
+    queryParams: { ...commonQueryParams, branch },
     inputSetIdentifier: '',
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })
@@ -261,8 +290,8 @@ export function OverlayInputSetForm({
       projectIdentifier,
       repoIdentifier,
       branch,
-      parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoName
+      parentEntityConnectorRef: pipelineConnectorRef,
+      parentEntityRepoName: pipelineRepoName
     }
   })
 
@@ -277,8 +306,8 @@ export function OverlayInputSetForm({
         pipelineBranch: branch,
         repoIdentifier,
         branch,
-        parentEntityConnectorRef: connectorRef,
-        parentEntityRepoName: repoName
+        parentEntityConnectorRef: pipelineConnectorRef,
+        parentEntityRepoName: pipelineRepoName
       }
     })
 
@@ -704,7 +733,7 @@ export function OverlayInputSetForm({
             initialValues={{
               ...omit(inputSet, 'gitDetails', 'entityValidityDetails', 'outdated'),
               repo: isGitSyncEnabled ? defaultTo(repoIdentifier, '') : defaultTo(repoName, ''),
-              branch: defaultTo(branch, ''),
+              branch: defaultTo(inputSet.gitDetails?.branch || branch, ''),
               connectorRef: defaultTo(connectorRef, ''),
               repoName: defaultTo(repoName, ''),
               storeType: defaultTo(storeType, StoreType.INLINE),
@@ -721,7 +750,8 @@ export function OverlayInputSetForm({
                 { ...values, inputSetReferences: selectedInputSetReferences },
                 { repoIdentifier: values.repo, branch: values.branch, repoName: values.repo },
                 {
-                  connectorRef: values.connectorRef,
+                  connectorRef:
+                    (values.connectorRef as unknown as ConnectorSelectedValue)?.value || values.connectorRef,
                   repoName: values.repo,
                   branch: values.branch,
                   filePath: values.filePath,
@@ -777,7 +807,7 @@ export function OverlayInputSetForm({
                                 formikProps={formikProps as any}
                                 isEdit={isEdit}
                                 disableFields={
-                                  !isEdit
+                                  shouldDisableGitDetailsFields(isEdit, allowDifferentRepoSettings?.data?.value)
                                     ? {
                                         connectorRef: true,
                                         repoName: true,

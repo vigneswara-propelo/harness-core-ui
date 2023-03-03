@@ -157,6 +157,8 @@ function InputSetList(): React.ReactElement {
     identifier?: string
     repoIdentifier?: string
     branch?: string
+    inputSetRepoName?: string
+    inputSetConnectorRef?: string
   }>()
   const history = useHistory()
 
@@ -177,8 +179,10 @@ function InputSetList(): React.ReactElement {
           inputSetIdentifier: typeof inputSetTemp?.identifier !== 'string' ? '-1' : inputSetTemp.identifier,
           module,
           inputSetRepoIdentifier: inputSetTemp?.gitDetails?.repoIdentifier,
+          inputSetRepoName: inputSetTemp?.gitDetails?.repoName,
           inputSetBranch: inputSetTemp?.gitDetails?.branch,
-          connectorRef,
+          inputSetConnectorRef: inputSetTemp?.connectorRef, //InputSet connector
+          connectorRef, //Pipeline connector
           repoIdentifier,
           repoName,
           branch,
@@ -212,6 +216,8 @@ function InputSetList(): React.ReactElement {
         identifier={selectedInputSet?.identifier}
         overlayInputSetRepoIdentifier={selectedInputSet?.repoIdentifier}
         overlayInputSetBranch={selectedInputSet?.branch}
+        overlayInputSetRepoName={selectedInputSet?.inputSetRepoName}
+        overlayInputSetConnectorRef={selectedInputSet?.inputSetConnectorRef}
         hideForm={() => {
           refetch()
           hideOverlayInputSetForm()
@@ -377,7 +383,9 @@ function InputSetList(): React.ReactElement {
                 setSelectedInputSet({
                   identifier: inputSetTemp?.identifier,
                   repoIdentifier: inputSetTemp?.gitDetails?.repoIdentifier,
-                  branch: inputSetTemp?.gitDetails?.branch
+                  branch: inputSetTemp?.gitDetails?.branch,
+                  inputSetRepoName: inputSetTemp?.gitDetails?.repoName,
+                  inputSetConnectorRef: inputSetTemp?.connectorRef
                 })
                 if (inputSetTemp?.inputSetType === 'INPUT_SET') {
                   goToInputSetForm(inputSetTemp)
