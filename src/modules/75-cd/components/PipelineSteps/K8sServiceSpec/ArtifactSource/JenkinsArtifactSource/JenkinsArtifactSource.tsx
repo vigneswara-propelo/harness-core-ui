@@ -82,6 +82,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     serviceIdentifier,
     stepViewType,
     artifacts,
+    pipelineIdentifier,
     useArtifactV1Data = false
   } = props
 
@@ -96,7 +97,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     projectIdentifier,
     orgIdentifier,
     repoIdentifier,
-    branch
+    branch,
+    pipelineIdentifier
   }
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
@@ -212,7 +214,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString(),
-      jobName: jobNameValue ? getEncodedValue(jobNameValue) : undefined,
+      jobName: jobNameValue,
       serviceId,
       fqnPath: getFqnPath(
         path as string,
