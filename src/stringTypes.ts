@@ -5867,6 +5867,7 @@ export interface StringsMap {
   'cd.steps.tas.oldAppInstance': string
   'cd.steps.tas.oldAppInstances': string
   'cd.steps.tas.readFromManifest': string
+  'cd.steps.tas.resizeStrategy': string
   'cd.steps.tas.tempRouteMandatory': string
   'cd.steps.tas.tempRoutes': string
   'cd.steps.tas.totalInstances': string
