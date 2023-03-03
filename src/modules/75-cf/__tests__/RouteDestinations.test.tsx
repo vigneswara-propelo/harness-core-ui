@@ -26,7 +26,8 @@ describe('RouteDestinations', () => {
     FFM_3959_FF_MFE_Environment_Detail: false,
     FFM_5256_FF_MFE_Environment_Listing: false,
     FFM_6665_FF_MFE_Target_Detail: false,
-    FFM_6666_FF_MFE_Target_Group_Detail: false
+    FFM_6666_FF_MFE_Target_Group_Detail: false,
+    FFM_6800_FF_MFE_Onboarding: false
   }
 
   const renderRoutes = (flagOverrides: Partial<Record<FeatureFlag, boolean>> = {}): ReactElement[] => {
@@ -135,6 +136,18 @@ describe('RouteDestinations', () => {
     const routes = renderRoutes({ FFM_6665_FF_MFE_Target_Detail: true, FFM_1827: false })
 
     expect(routesHavePageName(routes, 'TargetDetailPage')).toBeFalsy()
+  })
+
+  test('it should render the NGUI version of the Onboarding page when FFM_6800_FF_MFE_Onboarding is false', async () => {
+    const routes = renderRoutes({ FFM_6800_FF_MFE_Onboarding: false })
+
+    expect(routesHavePageName(routes, 'OnboardingPage')).toBeTruthy()
+  })
+
+  test('it should not render the NGUI version of the Onboarding listing page when FFM_6800_FF_MFE_Onboarding is true', async () => {
+    const routes = renderRoutes({ FFM_6800_FF_MFE_Onboarding: true })
+
+    expect(routesHavePageName(routes, 'OnboardingPage')).toBeFalsy()
   })
 })
 

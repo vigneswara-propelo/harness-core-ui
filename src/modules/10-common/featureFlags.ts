@@ -32,6 +32,7 @@ export enum FeatureFlag {
   FFM_5256_FF_MFE_Environment_Listing = 'FFM_5256_FF_MFE_Environment_Listing',
   FFM_5951_FF_MFE_Targets_Listing = 'FFM_5951_FF_MFE_Targets_Listing',
   FFM_6665_FF_MFE_Target_Detail = 'FFM_6665_FF_MFE_Target_Detail',
+  FFM_6800_FF_MFE_Onboarding = 'FFM_6800_FF_MFE_Onboarding',
   FEATURE_ENFORCEMENT_ENABLED = 'FEATURE_ENFORCEMENT_ENABLED',
   FREE_PLAN_ENFORCEMENT_ENABLED = 'FREE_PLAN_ENFORCEMENT_ENABLED',
   VIEW_USAGE_ENABLED = 'VIEW_USAGE_ENABLED',

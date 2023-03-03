@@ -202,7 +202,8 @@ const CFRoutes: FC = () => {
     FFM_6666_FF_MFE_Target_Group_Detail,
     FFM_5256_FF_MFE_Environment_Listing,
     FFM_5951_FF_MFE_Targets_Listing,
-    FFM_6665_FF_MFE_Target_Detail
+    FFM_6665_FF_MFE_Target_Detail,
+    FFM_6800_FF_MFE_Onboarding
   } = useFeatureFlags()
 
   return (
@@ -372,7 +373,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.OnboardingPage}
       >
-        <OnboardingPage />
+        {FFM_6800_FF_MFE_Onboarding ? <FFUIApp /> : <OnboardingPage />}
       </RouteWithLayout>
 
       <RouteWithLayout
