@@ -151,7 +151,7 @@ function SaveTemplatePopover(
         navigateToLocation(latestTemplate, updatedGitDetails)
       } else {
         showSuccess(getString('common.template.updateTemplate.templateUpdated'))
-        await fetchTemplate({ forceFetch: true, forceUpdate: true })
+        navigateToLocation(latestTemplate, updatedGitDetails)
       }
     } else {
       // If new template creation
