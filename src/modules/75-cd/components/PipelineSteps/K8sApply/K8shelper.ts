@@ -9,12 +9,6 @@ import type { IconName } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
 import type { StringKeys } from 'framework/strings'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
-import {
-  buildBitbucketPayload,
-  buildGithubPayload,
-  buildGitlabPayload,
-  buildGitPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { K8sManifestStores, K8sManifestTypes } from './K8sInterface'
 export const K8sManifestDataType: Record<K8sManifestTypes, K8sManifestTypes> = {
   Values: 'Values',
@@ -32,7 +26,8 @@ export const K8sManifestStoreMap: { [key: string]: K8sManifestStores } = {
   GitLab: 'GitLab',
   Bitbucket: 'Bitbucket',
   Inline: 'Inline',
-  Harness: 'Harness'
+  Harness: 'Harness',
+  AzureRepo: 'AzureRepo'
 }
 
 export const K8smanifestTypeIcons: Record<K8sManifestTypes, IconName> = {
@@ -51,7 +46,8 @@ export const K8sManifestToConnectorMap: Record<K8sManifestStores | string, Conne
   Git: Connectors.GIT,
   Github: Connectors.GITHUB,
   GitLab: Connectors.GITLAB,
-  Bitbucket: Connectors.BITBUCKET
+  Bitbucket: Connectors.BITBUCKET,
+  AzureRepo: Connectors.AZURE_REPO
 }
 
 export const K8smanifestStoreTypes: Array<K8sManifestStores> = [
@@ -59,6 +55,7 @@ export const K8smanifestStoreTypes: Array<K8sManifestStores> = [
   K8sManifestStoreMap.Github,
   K8sManifestStoreMap.GitLab,
   K8sManifestStoreMap.Bitbucket,
+  K8sManifestStoreMap.AzureRepo,
   K8sManifestStoreMap.Inline,
   K8sManifestStoreMap.Harness
 ]
@@ -66,20 +63,4 @@ export const K8sManifestTypetoStoreMap: Record<K8sManifestTypes, K8sManifestStor
   Values: K8smanifestStoreTypes,
   OpenshiftParam: K8smanifestStoreTypes,
   KustomizePatches: K8smanifestStoreTypes
-}
-
-export const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
-  if (type === Connectors.GIT) {
-    return buildGitPayload
-  }
-  if (type === Connectors.GITHUB) {
-    return buildGithubPayload
-  }
-  if (type === Connectors.BITBUCKET) {
-    return buildBitbucketPayload
-  }
-  if (type === Connectors.GITLAB) {
-    return buildGitlabPayload
-  }
-  return () => ({})
 }
