@@ -56,6 +56,8 @@ import {
   TemplateServiceDataType
 } from '@pipeline/utils/templateUtils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { Pipeline, TemplateIcons } from '@pipeline/utils/types'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
@@ -86,6 +88,7 @@ export interface PipelineInfoConfigWithGitDetails extends Partial<PipelineInfoCo
   remoteFetchError?: GetDataError<Failure | Error> | null
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
   cacheResponse?: CacheResponseMetadata
+  validationUuid?: string
 }
 
 interface FetchError {
@@ -118,7 +121,8 @@ export const getPipelineByIdentifier = (
         ...(params.repoIdentifier ? { repoIdentifier: params.repoIdentifier } : {}),
         parentEntityConnectorRef: params.connectorRef,
         parentEntityRepoName: params.repoName,
-        ...(params?.storeType === StoreType.REMOTE && !params.branch ? { loadFromFallbackBranch: true } : {})
+        ...(params?.storeType === StoreType.REMOTE && !params.branch ? { loadFromFallbackBranch: true } : {}),
+        ...(params.validateAsync && { validateAsync: true })
       },
       requestOptions: {
         headers: {
@@ -149,7 +153,8 @@ export const getPipelineByIdentifier = (
         entityValidityDetails: obj.data.entityValidityDetails ?? {},
         yamlSchemaErrorWrapper: obj.data.yamlSchemaErrorWrapper ?? {},
         modules: response.data?.modules,
-        cacheResponse: obj.data?.cacheResponse
+        cacheResponse: obj.data?.cacheResponse,
+        validationUuid: obj.data?.validationUuid
       }
     } else if (response?.status === 'ERROR' && params?.storeType === StoreType.REMOTE) {
       return { remoteFetchError: response } as FetchError // handling remote pipeline not found
@@ -304,6 +309,7 @@ export interface PipelineContextInterface {
   getStagePathFromPipeline(stageId: string, prefix?: string, pipeline?: PipelineInfoConfig): string
   /** Useful for setting any intermittent loading state. Eg. any API call loading, any custom loading, etc */
   setIntermittentLoading: (isIntermittentLoading: boolean) => void
+  setValidationUuid: (uuid: string) => void
 }
 
 interface PipelinePayload {
@@ -318,6 +324,7 @@ interface PipelinePayload {
   templateInputsErrorNodeSummary?: ErrorNodeSummary
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
   cacheResponse?: CacheResponseMetadata
+  validationUuid?: string
 }
 
 const getId = (
@@ -337,6 +344,7 @@ export interface FetchPipelineBoundProps {
   gitDetails: EntityGitDetails
   storeMetadata?: StoreMetadata
   supportingTemplatesGitx?: boolean
+  isAsyncValidationEnabled?: boolean
 }
 
 export interface FetchPipelineUnboundProps {
@@ -418,7 +426,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     pipelineIdentifier: identifier,
     gitDetails,
     supportingTemplatesGitx,
-    storeMetadata
+    storeMetadata,
+    isAsyncValidationEnabled = false
   } = props
   const {
     forceFetch = false,
@@ -451,7 +460,12 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
 
   if ((!data || forceFetch) && pipelineId !== DefaultNewPipelineId) {
     const pipelineByIdPromise = getPipelineByIdentifier(
-      { ...queryParams, ...(repoIdentifier ? { repoIdentifier } : {}), ...(branch ? { branch } : {}) },
+      {
+        ...queryParams,
+        ...(repoIdentifier ? { repoIdentifier } : {}),
+        ...(branch ? { branch } : {}),
+        ...(isAsyncValidationEnabled && { validateAsync: true })
+      },
       pipelineId,
       loadFromCache,
       signal
@@ -529,7 +543,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       'filePath',
       'yamlSchemaErrorWrapper',
       'modules',
-      'cacheResponse'
+      'cacheResponse',
+      'validationUuid'
     ) as PipelineInfoConfig
     const payload: PipelinePayload = {
       [KeyPath]: id,
@@ -549,7 +564,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         pipelineWithGitDetails?.yamlSchemaErrorWrapper,
         defaultTo(data?.yamlSchemaErrorWrapper, {})
       ),
-      cacheResponse: defaultTo(pipelineWithGitDetails?.cacheResponse, data?.cacheResponse)
+      cacheResponse: defaultTo(pipelineWithGitDetails?.cacheResponse, data?.cacheResponse),
+      validationUuid: defaultTo(pipelineWithGitDetails?.validationUuid, data?.validationUuid)
     }
     const templateQueryParams = {
       ...queryParams,
@@ -598,7 +614,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
             pipelineWithGitDetails?.yamlSchemaErrorWrapper,
             defaultTo(data?.yamlSchemaErrorWrapper, {})
           ),
-          cacheResponse: defaultTo(pipelineWithGitDetails?.cacheResponse, data?.cacheResponse)
+          cacheResponse: defaultTo(pipelineWithGitDetails?.cacheResponse, data?.cacheResponse),
+          validationUuid: defaultTo(pipelineWithGitDetails?.validationUuid, data?.validationUuid)
         })
       )
     } else {
@@ -635,7 +652,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           templateIcons,
           templateServiceData,
           resolvedCustomDeploymentDetailsByRef,
-          yamlSchemaErrorWrapper: payload?.yamlSchemaErrorWrapper
+          yamlSchemaErrorWrapper: payload?.yamlSchemaErrorWrapper,
+          validationUuid: payload.validationUuid
         })
       )
     }
@@ -664,7 +682,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         gitDetails: defaultTo(data?.gitDetails, {}),
         entityValidityDetails: defaultTo(data?.entityValidityDetails, {}),
         yamlSchemaErrorWrapper: defaultTo(data?.yamlSchemaErrorWrapper, {}),
-        cacheResponse: data?.cacheResponse
+        cacheResponse: data?.cacheResponse,
+        validationUuid: data?.validationUuid
       })
     )
     dispatch(PipelineContextActions.initialized())
@@ -1041,7 +1060,8 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   setSelectedSectionId: (_selectedSectionId: string | undefined) => undefined,
   setSelection: (_selectedState: PipelineSelectionState | undefined) => undefined,
   getStagePathFromPipeline: () => '',
-  setIntermittentLoading: () => undefined
+  setIntermittentLoading: () => undefined,
+  setValidationUuid: () => undefined
 })
 
 export interface PipelineProviderProps {
@@ -1071,6 +1091,7 @@ export function PipelineProvider({
   const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const { supportingTemplatesGitx } = useAppStore()
+  const isAsyncValidationEnabled = useFeatureFlag(FeatureFlag.PIE_ASYNC_VALIDATION)
   const isMounted = React.useRef(false)
   const [state, dispatch] = React.useReducer(
     PipelineReducer,
@@ -1103,7 +1124,8 @@ export function PipelineProvider({
       branch
     },
     storeMetadata: state.storeMetadata,
-    supportingTemplatesGitx
+    supportingTemplatesGitx,
+    isAsyncValidationEnabled
   })
 
   const updatePipelineStoreMetadata = _updateStoreMetadata.bind(null, {
@@ -1301,6 +1323,10 @@ export function PipelineProvider({
     dispatch(PipelineContextActions.setIntermittentLoading({ isIntermittentLoading }))
   }, [])
 
+  const setValidationUuid = React.useCallback((uuid: string) => {
+    dispatch(PipelineContextActions.setValidationUuid({ validationUuid: uuid }))
+  }, [])
+
   const updateStage = React.useCallback(
     async (newStage: StageElementConfig) => {
       function _updateStages(stages: StageElementWrapperConfig[]): StageElementWrapperConfig[] {
@@ -1399,7 +1425,8 @@ export function PipelineProvider({
         setTemplateTypes,
         setTemplateIcons,
         setTemplateServiceData,
-        setIntermittentLoading
+        setIntermittentLoading,
+        setValidationUuid
       }}
     >
       {children}

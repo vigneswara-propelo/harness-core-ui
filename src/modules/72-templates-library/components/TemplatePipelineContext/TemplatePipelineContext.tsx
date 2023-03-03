@@ -250,7 +250,8 @@ export function TemplatePipelineProvider({
         setTemplateTypes: noop,
         setTemplateIcons: noop,
         setTemplateServiceData: noop,
-        setIntermittentLoading
+        setIntermittentLoading,
+        setValidationUuid: noop
       }}
     >
       {children}

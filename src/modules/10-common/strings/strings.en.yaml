@@ -1356,6 +1356,8 @@ python: Python
 seeAdvancedOptions: See Advanced Options
 addedEntityLabel: 'Added {{entity}}'
 bucketName: Bucket Name
+validationInProgress: Validation in progress
+checkYourNetwork: check your network.
 
 # SSCA module
 ssca: Supply Chain Assurance

@@ -344,7 +344,6 @@ monitoringSources:
     validation: VALIDATION
     tiersMappedToServices: tiers mapped to services
     errorsFound: errors found
-    verificationsInProgress: Validation in progress
     noData: No data
     searchPlaceholderApplications: Search for Applications
     validationsPassed: Validation passed

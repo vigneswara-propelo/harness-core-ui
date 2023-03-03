@@ -150,6 +150,7 @@ export interface StringsMap {
   'common.changeIntelligence': string
   'common.changesUnsaved': string
   'common.channel': string
+  'common.checkYourNetwork': string
   'common.city': string
   'common.clear': string
   'common.clearSelection': string
@@ -1204,6 +1205,7 @@ export interface StringsMap {
   'common.validation.valueMustBeLessThanOrEqualToN': string
   'common.validation.variableAlreadyExists': string
   'common.validation.yamlFilePath': string
+  'common.validationInProgress': string
   'common.valuePlaceholder': string
   'common.variables': string
   'common.versionLabel': string
@@ -4356,10 +4358,12 @@ export interface StringsMap {
   'pipeline.policyEvaluations.evaluatedTime': string
   'pipeline.policyEvaluations.evaluations': string
   'pipeline.policyEvaluations.failedToSavePipeline': string
+  'pipeline.policyEvaluations.failureHeadingEvaluationDetail': string
   'pipeline.policyEvaluations.policySetName': string
   'pipeline.policyEvaluations.policySets': string
   'pipeline.policyEvaluations.policySetsApplied': string
   'pipeline.policyEvaluations.title': string
+  'pipeline.policyEvaluations.warningHeadingEvaluationDetail': string
   'pipeline.poweredByHarness': string
   'pipeline.prTitle': string
   'pipeline.previewTemplateLabel': string
@@ -4747,6 +4751,17 @@ export interface StringsMap {
   'pipeline.utilitiesStep.subject': string
   'pipeline.utilitiesStep.to': string
   'pipeline.utilitiesStep.url': string
+  'pipeline.validation.errorText': string
+  'pipeline.validation.evaluatingPolicySets': string
+  'pipeline.validation.nIssuesFound': string
+  'pipeline.validation.pipelineValidated': string
+  'pipeline.validation.revalidate': string
+  'pipeline.validation.validated': string
+  'pipeline.validation.validating': string
+  'pipeline.validation.validationInProgressText': string
+  'pipeline.validation.validationResultApiError': string
+  'pipeline.validation.validationSuccessful': string
+  'pipeline.validation.validationSuccessfulText': string
   'pipeline.variable.typePlaceholder': string
   'pipeline.variable.variableNamePlaceholder': string
   'pipeline.verification.analysisTab.logs': string
@@ -8298,7 +8313,6 @@ export interface StringsMap {
   'cv.monitoringSources.appD.validationsFailed': string
   'cv.monitoringSources.appD.validationsPassed': string
   'cv.monitoringSources.appD.verificationService': string
-  'cv.monitoringSources.appD.verificationsInProgress': string
   'cv.monitoringSources.assign': string
   'cv.monitoringSources.baselineDeviation': string
   'cv.monitoringSources.buildYourQuery': string

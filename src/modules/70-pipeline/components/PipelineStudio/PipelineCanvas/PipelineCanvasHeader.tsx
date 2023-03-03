@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import cx from 'classnames'
 import {
@@ -48,11 +55,14 @@ import { useValidateTemplateInputsQuery } from 'services/pipeline-rq'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { useQueryParams } from '@common/hooks'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import StudioGitPopover from '../StudioGitPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
 import { PipelineCachedCopy, PipelineCachedCopyHandle } from './PipelineCachedCopy/PipelineCachedCopy'
 import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
+import { ValidationBadge } from '../AsyncValidation/ValidationBadge'
 import css from './PipelineCanvas.module.scss'
 
 export interface PipelineCanvasHeaderProps {
@@ -95,6 +105,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     setSelectedStageId,
     setSelectedSectionId
   } = usePipelineContext()
+  const isAsyncValidationEnabled = useFeatureFlag(FeatureFlag.PIE_ASYNC_VALIDATION)
   const { showError, showSuccess, clear } = useToaster()
   const {
     pipeline,
@@ -416,6 +427,11 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                   >
                     {getString('unsavedChanges')}
                   </Button>
+                )}
+                {isAsyncValidationEnabled && !isNewPipeline && (
+                  <div className={css.validationContainer}>
+                    <ValidationBadge />
+                  </div>
                 )}
                 <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
                 {renderDiscardUnsavedChangeButton()}

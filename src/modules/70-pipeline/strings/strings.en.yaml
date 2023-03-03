@@ -1314,6 +1314,8 @@ policyEvaluations:
   policySetName: 'Policy Set: {{name}}'
   emptyPolicySet: This policy set does not have any policies attached to it.
   policySetsApplied: '{{pipelineName}}: Policy Sets applied'
+  failureHeadingEvaluationDetail: Policy Evaluation failed.
+  warningHeadingEvaluationDetail: Policy Evaluation contains warnings.
 expressionsReplaced: 'Pipeline updated with {{count}} expression(s) replaced. Please provide the value(s) for new expression(s).'
 runstageError: '{{count}} Error(s): Unable to run stages.'
 stageDependencyError: 'Stage {{stageId}} has a ‘useFromStage’ dependency on Stage {{dependentStage}}. Please select Stage {{dependentStage}} to run Stage {{stageId}}.'
@@ -1652,3 +1654,15 @@ ServiceDetail:
 iacm:
   workflow: Workflow
   resourceStack: Resource Stack
+validation:
+  validated: Validated
+  validating: Validating
+  validationSuccessful: Validation successful
+  validationSuccessfulText: No errors were found with your pipeline configurations. You can start running your pipeline! Click to view more.
+  validationInProgressText: Click to view details of the pipeline configuration validation progress.
+  nIssuesFound: '{{n}} issue(s) found'
+  errorText: Click to view list of issues.
+  evaluatingPolicySets: Evaluating Policy Sets
+  pipelineValidated: Pipeline validated
+  revalidate: Revalidate
+  validationResultApiError: Unable to complete validation due to [{{message}}] error.
