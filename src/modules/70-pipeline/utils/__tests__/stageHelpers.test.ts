@@ -52,6 +52,9 @@ import {
   isEnvironmentGroupPresent,
   isEnvironmentPresent,
   isExecutionFieldPresent,
+  getVariablesHeaderTooltipId,
+  isSshOrWinrmDeploymentType,
+  isGoogleCloudFuctionsDeploymentType,
   pipelineHasCIStageWithK8sInfra
 } from '../stageHelpers'
 import inputSetPipeline from './inputset-pipeline.json'
@@ -305,13 +308,25 @@ test('isFixedNonEmptyValue', () => {
 test('getAllowedRepoOptions', () => {
   expect(getAllowedRepoOptions(ServiceDeploymentType.WinRm, true, true, 'Acr')).toHaveLength(4)
 
-  expect(getAllowedRepoOptions(ServiceDeploymentType.AzureWebApp, true, true, 'Acr')).toHaveLength
+  expect(getAllowedRepoOptions(ServiceDeploymentType.AzureWebApp, true, true, 'Acr')).toHaveLength(4)
+
+  expect(getAllowedRepoOptions(ServiceDeploymentType.Kubernetes, true, true, 'Nexus3Registry')).toHaveLength(5)
 })
 
 test('isAzureWebAppOrSshWinrmGenericDeploymentType', () => {
   expect(
     isAzureWebAppOrSshWinrmGenericDeploymentType(ServiceDeploymentType.AzureWebApp, RepositoryFormatTypes.Generic)
   ).toBe(true)
+})
+
+test('isGoogleCloudFuctionsDeploymentType', () => {
+  expect(isGoogleCloudFuctionsDeploymentType(ServiceDeploymentType.GoogleCloudFunctions)).toBe(true)
+})
+
+test('isSshOrWinrmDeploymentType', () => {
+  expect(isSshOrWinrmDeploymentType(ServiceDeploymentType.Ssh)).toBe(true)
+  expect(isSshOrWinrmDeploymentType(ServiceDeploymentType.Kubernetes)).toBe(false)
+  expect(isSshOrWinrmDeploymentType(ServiceDeploymentType.WinRm)).toBe(true)
 })
 
 test('withoutSideCar', () => {
@@ -336,6 +351,12 @@ test('isTasGenericDeploymentType should return false for nongeneric repo type', 
 test('isTASDeploymentType', () => {
   expect(isTASDeploymentType(ServiceDeploymentType.TAS)).toBe(true)
   expect(isTASDeploymentType(ServiceDeploymentType.Elastigroup)).toBe(false)
+})
+
+test('getVariablesHeaderTooltipId', () => {
+  expect(getVariablesHeaderTooltipId(ServiceDeploymentType.Kubernetes)).toBe(
+    `${ServiceDeploymentType.Kubernetes}DeploymentTypeVariables`
+  )
 })
 
 test('getHelpeTextForTags', () => {

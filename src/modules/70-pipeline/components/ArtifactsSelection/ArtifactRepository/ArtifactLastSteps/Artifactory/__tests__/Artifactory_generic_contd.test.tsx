@@ -26,7 +26,14 @@ jest.mock('services/cd-ng', () => ({
     }
   }),
   useGetRepositoriesDetailsForArtifactory: jest.fn().mockReturnValue({
-    data: {},
+    data: {
+      data: {
+        repositories: {
+          iistest: 'iistest',
+          'harness-nuget': 'harness-nuget'
+        }
+      }
+    },
     refetch: jest.fn(),
     error: null,
     loading: false
@@ -34,6 +41,9 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 describe('artifactory test cases', () => {
+  beforeAll(() => {
+    jest.clearAllMocks()
+  })
   test('render form correctly when tagType is regex', async () => {
     const artifactInitValues = {
       spec: {

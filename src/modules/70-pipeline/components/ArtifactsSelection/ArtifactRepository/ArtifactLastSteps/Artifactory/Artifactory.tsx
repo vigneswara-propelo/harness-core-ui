@@ -23,7 +23,7 @@ import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps, FormikValues } from 'formik'
 import * as Yup from 'yup'
-import { defaultTo, memoize, merge } from 'lodash-es'
+import { defaultTo, get, isEqual, memoize, merge } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
@@ -116,6 +116,7 @@ function Artifactory({
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
+  const [error, setError] = useState<boolean>(false)
   const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
   const isSSHWinRmDeploymentType = isSshOrWinrmDeploymentType(selectedDeploymentType)
   const isAzureWebAppDeploymentTypeSelected = isAzureWebAppDeploymentType(selectedDeploymentType)
@@ -307,12 +308,13 @@ function Artifactory({
     }
   }, [lastQueryData, refetchArtifactoryTag])
   useEffect(() => {
-    if (artifactoryTagError) {
+    if (artifactoryTagError && !error) {
+      setError(true)
       setTagList([])
-    } else if (Array.isArray(data?.data?.buildDetailsList)) {
+    } else if (Array.isArray(data?.data?.buildDetailsList) && !isEqual(data?.data?.buildDetailsList, tagList)) {
       setTagList(data?.data?.buildDetailsList)
     }
-  }, [data?.data?.buildDetailsList, artifactoryTagError])
+  }, [data?.data?.buildDetailsList, artifactoryTagError, error, tagList])
 
   const canFetchTags = useCallback(
     (artifactPath: string, repository: string): boolean => {
@@ -446,7 +448,6 @@ function Artifactory({
       )
     )
   }
-
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       {!hideHeaderAndNavBtns && (
@@ -509,6 +510,53 @@ function Artifactory({
                   repoFormat={repositoryFormat}
                   fieldName={'repository'}
                   stepViewType={StepViewType.Edit}
+                  onChange={(value: SelectOption) => {
+                    if (
+                      value.value !== formik.values.repository &&
+                      getMultiTypeFromValue(value) === MultiTypeInputType.FIXED &&
+                      value
+                    ) {
+                      setArtifactPaths([])
+                      setTagList([])
+                      if (isGenericArtifactory) {
+                        formik.setValues({
+                          ...formik.values,
+                          repository: value.value as string,
+                          artifactDirectory:
+                            getMultiTypeFromValue(get(formik.values, 'artifactDirectory', '')) ===
+                            MultiTypeInputType.FIXED
+                              ? ''
+                              : get(formik.values, 'artifactDirectory', ''),
+                          tag:
+                            getMultiTypeFromValue(get(formik.values, 'tag', '')) === MultiTypeInputType.FIXED
+                              ? ''
+                              : get(formik.values, 'tag', ''),
+                          tagRegex:
+                            getMultiTypeFromValue(get(formik.values, 'tagRegex', '')) === MultiTypeInputType.FIXED
+                              ? ''
+                              : get(formik.values, 'tagRegex', '')
+                        })
+                      } else {
+                        formik.setValues({
+                          ...formik.values,
+                          repository: value.value as string,
+                          artifactPath:
+                            getMultiTypeFromValue(get(formik.values, 'artifactDirectory', '')) ===
+                            MultiTypeInputType.FIXED
+                              ? ''
+                              : get(formik.values, 'tag', ''),
+                          tag:
+                            getMultiTypeFromValue(get(formik.values, 'tag', '')) === MultiTypeInputType.FIXED
+                              ? ''
+                              : get(formik.values, 'tag', ''),
+                          tagRegex:
+                            getMultiTypeFromValue(get(formik.values, 'tagRegex', '')) === MultiTypeInputType.FIXED
+                              ? ''
+                              : get(formik.values, 'tagRegex', '')
+                        })
+                      }
+                    }
+                  }}
                 />
 
                 {isGenericArtifactory && (
