@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -8,7 +15,6 @@ import {
   Icon,
   Layout,
   ModalDialog,
-  NoDataCard,
   PageError,
   PageSpinner,
   TableV2,
@@ -145,7 +151,7 @@ export default function DelegateTaskLogs({ step }: DelegateTaskLogsProps): JSX.E
           renderRowSubComponent={renderRowSubComponent}
           onRowClick={noop}
         />
-        <Layout.Horizontal margin={{ bottom: 'large' }} spacing={'medium'} flex={{ justifyContent: 'center' }}>
+        <Layout.Horizontal spacing={'medium'} flex={{ justifyContent: 'center' }}>
           <Button
             variation={ButtonVariation.PRIMARY}
             icon={'chevron-left'}
@@ -181,7 +187,12 @@ export default function DelegateTaskLogs({ step }: DelegateTaskLogsProps): JSX.E
       </>
     )
   } else {
-    return <NoDataCard />
+    return (
+      <Layout.Vertical flex={{ align: 'center-center' }} spacing="medium">
+        <Icon name="delegates-icon" size={48} />
+        <Text font={{ size: 'medium' }}>{getString('common.logs.noLogsText')}</Text>
+      </Layout.Vertical>
+    )
   }
 }
 
