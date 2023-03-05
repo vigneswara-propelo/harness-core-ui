@@ -25,6 +25,7 @@ import produce from 'immer'
 import * as Yup from 'yup'
 import { HelpPanel } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
+import type { StringKeys } from 'framework/strings/StringsContext'
 import { deploymentIconMap, DeploymentTypeItem } from '@cd/utils/deploymentUtils'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { getServiceDeploymentTypeSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
@@ -114,6 +115,17 @@ const SelectDeploymentTypeRef = (
     }
   }))
 
+  React.useEffect(() => {
+    // Track event -- preselected deployment type
+    const initialSelectedDeploymentType = defaultTo(
+      get(serviceData, 'serviceDefinition.type'),
+      ServiceDeploymentType.Kubernetes
+    )
+    trackEvent(CDOnboardingActions.SelectDeploymentTypeDefault, {
+      selectedDeploymentType: initialSelectedDeploymentType
+    })
+  }, [])
+
   const handleSubmit = (): void => {
     const updatedContextService = produce(newServiceState, draft => {
       set(draft, 'serviceDefinition.type', selectedDeploymentType?.value as unknown as ServiceDefinition['type'])
@@ -170,7 +182,7 @@ const SelectDeploymentTypeRef = (
                                   className={css.text1}
                                   color={isSelected ? Color.GREY_1000 : Color.GREY_600}
                                 >
-                                  {getString(item.label)}
+                                  {getString(item.label as StringKeys)}
                                 </Text>
                               </Layout.Vertical>
                             </>
@@ -182,7 +194,7 @@ const SelectDeploymentTypeRef = (
                             formikProps.setFieldValue('selectedDeploymentType', item.value)
                             setSelectedDeploymentType(item)
                             trackEvent(CDOnboardingActions.SelectDeploymentType, {
-                              selectedDeploymentType
+                              selectedDeploymentType: item.value
                             })
                           }
                         }
