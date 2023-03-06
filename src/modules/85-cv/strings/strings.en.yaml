@@ -832,6 +832,8 @@ metricsAnalysis:
     criteria: CRITERIA
     value: VALUE
     applied: APPLIED
+    failAfterConsecutiveOccurrence: 'Fail after {{ actionableCount }} consecutive {{ occurrenceText }}'
+    failAfterOccurrence: 'Fail after {{ actionableCount }}  {{ occurrenceText }}'
 slos:
   title: SLOs
   subTitle: Review the status and error budget of all your defined service level objectives
