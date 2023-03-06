@@ -22,7 +22,6 @@ export enum FeatureFlag {
   ARGO_PHASE1 = 'ARGO_PHASE1',
   ARGO_PHASE2_MANAGED = 'ARGO_PHASE2_MANAGED',
   FF_GITSYNC = 'FF_GITSYNC',
-  FF_PIPELINE = 'FF_PIPELINE',
   FFM_1512 = 'FFM_1512',
   FFM_1513 = 'FFM_1513', // development only flag for epic https://harness.atlassian.net/browse/FFM-1513,
   FFM_1827 = 'FFM_1827',

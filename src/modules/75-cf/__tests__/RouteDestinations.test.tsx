@@ -19,7 +19,6 @@ describe('RouteDestinations', () => {
   const useFeatureFlagsMock = jest.spyOn(hooks, 'useFeatureFlags')
 
   const defaultFlagValues: Partial<Record<FeatureFlag, boolean>> = {
-    FF_PIPELINE: true,
     FFM_1512: false,
     FFM_1827: false,
     NG_SETTINGS: false,
@@ -46,12 +45,6 @@ describe('RouteDestinations', () => {
 
     expect(routes).toMatchSnapshot()
     expect(routesHavePageName(routes, 'PipelineRouteDestinations')).toBeTruthy()
-  })
-
-  test('it should not return the pipeline routes when the FF_PIPELINE feature flag is false', () => {
-    const routes = renderRoutes({ FF_PIPELINE: false })
-
-    expect(routesHavePageName(routes, 'PipelineRouteDestinations')).toBeFalsy()
   })
 
   test('it should render the NGUI version of the env detail page when FFM_3959_FF_MFE_Environment_Detail is false', async () => {

@@ -193,7 +193,6 @@ registerFlagConfigurationPipelineStep()
 
 const CFRoutes: FC = () => {
   const {
-    FF_PIPELINE,
     FFM_1512,
     FFM_1827,
     NG_SETTINGS,
@@ -447,22 +446,18 @@ const CFRoutes: FC = () => {
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CFSideNavProps}
         />
-        {FF_PIPELINE && (
-          <>
-            <PipelineRouteDestinations
-              pipelineStudioComponent={PipelineStudio}
-              pipelineDeploymentListComponent={PipelineDeploymentList}
-              moduleParams={moduleParams}
-              licenseRedirectData={licenseRedirectData}
-              sidebarProps={CFSideNavProps}
-            />
-            <TriggersRouteDestinations
-              moduleParams={moduleParams}
-              licenseRedirectData={licenseRedirectData}
-              sidebarProps={CFSideNavProps}
-            />
-          </>
-        )}
+        <PipelineRouteDestinations
+          pipelineStudioComponent={PipelineStudio}
+          pipelineDeploymentListComponent={PipelineDeploymentList}
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <TriggersRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
         <GovernanceRouteDestinations
           sidebarProps={CFSideNavProps}
           pathProps={{ ...accountPathProps, ...projectPathProps, ...moduleParams }}
