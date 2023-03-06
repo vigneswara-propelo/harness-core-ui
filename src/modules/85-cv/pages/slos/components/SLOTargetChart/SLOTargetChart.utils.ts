@@ -10,7 +10,8 @@ import { minBy, maxBy } from 'lodash-es'
 import type Highcharts from 'highcharts'
 import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import type { Point } from 'services/cv'
+import type { Point, ServiceLevelIndicatorSpec, TimeGraphResponse } from 'services/cv'
+import { SLIMetricTypes } from '../CVCreateSLOV2/CVCreateSLOV2.types'
 
 const MILLISECONDS_PER_HOUR = 1000 * 60 * 60 * 4
 
@@ -90,4 +91,52 @@ export const getDataPointsWithMinMaxXLimit = (
     minXLimit: minXLimit === maxXLimit ? minXLimit - divider : minXLimit,
     maxXLimit
   }
+}
+
+export const getSLIGraphData = ({
+  sliGraphData,
+  isRatioBased,
+  goodRequestMetric,
+  validRequestMetric,
+  SLIMetricType
+}: {
+  sliGraphData?: TimeGraphResponse
+  isRatioBased: boolean
+  goodRequestMetric?: string
+  validRequestMetric: string
+  SLIMetricType?: ServiceLevelIndicatorSpec['type']
+}): TimeGraphResponse | undefined => {
+  let areaChartData = sliGraphData
+  if (isRatioBased) {
+    if (!(Boolean(goodRequestMetric) && Boolean(validRequestMetric))) {
+      areaChartData = undefined
+    }
+  } else if (SLIMetricType === SLIMetricTypes.THRESHOLD) {
+    if (!validRequestMetric) {
+      areaChartData = undefined
+    }
+  }
+  return areaChartData
+}
+
+export const getMetricAndAreaChartCustomProps = (
+  isRatioBased: boolean,
+  goodRequestMetric: string | undefined,
+  validRequestMetric: string
+): {
+  showSLIAreaChart: boolean
+  validRequestGraphColor?:
+    | {
+        graphColor: string
+      }
+    | {
+        graphColor?: undefined
+      }
+} => {
+  const showSLIAreaChart = isRatioBased
+    ? Boolean(goodRequestMetric) || Boolean(validRequestMetric)
+    : Boolean(validRequestMetric)
+
+  const validRequestGraphColor = isRatioBased ? { graphColor: Utils.getRealCSSColor(Color.MAGENTA_800) } : {}
+  return { showSLIAreaChart, validRequestGraphColor }
 }

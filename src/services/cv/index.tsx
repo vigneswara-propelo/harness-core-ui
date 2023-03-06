@@ -13256,6 +13256,110 @@ export const getSliOnboardingGraphsPromise = (
     signal
   )
 
+export interface GetMetricOnboardingGraphQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  healthSourceRef: string
+  ratioSLIMetricEventType?: 'Good' | 'Bad'
+}
+
+export interface GetMetricOnboardingGraphPathParams {
+  monitoredServiceIdentifier: string
+}
+
+export type GetMetricOnboardingGraphProps = Omit<
+  MutateProps<
+    RestResponseMetricOnboardingGraph,
+    unknown,
+    GetMetricOnboardingGraphQueryParams,
+    string[],
+    GetMetricOnboardingGraphPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetMetricOnboardingGraphPathParams
+
+/**
+ * get metric graphs for onboarding UI
+ */
+export const GetMetricOnboardingGraph = ({ monitoredServiceIdentifier, ...props }: GetMetricOnboardingGraphProps) => (
+  <Mutate<
+    RestResponseMetricOnboardingGraph,
+    unknown,
+    GetMetricOnboardingGraphQueryParams,
+    string[],
+    GetMetricOnboardingGraphPathParams
+  >
+    verb="POST"
+    path={`/monitored-service/${monitoredServiceIdentifier}/sli/onboarding-metric-graphs`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetMetricOnboardingGraphProps = Omit<
+  UseMutateProps<
+    RestResponseMetricOnboardingGraph,
+    unknown,
+    GetMetricOnboardingGraphQueryParams,
+    string[],
+    GetMetricOnboardingGraphPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetMetricOnboardingGraphPathParams
+
+/**
+ * get metric graphs for onboarding UI
+ */
+export const useGetMetricOnboardingGraph = ({
+  monitoredServiceIdentifier,
+  ...props
+}: UseGetMetricOnboardingGraphProps) =>
+  useMutate<
+    RestResponseMetricOnboardingGraph,
+    unknown,
+    GetMetricOnboardingGraphQueryParams,
+    string[],
+    GetMetricOnboardingGraphPathParams
+  >(
+    'POST',
+    (paramsInPath: GetMetricOnboardingGraphPathParams) =>
+      `/monitored-service/${paramsInPath.monitoredServiceIdentifier}/sli/onboarding-metric-graphs`,
+    { base: getConfig('cv/api'), pathParams: { monitoredServiceIdentifier }, ...props }
+  )
+
+/**
+ * get metric graphs for onboarding UI
+ */
+export const getMetricOnboardingGraphPromise = (
+  {
+    monitoredServiceIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseMetricOnboardingGraph,
+    unknown,
+    GetMetricOnboardingGraphQueryParams,
+    string[],
+    GetMetricOnboardingGraphPathParams
+  > & { monitoredServiceIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseMetricOnboardingGraph,
+    unknown,
+    GetMetricOnboardingGraphQueryParams,
+    string[],
+    GetMetricOnboardingGraphPathParams
+  >(
+    'POST',
+    getConfig('cv/api'),
+    `/monitored-service/${monitoredServiceIdentifier}/sli/onboarding-metric-graphs`,
+    props,
+    signal
+  )
+
 export interface GetNewRelicApplicationsQueryParams {
   accountId: string
   orgIdentifier: string

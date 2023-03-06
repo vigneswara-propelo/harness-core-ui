@@ -6,7 +6,8 @@
  */
 
 import type Highcharts from 'highcharts'
-import type { ServiceLevelIndicatorDTO, SLIOnboardingGraphs, TimeGraphResponse } from 'services/cv'
+import type { MetricOnboardingGraph, ServiceLevelIndicatorDTO, TimeGraphResponse } from 'services/cv'
+import type { MetricNames } from '../../common/SLI/SLI.types'
 
 export interface SLOTargetChartProps {
   topLabel?: JSX.Element
@@ -20,7 +21,6 @@ export interface SLOTargetChartWithAPIGetSliGraphProps extends SLOTargetChartPro
   serviceLevelIndicator: ServiceLevelIndicatorDTO
   monitoredServiceIdentifier?: string
   sliGraphData?: TimeGraphResponse
-  metricGraphData?: SLIOnboardingGraphs['metricGraphs']
   loading?: boolean
   error?: string
   retryOnError: (serviceLevelIndicator: ServiceLevelIndicatorDTO, monitoredServiceIdentifier?: string) => void
@@ -29,4 +29,13 @@ export interface SLOTargetChartWithAPIGetSliGraphProps extends SLOTargetChartPro
     monitoredServiceIdentifier?: string
   ) => Promise<void>
   showMetricChart?: boolean
+  showSLIMetricChart?: boolean
+  metricChart?: {
+    data?: MetricOnboardingGraph
+    error?: string
+    loading?: boolean
+    retryOnError: () => void
+  }
+  metricsNames?: MetricNames
+  setMetricsNames?: React.Dispatch<React.SetStateAction<MetricNames>>
 }

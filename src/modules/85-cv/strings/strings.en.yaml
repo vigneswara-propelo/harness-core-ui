@@ -867,6 +867,7 @@ slos:
   confirmDeleteSLO: 'Are you sure you want to delete SLO: {{ name }}?'
   sloDeleted: '{{ name }} successfully deleted'
   sli: SLI
+  ratioObjectiveValueCheck: Objective value should be between 0 and 100
   backToSLI: Back to SLI
   sliMetricChartRatioBasedHeader: Metric for good requests vs valid requests
   sliMetricChartSubHeader: Using historical data and current parameters in the last 1 day

@@ -50,14 +50,14 @@ export const SLIMetricChartLegend = ({
     ]
   } else {
     legendConfig = [
-      { label: getString('cv.minimum'), value: (legendData as ThresholdLegend).max.toFixed(1) },
+      { label: getString('cv.minimum'), value: (legendData as ThresholdLegend).min.toString() },
       {
         label: getString('ce.perspectives.nodeDetails.aggregation.maximum'),
-        value: (legendData as ThresholdLegend).min.toFixed(1)
+        value: (legendData as ThresholdLegend).max.toString()
       },
       {
         label: getString('ce.perspectives.nodeDetails.aggregation.average'),
-        value: (legendData as ThresholdLegend).avg.toFixed(1)
+        value: (legendData as ThresholdLegend).avg.toString()
       }
     ]
   }
@@ -74,7 +74,7 @@ export const SLIMetricChartLegend = ({
           {legendObject.label}:
         </Text>
         <Text inline font={{ variation: FontVariation.FORM_HELP }}>
-          {legendObject.value}s
+          {legendObject.value}
         </Text>
       </Layout.Horizontal>
     )
