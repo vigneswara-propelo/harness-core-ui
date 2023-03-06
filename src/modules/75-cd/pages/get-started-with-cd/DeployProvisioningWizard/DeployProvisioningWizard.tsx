@@ -49,13 +49,13 @@ const WizardStepOrder = [
 ]
 
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
-  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.Deploy } = props
+  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectDeploymentType } = props
   const {
     state: { service: serviceData, agent: agentData }
   } = useCDOnboardingContext()
 
   const { getString } = useStrings()
-  const { trackEvent } = useTelemetry()
+  const { trackEvent, trackPage } = useTelemetry()
   const history = useHistory()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const selectedDeploymentType: string | undefined = get(serviceData, 'serviceDefinition.type')
@@ -93,6 +93,9 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       setCurrentWizardStepId(WizardStepOrder[indexAt])
     }
   }
+  React.useEffect(() => {
+    trackPage(getString('cd.getStartedWithCD.cdWizardEventName', { eventName: currentWizardStepId as string }), {})
+  }, [currentWizardStepId])
 
   React.useEffect(() => {
     if (selectedSectionId?.length && WizardStepOrder.includes(selectedSectionId)) {

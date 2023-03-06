@@ -5324,6 +5324,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.azureK8s': string
   'cd.getStartedWithCD.backToClusterList': string
   'cd.getStartedWithCD.backToRepoList': string
+  'cd.getStartedWithCD.cdWizardEventName': string
   'cd.getStartedWithCD.checkAgentStatus': string
   'cd.getStartedWithCD.checkAnnonymously': string
   'cd.getStartedWithCD.checkAuthSettings': string

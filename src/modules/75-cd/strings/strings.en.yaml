@@ -586,6 +586,7 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  cdWizardEventName: CD Wizard - {{ eventName }}
   creatingApp: Creating Application in progress
   main: main
   installationInstructions: Installation Instructions
