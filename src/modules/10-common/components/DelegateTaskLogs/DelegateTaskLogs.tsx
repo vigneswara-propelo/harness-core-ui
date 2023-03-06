@@ -40,14 +40,15 @@ export default function DelegateTaskLogs({ step }: DelegateTaskLogsProps): JSX.E
   const [currentPageToken, setCurrentPageToken] = useState<string | undefined>('')
   const { getString } = useStrings()
   const [previousPageStack, setPreviousPageStack] = useState<Array<string>>([])
-  const pageSize = 1000
+  const pageSize = 100
+  const timePadding = 60 * 5 // 5 minutes
 
   /* istanbul ignore next */
   const taskIds = step.delegateInfoList?.map(delegate => delegate.taskId || '')?.filter(a => a)
   /* istanbul ignore next */
-  const startTime = Math.floor((step?.startTs as number) / 1000)
+  const startTime = Math.floor((step?.startTs as number) / 1000) - timePadding
   /* istanbul ignore next */
-  const endTime = Math.floor((step?.endTs || Date.now()) / 1000)
+  const endTime = Math.floor((step?.endTs || Date.now()) / 1000) + timePadding
 
   const queryParams: GetTasksLogQueryParams = {
     accountId,
@@ -88,7 +89,7 @@ export default function DelegateTaskLogs({ step }: DelegateTaskLogsProps): JSX.E
 
   function renderRowSubComponent({ row }: { row: Row<DelegateStackDriverLog> }): JSX.Element {
     return (
-      <Container padding={{ left: 'xlarge' }} data-testid={`row-content-${row.index}`}>
+      <Container padding={{ left: 'xlarge' }} data-testid={`row-content-${row.index}`} className={css.jsonContainer}>
         <pre>{JSON.stringify(row.original, null, 4)}</pre>
       </Container>
     )
@@ -169,7 +170,7 @@ export default function DelegateTaskLogs({ step }: DelegateTaskLogsProps): JSX.E
           <Button
             variation={ButtonVariation.PRIMARY}
             icon={'chevron-right'}
-            disabled={data?.resource?.pageToken === undefined}
+            disabled={data?.resource?.pageToken === undefined || data?.resource?.pageToken === null}
             onClick={() => {
               if (currentPageToken !== null && currentPageToken !== undefined) {
                 setPreviousPageStack([...previousPageStack, currentPageToken])

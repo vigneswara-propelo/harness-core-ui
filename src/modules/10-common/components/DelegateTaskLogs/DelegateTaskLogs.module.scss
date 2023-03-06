@@ -8,4 +8,9 @@
 .delegateTaskLogsModal {
   width: 1024px;
   max-height: 80vh;
+
+  .jsonContainer {
+    overflow-x: auto;
+    max-width: 890px;
+  }
 }
