@@ -3822,6 +3822,7 @@ export interface StringsMap {
   'pipeline.execution.stageActionMessages.resumedMessage': string
   'pipeline.execution.stageTitlePrefix': string
   'pipeline.execution.stagesExecuted': string
+  'pipeline.execution.stepGroupTitlePrefix': string
   'pipeline.execution.stepTitlePrefix': string
   'pipeline.execution.timePrefix': string
   'pipeline.execution.upcomingStagesPrefix': string

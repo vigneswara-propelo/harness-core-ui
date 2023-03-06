@@ -547,6 +547,7 @@ execution:
   stagesExecuted: Stages executed (most recent first)
   upcomingStagesPrefix: 'Upcoming stages: '
   stepTitlePrefix: 'Step: '
+  stepGroupTitlePrefix: 'Step Group: '
   stageTitlePrefix: 'Stage: '
   noInputsText: No inputs found
   retryStepCount: 'Retry #{{ num }}'
