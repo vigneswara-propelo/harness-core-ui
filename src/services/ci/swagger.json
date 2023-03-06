@@ -394,18 +394,19 @@
         }
       }
     },
-    "/execution-config/get-deprecated-config": {
+    "/execution-config/get-default-config": {
       "get": {
         "tags": ["execution-config"],
-        "summary": "Get deprecated config",
+        "summary": "Get default execution config",
         "description": "",
-        "operationId": "getDeprecatedConfig",
+        "operationId": "getDefaultConfig",
         "parameters": [
           {
-            "name": "accountIdentifier",
+            "name": "infra",
             "in": "query",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "enum": ["K8", "VM", "DLITE_VM"]
           }
         ],
         "responses": {
@@ -480,26 +481,59 @@
         }
       }
     },
-    "/execution-config/get-default-config": {
+    "/execution-config": {
       "get": {
         "tags": ["execution-config"],
-        "summary": "Get default execution config",
+        "summary": "Get execution config",
         "description": "",
-        "operationId": "getDefaultConfig",
+        "operationId": "getExecutionConfig",
         "parameters": [
           {
-            "name": "infra",
+            "name": "accountIdentifier",
             "in": "query",
             "required": true,
-            "type": "string",
-            "enum": ["K8", "VM", "DLITE_VM"]
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ResponseCIExecutionImages"
+              "$ref": "#/definitions/ResponseListDeprecatedImageInfo"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["execution-config"],
+        "summary": "Delete execution config",
+        "description": "",
+        "operationId": "deleteExecutionConfig",
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBoolean"
             }
           },
           "400": {
@@ -571,6 +605,42 @@
         }
       }
     },
+    "/execution-config/get-deprecated-config": {
+      "get": {
+        "tags": ["execution-config"],
+        "summary": "Get deprecated config",
+        "description": "",
+        "operationId": "getDeprecatedConfig",
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCIExecutionImages"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/execution-config/reset-config": {
       "post": {
         "tags": ["execution-config"],
@@ -601,76 +671,6 @@
                 "$ref": "#/definitions/Operation"
               }
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseBoolean"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/execution-config": {
-      "get": {
-        "tags": ["execution-config"],
-        "summary": "Get execution config",
-        "description": "",
-        "operationId": "getExecutionConfig",
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListDeprecatedImageInfo"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": ["execution-config"],
-        "summary": "Delete execution config",
-        "description": "",
-        "operationId": "deleteExecutionConfig",
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
           }
         ],
         "responses": {
@@ -808,6 +808,99 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponsePagePluginMetadataResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/partial-yaml-schema/dummyApiForSwaggerCIPipelineModuleInfoSchemaCheck": {
+      "get": {
+        "tags": ["partial-yaml-schema"],
+        "summary": "dummy api for checking CIPipelineModuleInfo",
+        "description": "",
+        "operationId": "dummyApiForSwaggerCIPipelineModuleInfoSchemaCheck",
+        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCIPipelineModuleInfo"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/partial-yaml-schema/dummyApiForSwaggerStageSchemaCheck": {
+      "get": {
+        "tags": ["partial-yaml-schema"],
+        "summary": "dummy api for checking integration stage",
+        "description": "",
+        "operationId": "dummyApiForSwaggerStageSchemaCheck",
+        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseStageElementConfig"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/partial-yaml-schema/dummyApiForSwaggerStepSchemaCheck": {
+      "get": {
+        "tags": ["partial-yaml-schema"],
+        "summary": "dummy api for checking integration stage",
+        "description": "",
+        "operationId": "dummyApiForSwaggerStepSchemaCheck",
+        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseStepElementConfig"
             }
           },
           "400": {
@@ -1114,7 +1207,10 @@
               "CloudFunctionRollback",
               "AwsLambdaDeploy",
               "AwsSamDeploy",
-              "AwsSamRollback"
+              "AwsSamRollback",
+              "SscaOrchestration",
+              "AwsLambdaRollback",
+              "GITOPS_SYNC"
             ]
           },
           {
@@ -1137,99 +1233,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseJsonNode"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/partial-yaml-schema/dummyApiForSwaggerStageSchemaCheck": {
-      "get": {
-        "tags": ["partial-yaml-schema"],
-        "summary": "dummy api for checking integration stage",
-        "description": "",
-        "operationId": "dummyApiForSwaggerStageSchemaCheck",
-        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseStageElementConfig"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/partial-yaml-schema/dummyApiForSwaggerStepSchemaCheck": {
-      "get": {
-        "tags": ["partial-yaml-schema"],
-        "summary": "dummy api for checking integration stage",
-        "description": "",
-        "operationId": "dummyApiForSwaggerStepSchemaCheck",
-        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseStepElementConfig"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/partial-yaml-schema/dummyApiForSwaggerCIPipelineModuleInfoSchemaCheck": {
-      "get": {
-        "tags": ["partial-yaml-schema"],
-        "summary": "dummy api for checking CIPipelineModuleInfo",
-        "description": "",
-        "operationId": "dummyApiForSwaggerCIPipelineModuleInfoSchemaCheck",
-        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseCIPipelineModuleInfo"
             }
           },
           "400": {
@@ -1868,6 +1871,12 @@
           "type": "string"
         },
         "repoUrl": {
+          "type": "string"
+        },
+        "parentEntityConnectorRef": {
+          "type": "string"
+        },
+        "parentEntityRepoName": {
           "type": "string"
         }
       }
@@ -4069,6 +4078,9 @@
         },
         "securityTag": {
           "type": "string"
+        },
+        "sscaOrchestrationTag": {
+          "type": "string"
         }
       }
     },
@@ -4240,6 +4252,9 @@
         },
         "empty": {
           "type": "boolean"
+        },
+        "pageToken": {
+          "type": "string"
         }
       }
     },
@@ -4274,6 +4289,9 @@
         },
         "empty": {
           "type": "boolean"
+        },
+        "pageToken": {
+          "type": "string"
         }
       }
     },
@@ -4327,49 +4345,282 @@
         }
       }
     },
-    "JsonNode": {
-      "type": "object"
-    },
-    "PartialSchemaDTO": {
+    "CIBuildAuthor": {
       "type": "object",
       "properties": {
-        "schema": {
-          "$ref": "#/definitions/JsonNode"
-        },
-        "nodeType": {
+        "id": {
           "type": "string"
         },
-        "nodeName": {
+        "name": {
           "type": "string"
         },
-        "namespace": {
+        "email": {
           "type": "string"
         },
-        "skipStageSchema": {
-          "type": "boolean"
-        },
-        "moduleType": {
-          "type": "string",
-          "enum": [
-            "CD",
-            "CI",
-            "CV",
-            "CF",
-            "CE",
-            "STO",
-            "CHAOS",
-            "SRM",
-            "CODE",
-            "CORE",
-            "PMS",
-            "TEMPLATESERVICE",
-            "GOVERNANCE",
-            "IACM"
-          ]
+        "avatar": {
+          "type": "string"
         }
       }
     },
-    "ResponseListPartialSchemaDTO": {
+    "CIBuildBranchHook": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "commits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIBuildCommit"
+          }
+        },
+        "triggerCommits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIBuildCommit"
+          }
+        }
+      }
+    },
+    "CIBuildCommit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "ownerName": {
+          "type": "string"
+        },
+        "ownerId": {
+          "type": "string"
+        },
+        "ownerEmail": {
+          "type": "string"
+        },
+        "timeStamp": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CIBuildPRHook": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "link": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "sourceRepo": {
+          "type": "string"
+        },
+        "sourceBranch": {
+          "type": "string"
+        },
+        "targetBranch": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "commits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIBuildCommit"
+          }
+        },
+        "triggerCommits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIBuildCommit"
+          }
+        }
+      }
+    },
+    "CIImageDetails": {
+      "type": "object",
+      "properties": {
+        "imageName": {
+          "type": "string"
+        },
+        "imageTag": {
+          "type": "string"
+        }
+      }
+    },
+    "CIInfraDetails": {
+      "type": "object",
+      "properties": {
+        "infraType": {
+          "type": "string"
+        },
+        "infraOSType": {
+          "type": "string"
+        },
+        "infraHostType": {
+          "type": "string"
+        },
+        "infraArchType": {
+          "type": "string"
+        }
+      }
+    },
+    "CIPipelineModuleInfo": {
+      "type": "object",
+      "properties": {
+        "ciExecutionInfoDTO": {
+          "$ref": "#/definitions/CIWebhookInfoDTO"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "repoName": {
+          "type": "string"
+        },
+        "triggerRepoName": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        },
+        "prNumber": {
+          "type": "string"
+        },
+        "buildType": {
+          "type": "string"
+        },
+        "isPrivateRepo": {
+          "type": "boolean"
+        },
+        "scmDetailsList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIScmDetails"
+          }
+        },
+        "infraDetailsList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIInfraDetails"
+          }
+        },
+        "imageDetailsList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIImageDetails"
+          }
+        },
+        "tiBuildDetailsList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TIBuildDetails"
+          }
+        },
+        "ciPipelineStageModuleInfo": {
+          "$ref": "#/definitions/CIPipelineStageModuleInfo"
+        },
+        "ciLicenseType": {
+          "type": "string"
+        },
+        "ciEditionType": {
+          "type": "string"
+        }
+      }
+    },
+    "CIPipelineStageModuleInfo": {
+      "type": "object",
+      "properties": {
+        "stageExecutionId": {
+          "type": "string"
+        },
+        "stageId": {
+          "type": "string"
+        },
+        "stageName": {
+          "type": "string"
+        },
+        "cpuTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "stageBuildTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "infraType": {
+          "type": "string"
+        },
+        "osType": {
+          "type": "string"
+        },
+        "osArch": {
+          "type": "string"
+        },
+        "startTs": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "buildMultiplier": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "CIScmDetails": {
+      "type": "object",
+      "properties": {
+        "scmUrl": {
+          "type": "string"
+        },
+        "scmProvider": {
+          "type": "string"
+        },
+        "scmAuthType": {
+          "type": "string"
+        },
+        "scmHostType": {
+          "type": "string"
+        }
+      }
+    },
+    "CIWebhookInfoDTO": {
+      "type": "object",
+      "properties": {
+        "event": {
+          "type": "string"
+        },
+        "author": {
+          "$ref": "#/definitions/CIBuildAuthor"
+        },
+        "branch": {
+          "$ref": "#/definitions/CIBuildBranchHook"
+        },
+        "pullRequest": {
+          "$ref": "#/definitions/CIBuildPRHook"
+        }
+      }
+    },
+    "ResponseCIPipelineModuleInfo": {
       "type": "object",
       "properties": {
         "status": {
@@ -4377,15 +4628,23 @@
           "enum": ["SUCCESS", "FAILURE", "ERROR"]
         },
         "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PartialSchemaDTO"
-          }
+          "$ref": "#/definitions/CIPipelineModuleInfo"
         },
         "metaData": {
           "type": "object"
         },
         "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "TIBuildDetails": {
+      "type": "object",
+      "properties": {
+        "buildTool": {
+          "type": "string"
+        },
+        "language": {
           "type": "string"
         }
       }
@@ -5592,10 +5851,10 @@
         "imagePullPolicy": {
           "type": "string"
         },
-        "harnessManagedImage": {
+        "mainLiteEngine": {
           "type": "boolean"
         },
-        "mainLiteEngine": {
+        "harnessManagedImage": {
           "type": "boolean"
         }
       }
@@ -6673,16 +6932,10 @@
           "type": "object",
           "properties": {
             "connector": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string"
-              }
+              "type": "string"
             },
             "image": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string"
-              }
+              "type": "string"
             }
           }
         }
@@ -6771,26 +7024,26 @@
     "IntegrationStageConfig": {
       "type": "object",
       "properties": {
+        "caching": {
+          "$ref": "#/definitions/Caching"
+        },
         "execution": {
           "$ref": "#/definitions/ExecutionElementConfig"
+        },
+        "platform": {
+          "$ref": "#/definitions/ParameterFieldPlatform"
         },
         "infrastructure": {
           "$ref": "#/definitions/Infrastructure"
         },
-        "platform": {
-          "$ref": "#/definitions/ParameterFieldPlatform"
+        "cloneCodebase": {
+          "$ref": "#/definitions/ParameterFieldBoolean"
         },
         "serviceDependencies": {
           "$ref": "#/definitions/ParameterFieldListDependencyElement"
         },
         "sharedPaths": {
           "$ref": "#/definitions/ParameterFieldListString"
-        },
-        "cloneCodebase": {
-          "$ref": "#/definitions/ParameterFieldBoolean"
-        },
-        "caching": {
-          "$ref": "#/definitions/Caching"
         },
         "runtime": {
           "$ref": "#/definitions/Runtime"
@@ -6939,6 +7192,9 @@
           }
         }
       ]
+    },
+    "JsonNode": {
+      "type": "object"
     },
     "K8BuildJobEnvInfo": {
       "allOf": [
@@ -7345,11 +7601,11 @@
       "type": "object",
       "discriminator": "type",
       "properties": {
-        "description": {
-          "type": "string"
-        },
         "required": {
           "type": "boolean"
+        },
+        "description": {
+          "type": "string"
         },
         "name": {
           "type": "string"
@@ -9491,6 +9747,22 @@
         }
       ]
     },
+    "SbomOrchestrationSpec": {
+      "type": "object"
+    },
+    "SbomOrchestrationTool": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["Syft"]
+        },
+        "spec": {
+          "$ref": "#/definitions/SbomOrchestrationSpec"
+        }
+      }
+    },
     "SbomSource": {
       "type": "object",
       "required": ["type"],
@@ -9948,19 +10220,10 @@
         },
         {
           "type": "object",
-          "required": ["format", "source", "tool"],
+          "required": ["source", "tool"],
           "properties": {
             "tool": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string"
-              }
-            },
-            "format": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string"
-              }
+              "$ref": "#/definitions/SbomOrchestrationTool"
             },
             "source": {
               "$ref": "#/definitions/SbomSource"
@@ -10238,6 +10501,22 @@
             },
             "default": {
               "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "SyftSbomOrchestration": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SbomOrchestrationSpec"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "enum": ["spdx-json"]
             }
           }
         }
@@ -10993,7 +11272,46 @@
         }
       }
     },
-    "ResponseJsonNode": {
+    "PartialSchemaDTO": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "$ref": "#/definitions/JsonNode"
+        },
+        "nodeType": {
+          "type": "string"
+        },
+        "nodeName": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "skipStageSchema": {
+          "type": "boolean"
+        },
+        "moduleType": {
+          "type": "string",
+          "enum": [
+            "CD",
+            "CI",
+            "CV",
+            "CF",
+            "CE",
+            "STO",
+            "CHAOS",
+            "SRM",
+            "CODE",
+            "CORE",
+            "PMS",
+            "TEMPLATESERVICE",
+            "GOVERNANCE",
+            "IACM"
+          ]
+        }
+      }
+    },
+    "ResponseListPartialSchemaDTO": {
       "type": "object",
       "properties": {
         "status": {
@@ -11001,7 +11319,28 @@
           "enum": ["SUCCESS", "FAILURE", "ERROR"]
         },
         "data": {
-          "$ref": "#/definitions/JsonNode"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PartialSchemaDTO"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseYamlSchemaDetailsWrapper": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/YamlSchemaDetailsWrapper"
         },
         "metaData": {
           "type": "object"
@@ -11118,282 +11457,7 @@
         }
       }
     },
-    "CIBuildAuthor": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "avatar": {
-          "type": "string"
-        }
-      }
-    },
-    "CIBuildBranchHook": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "link": {
-          "type": "string"
-        },
-        "state": {
-          "type": "string"
-        },
-        "commits": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIBuildCommit"
-          }
-        },
-        "triggerCommits": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIBuildCommit"
-          }
-        }
-      }
-    },
-    "CIBuildCommit": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "link": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        },
-        "ownerName": {
-          "type": "string"
-        },
-        "ownerId": {
-          "type": "string"
-        },
-        "ownerEmail": {
-          "type": "string"
-        },
-        "timeStamp": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "CIBuildPRHook": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "link": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "body": {
-          "type": "string"
-        },
-        "sourceRepo": {
-          "type": "string"
-        },
-        "sourceBranch": {
-          "type": "string"
-        },
-        "targetBranch": {
-          "type": "string"
-        },
-        "state": {
-          "type": "string"
-        },
-        "commits": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIBuildCommit"
-          }
-        },
-        "triggerCommits": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIBuildCommit"
-          }
-        }
-      }
-    },
-    "CIImageDetails": {
-      "type": "object",
-      "properties": {
-        "imageName": {
-          "type": "string"
-        },
-        "imageTag": {
-          "type": "string"
-        }
-      }
-    },
-    "CIInfraDetails": {
-      "type": "object",
-      "properties": {
-        "infraType": {
-          "type": "string"
-        },
-        "infraOSType": {
-          "type": "string"
-        },
-        "infraHostType": {
-          "type": "string"
-        },
-        "infraArchType": {
-          "type": "string"
-        }
-      }
-    },
-    "CIPipelineModuleInfo": {
-      "type": "object",
-      "properties": {
-        "ciExecutionInfoDTO": {
-          "$ref": "#/definitions/CIWebhookInfoDTO"
-        },
-        "branch": {
-          "type": "string"
-        },
-        "repoName": {
-          "type": "string"
-        },
-        "triggerRepoName": {
-          "type": "string"
-        },
-        "tag": {
-          "type": "string"
-        },
-        "prNumber": {
-          "type": "string"
-        },
-        "buildType": {
-          "type": "string"
-        },
-        "isPrivateRepo": {
-          "type": "boolean"
-        },
-        "scmDetailsList": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIScmDetails"
-          }
-        },
-        "infraDetailsList": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIInfraDetails"
-          }
-        },
-        "imageDetailsList": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIImageDetails"
-          }
-        },
-        "tiBuildDetailsList": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/TIBuildDetails"
-          }
-        },
-        "ciPipelineStageModuleInfo": {
-          "$ref": "#/definitions/CIPipelineStageModuleInfo"
-        },
-        "ciLicenseType": {
-          "type": "string"
-        },
-        "ciEditionType": {
-          "type": "string"
-        }
-      }
-    },
-    "CIPipelineStageModuleInfo": {
-      "type": "object",
-      "properties": {
-        "stageExecutionId": {
-          "type": "string"
-        },
-        "stageId": {
-          "type": "string"
-        },
-        "stageName": {
-          "type": "string"
-        },
-        "cpuTime": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "stageBuildTime": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "infraType": {
-          "type": "string"
-        },
-        "osType": {
-          "type": "string"
-        },
-        "osArch": {
-          "type": "string"
-        },
-        "startTs": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "buildMultiplier": {
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
-    "CIScmDetails": {
-      "type": "object",
-      "properties": {
-        "scmUrl": {
-          "type": "string"
-        },
-        "scmProvider": {
-          "type": "string"
-        },
-        "scmAuthType": {
-          "type": "string"
-        },
-        "scmHostType": {
-          "type": "string"
-        }
-      }
-    },
-    "CIWebhookInfoDTO": {
-      "type": "object",
-      "properties": {
-        "event": {
-          "type": "string"
-        },
-        "author": {
-          "$ref": "#/definitions/CIBuildAuthor"
-        },
-        "branch": {
-          "$ref": "#/definitions/CIBuildBranchHook"
-        },
-        "pullRequest": {
-          "$ref": "#/definitions/CIBuildPRHook"
-        }
-      }
-    },
-    "ResponseCIPipelineModuleInfo": {
+    "ResponseJsonNode": {
       "type": "object",
       "properties": {
         "status": {
@@ -11401,36 +11465,7 @@
           "enum": ["SUCCESS", "FAILURE", "ERROR"]
         },
         "data": {
-          "$ref": "#/definitions/CIPipelineModuleInfo"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "TIBuildDetails": {
-      "type": "object",
-      "properties": {
-        "buildTool": {
-          "type": "string"
-        },
-        "language": {
-          "type": "string"
-        }
-      }
-    },
-    "ResponseYamlSchemaDetailsWrapper": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/YamlSchemaDetailsWrapper"
+          "$ref": "#/definitions/JsonNode"
         },
         "metaData": {
           "type": "object"

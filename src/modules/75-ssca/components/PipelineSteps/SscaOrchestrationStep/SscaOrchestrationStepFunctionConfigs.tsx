@@ -36,6 +36,14 @@ export const transformValuesFieldsConfig = [
   {
     name: 'timeout',
     type: TransformValuesTypes.Text
+  },
+  {
+    name: 'spec.source.spec.connectorRef',
+    type: TransformValuesTypes.ConnectorRef
+  },
+  {
+    name: 'spec.source.spec.image',
+    type: TransformValuesTypes.Text
   }
 ]
 
@@ -79,6 +87,18 @@ export const editViewValidateFieldsConfig = [
   {
     name: 'timeout',
     type: ValidationFieldTypes.Timeout
+  },
+  {
+    name: 'spec.source.spec.connectorRef',
+    type: ValidationFieldTypes.Text,
+    label: 'pipelineSteps.connectorLabel',
+    isRequired: true
+  },
+  {
+    name: 'spec.source.spec.image',
+    type: ValidationFieldTypes.Text,
+    label: 'imageLabel',
+    isRequired: true
   }
 ]
 
@@ -113,6 +133,18 @@ export function getInputSetViewValidateFieldsConfig(
     {
       name: 'timeout',
       type: ValidationFieldTypes.Timeout
+    },
+    {
+      name: 'spec.source.spec.connectorRef',
+      type: ValidationFieldTypes.Text,
+      label: 'pipelineSteps.connectorLabel',
+      isRequired
+    },
+    {
+      name: 'spec.source.spec.image',
+      type: ValidationFieldTypes.Text,
+      label: 'imageLabel',
+      isRequired
     }
   ]
 }

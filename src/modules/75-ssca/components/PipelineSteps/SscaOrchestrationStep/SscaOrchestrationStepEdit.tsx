@@ -9,6 +9,7 @@ import { Accordion, Formik, FormikForm, FormInput, SelectOption, Text } from '@h
 import { Color, FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
@@ -21,21 +22,28 @@ import { useStrings } from 'framework/strings'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { Connectors } from '@connectors/constants'
+import { useGitScope } from '@pipeline/utils/CIUtils'
+import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
+import type { SbomOrchestrationTool, SbomSource, SyftSbomOrchestration } from 'services/ci'
+import { AllMultiTypeInputTypesForStep } from '../utils'
+import { editViewValidateFieldsConfig, transformValuesFieldsConfig } from './SscaOrchestrationStepFunctionConfigs'
 import type {
   SscaOrchestrationStepData,
   SscaOrchestrationStepDataUI,
   SscaOrchestrationStepProps
 } from './SscaOrchestrationStep'
-import { editViewValidateFieldsConfig, transformValuesFieldsConfig } from './SscaOrchestrationStepFunctionConfigs'
 import css from './SscaOrchestrationStep.module.scss'
 
-export const artifactTypeOptions: SelectOption[] = [{ label: 'Image', value: 'image' }]
+const getTypedOptions = <T extends string>(input: T[]): SelectOption[] => {
+  return input.map(item => ({ label: item, value: item }))
+}
 
-export const sbomGenerationToolOptions: SelectOption[] = [{ label: 'Syft', value: 'Syft' }]
-
-export const sbomFormatOptions = [
-  { label: 'SPDX', value: 'SPDX' },
-  { label: 'CycloneDX', value: 'CycloneDX' }
+const artifactTypeOptions = getTypedOptions<SbomSource['type']>(['image'])
+const sbomGenerationToolOptions = getTypedOptions<SbomOrchestrationTool['type']>(['Syft'])
+const syftSbomFormats: { label: string; value: NonNullable<SyftSbomOrchestration['format']> }[] = [
+  { label: 'SPDX', value: 'spdx-json' }
 ]
 
 const SscaOrchestrationStepEdit = (
@@ -57,6 +65,12 @@ const SscaOrchestrationStepEdit = (
   const { stage: currentStage } = getStageFromPipeline<BuildStageElementConfig>(
     state.selectionState.selectedStageId || ''
   )
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
+    projectIdentifier: string
+    orgIdentifier: string
+    accountId: string
+  }>()
+  const gitScope = useGitScope()
 
   return (
     <Formik
@@ -108,11 +122,7 @@ const SscaOrchestrationStepEdit = (
                 />
               )}
 
-              <Text
-                font={{ variation: FontVariation.FORM_SUB_SECTION }}
-                color={Color.GREY_900}
-                margin={{ top: 'medium' }}
-              >
+              <Text font={{ variation: FontVariation.FORM_SUB_SECTION }} color={Color.GREY_900}>
                 {getString('ssca.orchestrationStep.sbomGeneration')}
               </Text>
 
@@ -125,7 +135,7 @@ const SscaOrchestrationStepEdit = (
               />
 
               <FormInput.RadioGroup
-                items={sbomFormatOptions}
+                items={syftSbomFormats}
                 name={`spec.tool.spec.format`}
                 label={getString('ssca.orchestrationStep.sbomFormat')}
                 disabled={readonly}
@@ -146,6 +156,48 @@ const SscaOrchestrationStepEdit = (
                 label={getString('pipeline.artifactsSelection.artifactType')}
                 placeholder={getString('select')}
                 disabled={readonly}
+              />
+
+              <FormMultiTypeConnectorField
+                label={getString('pipelineSteps.connectorLabel')}
+                type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER, Connectors.AZURE]}
+                name={`spec.source.spec.connectorRef`}
+                placeholder={getString('select')}
+                accountIdentifier={accountId}
+                projectIdentifier={projectIdentifier}
+                orgIdentifier={orgIdentifier}
+                multiTypeProps={{
+                  expressions,
+                  allowableTypes: AllMultiTypeInputTypesForStep,
+                  disabled: readonly
+                }}
+                gitScope={gitScope}
+                setRefValue
+                configureOptionsProps={{
+                  hideExecutionTimeField: true
+                }}
+              />
+
+              <MultiTypeTextField
+                name={`spec.source.spec.image`}
+                label={
+                  <Text
+                    className={css.formLabel}
+                    tooltipProps={{ dataTooltipId: 'image' }}
+                    placeholder={getString('imagePlaceholder')}
+                  >
+                    {getString('image')}
+                  </Text>
+                }
+                multiTextInputProps={{
+                  disabled: readonly,
+                  multiTextInputProps: {
+                    allowableTypes: AllMultiTypeInputTypesForStep
+                  }
+                }}
+                configureOptionsProps={{
+                  hideExecutionTimeField: true
+                }}
               />
 
               <Text

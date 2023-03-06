@@ -27,7 +27,11 @@ const runtimeValues = {
       }
     },
     source: {
-      type: 'image'
+      type: 'image',
+      spec: {
+        connectorRef: RUNTIME_INPUT_VALUE,
+        image: RUNTIME_INPUT_VALUE
+      }
     },
     attestation: {
       privateKey: RUNTIME_INPUT_VALUE

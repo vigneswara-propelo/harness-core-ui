@@ -15,11 +15,12 @@ import { StepViewType, ValidateInputSetProps } from '@pipeline/components/Abstra
 import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
-import type { MultiTypeSelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
+import type { MultiTypeConnectorRef, MultiTypeSelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { StringsMap } from 'stringTypes'
 import { VariableListTableProps, VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { flatObject } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import type { SbomOrchestrationTool, SbomSource, SyftSbomOrchestration } from 'services/ci'
 import { SscaOrchestrationStepEditWithRef } from './SscaOrchestrationStepEdit'
 import {
   getInputSetViewValidateFieldsConfig,
@@ -29,13 +30,17 @@ import SscaOrchestrationStepInputSet from './SscaOrchestrationStepInputSet'
 
 export interface SscaOrchestrationStepSpec {
   tool: {
-    type: string
+    type: SbomOrchestrationTool['type']
     spec: {
-      format: string
+      format: SyftSbomOrchestration['format']
     }
   }
   source: {
-    type: string
+    type: SbomSource['type']
+    spec: {
+      connectorRef: string
+      image: string
+    }
   }
   attestation: {
     privateKey: string
@@ -51,6 +56,7 @@ export interface SscaOrchestrationStepData {
 }
 
 export interface SscaOrchestrationStepSpecUI {
+  connectorRef: MultiTypeConnectorRef
   sbomToolType?: MultiTypeSelectOption
   sbomFormat?: MultiTypeSelectOption
   sbomSourceArtfifactType?: MultiTypeSelectOption
@@ -80,6 +86,7 @@ export class SscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepDat
   constructor() {
     super()
     this._hasStepVariables = true
+    this.invocationMap = new Map()
   }
 
   protected type = StepType.SscaOrchestration
@@ -95,11 +102,15 @@ export class SscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepDat
       tool: {
         type: 'Syft',
         spec: {
-          format: 'SPDX v2.2'
+          format: 'spdx-json'
         }
       },
       source: {
-        type: 'image'
+        type: 'image',
+        spec: {
+          connectorRef: '',
+          image: ''
+        }
       },
       attestation: {
         privateKey: ''

@@ -348,6 +348,7 @@ export interface CIExecutionImages {
   liteEngineTag?: string
   s3UploadTag?: string
   securityTag?: string
+  sscaOrchestrationTag?: string
 }
 
 export interface CIImageDetails {
@@ -753,6 +754,8 @@ export interface EntityGitDetails {
   filePath?: string
   fileUrl?: string
   objectId?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
   repoIdentifier?: string
   repoName?: string
   repoUrl?: string
@@ -2074,12 +2077,8 @@ export interface ImageDetails {
 }
 
 export type ImageSbomSource = SbomSourceSpec & {
-  connector?: {
-    [key: string]: string
-  }
-  image?: {
-    [key: string]: string
-  }
+  connector?: string
+  image?: string
 }
 
 export interface Infrastructure {
@@ -2518,6 +2517,7 @@ export interface Page {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -2528,6 +2528,7 @@ export interface PagePluginMetadataResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3619,6 +3620,15 @@ export type SaveCacheS3StepInfo = StepSpecType & {
   sourcePaths: string[]
 }
 
+export interface SbomOrchestrationSpec {
+  [key: string]: any
+}
+
+export interface SbomOrchestrationTool {
+  spec?: SbomOrchestrationSpec
+  type: 'Syft'
+}
+
 export interface SbomSource {
   spec?: SbomSourceSpec
   type: 'image'
@@ -3762,13 +3772,8 @@ export interface Splitting {
 
 export type SscaOrchestrationStepInfo = StepSpecType & {
   attestation?: Attestation
-  format: {
-    [key: string]: string
-  }
   source: SbomSource
-  tool: {
-    [key: string]: string
-  }
+  tool: SbomOrchestrationTool
 }
 
 export interface StackTraceElement {
@@ -3865,6 +3870,10 @@ export type StringNGVariable = NGVariable & {
   name?: string
   type?: 'String'
   value: string
+}
+
+export type SyftSbomOrchestration = SbomOrchestrationSpec & {
+  format?: 'spdx-json'
 }
 
 export type SysdigStepInfo = StepSpecType & {
@@ -5322,6 +5331,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
+    | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   yamlGroup?: string
 }
 
