@@ -50,7 +50,11 @@ fi
 
 if [ "$DEPLOYMENT_TYPE" != "ON_PREM" ]
 then
-  sed -i "s|<\!-- externalFontsForSaaS -->|<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600\&display=swap' rel='stylesheet' /><link href='https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700\&display=swap' rel='stylesheet' /><link href='https://fonts.googleapis.com/css2?family=Reenie+Beanie\&display=swap' rel='stylesheet' />|" index.html
+  sed -i "s|<\!-- externalFilesForSaaS -->|<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600\&display=swap' rel='stylesheet' />\n<link href='https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700\&display=swap' rel='stylesheet' />\n<link href='https://fonts.googleapis.com/css2?family=Reenie+Beanie\&display=swap' rel='stylesheet' />\n<link rel='icon' type='image/x-icon' href='https://static.harness.io/ng-static/images/favicon.ico' />\n<link rel='icon' type='image/png' href='https://static.harness.io/ng-static/images/favicon.png' />\n<link rel='apple-touch-icon' href='https://static.harness.io/ng-static/images/favicon.png' />|" index.html
+  sed -i "s|<\!-- externalLoaderForSaaS -->|<img src='https://static.harness.io/ng-static/images/loader.gif' alt='Loading...' />|" index.html
+else
+  sed -i "s|<\!-- externalFilesForSaaS -->|<link rel='icon' type='image/x-icon' href='/ng/static/favicon.ico' />\n<link rel='icon' type='image/png' href='/ng/static/favicon.png' />\n<link rel='apple-touch-icon' href='/ng/static/favicon.png' />|" index.html
+  sed -i "s|<\!-- externalLoaderForSaaS -->|<img src='/ng/static/loader.gif' alt='Loading...' />|" index.html
 fi
 
 echo "Using $NGINX_CONFIG_FILE for nginx"

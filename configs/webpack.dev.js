@@ -103,7 +103,8 @@ const config = {
             key,
             Object.assign({ logLevel: 'info', secure: false, changeOrigin: true }, value)
           ])
-        )
+        ),
+        static: [path.join(process.cwd(), 'src/static')]
       },
   module: {
     rules: [

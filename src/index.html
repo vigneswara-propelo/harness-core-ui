@@ -3,16 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Language" content="en" />
-    <!-- externalFontsForSaaS -->
+    <title>Harness</title>
+    <!-- externalFilesForSaaS -->
     <% if (__DEV__) { %>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
     <% } %>
-    <title>Harness</title>
-    <link rel="icon" type="image/x-icon" href="https://static.harness.io/ng-static/images/favicon.ico" />
-    <link rel="icon" type="image/png" href="https://static.harness.io/ng-static/images/favicon.png" />
-    <link rel="apple-touch-icon" href="https://static.harness.io/ng-static/images/favicon.png" />
     <style>
       .pre-loader-wrapper {
         position: fixed;
@@ -229,7 +229,10 @@
     <div id="react-root">
       <div class="pre-loader-wrapper">
         <div>
-          <img src="https://static.harness.io/ng-static/images/loader.gif" alt="Loading..." />
+          <!-- externalLoaderForSaaS -->
+          <% if (__DEV__) { %>
+          <img src="/loader.gif" alt="Loading..." />
+          <% } %>
           <div class="pre-loader-text">Loading, please wait...</div>
         </div>
       </div>
