@@ -36,7 +36,7 @@ export class TerraformCloudRun extends PipelineStep<any> {
     type: StepType.TerraformCloudRun,
     spec: {
       runType: '',
-      message: '',
+      runMessage: '',
       spec: {
         connectorRef: '',
         organization: '',

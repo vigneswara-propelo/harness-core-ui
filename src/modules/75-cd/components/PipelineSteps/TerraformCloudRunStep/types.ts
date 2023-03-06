@@ -59,6 +59,7 @@ export interface TerraformCloudRunData extends StepElementConfig {
       exportTerraformPlanJson?: boolean
       targets?: Array<{ id: string; value: string }> | string[] | string
       planType?: 'Plan' | 'Destroy'
+      overridePolicies?: boolean
     }
   }
 }
@@ -76,6 +77,7 @@ export interface TerraformCloudRunFormData extends StepElementConfig {
       exportTerraformPlanJson?: boolean
       targets?: Array<{ id: string; value: string }> | string[] | string
       planType?: 'Plan' | 'Destroy'
+      overridePolicies?: boolean
     }
   }
 }

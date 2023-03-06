@@ -335,7 +335,7 @@ export function TerraformCloudRunEdit(
             <div className={stepCss.formGroup}>
               <FormMultiTypeTextAreaField
                 placeholder={getString('pipeline.terraformStep.messagePlaceholder')}
-                name="spec.message"
+                name="spec.runMessage"
                 label={getString('pipeline.terraformStep.messageLabel')}
                 className={css.message}
                 multiTypeTextArea={{
@@ -346,14 +346,14 @@ export function TerraformCloudRunEdit(
                   textAreaProps: { growVertically: true }
                 }}
               />
-              {getMultiTypeFromValue(values.spec?.message) === MultiTypeInputType.RUNTIME && (
+              {getMultiTypeFromValue(values.spec?.runMessage) === MultiTypeInputType.RUNTIME && (
                 <ConfigureOptions
-                  value={values.spec?.message}
+                  value={values.spec?.runMessage}
                   type="String"
-                  variableName="spec.message"
+                  variableName="spec.runMessage"
                   showRequiredField={false}
                   showDefaultField={false}
-                  onChange={/* istanbul ignore next */ value => setFieldValue('spec.message', value)}
+                  onChange={/* istanbul ignore next */ value => setFieldValue('spec.runMessage', value)}
                   isReadonly={readonly}
                 />
               )}
@@ -379,6 +379,29 @@ export function TerraformCloudRunEdit(
                 />
               )}
             </div>
+            {(values.spec?.runType === RunTypes.PlanAndApply || values.spec?.runType === RunTypes.PlanAndDestroy) && (
+              <div className={cx(stepCss.formGroup)}>
+                <FormMultiTypeCheckboxField
+                  formik={formikValues}
+                  name={'spec.spec.overridePolicies'}
+                  label={getString('pipeline.terraformStep.overridePolicies')}
+                  multiTypeTextbox={{ expressions, allowableTypes }}
+                  disabled={readonly}
+                />
+                {getMultiTypeFromValue(values.spec?.spec?.overridePolicies) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={(values.spec?.spec?.overridePolicies || '') as string}
+                    type="String"
+                    variableName="spec.spec.overridePolicies"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    onChange={/* istanbul ignore next */ value => setFieldValue('spec.spec.overridePolicies', value)}
+                    style={{ alignSelf: 'center' }}
+                    isReadonly={readonly}
+                  />
+                )}
+              </div>
+            )}
             <div className={cx(stepCss.formGroup, stepCss.lg)}>
               <FormInput.Select
                 label={getString(runTypeLabel)}

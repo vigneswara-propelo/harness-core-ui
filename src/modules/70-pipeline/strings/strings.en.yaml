@@ -101,6 +101,7 @@ terraformStep:
   messageLabel: Run Message
   messagePlaceholder: Enter Message
   discardPendingRuns: Discard Pending Runs
+  overridePolicies: Override Policies
   runTypeLabel: Run Type
   runTypePlaceholder: Select Run Type
   terraformVersion: Terraform Version
