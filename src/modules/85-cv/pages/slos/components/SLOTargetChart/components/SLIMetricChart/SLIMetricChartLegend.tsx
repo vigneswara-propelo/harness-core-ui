@@ -9,9 +9,7 @@ import React from 'react'
 import { Container, Text, Layout, IconName } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { RatioSLIMetricSpec } from 'services/cv'
-import { SLIEventTypes } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
-import type { ThresholdLegend, RatioLegend } from './SLIMetricChartLegend.types'
+import type { ThresholdLegend } from './SLIMetricChartLegend.types'
 import css from './SLIMetricChart.module.scss'
 
 interface LegendConfig {
@@ -22,45 +20,29 @@ interface LegendConfig {
 }
 
 export const SLIMetricChartLegend = ({
-  hasMultipleMetric,
   legendData,
-  eventType
+  showPercentage = false
 }: {
-  hasMultipleMetric: boolean
-  legendData: ThresholdLegend | RatioLegend
-  eventType?: RatioSLIMetricSpec['eventType']
+  legendData: ThresholdLegend
+  showPercentage?: boolean
 }): JSX.Element => {
   const { getString } = useStrings()
   let legendElement = undefined
-  let legendConfig: LegendConfig[] = []
-  if (hasMultipleMetric) {
-    legendConfig = [
-      {
-        label: eventType === SLIEventTypes.GOOD ? getString('cv.slos.goodRequests') : getString('cv.slos.badRequests'),
-        value: (legendData as RatioLegend).goodMetric.toFixed(1),
-        icon: 'symbol-square' as IconName,
-        color: Color.MAGENTA_700
-      },
-      {
-        label: getString('cv.slos.validRequests'),
-        value: (legendData as RatioLegend).validMetric.toFixed(1),
-        icon: 'symbol-square' as IconName,
-        color: Color.GREEN_700
-      }
-    ]
-  } else {
-    legendConfig = [
-      { label: getString('cv.minimum'), value: (legendData as ThresholdLegend).min.toString() },
-      {
-        label: getString('ce.perspectives.nodeDetails.aggregation.maximum'),
-        value: (legendData as ThresholdLegend).max.toString()
-      },
-      {
-        label: getString('ce.perspectives.nodeDetails.aggregation.average'),
-        value: (legendData as ThresholdLegend).avg.toString()
-      }
-    ]
-  }
+  const suffix = showPercentage ? '%' : ''
+
+  const { min, max, avg } = legendData as ThresholdLegend
+
+  const legendConfig: LegendConfig[] = [
+    { label: getString('cv.minimum'), value: `${showPercentage ? min.toFixed(1) : min} ${suffix}` },
+    {
+      label: getString('ce.perspectives.nodeDetails.aggregation.maximum'),
+      value: `${showPercentage ? max.toFixed(1) : max} ${suffix}`
+    },
+    {
+      label: getString('ce.perspectives.nodeDetails.aggregation.average'),
+      value: `${showPercentage ? avg.toFixed(1) : avg} ${suffix}`
+    }
+  ]
 
   legendElement = legendConfig.map(legendObject => {
     return (

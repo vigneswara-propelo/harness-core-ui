@@ -65,7 +65,7 @@ describe('Validate SLI Metric chart', () => {
         ]}
         metricName="metric1"
         title="metric1"
-        hideLegend
+        showLegend
       />
     )
     expect(getByText('metric1')).toBeInTheDocument()

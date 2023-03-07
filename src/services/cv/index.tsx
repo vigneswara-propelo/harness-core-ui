@@ -477,6 +477,27 @@ export type AzureUserAssignedMSIAuth = AzureAuthCredentialDTO & {
   clientId: string
 }
 
+export interface BambooAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface BambooAuthenticationDTO {
+  spec?: BambooAuthCredentialsDTO
+  type: 'UsernamePassword' | 'Anonymous' | 'Bearer Token(HTTP Header)'
+}
+
+export type BambooConnectorDTO = ConnectorConfigDTO & {
+  auth?: BambooAuthenticationDTO
+  bambooUrl: string
+  delegateSelectors?: string[]
+}
+
+export type BambooUserNamePasswordDTO = BambooAuthCredentialsDTO & {
+  passwordRef: string
+  username?: string
+  usernameRef?: string
+}
+
 export interface BillingExportSpec {
   containerName: string
   directoryName: string
@@ -836,6 +857,7 @@ export interface ConnectorInfoDTO {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'Bamboo'
     | 'TerraformCloud'
 }
 
@@ -1754,6 +1776,7 @@ export interface Error {
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2185,6 +2208,7 @@ export interface Failure {
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2799,7 +2823,7 @@ export interface JiraAuthCredentialsDTO {
 
 export interface JiraAuthenticationDTO {
   spec: JiraAuthCredentialsDTO
-  type: 'UsernamePassword'
+  type: 'UsernamePassword' | 'PersonalAccessToken'
 }
 
 export type JiraConnector = ConnectorConfigDTO & {
@@ -2809,6 +2833,10 @@ export type JiraConnector = ConnectorConfigDTO & {
   passwordRef?: string
   username?: string
   usernameRef?: string
+}
+
+export type JiraPATDTO = JiraAuthCredentialsDTO & {
+  patRef: string
 }
 
 export type JiraUserNamePasswordDTO = JiraAuthCredentialsDTO & {
@@ -3672,6 +3700,7 @@ export interface Page {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3682,6 +3711,7 @@ export interface PageAnalyzedLogDataDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3692,6 +3722,7 @@ export interface PageAnalyzedRadarChartLogDataDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3702,6 +3733,7 @@ export interface PageAppDynamicsApplication {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3712,6 +3744,7 @@ export interface PageAppDynamicsTier {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3722,6 +3755,7 @@ export interface PageCVNGLogDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3732,6 +3766,7 @@ export interface PageChangeEventDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3742,6 +3777,7 @@ export interface PageDatadogDashboardDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3752,6 +3788,7 @@ export interface PageDowntimeHistoryView {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3762,6 +3799,7 @@ export interface PageDowntimeListView {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3772,6 +3810,7 @@ export interface PageLogAnalysisClusterDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3782,6 +3821,7 @@ export interface PageLogAnalysisRadarChartListDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3792,6 +3832,7 @@ export interface PageMSDropdownResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3802,6 +3843,7 @@ export interface PageMetricsAnalysis {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3812,6 +3854,7 @@ export interface PageMonitoredServiceListItemDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3822,6 +3865,7 @@ export interface PageMonitoredServiceResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3832,6 +3876,7 @@ export interface PageNotificationRuleResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3842,6 +3887,7 @@ export interface PageSLOConsumptionBreakdown {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3852,6 +3898,7 @@ export interface PageSLOHealthListView {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3862,6 +3909,7 @@ export interface PageServiceLevelObjectiveV2Response {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3872,6 +3920,7 @@ export interface PageStackdriverDashboardDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3882,6 +3931,7 @@ export interface PageString {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3892,6 +3942,7 @@ export interface PageTimeSeriesMetricDataDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3902,6 +3953,7 @@ export interface PageTransactionMetricInfo {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3912,6 +3964,7 @@ export interface PageUserJourneyResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3984,12 +4037,12 @@ export interface PartialSchemaDTO {
     | 'STO'
     | 'CHAOS'
     | 'SRM'
+    | 'IACM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'IACM'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -4178,6 +4231,12 @@ export interface ReferenceDTO {
   name?: string
   orgIdentifier?: string
   projectIdentifier?: string
+}
+
+export type RequestBasedServiceLevelIndicatorSpec = ServiceLevelIndicatorSpec & {
+  eventType: 'Good' | 'Bad'
+  metric1: string
+  metric2: string
 }
 
 export interface Response {
@@ -4718,6 +4777,7 @@ export interface ResponseMessage {
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5823,13 +5883,11 @@ export interface ServiceLevelIndicatorDTO {
   name?: string
   sliMissingDataType?: 'Good' | 'Bad' | 'Ignore'
   spec: ServiceLevelIndicatorSpec
-  type?: 'Availability' | 'Latency'
+  type?: 'Window' | 'Request'
 }
 
 export interface ServiceLevelIndicatorSpec {
-  sliMissingDataType?: 'Good' | 'Bad' | 'Ignore'
-  spec: SLIMetricSpec
-  type?: 'Threshold' | 'Ratio'
+  [key: string]: any
 }
 
 export interface ServiceLevelObjectiveDetailsDTO {
@@ -6614,6 +6672,12 @@ export type WeeklyCalendarSpec = CalenderSpec & {
   dayOfWeek: 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun'
 }
 
+export type WindowBasedServiceLevelIndicatorSpec = ServiceLevelIndicatorSpec & {
+  sliMissingDataType?: 'Good' | 'Bad' | 'Ignore'
+  spec: SLIMetricSpec
+  type?: 'Threshold' | 'Ratio'
+}
+
 export interface YamlGroup {
   group?: string
 }
@@ -6634,12 +6698,12 @@ export interface YamlSchemaMetadata {
     | 'STO'
     | 'CHAOS'
     | 'SRM'
+    | 'IACM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'IACM'
   )[]
   namespace?: string
   yamlGroup: YamlGroup
@@ -6658,12 +6722,12 @@ export interface YamlSchemaWithDetails {
     | 'STO'
     | 'CHAOS'
     | 'SRM'
+    | 'IACM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'IACM'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -6722,6 +6786,7 @@ export interface ChangeEventListForAccountQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export interface ChangeEventListForAccountPathParams {
@@ -6931,6 +6996,7 @@ export interface ChangeEventListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export interface ChangeEventListPathParams {
@@ -8371,6 +8437,7 @@ export interface GetMetricsAnalysisForVerifyStepExecutionIdQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export interface GetMetricsAnalysisForVerifyStepExecutionIdPathParams {

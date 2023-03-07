@@ -472,7 +472,6 @@ export const convertSLOFormDataToServiceLevelIndicatorDTO = (values: SLOV2Form):
   return {
     name: values.name,
     identifier: values.identifier,
-    type: values.serviceLevelIndicatorType as any,
     healthSourceRef: values.healthSourceRef,
     sliMissingDataType: values.SLIMissingDataType as any,
     spec: {

@@ -227,7 +227,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
             )}
             {validRequestMetric && (
               <SLIMetricChart
-                hideLegend={!isRatioBased}
+                showLegend={!isRatioBased}
                 loading={metricLoading}
                 title={activeValidMetric?.label || validRequestMetric}
                 error={metricError}
@@ -245,7 +245,8 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
             )}
             {validRequestMetric && goodRequestMetric && (
               <SLIMetricChart
-                hideLegend
+                showLegend
+                legendTypePercentage
                 loading={metricLoading}
                 error={metricError}
                 metricName={'ratio'}

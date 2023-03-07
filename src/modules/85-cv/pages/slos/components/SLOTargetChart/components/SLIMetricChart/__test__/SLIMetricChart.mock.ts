@@ -4363,7 +4363,6 @@ export const OnboardingAPIMock = {
 export const ServiceLevelIndicator = {
   name: 'Ratio based',
   identifier: 'Ratio_based',
-  type: 'Availability',
   healthSourceRef: 'Prometheus',
   sliMissingDataType: 'Good',
   spec: {

@@ -12,7 +12,6 @@ import type { SeriesLineOptions } from 'highcharts'
 import { Container, Icon, PageError, NoDataCard, Heading, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { RatioSLIMetricSpec } from 'services/cv'
 import NoChartDataImage from '@cv/assets/noChartData.svg'
 import { getChartSeriesValues } from '@cv/pages/health-source/common/CommonMetricLineChart/CommonMetricLineChart.utils'
 import { SLIMetricChartLegend } from './SLIMetricChartLegend'
@@ -25,11 +24,11 @@ export interface SLIMetricChartProps {
   metricName: string
   loading?: boolean
   error?: string
-  eventType?: RatioSLIMetricSpec['eventType']
   dataPoints: (number | undefined)[][]
   retryOnError?: () => void
-  hideLegend?: boolean
+  showLegend?: boolean
   graphColor?: string
+  legendTypePercentage?: boolean
 }
 
 export const SLIMetricChart = ({
@@ -39,10 +38,10 @@ export const SLIMetricChart = ({
   error,
   metricName,
   retryOnError,
-  eventType,
   dataPoints,
   graphColor,
-  hideLegend = false
+  showLegend,
+  legendTypePercentage
 }: SLIMetricChartProps): JSX.Element => {
   const { getString } = useStrings()
   const containerHeight = '150px'
@@ -87,7 +86,7 @@ export const SLIMetricChart = ({
     content = (
       <>
         <HighchartsReact highcharts={Highcharts} options={chartSeriesValues} />
-        {hideLegend && <SLIMetricChartLegend hasMultipleMetric={false} eventType={eventType} legendData={legendData} />}
+        {showLegend && <SLIMetricChartLegend showPercentage={legendTypePercentage} legendData={legendData} />}
       </>
     )
   }
