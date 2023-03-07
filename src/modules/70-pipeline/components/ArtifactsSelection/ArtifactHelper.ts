@@ -217,7 +217,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.AzureArtifacts,
     ENABLED_ARTIFACT_TYPES.Gcr,
     ENABLED_ARTIFACT_TYPES.Acr,
-    ENABLED_ARTIFACT_TYPES.DockerRegistry
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.Ecr
   ],
   WinRm: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -229,7 +230,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.AzureArtifacts,
     ENABLED_ARTIFACT_TYPES.Gcr,
     ENABLED_ARTIFACT_TYPES.Acr,
-    ENABLED_ARTIFACT_TYPES.DockerRegistry
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.Ecr
   ],
   AzureWebApp: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
