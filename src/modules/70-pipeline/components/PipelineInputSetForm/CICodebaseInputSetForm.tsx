@@ -76,7 +76,7 @@ export interface CICodebaseInputSetFormProps {
   chainedPipelineStagePath?: string
 }
 
-type AcceptableValue = boolean | string | number | SelectOption | string[] | MultiSelectOption[]
+export type AcceptableValue = boolean | string | number | SelectOption | string[] | MultiSelectOption[]
 
 const TriggerTypes = {
   SCHEDULED: 'Scheduled'
