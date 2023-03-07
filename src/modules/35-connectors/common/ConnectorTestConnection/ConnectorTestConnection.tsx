@@ -142,7 +142,7 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
       case Connectors.GITLAB:
       case Connectors.GITHUB:
       case Connectors.GIT:
-        return props.prevStepData?.url
+        return props.prevStepData?.url + '/' + props.prevStepData?.validationRepo
 
       default:
         return ''
@@ -150,7 +150,6 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
   }
 
   const value = props.url || getValue()
-
   return value ? (
     <Layout.Horizontal padding={{ top: 'xsmall' }} spacing="xsmall">
       <Text color={Color.GREY_400} font={{ size: 'small' }} style={{ whiteSpace: 'nowrap' }}>
