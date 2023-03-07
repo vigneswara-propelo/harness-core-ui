@@ -32,6 +32,7 @@ interface ServiceDetailsArtifactTableProps {
   resetSearch: () => void
   setRowClickFilter: React.Dispatch<React.SetStateAction<ServiceDetailInstanceViewProps>>
   searchTerm: string
+  artifactFilterApplied?: boolean
 }
 
 /* istanbul ignore next */
@@ -137,7 +138,7 @@ export const RenderArtifact: Renderer<CellProps<TableRowData>> = ({
 }
 
 export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifactTableProps): React.ReactElement {
-  const { artifactFilter, envFilter, resetSearch, setRowClickFilter, searchTerm } = props
+  const { artifactFilter, envFilter, resetSearch, setRowClickFilter, searchTerm, artifactFilterApplied = false } = props
   const { getString } = useStrings()
   const [selectedRow, setSelectedRow] = React.useState<string>()
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
@@ -148,7 +149,8 @@ export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifac
     projectIdentifier,
     serviceId,
     artifact: artifactFilter ? artifactFilter : undefined,
-    environmentIdentifier: envFilter ? envFilter : undefined
+    environmentIdentifier: envFilter ? envFilter : undefined,
+    filterOnArtifact: artifactFilterApplied
   }
 
   const { data, loading, error, refetch } = useGetActiveInstanceGroupedByArtifact({ queryParams })
