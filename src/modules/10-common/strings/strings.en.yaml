@@ -1358,6 +1358,8 @@ addedEntityLabel: 'Added {{entity}}'
 bucketName: Bucket Name
 validationInProgress: Validation in progress
 checkYourNetwork: check your network.
+Stepper:
+  StepError: Required fields are missing or incorrect data
 
 # SSCA module
 ssca: Supply Chain Assurance

@@ -23,7 +23,7 @@ import {
 } from 'services/cv'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { CVStepper } from '@cv/components/CVStepper/CVStepper'
+import { Stepper } from '@common/components/Stepper/Stepper'
 import SLOName from '@cv/pages/slos/common/SLOName/SLOName'
 import SLI from '@cv/pages/slos/common/SLI/SLI'
 import SLOTargetAndBudgetPolicy from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy'
@@ -292,7 +292,7 @@ export default function CreateSimpleSLOForm({
         )}
         {!loading && (
           <>
-            <CVStepper
+            <Stepper
               id="createSLOTabs"
               isStepValid={isStepValid}
               runValidationOnMount={validateAllSteps}

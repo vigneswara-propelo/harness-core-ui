@@ -107,7 +107,7 @@ const Step = ({
               <>
                 {!step.errorMessage?.length ? (
                   <Text margin={{ bottom: isCurrentStep ? 'large' : '' }} intent="danger">
-                    {getString('cv.CVStepper.StepError')}
+                    {getString('common.Stepper.StepError')}
                   </Text>
                 ) : (
                   step.errorMessage?.map((error, errorIndex) => {

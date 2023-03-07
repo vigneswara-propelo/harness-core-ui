@@ -177,7 +177,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
         </div>
         <div
           class="Layout--vertical StyledProps--main StyledProps--margin-xlarge"
-          data-testid="CVStepper_main"
+          data-testid="Stepper_main"
         >
           <div
             class="StyledProps--font StyledProps--main stepContainer"

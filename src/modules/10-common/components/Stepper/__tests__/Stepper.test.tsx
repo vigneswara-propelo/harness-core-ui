@@ -10,8 +10,8 @@ import { Button } from '@harness/uicore'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import { CVStepper } from '../CVStepper'
-import { StepList } from './CVStepper.mock'
+import { Stepper } from '../Stepper'
+import { StepList } from './Stepper.mock'
 
 const Wrapped = ({
   isStepValid,
@@ -23,13 +23,13 @@ const Wrapped = ({
   const [validateAll, setValidateAll] = useState(runValidationOnMount)
   return (
     <>
-      <CVStepper id="createSLOTabs" isStepValid={isStepValid} runValidationOnMount={validateAll} stepList={StepList} />
+      <Stepper id="createSLOTabs" isStepValid={isStepValid} runValidationOnMount={validateAll} stepList={StepList} />
       <Button text="save" onClick={() => setValidateAll(true)} />
     </>
   )
 }
 
-describe('Validate CVStepper', () => {
+describe('Validate Stepper', () => {
   test('render in create mode', () => {
     const isStepValid = jest.fn().mockReturnValue(true)
     const { container, getByText } = render(
@@ -123,9 +123,9 @@ describe('Validate CVStepper', () => {
   test('Render with empty step list', () => {
     const { container } = render(
       <TestWrapper>
-        <CVStepper id="createSLOTabs" isStepValid={jest.fn()} runValidationOnMount={false} stepList={[]} />
+        <Stepper id="createSLOTabs" isStepValid={jest.fn()} runValidationOnMount={false} stepList={[]} />
       </TestWrapper>
     )
-    expect(container.querySelector('[data-testid="CVStepper_main"]')).toBeInTheDocument()
+    expect(container.querySelector('[data-testid="Stepper_main"]')).toBeInTheDocument()
   })
 })

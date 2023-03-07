@@ -19,6 +19,7 @@ export interface StringsMap {
   'common.OFF': string
   'common.ON': string
   'common.PermissibleActions': string
+  'common.Stepper.StepError': string
   'common.accViewer': string
   'common.accessKey': string
   'common.account.checkLatestStatus': string
@@ -7835,7 +7836,6 @@ export interface StringsMap {
   'ssca.orchestrationStep.sbomFormat': string
   'ssca.orchestrationStep.sbomGeneration': string
   'ssca.orchestrationStep.sbomTool': string
-  'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string
   'cv.CompositeSLO.AddSLOMessage': string
   'cv.CompositeSLO.AddSLOValidation.maxSLOCount': string

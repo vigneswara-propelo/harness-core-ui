@@ -16,7 +16,7 @@ export interface StepDetailsInterface {
   errorMessage?: string[]
 }
 
-export interface CVStepperProps {
+export interface StepperProps {
   id: string
   stepList: StepDetailsInterface[]
   onStepChange?: (id: string) => void

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { StepDetailsInterface } from '@cv/components/CVStepper/CVStepper.types'
+import type { StepDetailsInterface } from '@common/components/Stepper/Stepper.types'
 import type { StepStatusType } from '../../Step.types'
 
 export interface StepTitleInterface {

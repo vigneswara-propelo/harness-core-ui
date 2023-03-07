@@ -7,17 +7,17 @@
 
 import React, { useState } from 'react'
 import { Layout } from '@harness/uicore'
-import type { CVStepperProps } from './CVStepper.types'
+import type { StepperProps } from './Stepper.types'
 import Step from './components/Step/Step'
 
-export const StepperContext = React.createContext<CVStepperProps>({ id: '', stepList: [] })
+export const StepperContext = React.createContext<StepperProps>({ id: '', stepList: [] })
 
-export const CVStepper = (props: React.PropsWithChildren<CVStepperProps>): React.ReactElement => {
+export const Stepper = (props: React.PropsWithChildren<StepperProps>): React.ReactElement => {
   const { stepList, isStepValid, onStepChange, runValidationOnMount } = props
   const [selectedStepId, setSelectedStepId] = useState(() => stepList[0]?.id)
   return (
     <StepperContext.Provider value={{ ...props }}>
-      <Layout.Vertical margin="xlarge" data-testid="CVStepper_main">
+      <Layout.Vertical margin="xlarge" data-testid="Stepper_main">
         {stepList?.map((step, index) => {
           return (
             <Step
