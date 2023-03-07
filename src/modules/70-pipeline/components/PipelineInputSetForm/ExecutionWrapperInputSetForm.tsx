@@ -168,7 +168,11 @@ export function ExecutionWrapperInputSetForm(props: {
                   <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
                     <FailureStrategiesInputSetForm
                       readonly={readonly}
-                      path={`${path}[${index}].parallel[${indexp}].stepGroup.failureStrategies`}
+                      path={
+                        isTemplateStepGroup
+                          ? `${path}[${index}].parallel[${indexp}].stepGroup.template.templateInputs.failureStrategies`
+                          : `${path}[${index}].parallel[${indexp}].stepGroup.failureStrategies`
+                      }
                       viewType={viewType}
                       stageType={defaultTo(customStepProps?.stageType, StageType.DEPLOY)}
                     />
@@ -225,7 +229,11 @@ export function ExecutionWrapperInputSetForm(props: {
               <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
                 <FailureStrategiesInputSetForm
                   readonly={readonly}
-                  path={`${path}[${index}].stepGroup.failureStrategies`}
+                  path={
+                    isTemplateStepGroup
+                      ? `${path}[${index}].stepGroup.template.templateInputs.failureStrategies`
+                      : `${path}[${index}].stepGroup.failureStrategies`
+                  }
                   viewType={viewType}
                   stageType={defaultTo(customStepProps?.stageType, StageType.DEPLOY)}
                 />
