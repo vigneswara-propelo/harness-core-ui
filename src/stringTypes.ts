@@ -3575,6 +3575,10 @@ export interface StringsMap {
   'pipeline.azureWebApp.strategy.basic': string
   'pipeline.azureWebApp.strategy.blueGreen': string
   'pipeline.azureWebApp.strategy.canary': string
+  'pipeline.banner.bannerDescription': string
+  'pipeline.banner.bannerDescriptionSecond': string
+  'pipeline.banner.bannerText': string
+  'pipeline.banner.docs': string
   'pipeline.barrierStep.barrierReference': string
   'pipeline.barrierStep.barrierReferencePlaceholder': string
   'pipeline.barrierStep.barrierReferenceRequired': string

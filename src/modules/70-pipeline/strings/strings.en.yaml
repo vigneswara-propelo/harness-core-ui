@@ -1656,6 +1656,11 @@ ServiceDetail:
 iacm:
   workflow: Workflow
   resourceStack: Resource Stack
+banner:
+  bannerText: Harness has significantly updated services and environments in CD. Please review our
+  bannerDescription: on upgrading to the newer v2 versions of these entities. Support for v1 was reduced and the entities were deprecated at the end of January 2023. Please reach out to
+  bannerDescriptionSecond: for any questions.
+  docs: docs
 validation:
   validated: Validated
   validating: Validating
