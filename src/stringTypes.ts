@@ -164,6 +164,7 @@ export interface StringsMap {
   'common.clusters': string
   'common.codeErrorsSettings': string
   'common.collapse': string
+  'common.combinedExpression': string
   'common.comingSoon': string
   'common.comingSoon2': string
   'common.commentModal.addCommentPlaceholder': string
@@ -519,6 +520,7 @@ export interface StringsMap {
   'common.importEntityFromGit': string
   'common.importFromGit': string
   'common.in': string
+  'common.individualExpression': string
   'common.infrastructureInputs': string
   'common.infrastructurePrefix': string
   'common.infrastructures': string

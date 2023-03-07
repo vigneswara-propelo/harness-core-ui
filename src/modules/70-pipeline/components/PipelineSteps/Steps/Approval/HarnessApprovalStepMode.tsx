@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { produce } from 'immer'
-import { isEmpty, compact, isArray } from 'lodash-es'
+import { isEmpty, compact, isArray, has } from 'lodash-es'
 import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
 import {
@@ -34,8 +34,10 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { FormMultiTypeUserGroupInput } from '@rbac/components/UserGroupsInput/FormMultitypeUserGroupInput'
 import { regexPositiveNumbers } from '@common/utils/StringUtils'
-import { isMultiTypeRuntime } from '@common/utils/utils'
+import { isMultiTypeRuntime, isValueExpression } from '@common/utils/utils'
 import { UserGroupConfigureOptions } from '@rbac/components/UserGroupConfigureOptions/UserGroupConfigureOptions'
+import { ExpressionTypes } from '@rbac/components/UserGroupsInput/UserGroupExpressionInput'
+
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type {
   ApproverInputsSubmitCallInterface,
@@ -272,14 +274,38 @@ function HarnessApprovalStepMode(
         if (isArray(userGroupValues) && userGroupValues.length > 0) {
           draft.spec.approvers.userGroups = compact(userGroupValues as string[])
         }
+        if (has(draft, 'userGroupExpression')) {
+          delete draft['userGroupExpression']
+        }
       })
     )
+  }
+
+  const getInitialValues = () => {
+    const formInitVals = {
+      ...props.initialValues
+    }
+
+    if (Array.isArray(formInitVals?.spec?.approvers?.userGroups)) {
+      /* 
+      even if the value is expression or a regular value
+      this is saved as individual, so that when changed to expression 
+      it preselects individual
+      */
+      formInitVals.userGroupExpression = ExpressionTypes.Individual
+    } else if (isValueExpression(formInitVals?.spec?.approvers?.userGroups)) {
+      formInitVals.userGroupExpression = ExpressionTypes.Combined
+    } else {
+      formInitVals.userGroupExpression = ExpressionTypes.Individual
+    }
+
+    return formInitVals
   }
 
   return (
     <Formik<HarnessApprovalData>
       onSubmit={handleOnSubmit}
-      initialValues={props.initialValues}
+      initialValues={getInitialValues()}
       formName="harnessApproval"
       validate={data => {
         onChange?.(data)

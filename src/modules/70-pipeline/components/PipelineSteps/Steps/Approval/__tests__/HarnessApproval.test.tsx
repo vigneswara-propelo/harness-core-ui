@@ -10,6 +10,8 @@ import { render, act, fireEvent, queryByAttribute, waitFor } from '@testing-libr
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
+import { ExpressionTypes } from '@rbac/components/UserGroupsInput/UserGroupExpressionInput'
+
 import { TestStepWidget, factory } from '../../__tests__/StepTestUtil'
 import { HarnessApproval } from '../HarnessApproval'
 import {
@@ -272,7 +274,8 @@ describe('Harness Approval tests', () => {
         includePipelineExecutionHistory: true
       },
       timeout: '10m',
-      type: 'HarnessApproval'
+      type: 'HarnessApproval',
+      userGroupExpression: ExpressionTypes.Individual
     })
   })
 

@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserGroup Expression Input tests should render without any issue 1`] = `
+<div>
+  <div
+    class="bp3-form-group"
+  >
+    <div
+      class="bp3-form-content"
+    >
+      <div
+        class="StyledProps--main"
+      >
+        
+        <div
+          class="RadioButtonGroup--inline"
+        >
+          <label
+            class="RadioButton--radio StyledProps--main"
+          >
+            <input
+              class="RadioButton--input"
+              name="userGroupExpression"
+              type="radio"
+              value="Individual"
+            />
+            <span
+              class="RadioButton--radioIcon"
+            />
+            common.individualExpression
+          </label>
+          <label
+            class="RadioButton--radio StyledProps--main"
+          >
+            <input
+              class="RadioButton--input"
+              name="userGroupExpression"
+              type="radio"
+              value="Combined"
+            />
+            <span
+              class="RadioButton--radioIcon"
+            />
+            common.combinedExpression
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="plusAdd"
+    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+    data-testid="add-spec.approvers.userGroups"
+    style="padding: 0px;"
+    type="button"
+  >
+    <span
+      class="bp3-button-text"
+    >
+      plusAdd
+    </span>
+  </button>
+</div>
+`;
