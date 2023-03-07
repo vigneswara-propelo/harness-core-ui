@@ -5542,6 +5542,7 @@ export interface StringsMap {
   'cd.noEnvironment.message': string
   'cd.noEnvironment.title': string
   'cd.noGitOpsServerText': string
+  'cd.noInfraInputsWhenDeployingToAllInfra': string
   'cd.noLinkedClusters': string
   'cd.noService': string
   'cd.notReachable': string

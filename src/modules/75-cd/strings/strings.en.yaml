@@ -920,5 +920,6 @@ openTask:
   openTaskStatusMsgAborted: 'deployment aborted'
   openTaskStatusMsgApprovalWaiting: 'deployment waiting for approval'
 since: Since
+noInfraInputsWhenDeployingToAllInfra: No infrastructure inputs are required when deploying to all infrastructures under this environment
 changingTaskDefinitionTypeWarningTitle: 'Changing Task Definition Type?'
 changeTaskDefinitionTypeWarning: If you move to {{nextSection}} section, you will loose your {{currentSection}} value. Do you still want to continue?
