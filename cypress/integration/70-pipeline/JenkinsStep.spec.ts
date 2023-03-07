@@ -81,6 +81,8 @@ describe('Connectors list', () => {
     cy.contains('span', 'Apply Selected').click()
     cy.get('input[name="spec.jobName"]').click()
     cy.contains('div', 'alex-pipeline-test').click()
+    cy.get('.bp3-input').eq(3).click()
+
     cy.contains('p', 'AutomationQA').click()
     cy.contains('span', 'Apply Changes').click()
     cy.wait(1000)
@@ -114,6 +116,7 @@ describe('Connectors list', () => {
     cy.wait(1000)
     cy.get('input[name="stages[0].stage.spec.execution.steps[0].step.spec.jobName"]').click()
     cy.contains('div', 'alex-pipeline-test').click()
+    cy.get('.bp3-input').eq(1).click()
     cy.contains('p', 'AutomationQA').click()
     // check if selected jobname is visible
     cy.contains('p', 'AutomationQA').should('be.visible')
@@ -150,6 +153,7 @@ describe('Connectors list', () => {
     cy.contains('span', 'Apply Selected').click()
     cy.get('input[name="stages[0].stage.spec.execution.steps[0].step.spec.jobName"]').click()
     cy.contains('div', 'alex-pipeline-test').click()
+    cy.get('.bp3-input').eq(1).click()
     cy.contains('p', 'AutomationQA').click()
     // check if selected jobname is visible
     cy.contains('p', 'AutomationQA').should('be.visible')
