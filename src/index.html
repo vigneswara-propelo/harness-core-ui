@@ -75,7 +75,6 @@
       }
 
       window.getIDPBaseUrl = str => {
-        window.IDPUrl = 'https://34.71.170.196'
         return window.IDPUrl && accountId
           ? `${window.IDPUrl}/${accountId}/${str}?${addRoutingIdParam()}`
           : window.getApiBaseUrl(str)
