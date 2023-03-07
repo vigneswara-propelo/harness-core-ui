@@ -516,7 +516,7 @@ loopingStrategy:
     content: Are you sure you want to remove this looping strategy? {{$.pipeline.loopingStrategy.warningText}}
   toggleTypeModal:
     title: Switch looping strategy?
-    content: Are you sure you want to switch lopping strategy? {{$.pipeline.loopingStrategy.warningText}}
+    content: Are you sure you want to switch looping strategy? {{$.pipeline.loopingStrategy.warningText}}
     switch: Switch
   matrix:
     label: Matrix
