@@ -36,7 +36,6 @@ import TextReference, { ValueType, TextReferenceInterface } from '@secrets/compo
 import { URLValidationSchema } from '@common/utils/Validation'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
-import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './Stepk8ClusterDetails.module.scss'
 
 interface Stepk8ClusterDetailsProps extends ConnectorInfoDTO {
@@ -456,11 +455,15 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
                     >
                       {getString('authentication')}
                     </Text>
-                    <FormInput.Select
+                    <FormInput.DropDown
                       name="authType"
                       items={authOptions}
                       disabled={false}
-                      className={commonStyles.authTypeSelect}
+                      dropDownProps={{
+                        isLabel: true,
+                        filterable: false,
+                        minWidth: 'unset'
+                      }}
                     />
                   </Container>
 
