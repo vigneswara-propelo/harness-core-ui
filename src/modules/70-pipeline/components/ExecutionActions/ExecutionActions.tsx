@@ -205,7 +205,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
       }
     }
   })
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, PIE_DEPRECATE_PAUSE_INTERRUPT_NG } = useFeatureFlags()
 
   const { canAbort, canPause, canRerun, canResume } = getValidExecutionActions(canExecute, executionStatus)
   const { abortText, pauseText, rerunText, resumeText } = getActionTexts(stageId)
@@ -332,7 +332,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     <Layout.Horizontal onClick={killEvent}>
       {!menuOnlyActions && (
         <>
-          {canResume && (
+          {!PIE_DEPRECATE_PAUSE_INTERRUPT_NG && canResume && (
             <Button
               size={ButtonSize.SMALL}
               icon="play"
@@ -354,7 +354,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
             />
           )}
 
-          {canPause && (
+          {!PIE_DEPRECATE_PAUSE_INTERRUPT_NG && canPause && (
             <Button
               size={ButtonSize.SMALL}
               icon="pause"
@@ -420,8 +420,13 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
               />
             )}
             <MenuItem text={getString(abortText)} onClick={openAbortDialog} disabled={!canAbort} />
-            <MenuItem text={getString(pauseText)} onClick={pausePipeline} disabled={!canPause} />
-            <MenuItem text={getString(resumeText)} onClick={resumePipeline} disabled={!canResume} />
+            {PIE_DEPRECATE_PAUSE_INTERRUPT_NG ? null : (
+              <MenuItem text={getString(pauseText)} onClick={pausePipeline} disabled={!canPause} />
+            )}
+            {PIE_DEPRECATE_PAUSE_INTERRUPT_NG ? null : (
+              <MenuItem text={getString(resumeText)} onClick={resumePipeline} disabled={!canResume} />
+            )}
+
             {onViewCompiledYaml ? (
               <MenuItem text={getString('pipeline.execution.actions.viewCompiledYaml')} onClick={onViewCompiledYaml} />
             ) : null}
