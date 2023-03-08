@@ -209,7 +209,6 @@ const SscaOrchestrationStepEdit = (
               </Text>
 
               <MultiTypeSecretInput
-                type={'SSHKey'}
                 name="spec.attestation.privateKey"
                 label={getString('connectors.serviceNow.privateKey')}
                 expressions={expressions}
