@@ -31,7 +31,7 @@ import { AuthenticationMechanisms, getUserGroupQueryParams } from '@rbac/utils/u
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { sortByEmail, sortByName } from '@common/utils/sortUtils'
+import { sortByEmail, sortByName, SortMethod } from '@common/utils/sortUtils'
 import ListHeader from '@common/components/ListHeader/ListHeader'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
@@ -202,8 +202,8 @@ const MemberList: React.FC<MemberListProps> = ({
     ProjectPathProps & UserGroupPathProps
   >()
   const { parentScope } = useQueryParams<{ parentScope: PrincipalScope }>()
-  const { preference: sortPreference = sortByName[0].value as string, setPreference: setSortPreference } =
-    usePreferenceStore<string>(PreferenceScope.USER, `sort-${PAGE_NAME.UserGroupDetails}`)
+  const { preference: sortPreference = SortMethod.NameAsc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.UserGroupDetails}`)
 
   const { data, refetch } = useMutateAsGet(useGetUsersInUserGroup, {
     body: {},
@@ -256,7 +256,7 @@ const MemberList: React.FC<MemberListProps> = ({
           selectedSortMethod={sortPreference}
           sortOptions={[...sortByName, ...sortByEmail]}
           onSortMethodChange={option => {
-            setSortPreference(option.value as string)
+            setSortPreference(option.value as SortMethod)
           }}
           totalCount={data?.data?.totalItems}
           className={css.listHeader}

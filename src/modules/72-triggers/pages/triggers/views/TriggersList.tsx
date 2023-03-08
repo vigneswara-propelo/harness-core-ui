@@ -26,7 +26,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getErrorMessage } from '@triggers/components/Triggers/utils'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 
@@ -44,8 +44,8 @@ interface TriggersListPropsInterface {
 
 export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {
   const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled } = props
-  const { preference: sortPreference = sortByCreated[0].value as string, setPreference: setSortPreference } =
-    usePreferenceStore<string>(PreferenceScope.USER, `sort-${PAGE_NAME.TriggersPage}`)
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.TriggersPage}`)
   const {
     branch,
     repoIdentifier,
@@ -255,7 +255,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
           selectedSortMethod={sortPreference}
           sortOptions={[...sortByCreated, ...sortByName]}
           onSortMethodChange={option => {
-            setSortPreference(option.value as string)
+            setSortPreference(option.value as SortMethod)
           }}
           totalCount={triggerListResponse?.data?.totalItems}
           className={css.listHeader}

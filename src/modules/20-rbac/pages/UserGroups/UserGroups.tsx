@@ -25,7 +25,7 @@ import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPagina
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByEmail, sortByLastModified, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByEmail, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 
@@ -45,8 +45,8 @@ const UserGroupsPage: React.FC = () => {
   })
   const { getString } = useStrings()
   useDocumentTitle(getString('common.userGroups'))
-  const { preference: sortPreference = sortByLastModified[0].value as string, setPreference: setSortPreference } =
-    usePreferenceStore<string>(PreferenceScope.USER, `sort-${PAGE_NAME.UserGroups}`)
+  const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod | undefined>(PreferenceScope.USER, `sort-${PAGE_NAME.UserGroups}`)
 
   const {
     search: searchTerm,
@@ -156,7 +156,7 @@ const UserGroupsPage: React.FC = () => {
           selectedSortMethod={sortPreference}
           sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName, ...sortByEmail]}
           onSortMethodChange={option => {
-            setSortPreference(option.value as string)
+            setSortPreference(option.value as SortMethod)
           }}
           totalCount={data?.data?.totalItems}
         />

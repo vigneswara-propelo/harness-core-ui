@@ -58,7 +58,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByEmail, sortByLastModified, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByEmail, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 
@@ -428,8 +428,8 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { page, size } = useQueryParams(rbacQueryParamOptions)
   const isCommunity = useGetCommunity()
-  const { preference: sortPreference = sortByLastModified[0].value as string, setPreference: setSortPreference } =
-    usePreferenceStore<string>(PreferenceScope.USER, `sort-${PAGE_NAME.UsersPage}`)
+  const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.UsersPage}`)
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetAggregatedUsers, {
     body: {},
@@ -543,7 +543,7 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
         selectedSortMethod={sortPreference}
         sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName, ...sortByEmail]}
         onSortMethodChange={option => {
-          setSortPreference(option.value as string)
+          setSortPreference(option.value as SortMethod)
         }}
         totalCount={data?.data?.totalItems}
       />

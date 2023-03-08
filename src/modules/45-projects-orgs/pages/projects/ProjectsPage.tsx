@@ -34,7 +34,7 @@ import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/P
 import { projectsPageQueryParamOptions, ProjectsPageQueryParams } from '@projects-orgs/utils/utils'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByLastModified, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 
 import ProjectsListView from './views/ProjectListView/ProjectListView'
@@ -46,8 +46,8 @@ import css from './ProjectsPage.module.scss'
 const ProjectsListPage: React.FC = () => {
   const { getString } = useStrings()
   useDocumentTitle(getString('projectsText'))
-  const { preference: sortPreference = sortByCreated[0].value as string, setPreference: setSortPreference } =
-    usePreferenceStore<string>(PreferenceScope.USER, `sort-${PAGE_NAME.ProjectListing}`)
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.ProjectListing}`)
 
   const { accountId } = useParams<AccountPathProps>()
   const {
@@ -194,7 +194,7 @@ const ProjectsListPage: React.FC = () => {
           selectedSortMethod={sortPreference}
           sortOptions={[...sortByName, ...sortByCreated, ...sortByLastModified]}
           onSortMethodChange={option => {
-            setSortPreference(option.value as string)
+            setSortPreference(option.value as SortMethod)
           }}
           totalCount={data?.data?.totalItems}
           className={css.listHeader}

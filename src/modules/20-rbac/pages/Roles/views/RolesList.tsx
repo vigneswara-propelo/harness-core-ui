@@ -35,7 +35,7 @@ import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 
@@ -60,8 +60,8 @@ const RolesList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
   const history = useHistory()
-  const { preference: sortPreference = sortByCreated[0].value as string, setPreference: setSortPreference } =
-    usePreferenceStore<string>(PreferenceScope.USER, `sort-${PAGE_NAME.Roles}`)
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.Roles}`)
   useDocumentTitle(getString('roles'))
 
   const {
@@ -181,7 +181,7 @@ const RolesList: React.FC = () => {
           selectedSortMethod={sortPreference}
           sortOptions={[...sortByCreated, ...sortByName]}
           onSortMethodChange={option => {
-            setSortPreference(option.value as string)
+            setSortPreference(option.value as SortMethod)
           }}
           totalCount={data?.data?.totalItems}
         />

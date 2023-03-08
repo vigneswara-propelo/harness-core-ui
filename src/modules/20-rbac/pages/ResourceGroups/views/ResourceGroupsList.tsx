@@ -25,7 +25,7 @@ import { rbacQueryParamOptions } from '@rbac/utils/utils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByLastModified, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 
@@ -33,8 +33,8 @@ const ResourceGroupsList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
   const history = useHistory()
-  const { preference: sortPreference = sortByLastModified[0].value as string, setPreference: setSortPreference } =
-    usePreferenceStore<string | undefined>(PreferenceScope.USER, `sort-${PAGE_NAME.ResourceGroups}`)
+  const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod | undefined>(PreferenceScope.USER, `sort-${PAGE_NAME.ResourceGroups}`)
   useDocumentTitle(getString('resourceGroups'))
 
   const {
@@ -129,7 +129,7 @@ const ResourceGroupsList: React.FC = () => {
           selectedSortMethod={sortPreference}
           sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
           onSortMethodChange={option => {
-            setSortPreference(option.value as string)
+            setSortPreference(option.value as SortMethod)
           }}
           totalCount={data?.data?.totalItems}
         />

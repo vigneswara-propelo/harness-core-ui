@@ -93,6 +93,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.PIPELINE, {
     [PermissionIdentifier.DELETE_PIPELINE]: <String stringID="rbac.permissionLabels.delete" />,
     [PermissionIdentifier.EXECUTE_PIPELINE]: <String stringID="rbac.permissionLabels.execute" />
   },
+  resourceModalSortingEnabled: true,
   // eslint-disable-next-line react/display-name
   addResourceModalBody: props => <PipelineResourceModal {...props} />,
   // eslint-disable-next-line react/display-name
@@ -109,6 +110,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SERVICE, {
     [PermissionIdentifier.DELETE_SERVICE]: <String stringID="rbac.permissionLabels.delete" />,
     [PermissionIdentifier.RUNTIMEACCESS_SERVICE]: <String stringID="rbac.permissionLabels.access" />
   },
+  resourceModalSortingEnabled: true,
   // eslint-disable-next-line react/display-name
   addResourceModalBody: props => <ServiceResourceModal {...props} />
 })
@@ -123,6 +125,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.ENVIRONMENT, {
     [PermissionIdentifier.DELETE_ENVIRONMENT]: <String stringID="rbac.permissionLabels.delete" />,
     [PermissionIdentifier.RUNTIMEACCESS_ENVIRONMENT]: <String stringID="rbac.permissionLabels.access" />
   },
+  resourceModalSortingEnabled: true,
   // eslint-disable-next-line react/display-name
   addResourceModalBody: props => <EnvironmentResourceModal {...props} />,
   addAttributeModalBody: props => <EnvironmentAttributeModal {...props} />,

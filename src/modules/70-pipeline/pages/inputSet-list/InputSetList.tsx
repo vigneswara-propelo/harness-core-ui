@@ -38,7 +38,7 @@ import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncIn
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 
@@ -48,8 +48,8 @@ import css from './InputSetList.module.scss'
 function InputSetList(): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [page, setPage] = React.useState(0)
-  const { preference: sortPreference = sortByCreated[0].value as string, setPreference: setSortPreference } =
-    usePreferenceStore<string>(PreferenceScope.USER, `sort-${PAGE_NAME.InputSetList}`)
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.InputSetList}`)
   const { connectorRef, repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<PipelinePathProps> & { accountId: string }
@@ -368,7 +368,7 @@ function InputSetList(): React.ReactElement {
               selectedSortMethod={sortPreference}
               sortOptions={[...sortByCreated, ...sortByName]}
               onSortMethodChange={option => {
-                setSortPreference(option.value as string)
+                setSortPreference(option.value as SortMethod)
               }}
               totalCount={inputSet?.data?.totalItems}
               className={css.listHeader}
