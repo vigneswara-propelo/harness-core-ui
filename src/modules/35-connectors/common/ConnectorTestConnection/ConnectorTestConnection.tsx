@@ -28,7 +28,6 @@ import { useStrings } from 'framework/strings'
 import {
   GetTestConnectionValidationTextByType,
   removeErrorCode,
-  DelegateTypes,
   showCustomErrorSuggestion,
   showEditAndViewPermission
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -38,6 +37,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { connectorsTrackEventMap } from '@connectors/utils/connectorEvents'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import Suggestions from '../ErrorSuggestions/ErrorSuggestionsCe'
 import css from './ConnectorTestConnection.module.scss'
 

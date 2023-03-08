@@ -24,11 +24,8 @@ import { FontVariation, Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorConfigDTO } from 'services/cd-ng'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-import {
-  DelegateTypes,
-  setupKubFormData,
-  DelegateCardInterface
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { setupKubFormData, DelegateCardInterface } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'

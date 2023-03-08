@@ -25,8 +25,9 @@ import type { StringKeys } from 'framework/strings'
 import { HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import { accessTypeOptionsMap } from '@connectors/components/CreateConnector/HashiCorpVault/views/VaultConnectorFormFields'
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { getLabelForAuthType, GitAuthTypes } from '../../utils/ConnectorHelper'
-import { AzureSecretKeyType, DelegateTypes } from '../../utils/ConnectorUtils'
+import { AzureSecretKeyType } from '../../utils/ConnectorUtils'
 import css from './SavedConnectorDetails.module.scss'
 
 interface SavedConnectorDetailsProps {

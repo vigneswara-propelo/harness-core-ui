@@ -12,7 +12,6 @@ import type {
   ConnectorInfoDTO,
   GetSecretV2QueryParams,
   ConnectorConfigDTO,
-  AwsCredential,
   ErrorDetail,
   Connector,
   AppDynamicsConnectorDTO,
@@ -35,7 +34,7 @@ import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { setSecretField } from '@secrets/utils/SecretField'
-import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
+import { ConnectivityModeType, DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { transformStepHeadersAndParamsForPayloadForPrometheus } from '@connectors/components/CreateConnector/PrometheusConnector/utils'
 import { transformStepHeadersAndParamsForPayload } from '@connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthHeadersAndParams/CustomHealthHeadersAndParams.utils'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
@@ -51,10 +50,6 @@ export interface DelegateCardInterface {
   disabled?: boolean
 }
 
-export interface CredentialType {
-  [key: string]: AwsCredential['type']
-}
-
 export enum AzureSecretKeyType {
   SECRET = 'Secret',
   CERT = 'Certificate'
@@ -68,12 +63,6 @@ export enum AzureManagedIdentityTypes {
 export const GCP_AUTH_TYPE = {
   DELEGATE: 'delegate',
   ENCRYPTED_KEY: 'encryptedKey'
-}
-
-export const DelegateTypes: CredentialType = {
-  DELEGATE_IN_CLUSTER: 'InheritFromDelegate',
-  DELEGATE_IN_CLUSTER_IRSA: 'Irsa',
-  DELEGATE_OUT_CLUSTER: 'ManualConfig'
 }
 
 export const DelegateInClusterType = {
