@@ -299,6 +299,10 @@ export const removeNodeFromPipeline = (
   return false
 }
 export const getDependantStages = (pipeline: PipelineInfoConfig, node?: StageElementWrapper): string[] => {
+  if (!node?.stage?.identifier) {
+    return []
+  }
+
   const dependantStages: string[] = []
   const flattenedStages = getFlattenedStages(pipeline).stages
 
