@@ -309,6 +309,7 @@ function HelmWithHttp({
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                   defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                   dragDropFieldWidth={filePathWidth}
+                  allowSinglePathDeletion
                 />
                 {getMultiTypeFromValue(formik.values.valuesPaths) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions

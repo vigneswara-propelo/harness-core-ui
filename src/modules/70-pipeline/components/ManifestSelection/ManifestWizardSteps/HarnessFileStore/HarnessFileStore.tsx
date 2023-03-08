@@ -244,6 +244,7 @@ function HarnessFileStore({
                           )
                         }}
                         restrictToSingleEntry={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
+                        allowSinglePathDeletion
                       />
                     </div>
                   )}
@@ -262,6 +263,7 @@ function HarnessFileStore({
                           label: <Text>{getString('pipeline.manifestType.paramsYamlPath')}</Text>
                         }}
                         restrictToSingleEntry={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
+                        allowSinglePathDeletion
                       />
                     </div>
                   )}

@@ -233,6 +233,7 @@ function HelmWithHarnessStore({
                         disableTypeSelection: false,
                         label: <Text>{getString('pipeline.manifestType.valuesYamlPath')}</Text>
                       }}
+                      allowSinglePathDeletion
                     />
                   </div>
                   <Accordion

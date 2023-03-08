@@ -484,6 +484,7 @@ function CustomRemoteManifest({
                         placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                         defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                         dragDropFieldWidth={filePathWidth}
+                        allowSinglePathDeletion
                       />
                       {getMultiTypeFromValue(formik.values.valuesPaths as string) === MultiTypeInputType.RUNTIME && (
                         <ConfigureOptions
@@ -514,6 +515,7 @@ function CustomRemoteManifest({
                         placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                         defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                         dragDropFieldWidth={filePathWidth}
+                        allowSinglePathDeletion
                       />
                       {getMultiTypeFromValue(formik.values.paramsPaths as string) === MultiTypeInputType.RUNTIME && (
                         <ConfigureOptions

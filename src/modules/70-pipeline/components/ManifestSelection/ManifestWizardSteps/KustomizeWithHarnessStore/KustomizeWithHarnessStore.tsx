@@ -231,6 +231,7 @@ function KustomizeWithHarnessStore({
                         disableTypeSelection: false,
                         label: <Text>{getString('pipeline.manifestTypeLabels.KustomizePatches')}</Text>
                       }}
+                      allowSinglePathDeletion
                     />
                   </div>
                   <div

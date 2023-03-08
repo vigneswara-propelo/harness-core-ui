@@ -407,6 +407,7 @@ function KustomizeWithGIT({
                     placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                     defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                     dragDropFieldWidth={filePathWidth}
+                    allowSinglePathDeletion
                   />
                   {getMultiTypeFromValue(formik.values.patchesPaths) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
