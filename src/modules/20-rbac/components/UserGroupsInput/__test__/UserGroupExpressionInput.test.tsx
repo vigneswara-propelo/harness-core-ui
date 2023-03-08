@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, render, waitFor, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { TestWrapper } from '@common/utils/testUtils'
@@ -17,7 +17,7 @@ const props = {
   formik: {
     setFieldValue: jest.fn(),
     values: {
-      userGroupExpression: 'Individual',
+      userGroupExpression: 'Single',
       name: 'spec.approvers.userGroups'
     },
     setErrors: jest.fn(),
@@ -41,19 +41,17 @@ describe('UserGroup Expression Input tests', () => {
   })
 
   test('should render when clicked on combined userGroup', async () => {
-    const { getByLabelText } = render(
+    render(
       <TestWrapper>
         <UserGroupExpressionInput {...props} />
       </TestWrapper>
     )
 
-    const RadioLabelKey = getByLabelText('common.combinedExpression')
-    expect(RadioLabelKey).toBeInTheDocument()
-
-    fireEvent.click(RadioLabelKey!)
-
-    await waitFor(() => {
-      expect(RadioLabelKey).toBeChecked()
+    userEvent.click(screen.getByLabelText('common.combined')!)
+    waitFor(() => {
+      expect(
+        screen.getByPlaceholderText('( <+pipeline.variables.group1> + "," + <+pipeline.variables.group2>).split(",")')
+      ).toBeInTheDocument()
     })
   })
 

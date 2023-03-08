@@ -1938,69 +1938,55 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
             <div
               class="bp3-form-content"
             >
-              <div
-                class="bp3-form-group"
-                data-id="userGroupExpression-5"
-              >
-                <div
-                  class="bp3-form-content"
+              <div>
+                <label
+                  class="bp3-control bp3-radio bp3-inline"
                 >
-                  <div
-                    class="StyledProps--main"
-                  >
-                    
-                    <div
-                      class="RadioButtonGroup--inline"
-                    >
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          class="RadioButton--input"
-                          name="userGroupExpression"
-                          type="radio"
-                          value="Individual"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        common.individualExpression
-                      </label>
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          checked=""
-                          class="RadioButton--input"
-                          name="userGroupExpression"
-                          type="radio"
-                          value="Combined"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        common.combinedExpression
-                      </label>
-                    </div>
-                  </div>
-                </div>
+                  <input
+                    name="userGroupExpression"
+                    type="radio"
+                    value="Single"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  common.single
+                </label>
+                <label
+                  class="bp3-control bp3-radio bp3-inline"
+                >
+                  <input
+                    name="userGroupExpression"
+                    type="radio"
+                    value="Combined"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  common.combined
+                </label>
               </div>
               <div
-                class="bp3-popover-wrapper"
+                style="margin-bottom: 15px;"
               >
                 <div
-                  class="bp3-popover-target"
+                  class="bp3-popover-wrapper"
                 >
                   <div
-                    class="bp3-input-group"
+                    class="bp3-popover-target"
                   >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="spec.approvers.userGroups"
-                      type="text"
-                      value="<+abc>"
-                    />
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.approvers.userGroups"
+                        placeholder="( <+pipeline.variables.group1> + \\",\\" + <+pipeline.variables.group2>).split(\\",\\")"
+                        type="text"
+                        value="<+abc>"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2012,7 +1998,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
         >
           <div
             class="bp3-form-group"
-            data-id="spec.approvers.minimumCount-6"
+            data-id="spec.approvers.minimumCount-5"
           >
             <label
               class="bp3-label"
@@ -2104,7 +2090,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
         </div>
         <div
           class="bp3-form-group"
-          data-id="spec.approvers.disallowPipelineExecutor-7"
+          data-id="spec.approvers.disallowPipelineExecutor-6"
         >
           <div
             class="bp3-form-content"
@@ -2570,69 +2556,55 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
             <div
               class="bp3-form-content"
             >
-              <div
-                class="bp3-form-group"
-                data-id="userGroupExpression-5"
-              >
-                <div
-                  class="bp3-form-content"
+              <div>
+                <label
+                  class="bp3-control bp3-radio bp3-inline"
                 >
-                  <div
-                    class="StyledProps--main"
-                  >
-                    
-                    <div
-                      class="RadioButtonGroup--inline"
-                    >
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          class="RadioButton--input"
-                          name="userGroupExpression"
-                          type="radio"
-                          value="Individual"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        common.individualExpression
-                      </label>
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          checked=""
-                          class="RadioButton--input"
-                          name="userGroupExpression"
-                          type="radio"
-                          value="Combined"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        common.combinedExpression
-                      </label>
-                    </div>
-                  </div>
-                </div>
+                  <input
+                    name="userGroupExpression"
+                    type="radio"
+                    value="Single"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  common.single
+                </label>
+                <label
+                  class="bp3-control bp3-radio bp3-inline"
+                >
+                  <input
+                    name="userGroupExpression"
+                    type="radio"
+                    value="Combined"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  common.combined
+                </label>
               </div>
               <div
-                class="bp3-popover-wrapper"
+                style="margin-bottom: 15px;"
               >
                 <div
-                  class="bp3-popover-target"
+                  class="bp3-popover-wrapper"
                 >
                   <div
-                    class="bp3-input-group"
+                    class="bp3-popover-target"
                   >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="spec.approvers.userGroups"
-                      type="text"
-                      value="<+abc>"
-                    />
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.approvers.userGroups"
+                        placeholder="( <+pipeline.variables.group1> + \\",\\" + <+pipeline.variables.group2>).split(\\",\\")"
+                        type="text"
+                        value="<+abc>"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2644,7 +2616,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
         >
           <div
             class="bp3-form-group"
-            data-id="spec.approvers.minimumCount-6"
+            data-id="spec.approvers.minimumCount-5"
           >
             <label
               class="bp3-label"
@@ -2713,7 +2685,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
         </div>
         <div
           class="bp3-form-group"
-          data-id="spec.approvers.disallowPipelineExecutor-7"
+          data-id="spec.approvers.disallowPipelineExecutor-6"
         >
           <div
             class="bp3-form-content"

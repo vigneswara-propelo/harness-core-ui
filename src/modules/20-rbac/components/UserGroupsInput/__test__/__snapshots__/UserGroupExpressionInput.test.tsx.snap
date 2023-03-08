@@ -2,50 +2,34 @@
 
 exports[`UserGroup Expression Input tests should render without any issue 1`] = `
 <div>
-  <div
-    class="bp3-form-group"
-  >
-    <div
-      class="bp3-form-content"
+  <div>
+    <label
+      class="bp3-control bp3-radio bp3-inline"
     >
-      <div
-        class="StyledProps--main"
-      >
-        
-        <div
-          class="RadioButtonGroup--inline"
-        >
-          <label
-            class="RadioButton--radio StyledProps--main"
-          >
-            <input
-              class="RadioButton--input"
-              name="userGroupExpression"
-              type="radio"
-              value="Individual"
-            />
-            <span
-              class="RadioButton--radioIcon"
-            />
-            common.individualExpression
-          </label>
-          <label
-            class="RadioButton--radio StyledProps--main"
-          >
-            <input
-              class="RadioButton--input"
-              name="userGroupExpression"
-              type="radio"
-              value="Combined"
-            />
-            <span
-              class="RadioButton--radioIcon"
-            />
-            common.combinedExpression
-          </label>
-        </div>
-      </div>
-    </div>
+      <input
+        checked=""
+        name="userGroupExpression"
+        type="radio"
+        value="Single"
+      />
+      <span
+        class="bp3-control-indicator"
+      />
+      common.single
+    </label>
+    <label
+      class="bp3-control bp3-radio bp3-inline"
+    >
+      <input
+        name="userGroupExpression"
+        type="radio"
+        value="Combined"
+      />
+      <span
+        class="bp3-control-indicator"
+      />
+      common.combined
+    </label>
   </div>
   <button
     aria-label="plusAdd"

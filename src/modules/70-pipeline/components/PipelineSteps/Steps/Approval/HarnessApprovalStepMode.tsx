@@ -34,9 +34,8 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { FormMultiTypeUserGroupInput } from '@rbac/components/UserGroupsInput/FormMultitypeUserGroupInput'
 import { regexPositiveNumbers } from '@common/utils/StringUtils'
-import { isMultiTypeRuntime, isValueExpression } from '@common/utils/utils'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { UserGroupConfigureOptions } from '@rbac/components/UserGroupConfigureOptions/UserGroupConfigureOptions'
-import { ExpressionTypes } from '@rbac/components/UserGroupsInput/UserGroupExpressionInput'
 
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type {
@@ -281,31 +280,10 @@ function HarnessApprovalStepMode(
     )
   }
 
-  const getInitialValues = () => {
-    const formInitVals = {
-      ...props.initialValues
-    }
-
-    if (Array.isArray(formInitVals?.spec?.approvers?.userGroups)) {
-      /* 
-      even if the value is expression or a regular value
-      this is saved as individual, so that when changed to expression 
-      it preselects individual
-      */
-      formInitVals.userGroupExpression = ExpressionTypes.Individual
-    } else if (isValueExpression(formInitVals?.spec?.approvers?.userGroups)) {
-      formInitVals.userGroupExpression = ExpressionTypes.Combined
-    } else {
-      formInitVals.userGroupExpression = ExpressionTypes.Individual
-    }
-
-    return formInitVals
-  }
-
   return (
     <Formik<HarnessApprovalData>
       onSubmit={handleOnSubmit}
-      initialValues={getInitialValues()}
+      initialValues={props.initialValues}
       formName="harnessApproval"
       validate={data => {
         onChange?.(data)

@@ -5,49 +5,76 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { FormEvent, useEffect } from 'react'
+import { RadioGroup, Radio } from '@blueprintjs/core'
+
 import { get } from 'lodash-es'
-import { ExpressionInput, FormInput } from '@harness/uicore'
+import { ExpressionInput } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 
 import { ExpressionsListInput } from '@common/components/ExpressionsListInput/ExpressionsListInput'
+import { isValueExpression } from '@common/utils/utils'
+
 import type { Extended } from './FormMultitypeUserGroupInput'
 
 export enum ExpressionTypes {
-  'Individual' = 'Individual',
+  'Single' = 'Single',
   'Combined' = 'Combined'
 }
 
 const UserGroupExpressionInput: React.FC<Extended> = props => {
   const { disabled, name, formik, expressions } = props
   const value = get(formik.values, name, '')
-  const userGroupExpression = get(formik.values, 'userGroupExpression', ExpressionTypes.Individual)
+  const userGroupExpression = get(formik.values, 'userGroupExpression', '')
   const { getString } = useStrings()
+
+  useEffect(() => {
+    if (value && Array.isArray(value)) {
+      formik.setFieldValue('userGroupExpression', ExpressionTypes.Single)
+    } else if (isValueExpression(value)) {
+      formik.setFieldValue('userGroupExpression', ExpressionTypes.Combined)
+    }
+  }, [])
   return (
     <>
-      <FormInput.RadioGroup
+      <RadioGroup
         name="userGroupExpression"
-        radioGroup={{ inline: true }}
-        items={[
-          { label: getString('common.individualExpression'), value: ExpressionTypes.Individual },
-          { label: getString('common.combinedExpression'), value: ExpressionTypes.Combined }
-        ]}
-      />
+        inline={true}
+        onChange={(event: FormEvent<HTMLInputElement>) => {
+          formik.setFieldValue('userGroupExpression', event?.currentTarget?.value)
+          if (event.currentTarget.checked) {
+            if (event?.currentTarget?.value === ExpressionTypes.Single) {
+              formik.setFieldValue(name, [])
+            } else {
+              formik.setFieldValue(name, '')
+            }
+          }
+        }}
+        selectedValue={formik?.values['userGroupExpression']}
+      >
+        <Radio label={getString('common.single')} value={ExpressionTypes.Single} />
+        <Radio label={getString('common.combined')} value={ExpressionTypes.Combined} />
+      </RadioGroup>
 
-      {userGroupExpression === ExpressionTypes.Individual ? (
+      {userGroupExpression === ExpressionTypes.Single ? (
         <ExpressionsListInput name={name} value={value} readOnly={disabled} expressions={expressions} />
       ) : (
-        <ExpressionInput
-          name={name}
-          value={value}
-          disabled={disabled}
-          items={expressions}
-          onChange={val =>
-            /* istanbul ignore next */
-            formik?.setFieldValue(name, val)
-          }
-        />
+        <div style={{ marginBottom: 15 }}>
+          <ExpressionInput
+            name={name}
+            value={value}
+            inputProps={{
+              placeholder: '( <+pipeline.variables.group1> + "," + <+pipeline.variables.group2>).split(",")'
+            }}
+            disabled={disabled}
+            items={expressions}
+            onChange={val =>
+              /* istanbul ignore next */
+              formik?.setFieldValue(name, val)
+            }
+          />
+        </div>
       )}
     </>
   )

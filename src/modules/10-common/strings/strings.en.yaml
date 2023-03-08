@@ -1374,5 +1374,5 @@ tickets:
   ticketExemption: 'Create a ticket when an Exemption is created (coming soon)'
 downloadYaml: 'Download YAML'
 previewYAML: Preview YAML
-individualExpression: 'Individual Expression'
-combinedExpression: 'Combined Expression'
+single: 'Single'
+combined: 'Combined'
