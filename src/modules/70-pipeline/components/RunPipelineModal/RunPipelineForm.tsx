@@ -494,7 +494,7 @@ function RunPipelineFormBasic({
         />
       </Dialog>
     )
-  }, [notifyOnlyMe, selectedStageData, stageIdentifiers])
+  }, [notifyOnlyMe, selectedStageData, stageIdentifiers, formErrors])
 
   const isExecutingPipeline =
     runPipelineLoading || reRunPipelineLoading || runStagesLoading || reRunStagesLoading || reRunDebugModeLoading
