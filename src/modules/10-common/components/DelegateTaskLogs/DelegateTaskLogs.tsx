@@ -27,21 +27,36 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetTasksLog, GetTasksLogQueryParams, DelegateStackDriverLog } from 'services/portal'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
+import { useTrackEvent } from '@common/hooks/useTelemetry'
+import { DelegateActions } from '@common/constants/TrackingConstants'
 
 import css from './DelegateTaskLogs.module.scss'
 
-interface DelegateTaskLogsProps {
-  step: ExecutionNode
+export enum TaskContext {
+  PipelineStep = 'Pipeline_Step',
+  ConnectorValidation = 'Connector_Validation'
 }
 
-export default function DelegateTaskLogs({ step }: DelegateTaskLogsProps): JSX.Element {
-  // TODO: Add segment event
+interface DelegateTaskLogsProps {
+  step: ExecutionNode
+  telemetry: {
+    taskContext: TaskContext
+    hasError: boolean
+  }
+}
+
+export default function DelegateTaskLogs({ step, telemetry }: DelegateTaskLogsProps): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [currentPageToken, setCurrentPageToken] = useState<string | undefined>('')
   const { getString } = useStrings()
   const [previousPageStack, setPreviousPageStack] = useState<Array<string>>([])
   const pageSize = 100
   const timePadding = 60 * 5 // 5 minutes
+
+  useTrackEvent(DelegateActions.DelegateTaskLogsViewed, {
+    task_context: telemetry.taskContext,
+    has_error: telemetry.hasError
+  })
 
   /* istanbul ignore next */
   const taskIds = step.delegateInfoList?.map(delegate => delegate.taskId || '')?.filter(a => a)
@@ -151,16 +166,17 @@ export default function DelegateTaskLogs({ step }: DelegateTaskLogsProps): JSX.E
           minimal
           renderRowSubComponent={renderRowSubComponent}
           onRowClick={noop}
+          className={css.table}
         />
-        <Layout.Horizontal spacing={'medium'} flex={{ justifyContent: 'center' }}>
+        <Layout.Horizontal spacing={'medium'}>
           <Button
-            variation={ButtonVariation.PRIMARY}
+            variation={ButtonVariation.SECONDARY}
             icon={'chevron-left'}
             disabled={previousPageToken === null}
             onClick={() => {
               if (previousPageStack.length > 0 && previousPageToken !== null) {
                 setPreviousPageStack(previousPageStack.slice(0, previousPageStack.length - 1))
-                refetch({ queryParams: { ...queryParams, pageToken: previousPageToken } })
+                return refetch({ queryParams: { ...queryParams, pageToken: previousPageToken } })
               }
             }}
             data-testid="button-previous"
@@ -168,8 +184,8 @@ export default function DelegateTaskLogs({ step }: DelegateTaskLogsProps): JSX.E
             {getString('previous')}
           </Button>
           <Button
-            variation={ButtonVariation.PRIMARY}
-            icon={'chevron-right'}
+            variation={ButtonVariation.SECONDARY}
+            rightIcon={'chevron-right'}
             disabled={data?.resource?.pageToken === undefined || data?.resource?.pageToken === null}
             onClick={() => {
               if (currentPageToken !== null && currentPageToken !== undefined) {
@@ -178,7 +194,7 @@ export default function DelegateTaskLogs({ step }: DelegateTaskLogsProps): JSX.E
               /* istanbul ignore next */
               const nextPageToken = data?.resource?.pageToken
               setCurrentPageToken(nextPageToken)
-              refetch({ queryParams: { ...queryParams, pageToken: nextPageToken } })
+              return refetch({ queryParams: { ...queryParams, pageToken: nextPageToken } })
             }}
             data-testid="button-next"
           >
@@ -189,9 +205,12 @@ export default function DelegateTaskLogs({ step }: DelegateTaskLogsProps): JSX.E
     )
   } else {
     return (
-      <Layout.Vertical flex={{ align: 'center-center' }} spacing="medium">
+      <Layout.Vertical flex={{ align: 'center-center' }} spacing="medium" margin="xlarge">
         <Icon name="delegates-icon" size={48} />
         <Text font={{ size: 'medium' }}>{getString('common.logs.noLogsText')}</Text>
+        <Button variation={ButtonVariation.SECONDARY} icon={'main-refresh'} onClick={() => refetch({ queryParams })}>
+          {getString('common.reload')}
+        </Button>
       </Layout.Vertical>
     )
   }

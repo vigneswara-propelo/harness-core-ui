@@ -9,5 +9,6 @@
 declare const styles: {
   readonly delegateTaskLogsModal: string
   readonly jsonContainer: string
+  readonly table: string
 }
 export default styles

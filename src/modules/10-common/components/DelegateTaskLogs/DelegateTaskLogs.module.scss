@@ -13,4 +13,9 @@
     overflow-x: auto;
     max-width: 890px;
   }
+
+  .table {
+    height: unset;
+    margin-bottom: var(--spacing-xlarge);
+  }
 }
