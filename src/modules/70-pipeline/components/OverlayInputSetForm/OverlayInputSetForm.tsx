@@ -42,7 +42,8 @@ import {
   UpdateOverlayInputSetForPipelinePathParams,
   CreateOverlayInputSetForPipelineQueryParams,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
-  ResponseMergeInputSetResponse
+  ResponseMergeInputSetResponse,
+  GitErrorMetadataDTO
 } from 'services/pipeline-ng'
 import { useGetSettingValue } from 'services/cd-ng'
 import { SettingType } from '@default-settings/interfaces/SettingType.types'
@@ -78,6 +79,8 @@ import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/
 import { shouldDisableGitDetailsFields, hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
 import {
@@ -620,11 +623,17 @@ export function OverlayInputSetForm({
     ]
   )
 
+  const hasRemoteFetchFailed = useMemo(() => {
+    const errorMetadata = (errorOverlayInputSet?.data as any)?.metadata as GitErrorMetadataDTO
+    return errorOverlayInputSet?.status === 400 && errorMetadata?.branch
+  }, [errorOverlayInputSet?.data, errorOverlayInputSet?.status])
+
   const hasAnyApiError = useMemo(() => {
     return anyOneOf([errorPipeline, errorOverlayInputSet, errorInputSetList])
   }, [errorPipeline, errorOverlayInputSet, errorInputSetList])
 
-  if (hasAnyApiError) {
+  if (hasAnyApiError && !hasRemoteFetchFailed) {
+    // Toaster is not required for RemoteFetchFailed
     clear()
     showError(
       defaultTo((hasAnyApiError.data as Failure)?.message, getString('commonError')),
@@ -673,10 +682,20 @@ export function OverlayInputSetForm({
     loadingOverlayInputSet
   ])
 
+  const handleRemoteBranchChange = (changedBranch: string): void => {
+    setSelectedBranch(changedBranch)
+    refetchOverlay({
+      pathParams: { inputSetIdentifier: identifier },
+      queryParams: { ...commonQueryParams, loadFromFallbackBranch: false, branch: changedBranch }
+    })
+  }
+
   return (
     <Dialog
       title={
-        isEdit
+        hasRemoteFetchFailed
+          ? ''
+          : isEdit
           ? getString('inputSets.editOverlayTitle', { name: inputSet.name })
           : getString('inputSets.newOverlayInputSet')
       }
@@ -686,261 +705,295 @@ export function OverlayInputSetForm({
     >
       {anyApiLoading && selectedView === SelectedView.VISUAL && <PageSpinner />}
       <div className={Classes.DIALOG_BODY}>
-        <Layout.Vertical spacing="medium">
-          <Layout.Horizontal className={css.rowBtns}>
-            <div className={css.optionBtns}>
-              <VisualYamlToggle
-                selectedView={selectedView}
-                onChange={nextMode => {
-                  handleModeSwitch(nextMode)
-                }}
-                disableToggle={disableVisualView}
-                disableToggleReasonIcon={'danger-icon'}
-                showDisableToggleReason={!hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
-              />
-            </div>
-            <Popover
-              className={Classes.DARK}
-              position={Position.LEFT}
-              isOpen={menuOpen}
-              onInteraction={nextOpenState => {
-                setMenuOpen(nextOpenState)
+        {hasRemoteFetchFailed ? (
+          <NoEntityFound
+            identifier={defaultTo(identifier, '')}
+            entityType={'overlayInputSet'}
+            entityConnectorRef={overlayInputSetConnectorRef}
+            gitDetails={{
+              ...inputSet?.gitDetails,
+              repoName: repoName,
+              branch: (errorOverlayInputSet?.data as any)?.metadata?.branch
+            }}
+            errorObj={errorOverlayInputSet?.data as Error}
+            onBranchChange={handleRemoteBranchChange}
+          />
+        ) : (
+          <Layout.Vertical spacing="medium">
+            <Layout.Horizontal className={css.rowBtns}>
+              <div className={css.optionBtns}>
+                <VisualYamlToggle
+                  selectedView={selectedView}
+                  onChange={nextMode => {
+                    handleModeSwitch(nextMode)
+                  }}
+                  disableToggle={disableVisualView}
+                  disableToggleReasonIcon={'danger-icon'}
+                  showDisableToggleReason={!hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
+                />
+              </div>
+              <Layout.Horizontal>
+                {isEdit && overlayInputSetResponse?.data?.storeType === StoreType.REMOTE && (
+                  <Container>
+                    <GitRemoteDetails
+                      connectorRef={overlayInputSetResponse?.data?.connectorRef}
+                      repoName={inputSet?.gitDetails?.repoName}
+                      branch={inputSet?.gitDetails?.branch}
+                      flags={{ borderless: false, showRepo: false, normalInputStyle: true }}
+                      onBranchChange={item => {
+                        handleRemoteBranchChange(item?.branch)
+                      }}
+                    />
+                  </Container>
+                )}
+                <Popover
+                  className={Classes.DARK}
+                  position={Position.LEFT}
+                  isOpen={menuOpen}
+                  onInteraction={nextOpenState => {
+                    setMenuOpen(nextOpenState)
+                  }}
+                >
+                  <Button
+                    variation={ButtonVariation.ICON}
+                    icon="Options"
+                    aria-label="overlay input set menu actions"
+                    onClick={() => setMenuOpen(true)}
+                  />
+                  <Menu style={{ backgroundColor: 'unset' }}>
+                    <OutOfSyncErrorStrip
+                      inputSet={inputSet}
+                      overlayInputSetRepoIdentifier={overlayInputSetRepoIdentifier}
+                      overlayInputSetBranch={overlayInputSetBranch}
+                      overlayInputSetIdentifier={identifier}
+                      pipelineGitDetails={get(pipeline, 'data.gitDetails')}
+                      hideForm={hideForm}
+                      isOverlayInputSet
+                      hideInputSetButton
+                      closeReconcileMenu={() => setMenuOpen(false)}
+                    />
+                  </Menu>
+                </Popover>
+              </Layout.Horizontal>
+            </Layout.Horizontal>
+
+            <Formik<OverlayInputSetDTO & GitContextProps & StoreMetadata>
+              initialValues={{
+                ...omit(inputSet, 'gitDetails', 'entityValidityDetails', 'outdated'),
+                repo: isGitSyncEnabled ? defaultTo(repoIdentifier, '') : defaultTo(repoName, ''),
+                branch: defaultTo(inputSet.gitDetails?.branch || branch, ''),
+                connectorRef: defaultTo(connectorRef, ''),
+                repoName: defaultTo(repoName, ''),
+                storeType: defaultTo(storeType, StoreType.INLINE),
+                filePath: defaultTo(inputSet.gitDetails?.filePath, `.harness/${inputSet.identifier}.yaml`)
+              }}
+              formName="overlayInputSet"
+              enableReinitialize={true}
+              validationSchema={Yup.object().shape({
+                name: NameSchema(getString, { requiredErrorMsg: getString('common.validation.nameIsRequired') }),
+                inputSetReferences: Yup.array().of(Yup.string().required(getString('inputSets.inputSetIsRequired')))
+              })}
+              onSubmit={values => {
+                handleSubmit(
+                  { ...values, inputSetReferences: selectedInputSetReferences },
+                  { repoIdentifier: values.repo, branch: values.branch, repoName: values.repo },
+                  {
+                    connectorRef:
+                      (values.connectorRef as unknown as ConnectorSelectedValue)?.value || values.connectorRef,
+                    repoName: values.repo,
+                    branch: values.branch,
+                    filePath: values.filePath,
+                    storeType: values.storeType
+                  }
+                )
               }}
             >
-              <Button
-                variation={ButtonVariation.ICON}
-                icon="Options"
-                aria-label="overlay input set menu actions"
-                onClick={() => setMenuOpen(true)}
-              />
-              <Menu style={{ backgroundColor: 'unset' }}>
-                <OutOfSyncErrorStrip
-                  inputSet={inputSet}
-                  overlayInputSetRepoIdentifier={overlayInputSetRepoIdentifier}
-                  overlayInputSetBranch={overlayInputSetBranch}
-                  overlayInputSetIdentifier={identifier}
-                  pipelineGitDetails={get(pipeline, 'data.gitDetails')}
-                  hideForm={hideForm}
-                  isOverlayInputSet
-                  hideInputSetButton
-                  closeReconcileMenu={() => setMenuOpen(false)}
-                />
-              </Menu>
-            </Popover>
-          </Layout.Horizontal>
-
-          <Formik<OverlayInputSetDTO & GitContextProps & StoreMetadata>
-            initialValues={{
-              ...omit(inputSet, 'gitDetails', 'entityValidityDetails', 'outdated'),
-              repo: isGitSyncEnabled ? defaultTo(repoIdentifier, '') : defaultTo(repoName, ''),
-              branch: defaultTo(inputSet.gitDetails?.branch || branch, ''),
-              connectorRef: defaultTo(connectorRef, ''),
-              repoName: defaultTo(repoName, ''),
-              storeType: defaultTo(storeType, StoreType.INLINE),
-              filePath: defaultTo(inputSet.gitDetails?.filePath, `.harness/${inputSet.identifier}.yaml`)
-            }}
-            formName="overlayInputSet"
-            enableReinitialize={true}
-            validationSchema={Yup.object().shape({
-              name: NameSchema(getString, { requiredErrorMsg: getString('common.validation.nameIsRequired') }),
-              inputSetReferences: Yup.array().of(Yup.string().required(getString('inputSets.inputSetIsRequired')))
-            })}
-            onSubmit={values => {
-              handleSubmit(
-                { ...values, inputSetReferences: selectedInputSetReferences },
-                { repoIdentifier: values.repo, branch: values.branch, repoName: values.repo },
-                {
-                  connectorRef:
-                    (values.connectorRef as unknown as ConnectorSelectedValue)?.value || values.connectorRef,
-                  repoName: values.repo,
-                  branch: values.branch,
-                  filePath: values.filePath,
-                  storeType: values.storeType
-                }
-              )
-            }}
-          >
-            {formikProps => {
-              return (
-                <>
-                  {selectedView === SelectedView.VISUAL ? (
-                    <>
-                      <ErrorsStrip formErrors={formErrors} />
-                      <FormikForm>
-                        <div className={css.inputSetForm}>
-                          <NameIdDescriptionTags
-                            className={css.inputSetName}
-                            identifierProps={{
-                              inputLabel: getString('name'),
-                              isIdentifierEditable: !isEdit && !isReadOnly,
-                              inputGroupProps: {
+              {formikProps => {
+                return (
+                  <>
+                    {selectedView === SelectedView.VISUAL ? (
+                      <>
+                        <ErrorsStrip formErrors={formErrors} />
+                        <FormikForm>
+                          <div className={css.inputSetForm}>
+                            <NameIdDescriptionTags
+                              className={css.inputSetName}
+                              identifierProps={{
+                                inputLabel: getString('name'),
+                                isIdentifierEditable: !isEdit && !isReadOnly,
+                                inputGroupProps: {
+                                  disabled: isReadOnly
+                                }
+                              }}
+                              descriptionProps={{ disabled: isReadOnly }}
+                              tagsProps={{
                                 disabled: isReadOnly
-                              }
-                            }}
-                            descriptionProps={{ disabled: isReadOnly }}
-                            tagsProps={{
-                              disabled: isReadOnly
-                            }}
-                            formikProps={formikProps}
-                          />
-                          {isGitSyncEnabled && (
-                            <GitSyncStoreProvider>
-                              <GitContextForm
-                                formikProps={formikProps}
-                                gitDetails={
-                                  isEdit
-                                    ? { ...overlayInputSetResponse?.data?.gitDetails, getDefaultFromOtherRepo: false }
-                                    : {
-                                        repoIdentifier,
-                                        branch,
-                                        getDefaultFromOtherRepo: true
-                                      }
-                                }
-                                onRepoChange={onRepoChange}
-                                onBranchChange={onBranchChange}
-                              />
-                            </GitSyncStoreProvider>
-                          )}
-                          {!isGitSyncEnabled && isPipelineRemote && (
-                            <Container>
-                              <GitSyncForm
-                                formikProps={formikProps as any}
-                                isEdit={isEdit}
-                                disableFields={
-                                  shouldDisableGitDetailsFields(isEdit, allowDifferentRepoSettings?.data?.value)
-                                    ? {
-                                        connectorRef: true,
-                                        repoName: true,
-                                        branch: true,
-                                        filePath: false
-                                      }
-                                    : {}
-                                }
-                              ></GitSyncForm>
-                            </Container>
-                          )}
-                          <Layout.Vertical padding={{ top: 'large', bottom: 'xxxlarge' }} spacing="small">
-                            <Heading level={5}>{getString('inputSets.selectInputSets')}</Heading>
-                            <Text
-                              icon="info-sign"
-                              iconProps={{ intent: 'primary', size: 16, padding: { left: 0, right: 'small' } }}
-                            >
-                              {getString('inputSets.selectInputSetsHelp')}
-                            </Text>
-                            {inputSet && (
+                              }}
+                              formikProps={formikProps}
+                            />
+                            {isGitSyncEnabled && (
                               <GitSyncStoreProvider>
-                                <InputSetSelector
-                                  pipelineIdentifier={pipelineIdentifier}
-                                  onChange={inputsets => {
-                                    setSelectedInputSets(inputsets)
-                                    setInvokeMergeInp(true)
-                                  }}
-                                  value={selectedInputSets}
-                                  selectedRepo={selectedRepo}
-                                  selectedBranch={selectedBranch}
-                                  isOverlayInputSet={true}
-                                  selectedValueClass={css.selectedInputSetsContainer}
-                                  pipelineGitDetails={get(pipeline, 'data.gitDetails')}
-                                  hideInputSetButton={true}
-                                  invalidInputSetReferences={invalidInputSetIds}
-                                  loadingMergeInputSets={loadingMergeInputSets}
-                                  onReconcile={onReconcile}
+                                <GitContextForm
+                                  formikProps={formikProps}
+                                  gitDetails={
+                                    isEdit
+                                      ? { ...overlayInputSetResponse?.data?.gitDetails, getDefaultFromOtherRepo: false }
+                                      : {
+                                          repoIdentifier,
+                                          branch,
+                                          getDefaultFromOtherRepo: true
+                                        }
+                                  }
+                                  onRepoChange={onRepoChange}
+                                  onBranchChange={onBranchChange}
                                 />
                               </GitSyncStoreProvider>
                             )}
-                          </Layout.Vertical>
-                        </div>
+                            {!isGitSyncEnabled && isPipelineRemote && (
+                              <Container>
+                                <GitSyncForm
+                                  formikProps={formikProps as any}
+                                  isEdit={isEdit}
+                                  disableFields={
+                                    shouldDisableGitDetailsFields(isEdit, allowDifferentRepoSettings?.data?.value)
+                                      ? {
+                                          connectorRef: true,
+                                          repoName: true,
+                                          branch: true,
+                                          filePath: false
+                                        }
+                                      : {}
+                                  }
+                                ></GitSyncForm>
+                              </Container>
+                            )}
+                            <Layout.Vertical padding={{ top: 'large', bottom: 'xxxlarge' }} spacing="small">
+                              <Heading level={5}>{getString('inputSets.selectInputSets')}</Heading>
+                              <Text
+                                icon="info-sign"
+                                iconProps={{ intent: 'primary', size: 16, padding: { left: 0, right: 'small' } }}
+                              >
+                                {getString('inputSets.selectInputSetsHelp')}
+                              </Text>
+                              {inputSet && (
+                                <GitSyncStoreProvider>
+                                  <InputSetSelector
+                                    pipelineIdentifier={pipelineIdentifier}
+                                    onChange={inputsets => {
+                                      setSelectedInputSets(inputsets)
+                                      setInvokeMergeInp(true)
+                                    }}
+                                    value={selectedInputSets}
+                                    selectedRepo={selectedRepo}
+                                    selectedBranch={selectedBranch}
+                                    isOverlayInputSet={true}
+                                    selectedValueClass={css.selectedInputSetsContainer}
+                                    pipelineGitDetails={get(pipeline, 'data.gitDetails')}
+                                    hideInputSetButton={true}
+                                    invalidInputSetReferences={invalidInputSetIds}
+                                    loadingMergeInputSets={loadingMergeInputSets}
+                                    onReconcile={onReconcile}
+                                  />
+                                </GitSyncStoreProvider>
+                              )}
+                            </Layout.Vertical>
+                          </div>
+                          <Layout.Horizontal padding={{ top: 'medium' }}>
+                            <Button
+                              variation={ButtonVariation.PRIMARY}
+                              type="submit"
+                              text={getString('save')}
+                              disabled={isReadOnly}
+                            />
+                            &nbsp; &nbsp;
+                            <Button
+                              variation={ButtonVariation.TERTIARY}
+                              onClick={closeForm}
+                              text={getString('cancel')}
+                            />
+                          </Layout.Horizontal>
+                        </FormikForm>
+                      </>
+                    ) : (
+                      <div className={css.editor}>
+                        <ErrorsStrip formErrors={formErrors} />
+                        {loading ? (
+                          <PageSpinner />
+                        ) : (
+                          <>
+                            {hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit) ? (
+                              <Callout intent="danger">{getString('pipeline.inputSetInvalidStoreTypeCallout')}</Callout>
+                            ) : null}
+                            <YAMLBuilder
+                              {...yamlBuilderReadOnlyModeProps}
+                              existingJSON={{
+                                overlayInputSet: {
+                                  ...omit(
+                                    formikProps?.values,
+                                    'pipeline',
+                                    'repo',
+                                    'branch',
+                                    'connectorRef',
+                                    'repoName',
+                                    'filePath',
+                                    'storeType'
+                                  ),
+                                  inputSetReferences: selectedInputSetReferences
+                                }
+                              }}
+                              invocationMap={invocationMap}
+                              bind={setYamlHandler}
+                              schema={pipelineSchema?.data}
+                              isReadOnlyMode={isReadOnly || hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
+                              isEditModeSupported={
+                                !isReadOnly && !hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)
+                              }
+                              hideErrorMesageOnReadOnlyMode={hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
+                              fileName={getYamlFileName({
+                                isPipelineRemote,
+                                filePath: inputSet?.gitDetails?.filePath,
+                                defaultName: yamlBuilderReadOnlyModeProps.fileName
+                              })}
+                            />
+                          </>
+                        )}
                         <Layout.Horizontal padding={{ top: 'medium' }}>
                           <Button
                             variation={ButtonVariation.PRIMARY}
                             type="submit"
                             text={getString('save')}
-                            disabled={isReadOnly}
+                            onClick={() => {
+                              const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), '')
+
+                              handleSubmit(
+                                parse<{ overlayInputSet: OverlayInputSetDTO }>(latestYaml)?.overlayInputSet,
+                                {
+                                  repoIdentifier: formikProps.values.repo,
+                                  branch: formikProps.values.branch,
+                                  repoName: formikProps.values.repo
+                                },
+                                {
+                                  connectorRef: formikProps.values.connectorRef,
+                                  repoName: formikProps.values.repo,
+                                  branch: formikProps.values.branch,
+                                  filePath: formikProps.values.filePath,
+                                  storeType: formikProps.values.storeType
+                                }
+                              )
+                            }}
+                            disabled={isReadOnly || hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
                           />
                           &nbsp; &nbsp;
                           <Button variation={ButtonVariation.TERTIARY} onClick={closeForm} text={getString('cancel')} />
                         </Layout.Horizontal>
-                      </FormikForm>
-                    </>
-                  ) : (
-                    <div className={css.editor}>
-                      <ErrorsStrip formErrors={formErrors} />
-                      {loading ? (
-                        <PageSpinner />
-                      ) : (
-                        <>
-                          {hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit) ? (
-                            <Callout intent="danger">{getString('pipeline.inputSetInvalidStoreTypeCallout')}</Callout>
-                          ) : null}
-                          <YAMLBuilder
-                            {...yamlBuilderReadOnlyModeProps}
-                            existingJSON={{
-                              overlayInputSet: {
-                                ...omit(
-                                  formikProps?.values,
-                                  'pipeline',
-                                  'repo',
-                                  'branch',
-                                  'connectorRef',
-                                  'repoName',
-                                  'filePath',
-                                  'storeType'
-                                ),
-                                inputSetReferences: selectedInputSetReferences
-                              }
-                            }}
-                            invocationMap={invocationMap}
-                            bind={setYamlHandler}
-                            schema={pipelineSchema?.data}
-                            isReadOnlyMode={isReadOnly || hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
-                            isEditModeSupported={
-                              !isReadOnly && !hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)
-                            }
-                            hideErrorMesageOnReadOnlyMode={hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
-                            fileName={getYamlFileName({
-                              isPipelineRemote,
-                              filePath: inputSet?.gitDetails?.filePath,
-                              defaultName: yamlBuilderReadOnlyModeProps.fileName
-                            })}
-                          />
-                        </>
-                      )}
-                      <Layout.Horizontal padding={{ top: 'medium' }}>
-                        <Button
-                          variation={ButtonVariation.PRIMARY}
-                          type="submit"
-                          text={getString('save')}
-                          onClick={() => {
-                            const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-
-                            handleSubmit(
-                              parse<{ overlayInputSet: OverlayInputSetDTO }>(latestYaml)?.overlayInputSet,
-                              {
-                                repoIdentifier: formikProps.values.repo,
-                                branch: formikProps.values.branch,
-                                repoName: formikProps.values.repo
-                              },
-                              {
-                                connectorRef: formikProps.values.connectorRef,
-                                repoName: formikProps.values.repo,
-                                branch: formikProps.values.branch,
-                                filePath: formikProps.values.filePath,
-                                storeType: formikProps.values.storeType
-                              }
-                            )
-                          }}
-                          disabled={isReadOnly || hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
-                        />
-                        &nbsp; &nbsp;
-                        <Button variation={ButtonVariation.TERTIARY} onClick={closeForm} text={getString('cancel')} />
-                      </Layout.Horizontal>
-                    </div>
-                  )}
-                </>
-              )
-            }}
-          </Formik>
-        </Layout.Vertical>
+                      </div>
+                    )}
+                  </>
+                )
+              }}
+            </Formik>
+          </Layout.Vertical>
+        )}
       </div>
     </Dialog>
   )

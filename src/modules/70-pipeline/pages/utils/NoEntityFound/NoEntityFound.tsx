@@ -36,16 +36,18 @@ export enum ErrorPlacement {
 }
 interface NoEntityFoundProps {
   identifier: string
-  entityType: 'pipeline' | 'inputSet' | 'template'
+  entityType: 'pipeline' | 'inputSet' | 'template' | 'overlayInputSet'
   errorObj?: Error | TemplateError
   gitDetails?: GitRemoteDetailsProps
   entityConnectorRef?: string
   errorPlacement?: ErrorPlacement
+  onBranchChange?: (branch: string) => void
 }
 
 const entityTypeLabelMapping = {
   pipeline: 'pipeline',
   inputSet: 'input set',
+  overlayInputSet: 'overlay input set',
   template: 'template'
 }
 
@@ -56,7 +58,8 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
     errorObj,
     gitDetails,
     errorPlacement = ErrorPlacement.TOP,
-    entityConnectorRef
+    entityConnectorRef,
+    onBranchChange
   } = props
   const { repoIdentifier, branch, versionLabel, connectorRef, storeType, repoName } =
     useQueryParams<TemplateStudioQueryParams>()
@@ -132,6 +135,8 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
               )
             }
             location.reload()
+          } else if (entityType === 'overlayInputSet') {
+            onBranchChange?.(defaultTo(selectedFilter.branch, ''))
           } else {
             history.push(
               routes.toTemplateStudio({
