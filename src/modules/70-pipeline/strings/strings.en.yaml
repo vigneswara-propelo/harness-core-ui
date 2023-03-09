@@ -107,6 +107,7 @@ terraformStep:
   runTypePlaceholder: Select Run Type
   terraformVersion: Terraform Version
   terraformVersionPlaceholder: Enter Terraform Version
+  runOnRemote: Run on Remote Workspace
 kubernetesStep:
   workload: Enter Workload
 waitStep:

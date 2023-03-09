@@ -284,6 +284,7 @@ export default function TerragruntEditView(
           setSelectedConnector={setSelectedConnector}
           isTerragruntPlan={false}
           isTerragrunt
+          fieldPath="configuration"
         />
         {connectorView ? getNewConnectorSteps() : null}
 
@@ -293,8 +294,9 @@ export default function TerragruntEditView(
           isTerragruntPlan={false}
           isReadonly={readonly}
           allowableTypes={allowableTypes}
+          fieldPath="configuration"
           onSubmitCallBack={(data: any, prevStepData: any) => {
-            const path = getPath(false, false, isBackendConfig)
+            const path = getPath(false, false, isBackendConfig, 'configuration')
             const configObject = get(data, path) || {
               store: {}
             }

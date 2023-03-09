@@ -2248,9 +2248,6 @@ exports[`Test TerraformApply should render variable view 1`] = `
       </p>
     </div>
   </div>
-  <div
-    class="variablesListTable variablePaddingL3"
-  />
 </div>
 `;
 

@@ -4713,6 +4713,7 @@ export interface StringsMap {
   'pipeline.terraformStep.messagePlaceholder': string
   'pipeline.terraformStep.overridePolicies': string
   'pipeline.terraformStep.provisionerIdentifier': string
+  'pipeline.terraformStep.runOnRemote': string
   'pipeline.terraformStep.runTypeLabel': string
   'pipeline.terraformStep.runTypePlaceholder': string
   'pipeline.terraformStep.terraformVersion': string
