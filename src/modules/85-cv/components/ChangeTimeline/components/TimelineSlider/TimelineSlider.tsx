@@ -69,7 +69,6 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({
           sliderAspects: { width, leftOffset, rightHandlePosition, leftHandlePosition },
           isSliderHidden: hideSlider
         })
-
         /* istanbul ignore else */ if (updatedSliderAspects) {
           setSliderAspects(updatedSliderAspects)
           onSliderDragEnd?.(calculateSliderDragEndData(updatedSliderAspects, parentClickEvent, containerWidth))
@@ -185,6 +184,7 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({
           </Container>
         )}
         <TimelineSliderHandle
+          data-testid="left-handle"
           className={css.leftHandle}
           bounds={LEFT_SLIDER_BOUNDS}
           defaultPosition={{ x: leftHandlePosition, y: 0 }}
@@ -234,6 +234,7 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({
           <div className={css.magnifyingGlass} />
         </Draggable>
         <TimelineSliderHandle
+          data-testid="right-handle"
           className={css.rightHandle}
           position={{ x: rightHandlePosition, y: 0 }}
           bounds={calculateRightHandleBounds(
