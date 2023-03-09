@@ -130,9 +130,13 @@ function Artifactory({
     isCustomDeploymentTypeSelected ||
     isTasDeploymentTypeSelected
   const [repositoryFormat, setRepositoryFormat] = useState<string | undefined>(
-    showRepositoryFormatForAllowedTypes || isServerlessDeploymentTypeSelected
-      ? RepositoryFormatTypes.Generic
-      : RepositoryFormatTypes.Docker
+    get(
+      initialValues,
+      'spec.repositoryFormat',
+      showRepositoryFormatForAllowedTypes || isServerlessDeploymentTypeSelected
+        ? RepositoryFormatTypes.Generic
+        : RepositoryFormatTypes.Docker
+    )
   )
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
@@ -489,7 +493,11 @@ function Artifactory({
                       items={repositoryFormats}
                       onChange={value => {
                         if (showRepositoryFormatForAllowedTypes) {
-                          selectedArtifact && formik.setValues(defaultArtifactInitialValues(selectedArtifact))
+                          selectedArtifact &&
+                            formik.setValues({
+                              ...defaultArtifactInitialValues(selectedArtifact),
+                              identifier: formik.values.identifier
+                            })
                           formik.setFieldValue('repositoryFormat', value?.value)
                           setRepositoryFormat(value?.value as string)
                           setIsAzureWebAppGeneric(
