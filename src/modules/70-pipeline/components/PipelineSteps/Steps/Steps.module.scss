@@ -43,6 +43,13 @@
   padding: 0 var(--spacing-xlarge) 0 var(--spacing-small);
 }
 
+.grid2Coloumns {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 20px;
+  margin-bottom: 10px;
+}
+
 .formGroup {
   display: grid;
   grid-template-columns: 1fr 42px;

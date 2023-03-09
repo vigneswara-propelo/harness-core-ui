@@ -7,11 +7,11 @@
 
 import React from 'react'
 import { IconName, Menu } from '@blueprintjs/core'
-import { Layout, SelectOption, Text, TextProps } from '@harness/uicore'
+import { Layout, MultiSelectOption, SelectOption, Text, TextProps } from '@harness/uicore'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 interface ItemRendererWithMenuItemProps {
-  item: SelectOption | SelectWithBiLevelOption
+  item: SelectOption | MultiSelectOption | SelectWithBiLevelOption
   itemProps: IItemRendererProps
   disabled?: boolean
   style?: TextProps

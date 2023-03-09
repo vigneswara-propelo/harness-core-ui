@@ -28,6 +28,7 @@ declare const styles: {
   readonly fieldsGroup: string
   readonly formGroup: string
   readonly formRow: string
+  readonly grid2Coloumns: string
   readonly inpLabel: string
   readonly inputWidth: string
   readonly kvpairLg: string

@@ -3405,6 +3405,7 @@ export interface StringsMap {
   'pipeline.addStage.description': string
   'pipeline.addStage.title': string
   'pipeline.additionalConfiguration': string
+  'pipeline.advancedConfiguration': string
   'pipeline.advancedOptions': string
   'pipeline.allStages': string
   'pipeline.alwaysEditModeYAML': string
@@ -3426,6 +3427,7 @@ export interface StringsMap {
   'pipeline.appServiceConfig.connectionStrings.overrides': string
   'pipeline.appServiceConfig.connectionStrings.subtitle': string
   'pipeline.appServiceConfig.title': string
+  'pipeline.applicationName': string
   'pipeline.approvalCriteria.allConditions': string
   'pipeline.approvalCriteria.anyCondition': string
   'pipeline.approvalCriteria.approvalCriteria': string
@@ -4460,6 +4462,7 @@ export interface StringsMap {
   'pipeline.savingInProgress': string
   'pipeline.scriptInputVariables': string
   'pipeline.scriptOutputVariables': string
+  'pipeline.selectApplications': string
   'pipeline.selectArtifactPathPlaceholder': string
   'pipeline.selectBambooBuildsPlaceholder': string
   'pipeline.selectJenkinsBuildsPlaceholder': string
@@ -4620,6 +4623,7 @@ export interface StringsMap {
   'pipeline.stepDescription.GCS': string
   'pipeline.stepDescription.GHAPlugin': string
   'pipeline.stepDescription.GitClone': string
+  'pipeline.stepDescription.GitOpsSync': string
   'pipeline.stepDescription.HTTP': string
   'pipeline.stepDescription.HarnessApproval': string
   'pipeline.stepDescription.HelmDeploy': string
@@ -4685,6 +4689,21 @@ export interface StringsMap {
   'pipeline.stepDetails': string
   'pipeline.stepLabel': string
   'pipeline.stepNamePlaceholder': string
+  'pipeline.syncStep.applyOnly': string
+  'pipeline.syncStep.applyOutOfSyncOnly': string
+  'pipeline.syncStep.autoCreateNamespace': string
+  'pipeline.syncStep.dryRun': string
+  'pipeline.syncStep.forceApply': string
+  'pipeline.syncStep.increaseBackoffByFactor': string
+  'pipeline.syncStep.limit': string
+  'pipeline.syncStep.maxBackoffDuration': string
+  'pipeline.syncStep.prune': string
+  'pipeline.syncStep.pruneProgrationPolicyPlaceholder': string
+  'pipeline.syncStep.prunePropagationPolicy': string
+  'pipeline.syncStep.pruneResourcesAtLast': string
+  'pipeline.syncStep.replaceResources': string
+  'pipeline.syncStep.skipSchemaValidation': string
+  'pipeline.syncStep.syncOptionsLabel': string
   'pipeline.tagDependencyRequired': string
   'pipeline.targets.title': string
   'pipeline.templateInputs': string
@@ -6273,7 +6292,6 @@ export interface StringsMap {
   'ce.co.autoStoppingRule.configuration.step3.validation.minTaskCount': string
   'ce.co.autoStoppingRule.configuration.step3.validation.taskCountInteger': string
   'ce.co.autoStoppingRule.configuration.step3.validation.taskCountRequired': string
-  'ce.co.autoStoppingRule.configuration.step4.advancedConfiguration': string
   'ce.co.autoStoppingRule.configuration.step4.setup': string
   'ce.co.autoStoppingRule.configuration.step4.tabs.deps.description': string
   'ce.co.autoStoppingRule.configuration.step4.tabs.deps.title': string
@@ -6418,7 +6436,6 @@ export interface StringsMap {
   'ce.co.dnsSetup.autoURL': string
   'ce.co.dnsSetup.customURL': string
   'ce.co.dnsSetup.isURLaccessible': string
-  'ce.co.dryRunLabel': string
   'ce.co.dryRunMode': string
   'ce.co.dryRunModeLabel': string
   'ce.co.editAsRule': string
@@ -7077,7 +7094,6 @@ export interface StringsMap {
   'ce.recommendation.recommendationChart.cpuPlaceholder': string
   'ce.recommendation.recommendationChart.cpuValuePlaceholder': string
   'ce.recommendation.recommendationChart.limitLabel': string
-  'ce.recommendation.recommendationChart.limitLabelRegular': string
   'ce.recommendation.recommendationChart.memoryHistogramHeader': string
   'ce.recommendation.recommendationChart.memoryLabel': string
   'ce.recommendation.recommendationChart.memoryLabelRegular': string
@@ -7916,7 +7932,6 @@ export interface StringsMap {
   'cv.activitySources.harnessCD.harnessApps': string
   'cv.activitySources.harnessCD.iconLabel': string
   'cv.activitySources.harnessCD.select': string
-  'cv.activitySources.harnessCD.selectApplication': string
   'cv.activitySources.harnessCD.selectEnvironment': string
   'cv.activitySources.harnessCD.selectService': string
   'cv.activitySources.harnessCD.service.harnessServices': string
@@ -8294,7 +8309,6 @@ export interface StringsMap {
   'cv.monitoringSources.appD.appdMetricDetail': string
   'cv.monitoringSources.appD.appdPathDetail': string
   'cv.monitoringSources.appD.appdPathTitle': string
-  'cv.monitoringSources.appD.applicationName': string
   'cv.monitoringSources.appD.averageWaitTime': string
   'cv.monitoringSources.appD.basePathPlaceholder': string
   'cv.monitoringSources.appD.callsPerMinute': string

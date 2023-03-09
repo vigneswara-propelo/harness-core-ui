@@ -59,6 +59,7 @@ startedOn: Started On
 nodes: nodes
 nodesLabel: Nodes
 amiTags: AMI Tags
+advancedConfiguration: 'Advanced Configuration'
 amiFilters: AMi Filters
 poweredByHarness: powered by Harness
 linuxOnly: Supported on Linux only
@@ -157,6 +158,22 @@ jenkinsStep:
   unstableStatusAsSuccess: Treat unstable Job status as success
   useConnectorUrlForJobExecution: Use Connector URL for job execution
   captureEnvironmentVariable: Capture environment variables from Jenkins build
+syncStep:
+  prune: Prune
+  dryRun: Dry Run
+  applyOnly: Apply Only
+  forceApply: Force Apply
+  syncOptionsLabel: Sync Options & Policy
+  skipSchemaValidation: Skip Schema Validations
+  autoCreateNamespace: Auto-Create Namespace
+  pruneResourcesAtLast: Prune Last
+  applyOutOfSyncOnly: Apply Out of Sync Only
+  replaceResources: Replace
+  prunePropagationPolicy: Prune Propagation Policy
+  pruneProgrationPolicyPlaceholder: Select Prune Propagation Policy
+  limit: Limit
+  maxBackoffDuration: Max Duration
+  increaseBackoffByFactor: Factor
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector
@@ -902,6 +919,8 @@ infraSpecifications:
 imagePathLabel: Image Path
 digest: Digest
 artifactPathLabel: Artifact Path
+applicationName: Application Name
+selectApplications: Select Applications
 artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
@@ -1145,6 +1164,7 @@ stepDescription:
   RestoreCacheS3: Restore saved files and directories between builds using AWS S3.
   DockerHub: Build a Docker image from a Dockerfile and push it to a Docker registry.
   Jenkins: Jenkins Description.
+  GitOpsSync: Gitops Sync
   GCS: Upload artifacts to Google Cloud Storage (GCS).
   S3: Upload artifacts to AWS S3.
   JFrogArtifactory: Upload artifacts to JFrog Artifactory.

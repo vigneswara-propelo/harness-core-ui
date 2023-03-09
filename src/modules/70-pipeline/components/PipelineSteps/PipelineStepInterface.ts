@@ -9,6 +9,7 @@ import type { SelectOption } from '@harness/uicore'
 import type { PipelineInfrastructure } from 'services/cd-ng'
 
 export enum StepType {
+  GitOpsSync = 'GitOpsSync',
   StageRuntimeInput = 'StageRuntimeInput',
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',

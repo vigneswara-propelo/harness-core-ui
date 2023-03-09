@@ -314,7 +314,6 @@ monitoringSources:
     absoluteValue: Absolute Value
     percentageDeviation: Percentage Deviation
     appdPathTitle: AppDynamics Path
-    applicationName: Application Name
     tierName: Tier Name
     completeMetricPath: Complete Metric Path
     serviceInstanceMetricPath: Service Instance Label Path
@@ -537,7 +536,6 @@ activitySources:
   harnessCD:
     defaultName: 'My Harness CD'
     select: 'Select your Change Source'
-    selectApplication: 'Select Applications'
     selectEnvironment: 'Select Environments'
     selectService: '{{ $.common.selectServices }}'
     iconLabel: 'Harness FirstGen'
