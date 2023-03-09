@@ -112,6 +112,7 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
         label={getString('common.userLabel')}
         multiSelectProps={{
           allowCreatingNewItems: true,
+          allowCommaSeparatedList: true,
           onQueryChange: setUserQuery,
           tagRenderer: (item: MultiSelectOption) => <UserTagRenderer key={item.value.toString()} item={item} />,
           itemRender: (item, { handleClick }) => (
