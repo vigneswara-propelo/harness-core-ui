@@ -368,6 +368,7 @@ serviceDashboard:
   noActiveServices: No Active Services in {{timeRange}}
   helmChartDetails: Helm Chart Details
   helmChartName: Helm Chart Name
+  helmSubChartName: Helm Sub-Chart Name
   helmRopoUrl: Repo URL
   manageServiceLabel: Manage Services
   unitDay: '/Day'

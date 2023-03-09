@@ -366,6 +366,10 @@ export const commonActiveInstanceData = (
           value: (instanceData.instanceInfoDTO as NativeHelmInstanceInfoDTO).helmChartInfo?.name as string
         },
         {
+          label: getString('cd.serviceDashboard.helmSubChartName'),
+          value: (instanceData.instanceInfoDTO as NativeHelmInstanceInfoDTO).helmChartInfo?.subChartName as string
+        },
+        {
           label: getString('cd.serviceDashboard.helmRopoUrl'),
           value: (instanceData.instanceInfoDTO as NativeHelmInstanceInfoDTO).helmChartInfo?.repoUrl as string
         },
