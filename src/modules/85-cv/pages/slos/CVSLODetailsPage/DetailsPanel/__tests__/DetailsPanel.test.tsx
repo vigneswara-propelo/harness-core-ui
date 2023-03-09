@@ -50,8 +50,8 @@ jest.mock('services/cv', () => ({
     }
   })
 }))
-// eslint-disable-next-line jest/no-disabled-tests
-describe.skip('Test DetailsPanel', () => {
+
+describe('Test DetailsPanel', () => {
   test('should render DetailsPanel', () => {
     const { container, getByTestId } = render(
       <TestWrapper>
