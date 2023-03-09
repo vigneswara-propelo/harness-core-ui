@@ -241,6 +241,7 @@ export function TasCanaryAppSetupWidget(
                 name="spec.additionalRoutes"
                 tagsProps={{ placeholder: getString('cd.steps.tas.typeAndEnterForRouteAdd') }}
                 multiTypeProps={{
+                  expressions,
                   allowableTypes
                 }}
                 type={getString('tagLabel')}
