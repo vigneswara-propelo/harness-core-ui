@@ -617,11 +617,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                   formik={formik}
                   name={`${path}.${manifestPath}.spec.chartVersion`}
                   disabled={isFieldDisabled(fromTrigger ? 'chartVersion' : `${manifestPath}.spec.chartVersion`)}
-                  placeholder={
-                    loadingChartVersions
-                      ? getString('pipeline.manifestType.http.loadingChartVersion')
-                      : getString('pipeline.manifestType.http.chartVersionPlaceHolder')
-                  }
+                  placeholder={getString('pipeline.manifestType.http.chartVersionPlaceHolder')}
                   multiTypeInputProps={{
                     onFocus: () => {
                       if (!chartVersions?.length) {
@@ -635,7 +631,11 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                       ...(fromTrigger && { value: TriggerDefaultFieldList.chartVersion }),
                       items: chartVersions,
                       noResults: (
-                        <Text padding={'small'}>{getString('pipeline.manifestType.http.noResultsChartVersion')}</Text>
+                        <Text padding={'small'}>
+                          {loadingChartVersions
+                            ? getString('pipeline.manifestType.http.loadingChartVersion')
+                            : getString('pipeline.manifestType.http.noResultsChartVersion')}
+                        </Text>
                       )
                     },
                     expressions,
