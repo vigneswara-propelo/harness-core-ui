@@ -217,8 +217,8 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   AsgScheduledUpdateGroupAction: gitStoreTypesWithHarnessStoreType,
   GoogleCloudFunctionDefinition: gitStoreTypesWithHarnessStoreType,
   HelmRepoOverride: [ManifestStoreMap.Http, ManifestStoreMap.OciHelmChart, ManifestStoreMap.S3, ManifestStoreMap.Gcs],
-  AwsLambdaFunctionDefinition: gitStoreTypes,
-  AwsLambdaFunctionAliasDefinition: gitStoreTypes
+  AwsLambdaFunctionDefinition: [...gitStoreTypes, ManifestStoreMap.Harness],
+  AwsLambdaFunctionAliasDefinition: [...gitStoreTypes, ManifestStoreMap.Harness]
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
