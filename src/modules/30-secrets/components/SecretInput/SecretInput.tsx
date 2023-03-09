@@ -15,7 +15,8 @@ import {
   Text,
   DataTooltipInterface,
   FormikTooltipContext,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  FormError
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { get, isPlainObject, pick } from 'lodash-es'
@@ -176,7 +177,7 @@ const SecretInput: React.FC<FormikSecretInput> = props => {
 
   return (
     <FormGroup
-      helperText={errorCheck() ? get(formik?.errors, name) : null}
+      helperText={errorCheck() ? <FormError name={name} errorMessage={get(formik?.errors, name)} /> : null}
       intent={errorCheck() ? Intent.DANGER : Intent.NONE}
     >
       <Layout.Vertical>

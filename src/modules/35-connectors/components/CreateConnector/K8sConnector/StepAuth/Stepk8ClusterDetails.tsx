@@ -293,7 +293,7 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
         is: delegateType => delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER,
         then: Yup.string().required(getString('validation.authType'))
       }),
-    username: Yup.string()
+    usernametextField: Yup.string()
       .nullable()
       .when('authType', {
         is: authType => authType === AuthTypes.USER_PASSWORD,
