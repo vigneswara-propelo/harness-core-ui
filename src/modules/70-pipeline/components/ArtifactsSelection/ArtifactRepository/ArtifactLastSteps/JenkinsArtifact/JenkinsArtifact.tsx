@@ -239,7 +239,8 @@ function FormComponent({
     if (lastOpenedJob.current) {
       setJobDetails((prevState: SelectWithBiLevelOption[]) => {
         const clonedJobDetails = cloneDeep(prevState)
-        const parentJob = clonedJobDetails.find(obj => obj.label === lastOpenedJob.current)
+        const probableParentName = jobsResponse?.data?.jobDetails?.[0]?.jobName?.split('/')?.[0]
+        const parentJob = clonedJobDetails.find(obj => obj.label === probableParentName)
         if (parentJob) {
           parentJob.submenuItems = [...getJobItems(jobsResponse?.data?.jobDetails || [])]
         }
@@ -313,7 +314,7 @@ function FormComponent({
             placeholder={
               connectorRefValue && getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED
                 ? fetchingJobs
-                  ? getString('common.loadingFieldOptions', { fieldName: getString('connectors.jenkins.jobs') })
+                  ? getString('common.loadingFieldOptions', { fieldName: getString('pipeline.jenkinsStep.job') })
                   : fetchingJobsError?.message
                   ? fetchingJobsError?.message
                   : getString('select')
@@ -386,7 +387,7 @@ function FormComponent({
               placeholder={
                 connectorRefValue && getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED
                   ? fetchingJobs
-                    ? getString('common.loadingFieldOptions', { fieldName: getString('connectors.jenkins.jobs') })
+                    ? getString('common.loadingFieldOptions', { fieldName: getString('pipeline.jenkinsStep.job') })
                     : fetchingJobsError?.message
                     ? fetchingJobsError?.message
                     : getString('select')

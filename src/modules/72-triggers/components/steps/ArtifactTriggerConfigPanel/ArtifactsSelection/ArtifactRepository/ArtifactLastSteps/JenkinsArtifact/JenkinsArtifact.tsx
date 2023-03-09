@@ -190,7 +190,8 @@ function FormComponent(
     if (lastOpenedJob.current) {
       setJobDetails((prevState: SelectWithBiLevelOption[]) => {
         const clonedJobDetails = cloneDeep(prevState)
-        const parentJob = clonedJobDetails.find(obj => obj.label === lastOpenedJob.current)
+        const probableParentName = jobsResponse?.data?.jobDetails?.[0]?.jobName?.split('/')?.[0]
+        const parentJob = clonedJobDetails.find(obj => obj.label === probableParentName)
         if (parentJob) {
           parentJob.submenuItems = [...getJobItems(jobsResponse?.data?.jobDetails || [])]
         }

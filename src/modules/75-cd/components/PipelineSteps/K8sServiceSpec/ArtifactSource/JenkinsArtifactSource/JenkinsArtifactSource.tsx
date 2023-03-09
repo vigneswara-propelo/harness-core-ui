@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { cloneDeep, defaultTo, get, isEqual, memoize } from 'lodash-es'
 
 import {
@@ -94,6 +94,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const [jobDetails, setJobDetails] = useState<SubmenuSelectOption[]>([])
   const [showChildJobField, setShowChildJobField] = useState<boolean>(false)
   const [lastOpenedJob, setLastOpenedJob] = useState<string | undefined>()
+  const recentParentJob = useRef<any>(null)
   const [childJob, setChildJob] = useState<SelectWithBiLevelOption>({} as SelectWithBiLevelOption)
   const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
   const [build, setJenkinsBuilds] = useState<SelectOption[]>([])
@@ -296,7 +297,12 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   useEffect(() => {
     if (refetchingAllowedTypes?.includes(getMultiTypeFromValue(connectorRefValue))) {
-      refetchJobs()
+      refetchJobs({
+        queryParams: {
+          ...commonParams,
+          connectorRef: connectorRefValue?.toString()
+        }
+      })
     }
   }, [connectorRefValue])
 
@@ -346,13 +352,15 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   }, [lastOpenedJob])
 
   useEffect(() => {
-    if (lastOpenedJob) {
+    if (lastOpenedJob || recentParentJob?.current) {
       setJobDetails((prevState: SubmenuSelectOption[]) => {
         const clonedJobDetails = cloneDeep(prevState)
-        const parentJob = clonedJobDetails.find(obj => obj.label === lastOpenedJob)
+        const probableParentName = jobsResponse?.data?.jobDetails?.[0]?.jobName?.split('/')?.[0]
+        const parentJob = clonedJobDetails.find(obj => obj.label === probableParentName)
         if (parentJob) {
           parentJob.submenuItems = [...getJobItems(jobsResponse?.data?.jobDetails || [])]
         }
+        setLastOpenedJob(undefined)
         return clonedJobDetails
       })
     } else {
@@ -377,7 +385,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     if (jobName?.split('/').length > 1 && jobDetails.length) {
       setShowChildJobField(true)
       const parentJobName = jobName?.split('/')[0]
-      setLastOpenedJob(parentJobName)
+      recentParentJob.current = parentJobName
       const parentJob = jobDetails?.find(job => job.label === parentJobName)
       if (!parentJob?.submenuItems?.length) {
         refetchJobs({
@@ -416,9 +424,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
 
   const childJobDetails = () => {
-    if (showChildJobField && lastOpenedJob) {
+    if (showChildJobField && recentParentJob?.current) {
       const childJobs: SelectWithBiLevelOption[] =
-        jobDetails.find(item => item.label === lastOpenedJob)?.submenuItems || []
+        jobDetails.find(item => item.label === recentParentJob?.current)?.submenuItems || []
       return childJobs
     }
     return []
@@ -427,7 +435,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const getJobnameValue = () => {
     const jobName = get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)
     if (showChildJobField) {
-      const parentJob = jobDetails.find(job => job.label === lastOpenedJob)
+      const parentJob = jobDetails.find(job => job.label === recentParentJob?.current)
       if (parentJob) return parentJob
     }
     const jobDetail = jobDetails.find(job => job.label === jobName)
@@ -482,6 +490,11 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 } else {
                   setConnectorRefValue(undefined)
                 }
+                formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.jobName`, '')
+                setLastOpenedJob(undefined)
+                recentParentJob.current = false
+                setShowChildJobField(false)
+                setChildJob({} as SelectWithBiLevelOption)
                 setJobDetails([])
                 setArtifactPaths([])
                 setJenkinsBuilds([])
@@ -504,7 +517,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 placeholder={
                   connectorRefValue && getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED
                     ? fetchingJobs
-                      ? getString('common.loadingFieldOptions', { fieldName: getString('connectors.jenkins.jobs') })
+                      ? getString('common.loadingFieldOptions', { fieldName: getString('pipeline.jenkinsStep.job') })
                       : fetchingJobsError?.message
                       ? fetchingJobsError?.message
                       : getString('select')
@@ -515,6 +528,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                     if (primaryValue?.hasSubmenuItems) {
                       setShowChildJobField(true)
                       setLastOpenedJob(primaryValue?.label)
+                      recentParentJob.current = primaryValue?.label
                       const parentJob = jobDetails?.find(job => job.label === primaryValue?.label)
                       if (!parentJob?.submenuItems?.length) {
                         refetchJobs({
@@ -555,7 +569,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               />
               {showChildJobField && (
                 <FormInput.MultiTypeBiLevelInput
-                  label={`${lastOpenedJob || getString('connectors.jenkins.child')} ${getString(
+                  label={`${recentParentJob?.current || getString('connectors.jenkins.child')} ${getString(
                     'connectors.jenkins.jobs'
                   )}`}
                   name={`${path}.artifacts.${artifactPath}.spec.jobName`}
@@ -563,7 +577,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   placeholder={
                     connectorRefValue && getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED
                       ? fetchingJobs
-                        ? getString('common.loadingFieldOptions', { fieldName: getString('connectors.jenkins.jobs') })
+                        ? getString('common.loadingFieldOptions', { fieldName: getString('pipeline.jenkinsStep.job') })
                         : fetchingJobsError?.message
                         ? fetchingJobsError?.message
                         : getString('select')
@@ -573,6 +587,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                     onChange: (primaryValue: any) => {
                       if (primaryValue?.hasSubmenuItems) {
                         setLastOpenedJob(primaryValue?.label)
+                        recentParentJob.current = primaryValue?.label
                         const parentJob = jobDetails?.find(job => job.label === primaryValue?.label)
                         if (!parentJob?.submenuItems?.length) {
                           refetchJobs({

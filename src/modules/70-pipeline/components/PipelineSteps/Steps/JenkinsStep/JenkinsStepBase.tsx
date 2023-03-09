@@ -193,7 +193,8 @@ function FormContent({
       ) {
         setJobDetails((prevState: SelectWithBiLevelOption[]) => {
           const clonedJobDetails = cloneDeep(prevState)
-          const parentJob = clonedJobDetails.find(obj => obj.label === lastOpenedJob.current)
+          const probableParentName = jobsResponse?.data?.jobDetails?.[0]?.jobName?.split('/')?.[0]
+          const parentJob = clonedJobDetails.find(obj => obj.label === probableParentName)
           if (parentJob) {
             parentJob.submenuItems = [...getJobItems(jobsResponse?.data?.jobDetails || [])]
           }
@@ -310,6 +311,8 @@ function FormContent({
           selected={formik?.values?.spec.connectorRef as string}
           onChange={(value: any, _unused) => {
             if (value?.record?.identifier !== connectorRefFixedValue) {
+              setChildJob({} as SelectWithBiLevelOption)
+              setShowChildJobField(false)
               resetForm(
                 formik,
                 'connectorRef',
@@ -354,7 +357,7 @@ function FormContent({
           placeholder={
             connectorRefFixedValue && getMultiTypeFromValue(connectorRefFixedValue) === MultiTypeInputType.FIXED
               ? fetchingJobs
-                ? getString('common.loadingFieldOptions', { fieldName: getString('connectors.jenkins.jobs') })
+                ? getString('common.loadingFieldOptions', { fieldName: getString('pipeline.jenkinsStep.job') })
                 : fetchingJobsError?.message
                 ? fetchingJobsError?.message
                 : getString('select')
@@ -435,7 +438,7 @@ function FormContent({
             placeholder={
               connectorRefFixedValue && getMultiTypeFromValue(connectorRefFixedValue) === MultiTypeInputType.FIXED
                 ? fetchingJobs
-                  ? getString('common.loadingFieldOptions', { fieldName: getString('connectors.jenkins.jobs') })
+                  ? getString('common.loadingFieldOptions', { fieldName: getString('pipeline.jenkinsStep.job') })
                   : fetchingJobsError?.message
                   ? fetchingJobsError?.message
                   : getString('select')
