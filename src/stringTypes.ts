@@ -8970,19 +8970,28 @@ export interface StringsMap {
   'sto.noSecurityResults': string
   'sto.scans': string
   'sto.securityStage.description': string
+  'sto.stepDescription.AWSECR': string
+  'sto.stepDescription.AWSSecurityHub': string
   'sto.stepDescription.AquaTrivy': string
   'sto.stepDescription.Bandit': string
   'sto.stepDescription.Blackduck': string
   'sto.stepDescription.Brakeman': string
   'sto.stepDescription.Burp': string
   'sto.stepDescription.Checkmarx': string
+  'sto.stepDescription.CustomIngestion': string
   'sto.stepDescription.Fortify': string
   'sto.stepDescription.FortifyOnDemand': string
   'sto.stepDescription.Grype': string
   'sto.stepDescription.Mend': string
+  'sto.stepDescription.Metasploit': string
+  'sto.stepDescription.Nikto': string
+  'sto.stepDescription.Nmap': string
+  'sto.stepDescription.OWASP': string
   'sto.stepDescription.Owasp': string
   'sto.stepDescription.PrismaCloud': string
+  'sto.stepDescription.Prowler': string
   'sto.stepDescription.ScoutSuite': string
+  'sto.stepDescription.Sniper': string
   'sto.stepDescription.Snyk': string
   'sto.stepDescription.Sonarqube': string
   'sto.stepDescription.TwistLock': string
@@ -8997,12 +9006,14 @@ export interface StringsMap {
   'sto.stepField.advanced.passthrough': string
   'sto.stepField.advanced.serializer': string
   'sto.stepField.authAccessId': string
+  'sto.stepField.authRegion': string
   'sto.stepField.authSsl': string
   'sto.stepField.authVersion': string
   'sto.stepField.config': string
   'sto.stepField.container.containerAccessToken': string
   'sto.stepField.container.containerRegion': string
   'sto.stepField.image.fieldsHeading': string
+  'sto.stepField.ingestion.customerArtifactsPath': string
   'sto.stepField.ingestion.file': string
   'sto.stepField.mode': string
   'sto.stepField.optionLabels.logLevel.debug': string
