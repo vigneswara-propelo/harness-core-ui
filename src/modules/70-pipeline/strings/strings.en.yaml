@@ -1673,3 +1673,15 @@ validation:
   pipelineValidated: Pipeline validated
   revalidate: Revalidate
   validationResultApiError: Unable to complete validation due to [{{message}}] error.
+bamboo:
+  planName: Plan Name
+planNamePlaceholder: Enter or Select Plan
+bambooBuilds: Bamboo Builds
+selectBambooBuildsPlaceholder: Select Bamboo Build
+Bamboo: Bamboo Description
+bambooStep:
+  validations:
+    planName: Planname is a required field
+  planParameter: Plan Parameters
+  addPlanParameters: Add Plan Parameter
+  noPlans: No Plans Defined

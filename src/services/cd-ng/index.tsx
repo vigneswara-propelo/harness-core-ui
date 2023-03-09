@@ -747,7 +747,6 @@ export interface AgentApplicationTargets {
   agentId?: string
   applicationName?: string[]
 }
-
 export interface AgentMtlsEndpointDetails {
   accountId?: string
   caCertificates?: string

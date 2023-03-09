@@ -6,7 +6,7 @@
  */
 
 import type { AllowedTypes, SelectOption } from '@harness/uicore'
-import type { FormikValues } from 'formik'
+import type { FormikProps, FormikValues } from 'formik'
 import type { GetDataError } from 'restful-react'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
@@ -244,6 +244,25 @@ export interface JenkinsArtifactProps {
   isMultiArtifactSource?: boolean
 }
 
+export interface BambooArtifactProps {
+  key: string
+  name: string
+  expressions: string[]
+  context: number
+  initialValues: BambooArtifactType
+  handleSubmit: (data: BambooArtifactType) => void
+  artifactIdentifiers: string[]
+  isReadonly?: boolean
+  selectedArtifact: ArtifactType | null
+  allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
+}
+
+export interface ArtifactFormikProps<Values> {
+  formik: FormikProps<Values>
+  formClassName?: string
+}
+
 export interface GoogleArtifactRegistryInitialValuesType {
   identifier?: string
   versionType?: TagTypes
@@ -320,6 +339,17 @@ export interface JenkinsArtifactType {
     artifactPath?: SelectOption | string
     build?: SelectOption | string
     jobName?: SelectOption | string
+  }
+}
+
+export interface BambooArtifactType {
+  identifier: string
+  type?: string
+  spec: {
+    connectorRef?: string
+    artifactPaths?: SelectOption[] | string[] | string
+    build?: SelectOption | string
+    planKey?: SelectOption | string
   }
 }
 

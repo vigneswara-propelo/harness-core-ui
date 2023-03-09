@@ -3388,6 +3388,7 @@ export interface StringsMap {
   'pipeline.ACR.subscriptionError': string
   'pipeline.ACR.subscriptionPlaceholder': string
   'pipeline.ACR.tagError': string
+  'pipeline.Bamboo': string
   'pipeline.MatrixNode.maxConcurrency': string
   'pipeline.OverviewEmptyStates.createPipelineHeaderMsg': string
   'pipeline.OverviewEmptyStates.createPipelineInfo': string
@@ -3579,6 +3580,12 @@ export interface StringsMap {
   'pipeline.azureWebApp.strategy.basic': string
   'pipeline.azureWebApp.strategy.blueGreen': string
   'pipeline.azureWebApp.strategy.canary': string
+  'pipeline.bamboo.planName': string
+  'pipeline.bambooBuilds': string
+  'pipeline.bambooStep.addPlanParameters': string
+  'pipeline.bambooStep.noPlans': string
+  'pipeline.bambooStep.planParameter': string
+  'pipeline.bambooStep.validations.planName': string
   'pipeline.banner.bannerDescription': string
   'pipeline.banner.bannerDescriptionSecond': string
   'pipeline.banner.bannerText': string
@@ -4374,6 +4381,7 @@ export interface StringsMap {
   'pipeline.pipelineTimeoutHelpText': string
   'pipeline.pipelineTimeoutSettings': string
   'pipeline.piplineDiffTitle': string
+  'pipeline.planNamePlaceholder': string
   'pipeline.policyEnforcement.description': string
   'pipeline.policyEnforcement.title': string
   'pipeline.policyEvaluations.emptyPolicySet': string
@@ -4449,6 +4457,7 @@ export interface StringsMap {
   'pipeline.scriptInputVariables': string
   'pipeline.scriptOutputVariables': string
   'pipeline.selectArtifactPathPlaceholder': string
+  'pipeline.selectBambooBuildsPlaceholder': string
   'pipeline.selectJenkinsBuildsPlaceholder': string
   'pipeline.selectOrCreateForm.description': string
   'pipeline.selectOrCreatePipeline.pipelineNameRequired': string
