@@ -3077,15 +3077,18 @@ export interface StringsMap {
   'auditTrail.actions.added_collaborator': string
   'auditTrail.actions.added_membership': string
   'auditTrail.actions.create_token': string
+  'auditTrail.actions.end': string
   'auditTrail.actions.force_deleted': string
   'auditTrail.actions.invite_resent': string
   'auditTrail.actions.invite_revoked': string
   'auditTrail.actions.invited': string
   'auditTrail.actions.login': string
   'auditTrail.actions.login2fa': string
+  'auditTrail.actions.pause': string
   'auditTrail.actions.removed_collaborator': string
   'auditTrail.actions.removed_membership': string
   'auditTrail.actions.restored': string
+  'auditTrail.actions.resume': string
   'auditTrail.actions.revoke_token': string
   'auditTrail.actions.unsuccessfullLogin': string
   'auditTrail.actions.upserted': string
@@ -3120,6 +3123,7 @@ export interface StringsMap {
   'auditTrail.logStreaming.streamingDestinationCreated': string
   'auditTrail.logStreaming.streamingDestinationSaved': string
   'auditTrail.noYamlDifference': string
+  'auditTrail.resourceLabel.nodeExecution': string
   'auditTrail.resourceNameLabel': string
   'auditTrail.streamingDestination': string
   'auditTrail.streamingDestinations': string
