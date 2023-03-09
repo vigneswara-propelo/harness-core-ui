@@ -34,6 +34,7 @@ import { getIdentifierFromName } from '@common/utils/StringUtils'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import * as trackingConstants from '@common/constants/TrackingConstants'
 import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
+import { StepStatus } from '@common/constants/StepStatusTypes'
 
 // eslint-disable-next-line import/no-unresolved
 const FFUIMFEApp = lazy(() => import('ffui/MicroFrontendApp'))
@@ -70,7 +71,7 @@ const FFUIApp: FC = () => (
     }}
     customRoutes={routes}
     customUtils={{ getIdentifierFromName, IdentifierSchema, NameSchema }}
-    customEnums={{ FeatureIdentifier, PreferenceScope, trackingConstants }}
+    customEnums={{ FeatureIdentifier, PreferenceScope, StepStatus, trackingConstants }}
   />
 )
 
