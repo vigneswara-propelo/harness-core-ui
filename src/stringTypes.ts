@@ -1827,6 +1827,7 @@ export interface StringsMap {
   'secrets.secret.validationNameChars': string
   'secrets.secretsTitle': string
   'secrets.selectSecret': string
+  'secrets.selectSecrets': string
   'secrets.sshAuthFormFields.labelFile': string
   'secrets.sshAuthFormFields.labelKeyFilePath': string
   'secrets.sshAuthFormFields.labelKeyReference': string
