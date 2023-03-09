@@ -135,6 +135,15 @@ export function getStepPaletteModuleInfosFromStage(
           module: 'pms',
           category: 'FeatureFlag',
           shouldShowCommonSteps: true
+        },
+        {
+          module: 'cv',
+          shouldShowCommonSteps: false
+        },
+        {
+          module: 'cd',
+          category: 'Chaos',
+          shouldShowCommonSteps: false
         }
       ]
 
