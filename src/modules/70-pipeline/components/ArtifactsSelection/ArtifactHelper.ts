@@ -32,14 +32,6 @@ export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDe
   )
 }
 
-export const isAllowedGithubPackageRegistryDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
-  return (
-    deploymentType === ServiceDeploymentType.Kubernetes ||
-    deploymentType === ServiceDeploymentType.TAS ||
-    deploymentType === ServiceDeploymentType.CustomDeployment
-  )
-}
-
 export const isAllowedAzureArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean =>
   deploymentType === ServiceDeploymentType.CustomDeployment
 
@@ -191,7 +183,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Acr,
-    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
+    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry,
+    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
   ],
   NativeHelm: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
@@ -264,7 +257,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.Gcr,
     ENABLED_ARTIFACT_TYPES.Acr,
-    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
+    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry,
+    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
   ],
   TAS: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -275,7 +269,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Gcr,
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.Acr,
-    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
+    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry,
+    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
   ],
   GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage],
   AwsLambda: [ENABLED_ARTIFACT_TYPES.AmazonS3, ENABLED_ARTIFACT_TYPES.Ecr],

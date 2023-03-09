@@ -81,7 +81,6 @@ import {
   isAllowedAMIDeploymentTypes,
   isAllowedAzureArtifactDeploymentTypes,
   isAllowedCustomArtifactDeploymentTypes,
-  isAllowedGithubPackageRegistryDeploymentTypes,
   isSidecarAllowed,
   ModalViewFor,
   showArtifactStoreStepDirectly
@@ -162,13 +161,8 @@ export default function ServiceV2ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const {
-    CUSTOM_ARTIFACT_NG,
-    GITHUB_PACKAGES,
-    AZURE_ARTIFACTS_NG,
-    CD_AMI_ARTIFACTS_NG,
-    AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
-  } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, AZURE_ARTIFACTS_NG, CD_AMI_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS } =
+    useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
@@ -178,13 +172,6 @@ export default function ServiceV2ArtifactsSelection({
       isAllowedCustomArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
-    }
-    if (
-      isAllowedGithubPackageRegistryDeploymentTypes(deploymentType) &&
-      GITHUB_PACKAGES &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     }
     if (
       isAllowedAzureArtifactDeploymentTypes(deploymentType) &&
