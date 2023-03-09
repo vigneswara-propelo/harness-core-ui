@@ -146,5 +146,6 @@ export enum PAGE_NAME {
   CFConfigurePath = 'CFConfigurePath',
   SSCAHomePage = 'SSCAHomePage',
   SSCAOverviewPage = 'SSCAOverviewPage',
-  IDPAdminPage = 'IDPAdminPage'
+  IDPAdminPage = 'IDPAdminPage',
+  ETHomePage = 'ETHomePage'
 }

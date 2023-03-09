@@ -797,6 +797,7 @@ export interface StringsMap {
   'common.purpose.cv.serviceReliability': string
   'common.purpose.cv.subtitle': string
   'common.purpose.cv.verification': string
+  'common.purpose.errorTracking.longTitle': string
   'common.purpose.errorTracking.title': string
   'common.purpose.howToProceed': string
   'common.purpose.idp.fullName': string
@@ -3382,6 +3383,11 @@ export interface StringsMap {
   'code.learnMore': string
   'code.pullRequests': string
   'code.webhooks': string
+  'et.homepage.learnMore': string
+  'et.homepage.slogan': string
+  'et.longTitle': string
+  'et.nav.settings': string
+  'et.title': string
   'pipeline.ACR.name': string
   'pipeline.ACR.registry': string
   'pipeline.ACR.registryError': string

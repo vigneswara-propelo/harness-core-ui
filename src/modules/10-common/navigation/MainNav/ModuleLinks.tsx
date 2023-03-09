@@ -266,3 +266,26 @@ export const IDPNavItem = (): JSX.Element => {
     </li>
   )
 }
+
+export const ETNavItem = () => {
+  const params = useParams<ProjectPathProps>()
+
+  return (
+    <li className={css.navItem}>
+      <Link {...commonLinkProps} to={routes.toET(params)}>
+        <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+          <Icon name="cet" size={30} />
+          <Text
+            font={{ weight: 'semi-bold', align: 'center' }}
+            margin="xsmall"
+            padding={{ bottom: 'xsmall' }}
+            color={Color.WHITE}
+            className={css.text}
+          >
+            <String stringID="common.purpose.errorTracking.longTitle" />
+          </Text>
+        </Layout.Vertical>
+      </Link>
+    </li>
+  )
+}

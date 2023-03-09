@@ -2071,7 +2071,15 @@ const routes = {
   toSSCAGettingStarted: withAccountId(() => '/ssca/getting-started'),
   toIDPDefaultPath: withAccountId(() => '/idp-default'),
   toIDP: withAccountId(() => '/idp'),
-  toIDPAdmin: withAccountId(() => '/idp-admin')
+  toIDPAdmin: withAccountId(() => '/idp-admin'),
+
+  // Error Tracking
+  toET: withAccountId(() => '/et'),
+  toETHome: withAccountId(() => '/et/home'),
+  toETPlaceholder: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
+  )
 }
 
 export default routes

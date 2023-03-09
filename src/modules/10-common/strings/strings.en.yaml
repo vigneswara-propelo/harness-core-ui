@@ -330,6 +330,7 @@ purpose:
     tests: '{{$.tests}}'
   errorTracking:
     title: Error Tracking
+    longTitle: Continuous Error Tracking
   code:
     name: Code
   chaos:
