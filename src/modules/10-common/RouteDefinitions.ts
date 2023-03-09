@@ -1984,11 +1984,11 @@ const routes = {
   ),
   toChaosExperiment: withAccountId(
     ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/${identifier}`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/${identifier}/chaos-studio`
   ),
   toNewChaosExperiment: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/new`
+    ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/new/${identifier}/chaos-studio`
   ),
   toChaosExperimentRun: withAccountId(
     ({

@@ -150,6 +150,7 @@ export enum PermissionIdentifier {
   VIEW_CHAOS_EXPERIMENT = 'chaos_chaosexperiment_view',
   EDIT_CHAOS_EXPERIMENT = 'chaos_chaosexperiment_edit',
   DELETE_CHAOS_EXPERIMENT = 'chaos_chaosexperiment_delete',
+  EXECUTE_CHAOS_EXPERIMENT = 'chaos_chaosexperiment_execute',
   VIEW_CHAOS_INFRASTRUCTURE = 'chaos_chaosinfrastructure_view',
   EDIT_CHAOS_INFRASTRUCTURE = 'chaos_chaosinfrastructure_edit',
   DELETE_CHAOS_INFRASTRUCTURE = 'chaos_chaosinfrastructure_delete',

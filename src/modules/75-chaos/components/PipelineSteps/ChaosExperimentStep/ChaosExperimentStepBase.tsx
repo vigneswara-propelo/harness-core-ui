@@ -131,15 +131,15 @@ export const ChaosExperimentStepBase = (
                     onSelect={experimentID => {
                       formikProps.setFieldValue('spec.experimentRef', experimentID)
                     }}
-                    goToNewExperiment={query =>
-                      history.push({
-                        pathname: routes.toNewChaosExperiment({
-                          accountId: accountId,
-                          orgIdentifier: orgIdentifier,
-                          projectIdentifier: projectIdentifier
-                        }),
-                        search: query
-                      })
+                    goToNewExperiment={() =>
+                      history.push(
+                        routes.toNewChaosExperiment({
+                          accountId,
+                          orgIdentifier,
+                          projectIdentifier,
+                          identifier: `chaos-experiment-${(+new Date()).toString(36).slice(-3)}`
+                        })
+                      )
                     }
                   />
                 </FormGroup>

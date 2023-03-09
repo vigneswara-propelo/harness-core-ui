@@ -27,7 +27,7 @@ export interface ChaosCustomMicroFrontendProps {
 export interface SelectPipelineExperimentProps {
   selectedExperimentID: string
   onSelect: (experimentID: string) => void
-  goToNewExperiment: (query?: string) => void
+  goToNewExperiment: () => void
 }
 
 export interface ExperimentPreviewProps {
