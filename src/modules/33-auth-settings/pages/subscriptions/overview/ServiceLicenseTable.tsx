@@ -45,6 +45,7 @@ export interface ServiceLicenseTableProps {
     serviceId: SelectOption | undefined
   ) => void
   servicesLoading: boolean
+  licenseType: string
 }
 
 export function ServiceLicenseTable({
@@ -53,7 +54,8 @@ export function ServiceLicenseTable({
   sortBy,
   setSortBy,
   updateFilters,
-  servicesLoading
+  servicesLoading,
+  licenseType
 }: ServiceLicenseTableProps): React.ReactElement {
   const { getString } = useStrings()
   const {
@@ -129,13 +131,17 @@ export function ServiceLicenseTable({
         Cell: LastDeployedCell,
         serverSortProps: getServerSortProps('common.lastDeployed')
       },
-      {
-        Header: NameHeader('common.licensesConsumed'),
-        accessor: 'licensesConsumed',
-        width: '15%',
-        Cell: LicenseConsumedCell,
-        serverSortProps: getServerSortProps('licensesConsumed')
-      }
+      ...(licenseType === 'SERVICES'
+        ? [
+            {
+              Header: NameHeader('common.licensesConsumed'),
+              accessor: 'licensesConsumed',
+              width: '15%',
+              Cell: LicenseConsumedCell,
+              serverSortProps: getServerSortProps('licensesConsumed')
+            }
+          ]
+        : [])
     ] as unknown as Column<LicenseUsageDTO>[]
   }, [currentOrder, currentSort])
   const { accountId } = useParams<AccountPathProps>()
@@ -189,14 +195,16 @@ export function ServiceLicenseTable({
           </div>
         </Layout.Horizontal>
         <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
-          <Layout.Vertical className={pageCss.badgesContainer}>
-            <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
-              <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
-              <String stringID={'common.subscriptions.usage.services'} />
-              <Text>&nbsp;{getString('common.updated')} -</Text>
-              <Text className={pageCss.badgeText}>{timeValue}</Text>
-            </div>
-          </Layout.Vertical>
+          {licenseType === 'SERVICES' ? (
+            <Layout.Vertical className={pageCss.badgesContainer}>
+              <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
+                <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
+                <String stringID={'common.subscriptions.usage.services'} />
+                <Text>&nbsp;{getString('common.updated')} -</Text>
+                <Text className={pageCss.badgeText}>{timeValue}</Text>
+              </div>
+            </Layout.Vertical>
+          ) : null}
           <Layout.Vertical>
             <OrgDropdown
               value={selectedOrg}
