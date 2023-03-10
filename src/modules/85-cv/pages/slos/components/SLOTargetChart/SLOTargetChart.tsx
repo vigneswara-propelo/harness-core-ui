@@ -15,7 +15,12 @@ import type { DataPoints } from 'services/cv'
 import { TimeSeriesAreaChart } from '@common/components'
 import NoChartDataImage from '@cv/assets/noChartData.svg'
 import { SLIMetricTypes } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
-import { getDefaultChartOptions, getMetricAndAreaChartCustomProps, getSLIGraphData } from './SLOTargetChart.utils'
+import {
+  getDefaultChartOptions,
+  getMetricAndAreaChartCustomProps,
+  getSLIGraphData,
+  getMetricTitleAndLoading
+} from './SLOTargetChart.utils'
 import type { SLOTargetChartProps, SLOTargetChartWithAPIGetSliGraphProps } from './SLOTargetChart.types'
 import { convertServiceLevelIndicatorToSLIFormData } from '../CVCreateSLOV2/CVCreateSLOV2.utils'
 import { SLIMetricChart } from './components/SLIMetricChart/SLIMetricChart'
@@ -205,14 +210,31 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
       )
     }
 
+    const {
+      goodRequestMetricLoading,
+      goodRequestMetricTitle,
+      validRequestMetricLoading,
+      validRequestMetricTitle,
+      metricPercentageGraphTitle
+    } = getMetricTitleAndLoading({
+      getString,
+      eventType,
+      metricGraphs,
+      goodRequestMetric,
+      validRequestMetric,
+      metricLoading,
+      activeGoodMetric,
+      activeValidMetric
+    })
+
     return (
       <Layout.Vertical spacing="small">
         {showSLIMetricChart && (
           <Layout.Vertical spacing="large" margin={{ bottom: 'xlarge' }}>
             {goodRequestMetric && (
               <SLIMetricChart
-                loading={metricLoading}
-                title={activeGoodMetric?.label || goodRequestMetric}
+                loading={goodRequestMetricLoading}
+                title={goodRequestMetricTitle}
                 error={metricError}
                 subTitle={getString('cv.slos.sliMetricChartSubHeader')}
                 metricName={goodRequestMetric}
@@ -228,8 +250,8 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
             {validRequestMetric && (
               <SLIMetricChart
                 showLegend={!isRatioBased}
-                loading={metricLoading}
-                title={activeValidMetric?.label || validRequestMetric}
+                loading={validRequestMetricLoading}
+                title={validRequestMetricTitle}
                 error={metricError}
                 subTitle={getString('cv.slos.sliMetricChartSubHeader')}
                 metricName={validRequestMetric}
@@ -250,7 +272,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
                 loading={metricLoading}
                 error={metricError}
                 metricName={'ratio'}
-                title={`( ${activeGoodMetric?.label} / ${activeValidMetric?.label} )`}
+                title={metricPercentageGraphTitle}
                 dataPoints={
                   metricPercentageGraph?.dataPoints?.map((graphData: DataPoints) => [
                     graphData.timeStamp,

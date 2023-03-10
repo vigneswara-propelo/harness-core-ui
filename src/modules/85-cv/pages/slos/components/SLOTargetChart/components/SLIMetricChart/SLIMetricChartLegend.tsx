@@ -33,14 +33,14 @@ export const SLIMetricChartLegend = ({
   const { min, max, avg } = legendData as ThresholdLegend
 
   const legendConfig: LegendConfig[] = [
-    { label: getString('cv.minimum'), value: `${showPercentage ? min.toFixed(1) : min} ${suffix}` },
+    { label: getString('cv.minimum'), value: `${min.toFixed(2)} ${suffix}` },
     {
       label: getString('ce.perspectives.nodeDetails.aggregation.maximum'),
-      value: `${showPercentage ? max.toFixed(1) : max} ${suffix}`
+      value: `${max.toFixed(2)} ${suffix}`
     },
     {
       label: getString('ce.perspectives.nodeDetails.aggregation.average'),
-      value: `${showPercentage ? avg.toFixed(1) : avg} ${suffix}`
+      value: `${avg.toFixed(2)} ${suffix}`
     }
   ]
 

@@ -177,11 +177,11 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
   const [graphContainerHeight, setGraphContainerHeight] = useState(sliFormContainerHeight)
   useEffect(() => {
     if (graphContainerHeight !== sliFormContainerHeight) {
-      const updatedHeight =
-        isRatioBasedMetric && showSLIMetricChart ? sliFormContainerHeight + 20 : sliFormContainerHeight
+      const bufferHeight = isRatioBasedMetric ? 40 : 20
+      const updatedHeight = isRatioBasedMetric ? sliFormContainerHeight + bufferHeight : sliFormContainerHeight
       setGraphContainerHeight(updatedHeight)
     }
-  }, [sliFormContainerHeight])
+  }, [sliFormContainerHeight, isRatioBasedMetric, showSLIMetricChart])
 
   return (
     <>

@@ -6,7 +6,9 @@
  */
 
 import type Highcharts from 'highcharts'
-import type { MetricOnboardingGraph, ServiceLevelIndicatorDTO, TimeGraphResponse } from 'services/cv'
+import type { SelectOption } from '@harness/uicore'
+import type { MetricGraph, MetricOnboardingGraph, ServiceLevelIndicatorDTO, TimeGraphResponse } from 'services/cv'
+import type { UseStringsReturn } from 'framework/strings'
 import type { MetricNames } from '../../common/SLI/SLI.types'
 
 export interface SLOTargetChartProps {
@@ -38,4 +40,23 @@ export interface SLOTargetChartWithAPIGetSliGraphProps extends SLOTargetChartPro
   }
   metricsNames?: MetricNames
   setMetricsNames?: React.Dispatch<React.SetStateAction<MetricNames>>
+}
+
+export interface GetMetricTitleAndLoadingProps {
+  getString: UseStringsReturn['getString']
+  eventType?: string
+  metricGraphs?: { [key: string]: MetricGraph }
+  goodRequestMetric?: string
+  validRequestMetric: string
+  metricLoading?: boolean
+  activeGoodMetric?: SelectOption
+  activeValidMetric?: SelectOption
+}
+
+export interface GetMetricTitleAndLoadingValues {
+  goodRequestMetricLoading?: boolean
+  goodRequestMetricTitle?: string
+  validRequestMetricLoading?: boolean
+  validRequestMetricTitle: string
+  metricPercentageGraphTitle?: string
 }

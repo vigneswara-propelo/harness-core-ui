@@ -11,7 +11,8 @@ import type Highcharts from 'highcharts'
 import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Point, ServiceLevelIndicatorSpec, TimeGraphResponse } from 'services/cv'
-import { SLIMetricTypes } from '../CVCreateSLOV2/CVCreateSLOV2.types'
+import { SLIEventTypes, SLIMetricTypes } from '../CVCreateSLOV2/CVCreateSLOV2.types'
+import type { GetMetricTitleAndLoadingProps, GetMetricTitleAndLoadingValues } from './SLOTargetChart.types'
 
 const MILLISECONDS_PER_HOUR = 1000 * 60 * 60 * 4
 
@@ -139,4 +140,41 @@ export const getMetricAndAreaChartCustomProps = (
 
   const validRequestGraphColor = isRatioBased ? { graphColor: Utils.getRealCSSColor(Color.MAGENTA_800) } : {}
   return { showSLIAreaChart, validRequestGraphColor }
+}
+
+export const getMetricTitleAndLoading = ({
+  getString,
+  eventType,
+  metricGraphs,
+  goodRequestMetric,
+  validRequestMetric,
+  metricLoading,
+  activeGoodMetric,
+  activeValidMetric
+}: GetMetricTitleAndLoadingProps): GetMetricTitleAndLoadingValues => {
+  const goodOrBadRequestMetricLabel =
+    eventType === SLIEventTypes.BAD
+      ? getString('cv.slos.slis.ratioMetricType.badRequestsMetrics')
+      : getString('cv.slos.slis.ratioMetricType.goodRequestsMetrics')
+
+  const goodMetricHasData = metricGraphs?.[goodRequestMetric || '']?.dataPoints
+  const validMetricHasData = metricGraphs?.[validRequestMetric || '']?.dataPoints
+  const goodRequestMetricLoading = !goodMetricHasData && metricLoading
+  const validRequestMetricLoading = !validMetricHasData && metricLoading
+  const goodRequestMetricTitle = `${goodOrBadRequestMetricLabel} ( ${activeGoodMetric?.label || goodRequestMetric} )`
+  const validRequestMetricTitle = `${getString('cv.slos.slis.ratioMetricType.validRequestsMetrics')} ( ${
+    activeValidMetric?.label || validRequestMetric
+  } )`
+  const metricPercentageGraphTitle = `${
+    eventType === SLIEventTypes.BAD
+      ? getString('cv.slos.slis.ratioMetricType.badRequestsByValidRequest')
+      : getString('cv.slos.slis.ratioMetricType.goodRequestsByValidRequest')
+  } ( ${activeGoodMetric?.label || goodRequestMetric} / ${activeValidMetric?.label || validRequestMetric} )`
+  return {
+    goodRequestMetricLoading,
+    goodRequestMetricTitle,
+    validRequestMetricLoading,
+    validRequestMetricTitle,
+    metricPercentageGraphTitle
+  }
 }

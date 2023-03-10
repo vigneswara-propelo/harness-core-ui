@@ -8860,8 +8860,10 @@ export interface StringsMap {
   'cv.slos.slis.SLIChartTitle': string
   'cv.slos.slis.metricOptions.ratioBased': string
   'cv.slos.slis.metricOptions.thresholdBased': string
+  'cv.slos.slis.ratioMetricType.badRequestsByValidRequest': string
   'cv.slos.slis.ratioMetricType.badRequestsMetrics': string
   'cv.slos.slis.ratioMetricType.eventType': string
+  'cv.slos.slis.ratioMetricType.goodRequestsByValidRequest': string
   'cv.slos.slis.ratioMetricType.goodRequestsMetrics': string
   'cv.slos.slis.ratioMetricType.selectMetric1': string
   'cv.slos.slis.ratioMetricType.selectMetric2': string
