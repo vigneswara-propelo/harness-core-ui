@@ -120,7 +120,12 @@ function _PipelineListPage(): React.ReactElement {
           branch
         })
     },
-    queryParamStringifyOptions: { arrayFormat: 'comma' }
+    queryParamStringifyOptions: { arrayFormat: 'comma' },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    }
   })
 
   const pipelineListRefetchRef = useRef(pipelinesQuery.refetch)
