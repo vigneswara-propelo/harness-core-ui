@@ -31,6 +31,7 @@ import type { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import type * as trackingConstants from '@common/constants/TrackingConstants'
 import type MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import type { StepStatus } from '@common/constants/StepStatusTypes'
+import type { MarkdownViewer } from '@common/components/MarkdownViewer/MarkdownViewer'
 import type useActiveEnvironment from './hooks/useActiveEnvironment'
 
 export interface FFCustomMicroFrontendProps {
@@ -56,6 +57,7 @@ export interface FFCustomMicroFrontendProps {
     EvaluationModal: typeof EvaluationModal
     FeatureWarningTooltip: typeof FeatureWarningTooltip
     GitSyncForm: typeof GitSyncForm
+    MarkdownViewer: typeof MarkdownViewer
     MonacoDiffEditor: typeof MonacoDiffEditor
     RbacOptionsMenuButton: typeof RbacOptionsMenuButton
     RBACTooltip: typeof RBACTooltip
