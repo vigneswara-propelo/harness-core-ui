@@ -1548,7 +1548,9 @@ export interface StringsMap {
   'delegates.GBRam': string
   'delegates.commandLineCreation.clickDoneAndCheckLater': string
   'delegates.commandLineCreation.closePreview': string
+  'delegates.commandLineCreation.combinedHelmChartCommandsHeading': string
   'delegates.commandLineCreation.commandsKubernetesHeading': string
+  'delegates.commandLineCreation.copyCommand': string
   'delegates.commandLineCreation.createYourOwnYaml': string
   'delegates.commandLineCreation.defaultValuesYaml': string
   'delegates.commandLineCreation.delegateFixed': string
