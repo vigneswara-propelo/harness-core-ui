@@ -17,7 +17,7 @@ const props = {
   formik: {
     setFieldValue: jest.fn(),
     values: {
-      userGroupExpression: 'Single',
+      userGroupExpression: 'Individual',
       name: 'spec.approvers.userGroups'
     },
     setErrors: jest.fn(),

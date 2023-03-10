@@ -19,7 +19,7 @@ import { isValueExpression } from '@common/utils/utils'
 import type { Extended } from './FormMultitypeUserGroupInput'
 
 export enum ExpressionTypes {
-  'Single' = 'Single',
+  'Individual' = 'Individual',
   'Combined' = 'Combined'
 }
 
@@ -31,7 +31,7 @@ const UserGroupExpressionInput: React.FC<Extended> = props => {
 
   useEffect(() => {
     if (value && Array.isArray(value)) {
-      formik.setFieldValue('userGroupExpression', ExpressionTypes.Single)
+      formik.setFieldValue('userGroupExpression', ExpressionTypes.Individual)
     } else if (isValueExpression(value)) {
       formik.setFieldValue('userGroupExpression', ExpressionTypes.Combined)
     }
@@ -44,7 +44,7 @@ const UserGroupExpressionInput: React.FC<Extended> = props => {
         onChange={(event: FormEvent<HTMLInputElement>) => {
           formik.setFieldValue('userGroupExpression', event?.currentTarget?.value)
           if (event.currentTarget.checked) {
-            if (event?.currentTarget?.value === ExpressionTypes.Single) {
+            if (event?.currentTarget?.value === ExpressionTypes.Individual) {
               formik.setFieldValue(name, [])
             } else {
               formik.setFieldValue(name, '')
@@ -53,11 +53,11 @@ const UserGroupExpressionInput: React.FC<Extended> = props => {
         }}
         selectedValue={formik?.values['userGroupExpression']}
       >
-        <Radio label={getString('common.single')} value={ExpressionTypes.Single} />
+        <Radio label={getString('common.individual')} value={ExpressionTypes.Individual} />
         <Radio label={getString('common.combined')} value={ExpressionTypes.Combined} />
       </RadioGroup>
 
-      {userGroupExpression === ExpressionTypes.Single ? (
+      {userGroupExpression === ExpressionTypes.Individual ? (
         <ExpressionsListInput name={name} value={value} readOnly={disabled} expressions={expressions} />
       ) : (
         <div style={{ marginBottom: 15 }}>

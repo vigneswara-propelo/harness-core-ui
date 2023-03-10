@@ -1945,12 +1945,12 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
                   <input
                     name="userGroupExpression"
                     type="radio"
-                    value="Single"
+                    value="Individual"
                   />
                   <span
                     class="bp3-control-indicator"
                   />
-                  common.single
+                  common.individual
                 </label>
                 <label
                   class="bp3-control bp3-radio bp3-inline"
@@ -2563,12 +2563,12 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
                   <input
                     name="userGroupExpression"
                     type="radio"
-                    value="Single"
+                    value="Individual"
                   />
                   <span
                     class="bp3-control-indicator"
                   />
-                  common.single
+                  common.individual
                 </label>
                 <label
                   class="bp3-control bp3-radio bp3-inline"

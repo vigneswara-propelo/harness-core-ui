@@ -520,6 +520,7 @@ export interface StringsMap {
   'common.importEntityFromGit': string
   'common.importFromGit': string
   'common.in': string
+  'common.individual': string
   'common.infrastructureInputs': string
   'common.infrastructurePrefix': string
   'common.infrastructures': string
@@ -973,7 +974,6 @@ export interface StringsMap {
   'common.showMore': string
   'common.showSelected': string
   'common.sidecarArtifactsText': string
-  'common.single': string
   'common.singularLabels.accountSetting': string
   'common.singularLabels.authenticationSetting': string
   'common.singularLabels.autoStoppingRule': string

@@ -10,12 +10,12 @@ exports[`UserGroup Expression Input tests should render without any issue 1`] = 
         checked=""
         name="userGroupExpression"
         type="radio"
-        value="Single"
+        value="Individual"
       />
       <span
         class="bp3-control-indicator"
       />
-      common.single
+      common.individual
     </label>
     <label
       class="bp3-control bp3-radio bp3-inline"
