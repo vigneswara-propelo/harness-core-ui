@@ -1133,6 +1133,7 @@ noBucketsFound: No buckets found
 noFilePathsFound: No file paths found
 noClustersFound: No clusters found
 noImagesFound: No images found
+noImages: 'No Images'
 noCloudSourceRepositoriesFound: No cloud source repositories found
 gitRepo: Git Repo
 buildRepo: Build Repo

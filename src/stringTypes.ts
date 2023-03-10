@@ -4305,6 +4305,7 @@ export interface StringsMap {
   'pipeline.noClustersFound': string
   'pipeline.noEnvironmentGroupsFound': string
   'pipeline.noFilePathsFound': string
+  'pipeline.noImages': string
   'pipeline.noImagesFound': string
   'pipeline.noPipelinesLabel': string
   'pipeline.noPipelinesText': string
