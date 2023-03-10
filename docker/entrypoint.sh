@@ -34,6 +34,7 @@ sed -i "s|<\!-- newNavContentfulAccessToken -->|<script>window.newNavContentfulA
 sed -i "s|<\!-- newNavContetfulSpace -->|<script>window.newNavContetfulSpace = '$NEW_NAV_CONTENTFUL_SPACE'</script>|" index.html
 sed -i "s|<\!-- newNavContentfulEnvironment -->|<script>window.newNavContentfulEnvironment = '$NEW_NAV_CONTENTFUL_ENVIRONMENT'</script>|" index.html
 sed -i "s|<\!-- harnessNameSpacePlaceHolder -->|<script>window.harnessNameSpace = '$HARNESS_NAME_SPACE'</script>|" index.html
+sed -i "s|<\!-- harnessClusterURLPlaceHolder -->|<script>window.harnessClusterURL = '$HARNESS_CLUSTER_URL'</script>|" index.html
 sed -i "s|<\!-- stripeApiKey -->|<script>window.stripeApiKey = '$STRIPE_API_KEY'</script>|" index.html
 
 sed -i "s|USE_LEGACY_FEATURE_FLAGS_PLACEHOLDER|$USE_LEGACY_FEATURE_FLAGS|" index.html
@@ -42,12 +43,22 @@ sed -i "s|HARNESS_FF_SDK_EVENT_URL_PLACEHOLDER|$HARNESS_FF_SDK_EVENT_URL|" index
 sed -i "s|HARNESS_FF_SDK_ENABLE_STREAM_PLACEHOLDER|$HARNESS_FF_SDK_ENABLE_STREAM|" index.html
 sed -i "s|HARNESS_FF_SDK_KEY_PLACEHOLDER|$HARNESS_FF_SDK_KEY|" index.html
 
+HARNESS_NAME_SPACE_URL=""
+# Check if the $HARNESS_NAME_SPACE is not empty or undefined
+if [ ! -z "$HARNESS_NAME_SPACE" ]
+then
+  HARNESS_NAME_SPACE_URL="/$HARNESS_NAME_SPACE"
+fi
+
 if [ "$HARNESS_ENABLE_CDN_PLACEHOLDER" = "true" ]
 then
   sed -i "s|\"static\/main\.\(.*\)\.js\"|\"//static.harness.io/ng-static/main.\1.js\"|" index.html
   sed -i "s|\"static\/styles\.\(.*\)\.css\"|\"//static.harness.io/ng-static/styles.\1.css\"|" index.html
+elif  [ "$HARNESS_BROWSER_ROUTER_ENABLED" = "true" ]
+then
+  sed -i "s|\"static\/main\.\(.*\)\.js\"|\"$HARNESS_NAME_SPACE_URL/ng/static/main.\1.js\"|" index.html
+  sed -i "s|\"static\/styles\.\(.*\)\.css\"|\"$HARNESS_NAME_SPACE_URL/ng/static/styles.\1.css\"|" index.html
 fi
-
 if [ "$DEPLOYMENT_TYPE" != "ON_PREM" ]
 then
   sed -i "s|<\!-- externalFilesForSaaS -->|<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600\&display=swap' rel='stylesheet' />\n<link href='https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700\&display=swap' rel='stylesheet' />\n<link href='https://fonts.googleapis.com/css2?family=Reenie+Beanie\&display=swap' rel='stylesheet' />\n<link rel='icon' type='image/x-icon' href='https://static.harness.io/ng-static/images/favicon.ico' />\n<link rel='icon' type='image/png' href='https://static.harness.io/ng-static/images/favicon.png' />\n<link rel='apple-touch-icon' href='https://static.harness.io/ng-static/images/favicon.png' />|" index.html
