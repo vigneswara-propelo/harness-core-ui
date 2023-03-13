@@ -422,7 +422,10 @@ function FormContent({
             variableName="spec.jobName"
             showRequiredField={false}
             showDefaultField={false}
-            onChange={value => formik.setFieldValue('spec.jobName', value)}
+            onChange={value => {
+              formik.setFieldValue('spec.jobName', value)
+              setShowChildJobField(false)
+            }}
             isReadonly={readonly}
           />
         )}
