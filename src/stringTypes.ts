@@ -1859,6 +1859,10 @@ export interface StringsMap {
   'secrets.winRmAuthFormFields.domain': string
   'secrets.winRmAuthFormFields.labelWinRmPort': string
   'secrets.winRmAuthFormFields.ntlm': string
+  'secrets.winRmAuthFormFields.optionalValue': string
+  'secrets.winRmAuthFormFields.parameterDuplicatedError': string
+  'secrets.winRmAuthFormFields.parameterError': string
+  'secrets.winRmAuthFormFields.parameterName': string
   'secrets.winRmAuthFormFields.skipCertCheck': string
   'secrets.winRmAuthFormFields.useNoProfile': string
   'filestore.cantDeleteFile': string
