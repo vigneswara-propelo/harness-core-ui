@@ -60,7 +60,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import StudioGitPopover from '../StudioGitPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
-import { PipelineCachedCopy, PipelineCachedCopyHandle } from './PipelineCachedCopy/PipelineCachedCopy'
+import { EntityCachedCopy, EntityCachedCopyHandle } from './EntityCachedCopy/EntityCachedCopy'
 import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
 import { ValidationBadge } from '../AsyncValidation/ValidationBadge'
 import css from './PipelineCanvas.module.scss'
@@ -127,7 +127,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
 
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
-  const pipelineCachedCopyRef = React.useRef<PipelineCachedCopyHandle | null>(null)
+  const pipelineCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
   const isCommunity = useGetCommunity()
   const { data: reconcileErrorData, refetch: reconcilePipeline } = useValidateTemplateInputsQuery(
     {
@@ -398,7 +398,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                   }}
                 />
                 {!isEmpty(pipelineCacheResponse) && !remoteFetchError && (
-                  <PipelineCachedCopy
+                  <EntityCachedCopy
                     ref={pipelineCachedCopyRef}
                     reloadContent={getString('common.pipeline')}
                     cacheResponse={pipelineCacheResponse as CacheResponseMetadata}

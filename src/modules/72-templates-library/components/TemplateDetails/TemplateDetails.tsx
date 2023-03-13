@@ -67,7 +67,7 @@ import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
-import { PipelineCachedCopy } from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
+import { EntityCachedCopy } from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
@@ -415,7 +415,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                         btnClassName={css.gitBtn}
                         customIcon={
                           !isEmpty((selectedTemplate as TemplateResponse)?.cacheResponseMetadata) ? (
-                            <PipelineCachedCopy
+                            <EntityCachedCopy
                               reloadContent={getString('common.template.label')}
                               cacheResponse={
                                 (selectedTemplate as TemplateResponse)?.cacheResponseMetadata as CacheResponseMetadata

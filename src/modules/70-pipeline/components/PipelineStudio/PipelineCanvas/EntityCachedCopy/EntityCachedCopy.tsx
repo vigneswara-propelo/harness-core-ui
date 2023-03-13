@@ -15,9 +15,9 @@ import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 import type { CacheResponseMetadata, Failure } from 'services/pipeline-ng'
-import css from './PipelineCachedCopy.module.scss'
+import css from './EntityCachedCopy.module.scss'
 
-export interface PipelineCachedCopyProps {
+export interface EntityCachedCopyProps {
   reloadContent: string
   cacheResponse: CacheResponseMetadata
   reloadFromCache: (loadFromCache?: boolean) => void
@@ -26,7 +26,7 @@ export interface PipelineCachedCopyProps {
   className?: string
 }
 
-export interface PipelineCachedCopyHandle {
+export interface EntityCachedCopyHandle {
   showConfirmationModal(): void
 }
 
@@ -36,9 +36,9 @@ const cacheStateToIconMap: Record<CacheResponseMetadata['cacheState'], IconName>
   UNKNOWN: 'danger-icon'
 }
 
-function PipelineCachedCopyInner(
-  props: PipelineCachedCopyProps,
-  ref: React.ForwardedRef<PipelineCachedCopyHandle>
+function EntityCachedCopyInner(
+  props: EntityCachedCopyProps,
+  ref: React.ForwardedRef<EntityCachedCopyHandle>
 ): React.ReactElement {
   const { reloadContent, cacheResponse, fetchError, reloadFromCache, readonly, className } = props
   const { getString } = useStrings()
@@ -52,7 +52,7 @@ function PipelineCachedCopyInner(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchError])
 
-  function reloadPipeline(): void {
+  function reloadEntity(): void {
     reloadFromCache()
   }
 
@@ -69,7 +69,7 @@ function PipelineCachedCopyInner(
 
   function handleReconcileConfirmClick(confirm: boolean): void {
     if (confirm) {
-      reloadPipeline()
+      reloadEntity()
     }
 
     hideModal()
@@ -77,7 +77,7 @@ function PipelineCachedCopyInner(
 
   function handleReconcileRetryClick(confirm: boolean): void {
     if (confirm) {
-      reloadPipeline()
+      reloadEntity()
     }
 
     hideErrorModal()
@@ -114,4 +114,4 @@ function PipelineCachedCopyInner(
   )
 }
 
-export const PipelineCachedCopy = React.forwardRef(PipelineCachedCopyInner)
+export const EntityCachedCopy = React.forwardRef(EntityCachedCopyInner)

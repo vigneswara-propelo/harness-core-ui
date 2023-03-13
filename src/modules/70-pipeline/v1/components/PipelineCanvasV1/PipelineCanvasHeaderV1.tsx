@@ -46,9 +46,9 @@ import { useQueryParams } from '@common/hooks'
 import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopover'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import {
-  PipelineCachedCopy,
-  PipelineCachedCopyHandle
-} from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
+  EntityCachedCopy,
+  EntityCachedCopyHandle
+} from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import {
   SavePipelineHandleV1,
   SavePipelinePopoverWithRefV1
@@ -97,7 +97,7 @@ export function PipelineCanvasHeaderV1(props: PipelineCanvasHeaderProps): React.
   const { branch, repoName, connectorRef } = useQueryParams<GitQueryParams & RunPipelineQueryParams>()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = params
   const savePipelineHandleRef = React.useRef<SavePipelineHandleV1 | null>(null)
-  const pipelineCachedCopyRef = React.useRef<PipelineCachedCopyHandle | null>(null)
+  const pipelineCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
 
   const { open: openDiffModal } = useDiffDialog({
     originalYaml: stringify(originalPipeline),
@@ -251,7 +251,7 @@ export function PipelineCanvasHeaderV1(props: PipelineCanvasHeaderProps): React.
                   }}
                 />
                 {!isEmpty(pipelineCacheResponse) && !remoteFetchError && (
-                  <PipelineCachedCopy
+                  <EntityCachedCopy
                     ref={pipelineCachedCopyRef}
                     reloadContent={getString('common.pipeline')}
                     cacheResponse={pipelineCacheResponse as CacheResponseMetadata}

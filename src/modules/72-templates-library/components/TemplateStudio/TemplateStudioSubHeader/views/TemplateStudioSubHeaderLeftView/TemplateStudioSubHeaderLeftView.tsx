@@ -57,9 +57,9 @@ import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopov
 import { VersionsDropDown } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
 import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
 import {
-  PipelineCachedCopy,
-  PipelineCachedCopyHandle
-} from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
+  EntityCachedCopy,
+  EntityCachedCopyHandle
+} from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import css from './TemplateStudioSubHeaderLeftView.module.scss'
 
@@ -116,7 +116,7 @@ export function TemplateStudioSubHeaderLeftView(
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
-  const pipelineCachedCopyRef = React.useRef<PipelineCachedCopyHandle | null>(null)
+  const pipelineCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
 
   const { mutate: updateStableTemplate, loading: updateStableTemplateLoading } = useUpdateStableTemplate({
     templateIdentifier: template.identifier,
@@ -371,14 +371,14 @@ export function TemplateStudioSubHeaderLeftView(
             <span className={css.separator}></span>
             <Layout.Horizontal flex={{ alignItems: 'center' }}>
               <GitPopoverV2
-                storeMetadata={storeMetadata!}
+                storeMetadata={storeMetadata}
                 gitDetails={gitDetails}
                 branchChangeDisabled={templateIdentifier === DefaultNewTemplateId}
                 onGitBranchChange={onGitBranchChange!}
                 btnClassName={css.gitBtn}
                 customIcon={
                   !isEmpty(cacheResponse) ? (
-                    <PipelineCachedCopy
+                    <EntityCachedCopy
                       ref={pipelineCachedCopyRef}
                       reloadContent={getString('common.template.label')}
                       cacheResponse={cacheResponse}

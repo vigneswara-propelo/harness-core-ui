@@ -13,7 +13,7 @@ import {
   PipelineContextInterface
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { CacheResponseMetadata } from 'services/pipeline-ng'
-import { PipelineCachedCopy, PipelineCachedCopyHandle } from '../PipelineCachedCopy'
+import { EntityCachedCopy, EntityCachedCopyHandle } from '../EntityCachedCopy'
 import { getDummyPipelineCanvasContextValue } from '../../__tests__/PipelineCanvasTestHelper'
 
 jest.mock('services/pipeline-ng', () => ({
@@ -46,7 +46,7 @@ describe('Test Pipeline gitx cache Copy', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={cacheResponseContextValue}>
-          <PipelineCachedCopy {...commonProps} />
+          <EntityCachedCopy {...commonProps} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -57,7 +57,7 @@ describe('Test Pipeline gitx cache Copy', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={cacheResponseContextValue}>
-          <PipelineCachedCopy {...commonProps} />
+          <EntityCachedCopy {...commonProps} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -70,7 +70,7 @@ describe('Test Pipeline gitx cache Copy', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={cacheResponseContextValue}>
-          <PipelineCachedCopy {...commonProps} />
+          <EntityCachedCopy {...commonProps} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -82,12 +82,12 @@ describe('Test Pipeline gitx cache Copy', () => {
 
   test('reload the data from cache', async () => {
     const reloadFromCache = jest.fn()
-    const ref = React.createRef<PipelineCachedCopyHandle>()
+    const ref = React.createRef<EntityCachedCopyHandle>()
 
     render(
       <TestWrapper>
         <PipelineContext.Provider value={cacheResponseContextValue}>
-          <PipelineCachedCopy
+          <EntityCachedCopy
             ref={ref}
             reloadContent="pipeline"
             reloadFromCache={reloadFromCache}
