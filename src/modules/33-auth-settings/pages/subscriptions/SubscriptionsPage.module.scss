@@ -167,8 +167,59 @@
   margin-bottom: 15px !important;
 }
 
-:global {
-  .bp3-popover-content {
-    width: 235px;
+.peakClass {
+  border: 1px dashed var(--red-600);
+  width: 25px;
+}
+.subClass {
+  border: 1px solid var(--primary-7);
+  width: 25px;
+}
+.overUseClass {
+  width: 12px;
+  height: 12px;
+  left: 10px;
+  top: 29.5px;
+
+  /* Status/Green/Green 900 */
+
+  background: var(--green-900);
+  border-radius: 3px;
+}
+.summaryCardsContainer {
+  margin-left: 20px;
+  display: flex;
+  .summaryCard {
+    min-width: 142px;
+    min-height: 76px;
+    background-color: var(--primary-1) !important;
+    margin-right: var(--spacing-4) !important;
+    border-radius: 4px;
+    padding-left: var(--spacing-4) !important;
+    padding-right: var(--spacing-4) !important;
+
+    .cardTitle {
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 16px;
+      letter-spacing: 0.2px;
+      color: var(--gray-700);
+      margin-top: 12px;
+    }
+    .frequencyContainer {
+      align-items: center;
+      margin-right: var(--spacing-medium);
+      display: flex;
+      justify-content: space-between;
+      .frequencyCount {
+        margin-top: 7px;
+        font-weight: 600;
+        font-size: 24px;
+        line-height: 32px;
+        display: flex;
+        align-items: center;
+        color: var(--grey-1000);
+      }
+    }
   }
 }

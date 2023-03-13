@@ -18,6 +18,7 @@ export interface StringsMap {
   'common.My': string
   'common.OFF': string
   'common.ON': string
+  'common.OverUse': string
   'common.PermissibleActions': string
   'common.Stepper.StepError': string
   'common.accViewer': string
@@ -165,6 +166,7 @@ export interface StringsMap {
   'common.codeErrorsSettings': string
   'common.collapse': string
   'common.combined': string
+  'common.combinedExpression': string
   'common.comingSoon': string
   'common.comingSoon2': string
   'common.commentModal.addCommentPlaceholder': string
@@ -522,6 +524,7 @@ export interface StringsMap {
   'common.importFromGit': string
   'common.in': string
   'common.individual': string
+  'common.individualExpression': string
   'common.infrastructureInputs': string
   'common.infrastructurePrefix': string
   'common.infrastructures': string
@@ -633,6 +636,7 @@ export interface StringsMap {
   'common.moduleTitles.cf': string
   'common.monitoredServices': string
   'common.monthly': string
+  'common.monthlyPeak': string
   'common.moreInfo': string
   'common.moreOptions': string
   'common.moreRefineSearch': string
@@ -979,6 +983,7 @@ export interface StringsMap {
   'common.showMore': string
   'common.showSelected': string
   'common.sidecarArtifactsText': string
+  'common.single': string
   'common.singularLabels.accountSetting': string
   'common.singularLabels.authenticationSetting': string
   'common.singularLabels.autoStoppingRule': string
@@ -1082,6 +1087,7 @@ export interface StringsMap {
   'common.subscriptions.usage.header': string
   'common.subscriptions.usage.last30days': string
   'common.subscriptions.usage.monthlyUsers': string
+  'common.subscriptions.usage.serviceInstances': string
   'common.subscriptions.usage.serviceLicenses': string
   'common.subscriptions.usage.services': string
   'common.subscriptions.usage.srvcInst': string
@@ -1240,6 +1246,7 @@ export interface StringsMap {
   'common.yamlDiffView.originalYamlLabel': string
   'common.yamlDiffView.refreshedYamlLabel': string
   'common.yearly': string
+  'common.yearlyPeak': string
   'common.zipCode': string
   'rbac.UserGroupRoleAssignmentForm.assignmentValidation': string
   'rbac.accessControlTitle.resourceGroups': string
@@ -5806,7 +5813,6 @@ export interface StringsMap {
   'cd.serviceDashboard.runTime': string
   'cd.serviceDashboard.runningServiceInstancesLabel': string
   'cd.serviceDashboard.seeMore': string
-  'cd.serviceDashboard.serviceInstances': string
   'cd.serviceDashboard.serviceInstancesInLast': string
   'cd.serviceDashboard.servicesInLast': string
   'cd.serviceDashboard.source': string

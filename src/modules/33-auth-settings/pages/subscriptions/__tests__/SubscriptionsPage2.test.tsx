@@ -32,6 +32,8 @@ const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType a
 const useDownloadActiveServiceCSVReportMock = useDownloadActiveServiceCSVReport as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
+
+jest.mock('highcharts-react-official', () => () => <div />)
 const orgListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
     orgMockData

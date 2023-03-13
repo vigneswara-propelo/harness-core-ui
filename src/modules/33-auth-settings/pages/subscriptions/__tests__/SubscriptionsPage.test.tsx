@@ -40,6 +40,7 @@ const orgListPromiseMock = jest.fn().mockImplementation(() => {
     orgMockData
   })
 })
+jest.mock('highcharts-react-official', () => () => <div />)
 const projListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
     projMockData
@@ -143,6 +144,7 @@ describe('Subscriptions Page', () => {
     expect(getByText('common.licensesConsumed')).toBeTruthy()
     userEvent.click(getByText('common.licensesConsumed'))
   })
+
   test('test for fetching active services by clicking the fetch button using filters', async () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {

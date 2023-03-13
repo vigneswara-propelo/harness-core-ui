@@ -22,6 +22,7 @@ import type { CDModuleLicenseDTO } from 'services/portal'
 import SubscriptionDetailsCard from './SubscriptionDetailsCard'
 import SubscriptionUsageCard from './SubscriptionUsageCard'
 import { ServiceLicenseTable } from './ServiceLicenseTable'
+import { ServiceLicenseGraphs } from './ServiceLicenseGraphs'
 import type { TrialInformation } from '../SubscriptionsPage'
 interface SubscriptionOverviewProps {
   accountName?: string
@@ -113,6 +114,13 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
           servicesLoading={loading}
           licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType || ''}
         />
+      ) : null}
+      {module === 'CD' ? (
+        <ServiceLicenseGraphs
+          accountId={accountId}
+          licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType}
+          licenseData={licenseData}
+        ></ServiceLicenseGraphs>
       ) : null}
     </Layout.Vertical>
   )
