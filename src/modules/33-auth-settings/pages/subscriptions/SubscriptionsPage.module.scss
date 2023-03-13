@@ -10,6 +10,17 @@
     padding-right: var(--spacing-small);
   }
 }
+
+.exportButton {
+  background-color: var(--primary-7);
+  color: white;
+  font-size: var(--font-size-small);
+  padding: 4px 20px !important;
+  min-height: 24px !important;
+  height: 24px !important;
+  border: solid 1px !important;
+  border-radius: 4px;
+}
 .badgesContainer {
   height: 56px;
   display: flex;
@@ -154,4 +165,10 @@
 .fetchButton {
   cursor: pointer;
   margin-bottom: 15px !important;
+}
+
+:global {
+  .bp3-popover-content {
+    width: 235px;
+  }
 }

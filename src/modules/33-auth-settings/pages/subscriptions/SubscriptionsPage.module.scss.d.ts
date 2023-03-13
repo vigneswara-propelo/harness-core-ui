@@ -20,6 +20,7 @@ declare const styles: {
   readonly cv: string
   readonly expired: string
   readonly expiryCountdown: string
+  readonly exportButton: string
   readonly failed24HrsExecutionsBadge: string
   readonly fetchButton: string
   readonly moduleIcons: string

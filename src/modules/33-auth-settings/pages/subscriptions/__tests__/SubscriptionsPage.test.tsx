@@ -185,7 +185,7 @@ describe('Subscriptions Page', () => {
     )
     expect(getByText('common.licensesConsumed')).toBeTruthy()
     userEvent.click(getByText('common.licensesConsumed'))
-    const fetchButton = getByText('Fetch')
+    const fetchButton = getByText('Update')
     expect(fetchButton).toBeDefined()
     userEvent.click(fetchButton)
   })

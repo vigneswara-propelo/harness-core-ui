@@ -459,6 +459,7 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
             <div>
                
               <a
+                class="exportButton"
                 download="serviceLicensesData.csv"
                 href="data:text/csv;charset=utf-8,"
               >
@@ -467,7 +468,7 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
             </div>
           </div>
           <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-end"
             style="width: 100%;"
           >
             <div
@@ -488,14 +489,23 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
                 <p
                   class="StyledProps--font StyledProps--main"
                 >
-                   
-                  common.updated
+                  (
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  common.lastUpdatedAt
                    -
                 </p>
                 <p
                   class="StyledProps--font StyledProps--main badgeText"
                 >
-                  21-12-2016 11:36:07
+                  Invalid date
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  )
                 </p>
               </div>
             </div>
@@ -552,6 +562,7 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
                 </div>
               </div>
             </div>
+            <div />
             <div
               class="bp3-popover-wrapper DropDown--main DropDown--disabled orgDropdown"
             >
@@ -651,10 +662,9 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
               </div>
             </div>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main fetchButton StyledProps--font-variation-lead StyledProps--color StyledProps--color-primary7"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main fetchButton StyledProps--font-variation-lead StyledProps--color StyledProps--color-primary7"
             >
-              Fetch
+              Update
             </p>
           </div>
           <div
