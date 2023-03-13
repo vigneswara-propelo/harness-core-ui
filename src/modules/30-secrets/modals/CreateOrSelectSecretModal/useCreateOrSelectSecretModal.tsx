@@ -166,7 +166,7 @@ const useCreateOrSelectSecretModal = (
         />
       </Dialog>
     )
-  }, inputDependencies)
+  }, [...inputDependencies, selectedSecret])
 
   return {
     openCreateOrSelectSecretModal: () => {
