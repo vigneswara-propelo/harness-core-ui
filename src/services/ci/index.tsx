@@ -2109,6 +2109,7 @@ export interface Input {
   name?: string
   required?: boolean
   secret?: boolean
+  type?: 'String' | 'Textarea'
 }
 
 export interface InputSetError {

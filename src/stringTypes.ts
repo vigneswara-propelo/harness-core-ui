@@ -309,6 +309,7 @@ export interface StringsMap {
   'common.errorHandler.issueCouldBe': string
   'common.errorHandler.possibleReasons': string
   'common.errorHandler.tryTheseSuggestions': string
+  'common.errorOccured': string
   'common.execute': string
   'common.executedBy': string
   'common.executionTab.stepsCount': string
@@ -656,6 +657,7 @@ export interface StringsMap {
   'common.noDeployments': string
   'common.noInfo': string
   'common.noNotifications': string
+  'common.noPluginInputsRequired': string
   'common.noRecentProjects': string
   'common.noRefData': string
   'common.noSearchResultsFound': string
@@ -711,6 +713,7 @@ export interface StringsMap {
   'common.plans.subscription': string
   'common.plans.title': string
   'common.platformServiceVersions': string
+  'common.plugins': string
   'common.plusAddName': string
   'common.plusNewName': string
   'common.plusNumber': string
@@ -818,6 +821,7 @@ export interface StringsMap {
   'common.python': string
   'common.readOnly': string
   'common.readonlyPermissions': string
+  'common.readonlyPermissionsForFile': string
   'common.recents': string
   'common.recommended': string
   'common.referenceButtonText': string
@@ -928,6 +932,7 @@ export interface StringsMap {
   'common.secrets': string
   'common.seeAdvancedOptions': string
   'common.seeDetails': string
+  'common.seeDocumentation': string
   'common.seeLess': string
   'common.seeMore': string
   'common.seeWhatChanged': string
@@ -1087,6 +1092,8 @@ export interface StringsMap {
   'common.subtotal': string
   'common.successfullCreate': string
   'common.successfullUpdate': string
+  'common.successfullyAdded': string
+  'common.successfullyUpdated': string
   'common.suggestionsLabel': string
   'common.support.subtitle': string
   'common.support.title': string
@@ -7759,7 +7766,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.carousel.labels.harnessCIFeatures': string
   'ci.getStartedWithCI.carousel.labels.integration': string
   'ci.getStartedWithCI.carousel.labels.useCaching': string
-  'ci.getStartedWithCI.carousel.labels.usePlugins': string
   'ci.getStartedWithCI.chooseDiffInfra': string
   'ci.getStartedWithCI.chooseStarterConfig': string
   'ci.getStartedWithCI.cloneGitRepo': string
