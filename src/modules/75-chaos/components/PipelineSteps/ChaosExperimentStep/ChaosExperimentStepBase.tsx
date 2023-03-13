@@ -106,7 +106,7 @@ export const ChaosExperimentStepBase = (
 
         return (
           <FormikForm className={css.chaosExperimentStep}>
-            <Layout.Vertical spacing="medium" width="75%">
+            <Layout.Vertical spacing="small" width="75%">
               {stepViewType !== StepViewType.Template && (
                 <NameIdDescription
                   className={css.nameIdDescriptionField}
@@ -141,6 +141,16 @@ export const ChaosExperimentStepBase = (
                         })
                       )
                     }
+                    goToChaosExperiment={(identifier: string) =>
+                      history.push(
+                        routes.toChaosExperiment({
+                          accountId,
+                          orgIdentifier,
+                          projectIdentifier,
+                          identifier
+                        })
+                      )
+                    }
                   />
                 </FormGroup>
                 <FormInput.Text
@@ -153,7 +163,7 @@ export const ChaosExperimentStepBase = (
                     formikProps.setFieldValue('spec.expectedResilienceScore', parseInt(e.target.value))
                   }
                 />
-                <Accordion activeId="step-1">
+                <Accordion panelClassName={css.optionalConfigPanel} activeId="step-1">
                   <Accordion.Panel
                     id="optional-config"
                     summary={getString('common.optionalConfig')}

@@ -28,6 +28,7 @@ export interface SelectPipelineExperimentProps {
   selectedExperimentID: string
   onSelect: (experimentID: string) => void
   goToNewExperiment: () => void
+  goToChaosExperiment: (indentifier: string) => void
 }
 
 export interface ExperimentPreviewProps {
