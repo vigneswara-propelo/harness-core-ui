@@ -131,6 +131,11 @@
   margin-bottom: var(--spacing-4);
 }
 
+.flex {
+  display: flex;
+  align-items: center;
+}
+
 .fieldsGroup {
   display: flex;
 

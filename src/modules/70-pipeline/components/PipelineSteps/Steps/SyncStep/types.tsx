@@ -8,7 +8,7 @@
 import type { AllowedTypes, MultiSelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import type { GetDataError } from 'restful-react'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { Failure } from 'services/cd-ng'
 import type { AllFailureStrategyConfig } from '../../AdvancedSteps/FailureStrategyPanel/utils'
 
@@ -44,30 +44,30 @@ export interface applicationListItemInterface {
 }
 
 export interface retryStrategyInterface {
-  limit?: string
+  limit?: string | number
   baseBackoffDuration?: string
-  increaseBackoffByFactor?: string
+  increaseBackoffByFactor?: string | number
   maxBackoffDuration?: string
 }
 
 export interface syncOptionsInterface {
-  skipSchemaValidation: boolean
-  autoCreateNamespace: boolean
-  pruneResourcesAtLast: boolean
-  applyOutOfSyncOnly: boolean
-  replaceResources: boolean
-  prunePropagationPolicy: POLICY_OPTIONS
+  skipSchemaValidation?: boolean | string
+  autoCreateNamespace?: boolean | string
+  pruneResourcesAtLast?: boolean | string
+  applyOutOfSyncOnly?: boolean | string
+  replaceResources?: boolean | string
+  prunePropagationPolicy?: POLICY_OPTIONS
 }
 
 export interface SyncStepSpec {
-  prune: boolean
-  dryRun: boolean
-  applyOnly: boolean
-  forceApply: boolean
-  applicationsList: applicationListItemInterface[] | string | MultiSelectOption[]
-  retryStrategy: retryStrategyInterface
-  retry?: boolean
-  syncOptions: syncOptionsInterface
+  prune?: boolean | string
+  dryRun?: boolean | string
+  applyOnly?: boolean | string
+  forceApply?: boolean | string
+  applicationsList?: applicationListItemInterface[] | string | MultiSelectOption[]
+  retryStrategy?: retryStrategyInterface
+  retry?: boolean | string
+  syncOptions?: syncOptionsInterface
 }
 
 export interface SyncStepData {
@@ -76,7 +76,7 @@ export interface SyncStepData {
   type: string
   timeout?: string
   failureStrategies?: AllFailureStrategyConfig[]
-  spec: SyncStepSpec
+  spec?: SyncStepSpec
 }
 
 export interface SyncStepFormContentInterface {
@@ -123,13 +123,23 @@ export interface ApplicationFilters {
 }
 
 export interface ApplicationFilterActions {
-  goToPage(page: number): void
   search(term: string): void
-  clearFilters(): void
-  reset(): void
-  healthStatus(status: HealthStatus[]): void
-  syncStatus(status: SyncStatus[]): void
-  agents(id: string[]): void
-  namespaces(namespaces: string[]): void
-  repo(repo: string[]): void
+}
+export interface SyncStepDeploymentModeProps {
+  stepViewType: StepViewType
+  initialValues: SyncStepData
+  allowableTypes: AllowedTypes
+  onUpdate?: (data: SyncStepData) => void
+  inputSetData?: InputSetData<SyncStepData>
+  formik?: any
+}
+
+export interface SyncStepStepModeProps {
+  stepViewType: StepViewType
+  initialValues: SyncStepData
+  allowableTypes: AllowedTypes
+  onUpdate?: (data: SyncStepData) => void
+  onChange?: (data: SyncStepData) => void
+  isNewStep?: boolean
+  readonly?: boolean
 }

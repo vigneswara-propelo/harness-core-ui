@@ -176,6 +176,10 @@ syncStep:
   limit: Limit
   maxBackoffDuration: Max Duration
   increaseBackoffByFactor: Factor
+  validation:
+    limit: Limit is required
+    maxBackoffDuration: Max Duration is required
+    increaseBackoffByFactor: Factor is required
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector

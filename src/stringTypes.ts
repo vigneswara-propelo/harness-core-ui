@@ -4715,6 +4715,9 @@ export interface StringsMap {
   'pipeline.syncStep.replaceResources': string
   'pipeline.syncStep.skipSchemaValidation': string
   'pipeline.syncStep.syncOptionsLabel': string
+  'pipeline.syncStep.validation.increaseBackoffByFactor': string
+  'pipeline.syncStep.validation.limit': string
+  'pipeline.syncStep.validation.maxBackoffDuration': string
   'pipeline.tagDependencyRequired': string
   'pipeline.targets.title': string
   'pipeline.templateInputs': string

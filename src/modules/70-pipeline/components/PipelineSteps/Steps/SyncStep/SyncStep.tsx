@@ -8,7 +8,7 @@
 import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, MultiSelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
-import { FormikErrors, yupToFormErrors } from 'formik'
+import { connect, FormikErrors, yupToFormErrors } from 'formik'
 import { cloneDeep } from 'lodash-es'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -24,6 +24,9 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import { SyncStepBaseWithRef } from './SyncStepBase'
 import { SyncStepSpec, SyncStepData, POLICY_OPTIONS, applicationListItemInterface } from './types'
 import { SyncStepVariables, SyncStepVariablesProps } from './SyncStepVariables'
+import SyncStepInputSet from './SyncStepInputSet'
+
+const SyncStepInputSetBasic = connect(SyncStepInputSet)
 
 export interface SyncStepSpecUI
   extends Omit<SyncStepSpec, 'connectorRef' | 'tags' | 'labels' | 'buildArgs' | 'pull' | 'resources'> {
@@ -77,10 +80,10 @@ export class SyncStep extends PipelineStep<SyncStepData> {
       forceApply: false,
       applicationsList: [],
       retryStrategy: {
-        limit: '',
-        baseBackoffDuration: '',
-        increaseBackoffByFactor: '',
-        maxBackoffDuration: ''
+        limit: 2,
+        baseBackoffDuration: '5s',
+        increaseBackoffByFactor: 2,
+        maxBackoffDuration: '3m5s'
       },
       syncOptions: {
         skipSchemaValidation: false,
@@ -107,9 +110,6 @@ export class SyncStep extends PipelineStep<SyncStepData> {
         }
       )
     }
-    if (clonedValues?.spec?.retry) {
-      delete clonedValues?.spec?.retry
-    }
     return clonedValues
   }
 
@@ -125,13 +125,6 @@ export class SyncStep extends PipelineStep<SyncStepData> {
         }
       })
     }
-    if (
-      clonedValues?.spec?.retryStrategy?.limit ||
-      clonedValues?.spec?.retryStrategy?.increaseBackoffByFactor ||
-      clonedValues?.spec?.retryStrategy?.baseBackoffDuration ||
-      clonedValues?.spec?.retryStrategy?.maxBackoffDuration
-    )
-      clonedValues.spec.retry = true
     return clonedValues
   }
 
@@ -162,6 +155,7 @@ export class SyncStep extends PipelineStep<SyncStepData> {
       onUpdate,
       stepViewType,
       formikRef,
+      inputSetData,
       isNewStep,
       readonly,
       onChange,
@@ -170,7 +164,20 @@ export class SyncStep extends PipelineStep<SyncStepData> {
     } = props
 
     if (this.isTemplatizedView(stepViewType)) {
-      return <></>
+      return (
+        <SyncStepInputSetBasic
+          initialValues={initialValues}
+          template={inputSetData?.template}
+          path={inputSetData?.path || ''}
+          inputSetData={inputSetData}
+          readonly={!!inputSetData?.readonly}
+          stepViewType={stepViewType}
+          onUpdate={(values: any) => onUpdate?.(values)}
+          onChange={(values: any) => onChange?.(values)}
+          ref={formikRef}
+          allowableTypes={allowableTypes}
+        />
+      )
     } else if (stepViewType === StepViewType.InputVariable) {
       return (
         <SyncStepVariables

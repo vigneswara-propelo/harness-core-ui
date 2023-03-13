@@ -24,8 +24,8 @@ export function SyncStepVariables({ variablesData, metadataMap, initialValues }:
   return (
     <VariablesListTable<SyncStepSpec>
       className={pipelineVariableCss.variablePaddingL3}
-      data={flatObject(variablesData.spec) as unknown as SyncStepSpec}
-      originalData={initialValues.spec}
+      data={flatObject(variablesData.spec || {}) as unknown as SyncStepSpec}
+      originalData={initialValues.spec || {}}
       metadataMap={metadataMap}
     />
   )

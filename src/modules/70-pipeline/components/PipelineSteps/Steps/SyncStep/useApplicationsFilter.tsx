@@ -7,7 +7,7 @@
 
 import { defaultTo } from 'lodash-es'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
-import type { ApplicationFilterActions, ApplicationFilters, HealthStatus, SyncStatus } from './types'
+import type { ApplicationFilterActions, ApplicationFilters } from './types'
 
 function processQueryParams(data: any): ApplicationFilters {
   return {
@@ -24,22 +24,12 @@ function processQueryParams(data: any): ApplicationFilters {
 
 export function useApplicationsFilter(): [ApplicationFilters, ApplicationFilterActions] {
   const filters = useQueryParams<ApplicationFilters>({ processQueryParams })
-  const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<ApplicationFilters>>()
+  const { updateQueryParams } = useUpdateQueryParams<Partial<ApplicationFilters>>()
 
   return [
     filters,
     {
-      goToPage: (page: number) => updateQueryParams({ page: page + 1 }),
-      search: (search: string) => updateQueryParams({ search, page: 1 }),
-      clearFilters: () => {
-        replaceQueryParams({})
-      },
-      reset: () => replaceQueryParams({}),
-      healthStatus: (healthStatus: HealthStatus[]) => updateQueryParams({ healthStatus, page: 1 }),
-      syncStatus: (syncStatus: SyncStatus[]) => updateQueryParams({ syncStatus, page: 1 }),
-      agents: (agents: string[]) => updateQueryParams({ agents, page: 1 }),
-      namespaces: (namespaces: string[]) => updateQueryParams({ namespaces, page: 1 }),
-      repo: (repo: string[]) => updateQueryParams({ repo, page: 1 })
+      search: (search: string) => updateQueryParams({ search, page: 1 })
     }
   ]
 }
