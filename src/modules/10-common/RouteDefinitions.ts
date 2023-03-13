@@ -2069,9 +2069,15 @@ const routes = {
     }
   ),
   toSSCAGettingStarted: withAccountId(() => '/ssca/getting-started'),
+  // IDP
   toIDPDefaultPath: withAccountId(() => '/idp-default'),
   toIDP: withAccountId(() => '/idp'),
   toIDPAdmin: withAccountId(() => '/idp-admin'),
+  toGetStartedWithIDP: withAccountId(() => '/idp-admin/get-started'),
+  toAdminHome: withAccountId(() => '/idp-admin/home'),
+  toPluginsPage: withAccountId(() => '/idp-admin/plugins'),
+  toLayoutConfig: withAccountId(() => '/idp-admin/layout'),
+  toIDPAccessControl: withAccountId(() => '/idp-admin/access-control'),
 
   // Error Tracking
   toET: withAccountId(() => '/et'),

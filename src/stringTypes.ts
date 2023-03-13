@@ -7896,7 +7896,8 @@ export interface StringsMap {
   'ci.titleSettings': string
   'ci.usesLabel': string
   'ci.welcome': string
-  'idp.idpAdmin': string
+  'idp.adminHome': string
+  'idp.layout': string
   'ssca.allowDenyList': string
   'ssca.enforcementStep.abortOn.sbomComponentPartOfDenyList': string
   'ssca.enforcementStep.abortOn.sbomPartOfDenyList': string

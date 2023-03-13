@@ -69,6 +69,7 @@ function RedirectToIDPDefaultPath(): React.ReactElement {
   }
   return <></>
 }
+
 export default (
   <>
     <RouteWithLayout path={routes.toIDPDefaultPath({ ...accountPathProps })} layout={MinimalLayout}>
