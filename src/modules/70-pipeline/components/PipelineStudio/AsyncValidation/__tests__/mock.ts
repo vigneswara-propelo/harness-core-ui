@@ -85,8 +85,8 @@ export const failureValidationResult: ResponsePipelineValidationResponseDTO = {
   status: 'SUCCESS',
   data: {
     status: 'FAILURE',
-    startTs: 1677246727984,
-    endTs: 1677246728125,
+    startTs: 1678790262904,
+    endTs: 1678790263029,
     policyEval: {
       id: 'id',
       deny: true,
@@ -99,37 +99,64 @@ export const failureValidationResult: ResponsePipelineValidationResponseDTO = {
               policyId: '',
               policyName: 'custom stage shell script forbidden',
               severity: 'error',
-              denyMessages: ["custom stage 's1' has step 'ShellScript_1' that is forbidden type 'ShellScript'"],
+              denyMessages: ["custom stage 's1' has step 'Shell Script_1' that is forbidden type 'ShellScript'"],
               status: 'error',
               identifier: 'custom_stage_shell_script_forbidden',
               accountId: 'accountId',
               orgId: 'default',
-              projectId: 'CD_Test',
-              created: '1675951420844',
-              updated: '1675951420844',
+              projectId: 'projectId',
+              created: '1675886348243',
+              updated: '1675886348243',
               error: ''
             }
           ],
           policySetName: 'custom stage shell script forbidden set',
           status: 'error',
           identifier: 'custom_stage_shell_script_forbidden_set',
-          created: '1675951465776',
+          created: '1675886558158',
           accountId: 'accountId',
           orgId: 'default',
-          projectId: 'CD_Test'
+          projectId: 'projectId'
+        },
+        {
+          policySetId: '',
+          deny: true,
+          policyMetadata: [
+            {
+              policyId: '',
+              policyName: 'custom stage shell script forbidden',
+              severity: 'error',
+              denyMessages: ["custom stage 's1' has step 'Shell Script_1' that is forbidden type 'ShellScript'"],
+              status: 'error',
+              identifier: 'custom_stage_shell_script_forbidden',
+              accountId: 'accountId',
+              orgId: 'default',
+              projectId: 'projectId',
+              created: '1675886348243',
+              updated: '1675886348243',
+              error: ''
+            }
+          ],
+          policySetName: 'shellscript fail policy set',
+          status: 'error',
+          identifier: 'shellscript_fail_policy_set',
+          created: '1678789753615',
+          accountId: 'accountId',
+          orgId: 'default',
+          projectId: 'projectId'
         }
       ],
       message: '',
-      timestamp: '1677246728124',
+      timestamp: '1678790263029',
       status: 'error',
       accountId: 'accountId',
       orgId: 'default',
-      projectId: 'CD_Test',
+      projectId: 'projectId',
       entity:
-        'accountIdentifier%3AaccountId%2ForgIdentifier%3Adefault%2FprojectIdentifier%3ACD_Test%2FpipelineIdentifier%3Apip_23_feb',
+        'accountIdentifier%3Aacid%2ForgIdentifier%3Adefault%2FprojectIdentifier%3Apid%2FpipelineIdentifier%3Apipid',
       type: 'pipeline',
       action: 'onsave',
-      created: '1677246728110'
+      created: '1678790263016'
     }
   },
   correlationId: 'correlationId'

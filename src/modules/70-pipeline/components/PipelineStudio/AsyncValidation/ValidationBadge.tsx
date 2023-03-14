@@ -24,6 +24,7 @@ import type { Evaluation } from 'services/pm'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import {
   getIconPropsByStatus,
+  getPolicySetsErrorCount,
   isStatusError,
   isStatusLoading,
   isStatusSuccess,
@@ -88,6 +89,10 @@ export function ValidationBadge(): JSX.Element {
   }, [validationResultData?.data?.status, validationResultError, validationResultLoading])
   const policyEval = validationResultData?.data?.policyEval as Evaluation | undefined
   const endTs = validationResultData?.data?.endTs
+  const showTimeago = Number.isFinite(endTs) && !isNil(endTs) && (isStatusSuccess(status) || isStatusError(status))
+  const showPopover = isStatusSuccess(status) || isStatusError(status)
+  const policySetsErrorCount = useMemo(() => getPolicySetsErrorCount(policyEval), [policyEval])
+  const errorCountToRender = status === 'FAILURE' ? policySetsErrorCount : 1
 
   const pollUntil = useMemo(() => {
     return !!validationUuid && !validationResultLoading && isStatusLoading(status)
@@ -142,18 +147,13 @@ export function ValidationBadge(): JSX.Element {
     }
   }
 
-  const showTimeago = Number.isFinite(endTs) && !isNil(endTs) && (isStatusSuccess(status) || isStatusError(status))
-  const showPopover = isStatusSuccess(status) || isStatusError(status)
-  const errorCount = 1 // todo: compute error count from response when API supports validation of multiple entities
-
   const validationText = useMemo(() => {
     switch (true) {
-      case isStatusError(status):
-        return errorCount
       case isStatusLoading(status):
         return getString('pipeline.validation.validating')
       case isStatusSuccess(status):
         return getString('pipeline.validation.validated')
+      case isStatusError(status):
       default:
         return null
     }
@@ -169,9 +169,11 @@ export function ValidationBadge(): JSX.Element {
   const badge = (
     <div data-testid="validation-badge" className={badgeClassName} onClick={onBadgeClick}>
       {iconProps && <Icon {...iconProps} />}
-      <Text font={{ size: 'xsmall', weight: 'bold' }} color={Color.GREY_600}>
-        {validationText}
-      </Text>
+      {validationText && (
+        <Text font={{ size: 'xsmall', weight: 'bold' }} color={Color.GREY_600}>
+          {validationText}
+        </Text>
+      )}
       {showTimeago && <ReactTimeago date={endTs as number} live formatter={minimalTimeagoFormatter} />}
     </div>
   )
@@ -181,7 +183,7 @@ export function ValidationBadge(): JSX.Element {
       {showPopover ? (
         <Popover interactionKind="hover-target" popoverClassName={Classes.DARK} position="bottom">
           {badge}
-          <ValidationPopoverContent status={status} errorCount={errorCount} />
+          <ValidationPopoverContent status={status} errorCount={errorCountToRender} />
         </Popover>
       ) : (
         badge

@@ -10,6 +10,7 @@ import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
 import { Text } from '@harness/uicore'
 import type { Formatter } from 'react-timeago'
+import type { Evaluation } from 'services/pm'
 
 export type ValidationStatus = 'INITIATED' | 'IN_PROGRESS' | 'SUCCESS' | 'FAILURE' | 'ERROR' | 'TERMINATED'
 
@@ -40,7 +41,18 @@ export const minimalTimeagoFormatter: Formatter = (value, unit, suffix) => {
   if (suffix === 'from now') return null
   return (
     <Text font={{ size: 'xsmall' }} color={Color.GREY_600}>
-      {`(${value}${unit.at(0)} ${suffix})`}
+      {`${value}${unit.at(0)} ${suffix}`}
     </Text>
   )
+}
+
+export const getPolicySetsErrorCount = (policyEval?: Evaluation): number => {
+  if (!Array.isArray(policyEval?.details) || policyEval?.status !== 'error') {
+    return 0
+  }
+
+  return policyEval.details.reduce((count, detail) => {
+    if (detail.status === 'error') return count + 1
+    return count
+  }, 0)
 }

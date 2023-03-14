@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as pipelineServices from 'services/pipeline-ng'
@@ -127,8 +127,11 @@ describe('ValidationBadge', () => {
 
     expect(validationBadge).toBeInTheDocument()
     expect(baseElement.querySelector('[data-icon="warning-sign"]')).toBeInTheDocument()
-    expect(screen.getByText('1')).toBeInTheDocument() // error count
     expect(screen.getByText('dummy date')).toBeInTheDocument()
+
+    fireEvent.mouseOver(validationBadge)
+
+    expect(await screen.findByText('pipeline.validation.nIssuesFound')).toBeInTheDocument()
 
     userEvent.click(validationBadge)
 
@@ -189,7 +192,9 @@ describe('ValidationBadge', () => {
     expect(useGetPipelineValidateResult).toHaveBeenCalled()
     expect(baseElement.querySelector('[data-icon="steps-spinner"]')).toBeInTheDocument()
 
-    jest.advanceTimersByTime(5_000)
+    act(() => {
+      jest.advanceTimersByTime(5_000)
+    })
 
     await waitFor(() => expect(refetch).toHaveBeenCalledTimes(1))
   })
