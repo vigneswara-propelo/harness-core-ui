@@ -20,8 +20,8 @@ import type { GetExecutionStrategyYamlQueryParams } from 'services/cd-ng'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
+import { namespaceRegex } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 
-const namespaceRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
 const releaseNameRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/
 
 export enum InfraDeploymentType {
@@ -62,7 +62,7 @@ export function getNameSpaceSchema(
   getString: UseStringsReturn['getString'],
   isRequired = true
 ): Yup.StringSchema<string | undefined> {
-  const namespaceSchema = Yup.string().test('namespace', getString('cd.namespaceValidation'), function (value) {
+  const namespaceSchema = Yup.string().test('namespace', getString('pipeline.namespaceValidation'), function (value) {
     if (getMultiTypeFromValue(value) !== MultiTypeInputType.FIXED || isEmpty(value)) {
       return true
     }

@@ -1712,3 +1712,4 @@ bambooStep:
   planParameter: Plan Parameters
   addPlanParameters: Add Plan Parameter
   noPlans: No Plans Defined
+namespaceValidation: Namespace must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc')

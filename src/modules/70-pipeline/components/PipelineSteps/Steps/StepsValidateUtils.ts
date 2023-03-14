@@ -25,6 +25,8 @@ import { IdentifierSchema, IdentifierSchemaWithoutHook, NameSchema } from '@comm
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { CIBuildInfrastructureType, stepNameRegex, stepIdentifierRegex } from '@pipeline/utils/constants'
 
+export const namespaceRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
+
 export enum Types {
   Text,
   List,
@@ -43,7 +45,8 @@ export enum Types {
   BuildEnvironment,
   FrameworkVersion,
   BuildTool,
-  NotIn
+  NotIn,
+  Namespace
 }
 
 interface Field {
@@ -335,6 +338,22 @@ function generateSchemaForOutputVariables(
   }
 }
 
+export function generateSchemaForNamespace({
+  getString,
+  isRequired = true
+}: GenerateSchemaDependencies): yup.StringSchema<string | undefined> {
+  const namespaceSchema = yup.string().test('namespace', getString('pipeline.namespaceValidation'), function (value) {
+    if (getMultiTypeFromValue(value) !== MultiTypeInputType.FIXED || isEmpty(value)) {
+      return true
+    }
+    return namespaceRegex.test(value)
+  })
+  if (isRequired) {
+    return namespaceSchema.required(getString('fieldRequired', { field: getString('common.namespace') }))
+  }
+  return namespaceSchema
+}
+
 export function generateSchemaForLimitMemory({ getString, isRequired = false }: GenerateSchemaDependencies): Lazy {
   // requires suffix
   const pattern = /^(([0-9]*[.])?[0-9]+)([GM]i?)|^$/
@@ -453,6 +472,10 @@ export function generateSchemaFields(
 
     if (type === Types.OutputVariables) {
       validationRule = generateSchemaForOutputVariables(field, { getString })
+    }
+
+    if (type === Types.Namespace) {
+      validationRule = generateSchemaForNamespace({ getString })
     }
 
     if (type === Types.LimitMemory) {

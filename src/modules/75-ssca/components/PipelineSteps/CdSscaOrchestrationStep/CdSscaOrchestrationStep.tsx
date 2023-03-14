@@ -7,7 +7,6 @@
 
 import type { IconName } from '@harness/icons'
 import { Color } from '@harness/design-system'
-import type { AllowedTypes } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import React from 'react'
 import { defaultTo } from 'lodash-es'
@@ -19,78 +18,23 @@ import type { StringsMap } from 'stringTypes'
 import { VariableListTableProps, VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { flatObject } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import type { SbomOrchestrationTool, SbomSource, SyftSbomOrchestration } from 'services/ci'
-import { SscaOrchestrationStepEditWithRef } from './SscaOrchestrationStepEdit'
 import {
   getInputSetViewValidateFieldsConfig,
   transformValuesFieldsConfig
-} from './SscaOrchestrationStepFunctionConfigs'
-import SscaOrchestrationStepInputSet from './SscaOrchestrationStepInputSet'
+} from '../SscaOrchestrationStep/SscaOrchestrationStepFunctionConfigs'
+import { SscaOrchestrationStepEditWithRef } from '../SscaOrchestrationStep/SscaOrchestrationStepEdit'
+import type { SscaOrchestrationStepData } from '../SscaOrchestrationStep/SscaOrchestrationStep'
 import { commonDefaultSpecValues } from '../utils'
+import SscaOrchestrationStepInputSet from '../SscaOrchestrationStep/SscaOrchestrationStepInputSet'
 
-export interface SscaOrchestrationStepSpec {
-  tool: {
-    type: SbomOrchestrationTool['type']
-    spec: {
-      format: SyftSbomOrchestration['format']
-    }
-  }
-  source: {
-    type: SbomSource['type']
-    spec: {
-      connector: string
-      image: string
-    }
-  }
-  attestation: {
-    privateKey: string
-  }
-  infrastructure?: {
-    type: string
-    spec: {
-      connector: string
-      namespace: string
-      resources: {
-        limits: {
-          memory?: string
-          cpu?: string
-        }
-      }
-    }
-  }
-}
-
-export interface SscaOrchestrationStepData {
-  name?: string
-  identifier: string
-  type: string
-  spec: SscaOrchestrationStepSpec
-  timeout?: string
-}
-export type SscaOrchestrationStepDataUI = SscaOrchestrationStepSpec
-
-export interface SscaOrchestrationStepProps {
-  initialValues: SscaOrchestrationStepData
-  template?: SscaOrchestrationStepData
-  path?: string
-  isNewStep?: boolean
-  readonly?: boolean
-  stepViewType: StepViewType
-  onUpdate?: (data: SscaOrchestrationStepData) => void
-  onChange?: (data: SscaOrchestrationStepData) => void
-  allowableTypes: AllowedTypes
-  formik?: any
-  stepType: StepType
-}
-
-export class SscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepData> {
+export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
     this.invocationMap = new Map()
   }
 
-  protected type = StepType.SscaOrchestration
+  protected type = StepType.CdSscaOrchestration
   protected stepName = 'Ssca Orchestration'
   protected stepIcon: IconName = 'ssca-orchestrate'
   protected stepIconColor = Color.GREY_600
@@ -99,7 +43,22 @@ export class SscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepDat
   protected defaultValues: SscaOrchestrationStepData = {
     type: StepType.SscaOrchestration,
     identifier: '',
-    spec: commonDefaultSpecValues
+    spec: {
+      ...commonDefaultSpecValues,
+      infrastructure: {
+        type: 'KubernetesDirect',
+        spec: {
+          connector: '',
+          namespace: '',
+          resources: {
+            limits: {
+              cpu: '0.5',
+              memory: '500Mi'
+            }
+          }
+        }
+      }
+    }
   }
 
   processFormData<T>(data: T): SscaOrchestrationStepData {

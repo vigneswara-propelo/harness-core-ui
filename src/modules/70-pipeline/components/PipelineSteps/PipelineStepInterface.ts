@@ -186,6 +186,7 @@ export enum StepType {
   TerraformCloudRun = 'TerraformCloudRun',
   TerraformCloudRollback = 'TerraformCloudRollback',
   SscaOrchestration = 'SscaOrchestration',
+  CdSscaOrchestration = 'CdSscaOrchestration',
   CustomIngestion = 'CustomIngestion'
 }
 

@@ -4314,6 +4314,7 @@ export interface StringsMap {
   'pipeline.myDeploymentsText': string
   'pipeline.myExecutionsText': string
   'pipeline.mySecurityTestsText': string
+  'pipeline.namespaceValidation': string
   'pipeline.nativeHelm': string
   'pipeline.neverRan': string
   'pipeline.newPipelineText': string
@@ -5608,7 +5609,6 @@ export interface StringsMap {
   'cd.moreIssue': string
   'cd.moreIssues': string
   'cd.nameEmptyError': string
-  'cd.namespaceValidation': string
   'cd.newAdapter': string
   'cd.newGitOpsServer': string
   'cd.noAdapterText': string

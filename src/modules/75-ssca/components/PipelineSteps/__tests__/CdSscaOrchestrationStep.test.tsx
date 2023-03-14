@@ -11,7 +11,7 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { SscaOrchestrationStep } from '../SscaOrchestrationStep/SscaOrchestrationStep'
+import { CdSscaOrchestrationStep } from '../CdSscaOrchestrationStep/CdSscaOrchestrationStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -35,6 +35,18 @@ const runtimeValues = {
     },
     attestation: {
       privateKey: RUNTIME_INPUT_VALUE
+    },
+    infrastructure: {
+      spec: {
+        connector: RUNTIME_INPUT_VALUE,
+        namespace: RUNTIME_INPUT_VALUE,
+        resources: {
+          limits: {
+            cpu: RUNTIME_INPUT_VALUE,
+            memory: RUNTIME_INPUT_VALUE
+          }
+        }
+      }
     }
   }
 }
@@ -55,17 +67,30 @@ const fixedValues = {
     },
     attestation: {
       privateKey: 'testKey'
+    },
+    infrastructure: {
+      type: 'KubernetesDirect',
+      spec: {
+        connector: '',
+        namespace: '',
+        resources: {
+          limits: {
+            cpu: '0.5',
+            memory: '500Mi'
+          }
+        }
+      }
     }
   }
 }
 
-describe('Ssca Orchestration Step', () => {
+describe('CD Ssca Orchestration Step', () => {
   beforeAll(() => {
-    factory.registerStep(new SscaOrchestrationStep())
+    factory.registerStep(new CdSscaOrchestrationStep())
   })
 
   test('edit view as new step', () => {
-    render(<TestStepWidget initialValues={{}} type={StepType.SscaOrchestration} stepViewType={StepViewType.Edit} />)
+    render(<TestStepWidget initialValues={{}} type={StepType.CdSscaOrchestration} stepViewType={StepViewType.Edit} />)
     expect(screen.getByText('pipelineSteps.stepNameLabel')).toBeInTheDocument()
   })
 
@@ -76,7 +101,7 @@ describe('Ssca Orchestration Step', () => {
       <TestStepWidget
         initialValues={runtimeValues}
         template={runtimeValues}
-        type={StepType.SscaOrchestration}
+        type={StepType.CdSscaOrchestration}
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
         ref={ref}
@@ -84,11 +109,13 @@ describe('Ssca Orchestration Step', () => {
     )
 
     await act(() => ref.current?.submitForm()!)
-    expect(onUpdate).toHaveBeenCalledWith(runtimeValues)
+    expect(onUpdate).toBeCalledWith(runtimeValues)
   })
 
   test('input set view', async () => {
-    render(<TestStepWidget initialValues={{}} type={StepType.SscaOrchestration} stepViewType={StepViewType.InputSet} />)
+    render(
+      <TestStepWidget initialValues={{}} type={StepType.CdSscaOrchestration} stepViewType={StepViewType.InputSet} />
+    )
     expect(screen.getByRole('button', { name: 'Submit' })).toBeInTheDocument()
   })
 
@@ -96,7 +123,7 @@ describe('Ssca Orchestration Step', () => {
     render(
       <TestStepWidget
         initialValues={fixedValues}
-        type={StepType.SscaOrchestration}
+        type={StepType.CdSscaOrchestration}
         stepViewType={StepViewType.InputVariable}
       />
     )
