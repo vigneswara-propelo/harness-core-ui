@@ -432,20 +432,20 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
       {!!selectedDeploymentType && (
         <>
           <Card className={css.sectionCard} data-testid={'task-definition-card'}>
-            <Container margin={{ bottom: 'medium' }}>{taskDefinitionTypeSelection}</Container>
+            <div
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+              data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_taskDefinition`}
+              data-testid={'task-definition-manifest-header-container'}
+            >
+              {getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition')}
+              <HarnessDocTooltip
+                tooltipId={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_taskDefinition`}
+                useStandAlone={true}
+              />
+            </div>
+            <Container margin={{ top: 'medium', bottom: 'medium' }}>{taskDefinitionTypeSelection}</Container>
             {selectedTaskDefinitionType === TaskDefinitionType.TASK_DEFINITION && (
               <>
-                <div
-                  className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
-                  data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_taskDefinition`}
-                  data-testid={'task-definition-manifest-header-container'}
-                >
-                  {getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition')}
-                  <HarnessDocTooltip
-                    tooltipId={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_taskDefinition`}
-                    useStandAlone={true}
-                  />
-                </div>
                 <ManifestSelection
                   isPropagating={isPropagating}
                   deploymentType={selectedDeploymentType}
