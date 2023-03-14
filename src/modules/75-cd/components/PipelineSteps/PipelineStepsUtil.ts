@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypesWithRunTime } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { get, isEmpty } from 'lodash-es'
@@ -355,3 +355,14 @@ export function validateGitOpsExecutionStepForm({
   }
   return errors
 }
+
+// List type field do not support expression at root
+export const SupportedInputTypesForListTypeField: AllowedTypesWithRunTime[] = [
+  MultiTypeInputType.FIXED,
+  MultiTypeInputType.RUNTIME
+]
+
+export const SupportedInputTypesForListItems: AllowedTypesWithRunTime[] = [
+  MultiTypeInputType.FIXED,
+  MultiTypeInputType.EXPRESSION
+]
