@@ -78,7 +78,10 @@ jest.mock('services/cd-ng', () => ({
   usePutSecretTextV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   usePutSecretFileV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   usePutSecretViaYaml: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
-  useGetConnectorList: jest.fn(() => ({ data: null }))
+  useGetConnectorList: jest.fn(() => ({ data: null })),
+  useGetConnector: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn(), error: null }
+  })
 }))
 
 jest.mock('lodash-es', () => ({

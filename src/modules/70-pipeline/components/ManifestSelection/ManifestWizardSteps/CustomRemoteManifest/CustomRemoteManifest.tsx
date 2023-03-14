@@ -34,7 +34,11 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { CustomManifestManifestDataType, ManifestTypes } from '../../ManifestInterface'
+import type {
+  CustomManifestManifestDataType,
+  CustomRemoteManifestManifestLastStepPrevStepData,
+  ManifestTypes
+} from '../../ManifestInterface'
 import {
   ManifestDataType,
   ManifestIdentifierValidation,
@@ -56,6 +60,7 @@ interface CustomRemoteManifestPropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   deploymentType?: string
+  editManifestModePrevStepData?: CustomRemoteManifestManifestLastStepPrevStepData
 }
 
 const showValuesPaths = (selectedManifest: ManifestTypes): boolean => {
@@ -92,10 +97,13 @@ function CustomRemoteManifest({
   previousStep,
   manifestIdsList,
   isReadonly,
-  deploymentType
+  deploymentType,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & CustomRemoteManifestPropType): React.ReactElement {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   const getInitialValues = (): CustomManifestManifestDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -297,7 +305,7 @@ function CustomRemoteManifest({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData
           })
         }}
@@ -546,7 +554,7 @@ function CustomRemoteManifest({
                             allowableTypes={allowableTypes}
                             helmVersion={formik.values?.helmVersion}
                             deploymentType={deploymentType as string}
-                            helmStore={prevStepData?.store ?? ''}
+                            helmStore={modifiedPrevStepData?.store ?? ''}
                             initialValues={initialValues}
                             selectedManifest={selectedManifest}
                           />
@@ -561,7 +569,7 @@ function CustomRemoteManifest({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

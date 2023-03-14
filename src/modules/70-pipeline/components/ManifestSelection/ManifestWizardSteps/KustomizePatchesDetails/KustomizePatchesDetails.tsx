@@ -20,7 +20,7 @@ import {
   FormikForm
 } from '@harness/uicore'
 import * as Yup from 'yup'
-import { get, isEmpty, set } from 'lodash-es'
+import { get, isEmpty, set, defaultTo } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
@@ -28,7 +28,11 @@ import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 
-import type { KustomizePatchDataType, ManifestTypes } from '../../ManifestInterface'
+import type {
+  KustomizePatchDataType,
+  KustomizePatchManifestLastStepPrevStepData,
+  ManifestTypes
+} from '../../ManifestInterface'
 
 import {
   gitFetchTypeList,
@@ -55,6 +59,7 @@ interface KustomizePathPropTypes {
   manifestIdsList: Array<string>
   selectedManifest: ManifestTypes | null
   isReadonly?: boolean
+  editManifestModePrevStepData?: KustomizePatchManifestLastStepPrevStepData
 }
 
 const submitKustomizePatchData = (
@@ -175,21 +180,25 @@ function KustomizePatchDetails({
   previousStep,
   isReadonly = false,
   handleSubmit,
-  manifestIdsList
+  manifestIdsList,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & KustomizePathPropTypes): React.ReactElement {
   const { getString } = useStrings()
-  const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+
+  const gitConnectionType: string = modifiedPrevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
-    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
-    prevStepData?.urlType === GitRepoName.Repo
+    modifiedPrevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    modifiedPrevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
   const accountUrl =
     connectionType === GitRepoName.Account
-      ? prevStepData?.connectorRef
-        ? prevStepData?.connectorRef?.connector?.spec?.url
-        : prevStepData?.url
+      ? modifiedPrevStepData?.connectorRef
+        ? modifiedPrevStepData?.connectorRef?.connector?.spec?.url
+        : modifiedPrevStepData?.url
       : null
 
   const submitFormData = (formData: KustomizePatchDataType & { store?: string; connectorRef?: string }): void => {
@@ -204,7 +213,7 @@ function KustomizePatchDetails({
       return {
         ...specValues,
         identifier: initialValues.identifier,
-        repoName: getRepositoryName(prevStepData, initialValues),
+        repoName: getRepositoryName(modifiedPrevStepData, initialValues),
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
@@ -218,7 +227,7 @@ function KustomizePatchDetails({
       identifier: '',
       branch: undefined,
       commitId: undefined,
-      repoName: getRepositoryName(prevStepData, initialValues),
+      repoName: getRepositoryName(modifiedPrevStepData, initialValues),
       gitFetchType: 'Branch',
       paths: [{ path: '', id: uuid('', nameSpace()) }]
     }
@@ -260,7 +269,7 @@ function KustomizePatchDetails({
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
             if (
               connectionType === GitRepoName.Repo ||
-              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+              getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
             ) {
               return true
             }
@@ -269,14 +278,14 @@ function KustomizePatchDetails({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: modifiedPrevStepData?.connectorRef
+              ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? modifiedPrevStepData?.connectorRef
+                : modifiedPrevStepData?.connectorRef?.value
+              : modifiedPrevStepData?.identifier
+              ? modifiedPrevStepData?.identifier
               : ''
           })
         }}
@@ -371,7 +380,7 @@ function KustomizePatchDetails({
                 variation={ButtonVariation.SECONDARY}
                 text={getString('back')}
                 icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
+                onClick={() => previousStep?.(modifiedPrevStepData)}
               />
               <Button
                 variation={ButtonVariation.PRIMARY}
