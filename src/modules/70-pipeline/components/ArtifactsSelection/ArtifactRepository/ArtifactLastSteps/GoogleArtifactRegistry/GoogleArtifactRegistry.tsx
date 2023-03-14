@@ -102,6 +102,7 @@ function FormComponent(
   const regionValue = defaultTo(formik.values.spec.region, initialValues?.spec?.region)
   const repositoryNameValue = defaultTo(formik.values?.spec.repositoryName, initialValues?.spec?.repositoryName)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
+  const isTemplateContext = context === ModalViewFor.Template
 
   const {
     data: buildDetails,
@@ -235,7 +236,7 @@ function FormComponent(
                 allowCreatingNewItems: true,
                 addClearBtn: !isReadonly,
                 items: regions,
-                usePortal: false
+                usePortal: isTemplateContext
               },
               allowableTypes
             }}
@@ -342,7 +343,7 @@ function FormComponent(
                   itemRenderer: itemRenderer,
                   items: getBuilds(),
                   allowCreatingNewItems: true,
-                  usePortal: false
+                  usePortal: isTemplateContext
                 },
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
