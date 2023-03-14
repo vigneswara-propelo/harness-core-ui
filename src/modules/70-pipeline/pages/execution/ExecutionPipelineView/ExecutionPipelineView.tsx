@@ -11,7 +11,7 @@ import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/P
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
-import { isSimplifiedYAMLEnabledForCI } from '@pipeline/utils/CIUtils'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import ExecutionGraphView from './ExecutionGraphView/ExecutionGraphView'
 import ExecutionLogView from './ExecutionLogView/ExecutionLogView'
 
@@ -24,7 +24,7 @@ export default function ExecutionPipelineView(): React.ReactElement {
     PreferenceScope.USER,
     'executionViewType'
   )
-  const initialSelectedView = isSimplifiedYAMLEnabledForCI(module, CI_YAML_VERSIONING)
+  const initialSelectedView = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
     ? SavedExecutionViewTypes.LOG
     : savedExecutionView || SavedExecutionViewTypes.GRAPH
   const view = queryParams.get('view')

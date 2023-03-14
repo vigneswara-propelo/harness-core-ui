@@ -26,6 +26,7 @@ import { String } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import PipelineStudioV1 from '@pipeline/v1/components/PipelineStudioV1/PipelineStudioV1'
 import { IACMApp } from './components/IACMApp'
 
 const moduleParams: ModulePathParams = {
@@ -75,6 +76,7 @@ function IACMRoutes(): JSX.Element {
           pipelineDeploymentListComponent={PipelineDeploymentList}
           moduleParams={moduleParams}
           sidebarProps={IACMSideNavProps}
+          pipelineStudioComponentV1={PipelineStudioV1}
         />
       </Route>
       <RouteWithLayout

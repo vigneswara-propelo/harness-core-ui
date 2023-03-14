@@ -12,7 +12,6 @@ import { useParams } from 'react-router-dom'
 import { ButtonVariation, Text } from '@harness/uicore'
 import { String as StrTemplate, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import factory from '@pipeline/factories/ExecutionFactory'
@@ -31,6 +30,7 @@ import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRu
 import { extractInfo } from '@common/components/ErrorHandler/ErrorHandler'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import css from './ExecutionStageDetailsHeader.module.scss'
 
 export function ExecutionStageDetailsHeader(): React.ReactElement {
@@ -99,9 +99,7 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
   )
   const { CI_YAML_VERSIONING } = useFeatureFlags()
   const runPipeline = (): void => {
-    CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
-      ? openRunPipelineModalV1()
-      : openRunPipelineModal()
+    isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) ? openRunPipelineModalV1() : openRunPipelineModal()
   }
 
   const { openRunPipelineModal } = useRunPipelineModal({

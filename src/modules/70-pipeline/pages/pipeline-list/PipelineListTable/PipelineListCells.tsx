@@ -38,13 +38,12 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
-import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { ResourceType as GitResourceType } from '@common/interfaces/GitSyncInterface'
 import type { PipelineStageInfo, PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
-import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelineType, Module } from '@common/interfaces/RouteInterfaces'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
 import { killEvent } from '@common/utils/eventUtils'
@@ -55,6 +54,7 @@ import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getChildExecutionPipelineViewLink } from '@pipeline/pages/execution-list/ExecutionListTable/ExecutionListCells'
 import { useQueryParams } from '@common/hooks/useQueryParams'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import type { PipelineListColumnActions } from './PipelineListTable'
@@ -323,7 +323,7 @@ export const MenuCell: CellType = ({ row, column }) => {
     projectIdentifier: string
     orgIdentifier: string
     accountId: string
-    module: string
+    module: Module
   }>()
 
   const { confirmDelete } = useDeleteConfirmationDialog(data, 'pipeline', commitMsg =>
@@ -353,9 +353,7 @@ export const MenuCell: CellType = ({ row, column }) => {
 
   const { CI_YAML_VERSIONING } = useFeatureFlags()
   const runPipeline = (): void => {
-    CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
-      ? openRunPipelineModalV1()
-      : openRunPipelineModal()
+    isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) ? openRunPipelineModalV1() : openRunPipelineModal()
   }
   const { openRunPipelineModal } = useRunPipelineModal({
     pipelineIdentifier: (data.identifier || '') as string,

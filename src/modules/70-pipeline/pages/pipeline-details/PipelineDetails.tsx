@@ -25,7 +25,6 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useStrings, String } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
@@ -36,7 +35,7 @@ import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetai
 import { StoreType } from '@common/constants/GitSyncTypes'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { BannerEOL } from '@pipeline/components/BannerEOL/BannerEOL'
-
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import NoEntityFound from '../utils/NoEntityFound/NoEntityFound'
 import css from './PipelineDetails.module.scss'
 
@@ -122,8 +121,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   const [triggerTabDisabled, setTriggerTabDisabled] = React.useState(false)
   const [showBanner, setShowBanner] = React.useState<boolean>(false)
   const { CI_YAML_VERSIONING, CDS_V1_EOL_BANNER } = useFeatureFlags()
-  const isYAMLSimplicationEnabledForCI =
-    CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.valueOf().toLowerCase()
+  const isYAMLSimplicationEnabledForCI = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
 
   const routeParams = {
     orgIdentifier,

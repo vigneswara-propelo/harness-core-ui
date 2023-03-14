@@ -34,9 +34,9 @@ import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRu
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
-import { isSimplifiedYAMLEnabledForCI } from '@pipeline/utils/CIUtils'
 import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import css from './ExecutionHeader.module.scss'
@@ -200,7 +200,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
           <Link
             className={css.view}
             to={
-              isSimplifiedYAMLEnabledForCI(module, CI_YAML_VERSIONING)
+              isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
                 ? routes.toPipelineStudioV1(pipelineStudioRoutingProps)
                 : routes.toPipelineStudio(pipelineStudioRoutingProps)
             }

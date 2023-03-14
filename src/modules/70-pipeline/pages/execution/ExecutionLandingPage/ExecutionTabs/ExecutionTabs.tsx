@@ -23,7 +23,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
-import { isSimplifiedYAMLEnabledForCI } from '@pipeline/utils/CIUtils'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import css from './ExecutionTabs.module.scss'
 
 const TAB_ID_MAP = {
@@ -51,8 +51,8 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const { children, savedExecutionView, setSavedExecutionView } = props
   const { getString } = useStrings()
   const { pipelineExecutionDetail, isPipelineInvalid } = useExecutionContext()
-  const isSimplifiedYAMLEnabled = useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
-  const initialSelectedView = isSimplifiedYAMLEnabledForCI(module, isSimplifiedYAMLEnabled)
+  const CI_YAML_VERSIONING = useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
+  const initialSelectedView = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
     ? SavedExecutionViewTypes.LOG
     : savedExecutionView || SavedExecutionViewTypes.GRAPH
   const params = useParams<PipelineType<ExecutionPathProps>>()
