@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, act, waitFor } from '@testing-library/react'
+import { render, fireEvent, act, waitFor, screen } from '@testing-library/react'
 
 import * as GitSyncStoreContext from 'framework/GitRepoStore/GitSyncStoreContext'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
@@ -127,7 +127,7 @@ const getEditPropsForRemotePipeline = (
   },
   gitDetails: {
     branch: 'master',
-    filePath: '.harness/awsasas.yaml',
+    filePath: './test.yaml',
     remoteFetchFailed: false,
     repoName: 'sunnykesh-gitSync',
     getDefaultFromOtherRepo: false
@@ -250,7 +250,17 @@ describe('PipelineCreate test', () => {
       </TestWrapper>
     )
     await waitFor(() => getByText('continue'))
-    expect(container).toMatchSnapshot()
+
+    const pipelineName = await screen.findByPlaceholderText('common.namePlaceholder')
+    const selectedStoreTypeCard = container.querySelector('.Card--selected')
+    const repoNameName = await screen.findByPlaceholderText('- common.git.selectRepositoryPlaceholder -')
+    const filePath = await screen.findByPlaceholderText('gitsync.gitSyncForm.enterYamlPath')
+
+    expect(pipelineName).toHaveValue(getEditPropsForRemotePipeline().initialValues?.name)
+    expect(selectedStoreTypeCard).toHaveTextContent('remote')
+    expect(repoNameName).toHaveValue(getEditPropsForRemotePipeline().gitDetails?.repoName)
+    expect(filePath).toHaveValue(getEditPropsForRemotePipeline().gitDetails?.filePath)
+
     const continueBtn = getByText('continue')
     fireEvent.click(continueBtn)
     await waitFor(() => expect(afterSave).toBeCalledTimes(1))
