@@ -1137,6 +1137,7 @@ export interface StringsMap {
   'common.test.inProgress': string
   'common.test.retest': string
   'common.tickets.connector': string
+  'common.tickets.defaultIssueType': string
   'common.tickets.defaultProjectName': string
   'common.tickets.externalTickets': string
   'common.tickets.selectConnector': string
