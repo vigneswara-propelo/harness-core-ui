@@ -18,6 +18,7 @@ import { useUpdateQueryParams, useQueryParams, useMutateAsGet } from '@common/ho
 import { usePreferenceStore, PreferenceScope } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import type { CDModuleLicenseDTO } from 'services/portal'
 import SubscriptionDetailsCard from './SubscriptionDetailsCard'
 import SubscriptionUsageCard from './SubscriptionUsageCard'
@@ -61,7 +62,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const [orgName, setOrgName] = useState<string>('')
   const [projName, setProjName] = useState<string>('')
   const [serviceName, setServiceName] = useState<string>('')
-
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   const sort = useMemo(
     () => (sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort),
     [queryParams.sort, sortingPreference]
@@ -101,7 +102,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
       {enabled && licenseData && module !== ModuleName.CHAOS && (
         <SubscriptionUsageCard module={module} licenseData={licenseData} />
       )}
-      {module === 'CD' ? (
+      {module === 'CD' && shouldVisible ? (
         <ServiceLicenseTable
           gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
           data={activeServiceList?.data || {}}
@@ -115,7 +116,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
           licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType || ''}
         />
       ) : null}
-      {module === 'CD' ? (
+      {module === 'CD' && shouldVisible ? (
         <ServiceLicenseGraphs
           accountId={accountId}
           licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType}
