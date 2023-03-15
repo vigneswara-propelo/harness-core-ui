@@ -4680,6 +4680,7 @@ export interface StringsMap {
   'pipeline.stepDescription.RestoreCacheS3': string
   'pipeline.stepDescription.RollingDeployment': string
   'pipeline.stepDescription.RollingRollback': string
+  'pipeline.stepDescription.RouteMapping': string
   'pipeline.stepDescription.Run': string
   'pipeline.stepDescription.RunTests': string
   'pipeline.stepDescription.S3': string
@@ -5954,6 +5955,8 @@ export interface StringsMap {
   'cd.steps.tas.enableDownSizeOldApplication': string
   'cd.steps.tas.enableUpsizeInActiveApp': string
   'cd.steps.tas.existingVersionToKeep': string
+  'cd.steps.tas.mapRoute': string
+  'cd.steps.tas.mappingType': string
   'cd.steps.tas.matchRunningInstances': string
   'cd.steps.tas.minimumCountPercentage': string
   'cd.steps.tas.newAppInstance': string
@@ -5961,10 +5964,13 @@ export interface StringsMap {
   'cd.steps.tas.oldAppInstances': string
   'cd.steps.tas.readFromManifest': string
   'cd.steps.tas.resizeStrategy': string
+  'cd.steps.tas.routeMandatory': string
+  'cd.steps.tas.routes': string
   'cd.steps.tas.tempRouteMandatory': string
   'cd.steps.tas.tempRoutes': string
   'cd.steps.tas.totalInstances': string
   'cd.steps.tas.typeAndEnterForRouteAdd': string
+  'cd.steps.tas.unMapRoute': string
   'cd.steps.tas.upscaleNewFirstLabel': string
   'cd.steps.tas.upsizeInactiveService': string
   'cd.steps.tas.zeroOldInstancesWarning': string
