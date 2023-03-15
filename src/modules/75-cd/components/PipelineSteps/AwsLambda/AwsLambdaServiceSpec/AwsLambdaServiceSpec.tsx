@@ -14,7 +14,6 @@ import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/ui
 
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
-import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import {
   ServiceSpec,
   getConnectorListV2Promise,
@@ -26,6 +25,7 @@ import {
   ResponseArtifactoryResponseDTO,
   ArtifactoryBuildDetailsDTO
 } from 'services/cd-ng'
+import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import {
   ArtifactToConnectorMap,
   allowedArtifactTypes,
@@ -42,8 +42,8 @@ import {
   K8sServiceSpecVariablesFormProps
 } from '../../Common/GenericServiceSpec/GenericServiceSpecVariablesForm'
 import { GenericServiceSpecInputSetMode } from '../../Common/GenericServiceSpec/GenericServiceSpecInputSetMode'
-import GenericServiceSpecEditable from '../../Common/GenericServiceSpec/GenericServiceSpecEditable'
 import type { ValidateArtifactInputSetFieldArgs, ValidateInputSetFieldArgs } from '../../Common/types'
+import { AwsLambdaServiceSpecEditable } from './AwsLambdaServiceSpecEditable'
 
 const logger = loggerFor(ModuleName.CD)
 
@@ -535,7 +535,7 @@ export class AwsLambdaServiceSpec extends Step<ServiceSpec> {
     }
 
     return (
-      <GenericServiceSpecEditable
+      <AwsLambdaServiceSpecEditable
         {...(customStepProps as K8sServiceSpecVariablesFormProps)}
         factory={factory}
         initialValues={initialValues}

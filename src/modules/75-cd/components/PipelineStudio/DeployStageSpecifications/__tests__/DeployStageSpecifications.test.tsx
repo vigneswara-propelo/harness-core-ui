@@ -128,7 +128,7 @@ jest.mock('../../DeployStage/EditStageView/EditStageView', () => ({
   }
 }))
 
-describe('StepWidget tests', () => {
+describe('DeployStageSpecifications tests', () => {
   test(`renders DeployStageSpecifications without crashing `, () => {
     const { container } = render(
       <TestWrapper>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -20,14 +20,15 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import { pipelineContextECS } from '@pipeline/components/PipelineStudio/PipelineContext/__tests__/helper'
+import {
+  pipelineContextAwsLambda,
+  pipelineContextECS
+} from '@pipeline/components/PipelineStudio/PipelineContext/__tests__/helper'
 import ManifestSelection from '../ManifestSelection'
 import connectorsData from './connectors_mock.json'
 import {
-  updateManifestListFirstArgEcsScalableTarget,
-  updateManifestListFirstArgEcsScallingPolicy,
-  updateManifestListFirstArgEcsServiceDefinition,
-  updateManifestListFirstArgEcsTaskDefinition
+  updateManifestListFirstArgAwsLambdaFunctionDefinition,
+  updateManifestListFirstArgAwsLambdaFunctionAliasDefinition
 } from './helpers/helper'
 import { ManifestDataType } from '../Manifesthelper'
 
@@ -53,8 +54,6 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
   expect(GitLab).not.toBeNull()
   const Bitbucket = queryByValueAttribute('Bitbucket')
   expect(Bitbucket).not.toBeNull()
-  const AzureRepo = queryByValueAttribute('AzureRepo')
-  expect(AzureRepo).not.toBeNull()
   const Harness = queryByValueAttribute('Harness')
   expect(Harness).not.toBeNull()
 
@@ -93,30 +92,30 @@ const testEcsManifestLastStep = async (portal: HTMLElement): Promise<void> => {
   userEvent.click(submitButton)
 }
 
-describe('ManifestSelection tests for ECS', () => {
-  test('for Amazon ECS deployment type, add EcsTaskDefinition manifest', async () => {
+describe('ManifestSelection tests for AWSLambda', () => {
+  test('for AWS Lambda deployment type, add AwsLambdaFunctionDefinition manifest', async () => {
     const updateManifestList = jest.fn()
 
     const { container } = render(
       <TestWrapper>
-        <PipelineContext.Provider value={pipelineContextECS}>
+        <PipelineContext.Provider value={pipelineContextAwsLambda}>
           <ManifestSelection
             isReadonlyServiceMode={false}
             readonly={false}
-            deploymentType={ServiceDeploymentType.ECS}
+            deploymentType={ServiceDeploymentType.AwsLambda}
             initialManifestList={[]}
             allowOnlyOneManifest={true}
-            addManifestBtnText={'+ Add Task Definition'}
+            addManifestBtnText={'+ Add AWS Lambda Function Definition'}
             updateManifestList={updateManifestList}
-            preSelectedManifestType={ManifestDataType.EcsTaskDefinition}
-            availableManifestTypes={[ManifestDataType.EcsTaskDefinition]}
+            preSelectedManifestType={ManifestDataType.AwsLambdaFunctionDefinition}
+            availableManifestTypes={[ManifestDataType.AwsLambdaFunctionDefinition]}
             deleteManifest={jest.fn()}
           />
         </PipelineContext.Provider>
       </TestWrapper>
     )
 
-    const addManifestButton = await findByText(container, '+ Add Task Definition')
+    const addManifestButton = await findByText(container, '+ Add AWS Lambda Function Definition')
     userEvent.click(addManifestButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
 
@@ -127,11 +126,11 @@ describe('ManifestSelection tests for ECS', () => {
     await testEcsManifestLastStep(portal)
 
     await waitFor(() => {
-      expect(updateManifestList).toHaveBeenCalledWith(updateManifestListFirstArgEcsTaskDefinition, 0)
+      expect(updateManifestList).toHaveBeenCalledWith(updateManifestListFirstArgAwsLambdaFunctionDefinition, 0)
     })
   })
 
-  test('for Amazon ECS deployment type, add EcsServiceDefinition manifest', async () => {
+  test('for AWS Lambda deployment type, add AwsLambdaFunctionAliasDefinition manifest', async () => {
     const updateManifestList = jest.fn()
 
     const { container } = render(
@@ -140,20 +139,19 @@ describe('ManifestSelection tests for ECS', () => {
           <ManifestSelection
             isReadonlyServiceMode={false}
             readonly={false}
-            deploymentType={ServiceDeploymentType.ECS}
+            deploymentType={ServiceDeploymentType.AwsLambda}
             initialManifestList={[]}
-            allowOnlyOneManifest={true}
-            addManifestBtnText={'+ Add Service Definition'}
+            addManifestBtnText={'+ Add AWS Lambda Function Alias Definition'}
             updateManifestList={updateManifestList}
-            preSelectedManifestType={ManifestDataType.EcsServiceDefinition}
-            availableManifestTypes={[ManifestDataType.EcsServiceDefinition]}
+            preSelectedManifestType={ManifestDataType.AwsLambdaFunctionAliasDefinition}
+            availableManifestTypes={[ManifestDataType.AwsLambdaFunctionAliasDefinition]}
             deleteManifest={jest.fn()}
           />
         </PipelineContext.Provider>
       </TestWrapper>
     )
 
-    const addManifestButton = await findByText(container, '+ Add Service Definition')
+    const addManifestButton = await findByText(container, '+ Add AWS Lambda Function Alias Definition')
     userEvent.click(addManifestButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
 
@@ -164,87 +162,7 @@ describe('ManifestSelection tests for ECS', () => {
     await testEcsManifestLastStep(portal)
 
     await waitFor(() => {
-      expect(updateManifestList).toHaveBeenCalledWith(updateManifestListFirstArgEcsServiceDefinition, 0)
-    })
-  })
-
-  test('for Amazon ECS deployment type, add EcsScalingPolicyDefinition manifest', async () => {
-    const updateManifestList = jest.fn()
-
-    const { container } = render(
-      <TestWrapper>
-        <PipelineContext.Provider value={pipelineContextECS}>
-          <ManifestSelection
-            isReadonlyServiceMode={false}
-            readonly={false}
-            deploymentType={ServiceDeploymentType.ECS}
-            initialManifestList={[]}
-            allowOnlyOneManifest={true}
-            addManifestBtnText={'+ Add Scalling Policy'}
-            updateManifestList={updateManifestList}
-            preSelectedManifestType={ManifestDataType.EcsScalingPolicyDefinition}
-            availableManifestTypes={[ManifestDataType.EcsScalingPolicyDefinition]}
-            deleteManifest={jest.fn()}
-          />
-        </PipelineContext.Provider>
-      </TestWrapper>
-    )
-
-    const addManifestButton = await findByText(container, '+ Add Scalling Policy')
-    userEvent.click(addManifestButton)
-    const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
-
-    const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
-
-    await waitFor(() => expect(queryByValueAttribute('Github')).not.toBeNull())
-    // Test manifest store tiles, choose Git and fill in Connector field
-    await testManifestStoreStep(portal)
-
-    // Fill in required field and submit manifest
-    await testEcsManifestLastStep(portal)
-
-    await waitFor(() => {
-      expect(updateManifestList).toHaveBeenCalledWith(updateManifestListFirstArgEcsScallingPolicy, 0)
-    })
-  })
-
-  test('for Amazon ECS deployment type, add EcsScalableTargetDefinition manifest', async () => {
-    const updateManifestList = jest.fn()
-
-    const { container } = render(
-      <TestWrapper>
-        <PipelineContext.Provider value={pipelineContextECS}>
-          <ManifestSelection
-            isReadonlyServiceMode={false}
-            readonly={false}
-            deploymentType={ServiceDeploymentType.ECS}
-            initialManifestList={[]}
-            allowOnlyOneManifest={true}
-            addManifestBtnText={'+ Add Scalable Target'}
-            updateManifestList={updateManifestList}
-            preSelectedManifestType={ManifestDataType.EcsScalableTargetDefinition}
-            availableManifestTypes={[ManifestDataType.EcsScalableTargetDefinition]}
-            deleteManifest={jest.fn()}
-          />
-        </PipelineContext.Provider>
-      </TestWrapper>
-    )
-
-    const addManifestButton = await findByText(container, '+ Add Scalable Target')
-    userEvent.click(addManifestButton)
-    const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
-
-    const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
-
-    await waitFor(() => expect(queryByValueAttribute('Github')).not.toBeNull())
-    // Test manifest store tiles, choose Git and fill in Connector field
-    await testManifestStoreStep(portal)
-
-    // Fill in required field and submit manifest
-    await testEcsManifestLastStep(portal)
-
-    await waitFor(() => {
-      expect(updateManifestList).toHaveBeenCalledWith(updateManifestListFirstArgEcsScalableTarget, 0)
+      expect(updateManifestList).toHaveBeenCalledWith(updateManifestListFirstArgAwsLambdaFunctionAliasDefinition, 0)
     })
   })
 })

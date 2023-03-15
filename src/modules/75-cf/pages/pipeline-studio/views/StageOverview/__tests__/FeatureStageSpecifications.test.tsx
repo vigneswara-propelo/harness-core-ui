@@ -91,7 +91,7 @@ const getPipelineContext = (): PipelineContextInterface => ({
   setValidationUuid: jest.fn()
 })
 
-describe('StepWidget tests', () => {
+describe('FeatureStageSpecifications tests', () => {
   test('it renders StageOverview', () => {
     const { container } = render(
       <TestWrapper>

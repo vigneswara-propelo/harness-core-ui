@@ -726,7 +726,7 @@ function ManifestListView({
 
   return (
     <Layout.Vertical style={{ width: '100%' }}>
-      <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }}>
+      <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }} margin={{ top: 'medium' }}>
         {!!listOfManifests?.length && (
           <div className={cx(css.manifestList, css.listHeader)}>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.ID')}</Text>

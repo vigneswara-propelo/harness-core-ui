@@ -60,7 +60,9 @@ const showManifestStoreStepDirectly = (selectedManifest: ManifestTypes | null): 
       ManifestDataType.AsgLaunchTemplate,
       ManifestDataType.AsgScalingPolicy,
       ManifestDataType.AsgScheduledUpdateGroupAction,
-      ManifestDataType.GoogleCloudFunctionDefinition
+      ManifestDataType.GoogleCloudFunctionDefinition,
+      ManifestDataType.AwsLambdaFunctionDefinition,
+      ManifestDataType.AwsLambdaFunctionAliasDefinition
     ].includes(selectedManifest)
   )
 }
