@@ -885,6 +885,7 @@ perspectives:
     actualSpend: Actual spend
     forecastedCost: Forecasted cost
     perspectiveBudgets: Perspective Budget
+    perspectiveBudgetGroup: Perspective Budget Group
     defineTarget:
       title: Define Target
       text: Budgets are created on Perspectives. If you do not have a Perspective of the resources you would like to budget, create a new Perspective and then proceed to set a budget.

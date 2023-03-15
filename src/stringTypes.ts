@@ -6892,6 +6892,7 @@ export interface StringsMap {
   'ce.perspectives.budgets.desc': string
   'ce.perspectives.budgets.forecastedCost': string
   'ce.perspectives.budgets.monthToDateSpend': string
+  'ce.perspectives.budgets.perspectiveBudgetGroup': string
   'ce.perspectives.budgets.perspectiveBudgets': string
   'ce.perspectives.budgets.perspectiveCreateBudgetTitle': string
   'ce.perspectives.budgets.sendAlerts': string
