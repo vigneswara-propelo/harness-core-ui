@@ -20,7 +20,7 @@ import {
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { UseGetMockDataWithMutateAndRefetch } from '@common/utils/testUtils'
 import type { ResponseListNexusRepositories } from 'services/cd-ng'
-import { Nexus3Artifact } from '../NexusArtifact'
+import { Nexus3Artifact } from '../Nexus3Artifact'
 
 const mockRepositoryResponse: UseGetMockDataWithMutateAndRefetch<ResponseListNexusRepositories> = {
   loading: false,

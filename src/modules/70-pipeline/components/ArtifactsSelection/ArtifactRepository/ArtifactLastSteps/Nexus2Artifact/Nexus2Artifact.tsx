@@ -55,7 +55,7 @@ import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHel
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
 import ArtifactImagePathTagView, { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import type { queryInterface } from '../NexusArtifact/NexusArtifact'
+import type { queryInterface } from '../Nexus3Artifact/Nexus3Artifact'
 import css from '../../ArtifactConnector.module.scss'
 
 export function Nexus2Artifact({

@@ -37,7 +37,8 @@ import {
   Failure,
   Error,
   useGetBuildDetailsForArtifactoryArtifact,
-  useGetImagePathsForArtifactory
+  useGetImagePathsForArtifactory,
+  ServiceDefinition
 } from 'services/cd-ng'
 import {
   checkIfQueryParamsisNotEmpty,
@@ -61,7 +62,8 @@ import {
   isSshOrWinrmDeploymentType,
   isTASDeploymentType,
   repositoryFormats,
-  RepositoryFormatTypes
+  RepositoryFormatTypes,
+  isAWSLambdaDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type {
@@ -122,6 +124,7 @@ function Artifactory({
   const isAzureWebAppDeploymentTypeSelected = isAzureWebAppDeploymentType(selectedDeploymentType)
   const isCustomDeploymentTypeSelected = isCustomDeploymentType(selectedDeploymentType)
   const isTasDeploymentTypeSelected = isTASDeploymentType(selectedDeploymentType)
+  const isAWSLambdaDeploymentTypeSelected = isAWSLambdaDeploymentType(selectedDeploymentType)
   const CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY = useFeatureFlag(FeatureFlag.CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY)
 
   const showRepositoryFormatForAllowedTypes =
@@ -129,11 +132,16 @@ function Artifactory({
     isAzureWebAppDeploymentTypeSelected ||
     isCustomDeploymentTypeSelected ||
     isTasDeploymentTypeSelected
+
+  // For Serverless and AWS Lambda, there is not dropdown for repositoryFormat to select from
+  // By default, UI should be rendered assuming repositoryFormat is Generic
+  const shouldChooseGenericAsDefault = isServerlessDeploymentTypeSelected || isAWSLambdaDeploymentTypeSelected
+
   const [repositoryFormat, setRepositoryFormat] = useState<string | undefined>(
     get(
       initialValues,
       'spec.repositoryFormat',
-      showRepositoryFormatForAllowedTypes || isServerlessDeploymentTypeSelected
+      showRepositoryFormatForAllowedTypes || shouldChooseGenericAsDefault
         ? RepositoryFormatTypes.Generic
         : RepositoryFormatTypes.Docker
     )
@@ -153,7 +161,7 @@ function Artifactory({
 
   useLayoutEffect(() => {
     let repoFormat = RepositoryFormatTypes.Docker
-    if (isServerlessDeploymentTypeSelected) repoFormat = RepositoryFormatTypes.Generic
+    if (shouldChooseGenericAsDefault) repoFormat = RepositoryFormatTypes.Generic
     if (showRepositoryFormatForAllowedTypes) {
       repoFormat = getRepositoryFormat(initialValues)
         ? (getRepositoryFormat(initialValues) as RepositoryFormatTypes)
@@ -351,6 +359,7 @@ function Artifactory({
       initialValues,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed,
+      selectedDeploymentType as ServiceDefinition['type'],
       isGenericArtifactory
     ) as ImagePathTypes
     if (
@@ -406,7 +415,7 @@ function Artifactory({
     return primarySchema
   }, [context, isGenericArtifactory, primarySchema, serverlessPrimarySchema, sidecarSchema])
 
-  const loadingPlaceholderText = isServerlessDeploymentTypeSelected
+  const loadingPlaceholderText = shouldChooseGenericAsDefault
     ? getString('pipeline.artifactsSelection.loadingArtifactPaths')
     : getString('pipeline.artifactsSelection.loadingTags')
 

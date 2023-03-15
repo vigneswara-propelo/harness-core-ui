@@ -8,8 +8,14 @@
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, isObject, merge } from 'lodash-es'
-import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
-import type { ArtifactConfig, ConnectorConfigDTO, PrimaryArtifact, SidecarArtifact } from 'services/cd-ng'
+import { RepositoryFormatTypes, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type {
+  ArtifactConfig,
+  ConnectorConfigDTO,
+  PrimaryArtifact,
+  ServiceDefinition,
+  SidecarArtifact
+} from 'services/cd-ng'
 import { ENABLED_ARTIFACT_TYPES, ModalViewFor } from './ArtifactHelper'
 import {
   ArtifactTagHelperText,
@@ -308,12 +314,13 @@ export const getArtifactFormData = (
   initialValues: artifactInitialValueTypes,
   selectedArtifact: ArtifactType,
   isIdentifierAllowed: boolean,
+  selectedDeploymentType?: ServiceDefinition['type'],
   isServerlessDeploymentTypeSelected = false
 ): artifactInitialValueTypes => {
   const specValues = get(initialValues, 'spec', null)
 
   if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
-    return defaultArtifactInitialValues(selectedArtifact)
+    return defaultArtifactInitialValues(selectedArtifact, selectedDeploymentType)
   }
 
   let values: artifactInitialValueTypes | null = {} as artifactInitialValueTypes
@@ -455,7 +462,10 @@ export const customArtifactDefaultSpec = {
   }
 }
 
-export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): any => {
+export const defaultArtifactInitialValues = (
+  selectedArtifact: ArtifactType,
+  selectedDeploymentType?: ServiceDefinition['type']
+): any => {
   switch (selectedArtifact) {
     case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
       return {
@@ -510,7 +520,7 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         tag: RUNTIME_INPUT_VALUE,
         tagRegex: RUNTIME_INPUT_VALUE,
         repository: '',
-        repositoryFormat: 'docker',
+        repositoryFormat: selectedDeploymentType === ServiceDeploymentType.AwsLambda ? 'maven' : 'docker',
         spec: {
           repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryUrl,
           artifactPath: '',

@@ -23,7 +23,7 @@ import type {
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { GCRImagePath } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/GCRImagePath/GCRImagePath'
 import { ECRArtifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
-import { Nexus3Artifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
+import { Nexus3Artifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Nexus3Artifact/Nexus3Artifact'
 import { Nexus2Artifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Nexus2Artifact/Nexus2Artifact'
 import Artifactory from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Artifactory/Artifactory'
 import { AmazonS3 } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'

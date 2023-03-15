@@ -31,6 +31,7 @@ import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import {
   ConnectorConfigDTO,
   DockerBuildDetailsDTO,
+  ServiceDefinition,
   useGetBuildDetailsForNexusArtifact,
   useGetRepositories
 } from 'services/cd-ng'
@@ -378,6 +379,7 @@ export function Nexus3Artifact({
       initialValues,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed,
+      selectedDeploymentType as ServiceDefinition['type'],
       false
     ) as Nexus2InitialValuesType
   }
@@ -534,7 +536,6 @@ export function Nexus3Artifact({
                       noResults: (
                         <NoTagResults
                           tagError={errorFetchingRepository}
-                          isServerlessDeploymentTypeSelected={false}
                           defaultErrorText={getString('pipeline.artifactsSelection.errors.noRepositories')}
                         />
                       ),

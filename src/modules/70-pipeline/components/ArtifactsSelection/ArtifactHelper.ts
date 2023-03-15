@@ -28,7 +28,8 @@ export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDe
     deploymentType === ServiceDeploymentType.Kubernetes ||
     deploymentType === ServiceDeploymentType.NativeHelm ||
     deploymentType === ServiceDeploymentType.ECS ||
-    deploymentType === ServiceDeploymentType.TAS
+    deploymentType === ServiceDeploymentType.TAS ||
+    deploymentType === ServiceDeploymentType.AwsLambda
   )
 }
 
@@ -273,7 +274,14 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
   ],
   GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage],
-  AwsLambda: [ENABLED_ARTIFACT_TYPES.AmazonS3, ENABLED_ARTIFACT_TYPES.Ecr],
+  AwsLambda: [
+    ENABLED_ARTIFACT_TYPES.AmazonS3,
+    ENABLED_ARTIFACT_TYPES.Ecr,
+    ENABLED_ARTIFACT_TYPES.Nexus2Registry,
+    ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
+    ENABLED_ARTIFACT_TYPES.Jenkins
+  ],
   AWS_SAM: []
 }
 

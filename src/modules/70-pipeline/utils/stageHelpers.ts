@@ -440,6 +440,10 @@ export const isGoogleCloudFuctionsDeploymentType = (deploymentType: string): boo
   return deploymentType === ServiceDeploymentType.GoogleCloudFunctions
 }
 
+export const isAWSLambdaDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.AwsLambda
+}
+
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
@@ -753,11 +757,13 @@ export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefin
 export const getAllowedRepoOptions = (
   deploymentType: string,
   azureFlag?: boolean,
-
   isTemplateContext?: boolean,
   selectedArtifact?: ArtifactType | null
 ): SelectOption[] => {
   if (selectedArtifact === 'Nexus3Registry') {
+    if (isAWSLambdaDeploymentType(deploymentType)) {
+      return [...nexus3RepositoryFormatTypes]
+    }
     return [...k8sRepositoryFormatTypes, ...nexus3RepositoryFormatTypes]
   }
   return !!isTemplateContext ||
