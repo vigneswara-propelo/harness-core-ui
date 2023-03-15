@@ -12,6 +12,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useGetCommunity } from '@common/utils/utils'
 import { FeatureFlag } from '@common/featureFlags'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { ModuleLicenseDTO } from '../../../services/cd-ng'
@@ -206,11 +207,13 @@ const getModuleInfo = (
 const shouldBeVisible = (
   module: NavModuleName,
   featureFlags: Partial<Record<FeatureFlag, boolean>>,
-  licenseInformation: { [key: string]: ModuleLicenseDTO } | Record<string, undefined>
+  licenseInformation: { [key: string]: ModuleLicenseDTO } | Record<string, undefined>,
+  isCommunity: boolean
 ): boolean => {
   const featureFlagName = moduleInfoMap[module]?.featureFlagName
-
-  if (module === ModuleName.CV) {
+  if (isCommunity && module === ModuleName.CV) {
+    return false
+  } else if (module === ModuleName.CV) {
     return Boolean(
       licenseInformation[ModuleName.CV]?.status === 'ACTIVE' ||
         licenseInformation[ModuleName.CD]?.status === 'ACTIVE' ||
@@ -227,14 +230,14 @@ const useNavModuleInfo = (module: NavModuleName) => {
   const { accountId } = useParams<AccountPathProps>()
   const featureFlags = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
-
+  const isCommunity = useGetCommunity()
   const { color, backgroundColor } = moduleInfoMap[module]
 
   return getModuleInfo(
     moduleInfoMap[module],
     accountId,
     !!licenseInformation[module]?.id,
-    shouldBeVisible(module, featureFlags, licenseInformation),
+    shouldBeVisible(module, featureFlags, licenseInformation, isCommunity),
     color,
     backgroundColor
   ) as useNavModuleInfoReturnType
@@ -243,6 +246,7 @@ const useNavModuleInfo = (module: NavModuleName) => {
 export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoReturnType> => {
   const { accountId } = useParams<AccountPathProps>()
   const featureFlags = useFeatureFlags()
+  const isCommunity = useGetCommunity()
 
   const { licenseInformation } = useLicenseStore()
 
@@ -255,7 +259,7 @@ export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoRet
         moduleInfoMap[module],
         accountId,
         !!licenseInformation[module]?.id,
-        shouldBeVisible(module, featureFlags, licenseInformation),
+        shouldBeVisible(module, featureFlags, licenseInformation, isCommunity),
         moduleInfoMap[module].color
       )
     }
