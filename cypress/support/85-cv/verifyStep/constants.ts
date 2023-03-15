@@ -59,6 +59,9 @@ export const logsRadarChartDataCLusterFilterCall = `/cv/api/verify-step/GZNwefkd
 // logs min slider filter
 export const logsListMinSliderFilterCall = `cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-log-analysis-radar-chart-data?routingId=${accountId}&accountId=${accountId}&pageNumber=0&pageSize=10&minAngle=30&maxAngle=360&clusterTypes=UNEXPECTED_FREQUENCY`
 
+// log feedback call
+export const feedbackHistory = `/cv/api/account/accountId/org/${org}/project/${project}/log-feedback/abc/history?*`
+
 export const strategiesResponse = {
   status: 'SUCCESS',
   data: { Kubernetes: ['Rolling', 'BlueGreen', 'Canary', 'Default'], NativeHelm: ['Rolling', 'Default'] },
@@ -1019,7 +1022,26 @@ export const logsListCallResponse = {
               timeStamp: 1672845300,
               count: 10
             }
-          ]
+          ],
+          feedbackApplied: {
+            feedbackScore: 'HIGH_RISK',
+            description:
+              'Some applied reason Some applied reason Some applied reason Some applied reason Some applied reasonSome applied reason',
+            createdBy: 'pranesh@harness.io',
+            createdAt: 1677414780069,
+            updatedby: 'pranesh@harness.io',
+            updatedAt: 1677414840933,
+            feedbackId: 'abc'
+          },
+          feedback: {
+            feedbackScore: 'MEDIUM_RISK',
+            description: 'Some reason',
+            createdBy: 'pranesh@harness.io',
+            createdAt: 1677414780069,
+            updatedby: 'pranesh@harness.io',
+            updatedAt: 1677414840933,
+            feedbackId: 'abc'
+          }
         },
         {
           message: 'test 2',
@@ -2092,4 +2114,18 @@ export const overviewCallResponse = {
   metricsAnalysis: { healthy: 0, warning: 0, unhealthy: 0, noAnalysis: 336 },
   logClusters: { knownClustersCount: 0, unknownClustersCount: 0, unexpectedFrequencyClustersCount: 0 },
   errorClusters: { knownClustersCount: 0, unknownClustersCount: 0, unexpectedFrequencyClustersCount: 0 }
+}
+
+export const feedbackHistoryResponse = {
+  metaData: {},
+  resource: [
+    {
+      updatedBy: 'pranesh.g@harness.io',
+      logFeedback: {
+        feedbackScore: 'NO_RISK_CONSIDER_FREQUENCY',
+        description: 'It is not an issue',
+        updatedAt: 1672845660
+      }
+    }
+  ]
 }

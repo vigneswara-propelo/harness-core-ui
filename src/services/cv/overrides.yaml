@@ -198,6 +198,9 @@ allowpaths:
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/history
   - /slo-dashboard/unavailable-instances/{identifier}
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/param-values
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/log-feedback
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/log-feedback/{logFeedbackId}
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/log-feedback/{logFeedbackId}/history
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

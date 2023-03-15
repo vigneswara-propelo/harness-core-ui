@@ -98,6 +98,21 @@ export interface AnalyzedRadarChartLogDataWithCountDTO {
   totalClusters?: number
 }
 
+export interface AnnotationDTO {
+  endTime: number
+  message: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  sloIdentifier: string
+  startTime: number
+}
+
+export interface AnnotationResponse {
+  annotation: AnnotationDTO
+  createdAt?: number
+  lastModifiedAt?: number
+}
+
 export interface AnomaliesSummaryDTO {
   logsAnomalies?: number
   timeSeriesAnomalies?: number
@@ -774,6 +789,9 @@ export interface ClusterSummary {
   feedbackApplied?: LogFeedback
   frequencyData?: HostFrequencyData[]
   label?: number
+  previousClusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  previousRisk?: number
+  previousRiskLevel?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
   risk?: number
   riskLevel?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
   score?: number
@@ -2950,6 +2968,7 @@ export interface LearningEngineTask {
     | 'CANARY_DEPLOYMENT_LOG'
     | 'LOG_ANALYSIS'
     | 'TIME_SERIES_LOAD_TEST'
+    | 'LOG_FEEDBACK'
   createdAt?: number
   endTime?: number
   exception?: string
@@ -2975,6 +2994,7 @@ export interface LearningEngineTask {
     | 'CANARY_DEPLOYMENT_LOG'
     | 'LOG_ANALYSIS'
     | 'TIME_SERIES_LOAD_TEST'
+    | 'LOG_FEEDBACK'
   uuid?: string
   verificationTaskId?: string
 }
@@ -3161,10 +3181,10 @@ export interface LogFeedback {
   environmentIdentifier?: string
   feedbackId?: string
   feedbackScore?: 'NO_RISK_IGNORE_FREQUENCY' | 'NO_RISK_CONSIDER_FREQUENCY' | 'MEDIUM_RISK' | 'HIGH_RISK' | 'DEFAULT'
-  lastUpdatedAt?: number
-  lastUpdatedBy?: string
   sampleMessage?: string
   serviceIdentifier?: string
+  updatedAt?: number
+  updatedby?: string
   verificationJobInstanceId?: string
 }
 
@@ -5009,6 +5029,14 @@ export interface RestResponseAnalyzedRadarChartLogDataWithCountDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseAnnotationResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: AnnotationResponse
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseAnomaliesSummaryDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -6733,6 +6761,8 @@ export interface YamlSchemaWithDetails {
   yamlSchemaMetadata?: YamlSchemaMetadata
 }
 
+export type AnnotationDTORequestBody = AnnotationDTO
+
 export type ChangeEventDTORequestBody = ChangeEventDTO
 
 export type CompositeServiceLevelObjectiveSpecRequestBody = CompositeServiceLevelObjectiveSpec
@@ -8425,6 +8455,405 @@ export const getSampleRawRecordPromise = (
     'POST',
     getConfig('cv/api'),
     `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/records`,
+    props,
+    signal
+  )
+
+export interface SaveLogFeedbackPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type SaveLogFeedbackProps = Omit<
+  MutateProps<RestResponseLogFeedback, unknown, void, LogFeedbackRequestBody, SaveLogFeedbackPathParams>,
+  'path' | 'verb'
+> &
+  SaveLogFeedbackPathParams
+
+/**
+ * saves log data collected for verification
+ */
+export const SaveLogFeedback = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: SaveLogFeedbackProps) => (
+  <Mutate<RestResponseLogFeedback, unknown, void, LogFeedbackRequestBody, SaveLogFeedbackPathParams>
+    verb="POST"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/log-feedback`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseSaveLogFeedbackProps = Omit<
+  UseMutateProps<RestResponseLogFeedback, unknown, void, LogFeedbackRequestBody, SaveLogFeedbackPathParams>,
+  'path' | 'verb'
+> &
+  SaveLogFeedbackPathParams
+
+/**
+ * saves log data collected for verification
+ */
+export const useSaveLogFeedback = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseSaveLogFeedbackProps) =>
+  useMutate<RestResponseLogFeedback, unknown, void, LogFeedbackRequestBody, SaveLogFeedbackPathParams>(
+    'POST',
+    (paramsInPath: SaveLogFeedbackPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/log-feedback`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * saves log data collected for verification
+ */
+export const saveLogFeedbackPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseLogFeedback,
+    unknown,
+    void,
+    LogFeedbackRequestBody,
+    SaveLogFeedbackPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseLogFeedback, unknown, void, LogFeedbackRequestBody, SaveLogFeedbackPathParams>(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/log-feedback`,
+    props,
+    signal
+  )
+
+export interface DeleteLogFeedbackPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type DeleteLogFeedbackProps = Omit<
+  MutateProps<RestResponseBoolean, unknown, void, string, DeleteLogFeedbackPathParams>,
+  'path' | 'verb'
+> &
+  DeleteLogFeedbackPathParams
+
+/**
+ * saves log data collected for verification
+ */
+export const DeleteLogFeedback = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: DeleteLogFeedbackProps) => (
+  <Mutate<RestResponseBoolean, unknown, void, string, DeleteLogFeedbackPathParams>
+    verb="DELETE"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/log-feedback`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteLogFeedbackProps = Omit<
+  UseMutateProps<RestResponseBoolean, unknown, void, string, DeleteLogFeedbackPathParams>,
+  'path' | 'verb'
+> &
+  DeleteLogFeedbackPathParams
+
+/**
+ * saves log data collected for verification
+ */
+export const useDeleteLogFeedback = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseDeleteLogFeedbackProps) =>
+  useMutate<RestResponseBoolean, unknown, void, string, DeleteLogFeedbackPathParams>(
+    'DELETE',
+    (paramsInPath: DeleteLogFeedbackPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/log-feedback`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * saves log data collected for verification
+ */
+export const deleteLogFeedbackPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<RestResponseBoolean, unknown, void, string, DeleteLogFeedbackPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseBoolean, unknown, void, string, DeleteLogFeedbackPathParams>(
+    'DELETE',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/log-feedback`,
+    props,
+    signal
+  )
+
+export interface GetLogFeedbackPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  logFeedbackId: string
+}
+
+export type GetLogFeedbackProps = Omit<
+  GetProps<RestResponseLogFeedback, unknown, void, GetLogFeedbackPathParams>,
+  'path'
+> &
+  GetLogFeedbackPathParams
+
+/**
+ * saves log data collected for verification
+ */
+export const GetLogFeedback = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  logFeedbackId,
+  ...props
+}: GetLogFeedbackProps) => (
+  <Get<RestResponseLogFeedback, unknown, void, GetLogFeedbackPathParams>
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/log-feedback/${logFeedbackId}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetLogFeedbackProps = Omit<
+  UseGetProps<RestResponseLogFeedback, unknown, void, GetLogFeedbackPathParams>,
+  'path'
+> &
+  GetLogFeedbackPathParams
+
+/**
+ * saves log data collected for verification
+ */
+export const useGetLogFeedback = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  logFeedbackId,
+  ...props
+}: UseGetLogFeedbackProps) =>
+  useGet<RestResponseLogFeedback, unknown, void, GetLogFeedbackPathParams>(
+    (paramsInPath: GetLogFeedbackPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/log-feedback/${paramsInPath.logFeedbackId}`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, logFeedbackId },
+      ...props
+    }
+  )
+
+/**
+ * saves log data collected for verification
+ */
+export const getLogFeedbackPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    logFeedbackId,
+    ...props
+  }: GetUsingFetchProps<RestResponseLogFeedback, unknown, void, GetLogFeedbackPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+    logFeedbackId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseLogFeedback, unknown, void, GetLogFeedbackPathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/log-feedback/${logFeedbackId}`,
+    props,
+    signal
+  )
+
+export interface UpdateLogFeedbackPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  logFeedbackId: string
+}
+
+export type UpdateLogFeedbackProps = Omit<
+  MutateProps<RestResponseLogFeedback, unknown, void, LogFeedbackRequestBody, UpdateLogFeedbackPathParams>,
+  'path' | 'verb'
+> &
+  UpdateLogFeedbackPathParams
+
+/**
+ * saves log data collected for verification
+ */
+export const UpdateLogFeedback = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  logFeedbackId,
+  ...props
+}: UpdateLogFeedbackProps) => (
+  <Mutate<RestResponseLogFeedback, unknown, void, LogFeedbackRequestBody, UpdateLogFeedbackPathParams>
+    verb="PUT"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/log-feedback/${logFeedbackId}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateLogFeedbackProps = Omit<
+  UseMutateProps<RestResponseLogFeedback, unknown, void, LogFeedbackRequestBody, UpdateLogFeedbackPathParams>,
+  'path' | 'verb'
+> &
+  UpdateLogFeedbackPathParams
+
+/**
+ * saves log data collected for verification
+ */
+export const useUpdateLogFeedback = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  logFeedbackId,
+  ...props
+}: UseUpdateLogFeedbackProps) =>
+  useMutate<RestResponseLogFeedback, unknown, void, LogFeedbackRequestBody, UpdateLogFeedbackPathParams>(
+    'PUT',
+    (paramsInPath: UpdateLogFeedbackPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/log-feedback/${paramsInPath.logFeedbackId}`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, logFeedbackId },
+      ...props
+    }
+  )
+
+/**
+ * saves log data collected for verification
+ */
+export const updateLogFeedbackPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    logFeedbackId,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseLogFeedback,
+    unknown,
+    void,
+    LogFeedbackRequestBody,
+    UpdateLogFeedbackPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string; logFeedbackId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseLogFeedback, unknown, void, LogFeedbackRequestBody, UpdateLogFeedbackPathParams>(
+    'PUT',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/log-feedback/${logFeedbackId}`,
+    props,
+    signal
+  )
+
+export interface GetFeedbackHistoryPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  logFeedbackId: string
+}
+
+export type GetFeedbackHistoryProps = Omit<
+  GetProps<RestResponseListLogFeedbackHistory, unknown, void, GetFeedbackHistoryPathParams>,
+  'path'
+> &
+  GetFeedbackHistoryPathParams
+
+/**
+ * saves log data collected for verification
+ */
+export const GetFeedbackHistory = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  logFeedbackId,
+  ...props
+}: GetFeedbackHistoryProps) => (
+  <Get<RestResponseListLogFeedbackHistory, unknown, void, GetFeedbackHistoryPathParams>
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/log-feedback/${logFeedbackId}/history`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetFeedbackHistoryProps = Omit<
+  UseGetProps<RestResponseListLogFeedbackHistory, unknown, void, GetFeedbackHistoryPathParams>,
+  'path'
+> &
+  GetFeedbackHistoryPathParams
+
+/**
+ * saves log data collected for verification
+ */
+export const useGetFeedbackHistory = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  logFeedbackId,
+  ...props
+}: UseGetFeedbackHistoryProps) =>
+  useGet<RestResponseListLogFeedbackHistory, unknown, void, GetFeedbackHistoryPathParams>(
+    (paramsInPath: GetFeedbackHistoryPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/log-feedback/${paramsInPath.logFeedbackId}/history`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, logFeedbackId },
+      ...props
+    }
+  )
+
+/**
+ * saves log data collected for verification
+ */
+export const getFeedbackHistoryPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    logFeedbackId,
+    ...props
+  }: GetUsingFetchProps<RestResponseListLogFeedbackHistory, unknown, void, GetFeedbackHistoryPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+    logFeedbackId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseListLogFeedbackHistory, unknown, void, GetFeedbackHistoryPathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/log-feedback/${logFeedbackId}/history`,
     props,
     signal
   )

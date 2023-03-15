@@ -4,12 +4,15 @@ import {
   pipelineExecutionSummaryAPI,
   pipelineListAPI
 } from '../../../support/70-pipeline/constants'
+import { featureFlagsCall } from '../../../support/85-cv/common'
 
 import {
   aggregateProjectsCall,
   deploymentTimeseriesDataAPI,
   deploymentTimeseriesDataWithFilters,
   deploymentTimeseriesDataWithNodeFilterAPI,
+  feedbackHistory,
+  feedbackHistoryResponse,
   gitSyncCall,
   healthSourceAPI,
   logsListCall,
@@ -33,6 +36,21 @@ import {
 
 describe('Verify step', () => {
   beforeEach(() => {
+    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+      cy.intercept('GET', featureFlagsCall, {
+        ...featureFlagsData,
+        resource: [
+          ...featureFlagsData.resource,
+          {
+            uuid: null,
+            name: 'SRM_LOG_FEEDBACK_ENABLE_UI',
+            enabled: true,
+            lastUpdatedAt: 0
+          }
+        ]
+      })
+    })
+
     cy.intercept('POST', pipelineListAPI, { fixture: '/pipeline/api/pipelines/getPipelineList' }).as('pipelineList')
     cy.intercept('GET', pipelinesSummaryFetchCall, { fixture: '/pipeline/api/pipelines/pipelineSummary' }).as(
       'pipelineSummary'
@@ -98,6 +116,7 @@ describe('Verify step', () => {
       'logsRadarChartDataCLusterFilterCall'
     )
     cy.intercept('GET', logsListMinSliderFilterCall, logsListCallResponse).as('logsListMinSliderFilterCall')
+    cy.intercept('GET', feedbackHistory, feedbackHistoryResponse).as('feedbackHistory')
 
     cy.findByText('NG Docker Image').click()
 
@@ -149,6 +168,24 @@ describe('Verify step', () => {
     cy.findByTestId(/ActivityHeadingContent_count/i).should('have.text', '8')
 
     cy.findAllByTestId(/activityHeadingContent-chart/i).should('have.length', '4')
+
+    cy.findByTestId(/updatedFeedbackDisplay/).should('exist')
+    cy.findByTestId(/appliedFeedbackDisplay/).should('exist')
+
+    cy.findByTestId(/updatedFeedbackRisk/).should('have.text', 'Medium risk')
+    cy.findByTestId(/appliedFeedbackRisk/).should('have.text', 'High risk')
+
+    cy.findByTestId(/updatedFeedbackDetails/).should('include.text', ' Updated By pranesh@harness.io on 02/26/2023')
+    cy.findByTestId(/appliedFeedbackDetails/).should('include.text', ' Updated By pranesh@harness.io on 02/26/2023')
+
+    cy.findByTestId(/updateEventPreferenceButton-Drawer/).click()
+
+    cy.wait('@feedbackHistory')
+
+    cy.get('input[name="eventPriority"]').should('have.value', 'Medium risk')
+    cy.get('textarea[name="reason"]').should('have.value', 'Some reason')
+
+    cy.findByTestId(/updatePreferenceDrawerSubmit_button/).click()
 
     cy.findByTestId(/DrawerClose_button/i).click()
 

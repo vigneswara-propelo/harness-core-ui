@@ -1088,7 +1088,7 @@ verification:
     countPerMin: Count per min
     eventCountPerMin: Event count per minute
     eventDetails: Event Details
-    updateEventPreference: Update Event Preference
+    updateEventPreference: Update event preference
     eventPreference: Event Preference
     lastKnownOccurrence: Last Known Occurrence
     firstOccurrence: First Occurrence

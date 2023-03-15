@@ -8227,12 +8227,27 @@ export interface StringsMap {
   'cv.logCluster': string
   'cv.logs.baselineLegendTooltip': string
   'cv.logs.eventMarkedAs': string
+  'cv.logs.eventPriority': string
   'cv.logs.eventPriorityUpdate': string
+  'cv.logs.eventPriorityValues.default': string
+  'cv.logs.eventPriorityValues.highRisk': string
+  'cv.logs.eventPriorityValues.mediumRisk': string
+  'cv.logs.eventPriorityValues.notARiskConsider': string
+  'cv.logs.eventPriorityValues.notARiskIgnore': string
+  'cv.logs.feedbackApplied': string
+  'cv.logs.feedbackAppliedMessage': string
+  'cv.logs.feedbackHistory': string
+  'cv.logs.feedbackUpdatedMessage': string
   'cv.logs.notARisk': string
   'cv.logs.priorityOrRiskSelectionRequired': string
   'cv.logs.radarChartInfo': string
+  'cv.logs.reasonPlaceholder': string
   'cv.logs.reportedBy': string
+  'cv.logs.riskPriorityLabel': string
+  'cv.logs.riskPriorityValidation': string
   'cv.logs.totalCount': string
+  'cv.logs.updatedBy': string
+  'cv.logs.viewEventDetails': string
   'cv.logsCluster': string
   'cv.maxValue': string
   'cv.messageFrequency': string
@@ -8318,6 +8333,7 @@ export interface StringsMap {
   'cv.monitoredServices.serviceHealth.selectTimeline': string
   'cv.monitoredServices.serviceHealth.selectTimelineErrorTracking': string
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.exhausted': string
+  'cv.monitoredServices.serviceHealth.serviceDependencies.states.mediumHealthy': string
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.needsAttention': string
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.observe': string
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.unhealthy': string
