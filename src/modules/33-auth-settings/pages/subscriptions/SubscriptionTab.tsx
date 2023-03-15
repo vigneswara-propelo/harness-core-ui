@@ -14,7 +14,7 @@ import type { Editions } from '@common/constants/SubscriptionTypes'
 import { SubscriptionTabNames, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
-import type { ModuleName } from 'framework/types/ModuleName'
+import { ModuleName } from 'framework/types/ModuleName'
 import type { AccountDTO, ModuleLicenseDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
@@ -111,6 +111,10 @@ const SubscriptionTab = ({
 
       const isSelected = tab === selectedSubscriptionTab
       const buttonClassnames = cx(css.subscriptionTabButton, isSelected && css.selected)
+      // adding this until we have plans page for srm page
+      if (selectedModule.toUpperCase() === ModuleName.CV && tab.label === SUBSCRIPTION_TABS[1].label) {
+        return <></>
+      }
       return (
         <Button className={buttonClassnames} key={tab.label} round onClick={handleTabClick}>
           {getString(tab.label)}
