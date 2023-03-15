@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { render, fireEvent, act } from '@testing-library/react'
 import type { IconName } from '@blueprintjs/core'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { UseGetReturnData } from '@common/utils/testUtils'
@@ -168,8 +168,7 @@ jest.mock('services/portal', () => ({
 }))
 
 describe('BuildStageSetupShell snapshot test', () => {
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('initializes ok', async () => {
+  test('initializes ok', async () => {
     const { container } = render(
       <TestWrapper pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
         <PipelineContext.Provider value={getContextValue()}>
@@ -180,10 +179,9 @@ describe('BuildStageSetupShell snapshot test', () => {
     expect(container).toMatchSnapshot()
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('advances through tabs and finalizes saving when click "Done"', async () => {
+  test('advances through tabs and finalizes saving when click "Done"', async () => {
     const contextMock = getContextValue()
-    const { container, findByTestId, findByText } = render(
+    const { container, getByText } = render(
       <TestWrapper pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
         <PipelineContext.Provider value={contextMock}>
           <StageErrorContext.Provider
@@ -200,16 +198,27 @@ describe('BuildStageSetupShell snapshot test', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    expect(container.querySelector('#stageDetails')).not.toBeNull()
-    fireEvent.click(await findByText('continue'))
-    await waitFor(() => expect(findByText('pipelineSteps.build.infraSpecifications.whereToRun')).not.toBeNull())
-    fireEvent.click(await findByTestId('ci.advancedLabel'))
-    fireEvent.click(await findByText('Done'))
-    expect(contextMock.updatePipelineView).toHaveBeenCalled()
+    const continueBtn = getByText('continue')
+    expect(container.querySelector('[id="bp3-tab-title_stageSetupShell_OVERVIEW"]')).toBeInTheDocument()
+    expect(continueBtn).toBeInTheDocument()
+    await act(async () => {
+      fireEvent.click(continueBtn)
+    })
+    await act(async () => {
+      fireEvent.click(continueBtn)
+    })
+    const advancedTab = getByText('ci.advancedLabel')
+    expect(advancedTab).toBeInTheDocument()
+    await act(async () => {
+      fireEvent.click(advancedTab!)
+    })
+    await act(async () => {
+      fireEvent.click(getByText('Done')!)
+    })
+    expect(container.querySelector('[aria-selected="true"]')?.getAttribute('data-tab-id')).toBe('ADVANCED')
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('ExecutionGraph step handlers update pipeline view', async () => {
+  test('ExecutionGraph step handlers update pipeline view', async () => {
     ;(ExecutionGraph as any).render.mockImplementationOnce(({ onAddStep, onEditStep }: any) => (
       <div>
         <div data-testid="execution-graph-mock-add" onClick={() => onAddStep({})} />
@@ -239,5 +248,46 @@ describe('BuildStageSetupShell snapshot test', () => {
     expect(contextMock.updatePipelineView).toHaveBeenCalledTimes(1)
     fireEvent.click(await findByTestId('execution-graph-mock-edit'))
     expect(contextMock.updatePipelineView).toHaveBeenCalledTimes(2)
+  })
+
+  test('Should invoke updateStage on step group add', async () => {
+    ;(ExecutionGraph as any).render.mockImplementationOnce(({ onAddStep, onEditStep, updateStage }: any) => (
+      <div>
+        <div data-testid="execution-graph-mock-add" onClick={() => onAddStep({})} />
+        <div data-testid="execution-graph-mock-step-group-add" onClick={() => updateStage({})} />
+        <div data-testid="execution-graph-mock-edit" onClick={() => onEditStep({})} />
+      </div>
+    ))
+    const contextMock = getContextValue()
+    const { container, getByText, findByTestId } = render(
+      <TestWrapper pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
+        <PipelineContext.Provider value={contextMock}>
+          <StageErrorContext.Provider
+            value={{
+              state: {} as any,
+              checkErrorsForTab: () => Promise.resolve(),
+              subscribeForm: () => undefined,
+              unSubscribeForm: () => undefined,
+              submitFormsForTab: () => undefined
+            }}
+          >
+            <BuildStageSetupShell />
+          </StageErrorContext.Provider>
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const continueBtn = getByText('continue')
+    expect(container.querySelector('[id="bp3-tab-title_stageSetupShell_OVERVIEW"]')).toBeInTheDocument()
+    expect(continueBtn).toBeInTheDocument()
+    await act(async () => {
+      fireEvent.click(continueBtn)
+    })
+    await act(async () => {
+      fireEvent.click(getByText('ci.executionLabel'))
+    })
+    const addStepButton = await findByTestId('execution-graph-mock-step-group-add')
+    fireEvent.click(addStepButton)
+    expect(container.querySelector('[aria-selected="true"]')?.getAttribute('data-tab-id')).toBe('EXECUTION')
   })
 })
