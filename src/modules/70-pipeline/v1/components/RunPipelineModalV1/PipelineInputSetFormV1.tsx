@@ -8,10 +8,11 @@
 import React from 'react'
 import { Layout, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import cx from 'classnames'
+import type { InputsResponseBody } from '@harnessio/react-pipeline-service-client'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
-import type { ResponseInputs, PipelineV1InfoConfig } from 'services/pipeline-ng'
+import type { PipelineV1InfoConfig } from './RunPipelineFormV1'
 import { CICodebaseInputSetFormV1 } from './CICodebaseInputSetFormV1'
 import { PipelineInputParametersV1 } from './PipelineInputParamsV1/PipelineInputParametersV1'
 import css from '../../../components/PipelineInputSetForm/PipelineInputSetForm.module.scss'
@@ -27,7 +28,7 @@ export interface PipelineInputSetFormV1Props {
   gitAwareForTriggerEnabled?: boolean
   hideTitle?: boolean
   disableRuntimeInputConfigureOptions?: boolean
-  inputSets?: ResponseInputs | null
+  inputSets?: InputsResponseBody | null
   hasRuntimeInputs?: boolean
   hasCodebaseInputs?: boolean
   originalPipeline?: PipelineV1InfoConfig

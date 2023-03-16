@@ -80,7 +80,7 @@ module.exports = {
     }
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(date-fns|lodash-es|@harnessio/react-audit-service-client|@harnessio/react-idp-service-client|p-debounce)/)'
+    'node_modules/(?!(date-fns|lodash-es|@harnessio/react-audit-service-client|@harnessio/react-idp-service-client|p-debounce|@harnessio/react-pipeline-service-client)/)'
   ],
   testPathIgnorePatterns: ['<rootDir>/dist', '<rootDir>/src/static']
 }

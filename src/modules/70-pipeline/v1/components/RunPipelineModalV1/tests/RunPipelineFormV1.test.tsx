@@ -44,9 +44,6 @@ jest.mock('services/pipeline-ng', () => ({
   usePostPipelineExecuteWithInputSetYaml: jest.fn(() => getMockFor_Generic_useMutate()),
   useRePostPipelineExecuteWithInputSetYaml: jest.fn(() => getMockFor_Generic_useMutate(mockRePostPipelineExecuteYaml)),
 
-  // used within useInputSets
-  useGetPipelineInputs: jest.fn(() => getMockFor_useGetTemplateFromPipeline()),
-
   // used within PipelineVaribalesContext
   useCreateVariablesV2: jest.fn(() => ({})),
 
@@ -54,6 +51,10 @@ jest.mock('services/pipeline-ng', () => ({
   useGetPreflightCheckResponse: jest.fn(() => ({ data: { data: { status: 'SUCCESS' } } })),
   startPreflightCheckPromise: jest.fn().mockResolvedValue({}),
   useDebugPipelineExecuteWithInputSetYaml: jest.fn().mockImplementation(() => ({ mutate: successResponse }))
+}))
+
+jest.mock('@harnessio/react-pipeline-service-client', () => ({
+  useGetPipelineInputsQuery: jest.fn(() => getMockFor_useGetTemplateFromPipeline())
 }))
 
 describe('<RunPipelineForm', () => {

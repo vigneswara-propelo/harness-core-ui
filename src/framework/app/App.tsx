@@ -15,6 +15,7 @@ import { PageSpinner, useToaster, MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY }
 import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
 import { HarnessReactAPIClient as AuditServiceClient } from '@harnessio/react-audit-service-client'
 import { IDPServiceAPIClient } from '@harnessio/react-idp-service-client'
+import { PipelineServiceAPIClient } from '@harnessio/react-pipeline-service-client'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import SessionToken from 'framework/utils/SessionToken'
 import { queryClient } from 'services/queryClient'
@@ -83,6 +84,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   const { forceLogout } = useLogout()
   const auditServiceClientObjRef = useRef<AuditServiceClient>()
   const idpServiceClientObjRef = useRef<IDPServiceAPIClient>()
+  const pipelineServiceClientObjRef = useRef<PipelineServiceAPIClient>()
 
   const getQueryParams = React.useCallback(() => {
     return {
@@ -186,6 +188,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   const updateHeadersForOpenApiClients = (headers: Record<string, any>): void => {
     auditServiceClientObjRef.current?.updateHeaders(headers)
     idpServiceClientObjRef.current?.updateHeaders(headers)
+    pipelineServiceClientObjRef.current?.updateHeaders(headers)
   }
 
   useEffect(() => {
@@ -213,6 +216,18 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
           token: SessionToken.getToken(),
           'Harness-Account': accountId
         }
+      }
+    })
+    pipelineServiceClientObjRef.current = new PipelineServiceAPIClient({
+      responseInterceptor: response => {
+        globalResponseHandler(response.clone())
+        return response
+      },
+      urlInterceptor: (url: string) => {
+        return window.getApiBaseUrl(url)
+      },
+      getRequestHeaders: () => {
+        return { token: SessionToken.getToken(), 'Harness-Account': accountId }
       }
     })
   }, [accountId])

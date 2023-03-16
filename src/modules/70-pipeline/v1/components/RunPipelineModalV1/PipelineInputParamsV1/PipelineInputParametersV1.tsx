@@ -10,12 +10,12 @@ import { TextInput, Layout, Text } from '@harness/uicore'
 import { connect } from 'formik'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
-import type { ResponseInputs } from 'services/pipeline-ng'
+import type { InputsResponseBody } from '@harnessio/react-pipeline-service-client'
 import { useStrings } from 'framework/strings'
 import css from './PipelineInputParamsV1.module.scss'
 
 export interface PipelineInputParametersV1Props {
-  pipelineInputsMetadata?: ResponseInputs | null
+  pipelineInputsMetadata?: InputsResponseBody | null
   formik?: any
 }
 

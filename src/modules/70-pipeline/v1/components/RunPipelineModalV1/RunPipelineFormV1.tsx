@@ -24,12 +24,16 @@ import { isEmpty, defaultTo } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
-  PipelineV1InfoConfig,
   ResponseJsonNode,
   useGetPipeline,
   usePostPipelineExecuteWithInputSetYaml,
   useRePostPipelineExecuteWithInputSetYaml,
-  useDebugPipelineExecuteWithInputSetYaml
+  useDebugPipelineExecuteWithInputSetYaml,
+  FlowControlConfig,
+  NotificationRules,
+  JsonNode,
+  TemplateLinkConfig,
+  NGVariable
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -72,6 +76,28 @@ export interface RunPipelineFormV1Props extends PipelineType<PipelinePathProps &
   source: ExecutionPathProps['source']
   storeMetadata?: StoreMetadata
   isDebugMode?: boolean
+}
+
+export interface PipelineV1InfoConfig {
+  allowStageExecutions?: boolean
+  delegateSelectors?: string[]
+  description?: string
+  flowControl?: FlowControlConfig
+  identifier?: string
+  name: string
+  notificationRules?: NotificationRules[]
+  orgIdentifier?: string
+  projectIdentifier?: string
+  inputs?: JsonNode
+  repository?: JsonNode
+  stages?: JsonNode[]
+  tags?: {
+    [key: string]: string
+  }
+  template?: TemplateLinkConfig
+  timeout?: string
+  variables?: NGVariable[]
+  version: number
 }
 
 function RunPipelineFormV1Basic({
@@ -146,8 +172,8 @@ function RunPipelineFormV1Basic({
     inputSetYaml,
     hasRuntimeInputs,
     hasCodebaseInputs,
-    loading: loadingInputSets,
-    error: inputSetsError
+    isLoading: loadingInputSets,
+    inputSetsError
   } = useInputSetsV1({
     accountId,
     projectIdentifier,
@@ -344,7 +370,7 @@ function RunPipelineFormV1Basic({
 
   let runPipelineFormContent: React.ReactElement | null = null
 
-  if (inputSetsError?.message) {
+  if (inputSetsError) {
     runPipelineFormContent = <PipelineInvalidRequestContent onClose={onClose} getTemplateError={inputSetsError} />
   } else {
     runPipelineFormContent = (

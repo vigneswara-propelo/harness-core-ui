@@ -7,11 +7,12 @@
 
 import { renderHook } from '@testing-library/react-hooks'
 import { waitFor } from '@testing-library/react'
-import { useGetPipelineInputs } from 'services/pipeline-ng'
+import { useGetPipelineInputsQuery } from '@harnessio/react-pipeline-service-client'
 import { useInputSetsV1 } from '../useInputSetsV1'
 import type { useInputSetsProps } from '../useInputSetsV1'
-jest.mock('services/pipeline-ng', () => ({
-  useGetPipelineInputs: jest.fn(() => ({}))
+
+jest.mock('@harnessio/react-pipeline-service-client', () => ({
+  useGetPipelineInputsQuery: jest.fn(() => ({}))
 }))
 
 const getInitialProps = (): useInputSetsProps => ({
@@ -23,11 +24,11 @@ const getInitialProps = (): useInputSetsProps => ({
 
 describe('<useInputSets /> tests', () => {
   beforeEach(() => {
-    ;(useGetPipelineInputs as jest.Mock).mockReset()
+    ;(useGetPipelineInputsQuery as jest.Mock).mockReset()
   })
 
   test('works without runtime inputs', async () => {
-    ;(useGetPipelineInputs as jest.Mock).mockImplementation().mockReturnValue('')
+    ;(useGetPipelineInputsQuery as jest.Mock).mockImplementation().mockReturnValue('')
     const { result } = renderHook(useInputSetsV1, { initialProps: getInitialProps() })
 
     await waitFor(() => expect(result.current.inputSets).toBeUndefined())

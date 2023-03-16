@@ -22,13 +22,13 @@ import { getReference } from '@common/utils/utils'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { CodebaseTypes, GIT_EXTENSION, getCodebaseRepoNameFromConnector } from '@pipeline/utils/CIUtils'
-import type { PipelineV1InfoConfig } from 'services/pipeline-ng'
 import {
   ConnectorInfoDTO,
   getListOfBranchesByRefConnectorV2Promise,
   ResponseGitBranchesResponseDTO,
   useGetConnector
 } from 'services/cd-ng'
+import type { PipelineV1InfoConfig } from './RunPipelineFormV1'
 import { StepViewType } from '../../../components/AbstractSteps/Step'
 import css from '../../../components/PipelineInputSetForm/CICodebaseInputSetForm.module.scss'
 import pipelineInputSetCss from '../../../components/PipelineInputSetForm/PipelineInputSetForm.module.scss'

@@ -8,8 +8,9 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import cx from 'classnames'
 import { FormikForm, Layout, Text } from '@harness/uicore'
+import type { InputsResponseBody } from '@harnessio/react-pipeline-service-client'
 import { useStrings } from 'framework/strings'
-import type { ResponseInputs, PipelineV1InfoConfig } from 'services/pipeline-ng'
+import type { PipelineV1InfoConfig } from './RunPipelineFormV1'
 import { PipelineInputSetFormV1 } from './PipelineInputSetFormV1'
 import { StepViewType } from '../../../components/AbstractSteps/Step'
 import css from '../../../components/RunPipelineModal/RunPipelineForm.module.scss'
@@ -22,7 +23,7 @@ export interface VisualViewProps {
   hasCodebaseInputs: boolean
   submitForm(): void
   loadingInputSets: boolean
-  inputSets?: ResponseInputs | null
+  inputSets?: InputsResponseBody | null
   inputSetsError: any
   resolvedPipeline?: PipelineV1InfoConfig
   connectorRef?: string
@@ -101,7 +102,7 @@ export interface PipelineInputSetFormWrapperProps {
   executionIdentifier?: string
   hasRuntimeInputs?: boolean
   hasCodebaseInputs?: boolean
-  inputSets?: ResponseInputs | null
+  inputSets?: InputsResponseBody | null
   resolvedPipeline?: PipelineV1InfoConfig
   connectorRef?: string
   repoIdentifier?: string

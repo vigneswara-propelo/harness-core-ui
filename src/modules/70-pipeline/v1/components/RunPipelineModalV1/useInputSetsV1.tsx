@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import { isEmpty } from 'lodash-es'
-import { useGetPipelineInputs } from 'services/pipeline-ng'
+import { useGetPipelineInputsQuery } from '@harnessio/react-pipeline-service-client'
 
 export interface useInputSetsProps {
   projectIdentifier: string
@@ -26,13 +26,13 @@ export interface InputsYaml {
 }
 
 export function useInputSetsV1(props: useInputSetsProps) {
-  const { branch, repoIdentifier, orgIdentifier, accountId, connectorRef, projectIdentifier, pipelineIdentifier } =
-    props
+  const { branch, repoIdentifier, orgIdentifier, connectorRef, projectIdentifier, pipelineIdentifier } = props
+
   const {
     data: pipelineInputs,
-    loading: loading,
-    error: error
-  } = useGetPipelineInputs({
+    error: error,
+    isLoading
+  } = useGetPipelineInputsQuery({
     org: orgIdentifier,
     project: projectIdentifier,
     pipeline: pipelineIdentifier,
@@ -40,12 +40,6 @@ export function useInputSetsV1(props: useInputSetsProps) {
       repo_name: repoIdentifier,
       branch_name: branch,
       connector_ref: connectorRef
-    },
-    requestOptions: {
-      headers: {
-        'content-type': 'application/json',
-        'Harness-Account': `${accountId}`
-      }
     }
   })
 
@@ -72,5 +66,12 @@ export function useInputSetsV1(props: useInputSetsProps) {
     }
   }
 
-  return { inputSets: pipelineInputs, inputSetYaml, hasRuntimeInputs, hasCodebaseInputs, loading, error }
+  return {
+    inputSets: pipelineInputs,
+    inputSetYaml,
+    hasRuntimeInputs,
+    isLoading,
+    hasCodebaseInputs,
+    inputSetsError: (error as any)?.data?.message || (error as any)?.message
+  }
 }
