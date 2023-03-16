@@ -8,7 +8,7 @@
 import React, { useState, useEffect } from 'react'
 import type { AllowedTypes, SelectOption, DataTooltipInterface } from '@harness/uicore'
 import { useFormikContext } from 'formik'
-import { get, isEmpty, set } from 'lodash-es'
+import { get } from 'lodash-es'
 
 import TagSelector from '../TagSelector/TagSelector'
 
@@ -30,7 +30,7 @@ interface MultiTypeTagSelectorProps {
   label?: string
 }
 
-const MultiTypeTagSelector = ({
+const MultiTypeArrayTagSelector = ({
   allowableTypes,
   tags,
   name,
@@ -39,23 +39,24 @@ const MultiTypeTagSelector = ({
   tooltipProps,
   expressions,
   initialTags,
-  label
+  label,
+  isLoadingTags
 }: MultiTypeTagSelectorProps) => {
   const formik = useFormikContext()
   const [selectedTags, setSelectedTags] = useState([] as SelectedTagsType[])
   const [lastInitialTags, setLastInitialTags] = useState(initialTags)
 
   useEffect(() => {
-    if (typeof initialTags === 'object') {
-      const initialTagOptions = Object.entries(initialTags || {}).map(
-        entry => ({ key: entry[0], value: entry[1] } as SelectedTagsType)
+    if (Array.isArray(initialTags)) {
+      const initialTagOptions = (initialTags || []).map(
+        entry => ({ key: entry.name, value: entry.value } as SelectedTagsType)
       )
       initialTagOptions.forEach(tagOption => {
         formik.setFieldValue(`${name}.${tagOption.key}`, tagOption.value)
       })
       setSelectedTags(initialTagOptions)
     } else if (get(formik.values, name, '') === '') {
-      formik.setFieldValue(`${name}`, {})
+      formik.setFieldValue(`${name}`, [])
     }
   }, [])
 
@@ -75,18 +76,18 @@ const MultiTypeTagSelector = ({
   }, [get(formik.values, name, null)])
 
   useEffect(() => {
-    const tagsObject = {}
-
-    selectedTags.forEach(tag => set(tagsObject, tag.key, tag.value))
-
-    !isEmpty(tagsObject) ? formik.setFieldValue(name, tagsObject) : null
+    const Stags: any[] = []
+    selectedTags.forEach(tag => {
+      Stags.push({ name: tag.key, value: tag.value })
+    })
+    Stags.length ? formik.setFieldValue(name, Stags) : null
   }, [selectedTags])
 
   return (
     <TagSelector
       allowableTypes={allowableTypes}
       tags={tags}
-      isLoadingTags={false}
+      isLoadingTags={isLoadingTags}
       name={name}
       errorMessage={errorMessage}
       className={className}
@@ -97,8 +98,9 @@ const MultiTypeTagSelector = ({
       selectedTags={selectedTags}
       lastInitialTags={lastInitialTags}
       setSelectedTags={setSelectedTags}
+      formatAsArray={true}
     />
   )
 }
 
-export default MultiTypeTagSelector
+export default MultiTypeArrayTagSelector
