@@ -307,7 +307,8 @@ export enum FeatureActions {
   CreateEnvCancel = 'Create an Environment Cancel Clicked',
   CreateSDKKeyClick = 'Create SDK Key Clicked',
   CreateSDKKeySubmit = 'Create SDK Key Submitted',
-  CreateSDKKeyCancel = 'Create SDK Key Cancel Clicked'
+  CreateSDKKeyCancel = 'Create SDK Key Cancel Clicked',
+  JiraAddedToFlag = 'Jira Added To Flag'
 }
 
 export enum CCMActions {

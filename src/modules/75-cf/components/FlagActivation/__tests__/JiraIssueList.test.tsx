@@ -11,8 +11,14 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { JiraIssue } from 'services/cf'
 import * as cfServiceMock from 'services/cf'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import JiraIssueList, { JiraIssueListProps } from '../JiraIssueList'
 jest.mock('services/cf')
+jest.mock('@common/hooks/useTelemetry', () => ({
+  useTelemetry: jest.fn(() => ({
+    trackEvent: jest.fn()
+  }))
+}))
 
 const patchMutateMock = jest.fn()
 const renderComponent = (props?: Partial<JiraIssueListProps>): RenderResult => {
@@ -116,7 +122,7 @@ describe('JiraIssueList', () => {
 
     // submit form
     userEvent.click(screen.getByRole('button', { name: 'add' }))
-    await waitFor(() =>
+    await waitFor(() => {
       expect(patchMutateMock).toHaveBeenCalledWith({
         instructions: [
           {
@@ -127,7 +133,8 @@ describe('JiraIssueList', () => {
           }
         ]
       })
-    )
+      expect(useTelemetry).toHaveBeenCalled()
+    })
   })
 
   test('it should handle/show error on add button click', async () => {

@@ -28,6 +28,9 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { useGetJiraIssues, usePatchFeature } from 'services/cf'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
+
 import patch from '../../utils/instructions'
 
 export interface LinkJiraIssueModalProps {
@@ -37,6 +40,7 @@ export interface LinkJiraIssueModalProps {
 
 const LinkJiraIssueModal: FC<LinkJiraIssueModalProps> = ({ featureIdentifier, refetchFlag }) => {
   const { showError, showSuccess } = useToaster()
+  const { trackEvent } = useTelemetry()
 
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { getString } = useStrings()
@@ -89,6 +93,9 @@ const LinkJiraIssueModal: FC<LinkJiraIssueModalProps> = ({ featureIdentifier, re
           hideModal()
           refetchFlag()
           showSuccess(getString('cf.featureFlags.jira.successMessage'))
+          trackEvent(FeatureActions.JiraAddedToFlag, {
+            category: Category.FEATUREFLAG
+          })
         } catch (e) {
           showError(getErrorMessage(e), undefined, 'cf.featureFlags.jira.errorMessage')
         } finally {
@@ -96,7 +103,7 @@ const LinkJiraIssueModal: FC<LinkJiraIssueModalProps> = ({ featureIdentifier, re
         }
       })
     },
-    [getString, hideModal, mutate, refetchFlag, showError, showSuccess]
+    [getString, hideModal, mutate, refetchFlag, showError, showSuccess, trackEvent]
   )
 
   return (
