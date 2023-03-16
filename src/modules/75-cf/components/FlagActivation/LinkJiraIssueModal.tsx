@@ -79,7 +79,7 @@ const LinkJiraIssueModal: FC<LinkJiraIssueModalProps> = ({ featureIdentifier, re
       patch.feature.addInstruction({
         kind: 'addJiraIssueToFlag',
         parameters: {
-          issueKey: jiraIssueKey as string
+          issueKey: jiraIssueKey
         }
       })
 

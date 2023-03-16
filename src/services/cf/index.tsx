@@ -249,6 +249,10 @@ export interface Feature {
      */
     environment: string
     /**
+     * Indicates whether jira functionality is enabled for the given account, project, org, and environment
+     */
+    jiraEnabled?: boolean
+    /**
      * An array of Jira Issues linked to this Feature. Returns empty if none exist
      */
     jiraIssues?: JiraIssue[]
