@@ -15,6 +15,7 @@ import { useStrings } from 'framework/strings'
 import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import routes from '@common/RouteDefinitions'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
@@ -60,15 +61,15 @@ export function PipelineListTable({
   const history = useHistory()
   const { getString } = useStrings()
   const pathParams = useParams<PipelineListPagePathParams>()
+  const { CI_YAML_VERSIONING, PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const {
     content = [],
     totalElements = 0,
     totalPages = 0,
     number = DEFAULT_PAGE_INDEX,
-    size = DEFAULT_PAGE_SIZE
+    size = PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : DEFAULT_PAGE_SIZE
   } = data
   const [currentSort, currentOrder] = sortBy
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   const columns: Column<PMSPipelineSummaryResponse>[] = React.useMemo(() => {
     const getServerSortProps = (id: string) => {

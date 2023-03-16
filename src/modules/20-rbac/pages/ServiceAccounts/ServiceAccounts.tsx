@@ -23,7 +23,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
-import { rbacQueryParamOptions } from '@rbac/utils/utils'
+import { useRbacQueryParamOptions } from '@rbac/utils/utils'
 import ListHeader from '@common/components/ListHeader/ListHeader'
 import { sortByCreated, sortByEmail, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -38,12 +38,12 @@ const ServiceAccountsPage: React.FC = () => {
   useDocumentTitle(getString('rbac.serviceAccounts.label'))
   const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.ServiceAccountsPage}`)
-
+  const queryParamOptions = useRbacQueryParamOptions()
   const {
     search: searchTerm,
     page: pageIndex,
     size: pageSize
-  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(rbacQueryParamOptions)
+  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(queryParamOptions)
   const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
 
   const { data, loading, error, refetch } = useListAggregatedServiceAccounts({

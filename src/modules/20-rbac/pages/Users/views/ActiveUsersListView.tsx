@@ -39,7 +39,7 @@ import {
 import { useStrings } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
-import { PrincipalType, rbacQueryParamOptions } from '@rbac/utils/utils'
+import { PrincipalType, useRbacQueryParamOptions } from '@rbac/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { PipelineType, ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
@@ -426,7 +426,8 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
   const { getString } = useStrings()
   const history = useHistory()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
-  const { page, size } = useQueryParams(rbacQueryParamOptions)
+  const queryParamOptions = useRbacQueryParamOptions()
+  const { page, size } = useQueryParams(queryParamOptions)
   const isCommunity = useGetCommunity()
   const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.UsersPage}`)

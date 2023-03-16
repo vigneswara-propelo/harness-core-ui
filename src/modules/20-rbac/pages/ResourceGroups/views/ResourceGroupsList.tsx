@@ -21,7 +21,7 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
-import { rbacQueryParamOptions } from '@rbac/utils/utils'
+import { useRbacQueryParamOptions } from '@rbac/utils/utils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
@@ -36,12 +36,12 @@ const ResourceGroupsList: React.FC = () => {
   const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod | undefined>(PreferenceScope.USER, `sort-${PAGE_NAME.ResourceGroups}`)
   useDocumentTitle(getString('resourceGroups'))
-
+  const queryParamOptions = useRbacQueryParamOptions()
   const {
     search: searchTerm,
     page: pageIndex,
     size: pageSize
-  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(rbacQueryParamOptions)
+  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(queryParamOptions)
   const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
 
   const { data, loading, error, refetch } = useGetResourceGroupListV2({

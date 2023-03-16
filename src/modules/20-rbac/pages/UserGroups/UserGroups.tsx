@@ -17,7 +17,7 @@ import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRole
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PrincipalType, rbacQueryParamOptions } from '@rbac/utils/utils'
+import { PrincipalType, useRbacQueryParamOptions } from '@rbac/utils/utils'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
@@ -47,12 +47,12 @@ const UserGroupsPage: React.FC = () => {
   useDocumentTitle(getString('common.userGroups'))
   const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod | undefined>(PreferenceScope.USER, `sort-${PAGE_NAME.UserGroups}`)
-
+  const queryParamOptions = useRbacQueryParamOptions()
   const {
     search: searchTerm,
     page: pageIndex,
     size: pageSize
-  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(rbacQueryParamOptions)
+  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(queryParamOptions)
   const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
   const { data, loading, error, refetch } = useGetUserGroupAggregateList({
     queryParams: {

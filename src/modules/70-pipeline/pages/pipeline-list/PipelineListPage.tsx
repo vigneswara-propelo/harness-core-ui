@@ -46,7 +46,7 @@ import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedC
 import { getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import { CreatePipeline } from './CreatePipeline/CreatePipeline'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
-import { getEmptyStateIllustration, queryParamOptions } from './PipelineListUtils'
+import { getEmptyStateIllustration, useQueryParamOptions } from './PipelineListUtils'
 import type {
   PipelineListPagePathParams,
   PipelineListPageQueryParams,
@@ -65,6 +65,7 @@ function _PipelineListPage(): React.ReactElement {
   const { showSuccess, showError } = useToaster()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const queryParamOptions = useQueryParamOptions()
   const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
   const { searchTerm, repoIdentifier, branch, page, size, repoName, filterIdentifier, filters } = queryParams
   const isSavedFilterApplied = getIsSavedFilterApplied(queryParams.filterIdentifier)
