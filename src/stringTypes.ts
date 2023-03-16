@@ -5003,6 +5003,7 @@ export interface StringsMap {
   'templatesLibrary.setAsStableText': string
   'templatesLibrary.setAsStableTitle': string
   'templatesLibrary.stableVersion': string
+  'templatesLibrary.stableVersionDeleteError': string
   'templatesLibrary.templateDoesNotExist': string
   'templatesLibrary.templateDoesNotExistInBranch': string
   'templatesLibrary.templateHasBeenDeleted': string
