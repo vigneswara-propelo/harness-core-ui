@@ -86,6 +86,7 @@ import TabWizard from '@triggers/components/TabWizard/TabWizard'
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import useTriggerView from '@common/components/Wizard/useTriggerView'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import {
   ConnectorRefInterface,
@@ -130,7 +131,7 @@ export default function WebhookTriggerWizard(
     useFeatureFlags()
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
-  const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
+  const [selectedView, setSelectedView] = useTriggerView()
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const history = useHistory()

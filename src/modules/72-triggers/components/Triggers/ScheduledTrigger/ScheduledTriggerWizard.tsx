@@ -78,6 +78,7 @@ import { scheduledTypes } from '@triggers/pages/triggers/utils/TriggersWizardPag
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import useTriggerView from '@common/components/Wizard/useTriggerView'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import { flattenKeys, getModifiedTemplateValues } from '../WebhookTrigger/utils'
 import type { TriggerProps } from '../Trigger'
@@ -107,7 +108,7 @@ export default function ScheduledTriggerWizard(
   const { isNewTrigger, baseType, triggerData } = props
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
-  const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
+  const [selectedView, setSelectedView] = useTriggerView()
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const history = useHistory()
