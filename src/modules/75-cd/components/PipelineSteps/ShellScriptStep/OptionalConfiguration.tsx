@@ -130,7 +130,7 @@ export default function OptionalConfiguration(props: {
               isOptional
               optionalLabel={getString('common.optionalLabel')}
               defaultValueToReset={[]}
-              disableTypeSelection
+              disableTypeSelection={false}
             >
               <FieldArray
                 name="spec.outputVariables"

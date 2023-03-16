@@ -275,6 +275,12 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
     }
   }, [plansResponse])
 
+  useEffect(() => {
+    if (plansError) {
+      setPlanDetails([])
+    }
+  }, [plansError])
+
   const isFieldDisabled = (fieldName: string, isTag = false): boolean => {
     /* instanbul ignore else */
     if (
@@ -389,7 +395,15 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                     : planDetails,
                   usePortal: true,
                   addClearBtn: !readonly,
-                  noResults: <Text lineClamp={1}>{plansError}</Text>,
+                  noResults: (
+                    <Text lineClamp={1} width={500} height={35} padding="small">
+                      {plansError
+                        ? get(plansError, 'data.message', '')
+                        : getString('pipeline.cannotFetchOptions', {
+                            fieldName: getString('pipeline.bamboo.planName')
+                          })}
+                    </Text>
+                  ),
                   itemRenderer,
                   allowCreatingNewItems: true,
                   popoverClassName: css.selectPopover,
@@ -453,7 +467,11 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                   ]),
                   noResults: (
                     <Text lineClamp={1} width={500} height={35} padding="small">
-                      {artifactPathError}
+                      {artifactPathError
+                        ? get(artifactPathError, 'data.message', '')
+                        : getString('pipeline.cannotFetchOptions', {
+                            fieldName: getString('cd.artifactPaths')
+                          })}
                     </Text>
                   )
                 }
@@ -506,7 +524,11 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                   ]),
                   noResults: (
                     <Text lineClamp={1} width={500} height={35} padding="small">
-                      {buildError}
+                      {buildError
+                        ? get(buildError, 'data.message', '')
+                        : getString('pipeline.cannotFetchOptions', {
+                            fieldName: getString('buildsText')
+                          })}
                     </Text>
                   )
                 }

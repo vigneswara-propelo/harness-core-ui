@@ -22,6 +22,7 @@ import { JenkinsStep } from './Steps/JenkinsStep/JenkinsStep'
 import { CustomApproval } from './Steps/CustomApproval/CustomApproval'
 import { ServiceNowImportSet } from './Steps/ServiceNowImportSet/ServiceNowImportSet'
 import { SyncStep } from './Steps/SyncStep/SyncStep'
+import { BambooStep } from './Steps/BambooStep/BambooStep'
 
 class PipelineStepFactory extends AbstractStepFactory {
   protected type = 'pipeline-factory'
@@ -44,6 +45,7 @@ factory.registerStep(new ServiceNowUpdate())
 factory.registerStep(new ServiceNowImportSet())
 factory.registerStep(new JenkinsStep())
 factory.registerStep(new SyncStep())
+factory.registerStep(new BambooStep())
 factory.registerStep(new WaitStep())
 factory.registerStep(new CustomApproval())
 

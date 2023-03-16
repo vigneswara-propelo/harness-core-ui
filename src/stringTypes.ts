@@ -2279,6 +2279,7 @@ export interface StringsMap {
   'connectors.azureKeyVault.validation.tenantId': string
   'connectors.azureKeyVault.validation.vaultName': string
   'connectors.bamboo.bamboo': string
+  'connectors.bamboo.bambooConnectorLabel': string
   'connectors.bamboo.bambooUrl': string
   'connectors.baseURL': string
   'connectors.bearerToken': string
@@ -3660,6 +3661,7 @@ export interface StringsMap {
   'pipeline.cannotAddInputSetInvalidPipeline': string
   'pipeline.cannotAddTriggerInvalidPipeline': string
   'pipeline.cannotEditTriggerInvalidPipeline': string
+  'pipeline.cannotFetchOptions': string
   'pipeline.cannotRunInvalidPipeline': string
   'pipeline.cannotRunUnsavedPipeline': string
   'pipeline.changeTemplateLabel': string
@@ -4625,6 +4627,7 @@ export interface StringsMap {
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Background': string
+  'pipeline.stepDescription.Bamboo': string
   'pipeline.stepDescription.Barrier': string
   'pipeline.stepDescription.BitrisePlugin': string
   'pipeline.stepDescription.Container': string

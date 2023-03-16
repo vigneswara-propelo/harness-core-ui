@@ -1171,6 +1171,7 @@ stepDescription:
   RestoreCacheS3: Restore saved files and directories between builds using AWS S3.
   DockerHub: Build a Docker image from a Dockerfile and push it to a Docker registry.
   Jenkins: Jenkins Description.
+  Bamboo: Bamboo Description.
   GitOpsSync: Gitops Sync
   GCS: Upload artifacts to Google Cloud Storage (GCS).
   S3: Upload artifacts to AWS S3.
@@ -1714,3 +1715,4 @@ bambooStep:
   addPlanParameters: Add Plan Parameter
   noPlans: No Plans Defined
 namespaceValidation: Namespace must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc')
+cannotFetchOptions: Cannot Fetch {{fieldName}}...

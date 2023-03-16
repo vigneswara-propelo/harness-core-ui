@@ -350,6 +350,7 @@ helmRepo:
 bamboo:
   bamboo: 'Bamboo'
   bambooUrl: 'Bamboo URL'
+  bambooConnectorLabel: 'Bamboo Connector'
 aws:
   awsAccessKey: AWS Access Key
   accessKey: '{{ $.common.accessKey }}'
