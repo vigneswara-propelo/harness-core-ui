@@ -107,7 +107,8 @@ function InputSetList(): React.ReactElement {
     },
     body: {
       stageIdentifiers: []
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const {

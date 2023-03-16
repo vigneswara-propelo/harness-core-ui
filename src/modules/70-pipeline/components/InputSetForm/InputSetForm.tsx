@@ -65,11 +65,18 @@ import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import GitPopover from '../GitPopover/GitPopover'
 import FormikInputSetForm from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
 import { PipelineVariablesContextProvider } from '../PipelineVariablesContext/PipelineVariablesContext'
 import { OutOfSyncErrorStrip } from '../InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
+import {
+  EntityCachedCopy,
+  EntityCachedCopyHandle
+} from '../PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import css from './InputSetForm.module.scss'
 
 const getDefaultInputSet = (
@@ -150,6 +157,7 @@ const getInputSet = (
       inputSetErrorWrapper: defaultTo(inputSetObj.inputSetErrorWrapper, {}),
       entityValidityDetails: defaultTo(inputSetObj.entityValidityDetails, {}),
       outdated: inputSetObj.outdated,
+      cacheResponse: inputSetObj.cacheResponse,
       storeType: inputSetObj.storeType
     }
   }
@@ -179,6 +187,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
     storeType
   } = useQueryParams<InputSetGitQueryParams>()
 
+  const defaultLoadFromCacheHeader = Boolean(inputSetRepoName).toString()
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
     gitSyncEnabledOnlyForFF,
@@ -187,6 +196,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [inputSetUpdateResponse, setInputSetUpdateResponse] = React.useState<ResponseInputSetResponse>()
   const [filePath, setFilePath] = React.useState<string>()
+  const [loadFromCache, setLoadFromCache] = React.useState<string>(defaultLoadFromCacheHeader)
   const {
     refetch: refetchTemplate,
     data: template,
@@ -205,6 +215,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
     body: {
       stageIdentifiers: []
     },
+    requestOptions: { headers: { 'Load-From-Cache': loadFromCache } },
     lazy: true
   })
 
@@ -268,7 +279,8 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       ...getBranchQueryParams(true),
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoName
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': loadFromCache } }
   })
 
   const { mutate: createInputSet, loading: createInputSetLoading } = useCreateInputSetForPipeline({
@@ -402,7 +414,10 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   React.useEffect(() => {
     if (inputSetIdentifier !== '-1' && !isNewInModal) {
       setIsEdit(true)
-      refetch({ pathParams: { inputSetIdentifier: inputSetIdentifier } })
+      refetch({
+        pathParams: { inputSetIdentifier: inputSetIdentifier },
+        requestOptions: { headers: { 'Load-From-Cache': loadFromCache } }
+      })
       refetchTemplate()
       refetchPipeline()
     } else {
@@ -416,9 +431,12 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   React.useEffect(() => {
     if (!loadingInputSet && inputSetResponse && !isInputSetInvalid(inputSet)) {
       // Merge only if inputset is valid
-      mergeInputSet({ inputSetReferences: [inputSetIdentifier] })
+      mergeInputSet({
+        inputSetReferences: [inputSetIdentifier]
+      })
         .then(response => {
           setMergeTemplate(response.data?.pipelineYaml)
+          setLoadFromCache(defaultLoadFromCacheHeader)
         })
         .catch(e => {
           setMergeTemplate(undefined)
@@ -560,9 +578,22 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
           ...getInputSetDefaultQueryParam(),
           loadFromFallbackBranch: false,
           branch: selectedBranch
-        }
+        },
+        requestOptions: { headers: { 'Load-From-Cache': loadFromCache } }
       })
     }
+  }
+
+  function handleReloadFromCache(): void {
+    flushSync(() => {
+      setLoadFromCache('false')
+    })
+    refetch({
+      pathParams: { inputSetIdentifier: inputSetIdentifier },
+      requestOptions: { headers: { 'Load-From-Cache': 'false' } }
+    })
+    refetchTemplate({ requestOptions: { headers: { 'Load-From-Cache': 'false' } } })
+    refetchPipeline({ requestOptions: { headers: { 'Load-From-Cache': 'false' } } })
   }
 
   return (
@@ -579,6 +610,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       menuOpen={menuOpen}
       handleMenu={handleMenu}
       onBranchChange={branchChangeHandler}
+      handleReloadFromCache={handleReloadFromCache}
     >
       {child()}
     </InputSetFormWrapper>
@@ -599,6 +631,7 @@ export interface InputSetFormWrapperProps {
   menuOpen: boolean
   handleMenu: (state: boolean) => void
   onBranchChange?: (branch?: string) => void
+  handleReloadFromCache?: (loadFromCache?: boolean) => void
 }
 
 export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.ReactElement {
@@ -615,7 +648,8 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
     inputSetUpdateResponseHandler,
     menuOpen,
     handleMenu,
-    onBranchChange
+    onBranchChange,
+    handleReloadFromCache = noop
   } = props
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
@@ -623,6 +657,15 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
   const { connectorRef, repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { updateQueryParams } = useUpdateQueryParams()
+  const inputCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
+
+  function showReloadFromGitoption(): boolean {
+    return Boolean(inputSet?.storeType === StoreType.REMOTE && inputSet?.cacheResponse)
+  }
+
+  function handleReloadFromGitClick(): void {
+    inputCachedCopyRef.current?.showConfirmationModal()
+  }
 
   return (
     <React.Fragment>
@@ -631,7 +674,12 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
           className={css.pageHeaderStyles}
           title={
             <Layout.Horizontal width="42%">
-              <Text lineClamp={1} color={Color.GREY_800} font={{ weight: 'bold', variation: FontVariation.H4 }}>
+              <Text
+                lineClamp={1}
+                color={Color.GREY_800}
+                font={{ weight: 'bold', variation: FontVariation.H4 }}
+                margin={{ right: 'medium' }}
+              >
                 {isEdit
                   ? getString('inputSets.editTitle', { name: inputSet.name })
                   : getString('inputSets.newInputSetLabel')}
@@ -648,7 +696,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                     connectorRef={inputSet?.connectorRef}
                     repoName={inputSet?.gitDetails?.repoName}
                     branch={inputSet?.gitDetails?.branch}
-                    flags={{ borderless: false, showRepo: false, normalInputStyle: true }}
+                    flags={{ borderless: true, showRepo: false, normalInputStyle: true }}
                     onBranchChange={item => {
                       flushSync(() => {
                         updateQueryParams({ inputSetBranch: item?.branch })
@@ -656,6 +704,15 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                       onBranchChange?.(item?.branch)
                     }}
                   />
+
+                  {!loading && inputSet?.cacheResponse && (
+                    <EntityCachedCopy
+                      ref={inputCachedCopyRef}
+                      reloadContent={getString('inputSets.inputSetLabel')}
+                      cacheResponse={inputSet?.cacheResponse}
+                      reloadFromCache={handleReloadFromCache}
+                    />
+                  )}
                 </Container>
               )}
               <div className={css.optionBtns}>
@@ -691,6 +748,26 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                     inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
                     closeReconcileMenu={() => handleMenu(false)}
                   />
+
+                  {showReloadFromGitoption() ? (
+                    <RbacMenuItem
+                      icon="repeat"
+                      text={getString('common.reloadFromGit')}
+                      onClick={handleReloadFromGitClick}
+                      permission={{
+                        resourceScope: {
+                          accountIdentifier: accountId,
+                          orgIdentifier,
+                          projectIdentifier
+                        },
+                        resource: {
+                          resourceType: ResourceType.PIPELINE,
+                          resourceIdentifier: inputSet?.identifier
+                        },
+                        permission: PermissionIdentifier.VIEW_PIPELINE
+                      }}
+                    />
+                  ) : null}
                 </Menu>
               </Popover>
             </Layout.Horizontal>

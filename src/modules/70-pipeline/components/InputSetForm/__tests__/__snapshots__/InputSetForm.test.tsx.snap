@@ -290,7 +290,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view 1`] = `
         style="width: 42%;"
       >
         <p
-          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4"
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
           style="--text-line-clamp: 1;"
         >
           inputSets.editTitle
@@ -321,14 +321,14 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view 1`] = `
               class="Layout--horizontal StyledProps--main"
             >
               <div
-                class="bp3-form-group branchSelector branchSelector"
+                class="bp3-form-group branchSelector transparent branchSelector"
               >
                 
                 <div
                   class="bp3-form-content"
                 >
                   <div
-                    class="bp3-popover-wrapper Select--main bp3-fill"
+                    class="bp3-popover-wrapper Select--main Select--borderless bp3-fill"
                   >
                     <div
                       class="bp3-popover-target"
@@ -682,7 +682,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
         style="width: 42%;"
       >
         <p
-          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4"
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
           style="--text-line-clamp: 1;"
         >
           inputSets.editTitle
@@ -713,14 +713,14 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
               class="Layout--horizontal StyledProps--main"
             >
               <div
-                class="bp3-form-group branchSelector branchSelector"
+                class="bp3-form-group branchSelector transparent branchSelector"
               >
                 
                 <div
                   class="bp3-form-content"
                 >
                   <div
-                    class="bp3-popover-wrapper Select--main bp3-fill"
+                    class="bp3-popover-wrapper Select--main Select--borderless bp3-fill"
                   >
                     <div
                       class="bp3-popover-target"
@@ -1573,7 +1573,7 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
         style="width: 42%;"
       >
         <p
-          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4"
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
           style="--text-line-clamp: 1;"
         >
           inputSets.newInputSetLabel
@@ -2486,7 +2486,7 @@ exports[`Render Forms - Snapshot Testing render NewInputSetModal 1`] = `
               style="width: 42%;"
             >
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
                 style="--text-line-clamp: 1;"
               >
                 inputSets.newInputSetLabel
@@ -2953,7 +2953,7 @@ exports[`Render Forms - Snapshot Testing render inputset with no inputSetRespons
         style="width: 42%;"
       >
         <p
-          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4"
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
           style="--text-line-clamp: 1;"
         >
           inputSets.newInputSetLabel

@@ -148,7 +148,7 @@ exports[`Input Set - error scenarios if API errors are displayed in yellow accor
         style="width: 42%;"
       >
         <p
-          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4"
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
           style="--text-line-clamp: 1;"
         >
           inputSets.editTitle
