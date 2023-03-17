@@ -72,11 +72,15 @@ function CustomRemoteAdvancedStepSection({
     lazy: true
   })
 
+  const showHelmVersion = React.useMemo((): boolean => {
+    return !!selectedManifest && [ManifestDataType.HelmChart].includes(selectedManifest)
+  }, [selectedManifest])
+
   useEffect(() => {
-    if (!commandFlagOptions[helmVersion]?.length && selectedManifest !== ManifestDataType.K8sManifest) {
+    if (!commandFlagOptions[helmVersion]?.length && showHelmVersion) {
       refetchCommandFlags()
     }
-  }, [helmVersion])
+  }, [helmVersion, showHelmVersion])
 
   useDeepCompareEffect(() => {
     const commandFlagSelectOption = {
@@ -145,7 +149,7 @@ function CustomRemoteAdvancedStepSection({
             isReadonly={isReadonly}
           />
         )}
-        {selectedManifest !== ManifestDataType.K8sManifest ? (
+        {showHelmVersion ? (
           <FormInput.Select
             name="helmVersion"
             label={getString('helmVersion')}
