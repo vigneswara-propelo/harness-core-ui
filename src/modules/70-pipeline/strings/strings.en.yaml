@@ -1716,3 +1716,6 @@ bambooStep:
   noPlans: No Plans Defined
 namespaceValidation: Namespace must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc')
 cannotFetchOptions: Cannot Fetch {{fieldName}}...
+noNotifications:
+  title: No notifications configured for this {{entity}}
+  subtitle: Configure settings to notify your team of specific events in your {{entity}}.

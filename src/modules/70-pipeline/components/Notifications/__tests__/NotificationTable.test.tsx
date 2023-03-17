@@ -12,6 +12,7 @@ import {
   getAllByText as getAllByTextGlobal,
   render,
   RenderResult,
+  screen,
   waitFor
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -75,8 +76,11 @@ const args: NotificationTableProps = {
   pageSize: 5,
   pageIndex: 0,
   onFilterType: _type => undefined,
-  filterType: ''
+  filterType: '',
+  hasNotifications: true,
+  parentEntity: 'Pipeline'
 }
+
 describe('Notification Table test', () => {
   let container: HTMLElement
   let getByText: RenderResult['getByText']
@@ -273,4 +277,14 @@ describe('testing notification method', () => {
       })
     )
   })
+})
+
+test('should render no notifications section when there are no notifications', () => {
+  render(
+    <TestWrapper>
+      <NotificationTable {...args} data={[]} hasNotifications={false} />
+    </TestWrapper>
+  )
+
+  expect(screen.getByText('pipeline.noNotifications.title')).toBeInTheDocument()
 })

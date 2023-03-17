@@ -137,6 +137,8 @@ export const FreezeNotifications = () => {
           isReadonly={isReadOnly || isActiveFreeze}
           EventsTabComponent={FreezeEvents}
           eventsColumnConfig={eventsColumnConfig as any}
+          hasNotifications={Boolean(allRowsData.length)}
+          parentEntity={getString('freezeWindows.freezeWindowsPage.freezeWindow')}
         />
       </div>
     </>

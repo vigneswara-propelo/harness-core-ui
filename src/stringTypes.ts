@@ -4332,6 +4332,8 @@ export interface StringsMap {
   'pipeline.noFilePathsFound': string
   'pipeline.noImages': string
   'pipeline.noImagesFound': string
+  'pipeline.noNotifications.subtitle': string
+  'pipeline.noNotifications.title': string
   'pipeline.noPipelinesLabel': string
   'pipeline.noPipelinesText': string
   'pipeline.noRegions': string
@@ -4948,6 +4950,7 @@ export interface StringsMap {
   'freezeWindows.freezeWindowsPage.deleteFailure': string
   'freezeWindows.freezeWindowsPage.deleteSuccess': string
   'freezeWindows.freezeWindowsPage.editFreezeWindow': string
+  'freezeWindows.freezeWindowsPage.freezeWindow': string
   'freezeWindows.freezeWindowsPage.newFreezeWindow': string
   'freezeWindows.freezeWindowsPage.noFreezeWindows': string
   'freezeWindows.freezeWindowsPage.updateStatusFailure': string

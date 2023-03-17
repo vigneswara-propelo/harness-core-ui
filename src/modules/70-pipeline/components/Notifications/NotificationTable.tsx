@@ -19,7 +19,7 @@ import {
   ButtonVariation,
   TableV2
 } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Classes, Menu, PopoverInteractionKind, Position, Tag } from '@blueprintjs/core'
 import { startCase } from 'lodash-es'
@@ -28,6 +28,7 @@ import { useStrings } from 'framework/strings'
 import type { NotificationRules, PipelineEvent } from 'services/pipeline-ng'
 import { getIconByNotificationMethod } from '@rbac/utils/NotificationUtils'
 import type { NotificationType } from '@rbac/interfaces/Notifications'
+import NoNotifications from '@pipeline/icons/NoNotifications.svg'
 import { useNotificationModal } from './useNotificationModal'
 import { PipelineEventType } from './Steps/PipelineEvents'
 import { Actions } from './NotificationUtils'
@@ -56,6 +57,8 @@ export interface NotificationTableProps {
   isReadonly?: boolean
   EventsTabComponent?: React.FC
   eventsColumnConfig?: CustomColumn<NotificationRulesItem>
+  hasNotifications: boolean
+  parentEntity: string
 }
 
 type CustomColumn<T extends Record<string, any>> = Column<T> & {
@@ -231,7 +234,9 @@ function NotificationTable(props: NotificationTableProps): React.ReactElement {
     getExistingNotificationNames = (_skipIndex?: number) => [],
     isReadonly = false,
     EventsTabComponent,
-    eventsColumnConfig
+    eventsColumnConfig,
+    hasNotifications,
+    parentEntity
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -306,43 +311,62 @@ function NotificationTable(props: NotificationTableProps): React.ReactElement {
 
   const filterOptions = [getAllNotificationTypeSelectOption(getString), ...NotificationTypeSelectOptions]
 
+  const newNotificationButton = (
+    <Button
+      variation={ButtonVariation.PRIMARY}
+      text={getString('rbac.notifications.name')}
+      icon="plus"
+      id="newNotificationBtn"
+      onClick={() => openNotificationModal()}
+      disabled={isReadonly}
+    />
+  )
+
   return (
     <>
-      <Container>
-        <Layout.Horizontal flex className={css.headerActions}>
-          <Button
-            variation={ButtonVariation.PRIMARY}
-            text={getString('rbac.notifications.name')}
-            icon="plus"
-            id="newNotificationBtn"
-            onClick={() => openNotificationModal()}
-            disabled={isReadonly}
-          />
-
-          <Select
-            value={filterOptions.find(item => item.value === filterType)}
-            items={filterOptions}
-            onChange={value => {
-              onFilterType?.(value.value as string)
-            }}
-            className={css.filterDropdown}
-          />
-        </Layout.Horizontal>
-      </Container>
-      <Container padding={{ bottom: 'huge' }} className={css.content}>
-        <TableV2<NotificationRulesItem>
-          columns={columns}
-          data={data}
-          className={css.notificationTable}
-          pagination={{
-            itemCount: totalItems,
-            pageSize: pageSize,
-            pageCount: totalPages,
-            pageIndex: pageIndex,
-            gotoPage: gotoPage
-          }}
-        />
-      </Container>
+      {!hasNotifications && (
+        <section className={css.noNotificationsSection}>
+          <img className={css.image} src={NoNotifications} alt={getString('pipeline.noNotifications.title')} />
+          <Text className={css.title} font={{ variation: FontVariation.H4 }}>
+            {getString('pipeline.noNotifications.title', { entity: parentEntity })}
+          </Text>
+          <Text className={css.subtitle} font={{ variation: FontVariation.BODY1 }}>
+            {getString('pipeline.noNotifications.subtitle', { entity: parentEntity })}
+          </Text>
+          {newNotificationButton}
+        </section>
+      )}
+      {hasNotifications && (
+        <div className={css.notificationsWrapper}>
+          <Container>
+            <Layout.Horizontal flex className={css.headerActions}>
+              {newNotificationButton}
+              <Select
+                value={filterOptions.find(item => item.value === filterType)}
+                items={filterOptions}
+                onChange={value => {
+                  onFilterType?.(value.value as string)
+                }}
+                className={css.filterDropdown}
+              />
+            </Layout.Horizontal>
+          </Container>
+          <Container padding={{ bottom: 'huge' }} className={css.content}>
+            <TableV2<NotificationRulesItem>
+              columns={columns}
+              data={data}
+              className={css.notificationTable}
+              pagination={{
+                itemCount: totalItems,
+                pageSize: pageSize,
+                pageCount: totalPages,
+                pageIndex: pageIndex,
+                gotoPage: gotoPage
+              }}
+            />
+          </Container>
+        </div>
+      )}
     </>
   )
 }

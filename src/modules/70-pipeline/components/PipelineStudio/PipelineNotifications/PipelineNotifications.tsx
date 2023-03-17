@@ -177,6 +177,8 @@ function PipelineNotificationsWithRef(
             }
           }}
           isReadonly={isReadonly}
+          hasNotifications={Boolean(allRowsData.length)}
+          parentEntity={getString('common.pipeline')}
         />
       </div>
       <ConfirmationDialog

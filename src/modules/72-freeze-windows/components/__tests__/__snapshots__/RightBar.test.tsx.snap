@@ -153,164 +153,56 @@ exports[`Freeze Window Studio - Right Bar it should render in open state of Noti
       <div
         class="pipelineNotifications"
       >
-        <div
-          class="StyledProps--font StyledProps--main"
+        <section
+          class="noNotificationsSection"
         >
-          <div
-            class="Layout--horizontal StyledProps--main headerActions StyledProps--flex"
+          <img
+            alt="pipeline.noNotifications.title"
+            class="image"
+            src="test-file-stub"
+          />
+          <p
+            class="StyledProps--font StyledProps--main title StyledProps--font-variation-h4"
           >
-            <button
-              aria-label="rbac.notifications.name"
-              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
-              id="newNotificationBtn"
-              type="button"
-            >
-              <span
-                class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
-                icon="plus"
-              >
-                <svg
-                  data-icon="plus"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  width="16"
-                >
-                  <desc>
-                    plus
-                  </desc>
-                  <path
-                    d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-              <span
-                class="bp3-button-text"
-              >
-                rbac.notifications.name
-              </span>
-            </button>
-            <div
-              class="bp3-popover-wrapper filterDropdown Select--main bp3-fill"
-            >
-              <div
-                class="bp3-popover-target"
-              >
-                <div
-                  class="bp3-input-group"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    placeholder="- Select -"
-                    style="padding-right: 0px;"
-                    type="text"
-                    value=""
-                  />
-                  <span
-                    class="bp3-input-action"
-                  >
-                    <span
-                      class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                      icon="chevron-down"
-                    >
-                      <svg
-                        data-icon="chevron-down"
-                        height="14"
-                        viewBox="0 0 16 16"
-                        width="14"
-                      >
-                        <desc>
-                          chevron-down
-                        </desc>
-                        <path
-                          d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                          fill-rule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="StyledProps--font StyledProps--main content StyledProps--padding-bottom-huge"
-        >
-          <div
-            class="TableV2--table notificationTable"
+            pipeline.noNotifications.title
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main subtitle StyledProps--font-variation-body1"
           >
-            <div
-              class="TableV2--header"
-              role="row"
+            pipeline.noNotifications.subtitle
+          </p>
+          <button
+            aria-label="rbac.notifications.name"
+            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+            id="newNotificationBtn"
+            type="button"
+          >
+            <span
+              class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+              icon="plus"
             >
-              <div
-                class="TableV2--cell"
-                colspan="1"
-                role="columnheader"
-                style="width: 15%;"
+              <svg
+                data-icon="plus"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  ENABLEDLABEL
-                </p>
-              </div>
-              <div
-                class="TableV2--cell"
-                colspan="1"
-                role="columnheader"
-                style="width: 20%;"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  RBAC.NOTIFICATIONS.NAMEOFTHERULE
-                </p>
-              </div>
-              <div
-                class="TableV2--cell"
-                colspan="1"
-                role="columnheader"
-                style="width: 35%;"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  CONDITIONS
-                </p>
-              </div>
-              <div
-                class="TableV2--cell"
-                colspan="1"
-                role="columnheader"
-                style="width: 28%;"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  RBAC.NOTIFICATIONS.NOTIFICATIONMETHOD
-                </p>
-              </div>
-              <div
-                class="TableV2--cell"
-                colspan="1"
-                role="columnheader"
-                style="width: 2%;"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  
-                </p>
-              </div>
-            </div>
-            <div
-              class="TableV2--body"
-            />
-          </div>
-        </div>
+                <desc>
+                  plus
+                </desc>
+                <path
+                  d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <span
+              class="bp3-button-text"
+            >
+              rbac.notifications.name
+            </span>
+          </button>
+        </section>
       </div>
     </div>
   </div>

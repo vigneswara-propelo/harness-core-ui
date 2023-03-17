@@ -10,7 +10,12 @@ declare const styles: {
   readonly content: string
   readonly filterDropdown: string
   readonly headerActions: string
+  readonly image: string
+  readonly noNotificationsSection: string
   readonly notificationTable: string
   readonly notificationTableHeader: string
+  readonly notificationsWrapper: string
+  readonly subtitle: string
+  readonly title: string
 }
 export default styles
