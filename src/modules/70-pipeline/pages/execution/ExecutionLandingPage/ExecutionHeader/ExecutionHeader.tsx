@@ -40,7 +40,7 @@ import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } fro
 import { useQueryParams } from '@common/hooks'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
-import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import css from './ExecutionHeader.module.scss'
 
 export interface ExecutionHeaderProps {
@@ -146,6 +146,21 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     isDebugMode: hasCI
   })
 
+  let moduleLabel = getString('common.pipelineExecution')
+  if (module) {
+    switch (module.toUpperCase() as ModuleName) {
+      case ModuleName.CD:
+        moduleLabel = getString('deploymentsText')
+        break
+      case ModuleName.CI:
+        moduleLabel = getString('buildsText')
+        break
+      case ModuleName.STO:
+        moduleLabel = getString('common.purpose.sto.continuous')
+        break
+    }
+  }
+
   return (
     <header className={css.header}>
       <div className={css.headerTopRow}>
@@ -155,7 +170,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
               ? [
                   {
                     url: routes.toDeployments({ orgIdentifier, projectIdentifier, accountId, module }),
-                    label: module === 'ci' ? getString('buildsText') : getString('deploymentsText')
+                    label: moduleLabel
                   }
                 ]
               : [
