@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Layout, Icon, Text } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
@@ -21,7 +22,7 @@ const DefaultRenderer: React.FC = () => {
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   return (
     <Layout.Vertical padding={{ top: 'xlarge' }} className={css.started}>
-      <Text font={{ size: 'small', weight: 'semi-bold' }} padding={{ bottom: 'xsmall' }}>
+      <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_400} padding={{ bottom: 'xsmall' }}>
         {getString('modules')}
       </Text>
       <Layout.Horizontal spacing="small">
