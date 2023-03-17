@@ -40,21 +40,22 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, SecretActions } from '@common/constants/TrackingConstants'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
-
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import SecretsList from './views/SecretsListView/SecretsList'
-
 import SecretEmptyState from './secrets-empty-state.png'
+import { SECRETS_DEFAULT_PAGE_INDEX, SECRETS_DEFAULT_PAGE_SIZE } from './Constants'
 
 import css from './SecretsPage.module.scss'
 
-interface SecretsPageProps {
-  mock?: UseGetMockData<ResponsePageSecretResponseWrapper>
-}
 interface CreateSecretBtnProp {
   setOpenPopOverProp: (val: boolean) => void
   size?: ButtonSize
+}
+interface SecretsPageProps {
+  mock?: UseGetMockData<ResponsePageSecretResponseWrapper>
 }
 
 const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
@@ -67,6 +68,7 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
   const history = useHistory()
   const { getString } = useStrings()
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const { page: pageIndex, size: pageSize } = useQueryParams<CommonPaginationQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams>()
   const [openPopOver, setOpenPopOver] = useState<boolean>(false)
@@ -82,8 +84,8 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
     queryParams: {
       accountIdentifier: accountId,
       searchTerm,
-      pageIndex: pageIndex ?? 0,
-      pageSize: pageSize ?? 10,
+      pageIndex: pageIndex ?? SECRETS_DEFAULT_PAGE_INDEX,
+      pageSize: pageSize ?? (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : SECRETS_DEFAULT_PAGE_SIZE),
       orgIdentifier,
       projectIdentifier
     },

@@ -26,6 +26,7 @@ import DescriptionPopover from '@common/components/DescriptionPopover.tsx/Descri
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectListView.module.scss'
 
@@ -303,7 +304,7 @@ const ProjectListView: React.FC<ProjectListViewProps> = props => {
 
   const paginationProps = useDefaultPaginationProps({
     itemCount: data?.data?.totalItems || 0,
-    pageSize: data?.data?.pageSize || 10,
+    pageSize: data?.data?.pageSize || COMMON_DEFAULT_PAGE_SIZE,
     pageCount: data?.data?.totalPages || 0,
     pageIndex: data?.data?.pageIndex || 0
   })
