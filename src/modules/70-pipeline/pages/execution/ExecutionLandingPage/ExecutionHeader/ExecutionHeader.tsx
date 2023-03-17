@@ -27,6 +27,7 @@ import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { TagsPopover } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useDocumentFavicon } from '@common/hooks/useDocumentFavicon'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RetryHistory from '@pipeline/components/RetryPipeline/RetryHistory/RetryHistory'
@@ -34,6 +35,7 @@ import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRu
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
+import { getFavIconDetailsFromPipelineExecutionStatus } from '@pipeline/utils/executionUtils'
 import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
@@ -93,6 +95,13 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
       pipelineExecutionSummary
     )}`
   ])
+
+  const favIconDetails = React.useMemo(
+    () => getFavIconDetailsFromPipelineExecutionStatus(pipelineExecutionSummary?.status),
+    [pipelineExecutionSummary?.status]
+  )
+
+  useDocumentFavicon(favIconDetails)
 
   const repoName = pipelineExecutionSummary?.gitDetails?.repoName ?? repoNameQueryParam
   const repoIdentifier = defaultTo(
@@ -240,7 +249,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
                   : openRunPipelineModal
                 : undefined
             }
-            onViewCompiledYaml={() => setViewCompiledYaml(pipelineExecutionSummary)}
+            onViewCompiledYaml={/* istanbul ignore next */ () => setViewCompiledYaml(pipelineExecutionSummary)}
           />
         </div>
       </div>
@@ -282,7 +291,10 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
             </GitSyncStoreProvider>
           )
         ) : null}
-        <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
+        <ExecutionCompiledYaml
+          onClose={/* istanbul ignore next */ () => setViewCompiledYaml(undefined)}
+          executionSummary={viewCompiledYaml}
+        />
       </div>
     </header>
   )

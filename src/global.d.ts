@@ -52,6 +52,7 @@ declare interface Window {
   apiUrl: string
   segmentToken: string
   HARNESS_ENABLE_NG_AUTH_UI: boolean
+  HARNESS_ENABLE_CDN: boolean
   bugsnagClient: any
   bugsnagToken: string
   Harness: {
