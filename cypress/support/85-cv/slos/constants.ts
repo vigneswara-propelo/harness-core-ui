@@ -69,6 +69,7 @@ export const getSLODetailsForSLO_1 = `/cv/api/slo-dashboard/widget/SLO_1?routing
 export const getSLODetailsForSLO_2 = `/cv/api/slo-dashboard/widget/SLO_2?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&startTime=1651717500000&endTime=1651731600000`
 export const getSLODetailsForSLO_3 = `/cv/api/slo-dashboard/widget/SLO_3?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&startTime=1651717500000&endTime=1651731600000`
 export const getSLODetailsForSLO_4 = `/cv/api/slo-dashboard/widget/SLO_4?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&startTime=1651717500000&endTime=1651731600000`
+export const listUnavailabilityInstances = `/cv/api/slo-dashboard/unavailable-instances/SLO1?*`
 export const createNotification = `/cv/api/notification-rule?routingId=${accountId}&accountId=${accountId}`
 export const getServicesCall = `/ng/api/services?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getEnvironmentsCall = `/ng/api/environments?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
@@ -1416,6 +1417,31 @@ export const getSLODetailsForSLO_1Response = {
       ]
     }
   }
+}
+
+export const unavailabilityInstancesResponse = {
+  status: 'SUCCESS',
+  data: [
+    {
+      orgIdentifier: 'default',
+      projectIdentifier: 'demokaran',
+      startTime: 1678537140,
+      endTime: 1678537440,
+      status: 'MaintenanceWindow',
+      entityIdentifier: 'ft5',
+      entityType: 'MaintenanceWindow'
+    },
+    {
+      orgIdentifier: 'default',
+      projectIdentifier: 'demokaran',
+      startTime: 1678596900,
+      endTime: 1678597200,
+      status: 'MaintenanceWindow',
+      entityIdentifier: 'ft4',
+      entityType: 'MaintenanceWindow'
+    }
+  ],
+  correlationId: '4b06f4a1-feca-4e08-869c-7d8aa5d3952e'
 }
 
 export const getSLODetailResponseSLOOutRange = {

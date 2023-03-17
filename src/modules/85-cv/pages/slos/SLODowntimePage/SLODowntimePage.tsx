@@ -51,7 +51,8 @@ export const SLODowntimePage = (): JSX.Element => {
       routes.toCVCreateSLODowntime({
         accountId,
         orgIdentifier,
-        projectIdentifier
+        projectIdentifier,
+        module: 'cv'
       })
     )
 

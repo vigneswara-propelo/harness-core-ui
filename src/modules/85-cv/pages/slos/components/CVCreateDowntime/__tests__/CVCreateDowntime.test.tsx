@@ -13,6 +13,7 @@ import routes from '@common/RouteDefinitions'
 import * as cvServices from 'services/cv'
 import { editParams } from '@cv/utils/routeUtils'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { cvModuleParams } from '@cv/RouteDestinations'
 import CVCreateDowntime from '../CVCreateDowntime'
 import {
   downtimeAssociatedMSs,
@@ -21,8 +22,19 @@ import {
   recurrenceBasedDowntimeResponse
 } from './CVCreateDowntime.mock'
 
-const testPath = routes.toCVEditSLODowntime({ ...accountPathProps, ...projectPathProps, ...editParams })
-const testPathParams = { accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy', identifier: 'dummy' }
+const testPath = routes.toCVEditSLODowntime({
+  ...accountPathProps,
+  ...projectPathProps,
+  ...cvModuleParams,
+  ...editParams
+})
+const testPathParams = {
+  accountId: 'dummy',
+  orgIdentifier: 'dummy',
+  projectIdentifier: 'dummy',
+  identifier: 'dummy',
+  module: 'cv'
+}
 
 jest.mock(
   '@cv/pages/slos/components/CVCreateDowntime/components/CreateDowntimeForm/components/AddMonitoredServices/components/MSList.tsx',

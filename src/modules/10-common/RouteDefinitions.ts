@@ -1655,12 +1655,35 @@ const routes = {
       })
     }
   ),
-  toCVCreateSLODowntime: withAccountId(({ orgIdentifier, projectIdentifier }: ProjectPathProps) => {
-    return `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create/downtime`
-  }),
+  toCVCreateSLODowntime: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `resources/slo-downtime/create`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
   toCVEditSLODowntime: withAccountId(
-    ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps & { identifier: string }>) => {
-      return `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/edit/downtime/${identifier}`
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      identifier
+    }: Partial<ProjectPathProps & ModulePathParams & { identifier: string }>) => {
+      const path = `resources/slo-downtime/edit/${identifier}`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
     }
   ),
   toCVAddMonitoringServicesSetup: withAccountId(

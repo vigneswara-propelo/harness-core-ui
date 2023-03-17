@@ -390,8 +390,8 @@ export default (
       exact
       sidebarProps={CVSideNavProps}
       path={[
-        routes.toCVCreateSLODowntime({ ...accountPathProps, ...projectPathProps }),
-        routes.toCVEditSLODowntime({ ...accountPathProps, ...projectPathProps, ...editParams })
+        routes.toCVCreateSLODowntime({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+        routes.toCVEditSLODowntime({ ...accountPathProps, ...projectPathProps, ...cvModuleParams, ...editParams })
       ]}
     >
       <CVCreateDowntime />

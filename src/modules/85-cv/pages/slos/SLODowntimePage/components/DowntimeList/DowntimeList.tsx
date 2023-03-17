@@ -139,7 +139,8 @@ const DowntimeList = ({
         identifier,
         accountId,
         orgIdentifier,
-        projectIdentifier
+        projectIdentifier,
+        module: 'cv'
       })
     })
   }

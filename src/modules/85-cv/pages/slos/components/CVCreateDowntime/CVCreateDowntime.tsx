@@ -75,10 +75,22 @@ const CVCreateDowntime = (): JSX.Element => {
     }
   }
 
+  const links = [
+    {
+      url: routes.toCVSLODowntime({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        module: 'cv'
+      }),
+      label: getString('common.sloDowntimeLabel')
+    }
+  ]
+
   return (
     <Container margin={{ bottom: 'large' }}>
       <Page.Header
-        breadcrumbs={<NGBreadcrumbs />}
+        breadcrumbs={<NGBreadcrumbs links={links} />}
         title={
           <Heading level={3} font={{ variation: FontVariation.H4 }}>
             {getString('cv.sloDowntime.addDowntime')}

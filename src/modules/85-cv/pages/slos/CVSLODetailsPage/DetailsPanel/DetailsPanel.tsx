@@ -46,7 +46,8 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
     currentPeriodEndTime = 0,
     monitoredServiceDetails,
     calculatingSLI,
-    recalculatingSLI
+    recalculatingSLI,
+    sloPerformanceTrend
   } = sloDashboardWidget ?? {}
   const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
   const [sliderTimeRange, setSliderTimeRange] = useState<{ startTime: number; endTime: number }>()
@@ -78,11 +79,11 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
     lazy: true
   })
 
-  const downtimeStartTime = chartTimeRange?.startTime || sloDashboardWidget?.currentPeriodStartTime || 0
-  const downtimeEndTime = chartTimeRange?.endTime || sloDashboardWidget?.currentPeriodEndTime || 0
+  const downtimeStartTime = chartTimeRange?.startTime || sloPerformanceTrend?.at(0)?.timestamp || currentPeriodStartTime
+  const downtimeEndTime = chartTimeRange?.endTime || currentPeriodEndTime
 
   useEffect(() => {
-    if (identifier && sloDashboardWidget && sloType === SLOType.SIMPLE) {
+    if (identifier && sloDashboardWidget) {
       unavailabilityRefetch({
         queryParams: {
           accountId,
