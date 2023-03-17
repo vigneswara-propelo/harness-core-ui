@@ -32,6 +32,7 @@ export default function OrgAccountLevelServiceEnvField({
         label={getString('cv.healthSource.serviceLabel')}
         isOnlyFixedType={!isTemplate}
         openAddNewModal={openAddServiceModal}
+        setRefValue={isTemplate}
         onChange={service => onValueChange({ value: service, isTemplate, onSuccess: serviceOnSelect })}
         {...COMMON_FIELDS_PROPS}
       />
@@ -40,6 +41,7 @@ export default function OrgAccountLevelServiceEnvField({
         label={getString('cv.healthSource.environmentLabel')}
         placeholder={getString('cv.selectOrCreateEnv')}
         isOnlyFixedType={!isTemplate}
+        setRefValue={isTemplate}
         openAddNewModal={openAddEnvModal}
         onChange={env => onValueChange({ value: env, isTemplate, onSuccess: environmentOnSelect })}
         {...COMMON_FIELDS_PROPS}

@@ -18,6 +18,17 @@ import OrgAccountLevelServiceEnvField from '../OrgAccountLevelServiceEnvField'
 const serviceOnSelect = jest.fn()
 const environmentOnSelect = jest.fn()
 
+const serviceOption = {
+  label: 'service1',
+  scope: 'org',
+  value: 'org.service1'
+}
+const envOptions = {
+  label: 'env1',
+  scope: 'org',
+  value: 'org.env1'
+}
+
 jest.mock('services/cd-ng', () => ({
   useCreateServiceV2: jest.fn().mockReturnValue({
     mutate: jest
@@ -66,6 +77,31 @@ jest.mock('@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFe
 
 describe('OrgAccountLevelServiceEnvField', () => {
   test('should render OrgAccountLevelServiceEnvField with isTemplate true', async () => {
+    jest.spyOn(MultiTypeServiceField, 'MultiTypeServiceField').mockImplementation((props: any) => {
+      return (
+        <Container>
+          <Button className="addNewService" onClick={() => props.openAddNewModal()} title="Add New Service" />
+          <Button
+            className="onChangeService"
+            onClick={() => props.onChange({ label: 'service1', value: 'org.service1', scope: 'org' })}
+            title="On Change Service"
+          />
+        </Container>
+      )
+    })
+    jest.spyOn(MultiTypeEnvironmentField, 'MultiTypeEnvironmentField').mockImplementation((props: any) => {
+      return (
+        <Container>
+          <Button className="addNewEnvironment" onClick={() => props.openAddNewModal()} title="Add New Environment" />
+          <Button
+            className="onChangeEnvironment"
+            onClick={() => props.onChange({ label: 'env1', value: 'org.env1', scope: 'org' })}
+            title="On Change Environment"
+          />
+        </Container>
+      )
+    })
+
     const { container } = render(
       <TestWrapper>
         <OrgAccountLevelServiceEnvField
@@ -83,8 +119,8 @@ describe('OrgAccountLevelServiceEnvField', () => {
       userEvent.click(container.querySelector('[title="On Change Service"]')!)
     })
     expect(serviceOnSelect).toHaveBeenCalledWith({
-      label: 'service1',
-      value: 'service1'
+      label: serviceOption,
+      value: serviceOption
     })
 
     expect(container.querySelector('[title="Add New Environment"]')).toBeInTheDocument()
@@ -92,8 +128,8 @@ describe('OrgAccountLevelServiceEnvField', () => {
       userEvent.click(container.querySelector('[title="On Change Environment"]')!)
     })
     expect(environmentOnSelect).toHaveBeenCalledWith({
-      label: 'env1',
-      value: 'env1'
+      label: envOptions,
+      value: envOptions
     })
   })
 

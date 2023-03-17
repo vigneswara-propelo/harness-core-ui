@@ -24,8 +24,8 @@ import { spacingMedium } from '../../MonitoredServiceInputSetsTemplate.constants
 import css from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.module.scss'
 
 interface ServiceEnvironmentInputSetInterface {
-  serviceValue: string
-  environmentValue: string | SelectOption
+  serviceValue?: string
+  environmentValue?: string | SelectOption
   onChange: any
   isReadOnlyInputSet: boolean
 }
@@ -42,7 +42,11 @@ export default function ServiceEnvironmentInputSet({
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const environmentRefValue = environmentOptions?.find(item => item?.value === environmentValue)
 
-  if (CDS_OrgAccountLevelServiceEnvEnvGroup) {
+  if (isUndefined(serviceValue) && isUndefined(environmentValue)) {
+    return <></>
+  }
+
+  if (CDS_OrgAccountLevelServiceEnvEnvGroup && !isUndefined(serviceValue) && !isUndefined(environmentValue)) {
     content = (
       <OrgAccountLevelServiceEnvField
         isTemplate={isReadOnlyInputSet}
