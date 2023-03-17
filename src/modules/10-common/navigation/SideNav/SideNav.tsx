@@ -17,6 +17,7 @@ import { returnLaunchUrl } from '@common/utils/routeUtils'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import css from './SideNav.module.scss'
 
 export interface SideNavProps {
@@ -61,7 +62,10 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
   const { SPG_SIDENAV_COLLAPSE, PLG_ENABLE_CROSS_GENERATION_ACCESS } = useFeatureFlags()
   const params = useParams<ProjectPathProps>()
   const { accountId } = useParams<AccountPathProps>()
-  const [sideNavExpanded, setSideNavExpanded] = useState<boolean>(!collapseByDefault)
+  const { setPreference: setSideNavExpandedPrefStore, preference: sideNavExpandedPrefStore = true } =
+    usePreferenceStore<boolean>(PreferenceScope.ACCOUNT, 'collapseSideNav')
+
+  const [sideNavExpanded, setSideNavExpanded] = useState<boolean>(collapseByDefault ? false : sideNavExpandedPrefStore)
   const launchButtonRedirectUrl = props.launchButtonRedirectUrl
     ? props.launchButtonRedirectUrl?.replace('{replaceAccountId}', params.accountId)
     : ''
@@ -75,11 +79,17 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
       newNavFlag = account?.crossGenerationAccessEnabled
     }
   }
+
   return (
     <div
       className={cx(css.main, {
         [css.sideNavExpanded]: sideNavExpanded
       })}
+      onClick={() => {
+        if (!sideNavExpanded) {
+          setSideNavExpanded(true)
+        }
+      }}
     >
       <>
         <div>{props.children}</div>
@@ -111,6 +121,9 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
         <SideNavCollapseButton
           isExpanded={sideNavExpanded}
           onClick={() => {
+            if (!collapseByDefault) {
+              setSideNavExpandedPrefStore(!sideNavExpanded)
+            }
             setSideNavExpanded(!sideNavExpanded)
           }}
         />
