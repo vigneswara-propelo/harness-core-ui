@@ -205,14 +205,6 @@ AuditTrailFactory.registerResourceHandler('ROLE', {
   }
 })
 
-AuditTrailFactory.registerResourceHandler('ROLE_ASSIGNMENT', {
-  moduleIcon: {
-    name: 'nav-settings'
-  },
-  resourceLabel: 'common.roleAssignmentLabel',
-  moduleLabel: platformLabel
-})
-
 AuditTrailFactory.registerResourceHandler('SERVICE_ACCOUNT', {
   moduleIcon: {
     name: 'nav-settings'
