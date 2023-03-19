@@ -163,6 +163,92 @@ describe('process single environment initial values', () => {
       category: 'single'
     } as DeployEnvironmentEntityFormState)
   })
+
+  test('set environment, service overrides and infra inputs when environment is expression', () => {
+    const output = processSingleEnvironmentInitialValues(
+      {
+        environmentRef: '<+expressionpart1.expressionpart2>',
+        environmentInputs: {
+          variables: [
+            {
+              name: 'var1',
+              type: 'String',
+              value: 'test1'
+            }
+          ]
+        },
+        infrastructureDefinitions: [
+          {
+            identifier: '<+expressionpart3.expressionpart4>',
+            inputs: {
+              identifier: '<+expressionpart3.expressionpart4>',
+              spec: {
+                connectorRef: '<+input>'
+              },
+              type: 'Kubernetes'
+            }
+          }
+        ],
+        serviceOverrideInputs: {
+          variables: [
+            {
+              name: 'var1',
+              type: 'String',
+              value: 'test1'
+            }
+          ]
+        },
+        deployToAll: false
+      },
+      { gitOpsEnabled: false }
+    )
+
+    expect(output).toEqual({
+      category: 'single',
+      environment: '<+expressionpart1.expressionpart2>',
+      // Validation when all the below remains as is, will the form get updated correctly
+      environmentInputs: {
+        environment: {
+          expression: {
+            variables: [
+              {
+                name: 'var1',
+                type: 'String',
+                value: 'test1'
+              }
+            ]
+          }
+        }
+      },
+      serviceOverrideInputs: {
+        environment: {
+          expression: {
+            variables: [
+              {
+                name: 'var1',
+                type: 'String',
+                value: 'test1'
+              }
+            ]
+          }
+        }
+      },
+      infrastructure: '<+expressionpart3.expressionpart4>',
+      infrastructureInputs: {
+        environment: {
+          infrastructure: {
+            expression: {
+              identifier: '<+expressionpart3.expressionpart4>',
+              type: 'Kubernetes',
+              spec: {
+                connectorRef: '<+input>'
+              }
+            }
+          }
+        }
+      }
+    })
+  })
 })
 
 describe('process single environment form values', () => {
@@ -444,5 +530,93 @@ describe('process single environment form values', () => {
     const output = processSingleEnvironmentFormValues({}, { gitOpsEnabled: false })
 
     expect(output).toEqual({})
+  })
+
+  test('environment, service overrides and infra inputs when environment is expression', () => {
+    const output = processSingleEnvironmentFormValues(
+      {
+        category: 'single',
+        environment: '<+expressionpart1.expressionpart2>',
+        // Validation when all the below remains as is, will the form get updated correctly
+        environmentInputs: {
+          environment: {
+            expression: {
+              variables: [
+                {
+                  name: 'var1',
+                  type: 'String',
+                  value: 'test1'
+                }
+              ]
+            }
+          }
+        },
+        serviceOverrideInputs: {
+          environment: {
+            expression: {
+              variables: [
+                {
+                  name: 'var1',
+                  type: 'String',
+                  value: 'test1'
+                }
+              ]
+            }
+          }
+        },
+        infrastructure: '<+expressionpart3.expressionpart4>',
+        infrastructureInputs: {
+          environment: {
+            infrastructure: {
+              expression: {
+                identifier: '<+expressionpart3.expressionpart4>',
+                type: 'Kubernetes',
+                spec: {
+                  connectorRef: '<+input>'
+                }
+              }
+            }
+          }
+        }
+      },
+      { gitOpsEnabled: false }
+    )
+
+    expect(output).toEqual({
+      environment: {
+        environmentRef: '<+expressionpart1.expressionpart2>',
+        environmentInputs: {
+          variables: [
+            {
+              name: 'var1',
+              type: 'String',
+              value: 'test1'
+            }
+          ]
+        },
+        infrastructureDefinitions: [
+          {
+            identifier: '<+expressionpart3.expressionpart4>',
+            inputs: {
+              identifier: '<+expressionpart3.expressionpart4>',
+              spec: {
+                connectorRef: '<+input>'
+              },
+              type: 'Kubernetes'
+            }
+          }
+        ],
+        serviceOverrideInputs: {
+          variables: [
+            {
+              name: 'var1',
+              type: 'String',
+              value: 'test1'
+            }
+          ]
+        },
+        deployToAll: false
+      }
+    } as DeployEnvironmentEntityConfig)
   })
 })

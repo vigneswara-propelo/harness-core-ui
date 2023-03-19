@@ -484,10 +484,7 @@ export default function DeployStageSetupShell(): JSX.Element {
             id={DeployTabs.ENVIRONMENT}
             title={
               <span className={css.title} data-completed={!incompleteTabs[DeployTabs.ENVIRONMENT]}>
-                <Icon
-                  name={incompleteTabs[DeployTabs.ENVIRONMENT] ? 'environments-outline' : iconNames.tick}
-                  size={16}
-                />
+                <Icon name={incompleteTabs[DeployTabs.ENVIRONMENT] ? 'infrastructure' : iconNames.tick} size={16} />
                 {getString('environment')}
               </span>
             }

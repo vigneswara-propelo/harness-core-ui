@@ -45,12 +45,17 @@ export function processSingleEnvironmentFormValues(
       return {
         environment: {
           environmentRef: data.environment,
-          ...(!!data.environmentInputs?.[data.environment] && {
-            environmentInputs: data.environmentInputs[data.environment]
-          }),
-          ...(!!data.serviceOverrideInputs?.[data.environment]?.[serviceIdentifiers?.[0] as string] && {
-            serviceOverrideInputs: data.serviceOverrideInputs?.[data.environment]?.[serviceIdentifiers?.[0] as string]
-          }),
+          ...(get(data.environmentInputs, 'environment.expression')
+            ? { environmentInputs: get(data.environmentInputs, 'environment.expression') }
+            : !!data.environmentInputs?.[data.environment] && {
+                environmentInputs: data.environmentInputs[data.environment]
+              }),
+          ...(get(data.serviceOverrideInputs, 'environment.expression')
+            ? { serviceOverrideInputs: get(data.serviceOverrideInputs, 'environment.expression') }
+            : !!data.serviceOverrideInputs?.[data.environment]?.[serviceIdentifiers?.[0] as string] && {
+                serviceOverrideInputs:
+                  data.serviceOverrideInputs?.[data.environment]?.[serviceIdentifiers?.[0] as string]
+              }),
           deployToAll: false,
           ...(!isEmpty(data.provisioner) && { provisioner: data.provisioner }),
           ...(data.environment &&
@@ -61,7 +66,11 @@ export function processSingleEnvironmentFormValues(
                   : [
                       {
                         identifier: data.infrastructure,
-                        inputs: get(data, `infrastructureInputs.['${data.environment}'].${data.infrastructure}`)
+                        inputs: get(
+                          data,
+                          `infrastructureInputs.environment.infrastructure.expression`,
+                          get(data, `infrastructureInputs.['${data.environment}'].${data.infrastructure}`)
+                        )
                       }
                     ]
             }),

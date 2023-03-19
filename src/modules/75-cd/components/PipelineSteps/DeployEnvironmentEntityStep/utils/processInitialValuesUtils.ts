@@ -8,7 +8,7 @@
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { defaultTo, set } from 'lodash-es'
 import type { EnvironmentYamlV2, FilterYaml } from 'services/cd-ng'
-import { getIdentifierFromScopedRef, isValueRuntimeInput } from '@common/utils/utils'
+import { getIdentifierFromScopedRef, isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 import type {
   DeployEnvironmentEntityConfig,
   DeployEnvironmentEntityCustomStepProps,
@@ -41,6 +41,8 @@ export function processSingleEnvironmentInitialValues(
         'environmentInputs',
         getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED
           ? { [environment.environmentRef]: environment?.environmentInputs }
+          : isValueExpression(environment.environmentRef)
+          ? { environment: { expression: environment.environmentInputs } }
           : {}
       )
 
@@ -53,6 +55,8 @@ export function processSingleEnvironmentInitialValues(
                 [serviceIdentifiers?.[0] as string]: environment?.serviceOverrideInputs
               }
             }
+          : isValueExpression(environment.environmentRef)
+          ? { environment: { expression: environment.serviceOverrideInputs } }
           : {}
       )
 
@@ -77,7 +81,13 @@ export function processSingleEnvironmentInitialValues(
         set(
           formState,
           'infrastructureInputs',
-          Array.isArray(infrastructureDefinitions) && infrastructure
+          isValueExpression(infrastructure)
+            ? {
+                environment: {
+                  infrastructure: { expression: infrastructureDefinitions?.[0]?.inputs }
+                }
+              }
+            : Array.isArray(infrastructureDefinitions) && infrastructure
             ? {
                 [environment.environmentRef]: {
                   [infrastructure]: infrastructureDefinitions?.[0]?.inputs

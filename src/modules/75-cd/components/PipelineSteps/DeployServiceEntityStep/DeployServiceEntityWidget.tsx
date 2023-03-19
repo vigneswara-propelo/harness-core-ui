@@ -50,7 +50,7 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
-import { isMultiTypeRuntime } from '@common/utils/utils'
+import { isMultiTypeExpression, isMultiTypeRuntime, isValueExpression } from '@common/utils/utils'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
@@ -103,6 +103,8 @@ function getInitialValues(data: DeployServiceEntityData): FormState {
       serviceInputs:
         getMultiTypeFromValue(data.service.serviceRef) === MultiTypeInputType.FIXED
           ? { [data.service.serviceRef]: data.service.serviceInputs }
+          : isValueExpression(data.service.serviceRef)
+          ? { service: { expression: data.service.serviceInputs } }
           : {}
     }
   } else if (data.services) {
@@ -393,6 +395,8 @@ export default function DeployServiceEntityWidget({
         serviceInputs = get(values.serviceInputs, values.service)
       } else if (isMultiTypeRuntime(typeOfService)) {
         serviceInputs = RUNTIME_INPUT_VALUE
+      } else if (isMultiTypeExpression(typeOfService)) {
+        serviceInputs = get(values.serviceInputs, 'service.expression')
       }
 
       onUpdate?.({
