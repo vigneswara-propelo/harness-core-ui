@@ -7,7 +7,7 @@
 import React, { useState } from 'react'
 import { Classes, FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
-import { useFormikContext } from 'formik'
+import { FormikProps, useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
 import {
   ButtonVariation,
@@ -73,6 +73,7 @@ export interface EnvironmentReferenceFieldProps extends Omit<IFormGroupProps, 'l
   isNewConnectorLabelVisible?: boolean
   labelClass?: string
   envTypeFilter?: ('PreProduction' | 'Production')[]
+  formikProps?: FormikProps<any>
 }
 
 export function getSelectedRenderer(selected: any): JSX.Element {
@@ -121,9 +122,10 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
     disabled,
     width,
     envTypeFilter = [],
+    formikProps,
     ...restProps
   } = props
-  const formik = useFormikContext()
+  const formik = useFormikContext() || formikProps
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const [page, setPage] = useState(0)

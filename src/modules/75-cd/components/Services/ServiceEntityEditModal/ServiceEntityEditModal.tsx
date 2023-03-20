@@ -13,7 +13,7 @@ import ServiceConfigurationWrapper from '@cd/components/Services/ServiceStudio/S
 import { ServiceContextProvider } from '@cd/context/ServiceContext'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
-interface ServiceEntityEditModalProps {
+export interface ServiceEntityEditModalProps {
   onCloseModal: () => void
   onServiceCreate: (val: ServiceYaml) => void
   isServiceCreateModalView: boolean

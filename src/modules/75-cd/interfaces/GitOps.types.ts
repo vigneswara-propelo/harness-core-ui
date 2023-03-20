@@ -18,6 +18,8 @@ import type {
 } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceInterface'
 import type { ServiceReferenceFieldProps } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import type { EnvironmentReferenceFieldProps } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
+import type { ServiceEntityEditModalProps } from '@cd/components/Services/ServiceEntityEditModal/ServiceEntityEditModal'
+import type { AddEditEnvironmentModalProps } from '@cd/components/PipelineSteps/DeployEnvironmentEntityStep/AddEditEnvironmentModal'
 
 export interface GitOpsCustomMicroFrontendProps {
   getLinkForAccountResources?(props: GetLinkForAccountResourcesProps): Breadcrumb[]
@@ -28,5 +30,7 @@ export interface GitOpsCustomMicroFrontendProps {
     NewEditEnvironmentModal: React.ComponentType<NewEditEnvironmentModalProps>
     MultiTypeServiceField: React.ComponentType<ServiceReferenceFieldProps>
     MultiTypeEnvironmentField: React.ComponentType<EnvironmentReferenceFieldProps>
+    ServiceEntityEditModal: React.ComponentType<ServiceEntityEditModalProps>
+    AddEditEnvironmentModal: React.ComponentType<AddEditEnvironmentModalProps>
   }
 }

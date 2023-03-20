@@ -23,6 +23,8 @@ import type { GitOpsCustomMicroFrontendProps } from '@cd/interfaces/GitOps.types
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import DeployServiceWidget from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceWidget'
+import ServiceEntityEditModal from '@cd/components/Services/ServiceEntityEditModal/ServiceEntityEditModal'
+import AddEditEnvironmentModal from '@cd/components/PipelineSteps/DeployEnvironmentEntityStep/AddEditEnvironmentModal'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
@@ -52,7 +54,9 @@ const GitOpsPage = (): React.ReactElement | null => {
         NewEditEnvironmentModal,
         NewEditServiceModal,
         MultiTypeServiceField,
-        MultiTypeEnvironmentField
+        MultiTypeEnvironmentField,
+        ServiceEntityEditModal,
+        AddEditEnvironmentModal
       }}
     />
   )
