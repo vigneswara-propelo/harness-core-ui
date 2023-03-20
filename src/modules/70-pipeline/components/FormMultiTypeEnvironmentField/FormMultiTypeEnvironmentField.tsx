@@ -72,6 +72,7 @@ export interface EnvironmentReferenceFieldProps extends Omit<IFormGroupProps, 'l
   isOnlyFixedType?: boolean
   isNewConnectorLabelVisible?: boolean
   labelClass?: string
+  envTypeFilter?: ('PreProduction' | 'Production')[]
 }
 
 export function getSelectedRenderer(selected: any): JSX.Element {
@@ -119,6 +120,7 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
     labelClass: labelClassFromProps = '',
     disabled,
     width,
+    envTypeFilter = [],
     ...restProps
   } = props
   const formik = useFormikContext()
@@ -151,7 +153,8 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
     isMultiSelect,
     setPagedEnvironmentData,
     selectedEnvironments: Array.isArray(selected) ? selected : [],
-    getString
+    getString,
+    envTypeFilter
   })
   const handleMultiSelectChange = (envs: any): void => {
     const environments = envs.map((env: any) => ({

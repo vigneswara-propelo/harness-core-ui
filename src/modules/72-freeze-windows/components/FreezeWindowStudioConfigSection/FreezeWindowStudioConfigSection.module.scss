@@ -88,3 +88,11 @@
     }
   }
 }
+
+.allScvEnvCheckbox {
+  [data-id*='allServices'],
+  [data-id*='allEnvironments'] {
+    width: 120px !important;
+    margin-bottom: var(--spacing-2) !important;
+  }
+}

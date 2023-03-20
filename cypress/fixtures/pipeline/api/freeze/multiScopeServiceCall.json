@@ -1,0 +1,21 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "service": {
+        "accountId": "accountId",
+        "identifier": "testService",
+        "orgIdentifier": "orgIdentifier",
+        "projectIdentifier": "projectIdentifier",
+        "name": "testService",
+        "deleted": false,
+        "tags": {},
+        "v2Service": false
+      },
+      "createdAt": 1677664498578,
+      "lastModifiedAt": 1677665258048
+    }
+  ],
+  "metaData": null,
+  "correlationId": "17d48b96-ec9a-462b-a722-35c9ef914203"
+}

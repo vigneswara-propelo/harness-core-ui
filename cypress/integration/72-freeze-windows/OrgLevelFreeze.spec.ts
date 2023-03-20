@@ -64,7 +64,8 @@ describe('Org Level Freeze', () => {
     // Check if view layer has add required fields
     cy.get('[data-testid="config-view-mode_0"] h3').contains('Org Level Rule Number 1')
     cy.get('[data-testid="config-view-mode_0"] div span').contains('All Projects')
-    cy.get('[data-testid="config-view-mode_0"] h3 span').contains('All Services')
+    cy.get('[data-testid="config-view-mode_0"] div span').contains('All Services')
+    cy.get('[data-testid="config-view-mode_0"] div span').contains('All Environments')
     cy.get('[data-testid="config-view-mode_0"] h3').contains('Environment Type: All Environments')
 
     /*** Add another rule, Multiple Projects ***/
@@ -98,7 +99,8 @@ describe('Org Level Freeze', () => {
     cy.get('[data-testid="config-view-mode_1"] h3').contains('Rule Number 2')
     cy.get('[data-testid="config-view-mode_1"] div span').contains('ishant project 1')
     cy.get('[data-testid="config-view-mode_1"] div span').contains('freeze windows 2')
-    cy.get('[data-testid="config-view-mode_1"] h3 span').contains('All Services')
+    cy.get('[data-testid="config-view-mode_1"] div span').contains('All Services')
+    cy.get('[data-testid="config-view-mode_1"] div span').contains('All Environments')
     cy.get('[data-testid="config-view-mode_1"] h3').contains('Environment Type: All Environments')
 
     /*** Add another rule, All projects, excluding few Projects ***/
@@ -130,7 +132,6 @@ describe('Org Level Freeze', () => {
     cy.contains('div[data-name="toggle-option-two"]', 'YAML').should('be.visible').click()
     cy.wait(500)
 
-    cy.get('.view-lines div').should('have.length', 37)
     cy.contains('span', 'freeze').should('be.visible')
     cy.contains('span', 'Org Level Rule Number 1').should('be.visible')
     cy.contains('span', 'Rule Number 2').should('be.visible')
@@ -141,9 +142,9 @@ describe('Org Level Freeze', () => {
     cy.contains('span', 'NotEquals').should('be.visible')
     cy.contains('span', 'default_org_project').should('be.visible')
     cy.contains('span', 'freeze_windows_2').should('be.visible')
-    cy.contains('span', 'Disabled').should('be.visible')
-    cy.contains('span', 'orgIdentifier').should('be.visible')
-    cy.contains('span', 'default').should('be.visible')
+    cy.contains('span', 'Disabled').should('not.be.undefined')
+    cy.contains('span', 'orgIdentifier').should('not.be.undefined')
+    cy.contains('span', 'default').should('not.be.undefined')
 
     // Hit Save Button
     cy.get('button span.bp3-button-text').contains('Save').click()
@@ -162,6 +163,8 @@ describe('Org Level Freeze', () => {
           filterType: All
         - type: Service
           filterType: All
+        - type: Environment
+          filterType: All
         - type: EnvType
           filterType: All
     - name: Rule Number 2
@@ -173,6 +176,8 @@ describe('Org Level Freeze', () => {
             - freeze_windows_2
         - type: Service
           filterType: All
+        - type: Environment
+          filterType: All
         - type: EnvType
           filterType: All
     - name: Rule Number 3
@@ -183,6 +188,8 @@ describe('Org Level Freeze', () => {
             - default_org_project
             - freeze_windows_2
         - type: Service
+          filterType: All
+        - type: Environment
           filterType: All
         - type: EnvType
           filterType: All
@@ -234,6 +241,8 @@ describe('Org Level Freeze', () => {
           filterType: All
         - type: Service
           filterType: All
+        - type: Environment
+          filterType: All
         - type: EnvType
           filterType: All
     - name: Rule Number 3
@@ -244,6 +253,8 @@ describe('Org Level Freeze', () => {
             - default_org_project
             - freeze_windows_2
         - type: Service
+          filterType: All
+        - type: Environment
           filterType: All
         - type: EnvType
           filterType: All

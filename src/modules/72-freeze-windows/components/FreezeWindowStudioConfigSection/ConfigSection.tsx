@@ -11,7 +11,7 @@ import type { FormikProps } from 'formik'
 import { isEmpty, noop } from 'lodash-es'
 import { Button, Formik } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
-import type { EntityConfig, ResourcesInterface, ValidationErrorType } from '@freeze-windows/types'
+import { EntityConfig, FIELD_KEYS, ResourcesInterface, ValidationErrorType } from '@freeze-windows/types'
 import {
   convertValuesToYamlObj,
   FieldVisibility,
@@ -147,10 +147,19 @@ const ConfigsSection = (
         formName="freezeWindowStudioConfigForm"
         validationSchema={Yup.object().shape({
           entity: Yup.array().of(
-            Yup.object().shape({
-              name: Yup.string().required('Name is required'),
-              ...getValidationSchema(fieldsVisibility.freezeWindowLevel)
-            })
+            Yup.object().shape(
+              {
+                name: Yup.string().required('Name is required'),
+                ...getValidationSchema(fieldsVisibility.freezeWindowLevel)
+              },
+              [
+                [FIELD_KEYS.Service, FIELD_KEYS.Org],
+                [FIELD_KEYS.Environment, FIELD_KEYS.Org],
+                [FIELD_KEYS.Service, FIELD_KEYS.Proj],
+                [FIELD_KEYS.Environment, FIELD_KEYS.Proj],
+                [FIELD_KEYS.Service, FIELD_KEYS.Environment]
+              ]
+            )
           )
         })}
       >

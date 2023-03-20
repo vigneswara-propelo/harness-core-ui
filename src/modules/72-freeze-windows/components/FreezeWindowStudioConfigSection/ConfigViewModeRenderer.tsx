@@ -11,7 +11,7 @@ import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import { EntityConfig, EntityType, EnvironmentType, FIELD_KEYS, ResourcesInterface } from '@freeze-windows/types'
 import type { FieldVisibility } from '@freeze-windows/utils/FreezeWindowStudioUtil'
-import { ServicesAndEnvRenderer, OrgProjAndServiceRenderer } from './FreezeStudioConfigSectionRenderers'
+import { EnvTypeRenderer, OrgProjAndServiceRenderer } from './FreezeStudioConfigSectionRenderers'
 
 interface ConfigViewModeRendererProps {
   config: EntityConfig
@@ -62,8 +62,7 @@ export const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
           resources={resources}
           getString={getString}
         />
-        <ServicesAndEnvRenderer
-          freezeWindowLevel={fieldsVisibility.freezeWindowLevel}
+        <EnvTypeRenderer
           getString={getString}
           envType={
             /* istanbul ignore next */ (entitiesMap[FIELD_KEYS.EnvType]?.entityRefs?.[0] ||

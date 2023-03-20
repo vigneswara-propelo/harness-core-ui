@@ -17,47 +17,262 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
         >
           <div
-            class="Layout--vertical StyledProps--main"
+            class="bp3-form-group"
+            data-id="entity[0].name-0"
             style="width: 400px;"
           >
-            <div
-              class="bp3-form-group"
-              data-id="entity[0].name-0"
+            <label
+              class="bp3-label"
+              for="entity[0].name"
             >
-              <label
-                class="bp3-label"
-                for="entity[0].name"
+              <span
+                class="Tooltip--acenter"
+                data-tooltip-id="freezeWindowStudioConfigForm_entity[0].name"
               >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="freezeWindowStudioConfigForm_entity[0].name"
-                >
-                  name
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
+                name
+              </span>
+               
+              <span
+                class="bp3-text-muted"
+              />
+            </label>
+            <div
+              class="bp3-form-content"
+            >
               <div
-                class="bp3-form-content"
+                class="bp3-input-group"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  name="entity[0].name"
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <button
+              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main tickButton Button--iconOnly Button--without-shadow Button--withLeftIcon"
+              type="button"
+            >
+              <span
+                class="bp3-icon bp3-icon-tick StyledProps--main"
+                icon="tick"
+              >
+                <svg
+                  data-icon="tick"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    tick
+                  </desc>
+                  <path
+                    d="M14 3c-.28 0-.53.11-.71.29L6 10.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l8-8A1.003 1.003 0 0014 3z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main crossButton Button--iconOnly Button--without-shadow Button--withLeftIcon"
+              type="button"
+            >
+              <span
+                class="bp3-icon bp3-icon-cross StyledProps--main"
+                icon="cross"
+              >
+                <svg
+                  data-icon="cross"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    cross
+                  </desc>
+                  <path
+                    d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <hr
+            class="separator"
+          />
+          <div
+            class="Layout--vertical StyledProps--main"
+          >
+            <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main allScvEnvCheckbox StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+            >
+              <div
+                class="serviceLabel"
+                style="width: 400px;"
               >
                 <div
-                  class="bp3-input-group"
+                  class="StyledProps--font StyledProps--main"
+                  data-testid="serviceTooltip"
                 >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="entity[0].name"
-                    type="text"
-                    value=""
-                  />
+                  <span
+                    class="Tooltip--acenter bp3-label"
+                    data-tooltip-id="freezeWindowStudioConfigForm_"
+                  >
+                    services
+                  </span>
+                </div>
+                <div
+                  class="bp3-form-group"
+                  data-id="undefined-1"
+                >
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main bp3-input bp3-disabled placeholderContainer placeholderClass StyledProps--border StyledProps--padding-xsmall"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--flex-inline StyledProps--padding-xsmall"
+                        >
+                          services
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml StyledProps--color StyledProps--color-grey500"
+              >
+                OR
+              </p>
+              <div
+                class="bp3-form-group"
+                data-id="entity[0].Service__0_allServices-2"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <label
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                  >
+                    <input
+                      checked=""
+                      name="entity[0].Service__0_allServices"
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    <span
+                      class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                      data-tooltip-id="freezeWindowStudioConfigForm_entity[0].Service__0_allServices"
+                    >
+                      common.allServices
+                    </span>
+                  </label>
                 </div>
               </div>
             </div>
             <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main allScvEnvCheckbox StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+            >
+              <div
+                class="environmentLabel"
+                style="width: 400px;"
+              >
+                <div
+                  class="StyledProps--font StyledProps--main"
+                  data-testid="environmentTooltip"
+                >
+                  <span
+                    class="Tooltip--acenter bp3-label"
+                    data-tooltip-id="freezeWindowStudioConfigForm_"
+                  >
+                    environments
+                  </span>
+                </div>
+                <div
+                  class="bp3-form-group"
+                  data-id="undefined-3"
+                >
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main bp3-input bp3-disabled placeholderContainer placeholderClass StyledProps--border StyledProps--padding-xsmall"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--flex-inline StyledProps--padding-xsmall"
+                        >
+                          environments
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml StyledProps--color StyledProps--color-grey500"
+              >
+                OR
+              </p>
+              <div
+                class="bp3-form-group"
+                data-id="entity[0].Environment__0_allEnvironments-4"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <label
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                  >
+                    <input
+                      checked=""
+                      name="entity[0].Environment__0_allEnvironments"
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    <span
+                      class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                      data-tooltip-id="freezeWindowStudioConfigForm_entity[0].Environment__0_allEnvironments"
+                    >
+                      common.allEnvironments
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr
+            class="separator"
+          />
+          <div
+            class="Layout--vertical StyledProps--main"
+            style="width: 400px;"
+          >
+            <div
               class="bp3-form-group tagInputStyle"
-              data-id="entity[0].Org-1"
+              data-id="entity[0].Org-5"
             >
               <label
                 class="bp3-label"
@@ -141,7 +356,7 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
             </div>
             <div
               class="bp3-form-group"
-              data-id="entity[0].ExcludeOrgCheckbox-2"
+              data-id="entity[0].ExcludeOrgCheckbox-6"
             >
               <div
                 class="bp3-form-content"
@@ -167,7 +382,7 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
             </div>
             <div
               class="bp3-form-group bp3-disabled tagInputStyle"
-              data-id="entity[0].Project-3"
+              data-id="entity[0].Project-7"
             >
               <label
                 class="bp3-label"
@@ -228,7 +443,7 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
             </div>
             <div
               class="bp3-form-group bp3-disabled"
-              data-id="entity[0].ExcludeProjCheckbox-4"
+              data-id="entity[0].ExcludeProjCheckbox-8"
             >
               <div
                 class="bp3-form-content"
@@ -254,62 +469,7 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
               </div>
             </div>
           </div>
-          <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-          >
-            <button
-              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main tickButton Button--iconOnly Button--without-shadow Button--withLeftIcon"
-              type="button"
-            >
-              <span
-                class="bp3-icon bp3-icon-tick StyledProps--main"
-                icon="tick"
-              >
-                <svg
-                  data-icon="tick"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  width="16"
-                >
-                  <desc>
-                    tick
-                  </desc>
-                  <path
-                    d="M14 3c-.28 0-.53.11-.71.29L6 10.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l8-8A1.003 1.003 0 0014 3z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </button>
-            <button
-              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main crossButton Button--iconOnly Button--without-shadow Button--withLeftIcon"
-              type="button"
-            >
-              <span
-                class="bp3-icon bp3-icon-cross StyledProps--main"
-                icon="cross"
-              >
-                <svg
-                  data-icon="cross"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  width="16"
-                >
-                  <desc>
-                    cross
-                  </desc>
-                  <path
-                    d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
         </div>
-        <hr
-          class="separator"
-        />
         <div
           class="Layout--vertical StyledProps--main"
         >
@@ -318,16 +478,16 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
           >
             <div
               class="bp3-form-group bp3-disabled"
-              data-id="entity[0].Service-5"
+              data-id="projectServices-9"
               style="width: 400px;"
             >
               <label
                 class="bp3-label"
-                for="entity[0].Service"
+                for="projectServices"
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="freezeWindowStudioConfigForm_entity[0].Service"
+                  data-tooltip-id="freezeWindowStudioConfigForm_projectServices"
                 >
                   services
                 </span>
@@ -352,7 +512,7 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
                         autocomplete="off"
                         class="bp3-input"
                         disabled=""
-                        name="entity[0].Service"
+                        name="projectServices"
                         placeholder="- common.allServices -"
                         style="padding-right: 0px;"
                         type="text"
@@ -388,7 +548,7 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
             </div>
             <div
               class="bp3-form-group"
-              data-id="entity[0].EnvType-6"
+              data-id="entity[0].EnvType-10"
               style="width: 400px;"
             >
               <label
@@ -480,42 +640,38 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
         >
           <div
-            class="Layout--vertical StyledProps--main"
+            class="bp3-form-group"
+            data-id="entity[0].name-0"
             style="width: 400px;"
           >
-            <div
-              class="bp3-form-group"
-              data-id="entity[0].name-0"
+            <label
+              class="bp3-label"
+              for="entity[0].name"
             >
-              <label
-                class="bp3-label"
-                for="entity[0].name"
+              <span
+                class="Tooltip--acenter"
+                data-tooltip-id="freezeWindowStudioConfigForm_entity[0].name"
               >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="freezeWindowStudioConfigForm_entity[0].name"
-                >
-                  name
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
+                name
+              </span>
+               
+              <span
+                class="bp3-text-muted"
+              />
+            </label>
+            <div
+              class="bp3-form-content"
+            >
               <div
-                class="bp3-form-content"
+                class="bp3-input-group"
               >
-                <div
-                  class="bp3-input-group"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="entity[0].name"
-                    type="text"
-                    value=""
-                  />
-                </div>
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  name="entity[0].name"
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -572,6 +728,14 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
             </button>
           </div>
         </div>
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <div
+            class="Layout--vertical StyledProps--main"
+            style="width: 400px;"
+          />
+        </div>
         <hr
           class="separator"
         />
@@ -579,96 +743,85 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
           class="Layout--vertical StyledProps--main"
         >
           <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main allScvEnvCheckbox StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
           >
             <div
-              class="bp3-form-group"
-              data-id="entity[0].Service-1"
+              class="serviceLabel"
               style="width: 400px;"
             >
-              <label
-                class="bp3-label"
-                for="entity[0].Service"
+              <div
+                class="StyledProps--font StyledProps--main"
+                data-testid="serviceTooltip"
               >
                 <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="freezeWindowStudioConfigForm_entity[0].Service"
+                  class="Tooltip--acenter bp3-label"
+                  data-tooltip-id="freezeWindowStudioConfigForm_"
                 >
                   services
                 </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
+              </div>
               <div
-                class="bp3-form-content"
+                class="bp3-form-group"
+                data-id="undefined-1"
               >
                 <div
-                  class="bp3-popover-wrapper MultiSelect--main bp3-fill"
+                  class="bp3-form-content"
                 >
                   <div
-                    class="bp3-popover-target"
+                    class="StyledProps--font StyledProps--main bp3-input bp3-disabled placeholderContainer placeholderClass StyledProps--border StyledProps--padding-xsmall"
                   >
                     <div
-                      class=""
+                      class="StyledProps--font StyledProps--main"
                     >
-                      <div
-                        class="bp3-input bp3-tag-input bp3-multi-select"
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--flex-inline StyledProps--padding-xsmall"
                       >
-                        <div
-                          class="bp3-tag-input-values"
-                        >
-                          <span
-                            class="bp3-tag MultiSelect--tag"
-                            data-tag-index="0"
-                          >
-                            <span
-                              class="bp3-text-overflow-ellipsis bp3-fill"
-                            >
-                              common.allServices
-                            </span>
-                            <button
-                              class="bp3-tag-remove"
-                              type="button"
-                            >
-                              <span
-                                class="bp3-icon bp3-icon-small-cross"
-                                icon="small-cross"
-                              >
-                                <svg
-                                  data-icon="small-cross"
-                                  height="16"
-                                  viewBox="0 0 16 16"
-                                  width="16"
-                                >
-                                  <desc>
-                                    small-cross
-                                  </desc>
-                                  <path
-                                    d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                                    fill-rule="evenodd"
-                                  />
-                                </svg>
-                              </span>
-                            </button>
-                          </span>
-                          <input
-                            autocomplete="off"
-                            class="bp3-input-ghost bp3-multi-select-tag-input-input"
-                            name="entity[0].Service"
-                            value=""
-                          />
-                        </div>
-                      </div>
+                        services
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml StyledProps--color StyledProps--color-grey500"
+            >
+              OR
+            </p>
             <div
               class="bp3-form-group"
-              data-id="entity[0].EnvType-2"
+              data-id="entity[0].Service__0_allServices-2"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    checked=""
+                    name="entity[0].Service__0_allServices"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="freezeWindowStudioConfigForm_entity[0].Service__0_allServices"
+                  >
+                    common.allServices
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+          >
+            <div
+              class="bp3-form-group"
+              data-id="entity[0].EnvType-3"
               style="width: 400px;"
             >
               <label
@@ -735,6 +888,80 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
                 </div>
               </div>
             </div>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main allScvEnvCheckbox StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+            >
+              <div
+                class="environmentLabel"
+                style="width: 400px;"
+              >
+                <div
+                  class="StyledProps--font StyledProps--main"
+                  data-testid="environmentTooltip"
+                >
+                  <span
+                    class="Tooltip--acenter bp3-label"
+                    data-tooltip-id="freezeWindowStudioConfigForm_"
+                  >
+                    environments
+                  </span>
+                </div>
+                <div
+                  class="bp3-form-group"
+                  data-id="undefined-4"
+                >
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main bp3-input bp3-disabled placeholderContainer placeholderClass StyledProps--border StyledProps--padding-xsmall"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--flex-inline StyledProps--padding-xsmall"
+                        >
+                          environments
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml StyledProps--color StyledProps--color-grey500"
+              >
+                OR
+              </p>
+              <div
+                class="bp3-form-group"
+                data-id="entity[0].Environment__0_allEnvironments-5"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <label
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                  >
+                    <input
+                      checked=""
+                      name="entity[0].Environment__0_allEnvironments"
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    <span
+                      class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                      data-tooltip-id="freezeWindowStudioConfigForm_entity[0].Environment__0_allEnvironments"
+                    >
+                      common.allEnvironments
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -774,6 +1001,20 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
           class="badge"
         >
           common.allServices
+        </span>
+      </div>
+      <div
+        class="viewRowNode"
+      >
+        <span>
+          environments
+          :
+        </span>
+         
+        <span
+          class="badge"
+        >
+          common.allEnvironments
         </span>
       </div>
       <h3

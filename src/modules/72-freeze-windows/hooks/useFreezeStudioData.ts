@@ -10,16 +10,29 @@ import { useParams } from 'react-router-dom'
 import { debounce } from 'lodash-es'
 import type { SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useGetOrganizationAggregateDTOList, useGetProjectList, useGetServiceList } from 'services/cd-ng'
+import {
+  useGetEnvironmentListV2,
+  useGetOrganizationAggregateDTOList,
+  useGetProjectList,
+  useGetServiceList
+} from 'services/cd-ng'
 import { FreezeWindowLevels, ResourcesInterface, ProjctsByOrgId } from '@freeze-windows/types'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
-import { allOrgsObj, allProjectsObj, allServicesObj } from '@freeze-windows/utils/FreezeWindowStudioUtil'
+import {
+  allEnvironmentsObj,
+  allOrgsObj,
+  allProjectsObj,
+  allServicesObj
+} from '@freeze-windows/utils/FreezeWindowStudioUtil'
+import { useMutateAsGet } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export const useFreezeStudioData = (): ResourcesInterface => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { freezeWindowLevel } = React.useContext(FreezeWindowContext)
   const { getString } = useStrings()
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const {
     loading: loadingOrgs,
@@ -30,18 +43,26 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     lazy: true
   })
 
-  const {
-    data: serviceData,
-    loading: loadingServices,
-    refetch: refetchServices
-  } = useGetServiceList({
+  const { data: serviceData, loading: loadingServices } = useGetServiceList({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      size: 200
+      size: 200,
+      includeAllServicesAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
+    }
+  })
+
+  const { data: environmentsResponse, loading: isEnvironmentsLoading } = useMutateAsGet(useGetEnvironmentListV2, {
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      includeAllAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
     },
-    lazy: true
+    body: {
+      filterType: 'Environment'
+    }
   })
 
   const {
@@ -73,15 +94,14 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     All: allServicesObj(getString)
   })
 
+  const [environments, setEnvironments] = React.useState<SelectOption[]>([allEnvironmentsObj(getString)])
+  const [environmentsMap, setEnvironmentsMap] = React.useState<Record<string, SelectOption>>({
+    All: allEnvironmentsObj(getString)
+  })
+
   React.useEffect(() => {
     refetchOrgs()
   }, [accountId])
-
-  React.useEffect(() => {
-    if (freezeWindowLevel === FreezeWindowLevels.PROJECT && projectIdentifier) {
-      refetchServices()
-    }
-  }, [projectIdentifier, freezeWindowLevel])
 
   React.useEffect(() => {
     if (!loadingOrgs && orgsData?.data?.content) {
@@ -118,7 +138,25 @@ export const useFreezeStudioData = (): ResourcesInterface => {
       setServices([allServicesObj(getString), ...adaptedServicesData])
       setServicesMap(servicesMapp)
     }
-  }, [loadingServices])
+  }, [loadingServices, serviceData?.data?.content])
+
+  React.useEffect(() => {
+    if (!isEnvironmentsLoading && environmentsResponse?.data?.content) {
+      const envMap: Record<string, SelectOption> = { All: allEnvironmentsObj(getString) }
+      const adaptedEnvData = environmentsResponse?.data?.content.map(item => {
+        const label = item?.environment?.name || ''
+        const value = item?.environment?.identifier || ''
+        const obj = {
+          label,
+          value
+        }
+        envMap[value] = obj
+        return obj
+      })
+      setEnvironments([allEnvironmentsObj(getString), ...adaptedEnvData])
+      setEnvironmentsMap(envMap)
+    }
+  }, [environmentsResponse?.data?.content, isEnvironmentsLoading])
 
   React.useEffect(() => {
     if (!loadingProjects && projectsData?.data?.content) {
@@ -227,6 +265,8 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     projectsMap,
     services,
     servicesMap,
+    environmentsMap,
+    environments,
     freezeWindowLevel,
     projectsByOrgId,
     fetchProjectsForOrgId,

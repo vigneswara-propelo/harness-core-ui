@@ -12,7 +12,16 @@ import { Color } from '@harness/design-system'
 import { Icon, Layout, Text } from '@harness/uicore'
 import cx from 'classnames'
 import type { ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
-import { EnvironmentResponseDTO, Failure, getEnvironmentAccessListPromise } from 'services/cd-ng'
+import {
+  EnvironmentResponse,
+  EnvironmentResponseDTO,
+  Failure,
+  getEnvironmentAccessListPromise,
+  getEnvironmentListV2Promise,
+  PageEnvironmentResponse,
+  ResponseListEnvironmentResponse,
+  ResponsePageEnvironmentResponse
+} from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import environmentEmptyStateSvg from '@pipeline/icons/emptyServiceDetail.svg'
 
@@ -30,7 +39,8 @@ export function getReferenceFieldProps({
   accountIdentifier,
   setPagedEnvironmentData,
   selectedEnvironments,
-  getString
+  getString,
+  envTypeFilter
 }: any): Omit<
   ReferenceSelectProps<EnvironmentResponseDTO>,
   'onChange' | 'onMultiSelectChange' | 'onCancel' | 'pagination'
@@ -45,23 +55,42 @@ export function getReferenceFieldProps({
     createNewLabel: getString('environment'),
     isNewConnectorLabelVisible: true,
     fetchRecords: (done, search, page, scope, signal = undefined) => {
-      const request = getEnvironmentAccessListPromise(
-        {
-          queryParams: {
-            page: page,
-            accountIdentifier: accountIdentifier,
-            orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
-            projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-            searchTerm: search
-          }
-        },
-        signal
-      )
+      const commonQueryParams = {
+        page: page,
+        accountIdentifier: accountIdentifier,
+        orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
+        projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
+        searchTerm: search
+      }
+      const request = envTypeFilter.length
+        ? getEnvironmentListV2Promise(
+            {
+              queryParams: {
+                ...commonQueryParams
+              },
+              body: {
+                environmentTypes: envTypeFilter,
+                filterType: 'Environment'
+              }
+            },
+            signal
+          )
+        : getEnvironmentAccessListPromise(
+            {
+              queryParams: {
+                ...commonQueryParams
+              }
+            },
+            signal
+          )
       return request
-        .then(responseData => {
-          if (responseData?.data?.length) {
+        .then((responseData: ResponseListEnvironmentResponse | ResponsePageEnvironmentResponse) => {
+          const responseDt = envTypeFilter.length
+            ? (responseData.data as PageEnvironmentResponse).content
+            : (responseData.data as EnvironmentResponse[])
+          if (responseDt?.length) {
             setPagedEnvironmentData(responseData)
-            const environmentsList = responseData?.data?.map(environment => ({
+            const environmentsList = responseDt?.map(environment => ({
               identifier: defaultTo(environment.environment?.identifier, ''),
               name: defaultTo(environment.environment?.name, ''),
               record: {

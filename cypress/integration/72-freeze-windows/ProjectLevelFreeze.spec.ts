@@ -10,7 +10,9 @@ import {
   existingProjectLevelFreezeRoute,
   projLevelPostFreezeCall,
   projLevelPutFreezeCall,
-  projLevelGetFreezeCall
+  projLevelGetFreezeCall,
+  multiscopeServiceCall,
+  multiScopeEnvWithTypeFilterCall
 } from './constants'
 
 describe('Project Level Freeze', () => {
@@ -21,6 +23,12 @@ describe('Project Level Freeze', () => {
     )
     cy.intercept('PUT', projLevelPutFreezeCall).as('updateFreezeCall')
     cy.intercept('GET', projLevelGetFreezeCall, { fixture: 'pipeline/api/freeze/getProjectLevelFreeze' })
+    cy.intercept('GET', multiscopeServiceCall, { fixture: 'pipeline/api/freeze/multiScopeServiceCall' }).as(
+      'multiScopeServiceCall'
+    )
+    cy.intercept('POST', multiScopeEnvWithTypeFilterCall, { fixture: 'pipeline/api/freeze/multiScopeEnvCall' }).as(
+      'multiScopeEnvWithTypeFilterCall'
+    )
   })
 
   it('should go to freeze creation page in Project Level and init config, and add a rule in Config Section', () => {
@@ -100,13 +108,24 @@ describe('Project Level Freeze', () => {
     cy.get('@typeProd').click({ force: true })
 
     // Select Service
-    cy.get('input[name="entity[0].Service"]').should('be.visible').click()
-    cy.get('li.MultiSelect--menuItem').should('have.length', 2).as('serviceTypeMenuItem')
-    cy.get('@serviceTypeMenuItem').eq(0).should('contain.text', 'All Services').as('typeAllSvc')
-    cy.get('@serviceTypeMenuItem').eq(1).should('contain.text', 'testService').as('testServiceSvc')
+    cy.get('[data-id="entity[0].Service__0_allServices-2"] input').should('be.checked').as('allServiceCheckbox')
+    cy.get('@allServiceCheckbox').click({ force: true })
+    cy.get('@allServiceCheckbox').should('not.be.checked')
 
-    cy.get('@typeAllSvc').click({ force: true })
-    cy.get('@testServiceSvc').click({ force: true })
+    cy.get('[data-testid="config-edit-mode_0"]').contains('p', 'Services').should('be.visible').click()
+    cy.wait('@multiScopeServiceCall')
+    cy.contains('p', 'Id: testService').should('be.visible').click()
+    cy.get('button[aria-label="Apply Selected"]').click()
+
+    // Select Env
+    cy.get('[data-id="entity[0].Environment__0_allEnvironments-5"] input').should('be.checked').as('allEnvCheckbox')
+    cy.get('@allEnvCheckbox').click({ force: true })
+    cy.get('@allEnvCheckbox').should('not.be.checked')
+
+    cy.get('[data-testid="config-edit-mode_0"]').contains('p', 'Environments').should('be.visible').click()
+    cy.wait('@multiScopeEnvWithTypeFilterCall')
+    cy.contains('p', 'Id: testEnv').should('be.visible').click()
+    cy.get('button[aria-label="Apply Selected"]').click()
 
     // Hit Tick button
     cy.get('button span.bp3-icon-tick').click()
@@ -118,7 +137,7 @@ describe('Project Level Freeze', () => {
     // Go To YAML - validate YAML
     cy.contains('div[data-name="toggle-option-two"]', 'YAML').should('be.visible').click()
     cy.wait(500)
-    cy.get('.view-lines div').should('have.length', 24)
+    cy.get('.view-lines div').should('have.length', 30)
     cy.contains('span', 'freeze').should('be.visible')
     cy.contains('span', 'name:').should('be.visible')
     cy.contains('span', 'project level freeze').should('be.visible')
@@ -137,6 +156,7 @@ describe('Project Level Freeze', () => {
     cy.contains('span', 'Equals').should('be.visible')
     cy.contains('span', 'entityRefs').should('be.visible')
     cy.contains('span', 'testService').should('be.visible')
+    cy.contains('span', 'testEnv').should('be.visible')
     cy.contains('span', 'status').should('be.visible')
     cy.contains('span', 'Disabled').should('be.visible')
     cy.contains('span', 'orgIdentifier').should('be.visible')
@@ -162,6 +182,10 @@ describe('Project Level Freeze', () => {
           filterType: Equals
           entityRefs:
             - testService
+        - type: Environment
+          filterType: Equals
+          entityRefs:
+            - testEnv
         - type: EnvType
           filterType: Equals
           entityRefs:
@@ -169,6 +193,8 @@ describe('Project Level Freeze', () => {
     - name: Rule Number 2
       entities:
         - type: Service
+          filterType: All
+        - type: Environment
           filterType: All
         - type: EnvType
           filterType: All

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { addHashInCypressURLBasedOnBrowserRouter } from "../../utils/windowLocation"
+import { addHashInCypressURLBasedOnBrowserRouter } from '../../utils/windowLocation'
 
 export const accountId = 'accountId'
 export const projectId = 'project1'
@@ -33,3 +33,7 @@ export const projectsAPI = `ng/api/projects?routingId=${accountId}&accountIdenti
 export const orgLevelPostFreezeCall = `ng/api/freeze?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgId}`
 export const orgLevelGetFreezeCall = `/ng/api/freeze/${orgLevelFreezeId}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgId}`
 export const orgLevelPutFreezeCall = `ng/api/freeze/${orgLevelFreezeId}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgId}`
+
+/** MultiscopeService Call - Project tab */
+export const multiscopeServiceCall = `ng/api/servicesV2/list/access?page=0&accountIdentifier=${accountId}&orgIdentifier=${orgId}&projectIdentifier=${projectId}&searchTerm=&deploymentTemplateIdentifier=`
+export const multiScopeEnvWithTypeFilterCall = `ng/api/environmentsV2/listV2?page=0&accountIdentifier=${accountId}&orgIdentifier=${orgId}&projectIdentifier=${projectId}&searchTerm=`

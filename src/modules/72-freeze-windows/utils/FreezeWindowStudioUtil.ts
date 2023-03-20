@@ -21,6 +21,7 @@ import {
   ResourcesInterface
 } from '@freeze-windows/types'
 import { DefaultFreezeId } from '@freeze-windows/context/FreezeWindowReducer'
+import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 
 export const isAllOptionSelected = (selected?: SelectOption[]) => {
   if (Array.isArray(selected)) {
@@ -39,6 +40,11 @@ export const allProjectsObj = (getString: UseStringsReturn['getString']) => ({
 })
 export const allServicesObj = (getString: UseStringsReturn['getString']) => ({
   label: getString('common.allServices'),
+  value: 'All'
+})
+
+export const allEnvironmentsObj = (getString: UseStringsReturn['getString']) => ({
+  label: getString('common.allEnvironments'),
   value: 'All'
 })
 
@@ -125,6 +131,9 @@ const selectedValueForFilterTypeAll = (type: string, getString: UseStringsReturn
   if (type === FIELD_KEYS.Service) {
     return [allServicesObj(getString)]
   }
+  if (type === FIELD_KEYS.Environment) {
+    return [allEnvironmentsObj(getString)]
+  }
 }
 
 const makeOptions = (dataMap: Record<string, SelectOption>, keys?: string[]) => {
@@ -133,7 +142,20 @@ const makeOptions = (dataMap: Record<string, SelectOption>, keys?: string[]) => 
 
 const equalsOptions = (type: FIELD_KEYS, entityRefs: string[], resources: ResourcesInterface) => {
   if (type === FIELD_KEYS.Service) {
-    return makeOptions(resources.servicesMap, entityRefs)
+    return entityRefs.map(item => {
+      return {
+        label: defaultTo(resources.servicesMap[getIdentifierFromValue(item)]?.label, getIdentifierFromValue(item)),
+        value: item
+      }
+    })
+  }
+  if (type === FIELD_KEYS.Environment) {
+    return entityRefs.map(item => {
+      return {
+        label: defaultTo(resources.environmentsMap[getIdentifierFromValue(item)]?.label, getIdentifierFromValue(item)),
+        value: item
+      }
+    })
   }
   if (type === FIELD_KEYS.Proj) {
     return makeOptions(resources.projectsMap, entityRefs)
@@ -247,7 +269,12 @@ const getMetaDataForField = (fieldKey: FIELD_KEYS, entities: EntityType[], newVa
 
 const adaptForOrgField = (newValues: any, entities: EntityType[]) => {
   const fieldKey = FIELD_KEYS.Org
-  const { isAllSelected, obj, index: orgFieldIndex } = getMetaDataForField(fieldKey, entities, newValues)
+  const {
+    isAllSelected,
+    obj,
+    index: orgFieldIndex,
+    isNewValueEmpty
+  } = getMetaDataForField(fieldKey, entities, newValues)
   if (orgFieldIndex < 0 && !newValues[fieldKey]) {
     return
   }
@@ -259,6 +286,8 @@ const adaptForOrgField = (newValues: any, entities: EntityType[]) => {
     }
     // exclude can be there
     // entityRefs reqd, if exclude is true
+  } else if (isNewValueEmpty) {
+    // Do nothing here
   } else {
     obj.filterType = 'Equals'
     obj.entityRefs.push(...(newValues[fieldKey]?.map((field: SelectOption) => field.value) || []))
@@ -312,18 +341,39 @@ const adaptForProjectField = (newValues: any, entities: EntityType[]) => {
   updateEntities(obj, entities, index)
 }
 
-const adaptForServiceField = (newValues: any, entities: EntityType[]) => {
-  const fieldKey = FIELD_KEYS.Service
-  const { isAllSelected, obj, index } = getMetaDataForField(fieldKey, entities, newValues)
+const adaptForServiceEnvField = (newValues: any, entities: EntityType[], fieldKeys: FIELD_KEYS) => {
+  const fieldKey = fieldKeys
+  const { isAllSelected, obj, index, isNewValueEmpty } = getMetaDataForField(fieldKey, entities, newValues)
   if (index < 0 && !newValues[fieldKey]) {
     return
   }
 
   if (isAllSelected) {
     obj.filterType = 'All'
+  } else if (isNewValueEmpty) {
+    //Do nothing here
   } else {
     obj.filterType = 'Equals'
     obj.entityRefs.push(...(newValues[fieldKey]?.map((field: SelectOption) => field.value) || []))
+  }
+
+  updateEntities(obj, entities, index)
+}
+
+const adaptForServiceEnvFieldAtOrgAcct = (newValues: any, entities: EntityType[], fieldKeys: FIELD_KEYS) => {
+  const fieldKey = fieldKeys
+  const { obj, index } = getMetaDataForField(fieldKey, entities, newValues)
+  const isAllOption = isAllOptionSelected(newValues[fieldKey])
+  if (index < 0 && !newValues[fieldKey]) {
+    return
+  }
+
+  const entityRefValues = (newValues[fieldKey]?.map((field: SelectOption) => field.value) || []) as string[]
+  if (entityRefValues?.length && !isAllOption) {
+    obj.filterType = 'Equals'
+    obj.entityRefs.push(...entityRefValues)
+  } else {
+    obj.filterType = 'All'
   }
 
   updateEntities(obj, entities, index)
@@ -336,14 +386,19 @@ export const convertValuesToYamlObj = (currentValues: any, newValues: any, field
   if (fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
     adaptForOrgField(newValues, entities)
     adaptForProjectField(newValues, entities)
+    adaptForServiceEnvFieldAtOrgAcct(newValues, entities, FIELD_KEYS.Service)
+    adaptForServiceEnvFieldAtOrgAcct(newValues, entities, FIELD_KEYS.Environment)
   }
 
   if (fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.PROJECT) {
-    adaptForServiceField(newValues, entities)
+    adaptForServiceEnvField(newValues, entities, FIELD_KEYS.Service)
+    adaptForServiceEnvField(newValues, entities, FIELD_KEYS.Environment)
   }
 
   if (fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.ORG) {
     adaptForProjectField(newValues, entities)
+    adaptForServiceEnvFieldAtOrgAcct(newValues, entities, FIELD_KEYS.Service)
+    adaptForServiceEnvFieldAtOrgAcct(newValues, entities, FIELD_KEYS.Environment)
   }
 
   return { name: newValues.name, entities }
@@ -364,6 +419,7 @@ export const getEmptyEntityConfig = (fieldsVisibility: FieldVisibility): EntityC
     })
   }
   entities.push({ type: FIELD_KEYS.Service, filterType: 'All' })
+  entities.push({ type: FIELD_KEYS.Environment, filterType: 'All' })
   entities.push({ type: FIELD_KEYS.EnvType, filterType: 'All' })
   return {
     name: '',
@@ -374,18 +430,50 @@ export const getEmptyEntityConfig = (fieldsVisibility: FieldVisibility): EntityC
 export const getValidationSchema = (freezeWindowLevel: FreezeWindowLevels) => {
   if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
     return {
-      [FIELD_KEYS.Service]: Yup.string().required('Service is required')
+      [FIELD_KEYS.Service]: Yup.string().when([FIELD_KEYS.Environment], {
+        is: val => !val?.length,
+        then: Yup.string().required('Service is required')
+      }),
+      [FIELD_KEYS.Environment]: Yup.string().when([FIELD_KEYS.Service], {
+        is: val => !val?.length,
+        then: Yup.string().required('Environment is required')
+      })
     }
   }
   if (freezeWindowLevel === FreezeWindowLevels.ORG) {
     return {
-      [FIELD_KEYS.Proj]: Yup.string().required('Project is required')
+      [FIELD_KEYS.Service]: Yup.string().when([FIELD_KEYS.Proj, FIELD_KEYS.Environment], {
+        is: (val1, val2) => !val1?.length && !val2?.length,
+        then: Yup.string().required('Service is required')
+      }),
+      [FIELD_KEYS.Environment]: Yup.string().when([FIELD_KEYS.Proj, FIELD_KEYS.Service], {
+        is: (val1, val2) => !val1?.length && !val2?.length,
+        then: Yup.string().required('Environment is required')
+      }),
+      [FIELD_KEYS.Proj]: Yup.string().when([FIELD_KEYS.Service, FIELD_KEYS.Environment], {
+        is: (val1, val2) => !val1?.length && !val2?.length,
+        then: Yup.string().required('Project is required')
+      })
     }
   }
   if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
     return {
-      [FIELD_KEYS.Org]: Yup.string().required('Organization is required'),
-      [FIELD_KEYS.Proj]: Yup.string().required('Project is required')
+      [FIELD_KEYS.Service]: Yup.string().when([FIELD_KEYS.Org, FIELD_KEYS.Proj, FIELD_KEYS.Environment], {
+        is: (val1, val2, val3) => !(val1?.length && val2?.length) && !val3?.length,
+        then: Yup.string().required('Service is required')
+      }),
+      [FIELD_KEYS.Environment]: Yup.string().when([FIELD_KEYS.Org, FIELD_KEYS.Proj, FIELD_KEYS.Service], {
+        is: (val1, val2, val3) => !(val1?.length && val2?.length) && !val3?.length,
+        then: Yup.string().required('Environment is required')
+      }),
+      [FIELD_KEYS.Org]: Yup.string().when([FIELD_KEYS.Service, FIELD_KEYS.Environment], {
+        is: (val1, val2) => !val1?.length && !val2?.length,
+        then: Yup.string().required('Organization is required')
+      }),
+      [FIELD_KEYS.Proj]: Yup.string().when([FIELD_KEYS.Service, FIELD_KEYS.Environment], {
+        is: (val1, val2) => !val1?.length && !val2?.length,
+        then: Yup.string().required('Project is required')
+      })
     }
   }
   return {}

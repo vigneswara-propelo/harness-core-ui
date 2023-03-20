@@ -18,6 +18,7 @@ export enum FreezeWindowLevels {
 
 export enum FIELD_KEYS {
   EnvType = 'EnvType',
+  Environment = 'Environment',
   Service = 'Service',
   Org = 'Org',
   ExcludeOrgCheckbox = 'ExcludeOrgCheckbox',
@@ -75,7 +76,9 @@ export interface ResourcesInterface {
   projects: SelectOption[]
   projectsMap: Record<string, SelectOption>
   services: SelectOption[]
+  environments: SelectOption[]
   servicesMap: Record<string, SelectOption>
+  environmentsMap: Record<string, SelectOption>
   freezeWindowLevel: FreezeWindowLevels
   projectsByOrgId: Record<string, ProjctsByOrgId>
   fetchProjectsForOrgId: (orgId: string) => void

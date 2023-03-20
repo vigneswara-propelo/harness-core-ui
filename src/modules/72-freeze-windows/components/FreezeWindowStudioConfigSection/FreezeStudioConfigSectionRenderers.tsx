@@ -11,6 +11,7 @@ import { set, cloneDeep } from 'lodash-es'
 import { Icon, SelectOption, FormInput, Heading } from '@harness/uicore'
 import type { ITagInputProps } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
+import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import type { UseStringsReturn } from 'framework/strings'
 import { EntityType, EnvironmentType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
 import { allProjectsObj, getEnvTypeMap, isAllOptionSelected } from '@freeze-windows/utils/FreezeWindowStudioUtil'
@@ -23,9 +24,10 @@ const NotEquals = 'NotEquals'
 interface EnvTypeRendererProps {
   getString: UseStringsReturn['getString']
   name: string
+  setEnvTypeFilter: React.Dispatch<React.SetStateAction<('Production' | 'PreProduction')[] | undefined>>
 }
 
-export const EnvironmentTypeRenderer = ({ getString, name }: EnvTypeRendererProps) => {
+export const EnvironmentTypeRenderer = ({ getString, name, setEnvTypeFilter }: EnvTypeRendererProps) => {
   const envTypeMap = getEnvTypeMap(getString)
   const [envTypes] = React.useState<SelectOption[]>([
     { label: envTypeMap[EnvironmentType.All], value: All },
@@ -33,35 +35,19 @@ export const EnvironmentTypeRenderer = ({ getString, name }: EnvTypeRendererProp
     { label: envTypeMap[EnvironmentType.PreProduction], value: EnvironmentType.PreProduction }
   ])
 
-  return <FormInput.Select name={name} items={envTypes} label={getString('envType')} style={{ width: '400px' }} />
-}
-
-interface ServiceFieldRendererPropsInterface {
-  getString: UseStringsReturn['getString']
-  isDisabled: boolean
-  name: string
-  services: SelectOption[]
-}
-export const ServiceFieldRenderer: React.FC<ServiceFieldRendererPropsInterface> = ({
-  getString,
-  isDisabled,
-  name,
-  services
-}) => {
-  const [disabledItems] = React.useState<SelectOption[]>([{ label: getString('common.allServices'), value: All }])
-  if (isDisabled) {
-    return (
-      <FormInput.Select
-        name={name}
-        items={disabledItems}
-        disabled={isDisabled}
-        placeholder={disabledItems[0].label}
-        label={getString('services')}
-        style={{ width: '400px' }}
-      />
-    )
-  }
-  return <FormInput.MultiSelect style={{ width: '400px' }} name={name} items={services} label={getString('services')} />
+  return (
+    <FormInput.Select
+      name={name}
+      items={envTypes}
+      label={getString('envType')}
+      style={{ width: '400px' }}
+      onChange={val => {
+        if (val.value === All) {
+          setEnvTypeFilter(['PreProduction', 'Production'])
+        } else setEnvTypeFilter([val.value as 'Production' | 'PreProduction'])
+      }}
+    />
+  )
 }
 
 const getOrgNameKeys = (namePrefix: string) => {
@@ -316,20 +302,14 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   )
 }
 
-export const ServicesAndEnvRenderer: React.FC<{
-  freezeWindowLevel: FreezeWindowLevels
+export const EnvTypeRenderer: React.FC<{
   envType: EnvironmentType
   getString: UseStringsReturn['getString']
-}> = ({ freezeWindowLevel, getString, envType }) => {
+}> = ({ getString, envType }) => {
   const envTypeMap = getEnvTypeMap(getString)
 
   return (
     <Heading level={3} style={{ fontWeight: 600, fontSize: '12px', lineHeight: '18px' }} color={Color.GREY_600}>
-      {freezeWindowLevel !== FreezeWindowLevels.PROJECT ? (
-        <span style={{ marginRight: '8px', paddingRight: '8px', borderRight: '0.5px solid' }}>
-          {getString('common.allServices')}
-        </span>
-      ) : null}
       {`${getString('envType')}: ${envTypeMap[envType as EnvironmentType]}`}
     </Heading>
   )
@@ -348,26 +328,50 @@ const ProjectLevelRender: React.FC<OrgProjAndServiceRendererPropsInterface> = ({
   getString
 }) => {
   const serviceEntityMap = entitiesMap[FIELD_KEYS.Service]
+  const envEntityMap = entitiesMap[FIELD_KEYS.Environment]
+  const filterTypeEnv = envEntityMap?.filterType || All
+  const environmentMap = resources.environmentsMap
+  const selectedEnvIds = envEntityMap?.entityRefs || []
+  let envNodes = null
+  if (filterTypeEnv === All || selectedEnvIds.length === 0) {
+    envNodes = <span className={css.badge}>{getString('common.allEnvironments')}</span>
+  } else {
+    envNodes = selectedEnvIds.map(envId => {
+      const envIdWithoutScope = getIdentifierFromValue(envId)
+      return (
+        <span key={envId} className={css.badge}>
+          {environmentMap[envIdWithoutScope]?.label || envIdWithoutScope}
+        </span>
+      )
+    })
+  }
+
   const filterType = serviceEntityMap?.filterType || All
   const serviceMap = resources.servicesMap
   const selectedServiceIds = serviceEntityMap?.entityRefs || []
   let serviceNodes = null
   if (filterType === All || selectedServiceIds.length === 0) {
-    serviceNodes = <span className={css.badge}>{serviceMap[All]?.label}</span>
+    serviceNodes = <span className={css.badge}>{getString('common.allServices')}</span>
   } else {
     serviceNodes = selectedServiceIds.map(svcId => {
+      const svcIdWithoutScope = getIdentifierFromValue(svcId)
       return (
         <span key={svcId} className={css.badge}>
-          {serviceMap[svcId]?.label || svcId}
+          {serviceMap[svcIdWithoutScope]?.label || svcIdWithoutScope}
         </span>
       )
     })
   }
 
   return (
-    <div className={css.viewRowNode}>
-      <span>{getString('services')}:</span> {serviceNodes}
-    </div>
+    <>
+      <div className={css.viewRowNode}>
+        <span>{getString('services')}:</span> {serviceNodes}
+      </div>
+      <div className={css.viewRowNode}>
+        <span>{getString('environments')}:</span> {envNodes}
+      </div>
+    </>
   )
 }
 
@@ -542,17 +546,33 @@ export const OrgProjAndServiceRenderer: React.FC<OrgProjAndServiceRendererPropsI
   }
   if (freezeWindowLevel === FreezeWindowLevels.ORG) {
     return (
-      <OrgLevelRenderer entitiesMap={entitiesMap} projectsMap={resources.projectsMap || {}} getString={getString} />
+      <>
+        <OrgLevelRenderer entitiesMap={entitiesMap} projectsMap={resources.projectsMap || {}} getString={getString} />
+        <ProjectLevelRender
+          entitiesMap={entitiesMap}
+          resources={resources}
+          getString={getString}
+          freezeWindowLevel={freezeWindowLevel}
+        />
+      </>
     )
   }
   if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
     return (
-      <AccountLevelRenderer
-        entitiesMap={entitiesMap}
-        resources={resources}
-        getString={getString}
-        freezeWindowLevel={freezeWindowLevel}
-      />
+      <>
+        <AccountLevelRenderer
+          entitiesMap={entitiesMap}
+          resources={resources}
+          getString={getString}
+          freezeWindowLevel={freezeWindowLevel}
+        />
+        <ProjectLevelRender
+          entitiesMap={entitiesMap}
+          resources={resources}
+          getString={getString}
+          freezeWindowLevel={freezeWindowLevel}
+        />
+      </>
     )
   }
   return <div></div>

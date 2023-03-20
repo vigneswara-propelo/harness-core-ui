@@ -1,0 +1,26 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "content": [
+      {
+        "environment": {
+          "accountId": "accountId",
+          "orgIdentifier": "orgIdentifier",
+          "projectIdentifier": "projectIdentifier",
+          "identifier": "testEnv",
+          "name": "testEnv",
+          "description": "",
+          "color": "#0063F7",
+          "type": "Production",
+          "deleted": false,
+          "tags": {},
+          "yaml": "environment:\n  name: testEnv\n  identifier: testEnv\n  description: \"\"\n  tags: {}\n  type: Production\n  orgIdentifier: orgIdentifier\n  projectIdentifier: projectIdentifier\n"
+        },
+        "createdAt": 1677665329275,
+        "lastModifiedAt": 1677665329275
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "92358a11-3743-45d6-8f73-f0706ed9b1c5"
+}

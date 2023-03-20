@@ -30,12 +30,13 @@ jest.mock('services/cd-ng', () => ({
   useCreateFreeze: jest.fn().mockImplementation(() => ({})),
   useUpdateFreeze: jest.fn().mockImplementation(() => ({})),
   useGetProjectList: jest.fn().mockImplementation(() => ({})),
-  useGetServiceList: jest.fn().mockImplementation(() => ({ loading: false, data: serviceData, refetch: jest.fn() }))
+  useGetServiceList: jest.fn().mockImplementation(() => ({ loading: false, data: serviceData, refetch: jest.fn() })),
+  useGetEnvironmentListV2: jest.fn().mockImplementation(() => ({ loading: false, data: [], refetch: jest.fn() }))
 }))
 
 describe('Freeze Window Studio Config Section', () => {
   test('it should render Config section in create mode - PROJECT LEVEL', async () => {
-    const { container, getByText } = render(
+    const { container, getByText, getAllByText } = render(
       <TestWrapper
         path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
         pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
@@ -72,7 +73,7 @@ describe('Freeze Window Studio Config Section', () => {
 
     // Fields should be renderer
     expect(inputEl).toBeDefined()
-    expect(getByText('services')).toBeDefined()
+    expect(getAllByText('services')).toBeDefined()
     expect(getByText('envType')).toBeDefined()
 
     userEvent.type(inputEl as TargetElement, 'Rule Number 1')
@@ -99,7 +100,7 @@ describe('Freeze Window Studio Config Section', () => {
   })
 
   test('it should render Config section in create mode - ACCOUNT LEVEL', async () => {
-    const { container, getByText, getByTestId } = render(
+    const { container, getByText, getByTestId, getAllByText } = render(
       <TestWrapper
         path="/account/:accountId/settings/freeze-window-studio/window/:windowIdentifier/"
         pathParams={{ accountId, windowIdentifier: '-1' }}
@@ -139,7 +140,7 @@ describe('Freeze Window Studio Config Section', () => {
     expect(getByText('freezeWindows.freezeStudio.excludeOrgs')).toBeDefined()
     expect(getByText('projectsText')).toBeDefined()
     expect(getByText('freezeWindows.freezeStudio.excludeProjects')).toBeDefined()
-    expect(getByText('services')).toBeDefined()
+    expect(getAllByText('services')).toBeDefined()
     expect(getByText('envType')).toBeDefined()
 
     userEvent.type(inputEl as TargetElement, 'Rule Number 1')
