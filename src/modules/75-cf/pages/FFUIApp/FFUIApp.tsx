@@ -36,6 +36,7 @@ import * as trackingConstants from '@common/constants/TrackingConstants'
 import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import { StepStatus } from '@common/constants/StepStatusTypes'
 import { MarkdownViewer } from '@common/components/MarkdownViewer/MarkdownViewer'
+import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
 
 // eslint-disable-next-line import/no-unresolved
 const FFUIMFEApp = lazy(() => import('ffui/MicroFrontendApp'))
@@ -69,7 +70,8 @@ const FFUIApp: FC = () => (
       MarkdownViewer,
       MonacoDiffEditor,
       RbacOptionsMenuButton,
-      RBACTooltip
+      RBACTooltip,
+      ResourceCenter
     }}
     customRoutes={routes}
     customUtils={{ getIdentifierFromName, IdentifierSchema, NameSchema }}

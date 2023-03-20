@@ -32,6 +32,7 @@ import type * as trackingConstants from '@common/constants/TrackingConstants'
 import type MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import type { StepStatus } from '@common/constants/StepStatusTypes'
 import type { MarkdownViewer } from '@common/components/MarkdownViewer/MarkdownViewer'
+import type { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
 import type useActiveEnvironment from './hooks/useActiveEnvironment'
 
 export interface FFCustomMicroFrontendProps {
@@ -61,6 +62,7 @@ export interface FFCustomMicroFrontendProps {
     MonacoDiffEditor: typeof MonacoDiffEditor
     RbacOptionsMenuButton: typeof RbacOptionsMenuButton
     RBACTooltip: typeof RBACTooltip
+    ResourceCenter: typeof ResourceCenter
   }
   customRoutes: typeof routes
   customUtils: {
