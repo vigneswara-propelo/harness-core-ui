@@ -272,5 +272,8 @@
       ]
     },
     "commonChunkLimit": "70-pipeline"
+  },
+  "jest-junit": {
+    "addFileAttribute": "true"
   }
 }
