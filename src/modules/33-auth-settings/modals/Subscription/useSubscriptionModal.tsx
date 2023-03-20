@@ -86,6 +86,12 @@ const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose, c
     premiumSupport: false,
     paymentFreq: time,
     subscriptionId: '',
+    quantities: {
+      featureFlag: {
+        numberOfMau: 1,
+        numberOfDevelopers: 1
+      }
+    },
     billingContactInfo: {
       name: '',
       email: email || '',

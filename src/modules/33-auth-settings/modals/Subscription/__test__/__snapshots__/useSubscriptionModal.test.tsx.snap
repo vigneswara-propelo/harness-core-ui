@@ -811,7 +811,7 @@ exports[`useSubscriptionModal render 1`] = `
                   <p
                     class="StyledProps--font StyledProps--main"
                   >
-                    0 authSettings.costCalculator.maus
+                    1 authSettings.costCalculator.maus
                   </p>
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"

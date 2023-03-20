@@ -33,8 +33,9 @@ export const PricePreviewLine: React.FC<LineProps> = ({
   quantity = 0,
   paymentFrequency,
   unit = '',
-  minValue
+  minValue = 0
 }) => {
+  const mauValue = quantity < minValue ? minValue : quantity
   const { getString } = useStrings()
   const isDevPreview = description?.includes('developers')
   const breakdownDescr = isDevPreview
@@ -42,9 +43,8 @@ export const PricePreviewLine: React.FC<LineProps> = ({
         unitDescription as keyof StringsMap,
         { quantity: minValue }
       )}`
-    : `${quantity}${isDevPreview ? '' : unit} ${getString(description as keyof StringsMap)}`
+    : `${mauValue}${isDevPreview ? '' : unit} ${getString(description as keyof StringsMap)}`
   const amount = isDevPreview ? quantity * unitPrice : unitPrice
-
   let unitDescr
   if (unitDescription && underComment) {
     unitDescr = (
@@ -58,6 +58,7 @@ export const PricePreviewLine: React.FC<LineProps> = ({
   } else if (unitDescription) {
     unitDescr = <Text>{breakdownDescr}</Text>
   }
+
   return (
     <Layout.Vertical className={css.line} padding={{ top: 'small', bottom: 'small' }}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ bottom: 'small' }}>

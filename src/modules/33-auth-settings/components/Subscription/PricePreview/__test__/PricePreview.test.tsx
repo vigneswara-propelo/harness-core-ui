@@ -70,6 +70,11 @@ const subscriptionDetails = {
   billingContactInfo,
   paymentMethodInfo,
   productPrices,
+  sampleDetails: {
+    minValue: 0,
+    sampleUnit: 'K',
+    sampleMultiplier: 0
+  },
   quantities: {
     featureFlag: {
       numberOfDevelopers: 25,
