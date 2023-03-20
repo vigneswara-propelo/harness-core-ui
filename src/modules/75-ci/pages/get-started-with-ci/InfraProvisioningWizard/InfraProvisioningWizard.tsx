@@ -364,13 +364,13 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       const shouldSavePipelineToGit =
         (connectorType && [Connectors.GITHUB, Connectors.BITBUCKET].includes(connectorType) && storeInGit) || false
       const connectorRef = getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO)
-      const gitParams: GitQueryParams = {
-        storeType: StoreType.REMOTE,
-        connectorRef,
-        branch,
-        repoName: selectRepositoryRef.current?.repository?.name
-      }
       if (selectRepositoryRef.current?.repository && configuredGitConnector) {
+        const commonGitParams: GitQueryParams = {
+          storeType: StoreType.REMOTE,
+          connectorRef,
+          branch,
+          repoName: getFullRepoName(selectRepositoryRef.current.repository)
+        }
         const { configuredOption } = configurePipelineRef.current || {}
         const v1YAMLAsJSON: Record<string, any> =
           configuredOption &&
@@ -397,7 +397,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             shouldSavePipelineToGit,
             defaultBranch,
             isGitSaveRetry,
-            gitParams,
+            gitParams: commonGitParams,
             yamlPath
           }),
           requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
@@ -449,7 +449,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                       reRouteToPipelineStudio({
                         pipelineIdentifier: createPipelineResponse.data.identifier,
                         includeGitParams: shouldSavePipelineToGit,
-                        gitParams
+                        gitParams: commonGitParams
                       })
                     }
                   } else {
