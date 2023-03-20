@@ -76,8 +76,8 @@ interface GithubFormInterface {
   authType: string
   username: TextReferenceInterface | void
   accessToken: SecretReferenceInterface | void
-  installationId: string
-  applicationId: string
+  installationId: TextReferenceInterface | void
+  applicationId: TextReferenceInterface | void
   privateKey: SecretReferenceInterface | void
   sshKey: SecretReferenceInterface | void
   apiAccessToken: SecretReferenceInterface | void
@@ -90,8 +90,8 @@ const defaultInitialFormData: GithubFormInterface = {
   authType: GitAuthTypes.USER_TOKEN,
   username: undefined,
   accessToken: undefined,
-  installationId: '',
-  applicationId: '',
+  installationId: undefined,
+  applicationId: undefined,
   privateKey: undefined,
   sshKey: undefined,
   apiAccessToken: undefined,
@@ -124,19 +124,23 @@ const RenderGithubAuthForm: React.FC<{
 }
 
 const RenderAPIAccessForm: React.FC<FormikProps<GithubFormInterface> & { scope?: ScopedObjectDTO }> = props => {
-  const { scope } = props
+  const { scope, values } = props
   const { getString } = useStrings()
   switch (props.values.apiAuthType) {
     case GitAPIAuthTypes.GITHUB_APP:
       return (
         <Container>
-          <Container className={css.formRow}>
-            <FormInput.Text name="installationId" label={getString('common.git.installationId')} />
-            <FormInput.Text name="applicationId" label={getString('common.git.applicationId')} />
-          </Container>
-          <Container width={'42.5%'}>
-            <MultiTypeSecretInput name="privateKey" label={getString('common.git.privateKey')} />
-          </Container>
+          <TextReference
+            name="installationId"
+            stringId="common.git.installationId"
+            type={values.installationId ? values.installationId?.type : ValueType.TEXT}
+          />
+          <TextReference
+            name="applicationId"
+            stringId="common.git.applicationId"
+            type={values.applicationId ? values.applicationId?.type : ValueType.TEXT}
+          />
+          <MultiTypeSecretInput name="privateKey" label={getString('common.git.privateKey')} />
         </Container>
       )
     case GitAPIAuthTypes.TOKEN:
@@ -175,7 +179,11 @@ const RenderAPIAccessFormWrapper: React.FC<FormikProps<GithubFormInterface> & Sc
         <Text font={{ variation: FontVariation.H6 }} tooltipProps={{ dataTooltipId: 'githubApiAuthentication' }}>
           {getString('common.git.APIAuthentication')}
         </Text>
-        <FormInput.Select name="apiAuthType" items={apiAuthOptions} className={commonStyles.authTypeSelect} />
+        <FormInput.Select
+          name="apiAuthType"
+          items={apiAuthOptions}
+          className={cx(commonStyles.authTypeSelect, commonStyles.marginBottom3)}
+        />
       </Container>
       <RenderAPIAccessForm {...props} />
     </>
@@ -410,7 +418,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
                           name="authType"
                           items={authOptions}
                           disabled={false}
-                          className={commonStyles.authTypeSelect}
+                          className={cx(commonStyles.authTypeSelect, commonStyles.marginBottom3)}
                           onChange={(selection: SelectOption) => {
                             const selectedOption = selection.value as GitAuthTypes
                             setGitAuthType(selectedOption)

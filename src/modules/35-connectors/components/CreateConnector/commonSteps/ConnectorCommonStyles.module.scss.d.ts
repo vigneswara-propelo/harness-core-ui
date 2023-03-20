@@ -16,6 +16,7 @@ declare const styles: {
   readonly fullHeight: string
   readonly fullHeightDivsWithFlex: string
   readonly label: string
+  readonly marginBottom3: string
   readonly maxHeightScroll: string
   readonly paddingTop8: string
   readonly stepContainer: string
