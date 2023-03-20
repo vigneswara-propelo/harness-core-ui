@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PipelineInputParametersV1 tests Initial Render 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <form
+      action="#"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"
+      >
+        <div
+          class="Text--withDocsTooltip"
+          data-tooltip-id="runModalParams"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
+            data-name="runmodal-params-title"
+          >
+            connectors.parameters
+          </p>
+        </div>
+      </div>
+      <div
+        class="topAccordion"
+      >
+        <div
+          class="accordionSummary"
+        >
+          <div
+            class="nestedAccordions"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`PipelineInputParametersV1 tests should not render if no inputs present 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <form
+      action="#"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"
+      >
+        <div
+          class="Text--withDocsTooltip"
+          data-tooltip-id="runModalParams"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
+            data-name="runmodal-params-title"
+          >
+            connectors.parameters
+          </p>
+        </div>
+      </div>
+      <div
+        class="topAccordion"
+      >
+        <div
+          class="accordionSummary"
+        >
+          <div
+            class="nestedAccordions"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;

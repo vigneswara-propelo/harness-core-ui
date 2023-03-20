@@ -35,19 +35,21 @@ export const getMockFor_Generic_useMutate = (mutateMock?: jest.Mock): any => ({
     })
 })
 
-export const getMockFor_useGetTemplateFromPipeline = (): any => ({
-  mutate: jest.fn().mockResolvedValue({
-    inputs: {
-      image: { prompt: false, required: true, default: 'golang', type: 'string', desc: 'image name' },
-      repo: { prompt: true, required: true, type: 'string', desc: 'repository name' }
-    },
-    repository: {
-      reference: {
-        type: { prompt: false, required: true, type: 'string', enums: ['branch', 'tag', 'pr'] },
-        value: { prompt: false, required: true, type: 'string' }
-      }
+export const PipelineInputsMetadata = {
+  inputs: {
+    image: { prompt: false, required: true, default: 'golang', type: 'string', desc: 'image name' },
+    repo: { prompt: true, required: true, type: 'string', desc: 'repository name' }
+  },
+  repository: {
+    reference: {
+      type: { prompt: false, required: true, type: 'string', enums: ['branch', 'tag', 'pr'] },
+      value: { prompt: false, required: true, type: 'string' }
     }
-  })
+  }
+}
+
+export const getMockFor_useGetTemplateFromPipeline = (): any => ({
+  mutate: jest.fn().mockResolvedValue(PipelineInputsMetadata)
 })
 
 export const getCICodebaseInputSetFormInitialValues = () => ({
