@@ -896,6 +896,7 @@ pipelineChaining:
   noPipelineSelected: Pipeline is not selected
   noPipelinesInSelectedScope: No pipelines available in the selected scope
   noPipelinesInSearchCriteria: No pipelines match your search criteria
+  loadingChildPipeline: Please wait while system is attempting to fetch your pipeline details...
   pipelineOutputs: Pipeline Outputs
   outputTabSummaryDetail: Define outputs from child pipeline that you can use in other stages in parent pipeline.
   newOutput: New Output

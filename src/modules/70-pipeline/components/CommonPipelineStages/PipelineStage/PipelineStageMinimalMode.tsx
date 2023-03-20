@@ -34,14 +34,16 @@ import {
   useGetOrganizationList,
   useGetProjectAggregateDTOList
 } from 'services/cd-ng'
-import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import {
   PagePMSPipelineSummaryResponse,
   PipelineFilterProperties,
   PMSPipelineSummaryResponse,
-  useGetPipelineList
+  useGetPipeline,
+  useGetPipelineList,
+  Error
 } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import type { PipelineListPageQueryParams } from '@pipeline/pages/pipeline-list/types'
@@ -71,7 +73,9 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, pipelineIdentifier } =
     useParams<PipelineType<PipelinePathProps>>()
   const { selectedOrg: currentOrg, selectedProject: currentProject } = useAppStore()
-  const { repoIdentifier, branch, page, size } = useQueryParams<PartialPipelineListPageQueryParams>(queryParamOptions)
+  const { repoIdentifier, branch, page, size, connectorRef, repoName } = useQueryParams<
+    PartialPipelineListPageQueryParams & GitQueryParams
+  >(queryParamOptions)
   const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
 
@@ -108,6 +112,21 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
       searchTerm: projectsQuery || undefined
     },
     debounce: 400
+  })
+
+  const { loading: loadingChildPipeline, error: childPipelineLoadingError } = useGetPipeline({
+    pipelineIdentifier: selectedRow.identifier as string,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier: selectedOrg.value as string,
+      projectIdentifier: selectedProject.value as string,
+      repoIdentifier,
+      branch,
+      getTemplatesResolvedPipeline: true,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
+    },
+    lazy: isEmpty(selectedRow) && !selectedRow.identifier
   })
 
   const {
@@ -342,12 +361,41 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
               </div>
             )}
           </div>
+          {loadingChildPipeline ? (
+            <Text
+              icon="spinner"
+              iconProps={{ size: 18, padding: { right: 'small' } }}
+              margin={{ top: 'medium' }}
+              color={Color.GREY_700}
+              font={{ weight: 'light' }}
+            >
+              {getString('pipeline.pipelineChaining.loadingChildPipeline')}
+            </Text>
+          ) : childPipelineLoadingError &&
+            (childPipelineLoadingError.data as Error)?.message &&
+            !isEmpty(selectedRow) ? (
+            <Text
+              icon="warning-icon"
+              iconProps={{ size: 18, color: Color.RED_800, padding: { right: 'xsmall' } }}
+              margin={{ top: 'medium' }}
+              color={Color.RED_700}
+              font={{ weight: 'semi-bold' }}
+            >
+              {(childPipelineLoadingError.data as Error).message}
+            </Text>
+          ) : null}
           <Layout.Horizontal spacing="medium" padding={{ top: 'medium' }}>
             <Button
               variation={ButtonVariation.PRIMARY}
               text={getString('entityReference.apply')}
               onClick={() => setOpen(false)}
-              disabled={isEmpty(selectedRow) || isEmpty(selectedOrg.value) || isEmpty(selectedProject.value)}
+              disabled={
+                isEmpty(selectedRow) ||
+                isEmpty(selectedOrg.value) ||
+                isEmpty(selectedProject.value) ||
+                loadingChildPipeline ||
+                !!childPipelineLoadingError
+              }
               className={cx(Classes.POPOVER_DISMISS)}
               tooltip={
                 isEmpty(selectedProject.value)

@@ -4396,6 +4396,7 @@ export interface StringsMap {
   'pipeline.pipelineCachedCopy.reloadPipelineContent': string
   'pipeline.pipelineCachedCopy.updateAvailable': string
   'pipeline.pipelineChaining.enterOutputName': string
+  'pipeline.pipelineChaining.loadingChildPipeline': string
   'pipeline.pipelineChaining.newOutput': string
   'pipeline.pipelineChaining.noPipelineSelected': string
   'pipeline.pipelineChaining.noPipelinesInSearchCriteria': string
