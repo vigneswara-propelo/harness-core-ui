@@ -202,23 +202,6 @@
   &.templateStepGroup {
     background-color: rgba(var(--grey-200), 0.25);
   }
-  &.rollbackGroup {
-    border-color: var(--orange-700);
-
-    & .stepGroupHeader {
-      display: inline-block;
-      transform: translate(10px, -18px);
-      background: var(--orange-700);
-      padding: var(--spacing-xsmall) var(--spacing-small);
-      --intent-color: var(--white);
-      border-radius: 4px;
-
-      & .collapseIcon {
-        color: var(--white);
-        margin-right: var(--spacing-xsmall);
-      }
-    }
-  }
 }
 
 .createnodeci {

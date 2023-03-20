@@ -48,7 +48,6 @@ export enum StageType {
   MATRIX = 'MATRIX',
   LOOP = 'LOOP',
   PARALLELISM = 'PARALLELISM',
-  ROLLBACK = 'Rollback',
   IACM = 'IACM'
 }
 
