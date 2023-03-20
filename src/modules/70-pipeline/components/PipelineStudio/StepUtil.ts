@@ -440,7 +440,7 @@ export const validateStage = ({
           set(errors, `spec.service.serviceInputs.serviceDefinition.spec`, serviceStepErrorResponse)
         }
       }
-      if (stageConfig?.service?.serviceInputs?.serviceDefinition?.spec?.variables) {
+      if (!isOptionalVariableAllowed && stageConfig?.service?.serviceInputs?.serviceDefinition?.spec?.variables) {
         const currentStepForVariable = factory.getStep(StepType.CustomVariable)
         const variablesErrorsResponse = currentStepForVariable?.validateInputSet({
           data: stageConfig?.service?.serviceInputs?.serviceDefinition?.spec,
@@ -481,7 +481,7 @@ export const validateStage = ({
           if (!isEmpty(serviceStepErrorResponse)) {
             set(errors, `spec.services.values[${index}].serviceInputs.serviceDefinition.spec`, serviceStepErrorResponse)
           }
-          if (serviceInput.serviceInputs?.serviceDefinition?.spec?.variables) {
+          if (!isOptionalVariableAllowed && serviceInput.serviceInputs?.serviceDefinition?.spec?.variables) {
             const variablesStep = factory.getStep(StepType.CustomVariable)
             const variablesErrorResponse = variablesStep?.validateInputSet({
               data: serviceInput.serviceInputs?.serviceDefinition?.spec,
@@ -599,7 +599,7 @@ export const validateStage = ({
         set(errors, 'spec.serviceConfig.serviceDefinition.spec', errorsResponse)
       }
 
-      if (stageConfig?.serviceConfig?.serviceDefinition?.spec?.variables) {
+      if (!isOptionalVariableAllowed && stageConfig?.serviceConfig?.serviceDefinition?.spec?.variables) {
         const currentStep = factory.getStep(StepType.CustomVariable)
         const stepErrorsResponse = currentStep?.validateInputSet({
           data: stageConfig?.serviceConfig?.serviceDefinition?.spec,
