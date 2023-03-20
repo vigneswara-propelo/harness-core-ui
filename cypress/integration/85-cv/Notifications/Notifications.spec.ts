@@ -79,9 +79,9 @@ describe('Create SLO with Notifications', () => {
     )
 
     cy.contains('span', 'Finish').click({ force: true })
-
+    cy.scrollTo('top')
     cy.contains('p', 'notification').should('be.visible')
-    cy.contains('p', 'SLO').should('be.visible')
+    cy.contains('p', 'SLO').scrollIntoView().should('be.visible')
     cy.contains('p', 'Slack').should('be.visible')
     cy.contains('span', 'Notification notification has been successfully created').should('be.visible')
 

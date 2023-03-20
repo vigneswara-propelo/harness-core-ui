@@ -77,7 +77,7 @@ describe('Canvas Stages Assertion', () => {
     cy.get('span[class="Resizer horizontal "]').then(el => dragElementVerticallyBy(el, 220))
     cy.contains('p', 'test12').should('be.visible')
     cy.contains('p', '7 more stages').should('be.visible')
-
+    cy.scrollTo('top')
     //dragging up the node 15
     cy.get('div[id="ref_test15"]').then(el => dragElementVerticallyBy(el, -320))
     cy.contains('p', '5 more stages').should('be.visible')

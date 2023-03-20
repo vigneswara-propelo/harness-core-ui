@@ -58,6 +58,7 @@ describe('GIT SYNC DISABLED', () => {
 
   it('should display the close without saving dialog for pipeline', () => {
     cy.wait(2000)
+    cy.scrollTo('top')
     cy.contains('p', 'Pipelines').should('be.visible', { timeout: 10000 }).click()
     cy.contains('p', 'Close without saving?').should('be.visible')
     cy.contains('span', 'Leave this Page').click({ force: true })

@@ -84,6 +84,8 @@ describe('Checks visual to YAML and visual to variable view parity', () => {
     //Verify all details in YAML view
     cy.contains('span', 'testPipeline_Cypress').should('be.visible')
     cy.contains('span', 'testStage_Cypress').should('be.visible')
+
+    cy.scrollTo('top')
     cy.contains('span', 'Deployment').should('be.visible')
 
     cy.contains('span', 'serviceRef').should('be.visible')
