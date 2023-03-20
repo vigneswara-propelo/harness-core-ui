@@ -35,8 +35,6 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './ServiceNowConnector.module.scss'
 interface ServiceNowFormData {
@@ -83,7 +81,6 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
   const [, setModalErrorHandler] = React.useState<ModalErrorHandlerBinding | undefined>()
   const [initialValues, setInitialValues] = React.useState(defaultInitialFormData)
   const [loadConnector] = React.useState(false)
-  const isServiceNowAdfsAuthEnabled = useFeatureFlag(FeatureFlag.CDS_SERVICENOW_ADFS_AUTH)
 
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = React.useState(true && props.isEditMode)
   const { getString } = useStrings()
@@ -209,11 +206,7 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
                   </Text>
                   <FormInput.Select
                     name="authType"
-                    items={
-                      isServiceNowAdfsAuthEnabled
-                        ? authOptions
-                        : authOptions.filter(authOption => authOption.value !== AuthTypes.ADFS)
-                    }
+                    items={authOptions}
                     disabled={false}
                     className={commonStyles.authTypeSelectLarge}
                   />
@@ -228,7 +221,7 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
                     <SecretInput name={'passwordRef'} label={getString('connectors.apiKeyOrPassword')} />
                   </Container>
                 ) : null}
-                {formik.values.authType === AuthTypes.ADFS && isServiceNowAdfsAuthEnabled ? (
+                {formik.values.authType === AuthTypes.ADFS ? (
                   <>
                     <Layout.Horizontal>
                       <Layout.Vertical className={css.detailsFormWidth} margin={{ right: 'xxlarge' }}>
