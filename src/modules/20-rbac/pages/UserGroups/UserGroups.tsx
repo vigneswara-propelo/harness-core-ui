@@ -25,7 +25,7 @@ import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPagina
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByEmail, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 
@@ -154,7 +154,7 @@ const UserGroupsPage: React.FC = () => {
       >
         <ListHeader
           selectedSortMethod={sortPreference}
-          sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName, ...sortByEmail]}
+          sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
           onSortMethodChange={option => {
             setSortPreference(option.value as SortMethod)
           }}
