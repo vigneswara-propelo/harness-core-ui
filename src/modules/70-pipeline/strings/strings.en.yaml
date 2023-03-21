@@ -461,8 +461,8 @@ manifestTypeLabels:
   AsgScheduledUpdateGroupAction: ASG Scheduled Group Update Action
   ReleaseRepo: Release Repo Manifest
   TASManifest: TAS Manifest
-  VarsYAML: Vars
-  Autoscaler: AutoScaler
+  VarsYAML: TAS Vars
+  Autoscaler: TAS AutoScaler
   GoogleCloudFunctionDefinition: Google Cloud Function Definition
   HelmRepoOverride: Helm Repo Override
   AwsLambdaFunctionDefinition: AWS Lambda Function Definition
