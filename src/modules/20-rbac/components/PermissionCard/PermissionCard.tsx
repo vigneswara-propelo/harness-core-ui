@@ -56,7 +56,9 @@ const PermissionCard: React.FC<PermissionCardProps> = ({
             return (
               <Checkbox
                 labelElement={
-                  handler.permissionLabels?.[permission.identifier as PermissionIdentifier] || permission.action
+                  <Text tooltipProps={{ dataTooltipId: permission.identifier }}>
+                    {handler.permissionLabels?.[permission.identifier as PermissionIdentifier] || permission.action}
+                  </Text>
                 }
                 data-testid={`checkBox-${resource}-${permission.action}`}
                 key={permission.name}
@@ -73,6 +75,7 @@ const PermissionCard: React.FC<PermissionCardProps> = ({
       )
     }
   }
+
   const resourceHandler =
     RbacFactory.getResourceCategoryHandler(resourceCategory as ResourceCategory) ||
     RbacFactory.getResourceTypeHandler(resourceCategory as ResourceType)
@@ -82,7 +85,7 @@ const PermissionCard: React.FC<PermissionCardProps> = ({
         <Layout.Horizontal width="100%" className={css.permissionRow}>
           <Layout.Horizontal spacing="medium" className={css.center}>
             <Icon name={resourceHandler.icon} size={30} />
-            <Text color={Color.BLACK} font={{ weight: 'semi-bold' }}>
+            <Text color={Color.BLACK} font={{ weight: 'semi-bold' }} tooltipProps={{ dataTooltipId: resourceCategory }}>
               {getString(resourceHandler.label)}
             </Text>
           </Layout.Horizontal>
@@ -97,7 +100,7 @@ const PermissionCard: React.FC<PermissionCardProps> = ({
               return (
                 handler && (
                   <div key={resource} className={cx(css.permissionRow, css.groupRow)}>
-                    <Text color={Color.BLACK} padding={{ left: 'large' }}>
+                    <Text color={Color.BLACK} padding={{ left: 'large' }} tooltipProps={{ dataTooltipId: resource }}>
                       {getString(handler.label)}
                     </Text>
                     {getPermissionList(resource)}

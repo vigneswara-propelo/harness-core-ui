@@ -343,11 +343,16 @@ exports[`Role Details Page Click on Resource Type 1`] = `
                         />
                       </svg>
                     </span>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="ADMINSTRATIVE_FUNCTIONS"
                     >
-                      adminFunctions
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+                      >
+                        adminFunctions
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div
@@ -356,11 +361,16 @@ exports[`Role Details Page Click on Resource Type 1`] = `
                   <div
                     class="permissionRow groupRow"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="ORGANIZATION"
                     >
-                      orgsText
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                      >
+                        orgsText
+                      </p>
+                    </div>
                     <div
                       class="permissionList"
                     >
@@ -375,20 +385,34 @@ exports[`Role Details Page Click on Resource Type 1`] = `
                         <span
                           class="bp3-control-indicator"
                         />
-                        <span>
-                          rbac.permissionLabels.view
-                        </span>
+                        <div
+                          class="Text--withDocsTooltip"
+                          data-tooltip-id="core_organization_view"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            <span>
+                              rbac.permissionLabels.view
+                            </span>
+                          </p>
+                        </div>
                       </label>
                     </div>
                   </div>
                   <div
                     class="permissionRow groupRow"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="PROJECT"
                     >
-                      projectsText
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                      >
+                        projectsText
+                      </p>
+                    </div>
                     <div
                       class="permissionList"
                     />
@@ -430,11 +454,16 @@ exports[`Role Details Page Click on Resource Type 1`] = `
                         />
                       </svg>
                     </span>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="SHARED_RESOURCES"
                     >
-                      rbac.categoryLabels.sharedResources
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+                      >
+                        rbac.categoryLabels.sharedResources
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div
@@ -443,29 +472,44 @@ exports[`Role Details Page Click on Resource Type 1`] = `
                   <div
                     class="permissionRow groupRow"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="SECRET"
                     >
-                      common.secrets
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                      >
+                        common.secrets
+                      </p>
+                    </div>
                   </div>
                   <div
                     class="permissionRow groupRow"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="CONNECTOR"
                     >
-                      connectorsLabel
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                      >
+                        connectorsLabel
+                      </p>
+                    </div>
                   </div>
                   <div
                     class="permissionRow groupRow"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="DELEGATE"
                     >
-                      delegate.delegates
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                      >
+                        delegate.delegates
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -821,11 +865,16 @@ exports[`Role Details Page render data 1`] = `
                         />
                       </svg>
                     </span>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="ADMINSTRATIVE_FUNCTIONS"
                     >
-                      adminFunctions
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+                      >
+                        adminFunctions
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div
@@ -834,11 +883,16 @@ exports[`Role Details Page render data 1`] = `
                   <div
                     class="permissionRow groupRow"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="ORGANIZATION"
                     >
-                      orgsText
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                      >
+                        orgsText
+                      </p>
+                    </div>
                     <div
                       class="permissionList"
                     >
@@ -852,20 +906,34 @@ exports[`Role Details Page render data 1`] = `
                         <span
                           class="bp3-control-indicator"
                         />
-                        <span>
-                          rbac.permissionLabels.view
-                        </span>
+                        <div
+                          class="Text--withDocsTooltip"
+                          data-tooltip-id="core_organization_view"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            <span>
+                              rbac.permissionLabels.view
+                            </span>
+                          </p>
+                        </div>
                       </label>
                     </div>
                   </div>
                   <div
                     class="permissionRow groupRow"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="PROJECT"
                     >
-                      projectsText
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                      >
+                        projectsText
+                      </p>
+                    </div>
                     <div
                       class="permissionList"
                     />
@@ -907,11 +975,16 @@ exports[`Role Details Page render data 1`] = `
                         />
                       </svg>
                     </span>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="SHARED_RESOURCES"
                     >
-                      rbac.categoryLabels.sharedResources
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+                      >
+                        rbac.categoryLabels.sharedResources
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div
@@ -920,29 +993,44 @@ exports[`Role Details Page render data 1`] = `
                   <div
                     class="permissionRow groupRow"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="SECRET"
                     >
-                      common.secrets
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                      >
+                        common.secrets
+                      </p>
+                    </div>
                   </div>
                   <div
                     class="permissionRow groupRow"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="CONNECTOR"
                     >
-                      connectorsLabel
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                      >
+                        connectorsLabel
+                      </p>
+                    </div>
                   </div>
                   <div
                     class="permissionRow groupRow"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="DELEGATE"
                     >
-                      delegate.delegates
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--padding-left-large"
+                      >
+                        delegate.delegates
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
