@@ -338,7 +338,7 @@ const AsgRollingDeployWidgetWithRef = React.forwardRef(AsgRollingDeployWidget)
 export class AsgRollingDeploy extends PipelineStep<AsgRollingDeployData> {
   protected type = StepType.AsgRollingDeploy
   protected stepName = 'Asg Rolling Deploy'
-  protected referenceId = 'asgRollingDeploy'
+  protected referenceId = 'AsgRollingDeploy'
   protected stepIcon: IconName = 'asg-deploy'
   protected stepDescription: keyof StringsMap = 'cd.asgRollingDeployStepDescription'
   protected isHarnessSpecific = false

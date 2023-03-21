@@ -56,7 +56,7 @@ export class AsgInfraSpec extends PipelineStep<AsgInfrastructureStep> {
   lastFetched: number
   protected type = StepType.AsgInfraSpec
   protected defaultValues: AsgInfrastructure = { connectorRef: '', region: '' }
-
+  protected referenceId = 'AsgInfrastructure'
   protected stepIcon: IconName = 'aws-asg'
   protected stepName = 'Specify your AWS connector'
   protected stepPaletteVisible = false

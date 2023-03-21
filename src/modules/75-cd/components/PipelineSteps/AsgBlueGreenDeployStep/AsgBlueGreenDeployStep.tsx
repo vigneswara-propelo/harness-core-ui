@@ -46,6 +46,7 @@ export class AsgBlueGreenDeployStep extends PipelineStep<AsgBlueGreenDeployStepI
   protected stepIcon: IconName = 'asg-blue-green'
   protected stepDescription: keyof StringsMap = 'cd.asgBlueGreenDeployStepDescription'
   protected isHarnessSpecific = false
+  protected referenceId = 'AsgBlueGreenDeploy'
   protected defaultValues: AsgBlueGreenDeployStepInitialValues = {
     identifier: '',
     name: '',

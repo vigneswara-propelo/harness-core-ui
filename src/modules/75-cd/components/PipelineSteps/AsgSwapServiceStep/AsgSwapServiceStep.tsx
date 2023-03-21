@@ -65,7 +65,7 @@ const AsgSwapServiceWidgetWithRef = React.forwardRef(AsgSwapServiceWidget)
 export class AsgSwapService extends PipelineStep<AsgSwapServiceData> {
   protected type = StepType.AsgBlueGreenSwapService
   protected stepName = 'Asg Swap Service'
-  protected referenceId = 'asgSwapService'
+  protected referenceId = 'AsgSwapService'
   protected stepIcon: IconName = 'asg-swap'
   protected stepDescription: keyof StringsMap = 'cd.asgBlueGreenSwapServiceStepDescription'
   protected isHarnessSpecific = false

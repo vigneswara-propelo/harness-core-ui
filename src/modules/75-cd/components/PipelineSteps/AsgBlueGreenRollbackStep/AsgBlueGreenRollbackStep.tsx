@@ -31,6 +31,7 @@ export class AsgBlueGreenRollbackStep extends PipelineStep<StepElementConfig> {
   protected type = StepType.AsgBlueGreenRollback
   protected stepName = 'Asg Blue Green Rollback'
   protected stepIcon: IconName = 'asg-blue-green'
+  protected referenceId = 'AsgBlueGreenRollback'
   protected stepDescription: keyof StringsMap = 'cd.asgBlueGreenRollbackStepDescription'
   protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {

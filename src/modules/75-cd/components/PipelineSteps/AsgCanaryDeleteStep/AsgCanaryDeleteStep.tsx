@@ -34,6 +34,7 @@ export class AsgCanaryDeleteStep extends PipelineStep<StepElementConfig> {
   protected type = StepType.AsgCanaryDelete
   protected stepName = 'Asg Canary Delete'
   protected stepIcon: IconName = 'asg-canary-delete'
+  protected referenceId = 'AsgCanaryDelete'
   protected stepDescription: keyof StringsMap = 'cd.asgCanaryDeleteStepDescription'
   protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {

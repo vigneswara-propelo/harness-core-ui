@@ -66,6 +66,7 @@ export class ASGServiceSpec extends Step<ServiceSpec> {
   protected type = StepType.Asg
   protected defaultValues: ServiceSpec = {}
   protected inputSetData: InputSetData<K8SDirectServiceStep> | undefined = undefined
+  protected referenceId = 'AsgService'
 
   protected stepIcon: IconName = 'aws-asg'
   protected stepName = 'Deployment Service'
