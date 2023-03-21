@@ -120,7 +120,7 @@ function TerraformPlanWidget(
 ): React.ReactElement {
   const { initialValues, onUpdate, onChange, allowableTypes, isNewStep, readonly = false, stepViewType } = props
   const { getString } = useStrings()
-  const { TERRAFORM_REMOTE_BACKEND_CONFIG, CD_TERRAFORM_CLOUD_CLI_NG } = useFeatureFlags()
+  const { CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG, CD_TERRAFORM_CLOUD_CLI_NG } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
@@ -709,7 +709,7 @@ function TerraformPlanWidget(
                       />
 
                       <div className={cx(css.divider, css.addMarginBottom)} />
-                      {TERRAFORM_REMOTE_BACKEND_CONFIG ? (
+                      {CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG ? (
                         <>
                           <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
                             {get(values.spec, `${fieldPath}.backendConfig.type`) ===

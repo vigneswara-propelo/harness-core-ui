@@ -145,7 +145,7 @@ describe('Test terraform input set', () => {
     const { getByText } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { TERRAFORM_REMOTE_BACKEND_CONFIG: true }
+          featureFlags: { CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG: true }
         }}
       >
         <Formik initialValues={{}} onSubmit={() => undefined} formName="wrapperComponentTestForm">

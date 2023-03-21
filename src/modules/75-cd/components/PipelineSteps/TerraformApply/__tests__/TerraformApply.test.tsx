@@ -728,7 +728,7 @@ describe('Test TerraformApply', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('renders remote backend config when TERRAFORM_REMOTE_BACKEND_CONFIG is on for TerraformApply', async () => {
+  test('renders remote backend config when CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG is on for TerraformApply', async () => {
     const { getByText } = render(
       <TestStepWidget
         initialValues={{
@@ -786,7 +786,7 @@ describe('Test TerraformApply', () => {
         stepViewType={StepViewType.Edit}
         testWrapperProps={{
           defaultAppStoreValues: {
-            featureFlags: { TERRAFORM_REMOTE_BACKEND_CONFIG: true }
+            featureFlags: { CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG: true }
           }
         }}
       />

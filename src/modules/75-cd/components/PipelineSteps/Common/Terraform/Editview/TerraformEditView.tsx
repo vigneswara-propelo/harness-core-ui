@@ -104,7 +104,7 @@ export default function TerraformEditView(
   const { stepType, isNewStep = true } = props
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, readonly = false } = props
   const { getString } = useStrings()
-  const { TERRAFORM_REMOTE_BACKEND_CONFIG, CD_TERRAFORM_CLOUD_CLI_NG } = useFeatureFlags()
+  const { CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG, CD_TERRAFORM_CLOUD_CLI_NG } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -682,7 +682,7 @@ export default function TerraformEditView(
                             varFilePath={`spec.${fieldPath}.spec.varFiles`}
                           />
                           <div className={css.divider} />
-                          {TERRAFORM_REMOTE_BACKEND_CONFIG && initialValues?.type !== 'TerraformDestroy' ? (
+                          {CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG && initialValues?.type !== 'TerraformDestroy' ? (
                             <>
                               <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
                                 {get(values.spec, `${fieldPath}.spec.backendConfig.type`) ===
