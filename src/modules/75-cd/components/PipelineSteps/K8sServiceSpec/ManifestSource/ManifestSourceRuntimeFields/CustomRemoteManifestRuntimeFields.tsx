@@ -80,6 +80,7 @@ const CustomRemoteManifestRuntimeFields = ({
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.filePath`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.filePath`)}
           />
         )}
       </div>
@@ -137,6 +138,7 @@ const CustomRemoteManifestRuntimeFields = ({
             onChange={value => {
               formik.setFieldValue(`${path}.spec.store.spec.delegateSelectors`, value)
             }}
+            isReadonly={readonly}
           />
         )}
       </div>

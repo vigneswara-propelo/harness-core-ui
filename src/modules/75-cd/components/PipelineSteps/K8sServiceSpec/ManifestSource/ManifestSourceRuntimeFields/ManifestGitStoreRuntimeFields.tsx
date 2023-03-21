@@ -110,6 +110,7 @@ const ManifestGitStoreRuntimeFields = ({
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.repoName`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.repoName`)}
           />
         )}
       </div>
@@ -156,6 +157,7 @@ const ManifestGitStoreRuntimeFields = ({
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.commitId`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.commitId`)}
           />
         )}
       </div>

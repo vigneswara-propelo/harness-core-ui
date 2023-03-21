@@ -129,6 +129,7 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.enableDeclarativeRollback`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.enableDeclarativeRollback`)}
           />
         )}
       </div>
@@ -162,6 +163,7 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.skipResourceVersioning`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.skipResourceVersioning`)}
           />
         )}
       </div>
