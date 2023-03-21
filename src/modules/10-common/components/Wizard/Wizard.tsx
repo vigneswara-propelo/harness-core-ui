@@ -16,10 +16,10 @@ import {
   VisualYamlSelectedView as SelectedView,
   IconName
 } from '@harness/uicore'
-
+import stableStringify from 'fast-json-stable-stringify'
 import { useHistory } from 'react-router-dom'
 import cx from 'classnames'
-import { isEqual, noop } from 'lodash-es'
+import { noop } from 'lodash-es'
 import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'
 import { useToaster } from '@common/exports'
 import type {
@@ -157,7 +157,7 @@ const Wizard: React.FC<WizardProps> = ({
   const history = useHistory()
   const { showError, clear } = useToaster()
   const getIsDirtyForm = (parsedYaml: any): boolean =>
-    !isEqual(convertFormikValuesToYaml?.(formikInitialProps?.initialValues), parsedYaml)
+    stableStringify(convertFormikValuesToYaml?.(formikInitialProps?.initialValues)) !== stableStringify(parsedYaml)
 
   useEffect(() => {
     if (errorToasterMessage) {
@@ -208,7 +208,8 @@ const Wizard: React.FC<WizardProps> = ({
                       isValid: formikProps.isValid,
                       isYamlView,
                       yamlHandler,
-                      dirty: formikProps.dirty,
+                      // Instead of using formikProps.dirty, convert the lates formik values to Yaml and then compare with the formik initial values yaml
+                      dirty: getIsDirtyForm(convertFormikValuesToYaml?.(formikProps.values)),
                       getIsDirtyForm
                     })
                   }

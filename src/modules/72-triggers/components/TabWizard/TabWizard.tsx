@@ -7,7 +7,7 @@
 
 import React, { useRef, createRef, RefObject, useMemo, useState, Dispatch, SetStateAction } from 'react'
 import { useHistory } from 'react-router-dom'
-import { defaultTo, isEqual, noop } from 'lodash-es'
+import { defaultTo, noop } from 'lodash-es'
 
 import {
   Layout,
@@ -20,6 +20,7 @@ import {
   VisualYamlSelectedView as SelectedView,
   Container
 } from '@harness/uicore'
+import stableStringify from 'fast-json-stable-stringify'
 import { Color } from '@harness/design-system'
 
 import { FormikEffect, FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
@@ -147,7 +148,7 @@ export default function TabWizard({
 
   //? To be thought through
   const getIsDirtyForm = (parsedYaml: any): boolean =>
-    !isEqual(convertFormikValuesToYaml?.(formikInitialProps?.initialValues), parsedYaml)
+    stableStringify(convertFormikValuesToYaml?.(formikInitialProps?.initialValues)) !== stableStringify(parsedYaml)
 
   return (
     <TabWizardContext.Provider
@@ -175,7 +176,8 @@ export default function TabWizard({
                         isValid: formikProps.isValid,
                         isYamlView,
                         yamlHandler,
-                        dirty: formikProps.dirty,
+                        // Instead of using formikProps.dirty, convert the lates formik values to Yaml and then compare with the formik initial values yaml
+                        dirty: getIsDirtyForm(convertFormikValuesToYaml?.(formikProps.values)),
                         getIsDirtyForm
                       })
                     }
