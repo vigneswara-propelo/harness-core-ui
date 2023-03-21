@@ -8816,17 +8816,18 @@ export interface StringsMap {
   'cv.sloCreateInfo': string
   'cv.sloDowntime.NoData': string
   'cv.sloDowntime.NoDataSuggestion': string
-  'cv.sloDowntime.addDowntime': string
   'cv.sloDowntime.allMonitoredServices': string
   'cv.sloDowntime.bannerText': string
   'cv.sloDowntime.category': string
   'cv.sloDowntime.confirmDeleteDowntime': string
+  'cv.sloDowntime.createSLODowntime': string
   'cv.sloDowntime.downtimeCreated': string
   'cv.sloDowntime.downtimeName': string
   'cv.sloDowntime.downtimeToggle': string
   'cv.sloDowntime.downtimeUpdated': string
   'cv.sloDowntime.downtimeWindow': string
   'cv.sloDowntime.durationText': string
+  'cv.sloDowntime.editSLODowntime': string
   'cv.sloDowntime.info': string
   'cv.sloDowntime.label': string
   'cv.sloDowntime.msList': string

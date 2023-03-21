@@ -20,7 +20,8 @@ import type { DowntimeForm } from './CVCreateDowntime.types'
 import {
   createSLODowntimeRequestPayload,
   getDowntimeFormValidationSchema,
-  getDowntimeInitialFormData
+  getDowntimeInitialFormData,
+  getSLOTitle
 } from './CVCreateDowntime.utils'
 import { CreateDowntimeForm } from './components/CreateDowntimeForm/CreateDowntimeForm'
 
@@ -93,7 +94,7 @@ const CVCreateDowntime = (): JSX.Element => {
         breadcrumbs={<NGBreadcrumbs links={links} />}
         title={
           <Heading level={3} font={{ variation: FontVariation.H4 }}>
-            {getString('cv.sloDowntime.addDowntime')}
+            {getSLOTitle(getString, identifier)}
           </Heading>
         }
       />

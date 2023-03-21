@@ -315,3 +315,6 @@ export const createSLODowntimeRequestPayload = (
     }
   }
 }
+
+export const getSLOTitle = (getString: UseStringsReturn['getString'], identifier?: string): string =>
+  identifier ? getString('cv.sloDowntime.editSLODowntime') : getString('cv.sloDowntime.createSLODowntime')

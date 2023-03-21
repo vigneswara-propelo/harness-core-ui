@@ -21,6 +21,7 @@ import {
   oneTimeEndTimeBasedDowntimeResponse,
   recurrenceBasedDowntimeResponse
 } from './CVCreateDowntime.mock'
+import { getSLOTitle } from '../CVCreateDowntime.utils'
 
 const testPath = routes.toCVEditSLODowntime({
   ...accountPathProps,
@@ -71,7 +72,7 @@ describe('CVCreateDowntime', () => {
     )
 
     await waitFor(() => {
-      expect(getByText('cv.sloDowntime.addDowntime')).toBeInTheDocument()
+      expect(getByText('cv.sloDowntime.createSLODowntime')).toBeInTheDocument()
       expect(getByText('cv.sloDowntime.steps.identification')).toBeInTheDocument()
       expect(getByText('cv.sloDowntime.steps.downtimeWindow')).toBeInTheDocument()
       expect(getByText('cv.sloDowntime.steps.monitoredServices')).toBeInTheDocument()
@@ -292,5 +293,11 @@ describe('CVCreateDowntime', () => {
     expect(screen.getByDisplayValue('cv.minutes')).toBeInTheDocument()
     expect(getByText('cv.sloDowntime.repeatEvery')).toBeInTheDocument()
     expect(getByText('cv.sloDowntime.repeatEndsOn')).toBeInTheDocument()
+  })
+
+  test('should return slo title', () => {
+    expect(getSLOTitle(str => str)).toEqual('cv.sloDowntime.createSLODowntime')
+    expect(getSLOTitle(str => str, 'slo1')).toEqual('cv.sloDowntime.editSLODowntime')
+    expect(getSLOTitle(str => str, undefined)).toEqual('cv.sloDowntime.createSLODowntime')
   })
 })

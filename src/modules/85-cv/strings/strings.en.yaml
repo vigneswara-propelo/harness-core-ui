@@ -993,7 +993,8 @@ sloDowntime:
   downtimeWindow: SLO Downtime Window
   category: Category
   noData: No SLO downtime configured
-  addDowntime: Add a SLO Downtime
+  createSLODowntime: Create new SLO Downtime
+  editSLODowntime: Edit SLO Downtime
   info: During downtime, SLO status and error budget calculations will be excluded for that specific time period.
   bannerText: SLO status and error budget calculations will be excluded from {{ startTime }} until {{ endTime }}
   scheduledMaintenance: Scheduled Maintenance
@@ -1024,7 +1025,7 @@ sloDowntime:
     endTimeNotMoreThan3Years: End time can't be more than 3 years from start time
     msListValidation: At least one monitored service should be selected
   steps:
-    identification: Define SLO downtime identification
+    identification: Name, description and category
     downtimeWindow: Select the SLO downtime window
     monitoredServices: Apply to monitored services
 SLO: SLO

@@ -103,7 +103,7 @@ exports[`CVCreateDowntime should render create flow 1`] = `
           class="StyledProps--font StyledProps--font-h3 StyledProps--main StyledProps--font-variation-h4"
           level="3"
         >
-          cv.sloDowntime.addDowntime
+          cv.sloDowntime.createSLODowntime
         </h3>
       </div>
     </div>
@@ -731,7 +731,7 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
           class="StyledProps--font StyledProps--font-h3 StyledProps--main StyledProps--font-variation-h4"
           level="3"
         >
-          cv.sloDowntime.addDowntime
+          cv.sloDowntime.editSLODowntime
         </h3>
       </div>
     </div>
