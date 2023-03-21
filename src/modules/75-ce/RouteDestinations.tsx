@@ -66,7 +66,6 @@ import formatCost from './utils/formatCost'
 import BusinessMapping from './pages/business-mapping/BusinessMapping'
 import ECSRecommendationDetailsPage from './pages/ecs-recommendation-details/ECSRecommendationDetailsPage'
 import OverviewAddCluster from './components/OverviewPage/OverviewAddCluster'
-import BIDashboard from './pages/bi-dashboards/BIDashboard'
 import CORuleDetailsPage from './pages/co-rule-details/CORuleDetailsPage'
 import CommitmentOrchestration from './pages/CommitmentOrchestration/CommitmentOrchestration'
 import CommitmentOrchestrationSetup from './pages/CommitmentOrchestration/CommitmentOrchestrationSetup'
@@ -736,15 +735,6 @@ const CENonMFERoutes = (
       pageName={PAGE_NAME.CENodeDetailsPage}
     >
       <NodeDetailsPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCEDashboards({ ...accountPathProps })}
-      exact
-      pageName={PAGE_NAME.CEDashboards}
-    >
-      <BIDashboard />
     </RouteWithLayout>
     <RouteWithLayout
       licenseRedirectData={licenseRedirectData}
