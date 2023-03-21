@@ -1720,3 +1720,4 @@ cannotFetchOptions: Cannot Fetch {{fieldName}}...
 noNotifications:
   title: No notifications configured for this {{entity}}
   subtitle: Configure settings to notify your team of specific events in your {{entity}}.
+guidedCDK8sGetStarted: Get started with guided K8s Deployment
