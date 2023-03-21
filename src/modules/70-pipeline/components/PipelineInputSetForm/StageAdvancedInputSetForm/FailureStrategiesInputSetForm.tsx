@@ -18,6 +18,7 @@ import type { StageType } from '@pipeline/utils/stageHelpers'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import type { FailureStrategyConfig } from 'services/pipeline-ng'
 
 import css from '../PipelineInputSetForm.module.scss'
 
@@ -27,6 +28,7 @@ export interface FailureStrategiesInputSetFormProps {
   stageType: StageType
   viewType?: StepViewType
   allowableTypes?: AllowedTypes
+  template?: FailureStrategyConfig[] | string
 }
 
 export interface FormikState {
@@ -56,6 +58,7 @@ export function FailureStrategiesInputSetForm(props: FailureStrategiesInputSetFo
             allowedTypes={(allowableTypes as AllowedTypesWithRunTime[]).filter(
               type => type !== MultiTypeInputType.EXPRESSION
             )}
+            disabled={readonly}
             onChange={type => {
               formik.setValues(
                 produce(formik.values, (draft: any) => {

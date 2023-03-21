@@ -9,6 +9,7 @@
 declare const styles: {
   readonly disabled: string
   readonly mainContainer: string
+  readonly runtimeInput: string
   readonly selected: string
   readonly strategyAnchor: string
 }

@@ -25,7 +25,7 @@ import type { CommandFlags } from '../ManifestSelection/ManifestInterface'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepWidget } from '../AbstractSteps/StepWidget'
 import type { StepType } from '../PipelineSteps/PipelineStepInterface'
-import { StrategyForm } from './StageAdvancedInputSetForm/StageAdvancedInputSetForm'
+import { LoopingStrategyInputSetForm } from './StageAdvancedInputSetForm/LoopingStrategyInputSetForm'
 import { ConditionalExecutionForm } from './StageAdvancedInputSetForm/ConditionalExecutionForm'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import MultiTypePolicySetSelector from '../PipelineSteps/Common/PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
@@ -131,8 +131,15 @@ function StepFormInternal({
         </Container>
       )}
       {template?.step?.strategy && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <StrategyForm path={`${path}.strategy`} readonly={readonly} />
+        <div className={cx(stepCss.formGroup)}>
+          <LoopingStrategyInputSetForm
+            stageType={customStepProps?.stageType as StageType}
+            allowableTypes={allowableTypes}
+            path={`${path}.strategy`}
+            readonly={readonly}
+            viewType={viewType}
+            template={template?.step?.strategy}
+          />
         </div>
       )}
       {isValueRuntimeInput(template?.step?.failureStrategies as unknown as string) && (

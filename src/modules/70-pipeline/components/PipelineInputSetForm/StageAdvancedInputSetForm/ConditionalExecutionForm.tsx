@@ -79,6 +79,7 @@ export function ConditionalExecutionForm<T extends StepMode>(
             allowedTypes={(allowableTypes as AllowedTypesWithRunTime[]).filter(
               type => type !== MultiTypeInputType.EXPRESSION
             )}
+            disabled={isReadonly}
             onChange={type => {
               formik.setValues(
                 produce(formik.values, (draft: any) => {

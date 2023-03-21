@@ -6,10 +6,8 @@
  */
 
 import React from 'react'
-import { Text, Layout, Container, AllowedTypes } from '@harness/uicore'
-import { Color } from '@harness/design-system'
-import { isEmpty, get, set } from 'lodash-es'
-import produce from 'immer'
+import { Layout, Container, AllowedTypes } from '@harness/uicore'
+import { isEmpty, get } from 'lodash-es'
 import { connect, FormikContextType } from 'formik'
 import cx from 'classnames'
 import type { StageElementConfig } from 'services/pipeline-ng'
@@ -17,14 +15,12 @@ import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSt
 import SkipInstancesField from '@pipeline/components/PipelineStudio/SkipInstances/SkipInstances'
 
 import { useStrings } from 'framework/strings'
-import { getDefaultMonacoConfig } from '@common/components/MonacoTextField/MonacoTextField'
-import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
-import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepMode } from '@pipeline/utils/stepUtils'
 import { ConditionalExecutionForm } from './ConditionalExecutionForm'
 import { FailureStrategiesInputSetForm } from './FailureStrategiesInputSetForm'
+import { LoopingStrategyInputSetForm } from './LoopingStrategyInputSetForm'
 import css from '../PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -70,74 +66,6 @@ function SkipInstancesFormInternal(props: SkipInstancesFormProps): React.ReactEl
 }
 
 export const SkipInstancesForm = connect(SkipInstancesFormInternal)
-
-export interface StrategyFormInternalProps {
-  readonly?: boolean
-  path: string
-}
-
-export function StrategyFormInternal(
-  props: StrategyFormInternalProps & { formik: FormikContextType<any> }
-): React.ReactElement {
-  const { readonly, path, formik } = props
-  const { getString } = useStrings()
-  const isChanged = React.useRef(false)
-
-  const formikValue = yamlStringify(get(formik.values, path, ''))
-  const [value, setValue] = React.useState(formikValue)
-
-  React.useEffect(() => {
-    // do not update values from formik once user has changed the input
-    if (!isChanged.current) {
-      setValue(formikValue)
-    }
-  }, [formikValue])
-
-  function handleChange(newValue: string): void {
-    try {
-      isChanged.current = true
-      setValue(newValue)
-      const parsed = yamlParse(newValue)
-      formik.setValues(
-        produce(formik.values, (draft: any) => {
-          set(draft, path, parsed)
-        })
-      )
-    } catch (e) {
-      // empty block
-    }
-  }
-
-  function preventSubmit(e: React.KeyboardEvent): void {
-    if (e.key === 'Enter') {
-      e.stopPropagation()
-    }
-  }
-
-  return (
-    <div className={css.strategyContainer} onKeyDown={preventSubmit}>
-      <Text
-        color={Color.GREY_600}
-        margin={{ bottom: 'small' }}
-        className={css.conditionalExecutionTitle}
-        font={{ weight: 'semi-bold' }}
-      >
-        {getString('pipeline.loopingStrategy.title')}
-      </Text>
-      <div className={css.editor}>
-        <MonacoEditor
-          height={300}
-          options={getDefaultMonacoConfig(!!readonly)}
-          language="yaml"
-          value={value}
-          onChange={handleChange}
-        />
-      </div>
-    </div>
-  )
-}
-
-export const StrategyForm = connect<StrategyFormInternalProps>(StrategyFormInternal)
 
 export function StageAdvancedInputSetForm({
   deploymentStageTemplate,
@@ -186,12 +114,20 @@ export function StageAdvancedInputSetForm({
               path={`${path}.failureStrategies`}
               viewType={viewType}
               allowableTypes={allowableTypes}
+              template={deploymentStageTemplate?.failureStrategies}
             />
           </div>
         ) : null}
         {!isEmpty(deploymentStageTemplate?.strategy) && (
-          <div className={cx(css.nestedAccordions, stepCss.formGroup, css.runTimeWidth)}>
-            <StrategyForm readonly={readonly} path={`${path}.strategy`} />
+          <div className={cx(css.nestedAccordions, stepCss.formGroup)}>
+            <LoopingStrategyInputSetForm
+              stageType={stageType}
+              viewType={viewType}
+              allowableTypes={allowableTypes}
+              readonly={readonly}
+              path={`${path}.strategy`}
+              template={deploymentStageTemplate?.strategy}
+            />
           </div>
         )}
         {!isEmpty(skipInstances) && (

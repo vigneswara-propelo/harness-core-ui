@@ -165,14 +165,33 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
         )}
 
         <div className={stageCss.tabHeading}>
-          <span data-tooltip-id="loopingStrategyDeployStage">
-            {getString('pipeline.loopingStrategy.title')}
-            <HarnessDocTooltip tooltipId="loopingStrategyDeployStage" useStandAlone={true} />
-          </span>
+          <span data-tooltip-id="loopingStrategyDeployStage">{getString('pipeline.loopingStrategy.title')}</span>
+          <MultiTypeSelectorButton
+            className={stageCss.multiTypeBtn}
+            type={getMultiTypeFromValue(stage?.stage?.strategy as any)}
+            allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+            onChange={type => {
+              const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+              if (pipelineStage && pipelineStage.stage) {
+                const stageData = produce(pipelineStage, draft => {
+                  if (isMultiTypeRuntime(type)) {
+                    set(draft, 'stage.strategy', RUNTIME_INPUT_VALUE)
+                  } else {
+                    unset(draft, 'stage.strategy')
+                  }
+                })
+
+                if (stageData.stage) {
+                  updateStage(stageData.stage)
+                }
+              }
+            }}
+          />
+          <HarnessDocTooltip tooltipId="loopingStrategyDeployStage" useStandAlone={true} />
         </div>
         <Card className={stageCss.sectionCard} id="loopingStrategy">
           <LoopingStrategy
-            strategy={stage?.stage?.strategy}
+            selectedStage={stage}
             isReadonly={isReadonly}
             onUpdateStrategy={strategy => {
               const { stage: pipelineStage } = getStageFromPipeline(selectedStageId)

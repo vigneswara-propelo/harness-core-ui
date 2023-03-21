@@ -28,6 +28,7 @@ declare const styles: {
   readonly stagesTreeBulletCircle: string
   readonly stagesTreeBulletSquare: string
   readonly strategyContainer: string
+  readonly strategyTitle: string
   readonly tabSubHeading: string
   readonly titleWrapper: string
   readonly topAccordion: string

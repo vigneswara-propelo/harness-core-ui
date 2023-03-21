@@ -32,7 +32,7 @@ import {
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
-import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
+import { LoopingStrategyPanel } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategyPanel'
 import { getIsFailureStrategyDisabled } from '@pipeline/utils/CIUtils'
 import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import type { PolicyConfig, TemplateStepNode } from 'services/pipeline-ng'
@@ -143,6 +143,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
   const { NG_K8_COMMAND_FLAGS } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const failureStrategyValues = get(formikProps.values, 'failureStrategies')
+  const loopingStrategyValues = get(formikProps.values, 'strategy')
   const whenValues = get(formikProps.values, 'when')
 
   const getActiveId = React.useCallback(
@@ -274,13 +275,42 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
           {hiddenPanels.includes(AdvancedPanels.LoopingStrategy) ? null : (
             <Accordion.Panel
               id={AdvancedPanels.LoopingStrategy}
-              summary={getString('pipeline.loopingStrategy.title')}
+              summary={
+                <div className={css.titleWrapper}>
+                  <LocaleString stringID="pipeline.loopingStrategy.title" />
+                  <div onClick={e => e.stopPropagation()}>
+                    <MultiTypeSelectorButton
+                      type={getMultiTypeFromValue(loopingStrategyValues as unknown as string)}
+                      allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+                      onChange={type => {
+                        formikProps.setValues(
+                          produce(formikProps.values, draft => {
+                            if (isMultiTypeRuntime(type)) {
+                              set(draft, 'strategy', RUNTIME_INPUT_VALUE)
+                            } else {
+                              unset(draft, 'strategy')
+                            }
+                          })
+                        )
+                      }}
+                    />
+                  </div>
+                </div>
+              }
               details={
-                <LoopingStrategy
-                  strategy={formikProps.values.strategy}
+                <LoopingStrategyPanel
+                  path="strategy"
                   isReadonly={isReadonly}
                   onUpdateStrategy={strategy => {
-                    formikProps.setValues({ ...formikProps.values, strategy })
+                    formikProps.setValues(
+                      produce(formikProps.values, (draft: any) => {
+                        if (isEmpty(strategy)) {
+                          unset(draft, 'strategy')
+                        } else {
+                          set(draft, 'strategy', strategy)
+                        }
+                      })
+                    )
                   }}
                   step={step}
                 />

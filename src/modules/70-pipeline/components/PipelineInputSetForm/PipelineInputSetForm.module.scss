@@ -110,7 +110,8 @@
 }
 
 .conditionalExecutionTitle,
-.failureStrategiesTitle {
+.failureStrategiesTitle,
+.strategyTitle {
   font-size: var(--form-input-font-size) !important;
 }
 
@@ -121,6 +122,8 @@
 }
 
 .strategyContainer {
+  padding-bottom: var(--spacing-5);
+
   .editor {
     border: 1px solid var(--grey-200);
     border-radius: var(--spacing-2);

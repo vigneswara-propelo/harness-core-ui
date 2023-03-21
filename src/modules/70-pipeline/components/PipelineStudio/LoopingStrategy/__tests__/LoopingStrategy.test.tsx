@@ -81,7 +81,13 @@ describe('<LoopingStrategy /> tests', () => {
     const { findByTestId } = render(
       <TestWrapper>
         <LoopingStrategy
-          strategy={{ repeat: { items: '<+stage.output.hosts>' as any } }}
+          selectedStage={{
+            stage: {
+              identifier: '',
+              name: '',
+              strategy: { repeat: { items: '<+stage.output.hosts>' as any } }
+            }
+          }}
           step={{
             identifier: 'Step_1',
             name: 'Step 1',
@@ -108,7 +114,13 @@ describe('<LoopingStrategy /> tests', () => {
     const { findByTestId } = render(
       <TestWrapper>
         <LoopingStrategy
-          strategy={{ repeat: { items: '<+stage.output.hosts>' as any } }}
+          selectedStage={{
+            stage: {
+              identifier: '',
+              name: '',
+              strategy: { repeat: { items: '<+stage.output.hosts>' as any } }
+            }
+          }}
           step={{
             identifier: 'Step_Group_1',
             name: 'Step Group 1',
@@ -151,7 +163,13 @@ describe('<LoopingStrategy /> tests', () => {
     const { findByTestId } = render(
       <TestWrapper>
         <LoopingStrategy
-          strategy={{ repeat: { items: '<+stage.output.hosts>' as any } }}
+          selectedStage={{
+            stage: {
+              identifier: '',
+              name: '',
+              strategy: { repeat: { items: '<+stage.output.hosts>' as any } }
+            }
+          }}
           step={{
             identifier: 'Step_Group_1',
             name: 'Step Group 1',
@@ -184,6 +202,7 @@ describe('<LoopingStrategy /> tests', () => {
     expect(matrixStrategyPill).toHaveClass('Card--interactive')
     expect(parallelismStrategyPill).toHaveClass('Card--interactive')
     expect(repeatStrategyPill).toHaveClass('selected')
+
     const editor = (await findByTestId('editor')) as HTMLTextAreaElement
 
     expect(editor.value.trim()).toBe(`repeat:
@@ -210,7 +229,15 @@ describe('<LoopingStrategy /> tests', () => {
   test('Prompts warning before switch if data is present', async () => {
     const { findByTestId } = render(
       <TestWrapper>
-        <LoopingStrategy strategy={{ matrix: {} }} />
+        <LoopingStrategy
+          selectedStage={{
+            stage: {
+              identifier: '',
+              name: '',
+              strategy: { matrix: {} }
+            }
+          }}
+        />
       </TestWrapper>
     )
 
@@ -241,7 +268,15 @@ describe('<LoopingStrategy /> tests', () => {
   test('Prompts warning before delete if data is present', async () => {
     const { findByTestId, queryByTestId } = render(
       <TestWrapper>
-        <LoopingStrategy strategy={{ matrix: {} }} />
+        <LoopingStrategy
+          selectedStage={{
+            stage: {
+              identifier: '',
+              name: '',
+              strategy: { matrix: {} }
+            }
+          }}
+        />
       </TestWrapper>
     )
 
@@ -264,7 +299,7 @@ describe('<LoopingStrategy /> tests', () => {
     const apply = await findByTextGlobal(document.body, 'common.remove')
     userEvent.click(apply)
 
-    expect(queryByTestId('editor')).not.toBeInTheDocument()
+    await waitFor(() => expect(queryByTestId('editor')).not.toBeInTheDocument())
   })
 
   test('onChange', async () => {
@@ -292,7 +327,16 @@ describe('<LoopingStrategy /> tests', () => {
   test('readonly', async () => {
     const { findByTestId } = render(
       <TestWrapper>
-        <LoopingStrategy isReadonly strategy={{ matrix: {} }} />
+        <LoopingStrategy
+          isReadonly
+          selectedStage={{
+            stage: {
+              identifier: '',
+              name: '',
+              strategy: { matrix: {} }
+            }
+          }}
+        />
       </TestWrapper>
     )
 
