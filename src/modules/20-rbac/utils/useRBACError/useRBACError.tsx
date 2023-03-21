@@ -22,6 +22,7 @@ import type { StringsMap } from 'framework/strings/StringsContext'
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { AccessControlCheckError, Failure as FailureCDNG, Error as ErrorCDNG, ResourceScope } from 'services/cd-ng'
 import type { Failure as FailurePipeline, Error as ErrorPipeline } from 'services/pipeline-ng'
+import type { Failure as FailureRbac } from 'services/rbac'
 import type { ErrorHandlerProps } from '../utils'
 import css from '@rbac/components/RBACTooltip/RBACTooltip.module.scss'
 
@@ -29,7 +30,7 @@ import css from '@rbac/components/RBACTooltip/RBACTooltip.module.scss'
 // Once RBAC Error is renamed to a more generic solution and naming, this name should be renamed and made generic as well
 export type RBACError =
   | ErrorHandlerProps
-  | GetDataError<FailureCDNG | FailurePipeline | AccessControlCheckError | ErrorCDNG | ErrorPipeline>
+  | GetDataError<FailureCDNG | FailureRbac | FailurePipeline | AccessControlCheckError | ErrorCDNG | ErrorPipeline>
 export interface RbacErrorReturn {
   getRBACErrorMessage: (error: RBACError, allowMultiple?: boolean) => React.ReactElement | string
 }

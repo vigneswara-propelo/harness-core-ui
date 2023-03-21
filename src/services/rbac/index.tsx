@@ -312,6 +312,7 @@ export interface AccessControlCheckError {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -339,6 +340,7 @@ export interface AccessControlCheckError {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -368,12 +370,28 @@ export interface AccessControlCheckError {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -381,6 +399,11 @@ export interface AccessControlCheckError {
   metadata?: ErrorMetadataDTO
   responseMessages?: ResponseMessage[]
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface AttributeFilter {
+  attributeName?: string
+  attributeValues?: string[]
 }
 
 export interface Error {
@@ -662,6 +685,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -689,6 +713,7 @@ export interface Error {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -718,12 +743,28 @@ export interface Error {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1015,6 +1056,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -1042,6 +1084,7 @@ export interface Failure {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -1071,12 +1114,28 @@ export interface Failure {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1089,6 +1148,7 @@ export interface Page {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1099,6 +1159,7 @@ export interface PageRoleAssignmentAggregate {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1109,6 +1170,7 @@ export interface PageRoleAssignmentResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1119,13 +1181,14 @@ export interface PageRoleResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
 
 export interface Permission {
   action: string
-  allowedScopeLevels?: ('organization' | 'project' | 'account')[]
+  allowedScopeLevels?: string[]
   identifier: string
   includeInAllRoles?: boolean
   name: string
@@ -1149,15 +1212,21 @@ export interface PermissionResponse {
 
 export interface Principal {
   identifier?: string
-  scopeLevel?: 'organization' | 'project' | 'account'
+  scopeLevel?: string
   type?: 'USER' | 'USER_GROUP' | 'SERVICE' | 'API_KEY' | 'SERVICE_ACCOUNT'
 }
 
 export interface PrincipalV2 {
+  email?: string
   identifier?: string
   name?: string
   scopeLevel?: string
   type?: 'USER' | 'USER_GROUP' | 'SERVICE' | 'API_KEY' | 'SERVICE_ACCOUNT'
+}
+
+export interface ResourceFilter {
+  includeAllResources?: boolean
+  resources?: ResourceSelectorV2[]
 }
 
 export interface ResourceGroup {
@@ -1165,10 +1234,32 @@ export interface ResourceGroup {
   name?: string
 }
 
+export interface ResourceGroupV2 {
+  accountIdentifier: string
+  allowedScopeLevels?: string[]
+  color?: string
+  description?: string
+  identifier: string
+  includedScopes?: ScopeSelector[]
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  resourceFilter?: ResourceFilter
+  tags?: {
+    [key: string]: string
+  }
+}
+
 export interface ResourceScope {
   accountIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
+}
+
+export interface ResourceSelectorV2 {
+  attributeFilter?: AttributeFilter
+  identifiers?: string[]
+  resourceType: string
 }
 
 export interface Response {
@@ -1478,6 +1569,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -1505,6 +1597,7 @@ export interface ResponseMessage {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -1534,12 +1627,28 @@ export interface ResponseMessage {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1551,7 +1660,9 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
+    | 'INPUT_TIMEOUT_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'DELEGATE_RESTART'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -1585,6 +1696,13 @@ export interface ResponseRoleAssignmentAggregateResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseRoleAssignmentDeleteResponseDTO {
+  correlationId?: string
+  data?: RoleAssignmentDeleteResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseRoleAssignmentResponse {
   correlationId?: string
   data?: RoleAssignmentResponse
@@ -1614,7 +1732,7 @@ export interface ResponseSetString {
 }
 
 export interface Role {
-  allowedScopeLevels?: ('organization' | 'project' | 'account')[]
+  allowedScopeLevels?: string[]
   description?: string
   identifier: string
   name: string
@@ -1627,8 +1745,9 @@ export interface Role {
 export interface RoleAssignment {
   disabled?: boolean
   identifier?: string
+  internal?: boolean
   managed?: boolean
-  principal?: Principal
+  principal: Principal
   resourceGroupIdentifier?: string
   roleIdentifier?: string
 }
@@ -1640,7 +1759,7 @@ export interface RoleAssignmentAggregate {
   identifier?: string
   lastModifiedAt?: number
   principal?: PrincipalV2
-  resourceGroup?: ResourceGroup
+  resourceGroup?: ResourceGroupV2
   role?: RoleResponse
   scope?: ScopeResponse
 }
@@ -1656,6 +1775,17 @@ export interface RoleAssignmentCreateRequest {
   roleAssignments?: RoleAssignment[]
 }
 
+export interface RoleAssignmentDeleteResponseDTO {
+  failedToDelete?: number
+  roleAssignmentErrorResponseDTOList?: RoleAssignmentErrorResponseDTO[]
+  successfullyDeleted?: number
+}
+
+export interface RoleAssignmentErrorResponseDTO {
+  errorMessage?: string
+  roleAssignmentId?: string
+}
+
 export interface RoleAssignmentFilter {
   disabledFilter?: boolean[]
   harnessManagedFilter?: boolean[]
@@ -1667,7 +1797,10 @@ export interface RoleAssignmentFilter {
 }
 
 export interface RoleAssignmentFilterV2 {
+  disabledFilter?: boolean
+  harnessManagedFilter?: boolean
   principalFilter?: Principal
+  principalTypeFilter?: ('USER' | 'USER_GROUP' | 'SERVICE' | 'API_KEY' | 'SERVICE_ACCOUNT')[]
   resourceGroupFilter?: string[]
   roleFilter?: string[]
   scopeFilters?: ScopeSelector[]
@@ -1911,6 +2044,7 @@ export interface GetRoleAssignmentListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   accountIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -2140,10 +2274,90 @@ export const getRoleAssignmentsAggregatePromise = (
     void
   >('POST', getConfig('authz/api'), `/roleassignments/aggregate`, props, signal)
 
+export interface BulkDeleteRoleAssignmentQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type BulkDeleteRoleAssignmentProps = Omit<
+  MutateProps<
+    ResponseRoleAssignmentDeleteResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    BulkDeleteRoleAssignmentQueryParams,
+    string[],
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Delete Role Assignment
+ */
+export const BulkDeleteRoleAssignment = (props: BulkDeleteRoleAssignmentProps) => (
+  <Mutate<
+    ResponseRoleAssignmentDeleteResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    BulkDeleteRoleAssignmentQueryParams,
+    string[],
+    void
+  >
+    verb="POST"
+    path={`/roleassignments/delete/batch`}
+    base={getConfig('authz/api')}
+    {...props}
+  />
+)
+
+export type UseBulkDeleteRoleAssignmentProps = Omit<
+  UseMutateProps<
+    ResponseRoleAssignmentDeleteResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    BulkDeleteRoleAssignmentQueryParams,
+    string[],
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Delete Role Assignment
+ */
+export const useBulkDeleteRoleAssignment = (props: UseBulkDeleteRoleAssignmentProps) =>
+  useMutate<
+    ResponseRoleAssignmentDeleteResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    BulkDeleteRoleAssignmentQueryParams,
+    string[],
+    void
+  >('POST', `/roleassignments/delete/batch`, { base: getConfig('authz/api'), ...props })
+
+/**
+ * Delete Role Assignment
+ */
+export const bulkDeleteRoleAssignmentPromise = (
+  props: MutateUsingFetchProps<
+    ResponseRoleAssignmentDeleteResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    BulkDeleteRoleAssignmentQueryParams,
+    string[],
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseRoleAssignmentDeleteResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    BulkDeleteRoleAssignmentQueryParams,
+    string[],
+    void
+  >('POST', getConfig('authz/api'), `/roleassignments/delete/batch`, props, signal)
+
 export interface GetFilteredRoleAssignmentListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   accountIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -2221,6 +2435,93 @@ export const getFilteredRoleAssignmentListPromise = (
     RoleAssignmentFilterRequestBody,
     void
   >('POST', getConfig('authz/api'), `/roleassignments/filter`, props, signal)
+
+export interface GetFilteredRoleAssignmentsWithInternalRolesQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  pageToken?: string
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetFilteredRoleAssignmentsWithInternalRolesProps = Omit<
+  MutateProps<
+    ResponsePageRoleAssignmentResponse,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentsWithInternalRolesQueryParams,
+    RoleAssignmentFilterRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Filtered Role Assignments
+ */
+export const GetFilteredRoleAssignmentsWithInternalRoles = (
+  props: GetFilteredRoleAssignmentsWithInternalRolesProps
+) => (
+  <Mutate<
+    ResponsePageRoleAssignmentResponse,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentsWithInternalRolesQueryParams,
+    RoleAssignmentFilterRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/roleassignments/filter/internal`}
+    base={getConfig('authz/api')}
+    {...props}
+  />
+)
+
+export type UseGetFilteredRoleAssignmentsWithInternalRolesProps = Omit<
+  UseMutateProps<
+    ResponsePageRoleAssignmentResponse,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentsWithInternalRolesQueryParams,
+    RoleAssignmentFilterRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Filtered Role Assignments
+ */
+export const useGetFilteredRoleAssignmentsWithInternalRoles = (
+  props: UseGetFilteredRoleAssignmentsWithInternalRolesProps
+) =>
+  useMutate<
+    ResponsePageRoleAssignmentResponse,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentsWithInternalRolesQueryParams,
+    RoleAssignmentFilterRequestBody,
+    void
+  >('POST', `/roleassignments/filter/internal`, { base: getConfig('authz/api'), ...props })
+
+/**
+ * Get Filtered Role Assignments
+ */
+export const getFilteredRoleAssignmentsWithInternalRolesPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePageRoleAssignmentResponse,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentsWithInternalRolesQueryParams,
+    RoleAssignmentFilterRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageRoleAssignmentResponse,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentsWithInternalRolesQueryParams,
+    RoleAssignmentFilterRequestBody,
+    void
+  >('POST', getConfig('authz/api'), `/roleassignments/filter/internal`, props, signal)
 
 export interface PostRoleAssignmentsQueryParams {
   accountIdentifier?: string
@@ -2305,6 +2606,7 @@ export interface GetFilteredRoleAssignmentByScopeListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   accountIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -2541,6 +2843,91 @@ export const deleteRoleAssignmentPromise = (
     void
   >('DELETE', getConfig('authz/api'), `/roleassignments`, props, signal)
 
+export interface GetRoleAssignmentQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetRoleAssignmentPathParams {
+  identifier: string
+}
+
+export type GetRoleAssignmentProps = Omit<
+  GetProps<
+    ResponseRoleAssignmentResponse,
+    Failure | AccessControlCheckError | Error,
+    GetRoleAssignmentQueryParams,
+    GetRoleAssignmentPathParams
+  >,
+  'path'
+> &
+  GetRoleAssignmentPathParams
+
+/**
+ * Get Role Assignment
+ */
+export const GetRoleAssignment = ({ identifier, ...props }: GetRoleAssignmentProps) => (
+  <Get<
+    ResponseRoleAssignmentResponse,
+    Failure | AccessControlCheckError | Error,
+    GetRoleAssignmentQueryParams,
+    GetRoleAssignmentPathParams
+  >
+    path={`/roleassignments/${identifier}`}
+    base={getConfig('authz/api')}
+    {...props}
+  />
+)
+
+export type UseGetRoleAssignmentProps = Omit<
+  UseGetProps<
+    ResponseRoleAssignmentResponse,
+    Failure | AccessControlCheckError | Error,
+    GetRoleAssignmentQueryParams,
+    GetRoleAssignmentPathParams
+  >,
+  'path'
+> &
+  GetRoleAssignmentPathParams
+
+/**
+ * Get Role Assignment
+ */
+export const useGetRoleAssignment = ({ identifier, ...props }: UseGetRoleAssignmentProps) =>
+  useGet<
+    ResponseRoleAssignmentResponse,
+    Failure | AccessControlCheckError | Error,
+    GetRoleAssignmentQueryParams,
+    GetRoleAssignmentPathParams
+  >((paramsInPath: GetRoleAssignmentPathParams) => `/roleassignments/${paramsInPath.identifier}`, {
+    base: getConfig('authz/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Get Role Assignment
+ */
+export const getRoleAssignmentPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseRoleAssignmentResponse,
+    Failure | AccessControlCheckError | Error,
+    GetRoleAssignmentQueryParams,
+    GetRoleAssignmentPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseRoleAssignmentResponse,
+    Failure | AccessControlCheckError | Error,
+    GetRoleAssignmentQueryParams,
+    GetRoleAssignmentPathParams
+  >(getConfig('authz/api'), `/roleassignments/${identifier}`, props, signal)
+
 export interface PutRoleAssignmentQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -2637,6 +3024,7 @@ export interface GetRoleListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   accountIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string

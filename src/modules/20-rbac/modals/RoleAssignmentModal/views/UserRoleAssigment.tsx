@@ -8,15 +8,12 @@
 import React, { useEffect, useState } from 'react'
 import type { FormikProps } from 'formik'
 import {
-  Button,
   Formik,
   FormikForm as Form,
-  Layout,
   ModalErrorHandlerBinding,
   SelectOption,
   FormInput,
   ModalErrorHandler,
-  ButtonVariation,
   MultiSelectOption
 } from '@harness/uicore'
 import * as Yup from 'yup'
@@ -288,17 +285,10 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
                 noRoleAssignmentsText={getString('rbac.usersPage.noDataText')}
                 formik={formik as FormikProps<UserRoleAssignmentValues | RoleAssignmentValues>}
                 onSuccess={onSuccess}
+                disabled={saving || sending}
+                onCancel={onCancel}
               />
             )}
-            <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                text={getString('common.apply')}
-                type="submit"
-                disabled={saving || sending}
-              />
-              <Button text={getString('cancel')} variation={ButtonVariation.TERTIARY} onClick={onCancel} />
-            </Layout.Horizontal>
           </Form>
         )
       }}

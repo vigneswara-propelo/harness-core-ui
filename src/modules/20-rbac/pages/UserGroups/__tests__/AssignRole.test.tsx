@@ -10,7 +10,6 @@ import { act, fireEvent, getByText, render } from '@testing-library/react'
 
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import type { ResponseBoolean } from 'services/cd-ng'
-import { clickSubmit } from '@common/utils/JestFormHelper'
 import routes from '@common/RouteDefinitions'
 import { projectPathProps } from '@common/utils/routeUtils'
 import AssignRoles from '@rbac/modals/RoleAssignmentModal/views/AssignRoles'
@@ -29,7 +28,7 @@ jest.mock('services/rbac', () => ({
     return { data: roleMockData, refetch: jest.fn(), error: null, loading: false }
   }),
   usePostRoleAssignments: jest.fn().mockImplementation(() => ({ mutate: createRoleMock })),
-  useDeleteRoleAssignment: jest.fn().mockImplementation(() => ({ mutate: mockResponse }))
+  useBulkDeleteRoleAssignment: jest.fn().mockImplementation(() => ({ mutate: mockResponse }))
 }))
 
 jest.mock('services/resourcegroups', () => ({
@@ -79,16 +78,19 @@ describe('Assign Roles Test', () => {
     await act(async () => {
       fireEvent.click(applyChanges)
     })
+
+    const submitForm = getByText(container, 'common.apply')
     await act(async () => {
-      clickSubmit(container!)
+      fireEvent.click(submitForm)
     })
     expect(createRole).toBeCalled()
   })
   test('Assign Roles When No Usergroups Selected', async () => {
     createRole.mockReset()
 
+    const submitForm = getByText(container, 'common.apply')
     await act(async () => {
-      clickSubmit(container!)
+      fireEvent.click(submitForm)
     })
     const errorMessage = getByText(container!, 'rbac.userGroupRequired')
     expect(errorMessage).toBeTruthy()

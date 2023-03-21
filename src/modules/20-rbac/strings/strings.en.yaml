@@ -103,7 +103,7 @@ roleAssignment:
   searchOrAddUsersPlaceHolder: Search existing users or add new users
   addUsersPlaceHolder: Add new users
   assignmentValidation: You are trying to invite a user without any roles. Please click on add to start assigning roles.
-  deleteSuccess: Role Assignment deleted successfully
+  deleteSuccess: Role Assignments deleted successfully
   deleteFailure: This Role Assignment could not be deleted
 usersPage:
   search: Search by name or email

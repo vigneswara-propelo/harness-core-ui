@@ -6,15 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import {
-  Button,
-  Formik,
-  FormikForm as Form,
-  Layout,
-  ModalErrorHandlerBinding,
-  ModalErrorHandler,
-  ButtonVariation
-} from '@harness/uicore'
+import { Formik, FormikForm as Form, ModalErrorHandlerBinding, ModalErrorHandler } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
@@ -147,17 +139,10 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
                   formik as FormikProps<UserGroupRoleAssignmentValues | UserRoleAssignmentValues | RoleAssignmentValues>
                 }
                 onSuccess={onRoleAssignmentSuccess}
+                disabled={saving}
+                onCancel={onCancel}
               />
             )}
-            <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                text={getString('common.apply')}
-                type="submit"
-                disabled={saving}
-              />
-              <Button text={getString('cancel')} variation={ButtonVariation.TERTIARY} onClick={onCancel} />
-            </Layout.Horizontal>
           </Form>
         )
       }}

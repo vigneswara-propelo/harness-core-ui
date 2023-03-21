@@ -6,16 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import {
-  Button,
-  Formik,
-  FormikForm as Form,
-  Layout,
-  ModalErrorHandlerBinding,
-  FormInput,
-  ModalErrorHandler,
-  ButtonVariation
-} from '@harness/uicore'
+import { Formik, FormikForm as Form, ModalErrorHandlerBinding, FormInput, ModalErrorHandler } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
@@ -132,18 +123,10 @@ const RoleAssignment: React.FC<RoleAssignmentData> = ({
                 }
                 formik={formik}
                 onSuccess={onSuccess}
+                disabled={saving}
+                onCancel={onCancel}
               />
             )}
-
-            <Layout.Horizontal spacing="small">
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                text={getString('common.apply')}
-                type="submit"
-                disabled={saving}
-              />
-              <Button text={getString('cancel')} variation={ButtonVariation.TERTIARY} onClick={onCancel} />
-            </Layout.Horizontal>
           </Form>
         )
       }}
