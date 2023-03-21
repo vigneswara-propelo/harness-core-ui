@@ -86,7 +86,12 @@ import css from './JiraCreate.module.scss'
 const getUnsupportedRequiredFields = (requiredFields: JiraFieldNGWithValue[]): JiraFieldNGWithValue[] => {
   return requiredFields.filter(
     (field: JiraFieldNGWithValue) =>
-      !(shouldShowTextField(field) || shouldShowMultiSelectField(field) || shouldShowMultiTypeField(field))
+      !(
+        shouldShowTextField(field) ||
+        shouldShowMultiSelectField(field) ||
+        shouldShowMultiTypeField(field) ||
+        field.name === 'Description'
+      )
   )
 }
 
