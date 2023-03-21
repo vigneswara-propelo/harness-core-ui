@@ -5,9 +5,30 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { onChangeProps } from './OrgAccountLevelServiceEnvField.types'
+import { isUndefined } from 'lodash-es'
+import type {
+  onChangeProps,
+  ShouldShowServiceEnvironmentFieldProps,
+  ShouldShowServiceEnvironmentFieldValues
+} from './OrgAccountLevelServiceEnvField.types'
+import { DefaultShowServiceEnvironment } from './OrgAccountLevelServiceEnvField.constants'
 
 export const onValueChange = ({ isTemplate, value, onSuccess }: onChangeProps): void => {
   const selectedService = isTemplate ? { label: value, value: value } : value
   onSuccess(selectedService)
+}
+
+export const shouldShowServiceEnvironmentField = ({
+  isInputSet,
+  serviceRef,
+  environmentRef
+}: ShouldShowServiceEnvironmentFieldProps): ShouldShowServiceEnvironmentFieldValues => {
+  const showServiceEnvironmentField = Object.assign({}, DefaultShowServiceEnvironment)
+
+  if (isInputSet) {
+    showServiceEnvironmentField.showService = !isUndefined(serviceRef)
+    showServiceEnvironmentField.showEnvironment = !isUndefined(environmentRef)
+  }
+
+  return showServiceEnvironmentField
 }

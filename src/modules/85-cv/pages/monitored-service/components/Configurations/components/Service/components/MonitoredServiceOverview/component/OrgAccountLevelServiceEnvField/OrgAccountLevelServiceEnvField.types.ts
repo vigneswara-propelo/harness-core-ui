@@ -9,6 +9,7 @@ import type { SelectOption } from '@harness/uicore'
 
 export interface OrgAccountLevelServiceEnvFieldProps {
   isTemplate: boolean
+  isInputSet?: boolean
   serviceOnSelect: (service: SelectOption) => void
   environmentOnSelect: (environment: SelectOption) => void
 }
@@ -33,4 +34,15 @@ export interface ServiceEnvModalProps {
     closeModal: () => void
     onSelect: OrgAccountLevelServiceEnvFieldProps['environmentOnSelect']
   }
+}
+
+export interface ShouldShowServiceEnvironmentFieldProps {
+  isInputSet?: boolean
+  serviceRef?: string | null
+  environmentRef?: string | null
+}
+
+export interface ShouldShowServiceEnvironmentFieldValues {
+  showService: boolean
+  showEnvironment: boolean
 }

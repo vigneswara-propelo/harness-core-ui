@@ -8,15 +8,43 @@
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { act, render } from '@testing-library/react'
-import { Container, Button } from '@harness/uicore'
+import { Container, Button, Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as ServiceModal from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import * as MultiTypeServiceField from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import * as MultiTypeEnvironmentField from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
 import OrgAccountLevelServiceEnvField from '../OrgAccountLevelServiceEnvField'
+import { DefaultShowServiceEnvironment } from '../OrgAccountLevelServiceEnvField.constants'
+import { shouldShowServiceEnvironmentField } from '../OrgAccountLevelServiceEnvField.utils'
+import type { OrgAccountLevelServiceEnvFieldProps } from '../OrgAccountLevelServiceEnvField.types'
 
 const serviceOnSelect = jest.fn()
 const environmentOnSelect = jest.fn()
+
+const Wrapper = ({
+  values,
+  isInputSet,
+  isTemplate,
+  serviceOnSelect: serviceSelect,
+  environmentOnSelect: environmentSelect
+}: React.PropsWithChildren<
+  OrgAccountLevelServiceEnvFieldProps & { values?: { serviceRef?: string | null; environmentRef?: string | null } }
+>): React.ReactElement => {
+  return (
+    <TestWrapper>
+      <Formik initialValues={{ ...values }} onSubmit={jest.fn()} formName="TestWrapper">
+        {() => (
+          <OrgAccountLevelServiceEnvField
+            isInputSet={isInputSet}
+            isTemplate={isTemplate}
+            serviceOnSelect={serviceSelect}
+            environmentOnSelect={environmentSelect}
+          />
+        )}
+      </Formik>
+    </TestWrapper>
+  )
+}
 
 const serviceOption = {
   label: 'service1',
@@ -103,13 +131,7 @@ describe('OrgAccountLevelServiceEnvField', () => {
     })
 
     const { container } = render(
-      <TestWrapper>
-        <OrgAccountLevelServiceEnvField
-          isTemplate
-          serviceOnSelect={serviceOnSelect}
-          environmentOnSelect={environmentOnSelect}
-        />
-      </TestWrapper>
+      <Wrapper isTemplate serviceOnSelect={serviceOnSelect} environmentOnSelect={environmentOnSelect} />
     )
 
     await act(() => {
@@ -135,13 +157,7 @@ describe('OrgAccountLevelServiceEnvField', () => {
 
   test('should render OrgAccountLevelServiceEnvField with isTemplate false', async () => {
     const { container } = render(
-      <TestWrapper>
-        <OrgAccountLevelServiceEnvField
-          isTemplate={false}
-          serviceOnSelect={serviceOnSelect}
-          environmentOnSelect={environmentOnSelect}
-        />
-      </TestWrapper>
+      <Wrapper isTemplate={false} serviceOnSelect={serviceOnSelect} environmentOnSelect={environmentOnSelect} />
     )
     jest.spyOn(MultiTypeServiceField, 'MultiTypeServiceField').mockImplementation((props: any) => {
       return (
@@ -180,6 +196,44 @@ describe('OrgAccountLevelServiceEnvField', () => {
     expect(environmentOnSelect).toHaveBeenCalledWith({ name: 'env1' })
   })
 
+  test('should render OrgAccountLevelServiceEnvField with isInputSet true', async () => {
+    const { container } = render(
+      <Wrapper
+        isTemplate
+        isInputSet
+        values={{ serviceRef: null }}
+        serviceOnSelect={serviceOnSelect}
+        environmentOnSelect={environmentOnSelect}
+      />
+    )
+    jest.spyOn(MultiTypeServiceField, 'MultiTypeServiceField').mockImplementation((props: any) => {
+      return (
+        <Container>
+          <Button className="addNewService" onClick={() => props.openAddNewModal()} title="Add New Service" />
+          <Button
+            className="onChangeService"
+            onClick={() => props.onChange({ name: 'service1' })}
+            title="On Change Service"
+          />
+        </Container>
+      )
+    })
+    jest.spyOn(MultiTypeEnvironmentField, 'MultiTypeEnvironmentField').mockImplementation((props: any) => {
+      return (
+        <Container>
+          <Button className="addNewEnvironment" onClick={() => props.openAddNewModal()} title="Add New Environment" />
+          <Button
+            className="onChangeEnvironment"
+            onClick={() => props.onChange({ name: 'env1' })}
+            title="On Change Environment"
+          />
+        </Container>
+      )
+    })
+    expect(container.querySelector('[title="Add New Service"]')).toBeInTheDocument()
+    expect(container.querySelector('[title="Add New Environment"]')).not.toBeInTheDocument()
+  })
+
   test('should validate service modal', async () => {
     jest.spyOn(MultiTypeServiceField, 'MultiTypeServiceField').mockImplementation((props: any) => {
       return (
@@ -209,13 +263,7 @@ describe('OrgAccountLevelServiceEnvField', () => {
       )
     })
     const { container } = render(
-      <TestWrapper>
-        <OrgAccountLevelServiceEnvField
-          isTemplate={false}
-          serviceOnSelect={serviceOnSelect}
-          environmentOnSelect={environmentOnSelect}
-        />
-      </TestWrapper>
+      <Wrapper isTemplate={false} serviceOnSelect={serviceOnSelect} environmentOnSelect={environmentOnSelect} />
     )
     await act(() => {
       userEvent.click(container.querySelector('[title="Add New Service"]')!)
@@ -263,13 +311,7 @@ describe('OrgAccountLevelServiceEnvField', () => {
         )
       })
     const { container } = render(
-      <TestWrapper>
-        <OrgAccountLevelServiceEnvField
-          isTemplate={false}
-          serviceOnSelect={serviceOnSelect}
-          environmentOnSelect={environmentOnSelect}
-        />
-      </TestWrapper>
+      <Wrapper isTemplate={false} serviceOnSelect={serviceOnSelect} environmentOnSelect={environmentOnSelect} />
     )
     await act(() => {
       userEvent.click(container.querySelector('[title="Add New Environment"]')!)
@@ -280,6 +322,39 @@ describe('OrgAccountLevelServiceEnvField', () => {
     expect(environmentOnSelect).toHaveBeenCalledWith({
       label: 'Environment1',
       value: 'Environment1'
+    })
+  })
+
+  describe('shouldShowServiceEnvironmentField', () => {
+    test('should return the default values when no arguments are passed', () => {
+      const result = shouldShowServiceEnvironmentField({})
+      expect(result).toEqual(DefaultShowServiceEnvironment)
+    })
+
+    test('should return service and env as false for undefined values', () => {
+      const falseServiceAndEnv = { showEnvironment: false, showService: false }
+      const noServiceAndEnv = shouldShowServiceEnvironmentField({ isInputSet: true })
+      expect(noServiceAndEnv).toEqual(falseServiceAndEnv)
+      const serviceWithNoEnv = shouldShowServiceEnvironmentField({ isInputSet: true, serviceRef: undefined })
+      expect(serviceWithNoEnv).toEqual(falseServiceAndEnv)
+      const envWithNoService = shouldShowServiceEnvironmentField({ isInputSet: true, environmentRef: undefined })
+      expect(envWithNoService).toEqual(falseServiceAndEnv)
+    })
+
+    test('should return service and env for null values', () => {
+      const serviceWithNoEnv = shouldShowServiceEnvironmentField({ isInputSet: true, serviceRef: null })
+      expect(serviceWithNoEnv).toEqual({ showEnvironment: false, showService: true })
+      const envWithNoService = shouldShowServiceEnvironmentField({ isInputSet: true, environmentRef: null })
+      expect(envWithNoService).toEqual({ showEnvironment: true, showService: false })
+    })
+
+    test('should set showService and showEnvironment to true if both serviceRef and environmentRef are defined', () => {
+      const result = shouldShowServiceEnvironmentField({
+        isInputSet: true,
+        serviceRef: 'service',
+        environmentRef: 'environment'
+      })
+      expect(result).toEqual({ ...DefaultShowServiceEnvironment })
     })
   })
 })

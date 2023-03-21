@@ -32,3 +32,8 @@ export const COMMON_FIELDS_PROPS: Partial<ServiceReferenceFieldProps | Environme
   },
   isNewConnectorLabelVisible: true
 }
+
+export const DefaultShowServiceEnvironment = {
+  showService: true,
+  showEnvironment: true
+}

@@ -39,16 +39,17 @@ export default function ServiceEnvironmentInputSet({
   const { getString } = useStrings()
   const { serviceOptions, setServiceOptions } = useGetHarnessServices()
   const { environmentOptions, setEnvironmentOptions } = useGetHarnessEnvironments()
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup: orgAccountLevelServiceEnvironment } = useFeatureFlags()
   const environmentRefValue = environmentOptions?.find(item => item?.value === environmentValue)
 
   if (isUndefined(serviceValue) && isUndefined(environmentValue)) {
     return <></>
   }
 
-  if (CDS_OrgAccountLevelServiceEnvEnvGroup && !isUndefined(serviceValue) && !isUndefined(environmentValue)) {
+  if (orgAccountLevelServiceEnvironment) {
     content = (
       <OrgAccountLevelServiceEnvField
+        isInputSet
         isTemplate={isReadOnlyInputSet}
         serviceOnSelect={(selectedService: SelectOption) => onChange('serviceRef', selectedService.value)}
         environmentOnSelect={(selectedEnv: SelectOption) => onChange('environmentRef', selectedEnv.value)}
