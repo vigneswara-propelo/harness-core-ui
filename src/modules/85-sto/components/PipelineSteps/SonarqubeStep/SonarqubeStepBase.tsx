@@ -130,6 +130,7 @@ export const SonarqubeStepBase = (
               targetTypeSelectItems={targetTypeSelectItems}
             />
 
+            {/* TODO REMOVE THE NEXT LINE, THIS IS NOT AN IMAGE SCANNER */}
             <SecurityImageFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
 
             <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />

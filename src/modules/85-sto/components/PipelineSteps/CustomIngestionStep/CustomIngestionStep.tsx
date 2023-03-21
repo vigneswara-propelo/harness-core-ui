@@ -42,7 +42,7 @@ export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.CustomIngestion
+  protected type = StepType.CustomIngest
   protected stepName = 'Configure CustomIngestion'
   protected stepIcon: IconName = 'upload-box'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.CustomIngestion'
@@ -50,7 +50,7 @@ export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
 
   protected defaultValues: CustomIngestionStepData = {
     identifier: '',
-    type: StepType.CustomIngestion as string,
+    type: StepType.CustomIngest as string,
     spec: {
       mode: 'ingestion',
       config: 'default',

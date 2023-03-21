@@ -59,7 +59,7 @@ CustomIngestionStep.args = {
   initialValues: {
     identifier: 'Test_A',
     name: 'Test A',
-    type: StepType.CustomIngestion,
+    type: StepType.CustomIngest,
     description: 'Description',
     timeout: '10s',
     spec: {
@@ -79,7 +79,7 @@ CustomIngestionStep.args = {
       }
     }
   },
-  type: StepType.CustomIngestion,
+  type: StepType.CustomIngest,
   stepViewType: StepViewType.Edit,
   path: '',
   testWrapperProps: {
@@ -87,7 +87,7 @@ CustomIngestionStep.args = {
     pathParams: { accountId: 'zEaak-FLS425IEO7OLzMUg', orgIdentifier: 'default', projectIdentifier: 'Max_Test' }
   },
   template: {
-    type: StepType.CustomIngestion,
+    type: StepType.CustomIngest,
     identifier: 'Test_A',
     description: RUNTIME_INPUT_VALUE,
     timeout: RUNTIME_INPUT_VALUE,
@@ -105,7 +105,7 @@ CustomIngestionStep.args = {
     }
   },
   allValues: {
-    type: StepType.CustomIngestion,
+    type: StepType.CustomIngest,
     name: 'Test A',
     identifier: 'Test_A',
     description: RUNTIME_INPUT_VALUE,
@@ -171,7 +171,7 @@ CustomIngestionStep.args = {
       }
     },
     variablesData: {
-      type: StepType.CustomIngestion,
+      type: StepType.CustomIngest,
       identifier: 'Security',
       name: 'step-name',
       description: 'step-description',

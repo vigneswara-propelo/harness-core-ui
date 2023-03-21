@@ -63,7 +63,6 @@ interface ISecurityScanFields extends SecurityFieldsProps<SecurityStepData<Secur
 
 interface ISecurityTargetFields extends SecurityFieldsProps<SecurityStepData<SecurityStepSpec>> {
   targetTypeSelectItems: SelectItems[]
-  ingestionOnly?: boolean
 }
 
 export function SecurityScanFields(props: ISecurityScanFields) {
@@ -109,7 +108,7 @@ export function SecurityScanFields(props: ISecurityScanFields) {
 }
 
 export function SecurityTargetFields(props: ISecurityTargetFields) {
-  const { allowableTypes, formik, stepViewType, targetTypeSelectItems, ingestionOnly, toolTipOverrides } = props
+  const { allowableTypes, formik, stepViewType, targetTypeSelectItems, toolTipOverrides } = props
   return (
     <>
       <SecurityField
@@ -141,8 +140,9 @@ export function SecurityTargetFields(props: ISecurityTargetFields) {
             optional: true,
             label: 'pipelineSteps.workspace',
             hide:
-              ingestionOnly ||
+              formik.values.spec.target.type === 'instance' ||
               formik.values.spec.target.type === 'container' ||
+              formik.values.spec.mode === 'extraction' ||
               formik.values.spec.mode === 'ingestion',
             inputProps: { placeholder: '/harness' },
             tooltipId: tooltipIds.targetWorkspace
@@ -450,6 +450,11 @@ interface SecurityInstanceFieldsProps extends SecurityFieldsProps<SecurityStepDa
 
 export function SecurityInstanceFields(props: SecurityInstanceFieldsProps) {
   const { allowableTypes, formik, stepViewType, toolTipOverrides, showFields } = props
+
+  if (formik.values.spec.mode !== 'orchestration') {
+    return null
+  }
+
   return (
     <>
       <SecurityField

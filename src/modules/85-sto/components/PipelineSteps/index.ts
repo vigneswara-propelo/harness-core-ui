@@ -18,6 +18,14 @@ import { PrismaCloudStep } from './PrismaCloudStep/PrismaCloudStep'
 import { CheckmarxStep } from './CheckmarxStep/CheckmarxStep'
 import { MendStep } from './MendStep/MendStep'
 import { CustomIngestionStep } from './CustomIngestionStep/CustomIngestionStep'
+import { AWSSecurityHubStep } from './AWSSecurityHubStep/AWSSecurityHubStep'
+import { AWSECRStep } from './AWSECRStep/AWSECRStep'
+import { NiktoStep } from './NiktoStep/NiktoStep'
+import { NmapStep } from './NmapStep/NmapStep'
+import { OWASPStep } from './OWASPStep/OWASPStep'
+import { ProwlerStep } from './ProwlerStep/ProwlerStep'
+import { MetasploitStep } from './MetasploitStep/MetasploitStep'
+import { BrakemanStep } from './BrakemanStep/BrakemanStep'
 
 factory.registerStep(new ZeroNorthStep())
 factory.registerStep(new AquatrivyStep())
@@ -31,3 +39,11 @@ factory.registerStep(new PrismaCloudStep())
 factory.registerStep(new CheckmarxStep())
 factory.registerStep(new MendStep())
 factory.registerStep(new CustomIngestionStep())
+factory.registerStep(new AWSSecurityHubStep())
+factory.registerStep(new AWSECRStep())
+factory.registerStep(new NiktoStep())
+factory.registerStep(new NmapStep())
+factory.registerStep(new OWASPStep())
+factory.registerStep(new ProwlerStep())
+factory.registerStep(new MetasploitStep())
+factory.registerStep(new BrakemanStep())

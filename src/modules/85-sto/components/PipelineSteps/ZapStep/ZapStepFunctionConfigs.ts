@@ -17,53 +17,59 @@ import {
 import type { Field, InputSetViewValidateFieldsConfig } from '../types'
 import type { ZapStepData } from './ZapStep'
 
-const instanceFieldsTransformConfig = [
-  {
-    name: 'spec.instance.domain',
-    type: TransformValuesTypes.Text,
-    label: 'secrets.winRmAuthFormFields.domain'
-  },
-  {
-    name: 'spec.instance.protocol',
-    type: TransformValuesTypes.Text,
-    label: 'ce.common.protocol'
-  },
-  {
-    name: 'spec.instance.port',
-    type: TransformValuesTypes.Text,
-    label: 'common.smtp.port'
-  },
-  {
-    name: 'spec.instance.path',
-    type: TransformValuesTypes.Text,
-    label: 'common.path'
-  }
-]
+const instanceFieldsTransformConfig = (data: ZapStepData) =>
+  data.spec.mode === 'orchestration'
+    ? [
+        {
+          name: 'spec.instance.domain',
+          type: TransformValuesTypes.Text,
+          label: 'secrets.winRmAuthFormFields.domain'
+        },
+        {
+          name: 'spec.instance.protocol',
+          type: TransformValuesTypes.Text,
+          label: 'ce.common.protocol'
+        },
+        {
+          name: 'spec.instance.port',
+          type: TransformValuesTypes.Text,
+          label: 'common.smtp.port'
+        },
+        {
+          name: 'spec.instance.path',
+          type: TransformValuesTypes.Text,
+          label: 'common.path'
+        }
+      ]
+    : []
 
-const instanceFieldsValidationConfig: InputSetViewValidateFieldsConfig[] = [
-  {
-    name: 'spec.instance.domain',
-    type: ValidationFieldTypes.Text,
-    label: 'secrets.winRmAuthFormFields.domain',
-    isRequired: true
-  },
-  {
-    name: 'spec.instance.protocol',
-    type: ValidationFieldTypes.Text,
-    label: 'ce.common.protocol',
-    isRequired: true
-  },
-  {
-    name: 'spec.instance.port',
-    type: ValidationFieldTypes.Text,
-    label: 'common.smtp.port'
-  },
-  {
-    name: 'spec.instance.path',
-    type: ValidationFieldTypes.Text,
-    label: 'common.path'
-  }
-]
+const instanceFieldsValidationConfig = (data: ZapStepData) =>
+  data.spec.mode === 'orchestration'
+    ? ([
+        {
+          name: 'spec.instance.domain',
+          type: ValidationFieldTypes.Text,
+          label: 'secrets.winRmAuthFormFields.domain',
+          isRequired: true
+        },
+        {
+          name: 'spec.instance.protocol',
+          type: ValidationFieldTypes.Text,
+          label: 'ce.common.protocol',
+          isRequired: true
+        },
+        {
+          name: 'spec.instance.port',
+          type: ValidationFieldTypes.Numeric,
+          label: 'common.smtp.port'
+        },
+        {
+          name: 'spec.instance.path',
+          type: ValidationFieldTypes.Text,
+          label: 'common.path'
+        }
+      ] as InputSetViewValidateFieldsConfig[])
+    : []
 
 const toolFieldsTransformConfig = (data: ZapStepData) =>
   data.spec.mode === 'orchestration'
@@ -83,9 +89,8 @@ export const transformValuesFieldsConfig = (data: ZapStepData): Field[] => {
   const transformValuesFieldsConfigValues = [
     ...commonFieldsTransformConfig(data),
     ...toolFieldsTransformConfig(data),
-    ...instanceFieldsTransformConfig
+    ...instanceFieldsTransformConfig(data)
   ]
-
   return transformValuesFieldsConfigValues
 }
 
@@ -111,7 +116,7 @@ export const editViewValidateFieldsConfig = (data: ZapStepData) => {
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
     ...additionalFieldsValidationConfigEitView,
-    ...instanceFieldsValidationConfig,
+    ...instanceFieldsValidationConfig(data),
     ...toolFieldsValidationConfig(data)
   ]
 
@@ -124,7 +129,7 @@ export function getInputSetViewValidateFieldsConfig(data: ZapStepData): InputSet
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
     ...additionalFieldsValidationConfigInputSet,
-    ...instanceFieldsValidationConfig,
+    ...instanceFieldsValidationConfig(data),
     ...toolFieldsValidationConfig(data)
   ]
 

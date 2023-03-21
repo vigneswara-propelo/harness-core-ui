@@ -189,7 +189,16 @@ export enum StepType {
   TerraformCloudRollback = 'TerraformCloudRollback',
   SscaOrchestration = 'SscaOrchestration',
   CdSscaOrchestration = 'CdSscaOrchestration',
-  CustomIngestion = 'CustomIngestion'
+  CustomIngest = 'CustomIngest',
+  AWSSecurityHub = 'AWSSecurityHub',
+  AWSECR = 'AWSECR',
+  Nikto = 'Nikto',
+  Nmap = 'Nmap',
+  OWASP = 'OWASP',
+  Prowler = 'Prowler',
+  Sniper = 'Sniper',
+  Metasploit = 'Metasploit',
+  Brakeman = 'Brakeman'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

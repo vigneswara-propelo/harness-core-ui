@@ -125,7 +125,6 @@ export const CustomIngestionStepBase = (
                 CONTAINER_TARGET_TYPE,
                 CONFIGURATION_TARGET_TYPE
               ]}
-              ingestionOnly
             />
 
             <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />

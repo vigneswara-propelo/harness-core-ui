@@ -49,12 +49,6 @@ describe('Zap Step', () => {
           mode: 'ingestion',
           config: 'default',
           settings: RUNTIME_INPUT_VALUE,
-          instance: {
-            domain: 'auth domain',
-            protocol: 'http',
-            path: 'true',
-            port: 8080
-          },
           advanced: {
             fail_on_severity: RUNTIME_INPUT_VALUE,
             log: {

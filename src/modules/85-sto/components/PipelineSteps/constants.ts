@@ -107,16 +107,6 @@ export const NIKTO_DEFAULT_CONFIG = {
   label: 'Default'
 }
 
-export const NIKTO_FULL_CONFIG = {
-  value: 'nikto-full',
-  label: 'Full'
-}
-
-export const NIKTO_FULL_WEB_CONFIG = {
-  value: 'nikto-full-web',
-  label: 'Full Web'
-}
-
 export const NMAP_DEFAULT_CONFIG = {
   value: 'default',
   label: 'Default'
@@ -142,6 +132,11 @@ export const NMAP_EXPLOIT_CONFIG = {
   label: 'Exploit'
 }
 
+export const NMAP_NO_DEFAULT_CLI_FLAGS = {
+  value: 'no-default-cli-flags',
+  label: 'No Default CLI Flags'
+}
+
 export const PROWLER_DEFAULT_CONFIG = {
   value: 'default',
   label: 'Default'
@@ -159,17 +154,22 @@ export const PROWLER_EXCLUDE_EXTRAS_CONFIG = {
   label: 'Exclude Extras'
 }
 
+export const METASPLOIT_DEFAULT_CONFIG = {
+  value: 'default',
+  label: 'Default'
+}
+
 export const METASPLOIT_WEAK_SSH_CONFIG = {
   value: 'metasploit-weak-ssh',
   label: 'Weak SSH'
 }
 export const METASPLOIT_OPEN_SSL_HEARTBLEED_CONFIG = {
   value: 'metasploit-openssl-heartbleed',
-  label: 'Weak SSH'
+  label: 'Open SSL Heartbleed'
 }
 export const METASPLOIT_DYNAMIC_BY_CVE_CONFIG = {
   value: 'dynamic-by-cve',
-  label: 'Weak SSH'
+  label: 'Dynamic by CVE'
 }
 
 export const instanceProtocolSelectItems = [

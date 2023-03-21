@@ -24,7 +24,7 @@ describe('CustomIngestion Step', () => {
   describe('Edit View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.CustomIngestion} stepViewType={StepViewType.Edit} />
+        <TestStepWidget initialValues={{}} type={StepType.CustomIngest} stepViewType={StepViewType.Edit} />
       )
 
       expect(container).toMatchSnapshot()
@@ -71,7 +71,7 @@ describe('CustomIngestion Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.CustomIngestion}
+          type={StepType.CustomIngest}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -127,7 +127,7 @@ describe('CustomIngestion Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.CustomIngestion}
+          type={StepType.CustomIngest}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -145,7 +145,7 @@ describe('CustomIngestion Step', () => {
   describe('InputSet View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.CustomIngestion} stepViewType={StepViewType.InputSet} />
+        <TestStepWidget initialValues={{}} type={StepType.CustomIngest} stepViewType={StepViewType.InputSet} />
       )
 
       expect(container).toMatchSnapshot()
@@ -153,7 +153,7 @@ describe('CustomIngestion Step', () => {
 
     test('should render all fields', async () => {
       const template = {
-        type: StepType.CustomIngestion,
+        type: StepType.CustomIngest,
         identifier: 'My_CustomIngestion_Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
@@ -177,7 +177,7 @@ describe('CustomIngestion Step', () => {
       }
 
       const allValues = {
-        type: StepType.CustomIngestion,
+        type: StepType.CustomIngest,
         name: 'Test A',
         identifier: 'My_CustomIngestion_Step',
         description: RUNTIME_INPUT_VALUE,
@@ -206,7 +206,7 @@ describe('CustomIngestion Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.CustomIngestion}
+          type={StepType.CustomIngest}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -219,12 +219,12 @@ describe('CustomIngestion Step', () => {
 
     test('should not render any fields', async () => {
       const template = {
-        type: StepType.CustomIngestion,
+        type: StepType.CustomIngest,
         identifier: 'My_CustomIngestion_Step'
       }
 
       const allValues = {
-        type: StepType.CustomIngestion,
+        type: StepType.CustomIngest,
         identifier: 'My_CustomIngestion_Step',
         name: 'My CustomIngestion Step',
         description: 'Description',
@@ -258,7 +258,7 @@ describe('CustomIngestion Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.CustomIngestion}
+          type={StepType.CustomIngest}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -277,7 +277,7 @@ describe('CustomIngestion Step', () => {
           initialValues={{
             identifier: 'Test_A',
             name: 'Test A',
-            type: StepType.CustomIngestion,
+            type: StepType.CustomIngest,
             description: 'Description',
             timeout: '10s',
             spec: {
@@ -356,7 +356,7 @@ describe('CustomIngestion Step', () => {
               }
             },
             variablesData: {
-              type: StepType.CustomIngestion,
+              type: StepType.CustomIngest,
               __uuid: 'step-identifier',
               identifier: 'CustomIngestion',
               name: 'step-name',
@@ -376,7 +376,7 @@ describe('CustomIngestion Step', () => {
               }
             }
           }}
-          type={StepType.CustomIngestion}
+          type={StepType.CustomIngest}
           stepViewType={StepViewType.InputVariable}
         />
       )
@@ -390,7 +390,7 @@ describe('CustomIngestion Step', () => {
       identifier: 'id',
       name: 'name',
       description: 'desc',
-      type: StepType.CustomIngestion,
+      type: StepType.CustomIngest,
       timeout: '1h',
       spec: {
         target: {
