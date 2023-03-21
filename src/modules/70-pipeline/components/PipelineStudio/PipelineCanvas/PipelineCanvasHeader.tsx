@@ -428,11 +428,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     {getString('unsavedChanges')}
                   </Button>
                 )}
-                {isAsyncValidationEnabled && !isNewPipeline && (
-                  <div className={css.validationContainer}>
-                    <ValidationBadge />
-                  </div>
-                )}
+                {isAsyncValidationEnabled && !isNewPipeline && <ValidationBadge className={css.validationContainer} />}
                 <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
                 {renderDiscardUnsavedChangeButton()}
                 <RbacButton

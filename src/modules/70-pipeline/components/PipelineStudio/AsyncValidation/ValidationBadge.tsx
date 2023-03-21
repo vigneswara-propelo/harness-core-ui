@@ -36,7 +36,11 @@ import { ValidationErrorModal } from './ValidationModals/ValidationErrorModal'
 import { ValidationResultModal } from './ValidationModals/ValidationResultModal'
 import css from './ValidationBadge.module.scss'
 
-export function ValidationBadge(): JSX.Element {
+export interface ValidationBadgeProps {
+  className?: string
+}
+
+export function ValidationBadge({ className }: ValidationBadgeProps): JSX.Element | null {
   const { getString } = useStrings()
   const params = useParams<PipelineType<PipelinePathProps> & GitQueryParams>()
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier, pipelineIdentifier } = params
@@ -44,7 +48,7 @@ export function ValidationBadge(): JSX.Element {
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const {
-    state: { validationUuid, storeMetadata },
+    state: { validationUuid, storeMetadata, isUpdated },
     setValidationUuid
   } = usePipelineContext()
   const {
@@ -87,10 +91,10 @@ export function ValidationBadge(): JSX.Element {
 
     return validationResultData?.data?.status as ValidationStatus | undefined
   }, [validationResultData?.data?.status, validationResultError, validationResultLoading])
+
   const policyEval = validationResultData?.data?.policyEval as Evaluation | undefined
   const endTs = validationResultData?.data?.endTs
-  const showTimeago = Number.isFinite(endTs) && !isNil(endTs) && (isStatusSuccess(status) || isStatusError(status))
-  const showPopover = isStatusSuccess(status) || isStatusError(status)
+
   const policySetsErrorCount = useMemo(() => getPolicySetsErrorCount(policyEval), [policyEval])
   const errorCountToRender = status === 'FAILURE' ? policySetsErrorCount : 1
 
@@ -160,34 +164,38 @@ export function ValidationBadge(): JSX.Element {
   }, [getString, status])
 
   const iconProps = getIconPropsByStatus(status)
-  const badgeClassName = cx(css.validationBadge, {
-    [css.loading]: isStatusLoading(status),
-    [css.error]: isStatusError(status),
-    [css.success]: isStatusSuccess(status)
-  })
-
-  const badge = (
-    <div data-testid="validation-badge" className={badgeClassName} onClick={onBadgeClick}>
-      {iconProps && <Icon {...iconProps} />}
-      {validationText && (
-        <Text font={{ size: 'xsmall', weight: 'bold' }} color={Color.GREY_600}>
-          {validationText}
-        </Text>
-      )}
-      {showTimeago && <ReactTimeago date={endTs as number} live formatter={minimalTimeagoFormatter} />}
-    </div>
+  const badgeClassName = cx(
+    css.validationBadge,
+    {
+      [css.loading]: isStatusLoading(status),
+      [css.error]: isStatusError(status),
+      [css.success]: isStatusSuccess(status)
+    },
+    className
   )
+
+  const showTimeago = Number.isFinite(endTs) && !isNil(endTs) && (isStatusSuccess(status) || isStatusError(status))
+  const showPopover = isStatusSuccess(status) || isStatusError(status)
+  const showBadge = !(isUpdated && status === 'SUCCESS')
+
+  if (!showBadge) {
+    return null
+  }
 
   return (
     <>
-      {showPopover ? (
-        <Popover interactionKind="hover-target" popoverClassName={Classes.DARK} position="bottom">
-          {badge}
-          <ValidationPopoverContent status={status} errorCount={errorCountToRender} />
-        </Popover>
-      ) : (
-        badge
-      )}
+      <Popover disabled={!showPopover} interactionKind="hover" popoverClassName={Classes.DARK} position="bottom">
+        <div data-testid="validation-badge" className={badgeClassName} onClick={onBadgeClick}>
+          {iconProps && <Icon {...iconProps} />}
+          {validationText && (
+            <Text font={{ size: 'xsmall', weight: 'bold' }} color={Color.GREY_600}>
+              {validationText}
+            </Text>
+          )}
+          {showTimeago && <ReactTimeago date={endTs as number} live formatter={minimalTimeagoFormatter} />}
+        </div>
+        <ValidationPopoverContent status={status} errorCount={errorCountToRender} />
+      </Popover>
 
       <ValidationResultModal
         isOpen={isValidationResultModalOpen}

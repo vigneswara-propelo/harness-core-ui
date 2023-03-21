@@ -11,8 +11,6 @@ import { Classes, Dialog } from '@blueprintjs/core'
 import { Icon } from '@harness/icons'
 import { Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import ReactTimeago from 'react-timeago'
-import { isNil } from 'lodash-es'
 import { EvaluationView } from '@governance/EvaluationView'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -34,7 +32,6 @@ export function ValidationResultModal({
   isOpen,
   policyEval,
   status,
-  endTs,
   onClose,
   onRevalidate
 }: ValidationResultModalProps): JSX.Element | null {
@@ -48,16 +45,10 @@ export function ValidationResultModal({
   const successTitle = isSuccess && (
     <div className={css.successTitle}>
       <Icon name="tick" color={Color.PRIMARY_6} size={32} />
-      <div>
-        <Text font={{ variation: FontVariation.H4 }} color={Color.GREY_800}>
-          {getString('pipeline.validation.pipelineValidated')}
-        </Text>
-        {!isNil(endTs) && Number.isFinite(endTs) && (
-          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500}>
-            <ReactTimeago date={endTs} live />
-          </Text>
-        )}
-      </div>
+
+      <Text font={{ variation: FontVariation.H4 }} color={Color.GREY_800}>
+        {getString('pipeline.validation.pipelineValidated')}
+      </Text>
     </div>
   )
 
