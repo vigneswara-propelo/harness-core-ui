@@ -48,7 +48,6 @@ import CECODashboardPage from './pages/co-dashboard/CECODashboardPage'
 import CECOCreateGatewayPage from './pages/co-create-gateway/CECOCreateGatewayPage'
 import CECOEditGatewayPage from './pages/co-edit-gateway/CECOEditGatewayPage'
 import CECOLoadBalancersPage from './pages/co-access-points/CECOAccessPointsPage'
-import Budgets from './pages/budgets/Budgets'
 import CETrialHomePage from './pages/home/CETrialHomePage'
 
 import RecommendationList from './pages/recommendationList/RecommendationList'
@@ -59,7 +58,6 @@ import PerspectiveListPage from './pages/perspective-list/PerspectiveListPage'
 import WorkloadDetailsPage from './pages/workload-details/WorkloadDetailsPage'
 import OverviewPage from './pages/overview/OverviewPage'
 import NodeRecommendationDetailsPage from './pages/node-recommendation-details/NodeRecommendationDetailsPage'
-import BudgetDetails from './pages/budget-details/BudgetDetails'
 import NodeDetailsPage from './pages/node-details/NodeDetailsPage'
 import AnomaliesOverviewPage from './pages/anomalies-overview/AnomaliesOverviewPage'
 import formatCost from './utils/formatCost'
@@ -504,27 +502,6 @@ const CENonMFERoutes = (
       pageName={PAGE_NAME.CEOverviewPage}
     >
       <OverviewPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCEBudgets({ ...accountPathProps })}
-      pageName={PAGE_NAME.CEBudgets}
-      exact
-    >
-      <Budgets />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCEBudgetDetails({
-        ...accountPathProps,
-        budgetId: ':budgetId',
-        budgetName: ':budgetName'
-      })}
-      pageName={PAGE_NAME.CEBudgetDetails}
-    >
-      <BudgetDetails />
     </RouteWithLayout>
     <RouteWithLayout
       licenseRedirectData={licenseRedirectData}
