@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { capitalize, get } from 'lodash-es'
+import { capitalize, get, isEmpty } from 'lodash-es'
 import { Classes, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import { Color, FontVariation } from '@harness/design-system'
@@ -33,25 +33,40 @@ import { Status } from '@common/utils/Constants'
 import css from './PluginsPanel.module.scss'
 
 export enum PluginType {
-  SCRIPT = 'script',
-  PLUGIN = 'plugin',
-  BITRISE = 'bitrise',
-  ACTION = 'action'
+  Script = 'script',
+  Plugin = 'plugin',
+  Bitrise = 'bitrise',
+  Action = 'action'
 }
 
 export enum PluginKind {
-  HARNESS_NATIVE = 'harness_native',
-  HARNESS = 'harness',
-  BITRISE = 'bitrise',
-  ACTION = 'action'
+  HarnessBuiltIn = 'harness-built-in',
+  Harness = 'harness',
+  Bitrise = 'bitrise',
+  GitHubActions = 'action'
 }
 
 export interface PluginAddUpdateMetadata {
   pluginType: PluginType
   pluginData: Record<string, any>
   pluginName: PluginMetadataResponse['name']
-  pluginUses: PluginMetadataResponse['uses']
+  pluginUses?: PluginMetadataResponse['uses']
   shouldInsertYAML: boolean
+}
+
+enum PluginPanelView {
+  Category = 'CATEGORY',
+  List = 'LIST',
+  Configuration = 'CONFIGURATION'
+}
+
+enum PluginCategory {
+  RunStep = 'RUN_STEP',
+  RunTestStep = 'RUN_TEST_STEP',
+  BackgroundStep = 'BACKGROUND_STEP',
+  Harness = 'HARNESS',
+  GithubActions = 'GITHUB_ACTIONS',
+  Bitrise = 'BITRISE'
 }
 
 interface PluginsPanelInterface {
@@ -72,52 +87,42 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     pluginAddUpdateOpnStatus: pluginCrudOpnStatus = Status.TO_DO
   } = props
   const { getString } = useStrings()
-  const [plugin, setPlugin] = useState<PluginMetadataResponse | undefined>()
+  const [selectedPlugin, setSelectedPlugin] = useState<PluginMetadataResponse | undefined>()
   const [plugins, setPlugins] = useState<PluginMetadataResponse[]>([])
   const [query, setQuery] = useState<string>()
+  const [pluginCategory, setPluginCategory] = useState<PluginCategory>()
+  const [pluginPanelView, setPluginPanelView] = useState<PluginPanelView>(PluginPanelView.Category)
+
   const [isPluginUpdateAction, setIsPluginUpdateAction] = useState<boolean>(false)
   const defaultQueryParams = { pageIndex: 0, pageSize: 200 }
-  const { data, loading, error, refetch: fetchPlugins } = useListPlugins({ queryParams: defaultQueryParams })
-  const scriptPlugin = {
+  const {
+    data,
+    loading,
+    error,
+    refetch: fetchPlugins
+  } = useListPlugins({ queryParams: defaultQueryParams, lazy: true })
+  const scriptPlugin: PluginMetadataResponse = {
     name: 'Script',
     inputs: [{ name: 'run', type: 'Textarea' } as Input],
-    kind: PluginKind.HARNESS_NATIVE,
-    description: 'Run a script on macOS, Linux, or Windows'
+    kind: PluginKind.HarnessBuiltIn,
+    description: getString('common.plugin.runStepDesc')
   }
   const selectedPluginName: string = get(selectedPluginFromYAMLView, 'name', '')
   const selectedPluginType: PluginType = get(selectedPluginFromYAMLView, 'type', '')
-
-  const getPlugins = useCallback((searchTerm: string) => {
-    fetchPlugins({ queryParams: { ...defaultQueryParams, searchTerm } })
-  }, [])
+  const HarnessBuiltInSteps = [PluginCategory.RunStep, PluginCategory.RunTestStep, PluginCategory.BackgroundStep]
 
   useEffect(() => {
-    if (selectedPluginType === PluginType.SCRIPT) {
-      setPlugin(scriptPlugin)
-    }
-  }, [selectedPluginType])
-
-  const selectPluginFromList = useCallback(
-    (pluginToSelect: string) => {
-      const matchingPlugin = plugins.find((item: PluginMetadataResponse) => item.name === pluginToSelect)
-      if (matchingPlugin) {
-        setPlugin(matchingPlugin)
+    if (!isEmpty(selectedPluginFromYAMLView)) {
+      setPluginPanelView(PluginPanelView.Configuration)
+      setIsPluginUpdateAction(true)
+      if (selectedPluginType === PluginType.Script) {
+        setSelectedPlugin(scriptPlugin)
+        setPluginCategory(PluginCategory.RunStep)
+      } else if (selectedPluginName) {
         setQuery(selectedPluginName)
       }
-    },
-    [plugins]
-  )
-
-  useEffect(() => {
-    if (selectedPluginName) {
-      setIsPluginUpdateAction(true)
-      // first look up for matching plugin names in existing plugins list
-      selectPluginFromList(selectedPluginName)
-    } else {
-      // if not found, make an api call to fetch it
-      getPlugins(selectedPluginName)
     }
-  }, [selectedPluginName])
+  }, [selectedPluginFromYAMLView])
 
   useEffect(() => {
     if (!error && !loading) {
@@ -127,11 +132,25 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
 
   useEffect(() => {
     if (selectedPluginName) {
-      selectPluginFromList(selectedPluginName)
+      const matchingPlugin = plugins.find((item: PluginMetadataResponse) => item.name === selectedPluginName)
+      if (matchingPlugin) {
+        setSelectedPlugin(matchingPlugin)
+        const matchingCategory = getPluginCategoryForPluginKind(get(matchingPlugin, 'kind') as PluginKind)
+        if (matchingCategory) {
+          setPluginCategory(matchingCategory)
+        }
+      }
     }
   }, [plugins])
 
-  const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields, kind, uses } = plugin || {}
+  useEffect(() => {
+    if (
+      pluginPanelView === PluginPanelView.List ||
+      (!isEmpty(selectedPluginFromYAMLView) && pluginPanelView === PluginPanelView.Configuration)
+    ) {
+      fetchPlugins({ queryParams: { ...defaultQueryParams, searchTerm: query || '' } })
+    }
+  }, [query, pluginPanelView])
 
   const generateValidationSchema = useCallback((inputs: Input[]) => {
     let validationSchema = {}
@@ -149,22 +168,182 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     return Yup.object().shape({ ...validationSchema })
   }, [])
 
-  const onBackArrowClick = useCallback((): void => {
-    onPluginDiscard()
-    setPlugin(undefined)
-    setIsPluginUpdateAction(false)
-    setQuery('')
-    getPlugins('')
+  const renderPluginsPanel = useCallback((): JSX.Element => {
+    switch (pluginPanelView) {
+      case PluginPanelView.Category:
+        return renderPluginsPanelCategoryView()
+      case PluginPanelView.Configuration:
+        return renderPluginsPanelConfigurationView()
+      case PluginPanelView.List:
+        return renderPluginsPanelListView()
+      default:
+        return <></>
+    }
+  }, [pluginPanelView, pluginCategory, plugins, loading, error, query, selectedPlugin])
+
+  const getPluginCategoryForPluginKind = useCallback((kind: PluginKind): PluginCategory | undefined => {
+    switch (kind) {
+      case PluginKind.Harness:
+        return PluginCategory.Harness
+      case PluginKind.Bitrise:
+        return PluginCategory.Bitrise
+      case PluginKind.GitHubActions:
+        return PluginCategory.GithubActions
+    }
   }, [])
+
+  const getFixedPluginForCategory = useCallback((category: PluginCategory): PluginMetadataResponse | undefined => {
+    // TODO define individual plugin for below categories once schema/fieldds for them are finalized
+    switch (category) {
+      case PluginCategory.RunStep:
+      case PluginCategory.RunTestStep:
+      case PluginCategory.BackgroundStep:
+        return scriptPlugin
+    }
+  }, [])
+
+  const renderPluginsPanelCategoryView = useCallback((): JSX.Element => {
+    const categories: { category: PluginCategory; label: string; description: string; iconName: IconName }[] = [
+      {
+        category: PluginCategory.RunStep,
+        label: `${getString('runPipelineText')} ${getString('step')}`,
+        description: getString('common.plugin.runStepDesc'),
+        iconName: 'run-step-plugin'
+      },
+      {
+        category: PluginCategory.RunTestStep,
+        label: `${getString('runPipelineText')} ${getString('test')} ${getString('step')}`,
+        description: getString('common.plugin.runTestStepDesc'),
+        iconName: 'run-test-step-plugin'
+      },
+      {
+        category: PluginCategory.BackgroundStep,
+        label: `${getString('common.background')} ${getString('step')}`,
+        description: getString('common.plugin.backgroundStepDesc'),
+        iconName: 'background-step-plugin'
+      },
+      {
+        category: PluginCategory.Harness,
+        label: `${getString('harness')} ${getString('common.plugins')}`,
+        description: getString('common.plugin.harnessPluginsDesc'),
+        iconName: 'harness-plugin'
+      },
+      {
+        category: PluginCategory.Bitrise,
+        label: `${getString('common.bitrise')} ${getString('common.plugins')}`,
+        description: getString('common.plugin.bitrisePluginsDesc'),
+        iconName: 'bitrise-plugin'
+      },
+      {
+        category: PluginCategory.GithubActions,
+        label: `${getString('common.gitHubActions')}`,
+        description: getString('common.plugin.gitHubActionsPluginsDesc'),
+        iconName: 'github-action-plugin'
+      }
+    ]
+    return (
+      <Container>
+        {categories.map(
+          (item: { category: PluginCategory; label: string; description: string; iconName: IconName }) => {
+            const { category, label, description, iconName } = item
+            return (
+              <Layout.Horizontal
+                key={label}
+                padding={{ left: 'xlarge', top: 'medium', bottom: 'medium', right: 'xlarge' }}
+                className={css.pluginCategory}
+                onClick={() => {
+                  setPluginCategory(category)
+                  if (HarnessBuiltInSteps.includes(category)) {
+                    const plugin = getFixedPluginForCategory(category)
+                    if (plugin) {
+                      setSelectedPlugin(plugin)
+                    }
+                    setPluginPanelView(PluginPanelView.Configuration)
+                  } else {
+                    setPluginPanelView(PluginPanelView.List)
+                  }
+                }}
+              >
+                <Icon name={iconName} size={16} className={css.categoryIcon} />
+                <Layout.Vertical spacing="small" padding={{ left: 'small' }}>
+                  <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.BODY2 }}>
+                    {label}
+                  </Text>
+                  <Text font={{ variation: FontVariation.TINY }}>{description}</Text>
+                </Layout.Vertical>
+              </Layout.Horizontal>
+            )
+          }
+        )}
+      </Container>
+    )
+  }, [])
+
+  //#region Plugins List
+
+  const renderPluginsPanelListView = useCallback((): JSX.Element => {
+    let el: JSX.Element = <></>
+    if (loading) {
+      el = (
+        <Container flex={{ justifyContent: 'space-evenly' }} padding="large">
+          <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
+        </Container>
+      )
+    } else {
+      if (error) {
+        el = (
+          <Container flex={{ justifyContent: 'space-evenly' }} padding="large">
+            <Text>{getString('errorTitle')}</Text>
+          </Container>
+        )
+      } else {
+        if (Array.isArray(plugins) && plugins.length > 0) {
+          el = (
+            <Container className={css.overflow}>
+              {plugins.map((item: PluginMetadataResponse, index: number) => renderPlugin(item, index))}
+            </Container>
+          )
+        } else if (query) {
+          el = (
+            <Container flex={{ justifyContent: 'space-evenly' }} padding="large">
+              <Text>{getString('noSearchResultsFoundPeriod')}</Text>
+            </Container>
+          )
+        }
+      }
+    }
+    return (
+      <Layout.Vertical>
+        <Container className={css.search}>
+          <Layout.Horizontal flex>
+            <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
+              <Icon name="arrow-left" onClick={handleBackArrowClick} className={css.backBtn} />
+              <Text font={{ variation: FontVariation.H5 }}>{`${getString('select')} ${getString(
+                'common.plugin.label'
+              )}`}</Text>
+            </Layout.Horizontal>
+            <ExpandingSearchInput
+              autoFocus={true}
+              alwaysExpanded={true}
+              defaultValue={query}
+              onChange={setQuery}
+              className={css.expandingSearch}
+            />
+          </Layout.Horizontal>
+        </Container>
+        {el}
+      </Layout.Vertical>
+    )
+  }, [loading, plugins, error, query])
 
   const getPluginIconForKind = useCallback((pluginKind: string): IconName => {
     switch (pluginKind) {
-      case PluginKind.HARNESS_NATIVE:
-      case PluginKind.HARNESS:
+      case PluginKind.HarnessBuiltIn:
+      case PluginKind.Harness:
         return 'harness'
-      case PluginKind.BITRISE:
+      case PluginKind.Bitrise:
         return 'bitrise'
-      case PluginKind.ACTION:
+      case PluginKind.GitHubActions:
         return 'github-actions'
       default:
         return 'gear'
@@ -173,12 +352,12 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
 
   const getCertificationLabelForKind = useCallback((_kindOfPlugin: string): string => {
     switch (_kindOfPlugin) {
-      case PluginKind.HARNESS:
-      case PluginKind.HARNESS_NATIVE:
-        return `by ${capitalize(PluginKind.HARNESS)}`
-      case PluginKind.BITRISE:
+      case PluginKind.Harness:
+      case PluginKind.HarnessBuiltIn:
+        return `by ${capitalize(PluginKind.Harness)}`
+      case PluginKind.Bitrise:
         return `by ${capitalize(_kindOfPlugin)}`
-      case PluginKind.ACTION:
+      case PluginKind.GitHubActions:
         return `by ${getString('common.repo_provider.githubLabel')} ${capitalize(_kindOfPlugin)}`
       default:
         return ''
@@ -187,16 +366,16 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
 
   const getPluginTypeFromKind = useCallback((kindOfPlugin: string): PluginType => {
     switch (kindOfPlugin) {
-      case PluginKind.HARNESS_NATIVE:
-        return PluginType.SCRIPT
-      case PluginKind.HARNESS:
-        return PluginType.PLUGIN
-      case PluginKind.BITRISE:
-        return PluginType.BITRISE
-      case PluginKind.ACTION:
-        return PluginType.ACTION
+      case PluginKind.HarnessBuiltIn:
+        return PluginType.Script
+      case PluginKind.Harness:
+        return PluginType.Plugin
+      case PluginKind.Bitrise:
+        return PluginType.Bitrise
+      case PluginKind.GitHubActions:
+        return PluginType.Action
       default:
-        return PluginType.PLUGIN
+        return PluginType.Plugin
     }
   }, [])
 
@@ -207,7 +386,10 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
         className={css.plugin}
         width="100%"
         flex={{ justifyContent: 'space-between' }}
-        onClick={() => setPlugin(_plugin)}
+        onClick={() => {
+          setSelectedPlugin(_plugin)
+          setPluginPanelView(PluginPanelView.Configuration)
+        }}
         key={index}
       >
         <Layout.Horizontal style={{ flex: 2 }}>
@@ -229,6 +411,131 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
       </Layout.Horizontal>
     )
   }, [])
+
+  //#endregion
+
+  //#region Plugin Configuration
+
+  const renderPluginsPanelConfigurationView = useCallback((): JSX.Element => {
+    if (!selectedPlugin) {
+      return <></>
+    }
+    const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields, kind, uses } = selectedPlugin
+    return kind ? (
+      <Layout.Vertical
+        spacing="medium"
+        margin={{ left: 'xxlarge', top: 'large', right: 'xxlarge', bottom: 'xxlarge' }}
+        height="95%"
+        flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }}
+      >
+        <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
+          <Icon name="arrow-left" onClick={handleBackArrowClick} className={css.backBtn} />
+          <Text font={{ variation: FontVariation.H5 }}>{pluginName}</Text>
+        </Layout.Horizontal>
+        <Container className={css.form}>
+          <Formik
+            initialValues={
+              isPluginUpdateAction
+                ? get(selectedPluginFromYAMLView, kind === PluginKind.HarnessBuiltIn ? 'spec' : 'spec.with')
+                : {}
+            }
+            validationSchema={formFields ? generateValidationSchema(formFields) : {}}
+            enableReinitialize={true}
+            formName="pluginsForm"
+            onSubmit={formValues => {
+              try {
+                onPluginAddUpdate(
+                  {
+                    pluginName:
+                      kind === PluginKind.HarnessBuiltIn && selectedPluginName ? selectedPluginName : pluginName,
+                    pluginData: formValues,
+                    shouldInsertYAML: true,
+                    pluginType: getPluginTypeFromKind(kind),
+                    ...(uses ? { pluginUses: uses } : {})
+                  },
+                  isPluginUpdateAction
+                )
+              } catch (e) {
+                //ignore error
+              }
+            }}
+          >
+            {formikProps => {
+              return (
+                <FormikForm>
+                  <Layout.Vertical
+                    height="100%"
+                    flex={{ justifyContent: 'space-between', alignItems: 'baseline' }}
+                    spacing="small"
+                  >
+                    <Container className={css.pluginFields}>{renderPluginCongigurationForm()}</Container>
+                    <Layout.Horizontal flex spacing="xlarge">
+                      <Button
+                        type="submit"
+                        variation={ButtonVariation.PRIMARY}
+                        disabled={formFields?.length === 0 || !formikProps.dirty}
+                      >
+                        {isPluginUpdateAction ? getString('update') : getString('add')}
+                      </Button>
+                      {pluginDocumentationLink ? (
+                        <a href={pluginDocumentationLink} target="_blank" rel="noopener noreferrer">
+                          <Text className={css.docsLink}>{getString('common.seeDocumentation')}</Text>
+                        </a>
+                      ) : null}
+                    </Layout.Horizontal>
+                    {[Status.SUCCESS, Status.ERROR].includes(pluginCrudOpnStatus) ? (
+                      <Container padding={{ top: 'small', bottom: 'xsmall' }}>
+                        {renderPluginAddUpdateOpnStatus()}
+                      </Container>
+                    ) : (
+                      <></>
+                    )}
+                  </Layout.Vertical>
+                </FormikForm>
+              )
+            }}
+          </Formik>
+        </Container>
+      </Layout.Vertical>
+    ) : (
+      <></>
+    )
+  }, [selectedPlugin])
+
+  const renderPluginCongigurationForm = useCallback((): JSX.Element => {
+    const { inputs: formFields = [] } = selectedPlugin || {}
+    return formFields.length > 0 ? (
+      <Layout.Vertical height="100%">
+        {formFields.map((input: Input, index: number) => {
+          const { name, type } = input
+          return name ? (
+            <Layout.Horizontal padding="xmall" key={index}>
+              {type === 'Textarea' ? (
+                <FormInput.TextArea
+                  name={name}
+                  label={generateLabelForPluginField(input)}
+                  style={{ width: '100%' }}
+                  placeholder={formFields?.find((item: Input) => item.name === name)?.default}
+                />
+              ) : (
+                <FormInput.Text
+                  name={name}
+                  label={generateLabelForPluginField(input)}
+                  style={{ width: '100%' }}
+                  placeholder={formFields?.find((item: Input) => item.name === name)?.default}
+                />
+              )}
+            </Layout.Horizontal>
+          ) : null
+        })}
+      </Layout.Vertical>
+    ) : (
+      <Layout.Vertical flex={{ justifyContent: 'center' }} spacing="large" height="100%">
+        <Icon name="plugin-inputs" size={35} />
+        <Text font={{ variation: FontVariation.BODY2 }}>{getString('common.noPluginInputsRequired')}</Text>
+      </Layout.Vertical>
+    )
+  }, [selectedPlugin])
 
   const generateFriendlyPluginName = useCallback((_pluginName: string): string => {
     return capitalize(_pluginName.split('_').join(' '))
@@ -260,73 +567,6 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     )
   }, [])
 
-  const renderPluginForm = useCallback((): JSX.Element => {
-    const { inputs = [] } = plugin || {}
-    return inputs.length > 0 ? (
-      <Layout.Vertical height="100%">
-        {inputs.map((input: Input, index: number) => {
-          const { name, type } = input
-          return name ? (
-            <Layout.Horizontal padding="xmall" key={index}>
-              {type === 'Textarea' ? (
-                <FormInput.TextArea
-                  name={name}
-                  label={generateLabelForPluginField(input)}
-                  style={{ width: '100%' }}
-                  placeholder={formFields?.find((item: Input) => item.name === name)?.default}
-                />
-              ) : (
-                <FormInput.Text
-                  name={name}
-                  label={generateLabelForPluginField(input)}
-                  style={{ width: '100%' }}
-                  placeholder={formFields?.find((item: Input) => item.name === name)?.default}
-                />
-              )}
-            </Layout.Horizontal>
-          ) : null
-        })}
-      </Layout.Vertical>
-    ) : (
-      <Layout.Vertical flex={{ justifyContent: 'center' }} spacing="large" height="100%">
-        <Icon name="plugin-inputs" size={35} />
-        <Text font={{ variation: FontVariation.BODY2 }}>{getString('common.noPluginInputsRequired')}</Text>
-      </Layout.Vertical>
-    )
-  }, [plugin])
-
-  const renderPluginsPanel = useCallback((): JSX.Element => {
-    if (loading) {
-      return (
-        <Container flex={{ justifyContent: 'space-evenly' }} padding="large">
-          <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
-        </Container>
-      )
-    }
-    if (Array.isArray(plugins) && plugins.length > 0) {
-      return (
-        <Container className={css.overflow}>
-          {plugins.map((item: PluginMetadataResponse, index: number) => renderPlugin(item, index))}
-        </Container>
-      )
-    }
-    if (query) {
-      return (
-        <Container flex={{ justifyContent: 'space-evenly' }} padding="large">
-          <Text>{getString('noSearchResultsFoundPeriod')}</Text>
-        </Container>
-      )
-    }
-    if (error) {
-      return (
-        <Container flex={{ justifyContent: 'space-evenly' }} padding="large">
-          <Text>{getString('errorTitle')}</Text>
-        </Container>
-      )
-    }
-    return <></>
-  }, [loading, plugins, error, query])
-
   const renderPluginAddUpdateOpnStatus = useCallback((): React.ReactElement => {
     switch (pluginCrudOpnStatus) {
       case Status.SUCCESS:
@@ -350,6 +590,25 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     }
   }, [pluginCrudOpnStatus, isPluginUpdateAction])
 
+  //#endregion
+
+  const handleBackArrowClick = useCallback((): void => {
+    if (pluginPanelView === PluginPanelView.Configuration) {
+      if (pluginCategory && HarnessBuiltInSteps.includes(pluginCategory)) {
+        setPluginPanelView(PluginPanelView.Category)
+      } else {
+        setPluginPanelView(PluginPanelView.List)
+      }
+    } else if (pluginPanelView === PluginPanelView.List) {
+      setPluginPanelView(PluginPanelView.Category)
+    }
+    onPluginDiscard()
+    setPluginCategory(undefined)
+    setSelectedPlugin(undefined)
+    setIsPluginUpdateAction(false)
+    setQuery('') // TODO query should be plugin type specific here
+  }, [pluginCategory, pluginPanelView])
+
   return (
     <Container className={css.tabs}>
       <Tabs id={'pluginsPanel'} defaultSelectedTabId={'plugins'} className={css.tabs}>
@@ -367,101 +626,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
           }
           panel={
             <Container style={{ height }} className={css.pluginDetailsPanel}>
-              {pluginName && kind ? (
-                <Layout.Vertical
-                  spacing="medium"
-                  margin={{ left: 'xxlarge', top: 'large', right: 'xxlarge', bottom: 'xxlarge' }}
-                  height="95%"
-                  flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }}
-                >
-                  <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
-                    <Icon name="arrow-left" onClick={onBackArrowClick} className={css.backBtn} />
-                    <Text font={{ variation: FontVariation.H5 }}>{pluginName}</Text>
-                  </Layout.Horizontal>
-                  <Container className={css.form}>
-                    <Formik
-                      initialValues={
-                        isPluginUpdateAction
-                          ? get(selectedPluginFromYAMLView, kind === PluginKind.HARNESS_NATIVE ? 'spec' : 'spec.with')
-                          : {}
-                      }
-                      validationSchema={formFields ? generateValidationSchema(formFields) : {}}
-                      enableReinitialize={true}
-                      formName="pluginsForm"
-                      onSubmit={formValues => {
-                        try {
-                          onPluginAddUpdate(
-                            {
-                              pluginName:
-                                kind === PluginKind.HARNESS_NATIVE && selectedPluginName
-                                  ? selectedPluginName
-                                  : pluginName,
-                              pluginData: formValues,
-                              shouldInsertYAML: true,
-                              pluginType: getPluginTypeFromKind(kind),
-                              pluginUses: uses
-                            },
-                            isPluginUpdateAction
-                          )
-                        } catch (e) {
-                          //ignore error
-                        }
-                      }}
-                    >
-                      {formikProps => {
-                        return (
-                          <FormikForm>
-                            <Layout.Vertical
-                              height="100%"
-                              flex={{ justifyContent: 'space-between', alignItems: 'baseline' }}
-                              spacing="small"
-                            >
-                              <Container className={css.pluginFields}>{renderPluginForm()}</Container>
-                              <Layout.Horizontal flex spacing="xlarge">
-                                <Button
-                                  type="submit"
-                                  variation={ButtonVariation.PRIMARY}
-                                  disabled={formFields?.length === 0 || !formikProps.dirty}
-                                >
-                                  {isPluginUpdateAction ? getString('update') : getString('add')}
-                                </Button>
-                                {pluginDocumentationLink ? (
-                                  <a href={pluginDocumentationLink} target="_blank" rel="noopener noreferrer">
-                                    <Text className={css.docsLink}>{getString('common.seeDocumentation')}</Text>
-                                  </a>
-                                ) : null}
-                              </Layout.Horizontal>
-                              {[Status.SUCCESS, Status.ERROR].includes(pluginCrudOpnStatus) ? (
-                                <Container padding={{ top: 'small', bottom: 'xsmall' }}>
-                                  {renderPluginAddUpdateOpnStatus()}
-                                </Container>
-                              ) : (
-                                <></>
-                              )}
-                            </Layout.Vertical>
-                          </FormikForm>
-                        )
-                      }}
-                    </Formik>
-                  </Container>
-                </Layout.Vertical>
-              ) : (
-                <Layout.Vertical>
-                  <Container className={css.search}>
-                    <ExpandingSearchInput
-                      autoFocus={true}
-                      alwaysExpanded={true}
-                      defaultValue={query}
-                      onChange={(searchTerm: string) => {
-                        getPlugins(searchTerm)
-                        setQuery(searchTerm)
-                      }}
-                    />
-                  </Container>
-                  {renderPlugin(scriptPlugin)}
-                  {renderPluginsPanel()}
-                </Layout.Vertical>
-              )}
+              {renderPluginsPanel()}
             </Container>
           }
         />

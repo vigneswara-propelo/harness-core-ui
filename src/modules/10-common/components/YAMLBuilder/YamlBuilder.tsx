@@ -25,7 +25,10 @@ import {
   isNil,
   get,
   set,
-  truncate
+  truncate,
+  omitBy,
+  isUndefined,
+  isNull
 } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Intent, Popover, PopoverInteractionKind, Position as PopoverPosition } from '@blueprintjs/core'
@@ -887,7 +890,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     return {
       name: pluginName,
       spec:
-        pluginType === PluginType.SCRIPT
+        pluginType === PluginType.Script
           ? sanitizePluginValues(pluginData)
           : { with: sanitizePluginValues(pluginData), uses: pluginUses },
       type: pluginType
@@ -906,7 +909,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean): void => {
       const { pluginData, shouldInsertYAML } = pluginMetadata
       const cursorPosition = currentCursorPosition.current
-      if (!isEmpty(pluginData) && shouldInsertYAML && cursorPosition && editorRef.current?.editor) {
+      const sanitizedPluginData = omitBy(omitBy(pluginData, isUndefined), isNull)
+      if (!isEmpty(sanitizedPluginData) && shouldInsertYAML && cursorPosition && editorRef.current?.editor) {
         let updatedYAML = currentYaml
         try {
           let closestStageIndex = getArrayIndexClosestToCurrentCursor({

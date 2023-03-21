@@ -85,6 +85,7 @@ export interface StringsMap {
   'common.aws': string
   'common.azure': string
   'common.azureConnector': string
+  'common.background': string
   'common.banners.email.description': string
   'common.banners.email.resend': string
   'common.banners.email.success': string
@@ -130,6 +131,7 @@ export interface StringsMap {
   'common.billed': string
   'common.billing': string
   'common.billingAddress': string
+  'common.bitrise': string
   'common.blank': string
   'common.branchName': string
   'common.bucketName': string
@@ -458,6 +460,7 @@ export interface StringsMap {
   'common.git.validation.sameBranches': string
   'common.git.validation.targetBranch': string
   'common.gitDetailsTitle': string
+  'common.gitHubActions': string
   'common.gitOps': string
   'common.gitSync.allRepositories': string
   'common.gitSync.branchFetchFailed': string
@@ -717,6 +720,13 @@ export interface StringsMap {
   'common.plans.subscription': string
   'common.plans.title': string
   'common.platformServiceVersions': string
+  'common.plugin.backgroundStepDesc': string
+  'common.plugin.bitrisePluginsDesc': string
+  'common.plugin.gitHubActionsPluginsDesc': string
+  'common.plugin.harnessPluginsDesc': string
+  'common.plugin.label': string
+  'common.plugin.runStepDesc': string
+  'common.plugin.runTestStepDesc': string
   'common.plugins': string
   'common.plusAddName': string
   'common.plusNewName': string

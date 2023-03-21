@@ -1392,4 +1392,15 @@ monthlyPeak: 'Monthly Peak'
 single: 'Single'
 individual: 'Individual'
 combined: 'Combined'
+background: Background
+bitrise: Bitrise
+gitHubActions: GitHub Actions
+plugin:
+  label: Plugin
+  runStepDesc: Run a script on macOS, Linux, or Windows
+  runTestStepDesc: Run only impacted tests as part of your pipeline
+  backgroundStepDesc: Run a background step
+  harnessPluginsDesc: Run Harness plugins
+  bitrisePluginsDesc: Run Bitrise plugins
+  gitHubActionsPluginsDesc: Run GitHub Actions plugins
 userGroupsWarningMessage: 'Some of the User Groups referenced in this scope have been updated.'

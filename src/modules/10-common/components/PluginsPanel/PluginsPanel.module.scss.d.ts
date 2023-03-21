@@ -8,13 +8,16 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly backBtn: string
+  readonly categoryIcon: string
   readonly docsLink: string
+  readonly expandingSearch: string
   readonly form: string
   readonly mainTabPanel: string
   readonly overflow: string
   readonly padding1: string
   readonly padding2: string
   readonly plugin: string
+  readonly pluginCategory: string
   readonly pluginDetailsPanel: string
   readonly pluginFields: string
   readonly pluginIcon: string
