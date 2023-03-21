@@ -10,15 +10,16 @@ import { Layout, Text, SelectOption, MultiSelectOption, Container } from '@harne
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import {
+  EvaluationType,
   PeriodLengthTypes,
   PeriodTypes,
-  SLIEventTypes,
-  SLIMetricTypes
+  SLIEventTypes
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { KeyValuePair } from '@cv/pages/slos/CVSLODetailsPage/DetailsPanel/views/ServiceDetails'
 import { CreateCompositeSLOSteps } from '../../components/CVCreateSLOV2/components/CreateCompositeSloForm/CreateCompositeSloForm.types'
 import type { CreatePreviewProps, LabelValueProps, CalenderValuePreviewProps } from './CreatePreview.types'
 import { CreateSimpleSLOSteps } from '../../components/CVCreateSLOV2/components/CreateSimpleSloForm/CreateSimpleSloForm.types'
+import { showGoodMetrics } from '../../components/CVCreateSLOV2/components/CreateSimpleSloForm/CreateSimpleSloForm.utils'
 import css from './CreatePreview.module.scss'
 
 export const LabelAndValue = ({
@@ -149,43 +150,58 @@ export const CreatePreview = ({ id, data }: CreatePreviewProps): JSX.Element => 
           })}
         </Layout.Vertical>
       )
-    case CreateSimpleSLOSteps.Configure_Service_Level_Indicatiors:
+    case CreateSimpleSLOSteps.Configure_Service_Level_Indicatiors: {
+      const {
+        evaluationType,
+        SLIMetricType,
+        healthSourceRef,
+        eventType,
+        goodRequestMetric,
+        validRequestMetric,
+        objectiveComparator,
+        objectiveValue
+      } = data
+      const isGoodMetricVisible = showGoodMetrics(evaluationType, SLIMetricType)
+      const isWindow = evaluationType === EvaluationType.WINDOW
       return (
         <Layout.Vertical>
-          <LabelAndValue label={getString('cv.slos.healthSource')} value={data.healthSourceRef || ''} />
-          <LabelAndValue label={getString('cv.slos.sliType')} value={data.serviceLevelIndicatorType || ''} />
-          <LabelAndValue label={getString('cv.slos.evaluationMethod')} value={data.SLIMetricType || ''} />
+          <LabelAndValue label={getString('cv.slos.healthSource')} value={healthSourceRef || ''} />
+          <LabelAndValue label={getString('cv.slos.evaluationType')} value={evaluationType || ''} />
+          {isWindow && <LabelAndValue label={getString('cv.slos.evaluationMethod')} value={SLIMetricType || ''} />}
           <LabelAndValue
             label={'Definitions'}
             value={
               <Layout.Vertical>
                 <Layout.Horizontal spacing={'small'}>
                   <Text font={{ variation: FontVariation.BODY }}>{getString('cv.slos.requestType')}: </Text>
-                  <Text font={{ variation: FontVariation.BODY }}>{data.SLIMissingDataType}</Text>
+                  <Text font={{ variation: FontVariation.BODY }}>{eventType}</Text>
                 </Layout.Horizontal>
-                {data.SLIMetricType === SLIMetricTypes.RATIO && (
+                {isGoodMetricVisible && (
                   <Layout.Horizontal spacing={'small'}>
                     <Text font={{ variation: FontVariation.BODY }}>
-                      {data.eventType === SLIEventTypes.GOOD
+                      {eventType === SLIEventTypes.GOOD
                         ? getString('cv.slos.goodRequestMetric')
                         : getString('cv.slos.badRequestMetric')}
                     </Text>
-                    <Text font={{ variation: FontVariation.BODY }}>{data.goodRequestMetric}</Text>
+                    <Text font={{ variation: FontVariation.BODY }}>{goodRequestMetric}</Text>
                   </Layout.Horizontal>
                 )}
                 <Layout.Horizontal spacing={'small'}>
                   <Text font={{ variation: FontVariation.BODY }}>{getString('cv.slos.validRequestMetric')}: </Text>
-                  <Text font={{ variation: FontVariation.BODY }}>{data.validRequestMetric}</Text>
+                  <Text font={{ variation: FontVariation.BODY }}>{validRequestMetric}</Text>
                 </Layout.Horizontal>
               </Layout.Vertical>
             }
           />
-          <LabelAndValue
-            label={'Success criteria'}
-            value={`Good requests must be ${data.objectiveComparator} ${data.objectiveValue} of valid requests`}
-          />
+          {isWindow && (
+            <LabelAndValue
+              label={'Success criteria'}
+              value={`Good requests must be ${objectiveComparator} ${objectiveValue} of valid requests`}
+            />
+          )}
         </Layout.Vertical>
       )
+    }
     default:
       return <></>
   }

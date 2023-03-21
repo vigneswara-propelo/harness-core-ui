@@ -7,13 +7,24 @@
 
 import { isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import type { GetMetricOnboardingGraphPathParams, GetMetricOnboardingGraphQueryParams } from 'services/cv'
-import { SLIMetricTypes, SLOV2Form, SLOV2FormFields } from '../../CVCreateSLOV2.types'
+import type {
+  GetMetricOnboardingGraphPathParams,
+  GetMetricOnboardingGraphQueryParams,
+  ServiceLevelIndicatorDTO,
+  WindowBasedServiceLevelIndicatorSpec
+} from 'services/cv'
+import { EvaluationType, SLIMetricTypes, SLOV2Form, SLOV2FormFields } from '../../CVCreateSLOV2.types'
 import {
   validateErrorBudgetPolicy,
   validateSetSLOTimeWindow
 } from '../CreateCompositeSloForm/CreateCompositeSloForm.utils'
-import { CreateSimpleSLOSteps } from './CreateSimpleSloForm.types'
+import {
+  CreateSimpleSLOSteps,
+  GetMetricDefinitionsValues,
+  GetMetricsAndTypeProps,
+  GetSLIDerivedProps,
+  GetSLIDerivedValues
+} from './CreateSimpleSloForm.types'
 
 export const validateDefineSLOSection = (formikProps: FormikProps<SLOV2Form>): boolean => {
   formikProps.setFieldTouched(SLOV2FormFields.NAME, true)
@@ -31,7 +42,7 @@ export const validateDefineSLOSection = (formikProps: FormikProps<SLOV2Form>): b
 
 const isValidObjectiveValue = (value: number) => value >= 0 && value <= 99
 
-export const validateConfigureServiceLevelIndicatiors = (formikProps: FormikProps<SLOV2Form>): boolean => {
+const validateWindowBased = (values: SLOV2Form): boolean => {
   const {
     eventType,
     validRequestMetric,
@@ -40,7 +51,29 @@ export const validateConfigureServiceLevelIndicatiors = (formikProps: FormikProp
     objectiveComparator,
     objectiveValue,
     SLIMissingDataType
-  } = formikProps.values
+  } = values
+
+  if (!SLIMetricType) return false
+  if (!objectiveValue) return false
+  if (!objectiveComparator) return false
+  if (SLIMetricType && SLIMetricType === SLIMetricTypes.RATIO) {
+    if (!validRequestMetric || !goodRequestMetric || !eventType) return false
+    if (validRequestMetric === goodRequestMetric) return false
+    if (!isValidObjectiveValue(objectiveValue)) return false
+  }
+  if (!SLIMissingDataType) return false
+  return true
+}
+
+const validateRequestBased = (values: SLOV2Form): boolean => {
+  const { eventType, validRequestMetric, goodRequestMetric } = values
+  if (!validRequestMetric || !goodRequestMetric || !eventType) return false
+  if (validRequestMetric === goodRequestMetric) return false
+  return true
+}
+
+export const validateConfigureServiceLevelIndicatiors = (formikProps: FormikProps<SLOV2Form>): boolean => {
+  const { SLIMetricType, evaluationType } = formikProps.values
 
   formikProps.setTouched({
     [SLOV2FormFields.EVENT_TYPE]: SLIMetricType === SLIMetricTypes.RATIO,
@@ -53,16 +86,11 @@ export const validateConfigureServiceLevelIndicatiors = (formikProps: FormikProp
     [SLOV2FormFields.HEALTH_SOURCE_REF]: true
   })
 
-  if (!SLIMetricType) return false
-  if (!objectiveValue) return false
-  if (!objectiveComparator) return false
-  if (SLIMetricType && SLIMetricType === SLIMetricTypes.RATIO) {
-    if (!validRequestMetric || !goodRequestMetric || !eventType) return false
-    if (validRequestMetric === goodRequestMetric) return false
-    if (!isValidObjectiveValue(objectiveValue)) return false
+  if (evaluationType === EvaluationType.WINDOW) {
+    return validateWindowBased(formikProps.values)
+  } else {
+    return validateRequestBased(formikProps.values)
   }
-  if (!SLIMissingDataType) return false
-  return true
 }
 
 export const isFormDataValid = (formikProps: FormikProps<SLOV2Form>, selectedTabId: CreateSimpleSLOSteps): boolean => {
@@ -131,17 +159,19 @@ export const getErrorMessageByTabId = (
 }
 
 export const shouldFetchMetricGraph = ({
+  isWindow,
   eventType,
   isRatioBased,
   validRequestMetric,
   goodRequestMetric
 }: {
+  isWindow: boolean
   isRatioBased: boolean
   validRequestMetric?: string
   goodRequestMetric?: string
   eventType?: GetMetricOnboardingGraphQueryParams['ratioSLIMetricEventType']
 }): boolean => {
-  return isRatioBased
+  return shouldShowGoodMetric(isWindow, isRatioBased)
     ? (Boolean(validRequestMetric) || Boolean(goodRequestMetric)) &&
         validRequestMetric !== goodRequestMetric &&
         Boolean(eventType)
@@ -149,6 +179,7 @@ export const shouldFetchMetricGraph = ({
 }
 
 export const createMetricGraphPayload = ({
+  isWindow,
   eventType,
   isRatioBased,
   accountId,
@@ -159,6 +190,7 @@ export const createMetricGraphPayload = ({
   goodRequestMetric,
   monitoredServiceIdentifier
 }: {
+  isWindow: boolean
   isRatioBased: boolean
   eventType?: GetMetricOnboardingGraphQueryParams['ratioSLIMetricEventType']
   accountId: string
@@ -173,8 +205,13 @@ export const createMetricGraphPayload = ({
   pathParams: GetMetricOnboardingGraphPathParams
   body: string[]
 } => {
-  const eventTypeParam = isRatioBased ? { ratioSLIMetricEventType: eventType } : {}
-  const selectedMetricList = isRatioBased ? [goodRequestMetric, validRequestMetric] : [validRequestMetric]
+  const { eventTypeParam, selectedMetricList } = getMetricsAndType({
+    isWindow,
+    isRatioBased,
+    eventType,
+    goodRequestMetric,
+    validRequestMetric
+  })
   return {
     queryParams: {
       accountId,
@@ -188,4 +225,84 @@ export const createMetricGraphPayload = ({
     },
     body: selectedMetricList.filter(i => Boolean(i)) as string[]
   }
+}
+
+export const getSLIDerivedProps = ({
+  value,
+  sliGraphData,
+  isOccurenceBased
+}: GetSLIDerivedProps): GetSLIDerivedValues => {
+  const {
+    eventType,
+    healthSourceRef,
+    SLIMetricType,
+    evaluationType,
+    validRequestMetric,
+    objectiveValue,
+    objectiveComparator,
+    SLIMissingDataType,
+    goodRequestMetric,
+    serviceLevelIndicatorType
+  } = value
+  const isRatioBased = SLIMetricType === SLIMetricTypes.RATIO
+  const isWindow = evaluationType === EvaluationType.WINDOW
+  const metricsByType = shouldShowGoodMetric(isWindow, isRatioBased)
+    ? [eventType, validRequestMetric, goodRequestMetric]
+    : [validRequestMetric]
+
+  const ffBasedProp = isOccurenceBased ? [serviceLevelIndicatorType] : []
+  const valuesToDetermineReload = !isWindow
+    ? [healthSourceRef, ...metricsByType]
+    : [
+        healthSourceRef,
+        SLIMetricType,
+        ...metricsByType,
+        objectiveValue,
+        objectiveComparator,
+        SLIMissingDataType,
+        ...ffBasedProp
+      ]
+
+  const shouldFetchSliGraph = valuesToDetermineReload.reduce((total, data) => {
+    return Boolean(data) && total
+  }, true)
+
+  const showSLIMetricChart = shouldFetchMetricGraph({
+    isWindow,
+    isRatioBased,
+    validRequestMetric,
+    goodRequestMetric,
+    eventType
+  })
+
+  const sliAreaGraphData = shouldFetchSliGraph ? sliGraphData?.resource?.sliGraph : undefined
+  return { shouldFetchSliGraph, valuesToDetermineReload, showSLIMetricChart, isWindow, isRatioBased, sliAreaGraphData }
+}
+
+export const showGoodMetrics = (
+  evaluationType: ServiceLevelIndicatorDTO['type'],
+  SLIMetricType?: WindowBasedServiceLevelIndicatorSpec['type']
+): boolean => {
+  const isRatio = SLIMetricType === SLIMetricTypes.RATIO
+  const isWindow = evaluationType === EvaluationType.WINDOW
+  const isNotWindow = evaluationType !== EvaluationType.WINDOW
+  return (isRatio && isWindow) || isNotWindow
+}
+
+const shouldShowGoodMetric = (isWindow?: boolean, isRatioBased?: boolean): boolean =>
+  (isWindow && isRatioBased) || !isWindow
+
+const getMetricsAndType = ({
+  isWindow,
+  isRatioBased,
+  eventType,
+  goodRequestMetric,
+  validRequestMetric
+}: GetMetricsAndTypeProps): GetMetricDefinitionsValues => {
+  const showGoodMetric = shouldShowGoodMetric(isWindow, isRatioBased)
+  const eventTypeParam = (
+    showGoodMetric ? { ratioSLIMetricEventType: eventType } : {}
+  ) as GetMetricDefinitionsValues['eventTypeParam']
+  const selectedMetricList = showGoodMetric ? [goodRequestMetric, validRequestMetric] : [validRequestMetric]
+  return { eventTypeParam, selectedMetricList }
 }

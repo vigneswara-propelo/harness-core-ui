@@ -33,6 +33,7 @@ import {
   useSaveSLOV2Data,
   useUpdateSLOV2Data
 } from 'services/cv'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import sloReviewChange from '@cv/assets/sloReviewChange.svg'
 import {
@@ -51,7 +52,7 @@ import css from './components/CreateCompositeSloForm/CreateCompositeSloForm.modu
 const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element => {
   const history = useHistory()
   const { getString } = useStrings()
-
+  const { SRM_ENABLE_REQUEST_SLO } = useFeatureFlags()
   useDocumentTitle([getString('cv.srmTitle'), getString('cv.slos.title')])
 
   const { showSuccess, showError } = useToaster()
@@ -228,7 +229,11 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
         />
       )}
       <Formik<SLOV2Form>
-        initialValues={getSLOV2InitialFormData(sloType, SLODataResponse?.resource?.serviceLevelObjectiveV2)}
+        initialValues={getSLOV2InitialFormData(
+          sloType,
+          SLODataResponse?.resource?.serviceLevelObjectiveV2,
+          SRM_ENABLE_REQUEST_SLO
+        )}
         formName="SLO_form"
         onSubmit={values => {
           handleSLOV2Submit(values)

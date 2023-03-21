@@ -9,8 +9,11 @@ import React, { useCallback, useMemo } from 'react'
 import { Button, ButtonVariation, Layout, Select } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { SLODashbordFiltersProps } from './SLODashboardFilters.types'
 import {
+  getEvaluationTypeOptionsForFilter,
   getIsClearFilterDisabled,
   getIsMonitoresServicePageClearFilterDisabled,
   getMonitoredServicesOptionsForFilter,
@@ -29,7 +32,7 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
   isAccountLevel
 }) => {
   const { getString } = useStrings()
-
+  const SRM_ENABLE_REQUEST_SLO = useFeatureFlag(FeatureFlag.SRM_ENABLE_REQUEST_SLO)
   const resetFilters = useCallback(() => {
     dispatch(SLODashboardFilterActions.resetFilters())
   }, [])
@@ -106,6 +109,23 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
               value: defaultTo(filterState?.sliTypes?.value, getString('all'))
             }}
             items={getSliTypeOptionsForFilter(getString)}
+            onChange={item => {
+              dispatch(updateSliType({ sliTypes: item }))
+            }}
+          />
+        </Layout.Vertical>
+      )}
+      {!isAccountLevel && SRM_ENABLE_REQUEST_SLO && (
+        <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="evaluationType-filter">
+          <Select
+            value={{
+              label: `${getString('common.policy.evaluations')}: ${defaultTo(
+                filterState?.sliTypes?.label,
+                getString('all')
+              )}`,
+              value: defaultTo(filterState?.sliTypes?.value, getString('all'))
+            }}
+            items={getEvaluationTypeOptionsForFilter(getString)}
             onChange={item => {
               dispatch(updateSliType({ sliTypes: item }))
             }}

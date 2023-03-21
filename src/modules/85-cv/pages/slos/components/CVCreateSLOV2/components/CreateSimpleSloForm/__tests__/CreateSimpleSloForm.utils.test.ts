@@ -157,6 +157,7 @@ describe('validateConfigureServiceLevelIndicatiors', () => {
 
   test('should return correct payload for metric graph', () => {
     const params = {
+      isWindow: true,
       eventType: 'Good' as GetMetricOnboardingGraphQueryParams['ratioSLIMetricEventType'],
       accountId: 'accountId',
       orgIdentifier: 'orgIdentifier',

@@ -10,7 +10,14 @@ import { projectPathProps } from '@common/utils/routeUtils'
 import type { TestWrapperProps } from '@common/utils/testUtils'
 import { cvModuleParams } from '@cv/RouteDestinations'
 import type { ServiceLevelIndicatorDTO } from 'services/cv'
-import { Comparators, SLIEventTypes, SLIMetricTypes, SLIMissingDataTypes, SLOV2Form } from '../CVCreateSLOV2.types'
+import {
+  Comparators,
+  EvaluationType,
+  SLIEventTypes,
+  SLIMetricTypes,
+  SLIMissingDataTypes,
+  SLOV2Form
+} from '../CVCreateSLOV2.types'
 import { getSLOV2InitialFormData } from '../CVCreateSLOV2.utils'
 
 export const errorMessage = 'TEST ERROR MESSAGE'
@@ -121,7 +128,8 @@ export const serviceLevelIndicator: ServiceLevelIndicatorDTO = {
       thresholdType: Comparators.LESS,
       thresholdValue: 10
     } as any
-  }
+  },
+  type: EvaluationType.WINDOW
 }
 
 export const notificationMock = {

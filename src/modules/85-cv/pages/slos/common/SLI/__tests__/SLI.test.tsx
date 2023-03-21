@@ -22,6 +22,8 @@ import {
 } from '@cv/pages/slos/components/CVCreateSLOV2/__tests__/CVCreateSLOV2.mock'
 import type { StringKeys } from 'framework/strings'
 import { getSLITypeOptions, getSLIMetricOptions } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
+import { EvaluationType, SLIMetricTypes } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import { shouldFetchMetricGraph } from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateSimpleSloForm/CreateSimpleSloForm.utils'
 import type { MonitoredServiceDTO, ResponsePageMSDropdownResponse } from 'services/cv'
 import { getMonitoredServicesOptions } from '../SLI.utils'
 import SLI from '../SLI'
@@ -32,6 +34,7 @@ import {
   mockedMonitoredServiceDataWithNullData,
   monitoredServiceMockData
 } from './SLI.mock'
+import { ConfigureSLIProvider } from '../SLIContext'
 
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
@@ -53,9 +56,25 @@ function WrapperComponent(props: { initialValues: any }): JSX.Element {
         onSubmit={jest.fn()}
       >
         {formikProps => {
+          const { eventType, evaluationType, SLIMetricType, goodRequestMetric, validRequestMetric } = formikProps.values
+          const isWindowBased = evaluationType === EvaluationType.WINDOW
+          const isRatioBased = SLIMetricType === SLIMetricTypes.RATIO
+          const showSLIMetricChart = shouldFetchMetricGraph({
+            isWindow: isWindowBased,
+            isRatioBased,
+            validRequestMetric,
+            goodRequestMetric,
+            eventType
+          })
           return (
             <FormikForm>
-              <SLI formikProps={formikProps} retryOnError={jest.fn()} />
+              <ConfigureSLIProvider
+                isWindowBased={isWindowBased}
+                isRatioBased={isRatioBased}
+                showSLIMetricChart={showSLIMetricChart}
+              >
+                <SLI showMetricChart formikProps={formikProps} retryOnError={jest.fn()} />
+              </ConfigureSLIProvider>
             </FormikForm>
           )
         }}
@@ -167,8 +186,6 @@ describe('Test SLI component', () => {
     await act(() => {
       fireEvent.click(document.querySelectorAll('ul.bp3-menu li')[1])
     })
-    expect(container.querySelector('input[name="goodRequestMetric"]')).toHaveValue('appdMetric 1')
-
     expect(container.querySelector('input[name="goodRequestMetric"]')).toHaveValue('appdMetric 1')
     expect(container.querySelector('div[data-testid="appdMetric_1_metricChart"]')).toBeInTheDocument()
     expect(container.querySelector('div[data-testid="appdMetric_2_metricChart"]')).toBeInTheDocument()

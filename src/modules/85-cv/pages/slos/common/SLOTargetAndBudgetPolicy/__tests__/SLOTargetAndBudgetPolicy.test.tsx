@@ -20,6 +20,7 @@ import {
   getPeriodLengthOptionsForRolling
 } from '../SLOTargetAndBudgetPolicy.utils'
 import SLOTargetAndBudgetPolicy from '../SLOTargetAndBudgetPolicy'
+import { ConfigureSLIProvider } from '../../SLI/SLIContext'
 
 jest.mock('@cv/pages/slos/components/SLOTargetChart/SLOTargetChart', () => ({
   __esModule: true,
@@ -69,7 +70,11 @@ describe('Test SLOTargetAndBudgetPolicy component', () => {
   })
 
   test('should render SLOTargetAndBudgetPolicy component', async () => {
-    const { container } = render(<WrapperComponent initialValues={initialFormData} />)
+    const { container } = render(
+      <ConfigureSLIProvider isWindowBased isRatioBased showSLIMetricChart>
+        <WrapperComponent initialValues={initialFormData} />
+      </ConfigureSLIProvider>
+    )
     expect(screen.getByTestId('SLO-target-chart')).toBeInTheDocument()
     expect(container.querySelector('input[name="SLOTargetPercentage"]')).toHaveAttribute('step', 'any')
     expect(container).toMatchSnapshot()

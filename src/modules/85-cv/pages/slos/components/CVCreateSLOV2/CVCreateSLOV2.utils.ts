@@ -17,13 +17,15 @@ import type {
   MonitoredServiceDTO,
   MonitoredServiceWithHealthSources,
   RatioSLIMetricSpec,
+  RequestBasedServiceLevelIndicatorSpec,
   RollingSLOTargetSpec,
   ServiceLevelIndicatorDTO,
   ServiceLevelObjectiveDetailsDTO,
   ServiceLevelObjectiveV2DTO,
   SLOTargetDTO,
   ThresholdSLIMetricSpec,
-  UserJourneyResponse
+  UserJourneyResponse,
+  WindowBasedServiceLevelIndicatorSpec
 } from 'services/cv'
 import {
   PeriodLengthTypes,
@@ -35,7 +37,8 @@ import {
   SLIMetricTypes,
   GetMetricFormValueBySLIMetricTypeProps,
   GetSLOIdentifierWithOrgAndProjectProps,
-  GetMetricRequestValuesBySLIMetricTypeProps
+  GetMetricRequestValuesBySLIMetricTypeProps,
+  EvaluationType
 } from './CVCreateSLOV2.types'
 import { serviceLevelObjectiveKeys } from './components/CreateCompositeSloForm/CreateCompositeSloForm.constant'
 import type { SLIForm } from './components/CreateSimpleSloForm/CreateSimpleSloForm.types'
@@ -51,9 +54,35 @@ export const filterServiceLevelObjectivesDetailsFromSLOObjective = (
       })
     : []
 
+const populateMetricInSLOForm = (serviceLevelObjective: ServiceLevelObjectiveV2DTO) => {
+  const { spec } = serviceLevelObjective
+  const { serviceLevelIndicators } = spec || {}
+  const [data] = serviceLevelIndicators || {}
+  return data?.type === EvaluationType.REQUEST
+    ? {
+        [SLOV2FormFields.EVENT_TYPE]: data?.spec?.eventType,
+        ...getMetricFormValuesBySLIMetricType({
+          evaluationType: data?.type,
+          sliMetricType: data?.spec?.type,
+          metric1: data?.spec?.metric1,
+          metric2: data?.spec?.metric2
+        })
+      }
+    : {
+        [SLOV2FormFields.EVENT_TYPE]: data?.spec?.spec?.eventType,
+        ...getMetricFormValuesBySLIMetricType({
+          evaluationType: data?.type,
+          sliMetricType: data?.spec?.type,
+          metric1: data?.spec?.spec?.metric1,
+          metric2: data?.spec?.spec?.metric2
+        })
+      }
+}
+
 export const getSLOV2InitialFormData = (
   sloType: ServiceLevelObjectiveV2DTO['type'],
-  serviceLevelObjective?: ServiceLevelObjectiveV2DTO
+  serviceLevelObjective?: ServiceLevelObjectiveV2DTO,
+  occurenceBased = false
 ): SLOV2Form => {
   if (serviceLevelObjective) {
     if (sloType === 'Simple') {
@@ -81,16 +110,15 @@ export const getSLOV2InitialFormData = (
           serviceLevelObjective.spec?.serviceLevelIndicatorType,
           SLITypes.AVAILABILITY
         ),
+        [SLOV2FormFields.EVALUATION_TYPE]: defaultTo(
+          serviceLevelObjective.spec?.serviceLevelIndicators?.[0]?.type,
+          EvaluationType.WINDOW
+        ),
         [SLOV2FormFields.SLI_METRIC_TYPE]: defaultTo(
           serviceLevelObjective.spec?.serviceLevelIndicators?.[0]?.spec?.type,
           SLIMetricTypes.THRESHOLD
         ),
-        [SLOV2FormFields.EVENT_TYPE]: serviceLevelObjective.spec?.serviceLevelIndicators?.[0]?.spec?.spec?.eventType,
-        ...getMetricFormValuesBySLIMetricType({
-          sliMetricType: serviceLevelObjective.spec?.serviceLevelIndicators?.[0]?.spec?.type,
-          metric1: serviceLevelObjective.spec?.serviceLevelIndicators?.[0]?.spec?.spec?.metric1,
-          metric2: serviceLevelObjective.spec?.serviceLevelIndicators?.[0]?.spec?.spec?.metric2
-        }),
+        ...populateMetricInSLOForm(serviceLevelObjective),
         [SLOV2FormFields.OBJECTIVE_VALUE]:
           serviceLevelObjective.spec?.serviceLevelIndicators?.[0]?.spec?.spec?.thresholdValue,
         [SLOV2FormFields.OBJECTIVE_COMPARATOR]:
@@ -129,9 +157,15 @@ export const getSLOV2InitialFormData = (
       }
     }
   } else {
+    const featureFlagBasedProp = occurenceBased
+      ? {}
+      : {
+          [SLOV2FormFields.SERVICE_LEVEL_INDICATOR_TYPE]: SLITypes.AVAILABILITY
+        }
     const simpleSLODefaults = {
-      [SLOV2FormFields.SERVICE_LEVEL_INDICATOR_TYPE]: SLITypes.AVAILABILITY,
-      [SLOV2FormFields.SLI_METRIC_TYPE]: SLIMetricTypes.RATIO
+      ...featureFlagBasedProp,
+      [SLOV2FormFields.SLI_METRIC_TYPE]: SLIMetricTypes.RATIO,
+      [SLOV2FormFields.EVALUATION_TYPE]: EvaluationType.WINDOW
     }
     let defaultValues = {}
     if (sloType === 'Simple') {
@@ -185,6 +219,7 @@ export const getSLOTarget = (values: SLOV2Form): SLOTargetDTO['spec'] => {
 }
 
 export const getMetricValuesBySLIMetricType = ({
+  evaluationType,
   sliMetricType = '',
   validRequestMetric = '',
   goodRequestMetric
@@ -192,7 +227,8 @@ export const getMetricValuesBySLIMetricType = ({
   metric1: string
   metric2?: string
 } => {
-  return sliMetricType === SLIMetricTypes.RATIO
+  const isRequest = evaluationType === EvaluationType.REQUEST
+  return (!isRequest && sliMetricType === SLIMetricTypes.RATIO) || isRequest
     ? {
         metric1: goodRequestMetric ?? '',
         metric2: validRequestMetric
@@ -204,6 +240,7 @@ export const getMetricValuesBySLIMetricType = ({
 }
 
 export const getMetricFormValuesBySLIMetricType = ({
+  evaluationType,
   sliMetricType = '',
   metric1 = '',
   metric2
@@ -211,7 +248,8 @@ export const getMetricFormValuesBySLIMetricType = ({
   validRequestMetric: string
   goodRequestMetric?: string
 } => {
-  return sliMetricType === SLIMetricTypes.RATIO
+  const isRequest = evaluationType === EvaluationType.REQUEST
+  return (!isRequest && sliMetricType === SLIMetricTypes.RATIO) || isRequest
     ? {
         validRequestMetric: metric2 ?? '',
         goodRequestMetric: metric1
@@ -222,6 +260,69 @@ export const getMetricFormValuesBySLIMetricType = ({
       }
 }
 
+const createRequestBasedServiceLevelIndicatorSpec = (values: SLOV2Form): RequestBasedServiceLevelIndicatorSpec => {
+  const { eventType, goodRequestMetric, validRequestMetric } = values
+  const data = {
+    eventType,
+    metric1: goodRequestMetric,
+    metric2: validRequestMetric
+  }
+  return data as RequestBasedServiceLevelIndicatorSpec
+}
+
+const createWindowBasedServiceLevelIndicatorSpec = (values: SLOV2Form): WindowBasedServiceLevelIndicatorSpec => {
+  const { SLIMissingDataType, SLIMetricType } = values
+  const isRatio = SLIMetricType === SLIMetricTypes.RATIO
+  const data = {
+    sliMissingDataType: SLIMissingDataType,
+    type: SLIMetricType,
+    spec: isRatio ? createRatioSLIMetricSpec(values) : createThresholdSLIMetricSpec(values)
+  }
+  return data
+}
+
+const createThresholdSLIMetricSpec = (values: SLOV2Form): ThresholdSLIMetricSpec => {
+  const { validRequestMetric, objectiveComparator, objectiveValue } = values
+  const data = {
+    metric1: validRequestMetric,
+    thresholdType: objectiveComparator,
+    thresholdValue: objectiveValue
+  }
+  return data as ThresholdSLIMetricSpec
+}
+
+const createRatioSLIMetricSpec = (values: SLOV2Form): RatioSLIMetricSpec => {
+  const { eventType, validRequestMetric, goodRequestMetric, objectiveComparator, objectiveValue } = values
+  const data = {
+    eventType,
+    metric1: goodRequestMetric,
+    metric2: validRequestMetric,
+    thresholdType: objectiveComparator,
+    thresholdValue: objectiveValue
+  }
+  return data as RatioSLIMetricSpec
+}
+
+export const getSpecData = (
+  values: SLOV2Form
+): WindowBasedServiceLevelIndicatorSpec | RequestBasedServiceLevelIndicatorSpec => {
+  const { evaluationType } = values
+  return evaluationType === EvaluationType.WINDOW
+    ? createWindowBasedServiceLevelIndicatorSpec(values)
+    : createRequestBasedServiceLevelIndicatorSpec(values)
+}
+
+export const convertSLOFormDataToServiceLevelIndicatorDTO = (values: SLOV2Form): ServiceLevelIndicatorDTO => {
+  return {
+    name: values.name,
+    identifier: values.identifier,
+    healthSourceRef: values.healthSourceRef,
+    type: values.evaluationType,
+    sliMissingDataType: values?.SLIMissingDataType,
+    spec: getSpecData(values)
+  }
+}
+
 export const createSLOV2RequestPayload = (
   values: SLOV2Form,
   orgIdentifier: string,
@@ -229,6 +330,13 @@ export const createSLOV2RequestPayload = (
 ): ServiceLevelObjectiveV2DTO => {
   const sloType = values.type
   if (sloType === 'Simple') {
+    const serviceLevelIndicators = {
+      name: `${values.monitoredServiceRef}_${values.healthSourceRef}_${values.identifier}_${uuid()}}`,
+      identifier: `${values.monitoredServiceRef}_${values.healthSourceRef}_${values.identifier}_${uuid()}`,
+      type: values.evaluationType,
+      spec: getSpecData(values)
+    }
+
     return {
       name: values.name,
       type: values.type,
@@ -248,26 +356,7 @@ export const createSLOV2RequestPayload = (
         monitoredServiceRef: values.monitoredServiceRef,
         healthSourceRef: values.healthSourceRef,
         serviceLevelIndicatorType: values.serviceLevelIndicatorType,
-        serviceLevelIndicators: [
-          {
-            name: `${values.monitoredServiceRef}_${values.healthSourceRef}_${values.identifier}_${uuid()}}`,
-            identifier: `${values.monitoredServiceRef}_${values.healthSourceRef}_${values.identifier}_${uuid()}`,
-            spec: {
-              type: values.SLIMetricType,
-              spec: {
-                eventType: values.SLIMetricType === SLIMetricTypes.RATIO ? values.eventType : undefined,
-                ...getMetricValuesBySLIMetricType({
-                  sliMetricType: values.SLIMetricType,
-                  goodRequestMetric: values.goodRequestMetric,
-                  validRequestMetric: values.validRequestMetric
-                }),
-                thresholdValue: values.objectiveValue,
-                thresholdType: values.objectiveComparator
-              }
-            },
-            sliMissingDataType: values.SLIMissingDataType
-          }
-        ]
+        serviceLevelIndicators: [{ ...serviceLevelIndicators }]
       }
     }
   } else {
@@ -372,6 +461,7 @@ export const getSimpleSLOV2FormValidationSchema = (getString: UseStringsReturn['
       getString('connectors.cdng.validations.monitoringServiceRequired')
     ),
     [SLOV2FormFields.HEALTH_SOURCE_REF]: Yup.string().required(getString('cv.slos.validations.healthSourceRequired')),
+
     [SLOV2FormFields.EVENT_TYPE]: Yup.string().when(SLOV2FormFields.SLI_METRIC_TYPE, {
       is: SLIMetricType => SLIMetricType === SLIMetricTypes.RATIO,
       then: Yup.string().nullable().required(REQUIRED)
@@ -391,18 +481,27 @@ export const getSimpleSLOV2FormValidationSchema = (getString: UseStringsReturn['
             : true
         }
       ),
-    [SLOV2FormFields.OBJECTIVE_VALUE]: Yup.number()
-      .typeError(REQUIRED)
-      .min(0, getString('cv.minValueN', { n: 0 }))
-      .when([SLOV2FormFields.SLI_METRIC_TYPE], {
-        is: SLIMetricType => SLIMetricType === SLIMetricTypes.RATIO,
-        then: Yup.number()
-          .typeError(REQUIRED)
-          .max(100, getString('cv.maxValue', { n: 100 }))
-      })
-      .required(REQUIRED),
-    [SLOV2FormFields.OBJECTIVE_COMPARATOR]: Yup.string().required(REQUIRED),
-    [SLOV2FormFields.SLI_MISSING_DATA_TYPE]: Yup.string().required(getString('cv.sliMissingDataTypeIsRequired')),
+    [SLOV2FormFields.OBJECTIVE_VALUE]: Yup.number().when(SLOV2FormFields.EVALUATION_TYPE, {
+      is: evaluationType => evaluationType === EvaluationType.WINDOW,
+      then: Yup.number()
+        .typeError(REQUIRED)
+        .min(0, getString('cv.minValueN', { n: 0 }))
+        .when([SLOV2FormFields.SLI_METRIC_TYPE], {
+          is: SLIMetricType => SLIMetricType === SLIMetricTypes.RATIO,
+          then: Yup.number()
+            .typeError(REQUIRED)
+            .max(100, getString('cv.maxValue', { n: 100 }))
+        })
+        .required(REQUIRED)
+    }),
+    [SLOV2FormFields.OBJECTIVE_COMPARATOR]: Yup.string().when(SLOV2FormFields.EVALUATION_TYPE, {
+      is: evaluationType => evaluationType === EvaluationType.WINDOW,
+      then: Yup.string().required(REQUIRED)
+    }),
+    [SLOV2FormFields.SLI_MISSING_DATA_TYPE]: Yup.string().when(SLOV2FormFields.EVALUATION_TYPE, {
+      is: evaluationType => evaluationType === EvaluationType.WINDOW,
+      then: Yup.string().required(getString('cv.sliMissingDataTypeIsRequired'))
+    }),
     [SLOV2FormFields.PERIOD_LENGTH]: Yup.string().when([SLOV2FormFields.PERIOD_TYPE], {
       is: periodType => periodType === PeriodTypes.ROLLING,
       then: Yup.string().nullable().required(getString('cv.periodLengthIsRequired'))
@@ -468,9 +567,16 @@ export const getCustomOptionsForSLOTargetChart = (
   }
 }
 
-export const convertSLOFormDataToServiceLevelIndicatorDTO = (values: SLOV2Form): ServiceLevelIndicatorDTO => {
+export const convertSLOFormDataToServiceLevelIndicatorDTO_Old = (values: SLOV2Form): ServiceLevelIndicatorDTO => {
+  const metric = getMetricValuesBySLIMetricType({
+    evaluationType: values.evaluationType,
+    sliMetricType: values.SLIMetricType,
+    goodRequestMetric: values.goodRequestMetric,
+    validRequestMetric: values.validRequestMetric
+  })
   return {
     name: values.name,
+    type: values.evaluationType,
     identifier: values.identifier,
     healthSourceRef: values.healthSourceRef,
     sliMissingDataType: values.SLIMissingDataType as any,
@@ -478,11 +584,7 @@ export const convertSLOFormDataToServiceLevelIndicatorDTO = (values: SLOV2Form):
       type: values.SLIMetricType,
       spec: {
         eventType: values.SLIMetricType === SLIMetricTypes.RATIO ? values.eventType : undefined,
-        ...getMetricValuesBySLIMetricType({
-          sliMetricType: values.SLIMetricType,
-          goodRequestMetric: values.goodRequestMetric,
-          validRequestMetric: values.validRequestMetric
-        }),
+        ...metric,
         thresholdValue: values.objectiveValue,
         thresholdType: values.objectiveComparator
       } as ThresholdSLIMetricSpec & RatioSLIMetricSpec
@@ -491,19 +593,21 @@ export const convertSLOFormDataToServiceLevelIndicatorDTO = (values: SLOV2Form):
 }
 
 export const convertServiceLevelIndicatorToSLIFormData = (serviceLevelIndicator: ServiceLevelIndicatorDTO): SLIForm => {
-  const { type: SLIType, name, identifier, healthSourceRef, sliMissingDataType, spec } = serviceLevelIndicator
+  const { type, name, identifier, healthSourceRef, sliMissingDataType, spec } = serviceLevelIndicator
+  const isWindow = type === EvaluationType.WINDOW
   const { type: SLIMetricType, spec: SLIMetricSpec } = spec
-  const { eventType, metric1, metric2, thresholdValue, thresholdType } = SLIMetricSpec as ThresholdSLIMetricSpec &
-    RatioSLIMetricSpec
+  const { eventType, metric1, metric2, thresholdValue, thresholdType } = isWindow
+    ? ((SLIMetricSpec || {}) as ThresholdSLIMetricSpec & RatioSLIMetricSpec)
+    : spec
 
   return {
     name,
     identifier,
     healthSourceRef,
-    SLIType,
+    evaluationType: type,
     SLIMetricType,
     eventType,
-    ...getMetricFormValuesBySLIMetricType({ sliMetricType: SLIMetricType, metric1, metric2 }),
+    ...getMetricFormValuesBySLIMetricType({ evaluationType: type, sliMetricType: SLIMetricType, metric1, metric2 }),
     objectiveValue: thresholdValue,
     objectiveComparator: thresholdType,
     SLIMissingDataType: sliMissingDataType

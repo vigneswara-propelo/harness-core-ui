@@ -14,14 +14,17 @@ import type {
   SLOTargetDTO,
   CalenderSLOTargetSpec,
   WeeklyCalendarSpec,
-  NotificationRuleRefDTO
+  NotificationRuleRefDTO,
+  RestResponseSLIOnboardingGraphs,
+  TimeGraphResponse,
+  GetMetricOnboardingGraphQueryParams
 } from 'services/cv'
 import type { SLOTargetChartWithAPIGetSliGraphProps } from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart.types'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { SLOV2Form, SLOV2FormFields } from '../../CVCreateSLOV2.types'
 
 export interface SLIForm {
-  [SLOV2FormFields.SLI_TYPE]: ServiceLevelIndicatorDTO['type']
+  [SLOV2FormFields.EVALUATION_TYPE]: ServiceLevelIndicatorDTO['type']
   [SLOV2FormFields.SLI_METRIC_TYPE]?: ServiceLevelIndicatorSpec['type']
   [SLOV2FormFields.EVENT_TYPE]?: RatioSLIMetricSpec['eventType']
   [SLOV2FormFields.VALID_REQUEST_METRIC]: string
@@ -82,4 +85,32 @@ export enum CreateSimpleSLOSteps {
   Configure_Service_Level_Indicatiors = 'Configure_Service_Level_Indicatiors',
   Set_SLO = 'Set_SLO',
   Error_Budget_Policy = 'Error_Budget_Policy'
+}
+
+export interface GetSLIDerivedProps {
+  value: SLOV2Form
+  sliGraphData: RestResponseSLIOnboardingGraphs | null
+  isOccurenceBased?: boolean
+}
+
+export interface GetSLIDerivedValues {
+  shouldFetchSliGraph: boolean
+  valuesToDetermineReload: any[]
+  showSLIMetricChart: boolean
+  isWindow: boolean
+  isRatioBased: boolean
+  sliAreaGraphData?: TimeGraphResponse
+}
+
+export interface GetMetricsAndTypeProps {
+  isWindow: boolean
+  isRatioBased: boolean
+  eventType?: string
+  goodRequestMetric?: string
+  validRequestMetric?: string
+}
+
+export interface GetMetricDefinitionsValues {
+  eventTypeParam?: { ratioSLIMetricEventType?: GetMetricOnboardingGraphQueryParams['ratioSLIMetricEventType'] }
+  selectedMetricList: (string | undefined)[]
 }

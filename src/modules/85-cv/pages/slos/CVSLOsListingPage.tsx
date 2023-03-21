@@ -83,6 +83,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   const history = useHistory()
   const { getString } = useStrings()
   const SRM_COMPOSITE_SLO = useFeatureFlag(FeatureFlag.SRM_COMPOSITE_SLO)
+  const SRM_ENABLE_REQUEST_SLO = useFeatureFlag(FeatureFlag.SRM_ENABLE_REQUEST_SLO)
   const monitoredServiceIdentifier = useMemo(() => monitoredService?.identifier, [monitoredService?.identifier])
   useDocumentTitle([getString('cv.srmTitle'), getServiceTitle(getString, monitoredServiceIdentifier)])
 
@@ -396,6 +397,21 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     )
   }
 
+  const RenderEvaluationType: Renderer<CellProps<any>> = ({ row }) => {
+    const slo = row?.original
+    const { evaluationType = '' } = slo || {}
+    return (
+      <Text
+        className={css.titleInSloTable}
+        title={evaluationType}
+        font={{ align: 'left', size: 'normal', weight: 'light' }}
+        color={Color.GREY_900}
+      >
+        {evaluationType}
+      </Text>
+    )
+  }
+
   const RenderTarget: Renderer<CellProps<any>> = ({ row }) => {
     const slo = row.original
     return (
@@ -473,6 +489,16 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     )
   }
 
+  const evaluationColumn = SRM_ENABLE_REQUEST_SLO
+    ? [
+        {
+          Header: getString('common.policy.evaluations').toUpperCase(),
+          width: '7%',
+          Cell: RenderEvaluationType
+        }
+      ]
+    : []
+
   const columns = [
     {
       Header: getString('cv.slos.sloName').toUpperCase(),
@@ -481,9 +507,10 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     },
     {
       Header: getString('cv.slos.monitoredService').toUpperCase(),
-      width: '19%',
+      width: SRM_ENABLE_REQUEST_SLO ? '12%' : '19%',
       Cell: RenderMonitoredService
     },
+    ...evaluationColumn,
     {
       Header: getString('cv.slos.status').toUpperCase(),
       width: '12%',
