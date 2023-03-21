@@ -190,6 +190,7 @@ export const DelegateSelectorsV2 = (props: DelegateSelectorsV2Props): React.Reac
           connected: false
         }
       }}
+      resetOnSelect
       onItemSelect={(item: DelegateSelector) => {
         const isNewlyCreatedTag = !listContainsTag(delegateSelectors, item)
         if (isNewlyCreatedTag && !validateNewTag(item?.name || '')) {
