@@ -8,6 +8,7 @@
 export enum ProvisionerTypes {
   Terraform = 'Terraform',
   Terragrunt = 'Terragrunt',
+  TerraformCloud = 'Terraform Cloud',
   CloudFormation = 'CloudFormation',
   ARM = 'ARM',
   Blueprint = 'Blueprint',
@@ -20,6 +21,8 @@ export const payloadValueforProvisionerTypes = (provisionerTypes: ProvisionerTyp
       return 'TERRAFORM'
     case ProvisionerTypes.Terragrunt:
       return 'TERRAGRUNT'
+    case ProvisionerTypes.TerraformCloud:
+      return 'TERRAFORM_CLOUD'
     case ProvisionerTypes.CloudFormation:
       return 'CLOUD_FORMATION'
     case ProvisionerTypes.ARM:

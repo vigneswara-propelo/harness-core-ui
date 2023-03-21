@@ -52,6 +52,7 @@ describe('Choose Provisioner tests', () => {
   test('payloadValueforProvisionerTypes function', () => {
     expect(payloadValueforProvisionerTypes(ProvisionerTypes.Terraform)).toBe('TERRAFORM')
     expect(payloadValueforProvisionerTypes(ProvisionerTypes.Terragrunt)).toBe('TERRAGRUNT')
+    expect(payloadValueforProvisionerTypes(ProvisionerTypes.TerraformCloud)).toBe('TERRAFORM_CLOUD')
     expect(payloadValueforProvisionerTypes(ProvisionerTypes.CloudFormation)).toBe('CLOUD_FORMATION')
     expect(payloadValueforProvisionerTypes(ProvisionerTypes.ARM)).toBe('AZURE_ARM')
     expect(payloadValueforProvisionerTypes(ProvisionerTypes.Blueprint)).toBe('AZURE_BLUEPRINT')

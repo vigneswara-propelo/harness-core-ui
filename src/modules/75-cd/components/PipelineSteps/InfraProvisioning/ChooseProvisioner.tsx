@@ -27,7 +27,7 @@ interface ProvDialogProps {
 
 const ProvDialog = ({ onClose, hideModal, provData, onSubmit }: ProvDialogProps) => {
   const { getString } = useStrings()
-  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, CDS_TERRAFORM_CLOUD } = useFeatureFlags()
   const [provisioner, setProvisioner] = useState<ProvisionerTypes>(ProvisionerTypes.Terraform)
   const modalProps = {
     isOpen: true,
@@ -44,6 +44,11 @@ const ProvDialog = ({ onClose, hideModal, provData, onSubmit }: ProvDialogProps)
       name: ProvisionerTypes.Terragrunt,
       icon: 'service-terragrunt',
       enabled: !!NG_SVC_ENV_REDESIGN
+    },
+    {
+      name: ProvisionerTypes.TerraformCloud,
+      icon: 'terraform-cloud',
+      enabled: !!NG_SVC_ENV_REDESIGN && !!CDS_TERRAFORM_CLOUD
     },
     {
       name: ProvisionerTypes.CloudFormation,
