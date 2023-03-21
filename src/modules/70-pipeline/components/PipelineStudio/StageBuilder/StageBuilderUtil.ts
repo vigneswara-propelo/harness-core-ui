@@ -765,6 +765,9 @@ export const getParentPropagatedStage = (stage?: StageElementConfig): string | u
 }
 
 export const getDependentPropagatingStages = (pipeline: PipelineInfoConfig, node?: StageElementWrapper): string[] => {
+  if (!node?.stage?.identifier) {
+    return []
+  }
   const dependentStages: string[] = []
   const flattenedStages = getFlattenedStages(pipeline).stages
 
