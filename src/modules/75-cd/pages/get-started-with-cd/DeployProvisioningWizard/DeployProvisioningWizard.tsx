@@ -116,21 +116,6 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSectionId])
 
-  const alertUser = (event: BeforeUnloadEvent): string => {
-    const listener = event || window.event
-    listener.preventDefault()
-    if (listener) {
-      listener.returnValue = ''
-    }
-    return ''
-  }
-  React.useEffect(() => {
-    window.addEventListener('beforeunload', alertUser)
-    return () => {
-      window.removeEventListener('beforeunload', alertUser)
-    }
-  }, [])
-
   const deletionContentText = (
     <Text color={Color.BLACK} padding="medium">
       {`${getString('cd.getStartedWithCD.delegateRequiredWarning')} `}
