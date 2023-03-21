@@ -7,7 +7,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, isNil } from 'lodash-es'
+import { defaultTo, isEqual, isNil } from 'lodash-es'
 
 import { shouldShowError, useToaster } from '@harness/uicore'
 
@@ -19,6 +19,11 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGetEnvironmentGroupList } from 'services/cd-ng'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { EnvironmentGroupData } from '../types'
+
+export interface UseGetEnvironmentGroupsDataProps {
+  environmentGroupIdentifiers: string[]
+  scope?: Scope
+}
 export interface UseGetEnvironmentGroupsDataReturn {
   environmentGroupsList: EnvironmentGroupData[]
   loadingEnvironmentGroupsList: boolean
@@ -26,9 +31,13 @@ export interface UseGetEnvironmentGroupsDataReturn {
   refetchEnvironmentGroupsList(): void
   /** Used to prepend data to `environmentGroupsList` */
   prependEnvironmentGroupToEnvironmentGroupsList(newEnvironmentGroupInfo: EnvironmentGroupData): void
+  nonExistingEnvironmentGroupIdentifiers: string[]
 }
 
-export function useGetEnvironmentGroupsData(scope?: Scope): UseGetEnvironmentGroupsDataReturn {
+export function useGetEnvironmentGroupsData({
+  scope,
+  environmentGroupIdentifiers
+}: UseGetEnvironmentGroupsDataProps): UseGetEnvironmentGroupsDataReturn {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -36,6 +45,7 @@ export function useGetEnvironmentGroupsData(scope?: Scope): UseGetEnvironmentGro
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   // State
   const [environmentGroupsList, setEnvironmentGroupsList] = useState<EnvironmentGroupData[]>([])
+  const [nonExistingEnvironmentGroupIdentifiers, setNonExistingEnvironmentGroupIdentifiers] = useState<string[]>([])
 
   const {
     data: environmentGroupsListResponse,
@@ -72,6 +82,16 @@ export function useGetEnvironmentGroupsData(scope?: Scope): UseGetEnvironmentGro
       }
 
       setEnvironmentGroupsList(_environmentGroupsList)
+
+      const environmentGroupListIdentifiers = _environmentGroupsList.map(
+        envGroupInList => envGroupInList.envGroup?.identifier
+      )
+      const _nonExistingEnvironmentGroupIdentifiers = environmentGroupIdentifiers.filter(
+        envGroupInList => environmentGroupListIdentifiers.indexOf(envGroupInList) === -1
+      )
+      if (!isEqual(_nonExistingEnvironmentGroupIdentifiers, nonExistingEnvironmentGroupIdentifiers)) {
+        setNonExistingEnvironmentGroupIdentifiers(_nonExistingEnvironmentGroupIdentifiers)
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingEnvironmentGroupsList, environmentGroupsListResponse?.data?.content])
@@ -102,6 +122,7 @@ export function useGetEnvironmentGroupsData(scope?: Scope): UseGetEnvironmentGro
     loadingEnvironmentGroupsList,
     updatingEnvironmentGroupsList,
     refetchEnvironmentGroupsList,
-    prependEnvironmentGroupToEnvironmentGroupsList
+    prependEnvironmentGroupToEnvironmentGroupsList,
+    nonExistingEnvironmentGroupIdentifiers
   }
 }

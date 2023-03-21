@@ -24,6 +24,7 @@ import {
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   SelectOption,
+  useToaster,
   useToggleOpen
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
@@ -39,6 +40,7 @@ import {
   isValueExpression,
   isValueRuntimeInput
 } from '@common/utils/utils'
+import { useDeepCompareEffect } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 
@@ -125,6 +127,7 @@ export default function DeployEnvironment({
   const { values, setFieldValue, setValues, errors, setFieldError, setFieldTouched } =
     useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
+  const { showWarning } = useToaster()
   const { expressions } = useVariablesExpression()
   const { projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { refetchPipelineVariable } = usePipelineVariables()
@@ -159,7 +162,8 @@ export default function DeployEnvironment({
     updatingEnvironmentsData,
     refetchEnvironmentsList,
     refetchEnvironmentsData,
-    prependEnvironmentToEnvironmentList
+    prependEnvironmentToEnvironmentList,
+    nonExistingEnvironmentIdentifiers
   } = useGetEnvironmentsData({
     envIdentifiers: selectedEnvironments,
     envGroupIdentifier,
@@ -173,6 +177,17 @@ export default function DeployEnvironment({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useDeepCompareEffect(() => {
+    if (nonExistingEnvironmentIdentifiers.length) {
+      showWarning(
+        getString('cd.identifiersDoNotExist', {
+          entity: getString('environment'),
+          nonExistingIdentifiers: nonExistingEnvironmentIdentifiers.join(', ')
+        })
+      )
+    }
+  }, [nonExistingEnvironmentIdentifiers])
 
   useEffect(() => {
     if (environmentsTypeRef?.current === null || environmentsTypeRef?.current) {

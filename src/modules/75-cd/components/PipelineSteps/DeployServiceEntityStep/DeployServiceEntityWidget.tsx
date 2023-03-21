@@ -21,7 +21,8 @@ import {
   ConfirmationDialog,
   RUNTIME_INPUT_VALUE,
   SelectOption,
-  ModalDialog
+  ModalDialog,
+  useToaster
 } from '@harness/uicore'
 import type { ModalDialogProps } from '@harness/uicore/dist/components/ModalDialog/ModalDialog'
 import { defaultTo, get, isEmpty, isNil, noop } from 'lodash-es'
@@ -144,6 +145,7 @@ export default function DeployServiceEntityWidget({
   setupModeType
 }: DeployServiceEntityWidgetProps): React.ReactElement {
   const { getString } = useStrings()
+  const { showWarning } = useToaster()
 
   const { expressions } = useVariablesExpression()
   const { refetchPipelineVariable } = usePipelineVariables()
@@ -188,7 +190,8 @@ export default function DeployServiceEntityWidget({
     loadingServicesList,
     updatingData,
     prependServiceToServiceList,
-    updateServiceInputsData
+    updateServiceInputsData,
+    nonExistingServiceIdentifiers
   } = useGetServicesData({
     gitOpsEnabled,
     serviceIdentifiers: allServices,
@@ -207,6 +210,17 @@ export default function DeployServiceEntityWidget({
       setAllServices(getAllFixedServices(initialValues))
     }
   }, [initialValues, setupModeType])
+
+  useDeepCompareEffect(() => {
+    if (nonExistingServiceIdentifiers.length) {
+      showWarning(
+        getString('cd.identifiersDoNotExist', {
+          entity: getString('service'),
+          nonExistingIdentifiers: nonExistingServiceIdentifiers.join(', ')
+        })
+      )
+    }
+  }, [nonExistingServiceIdentifiers])
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */

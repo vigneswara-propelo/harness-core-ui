@@ -21,7 +21,8 @@ import {
   MultiTypeInputValue,
   RUNTIME_INPUT_VALUE,
   SelectOption,
-  Text
+  Text,
+  useToaster
 } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
@@ -73,6 +74,7 @@ export default function DeployInfrastructureEntityInputStep({
   scopePrefix
 }: DeployInfrastructureEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
+  const { showWarning } = useToaster()
   const { expressions } = useVariablesExpression()
   const formik = useFormikContext<DeployEnvironmentEntityConfig>()
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
@@ -128,7 +130,8 @@ export default function DeployInfrastructureEntityInputStep({
     loadingInfrastructuresList,
     loadingInfrastructuresData,
     // This is required only when updating the entities list
-    updatingInfrastructuresData
+    updatingInfrastructuresData,
+    nonExistingInfrastructureIdentifiers
   } = useGetInfrastructuresData({
     infrastructureIdentifiers:
       // This is required to prevent the API call when expression is being typed
@@ -157,6 +160,17 @@ export default function DeployInfrastructureEntityInputStep({
   }, [infrastructuresList])
 
   const loading = loadingInfrastructuresList || loadingInfrastructuresData || updatingInfrastructuresData
+
+  useDeepCompareEffect(() => {
+    if (nonExistingInfrastructureIdentifiers.length) {
+      showWarning(
+        getString('cd.identifiersDoNotExist', {
+          entity: getString('infrastructureText'),
+          nonExistingIdentifiers: nonExistingInfrastructureIdentifiers.join(', ')
+        })
+      )
+    }
+  }, [nonExistingInfrastructureIdentifiers])
 
   useDeepCompareEffect(() => {
     if (!infrastructuresList.length) {

@@ -22,12 +22,14 @@ import {
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   SelectOption,
+  useToaster,
   useToggleOpen
 } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
+import { useDeepCompareEffect } from '@common/hooks'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
@@ -104,6 +106,7 @@ export default function DeployInfrastructure({
 }: DeployInfrastructureProps): JSX.Element {
   const { values, setFieldValue, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
+  const { showWarning } = useToaster()
   const { expressions } = useVariablesExpression()
   const { refetchPipelineVariable } = usePipelineVariables()
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
@@ -144,7 +147,8 @@ export default function DeployInfrastructure({
     updatingInfrastructuresData,
     refetchInfrastructuresList,
     refetchInfrastructuresData,
-    prependInfrastructureToInfrastructureList
+    prependInfrastructureToInfrastructureList,
+    nonExistingInfrastructureIdentifiers
   } = useGetInfrastructuresData({
     environmentIdentifier: envToFetchInfraInputs,
     // this condition makes the yaml metadata call data
@@ -156,6 +160,17 @@ export default function DeployInfrastructure({
     }),
     lazyInfrastructure
   })
+
+  useDeepCompareEffect(() => {
+    if (nonExistingInfrastructureIdentifiers.length) {
+      showWarning(
+        getString('cd.identifiersDoNotExist', {
+          entity: getString('infrastructureText'),
+          nonExistingIdentifiers: nonExistingInfrastructureIdentifiers.join(', ')
+        })
+      )
+    }
+  }, [nonExistingInfrastructureIdentifiers])
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */

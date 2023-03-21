@@ -39,24 +39,34 @@ describe('useGetEnvironmentGroupsData hook', () => {
   })
 
   test('default case - hook returns list of environment group', async () => {
-    const { result } = renderHook(() => useGetEnvironmentGroupsData(), { wrapper: TestWrapper })
+    const { result } = renderHook(() => useGetEnvironmentGroupsData({ environmentGroupIdentifiers: [] }), {
+      wrapper: TestWrapper
+    })
     await waitFor(() => expect(result.current.environmentGroupsList).toHaveLength(2))
 
     expect(result.current.environmentGroupsList).toMatchSnapshot()
   })
 
   test('at account scope - hook returns no data', async () => {
-    const { result } = renderHook(() => useGetEnvironmentGroupsData(Scope.ACCOUNT), { wrapper: TestWrapper })
+    const { result } = renderHook(
+      () => useGetEnvironmentGroupsData({ scope: Scope.ACCOUNT, environmentGroupIdentifiers: [] }),
+      { wrapper: TestWrapper }
+    )
     await waitFor(() => expect(result.current.environmentGroupsList).toHaveLength(0))
   })
 
   test('at org scope - hook returns no data', async () => {
-    const { result } = renderHook(() => useGetEnvironmentGroupsData(Scope.ORG), { wrapper: TestWrapper })
+    const { result } = renderHook(
+      () => useGetEnvironmentGroupsData({ scope: Scope.ORG, environmentGroupIdentifiers: [] }),
+      { wrapper: TestWrapper }
+    )
     await waitFor(() => expect(result.current.environmentGroupsList).toHaveLength(0))
   })
 
   test('prepends environment group to list', async () => {
-    const { result } = renderHook(() => useGetEnvironmentGroupsData(), { wrapper: TestWrapper })
+    const { result } = renderHook(() => useGetEnvironmentGroupsData({ environmentGroupIdentifiers: [] }), {
+      wrapper: TestWrapper
+    })
     await waitFor(() => expect(result.current.environmentGroupsList).toHaveLength(2))
 
     result.current.prependEnvironmentGroupToEnvironmentGroupsList(newEnvironmentGroupData as any)
@@ -75,7 +85,9 @@ describe('useGetEnvironmentGroupsData hook', () => {
         } as any)
     )
 
-    const { result } = renderHook(() => useGetEnvironmentGroupsData(), { wrapper: TestWrapper })
+    const { result } = renderHook(() => useGetEnvironmentGroupsData({ environmentGroupIdentifiers: [] }), {
+      wrapper: TestWrapper
+    })
 
     await waitFor(() => expect(showError).toHaveBeenCalledWith('Failed to Load'))
     expect(result.current.environmentGroupsList).toHaveLength(0)

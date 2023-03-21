@@ -6,16 +6,20 @@
  */
 
 import React, { useMemo } from 'react'
-import { defaultTo, isEmpty, isNil } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { Spinner } from '@blueprintjs/core'
 
-import { AllowedTypes, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypes, getMultiTypeFromValue, Layout, MultiTypeInputType, useToaster } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 
-import { MultiTypeEnvironmentGroupField } from '@pipeline/components/FormMultiTypeEnvironmentGroupField/FormMultiTypeEnvironmentGroupField'
+import { useDeepCompareEffect } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isValueFixed } from '@common/utils/utils'
+
+import { MultiTypeEnvironmentGroupField } from '@pipeline/components/FormMultiTypeEnvironmentGroupField/FormMultiTypeEnvironmentGroupField'
+
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import type { DeployEnvironmentEntityConfig } from '../DeployEnvironmentEntityStep/types'
 import { useGetEnvironmentGroupsData } from '../DeployEnvironmentEntityStep/DeployEnvironmentGroup/useGetEnvironmentGroupsData'
@@ -39,9 +43,11 @@ export default function DeployEnvironmentGroupInputStep({
   gitOpsEnabled
 }: DeployEnvironmentGroupInputStepProps): React.ReactElement {
   const { getString } = useStrings()
+  const { showWarning } = useToaster()
   const formik = useFormikContext<DeployEnvironmentEntityConfig>()
 
   const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+  const environmentGroupValue = get(formik.values, `${pathPrefix}environmentGroup.envGroupRef`)
 
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
@@ -50,8 +56,22 @@ export default function DeployEnvironmentGroupInputStep({
     environmentGroupsList,
     loadingEnvironmentGroupsList,
     // This is required only when updating the entities list
-    updatingEnvironmentGroupsList
-  } = useGetEnvironmentGroupsData()
+    updatingEnvironmentGroupsList,
+    nonExistingEnvironmentGroupIdentifiers
+  } = useGetEnvironmentGroupsData({
+    environmentGroupIdentifiers: isValueFixed(environmentGroupValue) ? [environmentGroupValue] : []
+  })
+
+  useDeepCompareEffect(() => {
+    if (nonExistingEnvironmentGroupIdentifiers.length) {
+      showWarning(
+        getString('cd.identifiersDoNotExist', {
+          entity: getString('common.environmentGroup.label'),
+          nonExistingIdentifiers: nonExistingEnvironmentGroupIdentifiers.join(', ')
+        })
+      )
+    }
+  }, [nonExistingEnvironmentGroupIdentifiers])
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */

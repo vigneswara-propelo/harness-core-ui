@@ -20,7 +20,8 @@ import {
   MultiTypeInputType,
   MultiTypeInputValue,
   RUNTIME_INPUT_VALUE,
-  SelectOption
+  SelectOption,
+  useToaster
 } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
@@ -70,6 +71,7 @@ export default function DeployEnvironmentEntityInputStep({
   serviceIdentifiers
 }: DeployEnvironmentEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
+  const { showWarning } = useToaster()
   const { expressions } = useVariablesExpression()
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
   const formik = useFormikContext<DeployEnvironmentEntityConfig>()
@@ -119,7 +121,8 @@ export default function DeployEnvironmentEntityInputStep({
     loadingEnvironmentsList,
     loadingEnvironmentsData,
     // This is required only when updating the entities list
-    updatingEnvironmentsData
+    updatingEnvironmentsData,
+    nonExistingEnvironmentIdentifiers
   } = useGetEnvironmentsData({ envIdentifiers: environmentIdentifiers, envGroupIdentifier, serviceIdentifiers })
 
   const selectOptions = useMemo(() => {
@@ -136,6 +139,17 @@ export default function DeployEnvironmentEntityInputStep({
 
   const loading = loadingEnvironmentsList || loadingEnvironmentsData || updatingEnvironmentsData
   const disabled = inputSetData?.readonly || loading
+
+  useDeepCompareEffect(() => {
+    if (nonExistingEnvironmentIdentifiers.length) {
+      showWarning(
+        getString('cd.identifiersDoNotExist', {
+          entity: getString('environment'),
+          nonExistingIdentifiers: nonExistingEnvironmentIdentifiers.join(', ')
+        })
+      )
+    }
+  }, [nonExistingEnvironmentIdentifiers])
 
   useDeepCompareEffect(() => {
     if (!environmentsList.length) {

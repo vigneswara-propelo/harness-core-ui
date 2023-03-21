@@ -7,7 +7,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, isEqual } from 'lodash-es'
 
 import { shouldShowError, useToaster } from '@harness/uicore'
 
@@ -50,6 +50,7 @@ export interface UseGetInfrastructuresDataReturn {
   refetchInfrastructuresData(): void
   /** Used to prepend data to `environmentsList` */
   prependInfrastructureToInfrastructureList(newInfrastructureInfo: InfrastructureYaml): void
+  nonExistingInfrastructureIdentifiers: string[]
 }
 
 export function useGetInfrastructuresData({
@@ -67,6 +68,7 @@ export function useGetInfrastructuresData({
   // State
   const [infrastructuresList, setInfrastructuresList] = useState<InfrastructureYaml[]>([])
   const [infrastructuresData, setInfrastructuresData] = useState<InfrastructureData[]>([])
+  const [nonExistingInfrastructureIdentifiers, setNonExistingInfrastructureIdentifiers] = useState<string[]>([])
 
   const {
     data: infrastructuresListResponse,
@@ -156,6 +158,14 @@ export function useGetInfrastructuresData({
 
       setInfrastructuresList(_infrastructuresList)
       setInfrastructuresData(_infrastructuresData)
+
+      const infrastructureListIdentifiers = _infrastructuresList.map(infraInList => infraInList.identifier)
+      const _nonExistingInfrastructureIdentifiers = infrastructureIdentifiers.filter(
+        infraInList => infrastructureListIdentifiers.indexOf(infraInList) === -1
+      )
+      if (!isEqual(_nonExistingInfrastructureIdentifiers, nonExistingInfrastructureIdentifiers)) {
+        setNonExistingInfrastructureIdentifiers(_nonExistingInfrastructureIdentifiers)
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, infrastructuresListResponse?.data, infrastructuresDataResponse?.data?.infrastructureYamlMetadataList])
@@ -208,6 +218,7 @@ export function useGetInfrastructuresData({
     updatingInfrastructuresData,
     refetchInfrastructuresList,
     refetchInfrastructuresData,
-    prependInfrastructureToInfrastructureList
+    prependInfrastructureToInfrastructureList,
+    nonExistingInfrastructureIdentifiers
   }
 }

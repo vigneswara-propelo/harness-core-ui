@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import { defaultTo, get, isEmpty, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, isEqual, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useToaster, shouldShowError } from '@harness/uicore'
 import produce from 'immer'
@@ -36,6 +36,7 @@ export interface UseGetServicesDataReturn {
   refetchListData(): void
   prependServiceToServiceList(newServiceInfo: ServiceYaml): void
   updateServiceInputsData(serviceId: string, mergedInputResponse?: ServiceInputsMergedResponseDto): void
+  nonExistingServiceIdentifiers: string[]
 }
 // react-query staleTime
 const STALE_TIME = 60 * 1000 * 15
@@ -44,6 +45,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
   const { deploymentType, gitOpsEnabled, serviceIdentifiers, deploymentTemplateIdentifier, versionLabel } = props
   const [servicesList, setServicesList] = useState<ServiceYaml[]>([])
   const [servicesData, setServicesData] = useState<ServiceData[]>([])
+  const [nonExistingServiceIdentifiers, setNonExistingServiceIdentifiers] = useState<string[]>([])
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
@@ -163,6 +165,14 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
 
       setServicesList(_servicesList)
       setServicesData(_servicesData)
+
+      const serviceListIdentifiers = _servicesList.map(svcInList => svcInList.identifier)
+      const _nonExistingServiceIdentifiers = serviceIdentifiers.filter(
+        svcInList => serviceListIdentifiers.indexOf(svcInList) === -1
+      )
+      if (!isEqual(_nonExistingServiceIdentifiers, nonExistingServiceIdentifiers)) {
+        setNonExistingServiceIdentifiers(_nonExistingServiceIdentifiers)
+      }
     }
   }, [loading, servicesListResponse?.data, servicesDataResponse?.data?.serviceV2YamlMetadataList])
 
@@ -185,6 +195,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     refetchServicesData,
     refetchListData,
     prependServiceToServiceList,
-    updateServiceInputsData
+    updateServiceInputsData,
+    nonExistingServiceIdentifiers
   }
 }

@@ -7,7 +7,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, isNil } from 'lodash-es'
+import { defaultTo, isEqual, isNil } from 'lodash-es'
 
 import { shouldShowError, useToaster } from '@harness/uicore'
 
@@ -47,6 +47,7 @@ export interface UseGetEnvironmentsDataReturn {
   refetchEnvironmentsData(): void
   /** Used to prepend data to `environmentsList` */
   prependEnvironmentToEnvironmentList(newEnvironmentInfo: EnvironmentYaml): void
+  nonExistingEnvironmentIdentifiers: string[]
 }
 
 export function useGetEnvironmentsData({
@@ -61,6 +62,7 @@ export function useGetEnvironmentsData({
   // State
   const [environmentsList, setEnvironmentsList] = useState<EnvironmentYaml[]>([])
   const [environmentsData, setEnvironmentsData] = useState<EnvironmentData[]>([])
+  const [nonExistingEnvironmentIdentifiers, setNonExistingEnvironmentIdentifiers] = useState<string[]>([])
 
   const envGroupScope = getScopeFromValue(envGroupIdentifier as string)
 
@@ -179,6 +181,14 @@ export function useGetEnvironmentsData({
       }
       setEnvironmentsList(_environmentsList)
       setEnvironmentsData(_environmentsData)
+
+      const environmentListIdentifiers = _environmentsList.map(envInList => envInList.identifier)
+      const _nonExistingEnvironmentIdentifiers = envIdentifiers.filter(
+        envInList => environmentListIdentifiers.indexOf(envInList) === -1
+      )
+      if (!isEqual(_nonExistingEnvironmentIdentifiers, nonExistingEnvironmentIdentifiers)) {
+        setNonExistingEnvironmentIdentifiers(_nonExistingEnvironmentIdentifiers)
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -221,6 +231,7 @@ export function useGetEnvironmentsData({
     updatingEnvironmentsData,
     refetchEnvironmentsList,
     refetchEnvironmentsData,
-    prependEnvironmentToEnvironmentList
+    prependEnvironmentToEnvironmentList,
+    nonExistingEnvironmentIdentifiers
   }
 }

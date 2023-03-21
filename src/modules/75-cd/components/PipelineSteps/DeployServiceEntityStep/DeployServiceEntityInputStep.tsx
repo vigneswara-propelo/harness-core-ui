@@ -12,7 +12,8 @@ import {
   Layout,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
-  SelectOption
+  SelectOption,
+  useToaster
 } from '@harness/uicore'
 import { defaultTo, get, isEmpty, isNil, merge } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
@@ -57,6 +58,7 @@ export function DeployServiceEntityInputStep({
   customDeploymentData
 }: DeployServiceEntityInputStepProps): React.ReactElement | null {
   const { getString } = useStrings()
+  const { showWarning } = useToaster()
   const { expressions } = useVariablesExpression()
   const { updateStageFormTemplate } = useStageFormContext()
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith('template.templateInputs')
@@ -84,7 +86,14 @@ export function DeployServiceEntityInputStep({
   }, [serviceValue, servicesValue])
 
   const uniquePath = React.useRef(`_pseudo_field_${uuid()}`)
-  const { servicesData, servicesList, loadingServicesData, loadingServicesList, updatingData } = useGetServicesData({
+  const {
+    servicesData,
+    servicesList,
+    loadingServicesData,
+    loadingServicesList,
+    updatingData,
+    nonExistingServiceIdentifiers
+  } = useGetServicesData({
     gitOpsEnabled,
     deploymentType: deploymentType as ServiceDefinition['type'],
     serviceIdentifiers,
@@ -100,6 +109,17 @@ export function DeployServiceEntityInputStep({
   // This is the path prefix for updating inner formik values.
   // The inner formik receives the outer formik values object reduced to an object which has a key as one of the below prefixes
   const localPathPrefix = isMultiSvcTemplate ? 'services.' : 'service.'
+
+  useDeepCompareEffect(() => {
+    if (nonExistingServiceIdentifiers.length) {
+      showWarning(
+        getString('cd.identifiersDoNotExist', {
+          entity: getString('service'),
+          nonExistingIdentifiers: nonExistingServiceIdentifiers.join(', ')
+        })
+      )
+    }
+  }, [nonExistingServiceIdentifiers])
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */

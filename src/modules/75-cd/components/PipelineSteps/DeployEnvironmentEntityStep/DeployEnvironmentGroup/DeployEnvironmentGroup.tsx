@@ -22,6 +22,7 @@ import {
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   SelectOption,
+  useToaster,
   useToggleOpen
 } from '@harness/uicore'
 
@@ -44,6 +45,7 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import CreateEnvironmentGroupModal from '@cd/components/EnvironmentGroups/CreateEnvironmentGroupModal'
 
 import { MultiTypeEnvironmentGroupField } from '@pipeline/components/FormMultiTypeEnvironmentGroupField/FormMultiTypeEnvironmentGroupField'
+import { useDeepCompareEffect } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type {
@@ -100,6 +102,7 @@ export default function DeployEnvironmentGroup({
 }: DeployEnvironmentGroupProps): JSX.Element {
   const { values, setValues, setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
+  const { showWarning } = useToaster()
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
 
   // State
@@ -121,8 +124,20 @@ export default function DeployEnvironmentGroup({
     // This is required only when updating the entities list
     updatingEnvironmentGroupsList,
     refetchEnvironmentGroupsList,
-    prependEnvironmentGroupToEnvironmentGroupsList
-  } = useGetEnvironmentGroupsData(scope)
+    prependEnvironmentGroupToEnvironmentGroupsList,
+    nonExistingEnvironmentGroupIdentifiers
+  } = useGetEnvironmentGroupsData({ scope, environmentGroupIdentifiers: selectedEnvironmentGroups })
+
+  useDeepCompareEffect(() => {
+    if (nonExistingEnvironmentGroupIdentifiers.length) {
+      showWarning(
+        getString('cd.identifiersDoNotExist', {
+          entity: getString('common.environmentGroup.label'),
+          nonExistingIdentifiers: nonExistingEnvironmentGroupIdentifiers.join(', ')
+        })
+      )
+    }
+  }, [nonExistingEnvironmentGroupIdentifiers])
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */
