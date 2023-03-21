@@ -26,7 +26,6 @@ import css from './BuildTests.module.scss'
 const NOW = Date.now()
 const PAGE_SIZE = 10
 const COPY_CLIPBOARD_ICON_WIDTH = 16
-const SAFETY_TABLE_WIDTH = 216
 const ORDER = 'order'
 const STATUS = 'status'
 
@@ -231,18 +230,20 @@ function ColumnText({
   getString: UseStringsReturn['getString']
 }): JSX.Element {
   return (
-    <Text className={cx(css.text)} color={failed && col !== ORDER ? Color.RED_700 : Color.GREY_700}>
-      {getColumnText({
-        col,
-        pageIndex,
-        itemOrderNumber,
-        row,
-        openTestsFailedModal,
-        closeTestsFailedModal,
-        testCase,
-        getString,
-        failed
-      })}
+    <Text className={cx(css.text)} color={failed && col !== ORDER ? Color.RED_700 : Color.GREY_700} lineClamp={1}>
+      <Container padding={{ top: 'xsmall', left: 'small', bottom: 'xsmall' }}>
+        {getColumnText({
+          col,
+          pageIndex,
+          itemOrderNumber,
+          row,
+          openTestsFailedModal,
+          closeTestsFailedModal,
+          testCase,
+          getString,
+          failed
+        })}
+      </Container>
     </Text>
   )
 }
@@ -377,12 +378,14 @@ export function TestsExecutionItem({
   )
 
   const columns: Column<TestCase>[] = useMemo(() => {
-    const nameClassNameWidth = tableWidth ? tableWidth * 0.5 - 185 : SAFETY_TABLE_WIDTH
+    const nameClassNameWidth = tableWidth ? tableWidth * 0.3 : '30%'
+    const orderColumnWidth = tableWidth ? tableWidth * 0.05 : '5%'
+    const otherColumnWidth = tableWidth ? tableWidth * 0.15 : '15%'
     return [
       {
         Header: '#',
         accessor: ORDER as keyof TestCase,
-        width: 50,
+        width: orderColumnWidth,
         Cell: renderColumn({ col: ORDER }),
         disableSortBy: true
       },
@@ -424,7 +427,7 @@ export function TestsExecutionItem({
       {
         Header: getString('pipeline.testsReports.result'),
         accessor: TestCaseColumns.RESULT,
-        width: 100,
+        width: otherColumnWidth,
         Cell: renderColumn({ col: TestCaseColumns.RESULT }),
         disableSortBy: data?.content?.length === 1,
         serverSortProps: getServerSortProps({
@@ -439,7 +442,7 @@ export function TestsExecutionItem({
       {
         Header: getString('pipeline.duration').toUpperCase(),
         accessor: TestCaseColumns.DURATION_MS,
-        width: 100,
+        width: otherColumnWidth,
         Cell: renderColumn({ col: TestCaseColumns.DURATION_MS }),
         disableSortBy: data?.content?.length === 1,
         serverSortProps: getServerSortProps({
