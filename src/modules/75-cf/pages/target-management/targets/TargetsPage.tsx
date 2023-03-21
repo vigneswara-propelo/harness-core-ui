@@ -104,6 +104,13 @@ export const TargetsPage: React.FC = () => {
       }
     : undefined
 
+  const onCreated = useCallback(async () => {
+    setPageNumber(0)
+    showToaster(getString('cf.messages.targetCreated'))
+    await refetchTargets({ queryParams: { ...queryParams, pageNumber: 0 } })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryParams, refetchTargets, setPageNumber])
+
   const toolbar = (
     <>
       <Layout.Horizontal spacing="medium">
@@ -111,10 +118,7 @@ export const TargetsPage: React.FC = () => {
           accountIdentifier={accountIdentifier}
           orgIdentifier={orgIdentifier}
           projectIdentifier={projectIdentifier}
-          onCreated={() => {
-            setPageNumber(0)
-            showToaster(getString('cf.messages.targetCreated'))
-          }}
+          onCreated={onCreated}
         />
         <Text font={{ size: 'small' }} color={Color.GREY_400} style={{ alignSelf: 'center' }}>
           {getString('cf.targets.pageDescription')}
@@ -321,13 +325,7 @@ export const TargetsPage: React.FC = () => {
 
   const content =
     noEnvironmentExists || noTargetExists ? (
-      <NoTargetsView
-        onNewTargetsCreated={() => {
-          setPageNumber(0)
-          showToaster(getString('cf.messages.targetCreated'))
-        }}
-        noEnvironment={noEnvironmentExists}
-      />
+      <NoTargetsView onNewTargetsCreated={onCreated} noEnvironment={noEnvironmentExists} />
     ) : (
       <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
         <TableV2<Target>
