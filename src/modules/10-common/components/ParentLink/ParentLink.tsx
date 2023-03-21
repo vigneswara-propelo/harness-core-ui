@@ -10,10 +10,13 @@ import { Link } from 'react-router-dom'
 
 interface ParentLinkProps {
   to: string
+  className: string
+  activeClassName: string
+  href: string
 }
 
 function ParentLink(props: React.PropsWithChildren<ParentLinkProps>): React.ReactElement {
-  return <Link to={props.to}>{props.children}</Link>
+  return <Link {...props}>{props.children}</Link>
 }
 
 export default ParentLink
