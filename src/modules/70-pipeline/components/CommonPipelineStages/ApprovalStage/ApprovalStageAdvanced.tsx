@@ -70,6 +70,7 @@ function ApprovalAdvancedSpecifications({
             className={css.multiTypeBtn}
             type={getMultiTypeFromValue(stage?.stage?.when as any)}
             allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+            disabled={isReadonly}
             onChange={type => {
               const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
               if (pipelineStage && pipelineStage.stage) {
@@ -119,6 +120,7 @@ function ApprovalAdvancedSpecifications({
             className={css.multiTypeBtn}
             type={getMultiTypeFromValue(stage?.stage?.strategy as any)}
             allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+            disabled={isReadonly}
             onChange={type => {
               const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
               if (pipelineStage && pipelineStage.stage) {
@@ -164,6 +166,7 @@ function ApprovalAdvancedSpecifications({
             className={css.multiTypeBtn}
             type={getMultiTypeFromValue(stage?.stage?.failureStrategies as any)}
             allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+            disabled={isReadonly}
             onChange={type => {
               const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
               if (pipelineStage && pipelineStage.stage) {
