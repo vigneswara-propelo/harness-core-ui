@@ -6,14 +6,70 @@ exports[`IDP Sidenav render 1`] = `
     class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
   >
     <a
-      class="link"
-      href="/account/accountId/idp-admin/get-started"
+      class="link backBtn"
+      href="/account/accountId/idp"
     >
       <p
         class="StyledProps--font StyledProps--main text"
-        style=""
+        style="display: flex; align-items: center;"
       >
-        getStarted
+        <span
+          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+          data-icon="main-chevron-left"
+        >
+          <svg
+            height="16"
+            viewBox="0 0 8 14"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M2.4 7l5.3-5.3c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1-.3 0-.5.1-.7.3l-6 6c-.2.2-.3.4-.3.7s.1.5.3.7l6 6c.2.2.4.3.7.3.6 0 1-.4 1-1 0-.3-.1-.5-.3-.7z"
+              fill="#4d5969"
+            />
+          </svg>
+        </span>
+        back
+      </p>
+    </a>
+    <a
+      class="link"
+      href="/account/accountId/idp-admin/home"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        idp.adminHome
+      </p>
+    </a>
+    <a
+      class="link"
+      href="/account/accountId/idp-admin/plugins"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        common.plugins
+      </p>
+    </a>
+    <a
+      class="link"
+      href="/account/accountId/idp-admin/layout"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        idp.layout
+      </p>
+    </a>
+    <a
+      class="link"
+      href="/account/accountId/idp-admin/access-control"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        accessControl
       </p>
     </a>
   </div>

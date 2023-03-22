@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { useGetUserGroupAggregateList } from 'services/cd-ng'
 
@@ -14,5 +15,9 @@ export interface IDPCustomMicroFrontendProps {
   }
   customComponents: {
     ConnectorReferenceField: React.ComponentType<ConnectorReferenceFieldProps>
+  }
+  customHooks: {
+    useQueryParams: typeof useQueryParams
+    useUpdateQueryParams: typeof useUpdateQueryParams
   }
 }

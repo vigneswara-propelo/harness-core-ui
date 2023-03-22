@@ -12,6 +12,7 @@ import { isEmpty } from 'lodash-es'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
 import { accountPathProps } from '@common/utils/routeUtils'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { useGetUserGroupAggregateList } from 'services/cd-ng'
 import { MinimalLayout } from '@common/layouts'
@@ -59,7 +60,7 @@ function RedirectToIDPDefaultPath(): React.ReactElement {
       staleTime: 15 * 60 * 1000
     }
   )
-  const onboardingStatus = data?.status?.currentStatus
+  const onboardingStatus = data?.content?.status?.currentStatus
 
   if (!isEmpty(onboardingStatus)) {
     if (onboardingStatus === 'COMPLETED') {
@@ -88,6 +89,7 @@ export default (
       <ChildAppMounter<IDPCustomMicroFrontendProps>
         ChildApp={IDPAdminMicroFrontend}
         customComponents={{ ConnectorReferenceField }}
+        customHooks={{ useQueryParams, useUpdateQueryParams }}
         idpServices={{ useGetUserGroupAggregateList }}
       />
     </RouteWithLayout>
