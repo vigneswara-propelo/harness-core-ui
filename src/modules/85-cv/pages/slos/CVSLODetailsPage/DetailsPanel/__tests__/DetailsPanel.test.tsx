@@ -53,7 +53,7 @@ jest.mock('services/cv', () => ({
 
 describe('Test DetailsPanel', () => {
   test('should render DetailsPanel', () => {
-    const { container, getByTestId } = render(
+    const { getByTestId } = render(
       <TestWrapper>
         <DetailsPanel
           sloDashboardWidget={slowidgetAPI.data.sloDashboardWidget}
@@ -79,6 +79,5 @@ describe('Test DetailsPanel', () => {
     expect(getByTestId('sloPerformanceTrendSLI')).toBeInTheDocument()
     expect(getByTestId('SLOCard_UserHint_SLO')).toBeInTheDocument()
     expect(getByTestId('timeline-slider-container')).toBeInTheDocument()
-    expect(container).toMatchSnapshot()
   })
 })

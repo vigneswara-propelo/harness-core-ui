@@ -175,7 +175,9 @@ describe('Create empty monitored service', () => {
       )
     })
 
+    cy.get('div[data-testid="metricChart-summary"]').scrollIntoView().should('be.visible')
     cy.findByText(/Metric values and charts/i).click()
+    cy.get('button[aria-label="Build Chart"]').scrollIntoView().should('be.visible')
     cy.findByRole('button', { name: /Build Chart/i }).click()
 
     cy.wait('@parseSampleDataCall')

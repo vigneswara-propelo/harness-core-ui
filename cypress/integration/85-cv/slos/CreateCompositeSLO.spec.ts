@@ -86,7 +86,6 @@ describe('Create Composite SLO', () => {
     cy.contains('span', 'Save').click({ force: true })
     cy.wait('@saveSLO').then(data => {
       // match the payload to verify we submit correct payload
-      cy.debug()
       expect(JSON.stringify({ ...data.request.body })).equal(
         JSON.stringify({ ...createProjectLevelCompositeSLOPayload })
       )
@@ -252,6 +251,7 @@ describe('Create account level SLO', () => {
     cy.contains('p', 'demo_composite_slo').should('not.exist')
     cy.contains('span', 'Add SLOs').click()
     cy.wait('@sloListPostResponseRolling7Days')
+    cy.findAllByRole('checkbox', { timeout: 2000 }).eq(1).should('be.checked')
     cy.findAllByRole('checkbox').eq(2).click({ force: true })
     cy.get('[data-testid="addSloButton"]').click({ force: true })
     cy.contains('span', 'Next').click({ force: true })
@@ -259,7 +259,6 @@ describe('Create account level SLO', () => {
 
     cy.wait('@saveSLO').then(data => {
       // match the payload to verify we submit correct payload
-      cy.debug()
       expect(JSON.stringify({ ...data.request.body })).equal(JSON.stringify({ ...createCompositeSLOPayload }))
     })
   })
