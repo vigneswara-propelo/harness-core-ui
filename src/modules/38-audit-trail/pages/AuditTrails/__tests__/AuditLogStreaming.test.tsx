@@ -34,11 +34,11 @@ const mockWithData = (
   const useGetStreamingDestinationsAggregateQueryMock =
     useGetStreamingDestinationsAggregateQuery as jest.MockedFunction<any>
   useGetStreamingDestinationsAggregateQueryMock.mockImplementation(() => {
-    return { data: aggregateData, error: false, isFetching: false, refetch: mockAggregatePromise }
+    return { data: { content: aggregateData }, error: false, isFetching: false, refetch: mockAggregatePromise }
   })
   const useGetStreamingDestinationsCardsQueryMock = useGetStreamingDestinationsCardsQuery as jest.MockedFunction<any>
   useGetStreamingDestinationsCardsQueryMock.mockImplementation(() => {
-    return { data: cardsData, error: false, isFetching: false, refetch: mockCardsPromise }
+    return { data: { content: cardsData }, error: false, isFetching: false, refetch: mockCardsPromise }
   })
   return { mockAggregatePromise }
 }

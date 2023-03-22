@@ -1821,10 +1821,10 @@
     openapi-types "^12.0.2"
     zod "^3.19.1"
 
-"@harnessio/react-audit-service-client@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@harnessio/react-audit-service-client/-/react-audit-service-client-0.2.0.tgz#dcfbcdb90bcb0fe9d19304eff5d951b87ce459ec"
-  integrity sha512-D1tR2E9Cf4PLChJxvhiPtMtIX5fnarsjoiWQDgFyEODipiPAkjkXq4k3kqGz98q7JEhx9xDrmC5PdhkuJIexRw==
+"@harnessio/react-audit-service-client@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-audit-service-client/-/react-audit-service-client-0.3.0.tgz#2c4fedb28e3b1efb675350a69e889070f0dcc846"
+  integrity sha512-OZyLAB1CoYzRMxQXAGDiWpgeo0DumBX7OuqHETdtlM54MEPnoy5tk6fLZN2feew0kahG+sGgVkBvBbZIAQC89A==
   dependencies:
     "@tanstack/react-query" "4.20.4"
     "@types/qs" "^6.9.7"

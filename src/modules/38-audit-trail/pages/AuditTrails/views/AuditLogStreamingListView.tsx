@@ -15,7 +15,7 @@ import { Classes, Position, Menu, Intent } from '@blueprintjs/core'
 import type {
   StreamingDestinationDto,
   StreamingDestinationResponse,
-  StreamingDestinationAggregateListResponseResponse,
+  GetStreamingDestinationsAggregateOkResponse,
   StreamingDestinationCards,
   StreamingDestinationAggregateDto,
   StreamingDetails,
@@ -61,10 +61,11 @@ import type { ResourceDTO } from 'services/audit'
 import css from './AuditLogStreaming.module.scss'
 
 interface AuditLogStreamingListViewProps {
-  data?: StreamingDestinationAggregateListResponseResponse
+  data?: GetStreamingDestinationsAggregateOkResponse | undefined
   cardsData?: StreamingDestinationCards
   refetchListingPageAPIs?: () => void
   openStreamingDestinationModal: UseCreateStreamingDestinationModalReturn['openStreamingDestinationModal']
+  setPage: (page: number) => void
 }
 
 const RenderColumnStatus: Renderer<CellProps<StreamingDestinationResponse>> = ({ value, row, column }) => {
@@ -96,7 +97,9 @@ const RenderColumnStatus: Renderer<CellProps<StreamingDestinationResponse>> = ({
     if (streamingDestination.identifier) {
       try {
         const response = await updateStreamingDestination(payload)
-        const { streaming_destination: updatedStreamingDestination } = response
+        const {
+          content: { streaming_destination: updatedStreamingDestination }
+        } = response
         if (updatedStreamingDestination.identifier && updatedStreamingDestination.name) {
           showSuccess(
             getString('auditTrail.logStreaming.streamingDestinationSaved', { name: updatedStreamingDestination.name })
@@ -361,7 +364,8 @@ const AuditLogStreamingListView: React.FC<AuditLogStreamingListViewProps> = ({
   data,
   cardsData,
   refetchListingPageAPIs,
-  openStreamingDestinationModal
+  openStreamingDestinationModal,
+  setPage
 }) => {
   const { getString } = useStrings()
 
@@ -439,14 +443,27 @@ const AuditLogStreamingListView: React.FC<AuditLogStreamingListViewProps> = ({
     [refetchListingPageAPIs, openStreamingDestinationModal, getString]
   )
 
+  const streamingDestinationsData = data?.content
+  const total = defaultTo(data?.pagination?.total, 0)
+  const pageSize = defaultTo(data?.pagination?.pageSize, 10)
+  const pageCount = Math.ceil(total / pageSize)
+  const pageNumber = defaultTo(data?.pagination?.pageNumber, 0)
+
   return (
     <>
       <AuditLogStreamingCards className={css.paddingCards} cardsData={cardsData} />
       <TableV2<StreamingDestinationAggregateDto>
         className={css.paddingTable}
-        data={data || []}
+        data={streamingDestinationsData || []}
         columns={columns}
         renderRowSubComponent={renderRowSubComponent}
+        pagination={{
+          itemCount: total,
+          pageSize: pageSize,
+          pageCount: pageCount,
+          pageIndex: pageNumber,
+          gotoPage: setPage
+        }}
       />
     </>
   )

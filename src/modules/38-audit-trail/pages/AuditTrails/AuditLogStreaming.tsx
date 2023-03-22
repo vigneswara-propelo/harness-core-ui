@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { identity } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { FlexExpander, ButtonVariation } from '@harness/uicore'
 import {
@@ -16,6 +17,7 @@ import {
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import useCreateStreamingDestinationModal from '@audit-trail/modals/StreamingDestinationModal/useCreateStreamingDestinationModal'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -29,6 +31,7 @@ export const POLL_INTERVAL = 10 * 60 * 1000 // 10 minutes
 const AuditLogStreaming: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const [page, setPage] = useQueryParamsState<number>('page', 0, { serializer: identity, deserializer: identity })
   const { openStreamingDestinationModal } = useCreateStreamingDestinationModal({
     onClose: () => {
       refetchListingPageAPIs()
@@ -36,20 +39,17 @@ const AuditLogStreaming: React.FC = () => {
   })
 
   const {
-    data: cardsData,
+    data: cardsResponse,
     refetch: refetchCards,
     isFetching: isFetchingCards
   } = useGetStreamingDestinationsCardsQuery({}, { refetchInterval: POLL_INTERVAL })
 
-  const {
-    data: streamingDestinationsData,
-    error,
-    isFetching,
-    refetch
-  } = useGetStreamingDestinationsAggregateQuery(
-    { queryParams: { sort: 'created' } },
+  const { data, error, isFetching, refetch } = useGetStreamingDestinationsAggregateQuery(
+    { queryParams: { sort: 'created', page: page, limit: 25 } },
     { refetchInterval: POLL_INTERVAL }
   )
+
+  const cardsData = cardsResponse?.content
 
   const refetchListingPageAPIs = (): void => {
     refetch()
@@ -85,7 +85,7 @@ const AuditLogStreaming: React.FC = () => {
       </Page.SubHeader>
       <Page.Body
         noData={{
-          when: () => !streamingDestinationsData?.length,
+          when: () => !data?.content?.length,
           image: AuditTrailsEmptyState,
           imageClassName: css.emptyStateImage,
           messageTitle: getString('auditTrail.emptyStateMessageTitle'),
@@ -96,10 +96,11 @@ const AuditLogStreaming: React.FC = () => {
         loading={isFetching || isFetchingCards}
       >
         <AuditLogStreamingListView
-          data={streamingDestinationsData}
+          data={data}
           cardsData={cardsData}
           refetchListingPageAPIs={refetchListingPageAPIs}
           openStreamingDestinationModal={openStreamingDestinationModal}
+          setPage={setPage}
         />
       </Page.Body>
     </>

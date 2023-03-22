@@ -29,11 +29,21 @@ const mockCardsPromise = jest.fn(() => Promise.resolve(mockStreamingDestinationC
 const useGetStreamingDestinationsAggregateQueryMock =
   useGetStreamingDestinationsAggregateQuery as jest.MockedFunction<any>
 useGetStreamingDestinationsAggregateQueryMock.mockImplementation(() => {
-  return { data: mockAggregateListResponse, error: false, isFetching: false, refetch: mockAggregatePromise }
+  return {
+    data: { content: mockAggregateListResponse },
+    error: false,
+    isFetching: false,
+    refetch: mockAggregatePromise
+  }
 })
 const useGetStreamingDestinationsCardsQueryMock = useGetStreamingDestinationsCardsQuery as jest.MockedFunction<any>
 useGetStreamingDestinationsCardsQueryMock.mockImplementation(() => {
-  return { data: mockStreamingDestinationCards, error: false, isFetching: false, refetch: mockCardsPromise }
+  return {
+    data: { content: mockStreamingDestinationCards },
+    error: false,
+    isFetching: false,
+    refetch: mockCardsPromise
+  }
 })
 
 jest.mock('@harness/uicore', () => {

@@ -153,7 +153,9 @@ const StepStreamingConnector: React.FC<StepProps<StepStreamingConnectorForm> & S
       )
       updateStreamingDestination(updateSDPayload)
         .then(response => {
-          const { streaming_destination: updatedStreamingDestination } = response
+          const {
+            content: { streaming_destination: updatedStreamingDestination }
+          } = response
           if (updatedStreamingDestination?.identifier && updatedStreamingDestination?.name) {
             showSuccess(
               getString('auditTrail.logStreaming.streamingDestinationSaved', {
@@ -177,10 +179,10 @@ const StepStreamingConnector: React.FC<StepProps<StepStreamingConnectorForm> & S
       const createSDPayload = buildCreateStreamingDestinationPayload({ ...prevStepData, ...formData })
       createStreamingDestinations({ body: createSDPayload })
         .then(response => {
-          if (response?.streaming_destination?.identifier) {
+          if (response?.content?.streaming_destination?.identifier) {
             showSuccess(
               getString('auditTrail.logStreaming.streamingDestinationCreated', {
-                name: response?.streaming_destination?.name
+                name: response?.content?.streaming_destination?.name
               })
             )
             setIsEditMode(true)

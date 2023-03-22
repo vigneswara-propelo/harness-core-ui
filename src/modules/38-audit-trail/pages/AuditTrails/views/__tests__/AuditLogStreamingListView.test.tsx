@@ -48,8 +48,9 @@ describe('AuditLogStreaming List View', () => {
         pathParams={{ accountId: 'testAcc' }}
       >
         <AuditLogStreamingListView
-          data={mockAggregateListResponse}
+          data={{ content: mockAggregateListResponse }}
           openStreamingDestinationModal={openStreamingDestinationModal}
+          setPage={jest.fn()}
         />
       </TestWrapper>
     )
