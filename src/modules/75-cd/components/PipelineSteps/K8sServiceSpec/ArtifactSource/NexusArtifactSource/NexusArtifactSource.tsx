@@ -120,7 +120,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   )
 
   const groupValue = getDefaultQueryParam(
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.group`, ''), artifact?.spec?.group),
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.spec.group`, ''), artifact?.spec?.spec?.group),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.group`, '')
   )
 
