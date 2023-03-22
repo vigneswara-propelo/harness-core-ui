@@ -12,6 +12,7 @@ import cx from 'classnames'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageConfig, ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import { StepViewType } from '../AbstractSteps/Step'
 import { CollapseForm } from './CollapseForm'
 import type { StageInputSetFormProps } from './StageInputSetForm'
@@ -158,6 +159,9 @@ export function ExecutionWrapperInputSetForm(props: {
               const isTemplateStepGroup = !isEmpty(nodep.stepGroup?.template?.templateInputs)
               const stepGroup = getStepFromStage(nodep.stepGroup.identifier, allValues)
               const initialValues = getStepFromStage(nodep.stepGroup?.identifier || '', values)
+              const isStepGroupFailureStrategyRuntime = isTemplateStepGroup
+                ? isValueRuntimeInput(nodep.stepGroup?.template?.templateInputs?.failureStrategies as unknown as string)
+                : isValueRuntimeInput(nodep.stepGroup?.failureStrategies as unknown as string)
               return (
                 <Layout.Vertical spacing="medium" padding={{ top: 'medium' }}>
                   <Label>
@@ -165,18 +169,20 @@ export function ExecutionWrapperInputSetForm(props: {
                     {getString('pipeline.execution.stepGroupTitlePrefix')}
                     {getString('pipeline.stepLabel', stepGroup?.stepGroup)}
                   </Label>
-                  <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
-                    <FailureStrategiesInputSetForm
-                      readonly={readonly}
-                      path={
-                        isTemplateStepGroup
-                          ? `${path}[${index}].parallel[${indexp}].stepGroup.template.templateInputs.failureStrategies`
-                          : `${path}[${index}].parallel[${indexp}].stepGroup.failureStrategies`
-                      }
-                      viewType={viewType}
-                      stageType={defaultTo(customStepProps?.stageType, StageType.DEPLOY)}
-                    />
-                  </div>
+                  {isStepGroupFailureStrategyRuntime && (
+                    <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
+                      <FailureStrategiesInputSetForm
+                        readonly={readonly}
+                        path={
+                          isTemplateStepGroup
+                            ? `${path}[${index}].parallel[${indexp}].stepGroup.template.templateInputs.failureStrategies`
+                            : `${path}[${index}].parallel[${indexp}].stepGroup.failureStrategies`
+                        }
+                        viewType={viewType}
+                        stageType={defaultTo(customStepProps?.stageType, StageType.DEPLOY)}
+                      />
+                    </div>
+                  )}
                   <CollapseForm
                     header={isTemplateStepGroup ? nodep.stepGroup?.identifier : stepGroup?.stepGroup?.name || ''}
                     headerProps={{ font: { size: 'normal' } }}
@@ -219,6 +225,9 @@ export function ExecutionWrapperInputSetForm(props: {
           const isTemplateStepGroup = !isEmpty(item?.stepGroup?.template?.templateInputs)
           const stepGroup = getStepFromStage(item.stepGroup.identifier, allValues)
           const initialValues = getStepFromStage(item.stepGroup?.identifier || '', values)
+          const isStepGroupFailureStrategyRuntime = isTemplateStepGroup
+            ? isValueRuntimeInput(item?.stepGroup?.template?.templateInputs?.failureStrategies as unknown as string)
+            : isValueRuntimeInput(item?.stepGroup?.failureStrategies as unknown as string)
           return (
             <Layout.Vertical spacing="medium" padding={{ top: 'medium' }}>
               <Label>
@@ -226,18 +235,20 @@ export function ExecutionWrapperInputSetForm(props: {
                 {getString('pipeline.execution.stepGroupTitlePrefix')}
                 {getString('pipeline.stepLabel', stepGroup?.stepGroup)}
               </Label>
-              <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
-                <FailureStrategiesInputSetForm
-                  readonly={readonly}
-                  path={
-                    isTemplateStepGroup
-                      ? `${path}[${index}].stepGroup.template.templateInputs.failureStrategies`
-                      : `${path}[${index}].stepGroup.failureStrategies`
-                  }
-                  viewType={viewType}
-                  stageType={defaultTo(customStepProps?.stageType, StageType.DEPLOY)}
-                />
-              </div>
+              {isStepGroupFailureStrategyRuntime && (
+                <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
+                  <FailureStrategiesInputSetForm
+                    readonly={readonly}
+                    path={
+                      isTemplateStepGroup
+                        ? `${path}[${index}].stepGroup.template.templateInputs.failureStrategies`
+                        : `${path}[${index}].stepGroup.failureStrategies`
+                    }
+                    viewType={viewType}
+                    stageType={defaultTo(customStepProps?.stageType, StageType.DEPLOY)}
+                  />
+                </div>
+              )}
               <CollapseForm
                 header={stepGroup?.stepGroup?.name || stepGroup?.stepGroup?.identifier || ''}
                 headerProps={{ font: { size: 'normal' } }}
