@@ -17,6 +17,7 @@ WORKDIR /opt/nextgenui
 
 RUN chown 65534:65534 -R /opt/nextgenui
 RUN chown 65534:65534 -R /var/log/nginx
+RUN chown 65534:65534 -R /etc/nginx
 
 USER 65534
 

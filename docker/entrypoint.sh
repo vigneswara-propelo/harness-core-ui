@@ -50,6 +50,12 @@ then
   HARNESS_NAME_SPACE_URL="/$HARNESS_NAME_SPACE"
 fi
 
+if [ "$HARNESS_ENABLE_CSP_HEADERS" = "true" ]
+then
+  sed -i "s|#cspHeadersPlaceholder|add_header Content-Security-Policy-Report-Only \"script-src 'self' 'unsafe-inline' https://*.harness.io https://widget.saberfeedback.com https://cdn.segment.com https://js.refiner.io https://widget.intercom.io https://js.intercomcdn.com https://d2wy8f7a9ursnm.cloudfront.net https://cdn.appdynamics.com; style-src 'self' 'unsafe-inline' https://*.harness.io https://fonts.googleapis.com https://widget.saberfeedback.com https://js.refiner.io; img-src 'self' data: blob: https://*.harness.io https://widget.saberfeedback.com; font-src 'self' https://fonts.gstatic.com;\";|" $NGINX_CONFIG_FILE
+fi
+
+
 if [ "$HARNESS_ENABLE_CDN_PLACEHOLDER" = "true" ]
 then
   sed -i "s|\"static\/main\.\(.*\)\.js\"|\"//static.harness.io/ng-static/main.\1.js\"|" index.html
