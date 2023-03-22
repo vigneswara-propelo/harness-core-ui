@@ -1366,6 +1366,7 @@ export interface StringsMap {
   'rbac.permissionLabels.invite': string
   'rbac.permissionLabels.manage': string
   'rbac.permissionLabels.pipelineExecution': string
+  'rbac.permissionLabels.toggleFlag': string
   'rbac.permissionLabels.view': string
   'rbac.permissionOn': string
   'rbac.planEnforcement.ff.teamEnterprisePlan.approachingLimit': string
