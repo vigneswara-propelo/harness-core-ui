@@ -213,31 +213,42 @@ const SecretInput: React.FC<FormikSecretInput> = props => {
               </Text>
             </Link>
             {secretReference ? (
-              <RbacButton
-                minimal
-                className={css.containerEditBtn}
-                data-testid={`${name}-edit`}
-                onClick={() =>
-                  openCreateSecretModal(secretReference.type || type, {
-                    identifier: secretReference?.['identifier'],
-                    projectIdentifier: secretReference?.['projectIdentifier'],
-                    orgIdentifier: secretReference?.['orgIdentifier']
-                  } as SecretIdentifiers)
-                }
-                permission={{
-                  permission: PermissionIdentifier.UPDATE_SECRET,
-                  resource: {
-                    resourceType: ResourceType.SECRET,
-                    resourceIdentifier: secretReference?.['identifier']
-                  },
-                  resourceScope: {
-                    accountIdentifier: accountId,
-                    projectIdentifier: secretReference?.['projectIdentifier'],
-                    orgIdentifier: secretReference?.['orgIdentifier']
+              <Container flex={{ justifyContent: 'flex-end' }}>
+                <Icon
+                  name="circle-cross"
+                  size={14}
+                  className={css.cross}
+                  color={Color.GREY_400}
+                  onClick={() => {
+                    formik.setFieldValue(name, undefined)
+                  }}
+                />
+                <RbacButton
+                  minimal
+                  className={css.containerEditBtn}
+                  data-testid={`${name}-edit`}
+                  onClick={() =>
+                    openCreateSecretModal(secretReference.type || type, {
+                      identifier: secretReference?.['identifier'],
+                      projectIdentifier: secretReference?.['projectIdentifier'],
+                      orgIdentifier: secretReference?.['orgIdentifier']
+                    } as SecretIdentifiers)
                   }
-                }}
-                text={<Icon size={16} name={'edit'} color={Color.PRIMARY_7} />}
-              />
+                  permission={{
+                    permission: PermissionIdentifier.UPDATE_SECRET,
+                    resource: {
+                      resourceType: ResourceType.SECRET,
+                      resourceIdentifier: secretReference?.['identifier']
+                    },
+                    resourceScope: {
+                      accountIdentifier: accountId,
+                      projectIdentifier: secretReference?.['projectIdentifier'],
+                      orgIdentifier: secretReference?.['orgIdentifier']
+                    }
+                  }}
+                  text={<Icon size={16} name={'edit'} color={Color.PRIMARY_7} />}
+                />
+              </Container>
             ) : null}
           </Container>
         )}
