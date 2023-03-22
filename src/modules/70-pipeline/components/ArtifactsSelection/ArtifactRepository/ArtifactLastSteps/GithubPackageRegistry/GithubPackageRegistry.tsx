@@ -75,8 +75,11 @@ function FormComponent({
   isReadonly = false,
   formik,
   isMultiArtifactSource,
-  initialValues
+  initialValues,
+  editArtifactModePrevStepData
 }: any) {
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const { getString } = useStrings()
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -89,7 +92,9 @@ function FormComponent({
     branch
   }
   const packageTypeValue = getGenuineValue(formik.values.spec.packageType || initialValues?.spec?.packageType)
-  const connectorRefValue = getGenuineValue(defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier))
+  const connectorRefValue = getGenuineValue(
+    defaultTo(modifiedPrevStepData?.connectorId?.value, modifiedPrevStepData?.identifier)
+  )
   const packageNameValue = getGenuineValue(formik.values.spec.packageName || initialValues?.spec?.packageName)
   const orgValue = getGenuineValue(formik.values.spec.org)
 
@@ -402,7 +407,7 @@ function FormComponent({
             variation={ButtonVariation.SECONDARY}
             text={getString('back')}
             icon="chevron-left"
-            onClick={() => previousStep?.(prevStepData)}
+            onClick={() => previousStep?.(modifiedPrevStepData)}
           />
           <Button
             variation={ButtonVariation.PRIMARY}
@@ -420,7 +425,18 @@ export function GithubPackageRegistry(
   props: StepProps<ConnectorConfigDTO> & GithubPackageRegistryProps
 ): React.ReactElement {
   const { getString } = useStrings()
-  const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
+  const {
+    context,
+    handleSubmit,
+    initialValues,
+    prevStepData,
+    selectedArtifact,
+    artifactIdentifiers,
+    editArtifactModePrevStepData
+  } = props
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const getInitialValues = (): GithubPackageRegistryInitialValuesType => {
@@ -463,7 +479,7 @@ export function GithubPackageRegistry(
         {
           ...formData
         },
-        getConnectorIdValue(prevStepData)
+        getConnectorIdValue(modifiedPrevStepData)
       )
     }
   }
@@ -525,7 +541,7 @@ export function GithubPackageRegistry(
             {
               ...formData
             },
-            getConnectorIdValue(prevStepData)
+            getConnectorIdValue(modifiedPrevStepData)
           )
         }}
       >

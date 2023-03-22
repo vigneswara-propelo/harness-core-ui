@@ -69,8 +69,11 @@ export function GoogleCloudSourceRepositories(
     isReadonly = false,
     selectedArtifact,
     isMultiArtifactSource,
-    formClassName = ''
+    formClassName = '',
+    editArtifactModePrevStepData
   } = props
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
   const [lastProjectsQueryData, setLastProjectsQueryData] = React.useState({
     connectorRef: ''
@@ -83,7 +86,11 @@ export function GoogleCloudSourceRepositories(
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const getConnectorRefQueryData = (): string => {
-    return prevStepData?.connectorId?.value || prevStepData?.connectorId?.connector?.value || prevStepData?.identifier
+    return (
+      modifiedPrevStepData?.connectorId?.value ||
+      modifiedPrevStepData?.connectorId?.connector?.value ||
+      modifiedPrevStepData?.identifier
+    )
   }
 
   // Project
@@ -121,8 +128,8 @@ export function GoogleCloudSourceRepositories(
 
   const canFetchProjects = useCallback((): boolean => {
     const connectorRef = getConnectorRefQueryData()
-    return !!(lastProjectsQueryData.connectorRef !== connectorRef && shouldFetchFieldOptions(prevStepData, []))
-  }, [lastProjectsQueryData, prevStepData])
+    return !!(lastProjectsQueryData.connectorRef !== connectorRef && shouldFetchFieldOptions(modifiedPrevStepData, []))
+  }, [lastProjectsQueryData, modifiedPrevStepData])
 
   const fetchProjects = useCallback((): void => {
     if (canFetchProjects()) {
@@ -215,16 +222,16 @@ export function GoogleCloudSourceRepositories(
   ): void => {
     if (hideHeaderAndNavBtns) {
       submitFormData({
-        ...prevStepData,
+        ...modifiedPrevStepData,
         ...formData,
-        connectorId: getConnectorIdValue(prevStepData)
+        connectorId: getConnectorIdValue(modifiedPrevStepData)
       })
     }
   }
 
   const getProjectHelperText = React.useCallback(
     (formik: FormikProps<GoogleCloudSourceRepositoriesInitialValuesType>) => {
-      const prevStepConnectorRef = getConnectorIdValue(prevStepData)
+      const prevStepConnectorRef = getConnectorIdValue(modifiedPrevStepData)
       if (
         getMultiTypeFromValue(get(formik?.values, `project`)) === MultiTypeInputType.FIXED &&
         (getMultiTypeFromValue(prevStepConnectorRef) === MultiTypeInputType.RUNTIME ||
@@ -233,7 +240,7 @@ export function GoogleCloudSourceRepositories(
         return getString('pipeline.projectHelperText')
       }
     },
-    [prevStepData]
+    [modifiedPrevStepData]
   )
 
   const itemRenderer = useCallback(
@@ -257,9 +264,9 @@ export function GoogleCloudSourceRepositories(
         validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorId: getConnectorIdValue(prevStepData)
+            connectorId: getConnectorIdValue(modifiedPrevStepData)
           })
         }}
       >
@@ -384,7 +391,7 @@ export function GoogleCloudSourceRepositories(
                   variation={ButtonVariation.SECONDARY}
                   text={getString('back')}
                   icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
+                  onClick={() => previousStep?.(modifiedPrevStepData)}
                 />
                 <Button
                   variation={ButtonVariation.PRIMARY}

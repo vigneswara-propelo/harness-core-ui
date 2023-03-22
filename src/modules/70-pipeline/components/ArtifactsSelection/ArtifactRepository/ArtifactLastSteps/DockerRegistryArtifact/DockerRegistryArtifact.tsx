@@ -51,7 +51,8 @@ export function DockerRegistryArtifact({
   isReadonly = false,
   selectedArtifact,
   isMultiArtifactSource,
-  formClassName = ''
+  formClassName = '',
+  editArtifactModePrevStepData
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
   const [lastImagePath, setLastImagePath] = useState('')
@@ -61,6 +62,9 @@ export function DockerRegistryArtifact({
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const schemaObject = {
     imagePath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.imagePath')),
     tagType: Yup.string().required(),
@@ -86,7 +90,7 @@ export function DockerRegistryArtifact({
   })
 
   const getConnectorRefQueryData = (): string => {
-    return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
+    return defaultTo(modifiedPrevStepData?.connectorId?.value, modifiedPrevStepData?.identifier)
   }
 
   const queryParams = {
@@ -127,9 +131,9 @@ export function DockerRegistryArtifact({
   const canFetchTags = useCallback(
     /* istanbul ignore next */
     (imagePath: string): boolean => {
-      return !!(lastImagePath !== imagePath && shouldFetchFieldOptions(prevStepData, [imagePath]))
+      return !!(lastImagePath !== imagePath && shouldFetchFieldOptions(modifiedPrevStepData, [imagePath]))
     },
-    [lastImagePath, prevStepData]
+    [lastImagePath, modifiedPrevStepData]
   )
 
   const fetchTags = useCallback(
@@ -158,7 +162,7 @@ export function DockerRegistryArtifact({
       submitFormData({
         ...formData,
         tag: defaultTo(formData?.tag?.value, formData?.tag),
-        connectorId: getConnectorIdValue(prevStepData),
+        connectorId: getConnectorIdValue(modifiedPrevStepData),
         digest: formData?.digest
       })
     }
@@ -177,10 +181,10 @@ export function DockerRegistryArtifact({
         validate={handleValidate}
         onSubmit={formData => {
           const formObject = {
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
             tag: defaultTo(formData?.tag?.value, formData?.tag),
-            connectorId: getConnectorIdValue(prevStepData)
+            connectorId: getConnectorIdValue(modifiedPrevStepData)
           }
 
           if (CD_NG_DOCKER_ARTIFACT_DIGEST) {
@@ -201,7 +205,7 @@ export function DockerRegistryArtifact({
                 expressions={expressions}
                 allowableTypes={allowableTypes}
                 isReadonly={isReadonly}
-                connectorIdValue={getConnectorIdValue(prevStepData)}
+                connectorIdValue={getConnectorIdValue(modifiedPrevStepData)}
                 fetchTags={fetchTags}
                 buildDetailsLoading={dockerBuildDetailsLoading}
                 tagError={dockerTagError}
@@ -232,7 +236,7 @@ export function DockerRegistryArtifact({
                   text={getString('back')}
                   icon="chevron-left"
                   onClick={() => {
-                    previousStep?.(prevStepData)
+                    previousStep?.(modifiedPrevStepData)
                   }}
                 />
                 <Button

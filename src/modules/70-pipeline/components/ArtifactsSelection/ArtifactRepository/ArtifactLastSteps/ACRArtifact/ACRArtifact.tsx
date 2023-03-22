@@ -76,15 +76,19 @@ export function ACRArtifact({
   isReadonly = false,
   selectedArtifact,
   isMultiArtifactSource,
-  formClassName = ''
+  formClassName = '',
+  editArtifactModePrevStepData
 }: StepProps<ConnectorConfigDTO> & ACRArtifactProps): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const isTemplateContext = context === ModalViewFor.Template
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
-  const connectorRef = defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
+  const connectorRef = defaultTo(modifiedPrevStepData?.connectorId?.value, modifiedPrevStepData?.identifier)
   const isConnectorUndefinedOrRunTime = !connectorRef || connectorRef === RUNTIME_INPUT_VALUE
 
   const loadingItems = [{ label: getString('loading'), value: '' }]
@@ -217,7 +221,7 @@ export function ACRArtifact({
     if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
       refetchAcrBuildData()
     }
-  }, [lastQueryData, prevStepData, refetchAcrBuildData])
+  }, [lastQueryData, modifiedPrevStepData, refetchAcrBuildData])
 
   const {
     data: subscriptionsData,
@@ -377,9 +381,9 @@ export function ACRArtifact({
         (lastQueryData?.subscriptionId !== subscriptionId ||
           lastQueryData?.registry !== registry ||
           lastQueryData?.repository !== repository) &&
-        shouldFetchFieldOptions(prevStepData, [subscriptionId, registry, repository])
+        shouldFetchFieldOptions(modifiedPrevStepData, [subscriptionId, registry, repository])
       ),
-    [lastQueryData, prevStepData]
+    [lastQueryData, modifiedPrevStepData]
   )
 
   const isTagDisabled = useCallback((formikValue): boolean => {
@@ -451,9 +455,9 @@ export function ACRArtifact({
   const handleValidate = (formData: ACRArtifactType & { connectorId?: string }) => {
     if (hideHeaderAndNavBtns) {
       submitFormData({
-        ...prevStepData,
+        ...modifiedPrevStepData,
         ...formData,
-        connectorId: getConnectorIdValue(prevStepData),
+        connectorId: getConnectorIdValue(modifiedPrevStepData),
         subscriptionId: getValue(formData.subscriptionId),
         registry: getValue(formData.registry),
         repository: getValue(formData.repository)
@@ -516,9 +520,9 @@ export function ACRArtifact({
         validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorId: getConnectorIdValue(prevStepData),
+            connectorId: getConnectorIdValue(modifiedPrevStepData),
             subscriptionId: getValue(formData.subscriptionId),
             registry: getValue(formData.registry),
             repository: getValue(formData.repository)
@@ -800,7 +804,7 @@ export function ACRArtifact({
                         getMultiTypeFromValue(formik.values?.tag) === MultiTypeInputType.FIXED &&
                         selectedArtifact &&
                         getHelpeTextForTags(
-                          helperTextData(selectedArtifact, formik, getConnectorIdValue(prevStepData)),
+                          helperTextData(selectedArtifact, formik, getConnectorIdValue(modifiedPrevStepData)),
                           getString
                         )
                       }
@@ -894,7 +898,7 @@ export function ACRArtifact({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

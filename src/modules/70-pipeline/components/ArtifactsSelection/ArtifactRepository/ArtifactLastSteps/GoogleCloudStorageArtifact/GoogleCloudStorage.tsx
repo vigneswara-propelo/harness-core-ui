@@ -71,8 +71,11 @@ export function GoogleCloudStorage(
     isReadonly = false,
     selectedArtifact,
     isMultiArtifactSource,
-    formClassName = ''
+    formClassName = '',
+    editArtifactModePrevStepData
   } = props
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
   const [lastProjectsQueryData, setLastProjectsQueryData] = React.useState({
     connectorRef: ''
@@ -89,7 +92,11 @@ export function GoogleCloudStorage(
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const getConnectorRefQueryData = (): string => {
-    return prevStepData?.connectorId?.value || prevStepData?.connectorId?.connector?.value || prevStepData?.identifier
+    return (
+      modifiedPrevStepData?.connectorId?.value ||
+      modifiedPrevStepData?.connectorId?.connector?.value ||
+      modifiedPrevStepData?.identifier
+    )
   }
 
   // Project
@@ -121,8 +128,8 @@ export function GoogleCloudStorage(
 
   const canFetchProjects = useCallback((): boolean => {
     const connectorRef = getConnectorRefQueryData()
-    return !!(lastProjectsQueryData.connectorRef !== connectorRef && shouldFetchFieldOptions(prevStepData, []))
-  }, [lastProjectsQueryData, prevStepData])
+    return !!(lastProjectsQueryData.connectorRef !== connectorRef && shouldFetchFieldOptions(modifiedPrevStepData, []))
+  }, [lastProjectsQueryData, modifiedPrevStepData])
 
   const fetchProjects = useCallback((): void => {
     if (canFetchProjects()) {
@@ -172,10 +179,10 @@ export function GoogleCloudStorage(
       const connectorRef = getConnectorRefQueryData()
       return !!(
         (lastBucketsQueryData.connectorRef !== connectorRef || lastBucketsQueryData.project !== project) &&
-        shouldFetchFieldOptions(prevStepData, [])
+        shouldFetchFieldOptions(modifiedPrevStepData, [])
       )
     },
-    [prevStepData, lastBucketsQueryData]
+    [modifiedPrevStepData, lastBucketsQueryData]
   )
 
   const fetchBuckets = useCallback(
@@ -229,9 +236,9 @@ export function GoogleCloudStorage(
   const handleValidate = (formData: GoogleCloudStorageInitialValuesType & { connectorId?: string }): void => {
     if (hideHeaderAndNavBtns) {
       submitFormData({
-        ...prevStepData,
+        ...modifiedPrevStepData,
         ...formData,
-        connectorId: getConnectorIdValue(prevStepData)
+        connectorId: getConnectorIdValue(modifiedPrevStepData)
       })
     }
   }
@@ -274,7 +281,7 @@ export function GoogleCloudStorage(
 
   const getProjectHelperText = React.useCallback(
     (formik: FormikProps<GoogleCloudStorageInitialValuesType>) => {
-      const prevStepConnectorRef = getConnectorIdValue(prevStepData)
+      const prevStepConnectorRef = getConnectorIdValue(modifiedPrevStepData)
       if (
         getMultiTypeFromValue(get(formik?.values, `project`)) === MultiTypeInputType.FIXED &&
         (getMultiTypeFromValue(prevStepConnectorRef) === MultiTypeInputType.RUNTIME ||
@@ -283,12 +290,12 @@ export function GoogleCloudStorage(
         return getString('pipeline.projectHelperText')
       }
     },
-    [prevStepData]
+    [modifiedPrevStepData]
   )
 
   const getBucketHelperText = React.useCallback(
     (formik: FormikProps<GoogleCloudStorageInitialValuesType>) => {
-      const prevStepConnectorRef = getConnectorIdValue(prevStepData)
+      const prevStepConnectorRef = getConnectorIdValue(modifiedPrevStepData)
       if (
         getMultiTypeFromValue(get(formik?.values, `bucket`)) === MultiTypeInputType.FIXED &&
         (getMultiTypeFromValue(prevStepConnectorRef) === MultiTypeInputType.RUNTIME ||
@@ -297,7 +304,7 @@ export function GoogleCloudStorage(
         return getString('pipeline.bucketNameHelperText')
       }
     },
-    [prevStepData]
+    [modifiedPrevStepData]
   )
 
   const itemRenderer = useCallback(
@@ -321,9 +328,9 @@ export function GoogleCloudStorage(
         validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorId: getConnectorIdValue(prevStepData)
+            connectorId: getConnectorIdValue(modifiedPrevStepData)
           })
         }}
       >
@@ -478,7 +485,7 @@ export function GoogleCloudStorage(
                   variation={ButtonVariation.SECONDARY}
                   text={getString('back')}
                   icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
+                  onClick={() => previousStep?.(modifiedPrevStepData)}
                 />
                 <Button
                   variation={ButtonVariation.PRIMARY}

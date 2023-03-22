@@ -12,23 +12,21 @@ import {
   Button,
   ButtonSize,
   ButtonVariation,
-  getMultiTypeFromValue,
   Layout,
-  MultiTypeInputType,
   PageSpinner,
   StepProps,
   StepWizard
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
-import { defaultTo, get, isEmpty, noop } from 'lodash-es'
+import { defaultTo, get, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ManifestWizard } from '@pipeline/components/ManifestSelection/ManifestWizard/ManifestWizard'
-import { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, useGetConnector } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import {
   getBuildPayload,
   isGitTypeManifestStore,
@@ -82,10 +80,9 @@ import {
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useQueryParams } from '@common/hooks'
 import type { EnvironmentPathProps, GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
 import HelmRepoOverrideManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HelmRepoOverrideManifest/HelmRepoOverrideManifest'
+import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 import {
   OverrideManifestTypes,
   OverrideManifestStores,
@@ -141,7 +138,7 @@ function ServiceManifestOverride({
   >()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-  const { CDS_TAS_NG, CDS_MANIFEST_LAST_STEP } = useFeatureFlags()
+  const { CDS_TAS_NG, CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
 
   useEffect(() => {
     setIsManifestEditMode(manifestIndex < manifestOverrides.length)
@@ -246,73 +243,12 @@ function ServiceManifestOverride({
   )
 
   const initialValues = getLastStepInitialData()
-  const selected = defaultTo(getConnectorRef({ manifest: initialValues }), undefined) as any
+  const initialConnectorRef = defaultTo(getConnectorRef({ manifest: initialValues }), undefined) as any
 
-  const [selectedValue, setSelectedValue] = React.useState(selected)
-
-  useEffect(() => {
-    setSelectedValue(selected)
-  }, [selected])
-
-  const scopeFromSelected =
-    typeof selectedValue === 'string' && selectedValue.length > 0
-      ? getScopeFromValue(selectedValue || '')
-      : selected?.length > 0
-      ? getScopeFromValue(selected || '')
-      : selectedValue?.scope
-
-  const selectedRef = React.useMemo(() => {
-    return typeof selected === 'string' ? getIdentifierFromValue(selected || '') : selectedValue?.connector?.identifier
-  }, [selected, selectedValue])
-
-  const {
-    data: connectorData,
-    loading,
-    refetch
-  } = useGetConnector({
-    identifier: selectedRef,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier: scopeFromSelected === Scope.ORG || scopeFromSelected === Scope.PROJECT ? orgIdentifier : undefined,
-      projectIdentifier: scopeFromSelected === Scope.PROJECT ? projectIdentifier : undefined,
-      ...(!isEmpty(repoIdentifier) && !isEmpty(branch)
-        ? {
-            repoIdentifier,
-            branch,
-            getDefaultFromOtherRepo: true
-          }
-        : {})
-    },
-    lazy: true
+  const { selectedConnector, fetchingConnector } = useGetLastStepConnectorValue({
+    initialConnectorRef,
+    isEditMode: isManifestEditMode
   })
-
-  React.useEffect(() => {
-    if (getMultiTypeFromValue(selected) === MultiTypeInputType.FIXED && isManifestEditMode && CDS_MANIFEST_LAST_STEP) {
-      if (typeof selected === 'string' && selected?.length > 0) {
-        refetch()
-      }
-    }
-  }, [selected, isManifestEditMode, refetch, CDS_MANIFEST_LAST_STEP])
-
-  React.useEffect(() => {
-    if (typeof selected === 'string' && getMultiTypeFromValue(selected) === MultiTypeInputType.FIXED && !loading) {
-      if (connectorData && connectorData?.data?.connector?.name) {
-        const scope = getScopeFromValue(selected || '')
-        const value = {
-          label: connectorData?.data?.connector?.name,
-          value:
-            scope === Scope.ORG || scope === Scope.ACCOUNT
-              ? `${scope}.${connectorData?.data?.connector?.identifier}`
-              : connectorData?.data?.connector?.identifier,
-          scope: scope,
-          live: connectorData?.data?.status?.status === 'SUCCESS',
-          connector: connectorData?.data?.connector
-        }
-        setSelectedValue(value)
-      }
-    }
-  }, [connectorData, loading, selected])
-
   const lastStepProps = useCallback((): ManifestLastStepProps => {
     const manifestDetailsProps: ManifestLastStepProps = {
       key: getString('pipeline.manifestType.manifestDetails'),
@@ -334,13 +270,13 @@ function ServiceManifestOverride({
     return {
       editManifestModePrevStepData: {
         ...getInitialValues(),
-        connectorRef: selectedValue
+        connectorRef: selectedConnector
       }
     }
-  }, [getInitialValues, selectedValue])
+  }, [getInitialValues, selectedConnector])
 
-  const shouldPassPrevStepData = () => {
-    return isManifestEditMode && selectedValue && CDS_MANIFEST_LAST_STEP
+  const shouldPassPrevStepData = (): boolean => {
+    return isManifestEditMode && !!selectedConnector && !!CDS_SERVICE_CONFIG_LAST_STEP
   }
 
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
@@ -348,7 +284,7 @@ function ServiceManifestOverride({
     let manifestDetailStep = null
     const isGitTypeStores = isGitTypeManifestStore(manifestStore as OverrideManifestStoresTypes)
 
-    if (isManifestEditMode && loading) {
+    if (isManifestEditMode && fetchingConnector) {
       manifestDetailStep = <PageSpinner />
     } else {
       switch (true) {
@@ -454,7 +390,15 @@ function ServiceManifestOverride({
 
     arr.push(manifestDetailStep)
     return arr
-  }, [manifestStore, selectedManifest, lastStepProps, prevStepProps, selectedValue, isManifestEditMode, loading])
+  }, [
+    manifestStore,
+    selectedManifest,
+    lastStepProps,
+    prevStepProps,
+    selectedConnector,
+    isManifestEditMode,
+    fetchingConnector
+  ])
 
   const getLabels = (): { firstStepName: string; secondStepName: string } => {
     return {

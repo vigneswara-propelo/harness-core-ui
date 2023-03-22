@@ -104,11 +104,11 @@ const testAwsLambdaManifestLastStep = async (portal: HTMLElement): Promise<void>
   userEvent.click(submitButton)
 }
 
-const testUpdateAwsLambdaFunctionDefinitionManifest = async (CDS_MANIFEST_LAST_STEP: boolean): Promise<void> => {
+const testUpdateAwsLambdaFunctionDefinitionManifest = async (CDS_SERVICE_CONFIG_LAST_STEP: boolean): Promise<void> => {
   const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
   const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
 
-  if (CDS_MANIFEST_LAST_STEP) {
+  if (CDS_SERVICE_CONFIG_LAST_STEP) {
     // Check if second step IS NOT displayed
     const Git = queryByValueAttribute('Git')
     await waitFor(() => expect(Git).toBeNull()) // Because upon editing manifest, directly third step will be shown
@@ -241,7 +241,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
     expect(screen.getByText('AwsLambdaFunctionAliasDefinition_Manifest')).toBeInTheDocument()
   })
 
-  test('update AwsLambdaFunctionDefinition manifest when CDS_MANIFEST_LAST_STEP is OFF', async () => {
+  test('update AwsLambdaFunctionDefinition manifest when CDS_SERVICE_CONFIG_LAST_STEP is OFF', async () => {
     const updateStage = jest.fn()
     pipelineContextAwsLambdaManifests.updateStage = updateStage
 
@@ -279,7 +279,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
     })
   })
 
-  test('update AwsLambdaFunctionDefinition manifest when CDS_MANIFEST_LAST_STEP is ON', async () => {
+  test('update AwsLambdaFunctionDefinition manifest when CDS_SERVICE_CONFIG_LAST_STEP is ON', async () => {
     const updateStage = jest.fn()
     pipelineContextAwsLambdaManifests.updateStage = updateStage
 
@@ -287,7 +287,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
       <TestWrapper
         path={TEST_PATH}
         pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
-        defaultFeatureFlagValues={{ CDS_MANIFEST_LAST_STEP: true }}
+        defaultFeatureFlagValues={{ CDS_SERVICE_CONFIG_LAST_STEP: true }}
       >
         <PipelineContext.Provider value={pipelineContextAwsLambdaManifests}>
           <AwsLambdaServiceSpecEditable
@@ -395,7 +395,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
       <TestWrapper
         path={TEST_PATH}
         pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
-        defaultFeatureFlagValues={{ CDS_MANIFEST_LAST_STEP: true }}
+        defaultFeatureFlagValues={{ CDS_SERVICE_CONFIG_LAST_STEP: true }}
       >
         <PipelineContext.Provider value={pipelineContextAwsLambdaManifests}>
           <AwsLambdaServiceSpecEditable

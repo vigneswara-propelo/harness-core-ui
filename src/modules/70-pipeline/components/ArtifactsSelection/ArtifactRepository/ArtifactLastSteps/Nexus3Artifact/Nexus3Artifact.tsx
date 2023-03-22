@@ -89,7 +89,8 @@ export function Nexus3Artifact({
   selectedArtifact,
   selectedDeploymentType = '',
   isMultiArtifactSource,
-  formClassName = ''
+  formClassName = '',
+  editArtifactModePrevStepData
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2InitialValuesType>): React.ReactElement {
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
@@ -99,6 +100,9 @@ export function Nexus3Artifact({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { AZURE_WEB_APP_NG_NEXUS_PACKAGE } = useFeatureFlags()
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -167,7 +171,7 @@ export function Nexus3Artifact({
   })
 
   const getConnectorRefQueryData = (): string => {
-    return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
+    return defaultTo(modifiedPrevStepData?.connectorId?.value, modifiedPrevStepData?.identifier)
   }
 
   const {
@@ -268,7 +272,7 @@ export function Nexus3Artifact({
           lastQueryData.groupId !== formikValues.spec.groupId ||
           lastQueryData.extension !== formikValues.spec.extension ||
           lastQueryData.classifier !== formikValues.spec.classifier ||
-          shouldFetchFieldOptions(prevStepData, [
+          shouldFetchFieldOptions(modifiedPrevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.artifactId || '',
@@ -282,7 +286,7 @@ export function Nexus3Artifact({
           lastQueryData.artifactPath !== formikValues.spec.artifactPath ||
           lastQueryData.repositoryUrl !== formikValues.spec.repositoryUrl ||
           lastQueryData.repositoryPort !== formikValues.spec.repositoryPort ||
-          shouldFetchFieldOptions(prevStepData, [
+          shouldFetchFieldOptions(modifiedPrevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.artifactPath || '',
@@ -293,7 +297,7 @@ export function Nexus3Artifact({
         ? lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
           lastQueryData.repository !== formikValues.repository ||
           lastQueryData.group !== formikValues.spec.group ||
-          shouldFetchFieldOptions(prevStepData, [
+          shouldFetchFieldOptions(modifiedPrevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.group || ''
@@ -301,13 +305,13 @@ export function Nexus3Artifact({
         : lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
           lastQueryData.repository !== formikValues.repository ||
           lastQueryData.packageName !== formikValues.spec.packageName ||
-          shouldFetchFieldOptions(prevStepData, [
+          shouldFetchFieldOptions(modifiedPrevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.packageName || ''
           ]))
     },
-    [lastQueryData, prevStepData]
+    [lastQueryData, modifiedPrevStepData]
   )
 
   const fetchTags = useCallback(
@@ -444,9 +448,9 @@ export function Nexus3Artifact({
   const handleValidate = (formData: Nexus2InitialValuesType & { connectorId?: string }) => {
     if (hideHeaderAndNavBtns) {
       submitFormData({
-        ...prevStepData,
+        ...modifiedPrevStepData,
         ...formData,
-        connectorId: getConnectorIdValue(prevStepData)
+        connectorId: getConnectorIdValue(modifiedPrevStepData)
       })
     }
   }
@@ -464,9 +468,9 @@ export function Nexus3Artifact({
         validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorId: getConnectorIdValue(prevStepData)
+            connectorId: getConnectorIdValue(modifiedPrevStepData)
           })
         }}
       >
@@ -829,7 +833,7 @@ export function Nexus3Artifact({
                 expressions={expressions}
                 allowableTypes={allowableTypes}
                 isReadonly={isReadonly}
-                connectorIdValue={getConnectorIdValue(prevStepData)}
+                connectorIdValue={getConnectorIdValue(modifiedPrevStepData)}
                 fetchTags={() => fetchTags(formik.values)}
                 buildDetailsLoading={nexusBuildDetailsLoading}
                 tagError={nexusTagError}
@@ -847,7 +851,7 @@ export function Nexus3Artifact({
                   variation={ButtonVariation.SECONDARY}
                   text={getString('back')}
                   icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
+                  onClick={() => previousStep?.(modifiedPrevStepData)}
                 />
                 <Button
                   variation={ButtonVariation.PRIMARY}

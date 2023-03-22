@@ -71,8 +71,11 @@ function FormComponent({
   isReadonly = false,
   formik,
   isMultiArtifactSource,
-  formClassName = ''
+  formClassName = '',
+  editArtifactModePrevStepData
 }: StepProps<ConnectorConfigDTO> & BambooArtifactProps & ArtifactFormikProps<BambooArtifactType>): React.ReactElement {
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -88,7 +91,7 @@ function FormComponent({
     branch
   }
 
-  const connectorRefValue = getConnectorIdValue(prevStepData)
+  const connectorRefValue = getConnectorIdValue(modifiedPrevStepData)
   const planNameValue = get(formik.values, 'spec.planKey', '')
   const [planValue, setPlanValue] = useState<SelectOption>(planNameValue)
 
@@ -376,7 +379,7 @@ function FormComponent({
             variation={ButtonVariation.SECONDARY}
             text={getString('back')}
             icon="chevron-left"
-            onClick={() => previousStep?.(prevStepData)}
+            onClick={() => previousStep?.(modifiedPrevStepData)}
           />
           <Button
             variation={ButtonVariation.PRIMARY}
@@ -392,7 +395,18 @@ function FormComponent({
 
 export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArtifactProps): React.ReactElement {
   const { getString } = useStrings()
-  const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
+  const {
+    context,
+    handleSubmit,
+    initialValues,
+    prevStepData,
+    selectedArtifact,
+    artifactIdentifiers,
+    editArtifactModePrevStepData
+  } = props
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
 
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
@@ -431,7 +445,7 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
         {
           ...formData
         },
-        getConnectorIdValue(prevStepData)
+        getConnectorIdValue(modifiedPrevStepData)
       )
     }
   }
@@ -475,7 +489,7 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
             {
               ...formData
             },
-            getConnectorIdValue(prevStepData)
+            getConnectorIdValue(modifiedPrevStepData)
           )
         }}
       >

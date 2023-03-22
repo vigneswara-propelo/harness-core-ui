@@ -6,6 +6,9 @@
  */
 
 import React from 'react'
+
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type {
   AmazonS3InitialValuesType,
   CustomArtifactSource,
@@ -52,49 +55,77 @@ export type ArtifactLastStepProps = ImagePathProps<
     GoogleCloudSourceRepositoriesInitialValuesType
 >
 
+export interface ArtifactConnectorStepDataToLastStep {
+  submittedArtifact: string
+  connectorId: ConnectorSelectedValue | string
+}
+
+interface ArtifactPrevStepData {
+  editArtifactModePrevStepData: ArtifactConnectorStepDataToLastStep
+}
+
 export interface ArtifactSelectionLastStepsParams {
   selectedArtifact: ArtifactType | null
   artifactLastStepProps: ArtifactLastStepProps
+  artifactPrevStepData?: ArtifactPrevStepData
+  isArtifactEditMode?: boolean
+  selectedConnector?: ConnectorSelectedValue | string
 }
 
-export function useArtifactSelectionLastSteps(params: ArtifactSelectionLastStepsParams) {
-  const { selectedArtifact, artifactLastStepProps } = params
+export function useArtifactSelectionLastSteps(params: ArtifactSelectionLastStepsParams): JSX.Element {
+  const { selectedArtifact, artifactLastStepProps, artifactPrevStepData, isArtifactEditMode, selectedConnector } =
+    params
+
+  const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
+
+  const shouldPassPrevStepData = isArtifactEditMode && !!selectedConnector && CDS_SERVICE_CONFIG_LAST_STEP
 
   switch (selectedArtifact) {
     case ENABLED_ARTIFACT_TYPES.Gcr:
-      return <GCRImagePath {...artifactLastStepProps} />
+      return <GCRImagePath {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
     case ENABLED_ARTIFACT_TYPES.Ecr:
-      return <ECRArtifact {...artifactLastStepProps} />
+      return <ECRArtifact {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
     case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
-      return <Nexus3Artifact {...artifactLastStepProps} />
+      return <Nexus3Artifact {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
     case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
-      return <Nexus2Artifact {...artifactLastStepProps} />
+      return <Nexus2Artifact {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
     case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
-      return <Artifactory {...artifactLastStepProps} />
+      return <Artifactory {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
     case ENABLED_ARTIFACT_TYPES.AmazonS3:
-      return <AmazonS3 {...artifactLastStepProps} />
+      return <AmazonS3 {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
     case ENABLED_ARTIFACT_TYPES.CustomArtifact:
-      return <CustomArtifact {...artifactLastStepProps} />
+      return <CustomArtifact {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
     case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
-      return <AzureArtifacts {...artifactLastStepProps} />
+      return <AzureArtifacts {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
     case ENABLED_ARTIFACT_TYPES.Acr:
-      return <ACRArtifact {...artifactLastStepProps} />
+      return <ACRArtifact {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
     case ENABLED_ARTIFACT_TYPES.Jenkins:
-      return <JenkinsArtifact {...artifactLastStepProps} />
+      return <JenkinsArtifact {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
     case ENABLED_ARTIFACT_TYPES.Bamboo:
-      return <BambooArtifact {...artifactLastStepProps} />
+      return <BambooArtifact {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
-      return <GoogleArtifactRegistry {...artifactLastStepProps} />
+      return (
+        <GoogleArtifactRegistry {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
+      )
     case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
-      return <GithubPackageRegistry {...artifactLastStepProps} />
+      return (
+        <GithubPackageRegistry {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
+      )
     case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
-      return <AmazonMachineImage {...artifactLastStepProps} />
+      return <AmazonMachineImage {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
     case ENABLED_ARTIFACT_TYPES.GoogleCloudStorage:
-      return <GoogleCloudStorage {...artifactLastStepProps} />
+      return <GoogleCloudStorage {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
     case ENABLED_ARTIFACT_TYPES.GoogleCloudSource:
-      return <GoogleCloudSourceRepositories {...artifactLastStepProps} />
+      return (
+        <GoogleCloudSourceRepositories
+          {...artifactLastStepProps}
+          {...(shouldPassPrevStepData ? artifactPrevStepData : {})}
+        />
+      )
     case ENABLED_ARTIFACT_TYPES.DockerRegistry:
     default:
-      return <DockerRegistryArtifact {...artifactLastStepProps} />
+      return (
+        <DockerRegistryArtifact {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
+      )
   }
 }

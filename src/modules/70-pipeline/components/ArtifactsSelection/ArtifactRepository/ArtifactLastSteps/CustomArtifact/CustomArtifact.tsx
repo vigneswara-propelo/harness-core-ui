@@ -82,8 +82,11 @@ function FormContent({
   formik,
   selectedArtifact,
   isMultiArtifactSource,
-  formClassName
+  formClassName,
+  editArtifactModePrevStepData
 }: any): React.ReactElement {
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const { getString } = useStrings()
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const { accountId, projectIdentifier, orgIdentifier } =
@@ -583,7 +586,7 @@ function FormContent({
             variation={ButtonVariation.SECONDARY}
             text={getString('back')}
             icon="chevron-left"
-            onClick={() => previousStep?.(prevStepData)}
+            onClick={() => previousStep?.(modifiedPrevStepData)}
           />
           <Button
             variation={ButtonVariation.PRIMARY}
@@ -600,7 +603,18 @@ function FormContent({
 export function CustomArtifact(
   props: StepProps<ConnectorConfigDTO> & ImagePathProps<CustomArtifactSource>
 ): React.ReactElement {
-  const { context, initialValues, artifactIdentifiers, selectedArtifact, handleSubmit, prevStepData } = props
+  const {
+    context,
+    initialValues,
+    artifactIdentifiers,
+    selectedArtifact,
+    handleSubmit,
+    prevStepData,
+    editArtifactModePrevStepData
+  } = props
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
@@ -665,8 +679,8 @@ export function CustomArtifact(
   })
   const getInitialValues = (): CustomArtifactSource => {
     let currentValue = cloneDeep(initialValues)
-    if (prevStepData?.spec) {
-      currentValue = { ...prevStepData, type: 'CustomArtifact' }
+    if (modifiedPrevStepData?.spec) {
+      currentValue = { ...modifiedPrevStepData, type: 'CustomArtifact' }
     }
     if (currentValue?.spec?.scripts) {
       currentValue.formType = formFillingMethod.SCRIPT

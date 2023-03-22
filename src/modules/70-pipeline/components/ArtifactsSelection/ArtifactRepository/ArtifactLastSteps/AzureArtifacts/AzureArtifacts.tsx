@@ -81,8 +81,11 @@ function FormComponent(
     isReadonly = false,
     formik,
     isMultiArtifactSource,
-    formClassName = ''
+    formClassName = '',
+    editArtifactModePrevStepData
   } = props
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -97,7 +100,7 @@ function FormComponent(
     branch
   }
 
-  const connectorRefValue = getConnectorIdValue(prevStepData)
+  const connectorRefValue = getConnectorIdValue(modifiedPrevStepData)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const projectValue = defaultTo(getGenuineValue(formik.values.project), '')
   const feedValue = defaultTo(getGenuineValue(formik.values.feed), '')
@@ -617,7 +620,7 @@ function FormComponent(
             variation={ButtonVariation.SECONDARY}
             text={getString('back')}
             icon="chevron-left"
-            onClick={() => previousStep?.(prevStepData)}
+            onClick={() => previousStep?.(modifiedPrevStepData)}
           />
           <Button
             variation={ButtonVariation.PRIMARY}
@@ -635,7 +638,18 @@ export function AzureArtifacts(
   props: StepProps<ConnectorConfigDTO> & ImagePathProps<AzureArtifactsInitialValues>
 ): React.ReactElement {
   const { getString } = useStrings()
-  const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
+  const {
+    context,
+    handleSubmit,
+    initialValues,
+    prevStepData,
+    selectedArtifact,
+    artifactIdentifiers,
+    editArtifactModePrevStepData
+  } = props
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -654,7 +668,7 @@ export function AzureArtifacts(
         {
           ...formData
         },
-        getConnectorIdValue(prevStepData)
+        getConnectorIdValue(modifiedPrevStepData)
       )
     }
   }
@@ -742,7 +756,7 @@ export function AzureArtifacts(
             {
               ...formData
             },
-            getConnectorIdValue(prevStepData)
+            getConnectorIdValue(modifiedPrevStepData)
           )
         }}
       >

@@ -72,7 +72,8 @@ export function ECRArtifact({
   isReadonly = false,
   selectedArtifact,
   isMultiArtifactSource,
-  formClassName = ''
+  formClassName = '',
+  editArtifactModePrevStepData
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -88,10 +89,12 @@ export function ECRArtifact({
     region: ''
   })
 
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const getConnectorRefQueryData = (): string => {
-    return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
+    return defaultTo(modifiedPrevStepData?.connectorId?.value, modifiedPrevStepData?.identifier)
   }
 
   // Region
@@ -150,8 +153,8 @@ export function ECRArtifact({
 
   const canFetchImagesList = useCallback(
     (region: string): boolean =>
-      !!(imagesListLastQueryData.region !== region && shouldFetchFieldOptions(prevStepData, [region])),
-    [imagesListLastQueryData, prevStepData]
+      !!(imagesListLastQueryData.region !== region && shouldFetchFieldOptions(modifiedPrevStepData, [region])),
+    [imagesListLastQueryData, modifiedPrevStepData]
   )
 
   const fetchImagesList = useCallback(
@@ -200,7 +203,7 @@ export function ECRArtifact({
     if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
       refetchECRBuilddata()
     }
-  }, [lastQueryData, prevStepData, refetchECRBuilddata])
+  }, [lastQueryData, modifiedPrevStepData, refetchECRBuilddata])
 
   const fetchTags = (imagePath = '', region = ''): void => {
     if (canFetchTags(imagePath, region)) {
@@ -211,9 +214,9 @@ export function ECRArtifact({
     (imagePath: string, region: string): boolean =>
       !!(
         (lastQueryData.imagePath !== imagePath || lastQueryData.region !== region) &&
-        shouldFetchFieldOptions(prevStepData, [imagePath, region])
+        shouldFetchFieldOptions(modifiedPrevStepData, [imagePath, region])
       ),
-    [lastQueryData, prevStepData]
+    [lastQueryData, modifiedPrevStepData]
   )
 
   const isTagDisabled = useCallback((formikValue): boolean => {
@@ -266,15 +269,15 @@ export function ECRArtifact({
   const handleValidate = (formData: ImagePathTypes & { connectorId?: string }) => {
     if (hideHeaderAndNavBtns) {
       submitFormData({
-        ...prevStepData,
+        ...modifiedPrevStepData,
         ...formData,
-        connectorId: getConnectorIdValue(prevStepData)
+        connectorId: getConnectorIdValue(modifiedPrevStepData)
       })
     }
   }
 
   const getImagePathHelperText = (formikForm: FormikProps<ImagePathTypes>) => {
-    const connectorRefValue = getConnectorIdValue(prevStepData)
+    const connectorRefValue = getConnectorIdValue(modifiedPrevStepData)
     if (
       (getMultiTypeFromValue(formikForm?.values.imagePath) === MultiTypeInputType.FIXED &&
         (isMultiTypeRuntime(getMultiTypeFromValue(connectorRefValue)) || connectorRefValue?.length === 0)) ||
@@ -308,9 +311,9 @@ export function ECRArtifact({
         validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorId: getConnectorIdValue(prevStepData)
+            connectorId: getConnectorIdValue(modifiedPrevStepData)
           })
         }}
         enableReinitialize={true}
@@ -426,7 +429,7 @@ export function ECRArtifact({
                 expressions={expressions}
                 allowableTypes={allowableTypes}
                 isReadonly={isReadonly}
-                connectorIdValue={getConnectorIdValue(prevStepData)}
+                connectorIdValue={getConnectorIdValue(modifiedPrevStepData)}
                 fetchTags={imagePath => fetchTags(imagePath, formik.values?.region)}
                 buildDetailsLoading={ecrBuildDetailsLoading}
                 tagError={ecrTagError}
@@ -444,7 +447,7 @@ export function ECRArtifact({
                   variation={ButtonVariation.SECONDARY}
                   text={getString('back')}
                   icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
+                  onClick={() => previousStep?.(modifiedPrevStepData)}
                 />
                 <Button
                   variation={ButtonVariation.PRIMARY}

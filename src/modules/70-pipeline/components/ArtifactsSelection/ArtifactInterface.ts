@@ -26,6 +26,7 @@ import type {
 import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import type { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import type { ModalViewFor } from './ArtifactHelper'
+import type { ArtifactConnectorStepDataToLastStep } from './hooks/useArtifactSelectionLastSteps'
 
 export interface ArtifactListViewProps {
   stage: StageElementWrapper<DeploymentStageElementConfig> | undefined
@@ -146,6 +147,7 @@ export interface ImagePathProps<T> {
   isMultiArtifactSource?: boolean
   formClassName?: string
   prevStepData?: ConnectorConfigDTO
+  editArtifactModePrevStepData?: ArtifactConnectorStepDataToLastStep
 }
 
 export interface AzureArtifactsInitialValues {
@@ -173,6 +175,7 @@ export interface AmazonS3ArtifactProps {
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
   formClassName?: string
+  editArtifactModePrevStepData?: ArtifactConnectorStepDataToLastStep
 }
 
 export interface GithubPackageRegistryInitialValuesType {
@@ -213,6 +216,7 @@ export interface GithubPackageRegistryProps {
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
+  editArtifactModePrevStepData?: ArtifactConnectorStepDataToLastStep
 }
 
 export interface ACRArtifactProps {
@@ -228,6 +232,7 @@ export interface ACRArtifactProps {
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
   formClassName?: string
+  editArtifactModePrevStepData?: ArtifactConnectorStepDataToLastStep
 }
 
 export interface JenkinsArtifactProps {
@@ -242,6 +247,7 @@ export interface JenkinsArtifactProps {
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
+  editArtifactModePrevStepData?: ArtifactConnectorStepDataToLastStep
 }
 
 export interface BambooArtifactProps {
@@ -256,6 +262,7 @@ export interface BambooArtifactProps {
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
+  editArtifactModePrevStepData?: ArtifactConnectorStepDataToLastStep
 }
 
 export interface ArtifactFormikProps<Values> {
@@ -291,6 +298,7 @@ export interface GoogleArtifactRegistryProps {
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
   formClassName?: string
+  editArtifactModePrevStepData?: ArtifactConnectorStepDataToLastStep
 }
 
 export interface Nexus2ArtifactProps {
@@ -432,6 +440,7 @@ export interface GoogleCloudStorageArtifactProps {
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
   formClassName?: string
+  editArtifactModePrevStepData?: ArtifactConnectorStepDataToLastStep
 }
 
 export interface GoogleCloudSourceRepositoriesInitialValuesType {
@@ -454,4 +463,5 @@ export interface GoogleCloudSourceRepositoriesArtifactProps {
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
   formClassName?: string
+  editArtifactModePrevStepData?: ArtifactConnectorStepDataToLastStep
 }

@@ -6,18 +6,16 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { get, set, defaultTo, isEmpty, merge, unset, some, isUndefined } from 'lodash-es'
+import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
+import cx from 'classnames'
+import { useParams } from 'react-router-dom'
+import produce from 'immer'
 import { RUNTIME_INPUT_VALUE, shouldShowError, useToaster } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
-import cx from 'classnames'
-import { useParams } from 'react-router-dom'
-
-import produce from 'immer'
-
-import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
-import { get, set, defaultTo, isEmpty, merge, unset, some, isUndefined } from 'lodash-es'
-import { useArtifactSelectionLastSteps } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
+
 import {
   ArtifactConfig,
   ArtifactListConfig,
@@ -28,32 +26,37 @@ import {
   SidecarArtifactWrapper,
   useGetConnectorListV2
 } from 'services/cd-ng'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-import type { GitQueryParams, ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import type { TemplateStepNode, TemplateLinkConfig } from 'services/pipeline-ng'
+import { getTemplateInputSetYamlPromise } from 'services/template-ng'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { Scope } from '@common/interfaces/SecretsInterface'
-// eslint-disable-next-line no-restricted-imports
-import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
+import type { GitQueryParams, ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
+import { ArtifactActions } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { parse } from '@common/utils/YamlHelperMethods'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import {
+  ArtifactConnectorStepDataToLastStep,
+  useArtifactSelectionLastSteps
+} from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { ArtifactConfigDrawer } from '@pipeline/components/ArtifactsSelection/ArtifactConfigDrawer/ArtifactConfigDrawer'
-import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type {
   StepOrStepGroupOrTemplateStepData,
   Values
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
-import { getTemplateInputSetYamlPromise } from 'services/template-ng'
-import { useTelemetry } from '@common/hooks/useTelemetry'
-import { parse } from '@common/utils/YamlHelperMethods'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
-import { ArtifactActions } from '@common/constants/TrackingConstants'
-import type { TemplateStepNode, TemplateLinkConfig } from 'services/pipeline-ng'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
+// eslint-disable-next-line no-restricted-imports
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import ArtifactListView from './ArtifactListView/ArtifactListView'
 import type {
@@ -161,8 +164,13 @@ export default function ServiceV2ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { CUSTOM_ARTIFACT_NG, AZURE_ARTIFACTS_NG, CD_AMI_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS } =
-    useFeatureFlags()
+  const {
+    CUSTOM_ARTIFACT_NG,
+    AZURE_ARTIFACTS_NG,
+    CD_AMI_ARTIFACTS_NG,
+    AZURE_WEBAPP_NG_JENKINS_ARTIFACTS,
+    CDS_SERVICE_CONFIG_LAST_STEP
+  } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
@@ -222,11 +230,18 @@ export default function ServiceV2ArtifactsSelection({
   const artifactsList = useMemo(() => {
     if (!isEmpty(artifacts)) {
       if (artifactContext === ModalViewFor.PRIMARY) {
-        return artifacts.primary?.sources
+        return defaultTo(artifacts.primary?.sources, [])
       }
-      return artifacts.sidecars
+      return defaultTo(artifacts.sidecars, [])
     }
+    return []
   }, [artifactContext, artifacts, artifacts?.primary, artifacts?.sidecars, stage])
+
+  const [isArtifactEditMode, setIsArtifactEditMode] = useState(artifactIndex < artifactsList.length)
+
+  useEffect(() => {
+    setIsArtifactEditMode(artifactIndex < artifactsList.length)
+  }, [artifactsList, artifactsList.length, artifactIndex])
 
   const getArtifactsPath = useCallback((type: ModalViewFor) => {
     if (type === ModalViewFor.PRIMARY) {
@@ -245,24 +260,6 @@ export default function ServiceV2ArtifactsSelection({
     title: '',
     style: { width: 1100, height: 550, borderLeft: 'none', paddingBottom: 0, position: 'relative' }
   }
-
-  const [showConnectorModal, hideConnectorModal] = useModalHook(
-    () => (
-      <Dialog
-        onClose={() => {
-          hideConnectorModal()
-          setConnectorView(false)
-          setIsEditMode(false)
-          setSelectedArtifact(null)
-        }}
-        {...DIALOG_PROPS}
-        className={cx(css.modal, Classes.DIALOG)}
-      >
-        {renderExistingArtifact()}
-      </Dialog>
-    ),
-    [artifactContext, selectedArtifact, connectorView, artifactIndex, expressions, allowableTypes, isEditMode]
-  )
 
   const getPrimaryConnectorList = useCallback((): Array<{ scope: Scope; identifier: string }> => {
     return defaultTo(
@@ -427,11 +424,20 @@ export default function ServiceV2ArtifactsSelection({
     }
   }, [artifactContext, artifactsList, artifactIndex, selectedArtifact])
 
+  const initialValues = getLastStepInitialData()
+  const initialConnectorRef = initialValues?.spec?.connectorRef
+
+  const { selectedConnector } = useGetLastStepConnectorValue({
+    connectorList: fetchedConnectorResponse?.content,
+    initialConnectorRef,
+    isEditMode: isArtifactEditMode
+  })
+
   const addOrUpdateArtifactSourceTemplate = async (): Promise<void> => {
     await handleUseArtifactSourceTemplate(artifactContext, true)
   }
 
-  const handleUseArtifactSourceTemplate = async (viewType: ModalViewFor, isEdit?: boolean) => {
+  const handleUseArtifactSourceTemplate = async (viewType: ModalViewFor, isEdit?: boolean): Promise<void> => {
     if (!isEdit) {
       setArtifactContext(viewType)
       const artifactObject = get(artifacts, getArtifactsPath(viewType))
@@ -509,7 +515,7 @@ export default function ServiceV2ArtifactsSelection({
     }
   }
 
-  const handleApplyChanges = async () => {
+  const handleApplyChanges = async (): Promise<void> => {
     if (checkDuplicateStep(formikRef, artifactsList, artifactContext, getString, artifactIndex)) {
       return
     }
@@ -547,7 +553,7 @@ export default function ServiceV2ArtifactsSelection({
     }
   }
 
-  const handleCloseDrawer = () => {
+  const handleCloseDrawer = (): void => {
     setIsArtifactSourceDrawerOpen(false)
   }
 
@@ -613,6 +619,15 @@ export default function ServiceV2ArtifactsSelection({
     deploymentType
   ])
 
+  const artifactPrevStepData = useMemo((): { editArtifactModePrevStepData: ArtifactConnectorStepDataToLastStep } => {
+    return {
+      editArtifactModePrevStepData: {
+        submittedArtifact: initialValues?.type,
+        connectorId: selectedConnector
+      }
+    }
+  }, [initialValues, selectedConnector])
+
   const getLabels = useMemo((): ConnectorRefLabelType => {
     return {
       firstStepName: getString('connectors.specifyArtifactRepoType'),
@@ -660,16 +675,38 @@ export default function ServiceV2ArtifactsSelection({
   }
   /******************************************************************Connector Steps************************************************************** */
 
-  const artifactSelectionLastSteps = useArtifactSelectionLastSteps({ selectedArtifact, artifactLastStepProps })
+  const artifactSelectionLastSteps = useArtifactSelectionLastSteps({
+    selectedArtifact,
+    artifactLastStepProps,
+    artifactPrevStepData,
+    isArtifactEditMode,
+    selectedConnector: selectedConnector
+  })
 
-  const changeArtifactType = useCallback((selected: ArtifactType | null): void => {
-    setSelectedArtifact(selected)
+  const changeArtifactType = useCallback((selectedArtifactType: ArtifactType | null): void => {
+    setSelectedArtifact(selectedArtifactType)
   }, [])
 
   const handleConnectorViewChange = useCallback((isConnectorView: boolean): void => {
     setConnectorView(isConnectorView)
     setIsEditMode(false)
   }, [])
+
+  // This function decides which step to show first when artifact wizard is opened
+  const getArtifactWizardInitialStepNumber = (): number => {
+    // In edit mode, show 2nd or 3rd step depending on how many steps are there in total
+    if (isArtifactEditMode && showConnectorStep(selectedArtifact as ArtifactType) && CDS_SERVICE_CONFIG_LAST_STEP) {
+      return 3
+    }
+    if (isArtifactEditMode && !showConnectorStep(selectedArtifact as ArtifactType) && CDS_SERVICE_CONFIG_LAST_STEP) {
+      return 2
+    }
+    // For create mode, if we need to show 2nd step directly
+    if (showArtifactStoreStepDirectly(selectedArtifact)) {
+      return 2
+    }
+    return 1
+  }
 
   const renderExistingArtifact = (): JSX.Element => {
     return (
@@ -694,11 +731,40 @@ export default function ServiceV2ArtifactsSelection({
         }}
         handleViewChange={handleConnectorViewChange}
         showConnectorStep={showConnectorStep(selectedArtifact as ArtifactType)}
-        artifactWizardInitialStep={showArtifactStoreStepDirectly(selectedArtifact) ? 2 : 1}
-        showArtifactSelectionStep
+        artifactWizardInitialStep={getArtifactWizardInitialStepNumber()}
+        showArtifactSelectionStep={true}
       />
     )
   }
+
+  const [showConnectorModal, hideConnectorModal] = useModalHook(
+    () => (
+      <Dialog
+        onClose={() => {
+          hideConnectorModal()
+          setConnectorView(false)
+          setIsEditMode(false)
+          setSelectedArtifact(null)
+        }}
+        {...DIALOG_PROPS}
+        className={cx(css.modal, Classes.DIALOG)}
+      >
+        {renderExistingArtifact()}
+      </Dialog>
+    ),
+    [
+      artifactContext,
+      selectedArtifact,
+      connectorView,
+      artifactIndex,
+      expressions,
+      allowableTypes,
+      isEditMode,
+      isArtifactEditMode,
+      artifactLastStepProps,
+      renderExistingArtifact
+    ]
+  )
 
   return (
     <>

@@ -70,7 +70,8 @@ export function Nexus2Artifact({
   isReadonly = false,
   selectedArtifact,
   isMultiArtifactSource,
-  formClassName = ''
+  formClassName = '',
+  editArtifactModePrevStepData
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2InitialValuesType>): React.ReactElement {
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
@@ -79,6 +80,8 @@ export function Nexus2Artifact({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
   const schemaObject = {
     tagRegex: Yup.string().when('tagType', {
@@ -123,7 +126,7 @@ export function Nexus2Artifact({
   })
 
   const getConnectorRefQueryData = (): string => {
-    return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
+    return defaultTo(modifiedPrevStepData?.connectorId?.value, modifiedPrevStepData?.identifier)
   }
 
   const commonParams = {
@@ -216,7 +219,7 @@ export function Nexus2Artifact({
           lastQueryData.groupId !== formikValues.spec.groupId ||
           lastQueryData.extension !== formikValues.spec.extension ||
           lastQueryData.classifier !== formikValues.spec.classifier ||
-          shouldFetchFieldOptions(prevStepData, [
+          shouldFetchFieldOptions(modifiedPrevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.artifactId || '',
@@ -227,13 +230,13 @@ export function Nexus2Artifact({
         : lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
           lastQueryData.repository !== formikValues.repository ||
           lastQueryData.packageName !== formikValues.spec.packageName ||
-          shouldFetchFieldOptions(prevStepData, [
+          shouldFetchFieldOptions(modifiedPrevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.packageName || ''
           ]))
     },
-    [lastQueryData, prevStepData]
+    [lastQueryData, modifiedPrevStepData]
   )
   const fetchTags = useCallback(
     (formikValues: Nexus2InitialValuesType): void => {
@@ -327,9 +330,9 @@ export function Nexus2Artifact({
   const handleValidate = (formData: Nexus2InitialValuesType & { connectorId?: string }) => {
     if (hideHeaderAndNavBtns) {
       submitFormData({
-        ...prevStepData,
+        ...modifiedPrevStepData,
         ...formData,
-        connectorId: getConnectorIdValue(prevStepData)
+        connectorId: getConnectorIdValue(modifiedPrevStepData)
       })
     }
   }
@@ -360,7 +363,11 @@ export function Nexus2Artifact({
         validationSchema={isMultiArtifactSource ? sidecarSchema : primarySchema}
         validate={handleValidate}
         onSubmit={formData => {
-          submitFormData?.({ ...prevStepData, ...formData, connectorId: getConnectorIdValue(prevStepData) })
+          submitFormData?.({
+            ...modifiedPrevStepData,
+            ...formData,
+            connectorId: getConnectorIdValue(modifiedPrevStepData)
+          })
         }}
       >
         {formik => (
@@ -585,7 +592,7 @@ export function Nexus2Artifact({
                 expressions={expressions}
                 allowableTypes={allowableTypes}
                 isReadonly={isReadonly}
-                connectorIdValue={getConnectorIdValue(prevStepData)}
+                connectorIdValue={getConnectorIdValue(modifiedPrevStepData)}
                 fetchTags={() => fetchTags(formik.values)}
                 buildDetailsLoading={nexusBuildDetailsLoading}
                 tagError={nexusTagError}
@@ -610,7 +617,7 @@ export function Nexus2Artifact({
                   variation={ButtonVariation.SECONDARY}
                   text={getString('back')}
                   icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
+                  onClick={() => previousStep?.(modifiedPrevStepData)}
                 />
                 <Button
                   variation={ButtonVariation.PRIMARY}

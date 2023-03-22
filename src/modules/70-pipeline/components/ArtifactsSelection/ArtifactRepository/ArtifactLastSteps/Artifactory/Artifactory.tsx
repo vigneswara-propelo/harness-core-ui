@@ -111,9 +111,13 @@ function Artifactory({
   selectedArtifact,
   selectedDeploymentType = '',
   isMultiArtifactSource,
-  formClassName = ''
+  formClassName = '',
+  editArtifactModePrevStepData
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
@@ -216,7 +220,7 @@ function Artifactory({
 
   const serverlessPrimarySchema = Yup.object().shape(serverlessArtifactorySchema)
 
-  const connectorRef = getConnectorIdValue(prevStepData)
+  const connectorRef = getConnectorIdValue(modifiedPrevStepData)
 
   const sidecarSchema = Yup.object().shape({
     ...schemaObject,
@@ -241,7 +245,7 @@ function Artifactory({
   const isArtifactDisabled = (formik: FormikProps<ImagePathTypes>) => {
     if (
       getMultiTypeFromValue(formik?.values?.repository) === MultiTypeInputType.RUNTIME ||
-      getMultiTypeFromValue(prevStepData?.connectorId) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue(modifiedPrevStepData?.connectorId) === MultiTypeInputType.RUNTIME
     )
       return true
     return !(
@@ -260,7 +264,7 @@ function Artifactory({
       artifactPath: lastQueryData.artifactPath,
       repository: lastQueryData.repository,
       repositoryFormat,
-      connectorRef: getConnectorRefQueryData(prevStepData),
+      connectorRef: getConnectorRefQueryData(modifiedPrevStepData),
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
@@ -279,7 +283,7 @@ function Artifactory({
   } = useGetImagePathsForArtifactory({
     queryParams: {
       repository: lastQueryData.repository,
-      connectorRef: getConnectorRefQueryData(prevStepData),
+      connectorRef: getConnectorRefQueryData(modifiedPrevStepData),
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
@@ -332,10 +336,10 @@ function Artifactory({
     (artifactPath: string, repository: string): boolean => {
       return !!(
         (lastQueryData.artifactPath !== artifactPath || lastQueryData.repository !== repository) &&
-        shouldFetchFieldOptions(prevStepData, [artifactPath, repository])
+        shouldFetchFieldOptions(modifiedPrevStepData, [artifactPath, repository])
       )
     },
-    [lastQueryData, prevStepData]
+    [lastQueryData, modifiedPrevStepData]
   )
   const fetchTags = useCallback(
     (artifactPath = '', repository = ''): void => {
@@ -392,12 +396,12 @@ function Artifactory({
   const handleValidate = (formData: ImagePathTypes & { connectorId?: string }) => {
     if (hideHeaderAndNavBtns) {
       submitFormData({
-        ...prevStepData,
+        ...modifiedPrevStepData,
         ...formData,
         repository: defaultTo((formData?.repository as SelectOption)?.value, formData?.repository) as string,
         artifactPath: defaultTo((formData?.artifactPath as SelectOption)?.value, formData?.artifactPath) as string,
         tag: defaultTo(formData?.tag?.value, formData?.tag),
-        connectorId: getConnectorIdValue(prevStepData)
+        connectorId: getConnectorIdValue(modifiedPrevStepData)
       })
     }
   }
@@ -455,7 +459,7 @@ function Artifactory({
     return (
       getMultiTypeFromValue(formikForm.values?.tag) === MultiTypeInputType.FIXED &&
       getHelpeTextForTags(
-        helperTextData(selectedArtifact, formikForm, getConnectorIdValue(prevStepData)),
+        helperTextData(selectedArtifact, formikForm, getConnectorIdValue(modifiedPrevStepData)),
         getString,
         isGenericArtifactory
       )
@@ -475,12 +479,12 @@ function Artifactory({
         validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
             repository: defaultTo((formData?.repository as SelectOption)?.value, formData?.repository) as string,
             artifactPath: defaultTo((formData?.artifactPath as SelectOption)?.value, formData?.artifactPath) as string,
             tag: defaultTo(formData?.tag?.value, formData?.tag),
-            connectorId: getConnectorIdValue(prevStepData)
+            connectorId: getConnectorIdValue(modifiedPrevStepData)
           })
         }}
       >
@@ -519,7 +523,7 @@ function Artifactory({
                 )}
 
                 <ServerlessArtifactoryRepository
-                  connectorRef={getConnectorIdValue(prevStepData)}
+                  connectorRef={getConnectorIdValue(modifiedPrevStepData)}
                   isReadonly={isReadonly}
                   expressions={expressions}
                   allowableTypes={allowableTypes}
@@ -618,7 +622,7 @@ function Artifactory({
                         getHelpeTextForTags(
                           {
                             repository: formik.values?.repository as string,
-                            connectorRef: getConnectorIdValue(prevStepData)
+                            connectorRef: getConnectorIdValue(modifiedPrevStepData)
                           },
                           getString,
                           isGenericArtifactory,
@@ -649,7 +653,7 @@ function Artifactory({
                             refetchImagePathData({
                               queryParams: {
                                 repository: (formik.values?.repository as string) || '',
-                                connectorRef: getConnectorRefQueryData(prevStepData),
+                                connectorRef: getConnectorRefQueryData(modifiedPrevStepData),
                                 accountIdentifier: accountId,
                                 orgIdentifier,
                                 projectIdentifier
@@ -804,7 +808,7 @@ function Artifactory({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

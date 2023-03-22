@@ -24,7 +24,7 @@ import { Menu } from '@blueprintjs/core'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { memoize, merge } from 'lodash-es'
+import { defaultTo, memoize, merge } from 'lodash-es'
 import { ConnectorConfigDTO, useGetBuildDetailsForGcr } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -57,6 +57,7 @@ export function GCRImagePath({
   allowableTypes,
   handleSubmit,
   prevStepData,
+  editArtifactModePrevStepData,
   initialValues,
   previousStep,
   artifactIdentifiers,
@@ -66,6 +67,8 @@ export function GCRImagePath({
   formClassName = ''
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
   const schemaObject = {
     imagePath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.imagePath')),
@@ -108,9 +111,9 @@ export function GCRImagePath({
   } = useGetBuildDetailsForGcr({
     queryParams: {
       imagePath: lastQueryData.imagePath,
-      connectorRef: prevStepData?.connectorId?.value
-        ? prevStepData?.connectorId?.value
-        : prevStepData?.identifier || '',
+      connectorRef: modifiedPrevStepData?.connectorId?.value
+        ? modifiedPrevStepData?.connectorId?.value
+        : modifiedPrevStepData?.identifier || '',
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
@@ -147,7 +150,7 @@ export function GCRImagePath({
   const canFetchTags = (imagePath: string, registryHostname: string): boolean =>
     !!(
       (lastQueryData.imagePath !== imagePath || lastQueryData.registryHostname !== registryHostname) &&
-      shouldFetchFieldOptions(prevStepData, [imagePath, registryHostname])
+      shouldFetchFieldOptions(modifiedPrevStepData, [imagePath, registryHostname])
     )
 
   const isTagDisabled = useCallback((formikValue): boolean => {
@@ -164,10 +167,10 @@ export function GCRImagePath({
   const handleValidate = (formData: ImagePathTypes & { connectorId?: string }) => {
     if (hideHeaderAndNavBtns) {
       submitFormData({
-        ...prevStepData,
+        ...modifiedPrevStepData,
         ...formData,
         tag: formData?.tag?.value ? formData?.tag?.value : formData?.tag,
-        connectorId: getConnectorIdValue(prevStepData)
+        connectorId: getConnectorIdValue(modifiedPrevStepData)
       })
     }
   }
@@ -199,10 +202,10 @@ export function GCRImagePath({
         validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
             tag: formData?.tag?.value ? formData?.tag?.value : formData?.tag,
-            connectorId: getConnectorIdValue(prevStepData)
+            connectorId: getConnectorIdValue(modifiedPrevStepData)
           })
         }}
       >
@@ -257,7 +260,7 @@ export function GCRImagePath({
                 expressions={expressions}
                 allowableTypes={allowableTypes}
                 isReadonly={isReadonly}
-                connectorIdValue={getConnectorIdValue(prevStepData)}
+                connectorIdValue={getConnectorIdValue(modifiedPrevStepData)}
                 fetchTags={imagePath => fetchTags(imagePath, formik.values?.registryHostname)}
                 buildDetailsLoading={gcrBuildDetailsLoading}
                 tagError={gcrTagError}
@@ -272,7 +275,7 @@ export function GCRImagePath({
                   variation={ButtonVariation.SECONDARY}
                   text={getString('back')}
                   icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
+                  onClick={() => previousStep?.(modifiedPrevStepData)}
                 />
                 <Button
                   variation={ButtonVariation.PRIMARY}

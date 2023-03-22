@@ -69,8 +69,11 @@ function FormComponent({
   isReadonly = false,
   formik,
   isMultiArtifactSource,
-  formClassName = ''
+  formClassName = '',
+  editArtifactModePrevStepData
 }: any): React.ReactElement {
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const { getString } = useStrings()
   const lastOpenedJob = useRef<any>(null)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -88,7 +91,9 @@ function FormComponent({
     branch
   }
 
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
+  const connectorRefValue = getGenuineValue(
+    modifiedPrevStepData?.connectorId?.value || modifiedPrevStepData?.identifier
+  )
   const jobNameValue = formik.values?.spec?.jobName
   const artifactValue = getGenuineValue(formik.values?.spec?.artifactPath)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
@@ -99,7 +104,7 @@ function FormComponent({
     loading: fetchingJobs,
     error: fetchingJobsError
   } = useGetJobDetailsForJenkins({
-    lazy: getMultiTypeFromValue(prevStepData?.connectorId) === MultiTypeInputType.RUNTIME,
+    lazy: getMultiTypeFromValue(modifiedPrevStepData?.connectorId) === MultiTypeInputType.RUNTIME,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString()
@@ -566,7 +571,7 @@ function FormComponent({
             variation={ButtonVariation.SECONDARY}
             text={getString('back')}
             icon="chevron-left"
-            onClick={() => previousStep?.(prevStepData)}
+            onClick={() => previousStep?.(modifiedPrevStepData)}
           />
           <Button
             variation={ButtonVariation.PRIMARY}
@@ -582,7 +587,18 @@ function FormComponent({
 
 export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsArtifactProps): React.ReactElement {
   const { getString } = useStrings()
-  const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
+  const {
+    context,
+    handleSubmit,
+    initialValues,
+    prevStepData,
+    selectedArtifact,
+    artifactIdentifiers,
+    editArtifactModePrevStepData
+  } = props
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -615,7 +631,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
         {
           ...formData
         },
-        getConnectorIdValue(prevStepData)
+        getConnectorIdValue(modifiedPrevStepData)
       )
     }
   }
@@ -659,7 +675,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
             {
               ...formData
             },
-            getConnectorIdValue(prevStepData)
+            getConnectorIdValue(modifiedPrevStepData)
           )
         }}
       >

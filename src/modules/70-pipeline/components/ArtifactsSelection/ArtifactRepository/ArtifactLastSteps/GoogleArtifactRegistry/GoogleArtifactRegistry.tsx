@@ -83,12 +83,16 @@ function FormComponent(
     formik,
     selectedArtifact,
     isMultiArtifactSource,
-    formClassName = ''
+    formClassName = '',
+    editArtifactModePrevStepData
   } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [regions, setRegions] = useState<SelectOption[]>([])
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -96,7 +100,7 @@ function FormComponent(
     repoIdentifier,
     branch
   }
-  const connectorRefValue = getConnectorIdValue(prevStepData)
+  const connectorRefValue = getConnectorIdValue(modifiedPrevStepData)
   const packageValue = defaultTo(formik.values.spec.package, initialValues?.spec?.package)
   const projectValue = defaultTo(formik.values.spec.project, initialValues?.spec?.project)
   const regionValue = defaultTo(formik.values.spec.region, initialValues?.spec?.region)
@@ -170,7 +174,7 @@ function FormComponent(
   }
 
   const getConnectorRefQueryData = (): string => {
-    return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
+    return defaultTo(modifiedPrevStepData?.connectorId?.value, modifiedPrevStepData?.identifier)
   }
 
   const getVersionFieldHelperText = () => {
@@ -416,7 +420,7 @@ function FormComponent(
             variation={ButtonVariation.SECONDARY}
             text={getString('back')}
             icon="chevron-left"
-            onClick={() => previousStep?.(prevStepData)}
+            onClick={() => previousStep?.(modifiedPrevStepData)}
           />
           <Button
             variation={ButtonVariation.PRIMARY}
@@ -434,7 +438,18 @@ export function GoogleArtifactRegistry(
   props: StepProps<ConnectorConfigDTO> & GoogleArtifactRegistryProps
 ): React.ReactElement {
   const { getString } = useStrings()
-  const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
+  const {
+    context,
+    handleSubmit,
+    initialValues,
+    prevStepData,
+    selectedArtifact,
+    artifactIdentifiers,
+    editArtifactModePrevStepData
+  } = props
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -480,7 +495,7 @@ export function GoogleArtifactRegistry(
         {
           ...formData
         },
-        getConnectorIdValue(prevStepData)
+        getConnectorIdValue(modifiedPrevStepData)
       )
     }
   }
@@ -544,7 +559,7 @@ export function GoogleArtifactRegistry(
             {
               ...formData
             },
-            getConnectorIdValue(prevStepData)
+            getConnectorIdValue(modifiedPrevStepData)
           )
         }}
       >

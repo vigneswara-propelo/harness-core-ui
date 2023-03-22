@@ -6,6 +6,10 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
+import { get, isEmpty, noop } from 'lodash-es'
+import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
+import { useParams } from 'react-router-dom'
+import cx from 'classnames'
 import {
   Layout,
   Text,
@@ -15,24 +19,24 @@ import {
   Button,
   ButtonSize,
   ButtonVariation,
-  Container,
-  getMultiTypeFromValue,
-  MultiTypeInputType
+  Container
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { FontVariation, Color } from '@harness/design-system'
-import { useParams } from 'react-router-dom'
-import cx from 'classnames'
-import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
-import { defaultTo, get, isEmpty, noop } from 'lodash-es'
 import type { IconProps } from '@harness/icons'
+
 import { useStrings } from 'framework/strings'
+import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useQueryParams } from '@common/hooks'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { ManifestActions } from '@common/constants/TrackingConstants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
-import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
@@ -46,15 +50,9 @@ import {
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
-import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useQueryParams } from '@common/hooks'
-import { useTelemetry } from '@common/hooks/useTelemetry'
-import { ManifestActions } from '@common/constants/TrackingConstants'
-import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import { Scope } from '@common/interfaces/SecretsInterface'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
 import { FileUsage } from '@filestore/interfaces/FileStore'
+import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 import { ManifestWizard } from '../ManifestWizard/ManifestWizard'
 import { getStatus, getConnectorNameFromValue } from '../../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useVariablesExpression } from '../../PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -180,7 +178,7 @@ function ManifestListView({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_MANIFEST_LAST_STEP } = useFeatureFlags()
+  const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
 
   useEffect(() => {
     setIsManifestEditMode(manifestIndex < listOfManifests.length)
@@ -266,41 +264,13 @@ function ManifestListView({
   }
 
   const initialValues = getLastStepInitialData()
-  const selected = defaultTo(getConnectorPath(initialValues?.spec?.store?.type, initialValues), undefined) as any
+  const initialConnectorRef = getConnectorPath(initialValues?.spec?.store?.type, initialValues)
 
-  const [selectedValue, setSelectedValue] = React.useState(selected)
-
-  useEffect(() => {
-    setSelectedValue(selected)
-  }, [selected])
-
-  const selectedRef = React.useMemo(() => {
-    return typeof selected === 'string' ? getIdentifierFromValue(selected || '') : selectedValue?.connector?.identifier
-  }, [selected, selectedValue])
-
-  const connectorData = React.useMemo(
-    () => connectors?.content?.find(currConnector => currConnector.connector?.identifier === selectedRef),
-    [selectedRef, connectors]
-  )
-
-  React.useEffect(() => {
-    if (typeof selected === 'string' && getMultiTypeFromValue(selected) === MultiTypeInputType.FIXED) {
-      if (connectorData && connectorData?.connector?.name) {
-        const scope = getScopeFromValue(selected || '')
-        const value = {
-          label: connectorData?.connector?.name,
-          value:
-            scope === Scope.ORG || scope === Scope.ACCOUNT
-              ? `${scope}.${connectorData?.connector?.identifier}`
-              : connectorData?.connector?.identifier,
-          scope: scope,
-          live: connectorData?.status?.status === 'SUCCESS',
-          connector: connectorData?.connector
-        }
-        setSelectedValue(value)
-      }
-    }
-  }, [connectorData, selected])
+  const { selectedConnector } = useGetLastStepConnectorValue({
+    initialConnectorRef,
+    isEditMode: isManifestEditMode,
+    connectorList: connectors?.content
+  })
 
   const lastStepProps = useCallback((): ManifestLastStepProps => {
     const manifestDetailsProps: ManifestLastStepProps = {
@@ -328,10 +298,10 @@ function ManifestListView({
         ...initialValues?.spec.store.spec,
         selectedManifest: initialValues?.type,
         store: initialValues?.spec.store.type,
-        connectorRef: selectedValue
+        connectorRef: selectedConnector
       }
     }
-  }, [initialValues, selectedValue])
+  }, [initialValues, selectedConnector])
 
   const getLabels = (): ConnectorRefLabelType => {
     return {
@@ -360,8 +330,8 @@ function ManifestListView({
     return iconProps
   }
 
-  const shouldPassPrevStepData = () => {
-    return isManifestEditMode && selectedValue && CDS_MANIFEST_LAST_STEP
+  const shouldPassPrevStepData = (): boolean => {
+    return isManifestEditMode && !!selectedConnector && !!CDS_SERVICE_CONFIG_LAST_STEP
   }
 
   const lastSteps = React.useMemo((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
@@ -525,7 +495,7 @@ function ManifestListView({
         manifestDetailStep = (
           <CustomRemoteManifest
             {...lastStepProps()}
-            {...((isManifestEditMode && CDS_MANIFEST_LAST_STEP
+            {...((isManifestEditMode && CDS_SERVICE_CONFIG_LAST_STEP
               ? prevStepProps()
               : {}) as CustomRemoteManifestManifestLastStepPrevStepData)}
           />
@@ -560,7 +530,7 @@ function ManifestListView({
 
     arr.push(manifestDetailStep)
     return arr
-  }, [manifestStore, selectedManifest, lastStepProps, prevStepProps, isManifestEditMode, CDS_MANIFEST_LAST_STEP])
+  }, [manifestStore, selectedManifest, lastStepProps, prevStepProps, isManifestEditMode, CDS_SERVICE_CONFIG_LAST_STEP])
 
   const connectorDetailStepProps = {
     type: ManifestToConnectorMap[manifestStore],

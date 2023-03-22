@@ -74,8 +74,11 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     isReadonly = false,
     selectedArtifact,
     isMultiArtifactSource,
-    formClassName = ''
+    formClassName = '',
+    editArtifactModePrevStepData
   } = props
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
@@ -109,7 +112,11 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   }, [regionData?.resource])
 
   const getConnectorRefQueryData = (): string => {
-    return prevStepData?.connectorId?.value || prevStepData?.connectorId?.connector?.value || prevStepData?.identifier
+    return (
+      modifiedPrevStepData?.connectorId?.value ||
+      modifiedPrevStepData?.connectorId?.connector?.value ||
+      modifiedPrevStepData?.identifier
+    )
   }
 
   // Bucket related code
@@ -145,9 +152,9 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
 
   const canFetchBuckets = useCallback(
     (region: string): boolean => {
-      return !!(lastQueryData.region !== region && shouldFetchFieldOptions(prevStepData, []))
+      return !!(lastQueryData.region !== region && shouldFetchFieldOptions(modifiedPrevStepData, []))
     },
-    [lastQueryData, prevStepData]
+    [lastQueryData, modifiedPrevStepData]
   )
 
   const fetchBuckets = useCallback(
@@ -213,11 +220,11 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const canFetchFilePaths = useCallback(
     (region: string, bucketName: string): boolean => {
       return (
-        !!(lastQueryData.region !== region && shouldFetchFieldOptions(prevStepData, [])) ||
-        !!(lastQueryData.bucketName !== bucketName && shouldFetchFieldOptions(prevStepData, [bucketName]))
+        !!(lastQueryData.region !== region && shouldFetchFieldOptions(modifiedPrevStepData, [])) ||
+        !!(lastQueryData.bucketName !== bucketName && shouldFetchFieldOptions(modifiedPrevStepData, [bucketName]))
       )
     },
-    [lastQueryData, prevStepData]
+    [lastQueryData, modifiedPrevStepData]
   )
 
   const fetchFilePaths = useCallback(
@@ -334,9 +341,9 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const handleValidate = (formData: AmazonS3InitialValuesType & { connectorId?: string }) => {
     if (hideHeaderAndNavBtns) {
       submitFormData({
-        ...prevStepData,
+        ...modifiedPrevStepData,
         ...formData,
-        connectorId: getConnectorIdValue(prevStepData)
+        connectorId: getConnectorIdValue(modifiedPrevStepData)
       })
     }
   }
@@ -357,7 +364,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
 
   const renderS3BucketField = (formik: FormikProps<AmazonS3InitialValuesType>): JSX.Element => {
     if (
-      getMultiTypeFromValue(prevStepData?.connectorId) !== MultiTypeInputType.FIXED ||
+      getMultiTypeFromValue(modifiedPrevStepData?.connectorId) !== MultiTypeInputType.FIXED ||
       getMultiTypeFromValue(formik.values.region) !== MultiTypeInputType.FIXED
     ) {
       return (
@@ -446,7 +453,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
 
   const renderS3FilePathField = (formik: FormikProps<AmazonS3InitialValuesType>): JSX.Element => {
     if (
-      getMultiTypeFromValue(prevStepData?.connectorId) !== MultiTypeInputType.FIXED ||
+      getMultiTypeFromValue(modifiedPrevStepData?.connectorId) !== MultiTypeInputType.FIXED ||
       getMultiTypeFromValue(formik.values.region) !== MultiTypeInputType.FIXED ||
       getMultiTypeFromValue(formik.values.bucketName) !== MultiTypeInputType.FIXED
     ) {
@@ -552,9 +559,9 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
         validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorId: getConnectorIdValue(prevStepData)
+            connectorId: getConnectorIdValue(modifiedPrevStepData)
           })
         }}
       >
@@ -673,7 +680,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                   variation={ButtonVariation.SECONDARY}
                   text={getString('back')}
                   icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
+                  onClick={() => previousStep?.(modifiedPrevStepData)}
                 />
                 <Button
                   variation={ButtonVariation.PRIMARY}

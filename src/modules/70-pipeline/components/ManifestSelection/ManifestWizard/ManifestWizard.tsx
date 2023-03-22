@@ -88,7 +88,7 @@ export function ManifestWizard<T, U>({
   isEditMode = false
 }: ManifestWizardStepsProps<T, U>): React.ReactElement {
   const { getString } = useStrings()
-  const { CDS_MANIFEST_LAST_STEP } = useFeatureFlags()
+  const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
 
   const onStepChange = (arg: StepChangeData<any>): void => {
     if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 2) {
@@ -124,7 +124,7 @@ export function ManifestWizard<T, U>({
   }
 
   const getInitialStepNumber = (): number | undefined => {
-    if (isEditMode && CDS_MANIFEST_LAST_STEP) {
+    if (isEditMode && CDS_SERVICE_CONFIG_LAST_STEP) {
       return 3
     }
     if (showManifestStoreStepDirectly(selectedManifest)) {

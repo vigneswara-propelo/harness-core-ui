@@ -107,11 +107,11 @@ const testEcsManifestLastStep = async (portal: HTMLElement): Promise<void> => {
   userEvent.click(submitButton)
 }
 
-const testUpdateEcsTaskDefinitionManifest = async (CDS_MANIFEST_LAST_STEP: boolean): Promise<void> => {
+const testUpdateEcsTaskDefinitionManifest = async (CDS_SERVICE_CONFIG_LAST_STEP: boolean): Promise<void> => {
   const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
   const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
 
-  if (CDS_MANIFEST_LAST_STEP) {
+  if (CDS_SERVICE_CONFIG_LAST_STEP) {
     // Check if second step IS NOT displayed
     const Git = queryByValueAttribute('Git')
     await waitFor(() => expect(Git).toBeNull()) // Because upon editing manifest, directly third step will be shown
@@ -357,7 +357,7 @@ describe('ECSServiceSpecEditable tests', () => {
     expect(getByText('ScalableTarget_Manifest')).toBeInTheDocument()
   })
 
-  test('update EcsTaskDefinition manifest when CDS_MANIFEST_LAST_STEP is OFF', async () => {
+  test('update EcsTaskDefinition manifest when CDS_SERVICE_CONFIG_LAST_STEP is OFF', async () => {
     const updateStage = jest.fn()
     pipelineContextECSManifests.updateStage = updateStage
 
@@ -407,7 +407,7 @@ describe('ECSServiceSpecEditable tests', () => {
     })
   })
 
-  test('update EcsTaskDefinition manifest when CDS_MANIFEST_LAST_STEP is ON', async () => {
+  test('update EcsTaskDefinition manifest when CDS_SERVICE_CONFIG_LAST_STEP is ON', async () => {
     const updateStage = jest.fn()
     pipelineContextECSManifests.updateStage = updateStage
 
@@ -415,7 +415,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper
         path={TEST_PATH}
         pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
-        defaultFeatureFlagValues={{ CDS_MANIFEST_LAST_STEP: true }}
+        defaultFeatureFlagValues={{ CDS_SERVICE_CONFIG_LAST_STEP: true }}
       >
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
@@ -601,7 +601,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper
         path={TEST_PATH}
         pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
-        defaultFeatureFlagValues={{ CDS_MANIFEST_LAST_STEP: true }}
+        defaultFeatureFlagValues={{ CDS_SERVICE_CONFIG_LAST_STEP: true }}
       >
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable

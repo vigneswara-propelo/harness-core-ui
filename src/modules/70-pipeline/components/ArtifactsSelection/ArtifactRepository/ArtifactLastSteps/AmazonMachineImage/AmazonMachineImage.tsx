@@ -64,8 +64,11 @@ function FormComponent({
   isReadonly = false,
   formik,
   isMultiArtifactSource,
-  formClassName = ''
+  formClassName = '',
+  editArtifactModePrevStepData
 }: any): React.ReactElement {
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const { getString } = useStrings()
   const [regions, setRegions] = React.useState<SelectOption[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -79,7 +82,9 @@ function FormComponent({
     }
   })
 
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
+  const connectorRefValue = getGenuineValue(
+    modifiedPrevStepData?.connectorId?.value || modifiedPrevStepData?.identifier
+  )
 
   const {
     data: tagsData,
@@ -392,7 +397,7 @@ function FormComponent({
             variation={ButtonVariation.SECONDARY}
             text={getString('back')}
             icon="chevron-left"
-            onClick={() => previousStep?.(prevStepData)}
+            onClick={() => previousStep?.(modifiedPrevStepData)}
           />
           <Button
             variation={ButtonVariation.PRIMARY}
@@ -410,7 +415,18 @@ export function AmazonMachineImage(
   props: StepProps<ConnectorConfigDTO> & ImagePathProps<AmazonMachineImageInitialValuesType>
 ): React.ReactElement {
   const { getString } = useStrings()
-  const { context, handleSubmit, initialValues, prevStepData, artifactIdentifiers, selectedArtifact } = props
+  const {
+    context,
+    handleSubmit,
+    initialValues,
+    prevStepData,
+    artifactIdentifiers,
+    selectedArtifact,
+    editArtifactModePrevStepData
+  } = props
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -469,7 +485,7 @@ export function AmazonMachineImage(
         {
           ...formData
         },
-        getConnectorIdValue(prevStepData)
+        getConnectorIdValue(modifiedPrevStepData)
       )
     }
   }
@@ -503,7 +519,7 @@ export function AmazonMachineImage(
               {
                 ...formData
               },
-              getConnectorIdValue(prevStepData)
+              getConnectorIdValue(modifiedPrevStepData)
             )
         }}
       >
