@@ -92,8 +92,8 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
 
   const workspaces: SelectOption[] = useMemo(() => {
     return defaultTo(workspacesData?.data?.workspaces, [])?.map(workspace => ({
-      value: workspace?.workspaceName,
-      label: workspace?.workspaceId
+      value: workspace?.workspaceId,
+      label: `${workspace?.workspaceName}: ${workspace?.workspaceId}`
     }))
   }, [workspacesData?.data?.workspaces])
 
@@ -118,6 +118,19 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
           template={template}
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
+      )}
+      {isValueRuntimeInput(inputSet?.discardPendingRuns) && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            name={`${prefix}spec.spec.discardPendingRuns`}
+            label={getString('pipeline.terraformStep.discardPendingRuns')}
+            multiTypeTextbox={{ expressions, allowableTypes }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+          />
+        </div>
       )}
       {isValueRuntimeInput(template?.spec?.runMessage) && (
         <FormMultiTypeTextArea
@@ -281,19 +294,7 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
           template={template}
         />
       )}
-      {isValueRuntimeInput(inputSet?.discardPendingRuns) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeCheckboxField
-            name={`${prefix}spec.spec.discardPendingRuns`}
-            label={getString('pipeline.terraformStep.discardPendingRuns')}
-            multiTypeTextbox={{ expressions, allowableTypes }}
-            enableConfigureOptions={true}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-          />
-        </div>
-      )}
+
       {isValueRuntimeInput(inputSet?.overridePolicies) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeCheckboxField

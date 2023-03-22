@@ -36,7 +36,7 @@ export default function OptionalConfiguration(props: {
   return (
     <>
       <FormikForm>
-        <div className={cx(stepCss.formGroup)}>
+        <div className={cx(stepCss.formGroup, stepCss.xlg)}>
           <MultiTypeMap
             name="spec.spec.variables"
             valueMultiTextInputProps={{
@@ -78,7 +78,7 @@ export default function OptionalConfiguration(props: {
               style={{
                 marginTop: 'var(--spacing-small)',
                 marginBottom: 'var(--spacing-small)',
-                width: 435
+                width: 427
               }}
               disabled={readonly}
             />
@@ -86,7 +86,7 @@ export default function OptionalConfiguration(props: {
         )}
 
         {(values.spec?.runType === RunTypes.Plan || values.spec?.runType === RunTypes.PlanOnly) && (
-          <div className={cx(stepCss.formGroup, css.addMarginTop)}>
+          <div className={cx(stepCss.formGroup, stepCss.lg, css.addMarginTop)}>
             <FormMultiTypeCheckboxField
               formik={formik}
               name={'spec.spec.exportTerraformPlanJson'}
@@ -115,7 +115,7 @@ export default function OptionalConfiguration(props: {
         )}
 
         {(values.spec?.runType === RunTypes.PlanAndApply || values.spec?.runType === RunTypes.PlanAndDestroy) && (
-          <div className={cx(stepCss.formGroup)}>
+          <div className={cx(stepCss.formGroup, stepCss.lg)}>
             <FormMultiTypeCheckboxField
               formik={formik}
               name={'spec.spec.overridePolicies'}

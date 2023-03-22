@@ -75,7 +75,7 @@ function TerraformCloudRollbackWidget(
                 stepViewType={stepViewType}
               />
               <div className={stepCss.divider} />
-              <div className={stepCss.formGroup}>
+              <div className={(stepCss.formGroup, stepCss.lg)}>
                 <FormMultiTypeTextAreaField
                   placeholder={getString('pipeline.terraformStep.messagePlaceholder')}
                   name="spec.runMessage"
@@ -102,7 +102,7 @@ function TerraformCloudRollbackWidget(
                 )}
               </div>
 
-              <div className={cx(stepCss.formGroup, stepCss.md)}>
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormInput.MultiTextInput
                   name="spec.provisionerIdentifier"
                   placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
@@ -129,7 +129,7 @@ function TerraformCloudRollbackWidget(
                 )}
               </div>
 
-              <div className={cx(stepCss.formGroup, stepCss.md)}>
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormMultiTypeCheckboxField
                   name="spec.discardPendingRuns"
                   label={getString('pipeline.terraformStep.discardPendingRuns')}
@@ -152,7 +152,7 @@ function TerraformCloudRollbackWidget(
                 )}
               </div>
 
-              <div className={cx(stepCss.formGroup, stepCss.md)}>
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormMultiTypeCheckboxField
                   name="spec.overridePolicies"
                   label={getString('pipeline.terraformStep.overridePoliciesLabel')}

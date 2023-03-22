@@ -15,6 +15,7 @@ import type { ListType } from '@common/components/List/List'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { getConnectorSchema } from '../PipelineStepsUtil'
 import type { TerraformCloudRunFormData } from './types'
 
@@ -99,7 +100,7 @@ export const processFormData = (values: TerraformCloudRunFormData): TerraformClo
           organization: getValue(values.spec?.spec?.organization),
           workspace: getValue(values.spec?.spec?.workspace),
           variables: varMap,
-          targets: targetMap
+          targets: isMultiTypeRuntime(getMultiTypeFromValue(targets)) ? targets : targetMap
         }
       }
     }
@@ -209,31 +210,15 @@ export function getValidationSchema(
         .when('runType', {
           is: val => val !== RunTypes.RefreshState,
           then: Yup.object().shape({
-            provisionerIdentifier: Yup.string().when('runType', {
-              is: value => value !== 'Refresh',
-              then: Yup.lazy((value): Yup.Schema<unknown> => {
-                if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-                  return IdentifierSchemaWithOutName(getString, {
-                    requiredErrorMsg: getString('common.validation.provisionerIdentifierIsRequired'),
-                    regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
-                  })
-                }
-                /* istanbul ignore next */ return Yup.string().required(
-                  getString('common.validation.provisionerIdentifierIsRequired')
-                )
-              })
-            })
-          })
-        })
-        .when('runType', {
-          is: val => val === RunTypes.PlanOnly,
-          then: Yup.object().shape({
-            terraformVersion: Yup.string().when('runType', {
-              is: value => value !== 'Refresh',
-              then: Yup.string().required(
-                getString('common.validation.fieldIsRequired', {
-                  name: getString('pipeline.terraformStep.terraformVersion')
+            provisionerIdentifier: Yup.lazy((value): Yup.Schema<unknown> => {
+              if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+                return IdentifierSchemaWithOutName(getString, {
+                  requiredErrorMsg: getString('common.validation.provisionerIdentifierIsRequired'),
+                  regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
                 })
+              }
+              /* istanbul ignore next */ return Yup.string().required(
+                getString('common.validation.provisionerIdentifierIsRequired')
               )
             })
           })

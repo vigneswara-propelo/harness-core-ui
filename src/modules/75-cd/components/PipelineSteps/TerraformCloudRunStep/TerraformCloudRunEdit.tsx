@@ -67,6 +67,7 @@ export function TerraformCloudRunEdit(
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
+  const { getString } = useStrings()
   const terraformConnectorRef = defaultTo(formik?.values.spec?.spec?.connectorRef, '')
   const terraformOrganization =
     typeof formik?.values.spec?.spec?.organization === 'object'
@@ -93,11 +94,14 @@ export function TerraformCloudRunEdit(
   })
 
   const organizations: SelectOption[] = useMemo(() => {
+    if (loadingOrganizations) {
+      return [{ label: getString('loading'), value: getString('loading') }]
+    }
     return defaultTo(organizationsData?.data?.organizations, [])?.map(organization => ({
       value: organization?.organizationName,
       label: organization?.organizationName
     }))
-  }, [organizationsData?.data?.organizations])
+  }, [getString, loadingOrganizations, organizationsData?.data?.organizations])
 
   const {
     data: workspacesData,
@@ -113,11 +117,14 @@ export function TerraformCloudRunEdit(
   })
 
   const workspaces: SelectOption[] = useMemo(() => {
+    if (loadingWorkspaces) {
+      return [{ label: getString('loading'), value: getString('loading') }]
+    }
     return defaultTo(workspacesData?.data?.workspaces, [])?.map(workspace => ({
       value: workspace?.workspaceId,
       label: `${workspace?.workspaceName}: ${workspace?.workspaceId}`
     }))
-  }, [workspacesData?.data?.workspaces])
+  }, [loadingWorkspaces, workspacesData?.data?.workspaces, getString])
 
   const runTypeOptions = useMemo(
     () => [
@@ -130,8 +137,6 @@ export function TerraformCloudRunEdit(
     ],
     []
   )
-
-  const { getString } = useStrings()
 
   const planTypeOptions: IOptionProps[] = [
     { label: getString('filters.apply'), value: CommandTypes.Apply },
@@ -172,7 +177,7 @@ export function TerraformCloudRunEdit(
             </div>
             {values.spec?.runType !== RunTypes.Apply && (
               <>
-                <div className={cx(stepCss.formGroup)}>
+                <div className={cx(stepCss.formGroup, stepCss.lg)}>
                   <FormMultiTypeCheckboxField
                     formik={formikValues}
                     name={'spec.spec.discardPendingRuns'}
@@ -195,7 +200,7 @@ export function TerraformCloudRunEdit(
                     />
                   )}
                 </div>
-                <div className={stepCss.formGroup}>
+                <div className={cx(stepCss.formGroup, stepCss.lg)}>
                   <FormMultiTypeTextAreaField
                     placeholder={getString('pipeline.terraformStep.messagePlaceholder')}
                     name="spec.runMessage"

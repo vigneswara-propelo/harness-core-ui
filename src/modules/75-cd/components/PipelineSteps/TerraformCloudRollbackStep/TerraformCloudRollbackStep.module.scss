@@ -6,6 +6,8 @@
  */
 
 .message {
+  width: 370px;
+  display: inline-block;
   :global {
     textarea {
       min-height: 60px;
