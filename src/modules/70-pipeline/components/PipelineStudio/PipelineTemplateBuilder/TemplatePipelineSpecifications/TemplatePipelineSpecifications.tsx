@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { debounce, defaultTo, isEmpty, isEqual, isNil, noop, set } from 'lodash-es'
+import { debounce, defaultTo, isEmpty, isEqual, isNil, noop, omit, pick, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Container, Formik, FormikForm, Heading, Layout, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -243,7 +243,12 @@ export function TemplatePipelineSpecifications({
       isEqual(values.template?.versionLabel, pipeline.template?.versionLabel) &&
       templateInputs
     ) {
-      onChange?.(values)
+      onChange?.({
+        // This pick omit logic is required to only update the pipeline with the pipeline template form values
+        // and not update the pipeline data if there has been a change outside the template form values
+        ...omit(pipeline, 'template'),
+        ...pick(values, 'template')
+      })
       const errorsResponse = validatePipeline({
         pipeline: values.template?.templateInputs as PipelineInfoConfig,
         template: templateInputs,
