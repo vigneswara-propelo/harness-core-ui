@@ -26,7 +26,6 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -74,7 +73,6 @@ function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<Merge
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, onChange, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { GITOPS_API_PARAMS_MERGE_PR } = useFeatureFlags()
 
   return (
     <>
@@ -137,7 +135,7 @@ function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<Merge
                 <FormInput.CheckBox name="spec.deleteSourceBranch" label={getString('cd.deleteSourceBranch')} />
               </div>
 
-              {GITOPS_API_PARAMS_MERGE_PR ? (
+              {
                 <>
                   <div className={stepCss.divider} />
                   <Accordion className={stepCss.accordion}>
@@ -150,7 +148,7 @@ function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<Merge
                     />
                   </Accordion>
                 </>
-              ) : null}
+              }
             </>
           )
         }}

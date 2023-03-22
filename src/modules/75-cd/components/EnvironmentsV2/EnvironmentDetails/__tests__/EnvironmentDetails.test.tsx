@@ -123,9 +123,6 @@ describe('EnvironmentDetails tests', () => {
           environmentIdentifier: 'Env_1',
           sectionId: 'CONFIGURATION'
         }}
-        defaultFeatureFlagValues={{
-          ARGO_PHASE2_MANAGED: true
-        }}
       >
         <EnvironmentDetails />
       </TestWrapper>

@@ -173,12 +173,7 @@ describe('Test MergePrStep', () => {
 
   test('should render Merge Params when FF is true', async () => {
     const { container, getByText } = render(
-      <TestStepWidget
-        initialValues={{}}
-        type={StepType.MergePR}
-        stepViewType={StepViewType.Edit}
-        testWrapperProps={{ defaultFeatureFlagValues: { GITOPS_API_PARAMS_MERGE_PR: true } }}
-      />
+      <TestStepWidget initialValues={{}} type={StepType.MergePR} stepViewType={StepViewType.Edit} />
     )
 
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)

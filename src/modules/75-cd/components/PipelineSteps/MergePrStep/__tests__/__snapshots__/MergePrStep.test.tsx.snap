@@ -774,6 +774,41 @@ exports[`Test MergePrStep should render edit view as edit step 1`] = `
         </div>
       </div>
     </div>
+    <div
+      class="divider"
+    />
+    <div
+      class="Accordion--accordion accordion"
+    >
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="optional-config-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="optional-config-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            common.optionalConfig
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -1031,6 +1066,41 @@ exports[`Test MergePrStep should render edit view as edit step with runtime inpu
               cd.deleteSourceBranch
             </span>
           </label>
+        </div>
+      </div>
+    </div>
+    <div
+      class="divider"
+    />
+    <div
+      class="Accordion--accordion accordion"
+    >
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="optional-config-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="optional-config-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            common.optionalConfig
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
         </div>
       </div>
     </div>
@@ -1700,6 +1770,41 @@ exports[`Test MergePrStep should render edit view as new step 1`] = `
               cd.deleteSourceBranch
             </span>
           </label>
+        </div>
+      </div>
+    </div>
+    <div
+      class="divider"
+    />
+    <div
+      class="Accordion--accordion accordion"
+    >
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="optional-config-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="optional-config-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            common.optionalConfig
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
         </div>
       </div>
     </div>
