@@ -74,7 +74,7 @@ export default function PipelineStudioV1(): React.ReactElement {
     )
   }
   const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, PIPELINE_CHAINING, IACM_ENABLED } = useFeatureFlags()
+  const { CING_ENABLED, IACM_ENABLED } = useFeatureFlags()
 
   const { getString } = useStrings()
   return (
@@ -99,7 +99,7 @@ export default function PipelineStudioV1(): React.ReactElement {
           isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
           isIACMEnabled: IACM_ENABLED,
           isApprovalStageEnabled: true,
-          isPipelineChainingEnabled: PIPELINE_CHAINING
+          isPipelineChainingEnabled: true
         })
       }
       stepsFactory={factory}

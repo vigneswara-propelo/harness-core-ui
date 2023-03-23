@@ -45,9 +45,7 @@ describe('Add Stage View', () => {
       </TestWrapper>
     )
     const cards = container.getElementsByClassName('cardNew')
-    // Chained Pipeline is behind the FF
-    // Because of this condition -> (stage.type !== StageType.PIPELINE || isPipelineChainingEnabled), Chained Pipeline Card is not visible!
-    expect(cards.length).toBe(5)
+    expect(cards.length).toBe(6)
   })
 
   test('Different Stage card rendered', () => {

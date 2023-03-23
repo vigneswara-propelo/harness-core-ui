@@ -82,7 +82,7 @@ export default function PipelineStudio(): React.ReactElement {
     )
   }
   const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, CFNG_ENABLED, PIPELINE_CHAINING, IACM_ENABLED } = useFeatureFlags()
+  const { CING_ENABLED, CFNG_ENABLED, IACM_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   return (
@@ -110,7 +110,7 @@ export default function PipelineStudio(): React.ReactElement {
           isSTOEnabled: licenseInformation['STO']?.status === 'ACTIVE',
           isIACMEnabled: IACM_ENABLED,
           isApprovalStageEnabled: true,
-          isPipelineChainingEnabled: PIPELINE_CHAINING
+          isPipelineChainingEnabled: true
         })
       }
       stepsFactory={factory}
