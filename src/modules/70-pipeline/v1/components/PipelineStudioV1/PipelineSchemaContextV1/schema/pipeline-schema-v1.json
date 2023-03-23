@@ -25,22 +25,12 @@
           "type": "object",
           "description": "Inputs defines the pipeline input parameters.",
           "additionalProperties": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/definitions/Input"
-            }
+            "$ref": "#/definitions/Input"
           }
         },
-        "overlays": {
-          "type": "object",
-          "description": "Inputs defines the pipeline overlay parameters.",
-          "additionalProperties": {
-            "type": "object"
-          }
-        },
-        "registry": {
-          "$ref": "#/definitions/Registry",
-          "description": "Registry provides container registry configuration."
+        "options": {
+          "$ref": "#/definitions/Default",
+          "description": "Options defines global configuration options."
         }
       },
       "required": ["version", "stages"],
@@ -89,9 +79,13 @@
           "$ref": "#/definitions/Strategy",
           "description": "The stage execution strategy."
         },
+        "delegate": {
+          "$ref": "#/definitions/Delegate",
+          "description": "Configures the delegate matching logic."
+        },
         "type": {
           "description": "The stage type.",
-          "enum": ["ci"],
+          "enum": ["cd", "ci", "custom", "flag", "infra", "template"],
           "type": "string"
         },
         "when": {
@@ -120,9 +114,106 @@
               }
             }
           ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "type": {
+                  "const": "cd"
+                }
+              }
+            },
+            {
+              "properties": {
+                "spec": {
+                  "$ref": "#/definitions/StageCD"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "type": {
+                  "const": "custom"
+                }
+              }
+            },
+            {
+              "properties": {
+                "spec": {
+                  "$ref": "#/definitions/StageCustom"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "type": {
+                  "const": "infra"
+                }
+              }
+            },
+            {
+              "properties": {
+                "spec": {
+                  "$ref": "#/definitions/StageInfra"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "type": {
+                  "const": "flag"
+                }
+              }
+            },
+            {
+              "properties": {
+                "spec": {
+                  "$ref": "#/definitions/StageFlag"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "type": {
+                  "const": "template"
+                }
+              }
+            },
+            {
+              "properties": {
+                "spec": {
+                  "$ref": "#/definitions/StageTemplate"
+                }
+              }
+            }
+          ]
         }
       ],
-      "required": ["name"],
+      "anyOf": [
+        {
+          "required": ["name"]
+        },
+        {
+          "required": ["id"]
+        }
+      ],
       "x-file": "stage.yaml"
     },
     "Strategy": {
@@ -263,6 +354,21 @@
         }
       },
       "x-file": "strategy_while.yaml"
+    },
+    "Delegate": {
+      "title": "Delegate",
+      "type": "object",
+      "description": "Delegate defines the delegate matching logic.",
+      "properties": {
+        "selectors": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "Selectors defines tags that are used to match the stage\nwith a delegate.\n"
+        }
+      },
+      "x-file": "delegate.yaml"
     },
     "When": {
       "title": "When",
@@ -450,13 +556,13 @@
     },
     "StageCI": {
       "properties": {
-        "clone": {
-          "$ref": "#/definitions/Clone",
-          "description": "Configures the default clone behavior."
+        "cache": {
+          "$ref": "#/definitions/Cache",
+          "description": "Configures the cache behavior."
         },
-        "delegate": {
-          "$ref": "#/definitions/Delegate",
-          "description": "Configures the delegate matching logic."
+        "clone": {
+          "$ref": "#/definitions/CloneStage",
+          "description": "Overrides the clone behavior."
         },
         "platform": {
           "$ref": "#/definitions/Platform",
@@ -479,16 +585,46 @@
             "type": "string"
           },
           "description": "The stage environment variables."
+        },
+        "volumes": {
+          "description": "Configures a container volumes.",
+          "items": {
+            "$ref": "#/definitions/Volume"
+          },
+          "type": "array"
         }
       },
       "type": "object",
       "title": "StageCI",
       "x-file": "stage_ci.yaml"
     },
-    "Clone": {
-      "title": "Clone",
+    "Cache": {
+      "title": "Cache",
       "type": "object",
-      "description": "Clone defines the default clone behavior.",
+      "description": "Cache defines caching behavior.",
+      "properties": {
+        "enabled": {
+          "description": "Enabled enables cache intelligence.",
+          "type": "boolean"
+        },
+        "paths": {
+          "description": "Paths provides a list of paths to cache.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "key": {
+          "description": "Key provides a caching key.",
+          "type": "string"
+        }
+      },
+      "x-file": "cache.yaml"
+    },
+    "CloneStage": {
+      "title": "CloneStage",
+      "type": "object",
+      "description": "Clone defines the stage clone behavior.",
       "properties": {
         "depth": {
           "description": "Depth defines the clone depth.",
@@ -502,92 +638,17 @@
           "description": "Insecure disables ssl verification.",
           "type": "boolean"
         },
-        "repository": {
-          "$ref": "#/definitions/Repository",
-          "description": "Repostiory provides the remote repository url."
+        "strategy": {
+          "description": "Strategy configures the clone strategy.",
+          "type": "string",
+          "enum": ["source-branch", "merge"]
         },
         "trace": {
           "description": "Trace enables trace logging.",
           "type": "boolean"
-        },
-        "ref": {
-          "$ref": "#/definitions/Reference",
-          "description": "Reference defines the clone ref."
-        },
-        "sha": {
-          "description": "Sha provides the clone sha.",
-          "type": "string"
         }
       },
-      "x-file": "clone.yaml"
-    },
-    "Repository": {
-      "title": "Repository",
-      "description": "Repository defines a remote git repository.",
-      "type": "object",
-      "properties": {
-        "branch": {
-          "description": "Branch provides repository branch.",
-          "type": "string"
-        },
-        "connector": {
-          "description": "Connector provides the repository connector.",
-          "type": "string"
-        },
-        "name": {
-          "description": "Name provides the repository name.",
-          "type": "string"
-        },
-        "pr": {
-          "description": "PR provides the repository pull request.",
-          "type": "number"
-        },
-        "ref": {
-          "description": "Ref provides the repository reference.",
-          "type": "string"
-        },
-        "sha": {
-          "description": "Sha provides the repository commit sha.",
-          "type": "string"
-        },
-        "tag": {
-          "description": "Tag provides the repository tag.",
-          "type": "string"
-        }
-      },
-      "x-file": "repository.yaml"
-    },
-    "Reference": {
-      "title": "Reference",
-      "description": "Reference defines a git clone reference.",
-      "type": "object",
-      "properties": {
-        "name": {
-          "description": "Name provides ref name.",
-          "type": "string"
-        },
-        "type": {
-          "description": "Type defines the ref type.",
-          "type": "string",
-          "enum": ["branch", "tag", "pr"]
-        }
-      },
-      "x-file": "reference.yaml"
-    },
-    "Delegate": {
-      "title": "Delegate",
-      "type": "object",
-      "description": "Delegate defines the delegate matching logic.",
-      "properties": {
-        "selectors": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "description": "Selectors defines tags that are used to match the stage\nwith a delegate.\n"
-        }
-      },
-      "x-file": "delegate.yaml"
+      "x-file": "clone_stage.yaml"
     },
     "Platform": {
       "title": "Platform",
@@ -618,6 +679,19 @@
           "type": "string"
         }
       },
+      "examples": [
+        {
+          "platform": {
+            "os": "linux"
+          }
+        },
+        {
+          "platform": {
+            "os": "linux",
+            "arch": "amd64"
+          }
+        }
+      ],
       "x-file": "platform.yaml"
     },
     "Arch": {
@@ -875,7 +949,19 @@
         "type": {
           "type": "string",
           "description": "The step type.",
-          "enum": ["action", "background", "bitrise", "script", "group", "parallel", "plugin", "jenkins", "template"]
+          "enum": [
+            "action",
+            "background",
+            "barrier",
+            "bitrise",
+            "script",
+            "group",
+            "parallel",
+            "plugin",
+            "jenkins",
+            "template",
+            "test"
+          ]
         },
         "timeout": {
           "type": "string",
@@ -925,6 +1011,24 @@
               "properties": {
                 "spec": {
                   "$ref": "#/definitions/StepBackground"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "type": {
+                  "const": "barrier"
+                }
+              }
+            },
+            {
+              "properties": {
+                "spec": {
+                  "$ref": "#/definitions/StepBarrier"
                 }
               }
             }
@@ -1094,14 +1198,30 @@
           },
           "description": "The stage environment variables."
         },
-        "outputs": {
+        "mount": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/Mount"
           }
         }
       },
       "x-file": "step_action.yaml"
+    },
+    "Mount": {
+      "title": "Mount",
+      "type": "object",
+      "description": "Mount defines a volume mount.",
+      "properties": {
+        "name": {
+          "description": "Name defines the volume name.",
+          "type": "string"
+        },
+        "path": {
+          "description": "Path specifies the target mount path.",
+          "type": "string"
+        }
+      },
+      "x-file": "mount.yaml"
     },
     "StepBackground": {
       "title": "StepBackground",
@@ -1152,13 +1272,10 @@
         "privileged": {
           "type": "boolean"
         },
-        "outputs": {
-          "type": "string"
-        },
         "resources": {
           "$ref": "#/definitions/Resources"
         },
-        "volumes": {
+        "mount": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Mount"
@@ -1167,21 +1284,15 @@
       },
       "x-file": "step_background.yaml"
     },
-    "Mount": {
-      "title": "Mount",
+    "StepBarrier": {
+      "title": "StepBarrier",
       "type": "object",
-      "description": "Mount defines a volume mount.",
       "properties": {
-        "name": {
-          "description": "Name defines the volume name.",
-          "type": "string"
-        },
-        "path": {
-          "description": "Path specifies the target mount path.",
+        "ref": {
           "type": "string"
         }
       },
-      "x-file": "mount.yaml"
+      "x-file": "step_barrier.yaml"
     },
     "StepBitrise": {
       "title": "StepBitrise",
@@ -1200,10 +1311,10 @@
           },
           "description": "The stage environment variables."
         },
-        "outputs": {
+        "mount": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/Mount"
           }
         }
       },
@@ -1231,7 +1342,7 @@
         },
         "shell": {
           "type": "string",
-          "enum": ["sh", "bash", "powershell", "pwsh"]
+          "enum": ["sh", "bash", "powershell", "pwsh", "python"]
         },
         "envs": {
           "type": "object",
@@ -1264,16 +1375,10 @@
             "$ref": "#/definitions/Report"
           }
         },
-        "outputs": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
         "resources": {
           "$ref": "#/definitions/Resources"
         },
-        "volumes": {
+        "mount": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Mount"
@@ -1336,10 +1441,10 @@
             "$ref": "#/definitions/Report"
           }
         },
-        "outputs": {
+        "mount": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/Mount"
           }
         },
         "image": {
@@ -1463,16 +1568,10 @@
         "with": {
           "type": "object"
         },
-        "outputs": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
         "resources": {
           "$ref": "#/definitions/Resources"
         },
-        "volumes": {
+        "mount": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Mount"
@@ -1523,16 +1622,160 @@
           "items": {
             "type": "string"
           }
+        },
+        "mount": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Mount"
+          }
         }
       },
       "x-file": "step_jenkins.yaml"
     },
+    "Volume": {
+      "title": "Volume",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["claim", "config-map", "temp", "host"]
+        }
+      },
+      "required": ["name", "type"],
+      "oneOf": [
+        {
+          "allOf": [
+            {
+              "properties": {
+                "type": {
+                  "const": "host"
+                }
+              }
+            },
+            {
+              "properties": {
+                "spec": {
+                  "$ref": "#/definitions/VolumeHost"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "type": {
+                  "const": "claim"
+                }
+              }
+            },
+            {
+              "properties": {
+                "spec": {
+                  "$ref": "#/definitions/VolumeClaim"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "type": {
+                  "const": "temp"
+                }
+              }
+            },
+            {
+              "properties": {
+                "spec": {
+                  "$ref": "#/definitions/VolumeTemp"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "type": {
+                  "const": "config-map"
+                }
+              }
+            },
+            {
+              "properties": {
+                "spec": {
+                  "$ref": "#/definitions/VolumeConfigMap"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x-file": "volume.yaml"
+    },
+    "VolumeHost": {
+      "title": "VolumeHost",
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      },
+      "required": ["path"],
+      "x-file": "volume_host.yaml"
+    },
+    "VolumeClaim": {
+      "title": "VolumeClaim",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": ["name"],
+      "x-file": "volume_claim.yaml"
+    },
+    "VolumeTemp": {
+      "title": "VolumeTemp",
+      "type": "object",
+      "properties": {
+        "medium": {
+          "type": "string",
+          "enum": ["memory"]
+        },
+        "limit": {
+          "type": ["string", "number"]
+        }
+      },
+      "x-file": "volume_temp.yaml"
+    },
+    "VolumeConfigMap": {
+      "title": "VolumeConfigMap",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "optional": {
+          "type": "boolean"
+        }
+      },
+      "required": ["name"],
+      "x-file": "volume_config.yaml"
+    },
     "StageCD": {
       "properties": {
-        "delegate": {
-          "$ref": "#/definitions/Delegate",
-          "description": "Configures the delegate matching logic."
-        },
         "platform": {
           "$ref": "#/definitions/Platform",
           "description": "Configures the target execution platform."
@@ -1562,10 +1805,6 @@
     },
     "StageCustom": {
       "properties": {
-        "delegate": {
-          "$ref": "#/definitions/Delegate",
-          "description": "Configures the delegate matching logic."
-        },
         "platform": {
           "$ref": "#/definitions/Platform",
           "description": "Configures the target execution platform."
@@ -1599,10 +1838,6 @@
           "$ref": "#/definitions/Clone",
           "description": "Configures the default clone behavior."
         },
-        "delegate": {
-          "$ref": "#/definitions/Delegate",
-          "description": "Configures the delegate matching logic."
-        },
         "platform": {
           "$ref": "#/definitions/Platform",
           "description": "Configures the target execution platform."
@@ -1630,12 +1865,62 @@
       "title": "StageInfra",
       "x-file": "stage_infra.yaml"
     },
+    "Clone": {
+      "title": "Clone",
+      "type": "object",
+      "description": "Clone defines the default clone behavior.",
+      "properties": {
+        "depth": {
+          "description": "Depth defines the clone depth.",
+          "type": "number"
+        },
+        "disabled": {
+          "description": "Disabled disables the default clone step.",
+          "type": "boolean"
+        },
+        "insecure": {
+          "description": "Insecure disables ssl verification.",
+          "type": "boolean"
+        },
+        "strategy": {
+          "description": "Strategy configures the clone strategy.",
+          "type": "string",
+          "enum": ["source-branch", "merge"]
+        },
+        "trace": {
+          "description": "Trace enables trace logging.",
+          "type": "boolean"
+        },
+        "ref": {
+          "$ref": "#/definitions/Reference",
+          "description": "Reference defines the clone ref."
+        }
+      },
+      "x-file": "clone.yaml"
+    },
+    "Reference": {
+      "title": "Reference",
+      "description": "Reference defines a git clone reference.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name provides ref name.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type defines the ref type.",
+          "type": "string",
+          "enum": ["branch", "tag", "pr"]
+        },
+        "sha": {
+          "description": "Sha provides the ref sha.",
+          "type": "string"
+        }
+      },
+      "x-file": "reference.yaml"
+    },
     "StageFlag": {
       "properties": {
-        "delegate": {
-          "$ref": "#/definitions/Delegate",
-          "description": "Configures the delegate matching logic."
-        },
         "platform": {
           "$ref": "#/definitions/Platform",
           "description": "Configures the target execution platform."
@@ -1693,7 +1978,7 @@
           "type": "string",
           "enum": ["string", "number", "boolean"]
         },
-        "desc": {
+        "description": {
           "type": "string",
           "description": "Desc defines the input description."
         },
@@ -1709,24 +1994,117 @@
           "items": {
             "type": ["string", "number", "boolean"]
           },
-          "description": "Enum defines a list of accepted input values."
+          "description": "Enum defines a list of accepted input values.",
+          "x-go-type": "[]string"
         }
       },
       "x-file": "input.yaml"
+    },
+    "Default": {
+      "type": "object",
+      "title": "Default",
+      "properties": {
+        "clone": {
+          "$ref": "#/definitions/Clone",
+          "description": "Configures the default clone behavior."
+        },
+        "repository": {
+          "$ref": "#/definitions/Repository",
+          "description": "Configures the default repository."
+        },
+        "registry": {
+          "$ref": "#/definitions/Registry",
+          "description": "Provides default registry credentials."
+        },
+        "resources": {
+          "$ref": "#/definitions/Resources",
+          "description": "Configures the default stage and step resources."
+        },
+        "delegate": {
+          "$ref": "#/definitions/Delegate",
+          "description": "Configures the default delegate matching logic."
+        },
+        "barriers": {
+          "items": {
+            "$ref": "#/definitions/Barrier"
+          },
+          "type": "array"
+        },
+        "timeout": {
+          "type": "string",
+          "description": "Configures the pipeline timeout."
+        },
+        "envs": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Provides the default environment variables."
+        }
+      },
+      "x-file": "default.yaml"
+    },
+    "Repository": {
+      "title": "Repository",
+      "description": "Repository defines a remote git repository.",
+      "type": "object",
+      "properties": {
+        "connector": {
+          "description": "Connector provides the repository connector.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name provides the repository name.",
+          "type": "string"
+        }
+      },
+      "x-file": "repository.yaml"
     },
     "Registry": {
       "title": "Registry",
       "description": "Registry provides container registry details.",
       "type": "object",
       "properties": {
-        "credentials": {
-          "description": "Credentials provides container registry pull credentials.",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+        "connector": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "$ref": "#/definitions/RegistryConnector"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "object",
+              "$ref": "#/definitions/RegistryConnector"
+            }
+          ]
+        },
+        "mirror": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
         }
       },
+      "x-go-skip": true,
       "examples": [
         {
           "version": 1,
@@ -1748,8 +2126,36 @@
               }
             }
           ],
-          "registry": {
-            "credentials": ["connector.dockerhub", "connector.gcr"]
+          "options": {
+            "registry": {
+              "connector": "connector.dockerhub"
+            }
+          }
+        },
+        {
+          "version": 1,
+          "stages": [
+            {
+              "name": "build",
+              "type": "ci",
+              "spec": {
+                "steps": [
+                  {
+                    "name": "compile",
+                    "type": "script",
+                    "image": "golang",
+                    "spec": {
+                      "run": "go build"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "options": {
+            "registry": {
+              "connector": ["connector.dockerhub", "connector.gcr"]
+            }
           }
         },
         {
@@ -1772,21 +2178,105 @@
               }
             }
           ],
-          "registry": {
-            "credentials": [
-              {
-                "name": "connector.dockerhub",
-                "match": "docker.io"
-              },
-              {
-                "name": "connector.gcr",
-                "match": "us.gcr.io"
+          "options": {
+            "registry": {
+              "connector": [
+                {
+                  "name": "connector.dockerhub"
+                },
+                {
+                  "name": "connector.gcr",
+                  "match": "us.gcr.io"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "version": 1,
+          "stages": [
+            {
+              "name": "build",
+              "type": "ci",
+              "spec": {
+                "steps": [
+                  {
+                    "name": "compile",
+                    "type": "script",
+                    "image": "us.gcr.io/account/project/golang:latest",
+                    "spec": {
+                      "run": "go build"
+                    }
+                  }
+                ]
               }
-            ]
+            }
+          ],
+          "options": {
+            "registry": {
+              "mirror": "mirror.gcr.io"
+            }
+          }
+        },
+        {
+          "version": 1,
+          "stages": [
+            {
+              "name": "build",
+              "type": "ci",
+              "spec": {
+                "steps": [
+                  {
+                    "name": "compile",
+                    "type": "script",
+                    "image": "us.gcr.io/account/project/golang:latest",
+                    "spec": {
+                      "run": "go build"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "options": {
+            "registry": {
+              "mirror": ["mirror.gcr.io", "mirror.harness.io"]
+            }
           }
         }
       ],
       "x-file": "registry.yaml"
+    },
+    "RegistryConnector": {
+      "title": "RegistryConnector",
+      "description": "RegistryConnector provides a registry connector.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name provides the registry connector name.",
+          "type": "string"
+        },
+        "match": {
+          "description": "Match provides the regitry connector endpoint.",
+          "type": "string"
+        }
+      },
+      "x-go-skip": true,
+      "x-file": "registry_conn.yaml"
+    },
+    "Barrier": {
+      "title": "Barrier",
+      "type": "object",
+      "description": "Barrier defines a pipeline barrier.",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "x-file": "barrier.yaml"
     }
   },
   "oneOf": [
