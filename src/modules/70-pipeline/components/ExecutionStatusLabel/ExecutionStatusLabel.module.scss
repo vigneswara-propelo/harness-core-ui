@@ -36,6 +36,7 @@
   &.queued,
   &.aborted,
   &.discontinuing,
+  &.abortedbyfreeze,
   &.expired {
     --execution-status-bg-color: var(--grey-200);
     --execution-status-color: var(--grey-700);

@@ -6,7 +6,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Classes } from '@blueprintjs/core'
+import { Classes, Popover, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text, Checkbox } from '@harness/uicore'
 import { get, isEmpty, defaultTo } from 'lodash-es'
@@ -41,7 +41,7 @@ import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/Exec
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
-import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
+import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { mapTriggerTypeToIconAndExecutionText, mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -53,6 +53,7 @@ import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary, PipelineStageInfo, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import type { PipelineListPagePathParams } from '@pipeline/pages/pipeline-list/types'
+import FrozenExecutionDrawer from './FrozenExecutionDrawer/FrozenExecutionDrawer'
 import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
@@ -218,7 +219,55 @@ export const PipelineNameCell: CellType = ({ row }) => {
 }
 
 export const StatusCell: CellType = ({ row }) => {
-  return <ExecutionStatusLabel status={row.original.status as ExecutionStatus} />
+  const planExecutionId = row.original.planExecutionId
+  const isAbortedByFreeze = ExecutionStatusEnum.AbortedByFreeze === (row.original.status as ExecutionStatus)
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false)
+  const { getString } = useStrings()
+
+  const AbortedByFreezePopover = (): JSX.Element => {
+    return (
+      <Layout.Vertical className={css.abortedByFreezePopover} flex={{ alignItems: 'flex-start' }}>
+        <ExecutionStatusLabel
+          status={row.original.status as ExecutionStatus}
+          label={getString('pipeline.executionStatus.AbortedByFreeze')}
+        />
+        <Text color={Color.GREY_100}>{getString('pipeline.frozenExecPopover.abortedMsg')}</Text>
+        <Text
+          color={Color.PRIMARY_5}
+          rightIcon="right-drawer"
+          rightIconProps={{ color: Color.PRIMARY_5 }}
+          onClick={e => {
+            e.stopPropagation()
+            setDrawerOpen(true)
+          }}
+          className={css.viewWindowTextStyle}
+        >
+          {getString('pipeline.frozenExecPopover.viewFreezeWindows')}
+        </Text>
+      </Layout.Vertical>
+    )
+  }
+
+  return (
+    <div onClick={e => e.stopPropagation()}>
+      <Popover
+        interactionKind="hover"
+        popoverClassName={css.popoverStyle}
+        content={<AbortedByFreezePopover />}
+        disabled={!isAbortedByFreeze || drawerOpen}
+        position={Position.TOP}
+      >
+        <ExecutionStatusLabel status={row.original.status as ExecutionStatus} />
+      </Popover>
+      {drawerOpen && (
+        <FrozenExecutionDrawer
+          drawerOpen={drawerOpen}
+          planExecutionId={planExecutionId}
+          setDrawerOpen={setDrawerOpen}
+        />
+      )}
+    </div>
+  )
 }
 
 export const ExecutionCell: CellType = ({ row }) => {

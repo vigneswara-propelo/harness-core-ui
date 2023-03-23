@@ -1721,3 +1721,10 @@ noNotifications:
   title: No notifications configured for this {{entity}}
   subtitle: Configure settings to notify your team of specific events in your {{entity}}.
 guidedCDK8sGetStarted: Get started with guided K8s Deployment
+frozenExecList:
+  freezeTime: Freeze Time
+  freezeConfig: Freeze Configuration
+  emptyStateMsg: No Freeze Window details present for this execution.
+frozenExecPopover:
+  abortedMsg: Pipeline was aborted due to freeze windows.
+  viewFreezeWindows: View associated freeze windows

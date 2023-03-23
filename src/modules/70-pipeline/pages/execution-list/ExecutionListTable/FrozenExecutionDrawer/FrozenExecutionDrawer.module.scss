@@ -1,0 +1,92 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.frozenExecutionBgColor {
+  background-color: var(--primary-bg) !important;
+}
+
+.headerStyle {
+  height: var(--spacing-12);
+  padding: var(--spacing-6) var(--spacing-8) !important;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+  background-color: var(--grey-0) !important;
+}
+
+.table {
+  padding: var(--spacing-7) var(--spacing-8);
+  div[class*='TableV2--body'] {
+    overflow: auto;
+    max-height: calc(100% - 145px);
+  }
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.hoverUnderline {
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.tags {
+  p {
+    color: var(--grey-600) !important;
+    font-size: var(--font-size-small) !important;
+  }
+}
+
+.status {
+  border-radius: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3) !important;
+  display: inline-block !important;
+  text-transform: uppercase;
+  &[data-state='ACTIVE'] {
+    background-color: var(--primary-2);
+    color: var(--primary-7);
+  }
+  &[data-state='INACTIVE'] {
+    background-color: var(--grey-100);
+    color: var(--grey-600);
+  }
+  &[data-state='EXPIRED'] {
+    background-color: var(--grey-400);
+    color: var(--grey-0) !important;
+  }
+}
+
+.scope {
+  border-radius: var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-3) !important;
+  display: inline-block !important;
+  text-transform: uppercase;
+  background-color: var(--primary-2) !important;
+}
+
+.freezeConfigBadge {
+  background-color: var(--primary-2);
+  border-radius: var(--spacing-2);
+  color: var(--grey-900);
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  height: var(--spacing-7);
+  line-height: var(--spacing-6);
+  padding: var(--spacing-1) var(--spacing-3);
+  margin-left: var(--spacing-3);
+  margin-bottom: 6px;
+}
+
+.freezeConfigList {
+  display: flex;
+  align-items: center;
+  flex-flow: wrap;
+}
+
+.emptyStateStyle {
+  margin-bottom: var(--spacing-9) !important;
+}

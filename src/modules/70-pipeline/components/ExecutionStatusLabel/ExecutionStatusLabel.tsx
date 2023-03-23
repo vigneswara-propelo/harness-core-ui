@@ -60,7 +60,7 @@ export const iconMap: Record<ExecutionStatus, IconProps> = {
   TimedWaiting: { name: 'loading', size: 10 },
   Running: { name: 'loading', size: 10 },
   Aborted: { name: 'circle-stop', size: 9 },
-  AbortedByFreeze: { name: 'circle-stop', size: 9 },
+  AbortedByFreeze: { name: 'circle-stop', size: 10 },
   Discontinuing: { name: 'circle-stop', size: 9 },
   Expired: { name: 'expired', size: 9 },
   Suspended: { name: 'banned', size: 9 },

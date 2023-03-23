@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly abortedByFreezePopover: string
   readonly accordionBtn: string
   readonly cdExecutionSummary: string
   readonly checkbox: string
@@ -26,6 +27,7 @@ declare const styles: {
   readonly menu: string
   readonly multiSvcEnv: string
   readonly parentPipelineLink: string
+  readonly popoverStyle: string
   readonly prState: string
   readonly primary6: string
   readonly selectiveStageExecution: string
@@ -41,5 +43,6 @@ declare const styles: {
   readonly toggleAccordion: string
   readonly triggerInfo: string
   readonly triggerInfoCell: string
+  readonly viewWindowTextStyle: string
 }
 export default styles

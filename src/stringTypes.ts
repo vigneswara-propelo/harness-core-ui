@@ -4044,6 +4044,11 @@ export interface StringsMap {
   'pipeline.filters.environmentPlaceholder': string
   'pipeline.filters.pipelineNamePlaceholder': string
   'pipeline.filters.servicePlaceholder': string
+  'pipeline.frozenExecList.emptyStateMsg': string
+  'pipeline.frozenExecList.freezeConfig': string
+  'pipeline.frozenExecList.freezeTime': string
+  'pipeline.frozenExecPopover.abortedMsg': string
+  'pipeline.frozenExecPopover.viewFreezeWindows': string
   'pipeline.gitCloneStep.cloneDirectory': string
   'pipeline.gitCloneStep.validation.associatedBuildInput': string
   'pipeline.gitDetails': string

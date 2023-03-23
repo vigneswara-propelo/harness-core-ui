@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly aborted: string
+  readonly abortedbyfreeze: string
   readonly approvalrejected: string
   readonly approvalwaiting: string
   readonly asyncwaiting: string
