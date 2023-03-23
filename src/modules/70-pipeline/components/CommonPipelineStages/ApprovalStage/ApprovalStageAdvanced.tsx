@@ -29,6 +29,9 @@ import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStra
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
 import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 
+import { StageErrorContext } from '@pipeline/context/StageErrorContext'
+import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
+import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import css from './ApprovalAdvancedSpecifications.module.scss'
 
 export interface AdvancedSpecifications {
@@ -58,9 +61,18 @@ function ApprovalAdvancedSpecifications({
 
   const formikRef = React.useRef<StepFormikRef | null>(null)
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
+  const { submitFormsForTab } = React.useContext(StageErrorContext)
+  const { errorMap } = useValidationErrors()
+
+  React.useEffect(() => {
+    if (errorMap.size > 0) {
+      submitFormsForTab(getString('advancedTitle'))
+    }
+  }, [errorMap])
 
   return (
     <div className={cx(css.stageSection, css.editStageGrid)}>
+      <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
       <div className={css.contentSection} ref={scrollRef}>
         <div className={css.tabHeading}>
           <span data-tooltip-id={conditionalExecutionTooltipId}>
@@ -206,19 +218,21 @@ function ApprovalAdvancedSpecifications({
                         unset(draft, 'stage.failureStrategies')
                       }
                     })
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    updateStage(stageData.stage!)
-                    const errors = formikRef.current?.getErrors()
-                    if (isEmpty(errors) && Array.isArray(failureStrategies)) {
-                      const telemetryData = failureStrategies.map(strategy => ({
-                        onError: strategy.onFailure?.errors?.join(', '),
-                        action: strategy.onFailure?.action?.type
-                      }))
-                      telemetryData.length &&
-                        trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
+                    if (stageData.stage) {
+                      updateStage(stageData.stage)
+                      const errors = formikRef.current?.getErrors()
+                      if (isEmpty(errors) && Array.isArray(failureStrategies)) {
+                        const telemetryData = failureStrategies.map(strategy => ({
+                          onError: strategy.onFailure?.errors?.join(', '),
+                          action: strategy.onFailure?.action?.type
+                        }))
+                        telemetryData.length &&
+                          trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
+                      }
                     }
                   }
                 }}
+                tabName={getString('advancedTitle')}
               />
             </div>
           </div>

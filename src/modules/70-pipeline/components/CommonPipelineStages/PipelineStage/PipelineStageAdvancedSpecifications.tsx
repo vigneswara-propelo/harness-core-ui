@@ -220,6 +220,7 @@ export function PipelineStageAdvancedSpecifications({
                     }
                   }
                 }}
+                tabName={PipelineStageTabs.ADVANCED}
               />
             </div>
           </div>

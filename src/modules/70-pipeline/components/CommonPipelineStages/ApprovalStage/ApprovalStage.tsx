@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { PipelineStage } from '@pipeline/components/PipelineStages/PipelineStage'
+import { DeployStageErrorProvider } from '@pipeline/context/StageErrorContext'
 import { ApprovalStageMinimalMode } from './ApprovalStageMinimalMode'
 import { ApprovalStageSetupShellMode } from './ApprovalStageSetupShellMode'
 
@@ -16,6 +17,10 @@ export class ApprovalStage extends PipelineStage {
     if (minimal) {
       return <ApprovalStageMinimalMode {...stageProps} />
     }
-    return <ApprovalStageSetupShellMode />
+    return (
+      <DeployStageErrorProvider>
+        <ApprovalStageSetupShellMode />
+      </DeployStageErrorProvider>
+    )
   }
 }

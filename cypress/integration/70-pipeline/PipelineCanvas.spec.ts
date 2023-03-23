@@ -638,12 +638,8 @@ describe('Add stage view with enabled licences', () => {
     cy.findByTestId('stage-CI').should('be.visible')
     cy.findByTestId('stage-Approval').should('be.visible')
     cy.findByTestId('stage-Custom').should('be.visible')
+    cy.findByTestId('stage-Pipeline').should('be.visible')
     cy.findByTestId('stage-SecurityTests').should('be.visible')
-  })
-
-  it('should not display chained pipeline', () => {
-    cy.get('[icon="plus"]').click()
-    cy.findByTestId('stage-Pipeline').should('not.exist')
   })
 })
 

@@ -28,6 +28,7 @@ import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
 import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
+import { BuildTabs } from '../CIPipelineStagesUtils'
 import css from './BuildAdvancedSpecifications.module.scss'
 
 export interface AdvancedSpecifications {
@@ -214,6 +215,7 @@ const BuildAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childre
                       }
                     }
                   }}
+                  tabName={BuildTabs.ADVANCED}
                 />
               </div>
             </div>
