@@ -807,6 +807,22 @@ export function PipelineRouteDestinations({
         licenseRedirectData={licenseRedirectData}
         sidebarProps={sidebarProps}
         layout={MinimalLayout}
+        path={routes.toExecutionCommitsView({
+          ...accountPathProps,
+          ...executionPathProps,
+          ...moduleParams
+        })}
+        pageName={PAGE_NAME.BuildCommits}
+      >
+        <ExecutionLandingPage>
+          <BuildCommits />
+        </ExecutionLandingPage>
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        layout={MinimalLayout}
         path={routes.toResilienceView({
           ...accountPathProps,
           ...executionPathProps,

@@ -32,7 +32,7 @@ import {
 } from '@common/Redirects'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
-import { accountPathProps, executionPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { ConnectorRouteDestinations } from '@connectors/RouteDestinations'
 import { FileStoreRouteDestinations } from '@filestore/RouteDestinations'
 import { DelegateRouteDestinations } from '@delegates/RouteDestinations'
@@ -40,7 +40,6 @@ import { GitSyncRouteDestinations } from '@gitsync/RouteDestinations'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import executionFactory from '@pipeline/factories/ExecutionFactory'
 
-import ExecutionLandingPage from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionLandingPage'
 import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'
 import { StageType } from '@pipeline/utils/stageHelpers'
@@ -58,7 +57,6 @@ import featureFactory from 'framework/featureStore/FeaturesFactory'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
-import { BuildCommits } from '@pipeline/pages/execution/ExecutionLandingPage/Commits/BuildCommits'
 import { CIExecutionCardSummary } from './components/CIExecutionCardSummary/CIExecutionCardSummary'
 import { CIExecutionSummary } from './components/CIExecutionSummary/CIExecutionSummary'
 import CISideNav from './components/CISideNav/CISideNav'
@@ -302,22 +300,6 @@ export default (
       path={routes.toGetStartedWithCI({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
     >
       <GetStartedWithCI />
-    </RouteWithLayout>
-
-    <RouteWithLayout
-      exact
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CISideNavProps}
-      path={routes.toExecutionCommitsView({
-        ...accountPathProps,
-        ...executionPathProps,
-        ...moduleParams
-      })}
-      pageName={PAGE_NAME.BuildCommits}
-    >
-      <ExecutionLandingPage>
-        <BuildCommits />
-      </ExecutionLandingPage>
     </RouteWithLayout>
 
     {
