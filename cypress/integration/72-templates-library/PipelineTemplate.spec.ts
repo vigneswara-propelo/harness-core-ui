@@ -13,13 +13,13 @@ import {
   incompleteTemplateCreationResponse,
   pipelineTemplatePublishResponse,
   selectedPipelineTemplateResponse,
-  applyTemplateResponse,
   selectedTemplateListFromPipeline,
   templateListCallAfterSelectionResponse,
   afterUseTemplateEndpointResponse,
   afterUseTemplatePipelineTemplateNameResponse,
   afterUseTemplateApplyTemplateResponse,
-  afterUseTemplatePipelineTemplateInputsResponse
+  afterUseTemplatePipelineTemplateInputsResponse,
+  applyTemplateResponseForTemplateInputs
 } from '../../support/72-templates-library/constants'
 
 describe('Pipeline Template creation and assertion', () => {
@@ -84,7 +84,7 @@ describe('Pipeline Template creation and assertion', () => {
   it('create pipeline with pipeline template', () => {
     cy.intercept('POST', templateMetadataCall, selectedTemplateListFromPipeline).as('templateListCallPipelineTemplate')
     cy.intercept('GET', templateDetailsCall, selectedPipelineTemplateResponse).as('selectedPipelineTemplateResponse')
-    cy.intercept('POST', applyTemplateEndpoint, applyTemplateResponse).as('applyTemplateCall')
+    cy.intercept('POST', applyTemplateEndpoint, applyTemplateResponseForTemplateInputs).as('applyTemplateCall')
     cy.intercept('POST', templateMetadataCallAfterSelection, templateListCallAfterSelectionResponse).as(
       'templateListCallAfterSelection'
     )

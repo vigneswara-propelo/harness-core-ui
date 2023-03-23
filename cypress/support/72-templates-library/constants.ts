@@ -96,6 +96,26 @@ export const applyTemplateResponse = {
   correlationId: '416b502d-11bb-461b-9706-7aa40d95016f'
 }
 
+export const applyTemplateResponseForTemplateInputs = {
+  status: 'SUCCESS',
+  data: {
+    mergedPipelineYaml:
+      'pipeline:\n  stages:\n    - stage:\n        name: teststage\n        identifier: teststage\n        type: Deployment\n        spec:\n          deploymentType: Kubernetes\n          service:\n            serviceRef: artifact_source_builds\n            serviceInputs:\n              serviceDefinition:\n                type: Kubernetes\n                spec:\n                  artifacts:\n                    primary:\n                      primaryArtifactRef: check docker template\n                      sources:\n                        - identifier: check docker template\n                          template:\n                            templateInputs:\n                              type: DockerRegistry\n                              spec:\n                                imagePath: sasa\n                                tag: SSas\n          environment:\n            environmentRef: CD\n            deployToAll: false\n            infrastructureDefinitions: <+input>\n          execution:\n            steps:\n              - step:\n                  identifier: kl\n                  name: kl\n                  timeout: 10m\n                  type: ShellScript\n                  spec:\n                    shell: Bash\n                    onDelegate: true\n                    source:\n                      type: Inline\n                      spec:\n                        script: simple update\n                    environmentVariables: []\n                    outputVariables: []\n            rollbackSteps: []\n        failureStrategies:\n          - onFailure:\n              errors:\n                - AllErrors\n              action:\n                type: MarkAsSuccess\n',
+    templateReferenceSummaries: [
+      {
+        fqn: 'pipeline.stages.s2',
+        templateIdentifier: 'stage_temp_infra_run',
+        versionLabel: '12',
+        scope: 'project',
+        stableTemplate: false,
+        moduleInfo: ['cd']
+      }
+    ]
+  },
+  metaData: null,
+  correlationId: '925fed7a-e586-4971-8e44-13ce715e182f'
+}
+
 export const selectedTemplateListFromPipeline = {
   status: 'SUCCESS',
   data: {

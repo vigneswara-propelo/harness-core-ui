@@ -23,6 +23,7 @@ import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, noop, unset } from 'lodash-es'
 import produce from 'immer'
+import { parse } from 'yaml'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { TemplateTags } from '@templates-library/components/TemplateTags/TemplateTags'
@@ -34,7 +35,7 @@ import {
 } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 
-import { useMutateAsGet } from '@common/hooks'
+import { useDeepCompareEffect, useMutateAsGet } from '@common/hooks'
 import {
   CacheResponseMetadata,
   Error,
@@ -44,16 +45,18 @@ import {
   useGetTemplate,
   useGetTemplateInputSetYaml,
   useGetTemplateList,
-  useGetTemplateMetadataList
+  useGetTemplateMetadataList,
+  useGetYamlWithTemplateRefsResolved
 } from 'services/template-ng'
 import RbacButton from '@rbac/components/Button/Button'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import { TemplateYaml } from '@pipeline/components/PipelineStudio/TemplateYaml/TemplateYaml'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getVersionLabelText } from '@templates-library/utils/templatesUtils'
+import { getVersionLabelText, TemplateType } from '@templates-library/utils/templatesUtils'
 import { TemplateReferenceByTabPanel } from '@templates-library/components/TemplateDetails/TemplateReferenceByTabPanel'
 import NoEntityFound, { ErrorPlacement } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
@@ -191,6 +194,35 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   })
   const { refetch: refetchTemplateInputSetYaml } = templateInputSetFetchParams
 
+  const selectedTemplateSpec = React.useMemo(
+    () => parse((selectedTemplate as TemplateSummaryResponse)?.yaml || '')?.template?.spec,
+    [selectedTemplate]
+  )
+
+  const {
+    data: resolvedPipelineResponse,
+    loading: loadingResolvedPipeline,
+    refetch: refetchResolvedPipeline
+  } = useMutateAsGet(useGetYamlWithTemplateRefsResolved, {
+    queryParams: {
+      accountIdentifier: defaultTo(selectedTemplate?.accountId, accountId),
+      orgIdentifier: selectedTemplate?.orgIdentifier,
+      pipelineIdentifier: selectedTemplateSpec?.identifier,
+      projectIdentifier: selectedTemplate?.projectIdentifier,
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params,
+        repoIdentifier: repo,
+        branch: selectedTemplateBranch
+      })
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
+    body: {
+      originalEntityYaml: yamlStringify({ pipeline: selectedTemplateSpec })
+    },
+    lazy: true
+  })
+
   const templateIconName = React.useMemo(() => getIconForTemplate(getString, selectedTemplate), [selectedTemplate])
   const templateIconUrl = React.useMemo(() => selectedTemplate?.icon, [selectedTemplate?.icon])
   const templateType = React.useMemo(() => getTypeForTemplate(getString, selectedTemplate), [selectedTemplate])
@@ -237,6 +269,12 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       refetchTemplateInputSetYaml()
     }
   }, [selectedTemplate?.identifier, selectedTemplate?.versionLabel])
+
+  useDeepCompareEffect(() => {
+    if (selectedTemplateSpec && selectedTemplate?.templateEntityType === TemplateType.Pipeline) {
+      refetchResolvedPipeline()
+    }
+  }, [selectedTemplateSpec, selectedTemplate?.templateEntityType])
 
   React.useEffect(() => {
     if (selectedTemplate) {
@@ -303,6 +341,22 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
           ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier: repo, branch })
         }
       })
+      if (selectedTemplate?.templateEntityType === TemplateType.Pipeline) {
+        refetchResolvedPipeline({
+          queryParams: {
+            accountIdentifier: defaultTo(selectedTemplate?.accountId, accountId),
+            orgIdentifier: selectedTemplate?.orgIdentifier,
+            pipelineIdentifier: selectedTemplateSpec?.identifier,
+            projectIdentifier: selectedTemplate?.projectIdentifier,
+            ...getGitQueryParamsWithParentScope({
+              storeMetadata,
+              params,
+              repoIdentifier: repo,
+              branch
+            })
+          }
+        })
+      }
     }
   }
 
@@ -357,7 +411,11 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
     templateFactory.getTemplate(selectedTemplate.templateEntityType || '')?.renderTemplateInputsForm({
       template: selectedTemplate,
       accountId: defaultTo(template.accountId, ''),
-      templateInputSetFetchParams
+      templateInputSetFetchParams,
+      resolvedPipelineFetchParams: {
+        resolvedPipelineResponse,
+        loadingResolvedPipeline
+      }
     })
   ) : (
     <PageBody className={css.yamlLoader} loading />

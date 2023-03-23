@@ -23,7 +23,8 @@ import type {
   Failure,
   GetTemplateInputSetYamlQueryParams,
   ResponseString,
-  TemplateSummaryResponse
+  TemplateSummaryResponse,
+  ResponseTemplateMergeResponse
 } from 'services/template-ng'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -54,6 +55,11 @@ import { StepForm } from '@pipeline/components/PipelineInputSetForm/StepInputSet
 import { StepGroupForm } from '@pipeline/components/PipelineInputSetForm/StepGroupInputSetForm'
 import css from './TemplateInputs.module.scss'
 
+interface ResolvedPipelineFetchParams {
+  resolvedPipelineResponse: ResponseTemplateMergeResponse | null
+  loadingResolvedPipeline: boolean
+}
+
 export interface TemplateInputsProps {
   template: TemplateSummaryResponse | NGTemplateInfoConfigWithGitDetails
   templateInputSetFetchParams: UseGetReturn<
@@ -62,6 +68,7 @@ export interface TemplateInputsProps {
     GetTemplateInputSetYamlQueryParams,
     unknown
   >
+  resolvedPipelineFetchParams?: ResolvedPipelineFetchParams
 }
 
 type TemplateInputsFormData =
@@ -73,7 +80,11 @@ type TemplateInputsFormData =
   | ArtifactSourceConfigDetails
   | StepGroupElementConfig
 
-export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, templateInputSetFetchParams }) => {
+export const TemplateInputs: React.FC<TemplateInputsProps> = ({
+  template,
+  templateInputSetFetchParams,
+  resolvedPipelineFetchParams
+}) => {
   const templateSpec =
     parse((template as TemplateSummaryResponse).yaml || '')?.template?.spec ||
     (template as NGTemplateInfoConfigWithGitDetails).spec
@@ -91,7 +102,17 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, templa
   const templateEntityType =
     (template as TemplateSummaryResponse).templateEntityType || (template as NGTemplateInfoConfigWithGitDetails).type
 
+  const { resolvedPipelineResponse, loadingResolvedPipeline } =
+    (resolvedPipelineFetchParams as ResolvedPipelineFetchParams) || {}
+  const [resolvedPipelineValues, setResolvedPipelineValues] = React.useState<PipelineInfoConfig>(templateSpec)
+
   const { data: templateInputYaml, error: inputSetError, refetch, loading } = templateInputSetFetchParams
+
+  React.useEffect(() => {
+    if (!loadingResolvedPipeline) {
+      setResolvedPipelineValues(parse(defaultTo(resolvedPipelineResponse?.data?.mergedPipelineYaml, ''))?.pipeline)
+    }
+  }, [resolvedPipelineResponse?.data?.mergedPipelineYaml, loadingResolvedPipeline])
 
   React.useEffect(() => {
     try {
@@ -115,7 +136,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, templa
       className={css.container}
     >
       <Layout.Vertical>
-        {loading && <PageSpinner />}
+        {(loading || loadingResolvedPipeline) && <PageSpinner />}
         {!loading && inputSetError && (
           <Container height={300}>
             <PageError
@@ -149,7 +170,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, templa
                       {templateEntityType === TemplateType.Pipeline && (
                         <PipelineInputSetFormInternal
                           template={inputSetTemplate as PipelineInfoConfig}
-                          originalPipeline={formikProps.values.data as PipelineInfoConfig}
+                          originalPipeline={resolvedPipelineValues as PipelineInfoConfig}
                           path={'data'}
                           viewType={StepViewType.TemplateUsage}
                           readonly={true}
