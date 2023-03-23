@@ -215,7 +215,7 @@ describe('GoogleArtifactRegistry tests', () => {
     const submitBtn = getByText('submit')
     fireEvent.click(submitBtn)
 
-    const identifierRequiredErr = await findByText(container, 'common.validation.nameIsRequired')
+    const identifierRequiredErr = await findByText(container, 'common.validation.fieldIsRequired')
     expect(identifierRequiredErr).toBeDefined()
 
     // change value of identifier

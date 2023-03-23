@@ -833,7 +833,7 @@ exports[`Azure Artifacts tests clicking on package name dropdown 1`] = `
                       name="identifier"
                       placeholder="pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder"
                       type="text"
-                      value="test-id"
+                      value="testId"
                     />
                   </div>
                 </div>
@@ -3151,7 +3151,7 @@ exports[`Azure Artifacts tests should throw validation error for version when it
                       name="identifier"
                       placeholder="pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder"
                       type="text"
-                      value="test-id"
+                      value="testId"
                     />
                   </div>
                 </div>
@@ -3929,7 +3929,7 @@ exports[`Azure Artifacts tests should throw validation error for version when it
                       name="identifier"
                       placeholder="pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder"
                       type="text"
-                      value="test-id"
+                      value="testId"
                     />
                   </div>
                 </div>
@@ -4768,7 +4768,7 @@ exports[`Azure Artifacts tests shows validation error on submit when form is emp
                       <span
                         class="FormError--error"
                       >
-                        common.validation.nameIsRequired
+                        common.validation.fieldIsRequired
                       </span>
                     </div>
                   </div>
@@ -5517,7 +5517,7 @@ exports[`Azure Artifacts tests shows validation error on submit when form is emp
                       <span
                         class="FormError--error"
                       >
-                        common.validation.nameIsRequired
+                        common.validation.fieldIsRequired
                       </span>
                     </div>
                   </div>

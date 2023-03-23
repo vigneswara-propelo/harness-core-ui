@@ -9,7 +9,7 @@ import type { Schema } from 'yup'
 import type { IconName, SelectOption } from '@harness/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
 import { isEmpty } from 'lodash-es'
-import { NameSchema } from '@common/utils/Validation'
+import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { Connectors } from '@connectors/constants'
 import type { ArtifactSource, ConnectorInfoDTO, PrimaryArtifact, ServiceDefinition } from 'services/cd-ng'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
@@ -324,13 +324,20 @@ export const ArtifactIdentifierValidation = (
   id: string | undefined,
   validationMsg: string
 ): { identifier: Schema<unknown> } => {
+  const requiredErrorMsg = getString('common.validation.fieldIsRequired', {
+    name: getString('pipeline.artifactsSelection.artifactSourceName')
+  })
+  const regexErrorMsg = getString('pipeline.artifactsSelection.artifactSourceNameRegexErrorMsg')
   if (!id) {
     return {
-      identifier: NameSchema(getString).notOneOf(artifactIdentifiers, validationMsg)
+      identifier: IdentifierSchemaWithOutName(getString, { requiredErrorMsg, regexErrorMsg }).notOneOf(
+        artifactIdentifiers,
+        validationMsg
+      )
     }
   }
   return {
-    identifier: NameSchema(getString)
+    identifier: IdentifierSchemaWithOutName(getString, { requiredErrorMsg, regexErrorMsg })
   }
 }
 

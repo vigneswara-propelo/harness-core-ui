@@ -113,7 +113,7 @@ const props = {
 }
 
 const editValues = {
-  identifier: 'test-id',
+  identifier: 'testId',
   type: 'AzureArtifacts' as ArtifactType,
   spec: {
     versionType: '',

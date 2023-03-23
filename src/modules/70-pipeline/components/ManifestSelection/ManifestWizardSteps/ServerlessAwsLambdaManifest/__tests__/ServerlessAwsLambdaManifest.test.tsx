@@ -179,7 +179,7 @@ describe('Manifest Details tests', () => {
       },
       store: 'Git'
     }
-    const { container, getByText, findByText } = render(
+    const { container, getByText, findByText, findAllByText } = render(
       <TestWrapper>
         <ServerlessAwsLambdaManifest {...props} prevStepData={prevStepData} initialValues={initialValues} />
       </TestWrapper>
@@ -190,13 +190,19 @@ describe('Manifest Details tests', () => {
     const submitBtn = getByText('submit')
     userEvent.click(submitBtn)
     // Check for all validation errors
-    const nameValidationError = await findByText('common.validation.nameIsRequired')
+    /* 
+    Validation Error with common.validation.fieldIsRequired:
+    0: Manifest Name is required
+    1: Folder Path is required
+    */
+    const allFieldIsRequiredValidationError = await findAllByText('common.validation.fieldIsRequired')
+    const nameValidationError = allFieldIsRequiredValidationError[0]
     expect(nameValidationError).toBeInTheDocument()
     const repoValidationError = getByText('common.validation.repositoryName')
     expect(repoValidationError).toBeInTheDocument()
     const branchValidationError = getByText('validation.branchName')
     expect(branchValidationError).toBeInTheDocument()
-    const folderPathValidationError = getByText('common.validation.fieldIsRequired')
+    const folderPathValidationError = allFieldIsRequiredValidationError[1]
     expect(folderPathValidationError).toBeInTheDocument()
     // Change Folder Path to value that starts with "." and check for validation error message
     fireEvent.change(queryByNameAttribute('paths[0].path')!, { target: { value: './folder1/sub-folder-1' } })

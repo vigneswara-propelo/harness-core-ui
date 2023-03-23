@@ -170,11 +170,12 @@ describe('Bamboo Artifact tests', () => {
   })
 
   test('onclick of form - should submit form succesfully', async () => {
+    const identifier = 'testBambooArtifact'
     const { container } = render(
       <TestWrapper>
         <BambooArtifact
           initialValues={{
-            identifier: 'test-bamboo-artifact',
+            identifier,
             spec: {
               planKey: 'PFP-PT',
               artifactPaths: ['store/helloworld.war'],
@@ -192,7 +193,7 @@ describe('Bamboo Artifact tests', () => {
     await waitFor(() => {
       expect(bambooProps.handleSubmit).toBeCalled()
       expect(bambooProps.handleSubmit).toHaveBeenCalledWith({
-        identifier: 'test-bamboo-artifact',
+        identifier,
         spec: {
           artifactPaths: ['store/helloworld.war'],
           build: '14',

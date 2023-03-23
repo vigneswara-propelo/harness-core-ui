@@ -3550,6 +3550,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactIdPlaceholder': string
   'pipeline.artifactsSelection.artifactPathPlaceholder': string
   'pipeline.artifactsSelection.artifactSourceName': string
+  'pipeline.artifactsSelection.artifactSourceNameRegexErrorMsg': string
   'pipeline.artifactsSelection.artifactType': string
   'pipeline.artifactsSelection.artifactTyperequired': string
   'pipeline.artifactsSelection.artifactsArrayPath': string
@@ -4265,6 +4266,7 @@ export interface StringsMap {
   'pipeline.manifestType.kustomizeYamlFolderPathRequired': string
   'pipeline.manifestType.manifestDetails': string
   'pipeline.manifestType.manifestIdentifier': string
+  'pipeline.manifestType.manifestIdentifierRegexErrorMsg': string
   'pipeline.manifestType.manifestPathPlaceholder': string
   'pipeline.manifestType.manifestPlaceholder': string
   'pipeline.manifestType.manifestRepoType': string

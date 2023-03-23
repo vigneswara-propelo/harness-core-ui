@@ -159,7 +159,8 @@ describe('ECSWithS3 tests', () => {
     expect(portalDivs.length).toBe(0)
 
     // Type manifest identifier value
-    fireEvent.change(idField!, { target: { value: 'Jest Manifest' } })
+    const identifier = 'JestManifest'
+    fireEvent.change(idField!, { target: { value: identifier } })
 
     // Select region from dropdown
     const regionDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[0]
@@ -195,7 +196,7 @@ describe('ECSWithS3 tests', () => {
       expect(props.handleSubmit).toBeCalled()
       expect(props.handleSubmit).toHaveBeenCalledWith({
         manifest: {
-          identifier: 'Jest Manifest',
+          identifier,
           type: ManifestDataType.EcsTaskDefinition,
           spec: {
             store: {

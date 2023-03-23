@@ -60,7 +60,7 @@ describe('bamboo submit flow', () => {
     fireEvent.click(submitBtn)
     await waitFor(() => {
       expect(bambooProps.handleSubmit).not.toBeCalled()
-      expect(screen.queryByText('common.validation.nameIsRequired')).toBeInTheDocument()
+      expect(screen.queryByText('common.validation.fieldIsRequired')).toBeInTheDocument()
       expect(screen.queryByText('pipeline.bambooStep.validations.planName')).toBeInTheDocument()
     })
   })
@@ -76,7 +76,7 @@ describe('bamboo submit flow', () => {
     await waitFor(() => {
       expect(bambooProps.handleSubmit).not.toBeCalled()
 
-      expect(screen.queryByText('common.validation.nameIsRequired')).toBeInTheDocument()
+      expect(screen.queryByText('common.validation.fieldIsRequired')).toBeInTheDocument()
       expect(screen.queryByText('pipeline.bambooStep.validations.planName')).toBeInTheDocument()
     })
   })

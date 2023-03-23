@@ -12,7 +12,7 @@ import { Connectors } from '@connectors/constants'
 import type { ConnectorConfigDTO, ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
-import { NameSchema } from '@common/utils/Validation'
+import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import {
   buildAzureRepoPayload,
@@ -359,13 +359,20 @@ export const ManifestIdentifierValidation = (
   id: string | undefined,
   validationMsg: string
 ): { identifier: Schema<unknown> } => {
+  const requiredErrorMsg = getString('common.validation.fieldIsRequired', {
+    name: getString('pipeline.manifestType.manifestIdentifier')
+  })
+  const regexErrorMsg = getString('pipeline.manifestType.manifestIdentifierRegexErrorMsg')
   if (!id) {
     return {
-      identifier: NameSchema(getString).notOneOf(manifestNames, validationMsg)
+      identifier: IdentifierSchemaWithOutName(getString, { requiredErrorMsg, regexErrorMsg }).notOneOf(
+        manifestNames,
+        validationMsg
+      )
     }
   }
   return {
-    identifier: NameSchema(getString)
+    identifier: IdentifierSchemaWithOutName(getString)
   }
 }
 
