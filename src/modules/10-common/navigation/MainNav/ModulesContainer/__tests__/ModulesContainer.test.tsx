@@ -26,6 +26,9 @@ jest.mock('lodash-es', () => ({
 
 const setModuleConfigPreference = jest.fn()
 
+// eslint-disable-next-line
+// @ts-ignore
+window.innerHeight = 850
 describe('Modules containter test', () => {
   test('render', () => {
     const selectedModules = [ModuleName.CD, ModuleName.CI, ModuleName.CF]

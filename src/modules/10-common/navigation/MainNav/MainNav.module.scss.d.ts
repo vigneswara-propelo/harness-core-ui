@@ -14,6 +14,7 @@ declare const styles: {
   readonly chevron: string
   readonly darkBackground: string
   readonly disabled: string
+  readonly disabledContainer: string
   readonly hiddenText: string
   readonly hoverNavLink: string
   readonly hoverText: string
@@ -28,6 +29,7 @@ declare const styles: {
   readonly recessed: string
   readonly settings: string
   readonly text: string
+  readonly top: string
   readonly userLink: string
   readonly userName: string
 }

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Container, Icon } from '@harness/uicore'
 import { debounce } from 'lodash-es'
 import cx from 'classnames'
@@ -30,12 +30,14 @@ interface ChevronButtonProps {
   handleClick: () => void
 }
 
+const mainNavContentHeight = 576
+const moduleMaximumHeight = 90
 const ChevronButton: React.FC<ChevronButtonProps> = (props: ChevronButtonProps) => {
   const { disabled, type, handleClick } = props
 
   return (
     <Container
-      className={cx(css.chevron, css.navBtn)}
+      className={cx(css.chevron, css.navBtn, { [css.top]: type !== 'DOWN', [css.disabledContainer]: disabled })}
       onClick={disabled ? undefined : handleClick}
       padding={{ top: 'small', bottom: 'small' }}
     >
@@ -64,6 +66,26 @@ const isModuleHiddenOnTop = (
 const ModulesContainer = (): React.ReactElement => {
   const [moduleStartIndex, setModuleStartIndex] = useState<number>(0)
   const itemsRef = useRef<HTMLDivElement[]>([])
+  const [modulesWindowSize, setModulesWindowSize] = useState<number>(0)
+
+  const updateModulesContainerHeight = () => {
+    const extraSpace = window.innerHeight - mainNavContentHeight
+    if (extraSpace < moduleMaximumHeight) {
+      setModulesWindowSize(0)
+    } else {
+      setModulesWindowSize(Math.floor(extraSpace / moduleMaximumHeight))
+    }
+  }
+
+  const onWindowResize = debounce(() => {
+    updateModulesContainerHeight()
+  }, 100)
+
+  useLayoutEffect(() => {
+    window.addEventListener('resize', onWindowResize)
+    updateModulesContainerHeight()
+    return () => window.removeEventListener('resize', onWindowResize)
+  }, [])
 
   const { preference: modulesPreferenceData, setPreference: setModuleConfigPreference } =
     usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
@@ -71,7 +93,7 @@ const ModulesContainer = (): React.ReactElement => {
   const [filterModulesExecuted, setFilterModulesExecuted] = useState<boolean>(false)
 
   const { selectedModules = [], orderedModules = [] } = modulesPreferenceData || {}
-  const modulesListHeight = 92 * Math.min(MODULES_WINDOW_SIZE, selectedModules?.length || 0)
+  const modulesListHeight = 92 * Math.min(modulesWindowSize, selectedModules?.length || 0)
 
   useEffect(() => {
     const { orderedModules: filteredOrderedModules, selectedModules: filteredSelectedModules } = filterNavModules(
@@ -99,7 +121,7 @@ const ModulesContainer = (): React.ReactElement => {
   const handleDownClick = (): void => {
     const index = moduleStartIndex < selectedModules.length - 1 ? moduleStartIndex + 1 : moduleStartIndex
     setModuleStartIndex(index)
-    scrollModuleToView(index + MODULES_WINDOW_SIZE - 1)
+    scrollModuleToView(index + modulesWindowSize - 1)
   }
 
   const handleOnScroll = debounce(e => {
@@ -107,11 +129,11 @@ const ModulesContainer = (): React.ReactElement => {
     setModuleStartIndex(firstVisibleModule === -1 ? 0 : firstVisibleModule)
   }, 100)
 
-  if (!filterModulesExecuted) {
+  if (!filterModulesExecuted || modulesWindowSize === 0) {
     return <></>
   }
 
-  const showChevronButtons = selectedModules.length > MODULES_WINDOW_SIZE
+  const showChevronButtons = selectedModules.length > modulesWindowSize
   return (
     <>
       <div className={cx(css.border, css.navBtn)} />
@@ -133,7 +155,7 @@ const ModulesContainer = (): React.ReactElement => {
         <ChevronButton
           handleClick={handleDownClick}
           type={ChevronButtonType.DOWN}
-          disabled={moduleStartIndex + MODULES_WINDOW_SIZE >= selectedModules.length}
+          disabled={moduleStartIndex + modulesWindowSize >= selectedModules.length}
         />
       )}
       <div className={cx(css.border, css.navBtn)} />
