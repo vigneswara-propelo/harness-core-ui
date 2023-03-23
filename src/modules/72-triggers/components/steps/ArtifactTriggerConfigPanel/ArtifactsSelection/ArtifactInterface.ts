@@ -14,6 +14,7 @@ import type {
   AmazonS3RegistrySpec,
   ArtifactoryRegistrySpec,
   ArtifactTriggerConfig,
+  BambooRegistrySpec,
   CustomArtifactSpec,
   DockerRegistrySpec,
   EcrSpec,
@@ -258,3 +259,4 @@ export type ArtifactTriggerSpec =
   | JenkinsRegistrySpec
   | NexusRegistrySpec
   | CustomArtifactSpec
+  | BambooRegistrySpec

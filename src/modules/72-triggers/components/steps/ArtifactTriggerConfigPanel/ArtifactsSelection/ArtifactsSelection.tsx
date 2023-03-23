@@ -59,6 +59,8 @@ import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsA
 import { AzureArtifacts } from './ArtifactRepository/ArtifactLastSteps/AzureArtifacts/AzureArtifacts'
 import { AmazonMachineImage } from './ArtifactRepository/ArtifactLastSteps/AmazonMachineImage/AmazonMachineImage'
 import { GoogleCloudStorage } from './ArtifactRepository/ArtifactLastSteps/GoogleCloudStorage/GoogleCloudStorage'
+import { BambooArtifact } from './ArtifactRepository/ArtifactLastSteps/BambooArtifact/BambooArtifact'
+
 import css from '@pipeline/components/ArtifactsSelection/ArtifactsSelection.module.scss'
 
 interface ArtifactsSelectionProps {
@@ -136,7 +138,7 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
 
   useEffect(() => {
     refetchConnectorList()
-  }, [artifactSpec.connectorRef])
+  }, [artifactSpec?.connectorRef])
 
   const [showConnectorModal, hideConnectorModal] = useModalHook(
     () => (
@@ -338,6 +340,8 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
         return <AmazonMachineImage {...artifactLastStepProps()} />
       case 'GoogleCloudStorage':
         return <GoogleCloudStorage {...artifactLastStepProps()} />
+      case 'Bamboo':
+        return <BambooArtifact {...artifactLastStepProps()} />
       default:
         return <></>
     }

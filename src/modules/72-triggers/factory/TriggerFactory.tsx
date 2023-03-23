@@ -32,6 +32,8 @@ import { GithubPackageRegistry } from '@triggers/components/Triggers/ArtifactTri
 import { GoogleArtifactRegistry } from '@triggers/components/Triggers/ArtifactTrigger/GoogleArtifactRegistry/GoogleArtifactRegistry'
 import { AzureArtifacts } from '@triggers/components/Triggers/ArtifactTrigger/AzureArtifacts/AzureArtifacts'
 import { AmazonMachineImage } from '@triggers/components/Triggers/ArtifactTrigger/AmazonMachineImage/AmazonMachineImage'
+import { Bamboo } from '@triggers/components/Triggers/ArtifactTrigger/Bamboo/Bamboo'
+
 import { AbstractTriggerFactory } from './AbstractTriggerFactory'
 
 class Factory extends AbstractTriggerFactory {
@@ -54,6 +56,7 @@ TriggerFactory.registerTrigger(new Cron())
 // Artifact Triggers
 TriggerFactory.registerTrigger(new Acr())
 TriggerFactory.registerTrigger(new AmazonS3())
+TriggerFactory.registerTrigger(new Bamboo())
 TriggerFactory.registerTrigger(new AzureArtifacts())
 TriggerFactory.registerTrigger(new ArtifactoryRegistry())
 TriggerFactory.registerTrigger(new DockerRegistry())

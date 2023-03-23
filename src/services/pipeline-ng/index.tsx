@@ -36,6 +36,11 @@ export type AbortFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Abort'
 }
 
+export interface AbortedBy {
+  email?: string
+  userName?: string
+}
+
 export interface AccessControlCheckError {
   code?:
     | 'DEFAULT_ERROR_CODE'
@@ -342,6 +347,7 @@ export interface AccessControlCheckError {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -394,6 +400,7 @@ export interface AccessControlCheckError {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -547,6 +554,7 @@ export type ArtifactTriggerConfig = NGTriggerSpecV2 & {
     | 'AzureArtifacts'
     | 'AmazonMachineImage'
     | 'GoogleCloudStorage'
+    | 'Bamboo'
 }
 
 export interface ArtifactTypeSpec {
@@ -685,6 +693,14 @@ export type AzureRepoSpec = WebhookTriggerSpecV2 & {
   type?: 'PullRequest' | 'Push' | 'IssueComment'
 }
 
+export type BambooRegistrySpec = ArtifactTypeSpec & {
+  artifactPaths?: string[]
+  build?: string
+  connectorRef?: string
+  eventConditions?: TriggerEventDataCondition[]
+  planKey?: string
+}
+
 export interface BarrierExecutionInfo {
   identifier?: string
   name?: string
@@ -799,7 +815,14 @@ export interface CcmConnectorFilter {
   awsAccountIds?: string[]
   azureSubscriptionId?: string
   azureTenantId?: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   gcpProjectId?: string
   k8sConnectorRef?: string[]
 }
@@ -1481,6 +1504,7 @@ export interface Error {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -1533,6 +1557,7 @@ export interface Error {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1847,6 +1872,7 @@ export interface ErrorMetadata {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -1899,6 +1925,7 @@ export interface ErrorMetadata {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   errorMessage?: string
 }
 
@@ -2000,6 +2027,13 @@ export interface ExecutionInputStatus {
 export interface ExecutionInputVariablesResponse {
   pipelineYaml?: string
   variableMergeServiceResponse?: VariableMergeServiceResponse
+}
+
+export interface ExecutionMetaDataResponse {
+  executionYaml?: string
+  inputYaml?: string
+  planExecutionId: string
+  triggerPayload?: TriggerPayload
 }
 
 export interface ExecutionMetadata {
@@ -2420,6 +2454,7 @@ export interface Failure {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -2472,6 +2507,7 @@ export interface Failure {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -3730,6 +3766,7 @@ export interface PipelineExecutionDetail {
   childGraph?: ChildExecutionDetailDTO
   executionGraph?: ExecutionGraph
   pipelineExecutionSummary?: PipelineExecutionSummary
+  rollbackGraph?: ChildExecutionDetailDTO
 }
 
 export type PipelineExecutionFilterProperties = FilterProperties & {
@@ -3780,6 +3817,7 @@ export interface PipelineExecutionInfo {
 }
 
 export interface PipelineExecutionSummary {
+  abortedBy?: AbortedBy
   allowStageExecutions?: boolean
   canRetry?: boolean
   connectorRef?: string
@@ -3790,7 +3828,6 @@ export interface PipelineExecutionSummary {
   executionTriggerInfo?: ExecutionTriggerInfo
   failedStagesCount?: number
   failureInfo?: FailureInfoDTO
-  firstRollbackStageGraphId?: string
   gitDetails?: EntityGitDetails
   governanceMetadata?: GovernanceMetadata
   layoutNodeMap?: {
@@ -4352,6 +4389,13 @@ export interface ResponseExecutionInputVariablesResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseExecutionMetaDataResponse {
+  correlationId?: string
+  data?: ExecutionMetaDataResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseExecutionNode {
   correlationId?: string
   data?: ExecutionNode
@@ -4892,6 +4936,7 @@ export interface ResponseMessage {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -4944,6 +4989,7 @@ export interface ResponseMessage {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -6061,6 +6107,10 @@ export interface TriggerEventDataCondition {
 export interface TriggerIssuer {
   abortPrevConcurrentExecution: boolean
   triggerRef: string
+}
+
+export interface TriggerPayload {
+  [key: string]: any
 }
 
 export interface TriggerStatus {
@@ -12519,6 +12569,89 @@ export const getExecutionDataPromise = (
     GetExecutionDataPathParams
   >(getConfig('pipeline/api'), `/pipelines/execution/${planExecutionId}/metadata`, props, signal)
 
+export interface GetExecutionDataDetailsQueryParams {
+  accountIdentifier: string
+}
+
+export interface GetExecutionDataDetailsPathParams {
+  planExecutionId: string
+}
+
+export type GetExecutionDataDetailsProps = Omit<
+  GetProps<
+    ResponseExecutionMetaDataResponse,
+    Failure | Error,
+    GetExecutionDataDetailsQueryParams,
+    GetExecutionDataDetailsPathParams
+  >,
+  'path'
+> &
+  GetExecutionDataDetailsPathParams
+
+/**
+ * Get plan metadata details of an execution
+ */
+export const GetExecutionDataDetails = ({ planExecutionId, ...props }: GetExecutionDataDetailsProps) => (
+  <Get<
+    ResponseExecutionMetaDataResponse,
+    Failure | Error,
+    GetExecutionDataDetailsQueryParams,
+    GetExecutionDataDetailsPathParams
+  >
+    path={`/pipelines/execution/${planExecutionId}/metadata/details`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetExecutionDataDetailsProps = Omit<
+  UseGetProps<
+    ResponseExecutionMetaDataResponse,
+    Failure | Error,
+    GetExecutionDataDetailsQueryParams,
+    GetExecutionDataDetailsPathParams
+  >,
+  'path'
+> &
+  GetExecutionDataDetailsPathParams
+
+/**
+ * Get plan metadata details of an execution
+ */
+export const useGetExecutionDataDetails = ({ planExecutionId, ...props }: UseGetExecutionDataDetailsProps) =>
+  useGet<
+    ResponseExecutionMetaDataResponse,
+    Failure | Error,
+    GetExecutionDataDetailsQueryParams,
+    GetExecutionDataDetailsPathParams
+  >(
+    (paramsInPath: GetExecutionDataDetailsPathParams) =>
+      `/pipelines/execution/${paramsInPath.planExecutionId}/metadata/details`,
+    { base: getConfig('pipeline/api'), pathParams: { planExecutionId }, ...props }
+  )
+
+/**
+ * Get plan metadata details of an execution
+ */
+export const getExecutionDataDetailsPromise = (
+  {
+    planExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseExecutionMetaDataResponse,
+    Failure | Error,
+    GetExecutionDataDetailsQueryParams,
+    GetExecutionDataDetailsPathParams
+  > & { planExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseExecutionMetaDataResponse,
+    Failure | Error,
+    GetExecutionDataDetailsQueryParams,
+    GetExecutionDataDetailsPathParams
+  >(getConfig('pipeline/api'), `/pipelines/execution/${planExecutionId}/metadata/details`, props, signal)
+
 export interface GetExpandedPipelineJSONQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -16557,6 +16690,8 @@ export interface GetSchemaYamlQueryParams {
     | 'GITOPS_SYNC'
     | 'BambooBuild'
     | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -16858,6 +16993,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'GITOPS_SYNC'
     | 'BambooBuild'
     | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

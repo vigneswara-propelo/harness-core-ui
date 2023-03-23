@@ -183,6 +183,12 @@ const triggerDrawerMap = (
                 disabled: isNewService
               },
               {
+                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Bamboo]),
+                value: ENABLED_ARTIFACT_TYPES.Bamboo,
+                iconName: ArtifactIconByType.Bamboo as IconName,
+                disabled: isNewService
+              },
+              {
                 itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AzureArtifacts]),
                 value: ENABLED_ARTIFACT_TYPES.AzureArtifacts,
                 iconName: ArtifactIconByType.AzureArtifacts as IconName,
