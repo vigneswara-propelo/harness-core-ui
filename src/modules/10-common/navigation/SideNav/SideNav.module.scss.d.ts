@@ -14,6 +14,7 @@ declare const styles: {
   readonly iconContainer: string
   readonly link: string
   readonly main: string
+  readonly newNav: string
   readonly popover: string
   readonly selected: string
   readonly sideNavExpanded: string

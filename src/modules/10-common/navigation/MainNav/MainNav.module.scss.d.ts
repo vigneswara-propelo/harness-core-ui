@@ -26,6 +26,7 @@ declare const styles: {
   readonly navItem: string
   readonly navLink: string
   readonly navList: string
+  readonly newNav: string
   readonly recessed: string
   readonly settings: string
   readonly text: string

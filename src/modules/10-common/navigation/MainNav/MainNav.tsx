@@ -60,7 +60,7 @@ export default function L1Nav(): React.ReactElement {
 
   return (
     <>
-      <nav className={cx(css.main, { [css.recessed]: isModuleListOpen })}>
+      <nav className={cx(css.main, { [css.recessed]: isModuleListOpen, [css.newNav]: NEW_LEFT_NAVBAR_SETTINGS })}>
         <ul className={css.navList}>
           {NEW_LEFT_NAVBAR_SETTINGS && (
             <li className={css.navItem}>
