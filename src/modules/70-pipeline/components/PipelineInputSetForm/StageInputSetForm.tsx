@@ -19,7 +19,7 @@ import {
 } from '@harness/uicore'
 import { connect, FormikProps } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
+import { defaultTo, get, some, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -70,6 +70,7 @@ import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '../../utils/const
 import ServicesInputSetForm from './ServicesInputSetForm/ServicesInputSetForm'
 import EnvironmentsInputSetForm from './EnvironmentsInputSetForm/EnvironmentsInputSetForm'
 import { ExecutionWrapperInputSetForm } from './ExecutionWrapperInputSetForm'
+import IACMInputSetForm from './IACMInputSetForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
@@ -164,7 +165,9 @@ export function StageInputSetFormInternal({
     deploymentStageTemplateInfraKeys.includes(field)
   )
   const namePath = isEmpty(path) ? '' : `${path}.`
-  const { CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS, CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+  const { CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS, CDS_OrgAccountLevelServiceEnvEnvGroup, IACM_ENABLED } =
+    useFeatureFlags()
+  const iacmRequired = some(formik?.values?.stages, stages => stages?.stage?.type === StageType.IACM)
 
   const renderMultiTypeInputWithAllowedValues = React.useCallback(
     ({
@@ -597,6 +600,25 @@ export function StageInputSetFormInternal({
         readonly={readonly}
         stageIdentifier={stageIdentifier}
       />
+
+      {IACM_ENABLED && iacmRequired && (
+        <IACMInputSetForm
+          formik={formik}
+          deploymentStage={deploymentStage}
+          deploymentStageTemplate={deploymentStageTemplate}
+          allowableTypes={
+            scope === Scope.PROJECT
+              ? allowableTypes
+              : ((allowableTypes as MultiTypeInputType[])?.filter(
+                  item => item !== MultiTypeInputType.FIXED
+                ) as AllowedTypes)
+          }
+          path={path}
+          viewType={viewType}
+          readonly={readonly}
+          stageIdentifier={stageIdentifier}
+        />
+      )}
 
       {(deploymentStageTemplate.infrastructure || (deploymentStageTemplate as any).platform) && (
         <div id={`Stage.${stageIdentifier}.Infrastructure`} className={cx(css.accordionSummary)}>
