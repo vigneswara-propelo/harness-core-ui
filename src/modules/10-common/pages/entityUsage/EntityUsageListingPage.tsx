@@ -18,6 +18,7 @@ export interface EntityUsageListingPageProps {
   searchTerm?: string
   setSearchTerm(searchValue: string): void
   setPage(page: number): void
+  onClose?: () => void
   apiReturnProps: {
     data: ResponsePageEntitySetupUsageDTO | null
     loading: boolean
@@ -35,10 +36,11 @@ export default function EntityUsageListingPage({
   searchTerm,
   setSearchTerm,
   setPage,
+  onClose,
   apiReturnProps: { data, loading, error, refetch }
 }: EntityUsageListingPageProps): React.ReactElement {
   const { getString } = useStrings()
-
+  const [loadingMetadata, setLoadingMetadata] = React.useState<boolean>(false)
   return (
     <>
       {withSearchBarInPageHeader && (
@@ -64,7 +66,7 @@ export default function EntityUsageListingPage({
         />
       )}
       <PageBody
-        loading={loading}
+        loading={loading || loadingMetadata}
         retryOnError={() => refetch()}
         className={pageBodyClassName}
         error={(error?.data as Error)?.message || error?.message}
@@ -83,7 +85,12 @@ export default function EntityUsageListingPage({
         }
       >
         {withSearchBarInPageHeader ? (
-          <EntityUsageList entityData={data} gotoPage={pageNumber => setPage(pageNumber)} />
+          <EntityUsageList
+            entityData={data}
+            gotoPage={pageNumber => setPage(pageNumber)}
+            showSpinner={(loadingForRedirect: boolean) => setLoadingMetadata(loadingForRedirect)}
+            onClose={onClose}
+          />
         ) : (
           <Layout.Vertical>
             <ExpandingSearchInput
@@ -99,6 +106,8 @@ export default function EntityUsageListingPage({
               entityData={data}
               gotoPage={pageNumber => setPage(pageNumber)}
               withNoSpaceAroundTable={!withSearchBarInPageHeader}
+              showSpinner={(loadingForRedirect: boolean) => setLoadingMetadata(loadingForRedirect)}
+              onClose={onClose}
             />
           </Layout.Vertical>
         )}

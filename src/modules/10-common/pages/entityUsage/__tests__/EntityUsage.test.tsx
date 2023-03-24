@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, queryByText, screen, within } from '@testing-library/react'
+import { render, waitFor, queryByText, screen, within, act, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, connectorPathProps, projectPathProps, secretPathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
@@ -14,6 +14,16 @@ import EntityUsage from '../EntityUsage'
 import referencedData from './entity-usage-data.json'
 import referencedDataWithGit from './entity-usage-data-with-git.json'
 import referencedDataWithDetails from './entity-usage-connector-data.json'
+
+const getPipelineSummryMock = jest.fn(() => Promise.resolve({}))
+
+jest.mock('services/pipeline-ng', () => ({
+  getPipelineSummaryPromise: jest.fn().mockImplementation(() => getPipelineSummryMock())
+}))
+
+jest.mock('services/template-ng', () => ({
+  getTemplateMetadataListPromise: jest.fn().mockImplementation(() => Promise.resolve({}))
+}))
 
 describe('Entity Usage', () => {
   test('render for no data', async () => {
@@ -56,7 +66,7 @@ describe('Entity Usage', () => {
   })
 
   test('render for connector data with gitSync', async () => {
-    const { container } = render(
+    const { container, findByTestId } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ ...projectPathProps, ...connectorPathProps })}
         pathParams={{
@@ -79,6 +89,14 @@ describe('Entity Usage', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+    await waitFor(() => expect(queryByText(container, 'Refer test')).toBeInTheDocument())
+    await act(async () => {
+      fireEvent.click(queryByText(container, 'Refer test')!)
+    })
+    expect(getPipelineSummryMock).toBeCalledTimes(1)
+    const location = await findByTestId('location')
+    // Redirecting to list page with no Pipeline summary data
+    expect(location.innerHTML).toEqual('/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/AaTestOrg/projects/dev7/pipelines')
   })
 
   test('render for connector data with details', async () => {

@@ -65,7 +65,7 @@
           "type": "Pipelines",
           "entityRef": {
             "scope": "project",
-            "identifier": "test",
+            "identifier": "refer_test",
             "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
             "orgIdentifier": "AaTestOrg",
             "projectIdentifier": "dev7",
@@ -75,7 +75,7 @@
             "isDefault": true,
             "default": true
           },
-          "name": "test"
+          "name": "Refer test"
         },
         "detail": null,
         "createdAt": 1624355655236
