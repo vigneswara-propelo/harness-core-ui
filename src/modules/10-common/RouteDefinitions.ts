@@ -2030,6 +2030,14 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs/${identifier}`
   ),
+  toChaosProbes: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/probes`
+  ),
+  toChaosGameDays: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/gamedays`
+  ),
 
   // chaos enviroments
   toChaosEnvironments: withAccountId(

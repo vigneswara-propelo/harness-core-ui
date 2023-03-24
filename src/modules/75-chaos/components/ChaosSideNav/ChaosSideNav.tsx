@@ -15,13 +15,14 @@ import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/Proje
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 // ChaosSideNav: Renders sidenav for chaos module
 export default function ChaosSideNav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
   const { accountId, projectIdentifier, orgIdentifier } = params
   const { getString } = useStrings()
-
+  const { CHAOS_PROBE_ENABLED, CHAOS_GAMEDAY_ENABLED } = useFeatureFlags()
   const { updateAppStore } = useAppStore()
   const history = useHistory()
 
@@ -48,6 +49,12 @@ export default function ChaosSideNav(): React.ReactElement {
             to={routes.toChaosExperiments({ ...params })}
           />
           <SidebarLink label={getString('chaos.navLabels.chaosHubs')} to={routes.toChaosHubs({ ...params })} />
+          {CHAOS_GAMEDAY_ENABLED && (
+            <SidebarLink label={getString('chaos.navLabels.gamedays')} to={routes.toChaosGameDays({ ...params })} />
+          )}
+          {CHAOS_PROBE_ENABLED && (
+            <SidebarLink label={getString('chaos.navLabels.probes')} to={routes.toChaosProbes({ ...params })} />
+          )}
           <SidebarLink label={getString('environments')} to={routes.toChaosEnvironments({ ...params })} />
           <ProjectSetupMenu module="chaos" />
         </>

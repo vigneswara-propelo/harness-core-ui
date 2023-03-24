@@ -17,6 +17,8 @@ chaosTrialHomePage:
 navLabels:
   chaosExperiments: Chaos Experiments
   chaosHubs: ChaosHubs
+  gamedays: GameDays
+  probes: Resilience Probes
 environments:
   pageTitle: '[{{projectName}}] Environments'
   create:
