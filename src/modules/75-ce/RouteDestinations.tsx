@@ -55,10 +55,8 @@ import RecommendationDetailsPage from './pages/recommendationDetails/Recommendat
 import PerspectiveDetailsPage from './pages/perspective-details/PerspectiveDetailsPage'
 import CreatePerspectivePage from './pages/perspective-builder/CreatePerspectivePage'
 import PerspectiveListPage from './pages/perspective-list/PerspectiveListPage'
-import WorkloadDetailsPage from './pages/workload-details/WorkloadDetailsPage'
 import OverviewPage from './pages/overview/OverviewPage'
 import NodeRecommendationDetailsPage from './pages/node-recommendation-details/NodeRecommendationDetailsPage'
-import NodeDetailsPage from './pages/node-details/NodeDetailsPage'
 import AnomaliesOverviewPage from './pages/anomalies-overview/AnomaliesOverviewPage'
 import formatCost from './utils/formatCost'
 import BusinessMapping from './pages/business-mapping/BusinessMapping'
@@ -68,7 +66,6 @@ import CORuleDetailsPage from './pages/co-rule-details/CORuleDetailsPage'
 import CommitmentOrchestration from './pages/CommitmentOrchestration/CommitmentOrchestration'
 import CommitmentOrchestrationSetup from './pages/CommitmentOrchestration/CommitmentOrchestrationSetup'
 import CloudIntegrationPage from './pages/cloud-integration/CloudIntegrationPage'
-import ServiceDetailsPage from './pages/service-details/ServiceDetailsPage'
 import AnomaliesFilter from './components/AnomaliesFilter/AnomaliesFilter'
 import GatewayListFilters from './components/COGatewayList/GatewayListFilters'
 import PerspectiveResourceModalBody from './components/ResourceGroupModals/PerspectiveResourceModalBody'
@@ -640,83 +637,6 @@ const CENonMFERoutes = (
       pageName={PAGE_NAME.CEPerspectiveDetailsPage}
     >
       <PerspectiveDetailsPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCEPerspectiveWorkloadDetails({
-        ...accountPathProps,
-        perspectiveId: ':perspectiveId',
-        perspectiveName: ':perspectiveName',
-        clusterName: ':clusterName',
-        namespace: ':namespace',
-        workloadName: ':workloadName'
-      })}
-      exact
-      pageName={PAGE_NAME.CEWorkloadDetailsPage}
-    >
-      <WorkloadDetailsPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCERecommendationWorkloadDetails({
-        ...accountPathProps,
-        recommendation: ':recommendation',
-        recommendationName: ':recommendationName',
-        clusterName: ':clusterName',
-        namespace: ':namespace',
-        workloadName: ':workloadName'
-      })}
-      exact
-      pageName={PAGE_NAME.CEWorkloadDetailsPage}
-    >
-      <WorkloadDetailsPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCEPerspectiveServiceDetails({
-        ...accountPathProps,
-        perspectiveId: ':perspectiveId',
-        perspectiveName: ':perspectiveName',
-        clusterName: ':clusterName',
-        serviceName: ':serviceName'
-      })}
-      exact
-      pageName={PAGE_NAME.CEServiceDetailsPage}
-    >
-      <ServiceDetailsPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCERecommendationServiceDetails({
-        ...accountPathProps,
-        recommendation: ':recommendation',
-        recommendationName: ':recommendationName',
-        clusterName: ':clusterName',
-        serviceName: ':serviceName'
-      })}
-      exact
-      pageName={PAGE_NAME.CEServiceDetailsPage}
-    >
-      <ServiceDetailsPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCEPerspectiveNodeDetails({
-        ...accountPathProps,
-        perspectiveId: ':perspectiveId',
-        perspectiveName: ':perspectiveName',
-        clusterName: ':clusterName',
-        nodeId: ':nodeId'
-      })}
-      exact
-      pageName={PAGE_NAME.CENodeDetailsPage}
-    >
-      <NodeDetailsPage />
     </RouteWithLayout>
     <RouteWithLayout
       licenseRedirectData={licenseRedirectData}
