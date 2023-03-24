@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import cx from 'classnames'
 import { connect, FormikContextType } from 'formik'
 import { useParams } from 'react-router-dom'
@@ -13,15 +13,13 @@ import { get } from 'lodash-es'
 import { Container, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import List from '@common/components/List/List'
-import { isMultiTypeFixed, isValueRuntimeInput } from '@common/utils/utils'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import type { GitConfigDTO, Scope } from 'services/cd-ng'
-import { shouldDisplayRepositoryName } from '../../K8sServiceSpec/ManifestSource/ManifestSourceUtils'
 import type { TerragruntPlanProps } from '../../Common/Terragrunt/TerragruntInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -32,14 +30,11 @@ function TgPlanRemoteSectionRef(
     formik?: FormikContextType<any>
   }
 ): React.ReactElement {
-  const { remoteVar, index, allowableTypes, readonly, initialValues, path, inputSetData, stepViewType, formik } = props
+  const { remoteVar, index, allowableTypes, readonly, initialValues, path, inputSetData, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const [showRepoName, setShowRepoName] = useState(true)
-  const isRepoRuntime =
-    (isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.repoName')) ||
-      isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.connectorRef'))) &&
-    showRepoName
+
+  const isRepoRuntime = isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.repoName'))
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -74,20 +69,6 @@ function TgPlanRemoteSectionRef(
             placeholder={getString('select')}
             disabled={readonly}
             setRefValue
-            onChange={(selected, _itemType, multiType) => {
-              const item = selected as unknown as { record?: GitConfigDTO; scope: Scope }
-              if (isMultiTypeFixed(multiType)) {
-                if (shouldDisplayRepositoryName(item)) {
-                  setShowRepoName(true)
-                } else {
-                  setShowRepoName(false)
-                  formik?.setFieldValue(
-                    `${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.repoName`,
-                    ''
-                  )
-                }
-              }
-            }}
             gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
             multiTypeProps={{ expressions, allowableTypes }}
           />

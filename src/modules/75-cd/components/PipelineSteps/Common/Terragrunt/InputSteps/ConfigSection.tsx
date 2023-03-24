@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
@@ -13,12 +13,10 @@ import { Label } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { GitConfigDTO, Scope } from 'services/cd-ng'
-import { shouldDisplayRepositoryName } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ManifestSourceUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { isMultiTypeFixed, isValueRuntimeInput } from '@common/utils/utils'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -31,16 +29,15 @@ function ConfigSectionRef<T extends TerragruntData>(
 ): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { inputSetData, readonly, initialValues, path, allowableTypes, isBackendConfig, stepViewType, formik } = props
+  const { inputSetData, readonly, initialValues, path, allowableTypes, isBackendConfig, stepViewType } = props
   const template = inputSetData?.template
   const configPath = getPath(false, false, isBackendConfig, 'configuration')
   const configSpec = get(template, configPath)
   const store = configSpec?.store
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [showRepoName, setShowRepoName] = useState(true)
-  const isRepoRuntime =
-    (isValueRuntimeInput(store?.spec?.connectorRef) || isValueRuntimeInput(store?.spec?.repoName)) && showRepoName
+
+  const isRepoRuntime = isValueRuntimeInput(store?.spec?.repoName)
 
   return (
     <>
@@ -65,17 +62,6 @@ function ConfigSectionRef<T extends TerragruntData>(
             placeholder={getString('select')}
             disabled={readonly}
             setRefValue
-            onChange={(selected, _itemType, multiType) => {
-              const item = selected as unknown as { record?: GitConfigDTO; scope: Scope }
-              if (isMultiTypeFixed(multiType)) {
-                if (shouldDisplayRepositoryName(item)) {
-                  setShowRepoName(true)
-                } else {
-                  setShowRepoName(false)
-                  formik?.setFieldValue(`${path}.${configPath}.store.spec.repoName`, '')
-                }
-              }
-            }}
             gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
           />
         </div>

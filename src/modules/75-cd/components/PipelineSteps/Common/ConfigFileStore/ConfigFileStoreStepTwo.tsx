@@ -31,6 +31,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useStrings } from 'framework/strings'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { HarnessOption } from '@pipeline/components/StartupScriptSelection/HarnessOption'
+import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { formInputNames, formikOnChangeNames, stepTwoValidationSchema, getPath } from './ConfigFileStoreHelper'
 import type { Connector } from './ConfigFileStoreHelper'
 import css from './ConfigFileStore.module.scss'
@@ -118,13 +119,19 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
       >
         {formik => {
           const connectorValue = get(formik?.values, `${path}.store.spec.connectorRef`) as Connector
+
+          const connectionType =
+            connectorValue?.connector?.spec?.connectionType === GitRepoName.Repo ||
+            connectorValue?.connector?.spec?.type === GitRepoName.Repo ||
+            prevStepData?.urlType === GitRepoName.Repo
+              ? GitRepoName.Repo
+              : GitRepoName.Account
+
           const store = get(formik?.values, `${path}.store.spec`)
           return (
             <Form>
               <div className={css.tfRemoteForm}>
-                {(connectorValue?.connector?.spec?.connectionType === 'Account' ||
-                  connectorValue?.connector?.spec?.type === 'Account' ||
-                  prevStepData?.urlType === 'Account') && (
+                {connectionType === GitRepoName.Account && (
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.MultiTextInput
                       label={getString('pipelineSteps.repoName')}

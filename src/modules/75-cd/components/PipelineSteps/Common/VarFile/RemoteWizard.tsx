@@ -35,6 +35,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { Connector, PathInterface, RemoteVar, TerraformStoreTypes } from '../Terraform/TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -193,10 +194,11 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
         {formik => {
           const connectorValue = prevStepDataSpec?.connectorRef as Connector
           const connectionType =
-            connectorValue?.connector?.spec?.connectionType === 'Account' ||
-            connectorValue?.connector?.spec?.type === 'Account' ||
-            prevStepData?.urlType === 'Account'
-
+            connectorValue?.connector?.spec?.connectionType === GitRepoName.Repo ||
+            connectorValue?.connector?.spec?.type === GitRepoName.Repo ||
+            prevStepData?.urlType === GitRepoName.Repo
+              ? GitRepoName.Repo
+              : GitRepoName.Account
           const varFileSpec = formik.values?.varFile?.spec?.store?.spec
           return (
             <Form>
@@ -204,7 +206,7 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
                 <div className={cx(stepCss.formGroup, stepCss.md)}>
                   <FormInput.Text name="varFile.identifier" label={getString('identifier')} />
                 </div>
-                {connectionType && (
+                {connectionType === GitRepoName.Account && (
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.MultiTextInput
                       label={getString('pipelineSteps.repoName')}
