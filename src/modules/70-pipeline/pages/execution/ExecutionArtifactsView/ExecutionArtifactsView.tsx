@@ -5,26 +5,32 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { Container, Text } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
 import React from 'react'
-import { get } from 'lodash-es'
-import { useParams, useHistory } from 'react-router-dom'
-import { Text, Select, Container } from '@harness/uicore'
-import qs from 'qs'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
-import type { ExecutionNode, PipelineExecutionSummary, ExecutionGraph } from 'services/pipeline-ng'
-import { useQueryParams } from '@common/hooks'
-import routes from '@common/RouteDefinitions'
 import { String } from 'framework/strings'
-import ArtifactsComponent from './ArtifactsComponent/ArtifactsComponent'
+import type {
+  ExecutionGraph,
+  ExecutionNode,
+  PipelineExecutionDetail,
+  PipelineExecutionSummary
+} from 'services/pipeline-ng'
 import type { ArtifactGroup } from './ArtifactsComponent/ArtifactsComponent'
+import ArtifactsComponent from './ArtifactsComponent/ArtifactsComponent'
+import type { Artifact } from './ArtifactsTable/ArtifactsTable'
+import { ExecutionArtifactListView } from './ExecutionArtifactListView'
+import { StageSelector } from './StageSelector'
 import artifactsEmptyState from './images/artifacts_empty_state.svg'
 import css from './ExecutionArtifactsView.module.scss'
 
-export const getStageSetupIds: (data: PipelineExecutionSummary) => string[] = data => {
+export const getStageSetupIds: (data?: PipelineExecutionSummary) => string[] = data => {
   return Object.keys(data?.layoutNodeMap ?? {})
 }
 
-export const getStageNodesWithArtifacts: (data: ExecutionGraph, stageIds: string[]) => ExecutionNode[] = (
+export const getStageNodesWithArtifacts: (data: ExecutionGraph | undefined, stageIds: string[]) => ExecutionNode[] = (
   data,
   stageIds
 ) => {
@@ -66,44 +72,62 @@ export const getArtifactGroups: (stages: ExecutionNode[]) => ArtifactGroup[] = s
   })
 }
 
-export function StageSelector(props: { layoutNodeMap?: PipelineExecutionSummary['layoutNodeMap'] }) {
-  const history = useHistory()
-  const params = useParams<any>()
-  const query = useQueryParams<any>()
-  const setupIds = Object.keys(props?.layoutNodeMap ?? {})
-  const options = setupIds.map(value => ({
-    value,
-    label: props.layoutNodeMap![value].name!
-  }))
-  const selectedOption = options.find(option => option.value === query.stage)
+export const getArtifacts: (stages: ExecutionNode[]) => Artifact[] = stages => {
+  return stages.reduce<Artifact[]>((artifacts, node) => {
+    const outcomeWithImageArtifacts = Array.isArray(node.outcomes)
+      ? node.outcomes?.find(outcome => outcome.imageArtifacts)
+      : node.outcomes?.integrationStageOutcome
+    const imageArtifacts: Artifact[] =
+      outcomeWithImageArtifacts?.imageArtifacts?.map((artifact: any) => ({
+        ...artifact,
+        type: 'Image',
+        node
+      })) ?? []
 
-  // Need to have a selected change by default when we are opening a page
-  if (!selectedOption && options.length > 0) {
-    history.push(routes.toExecutionArtifactsView(params) + '?' + qs.stringify({ ...query, stage: options[0].value }))
-  }
+    const outcomeWithFileArtifacts = Array.isArray(node.outcomes)
+      ? node.outcomes?.find(outcome => outcome.fileArtifacts)
+      : node.outcomes?.integrationStageOutcome
+    const fileArtifacts: Artifact[] =
+      outcomeWithFileArtifacts?.fileArtifacts?.map((artifact: any) => ({
+        ...artifact,
+        type: 'File',
+        node
+      })) ?? []
 
-  return (
-    <Select
-      className={css.stageSelector}
-      value={selectedOption}
-      items={options}
-      onChange={val => {
-        history.push(routes.toExecutionArtifactsView(params) + '?' + qs.stringify({ ...query, stage: val.value }))
-      }}
-    />
-  )
+    const outcomeWithSbomArtifacts = Array.isArray(node.outcomes)
+      ? node.outcomes?.find(outcome => outcome.sbomArtifacts)
+      : node.outcomes?.integrationStageOutcome
+    const sbomArtifacts: Artifact[] =
+      outcomeWithSbomArtifacts?.sbomArtifacts?.map((artifact: any) => ({
+        ...artifact,
+        type: 'Sbom',
+        node
+      })) || []
+
+    artifacts.push(...imageArtifacts, ...fileArtifacts, ...sbomArtifacts)
+    return artifacts
+  }, [])
 }
 
 export default function ExecutionArtifactsView(): React.ReactElement {
   const context = useExecutionContext()
-  const executionSummary = get(context, 'pipelineExecutionDetail.pipelineExecutionSummary')
-  const executionGraph = get(context, 'pipelineExecutionDetail.executionGraph')
-  const stageSetupIds = getStageSetupIds(executionSummary as PipelineExecutionSummary)
-  const stageNodes = getStageNodesWithArtifacts(executionGraph as any, stageSetupIds)
+  const SSCA_ENABLED = useFeatureFlag(FeatureFlag.SSCA_ENABLED)
+  const { pipelineExecutionSummary, executionGraph } = defaultTo(
+    context?.pipelineExecutionDetail,
+    {} as PipelineExecutionDetail
+  )
+  const stageSetupIds = getStageSetupIds(pipelineExecutionSummary)
+  const stageNodes = getStageNodesWithArtifacts(executionGraph, stageSetupIds)
   const artifactGroups = getArtifactGroups(stageNodes)
-  return (
+
+  return SSCA_ENABLED ? (
+    <ExecutionArtifactListView
+      artifacts={getArtifacts(stageNodes)}
+      pipelineExecutionSummary={pipelineExecutionSummary}
+    />
+  ) : (
     <div className={css.wrapper}>
-      <StageSelector layoutNodeMap={executionSummary?.layoutNodeMap} />
+      <StageSelector layoutNodeMap={pipelineExecutionSummary?.layoutNodeMap} />
       {artifactGroups.length ? (
         <ArtifactsComponent artifactGroups={artifactGroups} />
       ) : (

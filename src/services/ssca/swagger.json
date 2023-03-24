@@ -1,9 +1,7 @@
 {
-  "swagger": "2.0",
-  "info": { "title": "Value Stream Management API", "description": "manage your value stream", "version": "0.1.0" },
-  "host": "localhost:3000",
-  "consumes": ["application/json", "application/xml", "application/gob"],
-  "produces": ["application/json", "application/xml", "application/gob"],
+  "openapi": "3.0.3",
+  "info": { "title": "SSCS Core API", "description": "manage your sscs", "version": "0.1.0" },
+  "servers": [{ "url": "http://localhost:3000/" }],
   "paths": {
     "/api/login": {
       "post": {
@@ -14,230 +12,468 @@
             "name": "accountIdentifier",
             "in": "query",
             "description": "Harness account ID",
+            "allowEmptyValue": true,
             "required": true,
-            "type": "string"
+            "schema": { "type": "string", "description": "Harness account ID", "example": "eBqAoNchMLKigC_qZ5EdC" },
+            "example": "eBqAoNchMLKigC_qZ5EdC"
           },
           {
             "name": "orgIdentifier",
             "in": "query",
             "description": "Harness organization ID",
+            "allowEmptyValue": true,
             "required": true,
-            "type": "string",
-            "default": ""
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "description": "Harness project ID",
-            "required": true,
-            "type": "string",
-            "default": ""
-          },
-          {
-            "name": "LoginRequestBody",
-            "in": "body",
-            "required": true,
-            "schema": { "$ref": "#/definitions/DevLoginRequestBody", "required": ["password"] }
-          }
-        ],
-        "responses": {
-          "200": { "description": "OK response.", "schema": { "type": "string" } },
-          "400": {
-            "description": "Bad Request response.",
-            "schema": { "$ref": "#/definitions/DevLoginBadRequestResponseBody" }
-          },
-          "401": {
-            "description": "Unauthorized response.",
-            "schema": { "$ref": "#/definitions/DevLoginUnauthorizedResponseBody" }
-          },
-          "403": {
-            "description": "Forbidden response.",
-            "schema": { "$ref": "#/definitions/DevLoginForbiddenResponseBody" }
-          },
-          "404": {
-            "description": "Not Found response.",
-            "schema": { "$ref": "#/definitions/DevLoginNotFoundResponseBody" }
-          },
-          "500": {
-            "description": "Internal Server Error response.",
-            "schema": { "$ref": "#/definitions/DevLoginInternalServerResponseBody" }
-          },
-          "502": {
-            "description": "Bad Gateway response.",
-            "schema": { "$ref": "#/definitions/DevLoginBadGatewayResponseBody" }
-          }
-        },
-        "schemes": ["http"]
-      }
-    },
-    "/api/v1/pullrequests": {
-      "get": {
-        "tags": ["pullrequests"],
-        "description": "List all pullrequests\n\n**Required security scopes for jwt**:\n  * `core_project_view`",
-        "operationId": "pullrequests#list",
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "description": "Harness account ID",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "description": "Harness organization ID",
-            "required": true,
-            "type": "string",
-            "default": ""
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "description": "Harness project ID",
-            "required": true,
-            "type": "string",
-            "default": ""
-          },
-          { "name": "Authorization", "in": "header", "description": "Auth token", "required": false, "type": "string" }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK response.",
-            "schema": { "type": "array", "items": { "$ref": "#/definitions/Pullrequest" } }
-          },
-          "400": {
-            "description": "Bad Request response.",
-            "schema": { "$ref": "#/definitions/PullrequestsListBadRequestResponseBody" }
-          },
-          "401": {
-            "description": "Unauthorized response.",
-            "schema": { "$ref": "#/definitions/PullrequestsListUnauthorizedResponseBody" }
-          },
-          "403": {
-            "description": "Forbidden response.",
-            "schema": { "$ref": "#/definitions/PullrequestsListForbiddenResponseBody" }
-          },
-          "404": {
-            "description": "Not Found response.",
-            "schema": { "$ref": "#/definitions/PullrequestsListNotFoundResponseBody" }
-          },
-          "500": {
-            "description": "Internal Server Error response.",
-            "schema": { "$ref": "#/definitions/PullrequestsListInternalServerResponseBody" }
-          },
-          "502": {
-            "description": "Bad Gateway response.",
-            "schema": { "$ref": "#/definitions/PullrequestsListBadGatewayResponseBody" }
-          }
-        },
-        "schemes": ["http"],
-        "security": [{ "jwt_header_Authorization": [] }]
-      }
-    },
-    "/api/v1/pullrequests/{source_identifier}/{number}": {
-      "get": {
-        "tags": ["pullrequests"],
-        "description": "Find a pullrequest by identifier\n\n**Required security scopes for jwt**:\n  * `core_project_view`",
-        "operationId": "pullrequests#find",
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "description": "Harness account ID",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "description": "Harness organization ID",
-            "required": true,
-            "type": "string",
-            "default": ""
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "description": "Harness project ID",
-            "required": true,
-            "type": "string",
-            "default": ""
-          },
-          {
-            "name": "source_identifier",
-            "in": "path",
-            "description": "Source ID associated with this connection source",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "number",
-            "in": "path",
-            "description": "Number associated with the Pull Request",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          { "name": "Authorization", "in": "header", "description": "Auth token", "required": false, "type": "string" }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK response.",
             "schema": {
-              "$ref": "#/definitions/PullrequestsFindResponseBody",
-              "required": [
-                "source_id",
-                "account_id",
-                "updated",
-                "created",
-                "pr_id",
-                "number",
-                "title",
-                "url",
-                "state",
-                "author",
-                "created_at",
-                "review_first_activity_at",
-                "review_last_approval_at",
-                "merged_at",
-                "closed_at",
-                "updated_at",
-                "published_at",
-                "commit_id",
-                "commit_hash",
-                "authored_date",
-                "committed_date"
-              ]
+              "type": "string",
+              "description": "Harness organization ID",
+              "default": "",
+              "example": "test-org"
+            },
+            "example": "test-org"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "description": "Harness project ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Harness project ID",
+              "default": "",
+              "example": "test-project"
+            },
+            "example": "test-project"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequestBody" },
+              "example": { "password": "Sit est." }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "string", "example": "Dignissimos et ab corporis natus." },
+                "example": "Omnis voluptate sit ut qui delectus."
+              }
             }
           },
           "400": {
-            "description": "Bad Request response.",
-            "schema": { "$ref": "#/definitions/PullrequestsFindBadRequestResponseBody" }
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           },
           "401": {
-            "description": "Unauthorized response.",
-            "schema": { "$ref": "#/definitions/PullrequestsFindUnauthorizedResponseBody" }
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           },
           "403": {
-            "description": "Forbidden response.",
-            "schema": { "$ref": "#/definitions/PullrequestsFindForbiddenResponseBody" }
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           },
           "404": {
-            "description": "Not Found response.",
-            "schema": { "$ref": "#/definitions/PullrequestsFindNotFoundResponseBody" }
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           },
           "500": {
-            "description": "Internal Server Error response.",
-            "schema": { "$ref": "#/definitions/PullrequestsFindInternalServerResponseBody" }
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           },
           "502": {
-            "description": "Bad Gateway response.",
-            "schema": { "$ref": "#/definitions/PullrequestsFindBadGatewayResponseBody" }
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/artifacts": {
+      "post": {
+        "tags": ["artifact"],
+        "description": "create an artifact in the artifact db",
+        "operationId": "artifact#createArtifact",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateArtifactRequestBody" },
+              "example": {
+                "accountIdentifier": "eBqAoNchMLKigC_qZ5EdC",
+                "artifact": {
+                  "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                  "name": "harness/image",
+                  "tag": "latest",
+                  "type": "repo/image",
+                  "url": "https://console.cloud.google.com/gcr/images/imageName"
+                },
+                "attestation": {
+                  "isAttested": false,
+                  "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+                },
+                "metadata": {
+                  "buildUrl": "log4Jj",
+                  "format": "log4Jj",
+                  "pipelineExecutionId": "log4Jj",
+                  "pipelineIdentifier": "log4Jj",
+                  "sequenceId": "log4Jj",
+                  "stageIdentifier": "log4Jj",
+                  "stepExecutionId": "Sunt voluptatem voluptas voluptatem facere nihil.",
+                  "stepIdentifier": "log4Jj",
+                  "tool": "log4Jj"
+                },
+                "orgIdentifier": "test-org",
+                "projectIdentifier": "test-project",
+                "sbom": { "data": "RXJyb3IgZGljdGEu", "name": "SBOM_Name", "url": "https://console.google.com/storage" }
+              }
+            }
           }
         },
-        "schemes": ["http"],
-        "security": [{ "jwt_header_Authorization": [] }]
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CreateArtifactResponseBody" },
+                "example": { "artifactId": "Enim rerum magni rerum molestiae illo praesentium." }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "401": {
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "403": {
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "500": {
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "502": {
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/artifacts/artifactId/{artifactId}/sbom/{filename}": {
+      "get": {
+        "tags": ["artifact"],
+        "description": "get the SBOM for an artifact of a particular version",
+        "operationId": "artifact#getArtifactSBOM",
+        "parameters": [
+          {
+            "name": "artifactId",
+            "in": "path",
+            "description": "ID of the artifact to fetch",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "ID of the artifact to fetch",
+              "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+            },
+            "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+          },
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "Ipsam sunt illum dolore repudiandae fugit." },
+            "example": "Ipsa dolores."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "headers": {
+              "Content-Length": {
+                "required": true,
+                "schema": { "type": "integer", "example": 2292267092897603485, "format": "int64" },
+                "example": 4086286692912934160
+              },
+              "Content-Type": {
+                "required": true,
+                "schema": { "type": "string", "example": "Ratione id officia sed." },
+                "example": "Quod qui."
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "401": {
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "403": {
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "500": {
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "502": {
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/artifacts/{artifactId}": {
+      "get": {
+        "tags": ["artifact"],
+        "description": "get artifacts by passing an artifact id",
+        "operationId": "artifact#getArtifactsById",
+        "parameters": [
+          {
+            "name": "artifactId",
+            "in": "path",
+            "description": "ID of the artifact to fetch",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "ID of the artifact to fetch",
+              "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+            },
+            "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GetArtifactsByIDResponseBody" },
+                "example": {
+                  "artifacts": [
+                    {
+                      "artifact": {
+                        "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                        "name": "harness/image",
+                        "tag": "latest",
+                        "type": "repo/image",
+                        "url": "https://console.cloud.google.com/gcr/images/imageName"
+                      },
+                      "attestation": {
+                        "isAttested": false,
+                        "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+                      },
+                      "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+                    },
+                    {
+                      "artifact": {
+                        "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                        "name": "harness/image",
+                        "tag": "latest",
+                        "type": "repo/image",
+                        "url": "https://console.cloud.google.com/gcr/images/imageName"
+                      },
+                      "attestation": {
+                        "isAttested": false,
+                        "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+                      },
+                      "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "401": {
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "403": {
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "500": {
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "502": {
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/artifacts/{artifactId}/stepExecutions/{stepExeuctionId}/sbom/{filename}": {
+      "get": {
+        "tags": ["artifact"],
+        "summary": "getSBOMFromExecutionId artifact",
+        "description": "get the SBOM by passing the step execution id and the artifact id",
+        "operationId": "artifact#getSBOMFromExecutionId",
+        "parameters": [
+          {
+            "name": "artifactId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "Ut doloremque et." },
+            "example": "Aspernatur ab ab."
+          },
+          {
+            "name": "stepExeuctionId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "Minus autem molestias voluptatibus eos et." },
+            "example": "Fugit consequuntur dolores nisi harum."
+          },
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "Laborum assumenda maiores voluptatem enim laborum magni." },
+            "example": "Quasi fugit recusandae id."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "headers": {
+              "Content-Length": {
+                "required": true,
+                "schema": { "type": "integer", "example": 5779643335059079431, "format": "int64" },
+                "example": 1806106501918562548
+              },
+              "Content-Type": {
+                "required": true,
+                "schema": { "type": "string", "example": "Nobis voluptatem in eaque est dolor." },
+                "example": "Eaque enim sunt."
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "401": {
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "403": {
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "500": {
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "502": {
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/artifacts/{stepExecutionId}/{stageId}/{stepId}": {
+      "get": {
+        "tags": ["artifact"],
+        "description": "get a unique by passing an artifact id and other exeuction details",
+        "operationId": "artifact#getUniqueArtifact",
+        "parameters": [
+          {
+            "name": "stepExecutionId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "Eligendi nihil vero error aut." },
+            "example": "Facilis soluta cupiditate."
+          },
+          {
+            "name": "stageId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "Et molestias sunt eum." },
+            "example": "Provident autem ut expedita."
+          },
+          {
+            "name": "stepId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "Qui distinctio." },
+            "example": "Delectus aut itaque facere minima."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GetUniqueArtifactResponseBody" },
+                "example": {
+                  "Artifact": {
+                    "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                    "name": "harness/image",
+                    "tag": "latest",
+                    "type": "repo/image",
+                    "url": "https://console.cloud.google.com/gcr/images/imageName"
+                  },
+                  "Attestation": {
+                    "isAttested": false,
+                    "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+                  },
+                  "Sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "401": {
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "403": {
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "500": {
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "502": {
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
       }
     },
     "/api/v1/sbomprocessor": {
@@ -247,112 +483,411 @@
         "operationId": "sbomprocessor#processsbom",
         "parameters": [
           {
-            "name": "ProcesssbomRequestBody",
-            "in": "body",
+            "name": "accountIdentifier",
+            "in": "query",
+            "description": "Harness account ID",
+            "allowEmptyValue": true,
             "required": true,
-            "schema": { "$ref": "#/definitions/SbomprocessorProcesssbomRequestBody" }
+            "schema": { "type": "string", "description": "Harness account ID", "example": "eBqAoNchMLKigC_qZ5EdC" },
+            "example": "eBqAoNchMLKigC_qZ5EdC"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "description": "Harness organization ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Harness organization ID",
+              "default": "",
+              "example": "test-org"
+            },
+            "example": "test-org"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "description": "Harness project ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Harness project ID",
+              "default": "",
+              "example": "test-project"
+            },
+            "example": "test-project"
           }
         ],
-        "responses": {
-          "200": { "description": "OK response." },
-          "400": {
-            "description": "Bad Request response.",
-            "schema": { "$ref": "#/definitions/SbomprocessorProcesssbomBadRequestResponseBody" }
-          },
-          "401": {
-            "description": "Unauthorized response.",
-            "schema": { "$ref": "#/definitions/SbomprocessorProcesssbomUnauthorizedResponseBody" }
-          },
-          "403": {
-            "description": "Forbidden response.",
-            "schema": { "$ref": "#/definitions/SbomprocessorProcesssbomForbiddenResponseBody" }
-          },
-          "404": {
-            "description": "Not Found response.",
-            "schema": { "$ref": "#/definitions/SbomprocessorProcesssbomNotFoundResponseBody" }
-          },
-          "500": {
-            "description": "Internal Server Error response.",
-            "schema": { "$ref": "#/definitions/SbomprocessorProcesssbomInternalServerResponseBody" }
-          },
-          "502": {
-            "description": "Bad Gateway response.",
-            "schema": { "$ref": "#/definitions/SbomprocessorProcesssbomBadGatewayResponseBody" }
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ProcesssbomRequestBody" },
+              "example": {
+                "artifact": {
+                  "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                  "name": "harness/image",
+                  "tag": "latest",
+                  "type": "repo/image",
+                  "url": "https://console.cloud.google.com/gcr/images/imageName"
+                },
+                "attestation": {
+                  "isAttested": false,
+                  "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+                },
+                "metadata": {
+                  "buildUrl": "log4Jj",
+                  "format": "log4Jj",
+                  "pipelineExecutionId": "log4Jj",
+                  "pipelineIdentifier": "log4Jj",
+                  "sequenceId": "log4Jj",
+                  "stageIdentifier": "log4Jj",
+                  "stepExecutionId": "Earum in aut commodi est aut.",
+                  "stepIdentifier": "log4Jj",
+                  "tool": "log4Jj"
+                },
+                "sbom": {
+                  "data": "RG9sb3JlbXF1ZSBzZXF1aSBldCBzaXQgaGljIGV1bS4=",
+                  "name": "SBOM_Name",
+                  "url": "https://console.google.com/storage"
+                }
+              }
+            }
           }
         },
-        "schemes": ["http"]
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProcesssbomResponseBody" },
+                "example": { "ArtifactId": "Quas qui possimus deleniti." }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "401": {
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "403": {
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "500": {
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "502": {
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/search/findany": {
+      "post": {
+        "tags": ["search"],
+        "description": "Find a package references by name",
+        "operationId": "search#findany",
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "description": "Harness account ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": { "type": "string", "description": "Harness account ID", "example": "eBqAoNchMLKigC_qZ5EdC" },
+            "example": "eBqAoNchMLKigC_qZ5EdC"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "description": "Harness organization ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Harness organization ID",
+              "default": "",
+              "example": "test-org"
+            },
+            "example": "test-org"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "description": "Harness project ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Harness project ID",
+              "default": "",
+              "example": "test-project"
+            },
+            "example": "test-project"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/FindanyRequestBody" },
+              "example": {
+                "ExecutionIdentifier": "test-org",
+                "PipelineIdentifier": "test-org",
+                "packageIdentifiers": [
+                  { "name": "log4Jj" },
+                  { "name": "log4Jj" },
+                  { "name": "log4Jj" },
+                  { "name": "log4Jj" }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FindResponseBody" },
+                "example": {
+                  "packageReferences": [
+                    {
+                      "AccountName": "log4Jj",
+                      "ArtifactName": "log4Jj",
+                      "BuildURL": "log4Jj",
+                      "Originator": "log4Jj",
+                      "PipelineIdentifier": "log4Jj",
+                      "SBOMURL": "log4Jj",
+                      "SequenceId": "log4Jj",
+                      "StageName": "log4Jj",
+                      "VersionInfo": "log4Jj",
+                      "name": "log4Jj"
+                    },
+                    {
+                      "AccountName": "log4Jj",
+                      "ArtifactName": "log4Jj",
+                      "BuildURL": "log4Jj",
+                      "Originator": "log4Jj",
+                      "PipelineIdentifier": "log4Jj",
+                      "SBOMURL": "log4Jj",
+                      "SequenceId": "log4Jj",
+                      "StageName": "log4Jj",
+                      "VersionInfo": "log4Jj",
+                      "name": "log4Jj"
+                    },
+                    {
+                      "AccountName": "log4Jj",
+                      "ArtifactName": "log4Jj",
+                      "BuildURL": "log4Jj",
+                      "Originator": "log4Jj",
+                      "PipelineIdentifier": "log4Jj",
+                      "SBOMURL": "log4Jj",
+                      "SequenceId": "log4Jj",
+                      "StageName": "log4Jj",
+                      "VersionInfo": "log4Jj",
+                      "name": "log4Jj"
+                    },
+                    {
+                      "AccountName": "log4Jj",
+                      "ArtifactName": "log4Jj",
+                      "BuildURL": "log4Jj",
+                      "Originator": "log4Jj",
+                      "PipelineIdentifier": "log4Jj",
+                      "SBOMURL": "log4Jj",
+                      "SequenceId": "log4Jj",
+                      "StageName": "log4Jj",
+                      "VersionInfo": "log4Jj",
+                      "name": "log4Jj"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "401": {
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "403": {
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "500": {
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "502": {
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        },
+        "security": [{ "jwt_header_Authorization": ["core_project_view"] }]
       }
     },
     "/api/v1/search/{packagename}": {
       "get": {
         "tags": ["search"],
-        "description": "Find a package references by name\n\n**Required security scopes for jwt**:\n  * `core_project_view`",
+        "description": "Find a package references by name",
         "operationId": "search#find",
         "parameters": [
           {
             "name": "accountIdentifier",
             "in": "query",
             "description": "Harness account ID",
+            "allowEmptyValue": true,
             "required": true,
-            "type": "string"
+            "schema": { "type": "string", "description": "Harness account ID", "example": "eBqAoNchMLKigC_qZ5EdC" },
+            "example": "eBqAoNchMLKigC_qZ5EdC"
           },
           {
             "name": "orgIdentifier",
             "in": "query",
             "description": "Harness organization ID",
+            "allowEmptyValue": true,
             "required": true,
-            "type": "string",
-            "default": ""
+            "schema": {
+              "type": "string",
+              "description": "Harness organization ID",
+              "default": "",
+              "example": "test-org"
+            },
+            "example": "test-org"
           },
           {
             "name": "projectIdentifier",
             "in": "query",
             "description": "Harness project ID",
+            "allowEmptyValue": true,
             "required": true,
-            "type": "string",
-            "default": ""
+            "schema": {
+              "type": "string",
+              "description": "Harness project ID",
+              "default": "",
+              "example": "test-project"
+            },
+            "example": "test-project"
           },
           {
             "name": "packagename",
             "in": "path",
             "description": "Source ID associated with this connection source",
             "required": true,
-            "type": "string"
-          },
-          { "name": "Authorization", "in": "header", "description": "Auth token", "required": false, "type": "string" }
+            "schema": {
+              "type": "string",
+              "description": "Source ID associated with this connection source",
+              "example": "log4Jj"
+            },
+            "example": "log4Jj"
+          }
         ],
         "responses": {
           "200": {
             "description": "OK response.",
-            "schema": { "$ref": "#/definitions/SearchFindResponseBody", "required": ["packageReferences"] }
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FindResponseBody" },
+                "example": {
+                  "packageReferences": [
+                    {
+                      "AccountName": "log4Jj",
+                      "ArtifactName": "log4Jj",
+                      "BuildURL": "log4Jj",
+                      "Originator": "log4Jj",
+                      "PipelineIdentifier": "log4Jj",
+                      "SBOMURL": "log4Jj",
+                      "SequenceId": "log4Jj",
+                      "StageName": "log4Jj",
+                      "VersionInfo": "log4Jj",
+                      "name": "log4Jj"
+                    },
+                    {
+                      "AccountName": "log4Jj",
+                      "ArtifactName": "log4Jj",
+                      "BuildURL": "log4Jj",
+                      "Originator": "log4Jj",
+                      "PipelineIdentifier": "log4Jj",
+                      "SBOMURL": "log4Jj",
+                      "SequenceId": "log4Jj",
+                      "StageName": "log4Jj",
+                      "VersionInfo": "log4Jj",
+                      "name": "log4Jj"
+                    },
+                    {
+                      "AccountName": "log4Jj",
+                      "ArtifactName": "log4Jj",
+                      "BuildURL": "log4Jj",
+                      "Originator": "log4Jj",
+                      "PipelineIdentifier": "log4Jj",
+                      "SBOMURL": "log4Jj",
+                      "SequenceId": "log4Jj",
+                      "StageName": "log4Jj",
+                      "VersionInfo": "log4Jj",
+                      "name": "log4Jj"
+                    },
+                    {
+                      "AccountName": "log4Jj",
+                      "ArtifactName": "log4Jj",
+                      "BuildURL": "log4Jj",
+                      "Originator": "log4Jj",
+                      "PipelineIdentifier": "log4Jj",
+                      "SBOMURL": "log4Jj",
+                      "SequenceId": "log4Jj",
+                      "StageName": "log4Jj",
+                      "VersionInfo": "log4Jj",
+                      "name": "log4Jj"
+                    }
+                  ]
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request response.",
-            "schema": { "$ref": "#/definitions/SearchFindBadRequestResponseBody" }
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           },
           "401": {
-            "description": "Unauthorized response.",
-            "schema": { "$ref": "#/definitions/SearchFindUnauthorizedResponseBody" }
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           },
           "403": {
-            "description": "Forbidden response.",
-            "schema": { "$ref": "#/definitions/SearchFindForbiddenResponseBody" }
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           },
           "404": {
-            "description": "Not Found response.",
-            "schema": { "$ref": "#/definitions/SearchFindNotFoundResponseBody" }
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           },
           "500": {
-            "description": "Internal Server Error response.",
-            "schema": { "$ref": "#/definitions/SearchFindInternalServerResponseBody" }
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           },
           "502": {
-            "description": "Bad Gateway response.",
-            "schema": { "$ref": "#/definitions/SearchFindBadGatewayResponseBody" }
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           }
         },
-        "schemes": ["http"],
-        "security": [{ "jwt_header_Authorization": [] }]
+        "security": [{ "jwt_header_Authorization": ["core_project_view"] }]
       }
     },
     "/api/v1/system/health": {
@@ -363,15 +898,14 @@
         "responses": {
           "204": { "description": "No Content response." },
           "500": {
-            "description": "Internal Server Error response.",
-            "schema": { "$ref": "#/definitions/SystemHealthInternalServerResponseBody" }
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           },
           "502": {
-            "description": "Bad Gateway response.",
-            "schema": { "$ref": "#/definitions/SystemHealthBadGatewayResponseBody" }
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           }
-        },
-        "schemes": ["http"]
+        }
       }
     },
     "/api/v1/system/version": {
@@ -382,1750 +916,975 @@
         "responses": {
           "200": {
             "description": "OK response.",
-            "schema": { "$ref": "#/definitions/SystemVersionResponseBody", "required": ["version", "commit"] }
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceVersion" },
+                "example": { "commit": "96381692bf3a2bd7904769c6886e832435768b57", "version": "v0.123.0" }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error response.",
-            "schema": { "$ref": "#/definitions/SystemVersionInternalServerResponseBody" }
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           },
           "502": {
-            "description": "Bad Gateway response.",
-            "schema": { "$ref": "#/definitions/SystemVersionBadGatewayResponseBody" }
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           }
-        },
-        "schemes": ["http"]
+        }
       }
     }
   },
-  "definitions": {
-    "DevLoginBadGatewayResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "login_BadGateway_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "DevLoginBadRequestResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "login_BadRequest_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": true,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "DevLoginForbiddenResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": true },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "login_Forbidden_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "DevLoginInternalServerResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
-      },
-      "description": "login_InternalServer_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "DevLoginNotFoundResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": true },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "login_NotFound_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "DevLoginRequestBody": {
-      "title": "DevLoginRequestBody",
-      "type": "object",
-      "properties": { "password": { "type": "string", "description": "Password", "example": "Ab porro et veniam." } },
-      "example": { "password": "Maiores sed molestiae." },
-      "required": ["password"]
-    },
-    "DevLoginUnauthorizedResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": true },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
-      },
-      "description": "login_Unauthorized_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "Pullrequest": {
-      "title": "Pullrequest",
-      "type": "object",
-      "properties": {
-        "account_id": {
-          "type": "string",
-          "description": "Harness account ID associated with this pullrequest",
-          "default": "",
-          "example": "eBqAoNchMLKigC_qZ5EdC"
-        },
-        "author": {
-          "type": "string",
-          "description": "author of the pullrequest",
-          "example": "pullrequest-1",
-          "minLength": 1
-        },
-        "authored_date": {
-          "type": "integer",
-          "description": "Time the commit was authored",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "closed_at": {
-          "type": "integer",
-          "description": "Time the pullrequest was closed",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "commit_hash": {
-          "type": "string",
-          "description": "the hash of the commit",
-          "example": "pullrequest-1",
-          "minLength": 1
-        },
-        "commit_id": {
-          "type": "string",
-          "description": "The ID of the commit",
-          "example": "pullrequest-1",
-          "minLength": 1
-        },
-        "committed_date": {
-          "type": "integer",
-          "description": "Time the commit was created",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "created": {
-          "type": "integer",
-          "description": "Time the pullrequest was last created",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "created_at": {
-          "type": "integer",
-          "description": "Time the pullrequest was created",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "merged_at": {
-          "type": "integer",
-          "description": "Time the pullrequest was merged",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "number": {
-          "type": "integer",
-          "description": "Number of the pullrequest",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "pr_id": {
-          "type": "string",
-          "description": "id of the pullrequest",
-          "example": "pullrequest-1",
-          "minLength": 1
-        },
-        "published_at": {
-          "type": "integer",
-          "description": "Time the pullrequest was published",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "review_first_activity_at": {
-          "type": "integer",
-          "description": "Time of the first review activity on the pullrequest was created",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "review_last_approval_at": {
-          "type": "integer",
-          "description": "Time of the last review activity on the pullrequest was created",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "source_id": {
-          "type": "integer",
-          "description": "Source ID associated with this connection source",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "state": {
-          "type": "string",
-          "description": "state of the pullrequest",
-          "example": "pullrequest-1",
-          "minLength": 1
-        },
-        "title": {
-          "type": "string",
-          "description": "title of the pullrequest",
-          "example": "pullrequest-1",
-          "minLength": 1
-        },
-        "updated": {
-          "type": "integer",
-          "description": "Time the pullrequest was last updated",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "updated_at": {
-          "type": "integer",
-          "description": "Time the pullrequest was updated",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "url": { "type": "string", "description": "url of the pullrequest", "example": "pullrequest-1", "minLength": 1 }
-      },
-      "description": "A pullrequest of value stream data",
-      "example": {
-        "account_id": "eBqAoNchMLKigC_qZ5EdC",
-        "author": "pullrequest-1",
-        "authored_date": 1636669297674,
-        "closed_at": 1636669297674,
-        "commit_hash": "pullrequest-1",
-        "commit_id": "pullrequest-1",
-        "committed_date": 1636669297674,
-        "created": 1636669297674,
-        "created_at": 1636669297674,
-        "merged_at": 1636669297674,
-        "number": 1636669297674,
-        "pr_id": "pullrequest-1",
-        "published_at": 1636669297674,
-        "review_first_activity_at": 1636669297674,
-        "review_last_approval_at": 1636669297674,
-        "source_id": 1636669297674,
-        "state": "pullrequest-1",
-        "title": "pullrequest-1",
-        "updated": 1636669297674,
-        "updated_at": 1636669297674,
-        "url": "pullrequest-1"
-      },
-      "required": [
-        "source_id",
-        "account_id",
-        "updated",
-        "created",
-        "pr_id",
-        "number",
-        "title",
-        "url",
-        "state",
-        "author",
-        "created_at",
-        "review_first_activity_at",
-        "review_last_approval_at",
-        "merged_at",
-        "closed_at",
-        "updated_at",
-        "published_at",
-        "commit_id",
-        "commit_hash",
-        "authored_date",
-        "committed_date"
-      ]
-    },
-    "PullrequestsFindBadGatewayResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "find_BadGateway_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": true,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "PullrequestsFindBadRequestResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
-      },
-      "description": "find_BadRequest_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "PullrequestsFindForbiddenResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
-      },
-      "description": "find_Forbidden_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": true,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "PullrequestsFindInternalServerResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": true },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
-      },
-      "description": "find_InternalServer_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": true,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "PullrequestsFindNotFoundResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "find_NotFound_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "PullrequestsFindResponseBody": {
-      "title": "PullrequestsFindResponseBody",
-      "type": "object",
-      "properties": {
-        "account_id": {
-          "type": "string",
-          "description": "Harness account ID associated with this pullrequest",
-          "default": "",
-          "example": "eBqAoNchMLKigC_qZ5EdC"
-        },
-        "author": {
-          "type": "string",
-          "description": "author of the pullrequest",
-          "example": "pullrequest-1",
-          "minLength": 1
-        },
-        "authored_date": {
-          "type": "integer",
-          "description": "Time the commit was authored",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "closed_at": {
-          "type": "integer",
-          "description": "Time the pullrequest was closed",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "commit_hash": {
-          "type": "string",
-          "description": "the hash of the commit",
-          "example": "pullrequest-1",
-          "minLength": 1
-        },
-        "commit_id": {
-          "type": "string",
-          "description": "The ID of the commit",
-          "example": "pullrequest-1",
-          "minLength": 1
-        },
-        "committed_date": {
-          "type": "integer",
-          "description": "Time the commit was created",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "created": {
-          "type": "integer",
-          "description": "Time the pullrequest was last created",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "created_at": {
-          "type": "integer",
-          "description": "Time the pullrequest was created",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "merged_at": {
-          "type": "integer",
-          "description": "Time the pullrequest was merged",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "number": {
-          "type": "integer",
-          "description": "Number of the pullrequest",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "pr_id": {
-          "type": "string",
-          "description": "id of the pullrequest",
-          "example": "pullrequest-1",
-          "minLength": 1
-        },
-        "published_at": {
-          "type": "integer",
-          "description": "Time the pullrequest was published",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "review_first_activity_at": {
-          "type": "integer",
-          "description": "Time of the first review activity on the pullrequest was created",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "review_last_approval_at": {
-          "type": "integer",
-          "description": "Time of the last review activity on the pullrequest was created",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "source_id": {
-          "type": "integer",
-          "description": "Source ID associated with this connection source",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "state": {
-          "type": "string",
-          "description": "state of the pullrequest",
-          "example": "pullrequest-1",
-          "minLength": 1
-        },
-        "title": {
-          "type": "string",
-          "description": "title of the pullrequest",
-          "example": "pullrequest-1",
-          "minLength": 1
-        },
-        "updated": {
-          "type": "integer",
-          "description": "Time the pullrequest was last updated",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "updated_at": {
-          "type": "integer",
-          "description": "Time the pullrequest was updated",
-          "example": 1636669297674,
-          "format": "int64"
-        },
-        "url": { "type": "string", "description": "url of the pullrequest", "example": "pullrequest-1", "minLength": 1 }
-      },
-      "example": {
-        "account_id": "eBqAoNchMLKigC_qZ5EdC",
-        "author": "pullrequest-1",
-        "authored_date": 1636669297674,
-        "closed_at": 1636669297674,
-        "commit_hash": "pullrequest-1",
-        "commit_id": "pullrequest-1",
-        "committed_date": 1636669297674,
-        "created": 1636669297674,
-        "created_at": 1636669297674,
-        "merged_at": 1636669297674,
-        "number": 1636669297674,
-        "pr_id": "pullrequest-1",
-        "published_at": 1636669297674,
-        "review_first_activity_at": 1636669297674,
-        "review_last_approval_at": 1636669297674,
-        "source_id": 1636669297674,
-        "state": "pullrequest-1",
-        "title": "pullrequest-1",
-        "updated": 1636669297674,
-        "updated_at": 1636669297674,
-        "url": "pullrequest-1"
-      },
-      "required": [
-        "source_id",
-        "account_id",
-        "updated",
-        "created",
-        "pr_id",
-        "number",
-        "title",
-        "url",
-        "state",
-        "author",
-        "created_at",
-        "review_first_activity_at",
-        "review_last_approval_at",
-        "merged_at",
-        "closed_at",
-        "updated_at",
-        "published_at",
-        "commit_id",
-        "commit_hash",
-        "authored_date",
-        "committed_date"
-      ]
-    },
-    "PullrequestsFindUnauthorizedResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": true },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
-      },
-      "description": "find_Unauthorized_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "PullrequestsListBadGatewayResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "list_BadGateway_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": true,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "PullrequestsListBadRequestResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": true },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "list_BadRequest_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": true,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "PullrequestsListForbiddenResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "list_Forbidden_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "PullrequestsListInternalServerResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "list_InternalServer_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "PullrequestsListNotFoundResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": true },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "list_NotFound_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": true,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "PullrequestsListUnauthorizedResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "list_Unauthorized_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": true,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SbomprocessorProcesssbomBadGatewayResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": true },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "processsbom_BadGateway_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SbomprocessorProcesssbomBadRequestResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
-      },
-      "description": "processsbom_BadRequest_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": true,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SbomprocessorProcesssbomForbiddenResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "processsbom_Forbidden_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": true,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SbomprocessorProcesssbomInternalServerResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": true },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "processsbom_InternalServer_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SbomprocessorProcesssbomNotFoundResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "processsbom_NotFound_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SbomprocessorProcesssbomRequestBody": {
-      "title": "SbomprocessorProcesssbomRequestBody",
-      "type": "object",
-      "properties": {
-        "AccountID": {
-          "type": "string",
-          "description": "name of the package",
-          "default": "",
-          "example": "log4Jj",
-          "minLength": 3
-        },
-        "ArtifactID": {
-          "type": "string",
-          "description": "name of the package",
-          "default": "",
-          "example": "log4Jj",
-          "minLength": 3
-        },
-        "Format": {
-          "type": "string",
-          "description": "stage name where sbom is generated",
-          "default": "",
-          "example": "log4Jj",
-          "minLength": 3
-        },
-        "PipelineExecutionID": {
-          "type": "string",
-          "description": "name of the package",
-          "default": "",
-          "example": "log4Jj",
-          "minLength": 3
-        },
-        "PipelineIdentifier": {
-          "type": "string",
-          "description": "name of the package",
-          "default": "",
-          "example": "log4Jj",
-          "minLength": 3
-        },
-        "SbomUrl": {
-          "type": "string",
-          "description": "name of the package",
-          "default": "",
-          "example": "log4Jj",
-          "minLength": 3
-        },
-        "SequenceId": { "type": "integer", "description": "name of the package", "example": 12, "format": "int64" },
-        "Tool": {
-          "type": "string",
-          "description": "name of the package",
-          "default": "",
-          "example": "log4Jj",
-          "minLength": 3
+  "components": {
+    "schemas": {
+      "ArtifactResult": {
+        "type": "object",
+        "properties": {
+          "artifact": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "id of the artifact",
+                "default": "",
+                "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+              },
+              "name": {
+                "type": "string",
+                "description": "name of the artifact",
+                "default": "",
+                "example": "harness/image"
+              },
+              "tag": {
+                "type": "string",
+                "description": "tag of the artifact",
+                "default": "latest",
+                "example": "latest"
+              },
+              "type": {
+                "type": "string",
+                "description": "type of the artifact",
+                "default": "",
+                "example": "repo/image"
+              },
+              "url": {
+                "type": "string",
+                "description": "url of the artifact",
+                "default": "",
+                "example": "https://console.cloud.google.com/gcr/images/imageName"
+              }
+            },
+            "example": {
+              "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+              "name": "harness/image",
+              "tag": "latest",
+              "type": "repo/image",
+              "url": "https://console.cloud.google.com/gcr/images/imageName"
+            },
+            "required": ["type", "name", "url"]
+          },
+          "attestation": {
+            "type": "object",
+            "properties": {
+              "isAttested": {
+                "type": "boolean",
+                "description": "is the sbom attested or not",
+                "default": false,
+                "example": false
+              },
+              "url": {
+                "type": "string",
+                "description": "url of the attested file",
+                "default": "",
+                "example": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+              }
+            },
+            "example": {
+              "isAttested": false,
+              "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+            }
+          },
+          "sbom": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string", "description": "name of the sbom", "default": "", "example": "SBOM_Name" },
+              "url": {
+                "type": "string",
+                "description": "url of the sbom",
+                "default": "",
+                "example": "\u003c\u003csbom_location\u003e\u003e"
+              }
+            },
+            "example": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" },
+            "required": ["name"]
+          }
+        },
+        "description": "result of get artifacts by id",
+        "example": {
+          "artifact": {
+            "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+            "name": "harness/image",
+            "tag": "latest",
+            "type": "repo/image",
+            "url": "https://console.cloud.google.com/gcr/images/imageName"
+          },
+          "attestation": {
+            "isAttested": false,
+            "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+          },
+          "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
         }
       },
-      "description": "A sbom process request on ssca",
-      "example": {
-        "AccountID": "log4Jj",
-        "ArtifactID": "log4Jj",
-        "Format": "log4Jj",
-        "PipelineExecutionID": "log4Jj",
-        "PipelineIdentifier": "log4Jj",
-        "SbomUrl": "log4Jj",
-        "SequenceId": 12,
-        "Tool": "log4Jj"
-      }
-    },
-    "SbomprocessorProcesssbomUnauthorizedResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
+      "CreateArtifactRequestBody": {
+        "type": "object",
+        "properties": {
+          "accountIdentifier": {
+            "type": "string",
+            "description": "Harness account ID",
+            "example": "eBqAoNchMLKigC_qZ5EdC"
+          },
+          "artifact": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "id of the artifact",
+                "default": "",
+                "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+              },
+              "name": {
+                "type": "string",
+                "description": "name of the artifact",
+                "default": "",
+                "example": "harness/image"
+              },
+              "tag": {
+                "type": "string",
+                "description": "tag of the artifact",
+                "default": "latest",
+                "example": "latest"
+              },
+              "type": {
+                "type": "string",
+                "description": "type of the artifact",
+                "default": "",
+                "example": "repo/image"
+              },
+              "url": {
+                "type": "string",
+                "description": "url of the artifact",
+                "default": "",
+                "example": "https://console.cloud.google.com/gcr/images/imageName"
+              }
+            },
+            "example": {
+              "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+              "name": "harness/image",
+              "tag": "latest",
+              "type": "repo/image",
+              "url": "https://console.cloud.google.com/gcr/images/imageName"
+            },
+            "required": ["type", "name", "url"]
+          },
+          "attestation": {
+            "type": "object",
+            "properties": {
+              "isAttested": {
+                "type": "boolean",
+                "description": "is the sbom attested or not",
+                "default": false,
+                "example": false
+              },
+              "url": {
+                "type": "string",
+                "description": "url of the attested file",
+                "default": "",
+                "example": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+              }
+            },
+            "example": {
+              "isAttested": false,
+              "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "buildUrl": { "type": "string", "description": "BuildURL", "default": "", "example": "log4Jj" },
+              "format": {
+                "type": "string",
+                "description": "stage name where sbom is generated",
+                "default": "",
+                "example": "log4Jj",
+                "minLength": 3
+              },
+              "pipelineExecutionId": {
+                "type": "string",
+                "description": "name of the package",
+                "default": "",
+                "example": "log4Jj",
+                "minLength": 3
+              },
+              "pipelineIdentifier": {
+                "type": "string",
+                "description": "name of the package",
+                "default": "",
+                "example": "log4Jj",
+                "minLength": 3
+              },
+              "sequenceId": {
+                "type": "string",
+                "description": "name of the package",
+                "default": "",
+                "example": "log4Jj"
+              },
+              "stageIdentifier": {
+                "type": "string",
+                "description": "name of the Stage",
+                "default": "",
+                "example": "log4Jj"
+              },
+              "stepExecutionId": {
+                "type": "string",
+                "description": "StepExecutionId",
+                "default": "",
+                "example": "Qui laudantium incidunt nemo id."
+              },
+              "stepIdentifier": {
+                "type": "string",
+                "description": "id of the step",
+                "default": "",
+                "example": "log4Jj"
+              },
+              "tool": {
+                "type": "string",
+                "description": "name of the package",
+                "default": "",
+                "example": "log4Jj",
+                "minLength": 3
+              }
+            },
+            "example": {
+              "buildUrl": "log4Jj",
+              "format": "log4Jj",
+              "pipelineExecutionId": "log4Jj",
+              "pipelineIdentifier": "log4Jj",
+              "sequenceId": "log4Jj",
+              "stageIdentifier": "log4Jj",
+              "stepExecutionId": "Sit corrupti fuga et voluptatem.",
+              "stepIdentifier": "log4Jj",
+              "tool": "log4Jj"
+            }
+          },
+          "orgIdentifier": {
+            "type": "string",
+            "description": "Harness organization ID",
+            "default": "",
+            "example": "test-org"
+          },
+          "projectIdentifier": {
+            "type": "string",
+            "description": "Harness project ID",
+            "default": "",
+            "example": "test-project"
+          },
+          "sbom": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "string",
+                "description": "serialised sbom data",
+                "example": "UXVpc3F1YW0gcXVpZGVtIHV0Lg==",
+                "format": "binary"
+              },
+              "name": { "type": "string", "description": "name of the sbom", "default": "", "example": "SBOM_Name" },
+              "url": {
+                "type": "string",
+                "description": "URL of the sbom",
+                "default": "",
+                "example": "https://console.google.com/storage"
+              }
+            },
+            "example": {
+              "data": "Tm9iaXMgbnVtcXVhbS4=",
+              "name": "SBOM_Name",
+              "url": "https://console.google.com/storage"
+            }
+          }
         },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
+        "description": "A sbom process request on sscs",
+        "example": {
+          "accountIdentifier": "eBqAoNchMLKigC_qZ5EdC",
+          "artifact": {
+            "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+            "name": "harness/image",
+            "tag": "latest",
+            "type": "repo/image",
+            "url": "https://console.cloud.google.com/gcr/images/imageName"
+          },
+          "attestation": {
+            "isAttested": false,
+            "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+          },
+          "metadata": {
+            "buildUrl": "log4Jj",
+            "format": "log4Jj",
+            "pipelineExecutionId": "log4Jj",
+            "pipelineIdentifier": "log4Jj",
+            "sequenceId": "log4Jj",
+            "stageIdentifier": "log4Jj",
+            "stepExecutionId": "Repellat et distinctio porro suscipit.",
+            "stepIdentifier": "log4Jj",
+            "tool": "log4Jj"
+          },
+          "orgIdentifier": "test-org",
+          "projectIdentifier": "test-project",
+          "sbom": {
+            "data": "U2ludCB2b2x1cHRhdGVzIHZvbHVwdGF0ZW0gZG9sb3JlcyBzaW50IGxpYmVybyBxdWFlcmF0Lg==",
+            "name": "SBOM_Name",
+            "url": "https://console.google.com/storage"
+          }
         },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
+        "required": ["accountIdentifier", "orgIdentifier", "projectIdentifier"]
       },
-      "description": "processsbom_Unauthorized_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": true
+      "CreateArtifactResponseBody": {
+        "type": "object",
+        "properties": { "artifactId": { "type": "string", "example": "Incidunt minima nihil." } },
+        "example": { "artifactId": "Excepturi pariatur commodi." },
+        "required": ["artifactId"]
       },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SearchFindBadGatewayResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
+      "Error": {
+        "type": "object",
+        "properties": {
+          "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
+          "id": {
+            "type": "string",
+            "description": "ID is a unique identifier for this particular occurrence of the problem.",
+            "example": "123abc"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
+            "example": "parameter 'p' must be an integer"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name is the name of this class of errors.",
+            "example": "bad_request"
+          },
+          "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
+          "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
         },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
+        "example": { "id": "3F1FKVRR", "message": "Value of ID must be an integer", "name": "bad_request" },
+        "required": ["name", "id", "message", "temporary", "timeout", "fault"]
       },
-      "description": "find_BadGateway_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SearchFindBadRequestResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
+      "FindResponseBody": {
+        "type": "object",
+        "properties": {
+          "packageReferences": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PackageReference" },
+            "example": [
+              {
+                "AccountName": "log4Jj",
+                "ArtifactName": "log4Jj",
+                "BuildURL": "log4Jj",
+                "Originator": "log4Jj",
+                "PipelineIdentifier": "log4Jj",
+                "SBOMURL": "log4Jj",
+                "SequenceId": "log4Jj",
+                "StageName": "log4Jj",
+                "VersionInfo": "log4Jj",
+                "name": "log4Jj"
+              },
+              {
+                "AccountName": "log4Jj",
+                "ArtifactName": "log4Jj",
+                "BuildURL": "log4Jj",
+                "Originator": "log4Jj",
+                "PipelineIdentifier": "log4Jj",
+                "SBOMURL": "log4Jj",
+                "SequenceId": "log4Jj",
+                "StageName": "log4Jj",
+                "VersionInfo": "log4Jj",
+                "name": "log4Jj"
+              }
+            ]
+          }
         },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "find_BadRequest_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SearchFindForbiddenResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
-      },
-      "description": "find_Forbidden_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SearchFindInternalServerResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": true },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "find_InternalServer_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SearchFindNotFoundResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
-      },
-      "description": "find_NotFound_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SearchFindResponseBody": {
-      "title": "SearchFindResponseBody",
-      "type": "object",
-      "properties": {
-        "packageReferences": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/packageReferenceResponseBody" },
-          "example": [
+        "example": {
+          "packageReferences": [
             {
               "AccountName": "log4Jj",
+              "ArtifactName": "log4Jj",
+              "BuildURL": "log4Jj",
               "Originator": "log4Jj",
               "PipelineIdentifier": "log4Jj",
-              "SequenceId": 12,
+              "SBOMURL": "log4Jj",
+              "SequenceId": "log4Jj",
               "StageName": "log4Jj",
               "VersionInfo": "log4Jj",
               "name": "log4Jj"
             },
             {
               "AccountName": "log4Jj",
+              "ArtifactName": "log4Jj",
+              "BuildURL": "log4Jj",
               "Originator": "log4Jj",
               "PipelineIdentifier": "log4Jj",
-              "SequenceId": 12,
+              "SBOMURL": "log4Jj",
+              "SequenceId": "log4Jj",
+              "StageName": "log4Jj",
+              "VersionInfo": "log4Jj",
+              "name": "log4Jj"
+            },
+            {
+              "AccountName": "log4Jj",
+              "ArtifactName": "log4Jj",
+              "BuildURL": "log4Jj",
+              "Originator": "log4Jj",
+              "PipelineIdentifier": "log4Jj",
+              "SBOMURL": "log4Jj",
+              "SequenceId": "log4Jj",
               "StageName": "log4Jj",
               "VersionInfo": "log4Jj",
               "name": "log4Jj"
             }
           ]
-        }
+        },
+        "required": ["packageReferences"]
       },
-      "example": {
-        "packageReferences": [
-          {
-            "AccountName": "log4Jj",
-            "Originator": "log4Jj",
-            "PipelineIdentifier": "log4Jj",
-            "SequenceId": 12,
-            "StageName": "log4Jj",
-            "VersionInfo": "log4Jj",
-            "name": "log4Jj"
+      "FindanyRequestBody": {
+        "type": "object",
+        "properties": {
+          "ExecutionIdentifier": {
+            "type": "string",
+            "description": "Harness ExecutionIdentifier ID",
+            "default": "",
+            "example": "test-org"
           },
-          {
-            "AccountName": "log4Jj",
-            "Originator": "log4Jj",
-            "PipelineIdentifier": "log4Jj",
-            "SequenceId": 12,
-            "StageName": "log4Jj",
-            "VersionInfo": "log4Jj",
-            "name": "log4Jj"
+          "PipelineIdentifier": {
+            "type": "string",
+            "description": "Harness pipeline ID",
+            "default": "",
+            "example": "test-org"
           },
-          {
-            "AccountName": "log4Jj",
-            "Originator": "log4Jj",
-            "PipelineIdentifier": "log4Jj",
-            "SequenceId": 12,
-            "StageName": "log4Jj",
-            "VersionInfo": "log4Jj",
-            "name": "log4Jj"
-          },
-          {
-            "AccountName": "log4Jj",
-            "Originator": "log4Jj",
-            "PipelineIdentifier": "log4Jj",
-            "SequenceId": 12,
-            "StageName": "log4Jj",
-            "VersionInfo": "log4Jj",
-            "name": "log4Jj"
+          "packageIdentifiers": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PackageIdentifier" },
+            "example": [{ "name": "log4Jj" }, { "name": "log4Jj" }, { "name": "log4Jj" }]
           }
-        ]
+        },
+        "example": {
+          "ExecutionIdentifier": "test-org",
+          "PipelineIdentifier": "test-org",
+          "packageIdentifiers": [{ "name": "log4Jj" }, { "name": "log4Jj" }, { "name": "log4Jj" }]
+        },
+        "required": ["packageIdentifiers"]
       },
-      "required": ["packageReferences"]
-    },
-    "SearchFindUnauthorizedResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
+      "GetArtifactsByIDResponseBody": {
+        "type": "object",
+        "properties": {
+          "artifacts": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ArtifactResult" },
+            "example": [
+              {
+                "artifact": {
+                  "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                  "name": "harness/image",
+                  "tag": "latest",
+                  "type": "repo/image",
+                  "url": "https://console.cloud.google.com/gcr/images/imageName"
+                },
+                "attestation": {
+                  "isAttested": false,
+                  "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+                },
+                "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+              },
+              {
+                "artifact": {
+                  "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                  "name": "harness/image",
+                  "tag": "latest",
+                  "type": "repo/image",
+                  "url": "https://console.cloud.google.com/gcr/images/imageName"
+                },
+                "attestation": {
+                  "isAttested": false,
+                  "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+                },
+                "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+              }
+            ]
+          }
         },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
-      },
-      "description": "find_Unauthorized_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SystemHealthBadGatewayResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": true },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
-      },
-      "description": "health_BadGateway_response_body result type (default view)",
-      "example": {
-        "fault": false,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SystemHealthInternalServerResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
-      },
-      "description": "health_InternalServer_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SystemVersionBadGatewayResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "version_BadGateway_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": true,
-        "timeout": false
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SystemVersionInternalServerResponseBody": {
-      "title": "Mediatype identifier: application/vnd.goa.error; view=default",
-      "type": "object",
-      "properties": {
-        "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
-        "id": {
-          "type": "string",
-          "description": "ID is a unique identifier for this particular occurrence of the problem.",
-          "example": "123abc"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message is a human-readable explanation specific to this occurrence of the problem.",
-          "example": "parameter 'p' must be an integer"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name is the name of this class of errors.",
-          "example": "bad_request"
-        },
-        "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-        "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
-      },
-      "description": "version_InternalServer_response_body result type (default view)",
-      "example": {
-        "fault": true,
-        "id": "123abc",
-        "message": "parameter 'p' must be an integer",
-        "name": "bad_request",
-        "temporary": false,
-        "timeout": true
-      },
-      "required": ["name", "id", "message", "temporary", "timeout", "fault"]
-    },
-    "SystemVersionResponseBody": {
-      "title": "SystemVersionResponseBody",
-      "type": "object",
-      "properties": {
-        "commit": {
-          "type": "string",
-          "description": "Build identifier",
-          "example": "96381692bf3a2bd7904769c6886e832435768b57"
-        },
-        "version": { "type": "string", "description": "Version number", "example": "v0.123.0" }
-      },
-      "example": { "commit": "96381692bf3a2bd7904769c6886e832435768b57", "version": "v0.123.0" },
-      "required": ["version", "commit"]
-    },
-    "packageReferenceResponseBody": {
-      "title": "packageReferenceResponseBody",
-      "type": "object",
-      "properties": {
-        "AccountName": {
-          "type": "string",
-          "description": "name of the package",
-          "default": "",
-          "example": "log4Jj",
-          "minLength": 3
-        },
-        "Originator": {
-          "type": "string",
-          "description": "name of the package",
-          "default": "",
-          "example": "log4Jj",
-          "minLength": 3
-        },
-        "PipelineIdentifier": {
-          "type": "string",
-          "description": "name of the package",
-          "default": "",
-          "example": "log4Jj",
-          "minLength": 3
-        },
-        "SequenceId": { "type": "integer", "description": "name of the package", "example": 12, "format": "int64" },
-        "StageName": {
-          "type": "string",
-          "description": "stage name where sbom is generated",
-          "default": "",
-          "example": "log4Jj",
-          "minLength": 3
-        },
-        "VersionInfo": {
-          "type": "string",
-          "description": "name of the package",
-          "default": "",
-          "example": "log4Jj",
-          "minLength": 3
-        },
-        "name": {
-          "type": "string",
-          "description": "name of the package",
-          "default": "",
-          "example": "log4Jj",
-          "minLength": 3
+        "example": {
+          "artifacts": [
+            {
+              "artifact": {
+                "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                "name": "harness/image",
+                "tag": "latest",
+                "type": "repo/image",
+                "url": "https://console.cloud.google.com/gcr/images/imageName"
+              },
+              "attestation": {
+                "isAttested": false,
+                "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+              },
+              "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+            },
+            {
+              "artifact": {
+                "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                "name": "harness/image",
+                "tag": "latest",
+                "type": "repo/image",
+                "url": "https://console.cloud.google.com/gcr/images/imageName"
+              },
+              "attestation": {
+                "isAttested": false,
+                "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+              },
+              "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+            }
+          ]
         }
       },
-      "description": "A package search request on ssca",
-      "example": {
-        "AccountName": "log4Jj",
-        "Originator": "log4Jj",
-        "PipelineIdentifier": "log4Jj",
-        "SequenceId": 12,
-        "StageName": "log4Jj",
-        "VersionInfo": "log4Jj",
-        "name": "log4Jj"
+      "GetUniqueArtifactResponseBody": {
+        "type": "object",
+        "properties": {
+          "Artifact": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "id of the artifact",
+                "default": "",
+                "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+              },
+              "name": {
+                "type": "string",
+                "description": "name of the artifact",
+                "default": "",
+                "example": "harness/image"
+              },
+              "tag": {
+                "type": "string",
+                "description": "tag of the artifact",
+                "default": "latest",
+                "example": "latest"
+              },
+              "type": {
+                "type": "string",
+                "description": "type of the artifact",
+                "default": "",
+                "example": "repo/image"
+              },
+              "url": {
+                "type": "string",
+                "description": "url of the artifact",
+                "default": "",
+                "example": "https://console.cloud.google.com/gcr/images/imageName"
+              }
+            },
+            "example": {
+              "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+              "name": "harness/image",
+              "tag": "latest",
+              "type": "repo/image",
+              "url": "https://console.cloud.google.com/gcr/images/imageName"
+            },
+            "required": ["type", "name", "url"]
+          },
+          "Attestation": {
+            "type": "object",
+            "properties": {
+              "isAttested": {
+                "type": "boolean",
+                "description": "is the sbom attested or not",
+                "default": false,
+                "example": false
+              },
+              "url": {
+                "type": "string",
+                "description": "url of the attested file",
+                "default": "",
+                "example": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+              }
+            },
+            "example": {
+              "isAttested": false,
+              "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+            }
+          },
+          "Sbom": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string", "description": "name of the sbom", "default": "", "example": "SBOM_Name" },
+              "url": {
+                "type": "string",
+                "description": "url of the sbom",
+                "default": "",
+                "example": "\u003c\u003csbom_location\u003e\u003e"
+              }
+            },
+            "example": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" },
+            "required": ["name"]
+          }
+        },
+        "example": {
+          "Artifact": {
+            "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+            "name": "harness/image",
+            "tag": "latest",
+            "type": "repo/image",
+            "url": "https://console.cloud.google.com/gcr/images/imageName"
+          },
+          "Attestation": {
+            "isAttested": false,
+            "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+          },
+          "Sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+        }
+      },
+      "LoginRequestBody": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "Password",
+            "example": "Omnis quia iure laudantium in quasi dolorum."
+          }
+        },
+        "example": { "password": "Dolore accusantium commodi." },
+        "required": ["password"]
+      },
+      "PackageIdentifier": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "name of the package",
+            "default": "",
+            "example": "log4Jj",
+            "minLength": 3
+          }
+        },
+        "description": "A package identifier",
+        "example": { "name": "log4Jj" }
+      },
+      "PackageReference": {
+        "type": "object",
+        "properties": {
+          "AccountName": {
+            "type": "string",
+            "description": "name of the package",
+            "default": "",
+            "example": "log4Jj",
+            "minLength": 3
+          },
+          "ArtifactName": {
+            "type": "string",
+            "description": "Source ID associated with this connection source",
+            "default": "",
+            "example": "log4Jj"
+          },
+          "BuildURL": {
+            "type": "string",
+            "description": "Source ID associated with this connection source",
+            "default": "",
+            "example": "log4Jj"
+          },
+          "Originator": {
+            "type": "string",
+            "description": "name of the package",
+            "default": "",
+            "example": "log4Jj",
+            "minLength": 3
+          },
+          "PipelineIdentifier": {
+            "type": "string",
+            "description": "name of the package",
+            "default": "",
+            "example": "log4Jj",
+            "minLength": 3
+          },
+          "SBOMURL": {
+            "type": "string",
+            "description": "Source ID associated with this connection source",
+            "default": "",
+            "example": "log4Jj"
+          },
+          "SequenceId": {
+            "type": "string",
+            "description": "name of the package",
+            "default": "",
+            "example": "log4Jj",
+            "minLength": 3
+          },
+          "StageName": {
+            "type": "string",
+            "description": "stage name where sbom is generated",
+            "default": "",
+            "example": "log4Jj",
+            "minLength": 3
+          },
+          "VersionInfo": {
+            "type": "string",
+            "description": "name of the package",
+            "default": "",
+            "example": "log4Jj",
+            "minLength": 3
+          },
+          "name": {
+            "type": "string",
+            "description": "name of the package",
+            "default": "",
+            "example": "log4Jj",
+            "minLength": 3
+          }
+        },
+        "description": "A package search request on sscs",
+        "example": {
+          "AccountName": "log4Jj",
+          "ArtifactName": "log4Jj",
+          "BuildURL": "log4Jj",
+          "Originator": "log4Jj",
+          "PipelineIdentifier": "log4Jj",
+          "SBOMURL": "log4Jj",
+          "SequenceId": "log4Jj",
+          "StageName": "log4Jj",
+          "VersionInfo": "log4Jj",
+          "name": "log4Jj"
+        }
+      },
+      "ProcesssbomRequestBody": {
+        "type": "object",
+        "properties": {
+          "artifact": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "id of the artifact",
+                "default": "",
+                "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+              },
+              "name": {
+                "type": "string",
+                "description": "name of the artifact",
+                "default": "",
+                "example": "harness/image"
+              },
+              "tag": {
+                "type": "string",
+                "description": "tag of the artifact",
+                "default": "latest",
+                "example": "latest"
+              },
+              "type": {
+                "type": "string",
+                "description": "type of the artifact",
+                "default": "",
+                "example": "repo/image"
+              },
+              "url": {
+                "type": "string",
+                "description": "url of the artifact",
+                "default": "",
+                "example": "https://console.cloud.google.com/gcr/images/imageName"
+              }
+            },
+            "example": {
+              "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+              "name": "harness/image",
+              "tag": "latest",
+              "type": "repo/image",
+              "url": "https://console.cloud.google.com/gcr/images/imageName"
+            },
+            "required": ["type", "name", "url"]
+          },
+          "attestation": {
+            "type": "object",
+            "properties": {
+              "isAttested": {
+                "type": "boolean",
+                "description": "is the sbom attested or not",
+                "default": false,
+                "example": false
+              },
+              "url": {
+                "type": "string",
+                "description": "url of the attested file",
+                "default": "",
+                "example": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+              }
+            },
+            "example": {
+              "isAttested": false,
+              "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "buildUrl": { "type": "string", "description": "BuildURL", "default": "", "example": "log4Jj" },
+              "format": {
+                "type": "string",
+                "description": "stage name where sbom is generated",
+                "default": "",
+                "example": "log4Jj",
+                "minLength": 3
+              },
+              "pipelineExecutionId": {
+                "type": "string",
+                "description": "name of the package",
+                "default": "",
+                "example": "log4Jj",
+                "minLength": 3
+              },
+              "pipelineIdentifier": {
+                "type": "string",
+                "description": "name of the package",
+                "default": "",
+                "example": "log4Jj",
+                "minLength": 3
+              },
+              "sequenceId": {
+                "type": "string",
+                "description": "name of the package",
+                "default": "",
+                "example": "log4Jj"
+              },
+              "stageIdentifier": {
+                "type": "string",
+                "description": "name of the Stage",
+                "default": "",
+                "example": "log4Jj"
+              },
+              "stepExecutionId": {
+                "type": "string",
+                "description": "StepExecutionId",
+                "default": "",
+                "example": "Et numquam nam dolores."
+              },
+              "stepIdentifier": {
+                "type": "string",
+                "description": "id of the step",
+                "default": "",
+                "example": "log4Jj"
+              },
+              "tool": {
+                "type": "string",
+                "description": "name of the package",
+                "default": "",
+                "example": "log4Jj",
+                "minLength": 3
+              }
+            },
+            "example": {
+              "buildUrl": "log4Jj",
+              "format": "log4Jj",
+              "pipelineExecutionId": "log4Jj",
+              "pipelineIdentifier": "log4Jj",
+              "sequenceId": "log4Jj",
+              "stageIdentifier": "log4Jj",
+              "stepExecutionId": "Et nisi ab ipsa mollitia earum.",
+              "stepIdentifier": "log4Jj",
+              "tool": "log4Jj"
+            }
+          },
+          "sbom": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "string",
+                "description": "serialised sbom data",
+                "example": "RXN0IGlwc2Eu",
+                "format": "binary"
+              },
+              "name": { "type": "string", "description": "name of the sbom", "default": "", "example": "SBOM_Name" },
+              "url": {
+                "type": "string",
+                "description": "URL of the sbom",
+                "default": "",
+                "example": "https://console.google.com/storage"
+              }
+            },
+            "example": {
+              "data": "UXVpYnVzZGFtIHByYWVzZW50aXVtIHBsYWNlYXQgdm9sdXB0YXRpYnVzLg==",
+              "name": "SBOM_Name",
+              "url": "https://console.google.com/storage"
+            }
+          }
+        },
+        "description": "A sbom process request on sscs",
+        "example": {
+          "artifact": {
+            "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+            "name": "harness/image",
+            "tag": "latest",
+            "type": "repo/image",
+            "url": "https://console.cloud.google.com/gcr/images/imageName"
+          },
+          "attestation": {
+            "isAttested": false,
+            "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+          },
+          "metadata": {
+            "buildUrl": "log4Jj",
+            "format": "log4Jj",
+            "pipelineExecutionId": "log4Jj",
+            "pipelineIdentifier": "log4Jj",
+            "sequenceId": "log4Jj",
+            "stageIdentifier": "log4Jj",
+            "stepExecutionId": "Non praesentium.",
+            "stepIdentifier": "log4Jj",
+            "tool": "log4Jj"
+          },
+          "sbom": {
+            "data": "UXVpIG9kaW8gaXVyZSB2ZXJvIHF1b3MgdmVyby4=",
+            "name": "SBOM_Name",
+            "url": "https://console.google.com/storage"
+          }
+        }
+      },
+      "ProcesssbomResponseBody": {
+        "type": "object",
+        "properties": {
+          "ArtifactId": {
+            "type": "string",
+            "description": "ID of the artifact",
+            "example": "Amet repudiandae explicabo ipsam fugit et."
+          }
+        },
+        "example": { "ArtifactId": "Quidem doloribus ducimus." },
+        "required": ["ArtifactId"]
+      },
+      "ServiceVersion": {
+        "type": "object",
+        "properties": {
+          "commit": {
+            "type": "string",
+            "description": "Build identifier",
+            "example": "96381692bf3a2bd7904769c6886e832435768b57"
+          },
+          "version": { "type": "string", "description": "Version number", "example": "v0.123.0" }
+        },
+        "example": { "commit": "96381692bf3a2bd7904769c6886e832435768b57", "version": "v0.123.0" },
+        "required": ["version", "commit"]
       }
-    }
+    },
+    "securitySchemes": { "jwt_header_Authorization": { "type": "http", "scheme": "bearer" } }
   },
-  "securityDefinitions": {
-    "jwt_header_Authorization": {
-      "type": "apiKey",
-      "description": "\n**Security Scopes**:\n  * `core_project_view`: View",
-      "name": "Authorization",
-      "in": "header"
-    }
-  }
+  "tags": [
+    { "name": "dev", "description": "Development endpoints" },
+    { "name": "artifact", "description": "generate the artifacts for a given SBOM" },
+    { "name": "sbomprocessor", "description": "process the raw sbom \u0026 injest it" },
+    { "name": "search", "description": "search across the sbom generated from artifacts" },
+    { "name": "system", "description": "System version and health" }
+  ]
 }

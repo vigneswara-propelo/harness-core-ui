@@ -712,6 +712,7 @@ export interface StringsMap {
   'common.pipeline': string
   'common.pipelineDetails': string
   'common.pipelineExecution': string
+  'common.pipelineStage': string
   'common.plans.currentPlan': string
   'common.plans.faq': string
   'common.plans.featureComparison': string
@@ -897,6 +898,7 @@ export interface StringsMap {
   'common.saveAsTemplate': string
   'common.savedSuccessfully': string
   'common.saving': string
+  'common.sbom': string
   'common.schedule': string
   'common.schedulePanel.FRI': string
   'common.schedulePanel.MON': string
@@ -1248,6 +1250,7 @@ export interface StringsMap {
   'common.viewReferences': string
   'common.viewText': string
   'common.viewUsage': string
+  'common.violations': string
   'common.warning': string
   'common.webhookURL': string
   'common.welcome': string
@@ -4362,6 +4365,8 @@ export interface StringsMap {
   'pipeline.noServicesFound': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string
+  'pipeline.notAvailable': string
+  'pipeline.notGenerated': string
   'pipeline.numOfApps': string
   'pipeline.numOfEnvs': string
   'pipeline.numOfServices': string

@@ -7,9 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly emptyArtifacts: string
-  readonly stageSelector: string
-  readonly subSection: string
-  readonly wrapper: string
+  readonly table: string
+  readonly toggleAccordion: string
 }
 export default styles

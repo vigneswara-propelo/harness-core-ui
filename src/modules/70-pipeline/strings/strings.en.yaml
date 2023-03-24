@@ -1730,3 +1730,5 @@ frozenExecList:
 frozenExecPopover:
   abortedMsg: Pipeline was aborted due to freeze windows.
   viewFreezeWindows: View associated freeze windows
+notGenerated: Not Generated
+notAvailable: Not Available

@@ -1404,3 +1404,6 @@ plugin:
   bitrisePluginsDesc: Run Bitrise plugins
   gitHubActionsPluginsDesc: Run GitHub Actions plugins
 userGroupsWarningMessage: 'Some of the User Groups referenced in this scope have been updated.'
+pipelineStage: Pipeline Stage
+violations: Violations
+sbom: SBOM

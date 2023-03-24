@@ -34,6 +34,14 @@
 }
 
 .stageSelector {
-  margin-bottom: var(--spacing-medium);
   width: 300px !important;
+}
+
+.subSection {
+  background-color: var(--primary-1);
+  border: 1px solid var(--primary-2);
+  padding: var(--spacing-small) var(--spacing-large);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

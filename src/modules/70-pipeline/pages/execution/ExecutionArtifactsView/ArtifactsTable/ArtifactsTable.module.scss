@@ -1,0 +1,20 @@
+.toggleAccordion {
+  // to have better click target area for toggle
+  padding: var(--spacing-large) var(--spacing-medium) !important;
+}
+
+.table {
+  padding: var(--spacing-large);
+
+  [role='cell'],
+  [role='columnheader'] {
+    width: auto !important;
+    padding-right: var(--spacing-small);
+  }
+
+  div[class*='TableV2--cells'],
+  div[class*='TableV2--header'] {
+    display: grid !important;
+    grid-template-columns: 2.5rem 1fr 1fr 1fr 1fr;
+  }
+}

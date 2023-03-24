@@ -155,4 +155,17 @@ describe('<ExecutionArtifactsView /> tests', () => {
     )
     expect(container).toMatchSnapshot()
   })
+
+  test('renders list with FF turned on', async () => {
+    const { container } = render(
+      <TestWrapper
+        defaultFeatureFlagValues={{
+          SSCA_ENABLED: true
+        }}
+      >
+        <ExecutionArtifactsView />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
 })
