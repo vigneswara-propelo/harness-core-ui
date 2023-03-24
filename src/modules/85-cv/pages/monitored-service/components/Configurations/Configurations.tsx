@@ -76,6 +76,9 @@ export default function Configurations(
   const dependencyTabformRef: React.MutableRefObject<FormikProps<MonitoredServiceForm> | null> = React.useRef(null)
   const [overrideBlockNavigation, setOverrideBlockNavigation] = useState<boolean>(false)
   const [defaultMonitoredService, setDefaultMonitoredService] = useState<MonitoredServiceDTO>()
+
+  const projectRef = useRef(projectIdentifier)
+
   const {
     data: dataMonitoredServiceById,
     error: errorFetchMonitoredService,
@@ -107,6 +110,21 @@ export default function Configurations(
     },
     lazy: true
   })
+
+  useEffect(() => {
+    if (isTemplate && projectRef.current !== projectIdentifier) {
+      projectRef.current = projectIdentifier
+      history.push({
+        pathname: routes.toTemplates({
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          module: 'cv'
+        }),
+        search: `?templateType=MonitoredService`
+      })
+    }
+  }, [isTemplate, projectIdentifier])
 
   const { mutate: saveMonitoredService } = useSaveMonitoredService({
     queryParams: { accountId }
