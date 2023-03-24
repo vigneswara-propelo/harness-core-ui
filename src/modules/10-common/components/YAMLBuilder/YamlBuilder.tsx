@@ -513,6 +513,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
 
+      if (ctrlKey && code === KEY_CODE_FOR_SPACE) {
+        disposePreviousSuggestions()
+      }
+
       // dispose expressionCompletion if (+) sign is not preceding with (<)
       if (code === KEY_CODE_FOR_PLUS_SIGN) {
         const lastKeyStrokeCharacter = getEditorContentInCurrentLine(editor)?.substr(-1)
