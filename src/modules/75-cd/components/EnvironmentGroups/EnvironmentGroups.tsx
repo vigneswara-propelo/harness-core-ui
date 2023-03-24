@@ -22,8 +22,7 @@ import {
   Layout,
   Text,
   DropDown,
-  Pagination,
-  getErrorInfoFromErrorObject
+  Pagination
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
@@ -33,6 +32,7 @@ import { GetEnvironmentGroupListQueryParams, useGetEnvironmentGroupList, useGetF
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -53,6 +53,7 @@ import css from './EnvironmentGroups.module.scss'
 export default function EnvironmentGroupsPage(): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
 
   /* #region Sort changes */
   const sortOptions: SelectOption[] = [
@@ -72,7 +73,7 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
   const [sort, setSort] = useState<string[]>([SortFields.LastUpdatedAt, Sort.DESC])
   const [sortOption, setSortOption] = useState<SelectOption>(sortOptions[0])
 
-  const handleSortChange = (item: SelectOption) => {
+  const handleSortChange = (item: SelectOption): void => {
     const sortArray =
       item.value === SortFields.AZ09
         ? [SortFields.Name, Sort.ASC]
@@ -84,7 +85,7 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
   }
   /* #endregion */
 
-  const handleSearchTermChange = (query: string) => {
+  const handleSearchTermChange = (query: string): void => {
     if (query) {
       updateQueryParams({ searchTerm: query })
     } else {
@@ -92,7 +93,8 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
     }
   }
 
-  const handlePageIndexChange = /* istanbul ignore next */ (index: number) => updateQueryParams({ page: index + 1 })
+  const handlePageIndexChange = /* istanbul ignore next */ (index: number): void =>
+    updateQueryParams({ page: index + 1 })
 
   const queryParams = useQueryParams<EnvironmentGroupListQueryParams>({
     processQueryParams(params: Partial<Record<keyof EnvironmentGroupListQueryParams, string>>) {
@@ -230,7 +232,7 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
         </Layout.Horizontal>
       </Page.SubHeader>
       <Page.Body
-        error={getErrorInfoFromErrorObject(error as any)}
+        error={getRBACErrorMessage(error as RBACError)}
         retryOnError={/*istanbul ignore next*/ () => refetch()}
         loading={loading}
       >

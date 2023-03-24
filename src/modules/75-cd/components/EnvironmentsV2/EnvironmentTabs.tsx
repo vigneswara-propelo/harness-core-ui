@@ -5,15 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
 
-import { TabNavigation, TabNavigationProps } from '@harness/uicore'
+import { TabNavigation } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-
-import { PermissionsRequest, usePermission } from '@rbac/hooks/usePermission'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -21,46 +17,31 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 export default function EnvironmentTabs(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const [canViewEnvGroup] = usePermission(
-    {
-      permissions: [PermissionIdentifier.VIEW_ENVIRONMENT_GROUP],
-      resource: {
-        resourceType: ResourceType.ENVIRONMENT_GROUP
-      }
-    } as PermissionsRequest,
-    []
+
+  return (
+    <TabNavigation
+      size={'small'}
+      links={[
+        {
+          label: getString('environment'),
+          to: routes.toEnvironment({
+            accountId,
+            orgIdentifier,
+            projectIdentifier,
+            module
+          }),
+          exact: true
+        },
+        {
+          label: getString('common.environmentGroups.label'),
+          to: routes.toEnvironmentGroups({
+            accountId,
+            orgIdentifier,
+            projectIdentifier,
+            module
+          })
+        }
+      ]}
+    />
   )
-  const [navLinks, setNavLinks] = useState<TabNavigationProps['links']>([])
-
-  useEffect(() => {
-    const links: TabNavigationProps['links'] = [
-      {
-        label: getString('environment'),
-        to: routes.toEnvironment({
-          accountId,
-          orgIdentifier,
-          projectIdentifier,
-          module
-        }),
-        exact: true
-      }
-    ]
-
-    if (canViewEnvGroup) {
-      links.push({
-        label: getString('common.environmentGroups.label'),
-        to: routes.toEnvironmentGroups({
-          accountId,
-          orgIdentifier,
-          projectIdentifier,
-          module
-        })
-      })
-    }
-
-    setNavLinks(links)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountId, orgIdentifier, projectIdentifier, module, canViewEnvGroup])
-
-  return <TabNavigation size={'small'} links={navLinks} />
 }

@@ -12,7 +12,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import EnvironmentTabs from '../EnvironmentTabs'
 
 describe('Environment Tab', () => {
-  test('renders Environment Group Tab', () => {
+  test('renders Environment & Environment Group Tab', () => {
     const dummyPermissionsMap = new Map()
     dummyPermissionsMap.set(PermissionIdentifier.VIEW_ENVIRONMENT_GROUP, true)
     const { container } = render(
@@ -50,39 +50,6 @@ describe('Environment Tab', () => {
             href="/account/test/home/orgs/test/projects/test/environments/groups"
           >
             common.environmentGroups.label
-          </a>
-        </div>
-      </div>
-    `)
-  })
-
-  test('does not render Environment Group Tab', () => {
-    const dummyPermissionsMap = new Map()
-    dummyPermissionsMap.set(PermissionIdentifier.VIEW_ENVIRONMENT_GROUP, false)
-    const { container } = render(
-      <TestWrapper
-        defaultPermissionValues={{
-          permissions: dummyPermissionsMap,
-          checkPermission: ({ permission }) =>
-            dummyPermissionsMap.has(permission as string)
-              ? (dummyPermissionsMap.get(permission as string) as boolean)
-              : true
-        }}
-      >
-        <EnvironmentTabs />
-      </TestWrapper>
-    )
-
-    expect(container).toMatchInlineSnapshot(`
-      <div>
-        <div
-          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main TabNavigation--container"
-        >
-          <a
-            class="TabNavigation--tags TabNavigation--small"
-            href="/account/undefined/environments"
-          >
-            environment
           </a>
         </div>
       </div>
