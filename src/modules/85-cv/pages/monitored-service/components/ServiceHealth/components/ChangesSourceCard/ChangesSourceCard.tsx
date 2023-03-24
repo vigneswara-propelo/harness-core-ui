@@ -16,8 +16,6 @@ import { useToaster } from '@common/components'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useGetMonitoredServiceChangeEventSummary } from 'services/cv'
 import { numberFormatter } from '@common/utils/utils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { ChangeSourceCardData, ChangeSourceCardInterface } from './ChangesSourceCard.types'
 import TickerValue from './components/TickerValue/TickerValue'
 import { calculateChangePercentage, getTickerColor } from './ChangesSourceCard.utils'
@@ -31,7 +29,6 @@ export default function ChangeSourceCard(props: ChangeSourceCardInterface): JSX.
   const { showError, clear } = useToaster()
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
   const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
-  const ffIntegration = useFeatureFlag(FeatureFlag.SRM_INTERNAL_CHANGE_SOURCE_FF)
 
   const monitoredServiceParams = monitoredServiceIdentifier
     ? { monitoredServiceIdentifier: monitoredServiceIdentifier }
@@ -59,9 +56,9 @@ export default function ChangeSourceCard(props: ChangeSourceCardInterface): JSX.
   }, [monitoredServiceIdentifier, monitoredServiceIdentifiers])
 
   const changeSummaryList = useMemo(
-    () => calculateChangePercentage(getString, ffIntegration, data?.resource),
+    () => calculateChangePercentage(getString, data?.resource),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data?.resource, ffIntegration]
+    [data?.resource]
   )
 
   if (error) {

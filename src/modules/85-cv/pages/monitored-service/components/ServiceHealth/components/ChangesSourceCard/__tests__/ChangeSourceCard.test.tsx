@@ -137,8 +137,8 @@ describe('Test ChangeSourceCard', () => {
 
   test('validate calculateChangePercentage', () => {
     const getString = (val: string): string => val
-    expect(calculateChangePercentage(getString, true, changeSummary)).toEqual(changeSourceCardData)
-    expect(calculateChangePercentage(getString, true, changeSummaryWithPositiveChange)).toEqual(
+    expect(calculateChangePercentage(getString, changeSummary)).toEqual(changeSourceCardData)
+    expect(calculateChangePercentage(getString, changeSummaryWithPositiveChange)).toEqual(
       changeSourceCardDataWithPositiveGrowth
     )
   })

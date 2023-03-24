@@ -36,7 +36,6 @@ describe('Verify Util functions', () => {
     const multipleValue = { startTime: 1632009431325, endTime: 1632157481325, count: 9 }
     const changeInfoCardDataSingleValue = createChangeInfoCardData(
       getString,
-      true,
       singleValue.startTime,
       singleValue.endTime,
       changeTimelineResponse.resource.categoryTimeline
@@ -44,7 +43,6 @@ describe('Verify Util functions', () => {
     expect(changeInfoCardDataSingleValue).toEqual(infoCardDataSingleValue)
     const changeInfoCardDataMultipleValue = createChangeInfoCardData(
       getString,
-      true,
       multipleValue.startTime,
       multipleValue.endTime,
       changeTimelineResponse.resource.categoryTimeline

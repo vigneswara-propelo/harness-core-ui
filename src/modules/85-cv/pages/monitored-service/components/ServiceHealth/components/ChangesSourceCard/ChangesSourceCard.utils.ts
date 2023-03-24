@@ -35,31 +35,13 @@ const labelByCategory = (
 const createChangeSourceCardData = (
   category: CategoryCountDetails,
   categoryType: ChangeSourceDTO['category'] | 'Changes',
-  ffIntegration: boolean,
   getString: UseStringsReturn['getString']
-): ChangeSourceCardData => {
-  if (ffIntegration) {
-    return {
-      count: getValue(category?.count),
-      id: categoryType ?? '',
-      label: labelByCategory(categoryType, getString),
-      percentage: getValue(category?.percentageChange)
-    }
-  } else {
-    const count = category?.count && isNaN(category?.count) ? 0 : category?.count || 0
-    const previousCount =
-      category?.countInPrecedingWindow && isNaN(category?.countInPrecedingWindow)
-        ? 0
-        : category?.countInPrecedingWindow || 0
-    const categoryPercentage: number = ((count - previousCount) / previousCount) * 100
-    return {
-      count,
-      id: categoryType ?? '',
-      label: labelByCategory(categoryType, getString),
-      percentage: isNaN(categoryPercentage) ? 0 : categoryPercentage === Infinity ? 100 : categoryPercentage
-    }
-  }
-}
+): ChangeSourceCardData => ({
+  count: getValue(category?.count),
+  id: categoryType ?? '',
+  label: labelByCategory(categoryType, getString),
+  percentage: getValue(category?.percentageChange)
+})
 
 const getValue = (item: number | undefined): number => (item && Number.isNaN(item) ? 0 : item || 0)
 
@@ -67,56 +49,20 @@ export const zeroIfUndefined = (item: number | undefined): number => item || 0
 
 export const calculateChangePercentage = (
   getString: UseStringsReturn['getString'],
-  ffIntegration: boolean,
   changeSummary?: ChangeSummaryDTO
 ): ChangeSourceCardData[] => {
   if (changeSummary && changeSummary?.categoryCountMap && changeSummary?.total) {
-    if (ffIntegration) {
-      const { categoryCountMap, total } = changeSummary
-      return [
-        createChangeSourceCardData(total as CategoryCountDetails, changeLabel, ffIntegration, getString),
-        ...Object.entries(categoryCountMap).map(categoryCountEntry =>
-          createChangeSourceCardData(
-            categoryCountEntry[1],
-            categoryCountEntry[0] as ChangeSourceDTO['category'],
-            ffIntegration,
-            getString
-          )
-        )
-      ]
-    } else {
-      const { categoryCountMap } = changeSummary
-      const { Infrastructure, Deployment, Alert } = categoryCountMap
-      const total = {
-        count:
-          zeroIfUndefined(Infrastructure?.count) + zeroIfUndefined(Deployment?.count) + zeroIfUndefined(Alert?.count),
-        countInPrecedingWindow:
-          zeroIfUndefined(Infrastructure?.countInPrecedingWindow) +
-          zeroIfUndefined(Deployment?.countInPrecedingWindow) +
-          zeroIfUndefined(Alert?.countInPrecedingWindow)
-      }
-      return [
-        createChangeSourceCardData(total, changeLabel, ffIntegration, getString),
+    const { categoryCountMap, total } = changeSummary
+    return [
+      createChangeSourceCardData(total as CategoryCountDetails, changeLabel, getString),
+      ...Object.entries(categoryCountMap).map(categoryCountEntry =>
         createChangeSourceCardData(
-          Deployment,
-          ChangeSourceCategoryName.DEPLOYMENT as ChangeSourceDTO['category'],
-          ffIntegration,
-          getString
-        ),
-        createChangeSourceCardData(
-          Infrastructure,
-          ChangeSourceCategoryName.INFRASTRUCTURE as ChangeSourceDTO['category'],
-          ffIntegration,
-          getString
-        ),
-        createChangeSourceCardData(
-          Alert,
-          ChangeSourceCategoryName.ALERT as ChangeSourceDTO['category'],
-          ffIntegration,
+          categoryCountEntry[1],
+          categoryCountEntry[0] as ChangeSourceDTO['category'],
           getString
         )
-      ]
-    }
+      )
+    ]
   }
   return []
 }

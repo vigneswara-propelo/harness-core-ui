@@ -137,51 +137,20 @@ export const labelByCategory = (categoryType: string, getString: UseStringsRetur
 
 export const createChangeInfoCardData = (
   getString: UseStringsReturn['getString'],
-  ffIntegration?: boolean,
   startTime?: number,
   endTime?: number,
   categoryTimeline?: { [key: string]: TimeRangeDetail[] }
 ): ChangesInfoCardData[] => {
   if (startTime && endTime && categoryTimeline) {
-    if (ffIntegration) {
-      return Object.entries(categoryTimeline).map(category => {
-        return {
-          key: category[0] as ChangeSourceTypes,
-          count: sumBy(filterChangeSourceType(category[1], startTime, endTime), 'count'),
-          message: createTooltipLabel(
-            sumBy(filterChangeSourceType(category[1], startTime, endTime), 'count'),
-            category[0] as ChangeSourceTypes,
-            getString
-          )
-        }
-      })
-    } else {
-      const { Deployment, Infrastructure, Alert } = categoryTimeline
-      const filterDeployment = Deployment?.filter((item: TimeRangeDetail) =>
-        isChangesInTheRange(item, startTime, endTime)
+    return Object.entries(categoryTimeline).map(category => ({
+      key: category[0] as ChangeSourceTypes,
+      count: sumBy(filterChangeSourceType(category[1], startTime, endTime), 'count'),
+      message: createTooltipLabel(
+        sumBy(filterChangeSourceType(category[1], startTime, endTime), 'count'),
+        category[0] as ChangeSourceTypes,
+        getString
       )
-      const filterInfra = Infrastructure?.filter((item: TimeRangeDetail) =>
-        isChangesInTheRange(item, startTime, endTime)
-      )
-      const filterIncident = Alert?.filter((item: TimeRangeDetail) => isChangesInTheRange(item, startTime, endTime))
-      return [
-        {
-          key: ChangeSourceTypes.Deployment,
-          count: sumBy(filterDeployment, 'count'),
-          message: createTooltipLabel(sumBy(filterDeployment, 'count'), ChangeSourceTypes.Deployment, getString)
-        },
-        {
-          key: ChangeSourceTypes.Alert,
-          count: sumBy(filterIncident, 'count'),
-          message: createTooltipLabel(sumBy(filterIncident, 'count'), ChangeSourceTypes.Alert, getString)
-        },
-        {
-          key: ChangeSourceTypes.Infrastructure,
-          count: sumBy(filterInfra, 'count'),
-          message: createTooltipLabel(sumBy(filterInfra, 'count'), ChangeSourceTypes.Infrastructure, getString)
-        }
-      ]
-    }
+    }))
   } else {
     return []
   }

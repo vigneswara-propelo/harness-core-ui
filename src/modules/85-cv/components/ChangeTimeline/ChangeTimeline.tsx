@@ -16,8 +16,6 @@ import {
   useChangeEventTimelineForAccount,
   useGetMonitoredServiceChangeTimeline
 } from 'services/cv'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { ChangeTimelineProps } from './ChangeTimeline.types'
 import { Timeline } from './components/Timeline/Timeline'
 import { ChangeSourceTypes, defaultCategoryTimeline } from './ChangeTimeline.constants'
@@ -49,7 +47,6 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
     duration,
     monitoredServiceIdentifiers
   } = props
-  const ffIntegration = useFeatureFlag(FeatureFlag.SRM_INTERNAL_CHANGE_SOURCE_FF)
 
   const {
     data: monitoredServiceChangeTimelineData,
@@ -191,12 +188,12 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
   const { categoryTimeline } = data?.resource || {}
 
   useEffect(() => {
-    const changeInfoCardData = createChangeInfoCardData(getString, ffIntegration, startTime, endTime, categoryTimeline)
+    const changeInfoCardData = createChangeInfoCardData(getString, startTime, endTime, categoryTimeline)
     if (changeInfoCardData.length) {
       onSliderMoved?.(changeInfoCardData)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startTime, endTime, categoryTimeline, ffIntegration])
+  }, [startTime, endTime, categoryTimeline])
 
   if (error) {
     return <ChangeTimelineError error={getErrorMessage(error) || ''} />
@@ -206,33 +203,10 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
     <Timeline
       isLoading={loading}
       rowOffset={90}
-      timelineRows={
-        ffIntegration
-          ? Object.entries(categoryTimeline || defaultCategoryTimeline).map(timeline => {
-              return {
-                labelName: labelByCategory(timeline[0], getString),
-                data: createTimelineSeriesData(timeline[0] as ChangeSourceTypes, getString, timeline[1])
-              }
-            })
-          : [
-              {
-                labelName: getString('deploymentsText'),
-                data: createTimelineSeriesData(ChangeSourceTypes.Deployment, getString, categoryTimeline?.Deployment)
-              },
-              {
-                labelName: getString('infrastructureText'),
-                data: createTimelineSeriesData(
-                  ChangeSourceTypes.Infrastructure,
-                  getString,
-                  categoryTimeline?.Infrastructure
-                )
-              },
-              {
-                labelName: getString('cv.changeSource.tooltip.incidents'),
-                data: createTimelineSeriesData(ChangeSourceTypes.Alert, getString, categoryTimeline?.Alert)
-              }
-            ]
-      }
+      timelineRows={Object.entries(categoryTimeline || defaultCategoryTimeline).map(timeline => ({
+        labelName: labelByCategory(timeline[0], getString),
+        data: createTimelineSeriesData(timeline[0] as ChangeSourceTypes, getString, timeline[1])
+      }))}
       timestamps={[startTimeRoundedOffToNearest30min, endTimeRoundedOffToNearest30min]}
       labelWidth={90}
       hideTimeline={hideTimeline}
