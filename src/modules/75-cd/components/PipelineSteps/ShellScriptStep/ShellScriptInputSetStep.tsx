@@ -44,6 +44,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
   const { expressions } = useVariablesExpression()
   const scriptType: ScriptType = get(initialValues, 'spec.shell') || 'Bash'
   const prefix = isEmpty(path) ? '' : `${path}.`
+  const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
 
   return (
     <FormikForm>
@@ -51,7 +52,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
         <TimeoutFieldInputSetView
           multiTypeDurationProps={{
             configureOptionsProps: {
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
             },
             allowableTypes,
             expressions,
@@ -75,7 +76,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             allowedTypes={allowableTypes}
             enableConfigureOptions={true}
             configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
             }}
             disableTypeSelection={readonly}
             skipRenderValueInExpressionLabel
@@ -125,13 +126,15 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                             placeholder={getString('name')}
                             disabled={true}
                           />
+
                           <FormInput.Select
                             items={scriptInputType}
                             name={`${prefix}spec.environmentVariables[${i}].type`}
                             placeholder={getString('typeLabel')}
                             disabled={true}
                           />
-                          <FormInput.MultiTextInput
+
+                          <TextFieldInputSetView
                             name={`${prefix}spec.environmentVariables[${i}].value`}
                             multiTextInputProps={{
                               allowableTypes,
@@ -139,8 +142,13 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                               disabled: readonly
                             }}
                             label=""
-                            disabled={readonly}
                             placeholder={getString('valueLabel')}
+                            fieldPath={`spec.environmentVariables[${i}].value`}
+                            template={template}
+                            enableConfigureOptions
+                            configureOptionsProps={{
+                              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+                            }}
                           />
                         </div>
                       )
@@ -178,6 +186,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                             placeholder={getString('name')}
                             disabled={true}
                           />
+
                           <FormInput.Select
                             items={scriptOutputType}
                             name={`${prefix}spec.outputVariables[${i}].type`}
@@ -185,7 +194,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                             disabled={true}
                           />
 
-                          <FormInput.MultiTextInput
+                          <TextFieldInputSetView
                             name={`${prefix}spec.outputVariables[${i}].value`}
                             multiTextInputProps={{
                               allowableTypes,
@@ -193,8 +202,13 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                               disabled: readonly
                             }}
                             label=""
-                            disabled={readonly}
                             placeholder={getString('valueLabel')}
+                            fieldPath={`spec.outputVariables[${i}].value`}
+                            template={template}
+                            enableConfigureOptions
+                            configureOptionsProps={{
+                              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+                            }}
                           />
                         </div>
                       )
@@ -216,7 +230,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             allowableTypes
           }}
           configureOptionsProps={{
-            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
           }}
           disabled={readonly}
           name={`${prefix}spec.executionTarget.host`}
@@ -233,7 +247,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             allowableTypes={allowableTypes}
             enableConfigureOptions={true}
             configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
             }}
             name={`${prefix}spec.executionTarget.connectorRef`}
             label={connectorType === 'SSHKey' ? getString('sshConnector') : getString('secrets.typeWinRM')}
@@ -252,7 +266,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             allowableTypes
           }}
           configureOptionsProps={{
-            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
           }}
           name={`${prefix}spec.executionTarget.workingDirectory`}
           fieldPath={`spec.executionTarget.workingDirectory`}

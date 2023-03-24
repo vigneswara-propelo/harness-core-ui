@@ -600,26 +600,30 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                           </div>
                         </div>
                         <div
-                          class="bp3-form-group"
+                          class="Layout--horizontal StyledProps--main"
                         >
-                          
                           <div
-                            class="bp3-form-content"
+                            class="bp3-form-group"
                           >
+                            
                             <div
-                              class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                              class="bp3-form-content"
                             >
                               <div
-                                class="bp3-input-group MultiTypeInput--input"
+                                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                               >
-                                <input
-                                  autocomplete="off"
-                                  class="bp3-input"
-                                  name="spec.environmentVariables[0].value"
-                                  placeholder="valueLabel"
-                                  type="text"
-                                  value="hello"
-                                />
+                                <div
+                                  class="bp3-input-group MultiTypeInput--input"
+                                >
+                                  <input
+                                    autocomplete="off"
+                                    class="bp3-input"
+                                    name="spec.environmentVariables[0].value"
+                                    placeholder="valueLabel"
+                                    type="text"
+                                    value="hello"
+                                  />
+                                </div>
                               </div>
                             </div>
                           </div>

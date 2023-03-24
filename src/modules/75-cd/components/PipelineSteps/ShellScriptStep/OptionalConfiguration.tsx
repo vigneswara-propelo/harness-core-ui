@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormikProps, FieldArray } from 'formik'
+import { FormikProps, FieldArray, useFormikContext } from 'formik'
 import {
   AllowedTypes,
   Button,
@@ -19,11 +19,13 @@ import {
   Text
 } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
+import { get } from 'lodash-es'
 import cx from 'classnames'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 
@@ -85,16 +87,10 @@ export default function OptionalConfiguration(props: {
                             placeholder={getString('typeLabel')}
                             disabled={readonly}
                           />
-                          <FormInput.MultiTextInput
-                            name={`spec.environmentVariables[${i}].value`}
-                            placeholder={getString('valueLabel')}
-                            multiTextInputProps={{
-                              allowableTypes,
-                              expressions,
-                              disabled: readonly
-                            }}
-                            label=""
-                            disabled={readonly}
+                          <OptionalVariables
+                            variablePath={`spec.environmentVariables[${i}].value`}
+                            allowableTypes={allowableTypes}
+                            readonly={readonly}
                           />
                           <Button
                             variation={ButtonVariation.ICON}
@@ -157,16 +153,10 @@ export default function OptionalConfiguration(props: {
                               disabled={readonly}
                             />
 
-                            <FormInput.MultiTextInput
-                              name={`spec.outputVariables[${i}].value`}
-                              placeholder={getString('valueLabel')}
-                              multiTextInputProps={{
-                                allowableTypes,
-                                expressions,
-                                disabled: readonly
-                              }}
-                              label=""
-                              disabled={readonly}
+                            <OptionalVariables
+                              variablePath={`spec.outputVariables[${i}].value`}
+                              allowableTypes={allowableTypes}
+                              readonly={readonly}
                             />
 
                             <Button minimal icon="main-trash" onClick={() => remove(i)} disabled={readonly} />
@@ -284,5 +274,47 @@ export default function OptionalConfiguration(props: {
         ) : null}
       </div>
     </FormikForm>
+  )
+}
+
+function OptionalVariables({
+  variablePath,
+  allowableTypes,
+  readonly
+}: {
+  variablePath: string
+  allowableTypes: AllowedTypes
+  readonly?: boolean
+}): React.ReactElement {
+  const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
+
+  const { values: formValues, setFieldValue } = useFormikContext()
+  const variableValue = get(formValues, variablePath)
+
+  return (
+    <Layout.Horizontal>
+      <FormInput.MultiTextInput
+        name={variablePath}
+        placeholder={getString('valueLabel')}
+        multiTextInputProps={{
+          allowableTypes,
+          expressions,
+          disabled: readonly
+        }}
+        label=""
+        disabled={readonly}
+      />
+
+      {isValueRuntimeInput(variableValue) && (
+        <ConfigureOptions
+          value={variableValue}
+          type="String"
+          variableName={variablePath}
+          onChange={value => setFieldValue(variablePath, value)}
+          isReadonly={readonly}
+        />
+      )}
+    </Layout.Horizontal>
   )
 }
