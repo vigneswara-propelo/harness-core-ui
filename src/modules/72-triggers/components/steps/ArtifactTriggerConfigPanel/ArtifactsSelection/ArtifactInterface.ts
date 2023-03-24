@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { AllowedTypes, SelectOption } from '@harness/uicore'
+import type { AllowedTypes, SelectOption, SelectWithSubmenuOption } from '@harness/uicore'
+import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { ArtifactConfig, PrimaryArtifact, PageConnectorResponse, ServiceDefinition } from 'services/cd-ng'
 import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
@@ -249,6 +250,11 @@ export interface ACRArtifactType {
   spec?: any
 }
 
+export interface JenkinsArtifactTriggerSpec extends Omit<JenkinsRegistrySpec, 'jobName'> {
+  jobName?: SelectWithBiLevelOption | string
+  childJobName?: SelectWithSubmenuOption | string
+}
+
 export type ArtifactTriggerSpec =
   | AcrSpec
   | AmazonS3RegistrySpec
@@ -256,7 +262,7 @@ export type ArtifactTriggerSpec =
   | DockerRegistrySpec
   | EcrSpec
   | GcrSpec
-  | JenkinsRegistrySpec
+  | JenkinsArtifactTriggerSpec
   | NexusRegistrySpec
   | CustomArtifactSpec
   | BambooRegistrySpec

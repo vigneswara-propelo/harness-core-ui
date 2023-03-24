@@ -84,7 +84,7 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
 
   /* istanbul ignore next */
   processFormData(data: any): JenkinsStepData {
-    return {
+    const processedData = {
       ...data,
       spec: {
         ...data.spec,
@@ -93,9 +93,19 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
             ? (data.spec.connectorRef as SelectOption)?.value?.toString()
             : data.spec.connectorRef,
         jobName:
-          ((data.spec.jobName as unknown as SelectOption).label as string) || (data.spec.jobName as unknown as string)
+          ((data.spec.jobName as unknown as SelectOption)?.label as string) || (data.spec.jobName as unknown as string)
       }
+    } as JenkinsStepData
+
+    if (processedData.spec.childJobName) {
+      processedData.spec.jobName =
+        typeof processedData.spec.childJobName === 'string'
+          ? processedData.spec.childJobName
+          : processedData.spec.childJobName?.label
+      delete processedData.spec.childJobName
     }
+
+    return processedData
   }
 
   validateInputSet({

@@ -9,6 +9,7 @@ import type { FormikProps } from 'formik'
 import type { GetDataError } from 'restful-react'
 import type { AllowedTypes, SelectOption, SelectWithSubmenuOption } from '@harness/uicore'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
+import type { MutableRefObject } from 'react'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { Failure } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -88,4 +89,7 @@ export interface JenkinsFormContentInterface {
   projectMetadataFetchError?: GetDataError<Failure | Error> | null
   isNewStep?: boolean
   readonly?: boolean
+  showChildJobField: boolean
+  setShowChildJobField: (value: boolean) => void
+  lastOpenedJob: MutableRefObject<any>
 }

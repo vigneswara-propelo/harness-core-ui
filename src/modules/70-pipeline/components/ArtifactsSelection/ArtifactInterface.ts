@@ -8,6 +8,7 @@
 import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import type { FormikProps, FormikValues } from 'formik'
 import type { GetDataError } from 'restful-react'
+import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type {
@@ -346,7 +347,8 @@ export interface JenkinsArtifactType {
     connectorRef?: string
     artifactPath?: SelectOption | string
     build?: SelectOption | string
-    jobName?: SelectOption | string
+    jobName?: SelectWithBiLevelOption | string
+    childJobName?: SelectWithBiLevelOption | string
   }
 }
 

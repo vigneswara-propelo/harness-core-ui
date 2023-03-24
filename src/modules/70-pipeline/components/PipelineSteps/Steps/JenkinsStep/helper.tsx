@@ -6,10 +6,13 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
+import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import type { UseStringsReturn } from 'framework/strings'
+import { isValueFixed } from '@common/utils/utils'
 import type { JenkinsStepData } from './types'
+const JENKINS_JOB_NAME_SEPARATOR = '/'
 
 export const resetForm = (
   formik: FormikProps<JenkinsStepData>,
@@ -50,3 +53,34 @@ export const variableSchema = (
       type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
     })
   )
+
+export const getJenkinsJobParentChildName = (
+  jobName: SelectWithBiLevelOption | string
+): { jobName: SelectWithBiLevelOption | string; childJobName?: string } => {
+  if (isValueFixed(jobName)) {
+    const fullJobName = typeof jobName === 'string' ? jobName : jobName.label
+    const jobNameSeparatorIndex = fullJobName.indexOf(JENKINS_JOB_NAME_SEPARATOR)
+
+    if (jobNameSeparatorIndex > 0) {
+      return {
+        jobName: fullJobName.substring(0, jobNameSeparatorIndex),
+        childJobName: fullJobName
+      }
+    }
+
+    return {
+      jobName: fullJobName
+    }
+  }
+
+  return { jobName }
+}
+
+export const getJobValue = (job: SelectWithBiLevelOption | string): SelectWithBiLevelOption => {
+  const label = typeof job === 'string' ? job : job?.label
+
+  return {
+    label,
+    value: label
+  }
+}
