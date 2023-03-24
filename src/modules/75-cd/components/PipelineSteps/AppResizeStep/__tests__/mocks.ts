@@ -12,6 +12,7 @@ export const countRequiredValues = {
   type: 'AppResize',
   timeout: '10m',
   spec: {
+    ignoreInstanceCountManifest: false,
     newAppInstances: {
       spec: { value: '' },
       type: InstanceTypes.Count
@@ -29,6 +30,7 @@ export const negativeCountVal = {
   type: 'AppResize',
   timeout: '10m',
   spec: {
+    ignoreInstanceCountManifest: false,
     newAppInstances: {
       spec: { value: -1 },
       type: InstanceTypes.Count
@@ -46,6 +48,7 @@ export const percentageValues = {
   type: 'AppResize',
   timeout: '10m',
   spec: {
+    ignoreInstanceCountManifest: false,
     newAppInstances: {
       spec: { value: '' },
       type: InstanceTypes.Percentage
@@ -63,6 +66,7 @@ export const negativePercentageValues = {
   type: 'AppResize',
   timeout: '10m',
   spec: {
+    ignoreInstanceCountManifest: false,
     newAppInstances: {
       spec: { value: -1 },
       type: InstanceTypes.Percentage
@@ -79,6 +83,7 @@ export const percentageMoreThan100Values = {
   type: 'AppResize',
   timeout: '10m',
   spec: {
+    ignoreInstanceCountManifest: false,
     newAppInstances: {
       spec: { value: 102 },
       type: InstanceTypes.Percentage

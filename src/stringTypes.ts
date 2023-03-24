@@ -5993,6 +5993,7 @@ export interface StringsMap {
   'cd.steps.tas.enableDownSizeOldApplication': string
   'cd.steps.tas.enableUpsizeInActiveApp': string
   'cd.steps.tas.existingVersionToKeep': string
+  'cd.steps.tas.ignoreInstanceCountManifest': string
   'cd.steps.tas.mapRoute': string
   'cd.steps.tas.mappingType': string
   'cd.steps.tas.matchRunningInstances': string

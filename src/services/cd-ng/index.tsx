@@ -360,6 +360,7 @@ export interface AccessControlCheckError {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -412,6 +413,7 @@ export interface AccessControlCheckError {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -2096,20 +2098,41 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
   billingExportSpec?: BillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   subscriptionId: string
   tenantId: string
 }
 
 export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   connectorRef: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
 }
 
 export type CELicenseSummaryDTO = LicensesWithSummaryDTO & {
@@ -2186,7 +2209,14 @@ export interface CcmConnectorFilter {
   awsAccountIds?: string[]
   azureSubscriptionId?: string
   azureTenantId?: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   gcpProjectId?: string
   k8sConnectorRef?: string[]
 }
@@ -2788,6 +2818,27 @@ export type CopyCommandUnitSpec = CommandUnitBaseSpec & {
 
 export type CountCapacitySpec = CapacitySpec & {
   count: number
+}
+
+export interface CountGroupedOnArtifact {
+  artifact?: string
+  artifactPath?: string
+  artifactVersion?: string
+  count?: number
+  executionCountGroupedOnStatusList?: CountGroupedOnStatus[]
+}
+
+export interface CountGroupedOnService {
+  count?: number
+  executionCountGroupedOnArtifactList?: CountGroupedOnArtifact[]
+  executionCountGroupedOnStatusList?: CountGroupedOnStatus[]
+  serviceName?: string
+  serviceReference?: string
+}
+
+export interface CountGroupedOnStatus {
+  count?: number
+  status?: string
 }
 
 export type CountInstanceSelection = InstanceSelectionBase & {
@@ -4001,6 +4052,7 @@ export interface EntityDetail {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4609,6 +4661,7 @@ export interface Error {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -4661,6 +4714,7 @@ export interface Error {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4981,6 +5035,7 @@ export interface ErrorMetadata {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -5033,6 +5088,7 @@ export interface ErrorMetadata {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   errorMessage?: string
 }
 
@@ -5404,6 +5460,7 @@ export interface Failure {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -5456,6 +5513,7 @@ export interface Failure {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -6202,7 +6260,14 @@ export interface GcpBillingExportSpec {
 
 export type GcpCloudCostConnector = ConnectorConfigDTO & {
   billingExportSpec?: GcpBillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   projectId: string
   serviceAccountEmail: string
 }
@@ -6552,6 +6617,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   )[]
   moduleType?:
     | 'CD'
@@ -6774,6 +6840,7 @@ export interface GitEntityFilterProperties {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -7073,6 +7140,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -7289,6 +7357,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7626,6 +7695,7 @@ export interface GitSyncEntityDTO {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7836,6 +7906,7 @@ export interface GitSyncEntityListDTO {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -8063,6 +8134,7 @@ export interface GitSyncErrorDTO {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -8123,8 +8195,10 @@ export interface GithubApiAccessSpecDTO {
 }
 
 export type GithubAppSpec = GithubApiAccessSpecDTO & {
-  applicationId: string
-  installationId: string
+  applicationId?: string
+  applicationIdRef?: string
+  installationId?: string
+  installationIdRef?: string
   privateKeyRef: string
 }
 
@@ -9534,7 +9608,9 @@ export type KubernetesServiceAccountDTO = KubernetesAuthCredentialDTO & {
   serviceAccountTokenRef: string
 }
 
-export type KubernetesServiceSpec = ServiceSpec & {}
+export type KubernetesServiceSpec = ServiceSpec & {
+  hooks?: ServiceHookWrapper[]
+}
 
 export type KubernetesUserNamePasswordDTO = KubernetesAuthCredentialDTO & {
   passwordRef: string
@@ -9543,6 +9619,7 @@ export type KubernetesUserNamePasswordDTO = KubernetesAuthCredentialDTO & {
 }
 
 export type KustomizeManifest = ManifestAttributes & {
+  commandFlags?: KustomizeManifestCommandFlag[]
   enableDeclarativeRollback?: ParameterFieldBoolean
   metadata?: string
   overlayConfiguration?: OverlayConfiguration
@@ -9552,12 +9629,17 @@ export type KustomizeManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
+export interface KustomizeManifestCommandFlag {
+  flag?: string
+  kustomizeCommandFlagType: 'Build'
+}
+
 export type KustomizePatchesManifest = ManifestAttributes & {
   metadata?: string
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -9565,6 +9647,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -10098,7 +10181,9 @@ export type NativeHelmInstanceInfoDTO = InstanceInfoDTO & {
   releaseName?: string
 }
 
-export type NativeHelmServiceSpec = ServiceSpec & {}
+export type NativeHelmServiceSpec = ServiceSpec & {
+  hooks?: ServiceHookWrapper[]
+}
 
 export type NewRelicConnectorDTO = ConnectorConfigDTO & {
   apiKeyRef: string
@@ -10297,9 +10382,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -11169,6 +11255,10 @@ export type PhysicalDataCenterConnectorDTO = ConnectorConfigDTO & {
   hosts?: HostDTO[]
 }
 
+export interface PipelineExecutionCountInfo {
+  executionCountGroupedOnServiceList?: CountGroupedOnService[]
+}
+
 export interface PipelineExecutionDashboardInfo {
   accountIdentifier?: string
   identifier?: string
@@ -11581,6 +11671,7 @@ export interface ReferencedByDTO {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
 }
 
 export interface RefreshResponse {
@@ -12918,6 +13009,7 @@ export interface ResponseListEntityType {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -13543,6 +13635,7 @@ export interface ResponseMessage {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -13595,6 +13688,7 @@ export interface ResponseMessage {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -13999,6 +14093,13 @@ export interface ResponsePaymentMethodCollectionDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponsePipelineExecutionCountInfo {
+  correlationId?: string
+  data?: PipelineExecutionCountInfo
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponsePipelinesExecutionDashboardInfo {
   correlationId?: string
   data?: PipelinesExecutionDashboardInfo
@@ -14258,9 +14359,23 @@ export interface ResponseSetK8sCommandFlagType {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseSetServiceHookAction {
+  correlationId?: string
+  data?: ('FetchFiles' | 'TemplateManifest' | 'SteadyStateCheck')[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseSetString {
   correlationId?: string
   data?: string[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseSetTerraformCommandFlagType {
+  correlationId?: string
+  data?: ('INIT' | 'WORKSPACE' | 'REFRESH' | 'PLAN' | 'APPLY' | 'DESTROY')[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -15544,6 +15659,18 @@ export interface ServiceHeaderInfo {
   name?: string
 }
 
+export interface ServiceHook {
+  actions?: ('FetchFiles' | 'TemplateManifest' | 'SteadyStateCheck')[]
+  identifier: string
+  store: StoreConfig
+  storeType: 'Inline'
+}
+
+export interface ServiceHookWrapper {
+  postHook?: ServiceHook
+  preHook?: ServiceHook
+}
+
 export interface ServiceInputsMergedResponseDto {
   mergedServiceInputsYaml?: string
   serviceYaml?: string
@@ -16545,6 +16672,7 @@ export type TanzuApplicationServiceSpec = ServiceSpec & {}
 
 export type TasAppResizeStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  ignoreInstanceCountManifest?: boolean
   newAppInstances: TasInstanceSelectionWrapper
   oldAppInstances?: TasInstanceSelectionWrapper
 }
@@ -18727,6 +18855,7 @@ export interface ListActivitiesQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -18929,6 +19058,7 @@ export interface ListActivitiesQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -19235,6 +19365,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -19437,6 +19568,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -26553,6 +26685,88 @@ export const getJobDetailsForJenkinsServiceV2Promise = (
     void
   >('POST', getConfig('ng/api'), `/artifacts/jenkins/v2/jobs`, props, signal)
 
+export interface ArtifactIdsQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  repositoryFormat?: string
+  repository?: string
+  groupId?: string
+  nexusSourceType?: string
+  fqnPath?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  serviceId?: string
+}
+
+export type ArtifactIdsProps = Omit<
+  MutateProps<ResponseListString, Failure | Error, ArtifactIdsQueryParams, ListTagsForAMIArtifactBodyRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Get ArtifactIds for nexus
+ */
+export const ArtifactIds = (props: ArtifactIdsProps) => (
+  <Mutate<ResponseListString, Failure | Error, ArtifactIdsQueryParams, ListTagsForAMIArtifactBodyRequestBody, void>
+    verb="POST"
+    path={`/artifacts/nexus/artifactIds`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseArtifactIdsProps = Omit<
+  UseMutateProps<
+    ResponseListString,
+    Failure | Error,
+    ArtifactIdsQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get ArtifactIds for nexus
+ */
+export const useArtifactIds = (props: UseArtifactIdsProps) =>
+  useMutate<ResponseListString, Failure | Error, ArtifactIdsQueryParams, ListTagsForAMIArtifactBodyRequestBody, void>(
+    'POST',
+    `/artifacts/nexus/artifactIds`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get ArtifactIds for nexus
+ */
+export const artifactIdsPromise = (
+  props: MutateUsingFetchProps<
+    ResponseListString,
+    Failure | Error,
+    ArtifactIdsQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseListString,
+    Failure | Error,
+    ArtifactIdsQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/nexus/artifactIds`, props, signal)
+
 export interface GetBuildDetailsForNexusArtifactQueryParams {
   repository?: string
   repositoryPort?: string
@@ -26909,6 +27123,86 @@ export const getRepositoriesPromise = (
     ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/nexus/getRepositories`, props, signal)
+
+export interface GetGroupIdsQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  repositoryFormat?: string
+  repository?: string
+  fqnPath?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  serviceId?: string
+}
+
+export type GetGroupIdsProps = Omit<
+  MutateProps<ResponseListString, Failure | Error, GetGroupIdsQueryParams, ListTagsForAMIArtifactBodyRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Get GroupIds for nexus
+ */
+export const GetGroupIds = (props: GetGroupIdsProps) => (
+  <Mutate<ResponseListString, Failure | Error, GetGroupIdsQueryParams, ListTagsForAMIArtifactBodyRequestBody, void>
+    verb="POST"
+    path={`/artifacts/nexus/groupIds`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetGroupIdsProps = Omit<
+  UseMutateProps<
+    ResponseListString,
+    Failure | Error,
+    GetGroupIdsQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get GroupIds for nexus
+ */
+export const useGetGroupIds = (props: UseGetGroupIdsProps) =>
+  useMutate<ResponseListString, Failure | Error, GetGroupIdsQueryParams, ListTagsForAMIArtifactBodyRequestBody, void>(
+    'POST',
+    `/artifacts/nexus/groupIds`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get GroupIds for nexus
+ */
+export const getGroupIdsPromise = (
+  props: MutateUsingFetchProps<
+    ResponseListString,
+    Failure | Error,
+    GetGroupIdsQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseListString,
+    Failure | Error,
+    GetGroupIdsQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/nexus/groupIds`, props, signal)
 
 export interface ValidateArtifactServerForNexusQueryParams {
   connectorRef?: string
@@ -31371,6 +31665,40 @@ export const getConnectorPromise = (
     signal
   )
 
+export type CreateCreditsProps = Omit<MutateProps<RestResponseVoid, Failure | Error, void, void, void>, 'path' | 'verb'>
+
+export const CreateCredits = (props: CreateCreditsProps) => (
+  <Mutate<RestResponseVoid, Failure | Error, void, void, void>
+    verb="POST"
+    path={`/credits/create`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateCreditsProps = Omit<
+  UseMutateProps<RestResponseVoid, Failure | Error, void, void, void>,
+  'path' | 'verb'
+>
+
+export const useCreateCredits = (props: UseCreateCreditsProps) =>
+  useMutate<RestResponseVoid, Failure | Error, void, void, void>('POST', `/credits/create`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+export const createCreditsPromise = (
+  props: MutateUsingFetchProps<RestResponseVoid, Failure | Error, void, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseVoid, Failure | Error, void, void, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/credits/create`,
+    props,
+    signal
+  )
+
 export type GetCustomDeploymentExpressionVariablesProps = Omit<
   MutateProps<
     ResponseCustomDeploymentVariableResponse,
@@ -33113,6 +33441,68 @@ export const getOpenTasksPromise = (
   getUsingFetch<ResponseOpenTaskDetails, Failure | Error, GetOpenTasksQueryParams, void>(
     getConfig('ng/api'),
     `/dashboard/getOpenTasks`,
+    props,
+    signal
+  )
+
+export interface GetPipelineExecutionCountQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceId?: string
+  startTime?: number
+  endTime?: number
+  artifactPath?: string
+  artifactVersion?: string
+  artifact?: string
+  status?: string
+}
+
+export type GetPipelineExecutionCountProps = Omit<
+  GetProps<ResponsePipelineExecutionCountInfo, Failure | Error, GetPipelineExecutionCountQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get pipeline execution count for a service grouped on artifact and status
+ */
+export const GetPipelineExecutionCount = (props: GetPipelineExecutionCountProps) => (
+  <Get<ResponsePipelineExecutionCountInfo, Failure | Error, GetPipelineExecutionCountQueryParams, void>
+    path={`/dashboard/getPipelineExecutionCount`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetPipelineExecutionCountProps = Omit<
+  UseGetProps<ResponsePipelineExecutionCountInfo, Failure | Error, GetPipelineExecutionCountQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get pipeline execution count for a service grouped on artifact and status
+ */
+export const useGetPipelineExecutionCount = (props: UseGetPipelineExecutionCountProps) =>
+  useGet<ResponsePipelineExecutionCountInfo, Failure | Error, GetPipelineExecutionCountQueryParams, void>(
+    `/dashboard/getPipelineExecutionCount`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get pipeline execution count for a service grouped on artifact and status
+ */
+export const getPipelineExecutionCountPromise = (
+  props: GetUsingFetchProps<
+    ResponsePipelineExecutionCountInfo,
+    Failure | Error,
+    GetPipelineExecutionCountQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePipelineExecutionCountInfo, Failure | Error, GetPipelineExecutionCountQueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/getPipelineExecutionCount`,
     props,
     signal
   )
@@ -35806,6 +36196,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -36069,6 +36460,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   searchTerm?: string
 }
 
@@ -39543,6 +39935,7 @@ export interface GetReferencedByQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   searchTerm?: string
 }
 
@@ -42219,6 +42612,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -42489,6 +42883,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'BambooBuild'
       | 'CdSscaOrchestration'
       | 'TasRouteMapping'
+      | 'AWSSecurityHub'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -48691,6 +49086,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   yamlGroup?: string
 }
 
@@ -49021,6 +49417,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -53970,60 +54367,6 @@ export const updateServiceV2Promise = (
     void
   >('PUT', getConfig('ng/api'), `/servicesV2`, props, signal)
 
-export interface GetAllServicesListQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  searchTerm?: string
-  page?: number
-  size?: number
-  sort?: string[]
-}
-
-export type GetAllServicesListProps = Omit<
-  GetProps<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>,
-  'path'
->
-
-/**
- * Get all services list
- */
-export const GetAllServicesList = (props: GetAllServicesListProps) => (
-  <Get<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>
-    path={`/servicesV2/all-services`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetAllServicesListProps = Omit<
-  UseGetProps<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>,
-  'path'
->
-
-/**
- * Get all services list
- */
-export const useGetAllServicesList = (props: UseGetAllServicesListProps) =>
-  useGet<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>(
-    `/servicesV2/all-services`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Get all services list
- */
-export const getAllServicesListPromise = (
-  props: GetUsingFetchProps<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>(
-    getConfig('ng/api'),
-    `/servicesV2/all-services`,
-    props,
-    signal
-  )
-
 export interface GetArtifactSourceTemplateEntityReferencesQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -54393,6 +54736,54 @@ export const dummyNGServiceConfigApiPromise = (
     signal
   )
 
+export interface HookActionsQueryParams {
+  serviceSpecType: string
+}
+
+export type HookActionsProps = Omit<
+  GetProps<ResponseSetServiceHookAction, Failure | Error, HookActionsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Available Service Hook Actions
+ */
+export const HookActions = (props: HookActionsProps) => (
+  <Get<ResponseSetServiceHookAction, Failure | Error, HookActionsQueryParams, void>
+    path={`/servicesV2/hooks/actions`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseHookActionsProps = Omit<
+  UseGetProps<ResponseSetServiceHookAction, Failure | Error, HookActionsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Available Service Hook Actions
+ */
+export const useHookActions = (props: UseHookActionsProps) =>
+  useGet<ResponseSetServiceHookAction, Failure | Error, HookActionsQueryParams, void>(`/servicesV2/hooks/actions`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get Available Service Hook Actions
+ */
+export const hookActionsPromise = (
+  props: GetUsingFetchProps<ResponseSetServiceHookAction, Failure | Error, HookActionsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseSetServiceHookAction, Failure | Error, HookActionsQueryParams, void>(
+    getConfig('ng/api'),
+    `/servicesV2/hooks/actions`,
+    props,
+    signal
+  )
+
 export interface K8sCmdFlagsQueryParams {
   serviceSpecType: string
 }
@@ -54510,6 +54901,60 @@ export const getServiceAccessListPromise = (
   getUsingFetch<ResponseListServiceResponse, Failure | Error, GetServiceAccessListQueryParams, void>(
     getConfig('ng/api'),
     `/servicesV2/list/access`,
+    props,
+    signal
+  )
+
+export interface GetAllServicesListQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  searchTerm?: string
+  page?: number
+  size?: number
+  sort?: string[]
+}
+
+export type GetAllServicesListProps = Omit<
+  GetProps<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all services list
+ */
+export const GetAllServicesList = (props: GetAllServicesListProps) => (
+  <Get<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>
+    path={`/servicesV2/list/all-services`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetAllServicesListProps = Omit<
+  UseGetProps<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all services list
+ */
+export const useGetAllServicesList = (props: UseGetAllServicesListProps) =>
+  useGet<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>(
+    `/servicesV2/list/all-services`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get all services list
+ */
+export const getAllServicesListPromise = (
+  props: GetUsingFetchProps<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>(
+    getConfig('ng/api'),
+    `/servicesV2/list/all-services`,
     props,
     signal
   )
@@ -57291,6 +57736,55 @@ export const getTerraformCloudWorkspacesPromise = (
   getUsingFetch<ResponseWorkspacesDTO, Failure | Error, GetTerraformCloudWorkspacesQueryParams, void>(
     getConfig('ng/api'),
     `/terraform-cloud/workspaces`,
+    props,
+    signal
+  )
+
+export interface TerraformCmdFlagsQueryParams {
+  stepType: string
+  configType: string
+}
+
+export type TerraformCmdFlagsProps = Omit<
+  GetProps<ResponseSetTerraformCommandFlagType, Failure | Error, TerraformCmdFlagsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Command flags based on terraform Step Type and Config Type
+ */
+export const TerraformCmdFlags = (props: TerraformCmdFlagsProps) => (
+  <Get<ResponseSetTerraformCommandFlagType, Failure | Error, TerraformCmdFlagsQueryParams, void>
+    path={`/terraform/terraformCmdFlags`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseTerraformCmdFlagsProps = Omit<
+  UseGetProps<ResponseSetTerraformCommandFlagType, Failure | Error, TerraformCmdFlagsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Command flags based on terraform Step Type and Config Type
+ */
+export const useTerraformCmdFlags = (props: UseTerraformCmdFlagsProps) =>
+  useGet<ResponseSetTerraformCommandFlagType, Failure | Error, TerraformCmdFlagsQueryParams, void>(
+    `/terraform/terraformCmdFlags`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get Command flags based on terraform Step Type and Config Type
+ */
+export const terraformCmdFlagsPromise = (
+  props: GetUsingFetchProps<ResponseSetTerraformCommandFlagType, Failure | Error, TerraformCmdFlagsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseSetTerraformCommandFlagType, Failure | Error, TerraformCmdFlagsQueryParams, void>(
+    getConfig('ng/api'),
+    `/terraform/terraformCmdFlags`,
     props,
     signal
   )
@@ -63135,6 +63629,7 @@ export interface GetYamlSchemaQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
   subtype?:
     | 'K8sCluster'
     | 'Git'

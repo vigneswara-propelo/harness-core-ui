@@ -42,6 +42,7 @@ describe('Test AppResizeStep', () => {
           identifier: 'App_Resize_Step',
           spec: {
             timeout: RUNTIME_INPUT_VALUE,
+            ignoreInstanceCountManifest: RUNTIME_INPUT_VALUE,
             newAppInstances: {
               type: InstanceTypes.Count,
               spec: { value: RUNTIME_INPUT_VALUE }
@@ -67,6 +68,7 @@ describe('Test AppResizeStep', () => {
           type: 'AppResize',
           spec: {
             timeout: RUNTIME_INPUT_VALUE,
+            ignoreInstanceCountManifest: RUNTIME_INPUT_VALUE,
             newAppInstances: {
               type: InstanceTypes.Count,
               spec: { value: RUNTIME_INPUT_VALUE }
@@ -83,6 +85,7 @@ describe('Test AppResizeStep', () => {
           identifier: 'App_Resize_Step',
           spec: {
             timeout: RUNTIME_INPUT_VALUE,
+            ignoreInstanceCountManifest: RUNTIME_INPUT_VALUE,
             newAppInstances: {
               type: InstanceTypes.Count,
               spec: { value: RUNTIME_INPUT_VALUE }
@@ -108,6 +111,7 @@ describe('Test AppResizeStep', () => {
           type: 'AppResize',
           spec: {
             timeout: '10m',
+            ignoreInstanceCountManifest: false,
             newAppInstances: { type: InstanceTypes.Count, spec: { value: 15 } },
             oldAppInstances: { type: InstanceTypes.Count, spec: { value: 15 } }
           }
@@ -127,6 +131,7 @@ describe('Test AppResizeStep', () => {
           type: 'AppResize',
           spec: {
             timeout: '10m',
+            ignoreInstanceCountManifest: false,
             newAppInstances: { type: InstanceTypes.Count, spec: { value: 15 } },
             oldAppInstances: { type: InstanceTypes.Count, spec: { value: 0 } }
           }
@@ -148,6 +153,7 @@ describe('Test AppResizeStep', () => {
           type: 'AppResize',
           timeout: '10m',
           spec: {
+            ignoreInstanceCountManifest: true,
             newAppInstances: { spec: { value: 15 }, type: InstanceTypes.Count },
             oldAppInstances: { spec: { value: 15 }, type: InstanceTypes.Count }
           },
@@ -167,6 +173,7 @@ describe('Test AppResizeStep', () => {
         identifier: 'App_Resize_Step',
         name: 'App Resize Step',
         spec: {
+          ignoreInstanceCountManifest: true,
           newAppInstances: {
             spec: { value: 15 },
             type: InstanceTypes.Count
@@ -193,6 +200,7 @@ describe('Test AppResizeStep', () => {
           type: 'AppResize',
           timeout: '10m',
           spec: {
+            ignoreInstanceCountManifest: false,
             newAppInstances: {
               spec: { value: 20 },
               type: InstanceTypes.Percentage
@@ -218,6 +226,7 @@ describe('Test AppResizeStep', () => {
         identifier: 'App_Resize_Step',
         name: 'App Resize Step',
         spec: {
+          ignoreInstanceCountManifest: false,
           newAppInstances: {
             spec: { value: 20 },
             type: InstanceTypes.Percentage
@@ -246,6 +255,7 @@ describe('Test AppResizeStep', () => {
           name: 'App Resize Step',
           timeout: '10m',
           spec: {
+            ignoreInstanceCountManifest: false,
             newAppInstances: {
               spec: { value: 10 },
               type: InstanceTypes.Percentage
@@ -270,6 +280,7 @@ describe('Test AppResizeStep', () => {
         identifier: 'App_Resize_Step',
         name: 'App Resize Step',
         spec: {
+          ignoreInstanceCountManifest: false,
           newAppInstances: {
             spec: { value: 10 },
             type: InstanceTypes.Percentage
@@ -296,6 +307,7 @@ describe('Test AppResizeStep', () => {
           name: 'App Resize Step',
           timeout: '10m',
           spec: {
+            ignoreInstanceCountManifest: false,
             newAppInstances: {
               spec: { value: 10 },
               type: InstanceTypes.Count
@@ -320,6 +332,7 @@ describe('Test AppResizeStep', () => {
         identifier: 'App_Resize_Step',
         name: 'App Resize Step',
         spec: {
+          ignoreInstanceCountManifest: false,
           newAppInstances: {
             spec: { value: 10 },
             type: InstanceTypes.Count
@@ -343,6 +356,7 @@ describe('Test AppResizeStep', () => {
           identifier: 'App_Resize_Step',
           name: 'App Resize Step',
           spec: {
+            ignoreInstanceCountManifest: false,
             newAppInstances: {
               spec: { value: 10 },
               type: InstanceTypes.Percentage
@@ -378,6 +392,7 @@ describe('Test AppResizeStep', () => {
             identifier: 'App_Resize_Step',
             name: 'step-name',
             spec: {
+              ignoreInstanceCountManifest: false,
               newAppInstances: {
                 spec: {
                   percentage: 10
@@ -418,7 +433,7 @@ describe('Test AppResizeStep', () => {
           type: 'AppResize',
           timeout: RUNTIME_INPUT_VALUE,
           spec: {
-            skipDryRun: RUNTIME_INPUT_VALUE,
+            ignoreInstanceCountManifest: RUNTIME_INPUT_VALUE,
             newAppInstances: {
               spec: { value: RUNTIME_INPUT_VALUE },
               type: InstanceTypes.Percentage
@@ -443,6 +458,7 @@ describe('Test AppResizeStep', () => {
         timeout: '1s',
         type: 'AppResize',
         spec: {
+          ignoreInstanceCountManifest: false,
           newAppInstances: {
             spec: { value: '10' },
             type: InstanceTypes.Percentage
@@ -459,6 +475,7 @@ describe('Test AppResizeStep', () => {
         type: 'AppResize',
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
+          ignoreInstanceCountManifest: false,
           newAppInstances: {
             spec: { value: RUNTIME_INPUT_VALUE },
             type: InstanceTypes.Percentage
@@ -488,6 +505,7 @@ describe('Test AppResizeStep', () => {
         type: 'AppResize',
         spec: {
           timeout: '1s',
+          ignoreInstanceCountManifest: false,
           newAppInstances: {
             spec: { value: RUNTIME_INPUT_VALUE },
             type: InstanceTypes.Count
@@ -596,6 +614,7 @@ describe('Test AppResizeStep', () => {
           name: 'App Resize Step',
           timeout: '10m',
           spec: {
+            ignoreInstanceCountManifest: false,
             newAppInstances: {
               spec: { value: '' },
               type: InstanceTypes.Percentage
@@ -637,6 +656,7 @@ describe('Test AppResizeStep', () => {
         identifier: 'App_Resize_Step',
         name: 'App Resize Step',
         spec: {
+          ignoreInstanceCountManifest: false,
           newAppInstances: {
             spec: { value: 1 },
             type: InstanceTypes.Count

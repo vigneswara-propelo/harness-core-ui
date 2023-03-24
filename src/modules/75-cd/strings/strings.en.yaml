@@ -138,6 +138,7 @@ steps:
     enableDownSizeOldApplication: Downsize Old Applications
     enableUpsizeInActiveApp: Upsize Applications in Active App
     upsizeInactiveService: Upsize inactive Service
+    ignoreInstanceCountManifest: Ignore instance count in Manifest
     totalInstances: Total Instances
     oldAppInstances: Desired Instances - Old Version
     newAppInstance: New App Instance

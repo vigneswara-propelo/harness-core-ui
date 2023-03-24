@@ -41,6 +41,7 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StringsMap } from 'stringTypes'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { FormMultiTypeCheckboxField } from '@common/components'
 import { FormInstanceDropdown, getInstanceDropdownSchema, InstanceTypes } from './InstanceDropdownField'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
@@ -156,6 +157,14 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
                 />
               </div>
               <div className={stepCss.divider} />
+              <div className={stepCss.formGroup}>
+                <FormMultiTypeCheckboxField
+                  multiTypeTextbox={{ expressions, allowableTypes }}
+                  name="spec.ignoreInstanceCountManifest"
+                  label={getString('cd.steps.tas.ignoreInstanceCountManifest')}
+                  disabled={readonly}
+                />
+              </div>
               <div className={cx(stepCss.formGroup)}>
                 <FormInstanceDropdown
                   name={'spec.newAppInstances'}
@@ -246,6 +255,20 @@ const AppResizeInputStep: React.FC<AppResizeProps> = ({
           />
         </div>
       ) : null}
+      {getMultiTypeFromValue(template?.spec?.ignoreInstanceCountManifest) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes: allowableTypes
+            }}
+            name={`${prefix}spec.ignoreInstanceCountManifest`}
+            label={getString('cd.steps.tas.ignoreInstanceCountManifest')}
+            disabled={readonly}
+            setToFalseWhenEmpty={true}
+          />
+        </div>
+      )}
       {getMultiTypeFromValue(template?.spec?.newAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, { [stepCss.md]: !isTemplateUsageView })}>
           <FormInstanceDropdown
@@ -310,6 +333,7 @@ export class AppResizeStep extends PipelineStep<AppResizeData> {
     name: '',
     type: StepType.AppResize,
     spec: {
+      ignoreInstanceCountManifest: false,
       newAppInstances: {
         type: InstanceTypes.Percentage,
         spec: { value: '100' }
