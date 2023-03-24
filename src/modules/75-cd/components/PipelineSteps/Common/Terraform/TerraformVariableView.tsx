@@ -21,7 +21,8 @@ export function TerraformVariableStep(props: TerraformVariableStepProps): React.
   const { getString } = useStrings()
   const initialValuesSpec = get(initialValues?.spec, `${fieldPath}`)
   const variablesDataSpec = get(variablesData?.spec, `${fieldPath}`)
-  if (initialValuesSpec?.type === 'Inline') {
+
+  if (initialValuesSpec?.type === 'Inline' || initialValues?.spec?.cloudCliConfiguration) {
     return (
       <>
         <VariablesListTable

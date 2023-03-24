@@ -824,34 +824,36 @@ function TerragruntPlanWidget(
                           disabled={readonly}
                         />
                       </div>
-                      <div className={cx(stepCss.formGroup, css.addMarginTop)}>
-                        <FormMultiTypeCheckboxField
-                          formik={formik as FormikProps<unknown>}
-                          name={'spec.configuration.exportTerragruntPlanJson'}
-                          label={getString('cd.exportTerragruntPlanJson')}
-                          multiTypeTextbox={{ expressions, allowableTypes }}
-                          disabled={readonly}
-                        />
-                        {
-                          /* istanbul ignore next */ getMultiTypeFromValue(
-                            values.spec.configuration?.exportTerragruntPlanJson
-                          ) === MultiTypeInputType.RUNTIME && (
-                            <ConfigureOptions
-                              value={(values.spec.configuration?.exportTerragruntPlanJson || '') as string}
-                              type="String"
-                              variableName="spec?.configuration?.exportTerragruntPlanJson"
-                              showRequiredField={false}
-                              showDefaultField={false}
-                              onChange={
-                                /* istanbul ignore next */ value =>
-                                  formik.setFieldValue('spec?.configuration?.exportTerragruntPlanJson', value)
-                              }
-                              style={{ alignSelf: 'center' }}
-                              isReadonly={readonly}
-                            />
-                          )
-                        }
-                      </div>
+                      {values?.spec?.configuration?.moduleConfig?.terragruntRunType === 'RunAll' && (
+                        <div className={cx(stepCss.formGroup, css.addMarginTop)}>
+                          <FormMultiTypeCheckboxField
+                            formik={formik as FormikProps<unknown>}
+                            name={'spec.configuration.exportTerragruntPlanJson'}
+                            label={getString('cd.exportTerragruntPlanJson')}
+                            multiTypeTextbox={{ expressions, allowableTypes }}
+                            disabled={readonly}
+                          />
+                          {
+                            /* istanbul ignore next */ getMultiTypeFromValue(
+                              values.spec.configuration?.exportTerragruntPlanJson
+                            ) === MultiTypeInputType.RUNTIME && (
+                              <ConfigureOptions
+                                value={(values.spec.configuration?.exportTerragruntPlanJson || '') as string}
+                                type="String"
+                                variableName="spec?.configuration?.exportTerragruntPlanJson"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                onChange={
+                                  /* istanbul ignore next */ value =>
+                                    formik.setFieldValue('spec?.configuration?.exportTerragruntPlanJson', value)
+                                }
+                                style={{ alignSelf: 'center' }}
+                                isReadonly={readonly}
+                              />
+                            )
+                          }
+                        </div>
+                      )}
                     </>
                   }
                 />

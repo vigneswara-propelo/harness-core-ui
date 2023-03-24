@@ -96,7 +96,7 @@ export class TerraformApply extends PipelineStep<TerraformData> {
   processFormData(data: any): TerraformData {
     return onSubmitTerraformData(data)
   }
-  renderStep(props: StepProps<TerraformData, unknown>): JSX.Element {
+  renderStep(props: StepProps<TerraformData, TerraformVariableStepProps>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -130,6 +130,9 @@ export class TerraformApply extends PipelineStep<TerraformData> {
           {...(customStepProps as TerraformVariableStepProps)}
           initialValues={initialValues}
           onUpdate={data => onUpdate?.(this.processFormData(data))}
+          fieldPath={
+            customStepProps?.variablesData?.spec?.cloudCliConfiguration ? 'cloudCliConfiguration' : 'configuration'
+          }
         />
       )
     }
