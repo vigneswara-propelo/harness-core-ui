@@ -25,7 +25,7 @@ import {
   Label
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { getErrorMessage, prepareFilterInfo } from '@cv/utils/CommonUtils'
+import { getEnvironmentOptions, getErrorMessage, prepareFilterInfo } from '@cv/utils/CommonUtils'
 import noServiceAvailableImage from '@cv/assets/noMonitoredServices.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -37,7 +37,6 @@ import {
 import { useStrings } from 'framework/strings'
 import { DowntimeFormFields } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types'
 import {
-  getEnvironmentOptions,
   getIsIntermediate,
   getIsSelectAllChecked,
   getMonitoredServiceDetail,
@@ -230,7 +229,11 @@ const MSList = ({ onAddMS, hideDrawer, msList }: MSListProps): JSX.Element => {
             <Label>{getString('environment').replace(/'/g, '')}</Label>
             <MultiSelect
               value={environmentOptions}
-              items={getEnvironmentOptions(environmentDataList, loadingEnvironments, getString)}
+              items={getEnvironmentOptions({
+                environmentList: environmentDataList,
+                loading: loadingEnvironments,
+                getString
+              })}
               placeholder={getString('all')}
               onChange={item => {
                 setEnvironmentOptions(item)

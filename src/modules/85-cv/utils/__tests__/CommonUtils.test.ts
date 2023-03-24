@@ -21,12 +21,15 @@ import {
   SLOErrorBudget,
   getDetailsLabel,
   getRiskLabelStringId,
-  getMonitoredServiceIdentifiers
+  getMonitoredServiceIdentifiers,
+  getEnvironmentOptions
 } from '../CommonUtils'
 import {
   monitoredServiceDetails,
   projectLevelMonitoredServiceIdentifier,
-  accountLevelMonitoredServiceIdentifier
+  accountLevelMonitoredServiceIdentifier,
+  scopedEnvironmentDataList,
+  scopedEnvOption
 } from './CommonUtils.mock'
 
 function getString(key: StringKeys): StringKeys {
@@ -205,5 +208,29 @@ describe('Test for getMonitoredServiceIdentifiers', () => {
     expect(getMonitoredServiceIdentifiers(true, monitoredServiceDetails)).toEqual(
       accountLevelMonitoredServiceIdentifier
     )
+  })
+
+  test('should validate getEnvironmentOptions', () => {
+    const loadingOptions = getEnvironmentOptions({
+      environmentList: null,
+      loading: true,
+      getString: str => str,
+      returnAll: false
+    })
+    expect(loadingOptions).toEqual([{ label: 'loading', value: 'loading' }])
+    const envOptions = getEnvironmentOptions({
+      environmentList: scopedEnvironmentDataList,
+      loading: false,
+      getString: str => str,
+      returnAll: false
+    })
+    expect(envOptions).toEqual(scopedEnvOption)
+    const envOptionsWithAll = getEnvironmentOptions({
+      environmentList: scopedEnvironmentDataList,
+      loading: false,
+      getString: str => str,
+      returnAll: true
+    })
+    expect(envOptionsWithAll).toEqual([{ label: 'all', value: 'all' }, ...scopedEnvOption])
   })
 })

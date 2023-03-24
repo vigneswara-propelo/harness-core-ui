@@ -22,6 +22,7 @@ import type { MonitoredServiceEnum } from '@cv/pages/monitored-service/Monitored
 import type { AnalysedDeploymentNode, CVNGLogTag, MonitoredServiceDetail, SloHealthIndicatorDTO } from 'services/cv'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 
 export enum EVENT_TYPE {
   KNOWN = 'KNOWN',
@@ -156,11 +157,19 @@ export function getErrorMessage(errorObj?: any): string | undefined {
   return get(errorObj, 'message')
 }
 
-export const getEnvironmentOptions = (
-  environmentList: ResponseListEnvironmentResponse | null,
-  loading: boolean,
+interface GetEnvironmentOptionsProps {
+  environmentList: ResponseListEnvironmentResponse | null
+  loading: boolean
   getString: UseStringsReturn['getString']
-): SelectOption[] => {
+  returnAll?: boolean
+}
+
+export const getEnvironmentOptions = ({
+  environmentList,
+  loading,
+  getString,
+  returnAll = false
+}: GetEnvironmentOptionsProps): SelectOption[] => {
   if (loading) {
     return [{ label: getString('loading'), value: 'loading' }]
   }
@@ -169,12 +178,13 @@ export const getEnvironmentOptions = (
     const environmentSelectOption: SelectOption[] =
       environmentList?.data?.map((environmentData: EnvironmentResponse) => {
         const { name = '', identifier = '' } = environmentData?.environment || {}
+        const scopedIdentifier = getScopedValueFromDTO(environmentData?.environment || {})
         return {
           label: name,
-          value: identifier
+          value: scopedIdentifier || identifier
         }
       }) || []
-    return [allOption, ...environmentSelectOption]
+    return returnAll ? [allOption, ...environmentSelectOption] : environmentSelectOption
   }
   return []
 }

@@ -6,16 +6,10 @@
  */
 
 import React from 'react'
-import { Checkbox, MultiSelectOption, Text } from '@harness/uicore'
+import { Checkbox, Text } from '@harness/uicore'
 import type { CellProps, Renderer, Row } from 'react-table'
 import { isEmpty } from 'lodash-es'
-import type {
-  EnvironmentResponse,
-  MonitoredServiceDetail,
-  MonitoredServiceListItemDTO,
-  ResponseListEnvironmentResponse
-} from 'services/cv'
-import type { UseStringsReturn } from 'framework/strings'
+import type { MonitoredServiceDetail, MonitoredServiceListItemDTO } from 'services/cv'
 
 export const getMonitoredServiceDetail = (msListItemDTO: MonitoredServiceListItemDTO): MonitoredServiceDetail => {
   const { identifier, name, serviceName, serviceRef, environmentName, environmentRef } = msListItemDTO
@@ -27,27 +21,6 @@ export const getMonitoredServiceDetail = (msListItemDTO: MonitoredServiceListIte
     environmentName,
     environmentIdentifier: environmentRef
   }
-}
-
-export const getEnvironmentOptions = (
-  environmentDataList: ResponseListEnvironmentResponse | null,
-  loading: boolean,
-  getString: UseStringsReturn['getString']
-): MultiSelectOption[] => {
-  if (loading) {
-    return [{ label: getString('loading'), value: 'loading' }]
-  }
-  if (environmentDataList?.data?.length) {
-    const environmentSelectOption = environmentDataList?.data?.map((environmentData: EnvironmentResponse) => {
-      const { name = '', identifier = '' } = environmentData?.environment || {}
-      return {
-        label: name,
-        value: identifier
-      }
-    })
-    return environmentSelectOption
-  }
-  return []
 }
 
 export const RenderMSName: Renderer<CellProps<MonitoredServiceListItemDTO>> = ({ row }) => {

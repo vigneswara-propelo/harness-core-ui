@@ -192,7 +192,12 @@ const MonitoredService: React.FC = () => {
                 value: defaultTo(environment?.value, getString('all'))
               }}
               defaultSelectedItem={{ label: getString('all'), value: getString('all') }}
-              items={getEnvironmentOptions(environmentDataList, loadingEnvironments, getString)}
+              items={getEnvironmentOptions({
+                environmentList: environmentDataList,
+                loading: loadingEnvironments,
+                getString,
+                returnAll: true
+              })}
               onChange={item => {
                 setPage(0)
                 setEnvironment(item)
