@@ -7,7 +7,6 @@
 
 import React, { useEffect } from 'react'
 import { Route, useHistory, useParams } from 'react-router-dom'
-import { Container } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import { RouteWithLayout } from '@common/router'
@@ -15,14 +14,13 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
 import type { GovernancePathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { String } from 'framework/strings'
-import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { AuditEventData, ResourceDTO } from 'services/audit'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-import { GovernanceRemoteComponentMounter } from './GovernanceApp'
+import PolicyManagementMFE from './GovernanceApp'
 
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
@@ -131,13 +129,7 @@ export const GovernanceRouteDestinations: React.FC<{
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.OPAPolicyDashboard}
       >
-        <GovernanceRemoteComponentMounter
-          spinner={
-            <Container height="100%" flex={{ align: 'center-center' }}>
-              <ContainerSpinner />
-            </Container>
-          }
-        />
+        <PolicyManagementMFE />
       </RouteWithLayout>
     </Route>
   )

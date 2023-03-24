@@ -8,18 +8,15 @@
 /* eslint-disable jest-no-mock */
 import { renderHook } from '@testing-library/react-hooks'
 import React, { FC } from 'react'
-import { ModalProvider } from '@harness/use-modal'
+import { TestWrapper } from '@common/utils/testUtils'
 import { useGovernance } from '../useGovernance'
 
 jest.mock('services/cf')
 jest.mock('@common/hooks/useFeatureFlag')
-jest.mock('react-router-dom', () => ({
-  useParams: () => jest.fn()
-}))
 
 const renderHookUnderTest = () => {
   const wrapper: FC = ({ children }) => {
-    return <ModalProvider>{children}</ModalProvider>
+    return <TestWrapper>{children}</TestWrapper>
   }
   return renderHook(() => useGovernance(), { wrapper })
 }

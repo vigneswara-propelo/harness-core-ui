@@ -20,8 +20,8 @@ import {
   inProgressValidationResult
 } from './mock'
 
-mockImport('@governance/EvaluationView', {
-  EvaluationView: () => <p>Evaluation View</p>
+mockImport('@governance/PolicyManagementEvaluationView', {
+  PolicyManagementEvaluationView: () => <p>Evaluation View</p>
 })
 
 const renderValidationBadge = (): RenderResult => {

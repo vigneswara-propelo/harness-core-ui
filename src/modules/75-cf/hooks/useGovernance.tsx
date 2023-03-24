@@ -8,7 +8,7 @@
 import { useParams } from 'react-router-dom'
 import React, { useState } from 'react'
 import { useModalHook } from '@harness/use-modal'
-import { EvaluationModal } from '@governance/EvaluationModal'
+import { PolicyManagementEvaluationModal } from '@governance/PolicyManagementEvaluationModal'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 
@@ -39,7 +39,7 @@ export const useGovernance = (): UseGovernancePayload => {
 
   const [showErrorModal, hideErrorModal] = useModalHook(
     () => (
-      <EvaluationModal
+      <PolicyManagementEvaluationModal
         accountId={accountIdentifier}
         key={governanceError.id}
         module="cf"

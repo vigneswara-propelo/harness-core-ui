@@ -22,7 +22,7 @@ import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/P
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
-import { EvaluationModal } from '@governance/EvaluationModal'
+import { PolicyManagementEvaluationModal } from '@governance/PolicyManagementEvaluationModal'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
@@ -64,7 +64,7 @@ const FFUIApp: FC = () => (
     customComponents={{
       ContainerSpinner,
       Description,
-      EvaluationModal,
+      EvaluationModal: PolicyManagementEvaluationModal,
       FeatureWarningTooltip,
       GitSyncForm,
       MarkdownViewer,

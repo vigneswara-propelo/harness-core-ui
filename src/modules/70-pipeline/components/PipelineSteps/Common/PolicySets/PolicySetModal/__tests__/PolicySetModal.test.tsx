@@ -23,8 +23,8 @@ jest.mock('@common/exports', () => ({
   })
 }))
 
-jest.mock('@governance/PolicySetWizard', () => ({
-  PolicySetWizard: () => <div>Policy Set Wizard Mock</div>
+jest.mock('@governance/GovernanceApp', () => ({
+  PolicyManagementPolicySetWizard: () => <div>Policy Set Wizard Mock</div>
 }))
 
 jest.mock('services/pm', () => ({

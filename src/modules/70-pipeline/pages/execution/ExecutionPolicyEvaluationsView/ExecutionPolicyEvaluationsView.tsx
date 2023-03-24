@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Container } from '@harness/uicore'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
-import { EvaluationView } from '@governance/EvaluationView'
+import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 
 export default function ExecutionPolicyEvaluationsView(): React.ReactElement | null {
   const { accountId, module } = useParams<PipelineType<ExecutionPathProps>>()
@@ -23,7 +23,7 @@ export default function ExecutionPolicyEvaluationsView(): React.ReactElement | n
 
   return (
     <Container width="100%" height="100%">
-      <EvaluationView metadata={governanceMetadata} accountId={accountId} module={module} />
+      <PolicyManagementEvaluationView metadata={governanceMetadata} accountId={accountId} module={module} />
     </Container>
   )
 }

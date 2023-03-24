@@ -46,7 +46,7 @@ import type { GovernanceMetadata, PipelineInfoConfig } from 'services/pipeline-n
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { AccessControlCheckError } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { EvaluationView } from '@governance/EvaluationView'
+import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import type { SaveToGitFormV2Interface } from '@common/components/SaveToGitFormV2/SaveToGitFormV2'
 import { SCHEMA_VALIDATION_FAILED } from '@common/interfaces/GitSyncInterface'
 import type { Pipeline } from '@pipeline/utils/types'
@@ -122,7 +122,7 @@ function SavePipelinePopoverV1(
         enforceFocus={false}
         className={css.policyEvaluationDialog}
       >
-        <EvaluationView
+        <PolicyManagementEvaluationView
           metadata={governanceMetadata}
           accountId={accountId}
           module={module}

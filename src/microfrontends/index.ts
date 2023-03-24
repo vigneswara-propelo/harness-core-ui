@@ -49,6 +49,7 @@ import type { getLocationPathName } from 'framework/utils/WindowLocation'
 import type { IACMCustomMicroFrontendProps } from '@iacm/interfaces/IACMCustomMicroFrontendProps.types'
 import type { SSCACustomMicroFrontendProps } from '@ssca/interfaces/SSCACustomMicroFrontendProps.types'
 import type { IDPCustomMicroFrontendProps } from '@idp/interfaces/IDPCustomMicroFrontendProps.types'
+import type { GovernanceCustomMicroFrontendProps } from '@governance/GovernanceCustomMicroFrontendProps.types'
 
 export interface Scope {
   accountId?: string
@@ -127,5 +128,6 @@ export {
   FFCustomMicroFrontendProps,
   IACMCustomMicroFrontendProps,
   SSCACustomMicroFrontendProps,
-  IDPCustomMicroFrontendProps
+  IDPCustomMicroFrontendProps,
+  GovernanceCustomMicroFrontendProps
 }

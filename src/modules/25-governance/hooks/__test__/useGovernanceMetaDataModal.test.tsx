@@ -14,8 +14,8 @@ import mockImport from 'framework/utils/mockImport'
 import { doesGovernanceHasErrorOrWarning } from '@governance/utils'
 import { useGovernanceMetaDataModal } from '../useGovernanceMetaDataModal'
 import governanceMetaData from './useGovernanceMetaDataModalData.json'
-mockImport('@governance/EvaluationView', {
-  EvaluationView: jest.fn().mockImplementation(() => <div>governance dialog</div>)
+mockImport('@governance/PolicyManagementEvaluationView', {
+  PolicyManagementEvaluationView: jest.fn().mockImplementation(() => <div>governance dialog</div>)
 })
 jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(() => {
   return true

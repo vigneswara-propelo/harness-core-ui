@@ -29,7 +29,7 @@ import type {
 } from '@pipeline/utils/pipelineTypes'
 import type { DependencyElement } from 'services/ci'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
-import { PipelineGovernanceView } from '@governance/PipelineGovernanceView'
+import { PolicyManagementPipelineView } from '@governance/GovernanceApp'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { ExecutionWrapperConfig, TemplateStepNode } from 'services/pipeline-ng'
@@ -1083,7 +1083,7 @@ export function RightDrawer(): React.ReactElement {
           onDiscard={onDiscard}
         />
       )}
-      {type === DrawerTypes.PolicySets && <PipelineGovernanceView pipelineName={pipeline.name} />}
+      {type === DrawerTypes.PolicySets && <PolicyManagementPipelineView pipelineName={pipeline.name} />}
       {type === DrawerTypes.ConfigureService && selectedStageId && data?.stepConfig && data?.stepConfig.node && (
         <StepCommands
           showHelpPanel={showHelpPanel}

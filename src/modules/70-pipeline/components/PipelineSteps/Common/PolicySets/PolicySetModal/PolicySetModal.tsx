@@ -31,7 +31,7 @@ import { GetPolicySetQueryParams, PolicySet, useGetPolicySetList } from 'service
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
-import { PolicySetWizard } from '@governance/PolicySetWizard'
+import { PolicyManagementPolicySetWizard } from '@governance/GovernanceApp'
 
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { PolicySetListRenderer } from '../PolicySetListRenderer/PolicySetListRenderer'
@@ -171,7 +171,7 @@ export function PolicySetModal<T>({
   const [showModal, hideModal] = useModalHook(() => {
     return (
       <Dialog {...modalProps} onClose={hideModal}>
-        <PolicySetWizard hideModal={hideModal} refetch={refetch} queryParams={queryParams} />
+        <PolicyManagementPolicySetWizard hideModal={hideModal} refetch={refetch} queryParams={queryParams} />
         <Button
           minimal
           className={css.closeIcon}

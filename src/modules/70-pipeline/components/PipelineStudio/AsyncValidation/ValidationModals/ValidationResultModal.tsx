@@ -11,7 +11,7 @@ import { Classes, Dialog } from '@blueprintjs/core'
 import { Icon } from '@harness/icons'
 import { Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { EvaluationView } from '@governance/EvaluationView'
+import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import type { Evaluation } from 'services/pm'
@@ -63,7 +63,7 @@ export function ValidationResultModal({
       canOutsideClickClose
     >
       <div className={css.validationResultModalBody}>
-        <EvaluationView
+        <PolicyManagementEvaluationView
           metadata={policyEval}
           accountId={accountId}
           module={module}

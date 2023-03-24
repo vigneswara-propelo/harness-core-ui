@@ -22,7 +22,7 @@ import type RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import type routes from '@common/RouteDefinitions'
 import type { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { IdentifierSchema, NameSchema } from '@common/utils/Validation'
-import type { EvaluationModal } from '@governance/EvaluationModal'
+import type { PolicyManagementEvaluationModal } from '@governance/PolicyManagementEvaluationModal'
 import type { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
@@ -55,7 +55,7 @@ export interface FFCustomMicroFrontendProps {
   customComponents: {
     ContainerSpinner: typeof ContainerSpinner
     Description: typeof Description
-    EvaluationModal: typeof EvaluationModal
+    EvaluationModal: typeof PolicyManagementEvaluationModal
     FeatureWarningTooltip: typeof FeatureWarningTooltip
     GitSyncForm: typeof GitSyncForm
     MarkdownViewer: typeof MarkdownViewer

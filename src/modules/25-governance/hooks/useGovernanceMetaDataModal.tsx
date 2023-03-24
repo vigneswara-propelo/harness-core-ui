@@ -13,7 +13,7 @@ import type { IDialogProps } from '@blueprintjs/core'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings, StringKeys } from 'framework/strings'
 import type { GovernanceMetadata } from 'services/cd-ng'
-import { EvaluationView } from '@governance/EvaluationView'
+import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 
 export interface UseConnectorGovernanceModalPayload {
@@ -66,7 +66,7 @@ export const useGovernanceMetaDataModal = ({
           }
         }}
       >
-        <EvaluationView
+        <PolicyManagementEvaluationView
           module={module}
           accountId={accountIdentifier}
           metadata={governanceMetadata}

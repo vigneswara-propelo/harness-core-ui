@@ -222,6 +222,31 @@ declare module 'ssca/MicroFrontendApp' {
   export default ChildApp
 }
 
+declare module 'governance/App' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'governance/EvaluationModal' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'governance/PipelineGovernanceView' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'governance/EvaluationView' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'governance/PolicySetWizard' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 declare type RequiredPick<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>

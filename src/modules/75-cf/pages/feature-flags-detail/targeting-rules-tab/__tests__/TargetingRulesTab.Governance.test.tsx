@@ -21,8 +21,8 @@ import mockSegment from './data/mockSegments'
 import mockTargets from './data/mockTargets'
 import mockFeature from './data/mockFeature'
 
-jest.mock('@governance/EvaluationModal', () => ({
-  EvaluationModal: () => <div>GOVERNANCE MODAL</div>
+jest.mock('@governance/PolicyManagementEvaluationModal', () => ({
+  PolicyManagementEvaluationModal: () => <div>GOVERNANCE MODAL</div>
 }))
 
 jest.mock('uuid')

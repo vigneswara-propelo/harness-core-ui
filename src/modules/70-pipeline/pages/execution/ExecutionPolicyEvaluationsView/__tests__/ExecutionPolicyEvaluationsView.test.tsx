@@ -16,8 +16,8 @@ describe('<ExecutionPolicyEvaluationsView /> tests', () => {
     mockImport('@pipeline/context/ExecutionContext', {
       useExecutionContext: jest.fn()
     })
-    mockImport('@governance/EvaluationView', {
-      EvaluationView: () => <div /> // eslint-disable-line react/display-name
+    mockImport('@governance/PolicyManagementEvaluationView', {
+      PolicyManagementEvaluationView: () => <div /> // eslint-disable-line react/display-name
     })
 
     const { container } = render(
@@ -40,8 +40,8 @@ describe('<ExecutionPolicyEvaluationsView /> tests', () => {
         }
       }
     })
-    mockImport('@governance/EvaluationView', {
-      EvaluationView: () => <div /> // eslint-disable-line react/display-name
+    mockImport('@governance/PolicyManagementEvaluationView', {
+      PolicyManagementEvaluationView: () => <div /> // eslint-disable-line react/display-name
     })
 
     const { container } = render(
