@@ -247,6 +247,7 @@ interface GetReferenceFieldMethodProps extends ConnectorReferenceFieldProps {
   openConnectorModal: UseCreateConnectorModalReturn['openConnectorModal']
   type: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
   setPagedConnectorData: (data: ResponsePageConnectorResponse) => void
+  version?: string
 }
 
 interface RecordRenderProps {
@@ -445,6 +446,7 @@ export function getReferenceFieldProps({
   setPagedConnectorData,
   connectorFilterProperties,
   isMultiSelect,
+  version,
   selectedConnectors
 }: GetReferenceFieldMethodProps): Omit<
   ReferenceSelectProps<ConnectorReferenceDTO>,
@@ -508,7 +510,8 @@ export function getReferenceFieldProps({
                   pageIndex: page,
                   pageSize: 10,
                   projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-                  orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? orgIdentifier : undefined
+                  orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? orgIdentifier : undefined,
+                  ...(version && { version })
                 }
               },
               signal

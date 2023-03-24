@@ -94,6 +94,7 @@ export interface MultiTypeConnectorFieldProps extends Omit<ConnectorReferenceFie
     isTemplatizedView: true
     templateValue: string | SelectOption | undefined
   }
+  version?: string
 }
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
   status: ConnectorResponse['status']
@@ -127,6 +128,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     mini,
     isDrawerMode = false,
     templateProps,
+    version,
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -418,6 +420,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
         types: Array.isArray(type) ? type : [type]
       }
     }),
+    version,
     getString,
     openConnectorModal,
     setPagedConnectorData
