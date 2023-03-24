@@ -77,6 +77,7 @@ type Tool = {
   product_name?: string
   project_token?: string
   product_lookup_type?: 'byTokens' | 'byNames' | 'appendToProductByToken' | 'appendToProductByName'
+  project_key?: string
 }
 
 type Instance = {

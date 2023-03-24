@@ -7,6 +7,7 @@
 
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   additionalFieldsValidationConfigEitView,
   additionalFieldsValidationConfigInputSet,
@@ -38,8 +39,11 @@ const toolFieldsTransformConfig = (data: SonarqubeStepData) =>
       ]
     : []
 
-const toolFieldsValidationConfig = (data: SonarqubeStepData): InputSetViewValidateFieldsConfig[] =>
-  data.spec.mode === 'orchestration'
+const toolFieldsValidationConfig = (
+  data: SonarqubeStepData,
+  stepViewType?: StepViewType
+): InputSetViewValidateFieldsConfig[] =>
+  data.spec.mode === 'orchestration' || stepViewType === StepViewType.InputSet
     ? [
         {
           name: 'spec.tool.include',
@@ -73,8 +77,11 @@ const extraAuthFieldsTransformConfig = (data: SonarqubeStepData) =>
       ]
     : []
 
-const extraAuthFieldsValidationConfig = (data: SonarqubeStepData): InputSetViewValidateFieldsConfig[] =>
-  data.spec.mode !== 'ingestion'
+const extraAuthFieldsValidationConfig = (
+  data: SonarqubeStepData,
+  stepViewType?: StepViewType
+): InputSetViewValidateFieldsConfig[] =>
+  data.spec.mode !== 'ingestion' || stepViewType === StepViewType.InputSet
     ? [
         {
           name: 'spec.auth.domain',
@@ -96,6 +103,13 @@ export const transformValuesFieldsConfig = (data: SonarqubeStepData): Field[] =>
     ...extraAuthFieldsTransformConfig(data),
     ...toolFieldsTransformConfig(data)
   ]
+
+  if (data.spec.mode !== 'ingestion') {
+    transformValuesFieldsConfigValues.push({
+      name: 'spec.tool.project_key',
+      type: TransformValuesTypes.Text
+    })
+  }
 
   return transformValuesFieldsConfigValues
 }
@@ -120,18 +134,32 @@ export const editViewValidateFieldsConfig = (data: SonarqubeStepData) => {
     ...toolFieldsValidationConfig(data)
   ]
 
+  if (data.spec.mode !== 'ingestion') {
+    editViewValidationConfig.push({
+      name: 'spec.tool.project_key',
+      type: ValidationFieldTypes.Text,
+      label: 'sto.stepField.tool.projectKey',
+      isRequired: data.spec.mode == 'extraction'
+    } as InputSetViewValidateFieldsConfig)
+  }
+
   return editViewValidationConfig
 }
 
 export function getInputSetViewValidateFieldsConfig(data: SonarqubeStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
     ...commonFieldsValidationConfig,
-    ...authFieldsValidationConfig(data),
-    ...extraAuthFieldsValidationConfig(data),
-    ...ingestionFieldValidationConfig(data),
-    ...imageFieldsValidationConfig(data),
+    ...authFieldsValidationConfig(data, StepViewType.InputSet),
+    ...extraAuthFieldsValidationConfig(data, StepViewType.InputSet),
+    ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
+    ...imageFieldsValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet,
-    ...toolFieldsValidationConfig(data)
+    ...toolFieldsValidationConfig(data, StepViewType.InputSet),
+    {
+      name: 'spec.tool.project_key',
+      type: ValidationFieldTypes.Text,
+      label: 'sto.stepField.tool.projectKey'
+    }
   ]
 
   return inputSetViewValidateFieldsConfig

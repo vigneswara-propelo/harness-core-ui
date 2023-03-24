@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   additionalFieldsValidationConfigEitView,
   additionalFieldsValidationConfigInputSet,
@@ -36,8 +37,8 @@ export const editViewValidateFieldsConfig = (data: AquatrivyStepData) => {
 export function getInputSetViewValidateFieldsConfig(data: AquatrivyStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
     ...commonFieldsValidationConfig,
-    ...ingestionFieldValidationConfig(data),
-    ...imageFieldsValidationConfig(data),
+    ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
+    ...imageFieldsValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet
   ]
 

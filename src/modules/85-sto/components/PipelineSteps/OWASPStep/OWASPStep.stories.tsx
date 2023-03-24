@@ -59,7 +59,7 @@ OWASPStep.args = {
   initialValues: {
     identifier: 'Test_A',
     name: 'Test A',
-    type: StepType.OWASP,
+    type: StepType.Owasp,
     description: 'Description',
     timeout: '10s',
     spec: {
@@ -79,7 +79,7 @@ OWASPStep.args = {
       }
     }
   },
-  type: StepType.OWASP,
+  type: StepType.Owasp,
   stepViewType: StepViewType.Edit,
   path: '',
   testWrapperProps: {
@@ -87,7 +87,7 @@ OWASPStep.args = {
     pathParams: { accountId: 'zEaak-FLS425IEO7OLzMUg', orgIdentifier: 'default', projectIdentifier: 'Max_Test' }
   },
   template: {
-    type: StepType.OWASP,
+    type: StepType.Owasp,
     identifier: 'Test_A',
     description: RUNTIME_INPUT_VALUE,
     timeout: RUNTIME_INPUT_VALUE,
@@ -105,7 +105,7 @@ OWASPStep.args = {
     }
   },
   allValues: {
-    type: StepType.OWASP,
+    type: StepType.Owasp,
     name: 'Test A',
     identifier: 'Test_A',
     description: RUNTIME_INPUT_VALUE,
@@ -171,7 +171,7 @@ OWASPStep.args = {
       }
     },
     variablesData: {
-      type: StepType.OWASP,
+      type: StepType.Owasp,
       identifier: 'Security',
       name: 'step-name',
       description: 'step-description',

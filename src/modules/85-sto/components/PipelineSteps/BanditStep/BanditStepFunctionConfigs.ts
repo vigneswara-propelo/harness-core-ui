@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import {
   commonFieldsTransformConfig as transformValuesFieldsConfigValues,
@@ -36,7 +37,7 @@ export const editViewValidateFieldsConfig = (data: BanditStepData) => {
 export function getInputSetViewValidateFieldsConfig(data: BanditStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
     ...commonFieldsValidationConfig,
-    ...ingestionFieldValidationConfig(data),
+    ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     {
       name: 'spec.resources.limits.memory',
       type: ValidationFieldTypes.LimitMemory

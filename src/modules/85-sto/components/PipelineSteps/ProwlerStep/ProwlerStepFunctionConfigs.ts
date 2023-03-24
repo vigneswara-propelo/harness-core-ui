@@ -7,6 +7,7 @@
 
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   additionalFieldsValidationConfigEitView,
   additionalFieldsValidationConfigInputSet,
@@ -29,8 +30,11 @@ const extraAuthFieldsTransformConfig = (data: ProwlerStepData) =>
       ]
     : []
 
-const extraAuthFieldsValidationConfig = (data: ProwlerStepData): InputSetViewValidateFieldsConfig[] =>
-  data.spec.mode !== 'ingestion'
+const extraAuthFieldsValidationConfig = (
+  data: ProwlerStepData,
+  stepViewType?: StepViewType
+): InputSetViewValidateFieldsConfig[] =>
+  data.spec.mode !== 'ingestion' || stepViewType === StepViewType.InputSet
     ? [
         {
           name: 'spec.auth.region',
@@ -75,9 +79,9 @@ export const editViewValidateFieldsConfig = (data: ProwlerStepData) => {
 export function getInputSetViewValidateFieldsConfig(data: ProwlerStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
     ...commonFieldsValidationConfig,
-    ...authFieldsValidationConfig(data),
-    ...extraAuthFieldsValidationConfig(data),
-    ...ingestionFieldValidationConfig(data),
+    ...authFieldsValidationConfig(data, StepViewType.InputSet),
+    ...extraAuthFieldsValidationConfig(data, StepViewType.InputSet),
+    ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet
   ]
 

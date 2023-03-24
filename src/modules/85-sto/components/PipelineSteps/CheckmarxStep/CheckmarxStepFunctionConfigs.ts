@@ -7,6 +7,7 @@
 
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   additionalFieldsValidationConfigEitView,
   additionalFieldsValidationConfigInputSet,
@@ -34,8 +35,11 @@ const toolFieldsTransformConfig = (data: CheckmarxStepData) =>
       ]
     : []
 
-const toolFieldsValidationConfig = (data: CheckmarxStepData): InputSetViewValidateFieldsConfig[] =>
-  data.spec.mode !== 'ingestion'
+const toolFieldsValidationConfig = (
+  data: CheckmarxStepData,
+  stepViewType?: StepViewType
+): InputSetViewValidateFieldsConfig[] =>
+  data.spec.mode !== 'ingestion' || stepViewType === StepViewType.InputSet
     ? [
         {
           name: 'spec.tool.team_name',
@@ -68,8 +72,11 @@ const extraAuthFieldsTransformConfig = (data: CheckmarxStepData) =>
       ]
     : []
 
-const extraAuthFieldsValidationConfig = (data: CheckmarxStepData): InputSetViewValidateFieldsConfig[] =>
-  data.spec.mode !== 'ingestion'
+const extraAuthFieldsValidationConfig = (
+  data: CheckmarxStepData,
+  stepViewType?: StepViewType
+): InputSetViewValidateFieldsConfig[] =>
+  data.spec.mode !== 'ingestion' || stepViewType === StepViewType.InputSet
     ? [
         {
           name: 'spec.auth.access_id',
@@ -128,12 +135,12 @@ export const editViewValidateFieldsConfig = (data: CheckmarxStepData) => {
 export function getInputSetViewValidateFieldsConfig(data: CheckmarxStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
     ...commonFieldsValidationConfig,
-    ...authFieldsValidationConfig(data),
-    ...extraAuthFieldsValidationConfig(data),
-    ...ingestionFieldValidationConfig(data),
-    ...imageFieldsValidationConfig(data),
+    ...authFieldsValidationConfig(data, StepViewType.InputSet),
+    ...extraAuthFieldsValidationConfig(data, StepViewType.InputSet),
+    ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
+    ...imageFieldsValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet,
-    ...toolFieldsValidationConfig(data)
+    ...toolFieldsValidationConfig(data, StepViewType.InputSet)
   ]
 
   return inputSetViewValidateFieldsConfig

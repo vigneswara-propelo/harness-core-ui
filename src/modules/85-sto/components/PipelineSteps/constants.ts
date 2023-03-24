@@ -10,6 +10,7 @@ import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineStep
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { InputSetViewValidateFieldsConfig, SecurityStepData, SecurityStepSpec } from './types'
 import type { SecurityFieldProps } from './SecurityField'
 
@@ -383,42 +384,75 @@ export const commonFieldsTransformConfig = (data: SecurityStepData<SecurityStepS
   return transformValuesFieldsConfigValues
 }
 
+export const instanceFieldsTransformConfig = (data: SecurityStepData<SecurityStepSpec>) =>
+  data.spec.mode === 'orchestration'
+    ? [
+        {
+          name: 'spec.instance.domain',
+          type: TransformValuesTypes.Text,
+          label: 'secrets.winRmAuthFormFields.domain'
+        },
+        {
+          name: 'spec.instance.protocol',
+          type: TransformValuesTypes.Text,
+          label: 'ce.common.protocol'
+        },
+        {
+          name: 'spec.instance.port',
+          type: TransformValuesTypes.Numeric,
+          label: 'common.smtp.port'
+        },
+        {
+          name: 'spec.instance.path',
+          type: TransformValuesTypes.Text,
+          label: 'common.path'
+        }
+      ]
+    : []
+
 export const authFieldsValidationConfig = (
-  data: SecurityStepData<SecurityStepSpec>
+  data: SecurityStepData<SecurityStepSpec>,
+  stepViewType?: StepViewType
 ): InputSetViewValidateFieldsConfig[] => [
   {
     name: 'spec.auth.access_token',
     type: ValidationFieldTypes.Text,
     label: 'common.getStarted.accessTokenLabel',
-    isRequired: data.spec.mode !== 'ingestion'
+    isRequired: stepViewType === StepViewType.InputSet || data.spec.mode !== 'ingestion'
   }
 ]
 
 export const ingestionFieldValidationConfig = (
-  data: SecurityStepData<SecurityStepSpec>
+  data: SecurityStepData<SecurityStepSpec>,
+  stepViewType?: StepViewType
 ): InputSetViewValidateFieldsConfig[] => [
   {
     name: 'spec.ingestion.file',
     type: ValidationFieldTypes.Text,
     label: 'sto.stepField.ingestion.file',
-    isRequired: data.spec.mode === 'ingestion'
+    isRequired: stepViewType === StepViewType.InputSet || data.spec.mode === 'ingestion'
   }
 ]
 
 export const imageFieldsValidationConfig = (
-  data: SecurityStepData<SecurityStepSpec>
+  data: SecurityStepData<SecurityStepSpec>,
+  stepViewType?: StepViewType
 ): InputSetViewValidateFieldsConfig[] => [
   {
     name: 'spec.image.type',
     type: ValidationFieldTypes.Text,
     label: 'typeLabel',
-    isRequired: data.spec.target?.type === 'container' && data.spec.mode === 'orchestration'
+    isRequired:
+      stepViewType === StepViewType.InputSet ||
+      (data.spec.target?.type === 'container' && data.spec.mode === 'orchestration')
   },
   {
     name: 'spec.image.name',
     type: ValidationFieldTypes.Text,
     label: 'imageNameLabel',
-    isRequired: data.spec.target?.type === 'container' && data.spec.mode === 'orchestration'
+    isRequired:
+      stepViewType === StepViewType.InputSet ||
+      (data.spec.target?.type === 'container' && data.spec.mode === 'orchestration')
   },
   {
     name: 'spec.image.domain',
@@ -434,7 +468,7 @@ export const imageFieldsValidationConfig = (
     name: 'spec.image.region',
     type: ValidationFieldTypes.Text,
     label: 'regionLabel',
-    isRequired: data.spec.image?.type === 'aws_ecr'
+    isRequired: stepViewType === StepViewType.InputSet || data.spec.image?.type === 'aws_ecr'
   },
   {
     name: 'spec.image.access_id',
@@ -445,9 +479,39 @@ export const imageFieldsValidationConfig = (
     name: 'spec.image.tag',
     type: ValidationFieldTypes.Text,
     label: 'tagLabel',
-    isRequired: data.spec.target?.type === 'container' && data.spec.mode === 'orchestration'
+    isRequired:
+      stepViewType === StepViewType.InputSet ||
+      (data.spec.target?.type === 'container' && data.spec.mode === 'orchestration')
   }
 ]
+
+export const instanceFieldsValidationConfig = (data: SecurityStepData<SecurityStepSpec>, stepViewType?: StepViewType) =>
+  data.spec.mode === 'orchestration' || stepViewType === StepViewType.InputSet
+    ? ([
+        {
+          name: 'spec.instance.domain',
+          type: ValidationFieldTypes.Text,
+          label: 'secrets.winRmAuthFormFields.domain',
+          isRequired: true
+        },
+        {
+          name: 'spec.instance.protocol',
+          type: ValidationFieldTypes.Text,
+          label: 'ce.common.protocol',
+          isRequired: true
+        },
+        {
+          name: 'spec.instance.port',
+          type: ValidationFieldTypes.Numeric,
+          label: 'common.smtp.port'
+        },
+        {
+          name: 'spec.instance.path',
+          type: ValidationFieldTypes.Text,
+          label: 'common.path'
+        }
+      ] as InputSetViewValidateFieldsConfig[])
+    : []
 
 export const commonFieldsValidationConfig: InputSetViewValidateFieldsConfig[] = [
   {
@@ -603,25 +667,25 @@ export const inputSetTargetFields = (
   template?.spec
     ? {
         // Target fields
-        ...(shouldRenderRunTimeInputView(template?.spec.target.name) && {
+        ...(shouldRenderRunTimeInputView(template?.spec.target?.name) && {
           [getInputSetFieldName(prefix, 'spec.target.name')]: {
             label: 'name',
             tooltipId: tooltipIds.targetName
           }
         }),
-        ...(shouldRenderRunTimeInputView(template?.spec.target.type) && {
+        ...(shouldRenderRunTimeInputView(template?.spec.target?.type) && {
           [getInputSetFieldName(prefix, 'spec.target.type')]: {
             label: 'typeLabel',
             tooltipId: tooltipIds.targetType
           }
         }),
-        ...(shouldRenderRunTimeInputView(template?.spec.target.variant) && {
+        ...(shouldRenderRunTimeInputView(template?.spec.target?.variant) && {
           [getInputSetFieldName(prefix, 'spec.target.variant')]: {
             label: 'sto.stepField.target.variant',
             tooltipId: tooltipIds.targetVariant
           }
         }),
-        ...(shouldRenderRunTimeInputView(template?.spec.target.workspace) && {
+        ...(shouldRenderRunTimeInputView(template?.spec.target?.workspace) && {
           [getInputSetFieldName(prefix, 'spec.target.workspace')]: {
             label: 'pipelineSteps.workspace',
             tooltipId: tooltipIds.targetWorkspace
@@ -662,7 +726,8 @@ export const inputSetImageFields = (
         ...(shouldRenderRunTimeInputView(template?.spec.image?.domain) && {
           [getInputSetFieldName(prefix, 'spec.image.domain')]: {
             label: 'secrets.winRmAuthFormFields.domain',
-            tooltipId: tooltipIds.imageDomain
+            tooltipId: tooltipIds.imageDomain,
+            optional: true
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.image?.access_token) && {
@@ -714,19 +779,23 @@ export const inputSetInstanceFields = (
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.protocol) && {
           [getInputSetFieldName(prefix, 'spec.instance.protocol')]: {
             label: 'ce.common.protocol',
-            tooltipId: tooltipIds.instanceProtocol
+            tooltipId: tooltipIds.instanceProtocol,
+            selectItems: instanceProtocolSelectItems,
+            fieldType: 'dropdown'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.port) && {
           [getInputSetFieldName(prefix, 'spec.instance.port')]: {
             label: 'common.smtp.port',
-            tooltipId: tooltipIds.instancePort
+            tooltipId: tooltipIds.instancePort,
+            optional: true
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.path) && {
           [getInputSetFieldName(prefix, 'spec.instance.path')]: {
             label: 'common.path',
-            tooltipId: tooltipIds.instancePath
+            tooltipId: tooltipIds.instancePath,
+            optional: true
           }
         })
       }
@@ -739,6 +808,12 @@ export const inputSetToolFields = (
   template?.spec
     ? {
         // Tool fields
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_key) && {
+          [getInputSetFieldName(prefix, 'spec.tool.project_key')]: {
+            label: 'sto.stepField.tool.projectKey',
+            tooltipId: tooltipIds.toolProjectKey
+          }
+        }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.include) && {
           [getInputSetFieldName(prefix, 'spec.tool.include')]: {
             label: 'sto.stepField.toolInclude',
@@ -907,52 +982,56 @@ export const inputSetAdvancedFields = (
     : {}
 
 const tooltipPrefix = 'securityStep'
+function getTooltipName(tooltipName: string) {
+  return `${tooltipPrefix}${tooltipName}`
+}
 
 export const tooltipIds = {
-  mode: `${tooltipPrefix}Mode`,
-  config: `${tooltipPrefix}Config`,
-  targetType: `${tooltipPrefix}TargetType`,
-  targetName: `${tooltipPrefix}TargetName`,
-  targetVariant: `${tooltipPrefix}TargetVariant`,
-  targetWorkspace: `${tooltipPrefix}TargetWorkspace`,
-  ingestionFile: `${tooltipPrefix}IngestionFile`,
-  logLevel: `${tooltipPrefix}LogLevel`,
-  logSerializer: `${tooltipPrefix}LogSerializer`,
-  argsCli: `${tooltipPrefix}ArgsCli`,
-  failOnSeverity: `${tooltipPrefix}FailOnSeverity`,
-  includeRaw: `${tooltipPrefix}IncludeRaw`,
-  authDomain: `${tooltipPrefix}AuthDomain`,
-  authSSL: `${tooltipPrefix}AuthSSL`,
-  authVersion: `${tooltipPrefix}AuthVersion`,
-  authType: `${tooltipPrefix}AuthType`,
-  authAccessId: `${tooltipPrefix}AuthAccessId`,
-  authAccessToken: `${tooltipPrefix}AuthAccessToken`,
-  authAccessRegion: `${tooltipPrefix}AuthAccessRegion`,
-  imageType: `${tooltipPrefix}ImageType`,
-  imageDomain: `${tooltipPrefix}ImageDomain`,
-  imageName: `${tooltipPrefix}ImageName`,
-  imageTag: `${tooltipPrefix}ImageTag`,
-  imageAccessId: `${tooltipPrefix}ImageAccessId`,
-  imageAccessToken: `${tooltipPrefix}ImageAccessToken`,
-  imageRegion: `${tooltipPrefix}ImageRegion`,
-  instanceDomain: `${tooltipPrefix}InstanceDomain`,
-  instanceProtocol: `${tooltipPrefix}InstanceProtocol`,
-  instancePort: `${tooltipPrefix}InstancePort`,
-  instancePath: `${tooltipPrefix}InstancePath`,
-  toolContext: `${tooltipPrefix}ToolContext`,
-  toolPort: `${tooltipPrefix}ToolPort`,
-  toolInclude: `${tooltipPrefix}ToolInclude`,
-  toolJavaLibraries: `${tooltipPrefix}ToolJavaLibraries`,
-  toolJavaBinaries: `${tooltipPrefix}ToolJavaBinaries`,
-  toolImageName: `${tooltipPrefix}ToolImageName`,
-  toolProductLookupType: `${tooltipPrefix}ToolProductLookupType`,
-  toolProductName: `${tooltipPrefix}ToolProductName`,
-  toolProductToken: `${tooltipPrefix}ToolProductToken`,
-  toolProjectName: `${tooltipPrefix}ToolProjectName`,
-  toolProjectToken: `${tooltipPrefix}ToolProjectToken`,
-  toolProjectVersion: `${tooltipPrefix}ToolProjectVersion`,
-  toolExclude: `${tooltipPrefix}ToolExclude`,
-  toolTeamName: `${tooltipPrefix}ToolTeamName`
+  mode: getTooltipName('Mode'),
+  config: getTooltipName('Config'),
+  targetType: getTooltipName('TargetType'),
+  targetName: getTooltipName('TargetName'),
+  targetVariant: getTooltipName('TargetVariant'),
+  targetWorkspace: getTooltipName('TargetWorkspace'),
+  ingestionFile: getTooltipName('IngestionFile'),
+  logLevel: getTooltipName('LogLevel'),
+  logSerializer: getTooltipName('LogSerializer'),
+  argsCli: getTooltipName('ArgsCli'),
+  failOnSeverity: getTooltipName('FailOnSeverity'),
+  includeRaw: getTooltipName('IncludeRaw'),
+  authDomain: getTooltipName('AuthDomain'),
+  authSSL: getTooltipName('AuthSSL'),
+  authVersion: getTooltipName('AuthVersion'),
+  authType: getTooltipName('AuthType'),
+  authAccessId: getTooltipName('AuthAccessId'),
+  authAccessToken: getTooltipName('AuthAccessToken'),
+  authAccessRegion: getTooltipName('AuthAccessRegion'),
+  imageType: getTooltipName('ImageType'),
+  imageDomain: getTooltipName('ImageDomain'),
+  imageName: getTooltipName('ImageName'),
+  imageTag: getTooltipName('ImageTag'),
+  imageAccessId: getTooltipName('ImageAccessId'),
+  imageAccessToken: getTooltipName('ImageAccessToken'),
+  imageRegion: getTooltipName('ImageRegion'),
+  instanceDomain: getTooltipName('InstanceDomain'),
+  instanceProtocol: getTooltipName('InstanceProtocol'),
+  instancePort: getTooltipName('InstancePort'),
+  instancePath: getTooltipName('InstancePath'),
+  toolContext: getTooltipName('ToolContext'),
+  toolPort: getTooltipName('ToolPort'),
+  toolInclude: getTooltipName('ToolInclude'),
+  toolJavaLibraries: getTooltipName('ToolJavaLibraries'),
+  toolJavaBinaries: getTooltipName('ToolJavaBinaries'),
+  toolImageName: getTooltipName('ToolImageName'),
+  toolProductLookupType: getTooltipName('ToolProductLookupType'),
+  toolProductName: getTooltipName('ToolProductName'),
+  toolProductToken: getTooltipName('ToolProductToken'),
+  toolProjectName: getTooltipName('ToolProjectName'),
+  toolProjectToken: getTooltipName('ToolProjectToken'),
+  toolProjectVersion: getTooltipName('ToolProjectVersion'),
+  toolExclude: getTooltipName('ToolExclude'),
+  toolTeamName: getTooltipName('ToolTeamName'),
+  toolProjectKey: getTooltipName('ToolProjectKey')
 }
 
 export function getCustomTooltipPrefix(step: StepType): StepType {

@@ -120,7 +120,7 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
 
           if (fieldName === 'header') return <SectionHeader text={label} />
 
-          if (fieldType === 'dropdown') {
+          if (fieldType === 'dropdown' || selectItems.length) {
             return (
               <Container key={fieldName} className={cx(stepCss.formGroup, stepCss.lg, stepCss.bottomMargin5)}>
                 <MultiTypeSelectField

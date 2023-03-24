@@ -7,6 +7,7 @@
 
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   commonFieldsValidationConfig,
   ingestionFieldValidationConfig,
@@ -32,11 +33,14 @@ export const transformValuesFieldsConfig = (data: AWSSecurityHubStepData): Field
   return config
 }
 
-const authAccessIdValidation = (data: AWSSecurityHubStepData): InputSetViewValidateFieldsConfig => ({
+const authAccessIdValidation = (
+  data: AWSSecurityHubStepData,
+  stepViewType?: StepViewType
+): InputSetViewValidateFieldsConfig => ({
   name: 'spec.auth.access_id',
   type: ValidationFieldTypes.Text,
   label: 'sto.stepField.authAccessId',
-  isRequired: data.spec.mode === 'extraction'
+  isRequired: stepViewType === StepViewType.InputSet || data.spec.mode === 'extraction'
 })
 
 export const editViewValidateFieldsConfig = (data: AWSSecurityHubStepData) => {
@@ -54,9 +58,9 @@ export const editViewValidateFieldsConfig = (data: AWSSecurityHubStepData) => {
 export function getInputSetViewValidateFieldsConfig(data: AWSSecurityHubStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
     ...commonFieldsValidationConfig,
-    ...ingestionFieldValidationConfig(data),
+    ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet,
-    authAccessIdValidation(data)
+    authAccessIdValidation(data, StepViewType.InputSet)
   ]
 
   return inputSetViewValidateFieldsConfig

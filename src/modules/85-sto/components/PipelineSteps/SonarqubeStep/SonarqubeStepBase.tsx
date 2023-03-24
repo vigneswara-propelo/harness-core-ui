@@ -114,7 +114,6 @@ export const SonarqubeStepBase = (
               }}
               formik={formik}
             />
-
             <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
@@ -122,19 +121,15 @@ export const SonarqubeStepBase = (
               scanConfigReadonly
               scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, EXTRACTION_SCAN_MODE, INGESTION_SCAN_MODE]}
             />
-
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
               stepViewType={stepViewType}
               targetTypeSelectItems={targetTypeSelectItems}
             />
-
             {/* TODO REMOVE THE NEXT LINE, THIS IS NOT AN IMAGE SCANNER */}
             <SecurityImageFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
-
             <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
-
             <SecurityAuthFields
               showFields={{
                 ssl: true,
@@ -144,38 +139,50 @@ export const SonarqubeStepBase = (
               formik={formik}
               stepViewType={stepViewType}
             />
-
-            {formik.values.spec.mode === 'orchestration' && (
-              <>
-                <SecurityField
-                  stepViewType={stepViewType}
-                  allowableTypes={allowableTypes}
-                  formik={formik}
-                  enableFields={{
-                    header: {
-                      label: 'sto.stepField.tool.fieldsHeading'
-                    },
-                    'spec.tool.include': {
-                      label: 'sto.stepField.toolInclude',
-                      optional: true,
-                      tooltipId: tooltipIds.toolInclude
-                    },
-                    'spec.tool.java.libraries': {
-                      label: 'sto.stepField.tool.javaLibraries',
-                      optional: true,
-                      tooltipId: tooltipIds.toolJavaLibraries
-                    },
-                    'spec.tool.java.binaries': {
-                      label: 'sto.stepField.tool.javaBinaries',
-                      optional: true,
-                      tooltipId: tooltipIds.toolJavaBinaries
-                    }
-                  }}
-                />
-                <Divider style={{ marginBottom: dividerBottomMargin }} />
-              </>
-            )}
-
+            {/* product_project_key : optional product_project_key: required for extraction */}
+            <>
+              <SecurityField
+                stepViewType={stepViewType}
+                allowableTypes={allowableTypes}
+                formik={formik}
+                enableFields={{
+                  header: {
+                    label: 'sto.stepField.tool.fieldsHeading',
+                    hide: formik.values.spec.mode === 'ingestion'
+                  },
+                  'spec.tool.project_key': {
+                    label: 'sto.stepField.tool.projectKey',
+                    tooltipId: tooltipIds.toolProjectKey,
+                    optional: formik.values.spec.mode === 'orchestration',
+                    hide: formik.values.spec.mode === 'ingestion'
+                  },
+                  'spec.tool.include': {
+                    label: 'sto.stepField.toolInclude',
+                    optional: true,
+                    tooltipId: tooltipIds.toolInclude,
+                    hide: formik.values.spec.mode !== 'orchestration'
+                  },
+                  'spec.tool.java.libraries': {
+                    label: 'sto.stepField.tool.javaLibraries',
+                    optional: true,
+                    tooltipId: tooltipIds.toolJavaLibraries,
+                    hide: formik.values.spec.mode !== 'orchestration'
+                  },
+                  'spec.tool.java.binaries': {
+                    label: 'sto.stepField.tool.javaBinaries',
+                    optional: true,
+                    tooltipId: tooltipIds.toolJavaBinaries,
+                    hide: formik.values.spec.mode !== 'orchestration'
+                  }
+                }}
+              />
+              <Divider
+                style={{
+                  marginBottom: dividerBottomMargin,
+                  display: formik.values.spec.mode === 'ingestion' ? 'none' : 'block'
+                }}
+              />
+            </>
             <AdditionalFields
               readonly={readonly}
               currentStage={currentStage}

@@ -7,6 +7,7 @@
 
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   additionalFieldsValidationConfigEitView,
   additionalFieldsValidationConfigInputSet,
@@ -64,44 +65,46 @@ const toolFieldsTransformConfig = (data: MendStepData) => {
   return config
 }
 
-const toolFieldsValidationConfig = (data: MendStepData): InputSetViewValidateFieldsConfig[] => {
-  if (data.spec.mode === 'ingestion') return []
-
-  return [
-    {
-      name: 'spec.tool.project_token',
-      type: ValidationFieldTypes.Text,
-      label: 'sto.stepField.tool.projectToken',
-      isRequired: data.spec.mode === 'extraction' && data.spec.tool?.product_lookup_type === 'byTokens'
-    },
-    {
-      name: 'spec.tool.project_name',
-      type: ValidationFieldTypes.Text,
-      label: 'projectCard.projectName',
-      isRequired: data.spec.mode === 'extraction' && data.spec.tool?.product_lookup_type === 'byNames'
-    },
-    {
-      name: 'spec.tool.include',
-      type: ValidationFieldTypes.Text
-    },
-    {
-      name: 'spec.tool.product_token',
-      type: ValidationFieldTypes.Text,
-      label: 'sto.stepField.tool.productToken',
-      isRequired:
-        data.spec.tool?.product_lookup_type === 'byTokens' ||
-        data.spec.tool?.product_lookup_type === 'appendToProductByToken'
-    },
-    {
-      name: 'spec.tool.product_name',
-      type: ValidationFieldTypes.Text,
-      label: 'name',
-      isRequired:
-        data.spec.tool?.product_lookup_type === 'byNames' ||
-        data.spec.tool?.product_lookup_type === 'appendToProductByName'
-    }
-  ]
-}
+const toolFieldsValidationConfig = (
+  data: MendStepData,
+  stepViewType?: StepViewType
+): InputSetViewValidateFieldsConfig[] =>
+  data.spec.mode === 'orchestration' || data.spec.mode === 'extraction' || stepViewType === StepViewType.InputSet
+    ? [
+        {
+          name: 'spec.tool.project_token',
+          type: ValidationFieldTypes.Text,
+          label: 'sto.stepField.tool.projectToken',
+          isRequired: data.spec.mode === 'extraction' && data.spec.tool?.product_lookup_type === 'byTokens'
+        },
+        {
+          name: 'spec.tool.project_name',
+          type: ValidationFieldTypes.Text,
+          label: 'projectCard.projectName',
+          isRequired: data.spec.mode === 'extraction' && data.spec.tool?.product_lookup_type === 'byNames'
+        },
+        {
+          name: 'spec.tool.include',
+          type: ValidationFieldTypes.Text
+        },
+        {
+          name: 'spec.tool.product_token',
+          type: ValidationFieldTypes.Text,
+          label: 'sto.stepField.tool.productToken',
+          isRequired:
+            data.spec.tool?.product_lookup_type === 'byTokens' ||
+            data.spec.tool?.product_lookup_type === 'appendToProductByToken'
+        },
+        {
+          name: 'spec.tool.product_name',
+          type: ValidationFieldTypes.Text,
+          label: 'name',
+          isRequired:
+            data.spec.tool?.product_lookup_type === 'byNames' ||
+            data.spec.tool?.product_lookup_type === 'appendToProductByName'
+        }
+      ]
+    : []
 
 const extraAuthFieldsTransformConfig = (data: MendStepData) =>
   data.spec.mode !== 'ingestion'
@@ -121,8 +124,11 @@ const extraAuthFieldsTransformConfig = (data: MendStepData) =>
       ]
     : []
 
-const extraAuthFieldsValidationConfig = (data: MendStepData): InputSetViewValidateFieldsConfig[] =>
-  data.spec.mode !== 'ingestion'
+const extraAuthFieldsValidationConfig = (
+  data: MendStepData,
+  stepViewType?: StepViewType
+): InputSetViewValidateFieldsConfig[] =>
+  data.spec.mode !== 'ingestion' || stepViewType === StepViewType.InputSet
     ? [
         {
           name: 'spec.auth.domain',
@@ -138,7 +144,7 @@ const extraAuthFieldsValidationConfig = (data: MendStepData): InputSetViewValida
           name: 'spec.auth.access_id',
           type: ValidationFieldTypes.Text,
           label: 'sto.stepField.authAccessId',
-          isRequired: true // todo verify
+          isRequired: true
         }
       ]
     : []
@@ -180,12 +186,12 @@ export const editViewValidateFieldsConfig = (data: MendStepData) => {
 export function getInputSetViewValidateFieldsConfig(data: MendStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
     ...commonFieldsValidationConfig,
-    ...authFieldsValidationConfig(data),
-    ...extraAuthFieldsValidationConfig(data),
-    ...ingestionFieldValidationConfig(data),
-    ...imageFieldsValidationConfig(data),
+    ...authFieldsValidationConfig(data, StepViewType.InputSet),
+    ...extraAuthFieldsValidationConfig(data, StepViewType.InputSet),
+    ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
+    ...imageFieldsValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet,
-    ...toolFieldsValidationConfig(data)
+    ...toolFieldsValidationConfig(data, StepViewType.InputSet)
   ]
 
   return inputSetViewValidateFieldsConfig

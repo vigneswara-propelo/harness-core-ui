@@ -49,10 +49,6 @@ describe('Nikto Step', () => {
           mode: 'ingestion',
           config: 'default',
           settings: RUNTIME_INPUT_VALUE,
-          instance: {
-            domain: 'auth domain',
-            protocol: 'http'
-          },
           advanced: {
             fail_on_severity: RUNTIME_INPUT_VALUE,
             log: {

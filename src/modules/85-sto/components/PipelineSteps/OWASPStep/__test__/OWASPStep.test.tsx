@@ -24,7 +24,7 @@ describe('OWASP Step', () => {
   describe('Edit View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.OWASP} stepViewType={StepViewType.Edit} />
+        <TestStepWidget initialValues={{}} type={StepType.Owasp} stepViewType={StepViewType.Edit} />
       )
 
       expect(container).toMatchSnapshot()
@@ -72,7 +72,7 @@ describe('OWASP Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.OWASP}
+          type={StepType.Owasp}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -129,7 +129,7 @@ describe('OWASP Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.OWASP}
+          type={StepType.Owasp}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -187,7 +187,7 @@ describe('OWASP Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.OWASP}
+          type={StepType.Owasp}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -205,7 +205,7 @@ describe('OWASP Step', () => {
   describe('InputSet View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.OWASP} stepViewType={StepViewType.InputSet} />
+        <TestStepWidget initialValues={{}} type={StepType.Owasp} stepViewType={StepViewType.InputSet} />
       )
 
       expect(container).toMatchSnapshot()
@@ -213,7 +213,7 @@ describe('OWASP Step', () => {
 
     test('should render all fields', async () => {
       const template = {
-        type: StepType.OWASP,
+        type: StepType.Owasp,
         identifier: 'My_OWASP_Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
@@ -246,7 +246,7 @@ describe('OWASP Step', () => {
       }
 
       const allValues = {
-        type: StepType.OWASP,
+        type: StepType.Owasp,
         name: 'Test A',
         identifier: 'My_OWASP_Step',
         description: RUNTIME_INPUT_VALUE,
@@ -284,7 +284,7 @@ describe('OWASP Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.OWASP}
+          type={StepType.Owasp}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -297,12 +297,12 @@ describe('OWASP Step', () => {
 
     test('should not render any fields', async () => {
       const template = {
-        type: StepType.OWASP,
+        type: StepType.Owasp,
         identifier: 'My_OWASP_Step'
       }
 
       const allValues = {
-        type: StepType.OWASP,
+        type: StepType.Owasp,
         identifier: 'My_OWASP_Step',
         name: 'My OWASP Step',
         description: 'Description',
@@ -330,7 +330,7 @@ describe('OWASP Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.OWASP}
+          type={StepType.Owasp}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -349,7 +349,7 @@ describe('OWASP Step', () => {
           initialValues={{
             identifier: 'Test_A',
             name: 'Test A',
-            type: StepType.OWASP,
+            type: StepType.Owasp,
             description: 'Description',
             timeout: '10s',
             spec: {
@@ -428,7 +428,7 @@ describe('OWASP Step', () => {
               }
             },
             variablesData: {
-              type: StepType.OWASP,
+              type: StepType.Owasp,
               __uuid: 'step-identifier',
               identifier: 'OWASP',
               name: 'step-name',
@@ -448,7 +448,7 @@ describe('OWASP Step', () => {
               }
             }
           }}
-          type={StepType.OWASP}
+          type={StepType.Owasp}
           stepViewType={StepViewType.InputVariable}
         />
       )
@@ -462,7 +462,7 @@ describe('OWASP Step', () => {
       identifier: 'id',
       name: 'name',
       description: 'desc',
-      type: StepType.OWASP,
+      type: StepType.Owasp,
       timeout: '1h',
       spec: {
         target: {

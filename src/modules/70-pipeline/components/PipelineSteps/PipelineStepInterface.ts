@@ -194,7 +194,7 @@ export enum StepType {
   AWSECR = 'AWSECR',
   Nikto = 'Nikto',
   Nmap = 'Nmap',
-  OWASP = 'OWASP',
+  Owasp = 'Owasp',
   Prowler = 'Prowler',
   Sniper = 'Sniper',
   Metasploit = 'Metasploit',

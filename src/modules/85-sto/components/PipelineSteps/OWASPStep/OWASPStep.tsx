@@ -42,15 +42,15 @@ export class OWASPStep extends PipelineStep<OWASPStepData> {
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.OWASP
+  protected type = StepType.Owasp
   protected stepName = 'Configure OWASP Dependency Check'
-  protected stepIcon: IconName = 'security-ci-step'
+  protected stepIcon: IconName = 'owasp'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.OWASP'
   protected stepPaletteVisible = false
 
   protected defaultValues: OWASPStepData = {
     identifier: '',
-    type: StepType.OWASP as string,
+    type: StepType.Owasp as string,
     spec: {
       mode: 'orchestration',
       config: 'default',
