@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { render, findByText, fireEvent, waitFor, findAllByText, getByText } from '@testing-library/react'
+import {
+  render,
+  findByText,
+  fireEvent,
+  waitFor,
+  findAllByText,
+  getByText,
+  queryByAttribute
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { TestWrapper } from '@common/utils/testUtils'
@@ -697,5 +705,65 @@ describe('ArtifactsSelection tests', () => {
     const overviewTitle = await findAllByText(portal, 'overview')
     expect(overviewTitle).toHaveLength(2)
     expect(getByText(portal, 'name')).toBeDefined()
+  })
+
+  test('clicking on Add Primary Artifact button should display all required artifact types for AWS Lambda', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_SVC_ENV_REDESIGN: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType={ServiceDeploymentType.AwsLambda}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addPrimaryButton = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
+    expect(addPrimaryButton).toBeInTheDocument()
+    fireEvent.click(addPrimaryButton)
+
+    const dialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
+
+    const artifactLabel = await findByText(dialog, 'connectors.specifyArtifactRepoType')
+    expect(artifactLabel).toBeInTheDocument()
+
+    const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', dialog, value)
+
+    // AmazonS3, ECR, Nexus2, Nexus3, Artifactory, Jenkins, Custom should be rendered
+    const amazonS3 = dialog.querySelector('input[value="AmazonS3"]')
+    expect(amazonS3).not.toBeNull()
+    const Ecr = queryByValueAttribute('Ecr')
+    expect(Ecr).not.toBeNull()
+    const Nexus2Registry = queryByValueAttribute('Nexus2Registry')
+    expect(Nexus2Registry).not.toBeNull()
+    const Nexus3Registry = queryByValueAttribute('Nexus3Registry')
+    expect(Nexus3Registry).not.toBeNull()
+    const ArtifactoryRegistry = queryByValueAttribute('ArtifactoryRegistry')
+    expect(ArtifactoryRegistry).not.toBeNull()
+    const Jenkins = queryByValueAttribute('Jenkins')
+    expect(Jenkins).not.toBeNull()
+    const CustomArtifact = queryByValueAttribute('CustomArtifact')
+    expect(CustomArtifact).not.toBeNull()
+
+    // Docker, Jenkins, Acr should NOT be rendered
+    const DockerRegistry = queryByValueAttribute('DockerRegistry')
+    expect(DockerRegistry).toBeNull()
+    const Gcr = queryByValueAttribute('Gcr')
+    expect(Gcr).toBeNull()
+    const Acr = queryByValueAttribute('Acr')
+    expect(Acr).toBeNull()
   })
 })

@@ -119,10 +119,10 @@ export class AwsLambdaInfraSpec extends PipelineStep<AwsLambdaInfrastructureStep
       isRequired &&
       getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME
     ) {
-      errors.connectorRef = getString?.('fieldRequired', { field: getString('connector') })
+      errors.connectorRef = getString?.('common.validation.fieldIsRequired', { name: getString('connector') })
     }
     if (isEmpty(data.region) && isRequired && getMultiTypeFromValue(template?.region) === MultiTypeInputType.RUNTIME) {
-      errors.region = getString?.('fieldRequired', { field: getString('regionLabel') })
+      errors.region = getString?.('common.validation.fieldIsRequired', { name: getString('regionLabel') })
     }
 
     return errors
