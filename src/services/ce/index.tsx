@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -2449,6 +2449,21 @@ export interface GovernanceMetadata {
   [key: string]: any
 }
 
+export interface GovernanceRuleFilter {
+  accountId?: string
+  cloudProvider?: string
+  isOOTB?: boolean
+  isStablePolicy?: boolean
+  limit?: number
+  offset?: number
+  orderBy?: CCMSort[]
+  orgIdentifier?: string
+  policyIds?: string[]
+  projectIdentifier?: string
+  search?: string
+  tags?: string
+}
+
 export interface GraphQLQuery {
   operationName?: string
   query?: string
@@ -2652,6 +2667,10 @@ export interface LicenseUsageDTO {
   accountIdentifier?: string
   module?: string
   timestamp?: number
+}
+
+export interface ListDTO {
+  query?: GovernanceRuleFilter
 }
 
 export type LocalConnectorDTO = ConnectorConfigDTO & {
@@ -3634,6 +3653,13 @@ export interface ResponseRecommendationsDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseRuleList {
+  correlationId?: string
+  data?: RuleList
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseServiceInstanceUsageDTO {
   correlationId?: string
   data?: ServiceInstanceUsageDTO
@@ -3707,6 +3733,32 @@ export interface RestResponseViewCustomField {
   }
   resource?: ViewCustomField
   responseMessages?: ResponseMessage[]
+}
+
+export interface Rule {
+  accountId?: string
+  cloudProvider?: 'AWS'
+  createdAt?: number
+  createdBy?: EmbeddedUser
+  deleted?: boolean
+  description?: string
+  isOOTB?: boolean
+  isStablePolicy?: boolean
+  lastUpdatedAt?: number
+  lastUpdatedBy?: EmbeddedUser
+  name?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  rulesYaml?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  tags?: string[]
+  uuid?: string
+  versionLabel?: string
+}
+
+export interface RuleList {
+  rules?: Rule[]
+  totalItems?: number
 }
 
 export interface ServiceInstanceUsageDTO {
@@ -5427,6 +5479,41 @@ export const useGetFilter = ({ identifier, ...props }: UseGetFilterProps) =>
     (paramsInPath: GetFilterPathParams) => `/filters/${paramsInPath.identifier}`,
     { base: getConfig('ccm/api'), pathParams: { identifier }, ...props }
   )
+
+export interface GetPoliciesQueryParams {
+  accountIdentifier: string
+}
+
+export type GetPoliciesProps = Omit<
+  MutateProps<ResponseRuleList, Failure | Error, GetPoliciesQueryParams, ListDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Get rules for given account
+ */
+export const GetPolicies = (props: GetPoliciesProps) => (
+  <Mutate<ResponseRuleList, Failure | Error, GetPoliciesQueryParams, ListDTO, void>
+    verb="POST"
+    path={`/governance/rule/list`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseGetPoliciesProps = Omit<
+  UseMutateProps<ResponseRuleList, Failure | Error, GetPoliciesQueryParams, ListDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Get rules for given account
+ */
+export const useGetPolicies = (props: UseGetPoliciesProps) =>
+  useMutate<ResponseRuleList, Failure | Error, GetPoliciesQueryParams, ListDTO, void>('POST', `/governance/rule/list`, {
+    base: getConfig('ccm/api'),
+    ...props
+  })
 
 export interface Execute1Response {
   [key: string]: { [key: string]: any }

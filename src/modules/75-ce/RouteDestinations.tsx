@@ -73,6 +73,8 @@ import AnomaliesFilter from './components/AnomaliesFilter/AnomaliesFilter'
 import GatewayListFilters from './components/COGatewayList/GatewayListFilters'
 import PerspectiveResourceModalBody from './components/ResourceGroupModals/PerspectiveResourceModalBody'
 import PerspectiveResourceRenderer from './components/ResourceGroupModals/PerspectiveResourceRenderer'
+import GovernanceRulesResourceModalBody from './components/GovernanceResourceGroupModals/GovernanceRulesResourceModalBody'
+import GovernanceRulesResourceRenderer from './components/GovernanceResourceGroupModals/GovernanceRulesResourceRenderer'
 
 RbacFactory.registerResourceCategory(ResourceCategory.CLOUD_COSTS, {
   icon: 'ccm-solid',
@@ -179,8 +181,11 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_CLOUD_ASSET_GOVERNANCE_
     [PermissionIdentifier.EDIT_CCM_CLOUD_ASSET_GOVERNANCE_RULE]: (
       <LocaleString stringID="rbac.permissionLabels.createEdit" />
     ),
-    [PermissionIdentifier.DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE]: <LocaleString stringID="delete" />
-  }
+    [PermissionIdentifier.DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE]: <LocaleString stringID="delete" />,
+    [PermissionIdentifier.EXECUTE_CCM_CLOUD_ASSET_GOVERNANCE_RULE]: <LocaleString stringID="common.execute" />
+  },
+  addResourceModalBody: props => <GovernanceRulesResourceModalBody {...props} />,
+  staticResourceRenderer: props => <GovernanceRulesResourceRenderer {...props} />
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET, {

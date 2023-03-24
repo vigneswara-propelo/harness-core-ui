@@ -26,6 +26,7 @@ src/framework/LicenseStore @harness/ui-plg
 src/services/ @harness/ui-council
 src/services/cv @harness/ui-cv
 src/services/sto @harness/ui-sto
+src/services/ce @harness/ui-ce
 src/services/ticket-service @harness/ui-sto
 src/modules/10-common/navigation/ @harness/ui-platform
 src/modules/10-common/RouteDefinitions.ts @harness/ui-council

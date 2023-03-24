@@ -1,0 +1,50 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalItems": 2,
+    "rules": [
+      {
+        "uuid": "MockRuleId",
+        "accountId": "accountId",
+        "name": "unused-eip-list",
+        "description": "List any EIP with no instances attached",
+        "rulesYaml": "policies:\n  - name: unused-eip-list\n    resource: network-addr\n    description: 'List any EIP with no instances attached'\n    filters:\n      - type: value\n        key: InstanceId\n        value: absent\n      - type: value\n        key: AssociationIds\n        value: absen",
+        "tags": null,
+        "orgIdentifier": null,
+        "projectIdentifier": null,
+        "cloudProvider": null,
+        "versionLabel": "0.0.1",
+        "isStablePolicy": null,
+        "storeType": "INLINE",
+        "isOOTB": false,
+        "deleted": false,
+        "createdAt": 1673345476335,
+        "lastUpdatedAt": 1678105939164,
+        "createdBy": null,
+        "lastUpdatedBy": null
+      },
+      {
+        "uuid": "MockRuleId2",
+        "accountId": "__GLOBAL_ACCOUNT_ID__",
+        "name": "s3-bucket-version-enabled-list",
+        "description": "List buckets where versioning is enabled",
+        "rulesYaml": "policies:\n  - name: s3-bucket-version-enabled-list\n    resource: s3\n    description: List buckets where versioning is enabled\n    filters:\n      - 'Versioning.Status': 'Enabled'",
+        "tags": null,
+        "orgIdentifier": null,
+        "projectIdentifier": null,
+        "cloudProvider": "AWS",
+        "versionLabel": "0.0.1",
+        "isStablePolicy": null,
+        "storeType": "INLINE",
+        "isOOTB": true,
+        "deleted": false,
+        "createdAt": 1669317524227,
+        "lastUpdatedAt": 1669317524231,
+        "createdBy": null,
+        "lastUpdatedBy": null
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "0feee460-42fc-428d-a6b9-7d0ee988fcc1"
+}

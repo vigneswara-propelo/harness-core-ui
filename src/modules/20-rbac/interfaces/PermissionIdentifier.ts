@@ -198,6 +198,7 @@ export enum PermissionIdentifier {
   VIEW_CCM_CLOUD_ASSET_GOVERNANCE_RULE = 'ccm_cloudAssetGovernanceRule_view',
   EDIT_CCM_CLOUD_ASSET_GOVERNANCE_RULE = 'ccm_cloudAssetGovernanceRule_edit',
   DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE = 'ccm_cloudAssetGovernanceRule_delete',
+  EXECUTE_CCM_CLOUD_ASSET_GOVERNANCE_RULE = 'ccm_cloudAssetGovernanceRule_execute',
   VIEW_CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET = 'ccm_cloudAssetGovernanceRuleSet_view',
   EDIT_CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET = 'ccm_cloudAssetGovernanceRuleSet_edit',
   DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET = 'ccm_cloudAssetGovernanceRuleSet_delete',
