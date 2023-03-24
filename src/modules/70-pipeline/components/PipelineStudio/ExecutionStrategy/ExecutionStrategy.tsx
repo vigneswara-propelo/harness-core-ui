@@ -132,6 +132,7 @@ function ExecutionStrategyRef(
   useEffect(() => {
     switch (serviceDefinitionType()) {
       case ServiceDeploymentType.ServerlessAwsLambda:
+      case ServiceDeploymentType.AwsLambda:
         setSelectedStrategy(ExecutionType.BASIC)
         break
       case ServiceDeploymentType.AzureWebApp:
