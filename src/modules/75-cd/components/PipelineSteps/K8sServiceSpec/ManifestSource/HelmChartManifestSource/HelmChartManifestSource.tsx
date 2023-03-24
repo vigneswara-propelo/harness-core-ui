@@ -389,6 +389,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.repoName`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.repoName`)}
           />
         )}
       </div>
@@ -436,6 +437,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.commitId`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.commitId`)}
           />
         )}
       </div>
@@ -475,6 +477,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.region`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.region`)}
           />
         )}
       </div>
@@ -510,6 +513,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.bucketName`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.bucketName`)}
           />
         )}
       </div>
@@ -541,6 +545,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.basePath`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.basePath`)}
           />
         )}
       </div>
@@ -572,6 +577,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.chartName`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.chartName`)}
           />
         )}
       </div>
@@ -603,6 +609,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.folderPath`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.folderPath`)}
           />
         )}
       </div>
@@ -691,6 +698,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.chartVersion`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.chartVersion`)}
           />
         )}
       </div>
@@ -759,6 +767,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.enableDeclarativeRollback`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.enableDeclarativeRollback`)}
           />
         )}
       </div>
@@ -792,6 +801,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.skipResourceVersioning`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.skipResourceVersioning`)}
           />
         )}
       </div>

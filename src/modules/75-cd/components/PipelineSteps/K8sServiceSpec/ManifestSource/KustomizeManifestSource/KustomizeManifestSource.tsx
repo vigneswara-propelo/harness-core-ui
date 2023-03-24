@@ -97,6 +97,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.folderPath`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.folderPath`)}
           />
         )}
       </div>
@@ -128,6 +129,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.pluginPath`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.pluginPath`)}
           />
         )}
       </div>
@@ -159,6 +161,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.overlayConfiguration`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.overlayConfiguration`)}
           />
         )}
       </div>
@@ -190,6 +193,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.patchesPaths`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.patchesPaths`)}
           />
         )}
       </div>
@@ -222,6 +226,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.overlayConfiguration.kustomizeYamlFolderPath`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.overlayConfiguration.kustomizeYamlFolderPath`)}
           />
         )}
       </div>
@@ -255,6 +260,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.enableDeclarativeRollback`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.enableDeclarativeRollback`)}
           />
         )}
       </div>
@@ -288,6 +294,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.skipResourceVersioning`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.skipResourceVersioning`)}
           />
         )}
       </div>

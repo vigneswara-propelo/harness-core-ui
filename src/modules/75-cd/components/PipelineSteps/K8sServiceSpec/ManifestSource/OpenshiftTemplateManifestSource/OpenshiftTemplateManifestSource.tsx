@@ -95,6 +95,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.paths`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.paths`)}
           />
         )}
       </div>
@@ -146,6 +147,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.enableDeclarativeRollback`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.enableDeclarativeRollback`)}
           />
         )}
       </div>
@@ -179,6 +181,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.skipResourceVersioning`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.skipResourceVersioning`)}
           />
         )}
       </div>

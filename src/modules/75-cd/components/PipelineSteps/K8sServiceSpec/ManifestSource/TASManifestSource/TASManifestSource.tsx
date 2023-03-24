@@ -115,6 +115,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.paths`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.paths`)}
           />
         )}
       </div>
@@ -165,6 +166,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.autoScalerPath`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.autoScalerPath`)}
           />
         )}
       </div>
@@ -213,6 +215,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.varsPaths`, value)
             }}
+            isReadonly={isFieldDisabled(`${manifestPath}.spec.varsPaths`)}
           />
         )}
       </div>
