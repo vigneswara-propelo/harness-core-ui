@@ -69,6 +69,8 @@ export interface specInterface {
   repositoryUrl?: string
   repositoryPort?: string
   artifactPath?: string
+  tag?: string
+  tagRegex?: string
 }
 export interface queryInterface extends specInterface {
   repository: string
@@ -503,24 +505,38 @@ export function Nexus3Artifact({
                         repositoryFormat: RepositoryFormatTypes.Maven,
                         artifactId: '',
                         groupId: '',
+                        tag: '',
+                        tagRegex: '',
                         ...optionalValues
                       })
                     } else if (value.value === RepositoryFormatTypes.Raw) {
                       setLastQueryData({
                         repository: '',
                         repositoryFormat: value.value as string,
-                        group: ''
+                        group: '',
+                        tag: '',
+                        tagRegex: ''
                       })
                     } else {
                       setLastQueryData({
                         repository: '',
                         repositoryFormat: value.value as string,
-                        packageName: ''
+                        packageName: '',
+                        tag: '',
+                        tagRegex: ''
                       })
                     }
 
                     if (isValueFixed(formik.values.repository)) {
                       formik.setFieldValue('repository', '')
+                    }
+
+                    if (isValueFixed(formik.values.tag)) {
+                      formik.setFieldValue('tag', '')
+                    }
+
+                    if (isValueFixed(formik.values.tagRegex)) {
+                      formik.setFieldValue('tagRegex', '')
                     }
                   }}
                 />
