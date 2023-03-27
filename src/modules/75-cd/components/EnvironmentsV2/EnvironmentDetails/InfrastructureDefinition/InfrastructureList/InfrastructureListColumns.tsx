@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, pick } from 'lodash-es'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 import { Layout, TagsPopover, Text, useConfirmationDialog, Popover, Button } from '@harness/uicore'
 import { Intent, Color } from '@harness/design-system'
@@ -78,20 +78,23 @@ export function LastUpdatedBy({ lastModifiedAt }: InfrastructureResponse): React
   )
 }
 
+export type InfraDetails = { name?: string; identifier?: string }
+
 export function InfrastructureMenu({
-  infrastructure: { identifier, yaml },
+  infrastructure,
   onEdit,
   onDelete
 }: {
   infrastructure: InfrastructureResponseDTO
   onEdit: (identifier: string) => void
-  onDelete: (identifier: string) => void
+  onDelete: (infrastructureDetails: InfraDetails) => void
 }): React.ReactElement {
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier, environmentIdentifier } = useParams<
     ProjectPathProps & EnvironmentPathProps
   >()
+  const { yaml } = infrastructure
 
   const { openDialog } = useConfirmationDialog({
     titleText: getString('cd.infrastructure.delete'),
@@ -104,7 +107,7 @@ export function InfrastructureMenu({
       /* istanbul ignore else */
       if (isConfirmed) {
         setMenuOpen(false)
-        await onDelete(defaultTo(identifier, ''))
+        await onDelete(pick(infrastructure, ['name', 'identifier']))
       }
     }
   })

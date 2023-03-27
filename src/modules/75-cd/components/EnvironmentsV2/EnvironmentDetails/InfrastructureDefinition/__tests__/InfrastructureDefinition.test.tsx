@@ -216,7 +216,11 @@ describe('Infrastructure Definition tests', () => {
 
     jest.spyOn(cdNgServices, 'useDeleteInfrastructure').mockImplementation(() => {
       return {
-        mutate: jest.fn().mockResolvedValue(null),
+        mutate: jest.fn(() =>
+          Promise.resolve({
+            status: 'SUCCESS'
+          })
+        ),
         cancel: jest.fn(),
         loading: false,
         error: null

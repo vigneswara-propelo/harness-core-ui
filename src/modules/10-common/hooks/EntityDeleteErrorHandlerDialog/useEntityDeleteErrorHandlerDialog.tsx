@@ -61,7 +61,11 @@ export const ContentText = (props: ContentTextProps): JSX.Element => {
 
   return (
     <Layout.Vertical>
-      <Text margin={{ bottom: 'medium' }} font={{ variation: FontVariation.BODY2_SEMI }}>
+      <Text
+        margin={{ bottom: 'medium' }}
+        className={css.referenceTextWarning}
+        font={{ variation: FontVariation.BODY2_SEMI }}
+      >
         {defaultTo(
           customErrorMessage,
           getString('common.referenceTextWarning', {

@@ -33,11 +33,8 @@ const DEFAULT_FAVICON_DETAILS: FavIconDetails = {
 }
 
 const getFavIconHrefPath = (favIconIdentifier: string) => {
-  if (__DEV__) {
-    return `/${favIconIdentifier}`
-  }
-  if (isOnPrem()) {
-    return `/ng/static/${favIconIdentifier}`
+  if (shouldUseStaticSource()) {
+    return __DEV__ ? `/${favIconIdentifier}` : `/ng/static/${favIconIdentifier}`
   }
 
   return favIconIdentifier

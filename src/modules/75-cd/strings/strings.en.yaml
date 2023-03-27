@@ -503,6 +503,7 @@ serviceOverrides:
   deletedOneVariable: Successfully deleted variable from service override
 infrastructure:
   infrastructureDefinitions: Infrastructure Definitions
+  infrastructureDetails: Infrastructure Details
   noInfrastructureInEnvironment: You have no infrastructures in this environment
   createNew: Create New Infrastructure
   edit: Edit Infrastructure

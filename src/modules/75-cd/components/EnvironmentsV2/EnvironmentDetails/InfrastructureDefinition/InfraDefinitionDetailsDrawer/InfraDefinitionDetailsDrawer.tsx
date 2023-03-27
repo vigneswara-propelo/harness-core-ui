@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Drawer, Position } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import { defaultTo } from 'lodash-es'
@@ -13,12 +13,14 @@ import { Button, Container, Tab, Tabs } from '@harness/uicore'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { useStrings } from 'framework/strings'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
+import type { EnvironmentQueryParams } from '@common/interfaces/RouteInterfaces'
 import { InfraDefinitionDetailsDrawerTitle } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawerTitle'
 import type {
   GetTemplateProps,
   GetTemplateResponse
 } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { InfrastructureConfig, InfrastructureDefinitionConfig } from 'services/cd-ng'
 import {
@@ -40,9 +42,9 @@ interface Props {
   infraSaveInProgress?: boolean
 }
 
-enum InfraDefinitionTabs {
-  Configuration = 'Configuration',
-  ReferenceBy = 'ReferenceBy'
+export enum InfraDefinitionTabs {
+  CONFIGURATION = 'CONFIGURATION',
+  REFERENCEDBY = 'REFERENCEDBY'
 }
 
 export function InfraDefinitionDetailsDrawer(props: Props) {
@@ -57,7 +59,12 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
     setInfraSaveInProgress,
     infraSaveInProgress
   } = props
-  const [selectedTab, setSelectedTab] = React.useState<InfraDefinitionTabs>(InfraDefinitionTabs.Configuration)
+
+  const { infraDetailsTab } = useQueryParams<EnvironmentQueryParams>()
+  const { updateQueryParams } = useUpdateQueryParams<EnvironmentQueryParams>()
+  const [selectedTab, setSelectedTab] = React.useState<InfraDefinitionTabs>(
+    defaultTo(infraDetailsTab, InfraDefinitionTabs.CONFIGURATION) as InfraDefinitionTabs
+  )
   const { getString } = useStrings()
   const { identifier: infraIdentifier, environmentRef: envIdentifier } = useMemo(() => {
     return defaultTo(
@@ -72,6 +79,29 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
     infraDefinitionFormRef.current?.saveInfrastructure()
   }
 
+  const resetQueryParams = () => {
+    updateQueryParams({ infraDetailsTab: undefined, infrastructureId: undefined })
+  }
+
+  const handleDrawerClose = () => {
+    resetQueryParams()
+    onCloseDrawer()
+  }
+
+  useEffect(() => {
+    updateQueryParams({ infraDetailsTab: selectedTab, infrastructureId: infraIdentifier })
+
+    return () => {
+      resetQueryParams()
+    }
+  }, [])
+
+  /* istanbul ignore next */
+  const handleTabChange = React.useCallback((newTab: InfraDefinitionTabs) => {
+    setSelectedTab(newTab)
+    updateQueryParams({ infraDetailsTab: newTab })
+  }, [])
+
   return (
     <Drawer
       usePortal={true}
@@ -85,11 +115,12 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
       position={Position.RIGHT}
       title={
         <InfraDefinitionDetailsDrawerTitle
-          discardChanges={onCloseDrawer}
+          discardChanges={handleDrawerClose}
           applyChanges={handleApplyChanges}
           scope={scope}
           environmentIdentifier={environmentIdentifier}
           infraSaveInProgress={infraSaveInProgress}
+          shouldShowActionButtons={selectedTab === InfraDefinitionTabs.CONFIGURATION}
         />
       }
       data-type={DrawerTypes.StepConfig}
@@ -97,22 +128,22 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
       isCloseButtonShown={false}
       portalClassName={'infra-definition-details--drawer'}
     >
-      <Button minimal className={css.closeButton} icon="cross" withoutBoxShadow onClick={onCloseDrawer} />
+      <Button minimal className={css.closeButton} icon="cross" withoutBoxShadow onClick={handleDrawerClose} />
 
       <Container>
         <Tabs
           id="infra-definition-details"
           selectedTabId={selectedTab}
-          onChange={/* istanbul ignore next */ (newTab: InfraDefinitionTabs) => setSelectedTab(newTab)}
+          onChange={handleTabChange}
           renderAllTabPanels={true}
         >
           <Tab
-            id={InfraDefinitionTabs.Configuration}
+            id={InfraDefinitionTabs.CONFIGURATION}
             title={getString('configuration')}
             className={css.infraDetailsConfigurationTab}
             panel={
               <BootstrapDeployInfraDefinitionWrapperWithRef
-                closeInfraDefinitionDetails={onCloseDrawer}
+                closeInfraDefinitionDetails={handleDrawerClose}
                 refetch={refetch}
                 scope={scope}
                 environmentIdentifier={environmentIdentifier}
@@ -125,7 +156,7 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
             }
           />
           <Tab
-            id={InfraDefinitionTabs.ReferenceBy}
+            id={InfraDefinitionTabs.REFERENCEDBY}
             title={getString('referencedBy')}
             className={css.infraDetailsReferencedByTab}
             panel={

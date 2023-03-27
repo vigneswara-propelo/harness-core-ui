@@ -7,16 +7,18 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { find, get } from 'lodash-es'
 
 import { ButtonSize, ButtonVariation, Container, ModalDialog, Page, useToggleOpen } from '@harness/uicore'
 
-import { useGetInfrastructureList } from 'services/cd-ng'
+import { InfrastructureResponse, useGetInfrastructureList } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
-import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { EnvironmentPathProps, ProjectPathProps, EnvironmentQueryParams } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useQueryParams } from '@common/hooks'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
@@ -43,6 +45,8 @@ export default function InfrastructureDefinition(): JSX.Element {
     open: openInfraDefinitionDetails
   } = useToggleOpen(false)
 
+  const { infrastructureId } = useQueryParams<EnvironmentQueryParams>()
+
   const { data, loading, error, refetch } = useGetInfrastructureList({
     queryParams: {
       accountIdentifier: accountId,
@@ -58,6 +62,20 @@ export default function InfrastructureDefinition(): JSX.Element {
     setSelectedInfrastructure('')
     closeInfraDefinitionDetails()
   }
+
+  useEffect(() => {
+    const preSelectedInfrastructureYaml = get(
+      find(
+        data?.data?.content,
+        (infraDetails: InfrastructureResponse) => infraDetails.infrastructure?.identifier === infrastructureId
+      ),
+      'infrastructure.yaml'
+    )
+
+    if (preSelectedInfrastructureYaml) {
+      setSelectedInfrastructure(preSelectedInfrastructureYaml)
+    }
+  }, [data?.data?.content, infrastructureId])
 
   useEffect(() => {
     if (selectedInfrastructure) {

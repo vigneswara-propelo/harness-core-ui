@@ -53,7 +53,7 @@ exports[`useEntityDeleteErrorHandlerDialog test should render error with forcedD
     class="Layout--vertical StyledProps--main"
   >
     <p
-      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-medium"
+      class="StyledProps--font StyledProps--main referenceTextWarning StyledProps--margin-bottom-medium"
     >
       common.referenceTextWarning
     </p>

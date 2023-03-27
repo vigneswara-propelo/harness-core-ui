@@ -5598,6 +5598,7 @@ export interface StringsMap {
   'cd.infrastructure.deleted': string
   'cd.infrastructure.edit': string
   'cd.infrastructure.infrastructureDefinitions': string
+  'cd.infrastructure.infrastructureDetails': string
   'cd.infrastructure.noInfrastructureInEnvironment': string
   'cd.infrastructure.sshWinRmAzure.cloudProvider': string
   'cd.infrastructure.sshWinRmAzure.hostConnectionAttributes': string

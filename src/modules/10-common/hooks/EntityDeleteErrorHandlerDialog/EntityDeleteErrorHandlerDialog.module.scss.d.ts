@@ -8,5 +8,6 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly forcedDeleteWarning: string
+  readonly referenceTextWarning: string
 }
 export default styles

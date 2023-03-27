@@ -16,8 +16,10 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
   scope: Scope
   environmentIdentifier: string
   infraSaveInProgress?: boolean
+  shouldShowActionButtons: boolean
 }): JSX.Element {
-  const { discardChanges, applyChanges, scope, environmentIdentifier, infraSaveInProgress } = props
+  const { discardChanges, applyChanges, scope, environmentIdentifier, infraSaveInProgress, shouldShowActionButtons } =
+    props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const environmentEditPermissions: ButtonProps['permission'] = {
     resource: {
@@ -35,30 +37,32 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
   return (
     <Layout.Horizontal flex={{ distribution: 'space-between' }}>
       <Text color={Color.BLACK} font={{ size: 'medium', weight: 'bold' }}>
-        {getString('cd.infrastructure.edit')}
+        {getString('cd.infrastructure.infrastructureDetails')}
       </Text>
-      <Container>
-        <Layout.Horizontal
-          spacing={'medium'}
-          padding={{ top: 'xlarge', left: 'huge', bottom: 'large' }}
-          className={css.modalFooter}
-        >
-          <RbacButton
-            text={getString('save')}
-            variation={ButtonVariation.PRIMARY}
-            onClick={applyChanges}
-            disabled={infraSaveInProgress}
-            loading={infraSaveInProgress}
-            permission={environmentEditPermissions}
-          />
-          <Button
-            text={getString('cancel')}
-            variation={ButtonVariation.SECONDARY}
-            onClick={discardChanges}
-            disabled={infraSaveInProgress}
-          />
-        </Layout.Horizontal>
-      </Container>
+      {shouldShowActionButtons && (
+        <Container>
+          <Layout.Horizontal
+            spacing={'medium'}
+            padding={{ top: 'xlarge', left: 'huge', bottom: 'large' }}
+            className={css.modalFooter}
+          >
+            <RbacButton
+              text={getString('save')}
+              variation={ButtonVariation.PRIMARY}
+              onClick={applyChanges}
+              disabled={infraSaveInProgress}
+              loading={infraSaveInProgress}
+              permission={environmentEditPermissions}
+            />
+            <Button
+              text={getString('cancel')}
+              variation={ButtonVariation.SECONDARY}
+              onClick={discardChanges}
+              disabled={infraSaveInProgress}
+            />
+          </Layout.Horizontal>
+        </Container>
+      )}
     </Layout.Horizontal>
   )
 }

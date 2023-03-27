@@ -9,20 +9,25 @@ import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { defaultTo } from 'lodash-es'
-
 import { ButtonVariation, Container, Heading, Layout, TableV2, useToaster } from '@harness/uicore'
-
 import { InfrastructureResponse, useDeleteInfrastructure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-
-import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
+import type { EnvironmentPathProps, ProjectPathProps, EnvironmentQueryParams } from '@common/interfaces/RouteInterfaces'
+import { InfraDefinitionTabs } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawer'
+import { useUpdateQueryParams } from '@common/hooks'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { InfrastructureMenu, InfrastructureName, LastUpdatedBy, withInfrastructure } from './InfrastructureListColumns'
-
+import {
+  InfraDetails,
+  InfrastructureMenu,
+  InfrastructureName,
+  LastUpdatedBy,
+  withInfrastructure
+} from './InfrastructureListColumns'
 import EmptyInfrastructure from '../images/EmptyInfrastructure.svg'
 
 export default function InfrastructureList({
@@ -42,27 +47,60 @@ export default function InfrastructureList({
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
+  const { CDS_FORCE_DELETE_ENTITIES } = useFeatureFlags()
+  const { updateQueryParams } = useUpdateQueryParams<EnvironmentQueryParams>()
+  const [infraDetailsToBeDeleted, setInfraDetailsToBeDeleted] = React.useState<InfraDetails>()
 
-  const { mutate: deleteInfrastructure } = useDeleteInfrastructure({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      environmentIdentifier
-    }
-  })
+  const redirectToReferencedBy = (): void => {
+    closeReferenceErrorDialog()
+    updateQueryParams({
+      infrastructureId: infraDetailsToBeDeleted?.identifier,
+      infraDetailsTab: InfraDefinitionTabs.REFERENCEDBY
+    })
+  }
+
+  const { openDialog: openReferenceErrorDialog, closeDialog: closeReferenceErrorDialog } =
+    useEntityDeleteErrorHandlerDialog({
+      entity: {
+        type: ResourceType.INFRASTRUCTURE,
+        name: defaultTo(infraDetailsToBeDeleted?.name, '')
+      },
+      redirectToReferencedBy,
+      forceDeleteCallback: CDS_FORCE_DELETE_ENTITIES ? () => deleteHandler(infraDetailsToBeDeleted!, true) : undefined
+    })
+
+  const { mutate: deleteInfrastructure } = useDeleteInfrastructure({})
 
   const onEdit = (yaml: string): void => {
     setSelectedInfrastructure(yaml)
   }
 
-  const onDelete = async (identifier: string): Promise<void> => {
+  const deleteHandler = async (infraDetails: InfraDetails, forceDelete?: boolean): Promise<void> => {
+    setInfraDetailsToBeDeleted(infraDetails)
     try {
-      await deleteInfrastructure(identifier, { headers: { 'content-type': 'application/json' } })
-      showSuccess(getString('cd.infrastructure.deleted', { identifier }))
-      refetch()
+      const infraIdentifier = defaultTo(infraDetails?.identifier, '')
+      const response = await deleteInfrastructure(infraIdentifier, {
+        headers: { 'content-type': 'application/json' },
+        queryParams: {
+          accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
+          environmentIdentifier,
+          forceDelete
+        }
+      })
+      if (response.status === 'SUCCESS') {
+        showSuccess(getString('cd.infrastructure.deleted', { identifier: infraIdentifier }))
+        refetch()
+        setInfraDetailsToBeDeleted(undefined)
+      }
     } catch (error) {
-      showError(getRBACErrorMessage(error))
+      if (error?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+        openReferenceErrorDialog()
+      } else {
+        showError(getRBACErrorMessage(error))
+        setInfraDetailsToBeDeleted(undefined)
+      }
     }
   }
 
@@ -87,7 +125,7 @@ export default function InfrastructureList({
         Cell: withInfrastructure(InfrastructureMenu),
         actions: {
           onEdit,
-          onDelete
+          onDelete: deleteHandler
         }
       }
     ],
