@@ -57,7 +57,7 @@ const TemplateYamlView: React.FC = () => {
   const userPreferenceEditMode = React.useMemo(() => defaultTo(Boolean(preference === 'true'), false), [preference])
   const { enableEditMode } = useEnableEditModes()
   const { expressions } = useVariablesExpression()
-  const isTemplateSchemaValidationEnabled = useFeatureFlag(FeatureFlag.TEMPLATE_SCHEMA_VALIDATION)
+  const isTemplateSchemaValidationDisabled = useFeatureFlag(FeatureFlag.DISABLE_TEMPLATE_SCHEMA_VALIDATION)
   const expressionRef = React.useRef<string[]>([])
   expressionRef.current = expressions
 
@@ -113,7 +113,7 @@ const TemplateYamlView: React.FC = () => {
       accountIdentifier: accountId,
       scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
     },
-    lazy: !isTemplateSchemaValidationEnabled
+    lazy: isTemplateSchemaValidationDisabled
   })
 
   const onEditButtonClick = async () => {
