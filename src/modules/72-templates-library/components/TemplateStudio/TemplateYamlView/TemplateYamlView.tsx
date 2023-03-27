@@ -107,7 +107,7 @@ const TemplateYamlView: React.FC = () => {
   const { data: templateSchema } = useGetTemplateSchema({
     queryParams: {
       templateEntityType: template.type,
-      entityType: template.spec?.type,
+      entityType: template.spec?.type || template.spec?.stageType,
       projectIdentifier,
       orgIdentifier,
       accountIdentifier: accountId,
