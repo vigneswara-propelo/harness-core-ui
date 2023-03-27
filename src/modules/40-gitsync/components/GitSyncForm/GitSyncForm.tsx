@@ -28,6 +28,7 @@ import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/E
 import { Connectors } from '@connectors/constants'
 import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
 import { yamlPathRegex } from '@common/utils/StringUtils'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import css from './GitSyncForm.module.scss'
 
 export interface GitSyncFormFields {
@@ -83,8 +84,8 @@ export const gitSyncFormSchema = (
   })
 })
 
-const getSupportedProviders = () => {
-  const supportedRepoProviders = [Connectors.GITHUB, Connectors.BITBUCKET, Connectors.AZURE_REPO]
+const getSupportedProviders = (): Array<ConnectorInfoDTO['type']> => {
+  const supportedRepoProviders = [Connectors.GITHUB, Connectors.BITBUCKET, Connectors.AZURE_REPO, Connectors.GITLAB]
   return supportedRepoProviders
 }
 

@@ -12,15 +12,16 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { GitSyncForm, GitSyncFormFields } from '../GitSyncForm'
-import { mockRepos, mockBranches, gitConnectorMock } from './mockdata'
+import { mockRepos, mockBranches, gitConnectorMock, fetchSupportedConnectorsListPayload } from './mockdata'
 
 const pathParams = { accountId: 'dummy', orgIdentifier: 'default', projectIdentifier: 'DevX' }
 const getGitConnector = jest.fn(() => Promise.resolve(gitConnectorMock))
 const fetchRepos = jest.fn(() => Promise.resolve(mockRepos))
 const fetchBranches = jest.fn(() => Promise.resolve(mockBranches))
+const fetchSupportedConnectorsList = jest.fn(_arg => Promise.resolve(gitConnectorMock))
 
 jest.mock('services/cd-ng', () => ({
-  getConnectorListV2Promise: jest.fn(() => Promise.resolve(gitConnectorMock)),
+  getConnectorListV2Promise: jest.fn().mockImplementation(arg => fetchSupportedConnectorsList(arg)),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: gitConnectorMock.data.content[0], refetch: getGitConnector, loading: false }
   }),
@@ -71,6 +72,9 @@ describe('GitSyncForm test', () => {
         fireEvent.click(connnectorRefInput)
       })
     }
+
+    expect(fetchSupportedConnectorsList).toBeCalledTimes(1)
+    expect(fetchSupportedConnectorsList).toBeCalledWith(fetchSupportedConnectorsListPayload)
 
     await act(async () => {
       const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0]

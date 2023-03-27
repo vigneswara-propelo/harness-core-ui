@@ -113,3 +113,21 @@ export const gitConnectorMock = {
   metaData: null,
   correlationId: 'b966360a-06b4-4c7a-8509-7d5d6d848548'
 }
+
+export const fetchSupportedConnectorsListPayload = {
+  body: {
+    category: undefined,
+    filterType: 'Connector',
+    orgIdentifier: ['default'],
+    projectIdentifier: ['DevX'],
+    types: ['Github', 'Bitbucket', 'AzureRepo', 'Gitlab']
+  },
+  queryParams: {
+    accountIdentifier: 'dummy',
+    orgIdentifier: 'default',
+    pageIndex: 0,
+    pageSize: 10,
+    projectIdentifier: 'DevX',
+    searchTerm: ''
+  }
+}
