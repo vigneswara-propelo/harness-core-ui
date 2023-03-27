@@ -109,6 +109,7 @@ const WebhookSecretInputWithDialog: React.FC<SecretInputWithDialogProps> = ({ fo
           onSuccess={() => {
             setIsDialogOpen(true)
           }}
+          tooltipProps={{ dataTooltipId: 'encryptedWebhookSecretIdentifier' }}
         />
       )}
       <Dialog

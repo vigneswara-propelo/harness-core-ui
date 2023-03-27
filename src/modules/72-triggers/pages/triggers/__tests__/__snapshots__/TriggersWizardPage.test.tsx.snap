@@ -659,7 +659,7 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                                 >
                                   <span
                                     class="Tooltip--acenter"
-                                    data-tooltip-id="wizardForm_webhook_encryptedWebhookSecretIdentifier"
+                                    data-tooltip-id="encryptedWebhookSecretIdentifier"
                                   >
                                     secrets.secret.configureSecret (projectsOrgs.optional)
                                   </span>
@@ -1430,7 +1430,7 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                                 >
                                   <span
                                     class="Tooltip--acenter"
-                                    data-tooltip-id="wizardForm_webhook_encryptedWebhookSecretIdentifier"
+                                    data-tooltip-id="encryptedWebhookSecretIdentifier"
                                   >
                                     secrets.secret.configureSecret (projectsOrgs.optional)
                                   </span>
@@ -4372,7 +4372,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                                 >
                                   <span
                                     class="Tooltip--acenter"
-                                    data-tooltip-id="wizardForm_webhook_encryptedWebhookSecretIdentifier"
+                                    data-tooltip-id="encryptedWebhookSecretIdentifier"
                                   >
                                     secrets.secret.configureSecret (projectsOrgs.optional)
                                   </span>
@@ -5535,7 +5535,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                                 >
                                   <span
                                     class="Tooltip--acenter"
-                                    data-tooltip-id="wizardForm_webhook_encryptedWebhookSecretIdentifier"
+                                    data-tooltip-id="encryptedWebhookSecretIdentifier"
                                   >
                                     secrets.secret.configureSecret (projectsOrgs.optional)
                                   </span>
