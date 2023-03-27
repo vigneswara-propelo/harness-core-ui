@@ -8968,6 +8968,15 @@ export interface StringsMap {
   'cv.slos.sloCreated': string
   'cv.slos.sloDefinition': string
   'cv.slos.sloDeleted': string
+  'cv.slos.sloDetailsChart.addAnnotation': string
+  'cv.slos.sloDetailsChart.addAnnotationMessage': string
+  'cv.slos.sloDetailsChart.annotation': string
+  'cv.slos.sloDetailsChart.annotationMessageDeleted': string
+  'cv.slos.sloDetailsChart.deleteMessageConfirmation': string
+  'cv.slos.sloDetailsChart.editAnnotation': string
+  'cv.slos.sloDetailsChart.endDate': string
+  'cv.slos.sloDetailsChart.startDate': string
+  'cv.slos.sloDetailsChart.updateAnnotationMessage': string
   'cv.slos.sloEditWarningMessage': string
   'cv.slos.sloFormula.subHeader': string
   'cv.slos.sloFormula.title': string

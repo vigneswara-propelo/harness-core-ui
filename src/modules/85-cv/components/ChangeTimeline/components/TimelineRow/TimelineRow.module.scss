@@ -40,41 +40,6 @@
   }
 }
 
-.timelineRowPopover {
-  background-color: var(--grey-700) !important;
-  position: relative;
-  bottom: 10px;
-  :global {
-    .bp3-popover-arrow-fill {
-      fill: var(--grey-700) !important;
-    }
-    .bp3-popover-content {
-      background-color: var(--grey-700) !important;
-    }
-  }
-}
-
-.tooltipContainer {
-  display: flex;
-  min-width: 200px;
-  justify-content: space-between;
-  align-items: center;
-
-  > p {
-    font-size: var(--font-size-small) !important;
-    margin-right: var(--spacing-4) !important;
-    color: var(--white) !important;
-  }
-
-  .colorSidePanel {
-    width: 4px;
-    margin-right: var(--spacing-4) !important;
-    min-height: 30px;
-    border-top-left-radius: 2px;
-    border-bottom-left-radius: 2px;
-  }
-}
-
 .errorContainer {
   height: 20px;
   width: 100%;
@@ -95,4 +60,10 @@
   p {
     margin-left: var(--spacing-medium) !important;
   }
+}
+
+.division {
+  border-color: var(--grey-200);
+  margin: var(--spacing-6) 0;
+  opacity: 0.3;
 }

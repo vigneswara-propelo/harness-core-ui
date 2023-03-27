@@ -426,8 +426,12 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
               CV.TIMELINE
             </p>
             <div
-              class="timelineBar"
-            />
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="timelineBar"
+              />
+            </div>
           </div>
         </div>
       </div>

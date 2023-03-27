@@ -8,6 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { mockedSecondaryEventsResponse } from '@cv/pages/slos/__tests__/CVSLOsListingPage.mock'
 import DetailsPanel from '../DetailsPanel'
 import { slowidgetAPI } from './DetailsPanel.mock'
 
@@ -32,6 +33,15 @@ jest.mock('services/cv', () => ({
   useChangeEventListForAccount: jest.fn().mockImplementation(() => mockAPI),
   useChangeEventList: jest.fn().mockImplementation(() => mockAPI),
   useGetUnavailabilityInstances: jest.fn().mockImplementation(() => mockAPI),
+  useGetSecondaryEvents: jest.fn().mockImplementation(() => {
+    return {
+      data: mockedSecondaryEventsResponse,
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    }
+  }),
   useGetMonitoredServiceChangeTimeline: jest.fn().mockImplementation(() => {
     return {
       data: {

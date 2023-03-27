@@ -6,9 +6,12 @@
  */
 
 import type { PointMarkerOptionsObject } from 'highcharts'
+import type { AnnotationMessage } from './components/Annotation/Annotation.types'
 
 export interface TimelineData {
   endTime: number
+  startTime: number
+  type?: string
   icon: {
     height: number
     width: number
@@ -16,10 +19,10 @@ export interface TimelineData {
     url: string
   }
   tooltip?: {
-    message: string
+    message?: string
     sideBorderColor: string
   }
-  startTime: number
+  identifiers?: string[]
 }
 
 export interface TimelineDataPoint extends TimelineData {
@@ -34,6 +37,8 @@ export interface TimelineRowProps {
   endTimestamp?: number
   isLoading?: boolean
   hideTimeline?: boolean
+  addAnnotation?: (annotationMessage?: AnnotationMessage) => void
+  fetchSecondaryEvents?: () => Promise<void>
 }
 
 export interface PointMarkerOptionsObjectCustom extends PointMarkerOptionsObject {

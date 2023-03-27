@@ -19,17 +19,71 @@ export function getDataWithPositions(
 
   const timelineDataPoints: TimelineDataPoint[] = []
   for (const datum of data) {
-    const { startTime, endTime, icon, tooltip } = datum || {}
-    if (startTime && endTime && icon) {
+    const { startTime, endTime, icon, tooltip, type, identifiers } = datum || {}
+    if (startTime && endTime) {
       timelineDataPoints.push({
         endTime,
         startTime,
         icon,
         tooltip,
+        type,
+        identifiers,
         leftOffset: containerWidth * (1 - (endOfTimestamps - startTime) / (endOfTimestamps - startOfTimestamps))
       })
     }
   }
 
   return timelineDataPoints
+}
+
+export function isWidgetWithSameStartTime(
+  dataGroupedWithStartTime: { [key: string]: TimelineDataPoint[] },
+  currentStartTime: string,
+  startTimestamp?: number,
+  endTimestamp?: number
+): boolean {
+  return (
+    dataGroupedWithStartTime[currentStartTime]?.length >= 1 &&
+    Number(currentStartTime) > Number(startTimestamp) &&
+    Number(currentStartTime) <= Number(endTimestamp)
+  )
+}
+
+export function isWidgetWithUniqStartTime(
+  dataGroupedWithStartTime: { [key: string]: TimelineDataPoint[] },
+  currentStartTime: string,
+  startTimestamp?: number,
+  endTimestamp?: number
+): boolean {
+  return (
+    dataGroupedWithStartTime[currentStartTime]?.length === 1 &&
+    Number(currentStartTime) >= Number(startTimestamp) &&
+    Number(currentStartTime) <= Number(endTimestamp)
+  )
+}
+
+export function getInitialPositionOfWidget(
+  position: number,
+  height = 16,
+  width = 16
+): { left: number; height: number; width: number } {
+  return {
+    left: position,
+    height,
+    width
+  }
+}
+
+export function getWidgetsGroupedWithStartTime(dataWithPositions: TimelineDataPoint[]): {
+  [key: string]: TimelineDataPoint[]
+} {
+  const widgetsGroupedWithStartTime: { [key: string]: TimelineDataPoint[] } = {}
+  for (const el of dataWithPositions) {
+    if (el?.startTime in widgetsGroupedWithStartTime) {
+      widgetsGroupedWithStartTime[el?.startTime?.toString()] = [...widgetsGroupedWithStartTime[el?.startTime], el]
+    } else {
+      widgetsGroupedWithStartTime[el?.startTime?.toString()] = [el]
+    }
+  }
+  return widgetsGroupedWithStartTime
 }

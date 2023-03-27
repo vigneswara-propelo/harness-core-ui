@@ -15,6 +15,7 @@ import { mockedHealthScoreData } from '@cv/pages/monitored-service/components/Se
 import { changeSummaryWithPositiveChange } from '@cv/pages/monitored-service/CVMonitoredService/__test__/CVMonitoredService.mock'
 import Button from '@rbac/components/Button/Button'
 
+import { mockedSecondaryEventsResponse } from '@cv/pages/slos/__tests__/CVSLOsListingPage.mock'
 import { mockData } from './data-mocks/ChangeEventListMock'
 import { CVChanges } from '../CVChanges'
 
@@ -179,6 +180,15 @@ jest.mock('services/cv', () => ({
           }
         }
       },
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    }
+  }),
+  useGetSecondaryEvents: jest.fn().mockImplementation(() => {
+    return {
+      data: mockedSecondaryEventsResponse,
       refetch: jest.fn(),
       error: null,
       loading: false,

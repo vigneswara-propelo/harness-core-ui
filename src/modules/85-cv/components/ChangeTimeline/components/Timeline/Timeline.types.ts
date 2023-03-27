@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { SecondaryEventsResponse } from 'services/cv'
+import type { AnnotationMessage } from '../TimelineRow/components/Annotation/Annotation.types'
 import type { TimelineRowProps } from '../TimelineRow/TimelineRow.types'
 export interface TimelineProps {
   timelineRows: Omit<TimelineRowProps, 'labelWidth'>[]
@@ -13,4 +15,9 @@ export interface TimelineProps {
   isLoading?: boolean
   rowOffset?: number
   hideTimeline?: boolean
+  addAnnotation?: (annotationMessage?: AnnotationMessage) => void
+  sloWidgetsData?: SecondaryEventsResponse[]
+  sloWidgetsDataLoading?: boolean
+  fetchSecondaryEvents?: () => Promise<void>
+  isSLOChartTimeline?: boolean
 }

@@ -45,7 +45,12 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
     changeSourceTypes,
     hideTimeline,
     duration,
-    monitoredServiceIdentifiers
+    monitoredServiceIdentifiers,
+    addAnnotation,
+    sloWidgetsData,
+    sloWidgetsDataLoading,
+    fetchSecondaryEvents,
+    isSLOChartTimeline
   } = props
 
   const {
@@ -210,6 +215,11 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
       timestamps={[startTimeRoundedOffToNearest30min, endTimeRoundedOffToNearest30min]}
       labelWidth={90}
       hideTimeline={hideTimeline}
+      addAnnotation={addAnnotation}
+      sloWidgetsData={sloWidgetsData}
+      sloWidgetsDataLoading={sloWidgetsDataLoading}
+      fetchSecondaryEvents={fetchSecondaryEvents}
+      isSLOChartTimeline={isSLOChartTimeline}
     />
   )
 }

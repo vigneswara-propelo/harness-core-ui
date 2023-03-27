@@ -220,3 +220,24 @@ export const mockSLODashboardWidgetsData = {
   metaData: null,
   correlationId: '8d19830f-e176-4957-83a1-9d898144ae00'
 }
+
+export const mockedSecondaryEventsResponse = {
+  status: 'SUCCESS',
+  data: [
+    { type: 'Downtime', identifiers: ['yEudIuKcQ_Cnd4TTzluxxg'], startTime: 1679229000, endTime: 1679230800 },
+    {
+      type: 'Annotation',
+      identifiers: ['2fq95fHDS_6If0_QRixu6w', 'YXrDFNNcSPC3kS9J1V8pPw'],
+      startTime: 1679229000,
+      endTime: 1679580900
+    },
+    {
+      type: 'Annotation',
+      identifiers: ['qdYMjJqLTz26vOnTg72eug', 'R6D2dCgLRrOYcblm7mAc2g', '7FuXVSShTEmCpg-x5xtNLQ'],
+      startTime: 1679528580,
+      endTime: 1679551980
+    },
+    { type: 'Annotation', identifiers: ['1YgDbYaGT5SbaVWkLqMOag'], startTime: 1679550120, endTime: 1679551920 }
+  ],
+  correlationId: '672837ee-7f1e-40ff-8edc-2b52abaa956d'
+}

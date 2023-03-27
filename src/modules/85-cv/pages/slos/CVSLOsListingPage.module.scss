@@ -144,7 +144,7 @@ $headerHeight: 146px;
 }
 
 .timelineSlider {
-  height: 85% !important;
+  height: 80% !important;
 }
 
 .titleInSloTable {
@@ -192,4 +192,12 @@ $headerHeight: 146px;
   .slider {
     height: 85% !important;
   }
+}
+
+.annotationIcon {
+  cursor: pointer;
+}
+
+.addAnnotationLink {
+  padding-left: var(--spacing-xsmall) !important;
 }

@@ -107,6 +107,19 @@ export interface AnnotationDTO {
   startTime: number
 }
 
+export interface AnnotationInstance {
+  createdAt?: number
+  createdBy?: string
+  endTime?: number
+  message: string
+  startTime?: number
+  uuid: string
+}
+
+export type AnnotationInstanceDetails = SecondaryEventDetails & {
+  annotations?: AnnotationInstance[]
+}
+
 export interface AnnotationResponse {
   annotation: AnnotationDTO
   createdAt?: number
@@ -582,20 +595,41 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
   billingExportSpec?: BillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   subscriptionId: string
   tenantId: string
 }
 
 export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   connectorRef: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
 }
 
 export type CVNGEmailChannelSpec = CVNGNotificationChannelSpec & {
@@ -1285,6 +1319,8 @@ export interface DowntimeHistoryView {
   startTime?: number
 }
 
+export type DowntimeInstanceDetails = SecondaryEventDetails & { [key: string]: any }
+
 export interface DowntimeListView {
   affectedEntities?: AffectedEntity[]
   category?: 'ScheduledMaintenance' | 'Deployment' | 'Other'
@@ -1295,6 +1331,7 @@ export interface DowntimeListView {
   identifier?: string
   lastModified?: LastModified
   name?: string
+  pastOrActiveInstancesCount?: number
   spec?: DowntimeSpecDTO
 }
 
@@ -1743,6 +1780,7 @@ export interface Error {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -1795,6 +1833,7 @@ export interface Error {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2175,6 +2214,7 @@ export interface Failure {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -2227,6 +2267,7 @@ export interface Failure {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2251,7 +2292,14 @@ export interface GcpBillingExportSpec {
 
 export type GcpCloudCostConnector = ConnectorConfigDTO & {
   billingExportSpec?: GcpBillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   projectId: string
   serviceAccountEmail: string
 }
@@ -2326,8 +2374,10 @@ export interface GithubApiAccessSpecDTO {
 }
 
 export type GithubAppSpec = GithubApiAccessSpecDTO & {
-  applicationId: string
-  installationId: string
+  applicationId?: string
+  applicationIdRef?: string
+  installationId?: string
+  installationIdRef?: string
   privateKeyRef: string
 }
 
@@ -4403,6 +4453,13 @@ export interface ResponseListPrometheusSampleData {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseListSecondaryEventsResponse {
+  correlationId?: string
+  data?: SecondaryEventsResponse[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseListStackdriverDashboardDetail {
   correlationId?: string
   data?: StackdriverDashboardDetail[]
@@ -4746,6 +4803,7 @@ export interface ResponseMessage {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -4798,6 +4856,7 @@ export interface ResponseMessage {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4974,6 +5033,13 @@ export interface ResponseSLORiskCountResponse {
 export interface ResponseSRMLicenseUsageDTO {
   correlationId?: string
   data?: SRMLicenseUsageDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseSecondaryEventDetailsResponse {
+  correlationId?: string
+  data?: SecondaryEventDetailsResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -5852,6 +5918,24 @@ export interface SampleDataDTO {
   metricValueJSONPath: string
   timestampFormat?: string
   timestampJSONPath: string
+}
+
+export interface SecondaryEventDetails {
+  [key: string]: any
+}
+
+export interface SecondaryEventDetailsResponse {
+  details: SecondaryEventDetails
+  endTime: number
+  startTime: number
+  type: 'Downtime' | 'DataCollectionFailure' | 'Annotation'
+}
+
+export interface SecondaryEventsResponse {
+  endTime?: number
+  identifiers?: string[]
+  startTime?: number
+  type?: 'Downtime' | 'DataCollectionFailure' | 'Annotation'
 }
 
 export interface ServiceDependencyDTO {
@@ -6793,6 +6877,86 @@ export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
 export type SaveMonitoredServiceFromYamlBodyRequestBody = string
 
+export interface SaveAccountLevelAnnotationPathParams {
+  accountIdentifier: string
+}
+
+export type SaveAccountLevelAnnotationProps = Omit<
+  MutateProps<
+    RestResponseAnnotationResponse,
+    unknown,
+    void,
+    AnnotationDTORequestBody,
+    SaveAccountLevelAnnotationPathParams
+  >,
+  'path' | 'verb'
+> &
+  SaveAccountLevelAnnotationPathParams
+
+/**
+ * saves annotation
+ */
+export const SaveAccountLevelAnnotation = ({ accountIdentifier, ...props }: SaveAccountLevelAnnotationProps) => (
+  <Mutate<RestResponseAnnotationResponse, unknown, void, AnnotationDTORequestBody, SaveAccountLevelAnnotationPathParams>
+    verb="POST"
+    path={`/account/${accountIdentifier}/annotation`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseSaveAccountLevelAnnotationProps = Omit<
+  UseMutateProps<
+    RestResponseAnnotationResponse,
+    unknown,
+    void,
+    AnnotationDTORequestBody,
+    SaveAccountLevelAnnotationPathParams
+  >,
+  'path' | 'verb'
+> &
+  SaveAccountLevelAnnotationPathParams
+
+/**
+ * saves annotation
+ */
+export const useSaveAccountLevelAnnotation = ({ accountIdentifier, ...props }: UseSaveAccountLevelAnnotationProps) =>
+  useMutate<
+    RestResponseAnnotationResponse,
+    unknown,
+    void,
+    AnnotationDTORequestBody,
+    SaveAccountLevelAnnotationPathParams
+  >(
+    'POST',
+    (paramsInPath: SaveAccountLevelAnnotationPathParams) => `/account/${paramsInPath.accountIdentifier}/annotation`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * saves annotation
+ */
+export const saveAccountLevelAnnotationPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseAnnotationResponse,
+    unknown,
+    void,
+    AnnotationDTORequestBody,
+    SaveAccountLevelAnnotationPathParams
+  > & { accountIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseAnnotationResponse,
+    unknown,
+    void,
+    AnnotationDTORequestBody,
+    SaveAccountLevelAnnotationPathParams
+  >('POST', getConfig('cv/api'), `/account/${accountIdentifier}/annotation`, props, signal)
+
 export interface ChangeEventListForAccountQueryParams {
   serviceIdentifiers?: string[]
   envIdentifiers?: string[]
@@ -7002,6 +7166,243 @@ export const changeEventTimelineForAccountPromise = (
     ChangeEventTimelineForAccountQueryParams,
     ChangeEventTimelineForAccountPathParams
   >(getConfig('cv/api'), `/account/${accountIdentifier}/change-event/timeline`, props, signal)
+
+export interface SaveAnnotationPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type SaveAnnotationProps = Omit<
+  MutateProps<RestResponseAnnotationResponse, unknown, void, AnnotationDTORequestBody, SaveAnnotationPathParams>,
+  'path' | 'verb'
+> &
+  SaveAnnotationPathParams
+
+/**
+ * saves annotation
+ */
+export const SaveAnnotation = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: SaveAnnotationProps) => (
+  <Mutate<RestResponseAnnotationResponse, unknown, void, AnnotationDTORequestBody, SaveAnnotationPathParams>
+    verb="POST"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/annotation`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseSaveAnnotationProps = Omit<
+  UseMutateProps<RestResponseAnnotationResponse, unknown, void, AnnotationDTORequestBody, SaveAnnotationPathParams>,
+  'path' | 'verb'
+> &
+  SaveAnnotationPathParams
+
+/**
+ * saves annotation
+ */
+export const useSaveAnnotation = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseSaveAnnotationProps) =>
+  useMutate<RestResponseAnnotationResponse, unknown, void, AnnotationDTORequestBody, SaveAnnotationPathParams>(
+    'POST',
+    (paramsInPath: SaveAnnotationPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/annotation`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * saves annotation
+ */
+export const saveAnnotationPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseAnnotationResponse,
+    unknown,
+    void,
+    AnnotationDTORequestBody,
+    SaveAnnotationPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseAnnotationResponse, unknown, void, AnnotationDTORequestBody, SaveAnnotationPathParams>(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/annotation`,
+    props,
+    signal
+  )
+
+export interface DeleteAnnotationPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type DeleteAnnotationProps = Omit<
+  MutateProps<RestResponseBoolean, unknown, void, string, DeleteAnnotationPathParams>,
+  'path' | 'verb'
+> &
+  DeleteAnnotationPathParams
+
+/**
+ * delete annotation
+ */
+export const DeleteAnnotation = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: DeleteAnnotationProps) => (
+  <Mutate<RestResponseBoolean, unknown, void, string, DeleteAnnotationPathParams>
+    verb="DELETE"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/annotation/identifier`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteAnnotationProps = Omit<
+  UseMutateProps<RestResponseBoolean, unknown, void, string, DeleteAnnotationPathParams>,
+  'path' | 'verb'
+> &
+  DeleteAnnotationPathParams
+
+/**
+ * delete annotation
+ */
+export const useDeleteAnnotation = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseDeleteAnnotationProps) =>
+  useMutate<RestResponseBoolean, unknown, void, string, DeleteAnnotationPathParams>(
+    'DELETE',
+    (paramsInPath: DeleteAnnotationPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/annotation/identifier`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * delete annotation
+ */
+export const deleteAnnotationPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<RestResponseBoolean, unknown, void, string, DeleteAnnotationPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseBoolean, unknown, void, string, DeleteAnnotationPathParams>(
+    'DELETE',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/annotation/identifier`,
+    props,
+    signal
+  )
+
+export interface UpdateAnnotationPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  identifier: string
+}
+
+export type UpdateAnnotationProps = Omit<
+  MutateProps<RestResponseAnnotationResponse, unknown, void, AnnotationDTORequestBody, UpdateAnnotationPathParams>,
+  'path' | 'verb'
+> &
+  UpdateAnnotationPathParams
+
+/**
+ * updates annotation message
+ */
+export const UpdateAnnotation = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: UpdateAnnotationProps) => (
+  <Mutate<RestResponseAnnotationResponse, unknown, void, AnnotationDTORequestBody, UpdateAnnotationPathParams>
+    verb="PUT"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/annotation/identifier/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateAnnotationProps = Omit<
+  UseMutateProps<RestResponseAnnotationResponse, unknown, void, AnnotationDTORequestBody, UpdateAnnotationPathParams>,
+  'path' | 'verb'
+> &
+  UpdateAnnotationPathParams
+
+/**
+ * updates annotation message
+ */
+export const useUpdateAnnotation = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: UseUpdateAnnotationProps) =>
+  useMutate<RestResponseAnnotationResponse, unknown, void, AnnotationDTORequestBody, UpdateAnnotationPathParams>(
+    'PUT',
+    (paramsInPath: UpdateAnnotationPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/annotation/identifier/${paramsInPath.identifier}`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, identifier },
+      ...props
+    }
+  )
+
+/**
+ * updates annotation message
+ */
+export const updateAnnotationPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseAnnotationResponse,
+    unknown,
+    void,
+    AnnotationDTORequestBody,
+    UpdateAnnotationPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string; identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseAnnotationResponse, unknown, void, AnnotationDTORequestBody, UpdateAnnotationPathParams>(
+    'PUT',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/annotation/identifier/${identifier}`,
+    props,
+    signal
+  )
 
 export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]
@@ -14993,6 +15394,127 @@ export const getServiceLevelObjectivesRiskCountPromise = (
     props,
     signal
   )
+
+export interface GetSecondaryEventDetailsQueryParams {
+  accountId: string
+  secondaryEventType: 'Downtime' | 'DataCollectionFailure' | 'Annotation'
+  identifiers: string[]
+}
+
+export type GetSecondaryEventDetailsProps = Omit<
+  GetProps<ResponseSecondaryEventDetailsResponse, unknown, GetSecondaryEventDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Secondary events details for SLO
+ */
+export const GetSecondaryEventDetails = (props: GetSecondaryEventDetailsProps) => (
+  <Get<ResponseSecondaryEventDetailsResponse, unknown, GetSecondaryEventDetailsQueryParams, void>
+    path={`/slo-dashboard/secondary-events-details`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSecondaryEventDetailsProps = Omit<
+  UseGetProps<ResponseSecondaryEventDetailsResponse, unknown, GetSecondaryEventDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Secondary events details for SLO
+ */
+export const useGetSecondaryEventDetails = (props: UseGetSecondaryEventDetailsProps) =>
+  useGet<ResponseSecondaryEventDetailsResponse, unknown, GetSecondaryEventDetailsQueryParams, void>(
+    `/slo-dashboard/secondary-events-details`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * Get Secondary events details for SLO
+ */
+export const getSecondaryEventDetailsPromise = (
+  props: GetUsingFetchProps<ResponseSecondaryEventDetailsResponse, unknown, GetSecondaryEventDetailsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseSecondaryEventDetailsResponse, unknown, GetSecondaryEventDetailsQueryParams, void>(
+    getConfig('cv/api'),
+    `/slo-dashboard/secondary-events-details`,
+    props,
+    signal
+  )
+
+export interface GetSecondaryEventsQueryParams {
+  startTime: number
+  endTime: number
+  accountId: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetSecondaryEventsPathParams {
+  identifier: string
+}
+
+export type GetSecondaryEventsProps = Omit<
+  GetProps<ResponseListSecondaryEventsResponse, unknown, GetSecondaryEventsQueryParams, GetSecondaryEventsPathParams>,
+  'path'
+> &
+  GetSecondaryEventsPathParams
+
+/**
+ * Get Secondary events data points for SLO
+ */
+export const GetSecondaryEvents = ({ identifier, ...props }: GetSecondaryEventsProps) => (
+  <Get<ResponseListSecondaryEventsResponse, unknown, GetSecondaryEventsQueryParams, GetSecondaryEventsPathParams>
+    path={`/slo-dashboard/secondary-events/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSecondaryEventsProps = Omit<
+  UseGetProps<
+    ResponseListSecondaryEventsResponse,
+    unknown,
+    GetSecondaryEventsQueryParams,
+    GetSecondaryEventsPathParams
+  >,
+  'path'
+> &
+  GetSecondaryEventsPathParams
+
+/**
+ * Get Secondary events data points for SLO
+ */
+export const useGetSecondaryEvents = ({ identifier, ...props }: UseGetSecondaryEventsProps) =>
+  useGet<ResponseListSecondaryEventsResponse, unknown, GetSecondaryEventsQueryParams, GetSecondaryEventsPathParams>(
+    (paramsInPath: GetSecondaryEventsPathParams) => `/slo-dashboard/secondary-events/${paramsInPath.identifier}`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * Get Secondary events data points for SLO
+ */
+export const getSecondaryEventsPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListSecondaryEventsResponse,
+    unknown,
+    GetSecondaryEventsQueryParams,
+    GetSecondaryEventsPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListSecondaryEventsResponse,
+    unknown,
+    GetSecondaryEventsQueryParams,
+    GetSecondaryEventsPathParams
+  >(getConfig('cv/api'), `/slo-dashboard/secondary-events/${identifier}`, props, signal)
 
 export interface GetUnavailabilityInstancesQueryParams {
   startTime: number

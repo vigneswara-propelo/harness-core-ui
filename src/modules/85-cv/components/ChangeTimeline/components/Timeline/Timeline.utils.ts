@@ -5,6 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { SecondaryEventsResponse } from 'services/cv'
+import downTimeIcon from '@cv/assets/downTime.svg'
+import annotationsIcon from '@cv/assets/annotations.svg'
+import { SLO_WIDGETS } from '../TimelineRow/TimelineRow.constants'
+import type { TimelineData } from '../TimelineRow/TimelineRow.types'
+
 export function calculateStartAndEndTimes(
   startXPercentage: number,
   endXPercentage: number,
@@ -14,4 +20,47 @@ export function calculateStartAndEndTimes(
   const startTime = Math.floor(startXPercentage * (timestamps[timestamps.length - 1] - timestamps[0]) + timestamps[0])
   const endTime = Math.floor(endXPercentage * (timestamps[timestamps.length - 1] - timestamps[0]) + timestamps[0])
   return [startTime, endTime]
+}
+
+export function generateSLOWidgetsInfo(sloWidgetsData?: SecondaryEventsResponse[]): TimelineData[] {
+  let sloWidgetsInfo: TimelineData[] = []
+  if (Array.isArray(sloWidgetsData) && sloWidgetsData.length) {
+    sloWidgetsInfo = sloWidgetsData.map(sloWidgetData => {
+      const { startTime, endTime, type } = sloWidgetData
+      let updatedSLOWidgetsInfo = {
+        ...sloWidgetData,
+        startTime: Number(startTime) * 1000,
+        endTime: Number(endTime) * 1000,
+        icon: {
+          height: 16,
+          width: 16,
+          url: ''
+        }
+      }
+
+      switch (type) {
+        case SLO_WIDGETS.DOWNTIME:
+          updatedSLOWidgetsInfo = {
+            ...updatedSLOWidgetsInfo,
+            icon: {
+              ...updatedSLOWidgetsInfo?.icon,
+              url: downTimeIcon
+            }
+          }
+          break
+        case SLO_WIDGETS.ANNOTATION:
+          updatedSLOWidgetsInfo = {
+            ...updatedSLOWidgetsInfo,
+            icon: {
+              ...updatedSLOWidgetsInfo?.icon,
+              url: annotationsIcon
+            }
+          }
+          break
+      }
+
+      return updatedSLOWidgetsInfo
+    })
+  }
+  return sloWidgetsInfo
 }

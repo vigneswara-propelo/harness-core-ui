@@ -7,7 +7,9 @@
 
 import type { SelectOption } from '@harness/uicore'
 import type { ChangeSourceTypes as ChangeSourceTypeRequest } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
+import type { SecondaryEventsResponse } from 'services/cv'
 import type { ChangeSourceTypes } from './ChangeTimeline.constants'
+import type { AnnotationMessage } from './components/TimelineRow/components/Annotation/Annotation.types'
 
 export interface ChangeTimelineProps {
   useMonitoredServiceChangeTimeline?: boolean
@@ -25,6 +27,11 @@ export interface ChangeTimelineProps {
   hideTimeline?: boolean
   duration?: SelectOption
   monitoredServiceIdentifiers?: string[]
+  addAnnotation?: (annotationMessage?: AnnotationMessage) => void
+  sloWidgetsData?: SecondaryEventsResponse[]
+  sloWidgetsDataLoading?: boolean
+  fetchSecondaryEvents?: () => Promise<void>
+  isSLOChartTimeline?: boolean
 }
 
 export interface ChangesInfoCardData {

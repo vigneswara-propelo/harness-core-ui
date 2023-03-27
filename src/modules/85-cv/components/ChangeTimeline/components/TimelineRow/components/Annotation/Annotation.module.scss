@@ -1,0 +1,71 @@
+.event {
+  position: absolute;
+  top: 0;
+
+  .singleEvent {
+    transform: rotate(45deg);
+  }
+}
+
+.annotationsWidgetPopover {
+  background-color: var(--primary-9-dark);
+  position: relative;
+  width: 369px;
+  bottom: 10px;
+  :global {
+    .bp3-popover-arrow {
+      margin-top: var(--spacing-small);
+    }
+    .bp3-popover-arrow-fill {
+      fill: var(--primary-9-dark);
+    }
+    .bp3-popover-content {
+      background-color: var(--primary-9-dark);
+    }
+  }
+}
+
+.annotationContainer {
+  display: flex;
+  flex-direction: column;
+  width: 369px;
+  max-height: 246px;
+  overflow-y: scroll;
+}
+
+.addAnnotationText {
+  font-weight: bold !important;
+  font-size: var(--font-size-normal) !important;
+  line-height: 16px !important;
+  color: var(--primary-5) !important;
+  cursor: pointer;
+}
+
+.annotationTextElements {
+  font-size: var(--font-size-small) !important;
+  color: var(--white) !important;
+}
+
+.annotationMessageStartTime {
+  font-size: var(--font-size-small) !important;
+  color: var(--grey-400) !important;
+}
+
+.annotationActionIcons {
+  cursor: pointer;
+  color: var(--white) !important;
+}
+
+.annotationIcon {
+  cursor: pointer;
+}
+
+.confirmationPopup {
+  width: 600px !important;
+}
+
+.division {
+  border-color: var(--grey-200);
+  margin: var(--spacing-8) 0 var(--spacing-2) 0;
+  opacity: 0.3;
+}

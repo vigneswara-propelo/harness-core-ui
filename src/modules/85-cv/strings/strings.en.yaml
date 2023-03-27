@@ -897,6 +897,16 @@ slos:
   goodRequestMetric: Good request metric
   badRequestMetric: Bad request metric
   validRequestMetric: Valid request metric
+  sloDetailsChart:
+    annotation: Annotation
+    editAnnotation: Edit Annotation
+    addAnnotation: Add Annotation
+    addAnnotationMessage: Added annotation to the chart
+    updateAnnotationMessage: Updated annotation
+    deleteMessageConfirmation: Are you sure you want to delete the message ?
+    annotationMessageDeleted: Annotation message deleted
+    startDate: Start date
+    endDate: End date
   sloFormula:
     title: How we do the SLI calculation?
     subHeader: The SLI equation is the number of good requests divided by the total number of valid requests, multiplied by 100 to keep it a uniform percentage.

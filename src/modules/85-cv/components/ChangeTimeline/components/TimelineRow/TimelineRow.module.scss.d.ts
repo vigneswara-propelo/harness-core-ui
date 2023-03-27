@@ -7,7 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly colorSidePanel: string
+  readonly division: string
   readonly errorContainer: string
   readonly event: string
   readonly main: string
@@ -16,7 +16,5 @@ declare const styles: {
   readonly singleEvent: string
   readonly timeline: string
   readonly timelineRow: string
-  readonly timelineRowPopover: string
-  readonly tooltipContainer: string
 }
 export default styles

@@ -9,7 +9,7 @@ import userEvent from '@testing-library/user-event'
 import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import SLOCardContent from '../SLOCard/SLOCardContent'
-import { testWrapperProps, dashboardWidgetsContent } from './CVSLOsListingPage.mock'
+import { testWrapperProps, dashboardWidgetsContent, mockedSecondaryEventsResponse } from './CVSLOsListingPage.mock'
 
 jest.mock('@cv/pages/slos/SLOCard/ErrorBudgetGauge', () => ({
   __esModule: true,
@@ -52,6 +52,15 @@ jest.mock('services/cv', () => {
     useChangeEventTimeline: jest.fn().mockImplementation(() => {
       return {
         data: {},
+        refetch: jest.fn(),
+        error: null,
+        loading: false,
+        cancel: jest.fn()
+      }
+    }),
+    useGetSecondaryEvents: jest.fn().mockImplementation(() => {
+      return {
+        data: mockedSecondaryEventsResponse,
         refetch: jest.fn(),
         error: null,
         loading: false,

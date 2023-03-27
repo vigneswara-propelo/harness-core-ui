@@ -1,0 +1,115 @@
+.event {
+  position: absolute;
+  top: 0;
+
+  .singleEvent {
+    transform: rotate(45deg);
+  }
+}
+
+.downTimeContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.downTimeTextElements {
+  font-size: var(--font-size-xsmall) !important;
+  color: var(--white) !important;
+}
+
+.downTimeWidgetsPopover {
+  background-color: var(--primary-9-dark);
+  position: relative;
+  bottom: 10px;
+  :global {
+    .bp3-popover-arrow-fill {
+      fill: var(--primary-9-dark);
+    }
+    .bp3-popover-content {
+      background-color: var(--primary-9-dark);
+    }
+  }
+}
+
+.addAnnotationText {
+  font-weight: bold !important;
+  font-size: var(--font-size-normal) !important;
+  line-height: 16px !important;
+  color: var(--primary-5) !important;
+  cursor: pointer;
+}
+
+.annotationText {
+  font-size: var(--font-size-small) !important;
+  line-height: 16px !important;
+  color: var(--primary-5) !important;
+  cursor: pointer;
+}
+
+.annotationsWidgetPopover {
+  background-color: var(--primary-9-dark);
+  position: relative;
+  width: 369px;
+  bottom: 10px;
+  :global {
+    .bp3-popover-arrow {
+      margin-top: var(--spacing-small);
+    }
+    .bp3-popover-arrow-fill {
+      fill: var(--primary-9-dark);
+    }
+    .bp3-popover-content {
+      background-color: var(--primary-9-dark);
+    }
+  }
+}
+
+.annotationContainer {
+  display: flex;
+  flex-direction: column;
+  width: 369px;
+}
+
+.annotationTextElements {
+  font-size: var(--font-size-small) !important;
+  color: var(--white) !important;
+}
+
+.annotationMessageStartTime {
+  font-size: var(--font-size-small) !important;
+  color: var(--grey-400) !important;
+}
+
+.annotationActionIcons {
+  cursor: pointer;
+  color: var(--white) !important;
+}
+
+.multiWidget {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--purple-500) !important;
+  border-radius: 30px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.multiWidgetCount {
+  font-weight: 500 !important;
+  font-size: var(--font-size-xsmall) !important;
+  line-height: 12px !important;
+  letter-spacing: 0.03em !important;
+  color: var(--white) !important;
+}
+
+.confirmationPopup {
+  width: 600px !important;
+}
+
+.division {
+  border-color: var(--grey-200);
+  margin: var(--spacing-8) 0 var(--spacing-2) 0;
+  opacity: 0.3;
+}

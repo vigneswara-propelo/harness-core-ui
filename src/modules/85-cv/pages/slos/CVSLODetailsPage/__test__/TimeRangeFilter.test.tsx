@@ -17,6 +17,7 @@ import {
   ChangeEventListResetParams,
   SLODetailsResetParams
 } from './CVSLODetailsPage.mock'
+import { mockedSecondaryEventsResponse } from '../../__tests__/CVSLOsListingPage.mock'
 
 jest.mock('@cv/pages/slos/CVSLODetailsPage/DetailsPanel/views/ServiceDetails', () => ({
   __esModule: true,
@@ -64,7 +65,16 @@ jest.mock('services/cv', () => {
       .mockImplementation(() => ({ data: null, loading: false, error: null, refetch: jest.fn() })),
     useChangeEventTimelineForAccount: jest.fn().mockImplementation(() => mockAPI),
     useChangeEventListForAccount: jest.fn().mockImplementation(() => mockAPI),
-    useGetUnavailabilityInstances: jest.fn().mockImplementation(() => mockAPI)
+    useGetUnavailabilityInstances: jest.fn().mockImplementation(() => mockAPI),
+    useGetSecondaryEvents: jest.fn().mockImplementation(() => {
+      return {
+        data: mockedSecondaryEventsResponse,
+        refetch: jest.fn(),
+        error: null,
+        loading: false,
+        cancel: jest.fn()
+      }
+    })
   }
 })
 

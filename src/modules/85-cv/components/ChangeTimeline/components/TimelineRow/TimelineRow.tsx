@@ -5,20 +5,40 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useRef, useLayoutEffect, useState } from 'react'
+import React, { useMemo, useRef, useLayoutEffect, useState, useEffect } from 'react'
 import { Container, Text } from '@harness/uicore'
-import moment from 'moment'
-import { Popover, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
+import { isEmpty } from 'lodash-es'
 import type { TimelineDataPoint, TimelineRowProps } from './TimelineRow.types'
-import { getDataWithPositions } from './TimelineRow.utils'
+import {
+  getDataWithPositions,
+  getWidgetsGroupedWithStartTime,
+  isWidgetWithSameStartTime,
+  isWidgetWithUniqStartTime
+} from './TimelineRow.utils'
 import TimelineRowLoading from './components/TimelineRowLoading'
-import { DATE_FORMAT } from './TimelineRow.constants'
+import DownTime from './components/DownTime/DownTime'
+import Annotation from './components/Annotation/Annotation'
+import DefaultWidget from './components/DefaultWidget/DefaultWidget'
+import WidgetsWithSameStartTime from './components/WidgetsWithSameStartTime/WidgetsWithSameStartTime'
+import { SLO_WIDGETS } from './TimelineRow.constants'
 import css from './TimelineRow.module.scss'
 
 export function TimelineRow(props: TimelineRowProps): JSX.Element {
-  const { labelName, labelWidth, data, isLoading, leftOffset = 0, startTimestamp, endTimestamp, hideTimeline } = props
+  const {
+    labelName,
+    labelWidth,
+    data,
+    isLoading,
+    leftOffset = 0,
+    startTimestamp,
+    endTimestamp,
+    hideTimeline,
+    addAnnotation,
+    fetchSecondaryEvents
+  } = props
   const timelineRowRef = useRef<HTMLDivElement>(null)
   const [dataWithPositions, setDataWithPositions] = useState<TimelineDataPoint[]>([])
+  const [dataGroupedWithStartTime, setDataGroupedWithStartTime] = useState<{ [key: string]: TimelineDataPoint[] }>({})
 
   useLayoutEffect(() => {
     if (!timelineRowRef?.current) {
@@ -26,7 +46,17 @@ export function TimelineRow(props: TimelineRowProps): JSX.Element {
     }
     const containerWidth = (timelineRowRef.current.parentElement?.getBoundingClientRect().width || 0) - leftOffset
     setDataWithPositions(getDataWithPositions(containerWidth, startTimestamp, endTimestamp, data))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timelineRowRef?.current, data, endTimestamp, startTimestamp])
+
+  useEffect(() => {
+    if (dataWithPositions.length) {
+      const widgetsGroupedWithStartTime: { [key: string]: TimelineDataPoint[] } =
+        getWidgetsGroupedWithStartTime(dataWithPositions)
+      setDataGroupedWithStartTime(widgetsGroupedWithStartTime)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataWithPositions])
 
   const renderTimelineRow = useMemo(() => {
     if (isLoading) {
@@ -35,44 +65,46 @@ export function TimelineRow(props: TimelineRowProps): JSX.Element {
     return (
       <>
         <hr />
-        {dataWithPositions?.map((datum, index) => {
-          const { icon, leftOffset: position, startTime, tooltip } = datum
-          return (
-            <Container
-              key={`${datum.startTime}-${position}-${index}`}
-              className={css.event}
-              style={{ left: position, height: icon.height, width: icon.width }}
-            >
-              <Popover
-                interactionKind={PopoverInteractionKind.HOVER}
-                popoverClassName={css.timelineRowPopover}
-                position={PopoverPosition.TOP}
-                minimal
-                content={
-                  <Container className={css.tooltipContainer}>
-                    <Container className={css.colorSidePanel} style={{ backgroundColor: tooltip?.sideBorderColor }} />
-                    <Text>{tooltip?.message}</Text>
-                    <Text>{moment(new Date(startTime)).format(DATE_FORMAT)}</Text>
-                  </Container>
+        {!isEmpty(dataGroupedWithStartTime)
+          ? Object.keys(dataGroupedWithStartTime).map((startTime, index) => {
+              const widgets = dataGroupedWithStartTime[startTime]
+              const widget = widgets[0]
+              if (isWidgetWithUniqStartTime(dataGroupedWithStartTime, startTime, startTimestamp, endTimestamp)) {
+                const { type } = widget
+                switch (type) {
+                  case SLO_WIDGETS.DOWNTIME:
+                    return <DownTime index={index} widget={widget} fetchSecondaryEvents={fetchSecondaryEvents} />
+                  case SLO_WIDGETS.ANNOTATION:
+                    return (
+                      <Annotation
+                        index={index}
+                        widget={widget}
+                        addAnnotation={addAnnotation}
+                        fetchSecondaryEvents={fetchSecondaryEvents}
+                      />
+                    )
+                  default:
+                    return <DefaultWidget index={index} widget={widget} />
                 }
-              >
-                {icon.url === 'diamond' ? (
-                  <Container
-                    className={css.singleEvent}
-                    style={{ background: icon.fillColor, width: icon.width, height: icon.height }}
+              } else if (isWidgetWithSameStartTime(dataGroupedWithStartTime, startTime, startTimestamp, endTimestamp)) {
+                return (
+                  <WidgetsWithSameStartTime
+                    index={index}
+                    widgets={widgets}
+                    addAnnotation={addAnnotation}
+                    fetchSecondaryEvents={fetchSecondaryEvents}
+                    startTimeForWidgets={Number(startTime)}
                   />
-                ) : (
-                  <svg height={icon.height} width={icon.width}>
-                    <image href={icon.url} height={icon.height} width={icon.width} fill={icon.fillColor} />
-                  </svg>
-                )}
-              </Popover>
-            </Container>
-          )
-        })}
+                )
+              } else {
+                return null
+              }
+            })
+          : null}
       </>
     )
-  }, [isLoading, dataWithPositions, hideTimeline])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, dataGroupedWithStartTime, hideTimeline, startTimestamp])
 
   return (
     <Container className={css.main} ref={timelineRowRef}>
