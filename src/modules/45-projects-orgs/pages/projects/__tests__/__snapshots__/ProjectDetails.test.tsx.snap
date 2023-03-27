@@ -116,7 +116,14 @@ exports[`Project Details render with modules and edit menu 1`] = `
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
             style="--text-line-clamp: 1;"
           >
-            orgLabel: testOrg
+            orgLabel
+            :
+             
+            <a
+              href="/account/testAcc/settings/organizations/testOrg/details"
+            >
+              testOrg
+            </a>
           </p>
           <div
             class="divider"
@@ -955,7 +962,14 @@ exports[`Project Details render with no modules and invite collaborators 1`] = `
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
             style="--text-line-clamp: 1;"
           >
-            orgLabel: testOrg
+            orgLabel
+            :
+             
+            <a
+              href="/account/testAcc/settings/organizations/testOrg/details"
+            >
+              testOrg
+            </a>
           </p>
           <div
             class="divider"

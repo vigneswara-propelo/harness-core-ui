@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { Button, Container, Icon, Layout, Popover, Text } from '@harness/uicore'
-import { useHistory, useParams } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
 import { Classes, Position } from '@blueprintjs/core'
 import ReactTimeago from 'react-timeago'
@@ -187,7 +187,15 @@ const ProjectDetails: React.FC = () => {
               </Text>
               <div className={css.divider} />
               <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
-                {`${getString('orgLabel')}: ${projectData.orgIdentifier}`}
+                {getString('orgLabel')}:{' '}
+                <Link
+                  to={routes.toOrganizationDetails({
+                    accountId: accountId,
+                    orgIdentifier: projectData.orgIdentifier as string
+                  })}
+                >
+                  {projectData.orgIdentifier}
+                </Link>
               </Text>
               <div className={css.divider} />
               {data?.data?.projectResponse.lastModifiedAt ? (
