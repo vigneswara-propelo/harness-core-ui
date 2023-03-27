@@ -39,7 +39,6 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   const [showAddNode, setVisibilityOfAdd] = React.useState(false)
   const stepType = props.type || props?.data?.step?.stepType || props?.data?.step?.template?.templateInputs?.type || ''
   const stepData = stepsfactory.getStepData(stepType)
-  const stepIconSize = stepsfactory.getStepIconSize(stepType)
   const isStepNonDeletable = stepsfactory.getIsStepNonDeletable(stepType)
   let stepIconColor = stepsfactory.getStepIconColor(stepType)
   if (stepIconColor && Object.values(Color).includes(stepIconColor)) {
@@ -212,7 +211,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
         ) : (
           stepIcon && (
             <>
-              <Icon size={stepIconSize || 28} {...isSelectedCss()} name={defaultTo(stepIcon, 'cross') as IconName} />
+              <Icon size={40} {...isSelectedCss()} name={defaultTo(stepIcon, 'cross') as IconName} />
             </>
           )
         )}

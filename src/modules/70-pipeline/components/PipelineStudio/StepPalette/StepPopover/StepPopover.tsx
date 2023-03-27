@@ -99,13 +99,13 @@ export function StepPopover(props: StepPopoverProps): React.ReactElement {
           {stepData?.iconUrl ? (
             <ImagePreview
               src={stepData.iconUrl}
-              size={25}
+              size={40}
               fallbackIcon={!isNil(step) ? step.getIconName?.() : iconMap[stepData.name || '']}
             />
           ) : (
             <Icon
               name={!isNil(step) ? step.getIconName?.() : iconMap[stepData.name || '']}
-              size={!isNil(step?.getIconSize?.()) ? step?.getIconSize?.() : 25}
+              size={40}
               {...(!isNil(step) && !isNil(step?.getIconColor?.()) ? { color: step.getIconColor() } : {})}
               style={{ color: step?.getIconColor?.() }}
             />
