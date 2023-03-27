@@ -14,8 +14,6 @@ import type { UpdateEventPreferenceFormValuesType } from './UpdateEventPreferenc
 import css from './UpdateEventPreferenceDrawer.module.scss'
 
 interface UpdateEventPreferenceDrawerFormType {
-  eventPriority?: string
-  reason?: string
   onHideCallback: (isCallAPI?: boolean) => void
   feedback?: LogFeedback
   activityId: string

@@ -28,6 +28,7 @@ export interface LogAnalysisRowProps {
   startTime?: number
   endTime?: number
   monitoredServiceIdentifier?: string
+  refetchLogAnalysis?: () => void
 }
 
 export interface LogAnalysisDataRowProps {

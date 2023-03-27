@@ -281,6 +281,7 @@ describe('Unit tests for LogAnalysisRow', () => {
     test('should render the feedback values correctly for edit scenario', async () => {
       const updateFeedbackMutateSpy = jest.fn()
       const feedbackHistorySpy = jest.fn()
+      const refetchLogAnalysisMock = jest.fn()
 
       jest.spyOn(cvService, 'useUpdateLogFeedback').mockReturnValue({
         mutate: updateFeedbackMutateSpy,
@@ -318,7 +319,8 @@ describe('Unit tests for LogAnalysisRow', () => {
       const propsWithFeatureFlag = {
         ...initialPropsWithFeedback,
         activityId: 'updateActivityIdTest',
-        featureFlagValues: { SRM_LOG_FEEDBACK_ENABLE_UI: true }
+        featureFlagValues: { SRM_LOG_FEEDBACK_ENABLE_UI: true },
+        refetchLogAnalysis: refetchLogAnalysisMock
       }
       const { container } = render(<WrapperComponent {...propsWithFeatureFlag} />)
 
@@ -373,8 +375,6 @@ describe('Unit tests for LogAnalysisRow', () => {
         userEvent.click(feedbackHistory)
       })
 
-      screen.debug(document, 90000)
-
       await waitFor(() => {
         expect(screen.getByText('It is not an issue')).toBeInTheDocument()
         expect(screen.getByText('pranesh.g@harness.io common.on 02/26/2023 12:34 PM')).toBeInTheDocument()
@@ -417,6 +417,28 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       await waitFor(() => {
         expect(updateFeedbackMutateSpy).toHaveBeenCalledWith(updateFeedbackExpectedPayload)
+      })
+
+      await waitFor(() => {
+        // To fetch single cluster data within log analysis drawer to update
+        expect(fetchLogsAnalysisData).toHaveBeenCalledWith({
+          queryParams: { accountId: '1234_accountId', clusterId: 'abc' }
+        })
+      })
+
+      await waitFor(() => {
+        expect(screen.getByTestId(/DrawerClose_button/)).toBeInTheDocument()
+      })
+
+      expect(refetchLogAnalysisMock).not.toHaveBeenCalled()
+
+      act(() => {
+        userEvent.click(screen.getByTestId(/DrawerClose_button/))
+      })
+
+      await waitFor(() => {
+        // Call to fetch the updated the logs in the list page
+        expect(refetchLogAnalysisMock).toHaveBeenCalled()
       })
     })
   })

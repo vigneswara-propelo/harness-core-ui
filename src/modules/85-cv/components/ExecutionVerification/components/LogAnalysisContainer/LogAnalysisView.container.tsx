@@ -54,6 +54,7 @@ export default function LogAnalysisContainer({
   const isMounted = useRef(false)
   const isFirstFilterCall = useRef(true)
   const [selectedHealthSource] = useState<string>()
+  const [pageNumber, setPageNumber] = useState<number>(0)
   const [pollingIntervalId, setPollingIntervalId] = useState<any>(-1)
 
   const [selectedNodeName, setSelectedNodeName] = useState(getInitialNodeName(hostName))
@@ -236,12 +237,18 @@ export default function LogAnalysisContainer({
     setMinMaxAngle({ ...updatedAngle })
   }, [])
 
+  const fetchPaginatedLogAnalysisRowData = useCallback(() => {
+    fetchLogAnalysis({
+      queryParams: { ...logsDataQueryParams, pageNumber }
+    })
+  }, [pageNumber, fetchLogAnalysis, logsDataQueryParams])
+
+  useEffect(() => {
+    fetchPaginatedLogAnalysisRowData()
+  }, [pageNumber])
+
   const goToLogsPage = useCallback(
-    pageNumber => {
-      fetchLogAnalysis({
-        queryParams: { ...logsDataQueryParams, pageNumber }
-      })
-    },
+    newPageNumber => setPageNumber(newPageNumber),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [logsDataQueryParams]
   )
@@ -270,7 +277,7 @@ export default function LogAnalysisContainer({
       filteredAngle: minMaxAngle,
       logsLoading,
       logsError,
-      refetchLogAnalysis: fetchLogAnalysis,
+      refetchLogAnalysis: fetchPaginatedLogAnalysisRowData,
       refetchClusterAnalysis: fetchClusterAnalysis,
       clusterChartError,
       clusterChartLoading,

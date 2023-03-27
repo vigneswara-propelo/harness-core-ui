@@ -19,7 +19,7 @@ import css from './UpdateEventPreferenceDrawer.module.scss'
 
 export interface UpdateEventPreferenceDrawerProps {
   rowData: LogAnalysisRowData
-  onHide: (isCallAPI?: boolean) => void
+  onHide: (isCallAPI?: boolean, clusterId?: string) => void
   activityId: string
 }
 
@@ -36,9 +36,9 @@ export default function UpdateEventPreferenceDrawer(props: UpdateEventPreference
   const onHideCallback = useCallback(
     (isCallAPI?: boolean) => {
       setOpen(false)
-      onHide(isCallAPI)
+      onHide(isCallAPI, clusterId)
     },
-    [onHide]
+    [onHide, clusterId]
   )
 
   const {

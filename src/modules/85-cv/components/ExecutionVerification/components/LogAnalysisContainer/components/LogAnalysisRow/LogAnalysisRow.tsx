@@ -48,6 +48,7 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     selectedLog,
     activityId,
     resetSelectedLog,
+    refetchLogAnalysis,
     goToPage,
     isServicePage,
     startTime,
@@ -70,10 +71,12 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     showDrawer: boolean
     selectedRowData: LogAnalysisRowData | null
     isOpenedViaLogsDrawer?: boolean
+    isFetchUpdatedData?: boolean
   }>({
     showDrawer: false,
     selectedRowData: null,
-    isOpenedViaLogsDrawer: false
+    isOpenedViaLogsDrawer: false,
+    isFetchUpdatedData: false
   })
 
   const isLogFeedbackEnabled = useFeatureFlag(FeatureFlag.SRM_LOG_FEEDBACK_ENABLE_UI)
@@ -148,11 +151,10 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
 
       drawerData = getSingleLogData(dataToDrawer as LogAnalysisRadarChartListDTO)
 
-      setRiskEditModalData({
-        showDrawer: true,
-        selectedRowData: drawerData,
-        selectedIndex: 0
-      })
+      setRiskEditModalData(currentData => ({
+        ...currentData,
+        selectedRowData: drawerData
+      }))
     }
   }, [logsData])
 
@@ -186,33 +188,27 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     })
   }, [fetchLogData, accountId, selectedLog])
 
-  const onDrawerHide = useCallback(() => {
+  const onDrawerHide = (): void => {
     setRiskEditModalData({
       showDrawer: false,
       selectedRowData: null,
       selectedIndex: null
     })
     resetSelectedLog?.()
-  }, [])
 
-  const onUpdatePreferenceDrawerHide = useCallback(
-    (isFetchUpdatedData?: boolean) => {
-      const isOpenedViaLogsDrawer = updateEventPreferenceDrawer.isOpenedViaLogsDrawer
+    const { isFetchUpdatedData: wasEventsUpdated, isOpenedViaLogsDrawer: wasEventDrawerOpenedViaRiskDrawer } =
+      updateEventPreferenceDrawer
+
+    if (wasEventDrawerOpenedViaRiskDrawer && wasEventsUpdated) {
+      refetchLogAnalysis?.()
       setUpdateEventPreferenceDrawer({
         showDrawer: false,
         selectedRowData: null,
-        isOpenedViaLogsDrawer
+        isOpenedViaLogsDrawer: false,
+        isFetchUpdatedData: false
       })
-
-      if (isFetchUpdatedData && isOpenedViaLogsDrawer) {
-        fetchLogData({
-          accountId,
-          clusterId: selectedLog as string
-        })
-      }
-    },
-    [selectedLog, accountId, updateEventPreferenceDrawer]
-  )
+    }
+  }
 
   useEffect(() => {
     if (isNoLogSelected(selectedLog)) {
@@ -231,19 +227,14 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
           accountId,
           clusterId: selectedLog as string
         })
+        setRiskEditModalData({
+          showDrawer: true,
+          selectedRowData: null,
+          selectedIndex: null
+        })
       }
     }
-  }, [accountId, data, fetchLogData, onDrawerHide, selectedLog])
-
-  useEffect(() => {
-    if (logsLoading) {
-      setRiskEditModalData({
-        showDrawer: true,
-        selectedRowData: {} as LogAnalysisRowData,
-        selectedIndex: null
-      })
-    }
-  }, [logsLoading])
+  }, [accountId, data, fetchLogData, selectedLog])
 
   const selectedIndices = useMemo(() => new Set(dataToCompare.map(d => d.index)), [dataToCompare])
 
@@ -257,13 +248,38 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
 
   const onUpdatePreferenceDrawerOpen = useCallback(
     ({ selectedIndex, isOpenedViaLogsDrawer, rowData }: UpdateEventPreferenceOpenFn) => {
-      setUpdateEventPreferenceDrawer({
+      setUpdateEventPreferenceDrawer(currentData => ({
+        ...currentData,
         showDrawer: true,
         selectedRowData: rowData ?? data[selectedIndex],
         isOpenedViaLogsDrawer
-      })
+      }))
     },
     []
+  )
+
+  const onUpdatePreferenceDrawerHide = useCallback(
+    (isFetchUpdatedData?: boolean, clusterId?: string) => {
+      const { isOpenedViaLogsDrawer, isFetchUpdatedData: isFetchUpdatedDataState } = updateEventPreferenceDrawer
+      setUpdateEventPreferenceDrawer({
+        showDrawer: false,
+        selectedRowData: null,
+        isOpenedViaLogsDrawer,
+        isFetchUpdatedData: Boolean(isFetchUpdatedDataState) || isFetchUpdatedData
+      })
+
+      if (isFetchUpdatedData) {
+        if (isOpenedViaLogsDrawer && clusterId) {
+          fetchLogData({
+            accountId,
+            clusterId: clusterId as string
+          })
+        } else {
+          refetchLogAnalysis?.()
+        }
+      }
+    },
+    [accountId, updateEventPreferenceDrawer, refetchLogAnalysis, fetchLogData]
   )
 
   return (

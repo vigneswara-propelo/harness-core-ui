@@ -364,7 +364,8 @@ describe('Unit tests for LogAnalysisContainer', () => {
       // @ts-ignore
       .mockReturnValue({
         data: {},
-        error: errorObj
+        error: errorObj,
+        refetch: fetchLogsAnalysisData
       })
 
     render(<WrapperComponent {...initialProps} hostName={undefined} />)

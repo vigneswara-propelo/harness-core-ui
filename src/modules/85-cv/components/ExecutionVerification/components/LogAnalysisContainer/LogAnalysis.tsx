@@ -86,6 +86,7 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
           goToPage={goToPage}
           selectedLog={selectedLog}
           resetSelectedLog={resetSelectedLog}
+          refetchLogAnalysis={refetchLogAnalysis}
           activityId={activityId}
           isServicePage={isServicePage}
           startTime={startTime}
