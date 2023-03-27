@@ -126,7 +126,7 @@ function ConfigFilesListView({
       files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', [''])
       fileType = FILE_TYPE_VALUES.ENCRYPTED
     } else {
-      files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.files', [''])
+      files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.files', ['']).filter((f: string) => f)
       fileType = FILE_TYPE_VALUES.FILE_STORE
     }
 

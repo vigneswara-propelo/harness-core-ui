@@ -23,15 +23,20 @@ interface CreateSSHCredWizardProps {
   hideModal?: () => void
 }
 
+export interface SecretSSHParams {
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
 export interface SSHCredSharedObj {
   detailsData?: DetailsForm
   authData?: SSHConfigFormData
   isEdit?: boolean
   loading?: boolean
+  params?: SecretSSHParams
 }
 
 const CreateSSHCredWizard: React.FC<CreateSSHCredWizardProps & SSHCredSharedObj> = props => {
-  const { isEdit } = props
+  const { isEdit, params } = props
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   React.useEffect(() => {
@@ -40,10 +45,16 @@ const CreateSSHCredWizard: React.FC<CreateSSHCredWizardProps & SSHCredSharedObj>
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   return (
     <StepWizard<SSHCredSharedObj> icon="secret-ssh" iconProps={{ size: 37 }} title={getString('ssh.sshCredential')}>
       <StepSSHDetails name={getString('secrets.createSSHCredWizard.titleDetails')} {...props} />
-      <StepAuthentication name={getString('configuration')} onSuccess={props.onSuccess} isEdit={isEdit} />
+      <StepAuthentication
+        name={getString('configuration')}
+        onSuccess={props.onSuccess}
+        isEdit={isEdit}
+        params={params}
+      />
       <StepVerify name={getString('secrets.stepTitleVerify')} closeModal={props.hideModal} />
     </StepWizard>
   )

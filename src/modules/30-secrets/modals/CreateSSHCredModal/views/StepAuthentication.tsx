@@ -54,7 +54,8 @@ const StepAuthentication: React.FC<StepProps<SSHCredSharedObj> & StepAuthenticat
   prevStepData,
   nextStep,
   previousStep,
-  onSuccess
+  onSuccess,
+  params
 }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [saving, setSaving] = useState(false)
@@ -70,7 +71,11 @@ const StepAuthentication: React.FC<StepProps<SSHCredSharedObj> & StepAuthenticat
   })
   const { mutate: editSecret } = usePutSecret({
     identifier: prevStepData?.detailsData?.identifier || '',
-    queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier }
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier: prevStepData?.isEdit ? params?.projectIdentifier : projectIdentifier,
+      orgIdentifier: prevStepData?.isEdit ? params?.orgIdentifier : orgIdentifier
+    }
   })
 
   const isEdit = prevStepData?.isEdit
@@ -78,6 +83,7 @@ const StepAuthentication: React.FC<StepProps<SSHCredSharedObj> & StepAuthenticat
 
   const handleSubmit = async (formData: SSHConfigFormData): Promise<void> => {
     setSaving(true)
+
     try {
       const authConfig = buildAuthConfig(formData)
       // build final data to submit
@@ -88,8 +94,8 @@ const StepAuthentication: React.FC<StepProps<SSHCredSharedObj> & StepAuthenticat
           identifier: prevStepData?.detailsData?.identifier as string,
           description: prevStepData?.detailsData?.description,
           tags: prevStepData?.detailsData?.tags,
-          projectIdentifier,
-          orgIdentifier,
+          projectIdentifier: prevStepData?.isEdit ? params?.projectIdentifier : projectIdentifier,
+          orgIdentifier: prevStepData?.isEdit ? params?.orgIdentifier : orgIdentifier,
           spec: {
             auth: {
               type: formData.authScheme,

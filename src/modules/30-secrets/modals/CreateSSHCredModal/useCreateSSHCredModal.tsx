@@ -69,6 +69,7 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
           <CreateSSHCredWizard
             {...props}
             loading={loading}
+            params={sshData?.params}
             isEdit={true}
             detailsData={sshData?.detailsData}
             authData={sshData?.authData}
@@ -91,7 +92,6 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
       if (_sshData) {
         setView(Views.EDIT)
         setLoading(true)
-
         const response = await getSecretReferencesForSSH(_sshData, projectPathParams)
         setSSHData({
           detailsData: {
@@ -114,6 +114,10 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
             key: response.keySecret,
             password: response.passwordSecret,
             encryptedPassphrase: response.encryptedPassphraseSecret
+          },
+          params: {
+            orgIdentifier: _sshData?.orgIdentifier,
+            projectIdentifier: _sshData?.projectIdentifier
           }
         })
         setLoading(false)
