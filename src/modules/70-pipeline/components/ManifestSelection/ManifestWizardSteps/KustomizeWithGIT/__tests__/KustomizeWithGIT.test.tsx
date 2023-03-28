@@ -13,6 +13,10 @@ import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import KustomizeWithGIT from '../KustomizeWithGIT'
 
+jest.mock('services/cd-ng', () => ({
+  useKustomizeCmdFlags: jest.fn().mockImplementation(() => ({ data: { data: ['Build'] }, refetch: jest.fn() }))
+}))
+
 const props = {
   stepName: 'Manifest details',
   expressions: [],
@@ -36,7 +40,8 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
       folderPath: '',
       skipResourceVersioning: false,
       repoName: '',
-      pluginPath: ''
+      pluginPath: '',
+      commandFlags: [{ commandType: undefined, flag: undefined, id: 'id2' }]
     }
     const { container } = render(
       <TestWrapper>
@@ -79,7 +84,8 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
       folderPath: '',
       skipResourceVersioning: false,
       repoName: '',
-      pluginPath: ''
+      pluginPath: '',
+      commandFlags: [{ commandType: undefined, flag: undefined, id: 'id2' }]
     }
 
     const { container } = render(
@@ -90,7 +96,7 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test(`renders correctly in edit case`, () => {
+  test(`renders correctly in edit case`, async () => {
     const initialValues = {
       identifier: 'id12',
       commitId: 'awsd123sd',
@@ -100,14 +106,18 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
       folderPath: './temp',
       skipResourceVersioning: true,
       repoName: 'someurl/repoName',
-      pluginPath: ''
+      pluginPath: '',
+      commandFlags: [{ commandType: 'Build', flag: 'flag', id: 'a1' }]
     }
 
-    const { container } = render(
+    const { container, getByTestId } = render(
       <TestWrapper>
         <KustomizeWithGIT initialValues={initialValues} {...props} />
       </TestWrapper>
     )
+
+    await act(async () => userEvent.click(getByTestId('advancedTitle-summary')))
+    await waitFor(() => userEvent.click(container.querySelector('[data-icon="main-trash"]') as HTMLElement))
     expect(container).toMatchSnapshot()
   })
 
@@ -121,7 +131,8 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
       folderPath: '',
       skipResourceVersioning: true,
       repoName: '',
-      pluginPath: ''
+      pluginPath: '',
+      commandFlags: [{ commandType: undefined, flag: undefined, id: 'id2' }]
     }
 
     const prevStepData = {
@@ -187,7 +198,8 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
       folderPath: '',
       skipResourceVersioning: false,
       repoName: '',
-      pluginPath: ''
+      pluginPath: '',
+      commandFlags: [{ commandType: undefined, flag: undefined, id: 'id2' }]
     }
     const { container, getByTestId } = render(
       <TestWrapper>
@@ -210,7 +222,8 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
       folderPath: '',
       skipResourceVersioning: false,
       repoName: '',
-      pluginPath: ''
+      pluginPath: '',
+      commandFlags: [{ commandType: undefined, flag: undefined, id: 'id2' }]
     }
     const { container, getByTestId } = render(
       <TestWrapper>

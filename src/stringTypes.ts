@@ -4260,6 +4260,7 @@ export interface StringsMap {
   'pipeline.manifestType.http.noResultsChartVersion': string
   'pipeline.manifestType.httpHelmRepoConnectorLabel': string
   'pipeline.manifestType.kustomizeBasePath': string
+  'pipeline.manifestType.kustomizeCommandFlagLabel': string
   'pipeline.manifestType.kustomizeFolderPath': string
   'pipeline.manifestType.kustomizeFolderPathPlaceholder': string
   'pipeline.manifestType.kustomizeFolderPathRequired': string
