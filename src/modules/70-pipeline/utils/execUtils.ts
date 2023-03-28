@@ -857,13 +857,12 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
             }
           }
         } else if (nodeData.stepType === StepNodeType.FORK) {
-          items.push({
-            parallel: processNodeDataV1(
-              nodeAdjacencyListMap[nodeId].children || /* istanbul ignore next */ [],
-              graph?.nodeMap,
-              graph?.nodeAdjacencyListMap,
-              items
-            )
+          processParallelNodeData({
+            items,
+            id: nodeData.uuid as string,
+            nodeAdjacencyListMap,
+            nodeMap: graph.nodeMap,
+            rootNodes: items
           })
         } else if (nodeData.identifier === LITE_ENGINE_TASK) {
           // handle lite engine task seperately for V1 yaml and process next nodes accordingly since NG_EXECUTION node is not available for V! yaml execution
