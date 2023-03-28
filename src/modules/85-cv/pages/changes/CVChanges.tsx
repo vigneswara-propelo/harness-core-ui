@@ -55,8 +55,8 @@ import { ChangeSourceConnectorOptions } from './CVChanges.constant'
 import css from './CVChanges.module.scss'
 
 export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element => {
-  const { serviceOptions } = useGetHarnessServices()
-  const { environmentOptions } = useGetHarnessEnvironments()
+  const { serviceOptions } = useGetHarnessServices(true)
+  const { environmentOptions } = useGetHarnessEnvironments(true)
   const { getString } = useStrings()
   const isChaosExperimentCSEnabled = useFeatureFlag(FeatureFlag.SRM_INTERNAL_CHANGE_SOURCE_CE)
 

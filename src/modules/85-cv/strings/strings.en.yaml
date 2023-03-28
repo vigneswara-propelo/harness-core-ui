@@ -1040,7 +1040,7 @@ sloDowntime:
     msListValidation: At least one monitored service should be selected
   steps:
     identification: Name, description and category
-    downtimeWindow: Select the SLO downtime window
+    downtimeWindow: Schedule SLO downtime window
     monitoredServices: Apply to monitored services
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
