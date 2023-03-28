@@ -2700,6 +2700,7 @@ export interface StringsMap {
   'connectors.connectivityMode.title': string
   'connectors.connectivityMode.validation': string
   'connectors.connectorAlreadyExist': string
+  'connectors.connectorConnectionTest': string
   'connectors.connectorDetails': string
   'connectors.connectorDetailsHeader': string
   'connectors.connectorEmptyState': string
