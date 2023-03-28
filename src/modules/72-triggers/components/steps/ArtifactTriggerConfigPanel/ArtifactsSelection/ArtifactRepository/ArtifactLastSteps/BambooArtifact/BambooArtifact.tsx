@@ -74,7 +74,6 @@ function FormComponent(
 
   const connectorRefValue = getConnectorIdValue(prevStepData)
   const planNameValue = get(formik.values, 'spec.planKey', '')
-  const [planValue, setPlanValue] = useState<SelectOption>(planNameValue)
 
   const {
     data: plansResponse,
@@ -124,10 +123,10 @@ function FormComponent(
   })
 
   useEffect(() => {
-    if (planValue) {
+    if (planNameValue) {
       refetchArtifactPaths()
     }
-  }, [planValue])
+  }, [planNameValue])
 
   useEffect(() => {
     if (artifactPathsResponse?.data) {
@@ -243,9 +242,7 @@ function FormComponent(
                   />
                 )
               },
-              onChange: (val: any) => {
-                setPlanValue(get(val, 'value', ''))
-              },
+
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                 onFocus(e, refetchPlans)
               },
@@ -340,17 +337,6 @@ export function BambooArtifact(
     })
   }
 
-  const schemaObject = {
-    spec: Yup.object().shape({
-      planKey: Yup.lazy(value =>
-        typeof value === 'object'
-          ? Yup.object().required(getString('pipeline.bambooStep.validations.planName')) // typeError is necessary here, otherwise we get a bad-looking yup error
-          : Yup.string().required(getString('pipeline.bambooStep.validations.planName'))
-      ),
-      artifactPaths: Yup.string()
-    })
-  }
-
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
@@ -360,7 +346,12 @@ export function BambooArtifact(
       <Formik
         initialValues={initialValues}
         formName="bambooTriggerForm"
-        validationSchema={schemaObject}
+        validationSchema={Yup.object().shape({
+          spec: Yup.object().shape({
+            planKey: Yup.string().required(getString('pipeline.bambooStep.validations.planName')),
+            artifactPaths: Yup.string()
+          })
+        })}
         onSubmit={formData => {
           submitFormData(
             {
