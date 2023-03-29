@@ -605,7 +605,7 @@ export default function ManifestTriggerWizard(
       }
     }
     const successCallback = ({ status, data, message }: ResponseNGTriggerResponseWithMessage): void => {
-      if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+      if (status === ResponseStatus.ERROR) {
         retryTriggerSubmit({ message })
       } else if (data?.errors && !isEmpty(data?.errors)) {
         const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -636,7 +636,7 @@ export default function ManifestTriggerWizard(
     }
 
     const errorCallback = (err: any): void => {
-      if (err?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+      if (err?.data?.status === ResponseStatus.ERROR) {
         retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
       } else {
         setErrorToasterMessage(getErrorMessage(err))

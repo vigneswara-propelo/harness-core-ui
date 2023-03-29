@@ -608,7 +608,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     }
 
     const successCallback = ({ status, data, message }: ResponseNGTriggerResponseWithMessage): void => {
-      if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+      if (status === ResponseStatus.ERROR) {
         retryTriggerSubmit({ message })
       } else if (data?.errors && !isEmpty(data?.errors)) {
         const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -640,7 +640,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     }
 
     const errorCallback = (err: any): void => {
-      if (err?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+      if (err?.data?.status === ResponseStatus.ERROR) {
         retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
       } else {
         setErrorToasterMessage(err?.data?.message)

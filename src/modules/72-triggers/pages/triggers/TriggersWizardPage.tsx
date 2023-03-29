@@ -1265,7 +1265,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -1294,7 +1294,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           )
         }
       } catch (err) {
-        if (err?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (err?.data?.status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
         } else {
           setErrorToasterMessage(getErrorMessage(err))
@@ -1309,7 +1309,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -1338,7 +1338,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           )
         }
       } catch (err) {
-        if (err?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (err?.data?.status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
         } else {
           setErrorToasterMessage(err?.data?.message)

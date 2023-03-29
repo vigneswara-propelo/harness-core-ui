@@ -1246,7 +1246,7 @@ export default function WebhookTriggerWizard(
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -1263,7 +1263,7 @@ export default function WebhookTriggerWizard(
         }
       } catch (err) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((err as any)?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if ((err as any)?.data?.status === ResponseStatus.ERROR) {
           retryTriggerSubmit({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: getErrorMessage((err as any)?.data) || getString('triggers.retryTriggerSave')
@@ -1282,7 +1282,7 @@ export default function WebhookTriggerWizard(
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -1299,7 +1299,7 @@ export default function WebhookTriggerWizard(
         }
       } catch (err) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((err as any)?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if ((err as any)?.data?.status === ResponseStatus.ERROR) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           retryTriggerSubmit({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
