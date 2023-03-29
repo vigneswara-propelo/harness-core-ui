@@ -683,7 +683,7 @@ export const newRelicServiceResponse = {
 }
 
 export const countOfServiceAPI =
-  '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1'
+  '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&filter='
 
 export const validations = {
   groupName: 'Group Name is required',
