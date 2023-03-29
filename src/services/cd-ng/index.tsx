@@ -11386,6 +11386,7 @@ export interface Project {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'ET'
   )[]
   name: string
   orgIdentifier?: string
