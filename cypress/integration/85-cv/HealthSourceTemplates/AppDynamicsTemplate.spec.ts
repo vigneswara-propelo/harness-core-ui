@@ -48,11 +48,7 @@ const setUpForMonitoredService = (oldGitEnabled?: boolean): void => {
   cy.login('test', 'test')
   cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
   cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
-  cy.intercept(
-    'POST',
-    'template/api/templates/list?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&templateListType=LastUpdated&searchTerm=&page=0&sort=lastUpdatedAt%2CDESC&size=20',
-    { fixture: 'cv/templates/templateList' }
-  ).as('templatesListCall')
+  cy.intercept('POST', templatesListCall, { fixture: 'cv/templates/templateList' }).as('templatesListCall')
   cy.visitSRMTemplate(oldGitEnabled)
 }
 
