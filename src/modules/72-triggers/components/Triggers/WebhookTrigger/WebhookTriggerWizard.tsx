@@ -1327,9 +1327,9 @@ export default function WebhookTriggerWizard(
       parse(latestYaml)
       const errorsYaml =
         (yamlHandler?.getYAMLValidationErrorMap() as unknown as Map<number, string>) || /* istanbul ignore next */ ''
+      /* istanbul ignore next */
       if (errorsYaml?.size > 0) {
-        //? Do we want to add this
-        // showError(getString('common.validation.invalidYamlText'))
+        showError(getString('common.validation.invalidYamlText'))
         return
       }
       // handleModeSwitch?.(mode, yamlHandler)
