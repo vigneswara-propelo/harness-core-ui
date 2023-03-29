@@ -415,6 +415,7 @@ export interface AccessControlCheckError {
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -4059,6 +4060,7 @@ export interface EntityDetail {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4722,6 +4724,7 @@ export interface Error {
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -5097,6 +5100,7 @@ export interface ErrorMetadata {
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   errorMessage?: string
 }
 
@@ -5523,6 +5527,7 @@ export interface Failure {
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -6627,6 +6632,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   )[]
   moduleType?:
     | 'CD'
@@ -6850,6 +6856,7 @@ export interface GitEntityFilterProperties {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -7150,6 +7157,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -7367,6 +7375,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7705,6 +7714,7 @@ export interface GitSyncEntityDTO {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7916,6 +7926,7 @@ export interface GitSyncEntityListDTO {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -8144,6 +8155,7 @@ export interface GitSyncErrorDTO {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -9648,7 +9660,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export interface LDAPSettings {
+export type LDAPSettings = NGAuthSettings & {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -9656,7 +9668,6 @@ export interface LDAPSettings {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -11682,6 +11693,7 @@ export interface ReferencedByDTO {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
 }
 
 export interface RefreshResponse {
@@ -13019,6 +13031,7 @@ export interface ResponseListEntityType {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -13699,6 +13712,7 @@ export interface ResponseMessage {
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -16955,6 +16969,11 @@ export interface TerraformBackendConfigSpec {
   [key: string]: any
 }
 
+export interface TerraformCliOptionFlag {
+  commandType: 'INIT' | 'WORKSPACE' | 'REFRESH' | 'PLAN' | 'APPLY' | 'DESTROY'
+  flag: string
+}
+
 export type TerraformCloudApplySpec = TerraformCloudRunExecutionSpec & {
   provisionerIdentifier: string
 }
@@ -16970,6 +16989,7 @@ export interface TerraformCloudCliExecutionData {
 export interface TerraformCloudCliPlanExecutionData {
   backendConfig?: TerraformBackendConfig
   command: 'Apply' | 'Destroy'
+  commandFlags?: TerraformCliOptionFlag[]
   configFiles: TerraformConfigFilesWrapper
   environmentVariables?: NGVariable[]
   targets?: string[]
@@ -16977,6 +16997,7 @@ export interface TerraformCloudCliPlanExecutionData {
 }
 
 export interface TerraformCloudCliStepConfiguration {
+  commandFlags?: TerraformCliOptionFlag[]
   spec?: TerraformCloudCliExecutionData
 }
 
@@ -17099,6 +17120,7 @@ export interface TerraformExecutionData {
 export interface TerraformPlanExecutionData {
   backendConfig?: TerraformBackendConfig
   command: 'Apply' | 'Destroy'
+  commandFlags?: TerraformCliOptionFlag[]
   configFiles: TerraformConfigFilesWrapper
   environmentVariables?: NGVariable[]
   exportTerraformHumanReadablePlan?: boolean
@@ -17118,12 +17140,14 @@ export type TerraformPlanStepInfo = StepSpecType & {
 }
 
 export type TerraformRollbackStepInfo = StepSpecType & {
+  commandFlags?: TerraformCliOptionFlag[]
   delegateSelectors?: string[]
   provisionerIdentifier: string
   skipRefreshCommand?: boolean
 }
 
 export interface TerraformStepConfiguration {
+  commandFlags?: TerraformCliOptionFlag[]
   skipRefreshCommand?: boolean
   spec?: TerraformExecutionData
   type: 'Inline' | 'InheritFromPlan' | 'InheritFromApply'
@@ -17954,6 +17978,8 @@ export type DelegateDownloadRequestRequestBody = DelegateDownloadRequest
 export type DelegateGroupTagsRequestBody = DelegateGroupTags
 
 export type DelegateProfileDetailsNgRequestBody = DelegateProfileDetailsNg
+
+export type DelegateResponseDataRequestBody = DelegateResponseData
 
 export type DockerRequestDTORequestBody = DockerRequestDTO
 
@@ -18877,6 +18903,7 @@ export interface ListActivitiesQueryParams {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -19080,6 +19107,7 @@ export interface ListActivitiesQueryParams {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -19387,6 +19415,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -19590,6 +19619,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -36429,6 +36459,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -36693,6 +36724,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   searchTerm?: string
 }
 
@@ -40168,6 +40200,7 @@ export interface GetReferencedByQueryParams {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   searchTerm?: string
 }
 
@@ -42845,6 +42878,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -43116,6 +43150,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'CdSscaOrchestration'
       | 'TasRouteMapping'
       | 'AWSSecurityHub'
+      | 'CustomIngest'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -46018,7 +46053,7 @@ export type GetInstanceSyncPerpetualTaskResponseProps = Omit<
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseData,
+    DelegateResponseDataRequestBody,
     void
   >,
   'path' | 'verb'
@@ -46028,7 +46063,13 @@ export type GetInstanceSyncPerpetualTaskResponseProps = Omit<
  * Get instance sync perpetual task response
  */
 export const GetInstanceSyncPerpetualTaskResponse = (props: GetInstanceSyncPerpetualTaskResponseProps) => (
-  <Mutate<ResponseBoolean, Failure | Error, GetInstanceSyncPerpetualTaskResponseQueryParams, DelegateResponseData, void>
+  <Mutate<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseQueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >
     verb="POST"
     path={`/instancesync/response`}
     base={getConfig('ng/api')}
@@ -46041,7 +46082,7 @@ export type UseGetInstanceSyncPerpetualTaskResponseProps = Omit<
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseData,
+    DelegateResponseDataRequestBody,
     void
   >,
   'path' | 'verb'
@@ -46055,7 +46096,7 @@ export const useGetInstanceSyncPerpetualTaskResponse = (props: UseGetInstanceSyn
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseData,
+    DelegateResponseDataRequestBody,
     void
   >('POST', `/instancesync/response`, { base: getConfig('ng/api'), ...props })
 
@@ -46067,7 +46108,7 @@ export const getInstanceSyncPerpetualTaskResponsePromise = (
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseData,
+    DelegateResponseDataRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -46076,9 +46117,87 @@ export const getInstanceSyncPerpetualTaskResponsePromise = (
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseData,
+    DelegateResponseDataRequestBody,
     void
   >('POST', getConfig('ng/api'), `/instancesync/response`, props, signal)
+
+export interface GetInstanceSyncPerpetualTaskResponseV2QueryParams {
+  accountIdentifier: string
+  perpetualTaskId: string
+}
+
+export type GetInstanceSyncPerpetualTaskResponseV2Props = Omit<
+  MutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get instance sync perpetual task response
+ */
+export const GetInstanceSyncPerpetualTaskResponseV2 = (props: GetInstanceSyncPerpetualTaskResponseV2Props) => (
+  <Mutate<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/instancesync/v2/response`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetInstanceSyncPerpetualTaskResponseV2Props = Omit<
+  UseMutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get instance sync perpetual task response
+ */
+export const useGetInstanceSyncPerpetualTaskResponseV2 = (props: UseGetInstanceSyncPerpetualTaskResponseV2Props) =>
+  useMutate<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >('POST', `/instancesync/v2/response`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get instance sync perpetual task response
+ */
+export const getInstanceSyncPerpetualTaskResponseV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/instancesync/v2/response`, props, signal)
 
 export interface GetInvitesQueryParams {
   accountIdentifier: string
@@ -49319,6 +49438,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   yamlGroup?: string
 }
 
@@ -49650,6 +49770,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -63959,6 +64080,7 @@ export interface GetYamlSchemaQueryParams {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
   subtype?:
     | 'K8sCluster'
     | 'Git'

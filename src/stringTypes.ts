@@ -5339,6 +5339,7 @@ export interface StringsMap {
   'cd.cloudFormation.urls': string
   'cd.clusterVerify': string
   'cd.clustersSelected': string
+  'cd.commandLineOptions': string
   'cd.componentsInstalled': string
   'cd.configFileDetails': string
   'cd.configFilePlaceHolder': string
@@ -5883,6 +5884,7 @@ export interface StringsMap {
   'cd.setupGitOpsServerStep': string
   'cd.since': string
   'cd.skipMatchingLabel': string
+  'cd.skipRefreshCommand': string
   'cd.skipRendering': string
   'cd.specifyTargetHost': string
   'cd.specifyTfVarStore': string

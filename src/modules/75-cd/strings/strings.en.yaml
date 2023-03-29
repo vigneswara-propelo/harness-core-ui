@@ -215,6 +215,8 @@ enterTragets: Enter Targets
 exportTerraformPlanJson: Export JSON representation of Terraform Plan
 exportTerraformHumanReadablePlan: Export Human Readable representation of Terraform Plan
 exportTerragruntPlanJson: Export JSON representation of Terragrunt Plan
+commandLineOptions: Command Line Options
+skipRefreshCommand: Skip Refresh Command
 specifyTargetHost: Specify Target Host
 configurationFile: 'Configuration File Repository'
 backendConfigurationFile: 'Backend Configuration File Repository (optional)'
