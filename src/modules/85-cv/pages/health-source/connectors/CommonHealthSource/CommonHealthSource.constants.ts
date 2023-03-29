@@ -1,4 +1,3 @@
-import type { QueryRecordsRequest } from 'services/cv'
 import { ElkProduct } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 import { HealthSourceTypes } from '../../types'
 import type { CommonCustomMetricFormikInterface, HealthSourceProductsType } from './CommonHealthSource.types'
@@ -88,6 +87,7 @@ export enum FieldMappingInputTypes {
 export const logsTableDefaultConfigs = {
   size: '40%'
 }
-export const ProviderTypes: Record<string, QueryRecordsRequest['providerType']> = {
-  SUMOLOGIC_LOG: 'SUMOLOGIC_LOG'
+
+export const PRODUCT_MAP: { [key: string]: HealthSourceTypes } = {
+  [HealthSourceTypes.Elk]: HealthSourceTypes.ElasticSearch_Logs
 }
