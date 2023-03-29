@@ -16,7 +16,6 @@ import {
   ButtonVariation,
   MultiTypeInputType,
   SelectOption,
-  getMultiTypeFromValue,
   FormInput,
   MultiSelectOption,
   FormikForm
@@ -181,10 +180,10 @@ function FormComponent(
       }) || [
         {
           label: getString('common.loadingFieldOptions', {
-            fieldName: getString('common.subscriptions.tabs.plans')
+            fieldName: getString('common.subscriptions.overview.plan')
           }),
           value: getString('common.loadingFieldOptions', {
-            fieldName: getString('common.subscriptions.tabs.plans')
+            fieldName: getString('common.subscriptions.overview.plan')
           })
         }
       ]
@@ -222,7 +221,7 @@ function FormComponent(
             placeholder={
               loadingPlans
                 ? getString('common.loadingFieldOptions', {
-                    fieldName: getString('common.subscriptions.tabs.plans')
+                    fieldName: getString('common.subscriptions.overview.plan')
                   })
                 : getString('pipeline.planNamePlaceholder')
             }
@@ -319,24 +318,6 @@ export function BambooArtifact(
   const { getString } = useStrings()
   const { handleSubmit, initialValues, prevStepData } = props
 
-  const submitFormData = (formData: BambooRegistrySpec, connectorId?: string): void => {
-    const planKey = get(formData, 'spec.planKey', '')
-    const artifactPaths = get(formData, 'spec.artifactPaths', [])
-    const build = get(formData, 'spec.build', '')
-
-    handleSubmit({
-      spec: {
-        connectorRef: connectorId,
-        artifactPaths:
-          getMultiTypeFromValue(artifactPaths) === MultiTypeInputType.FIXED
-            ? (artifactPaths || []).map((artifactPath: any) => artifactPath.value) || []
-            : artifactPaths,
-        build,
-        planKey
-      }
-    })
-  }
-
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
@@ -353,12 +334,10 @@ export function BambooArtifact(
           })
         })}
         onSubmit={formData => {
-          submitFormData(
-            {
-              ...formData
-            },
-            getConnectorIdValue(prevStepData)
-          )
+          handleSubmit({
+            ...formData,
+            connectorRef: getConnectorIdValue(prevStepData)
+          })
         }}
       >
         {formik => {
