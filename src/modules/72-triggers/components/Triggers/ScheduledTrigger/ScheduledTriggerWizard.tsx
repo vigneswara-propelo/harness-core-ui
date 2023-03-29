@@ -477,7 +477,7 @@ export default function ScheduledTriggerWizard(
           tags,
           inputYaml,
           pipelineBranchName = '',
-          inputSetRefs = [],
+          inputSetRefs,
           source: {
             spec: {
               spec: { expression }
@@ -588,18 +588,21 @@ export default function ScheduledTriggerWizard(
       },
       inputYaml: stringifyPipelineRuntimeInput,
       pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : undefined,
-      inputSetRefs: isNewGitSyncRemotePipeline ? inputSetRefs : undefined
+      inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
     })
   }
 
   const convertFormikValuesToYaml = (values: any): { trigger: TriggerConfigDTO } | undefined => {
     const res = getScheduleTriggerYaml({ values })
-    if (isNewGitSyncRemotePipeline) {
+
+    if (values.inputSetRefs?.length || values.inputSetSelected?.length) {
       delete res.inputYaml
-      if (values.inputSetSelected?.length) {
-        res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
-      }
     }
+
+    if (values.inputSetSelected?.length) {
+      res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
+    }
+
     return { trigger: res }
   }
 
@@ -809,7 +812,7 @@ export default function ScheduledTriggerWizard(
   }, [])
 
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
-    if (isNewGitSyncRemotePipeline) {
+    if (triggerYaml.inputSetRefs?.length) {
       delete triggerYaml.inputYaml
     }
 

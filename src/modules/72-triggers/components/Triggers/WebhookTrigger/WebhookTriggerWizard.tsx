@@ -580,7 +580,7 @@ export default function WebhookTriggerWizard(
             description,
             tags,
             inputYaml,
-            inputSetRefs = [],
+            inputSetRefs,
             source: {
               pollInterval,
               webhookId,
@@ -729,7 +729,7 @@ export default function WebhookTriggerWizard(
             tags,
             inputYaml,
             pipelineBranchName = getDefaultPipelineReferenceBranch(),
-            inputSetRefs = [],
+            inputSetRefs,
             source: {
               spec: {
                 type: sourceRepoForCustomYaml,
@@ -931,7 +931,7 @@ export default function WebhookTriggerWizard(
         },
         inputYaml: stringifyPipelineRuntimeInput,
         pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : null,
-        inputSetRefs: isNewGitSyncRemotePipeline ? inputSetRefs : null
+        inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
       } as NGTriggerConfigV2
       if (triggerYaml.source?.spec?.spec) {
         triggerYaml.source.spec.spec.spec.payloadConditions = persistIncomplete
@@ -977,7 +977,7 @@ export default function WebhookTriggerWizard(
         },
         inputYaml: stringifyPipelineRuntimeInput,
         pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : null,
-        inputSetRefs: isNewGitSyncRemotePipeline ? inputSetRefs : null
+        inputSetRefs
       } as NGTriggerConfigV2
 
       if (secureToken && triggerYaml.source?.spec) {
@@ -1020,11 +1020,12 @@ export default function WebhookTriggerWizard(
       delete res.source.spec.spec.event
     }
 
-    if (isNewGitSyncRemotePipeline) {
+    if (values.inputSetRefs?.length || values.inputSetSelected?.length) {
       delete res.inputYaml
-      if (values.inputSetSelected?.length) {
-        res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
-      }
+    }
+
+    if (values.inputSetSelected?.length) {
+      res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
     }
 
     return { trigger: res }
@@ -1228,9 +1229,11 @@ export default function WebhookTriggerWizard(
   }, [])
 
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
-    if (isNewGitSyncRemotePipeline) {
+    if (triggerYaml.inputSetRefs?.length) {
       delete triggerYaml.inputYaml
+    }
 
+    if (isNewGitSyncRemotePipeline) {
       // Set pipelineBranchName to proper expression when it's left empty
       if (!(triggerYaml.pipelineBranchName || '').trim()) {
         triggerYaml.pipelineBranchName = getDefaultPipelineReferenceBranch(triggerYaml?.source?.spec?.spec?.type)

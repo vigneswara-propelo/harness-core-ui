@@ -378,7 +378,7 @@ export default function TriggersDetailPage(): JSX.Element {
   const isTriggerRbacDisabled = !isExecutable || isPipelineInvalid
 
   let pipelineInputSet
-  if (isNewGitSyncRemotePipeline) {
+  if (get(triggerObj, 'inputSetRefs')?.length) {
     pipelineInputSet = yamlStringify(
       pickBy(
         {
