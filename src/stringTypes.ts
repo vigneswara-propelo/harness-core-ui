@@ -1330,6 +1330,7 @@ export interface StringsMap {
   'rbac.notifications.labelPDKey': string
   'rbac.notifications.labelPDUserGroups': string
   'rbac.notifications.labelPagerDuty': string
+  'rbac.notifications.labelPagerDutyUserGroups': string
   'rbac.notifications.labelSlackUserGroups': string
   'rbac.notifications.labelWebhookUrl': string
   'rbac.notifications.msTestSuccess': string
