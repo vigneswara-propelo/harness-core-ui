@@ -6,11 +6,12 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, RenderResult, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useGetFoldersWithHidden } from 'services/custom-dashboards'
-import DashboardResourceModalBody, { DashboardResourceModalBodyProps } from '../DashboardResourceModalBody'
+import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import DashboardResourceRenderer from '../DashboardResourceRenderer'
 
 jest.mock('services/custom-dashboards', () => ({
   useGetFoldersWithHidden: jest.fn(),
@@ -18,19 +19,20 @@ jest.mock('services/custom-dashboards', () => ({
 }))
 const useGetFoldersWithHiddenMock = useGetFoldersWithHidden as jest.Mock
 
-const renderComponent = (props: Partial<DashboardResourceModalBodyProps> = {}): RenderResult =>
+const renderComponent = (props: Partial<RbacResourceRendererProps> = {}): RenderResult =>
   render(
     <TestWrapper>
-      <DashboardResourceModalBody
-        onSelectChange={jest.fn()}
-        selectedData={[]}
+      <DashboardResourceRenderer
+        identifiers={['12', '41']}
         resourceScope={{ accountIdentifier: '' }}
+        resourceType={ResourceType.DASHBOARDS}
+        onResourceSelectionChange={jest.fn()}
         {...props}
       />
     </TestWrapper>
   )
 
-describe('DashboardResourceModalBody', () => {
+describe('DashboardResourceRenderer', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     useGetFoldersWithHiddenMock.mockReturnValue({
@@ -59,21 +61,27 @@ describe('DashboardResourceModalBody', () => {
 
     renderComponent()
 
-    expect(screen.getByText('noData')).toBeInTheDocument()
+    expect(screen.getByRole('rowgroup')).toBeEmptyDOMElement()
+  })
+
+  test('it should display the loading spinner when folders are loading', async () => {
+    useGetFoldersWithHiddenMock.mockReturnValue({ data: { resource: [] }, loading: true })
+
+    renderComponent()
+
+    expect(screen.getByText('Loading, please wait...')).toBeInTheDocument()
   })
 
   test('it should display the folder names', async () => {
     renderComponent()
 
     expect(screen.getByText('you_got_it (0)')).toBeInTheDocument()
-    expect(screen.getByText('but you dont got this (1)')).toBeInTheDocument()
     expect(screen.getByText('also_you_got_this (5)')).toBeInTheDocument()
   })
 
   test('it should display the child dashboard names', async () => {
     renderComponent()
 
-    expect(screen.getByText('child_one')).toBeInTheDocument()
     expect(screen.getByText('2nd_child_one')).toBeInTheDocument()
   })
 
@@ -85,24 +93,5 @@ describe('DashboardResourceModalBody', () => {
     expect(screen.getByText('child_three')).toBeInTheDocument()
     expect(screen.queryByText('child_four')).not.toBeInTheDocument()
     expect(screen.queryByText('child_five')).not.toBeInTheDocument()
-  })
-
-  test('calls onSelect handler with IDs of the selected folders', async () => {
-    const onSelectChangeMock = jest.fn()
-
-    renderComponent({ onSelectChange: onSelectChangeMock })
-    const folderCheckboxFirst = screen
-      .getByText('you_got_it (0)')
-      .closest('.TableV2--row')
-      ?.querySelector('input') as Element
-    const folderCheckboxLast = screen
-      .getByText('also_you_got_this (5)')
-      .closest('.TableV2--row')
-      ?.querySelector('input') as Element
-    userEvent.click(folderCheckboxFirst)
-    userEvent.click(folderCheckboxLast)
-
-    await waitFor(() => expect(onSelectChangeMock).toHaveBeenCalledWith(['12']))
-    await waitFor(() => expect(onSelectChangeMock).toHaveBeenLastCalledWith(['41']))
   })
 })
