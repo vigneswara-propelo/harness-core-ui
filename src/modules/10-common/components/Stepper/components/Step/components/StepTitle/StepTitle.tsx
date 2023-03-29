@@ -42,7 +42,9 @@ export const StepTitle = ({
             size={isErrorOrSuccess ? 20 : 16}
             margin="small"
             color={iconColor}
-            className={cx(css.iconNoBorder, !isErrorOrSuccess && css.editIcon)}
+            className={cx(css.iconNoBorder, {
+              [css.editIcon]: !isErrorOrSuccess
+            })}
           />
         ) : (
           <Icon
