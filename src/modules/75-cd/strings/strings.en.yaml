@@ -565,6 +565,7 @@ cloudFormation:
 gitOpsCluster: 'GitOps Clusters'
 selectGitopsCluster: 'Select GitOps Clusters to add to Environment'
 agentID: Agent Id
+linked: Linked
 clustersSelected: 'Clusters Selected'
 selectClusterLabel: 'Select Cluster(s)'
 noLinkedClusters: 'No Linked Clusters Available'

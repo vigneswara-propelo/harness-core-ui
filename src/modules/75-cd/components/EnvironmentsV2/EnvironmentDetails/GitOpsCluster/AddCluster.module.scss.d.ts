@@ -29,6 +29,7 @@ declare const styles: {
   readonly gitopsClusterCard: string
   readonly greenStatus: string
   readonly hasError: string
+  readonly linkedCluster: string
   readonly listContainer: string
   readonly listFooter: string
   readonly modalClusterList: string

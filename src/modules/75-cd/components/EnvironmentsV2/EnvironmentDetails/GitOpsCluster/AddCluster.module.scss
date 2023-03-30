@@ -298,3 +298,12 @@
 .clusterTitle {
   align-items: unset !important;
 }
+
+.linkedCluster {
+  cursor: no-drop;
+  background: var(--primary-1);
+  margin: -8px -16px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  opacity: 0.5;
+}

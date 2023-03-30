@@ -3,7 +3,7 @@
 exports[`GitOps Cluster tests click on select cluster 1`] = `
 <div
   class="bp3-dialog"
-  style="width: 648px; height: 551px; border-left: 0; padding: 24px;"
+  style="width: auto;"
 >
   <div
     class="bp3-dialog-header"
@@ -11,15 +11,7 @@ exports[`GitOps Cluster tests click on select cluster 1`] = `
     <h4
       class="bp3-heading"
     >
-      <div
-        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-medium"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h4 StyledProps--color StyledProps--color-black"
-        >
-          cd.selectGitopsCluster
-        </p>
-      </div>
+      cd.selectGitopsCluster
     </h4>
     <button
       aria-label="Close"
@@ -51,269 +43,172 @@ exports[`GitOps Cluster tests click on select cluster 1`] = `
     class="StyledProps--font StyledProps--main"
   >
     <div
-      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-small"
+      class="StyledProps--font StyledProps--main container"
     >
       <div
-        class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
-        data-name=""
-        style="width: 100%; max-width: 100%;"
-      >
-        <span
-          class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
-          data-icon="thinner-search"
-        >
-          <svg
-            fill="none"
-            height="14"
-            viewBox="0 0 16 16"
-            width="14"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </span>
-        <input
-          class="bp3-input  ExpandingSearchInput--filter"
-          dir="auto"
-          placeholder="Search Clusters"
-          style="padding-right: 38px;"
-          type="search"
-          value=""
-        />
-      </div>
-    </div>
-    <div
-      class="Layout--vertical StyledProps--main"
-    >
-      <div
-        class="Layout--horizontal StyledProps--main contentContainer"
-        style="height: 339px;"
+        class="tabsContainer"
       >
         <div
-          class="clusterList"
+          class="bp3-tabs Tabs--main Tabs--horizontal"
         >
           <div
-            class="listContainer"
+            class="bp3-tab-list"
+            role="tablist"
           >
             <div
-              class="Layout--vertical StyledProps--main"
+              class="bp3-tab-indicator-wrapper"
+              style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
             >
               <div
-                class="gitopsClusterCard"
-                data-cy="cluster-card"
-              >
-                <div
-                  class="clusterCardRightSide"
-                >
-                  <span
-                    class="bp3-icon StyledProps--main"
-                    data-icon="gitops-clusters"
-                  >
-                    <svg
-                      fill="none"
-                      height="16"
-                      viewBox="0 0 52 50"
-                      width="16"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        clip-rule="evenodd"
-                        d="M27.71 1.357a4 4 0 00-3.402 0L7.27 9.364a4 4 0 00-2.194 2.71L.887 29.985a4 4 0 00.798 3.442L13.447 47.82a4 4 0 003.097 1.47h18.93a4 4 0 003.097-1.47l11.762-14.393a4 4 0 00.797-3.442l-4.19-17.913a4 4 0 00-2.193-2.709L27.71 1.357zM8.972 12.984l17.037-8.006 17.037 8.006 4.19 17.913L35.474 45.29h-18.93L4.782 30.897l4.19-17.913zm9.056-.85a3.931 3.931 0 00-3.93 3.93v5.139a3.93 3.93 0 003.93 3.93h5.138a3.931 3.931 0 003.931-3.93v-5.138a3.931 3.931 0 00-3.93-3.931h-5.139zm0 3.93h5.138v5.139h-5.138v-5.138zm-3.93 15.8a3.93 3.93 0 013.93-3.931h5.138a3.931 3.931 0 013.931 3.93v5.139a3.931 3.931 0 01-3.93 3.931h-5.139a3.931 3.931 0 01-3.93-3.931v-5.138zm9.068 0h-5.138v5.138h5.138v-5.138zm9.702-11.894a3.931 3.931 0 00-3.931 3.93v5.139a3.93 3.93 0 003.931 3.93h5.138a3.93 3.93 0 003.931-3.93V23.9a3.93 3.93 0 00-3.93-3.93h-5.139zm0 3.93h5.138v5.139h-5.138V23.9z"
-                        fill="currentColor"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                  <div
-                    class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
-                    style="align-items: unset;"
-                  >
-                    <div
-                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
-                    >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                        data-id="cluster-id-label"
-                        style="--text-line-clamp: 1; width: 125px;"
-                      >
-                        
-                      </p>
-                    </div>
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
-                      data-id="cluster-id-text"
-                      style="--text-line-clamp: 1; width: 150px;"
-                    >
-                      common.ID
-                      : 
-                      test-cluster-a
-                    </p>
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
-                      data-id="cluster-agent-id-text"
-                      style="--text-line-clamp: 1; width: 150px;"
-                    >
-                      cd.agentID
-                      : 
-                    </p>
-                  </div>
-                </div>
-                <span
-                  class="Tag--main"
-                >
-                  <span
-                    class="bp3-tag bp3-minimal tag"
-                  />
-                </span>
-              </div>
+                class="bp3-tab-indicator"
+              />
             </div>
             <div
-              class="Layout--vertical StyledProps--main"
+              aria-controls="bp3-tab-panel_selectScope_account"
+              aria-disabled="false"
+              aria-expanded="true"
+              aria-selected="true"
+              class="bp3-tab"
+              data-tab-id="account"
+              id="bp3-tab-title_selectScope_account"
+              role="tab"
+              tabindex="0"
             >
               <div
-                class="gitopsClusterCard"
-                data-cy="cluster-card"
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
               >
-                <div
-                  class="clusterCardRightSide"
-                >
-                  <span
-                    class="bp3-icon StyledProps--main"
-                    data-icon="gitops-clusters"
-                  >
-                    <svg
-                      fill="none"
-                      height="16"
-                      viewBox="0 0 52 50"
-                      width="16"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        clip-rule="evenodd"
-                        d="M27.71 1.357a4 4 0 00-3.402 0L7.27 9.364a4 4 0 00-2.194 2.71L.887 29.985a4 4 0 00.798 3.442L13.447 47.82a4 4 0 003.097 1.47h18.93a4 4 0 003.097-1.47l11.762-14.393a4 4 0 00.797-3.442l-4.19-17.913a4 4 0 00-2.193-2.709L27.71 1.357zM8.972 12.984l17.037-8.006 17.037 8.006 4.19 17.913L35.474 45.29h-18.93L4.782 30.897l4.19-17.913zm9.056-.85a3.931 3.931 0 00-3.93 3.93v5.139a3.93 3.93 0 003.93 3.93h5.138a3.931 3.931 0 003.931-3.93v-5.138a3.931 3.931 0 00-3.93-3.931h-5.139zm0 3.93h5.138v5.139h-5.138v-5.138zm-3.93 15.8a3.93 3.93 0 013.93-3.931h5.138a3.931 3.931 0 013.931 3.93v5.139a3.931 3.931 0 01-3.93 3.931h-5.139a3.931 3.931 0 01-3.93-3.931v-5.138zm9.068 0h-5.138v5.138h5.138v-5.138zm9.702-11.894a3.931 3.931 0 00-3.931 3.93v5.139a3.93 3.93 0 003.931 3.93h5.138a3.93 3.93 0 003.931-3.93V23.9a3.93 3.93 0 00-3.93-3.93h-5.139zm0 3.93h5.138v5.139h-5.138V23.9z"
-                        fill="currentColor"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                  <div
-                    class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
-                    style="align-items: unset;"
-                  >
-                    <div
-                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
-                    >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                        data-id="cluster-id-label"
-                        style="--text-line-clamp: 1; width: 125px;"
-                      >
-                        
-                      </p>
-                    </div>
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
-                      data-id="cluster-id-text"
-                      style="--text-line-clamp: 1; width: 150px;"
-                    >
-                      common.ID
-                      : 
-                      test-cluster-b
-                    </p>
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
-                      data-id="cluster-agent-id-text"
-                      style="--text-line-clamp: 1; width: 150px;"
-                    >
-                      cd.agentID
-                      : 
-                    </p>
-                  </div>
-                </div>
                 <span
-                  class="Tag--main"
+                  class="bp3-icon bp3-icon-layers StyledProps--main tabIcon"
+                  icon="layers"
                 >
-                  <span
-                    class="bp3-tag bp3-minimal tag"
-                  />
+                  <svg
+                    data-icon="layers"
+                    height="14"
+                    viewBox="0 0 16 16"
+                    width="14"
+                  >
+                    <desc>
+                      layers
+                    </desc>
+                    <path
+                      d="M.55 4.89l7 3.5c.14.07.29.11.45.11s.31-.04.45-.11l7-3.5a.998.998 0 00-.06-1.81L8.4.08a1.006 1.006 0 00-.79 0l-6.99 3a.992.992 0 00-.07 1.81zM15 10c-.16 0-.31.04-.45.11L8 13.38 1.45 10.1c-.14-.06-.29-.1-.45-.1-.55 0-1 .45-1 1 0 .39.23.73.55.89l7 3.5c.14.07.29.11.45.11s.31-.04.45-.11l7-3.5c.32-.16.55-.5.55-.89 0-.55-.45-1-1-1zm0-3.5c-.16 0-.31.04-.45.11L8 9.88 1.45 6.61A.997.997 0 001 6.5c-.55 0-1 .45-1 1 0 .39.23.73.55.89l7 3.5c.14.07.29.11.45.11s.31-.04.45-.11l7-3.5c.32-.16.55-.5.55-.89 0-.55-.45-1-1-1z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
                 </span>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
+                  style="--text-line-clamp: 1;"
+                >
+                  account
+                </p>
               </div>
             </div>
           </div>
           <div
-            class="Layout--horizontal StyledProps--main listFooter StyledProps--color StyledProps--color-grey700"
+            aria-hidden="false"
+            aria-labelledby="bp3-tab-title_selectScope_account"
+            class="bp3-tab-panel"
+            id="bp3-tab-panel_selectScope_account"
+            role="tabpanel"
           >
-            <label
-              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkBox StyledProps--main"
+            <div
+              class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
             >
-              <input
-                type="checkbox"
-              />
-              <span
-                class="bp3-control-indicator"
-              />
-              Select All
-            </label>
-            <span
-              class="unlinkedCount"
-            >
-              (
-              2
-              )
-            </span>
-          </div>
-        </div>
-        <div
-          class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-flex-start StyledProps--padding-left-huge StyledProps--padding-right-huge"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--padding-bottom-medium StyledProps--margin-bottom-medium StyledProps--border StyledProps--border-bottom"
-          >
-            cd.clustersSelected
-            (
-            0
-            )
-          </p>
-          <div
-            class="Layout--vertical StyledProps--main"
-          >
-            <div />
+              <div
+                class="searchBox"
+              >
+                <div
+                  class="TextInput--main search"
+                >
+                  <div
+                    class="bp3-input-group"
+                  >
+                    <span
+                      class="bp3-icon bp3-icon-search StyledProps--main"
+                      icon="search"
+                    >
+                      <svg
+                        data-icon="search"
+                        height="12"
+                        viewBox="0 0 16 16"
+                        width="12"
+                      >
+                        <desc>
+                          search
+                        </desc>
+                        <path
+                          d="M15.55 13.43l-2.67-2.68a6.94 6.94 0 001.11-3.76c0-3.87-3.13-7-7-7s-7 3.13-7 7 3.13 7 7 7c1.39 0 2.68-.42 3.76-1.11l2.68 2.67a1.498 1.498 0 102.12-2.12zm-8.56-1.44c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                    <input
+                      class="bp3-input"
+                      placeholder="search"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--padding-small"
+              >
+                <span
+                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary7"
+                  data-icon="spinner"
+                >
+                  <svg
+                    fill="none"
+                    height="24"
+                    viewBox="0 0 36 36"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+                      stroke="currentColor"
+                      stroke-dasharray="75,100"
+                      stroke-linecap="round"
+                      stroke-width="2.8"
+                      style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="StyledProps--font StyledProps--main footerStyle"
-    >
-      <button
-        aria-label="Add"
-        class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
-        disabled=""
-        tabindex="-1"
-        type="button"
+      <div
+        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"
       >
-        <span
-          class="bp3-button-text"
+        <button
+          aria-label="entityReference.apply"
+          class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main bp3-popover-dismiss Button--with-current-color Button--variation Button--variation-primary"
+          disabled=""
+          tabindex="-1"
+          type="button"
         >
-          Add
-        </span>
-      </button>
-      <button
-        aria-label="Cancel"
-        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
+          <span
+            class="bp3-button-text"
+          >
+            entityReference.apply
+          </span>
+        </button>
+        <button
+          aria-label="cancel"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
+          type="button"
         >
-          Cancel
-        </span>
-      </button>
+          <span
+            class="bp3-button-text"
+          >
+            cancel
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -477,11 +372,18 @@ exports[`GitOps Cluster tests initial render 1`] = `
                     test-cluster-a
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
                     style="--text-line-clamp: 1;"
                   >
                     cd.agentID
                     : 
+                  </p>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
+                  >
+                    common.scopeLabel
+                    : 
+                    
                   </p>
                 </div>
               </div>
@@ -563,11 +465,18 @@ exports[`GitOps Cluster tests initial render 1`] = `
                     test-cluster-b
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
                     style="--text-line-clamp: 1;"
                   >
                     cd.agentID
                     : 
+                  </p>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
+                  >
+                    common.scopeLabel
+                    : 
+                    
                   </p>
                 </div>
               </div>

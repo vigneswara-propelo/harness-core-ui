@@ -23,7 +23,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer } from 'react-table'
 import ReactTimeago from 'react-timeago'
-import { defaultTo, get, isEmpty, noop } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop, capitalize } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 
@@ -43,6 +43,7 @@ const RenderClusterRef: Renderer<CellProps<ClusterResponse>> = ({ row }) => {
   const clusterName = row.original.name as string
   const clusterRef = row.original.clusterRef as string
   const agentName = row.original.agentIdentifier as string
+  const scope = row.original.scope as string
   const { getString } = useStrings()
   return (
     <Layout.Vertical>
@@ -60,8 +61,11 @@ const RenderClusterRef: Renderer<CellProps<ClusterResponse>> = ({ row }) => {
       <Text margin={{ bottom: 'xsmall' }} color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
         {getString('common.ID')}: {clusterRef}
       </Text>
-      <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
+      <Text margin={{ bottom: 'xsmall' }} color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
         {getString('cd.agentID')}: {agentName}
+      </Text>
+      <Text color={Color.GREY_500} font={{ size: 'small' }}>
+        {getString('common.scopeLabel')}: {capitalize(scope)}
       </Text>
     </Layout.Vertical>
   )

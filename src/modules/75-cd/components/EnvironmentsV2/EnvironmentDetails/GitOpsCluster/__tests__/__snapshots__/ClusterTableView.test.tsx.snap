@@ -123,11 +123,18 @@ exports[`GitOps Cluster tests initial render 1`] = `
                 test-cluster
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
                 style="--text-line-clamp: 1;"
               >
                 cd.agentID
                 : 
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
+              >
+                common.scopeLabel
+                : 
+                
               </p>
             </div>
           </div>

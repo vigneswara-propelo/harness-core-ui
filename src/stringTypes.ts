@@ -5654,6 +5654,7 @@ export interface StringsMap {
   'cd.launchArgo': string
   'cd.learnMore': string
   'cd.learnMoreAboutHarnessAdapter': string
+  'cd.linked': string
   'cd.loadBalancerConfig': string
   'cd.loadingDelegate': string
   'cd.logoOfName': string

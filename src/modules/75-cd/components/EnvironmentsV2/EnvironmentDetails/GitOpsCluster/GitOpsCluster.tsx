@@ -19,7 +19,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 
-import AddCluster from './AddCluster'
+import AddCluster from './AddClusterV2'
 import ClusterTableView from './ClusterTableView'
 
 const GitOpsCluster = (props: { envRef: string }): React.ReactElement => {
