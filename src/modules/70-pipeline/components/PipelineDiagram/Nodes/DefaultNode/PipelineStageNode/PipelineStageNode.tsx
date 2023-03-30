@@ -287,6 +287,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         <div className={cx(defaultCss.nodeNameText, defaultCss.stageName)}>
           <Text
             width={125}
+            height={64}
             font={{ size: 'normal', align: 'center' }}
             color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
             padding={'small'}

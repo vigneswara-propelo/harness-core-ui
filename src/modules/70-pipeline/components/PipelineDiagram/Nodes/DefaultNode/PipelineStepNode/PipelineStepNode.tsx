@@ -309,6 +309,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
         <div className={defaultCss.nodeNameText}>
           <Text
             width={125}
+            height={64}
             font={{ size: 'normal', align: 'center' }}
             color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
             padding={'small'}
