@@ -19,6 +19,7 @@ import type {
 } from 'services/cd-ng'
 import type { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { ManifestSourceBaseFactory } from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
+import type { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 
 export interface K8SDirectServiceStep extends ServiceSpec {
   stageIndex?: number
@@ -69,6 +70,7 @@ export interface KubernetesArtifactsProps {
   artifact?: PrimaryArtifact | SidecarArtifact
   isSidecar?: boolean
   artifactPath?: string
+  childPipelineMetadata?: ChildPipelineMetadataType
 }
 
 export interface KubernetesManifestsProps {

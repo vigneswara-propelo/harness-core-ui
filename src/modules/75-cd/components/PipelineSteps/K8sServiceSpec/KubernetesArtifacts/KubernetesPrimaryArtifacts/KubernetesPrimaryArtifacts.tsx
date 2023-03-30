@@ -18,16 +18,27 @@ import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/in
 import { useQueryParams } from '@common/hooks'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import type { PipelineStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type { KubernetesArtifactsProps } from '../../K8sServiceSpecInterface'
 import { fromPipelineInputTriggerTab, getPrimaryInitialValues } from '../../ArtifactSource/artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 export const KubernetesPrimaryArtifacts = (props: KubernetesArtifactsProps): React.ReactElement | null => {
   const { getString } = useStrings()
-  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
-    PipelineType<InputSetPathProps> & { accountId: string }
-  >()
+  const {
+    projectIdentifier: _projectIdentifier,
+    orgIdentifier: _orgIdentifier,
+    accountId,
+    pipelineIdentifier: _pipelineIdentifier
+  } = useParams<PipelineType<InputSetPathProps> & { accountId: string }>()
   const { repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
+  const {
+    state: {
+      selectionState: { selectedStageId = '' }
+    },
+    getStageFromPipeline
+  } = usePipelineContext()
   const { supportingGitSimplification } = useAppStore()
 
   const runtimeMode = isTemplatizedView(props.stepViewType)
@@ -43,6 +54,19 @@ export const KubernetesPrimaryArtifacts = (props: KubernetesArtifactsProps): Rea
         }
       : defaultTo(props.artifacts, props.template.artifacts)?.primary
   const artifactPath = 'primary'
+  const selectedStage = getStageFromPipeline<PipelineStageElementConfig>(selectedStageId).stage
+  const pipelineIdentifier =
+    (props.childPipelineMetadata
+      ? props.childPipelineMetadata.pipelineIdentifier
+      : get(selectedStage?.stage as PipelineStageElementConfig, 'spec.pipeline')) ?? _pipelineIdentifier
+  const projectIdentifier =
+    (props.childPipelineMetadata
+      ? props.childPipelineMetadata.projectIdentifier
+      : get(selectedStage?.stage as PipelineStageElementConfig, 'spec.project')) ?? _projectIdentifier
+  const orgIdentifier =
+    (props.childPipelineMetadata
+      ? props.childPipelineMetadata.orgIdentifier
+      : get(selectedStage?.stage as PipelineStageElementConfig, 'spec.org')) ?? _orgIdentifier
 
   useEffect(() => {
     /* istanbul ignore else */

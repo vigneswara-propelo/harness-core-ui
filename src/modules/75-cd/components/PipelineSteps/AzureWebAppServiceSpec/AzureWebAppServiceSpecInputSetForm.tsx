@@ -42,7 +42,8 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
     serviceIdentifier,
     stepViewType,
     formik,
-    allowableTypes
+    allowableTypes,
+    childPipelineMetadata
   } = props
   const { getString } = useStrings()
   const commonProps = {
@@ -72,6 +73,7 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
           artifacts={allValues?.artifacts}
           artifactSourceBaseFactory={artifactSourceBaseFactory}
           stageIdentifier={stageIdentifier}
+          childPipelineMetadata={childPipelineMetadata}
           {...commonProps}
         />
       )}

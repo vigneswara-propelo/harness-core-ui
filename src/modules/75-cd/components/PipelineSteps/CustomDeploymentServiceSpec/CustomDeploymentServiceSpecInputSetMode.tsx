@@ -23,6 +23,7 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import { KubernetesArtifacts } from '@cd/components/PipelineSteps/K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
+import type { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 import type { CustomDeploymentServiceStep } from './CustomDeploymentServiceSpecInterface'
 import PrimaryArtifactRef from '../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
 import { ConfigFiles } from '../SshServiceSpec/SshConfigFiles/ConfigFiles'
@@ -41,6 +42,7 @@ export interface CustomDeploymentInputSetProps {
   serviceIdentifier?: string
   formik?: any
   allowableTypes: AllowedTypes
+  childPipelineMetadata?: ChildPipelineMetadataType
 }
 const CustomDeploymentServiceSpecInputSetModeFormikForm = (
   props: CustomDeploymentInputSetProps
@@ -57,7 +59,8 @@ const CustomDeploymentServiceSpecInputSetModeFormikForm = (
     serviceIdentifier,
     stepViewType,
     formik,
-    allowableTypes
+    allowableTypes,
+    childPipelineMetadata
   } = props
   const { getString } = useStrings()
   const commonProps = {
@@ -86,6 +89,7 @@ const CustomDeploymentServiceSpecInputSetModeFormikForm = (
           artifactSourceBaseFactory={artifactSourceBaseFactory}
           stageIdentifier={stageIdentifier}
           template={template as ServiceSpec}
+          childPipelineMetadata={childPipelineMetadata}
           {...commonProps}
         />
       )}

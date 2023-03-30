@@ -87,7 +87,8 @@ export function StageFormInternal({
   viewType,
   stageClassName = '',
   allowableTypes,
-  executionIdentifier
+  executionIdentifier,
+  childPipelineMetadata
 }: {
   allValues?: StageElementWrapperConfig
   template?: StageElementWrapperConfig
@@ -97,6 +98,7 @@ export function StageFormInternal({
   stageClassName?: string
   allowableTypes: AllowedTypes
   executionIdentifier?: string
+  childPipelineMetadata?: ChildPipelineMetadataType
 }): JSX.Element {
   const { getString } = useStrings()
   return (
@@ -138,6 +140,7 @@ export function StageFormInternal({
           viewType={viewType}
           executionIdentifier={executionIdentifier}
           allowableTypes={allowableTypes}
+          childPipelineMetadata={childPipelineMetadata}
         />
       )}
       {(!isEmpty(template?.stage?.when) ||
@@ -255,6 +258,7 @@ export function StageForm({
           allowableTypes={allowableTypes}
           stageClassName={stageClassName}
           executionIdentifier={executionIdentifier}
+          childPipelineMetadata={childPipelineMetadata}
         />
       </StageFormContextProvider>
     </div>

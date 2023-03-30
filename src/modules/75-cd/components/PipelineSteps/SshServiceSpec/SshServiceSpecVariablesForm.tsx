@@ -26,6 +26,7 @@ import type {
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import type { AllNGVariables } from '@pipeline/utils/types'
 
+import type { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 import css from './SshServiceSpec.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 export interface SshServiceSpecVariablesFormProps {
@@ -39,6 +40,7 @@ export interface SshServiceSpecVariablesFormProps {
   readonly?: boolean
   path?: string
   allowableTypes: AllowedTypes
+  childPipelineMetadata?: ChildPipelineMetadataType
 }
 
 export interface VariableRowProps {

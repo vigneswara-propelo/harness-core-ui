@@ -50,7 +50,8 @@ export default function SingleServiceInputSetForm({
   readonly,
   viewType,
   stageIdentifier,
-  allowableTypes
+  allowableTypes,
+  childPipelineMetadata
 }: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'>): React.ReactElement | null {
   const {
     state: { pipeline, templateTypes },
@@ -192,7 +193,8 @@ export default function SingleServiceInputSetForm({
                 deploymentType: deploymentStage?.deploymentType,
                 gitOpsEnabled: deploymentStage?.gitOpsEnabled,
                 allValues: pick(deploymentStage, ['service']),
-                customDeploymentData: deploymentStage?.customDeploymentRef
+                customDeploymentData: deploymentStage?.customDeploymentRef,
+                childPipelineMetadata
               }}
               onUpdate={data => formik?.setFieldValue(`${path}.service`, get(data, 'service'))}
             />
@@ -211,7 +213,8 @@ export default function SingleServiceInputSetForm({
               customStepProps={{
                 stageIdentifier,
                 serviceIdentifier,
-                allValues: deploymentStage?.service?.serviceInputs?.serviceDefinition?.spec
+                allValues: deploymentStage?.service?.serviceInputs?.serviceDefinition?.spec,
+                childPipelineMetadata
               }}
               onUpdate={(data: any) => {
                 /* istanbul ignore next */

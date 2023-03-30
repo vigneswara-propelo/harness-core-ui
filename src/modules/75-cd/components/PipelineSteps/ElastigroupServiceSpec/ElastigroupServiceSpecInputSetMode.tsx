@@ -44,7 +44,8 @@ const ElastigroupServiceSpecInputSetModeFormikForm = (props: ElastigroupInputSet
     serviceIdentifier,
     stepViewType,
     formik,
-    allowableTypes
+    allowableTypes,
+    childPipelineMetadata
   } = props
   const { getString } = useStrings()
   const commonProps = {
@@ -74,6 +75,7 @@ const ElastigroupServiceSpecInputSetModeFormikForm = (props: ElastigroupInputSet
           artifactSourceBaseFactory={artifactSourceBaseFactory}
           stageIdentifier={stageIdentifier}
           template={template as ServiceSpec}
+          childPipelineMetadata={childPipelineMetadata}
           {...commonProps}
         />
       )}

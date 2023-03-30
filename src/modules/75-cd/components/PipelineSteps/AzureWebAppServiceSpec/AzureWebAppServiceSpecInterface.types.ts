@@ -16,6 +16,7 @@ import type {
   ServiceDefinition
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
+import type { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 
 export interface AzureWebAppServiceStep extends AzureWebAppServiceSpec {
   stageIndex?: number
@@ -38,6 +39,7 @@ export interface AzureWebAppServiceSpecFormProps {
   formik?: any
   serviceIdentifier?: string
   allowableTypes: AllowedTypes
+  childPipelineMetadata?: ChildPipelineMetadataType
 }
 
 export enum ApplicationConfigType {

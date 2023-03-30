@@ -28,6 +28,7 @@ import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/Con
 import applicationConfigBaseFactory from '@cd/factory/ApplicationConfigFactory/ApplicationConfigFactory'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
+import type { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 import type { K8SDirectServiceStep } from '../../K8sServiceSpec/K8sServiceSpecInterface'
 import { KubernetesArtifacts } from '../../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from '../../K8sServiceSpec/KubernetesManifests/KubernetesManifests'
@@ -55,6 +56,7 @@ export interface KubernetesInputSetProps {
   serviceIdentifier?: string
   formik?: any
   allowableTypes: AllowedTypes
+  childPipelineMetadata?: ChildPipelineMetadataType
 }
 const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps): React.ReactElement => {
   const {
@@ -69,7 +71,8 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
     serviceIdentifier,
     stepViewType,
     formik,
-    allowableTypes
+    allowableTypes,
+    childPipelineMetadata
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -100,6 +103,7 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
           artifactSourceBaseFactory={artifactSourceBaseFactory}
           stageIdentifier={stageIdentifier}
           template={template as ServiceSpec}
+          childPipelineMetadata={childPipelineMetadata}
           {...commonProps}
         />
       )}

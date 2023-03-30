@@ -25,6 +25,7 @@ import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/Manifes
 import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
 import { KubernetesArtifacts } from '@cd/components/PipelineSteps/K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from '@cd/components/PipelineSteps/K8sServiceSpec/KubernetesManifests/KubernetesManifests'
+import type { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 import type { SshWinRmDirectServiceStep } from './SshServiceSpecInterface'
 import PrimaryArtifactRef from '../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
 import css from './SshServiceSpec.module.scss'
@@ -42,6 +43,7 @@ export interface SshInputSetProps {
   serviceIdentifier?: string
   formik?: any
   allowableTypes: AllowedTypes
+  childPipelineMetadata?: ChildPipelineMetadataType
 }
 const SshServiceSpecInputSetModeFormikForm = (props: SshInputSetProps): React.ReactElement => {
   const {
@@ -56,7 +58,8 @@ const SshServiceSpecInputSetModeFormikForm = (props: SshInputSetProps): React.Re
     serviceIdentifier,
     stepViewType,
     formik,
-    allowableTypes
+    allowableTypes,
+    childPipelineMetadata
   } = props
   const { getString } = useStrings()
   const commonProps = {
@@ -86,6 +89,7 @@ const SshServiceSpecInputSetModeFormikForm = (props: SshInputSetProps): React.Re
           artifacts={allValues?.artifacts}
           artifactSourceBaseFactory={artifactSourceBaseFactory}
           stageIdentifier={stageIdentifier}
+          childPipelineMetadata={childPipelineMetadata}
           {...commonProps}
         />
       )}

@@ -71,6 +71,7 @@ import ServicesInputSetForm from './ServicesInputSetForm/ServicesInputSetForm'
 import EnvironmentsInputSetForm from './EnvironmentsInputSetForm/EnvironmentsInputSetForm'
 import { ExecutionWrapperInputSetForm } from './ExecutionWrapperInputSetForm'
 import IACMInputSetForm from './IACMInputSetForm'
+import type { ChildPipelineMetadataType } from './ChainedPipelineInputSetUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
@@ -137,6 +138,7 @@ export interface StageInputSetFormProps {
   executionIdentifier?: string
   allowableTypes: AllowedTypes
   stageType: StageType
+  childPipelineMetadata?: ChildPipelineMetadataType
 }
 
 export function StageInputSetFormInternal({
@@ -149,7 +151,8 @@ export function StageInputSetFormInternal({
   stageIdentifier,
   executionIdentifier,
   allowableTypes,
-  stageType
+  stageType,
+  childPipelineMetadata
 }: StageInputSetFormProps): React.ReactElement {
   const deploymentStageInputSet = get(formik?.values, path, {})
   const { getString } = useStrings()
@@ -583,6 +586,7 @@ export function StageInputSetFormInternal({
         viewType={viewType}
         readonly={readonly}
         stageIdentifier={stageIdentifier}
+        childPipelineMetadata={childPipelineMetadata}
       />
 
       <EnvironmentsInputSetForm
