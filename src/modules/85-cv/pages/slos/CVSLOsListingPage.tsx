@@ -505,8 +505,8 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
   const RenderRemainingErrorBudget: Renderer<CellProps<any>> = ({ row }) => {
     const slo = row?.original
-    const { errorBudgetRemainingPercentage = '', errorBudgetRemaining = '' } = slo || {}
-
+    const { errorBudgetRemainingPercentage = '', errorBudgetRemaining = '', evaluationType = '' } = slo || {}
+    const isRequest = evaluationType === EvaluationType.REQUEST
     return (
       <Layout.Horizontal className={css.errorBudgetParent}>
         <Text
@@ -516,19 +516,21 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           padding={{ right: 'small' }}
           color={Color.GREY_900}
         >
-          {` ${Number(errorBudgetRemainingPercentage || 0).toFixed(2)}%`}
+          {isRequest ? getString('na') : ` ${Number(errorBudgetRemainingPercentage || 0).toFixed(2)}%`}
         </Text>
-        <Container className={css.errorBudgetRemainingContainer}>
-          <Text
-            font={{ variation: FontVariation.SMALL }}
-            lineClamp={1}
-            title={`${errorBudgetRemaining} m`}
-            color={Color.GREY_700}
-            className={css.errorBudgetRemaining}
-          >
-            {`${errorBudgetRemaining} m`}
-          </Text>
-        </Container>
+        {!isRequest && (
+          <Container className={css.errorBudgetRemainingContainer}>
+            <Text
+              font={{ variation: FontVariation.SMALL }}
+              lineClamp={1}
+              title={`${errorBudgetRemaining} m`}
+              color={Color.GREY_700}
+              className={css.errorBudgetRemaining}
+            >
+              {`${errorBudgetRemaining} m`}
+            </Text>
+          </Container>
+        )}
       </Layout.Horizontal>
     )
   }

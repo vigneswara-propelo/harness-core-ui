@@ -251,7 +251,7 @@ export const getSLIDerivedProps = ({
     ? [eventType, validRequestMetric, goodRequestMetric]
     : [validRequestMetric]
 
-  const ffBasedProp = enableRequestSLO ? [serviceLevelIndicatorType] : []
+  const ffBasedProp = enableRequestSLO ? [] : [serviceLevelIndicatorType]
   const valuesToDetermineReload = !isWindow
     ? [healthSourceRef, ...metricsByType]
     : [

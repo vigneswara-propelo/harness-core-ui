@@ -194,12 +194,12 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
         {toggle === SLOCardToggleViews.ERROR_BUDGET && (
           <Layout.Horizontal spacing="medium">
             {renderRecalculation(serviceLevelObjective)}
-            {hideErrorBudgetGauge && (
-              <Container height={200} className={css.errorBudgetGaugeContainer}>
-                <Heading font={{ variation: headingVariation }} data-tooltip-id={'errorBudgetRemaining'}>
-                  {getString('cv.errorBudgetRemainingWithMins')}
-                </Heading>
-                <ErrorBudgetGauge customChartOptions={getErrorBudgetGaugeOptions(serviceLevelObjective)} />
+            <Container height={200} className={css.errorBudgetGaugeContainer}>
+              <Heading font={{ variation: headingVariation }} data-tooltip-id={'errorBudgetRemaining'}>
+                {getString('cv.errorBudgetRemainingWithMins')}
+              </Heading>
+              <ErrorBudgetGauge customChartOptions={getErrorBudgetGaugeOptions(serviceLevelObjective)} />
+              {hideErrorBudgetGauge && (
                 <Text
                   font={{ variation: FontVariation.SMALL }}
                   className={css.errorBudgetRemaining}
@@ -209,8 +209,8 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
                   {serviceLevelObjective.errorBudgetRemaining}
                   <span style={{ display: 'block' }}>{getString('cv.minutesRemaining')}</span>
                 </Text>
-              </Container>
-            )}
+              )}
+            </Container>
             <Container className={css.flexGrowOne} style={{ overflow: 'auto' }}>
               <Container flex={{ alignItems: 'flex-start' }} margin={{ bottom: 'small' }}>
                 <Heading font={{ variation: headingVariation }} data-tooltip-id={'errorBudgetBurnDown'}>

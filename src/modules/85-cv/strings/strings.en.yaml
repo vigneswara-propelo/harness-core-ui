@@ -708,6 +708,8 @@ changeSource:
     label: Harness FF
   chaosExperiment:
     label: Harness CE
+    event: Chaos Event
+    events: Chaos Events
 Dependency:
   serviceList: Service list
   noData: No Data For Dependency Graph

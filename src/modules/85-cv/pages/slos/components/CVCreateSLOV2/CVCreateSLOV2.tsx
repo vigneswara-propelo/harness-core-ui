@@ -39,6 +39,7 @@ import sloReviewChange from '@cv/assets/sloReviewChange.svg'
 import {
   createSLOV2RequestPayload,
   getIsUserUpdatedSLOData,
+  getServiceLevelIndicatorsIdentifierFromResponse,
   getSimpleSLOV2FormValidationSchema,
   getSLOV2FormValidationSchema,
   getSLOV2InitialFormData
@@ -163,8 +164,17 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
       : history.push(routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }))
   }
 
+  const serviceLevelIndicatorsIdentifierFromResponse = getServiceLevelIndicatorsIdentifierFromResponse(
+    SLODataResponse,
+    isComposite
+  )
   const handleSLOV2Submit = async (values: SLOV2Form): Promise<void> => {
-    const sloCreateRequestPayload = createSLOV2RequestPayload(values, orgIdentifier, projectIdentifier)
+    const sloCreateRequestPayload = createSLOV2RequestPayload(
+      values,
+      orgIdentifier,
+      projectIdentifier,
+      serviceLevelIndicatorsIdentifierFromResponse
+    )
 
     try {
       if (identifier) {
