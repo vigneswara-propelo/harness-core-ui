@@ -147,6 +147,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Triggers - 2
@@ -194,6 +195,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Ashwin
@@ -229,6 +231,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Triggers
@@ -276,6 +279,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Ashwin
@@ -311,6 +315,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Stage Template
@@ -358,6 +363,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Ashwin
@@ -393,6 +399,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Stage 1 (v1)
@@ -440,6 +447,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Ashwin
@@ -475,6 +483,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     env group 15
@@ -522,6 +531,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Ashwin
@@ -557,6 +567,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Test 11
@@ -604,6 +615,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Ashwin
@@ -639,6 +651,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Env Group 7
@@ -686,6 +699,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Ashwin
@@ -842,6 +856,7 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     testSuccess
@@ -884,6 +899,7 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Kapil
@@ -919,6 +935,7 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     IgnoreFailedPipe
@@ -961,6 +978,7 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Kapil
@@ -996,6 +1014,7 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     testSuccess
@@ -1038,6 +1057,7 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Kapil
@@ -1073,6 +1093,7 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     IgnoreFailedPipe
@@ -1115,6 +1136,7 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Kapil

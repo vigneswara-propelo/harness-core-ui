@@ -91,6 +91,7 @@ const RenderColumnEntity: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = (
         <Text color={Color.BLACK} lineClamp={1} className={css.overflow}>
           <a
             rel="noreferrer"
+            className={css.link}
             onClick={async e => {
               e.preventDefault()
               e.stopPropagation()
@@ -164,6 +165,7 @@ export const RenderScope: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = (
       <Text color={Color.BLACK} lineClamp={1} className={css.overflow}>
         {(column as any).enableURLLinkToScope ? (
           <a
+            className={css.link}
             rel="noreferrer"
             onClick={async e => {
               e.preventDefault()

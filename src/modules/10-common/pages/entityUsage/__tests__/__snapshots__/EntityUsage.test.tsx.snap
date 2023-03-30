@@ -147,6 +147,7 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     test2
@@ -241,6 +242,7 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     dev7
@@ -276,6 +278,7 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Refer test
@@ -370,6 +373,7 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     dev7
@@ -526,6 +530,7 @@ exports[`Entity Usage render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     Harness Docker Connector
@@ -568,6 +573,7 @@ exports[`Entity Usage render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
+                    class="link"
                     rel="noreferrer"
                   >
                     YNC_Project
