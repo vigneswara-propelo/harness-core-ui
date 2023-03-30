@@ -15,7 +15,12 @@
       "releaseName": "release-pipeline-1",
       "kind": "KubernetesDirect",
       "_pms_class": "io.harness.cdng.infra.beans.K8sDirectInfrastructureOutcome",
-      "path": ["path1", "path2"]
+      "path": ["path1", "path2"],
+      "label": {
+        "part1.part2.part3": "100hello",
+        "part4-part5": "31.0",
+        " version": "4.0"
+      }
     }
   },
   "stepParameters": {

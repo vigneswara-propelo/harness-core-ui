@@ -6,18 +6,24 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputOutputTab } from '../InputOutputTab'
 import data from './io-1.json'
 describe('<ExecutionStepInputOutputTab /> tests', () => {
-  test('output snapshot test', () => {
+  test('output snapshot test', async () => {
     const { container } = render(
       <TestWrapper>
         <InputOutputTab data={data.outcomes} mode="output" baseFqn="basefqn" />
       </TestWrapper>
     )
+    await waitFor(() =>
+      expect(
+        container.querySelector('[data-fqn="basefqn.someotherkey.label.get(\\"part1.part2.part3\\")"')
+      ).toBeVisible()
+    )
+    expect(container.querySelector('[data-fqn="basefqn.someotherkey.label.get(\\"part4-part5\\")"')).toBeVisible()
     expect(container).toMatchSnapshot()
   })
 

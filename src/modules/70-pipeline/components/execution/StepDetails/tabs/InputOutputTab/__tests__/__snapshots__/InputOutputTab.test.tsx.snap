@@ -943,6 +943,153 @@ exports[`<ExecutionStepInputOutputTab /> tests output snapshot test 1`] = `
               </div>
             </div>
           </div>
+          <div
+            class="panel"
+            data-status="open"
+          >
+            <div
+              class="panelTitle"
+            >
+              <span
+                class="bp3-icon bp3-icon-chevron-up"
+                icon="chevron-up"
+              >
+                <svg
+                  data-icon="chevron-up"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    chevron-up
+                  </desc>
+                  <path
+                    d="M12.71 9.29l-4-4C8.53 5.11 8.28 5 8 5s-.53.11-.71.29l-4 4a1.003 1.003 0 001.42 1.42L8 7.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span>
+                Label
+              </span>
+            </div>
+            <div
+              class="bp3-collapse"
+              style="height: auto; overflow-y: visible; transition: none;"
+            >
+              <div
+                aria-hidden="false"
+                class="bp3-collapse-body"
+                style="transform: translateY(0); transition: none;"
+              >
+                <div
+                  class="ioRow"
+                >
+                  <div
+                    class="key"
+                    data-fqn="basefqn.someotherkey.label.get(\\"part1.part2.part3\\")"
+                  >
+                    <div
+                      class="main"
+                    >
+                      <div
+                        class="text"
+                      >
+                        part1.part2.part3
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="value"
+                  >
+                    <div
+                      class="main valueText"
+                    >
+                      <div
+                        class="text"
+                      >
+                        <span
+                          class="StyledProps--font StyledProps--main StyledProps--inline"
+                        >
+                          100hello
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="ioRow"
+                >
+                  <div
+                    class="key"
+                    data-fqn="basefqn.someotherkey.label.get(\\"part4-part5\\")"
+                  >
+                    <div
+                      class="main"
+                    >
+                      <div
+                        class="text"
+                      >
+                        part4-part5
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="value"
+                  >
+                    <div
+                      class="main valueText"
+                    >
+                      <div
+                        class="text"
+                      >
+                        <span
+                          class="StyledProps--font StyledProps--main StyledProps--inline"
+                        >
+                          31.0
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="ioRow"
+                >
+                  <div
+                    class="key"
+                    data-fqn="basefqn.someotherkey.label. version"
+                  >
+                    <div
+                      class="main"
+                    >
+                      <div
+                        class="text"
+                      >
+                         version
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="value"
+                  >
+                    <div
+                      class="main valueText"
+                    >
+                      <div
+                        class="text"
+                      >
+                        <span
+                          class="StyledProps--font StyledProps--main StyledProps--inline"
+                        >
+                          4.0
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

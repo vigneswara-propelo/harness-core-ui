@@ -55,6 +55,11 @@ export function InputOutputTabRow(props: InputOutputTabRowProps): React.ReactEle
 
         let newKey = `${props.prefix}.${key}`
 
+        // if key includes '.' or '-', we need to split
+        if (key.includes('.') || key.includes('-')) {
+          newKey = `${props.prefix}.get("${key}")`
+        }
+
         if (blackListKeys.includes(key.toLowerCase()) || key.toLowerCase().endsWith('definition')) {
           newKey = props.prefix
         }
