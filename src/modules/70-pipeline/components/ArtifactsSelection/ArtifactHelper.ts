@@ -36,6 +36,14 @@ export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDe
 export const isAllowedAzureArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean =>
   deploymentType === ServiceDeploymentType.CustomDeployment || deploymentType === ServiceDeploymentType.TAS
 
+export const isAllowedBambooArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean =>
+  [
+    ServiceDeploymentType.Ssh,
+    ServiceDeploymentType.CustomDeployment,
+    ServiceDeploymentType.TAS,
+    ServiceDeploymentType.WinRm
+  ].includes(deploymentType as ServiceDeploymentType)
+
 export const isAllowedAMIDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean =>
   deploymentType === ServiceDeploymentType.CustomDeployment || deploymentType === ServiceDeploymentType.TAS
 
@@ -203,7 +211,6 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
   Ssh: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Jenkins,
-    ENABLED_ARTIFACT_TYPES.Bamboo,
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.AmazonS3,
@@ -251,7 +258,6 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Jenkins,
-    ENABLED_ARTIFACT_TYPES.Bamboo,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.Nexus2Registry,
     ENABLED_ARTIFACT_TYPES.AmazonS3,
@@ -274,8 +280,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Acr,
     ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry,
     ENABLED_ARTIFACT_TYPES.GoogleCloudStorage,
-    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry,
-    ENABLED_ARTIFACT_TYPES.Bamboo
+    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
   ],
   GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage],
   AwsLambda: [

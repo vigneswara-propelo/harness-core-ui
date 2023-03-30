@@ -83,6 +83,7 @@ import {
   ENABLED_ARTIFACT_TYPES,
   isAllowedAMIDeploymentTypes,
   isAllowedAzureArtifactDeploymentTypes,
+  isAllowedBambooArtifactDeploymentTypes,
   isAllowedCustomArtifactDeploymentTypes,
   isSidecarAllowed,
   ModalViewFor,
@@ -169,7 +170,8 @@ export default function ServiceV2ArtifactsSelection({
     AZURE_ARTIFACTS_NG,
     CD_AMI_ARTIFACTS_NG,
     AZURE_WEBAPP_NG_JENKINS_ARTIFACTS,
-    CDS_SERVICE_CONFIG_LAST_STEP
+    CDS_SERVICE_CONFIG_LAST_STEP,
+    BAMBOO_ARTIFACT_NG
   } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
@@ -203,6 +205,13 @@ export default function ServiceV2ArtifactsSelection({
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Jenkins)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Jenkins)
+    }
+    if (
+      BAMBOO_ARTIFACT_NG &&
+      isAllowedBambooArtifactDeploymentTypes(deploymentType) &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Bamboo)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Bamboo)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentType])
