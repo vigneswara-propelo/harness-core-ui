@@ -104,7 +104,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   } = useListPlugins({ queryParams: defaultQueryParams, lazy: true })
   const scriptPlugin: PluginMetadataResponse = {
     name: 'Script',
-    inputs: [{ name: 'run', type: 'Textarea' } as Input],
+    inputs: [{ name: 'run', type: 'Textarea', required: true } as Input],
     kind: PluginKind.HarnessBuiltIn,
     description: getString('common.plugin.runStepDesc')
   }
