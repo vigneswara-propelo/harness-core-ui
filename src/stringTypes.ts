@@ -2196,12 +2196,18 @@ export interface StringsMap {
   'authSettings.samlTestFailed': string
   'authSettings.samlTestSuccessful': string
   'authSettings.selectSAMLProvider': string
+  'authSettings.sessionTimOutSaved': string
+  'authSettings.sessionTimeOut': string
+  'authSettings.sessionTimeOutErrorMaxMessage': string
+  'authSettings.sessionTimeOutErrorMessage': string
   'authSettings.success.msg': string
   'authSettings.success.title': string
   'authSettings.success.woohoo': string
   'authSettings.sureToDisableTwoFAEnforcement': string
   'authSettings.testingSSO': string
   'authSettings.testingSSODescription': string
+  'authSettings.timeoutNumberRequired': string
+  'authSettings.timeoutRequired': string
   'authSettings.twoFAEnforcementDisabled': string
   'authSettings.twoFAEnforcementEnabled': string
   'authSettings.twoFactorAuthSupport': string

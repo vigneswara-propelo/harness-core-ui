@@ -115,6 +115,12 @@ sureToDisableTwoFAEnforcement: Are you sure you want to disable Two Factor Authe
 twoFAEnforcementDisabled: Two Factor Authentication enforcement has been disabled successfully
 authenticationSettings: Authentication Settings
 updating: Updating, please wait...
+sessionTimeOut: Session Timeout (in minutes)
+sessionTimeOutErrorMessage: Session Timeout cannot be less than {{minimum}} minutes
+sessionTimOutSaved: Session Timeout {{ $.common.savedSuccessfully }}
+sessionTimeOutErrorMaxMessage: Session Timeout cannot be more than {{maximum}} minutes
+timeoutRequired: Session timeout is required
+timeoutNumberRequired: Session timeout should be a number
 onprem: 'Self Hosted'
 saas: 'SaaS'
 multipleOrganizations: Multiple Organizations

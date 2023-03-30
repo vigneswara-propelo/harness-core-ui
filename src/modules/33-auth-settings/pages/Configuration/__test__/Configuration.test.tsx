@@ -50,7 +50,8 @@ jest.mock('services/cd-ng', () => ({
   }),
   syncLdapGroupsPromise: jest.fn().mockImplementation(() => {
     return syncLdapGroupsMock()
-  })
+  }),
+  useSetSessionTimeoutAtAccountLevel: jest.fn().mockReturnValue({ mutate: jest.fn() })
 }))
 
 describe('Configuration', () => {

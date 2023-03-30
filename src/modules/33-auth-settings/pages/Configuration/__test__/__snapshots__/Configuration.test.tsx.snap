@@ -961,6 +961,57 @@ exports[`Configuration Configuration page 1`] = `
         </label>
       </div>
     </div>
+    <div
+      class="OverlaySpinner--overlaySpinner"
+    >
+      <form
+        action="#"
+        class="FormikForm--main"
+      >
+        <div>
+          <div
+            class="bp3-card bp3-elevation-0 Card--card card"
+          >
+            <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main sessionTimeoutLayout StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-lead"
+              >
+                authSettings.sessionTimeOut
+              </p>
+              <div
+                class="TextInput--main textInpt"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    class="bp3-input"
+                    max="4320"
+                    min="480"
+                    name="timeout"
+                    type="number"
+                    value="530"
+                  />
+                </div>
+              </div>
+              <button
+                aria-label="save"
+                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+                type="submit"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  save
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 `;
