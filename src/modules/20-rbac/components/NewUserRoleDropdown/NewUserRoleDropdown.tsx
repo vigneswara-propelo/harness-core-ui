@@ -53,6 +53,7 @@ const NewUserRoleDropdown = (props: NewUserRoleDropdownProps): ReactElement => {
       }}
       items={roles}
       value={value}
+      usePortal={true}
       popoverClassName={css.selectPopover}
       inputProps={{
         placeholder: getString('rbac.usersPage.selectRole')

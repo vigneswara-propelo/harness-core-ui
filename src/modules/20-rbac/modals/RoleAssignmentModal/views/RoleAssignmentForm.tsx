@@ -190,6 +190,7 @@ const RoleAssignmentForm: React.FC<RoleAssignmentFormProps> = ({
                       value={value}
                       disabled={isAssignmentFieldDisabled(value)}
                       popoverClassName={css.selectPopover}
+                      usePortal={true}
                       inputProps={{
                         placeholder: getString('rbac.usersPage.selectResourceGroup'),
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
