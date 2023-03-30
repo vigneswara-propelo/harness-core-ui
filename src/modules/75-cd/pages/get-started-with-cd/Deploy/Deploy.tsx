@@ -84,7 +84,8 @@ export const Deploy = ({ onBack, setSelectedSectionId, appDetails }: DeployProps
       ...payload,
       projectIdentifier: projectIdentifier,
       orgIdentifier: orgIdentifier,
-      accountIdentifier: accountId
+      accountIdentifier: accountId,
+      isPLG: true
     }
 
     trackEvent(CDOnboardingActions.CreateAndSyncAppClicked, {})

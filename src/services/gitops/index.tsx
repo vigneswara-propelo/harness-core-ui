@@ -91,6 +91,10 @@ export interface V1Agent {
   disasterRecoveryNode?: V1DisasterRecoveryNode
   health?: V1AgentHealth
   identifier?: string
+  /**
+   * Indicates if the agent is for PLG.
+   */
+  isPLG?: boolean
   lastModifiedAt?: V1Time
   metadata?: V1AgentMetadata
   name?: string
@@ -1022,6 +1026,7 @@ export interface AgentApplicationServiceCreatePathParams {
 
 export interface ApplicationsApplicationCreateRequest {
   application?: ApplicationsApplication
+  isPLG?: boolean
   project?: string
   upsert?: boolean
   validate?: boolean

@@ -86,6 +86,7 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
       name: `hostedagent${_uuid}`,
       identifier: `hostedagent${_uuid}`,
       type: 'HOSTED_ARGO_PROVIDER' as V1AgentType,
+      isPLG: true,
       metadata: {
         highAvailability: false,
         existingInstallation: false
