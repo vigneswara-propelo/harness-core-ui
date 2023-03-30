@@ -7,8 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly bottomMargin: string
   readonly infralabel: string
   readonly limitsInput: string
   readonly resourcesLabel: string
+  readonly tabSubHeading: string
 }
 export default styles

@@ -18,8 +18,7 @@ import {
   FormInput,
   Layout,
   Label,
-  Icon,
-  AllowedTypes
+  Icon
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
@@ -28,7 +27,7 @@ import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
-import { getImagePullPolicyOptions, getShellOptions } from '@common/utils/ContainerRunStepUtils'
+import { getShellOptions } from '@common/utils/ContainerRunStepUtils'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -36,14 +35,12 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { Connectors } from '@connectors/constants'
 import { useQueryParams } from '@common/hooks'
-import { isMultiTypeRuntime } from '@common/utils/utils'
-import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
-import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import type { ContainerStepData, ContainerStepProps } from './types'
 import { getValidationSchema, processInitialValues } from './helper'
+import OptionalConfiguration from './OptionalConfiguration'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ContainerStep.module.scss'
 
@@ -356,58 +353,7 @@ export const ContainerStepBase = (
               <Accordion.Panel
                 id="optional-config"
                 summary={getString('common.optionalConfig')}
-                details={
-                  <>
-                    <div className={cx(stepCss.formGroup, stepCss.lg)}>
-                      <FormInput.MultiTypeInput
-                        name="spec.imagePullPolicy"
-                        label={getString('pipelineSteps.pullLabel')}
-                        disabled={readonly}
-                        useValue
-                        multiTypeInputProps={{
-                          selectProps: {
-                            items: getImagePullPolicyOptions(getString),
-
-                            addClearBtn: true
-                          },
-                          expressions,
-                          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
-                        }}
-                        selectItems={getImagePullPolicyOptions(getString)}
-                      />
-                    </div>
-                    <div className={cx(stepCss.formGroup, stepCss.lg)}>
-                      <MultiTypeList
-                        multiTextInputProps={{
-                          expressions,
-                          allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                            item => !isMultiTypeRuntime(item)
-                          ) as AllowedTypes
-                        }}
-                        name="spec.outputVariables"
-                        disabled={readonly}
-                        multiTypeFieldSelectorProps={{
-                          label: getString('pipelineSteps.outputVariablesLabel')
-                        }}
-                        style={{ marginTop: 'var(--spacing-small)', marginBottom: 'var(--spacing-small)' }}
-                      />
-                    </div>
-                    <div className={cx(stepCss.formGroup, stepCss.lg)}>
-                      <MultiTypeMap
-                        name={'spec.envVariables'}
-                        valueMultiTextInputProps={{
-                          expressions,
-                          allowableTypes
-                        }}
-                        multiTypeFieldSelectorProps={{
-                          label: getString('environmentVariables'),
-                          allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
-                        }}
-                        disabled={readonly}
-                      />
-                    </div>
-                  </>
-                }
+                details={<OptionalConfiguration formik={formik} readonly={readonly} allowableTypes={allowableTypes} />}
               />
             </Accordion>
           </FormikForm>

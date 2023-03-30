@@ -23,3 +23,14 @@
   flex-grow: 1;
   flex-basis: '50%';
 }
+
+.bottomMargin {
+  margin-bottom: var(--spacing-medium) !important;
+}
+
+.tabSubHeading {
+  font-size: var(--font-size-normal);
+  color: var(--grey-800);
+  margin-bottom: var(--spacing-5);
+  font-weight: 600;
+}

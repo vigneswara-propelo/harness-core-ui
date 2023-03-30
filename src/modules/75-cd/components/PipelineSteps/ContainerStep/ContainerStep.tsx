@@ -17,9 +17,9 @@ import type { StringsMap } from 'stringTypes'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import { ContainerStepBaseWithRef } from './ContainerStepBase'
-import ContainerStepInputSet from './ContainerStepInputSet'
 import { processFormData } from './helper'
 import type { ContainerStepData, ContainerStepVariableProps } from './types'
+import { ContainerStepInputSet } from './ContainerStepInputSet'
 export class ContainerStep extends PipelineStep<ContainerStepData> {
   protected type = StepType.Container
   protected stepName = 'Configure Container Step'

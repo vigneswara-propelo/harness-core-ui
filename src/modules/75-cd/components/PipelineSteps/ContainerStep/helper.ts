@@ -6,16 +6,48 @@
  */
 
 import * as Yup from 'yup'
-import { get } from 'lodash-es'
+import { get, once } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import type { UseStringsReturn } from 'framework/strings'
 import { cpuLimitRegex, memorLimityRegex } from '@common/utils/StringUtils'
-import type { MapType, MultiTypeListUIType } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
+import type {
+  MapType,
+  MapUIType,
+  MultiTypeListType,
+  MultiTypeListUIType,
+  MultiTypeMapType,
+  MultiTypeMapUIType,
+  SelectOption
+} from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { OsTypes } from '@pipeline/utils/constants'
+import type { ContainerK8sInfra } from 'services/pipeline-ng'
 import type { ContainerStepData } from './types'
 import { getConnectorSchema, getNameSpaceSchema } from '../PipelineStepsUtil'
+
+const getInitialMapValues: (value: MultiTypeMapType) => MultiTypeMapUIType = value => {
+  const map =
+    typeof value === 'string'
+      ? value
+      : Object.keys(value || {}).map(key => ({
+          id: uuid('', nameSpace()),
+          key: key,
+          value: value[key]
+        }))
+  return map
+}
+
+const getInitialListValues: (value: MultiTypeListType) => MultiTypeListUIType = value =>
+  typeof value === 'string'
+    ? value
+    : value
+        ?.filter((path: string) => !!path)
+        ?.map((_value: string) => ({
+          id: uuid('', nameSpace()),
+          value: _value
+        })) || []
 
 export const processInitialValues = (values: ContainerStepData): ContainerStepData => {
   return {
@@ -29,29 +61,52 @@ export const processInitialValues = (values: ContainerStepData): ContainerStepDa
               id: uuid('', nameSpace()),
               value: _value.name
             })) || [],
-      envVariables:
-        typeof values.spec.envVariables === 'string'
-          ? values.spec.envVariables
-          : Object.keys(values.spec.envVariables || {})?.map(key => ({
-              id: uuid('', nameSpace()),
-              key: key,
-              value: values?.spec?.envVariables?.[key]
-            }))
+      envVariables: getInitialMapValues(values.spec?.envVariables || {}),
+      infrastructure: {
+        type: values.spec.infrastructure?.type,
+        spec: {
+          ...values.spec.infrastructure?.spec,
+          annotations: getInitialMapValues(values.spec.infrastructure?.spec?.annotations || {}),
+          labels: getInitialMapValues(values.spec.infrastructure?.spec?.labels || {}),
+          containerSecurityContext: {
+            ...values.spec.infrastructure?.spec?.containerSecurityContext,
+            capabilities: {
+              drop: getInitialListValues(
+                (values.spec.infrastructure as ContainerK8sInfra)?.spec?.containerSecurityContext?.capabilities?.drop ||
+                  []
+              ),
+              add: getInitialListValues(
+                (values.spec.infrastructure as ContainerK8sInfra)?.spec?.containerSecurityContext?.capabilities?.add ||
+                  []
+              )
+            }
+          },
+          nodeSelector: getInitialMapValues((values.spec.infrastructure as ContainerK8sInfra)?.spec?.nodeSelector || {})
+        }
+      }
     }
   }
 }
 
+const processMapValues: (value: MapUIType) => MultiTypeMapType = value => {
+  const map: MapType = {}
+  typeof value === 'string'
+    ? value
+    : Array.isArray(value)
+    ? value.forEach(mapValue => {
+        if (mapValue.key) {
+          map[mapValue.key] = mapValue.value
+        }
+      })
+    : {}
+  return map
+}
+
+const processListValues: (value: MultiTypeListUIType) => MultiTypeListType = value =>
+  typeof value === 'string' ? value : value?.filter(listValue => !!listValue.value).map(listValue => listValue.value)
+
 export const processFormData = (_values: ContainerStepData): ContainerStepData => {
   const values = Object.assign({}, _values)
-  const envVar = get(values, 'spec.envVariables')
-  const map: MapType = {}
-  if (Array.isArray(envVar)) {
-    envVar.forEach(mapValue => {
-      if (mapValue.key) {
-        map[mapValue.key] = mapValue.value
-      }
-    })
-  }
   const outputVar = get(values, 'spec.outputVariables') as MultiTypeListUIType
   const outputVarlist =
     typeof outputVar === 'string'
@@ -61,14 +116,31 @@ export const processFormData = (_values: ContainerStepData): ContainerStepData =
           .map(listValue => ({
             name: listValue.value
           }))
-
   return {
     ...values,
     spec: {
       ...values.spec,
       connectorRef: values.spec.connectorRef,
       outputVariables: outputVarlist,
-      envVariables: typeof envVar === 'string' ? envVar : map
+      envVariables: processMapValues(values.spec?.envVariables),
+      infrastructure: {
+        type: values.spec.infrastructure?.type,
+        spec: {
+          ...values.spec.infrastructure?.spec,
+          annotations: processMapValues(values.spec.infrastructure?.spec?.annotations),
+          labels: processMapValues(values.spec.infrastructure?.spec?.labels),
+          containerSecurityContext: {
+            ...(values.spec.infrastructure?.spec?.os !== OsTypes.Windows && {
+              ...values.spec.infrastructure?.spec?.containerSecurityContext,
+              capabilities: {
+                drop: processListValues(values.spec.infrastructure?.spec?.containerSecurityContext?.capabilities?.drop),
+                add: processListValues(values.spec.infrastructure?.spec?.containerSecurityContext?.capabilities?.add)
+              }
+            })
+          },
+          nodeSelector: processMapValues(values.spec.infrastructure?.spec?.nodeSelector)
+        }
+      }
     }
   }
 }
@@ -108,3 +180,11 @@ export const getValidationSchema = (getString: UseStringsReturn['getString'], st
     })
   })
 }
+
+export const getOsTypes = once((getString: UseStringsReturn['getString']): SelectOption[] => [
+  { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+  {
+    label: getString('pipeline.infraSpecifications.osTypes.windows'),
+    value: OsTypes.Windows
+  }
+])

@@ -11,6 +11,7 @@ import { Formik, Form } from 'formik'
 
 import { TestWrapper } from '@common/utils/testUtils'
 
+import { tolerationsCustomMap } from '@common/utils/ContainerRunStepUtils'
 import MultiTypeCustomMap from '../MultiTypeCustomMap'
 
 interface TestProps {
@@ -29,12 +30,7 @@ const TestComponent = ({ initialValues, multiTypeCustomMapProps }: TestProps): R
             multiTypeFieldSelectorProps={{
               label: 'Test'
             }}
-            multiTypeMapKeys={[
-              { label: 'Effect', value: 'effect' },
-              { label: 'Key', value: 'key' },
-              { label: 'Operator', value: 'operator' },
-              { label: 'Value', value: 'value' }
-            ]}
+            multiTypeMapKeys={tolerationsCustomMap}
             formik={formik}
             {...multiTypeCustomMapProps}
           />

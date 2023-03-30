@@ -20,3 +20,10 @@ export const getImagePullPolicyOptions = once((getString: UseStringsReturn['getS
   { label: getString('common.ifNotPresent'), value: 'IfNotPresent' },
   { label: getString('pipelineSteps.pullNeverLabel'), value: 'Never' }
 ])
+
+export const tolerationsCustomMap = [
+  { label: 'Effect', value: 'effect' },
+  { label: 'Key', value: 'key' },
+  { label: 'Operator', value: 'operator' },
+  { label: 'Value', value: 'value' }
+]

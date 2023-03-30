@@ -86,6 +86,7 @@ import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinde
 import { Connectors } from '@connectors/constants'
 import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { isEnterprisePlan, isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { tolerationsCustomMap } from '@common/utils/ContainerRunStepUtils'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import {
   KUBERNETES_HOSTED_INFRA_ID,
@@ -1590,12 +1591,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                   hideExecutionTimeField: true
                 }}
                 disabled={isReadonly}
-                multiTypeMapKeys={[
-                  { label: 'Effect', value: 'effect' },
-                  { label: 'Key', value: 'key' },
-                  { label: 'Operator', value: 'operator' },
-                  { label: 'Value', value: 'value' }
-                ]}
+                multiTypeMapKeys={tolerationsCustomMap}
                 enableConfigureOptions={false}
               />
             </Container>
