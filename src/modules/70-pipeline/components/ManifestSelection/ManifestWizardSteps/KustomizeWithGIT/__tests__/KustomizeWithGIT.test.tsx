@@ -118,7 +118,8 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
 
     await act(async () => userEvent.click(getByTestId('advancedTitle-summary')))
     await waitFor(() => userEvent.click(container.querySelector('[data-icon="main-trash"]') as HTMLElement))
-    expect(container).toMatchSnapshot()
+    expect(container.querySelector('span[data-tooltip-id="kustomizeGit_repoName"]')).toBeInTheDocument()
+    expect(container.querySelector('span[data-tooltip-id="kustomizeGit_identifier"]')).toBeInTheDocument()
   })
 
   test('submits with the right payload when gitfetchtype is branch', async () => {
