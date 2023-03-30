@@ -10,6 +10,8 @@ import { debounce, isEqual, set, get, isString, omit } from 'lodash-es'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { ArtifactToConnectorMap } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { isConnectorRefUpdated } from '@cd/components/TemplateStudio/ArtifactSourceTemplateCanvas/utils'
+import type { NGTemplateInfoConfig } from 'services/template-ng'
 import { ArtifactSourceConfigFormWithRef } from '@cd/components/TemplateStudio/ArtifactSourceTemplateCanvas/ArtifactSourceConfigForm/ArtifactSourceConfigForm'
 import { sanitize } from '@common/utils/JSONUtils'
 import type {
@@ -18,19 +20,21 @@ import type {
 } from '@cd/components/TemplateStudio/ArtifactSourceTemplateCanvas/types'
 import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 
-function getProcessedTemplate(formikValues: ArtifactSourceConfigFormData) {
+function getProcessedTemplate(formikValues: ArtifactSourceConfigFormData, template: NGTemplateInfoConfig) {
   const { artifactType, connectorId } = formikValues || {}
   const isConnectorRefApplicable = Boolean(ArtifactToConnectorMap[artifactType])
+  const oldConnectorRef = template?.spec?.spec?.connectorRef
+  const newConnectorRef =
+    connectorId && isString(connectorId) ? connectorId : getConnectorIdValue({ connectorId: formikValues.connectorId })
+  const isConnectorUpdated = isConnectorRefUpdated({ oldConnectorRef, newConnectorRef, artifactType })
+
   return {
     type: artifactType,
     spec: {
-      ...omit(get(formikValues, 'artifactConfig.spec', {}), 'connectorRef'),
+      ...(isConnectorUpdated ? {} : omit(get(formikValues, 'artifactConfig.spec', {}), 'connectorRef')),
       ...(isConnectorRefApplicable
         ? {
-            connectorRef:
-              connectorId && isString(connectorId)
-                ? connectorId
-                : getConnectorIdValue({ connectorId: formikValues.connectorId })
+            connectorRef: newConnectorRef
           }
         : {})
     }
@@ -44,7 +48,7 @@ function ArtifactSourceTemplateCanvas(_props: unknown, formikRef: TemplateFormRe
   } = React.useContext(TemplateContext)
 
   const onUpdate = async (formikValue: ArtifactSourceConfigFormData): Promise<void> => {
-    const processNode = getProcessedTemplate(formikValue)
+    const processNode = getProcessedTemplate(formikValue, template)
     sanitize(processNode, {
       removeEmptyArray: false,
       removeEmptyObject: false,

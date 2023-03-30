@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import type { FormikProps, FormikContextType } from 'formik'
 import {
   FormikForm,
@@ -21,6 +21,7 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { usePrevious } from '@common/hooks/usePrevious'
 import type { GitQueryParams, ProjectPathProps, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -44,6 +45,7 @@ import type {
 import { useArtifactSelectionLastSteps } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
 import type { ArtifactConfig, ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
+import { isConnectorRefUpdated } from '@cd/components/TemplateStudio/ArtifactSourceTemplateCanvas/utils'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import {
   ArtifactConnectorLabelMap,
@@ -208,6 +210,23 @@ export function ArtifactSourceSpecifications(props: {
   const { CUSTOM_ARTIFACT_NG, AZURE_ARTIFACTS_NG, CD_AMI_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS } =
     useFeatureFlags()
 
+  const artifactConnectorType = ArtifactToConnectorMap[selectedArtifactType]
+
+  const [artifactDetailsFormKey, setArtifactDetailsFormKey] = React.useState(0)
+
+  const oldConnectorRef = usePrevious(template?.spec?.spec?.connectorRef)
+
+  useEffect(() => {
+    const isConnectorUpdated = isConnectorRefUpdated({
+      oldConnectorRef,
+      newConnectorRef: template?.spec?.spec?.connectorRef,
+      artifactType: selectedArtifactType
+    })
+    if (isConnectorUpdated) {
+      setArtifactDetailsFormKey(artifactDetailsFormKey + 1)
+    }
+  }, [template?.spec?.spec?.connectorRef, oldConnectorRef, artifactDetailsFormKey, selectedArtifactType])
+
   const enabledArtifactTypesList = useMemo(
     () =>
       getEnabledArtifactTypesList({
@@ -281,7 +300,6 @@ export function ArtifactSourceSpecifications(props: {
     selectedArtifact: selectedArtifactType,
     artifactLastStepProps
   })
-  const artifactConnectorType = ArtifactToConnectorMap[selectedArtifactType]
 
   return (
     <FormikForm>
@@ -328,6 +346,7 @@ export function ArtifactSourceSpecifications(props: {
               dataTooltipId="artifactSourceConfig_artifactSourceDetails"
               headerClassName={css.headerText}
               className={css.artifactSourceDetailsCard}
+              key={artifactDetailsFormKey}
             >
               {artifactSelectionLastSteps}
             </CardWithOuterTitle>

@@ -110,6 +110,25 @@ export const secretManagerTemplateMockWithExecutionTarget: NGTemplateInfoConfig 
   } as JsonNode
 }
 
+export const artifactSourceTemplateMock: NGTemplateInfoConfig = {
+  name: 'simple docker artifact source template',
+  identifier: 'simple_docker_artifact_source_template',
+  versionLabel: 'v1',
+  type: 'ArtifactSource',
+  projectIdentifier: 'Samarth_testing',
+  orgIdentifier: 'default',
+  tags: {},
+  spec: {
+    type: 'DockerRegistry',
+    spec: {
+      imagePath: 'test/path',
+      tag: '<+input>',
+      digest: '<+input>',
+      connectorRef: '<+input>'
+    }
+  }
+}
+
 export const approvalStageTemplateMock: NGTemplateInfoConfig = {
   name: 'Test Template',
   identifier: 'Test_Template',
@@ -768,6 +787,11 @@ export const getTemplateContextMock = (type: TemplateType): TemplateContextInter
       return produce(defaultTemplateContextMock, draft => {
         set(draft, 'state.template', secretManagerTemplateMock)
         set(draft, 'state.originalTemplate', secretManagerTemplateMock)
+      })
+    case TemplateType.ArtifactSource:
+      return produce(defaultTemplateContextMock, draft => {
+        set(draft, 'state.template', artifactSourceTemplateMock)
+        set(draft, 'state.originalTemplate', artifactSourceTemplateMock)
       })
     default:
       return defaultTemplateContextMock
