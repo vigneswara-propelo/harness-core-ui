@@ -110,14 +110,17 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
       commandFlags: [{ commandType: 'Build', flag: 'flag', id: 'a1' }]
     }
 
-    const { container, getByTestId } = render(
+    const { container, getByText } = render(
       <TestWrapper>
         <KustomizeWithGIT initialValues={initialValues} {...props} />
       </TestWrapper>
     )
 
-    await act(async () => userEvent.click(getByTestId('advancedTitle-summary')))
-    await waitFor(() => userEvent.click(container.querySelector('[data-icon="main-trash"]') as HTMLElement))
+    // Advanced Section
+    userEvent.click(getByText('advancedTitle'))
+    const deleteCommandFlagButton = container.querySelector('[data-icon="main-trash"]') as HTMLElement
+    expect(deleteCommandFlagButton).toBeDefined()
+    userEvent.click(deleteCommandFlagButton)
     expect(container.querySelector('span[data-tooltip-id="kustomizeGit_repoName"]')).toBeInTheDocument()
     expect(container.querySelector('span[data-tooltip-id="kustomizeGit_identifier"]')).toBeInTheDocument()
   })

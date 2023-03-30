@@ -94,10 +94,13 @@ export const DEFAULT_SAMPLE_REPO = 'https://github.com/harness-apps/hosted-gitop
 const DEFAULT_STAGE_ID = 'Stage'
 const DEFAULT_STAGE_TYPE = 'Deployment'
 
-export const BinaryOptions = [
-  { label: BinaryValue.YES, value: BinaryValue.YES },
-  { label: BinaryValue.NO, value: BinaryValue.NO }
-]
+export const SAMPLE_ARTIFACT_NAME = 'sample_artifact_source'
+export const SAMPLE_DOCKER_CONNECTOR_NAME = 'sample_docker_connector'
+
+export enum CustomType {
+  Custom = 'Custom'
+}
+
 export interface ServiceData {
   workloadType: string
   artifactType: string
@@ -801,19 +804,9 @@ export const getOAuthConnectorPayload = ({
   }
 }
 
-export const allowedArtifactTypesForOnboiarding: Record<string, Array<ArtifactType>> = {
-  Kubernetes: [
-    ENABLED_ARTIFACT_TYPES.DockerRegistry,
-    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-    ENABLED_ARTIFACT_TYPES.Ecr,
-    ENABLED_ARTIFACT_TYPES.Acr
-  ],
-  NativeHelm: [
-    ENABLED_ARTIFACT_TYPES.DockerRegistry,
-    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-    ENABLED_ARTIFACT_TYPES.Ecr,
-    ENABLED_ARTIFACT_TYPES.Acr
-  ]
+export const allowedArtifactTypesForOnboarding: Record<string, Array<ArtifactType>> = {
+  Kubernetes: [ENABLED_ARTIFACT_TYPES.DockerRegistry, ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry],
+  NativeHelm: [ENABLED_ARTIFACT_TYPES.DockerRegistry, ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry]
 }
 
 export const ArtifactIconByType: Record<string, IconName> = {

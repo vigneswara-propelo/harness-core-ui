@@ -5438,9 +5438,12 @@ export interface StringsMap {
   'cd.getStartedWithCD.appControllerInstalled': string
   'cd.getStartedWithCD.applicationController': string
   'cd.getStartedWithCD.applicationDetails': string
+  'cd.getStartedWithCD.artifactDescription': string
+  'cd.getStartedWithCD.artifactInManifest': string
   'cd.getStartedWithCD.artifactLocation': string
   'cd.getStartedWithCD.artifactManifest': string
   'cd.getStartedWithCD.artifactManifestContent': string
+  'cd.getStartedWithCD.artifactReferencedInManifest': string
   'cd.getStartedWithCD.artifactStorage': string
   'cd.getStartedWithCD.artifactToDeploy': string
   'cd.getStartedWithCD.awsElasticK8s': string
@@ -5467,6 +5470,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.codeRepos': string
   'cd.getStartedWithCD.configureRepo': string
   'cd.getStartedWithCD.connectHarnessEnv': string
+  'cd.getStartedWithCD.connectOwnArtifact': string
   'cd.getStartedWithCD.connectTo': string
   'cd.getStartedWithCD.connectionStatus': string
   'cd.getStartedWithCD.createCluster': string
@@ -5504,6 +5508,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.gitopsOnboardingSource': string
   'cd.getStartedWithCD.gitopsRedirect.subtitle': string
   'cd.getStartedWithCD.gitopsRedirect.title': string
+  'cd.getStartedWithCD.giveSample': string
   'cd.getStartedWithCD.googleGKEHelperText': string
   'cd.getStartedWithCD.googleK8s': string
   'cd.getStartedWithCD.harnessFileStore': string
@@ -5534,6 +5539,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.ipWhitelist2': string
   'cd.getStartedWithCD.main': string
   'cd.getStartedWithCD.managedCluster': string
+  'cd.getStartedWithCD.manifestDescription': string
   'cd.getStartedWithCD.manifestFile': string
   'cd.getStartedWithCD.manifestStorage': string
   'cd.getStartedWithCD.manifestStoreLabel': string
@@ -5550,11 +5556,14 @@ export interface StringsMap {
   'cd.getStartedWithCD.provisioningText': string
   'cd.getStartedWithCD.redisCache': string
   'cd.getStartedWithCD.redisCacheInstalled': string
+  'cd.getStartedWithCD.registryDetails': string
+  'cd.getStartedWithCD.repoDetails': string
   'cd.getStartedWithCD.repoServer': string
   'cd.getStartedWithCD.repoServerInstalled': string
   'cd.getStartedWithCD.reposubheading': string
   'cd.getStartedWithCD.retryProvisioningHostedCluster': string
   'cd.getStartedWithCD.runDelegateSubtitle': string
+  'cd.getStartedWithCD.sampleAppOnDockerRegistry': string
   'cd.getStartedWithCD.sampleManifest': string
   'cd.getStartedWithCD.sampleManifests': string
   'cd.getStartedWithCD.sampleRepoLink': string
@@ -5563,6 +5572,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.sampleRule3': string
   'cd.getStartedWithCD.sampleRule4': string
   'cd.getStartedWithCD.sampleRule5': string
+  'cd.getStartedWithCD.sampleToDoListApp': string
   'cd.getStartedWithCD.selectArtifactRepo': string
   'cd.getStartedWithCD.selectAuthMethod': string
   'cd.getStartedWithCD.selectAuthType': string
@@ -5572,6 +5582,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.serverless': string
   'cd.getStartedWithCD.serviceConfiguration': string
   'cd.getStartedWithCD.serviceDeploy': string
+  'cd.getStartedWithCD.serviceDescription': string
   'cd.getStartedWithCD.serviceHeading': string
   'cd.getStartedWithCD.serviceName': string
   'cd.getStartedWithCD.setupDelegate': string
@@ -5588,6 +5599,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.testConnection': string
   'cd.getStartedWithCD.testesSuccessfully': string
   'cd.getStartedWithCD.tryAnotherCreds': string
+  'cd.getStartedWithCD.useOwnManifest': string
   'cd.getStartedWithCD.useSample': string
   'cd.getStartedWithCD.usernameAndPassword': string
   'cd.getStartedWithCD.viewDelegateDetails': string

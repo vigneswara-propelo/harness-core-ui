@@ -371,7 +371,7 @@ const DelegateSelectorWizardRef = (
   }, [environmentEntities, getString])
 
   return (
-    <Layout.Vertical width={'100%'} margin={{ left: 'small' }}>
+    <Layout.Vertical width={'100%'}>
       <Layout.Horizontal>
         <Layout.Vertical width={'55%'}>
           <Container>
