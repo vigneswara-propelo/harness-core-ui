@@ -22,7 +22,6 @@ import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/Rout
 import { helmVersions } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ManifestStepInitData } from '@pipeline/components/ManifestSelection/ManifestInterface'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { ManifestLastStepProps, ManifestTriggerSource } from '../../ManifestInterface'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithHttp/Helm.module.scss'
@@ -39,7 +38,7 @@ function HelmWithS3({
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const [regions, setRegions] = useState<SelectOption[]>([])
-  const connectorRef = getConnectorIdValue(prevStepData) || (prevStepData?.connectorRef as ConnectorSelectedValue).value
+  const connectorRef = getConnectorIdValue(prevStepData)
 
   /* Code related to region */
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()

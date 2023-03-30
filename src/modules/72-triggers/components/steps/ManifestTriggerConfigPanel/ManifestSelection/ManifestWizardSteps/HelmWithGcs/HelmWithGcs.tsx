@@ -28,7 +28,6 @@ import type { BuildStore, HelmManifestSpec } from 'services/pipeline-ng'
 import { helmVersions } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ManifestStepInitData } from '@pipeline/components/ManifestSelection/ManifestInterface'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { ManifestLastStepProps, ManifestTriggerSource } from '../../ManifestInterface'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithHttp/Helm.module.scss'
@@ -45,7 +44,7 @@ function HelmWithGcs({
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
-  const connectorRef = getConnectorIdValue(prevStepData) || (prevStepData?.connectorRef as ConnectorSelectedValue).value
+  const connectorRef = getConnectorIdValue(prevStepData)
 
   const {
     data: bucketData,
