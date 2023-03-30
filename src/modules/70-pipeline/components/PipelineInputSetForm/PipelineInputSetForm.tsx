@@ -197,8 +197,8 @@ export function StageForm({
 
   function updateStageFormTemplate<T>(updatedData: T, pathToUpdate: string): void {
     const templatePath = getTemplatePath(pathToUpdate, path)
-    setStageFormTemplate(
-      produce(stageFormTemplate, draft => {
+    setStageFormTemplate(oldStageFormTemplate =>
+      produce(oldStageFormTemplate, draft => {
         if (draft) {
           set(draft, `stage.${templatePath}`, updatedData)
         }
