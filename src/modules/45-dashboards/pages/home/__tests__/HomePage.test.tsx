@@ -39,7 +39,7 @@ describe('HomePage', () => {
       .mockReturnValue({ data: { resource: { tags: 'first_tag,other_tag' } }, loading: false } as any)
     jest
       .spyOn(dashboardsContext, 'useDashboardsContext')
-      .mockReturnValue({ editableFolders: [], includeBreadcrumbs: jest.fn() } as any)
+      .mockReturnValue({ editableFolders: [], includeBreadcrumbs: jest.fn(), modelTags: [] } as any)
   })
 
   test('it should show an empty message when there are no dashboards', () => {

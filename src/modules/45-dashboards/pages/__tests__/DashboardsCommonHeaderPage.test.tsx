@@ -26,6 +26,7 @@ describe('DashboardsHeader', () => {
     jest.clearAllMocks()
     useDashboardsContextMock.mockReturnValue({
       editableFolders: [],
+      modelTags: [],
       includeBreadcrumbs: jest.fn(),
       breadcrumbs: [
         { label: 'Home', url: 'path/to/link' },
@@ -49,6 +50,7 @@ describe('DashboardsHeader', () => {
   test('it should include default breadcrumb in breadcrumbs and title', async () => {
     useDashboardsContextMock.mockReturnValue({
       editableFolders: [],
+      modelTags: [],
       includeBreadcrumbs: jest.fn(),
       breadcrumbs: []
     })
@@ -60,15 +62,21 @@ describe('DashboardsHeader', () => {
 
   test('it should open the getting started sidebar when clicking the getStarted button', async () => {
     renderComponent()
-
-    const getStartedButton = screen.getByText('getStarted') as HTMLButtonElement
     const sidebarQueryText = 'dashboards.getStarted.title'
-
-    expect(getStartedButton).toBeInTheDocument()
     expect(screen.queryByText(sidebarQueryText)).not.toBeInTheDocument()
 
-    userEvent.click(getStartedButton)
+    userEvent.click(screen.getByRole('button', { name: 'getStarted' }))
 
     await waitFor(() => expect(screen.queryByText(sidebarQueryText)).toBeInTheDocument())
+  })
+
+  test('it should close the getting started sidebar when clicking the getStarted X button', async () => {
+    renderComponent()
+    userEvent.click(screen.getByRole('button', { name: 'getStarted' }))
+    await waitFor(() => expect(screen.getByText('cross')).toBeInTheDocument())
+
+    userEvent.click(screen.getByRole('button', { name: 'cross' }))
+
+    await waitFor(() => expect(screen.queryByText('cross')).not.toBeInTheDocument())
   })
 })

@@ -81,6 +81,7 @@ describe('Dashboards', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.spyOn(customDashboardServices, 'useSearchFolders').mockImplementation(() => ({ data: {} } as any))
+    jest.spyOn(customDashboardServices, 'useGetModelTags').mockImplementation(() => ({ data: { resource: [] } } as any))
     useSearchFoldersMock.mockReturnValue({ data: mockEmptyGetFolderResponse, error: null, loading: false } as any)
   })
 

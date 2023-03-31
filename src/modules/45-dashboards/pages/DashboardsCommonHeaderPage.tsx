@@ -34,9 +34,7 @@ const DashboardsHeader: React.FC = () => {
   React.useEffect(() => {
     const titleArray: string[] = [getString('common.dashboards')]
 
-    if (breadcrumbs) {
-      breadcrumbs.forEach(breadcrumb => titleArray.push(breadcrumb.label))
-    }
+    breadcrumbs.forEach(breadcrumb => titleArray.push(breadcrumb.label))
 
     updateTitle(titleArray)
   }, [breadcrumbs, getString, updateTitle])

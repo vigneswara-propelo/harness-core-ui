@@ -28,7 +28,8 @@ const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactEle
 describe('DashboardsContext', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.spyOn(customDashboardServices, 'useSearchFolders').mockImplementation(() => ({ data: {} } as any))
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockImplementation(() => ({ data: null } as any))
+    jest.spyOn(customDashboardServices, 'useGetModelTags').mockImplementation(() => ({ data: null } as any))
   })
   test('it should provide no default breadcrumbs', async () => {
     const { result } = renderHook(() => useDashboardsContext(), { wrapper })

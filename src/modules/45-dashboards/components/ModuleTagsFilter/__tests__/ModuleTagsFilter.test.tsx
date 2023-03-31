@@ -9,9 +9,10 @@ import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as useFeatureFlag from '@common/hooks/useFeatureFlag'
-import mockImport from 'framework/utils/mockImport'
 import type { MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes.types'
+import { DashboardTags } from '@dashboards/types/DashboardTypes.types'
+import type { DashboardsContextProps } from '@dashboards/pages/DashboardsContext'
+import * as dashboardsContext from '@dashboards/pages/DashboardsContext'
 import ModuleTagsFilter, { ModuleTagsFilterProps } from '../ModuleTagsFilter'
 
 const DEFAULT_FILTER: MappedDashboardTagOptions = {
@@ -23,6 +24,16 @@ const DEFAULT_FILTER: MappedDashboardTagOptions = {
   STO: false
 }
 
+const DEFAULT_CONTEXT: DashboardsContextProps = {
+  editableFolders: [],
+  modelTags: [],
+  includeBreadcrumbs: jest.fn(),
+  breadcrumbs: [
+    { label: 'Home', url: 'path/to/link' },
+    { label: 'Dashboards', url: 'path/to/link' }
+  ]
+}
+
 const renderComponent = (props: Partial<ModuleTagsFilterProps> = {}): RenderResult =>
   render(
     <TestWrapper>
@@ -31,19 +42,13 @@ const renderComponent = (props: Partial<ModuleTagsFilterProps> = {}): RenderResu
   )
 
 describe('ModuleTagsFilter', () => {
-  const useFeatureFlagsMock = jest.spyOn(useFeatureFlag, 'useFeatureFlags')
+  const useDashboardsContextMock = jest.spyOn(dashboardsContext, 'useDashboardsContext')
 
   beforeEach(() => {
     jest.clearAllMocks()
-    useFeatureFlagsMock.mockReturnValue({
-      CENG_ENABLED: true,
-      CING_ENABLED: true,
-      CFNG_ENABLED: true
-    })
-    mockImport('framework/LicenseStore/LicenseStoreContext', {
-      useLicenseStore: jest.fn().mockImplementation(() => ({
-        licenseInformation: { STO: { status: 'ACTIVE' }, CD: { status: 'ACTIVE' } }
-      }))
+    useDashboardsContextMock.mockReturnValue({
+      ...DEFAULT_CONTEXT,
+      modelTags: [DashboardTags.CE, DashboardTags.CI, DashboardTags.CF, DashboardTags.CD, DashboardTags.STO]
     })
   })
 
@@ -59,15 +64,9 @@ describe('ModuleTagsFilter', () => {
   })
 
   test('it should only display HARNESS and any enabled modules', function () {
-    useFeatureFlagsMock.mockReturnValue({
-      CENG_ENABLED: true,
-      CING_ENABLED: true,
-      CFNG_ENABLED: false
-    })
-    mockImport('framework/LicenseStore/LicenseStoreContext', {
-      useLicenseStore: jest.fn().mockImplementation(() => ({
-        licenseInformation: { STO: { status: 'EXPIRED' } }
-      }))
+    useDashboardsContextMock.mockReturnValue({
+      ...DEFAULT_CONTEXT,
+      modelTags: [DashboardTags.CE, DashboardTags.CI]
     })
 
     renderComponent()
@@ -75,7 +74,7 @@ describe('ModuleTagsFilter', () => {
     expect(screen.getByText('dashboards.modules.harness')).toBeInTheDocument()
     expect(screen.getByText('common.purpose.ce.cloudCost')).toBeInTheDocument()
     expect(screen.getByText('buildsText')).toBeInTheDocument()
-    expect(screen.queryByText('deploymentsText')).toBeInTheDocument()
+    expect(screen.queryByText('deploymentsText')).not.toBeInTheDocument()
     expect(screen.queryByText('common.purpose.cf.continuous')).not.toBeInTheDocument()
     expect(screen.queryByText('common.purpose.sto.continuous')).not.toBeInTheDocument()
   })

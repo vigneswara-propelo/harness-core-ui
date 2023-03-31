@@ -134,6 +134,10 @@ export interface GetFolderResponse {
   responseMessages?: string
 }
 
+export interface GetModelTagsResponse {
+  resource: string[]
+}
+
 export interface GetOotbFolderIdResponse {
   resource?: string
 }
@@ -647,6 +651,54 @@ export const getFoldersWithHiddenPromise = (
   getUsingFetch<GetFolderResponse, ErrorResponse, GetFoldersWithHiddenQueryParams, void>(
     getConfig('dashboard/'),
     `/folders/with-hidden`,
+    props,
+    signal
+  )
+
+export interface GetModelTagsQueryParams {
+  accountId: string
+}
+
+export type GetModelTagsProps = Omit<
+  GetProps<GetModelTagsResponse, ErrorResponse, GetModelTagsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get list of active model tags for the account.
+ */
+export const GetModelTags = (props: GetModelTagsProps) => (
+  <Get<GetModelTagsResponse, ErrorResponse, GetModelTagsQueryParams, void>
+    path={`/model_tags`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseGetModelTagsProps = Omit<
+  UseGetProps<GetModelTagsResponse, ErrorResponse, GetModelTagsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get list of active model tags for the account.
+ */
+export const useGetModelTags = (props: UseGetModelTagsProps) =>
+  useGet<GetModelTagsResponse, ErrorResponse, GetModelTagsQueryParams, void>(`/model_tags`, {
+    base: getConfig('dashboard/'),
+    ...props
+  })
+
+/**
+ * Get list of active model tags for the account.
+ */
+export const getModelTagsPromise = (
+  props: GetUsingFetchProps<GetModelTagsResponse, ErrorResponse, GetModelTagsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<GetModelTagsResponse, ErrorResponse, GetModelTagsQueryParams, void>(
+    getConfig('dashboard/'),
+    `/model_tags`,
     props,
     signal
   )

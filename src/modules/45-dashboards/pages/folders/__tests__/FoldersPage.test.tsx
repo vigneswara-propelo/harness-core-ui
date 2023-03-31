@@ -52,6 +52,7 @@ describe('FoldersPage', () => {
       .spyOn(customDashboardServices, 'useSearchFolders')
       .mockImplementation(() => ({ data: mockEmptyGetFolderResponse, loading: false } as any))
     jest.spyOn(customDashboardServices, 'useCreateFolder').mockImplementation(() => ({ mutate: jest.fn() } as any))
+    jest.spyOn(customDashboardServices, 'useGetModelTags').mockImplementation(() => ({ data: { resource: [] } } as any))
   })
   afterEach(() => {
     jest.spyOn(customDashboardServices, 'useSearchFolders').mockReset()

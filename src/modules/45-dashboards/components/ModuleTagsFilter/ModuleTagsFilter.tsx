@@ -8,11 +8,8 @@
 import React from 'react'
 import { Checkbox, Layout } from '@harness/uicore'
 import { useStrings, StringKeys } from 'framework/strings'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { DashboardTags, MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes.types'
-import { ModuleName } from 'framework/types/ModuleName'
-import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
 import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 
 export interface ModuleTagsFilterProps {
@@ -22,8 +19,7 @@ export interface ModuleTagsFilterProps {
 
 const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, setPredefinedFilter }) => {
   const { getString } = useStrings()
-  const { CENG_ENABLED, CING_ENABLED, CFNG_ENABLED, CUSTOM_DASHBOARD_V2, CI_TI_DASHBOARDS_ENABLED } = useFeatureFlags()
-  const { licenseInformation } = useLicenseStore()
+  const { modelTags } = useDashboardsContext()
 
   const renderTagsFilter = (
     moduleName: DashboardTags,
@@ -45,19 +41,29 @@ const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, set
       )
     )
   }
-  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
+
   return (
     <>
       {renderTagsFilter(DashboardTags.HARNESS, moduleTagCss.harnessTag, 'dashboards.modules.harness', true)}
-      {renderTagsFilter(DashboardTags.CE, moduleTagCss.ceTag, 'common.purpose.ce.cloudCost', CENG_ENABLED)}
-      {renderTagsFilter(DashboardTags.CI, moduleTagCss.ciTag, 'buildsText', CING_ENABLED || CI_TI_DASHBOARDS_ENABLED)}
-      {renderTagsFilter(DashboardTags.CD, moduleTagCss.cdTag, 'deploymentsText', shouldVisible || CUSTOM_DASHBOARD_V2)}
-      {renderTagsFilter(DashboardTags.CF, moduleTagCss.cfTag, 'common.purpose.cf.continuous', CFNG_ENABLED)}
+      {renderTagsFilter(
+        DashboardTags.CE,
+        moduleTagCss.ceTag,
+        'common.purpose.ce.cloudCost',
+        modelTags.includes(DashboardTags.CE)
+      )}
+      {renderTagsFilter(DashboardTags.CI, moduleTagCss.ciTag, 'buildsText', modelTags.includes(DashboardTags.CI))}
+      {renderTagsFilter(DashboardTags.CD, moduleTagCss.cdTag, 'deploymentsText', modelTags.includes(DashboardTags.CD))}
+      {renderTagsFilter(
+        DashboardTags.CF,
+        moduleTagCss.cfTag,
+        'common.purpose.cf.continuous',
+        modelTags.includes(DashboardTags.CF)
+      )}
       {renderTagsFilter(
         DashboardTags.STO,
         moduleTagCss.stoTag,
         'common.purpose.sto.continuous',
-        licenseInformation['STO']?.status === 'ACTIVE'
+        modelTags.includes(DashboardTags.STO)
       )}
     </>
   )

@@ -80,9 +80,8 @@ describe('DashboardCard', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    jest
-      .spyOn(customDashboardServices, 'useSearchFolders')
-      .mockImplementation(() => ({ data: mockGetFolderResponse } as any))
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: mockGetFolderResponse } as any)
+    jest.spyOn(customDashboardServices, 'useGetModelTags').mockReturnValue({ data: { resource: [] } } as any)
   })
 
   test('it should show read only dashboard card for a shared dashboard', async () => {
