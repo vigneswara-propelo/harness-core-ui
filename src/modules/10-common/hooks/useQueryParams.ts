@@ -5,10 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import qs from 'qs'
 import type { IParseOptions } from 'qs'
+import { assignWith, isNil } from 'lodash-es'
 
 export interface UseQueryParamsOptions<T> extends IParseOptions {
   processQueryParams?(data: any): T
@@ -72,3 +73,24 @@ export const queryParamDecodeAll: CustomQsDecoder =
 
     return decoder(value)
   }
+
+export const useQueryParamsOptions = <Q, DKey extends keyof Q>(
+  defaultParams: { [K in DKey]: NonNullable<Q[K]> }
+): UseQueryParamsOptions<RequiredPick<Q, DKey>> => {
+  const defaultParamsRef = useRef(defaultParams)
+  useEffect(() => {
+    defaultParamsRef.current = defaultParams
+  }, [defaultParams])
+
+  const options = useMemo(
+    () => ({
+      decoder: queryParamDecodeAll(),
+      processQueryParams: (params: Q) =>
+        assignWith({ ...params }, defaultParamsRef.current, (objValue, srcValue) =>
+          isNil(objValue) ? srcValue : objValue
+        ) as RequiredPick<Q, DKey>
+    }),
+    []
+  )
+  return options
+}

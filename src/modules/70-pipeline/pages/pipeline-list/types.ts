@@ -18,7 +18,7 @@ export type PipelineListPagePathParams = PipelineType<{
 export type PipelineListPageQueryParams = Omit<
   GetPipelineListQueryParams,
   'accountIdentifier' | 'orgIdentifier' | 'projectIdentifier'
-> & { filters: PipelineFilterProperties }
+> & { filters?: PipelineFilterProperties }
 
 export interface SortBy {
   sort: 'lastUpdatedAt' | 'name' | 'executionSummaryInfo.lastExecutionTs'

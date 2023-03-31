@@ -7,7 +7,10 @@
 
 import type { GetListOfExecutionsQueryParams, PipelineExecutionFilterProperties } from 'services/pipeline-ng'
 
-export type ExecutionListPageQueryParams = GetListOfExecutionsQueryParams & {
+export type ExecutionListPageQueryParams = Omit<
+  GetListOfExecutionsQueryParams,
+  'accountIdentifier' | 'orgIdentifier' | 'projectIdentifier'
+> & {
   filters?: PipelineExecutionFilterProperties
   getDefaultFromOtherRepo?: boolean
 }

@@ -41,6 +41,8 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
 import { PrincipalType } from '@rbac/utils/utils'
 import { useGetCommunity } from '@common/utils/utils'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import css from './ServiceAccountsListView.module.scss'
 
@@ -304,6 +306,14 @@ const ServiceAccountsListView: React.FC<ServiceAccountsListViewProps> = ({
     []
   )
 
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: data?.totalItems || 0,
+    pageSize: data?.pageSize || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : 10),
+    pageCount: data?.totalPages || 0,
+    pageIndex: data?.pageIndex || 0
+  })
+
   return (
     <TableV2
       data={data?.content || []}
@@ -322,12 +332,7 @@ const ServiceAccountsListView: React.FC<ServiceAccountsListViewProps> = ({
         )
       }}
       rowDataTestID={serviceAcc => `row-${serviceAcc.serviceAccount.identifier}`}
-      pagination={useDefaultPaginationProps({
-        itemCount: data?.totalItems || 0,
-        pageSize: data?.pageSize || 10,
-        pageCount: data?.totalPages || 0,
-        pageIndex: data?.pageIndex || 0
-      })}
+      pagination={paginationProps}
     />
   )
 }

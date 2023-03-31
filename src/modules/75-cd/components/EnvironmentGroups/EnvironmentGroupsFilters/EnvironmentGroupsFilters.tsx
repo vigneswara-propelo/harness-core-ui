@@ -36,6 +36,7 @@ import type { FilterInterface, FilterDataInterface } from '@common/components/Fi
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 
 import { useFiltersContext } from '@cd/context/FiltersContext'
+import { PAGE_TEMPLATE_DEFAULT_PAGE_INDEX } from '@cd/components/EnvironmentsV2/PageTemplate/utils'
 
 import EnvironmentGroupsFilterForm from './EnvironmentGroupsFilterForm'
 import type { EnvironmentGroupListQueryParams } from '../utils'
@@ -54,8 +55,7 @@ export function EnvironmentGroupsFilters(): React.ReactElement {
   const { state: isFiltersDrawerOpen, open: openFilterDrawer, close: hideFilterDrawer } = useBooleanStatus()
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const { updateQueryParams, replaceQueryParams } =
-    useUpdateQueryParams<Partial<Record<keyof EnvironmentGroupListQueryParams, string>>>()
+  const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<EnvironmentGroupListQueryParams>>()
   const filterRef = React.useRef<FilterRef<FilterDTO> | null>(null)
   const { savedFilters: filters, isFetchingFilters, refetchFilters, queryParams } = useFiltersContext()
 
@@ -114,24 +114,18 @@ export function EnvironmentGroupsFilters(): React.ReactElement {
   const handleFilterSelection = (
     option: SelectOption,
     event?: React.SyntheticEvent<HTMLElement, Event> | undefined
-  ) => {
+  ): void => {
     event?.stopPropagation()
     event?.preventDefault()
 
-    if (option.value) {
-      updateQueryParams({
-        filterIdentifier: option.value.toString(),
-        filters: [] as any /* this will remove the param */
-      })
-    } else {
-      updateQueryParams({
-        filterIdentifier: [] as any /* this will remove the param */,
-        filters: [] as any /* this will remove the param */
-      })
-    }
+    updateQueryParams({
+      filterIdentifier: option.value ? option.value.toString() : undefined,
+      filters: undefined,
+      page: PAGE_TEMPLATE_DEFAULT_PAGE_INDEX
+    })
   }
 
-  const onApply = (inputFormData: FormikProps<EnvironmentGroupFilterFormType>['values']) => {
+  const onApply = (inputFormData: FormikProps<EnvironmentGroupFilterFormType>['values']): void => {
     if (!isObjectEmpty(inputFormData)) {
       const filterFromFormData = {
         ...(inputFormData.envGroupName && {
@@ -146,10 +140,10 @@ export function EnvironmentGroupsFilters(): React.ReactElement {
           })
         }),
         ...(inputFormData.environments?.length && {
-          envIdentifiers: inputFormData.environments?.map((env: MultiSelectOption) => env?.value)
+          envIdentifiers: inputFormData.environments?.map((env: MultiSelectOption) => env?.value) as string[]
         })
       }
-      updateQueryParams({ page: [] as any, filters: JSON.stringify({ ...(filterFromFormData || {}) }) })
+      updateQueryParams({ page: undefined, filterIdentifier: undefined, filters: filterFromFormData })
       hideFilterDrawer()
     } else {
       showError(getString('filters.invalidCriteria'))
@@ -159,7 +153,7 @@ export function EnvironmentGroupsFilters(): React.ReactElement {
   const handleSaveOrUpdate = async (
     isUpdate: boolean,
     data: FilterDataInterface<EnvironmentGroupFilterFormType, FilterInterface>
-  ) => {
+  ): Promise<void> => {
     setLoading(true)
     const requestBodyPayload = createRequestBodyPayload({
       isUpdate,
@@ -171,14 +165,14 @@ export function EnvironmentGroupsFilters(): React.ReactElement {
     const saveOrUpdateHandler = filterRef.current?.saveOrUpdateFilterHandler
     if (saveOrUpdateHandler && typeof saveOrUpdateHandler === 'function') {
       const updatedFilter = await saveOrUpdateHandler(isUpdate, requestBodyPayload)
-      updateQueryParams({ filters: JSON.stringify({ ...(updatedFilter || {}) }) })
+      updateQueryParams({ filters: updatedFilter?.filterProperties ?? {} })
     }
 
     setLoading(false)
     refetchFilters()
   }
 
-  const handleDelete = async (filterIdentifier: string) => {
+  const handleDelete = async (filterIdentifier: string): Promise<void> => {
     setLoading(true)
     const deleteHandler = filterRef.current?.deleteFilterHandler
     if (deleteHandler && typeof deleteFilter === 'function') {
@@ -192,16 +186,17 @@ export function EnvironmentGroupsFilters(): React.ReactElement {
     refetchFilters()
   }
 
-  const handleFilterClick = (filterIdentifier: string) => {
+  const handleFilterClick = (filterIdentifier: string): void => {
     if (filterIdentifier !== UNSAVED_FILTER_IDENTIFIER) {
       updateQueryParams({
         filterIdentifier,
-        filters: [] as any
+        filters: undefined,
+        page: PAGE_TEMPLATE_DEFAULT_PAGE_INDEX
       })
     }
   }
 
-  const reset = () => {
+  const reset = (): void => {
     replaceQueryParams({})
   }
 

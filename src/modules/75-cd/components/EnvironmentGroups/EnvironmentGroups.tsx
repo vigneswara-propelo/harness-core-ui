@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
@@ -22,12 +23,13 @@ import {
   Layout,
   Text,
   DropDown,
-  Pagination
+  Pagination,
+  ExpandingSearchInputHandle
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
-import { GetEnvironmentGroupListQueryParams, useGetEnvironmentGroupList, useGetFilterList } from 'services/cd-ng'
+import { useGetEnvironmentGroupList, useGetFilterList } from 'services/cd-ng'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -37,6 +39,7 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 
 import { FilterContextProvider } from '@cd/context/FiltersContext'
 
@@ -47,6 +50,12 @@ import EnvironmentTabs from '../EnvironmentsV2/EnvironmentTabs'
 import { EnvironmentGroupsFilters } from './EnvironmentGroupsFilters/EnvironmentGroupsFilters'
 import { getHasFilterIdentifier, getHasFilters } from './EnvironmentGroupsFilters/filterUtils'
 import { EnvironmentGroupListQueryParams, Sort, SortFields } from './utils'
+import {
+  PageQueryParamsWithDefaults,
+  PAGE_TEMPLATE_DEFAULT_PAGE_INDEX,
+  PAGE_TEMPLATE_DEFAULT_PAGE_SIZE,
+  usePageQueryParamOptions
+} from '../EnvironmentsV2/PageTemplate/utils'
 
 import css from './EnvironmentGroups.module.scss'
 
@@ -87,36 +96,18 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
 
   const handleSearchTermChange = (query: string): void => {
     if (query) {
-      updateQueryParams({ searchTerm: query })
+      updateQueryParams({ searchTerm: query, page: PAGE_TEMPLATE_DEFAULT_PAGE_INDEX })
     } else {
-      updateQueryParams({ searchTerm: [] as any }) // removes the param
+      updateQueryParams({ searchTerm: undefined })
     }
   }
 
   const handlePageIndexChange = /* istanbul ignore next */ (index: number): void =>
     updateQueryParams({ page: index + 1 })
 
-  const queryParams = useQueryParams<EnvironmentGroupListQueryParams>({
-    processQueryParams(params: Partial<Record<keyof EnvironmentGroupListQueryParams, string>>) {
-      let filtersInQueryParams = {}
-
-      try {
-        filtersInQueryParams = params.filters ? JSON.parse(params.filters) : undefined
-      } catch (_e) {
-        // do nothing
-      }
-
-      return {
-        ...params,
-        page: parseInt(params.page || '1', 10),
-        size: parseInt(params.size || '10', 10),
-        searchTerm: params.searchTerm,
-        filters: filtersInQueryParams
-      } as EnvironmentGroupListQueryParams
-    }
-  })
-
-  const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<GetEnvironmentGroupListQueryParams>>()
+  const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<EnvironmentGroupListQueryParams>>()
+  const queryParamOptions = usePageQueryParamOptions()
+  const queryParams = useQueryParams<PageQueryParamsWithDefaults>(queryParamOptions)
 
   const { page, size, filterIdentifier, searchTerm } = queryParams
   const hasFilterIdentifier = getHasFilterIdentifier(filterIdentifier)
@@ -166,9 +157,21 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
     filterIdentifier
   })
 
+  const searchRef = useRef<ExpandingSearchInputHandle>()
+
   const clearFilters = (): void => {
+    flushSync(() => searchRef.current?.clear())
     replaceQueryParams({})
   }
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: defaultTo(data?.data?.totalItems, 0),
+    pageSize: defaultTo(data?.data?.pageSize, PAGE_TEMPLATE_DEFAULT_PAGE_SIZE),
+    pageCount: defaultTo(data?.data?.totalPages, -1),
+    pageIndex: defaultTo(data?.data?.pageIndex, 0),
+    gotoPage: handlePageIndexChange,
+    onPageSizeChange: newSize => updateQueryParams({ page: PAGE_TEMPLATE_DEFAULT_PAGE_INDEX, size: newSize })
+  })
 
   const [showModal, hideModal] = useModalHook(
     () => (
@@ -227,6 +230,7 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
             width={200}
             placeholder={getString('search')}
             onChange={handleSearchTermChange}
+            ref={searchRef}
           />
           <EnvironmentGroupsFilters />
         </Layout.Horizontal>
@@ -243,6 +247,7 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
                 {getString('total')}: {response?.totalItems}
               </Text>
               <DropDown
+                buttonTestId="sort-dropdown"
                 items={sortOptions}
                 value={sortOption.value.toString()}
                 filterable={false}
@@ -253,13 +258,7 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
               />
             </Layout.Horizontal>
             <EnvironmentGroupsList environmentGroups={response?.content} refetch={refetch} />
-            <Pagination
-              itemCount={defaultTo(response?.totalItems, 0)}
-              pageSize={defaultTo(response?.pageSize, 10)}
-              pageCount={defaultTo(response?.totalPages, -1)}
-              pageIndex={defaultTo(response?.pageIndex, 0)}
-              gotoPage={handlePageIndexChange}
-            />
+            <Pagination {...paginationProps} />
           </Container>
         )}
         {emptyContent && (

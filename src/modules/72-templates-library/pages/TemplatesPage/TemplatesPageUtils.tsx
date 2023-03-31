@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName } from '@harness/uicore'
+import { IconName, Views } from '@harness/uicore'
 import { get } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
@@ -14,6 +14,11 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
+import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { SortMethod } from '@common/utils/sortUtils'
 
 export enum Sort {
   DESC = 'DESC',
@@ -69,4 +74,28 @@ export const getIconForTemplate = (
     default:
       return templateFactory.getTemplateIcon(templateType)
   }
+}
+
+export type TemplatesQueryParams = {
+  templateType?: TemplateType
+  repoName?: string
+  searchTerm?: string
+  sort?: SortMethod
+  view?: Views
+} & CommonPaginationQueryParams
+export type TemplatesQueryParamsWithDefaults = RequiredPick<TemplatesQueryParams, 'page' | 'size' | 'view' | 'sort'>
+
+export const TEMPLATES_PAGE_SIZE = 20
+export const TEMPLATES_PAGE_INDEX = 0
+export const TEMPLATES_DEFAULT_SORT: SortMethod = SortMethod.LastUpdatedDesc
+
+export const useTemplatesQueryParamOptions = (): UseQueryParamsOptions<TemplatesQueryParamsWithDefaults> => {
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+
+  return useQueryParamsOptions({
+    page: TEMPLATES_PAGE_INDEX,
+    size: PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : TEMPLATES_PAGE_SIZE,
+    sort: TEMPLATES_DEFAULT_SORT,
+    view: Views.GRID
+  })
 }

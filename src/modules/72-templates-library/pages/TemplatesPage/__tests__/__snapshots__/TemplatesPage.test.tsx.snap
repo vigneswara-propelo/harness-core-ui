@@ -367,10 +367,10 @@ exports[`<TemplatesPage /> tests should match snapshot 1`] = `
     data-testid="page-body"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--margin-bottom-large StyledProps--flex StyledProps--flex-alignItems-center"
+      class="Layout--horizontal StyledProps--main listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
       >
         total
         : 
@@ -386,21 +386,21 @@ exports[`<TemplatesPage /> tests should match snapshot 1`] = `
             class=""
           >
             <div
-              class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder StyledProps--flex"
+              class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder DropDown--minWidth StyledProps--flex"
               data-testid="dropdown-button"
-              style="width: 180px;"
+              style="min-width: 130px;"
             >
               <div
                 class="Layout--horizontal StyledProps--main DropDown--labelWrapper StyledProps--flex"
               >
                 <span
-                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
                   data-icon="main-sort"
                 >
                   <svg
-                    height="16"
+                    height="13"
                     viewBox="0 0 18 16"
-                    width="16"
+                    width="13"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
@@ -416,7 +416,7 @@ exports[`<TemplatesPage /> tests should match snapshot 1`] = `
                   data-testid="dropdown-value"
                   style="--text-line-clamp: 1;"
                 >
-                  lastUpdatedSort
+                  Last Updated
                 </p>
               </div>
               <div

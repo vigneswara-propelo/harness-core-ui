@@ -53,6 +53,8 @@ import OpenInNewTab from '@rbac/components/MenuItem/OpenInNewTab'
 import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
 import { getUserName, useGetCommunity } from '@common/utils/utils'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './UserGroupsListView.module.scss'
 
 interface UserGroupsListViewProps {
@@ -447,6 +449,15 @@ const UserGroupsListView: React.FC<UserGroupsListViewProps> = props => {
     ],
     [openRoleAssignmentModal, openUserGroupModal, reload]
   )
+
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: data?.data?.totalItems || 0,
+    pageSize: data?.data?.pageSize || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : 10),
+    pageCount: data?.data?.totalPages || 0,
+    pageIndex: data?.data?.pageIndex || 0
+  })
+
   return (
     <TableV2<UserGroupAggregateDTO>
       className={css.table}
@@ -465,12 +476,7 @@ const UserGroupsListView: React.FC<UserGroupsListViewProps> = props => {
           search: `?parentScope=${getPrincipalScopeFromDTO(userGroup.userGroupDTO)}`
         })
       }}
-      pagination={useDefaultPaginationProps({
-        itemCount: data?.data?.totalItems || 0,
-        pageSize: data?.data?.pageSize || 10,
-        pageCount: data?.data?.totalPages || 0,
-        pageIndex: data?.data?.pageIndex || 0
-      })}
+      pagination={paginationProps}
     />
   )
 }

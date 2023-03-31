@@ -28,21 +28,22 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 
 import { Page } from '@common/exports'
 import RbacButton from '@rbac/components/Button/Button'
-import { GetServiceListQueryParams, ServiceResponseDTO, useGetServiceList, ServiceResponse } from 'services/cd-ng'
+import { ServiceResponseDTO, useGetServiceList, ServiceResponse } from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useGetCommunity, useGetFreeOrCommunityCD } from '@common/utils/utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { FeatureFlag } from '@common/featureFlags'
-import { Sort, SortFields } from '@common/utils/listUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { SortOption } from '@common/components/SortOption/SortOption'
 import serviceEmptyStateSvg from '@cd/icons/ServiceDetailsEmptyState.svg'
 import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import type { Sort, SortFields } from '@common/utils/listUtils'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
-import { ServiceTabs } from '../utils/ServiceUtils'
+import { ServicesQueryParams, ServiceTabs, useServicesQueryParamOptions } from '../utils/ServiceUtils'
 import css from './ServicesListPage.module.scss'
 
 interface ServicesListPageProps {
@@ -61,15 +62,18 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
   const history = useHistory()
   const isFreeOrCommunityCD = useGetFreeOrCommunityCD()
 
-  const { preference: savedSortOption, setPreference: setSavedSortOption } = usePreferenceStore<string[] | undefined>(
-    PreferenceScope.USER,
-    'sortOptionManageService'
-  )
+  const { preference: savedSortOption, setPreference: setSavedSortOption } = usePreferenceStore<
+    [SortFields, Sort] | undefined
+  >(PreferenceScope.USER, 'sortOptionManageService')
 
-  const [sort, setSort] = useState<string[]>(savedSortOption || [SortFields.LastModifiedAt, Sort.DESC])
+  const queryParamOptions = useServicesQueryParamOptions()
+  const queryParams = useQueryParams(queryParamOptions)
+  const { updateQueryParams } = useUpdateQueryParams<ServicesQueryParams>()
+  const { page, size } = queryParams
+
+  const [sort, setSort] = useState<[SortFields, Sort]>(savedSortOption ?? queryParams.sort)
 
   const [view, setView] = useState(Views.LIST)
-  const [page, setPage] = useState(0)
   const [mode, setMode] = useState<SelectedView>(SelectedView.VISUAL)
   const [isEdit, setIsEdit] = useState(false)
   const [serviceDetails, setServiceDetails] = useState({
@@ -172,22 +176,21 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
     ),
     [fetchDeploymentList, orgIdentifier, projectIdentifier, mode, isEdit, serviceDetails]
   )
-  const queryParams: GetServiceListQueryParams = {
-    accountIdentifier: accountId,
-    orgIdentifier,
-    projectIdentifier,
-    size: 10,
-    page: page,
-    sort,
-    includeVersionInfo: isCdsV1EOLEnabled
-  }
 
   const {
     loading,
     data: serviceList,
     refetch
   } = useGetServiceList({
-    queryParams,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      size,
+      page,
+      sort,
+      includeVersionInfo: isCdsV1EOLEnabled
+    },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
@@ -229,7 +232,14 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
             }}
           />
           <Layout.Horizontal className={css.sortClass}>
-            {SortOption({ setSavedSortOption, setSort, sort })}
+            <SortOption
+              setSort={setSort}
+              sort={sort}
+              setSavedSortOption={newSort => {
+                setSavedSortOption(newSort)
+                updateQueryParams({ sort: newSort })
+              }}
+            />
             <GridListToggle initialSelectedView={Views.LIST} onViewToggle={setView} />
           </Layout.Horizontal>
         </Layout.Horizontal>
@@ -244,7 +254,6 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
                 data={serviceList}
                 loading={loading}
                 onRefresh={() => refetch()}
-                gotoPage={(pageNumber: number) => setPage(pageNumber)}
                 onServiceSelect={async service => goToServiceDetails(service)}
               />
             ) : (
@@ -252,7 +261,6 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
                 data={serviceList}
                 loading={loading}
                 onRefresh={() => refetch()}
-                gotoPage={(pageNumber: number) => setPage(pageNumber)}
                 onServiceSelect={async service => goToServiceDetails(service)}
               />
             )

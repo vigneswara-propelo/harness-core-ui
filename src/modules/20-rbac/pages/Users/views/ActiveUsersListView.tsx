@@ -53,7 +53,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { getUserName, useGetCommunity } from '@common/utils/utils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
@@ -61,6 +61,7 @@ import ListHeader from '@common/components/ListHeader/ListHeader'
 import { sortByCreated, sortByEmail, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 
 import css from './UserListView.module.scss'
 
@@ -500,9 +501,10 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
 
   const { getRBACErrorMessage } = useRBACError()
 
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const paginationProps = useDefaultPaginationProps({
     itemCount: data?.data?.totalItems || 0,
-    pageSize: data?.data?.pageSize || 10,
+    pageSize: data?.data?.pageSize || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : 10),
     pageCount: data?.data?.totalPages || 0,
     pageIndex: data?.data?.pageIndex || 0
   })

@@ -37,13 +37,14 @@ import {
   usePipelineListFilterFieldToLabelMapping
 } from '@pipeline/pages/utils/Filters/filters'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { ExecutionListFilterForm } from '../../execution-list/ExecutionListFilterForm/ExecutionListFilterForm'
 import type {
   PipelineListPagePathParams,
   PipelineListPageQueryParams,
   ProcessedPipelineListPageQueryParams
 } from '../types'
-import { useQueryParamOptions } from '../PipelineListUtils'
+import { usePipelinesQueryParamOptions } from '../PipelineListUtils'
 
 const UNSAVED_FILTER_IDENTIFIER = StringUtils.getIdentifierFromName(UNSAVED_FILTER)
 
@@ -60,7 +61,7 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
   const { state: isFiltersDrawerOpen, open: openFilterDrawer, close: hideFilterDrawer } = useBooleanStatus()
   const filterDrawerOpenedRef = useRef(false)
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
-  const queryParamOptions = useQueryParamOptions()
+  const queryParamOptions = usePipelinesQueryParamOptions()
   const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
   const { selectedProject } = useAppStore()
   const isCDEnabled = !!selectedProject?.modules?.includes('CD')
@@ -174,7 +175,8 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
     killEvent(event)
     updateQueryParams({
       filterIdentifier: option.value ? option.value.toString() : undefined,
-      filters: undefined
+      filters: undefined,
+      page: DEFAULT_PAGE_INDEX
     })
   }
 
@@ -182,7 +184,8 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
     if (filterIdentifier !== UNSAVED_FILTER_IDENTIFIER) {
       updateQueryParams({
         filterIdentifier,
-        filters: undefined
+        filters: undefined,
+        page: DEFAULT_PAGE_INDEX
       })
     }
   }

@@ -32,7 +32,7 @@ import {
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import { useMutateAsGet } from '@common/hooks'
-import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
+import { TemplateListType, TEMPLATES_PAGE_SIZE } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import TemplatesView from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import routes from '@common/RouteDefinitions'
@@ -47,7 +47,8 @@ import { areTemplatesSame } from '@pipeline/utils/templateUtils'
 import { useTemplateSelectorContext } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import RepoFilter from '@common/components/RepoFilter/RepoFilter'
-
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import css from './TemplateSelectorLeftView.module.scss'
 
 export interface TemplateSelectorLeftViewProps {
@@ -119,6 +120,8 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     }
   }, [templateType, selectedChildType, childTypes, selectedTemplateRefs, selectedRepo])
 
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+
   const queryParams = React.useMemo(() => {
     return {
       accountIdentifier: accountId,
@@ -127,7 +130,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
       templateListType: TemplateListType.Stable,
       searchTerm: searchParam,
       page,
-      size: 20,
+      size: PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : TEMPLATES_PAGE_SIZE,
       includeAllTemplatesAvailableAtScope: selectedScope.value === 'all',
       ...(isGitSyncEnabled &&
         (selectedScope.value === Scope.PROJECT || selectedScope.value === 'all') && {
@@ -362,6 +365,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                   onSelect={setSelectedTemplate}
                   selectedTemplate={selectedTemplate}
                   view={view}
+                  useQueryParamsForPagination={false}
                 />
               )}
             </Layout.Vertical>

@@ -6,23 +6,28 @@
  */
 
 import React, { useState } from 'react'
+import { flushSync } from 'react-dom'
 import {
   DropDown,
   ExpandingSearchInput,
   ExpandingSearchInputHandle,
   GridListToggle,
   HarnessDocTooltip,
-  Layout,
-  Views
+  Layout
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { TemplateSettingsModal } from '@templates-library/components/TemplateSettingsModal/TemplateSettingsModal'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
-import { Sort, SortFields, TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
+import {
+  TemplateListType,
+  TemplatesQueryParams,
+  TEMPLATES_PAGE_INDEX,
+  useTemplatesQueryParamOptions
+} from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { TemplateDetailsDrawer } from '@templates-library/components/TemplateDetailDrawer/TemplateDetailDrawer'
 import {
   TemplateSummaryResponse,
@@ -40,7 +45,6 @@ import { MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils
 
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import TemplatesView from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
-import ResultsViewHeader from '@templates-library/pages/TemplatesPage/views/ResultsViewHeader/ResultsViewHeader'
 import useMigrateTemplateResource from '@templates-library/components/MigrateTemplateResource/useMigrateTemplateSource'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -56,17 +60,17 @@ import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarni
 import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import RepoFilter from '@common/components/RepoFilter/RepoFilter'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByLastUpdated, sortByName, SortMethod } from '@common/utils/sortUtils'
 import css from './TemplatesPage.module.scss'
 
 export default function TemplatesPage(): React.ReactElement {
   const { getString } = useStrings()
   const history = useHistory()
-  const { templateType, repoName } = useQueryParams<{ templateType?: TemplateType; repoName?: string }>()
-  const { updateQueryParams } = useUpdateQueryParams<{ templateType?: TemplateType; repoName?: string }>()
-  const [page, setPage] = useState(0)
-  const [view, setView] = useState<Views>(Views.GRID)
-  const [sort, setSort] = useState<string[]>([SortFields.LastUpdatedAt, Sort.DESC])
-  const [searchParam, setSearchParam] = useState('')
+  const queryParamOptions = useTemplatesQueryParamOptions()
+  const { templateType, repoName, page, view, size, sort, searchTerm } = useQueryParams(queryParamOptions)
+  const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<TemplatesQueryParams>()
+
   const [templateToDelete, setTemplateToDelete] = React.useState<TemplateSummaryResponse>({})
   const [templateIdentifierToSettings, setTemplateIdentifierToSettings] = React.useState<string>()
   const [selectedTemplate, setSelectedTemplate] = React.useState<TemplateSummaryResponse | undefined>()
@@ -109,10 +113,10 @@ export default function TemplatesPage(): React.ReactElement {
       projectIdentifier,
       orgIdentifier,
       templateListType: TemplateListType.LastUpdated,
-      searchTerm: searchParam,
+      searchTerm,
       page,
-      sort,
-      size: 20,
+      sort: [sort],
+      size,
       ...(gitFilter?.repo &&
         gitFilter.branch && {
           repoIdentifier: gitFilter.repo,
@@ -144,10 +148,10 @@ export default function TemplatesPage(): React.ReactElement {
   }, [refetch])
 
   const reset = React.useCallback((): void => {
-    searchRef.current.clear()
-    updateQueryParams({ templateType: [] as any, repoName: [] as any })
+    flushSync(() => searchRef.current.clear())
+    replaceQueryParams({})
     setGitFilter(null)
-  }, [searchRef.current, updateQueryParams, setGitFilter])
+  }, [replaceQueryParams])
 
   const { showMigrateTemplateResourceModal, moveDataLoading } = useMigrateTemplateResource({
     resourceType: ResourceType.TEMPLATE,
@@ -220,8 +224,8 @@ export default function TemplatesPage(): React.ReactElement {
     reloadTemplates()
   }, [reloadTemplates])
 
-  const onChangeRepo = (_repoName: string): void => {
-    updateQueryParams({ repoName: (_repoName || []) as string })
+  const onChangeRepo = (selectedRepoName: string): void => {
+    updateQueryParams({ repoName: selectedRepoName || undefined, page: TEMPLATES_PAGE_INDEX })
   }
 
   return (
@@ -245,7 +249,7 @@ export default function TemplatesPage(): React.ReactElement {
           <NewTemplatePopover onImportTemplateClick={showImportResourceModal} />
           <DropDown
             onChange={item => {
-              updateQueryParams({ templateType: (item.value || []) as TemplateType })
+              updateQueryParams({ templateType: (item.value as TemplateType) || undefined, page: TEMPLATES_PAGE_INDEX })
             }}
             value={templateType}
             filterable={false}
@@ -259,7 +263,7 @@ export default function TemplatesPage(): React.ReactElement {
               <GitFilters
                 onChange={filter => {
                   setGitFilter(filter)
-                  setPage(0)
+                  updateQueryParams({ page: TEMPLATES_PAGE_INDEX })
                 }}
                 className={css.gitFilter}
                 defaultValue={gitFilter || undefined}
@@ -282,14 +286,19 @@ export default function TemplatesPage(): React.ReactElement {
             width={200}
             placeholder={getString('search')}
             onChange={(text: string) => {
-              setPage(0)
-              setSearchParam(text)
+              updateQueryParams({
+                page: TEMPLATES_PAGE_INDEX,
+                searchTerm: text || undefined
+              })
             }}
             ref={searchRef}
-            defaultValue={searchParam}
+            defaultValue={defaultTo(searchTerm, '')}
             className={css.expandSearch}
           />
-          <GridListToggle initialSelectedView={view} onViewToggle={setView} />
+          <GridListToggle
+            initialSelectedView={view}
+            onViewToggle={selectedView => updateQueryParams({ view: selectedView })}
+          />
         </Layout.Horizontal>
       </Page.SubHeader>
       <Page.Body
@@ -304,15 +313,22 @@ export default function TemplatesPage(): React.ReactElement {
           !loading &&
           (!templateData?.data?.content?.length ? (
             <NoResultsView
-              hasSearchParam={!!searchParam || !!templateType}
+              hasSearchParam={!!searchTerm || !!templateType}
               onReset={reset}
               text={getString('templatesLibrary.templatesPage.noTemplates', { scope })}
             />
           ) : (
             <React.Fragment>
-              <ResultsViewHeader templateData={templateData?.data} setPage={setPage} setSort={setSort} />
+              <ListHeader
+                className={css.listHeader}
+                selectedSortMethod={sort}
+                totalCount={templateData.data.totalElements}
+                onSortMethodChange={option => {
+                  updateQueryParams({ sort: option.value as SortMethod })
+                }}
+                sortOptions={[...sortByLastUpdated, ...sortByCreated, ...sortByName]}
+              />
               <TemplatesView
-                gotoPage={setPage}
                 data={templateData?.data}
                 onSelect={setSelectedTemplate}
                 selectedTemplate={selectedTemplate}
@@ -330,6 +346,7 @@ export default function TemplatesPage(): React.ReactElement {
                   showMigrateTemplateResourceModal(template)
                 }}
                 view={view}
+                useQueryParamsForPagination
               />
             </React.Fragment>
           ))

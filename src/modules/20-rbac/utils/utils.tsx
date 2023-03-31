@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode, useMemo } from 'react'
+import React, { ReactNode } from 'react'
 import type { IconName, ModalErrorHandlerBinding, MultiSelectOption, SelectOption } from '@harness/uicore'
 import { defaultTo, pick } from 'lodash-es'
 import type { StringsMap } from 'stringTypes'
@@ -35,7 +35,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import type { ResourceSelectorValue } from '@rbac/pages/ResourceGroupDetails/utils'
 import type { AttributeFilter } from 'services/resourcegroups'
-import { queryParamDecodeAll, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
+import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
@@ -514,23 +514,17 @@ export const getDefaultSelectedFilter = (scope: Scope): ScopeFilterItems => {
   }
 }
 
-export type ProcessedRbacQueryParams<Rest> = RequiredPick<CommonPaginationQueryParams, 'page' | 'size'> & Rest
+export type RbacQueryParams = {
+  searchTerm?: string
+} & CommonPaginationQueryParams
 
-export const useRbacQueryParamOptions = <Rest,>(): UseQueryParamsOptions<ProcessedRbacQueryParams<Rest>> => {
+export const useRbacQueryParamOptions = (): UseQueryParamsOptions<
+  RequiredPick<RbacQueryParams, keyof CommonPaginationQueryParams>
+> => {
   const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
-  const options = useMemo(
-    () => ({
-      decoder: queryParamDecodeAll(),
-      processQueryParams(params: CommonPaginationQueryParams & Rest): ProcessedRbacQueryParams<Rest> {
-        return {
-          ...params,
-          page: params.page ?? 0,
-          size: params.size ?? (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : 10)
-        }
-      }
-    }),
-    [PL_NEW_PAGE_SIZE]
-  )
 
-  return options
+  return useQueryParamsOptions({
+    page: 0,
+    size: PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : 10
+  })
 }

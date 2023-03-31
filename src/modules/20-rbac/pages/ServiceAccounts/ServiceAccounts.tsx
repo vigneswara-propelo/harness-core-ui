@@ -21,9 +21,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
-import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
-import { useRbacQueryParamOptions } from '@rbac/utils/utils'
+import { RbacQueryParams, useRbacQueryParamOptions } from '@rbac/utils/utils'
 import ListHeader from '@common/components/ListHeader/ListHeader'
 import { sortByCreated, sortByEmail, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -39,12 +38,8 @@ const ServiceAccountsPage: React.FC = () => {
   const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.ServiceAccountsPage}`)
   const queryParamOptions = useRbacQueryParamOptions()
-  const {
-    search: searchTerm,
-    page: pageIndex,
-    size: pageSize
-  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(queryParamOptions)
-  const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
+  const { searchTerm, page: pageIndex, size: pageSize } = useQueryParams(queryParamOptions)
+  const { updateQueryParams } = useUpdateQueryParams<RbacQueryParams>()
 
   const { data, loading, error, refetch } = useListAggregatedServiceAccounts({
     queryParams: {
@@ -93,7 +88,7 @@ const ServiceAccountsPage: React.FC = () => {
                 alwaysExpanded
                 placeholder={getString('common.searchPlaceholder')}
                 onChange={text => {
-                  updateQueryParams({ page: 0, search: text.trim() })
+                  updateQueryParams({ page: 0, searchTerm: text.trim() })
                 }}
                 width={250}
               />

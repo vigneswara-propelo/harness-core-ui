@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Tabs } from '@harness/uicore'
+import type { TabId } from '@blueprintjs/core'
 import moment from 'moment'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
@@ -17,7 +18,7 @@ import {
   TimeRangeSelector,
   TimeRangeSelectorProps
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
-import { useLocalStorage } from '@common/hooks'
+import { useLocalStorage, useUpdateQueryParams } from '@common/hooks'
 import { convertStringToDateTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import { BannerEOL } from '@pipeline/components/BannerEOL/BannerEOL'
 import { DeploymentsTimeRangeContext, ServiceStoreContext, useServiceStore } from './common'
@@ -32,6 +33,7 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
   const { getString } = useStrings()
   const isCommunity = useGetCommunity()
   const [showBanner, setShowBanner] = React.useState<boolean>(false)
+  const { replaceQueryParams } = useUpdateQueryParams()
 
   const [timeRange, setTimeRange] = useLocalStorage<TimeRangeSelectorProps>(
     'serviceTimeRange',
@@ -74,6 +76,11 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
             <Tabs
               id={'serviceLandingPageTabs'}
               defaultSelectedTabId={'dashboard'}
+              onChange={(newTabId: TabId, prevTabId: TabId) => {
+                if (newTabId === prevTabId) return
+                // clear pagination query params as APIs used in <ServicesDashboardPage /> and <ServicesListPage /> are different
+                replaceQueryParams({})
+              }}
               tabList={[
                 {
                   id: 'dashboard',

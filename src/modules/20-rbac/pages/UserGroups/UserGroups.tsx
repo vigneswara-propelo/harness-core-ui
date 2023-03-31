@@ -17,11 +17,10 @@ import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRole
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PrincipalType, useRbacQueryParamOptions } from '@rbac/utils/utils'
+import { PrincipalType, RbacQueryParams, useRbacQueryParamOptions } from '@rbac/utils/utils'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
-import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
@@ -48,12 +47,8 @@ const UserGroupsPage: React.FC = () => {
   const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod | undefined>(PreferenceScope.USER, `sort-${PAGE_NAME.UserGroups}`)
   const queryParamOptions = useRbacQueryParamOptions()
-  const {
-    search: searchTerm,
-    page: pageIndex,
-    size: pageSize
-  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(queryParamOptions)
-  const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
+  const { searchTerm, page: pageIndex, size: pageSize } = useQueryParams(queryParamOptions)
+  const { updateQueryParams } = useUpdateQueryParams<RbacQueryParams>()
   const { data, loading, error, refetch } = useGetUserGroupAggregateList({
     queryParams: {
       accountIdentifier: accountId,
@@ -127,7 +122,7 @@ const UserGroupsPage: React.FC = () => {
                 alwaysExpanded
                 placeholder={getString('rbac.userGroupPage.search')}
                 onChange={text => {
-                  updateQueryParams({ page: 0, search: text.trim() })
+                  updateQueryParams({ page: 0, searchTerm: text.trim() })
                 }}
                 width={250}
               />

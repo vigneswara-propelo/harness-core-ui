@@ -41,6 +41,8 @@ import ListHeader from '@common/components/ListHeader/ListHeader'
 import { sortByCreated, sortByEmail, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 
 import css from './UserListView.module.scss'
 
@@ -280,9 +282,10 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
     [openRoleAssignmentModal, refetch]
   )
 
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const paginationProps = useDefaultPaginationProps({
     itemCount: data?.data?.totalItems || 0,
-    pageSize: data?.data?.pageSize || 10,
+    pageSize: data?.data?.pageSize || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : 10),
     pageCount: data?.data?.totalPages || 0,
     pageIndex: data?.data?.pageIndex || 0
   })

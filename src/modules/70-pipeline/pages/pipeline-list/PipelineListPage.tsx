@@ -49,7 +49,7 @@ import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/
 import { useGetFreeOrCommunityCD } from '@common/utils/utils'
 import { CreatePipeline } from './CreatePipeline/CreatePipeline'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
-import { getEmptyStateIllustration, useQueryParamOptions } from './PipelineListUtils'
+import { getEmptyStateIllustration, usePipelinesQueryParamOptions } from './PipelineListUtils'
 import type {
   PipelineListPagePathParams,
   PipelineListPageQueryParams,
@@ -68,7 +68,7 @@ function _PipelineListPage(): React.ReactElement {
   const { showSuccess, showError } = useToaster()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
-  const queryParamOptions = useQueryParamOptions()
+  const queryParamOptions = usePipelinesQueryParamOptions()
   const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
   const isFreeOrCommunityCD = useGetFreeOrCommunityCD()
   const { searchTerm, repoIdentifier, branch, page, size, repoName, filterIdentifier, filters } = queryParams

@@ -9,19 +9,29 @@ import React from 'react'
 import { Container, Layout, /* Layout, */ PageSpinner /* Pagination */, Pagination } from '@harness/uicore'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import type { ResponsePageServiceResponse, ServiceResponse } from 'services/cd-ng'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import ServiceCard from '../ServiceCard/ServiceCard'
+import { SERVICES_DEFAULT_PAGE_SIZE } from '../utils/ServiceUtils'
 import css from './ServicesGridView.module.scss'
 
 interface ServicesGridViewProps {
   data: ResponsePageServiceResponse | null
   loading?: boolean
   onRefresh?: () => Promise<void>
-  gotoPage?: (index: number) => void
   onServiceSelect: (data: any) => Promise<void>
 }
 
 const ServicesGridView: React.FC<ServicesGridViewProps> = props => {
-  const { loading, data, gotoPage, onServiceSelect } = props
+  const { loading, data, onServiceSelect } = props
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: data?.data?.totalItems || 0,
+    pageSize: data?.data?.pageSize || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : SERVICES_DEFAULT_PAGE_SIZE),
+    pageCount: data?.data?.totalPages || 0,
+    pageIndex: data?.data?.pageIndex || 0
+  })
 
   return (
     <>
@@ -48,13 +58,7 @@ const ServicesGridView: React.FC<ServicesGridViewProps> = props => {
             />
           </Container>
           <Container className={css.pagination}>
-            <Pagination
-              itemCount={data?.data?.totalItems || 0}
-              pageSize={data?.data?.pageSize || 10}
-              pageCount={data?.data?.totalPages || 0}
-              pageIndex={data?.data?.pageIndex || 0}
-              gotoPage={gotoPage}
-            />
+            <Pagination {...paginationProps} />
           </Container>
         </>
       )}

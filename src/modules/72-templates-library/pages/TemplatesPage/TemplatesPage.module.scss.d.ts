@@ -12,6 +12,7 @@ declare const styles: {
   readonly expandSearch: string
   readonly featureWarningBanner: string
   readonly gitFilter: string
+  readonly listHeader: string
   readonly templatesPageBody: string
   readonly templatesPageHeader: string
   readonly templatesPageSubHeader: string

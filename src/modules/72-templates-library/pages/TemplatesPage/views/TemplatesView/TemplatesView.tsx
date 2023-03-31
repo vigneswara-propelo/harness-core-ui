@@ -13,16 +13,17 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { TemplatesListView } from '@templates-library/pages/TemplatesPage/views/TemplatesListView/TemplatesListView'
 
-export interface TemplatesViewProps {
+export type TemplatesViewProps = {
   data: PageTemplateSummaryResponse
+  useQueryParamsForPagination?: boolean
   selectedTemplate?: TemplateSummaryResponse
-  gotoPage: (pageNumber: number) => void
   onSelect: (template: TemplateSummaryResponse) => void
   onPreview?: (template: TemplateSummaryResponse) => void
   onOpenEdit?: (template: TemplateSummaryResponse) => void
   onOpenSettings?: (templateIdentifier: string) => void
   onDelete?: (template: TemplateSummaryResponse) => void
   onOpenMoveResource?: (template: TemplateSummaryResponse) => void
+  gotoPage?: (pageNumber: number) => void
 }
 
 export default function TemplatesView(props: TemplatesViewProps & { view: Views }): React.ReactElement {

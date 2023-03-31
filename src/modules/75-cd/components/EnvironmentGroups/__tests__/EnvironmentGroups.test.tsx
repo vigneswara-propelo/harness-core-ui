@@ -188,7 +188,7 @@ describe('Environment Group Tests', () => {
           orgIdentifier: 'dummy',
           page: 0,
           projectIdentifier: 'dummy',
-          searchTerm: '',
+          searchTerm: undefined,
           size: 10,
           sort: ['lastModifiedAt', 'DESC']
         }
@@ -209,7 +209,7 @@ describe('Environment Group Tests', () => {
       await waitFor(() => expect(screen.queryByText('Env Group 1')).toBeInTheDocument())
     })
 
-    const sortDropdown = screen.queryByTestId('dropdown-button')
+    const sortDropdown = screen.queryByTestId('sort-dropdown')
     fireEvent.click(sortDropdown!)
 
     const sortAscText = screen.queryByText('AZ09')

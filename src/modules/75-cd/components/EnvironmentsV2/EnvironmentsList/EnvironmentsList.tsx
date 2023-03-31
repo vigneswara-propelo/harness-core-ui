@@ -31,7 +31,7 @@ import {
 } from './EnvironmentsListColumns'
 import { EnvironmentDetailsTab } from '../utils'
 
-export default function EnvironmentsList({ response, refetch }: any) {
+export default function EnvironmentsList({ response, refetch }: any): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()

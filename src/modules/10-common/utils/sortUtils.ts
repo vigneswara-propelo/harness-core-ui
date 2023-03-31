@@ -13,6 +13,7 @@ export enum SortMethod {
   EmailAsc = 'email,ASC',
   EmailDesc = 'email,DESC',
   LastModifiedDesc = 'lastModifiedAt,DESC',
+  LastUpdatedDesc = 'lastUpdatedAt,DESC',
   Newest = 'createdAt,DESC',
   Oldest = 'createdAt,ASC'
 }
@@ -28,6 +29,8 @@ export const sortByEmail: SelectOption[] = [
 ]
 
 export const sortByLastModified: SelectOption[] = [{ label: 'Last Modified', value: SortMethod.LastModifiedDesc }]
+
+export const sortByLastUpdated: SelectOption[] = [{ label: 'Last Updated', value: SortMethod.LastUpdatedDesc }]
 
 export const sortByCreated: SelectOption[] = [
   { label: 'Newest', value: SortMethod.Newest },

@@ -42,11 +42,10 @@ export const ServicesContent: React.FC = () => {
   const { getString } = useStrings()
 
   const { timeRange, setTimeRange } = useContext(DeploymentsTimeRangeContext)
-  const { preference: savedSortOption, setPreference: setSavedSortOption } = usePreferenceStore<string[] | undefined>(
-    PreferenceScope.USER,
-    'sortOptionServiceDash'
-  )
-  const [sort, setSort] = useState<string[]>(savedSortOption || [SortFields.LastModifiedAt, Sort.DESC])
+  const { preference: savedSortOption, setPreference: setSavedSortOption } = usePreferenceStore<
+    [SortFields, Sort] | undefined
+  >(PreferenceScope.USER, 'sortOptionServiceDash')
+  const [sort, setSort] = useState<[SortFields, Sort]>(savedSortOption || [SortFields.LastModifiedAt, Sort.DESC])
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
 

@@ -21,9 +21,9 @@ export const selectedOpt = (sortOption: string[]): 1 | 2 | 0 => {
 }
 
 export interface SortOptionProps {
-  setSort: React.Dispatch<React.SetStateAction<string[]>>
+  setSort: React.Dispatch<React.SetStateAction<[SortFields, Sort]>>
   sort: string[]
-  setSavedSortOption?: (value: string[] | undefined) => void
+  setSavedSortOption?: (value: [SortFields, Sort]) => void
 }
 
 export const SortOption = (props: SortOptionProps): JSX.Element => {

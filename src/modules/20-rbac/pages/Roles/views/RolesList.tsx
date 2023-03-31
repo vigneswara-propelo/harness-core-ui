@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React from 'react'
 import {
   ButtonVariation,
   Container,
@@ -29,10 +29,10 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import { isAccountBasicRole, ProcessedRbacQueryParams } from '@rbac/utils/utils'
+import { isAccountBasicRole } from '@rbac/utils/utils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
-import { queryParamDecodeAll, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
+import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
 import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
@@ -46,23 +46,15 @@ const ROLES_PAGE_SIZE_OPTIONS = [12, 24, 48, 96]
 const DEFAULT_ROLES_PAGE_SIZE = ROLES_PAGE_SIZE_OPTIONS[0] as number
 const NEW_DEFAULT_ROLES_PAGE_SIZE = ROLES_PAGE_SIZE_OPTIONS[3] as number
 
-export const useRolesQueryParamOptions = <Rest,>(): UseQueryParamsOptions<ProcessedRbacQueryParams<Rest>> => {
+export const useRolesQueryParamOptions = (): UseQueryParamsOptions<
+  RequiredPick<CommonPaginationQueryParams & { search?: string }, keyof CommonPaginationQueryParams>
+> => {
   const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
-  const options = useMemo(
-    () => ({
-      decoder: queryParamDecodeAll(),
-      processQueryParams(params: CommonPaginationQueryParams & Rest): ProcessedRbacQueryParams<Rest> {
-        return {
-          ...params,
-          page: params.page ?? 0,
-          size: params.size ?? (PL_NEW_PAGE_SIZE ? NEW_DEFAULT_ROLES_PAGE_SIZE : DEFAULT_ROLES_PAGE_SIZE)
-        }
-      }
-    }),
-    [PL_NEW_PAGE_SIZE]
-  )
 
-  return options
+  return useQueryParamsOptions({
+    page: 0,
+    size: PL_NEW_PAGE_SIZE ? NEW_DEFAULT_ROLES_PAGE_SIZE : DEFAULT_ROLES_PAGE_SIZE
+  })
 }
 
 const RolesList: React.FC = () => {
@@ -74,11 +66,7 @@ const RolesList: React.FC = () => {
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.Roles}`)
   useDocumentTitle(getString('roles'))
   const queryParamOptions = useRolesQueryParamOptions()
-  const {
-    search: searchTerm,
-    size: pageSize,
-    page: pageIndex
-  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(queryParamOptions)
+  const { search: searchTerm, size: pageSize, page: pageIndex } = useQueryParams(queryParamOptions)
   const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
 
   const { data, loading, error, refetch } = useGetRoleList({

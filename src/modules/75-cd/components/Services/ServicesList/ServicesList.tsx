@@ -59,6 +59,7 @@ import { mapToExecutionStatus } from '@pipeline/components/Dashboards/shared'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { RateTrend, TrendPopover } from '@cd/pages/dashboard/dashboardUtils'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
+import type { Sort, SortFields } from '@common/utils/listUtils'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 
@@ -98,8 +99,8 @@ export interface ServicesListProps {
   error: boolean
   data: ServiceDetailsDTOV2[]
   refetch: () => void
-  setSavedSortOption: (value: string[] | undefined) => void
-  setSort: React.Dispatch<React.SetStateAction<string[]>>
+  setSavedSortOption: (value: [SortFields, Sort]) => void
+  setSort: React.Dispatch<React.SetStateAction<[SortFields, Sort]>>
   sort: string[]
 }
 
@@ -634,7 +635,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
     refetch,
     HeaderCustomPrimary: ServiceListHeaderCustomPrimary,
     onRowClick: goToServiceDetails,
-    SortList: SortOption({ setSavedSortOption, setSort, sort })
+    sortList: <SortOption setSavedSortOption={setSavedSortOption} setSort={setSort} sort={sort} />
   }
   return <DashboardList<ServiceListItem> {...dashboardListProps} />
 }

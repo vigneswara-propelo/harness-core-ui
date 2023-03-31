@@ -6,6 +6,11 @@
  */
 
 import { set } from 'lodash-es'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
+import { Sort, SortFields } from '@common/utils/listUtils'
 import type { ServiceDefinition } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
@@ -51,4 +56,18 @@ export const setNameIDDescription = (draftData: PipelineInfoConfig, updatedData:
   set(draftData, 'description', updatedData.description)
   set(draftData, 'tags', updatedData.tags)
   set(draftData, 'gitOpsEnabled', updatedData.gitOpsEnabled)
+}
+
+export const SERVICES_DEFAULT_PAGE_SIZE = 10
+export type ServicesQueryParams = CommonPaginationQueryParams & { sort?: [SortFields, Sort] }
+export type ServicesQueryParamsWithDefaults = RequiredPick<ServicesQueryParams, 'page' | 'size' | 'sort'>
+
+export const useServicesQueryParamOptions = (): UseQueryParamsOptions<ServicesQueryParamsWithDefaults> => {
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+
+  return useQueryParamsOptions({
+    page: 0,
+    size: PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : SERVICES_DEFAULT_PAGE_SIZE,
+    sort: [SortFields.LastModifiedAt, Sort.DESC]
+  })
 }

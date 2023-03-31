@@ -121,9 +121,9 @@ const defaultQueryParams = {
   orgIdentifier: 'default',
   page: 0,
   projectIdentifier: 'Yogesh_Test',
-  searchTerm: '',
+  searchTerm: undefined,
   size: 20,
-  sort: ['lastUpdatedAt', 'DESC'],
+  sort: ['lastUpdatedAt,DESC'],
   templateListType: 'LastUpdated'
 }
 

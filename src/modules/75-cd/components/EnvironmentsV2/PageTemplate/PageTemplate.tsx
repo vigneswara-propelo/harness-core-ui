@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode, useMemo, PropsWithChildren, useState } from 'react'
+import React, { ReactNode, useMemo, PropsWithChildren, useState, useRef } from 'react'
+import { flushSync } from 'react-dom'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
@@ -18,6 +19,7 @@ import {
   Container,
   Layout,
   ExpandingSearchInput,
+  ExpandingSearchInputHandle,
   GridListToggle,
   Pagination,
   SelectOption,
@@ -27,7 +29,7 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
-import { FilterProperties, GetFilterListQueryParams, useGetFilterList } from 'services/cd-ng'
+import { GetFilterListQueryParams, useGetFilterList } from 'services/cd-ng'
 
 import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
 
@@ -36,12 +38,19 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 
 import { FilterContextProvider } from '@cd/context/FiltersContext'
 
 import { usePageStore } from './PageContext'
 import NoData from './NoData'
 import { getHasFilterIdentifier, getHasFilters } from '../EnvironmentsFilters/filterUtils'
+import {
+  PageQueryParams,
+  PageQueryParamsWithDefaults,
+  PAGE_TEMPLATE_DEFAULT_PAGE_INDEX,
+  usePageQueryParamOptions
+} from './utils'
 
 import css from './PageTemplate.module.scss'
 
@@ -50,14 +59,6 @@ interface CreateButtonProps {
   dataTestid: string
   permission: ButtonProps['permission']
   onClick: () => void
-}
-
-export interface PageQueryParams {
-  page?: number
-  size?: number
-  searchTerm?: string
-  filterIdentifier?: string
-  filters?: FilterProperties
 }
 
 export interface PageTemplateProps {
@@ -103,28 +104,12 @@ export default function PageTemplate({
   const [sortOption, setSortOption] = useState<SelectOption>(sortOptions[0])
 
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<PageQueryParams>>()
-
-  const queryParams = useQueryParams<PageQueryParams>({
-    processQueryParams(params: Partial<Record<keyof PageQueryParams, string>>) {
-      let filtersInQueryParams = {}
-
-      try {
-        filtersInQueryParams = params.filters ? JSON.parse(params.filters) : undefined
-      } catch (_e) {
-        // do nothing
-      }
-
-      return {
-        ...params,
-        page: parseInt(params.page || '1', 10),
-        size: parseInt(params.size || '10', 10),
-        searchTerm: params.searchTerm,
-        filters: filtersInQueryParams
-      }
-    }
-  })
-
+  const queryParamOptions = usePageQueryParamOptions()
+  const queryParams = useQueryParams<PageQueryParamsWithDefaults>(queryParamOptions)
   const { page, size, searchTerm, filterIdentifier } = queryParams
+
+  const searchRef = useRef<ExpandingSearchInputHandle>()
+
   const hasFilterIdentifier = getHasFilterIdentifier(filterIdentifier)
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetListHook, {
@@ -171,9 +156,9 @@ export default function PageTemplate({
 
   const handleSearchTermChange = (query: string): void => {
     if (query) {
-      updateQueryParams({ searchTerm: query })
+      updateQueryParams({ searchTerm: query, page: PAGE_TEMPLATE_DEFAULT_PAGE_INDEX })
     } else {
-      updateQueryParams({ searchTerm: [] as any }) // removes the param
+      updateQueryParams({ searchTerm: undefined })
     }
   }
 
@@ -207,8 +192,18 @@ export default function PageTemplate({
   })
 
   const clearFilters = (): void => {
+    flushSync(() => searchRef.current?.clear())
     replaceQueryParams({})
   }
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: defaultTo(data?.data?.totalItems, 0),
+    pageSize: defaultTo(data?.data?.pageSize, 0),
+    pageCount: defaultTo(data?.data?.totalPages, 0),
+    pageIndex: defaultTo(data?.data?.pageIndex, 0),
+    gotoPage: handlePageIndexChange,
+    onPageSizeChange: newSize => updateQueryParams({ page: PAGE_TEMPLATE_DEFAULT_PAGE_INDEX, size: newSize })
+  })
 
   return (
     <FilterContextProvider
@@ -238,6 +233,7 @@ export default function PageTemplate({
               width={200}
               placeholder={getString('search')}
               onChange={handleSearchTermChange}
+              ref={searchRef}
             />
             <FilterComponent />
             <GridListToggle initialSelectedView={Views.LIST} onViewToggle={setView} />
@@ -292,13 +288,7 @@ export default function PageTemplate({
 
         {state === STATUS.ok && (
           <div className={css.footer}>
-            <Pagination
-              itemCount={defaultTo(data?.data?.totalItems, 0)}
-              pageSize={defaultTo(data?.data?.pageSize, 0)}
-              pageCount={defaultTo(data?.data?.totalPages, 0)}
-              pageIndex={defaultTo(data?.data?.pageIndex, 0)}
-              gotoPage={handlePageIndexChange}
-            />
+            <Pagination {...paginationProps} />
           </div>
         )}
 

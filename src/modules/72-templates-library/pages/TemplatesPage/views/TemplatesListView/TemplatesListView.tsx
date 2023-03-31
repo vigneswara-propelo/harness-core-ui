@@ -23,7 +23,10 @@ import GitDetailsColumn from '@common/components/Table/GitDetailsColumn/GitDetai
 import { ScopeBadge } from '@common/components/ScopeBadge/ScopeBadge'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
-import { getIconForTemplate } from '../../TemplatesPageUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { getIconForTemplate, TEMPLATES_PAGE_SIZE } from '../../TemplatesPageUtils'
 import css from './TemplatesListView.module.scss'
 
 type CustomColumn<T extends Record<string, any>> = Column<T> & {
@@ -201,13 +204,14 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
   const {
     data,
     selectedTemplate,
-    gotoPage,
     onPreview,
     onOpenEdit,
     onOpenSettings,
     onDelete,
     onSelect,
-    onOpenMoveResource
+    onOpenMoveResource,
+    gotoPage,
+    useQueryParamsForPagination
   } = props
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
@@ -306,20 +310,25 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
     columns.splice(4, 1)
   }
 
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: defaultTo(data.totalElements, 0),
+    pageSize: defaultTo(data.size, PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : TEMPLATES_PAGE_SIZE),
+    pageCount: defaultTo(data.totalPages, 0),
+    pageIndex: defaultTo(data.number, 0),
+    ...(!useQueryParamsForPagination && {
+      gotoPage,
+      onPageSizeChange: undefined
+    })
+  })
+
   return (
     <TableV2<TemplateSummaryResponse>
       className={css.table}
       columns={columns}
       data={defaultTo(data.content, [])}
       onRowClick={item => onSelect(item)}
-      pagination={{
-        className: css.pagination,
-        itemCount: defaultTo(data.totalElements, 0),
-        pageSize: defaultTo(data.size, 10),
-        pageCount: defaultTo(data.totalPages, 0),
-        pageIndex: defaultTo(data.number, 0),
-        gotoPage
-      }}
+      pagination={paginationProps}
       getRowClassName={row => (isEqual(row.original, selectedTemplate) ? css.selected : '')}
     />
   )

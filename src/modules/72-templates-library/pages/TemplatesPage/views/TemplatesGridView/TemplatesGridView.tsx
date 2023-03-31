@@ -13,22 +13,39 @@ import { TemplateCard } from '@templates-library/components/TemplateCard/Templat
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
 import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { TEMPLATES_PAGE_SIZE } from '../../TemplatesPageUtils'
 import css from './TemplatesGridView.module.scss'
 
 export const TemplatesGridView: React.FC<TemplatesViewProps> = (props): JSX.Element => {
   const {
     data,
     selectedTemplate,
-    gotoPage,
     onSelect,
     onPreview,
     onOpenEdit,
     onOpenSettings,
     onDelete,
-    onOpenMoveResource
+    onOpenMoveResource,
+    gotoPage,
+    useQueryParamsForPagination
   } = props
 
   const key = React.useMemo(() => uuid(), [data.content])
+
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: defaultTo(data.totalElements, 0),
+    pageSize: defaultTo(data.size, PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : TEMPLATES_PAGE_SIZE),
+    pageCount: defaultTo(data.totalPages, 0),
+    pageIndex: defaultTo(data.number, 0),
+    ...(!useQueryParamsForPagination && {
+      gotoPage,
+      onPageSizeChange: undefined
+    })
+  })
 
   return (
     <Layout.Vertical className={css.mainContainer}>
@@ -53,13 +70,7 @@ export const TemplatesGridView: React.FC<TemplatesViewProps> = (props): JSX.Elem
           keyOf={(item: TemplateSummaryResponse) => getScopeBasedTemplateRef(item)}
         />
       </Container>
-      <Pagination
-        itemCount={defaultTo(data.totalElements, 0)}
-        pageSize={defaultTo(data.size, 10)}
-        pageCount={defaultTo(data.totalPages, 0)}
-        pageIndex={defaultTo(data.number, 0)}
-        gotoPage={gotoPage}
-      />
+      <Pagination {...paginationProps} />
     </Layout.Vertical>
   )
 }

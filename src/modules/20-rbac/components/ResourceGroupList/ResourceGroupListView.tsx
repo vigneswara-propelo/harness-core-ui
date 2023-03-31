@@ -26,6 +26,8 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import { getSelectedScopeLabel } from '@rbac/pages/ResourceGroupDetails/utils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
 import ResourceGroupColumnMenu from './ResourceGroupColumnMenu'
 import css from './ResourceGroupList.module.scss'
@@ -191,10 +193,10 @@ const ResourceGroupListView: React.FC<ResourceGroupListViewProps> = props => {
     ],
     [props.data]
   )
-
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const paginationProps = useDefaultPaginationProps({
     itemCount: data?.totalItems || 0,
-    pageSize: data?.pageSize || 10,
+    pageSize: data?.pageSize || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : 10),
     pageCount: data?.totalPages || -1,
     pageIndex: data?.pageIndex || 0
   })

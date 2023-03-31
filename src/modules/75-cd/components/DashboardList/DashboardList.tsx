@@ -7,6 +7,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { ExpandingSearchInput, Layout, Text, PageError, TableV2, TableProps } from '@harness/uicore'
+import { PopoverPosition } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -14,14 +15,17 @@ import { PageSpinner } from '@common/components'
 import ServiceDetailsEmptyState from '@cd/icons/ServiceDetailsEmptyState.svg'
 import { useGetFreeOrCommunityCD } from '@common/utils/utils'
 import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE, COMMON_PAGE_SIZE_OPTIONS } from '@common/constants/Pagination'
 import css from '@cd/components/DashboardList/DashboardList.module.scss'
 
 const PAGE_SIZE = 10
+const PAGE_SIZE_OPTIONS = [10, 25, 50, 100]
 
 export interface DashboardListProps<T extends Record<string, any>> {
   HeaderCustomPrimary?: (props: { total: number }) => React.ReactElement
   HeaderCustomSecondary?: (props: { onChange: (val: string) => void }) => React.ReactElement
-  SortList: JSX.Element
+  sortList: JSX.Element
   columns: TableProps<T>['columns']
   loading: boolean
   error: boolean
@@ -62,7 +66,7 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
   const {
     HeaderCustomPrimary = () => <></>,
     HeaderCustomSecondary = HeaderFilterComponent,
-    SortList,
+    sortList,
     columns,
     loading,
     error,
@@ -71,8 +75,10 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
     onRowClick
   } = props
   const isFreeOrCommunityCD = useGetFreeOrCommunityCD()
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
 
   const [pageIndex, setPageIndex] = useState(0)
+  const [pageSize, setPageSize] = useState(PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : PAGE_SIZE)
   const [filteredData, setFilteredData] = useState<T[]>([])
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -117,15 +123,27 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
     return (
       <TableV2<T>
         columns={columns}
-        data={filteredData.slice(PAGE_SIZE * pageIndex, PAGE_SIZE * (pageIndex + 1))}
+        data={filteredData.slice(pageSize * pageIndex, pageSize * (pageIndex + 1))}
         pagination={{
           itemCount: filteredData.length,
-          pageSize: PAGE_SIZE,
-          pageCount: Math.ceil(filteredData.length / PAGE_SIZE),
+          pageSize,
+          pageCount: Math.ceil(filteredData.length / pageSize),
           pageIndex: pageIndex,
           gotoPage: pageNum => {
             setPageIndex(pageNum)
-          }
+          },
+          onPageSizeChange: size => {
+            setPageSize(size)
+            setPageIndex(0)
+          },
+          showPagination: true,
+          pageSizeDropdownProps: {
+            usePortal: true,
+            popoverProps: {
+              position: PopoverPosition.TOP
+            }
+          },
+          pageSizeOptions: PL_NEW_PAGE_SIZE ? COMMON_PAGE_SIZE_OPTIONS : PAGE_SIZE_OPTIONS
         }}
         onRowClick={onRowClick}
       />
@@ -142,7 +160,7 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
         <HeaderCustomPrimary total={filteredData.length} />
         <Layout.Horizontal>
           <HeaderCustomSecondary onChange={onSearchChange} />
-          {SortList}
+          {sortList}
         </Layout.Horizontal>
       </Layout.Horizontal>
       {getComponent()}
