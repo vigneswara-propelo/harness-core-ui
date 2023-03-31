@@ -16,6 +16,7 @@ import { useStrings } from 'framework/strings'
 import { getSecretV2Promise, ResponseSecretResponseWrapper } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
+import { getScopeBasedProjectPathParams, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import css from './WebhookTriggerConfigPanel.module.scss'
 
 interface SecretInputWithDialogProps {
@@ -35,16 +36,18 @@ const WebhookSecretInputWithDialog: React.FC<SecretInputWithDialogProps> = ({ fo
 
   useEffect(() => {
     if (secretValue && typeof secretValue === 'string') {
+      const scopeBasedProjectPathParams = getScopeBasedProjectPathParams(
+        { accountId, orgIdentifier, projectIdentifier },
+        getScopeFromValue(secretValue)
+      )
       const identifier = secretValue.includes('.') ? secretValue.split('.')[1] : secretValue
       const controller = new AbortController()
       const updateFormikSecretValue = (response?: ResponseSecretResponseWrapper) => {
         formikProps.setFieldValue(yamlWebhookSecretIdentifierName, {
-          identifier: get(response, 'data.secret.identifier', identifier),
-          name: get(response, 'data.secret.identifier', identifier),
+          identifier,
+          name: get(response, 'data.secret.name', identifier),
           referenceString: secretValue,
-          accountIdentifier: accountId,
-          orgIdentifier: orgIdentifier,
-          projectIdentifier: projectIdentifier
+          ...scopeBasedProjectPathParams
         })
       }
       const getSecretInfo = async (): Promise<void> => {
@@ -53,19 +56,18 @@ const WebhookSecretInputWithDialog: React.FC<SecretInputWithDialogProps> = ({ fo
           const response = await getSecretV2Promise(
             {
               identifier,
-              queryParams: {
-                accountIdentifier: accountId,
-                orgIdentifier,
-                projectIdentifier
-              }
+              queryParams: scopeBasedProjectPathParams
             },
             controller.signal
           )
 
           updateFormikSecretValue(response)
         } catch (e) {
-          showError(e.message)
-          updateFormikSecretValue()
+          // Do not show the error if it is due to AbortController.
+          if (!controller.signal.aborted) {
+            showError(e.message)
+            updateFormikSecretValue()
+          }
         } finally {
           setLoadingSecret(false)
         }
