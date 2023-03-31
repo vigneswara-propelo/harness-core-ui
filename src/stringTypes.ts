@@ -262,6 +262,7 @@ export interface StringsMap {
   'common.descriptionPlaceholder': string
   'common.directly': string
   'common.disable': string
+  'common.disabled': string
   'common.discard': string
   'common.download': string
   'common.downloadCSV': string
@@ -1652,7 +1653,6 @@ export interface StringsMap {
   'delegates.commandLineCreation.yamlFileOptions': string
   'delegates.configNameRequired': string
   'delegates.createDelegate': string
-  'delegates.delGroupStatus.DISABLED': string
   'delegates.delGroupStatus.WAITING_FOR_APPROVAL': string
   'delegates.delSetup': string
   'delegates.delegateCreation.docker.docLink': string
@@ -7366,6 +7366,8 @@ export interface StringsMap {
   'cf.environments.noEnvironmentSection.configurations': string
   'cf.environments.noEnvironmentSection.limitation': string
   'cf.environments.noEnvironmentSection.message': string
+  'cf.environments.nonProd': string
+  'cf.environments.prod': string
   'cf.featureFlagDetail.jiraIssuesDescription': string
   'cf.featureFlagDetail.jiraIssuesTitle': string
   'cf.featureFlagDetail.noServices': string

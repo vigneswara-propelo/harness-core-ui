@@ -9,6 +9,7 @@ import React from 'react'
 import { render, fireEvent, getByText, waitFor, RenderResult, screen } from '@testing-library/react'
 import { cloneDeep } from 'lodash-es'
 import userEvent from '@testing-library/user-event'
+import * as cfServices from 'services/cf'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
@@ -27,7 +28,8 @@ const renderComponent = (): RenderResult =>
       defaultFeatureFlagValues={{
         STALE_FLAGS_FFM_1510: true,
         FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: true,
-        FFM_6683_ALL_ENVIRONMENTS_FLAGS: true
+        FFM_6683_ALL_ENVIRONMENTS_FLAGS: true,
+        FFM_6610_ENABLE_METRICS_ENDPOINT: true
       }}
     >
       <FeatureFlagsPage />
@@ -97,11 +99,15 @@ describe('FeatureFlagsPage', () => {
   })
 
   test('It should render data correctly', async () => {
+    const metricsSpy = jest.spyOn(cfServices, 'getFeatureMetricsPromise')
     renderComponent()
 
-    expect(screen.getAllByText(mockFeatureFlags.features[0].name)).toBeDefined()
-    expect(screen.getAllByText(mockFeatureFlags.features[1].name)).toBeDefined()
-    expect(screen.getByRole('button', { name: 'cf.featureFlags.setupGitSync' })).toBeVisible()
+    await waitFor(() => {
+      expect(screen.getAllByText(mockFeatureFlags.features[0].name)).toBeDefined()
+      expect(screen.getAllByText(mockFeatureFlags.features[1].name)).toBeDefined()
+      expect(screen.getByRole('button', { name: 'cf.featureFlags.setupGitSync' })).toBeVisible()
+      expect(metricsSpy).toHaveBeenCalled()
+    })
   })
 
   test('It should have an option for "All Environments" in the EnvironmentSelect dropdown', async () => {

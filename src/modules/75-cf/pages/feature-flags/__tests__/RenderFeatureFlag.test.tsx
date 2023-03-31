@@ -12,11 +12,10 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
 import mockGovernance from '@cf/utils/testData/data/mockGovernance'
-import { RenderColumnFlag } from '../FeatureFlagsPage'
-import type { RenderColumnFlagProps } from '../FeatureFlagsPage'
+import { RenderFeatureFlag, RenderFeatureFlagProps } from '../components/RenderFeatureFlag'
 import cellMock from './data/cellMock'
 
-describe('RenderColumnFlag', () => {
+describe('RenderFeatureFlag', () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -29,13 +28,13 @@ describe('RenderColumnFlag', () => {
 
   const refetchFlags = jest.fn()
 
-  const renderFlagComponent = (props: Partial<RenderColumnFlagProps> = {}): RenderResult =>
+  const renderFlagComponent = (props: Partial<RenderFeatureFlagProps> = {}): RenderResult =>
     render(
       <TestWrapper
         path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <RenderColumnFlag
+        <RenderFeatureFlag
           gitSync={{ ...mockGitSync, isGitSyncEnabled: true }}
           toggleFeatureFlag={toggleFeatureFlag}
           cell={cellMock}

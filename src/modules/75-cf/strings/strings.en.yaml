@@ -332,6 +332,8 @@ segments:
   pageDescription: Target Groups allow you to serve flag variations to a list of targets in bulk.
 environments:
   environmentID: 'Id:'
+  prod: PROD
+  nonProd: NON-PROD
   delete:
     message: 'If you want to delete environment <strong>{{name}}</strong>, the SDK keys for this environment will also be deleted. Delete environment <strong>{{name}}</strong>?'
     title: '{{ $.common.deleteEnvironment.title }}?'

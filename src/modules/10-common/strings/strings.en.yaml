@@ -88,6 +88,7 @@ entityPlaceholderText: '- Select -' #used at placeholder places to select Svc, I
 approve: Approve
 reject: Reject
 disable: Disable
+disabled: Disabled
 remove: Remove
 member: Member
 showMore: Show More

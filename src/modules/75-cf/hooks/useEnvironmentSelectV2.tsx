@@ -13,8 +13,7 @@ import { useGetAllEnvironmentsFlags } from 'services/cf'
 import { EnvironmentResponseDTO, useGetEnvironmentListForProject } from 'services/cd-ng'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './useEnvironmentSelectV2.module.scss'
 
 export interface UseEnvironmentSelectV2Params {
@@ -63,7 +62,7 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
       value: elem.identifier as string
     })) || []
 
-  const ALL_ENVIRONMENTS_ENABLED = useFeatureFlag(FeatureFlag.FFM_6683_ALL_ENVIRONMENTS_FLAGS)
+  const { FFM_6683_ALL_ENVIRONMENTS_FLAGS } = useFeatureFlags()
 
   const queryParams = {
     accountIdentifier: accountId,
@@ -142,7 +141,7 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
           popoverClassName={!showCreateButton ? css.hideCreateButton : ''}
           value={selectedEnvironment}
           items={
-            ALL_ENVIRONMENTS_ENABLED && allowAllOption
+            FFM_6683_ALL_ENVIRONMENTS_FLAGS && allowAllOption
               ? [
                   { label: getString('common.allEnvironments'), value: getString('common.allEnvironments') },
                   ...selectOptions

@@ -12,7 +12,7 @@ export const statusTypes = ['ENABLED', 'WAITING_FOR_APPROVAL', 'DISABLED', 'DELE
 export const statusLabels: Record<string, keyof StringsMap> = {
   ENABLED: 'enabledLabel',
   WAITING_FOR_APPROVAL: 'delegates.delGroupStatus.WAITING_FOR_APPROVAL',
-  DISABLED: 'delegates.delGroupStatus.DISABLED',
+  DISABLED: 'common.disabled',
   DELETED: 'deleted',
   CONNECTED: 'connected',
   DISCONNECTED: 'delegate.notConnected'

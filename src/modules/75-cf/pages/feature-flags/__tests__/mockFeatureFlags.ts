@@ -6,8 +6,8 @@
  */
 
 export default {
-  itemCount: 13,
-  pageCount: 1,
+  itemCount: 17,
+  pageCount: 2,
   pageIndex: 0,
   pageSize: 15,
   featureCounts: {
