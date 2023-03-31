@@ -21,7 +21,6 @@ import type {
 } from 'react-table'
 import { useStrings } from 'framework/strings'
 import { killEvent } from '@common/utils/eventUtils'
-import { getConfig } from 'services/config'
 import type { Artifact, ArtifactsColumnActions } from './ArtifactsTable'
 import css from './ArtifactsTable.module.scss'
 
@@ -99,12 +98,9 @@ export const ViolationsCell: CellType = ({ row }) => {
 export const SbomCell: CellType = ({ row }) => {
   const { getString } = useStrings()
   const data = row.original
-  // this endpoint is exposed as Content-Type: application/octet-stream so browser will download as file automatically
-  const SBOMUrl = getConfig(
-    `ssca/api/v1/artifacts/${data.id}/stepExecutions/${data.stepExecutionId}/sbom/${data.sbomName}.json`
-  )
+  // sbomUrl is exposed as Content-Type: application/octet-stream so browser will download as file automatically
   return data.sbomName ? (
-    <a download color={Color.PRIMARY_7} href={SBOMUrl} target="_blank" rel="noopener noreferrer">
+    <a download color={Color.PRIMARY_7} href={data.sbomUrl} target="_blank" rel="noopener noreferrer">
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
         <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
           {data.sbomName}

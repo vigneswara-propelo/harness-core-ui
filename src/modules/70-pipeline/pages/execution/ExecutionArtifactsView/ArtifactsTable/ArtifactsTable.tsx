@@ -28,6 +28,7 @@ export interface Artifact {
   id?: string // artifact Id
   stepExecutionId?: string
   sbomName?: string
+  sbomUrl?: string
   isSbomAttested?: string
   violations?: number
   node?: ExecutionNode
