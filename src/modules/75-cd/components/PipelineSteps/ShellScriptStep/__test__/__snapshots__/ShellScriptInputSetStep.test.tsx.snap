@@ -269,7 +269,7 @@ exports[`ShellScriptInputSetStep tests renders input sets 1`] = `
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="stepTestUtilForm_spec.environmentVariables"
+                  data-tooltip-id="shellScriptInputVariable_undefined"
                 >
                   pipeline.scriptInputVariables
                 </span>
@@ -291,17 +291,17 @@ exports[`ShellScriptInputSetStep tests renders input sets 1`] = `
                   <span
                     class="label"
                   >
-                    Name
+                    name
                   </span>
                   <span
                     class="label"
                   >
-                    Type
+                    typeLabel
                   </span>
                   <span
                     class="label"
                   >
-                    Value
+                    valueLabel
                   </span>
                 </div>
                 <div
@@ -602,7 +602,7 @@ exports[`ShellScriptInputSetStep tests renders input sets 1`] = `
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="stepTestUtilForm_spec.outputVariables"
+                  data-tooltip-id="shellScriptOutputVariable_undefined"
                 >
                   pipeline.scriptOutputVariables
                 </span>
@@ -624,17 +624,17 @@ exports[`ShellScriptInputSetStep tests renders input sets 1`] = `
                   <span
                     class="label"
                   >
-                    Name
+                    name
                   </span>
                   <span
                     class="label"
                   >
-                    Type
+                    typeLabel
                   </span>
                   <span
                     class="label"
                   >
-                    Value
+                    cd.steps.shellScriptOutputVariablesLabel
                   </span>
                 </div>
                 <div

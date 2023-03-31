@@ -6015,6 +6015,7 @@ export interface StringsMap {
   'cd.steps.pdcStep.title': string
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
+  'cd.steps.shellScriptOutputVariablesLabel': string
   'cd.steps.tas.additionalRoutes': string
   'cd.steps.tas.downScaleOldFirstLabel': string
   'cd.steps.tas.enableDownSizeOldApplication': string

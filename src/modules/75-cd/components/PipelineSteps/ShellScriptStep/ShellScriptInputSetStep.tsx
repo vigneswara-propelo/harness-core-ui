@@ -35,10 +35,12 @@ export interface ShellScriptInputSetStepProps {
   template?: ShellScriptData
   path?: string
   connectorType: Exclude<SecretDTOV2['type'], 'SecretFile' | 'SecretText'>
+  shellScriptType?: ScriptType
 }
 
 export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepProps): React.ReactElement {
-  const { template, path, readonly, initialValues, allowableTypes, stepViewType, connectorType } = props
+  const { template, path, readonly, initialValues, allowableTypes, stepViewType, connectorType, shellScriptType } =
+    props
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -107,6 +109,8 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             label={getString('pipeline.scriptInputVariables')}
             defaultValueToReset={[]}
             disableTypeSelection
+            data-tooltip-id={`shellScriptInputVariable_${shellScriptType}`}
+            tooltipProps={{ dataTooltipId: `shellScriptInputVariable_${shellScriptType}` }}
           >
             <FieldArray
               name="spec.environmentVariables"
@@ -114,9 +118,9 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                 return (
                   <div className={css.panel}>
                     <div className={css.environmentVarHeader}>
-                      <span className={css.label}>Name</span>
-                      <span className={css.label}>Type</span>
-                      <span className={css.label}>Value</span>
+                      <span className={css.label}>{getString('name')}</span>
+                      <span className={css.label}>{getString('typeLabel')}</span>
+                      <span className={css.label}>{getString('valueLabel')}</span>
                     </div>
                     {template.spec.environmentVariables?.map((type, i: number) => {
                       return (
@@ -168,6 +172,8 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             label={getString('pipeline.scriptOutputVariables')}
             defaultValueToReset={[]}
             disableTypeSelection
+            data-tooltip-id={`shellScriptOutputVariable_${shellScriptType}`}
+            tooltipProps={{ dataTooltipId: `shellScriptOutputVariable_${shellScriptType}` }}
           >
             <FieldArray
               name="spec.outputVariables"
@@ -175,9 +181,11 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                 return (
                   <div className={css.panel}>
                     <div className={css.outputVarHeader}>
-                      <span className={css.label}>Name</span>
-                      <span className={css.label}>Type</span>
-                      <span className={css.label}>Value</span>
+                      <span className={css.label}>{getString('name')}</span>
+                      <span className={css.label}>{getString('typeLabel')}</span>
+                      <span className={css.label}>
+                        {getString('cd.steps.shellScriptOutputVariablesLabel', { scriptType: shellScriptType })}
+                      </span>
                     </div>
                     {template.spec.outputVariables?.map((output, i: number) => {
                       return (

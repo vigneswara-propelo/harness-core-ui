@@ -62,6 +62,8 @@ export default function OptionalConfiguration(props: {
             optionalLabel={getString('common.optionalLabel')}
             defaultValueToReset={[]}
             disableTypeSelection
+            data-tooltip-id={`shellScriptInputVariable_${formValues?.spec?.shell}`}
+            tooltipProps={{ dataTooltipId: `shellScriptInputVariable_${formValues?.spec?.shell}` }}
           >
             <FieldArray
               name="spec.environmentVariables"
@@ -69,9 +71,9 @@ export default function OptionalConfiguration(props: {
                 return (
                   <div className={css.panel}>
                     <div className={css.environmentVarHeader}>
-                      <span className={css.label}>Name</span>
-                      <span className={css.label}>Type</span>
-                      <span className={css.label}>Value</span>
+                      <span className={css.label}>{getString('name')}</span>
+                      <span className={css.label}>{getString('typeLabel')}</span>
+                      <span className={css.label}>{getString('valueLabel')}</span>
                     </div>
                     {formValues.spec.environmentVariables?.map(({ id }: ShellScriptStepVariable, i: number) => {
                       return (
@@ -127,6 +129,8 @@ export default function OptionalConfiguration(props: {
               optionalLabel={getString('common.optionalLabel')}
               defaultValueToReset={[]}
               disableTypeSelection={false}
+              data-tooltip-id={`shellScriptOutputVariable_${formValues?.spec?.shell}`}
+              tooltipProps={{ dataTooltipId: `shellScriptOutputVariable_${formValues?.spec?.shell}` }}
             >
               <FieldArray
                 name="spec.outputVariables"
@@ -134,9 +138,13 @@ export default function OptionalConfiguration(props: {
                   return (
                     <div className={css.panel}>
                       <div className={css.outputVarHeader}>
-                        <span className={css.label}>Name</span>
-                        <span className={css.label}>Type</span>
-                        <span className={css.label}>Value</span>
+                        <span className={css.label}>{getString('name')}</span>
+                        <span className={css.label}>{getString('typeLabel')}</span>
+                        <span className={css.label}>
+                          {getString('cd.steps.shellScriptOutputVariablesLabel', {
+                            scriptType: formValues?.spec?.shell
+                          })}
+                        </span>
                       </div>
                       {formValues.spec.outputVariables?.map(({ id }: ShellScriptOutputStepVariable, i: number) => {
                         return (

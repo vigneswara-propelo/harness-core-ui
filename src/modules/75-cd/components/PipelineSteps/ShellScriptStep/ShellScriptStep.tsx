@@ -93,6 +93,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
               ? 'WinRmCredentials'
               : 'SSHKey'
           }
+          shellScriptType={inputSetData?.allValues?.spec?.shell}
         />
       )
     }

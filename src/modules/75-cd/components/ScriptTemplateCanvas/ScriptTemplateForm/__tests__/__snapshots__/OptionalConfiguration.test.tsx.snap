@@ -29,7 +29,7 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="scriptOptionalForm_spec.environmentVariables"
+                    data-tooltip-id="shellScriptInputVariable_Bash"
                   >
                     pipeline.scriptInputVariables common.optionalLabel
                   </span>
@@ -51,17 +51,17 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                     <span
                       class="label"
                     >
-                      Name
+                      name
                     </span>
                     <span
                       class="label"
                     >
-                      Type
+                      typeLabel
                     </span>
                     <span
                       class="label"
                     >
-                      Value
+                      valueLabel
                     </span>
                   </div>
                   <button
@@ -172,7 +172,7 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="scriptOptionalForm_spec.environmentVariables"
+                    data-tooltip-id="shellScriptInputVariable_Bash"
                   >
                     pipeline.scriptInputVariables common.optionalLabel
                   </span>
@@ -194,17 +194,17 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                     <span
                       class="label"
                     >
-                      Name
+                      name
                     </span>
                     <span
                       class="label"
                     >
-                      Type
+                      typeLabel
                     </span>
                     <span
                       class="label"
                     >
-                      Value
+                      valueLabel
                     </span>
                   </div>
                   <button
@@ -489,7 +489,7 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                     >
                       <span
                         class="Tooltip--acenter"
-                        data-tooltip-id="scriptOptionalForm_spec.environmentVariables"
+                        data-tooltip-id="shellScriptInputVariable_Bash"
                       >
                         pipeline.scriptInputVariables common.optionalLabel
                       </span>
@@ -511,17 +511,17 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                         <span
                           class="label"
                         >
-                          Name
+                          name
                         </span>
                         <span
                           class="label"
                         >
-                          Type
+                          typeLabel
                         </span>
                         <span
                           class="label"
                         >
-                          Value
+                          valueLabel
                         </span>
                       </div>
                       <div

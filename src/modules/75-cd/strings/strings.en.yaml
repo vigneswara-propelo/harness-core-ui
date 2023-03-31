@@ -36,6 +36,7 @@ steps:
     validation:
       sourceTypeRequired: Source Type is required
       destinationPathRequired: Destination Path is required
+  shellScriptOutputVariablesLabel: '{{scriptType}} Output Variable'
   kubernetesGcpStep:
     stepName: Specify your GCP Connector
   pdcStep:
