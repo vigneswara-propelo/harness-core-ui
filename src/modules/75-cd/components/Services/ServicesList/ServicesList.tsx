@@ -541,24 +541,22 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   )
 }
 
+function ServiceListHeaderCustomPrimary(headerProps: { total?: number }): JSX.Element {
+  const { getString } = useStrings()
+  return (
+    <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_700}>
+      {getString('cd.serviceDashboard.totalServices', {
+        total: defaultTo(headerProps.total, 0)
+      })}
+    </Text>
+  )
+}
+
 export const ServicesList: React.FC<ServicesListProps> = props => {
   const { loading, data, error, refetch, setSavedSortOption, setSort, sort } = props
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const history = useHistory()
-
-  const ServiceListHeaderCustomPrimary = useMemo(
-    () => (headerProps: { total?: number }) =>
-      (
-        <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.GREY_700}>
-          {getString('cd.serviceDashboard.totalServices', {
-            total: headerProps.total || 0
-          })}
-        </Text>
-      ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data]
-  )
 
   const columns: TableProps<ServiceListItem>['columns'] = useMemo(
     () => {

@@ -13,7 +13,9 @@ import {
   servicesRoute,
   afterSaveServiceResponse,
   afterSaveServiceNameResponse,
-  afterSaveServiceHeaderResponse
+  afterSaveServiceHeaderResponse,
+  servicesDetailV2,
+  pageHeaderClassName
 } from '../../support/70-pipeline/constants'
 import {
   useTemplateResponse,
@@ -59,6 +61,13 @@ describe('ServiceV2 - Deployment Template', () => {
   })
 
   it('Create ServiceV2', () => {
+    cy.intercept('GET', servicesDetailV2, { fixture: 'ng/api/servicesV2/servicesDetailV2.empty.json' }).as(
+      'emptyServicesList'
+    )
+    cy.wait(1000)
+    cy.visitPageAssertion(pageHeaderClassName)
+    cy.wait('@emptyServicesList')
+    cy.wait(500)
     cy.intercept('POST', afterSaveServiceEndpointPOST, afterSaveServiceResponse).as('afterSaveService')
     cy.intercept('GET', afterSaveServiceNameEndpoint, afterSaveServiceNameResponse).as('afterSaveServiceName')
     cy.intercept('GET', afterSaveServiceHeaderEndpoint, afterSaveServiceHeaderResponse).as('afterSaveServiceHeader')
@@ -68,8 +77,6 @@ describe('ServiceV2 - Deployment Template', () => {
     cy.intercept('GET', useTemplateCall, useTemplateResponse).as('useTemplate')
     cy.intercept('POST', afterUseTemplateListCall, afterUseTemplateListResponse).as('afterUseTemplateList')
 
-    cy.visitPageAssertion('[id*="serviceLandingPageTabs_manageServices"]')
-    cy.get('div[id*="serviceLandingPageTabs_manageServices"]').click({ force: true })
     cy.contains('span', 'New Service').should('be.visible').click()
     cy.fillField('name', serviceName)
     cy.contains('span', 'Save').click()

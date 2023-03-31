@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 
 import { Color } from '@harness/design-system'
-import { Card, Container, Layout, Text } from '@harness/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import type { ResponseTimeValuePairListDTOInteger } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { SparklineChart } from '@common/components/SparklineChart/SparklineChart'
@@ -69,68 +69,66 @@ export const ServiceInstancesWidget: React.FC<ServiceInstanceWidgetProps> = prop
       : trendData
 
   return (
-    <Card className={css.card}>
-      <Layout.Vertical width={248}>
-        <Layout.Horizontal className={css.topSection}>
-          <Layout.Vertical width={'100%'}>
-            <Text font={{ weight: 'bold' }} color={Color.GREY_600}>
-              {getString('services')}
+    <Layout.Vertical width={248} className={css.serviceInstanceWidget}>
+      <Layout.Horizontal className={css.topSection}>
+        <Layout.Vertical width={'100%'}>
+          <Text font={{ weight: 'bold' }} color={Color.GREY_600}>
+            {getString('services')}
+          </Text>
+          <Layout.Horizontal flex={{ distribution: 'space-between' }}>
+            <Text color={Color.BLACK} font={{ weight: 'bold' }} className={css.text}>
+              {numberFormatter(serviceCount)}
             </Text>
-            <Layout.Horizontal flex={{ distribution: 'space-between' }}>
-              <Text color={Color.BLACK} font={{ weight: 'bold' }} className={css.text}>
-                {numberFormatter(serviceCount)}
-              </Text>
-              {reducedData.length ? (
-                <TrendPopover title={title} data={reducedData}>
-                  <SparklineChart
-                    title={getString('cd.serviceDashboard.6monthTrend')}
-                    data={reducedData}
-                    options={{ chart: { width: 80, height: 50 } }}
-                    sparklineChartContainerStyles={css.hover}
-                  />
-                </TrendPopover>
-              ) : (
-                <></>
-              )}
-            </Layout.Horizontal>
-          </Layout.Vertical>
-        </Layout.Horizontal>
-        <Layout.Vertical className={css.bottomSection}>
-          <Layout.Vertical margin={{ bottom: 'medium' }}>
-            <Text font={{ weight: 'bold' }} color={Color.GREY_600} margin={{ bottom: 'xsmall' }}>
-              {getString('common.subscriptions.usage.serviceInstances')}
-            </Text>
-            <Layout.Horizontal flex={{ alignItems: 'center', distribution: 'space-between' }}>
-              <Text color={Color.BLACK} font={{ weight: 'bold' }} className={css.text}>
-                {numberFormatter(serviceInstancesCount)}
-              </Text>
-              {serviceInstancesCount ? (
-                <Container height={65}>
-                  <PieChart size={65} items={pieChartData} showLabels={false}></PieChart>
-                </Container>
-              ) : (
-                <></>
-              )}
-            </Layout.Horizontal>
-          </Layout.Vertical>
-          {serviceInstancesCount ? (
-            <Layout.Horizontal flex={{ distribution: 'space-between' }}>
-              {pieChartData.map(pieChartDataItem => {
-                return (
-                  <Layout.Horizontal key={pieChartDataItem.label} flex={{ alignItems: 'center' }}>
-                    <div className={css.circle} style={{ background: pieChartDataItem.color }}></div>
-                    <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_500}>{`${
-                      pieChartDataItem.label
-                    } (${pieChartDataItem.formattedValue ?? pieChartDataItem.value})`}</Text>
-                  </Layout.Horizontal>
-                )
-              })}
-            </Layout.Horizontal>
-          ) : (
-            <></>
-          )}
+            {reducedData.length ? (
+              <TrendPopover title={title} data={reducedData}>
+                <SparklineChart
+                  title={getString('cd.serviceDashboard.6monthTrend')}
+                  data={reducedData}
+                  options={{ chart: { width: 80, height: 50 } }}
+                  sparklineChartContainerStyles={css.hover}
+                />
+              </TrendPopover>
+            ) : (
+              <></>
+            )}
+          </Layout.Horizontal>
         </Layout.Vertical>
+      </Layout.Horizontal>
+      <Layout.Vertical className={css.bottomSection}>
+        <Layout.Vertical margin={{ bottom: 'medium' }}>
+          <Text font={{ weight: 'bold' }} color={Color.GREY_600} margin={{ bottom: 'xsmall' }}>
+            {getString('common.subscriptions.usage.serviceInstances')}
+          </Text>
+          <Layout.Horizontal flex={{ alignItems: 'center', distribution: 'space-between' }}>
+            <Text color={Color.BLACK} font={{ weight: 'bold' }} className={css.text}>
+              {numberFormatter(serviceInstancesCount)}
+            </Text>
+            {serviceInstancesCount ? (
+              <Container height={65}>
+                <PieChart size={65} items={pieChartData} showLabels={false}></PieChart>
+              </Container>
+            ) : (
+              <></>
+            )}
+          </Layout.Horizontal>
+        </Layout.Vertical>
+        {serviceInstancesCount ? (
+          <Layout.Horizontal flex={{ distribution: 'space-between' }}>
+            {pieChartData.map(pieChartDataItem => {
+              return (
+                <Layout.Horizontal key={pieChartDataItem.label} flex={{ alignItems: 'center' }}>
+                  <div className={css.circle} style={{ background: pieChartDataItem.color }}></div>
+                  <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_500}>{`${
+                    pieChartDataItem.label
+                  } (${pieChartDataItem.formattedValue ?? pieChartDataItem.value})`}</Text>
+                </Layout.Horizontal>
+              )
+            })}
+          </Layout.Horizontal>
+        ) : (
+          <></>
+        )}
       </Layout.Vertical>
-    </Card>
+    </Layout.Vertical>
   )
 }

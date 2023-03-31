@@ -8,9 +8,9 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly bottomSection: string
-  readonly card: string
   readonly circle: string
   readonly hover: string
+  readonly serviceInstanceWidget: string
   readonly text: string
   readonly topSection: string
 }

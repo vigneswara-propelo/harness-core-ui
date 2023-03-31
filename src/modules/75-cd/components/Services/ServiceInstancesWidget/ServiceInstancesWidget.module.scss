@@ -5,10 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.card {
+.serviceInstanceWidget {
   height: 280px;
-  margin-right: var(--spacing-xlarge);
-  padding-top: var(--spacing-medium) !important;
+  margin-right: var(--spacing-xlarge) !important;
   .text {
     font-size: 40px !important;
     min-width: 130px;

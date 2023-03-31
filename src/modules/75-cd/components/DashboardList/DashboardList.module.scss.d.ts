@@ -8,11 +8,14 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly container: string
+  readonly dialog: string
   readonly listHeader: string
-  readonly loader: string
+  readonly listStateContainer: string
   readonly paddingTop: string
-  readonly searchIconStyle: string
+  readonly searchIcon: string
   readonly separator: string
+  readonly subHeader: string
+  readonly table: string
   readonly timeRangeSelector: string
 }
 export default styles

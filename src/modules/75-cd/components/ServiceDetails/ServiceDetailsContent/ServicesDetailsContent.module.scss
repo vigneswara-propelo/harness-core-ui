@@ -25,6 +25,14 @@
 
 .pageStyles {
   div[class*='PageSubHeader'] {
-    box-shadow: none;
+    box-shadow: var(--elevation-2);
+  }
+
+  :global {
+    .PageBody--pageBody {
+      .PageError--pageError {
+        margin-top: 15% !important;
+      }
+    }
   }
 }

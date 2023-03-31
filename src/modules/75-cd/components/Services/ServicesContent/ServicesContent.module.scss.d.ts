@@ -12,5 +12,6 @@ declare const styles: {
   readonly pageBody: string
   readonly refreshButton: string
   readonly separator: string
+  readonly timeSelectorClass: string
 }
 export default styles

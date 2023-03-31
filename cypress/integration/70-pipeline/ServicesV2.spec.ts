@@ -68,8 +68,6 @@ describe('Service V2', () => {
     cy.intercept('POST', afterFinalSaveConnectorsListEndpoint, afterFinalSaveConnectorsListResponse).as(
       'afterFinalSaveConnectorsList'
     )
-    cy.get('[id*="serviceLandingPageTabs_manageServices"]').should('be.visible')
-    cy.get('div[id*="serviceLandingPageTabs_manageServices"]').click({ force: true })
     cy.contains('span', 'New Service').click()
     cy.fillField('name', serviceName)
     cy.contains('span', 'Save').click()
@@ -166,8 +164,6 @@ describe('Service V2', () => {
     cy.intercept('GET', afterFinalSaveServiceNameEndpoint, afterFinalSaveServiceNameResponse).as(
       'afterFinalSaveServiceName'
     )
-    cy.get('[id*="serviceLandingPageTabs_manageServices"]').should('be.visible')
-    cy.get('div[id*="serviceLandingPageTabs_manageServices"]').click({ force: true })
     cy.contains('span', 'New Service').click()
     cy.fillField('name', serviceName)
     cy.contains('span', 'Save').click()
@@ -231,8 +227,6 @@ describe('Service V2', () => {
     cy.intercept('GET', afterFinalSaveServiceNameEndpoint, afterFinalServiceNameWinrmResponse).as(
       'afterFinalSaveServiceNameWinrm'
     )
-    cy.get('[id*="serviceLandingPageTabs_manageServices"]').should('be.visible')
-    cy.get('div[id*="serviceLandingPageTabs_manageServices"]').click({ force: true })
     cy.contains('span', 'New Service').click()
     cy.fillField('name', serviceName)
     cy.contains('span', 'Save').click()

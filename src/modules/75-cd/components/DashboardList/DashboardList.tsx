@@ -6,17 +6,41 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { ExpandingSearchInput, Layout, Text, PageError, TableV2, TableProps } from '@harness/uicore'
 import { PopoverPosition } from '@blueprintjs/core'
+import cx from 'classnames'
+import {
+  ExpandingSearchInput,
+  Layout,
+  Text,
+  PageError,
+  TableV2,
+  TableProps,
+  Page,
+  useToaster,
+  Dialog,
+  Container,
+  useToggleOpen
+} from '@harness/uicore'
+import { useHistory, useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
-import { noop } from 'lodash-es'
+import { defaultTo, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import ServiceDetailsEmptyState from '@cd/icons/ServiceDetailsEmptyState.svg'
-import { useGetFreeOrCommunityCD } from '@common/utils/utils'
+import { useGetCommunity, useGetFreeOrCommunityCD } from '@common/utils/utils'
 import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags, useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE, COMMON_PAGE_SIZE_OPTIONS } from '@common/constants/Pagination'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { FeatureFlag } from '@common/featureFlags'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ServiceResponseDTO } from 'services/cd-ng'
+import routes from '@common/RouteDefinitions'
+import { NewEditServiceModal } from '../PipelineSteps/DeployServiceStep/NewEditServiceModal'
+import { ServiceTabs } from '../Services/utils/ServiceUtils'
+import { useServiceStore } from '../Services/common'
 import css from '@cd/components/DashboardList/DashboardList.module.scss'
 
 const PAGE_SIZE = 10
@@ -43,7 +67,8 @@ const HeaderFilterComponent: React.FC<{ onChange: (val: string) => void }> = pro
         placeholder={getString('search')}
         throttle={200}
         onChange={onChange}
-        className={css.searchIconStyle}
+        className={css.searchIcon}
+        alwaysExpanded={true}
       />
     </Layout.Horizontal>
   )
@@ -83,6 +108,109 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
   const [searchTerm, setSearchTerm] = useState('')
 
   const { getString } = useStrings()
+  const { isOpen, open: showModal, close: hideModal } = useToggleOpen()
+
+  const { fetchDeploymentList } = useServiceStore()
+  const isCommunity = useGetCommunity()
+  const history = useHistory()
+  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const { showError } = useToaster()
+  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+
+  const [isEdit, setIsEdit] = useState(false)
+  const [serviceDetails, setServiceDetails] = useState({
+    name: '',
+    identifier: '',
+    orgIdentifier,
+    projectIdentifier,
+    description: '',
+    tags: {}
+  })
+
+  useEffect(() => {
+    if (isEdit) {
+      showModal()
+    }
+  }, [isEdit])
+
+  const goToServiceDetails = useCallback(
+    (selectedService: ServiceResponseDTO): void => {
+      if (isCommunity) {
+        const newServiceData = {
+          name: defaultTo(selectedService.name, ''),
+          identifier: defaultTo(selectedService.identifier, ''),
+          orgIdentifier,
+          projectIdentifier,
+          description: defaultTo(selectedService.description, ''),
+          tags: defaultTo(selectedService.tags, {})
+        }
+        setServiceDetails({ ...newServiceData })
+        setIsEdit(true)
+        return
+      }
+      if (selectedService?.identifier) {
+        history.push({
+          pathname: routes.toServiceStudio({
+            accountId,
+            orgIdentifier,
+            projectIdentifier,
+            serviceId: selectedService?.identifier,
+            module
+          }),
+          search: isSvcEnvEntityEnabled
+            ? `tab=${ServiceTabs.Configuration}`
+            : projectIdentifier
+            ? `tab=${ServiceTabs.SUMMARY}`
+            : `tab=${ServiceTabs.REFERENCED_BY}`
+        })
+      } else {
+        showError(getString('cd.serviceList.noIdentifier'))
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [accountId, orgIdentifier, projectIdentifier, module]
+  )
+
+  const onServiceCreate = (values: ServiceResponseDTO): void => {
+    if (isSvcEnvEntityEnabled) {
+      goToServiceDetails(values)
+    } else {
+      fetchDeploymentList.current?.()
+      hideModal()
+    }
+  }
+
+  const newServiceDialog = (
+    <Dialog
+      isOpen={isOpen}
+      enforceFocus={false}
+      canEscapeKeyClose
+      canOutsideClickClose
+      onClose={() => {
+        hideModal()
+        setIsEdit(false)
+      }}
+      title={isEdit ? getString('editService') : getString('cd.addService')}
+      isCloseButtonShown
+      className={cx('padded-dialog', css.dialog)}
+    >
+      <Container>
+        <NewEditServiceModal
+          data={isEdit ? serviceDetails : { name: '', identifier: '', orgIdentifier, projectIdentifier }}
+          isEdit={isEdit}
+          isService={!isEdit}
+          onCreateOrUpdate={values => {
+            onServiceCreate(values)
+            setIsEdit(false)
+          }}
+          closeModal={() => {
+            hideModal()
+            setIsEdit(false)
+          }}
+        />
+      </Container>
+    </Dialog>
+  )
 
   useEffect(() => {
     setPageIndex(0)
@@ -96,13 +224,17 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
   const getComponent = (): React.ReactElement => {
     if (loading) {
       return (
-        <Layout.Horizontal className={css.loader}>
+        <Container className={css.listStateContainer}>
           <PageSpinner />
-        </Layout.Horizontal>
+        </Container>
       )
     }
     if (error) {
-      return <PageError onClick={() => refetch()} />
+      return (
+        <Container className={css.listStateContainer}>
+          <PageError onClick={() => refetch()} />
+        </Container>
+      )
     }
     if (!filteredData?.length) {
       return (
@@ -124,6 +256,7 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
       <TableV2<T>
         columns={columns}
         data={filteredData.slice(pageSize * pageIndex, pageSize * (pageIndex + 1))}
+        className={css.table}
         pagination={{
           itemCount: filteredData.length,
           pageSize,
@@ -152,18 +285,29 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
 
   return (
     <Layout.Vertical className={css.container}>
-      <Layout.Horizontal
-        flex={{ distribution: 'space-between' }}
-        padding={{ top: 'medium', bottom: 'medium' }}
-        className={css.listHeader}
-      >
+      <Page.SubHeader className={css.subHeader}>
+        <RbacButton
+          intent="primary"
+          data-testid="add-service"
+          icon="plus"
+          iconProps={{ size: 10 }}
+          text={getString('newService')}
+          permission={{
+            permission: PermissionIdentifier.EDIT_SERVICE,
+            resource: {
+              resourceType: ResourceType.SERVICE
+            }
+          }}
+          onClick={showModal}
+        />
+        <HeaderCustomSecondary onChange={onSearchChange} />
+      </Page.SubHeader>
+      <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ right: 'large', left: 'large' }}>
         <HeaderCustomPrimary total={filteredData.length} />
-        <Layout.Horizontal>
-          <HeaderCustomSecondary onChange={onSearchChange} />
-          {sortList}
-        </Layout.Horizontal>
+        {sortList}
       </Layout.Horizontal>
       {getComponent()}
+      {newServiceDialog}
     </Layout.Vertical>
   )
 }

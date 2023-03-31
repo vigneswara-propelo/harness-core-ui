@@ -1,6 +1,6 @@
 import {
   servicesRoute,
-  servicesCall,
+  servicesDetailV2,
   servicesUpsertCall,
   pageHeaderClassName
 } from '../../support/70-pipeline/constants'
@@ -14,11 +14,11 @@ describe('Services for Pipeline', () => {
   })
 
   it('Service Addition & YAML/visual parity', () => {
-    cy.intercept('GET', servicesCall, { fixture: 'ng/api/servicesV2/service.empty.json' }).as('emptyServicesList')
+    cy.intercept('GET', servicesDetailV2, { fixture: 'ng/api/servicesV2/servicesDetailV2.empty.json' }).as(
+      'emptyServicesList'
+    )
     cy.wait(1000)
     cy.visitPageAssertion(pageHeaderClassName)
-    cy.contains('div', 'Manage Service').should('be.visible')
-    cy.contains('div', 'Manage Service').click()
     cy.wait('@emptyServicesList')
     cy.wait(500)
     cy.contains('span', 'New Service').should('be.visible')
@@ -50,16 +50,13 @@ describe('Services for Pipeline', () => {
   })
 
   it('Services Assertion and Edit', () => {
-    cy.intercept('GET', servicesCall, { fixture: 'ng/api/servicesV2/batch.post.json' }).as('servicesList')
+    cy.intercept('GET', servicesDetailV2, { fixture: 'ng/api/servicesV2/servicesDetailV2.json' }).as('servicesList')
     cy.wait(1000)
     cy.visitPageAssertion(pageHeaderClassName)
-    cy.contains('div', 'Manage Service').should('be.visible')
-    cy.contains('div', 'Manage Service').click()
     cy.wait('@servicesList')
     cy.wait(500)
 
     cy.contains('p', 'testService').should('be.visible')
-    cy.contains('p', 'Test Service Description').should('be.visible')
 
     cy.get('span[data-icon="main-tags"]').should('be.visible')
     cy.get('span[data-icon="main-tags"]').trigger('mouseover')
@@ -67,7 +64,6 @@ describe('Services for Pipeline', () => {
     cy.contains('span', 'serviceTag').should('be.visible')
     cy.get('span[data-icon="main-tags"]').trigger('mouseout').wait(500)
 
-    cy.get('span[icon="grid-view"]').click()
     cy.get('span[data-icon="Options"]').should('be.visible')
     cy.get('span[data-icon="Options"]').click()
     cy.contains('div', 'Edit').should('be.visible').click({ force: true })
@@ -84,29 +80,23 @@ describe('Services for Pipeline', () => {
     cy.contains('span', 'serviceTag').should('be.visible')
 
     //upsert call
-    cy.intercept('GET', servicesUpsertCall, { fixture: 'ng/api/servicesV2/servicesUpdate.json' })
-    cy.intercept('GET', servicesCall, { fixture: 'ng/api/servicesV2/batch.post.update.json' }).as('serviceListUpdate')
+    cy.intercept('PUT', servicesUpsertCall, { fixture: 'ng/api/servicesV2/servicesUpdate.json' }).as(
+      'serviceUpdateCall'
+    )
     cy.contains('span', 'Save').click()
 
-    //Updated list
-    cy.wait('@serviceListUpdate')
-
-    //check if list updated
-    cy.contains('p', 'NewtestService').should('be.visible')
+    //check if service updated
     cy.contains('span', 'Service updated successfully').should('be.visible')
   })
 
   it('Services Assertion and Deletion', () => {
-    cy.intercept('GET', servicesCall, { fixture: 'ng/api/servicesV2/batch.post.json' }).as('servicesList')
+    cy.intercept('GET', servicesDetailV2, { fixture: 'ng/api/servicesV2/servicesDetailV2.json' }).as('servicesList')
     cy.wait(1000)
     cy.visitPageAssertion(pageHeaderClassName)
-    cy.contains('div', 'Manage Service').should('be.visible')
-    cy.contains('div', 'Manage Service').click()
     cy.wait('@servicesList')
     cy.wait(500)
 
     cy.contains('p', 'testService').should('be.visible')
-    cy.contains('p', 'Test Service Description').should('be.visible')
 
     cy.get('span[data-icon="main-tags"]').should('be.visible')
     cy.get('span[data-icon="main-tags"]').trigger('mouseover')
@@ -114,7 +104,6 @@ describe('Services for Pipeline', () => {
     cy.contains('span', 'serviceTag').should('be.visible')
     cy.get('span[data-icon="main-tags"]').trigger('mouseout').wait(500)
 
-    cy.get('span[icon="grid-view"]').click()
     cy.get('span[data-icon="Options"]').should('be.visible')
     cy.get('span[data-icon="Options"]').click()
     cy.contains('div', 'Delete').should('be.visible').click({ force: true })

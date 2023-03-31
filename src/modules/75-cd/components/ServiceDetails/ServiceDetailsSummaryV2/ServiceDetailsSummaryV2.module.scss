@@ -396,7 +396,7 @@
 
 .overflowOpenTasks {
   overflow: auto;
-  max-height: 860px;
+  height: calc(100vh - 140px);
 }
 
 .openTasksBgColor {

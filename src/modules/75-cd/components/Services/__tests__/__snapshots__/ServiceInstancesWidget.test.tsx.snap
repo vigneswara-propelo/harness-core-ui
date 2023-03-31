@@ -3,92 +3,88 @@
 exports[`ServiceInstancesWidget render 1`] = `
 <div>
   <div
-    class="bp3-card bp3-elevation-0 Card--card card"
+    class="Layout--vertical StyledProps--main serviceInstanceWidget"
+    style="width: 248px;"
   >
     <div
-      class="Layout--vertical StyledProps--main"
-      style="width: 248px;"
+      class="Layout--horizontal StyledProps--main topSection"
     >
       <div
-        class="Layout--horizontal StyledProps--main topSection"
+        class="Layout--vertical StyledProps--main"
+        style="width: 100%;"
       >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey600"
+        >
+          services
+        </p>
         <div
-          class="Layout--vertical StyledProps--main"
-          style="width: 100%;"
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between"
         >
           <p
-            class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey600"
+            class="StyledProps--font StyledProps--main text StyledProps--color StyledProps--color-black StyledProps--font-weight-bold"
           >
-            services
+            10
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main bottomSection"
+    >
+      <div
+        class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-bottom-xsmall"
+        >
+          common.subscriptions.usage.serviceInstances
+        </p>
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-distribution-space-between"
+        >
+          <p
+            class="StyledProps--font StyledProps--main text StyledProps--color StyledProps--color-black StyledProps--font-weight-bold"
+          >
+            20
           </p>
           <div
-            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between"
+            class="StyledProps--font StyledProps--main"
+            style="height: 65px;"
           >
-            <p
-              class="StyledProps--font StyledProps--main text StyledProps--color StyledProps--color-black StyledProps--font-weight-bold"
-            >
-              10
-            </p>
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-distribution-space-between"
+              style="height: 100%;"
+            />
           </div>
         </div>
       </div>
       <div
-        class="Layout--vertical StyledProps--main bottomSection"
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between"
       >
         <div
-          class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
         >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-bottom-xsmall"
-          >
-            common.subscriptions.usage.serviceInstances
-          </p>
           <div
-            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-distribution-space-between"
+            class="circle"
+          />
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey500"
           >
-            <p
-              class="StyledProps--font StyledProps--main text StyledProps--color StyledProps--color-black StyledProps--font-weight-bold"
-            >
-              20
-            </p>
-            <div
-              class="StyledProps--font StyledProps--main"
-              style="height: 65px;"
-            >
-              <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-distribution-space-between"
-                style="height: 100%;"
-              />
-            </div>
-          </div>
+            cd.serviceDashboard.nonProd (10)
+          </p>
         </div>
         <div
-          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between"
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
         >
           <div
-            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+            class="circle"
+          />
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey500"
           >
-            <div
-              class="circle"
-            />
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey500"
-            >
-              cd.serviceDashboard.nonProd (10)
-            </p>
-          </div>
-          <div
-            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
-          >
-            <div
-              class="circle"
-            />
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey500"
-            >
-              cd.serviceDashboard.prod (10)
-            </p>
-          </div>
+            cd.serviceDashboard.prod (10)
+          </p>
         </div>
       </div>
     </div>

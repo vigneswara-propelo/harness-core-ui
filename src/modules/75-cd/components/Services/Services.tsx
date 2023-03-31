@@ -5,20 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Tabs } from '@harness/uicore'
-import type { TabId } from '@blueprintjs/core'
+import React, { useState } from 'react'
+import { Button } from '@harness/uicore'
 import moment from 'moment'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import { useGetCommunity } from '@common/utils/utils'
-import {
-  startOfDay,
-  TimeRangeSelector,
-  TimeRangeSelectorProps
-} from '@common/components/TimeRangeSelector/TimeRangeSelector'
-import { useLocalStorage, useUpdateQueryParams } from '@common/hooks'
+import { startOfDay, TimeRangeSelectorProps } from '@common/components/TimeRangeSelector/TimeRangeSelector'
+import { useLocalStorage } from '@common/hooks'
 import { convertStringToDateTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import { BannerEOL } from '@pipeline/components/BannerEOL/BannerEOL'
 import { DeploymentsTimeRangeContext, ServiceStoreContext, useServiceStore } from './common'
@@ -26,14 +21,13 @@ import { DeploymentsTimeRangeContext, ServiceStoreContext, useServiceStore } fro
 import { ServicesListPage } from './ServicesListPage/ServicesListPage'
 import { ServicesDashboardPage } from './ServicesDashboardPage/ServicesDashboardPage'
 
-import css from './Services.module.scss'
-
 export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showServicesDashboard }) => {
-  const { view, setView, fetchDeploymentList } = useServiceStore()
+  const { view, setView, fetchDeploymentList, refetchServiceDashboard } = useServiceStore()
   const { getString } = useStrings()
   const isCommunity = useGetCommunity()
   const [showBanner, setShowBanner] = React.useState<boolean>(false)
-  const { replaceQueryParams } = useUpdateQueryParams()
+
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
 
   const [timeRange, setTimeRange] = useLocalStorage<TimeRangeSelectorProps>(
     'serviceTimeRange',
@@ -51,7 +45,10 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
       value={{
         view,
         setView,
-        fetchDeploymentList
+        fetchDeploymentList,
+        isPageLoading,
+        refetchServiceDashboard,
+        setIsPageLoading
       }}
     >
       <BannerEOL isVisible={showBanner} />
@@ -60,7 +57,15 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
         breadcrumbs={<NGBreadcrumbs />}
         toolbar={
           showServicesDashboard && (
-            <TimeRangeSelector timeRange={resultTimeFilterRange?.range} setTimeRange={setTimeRange} minimal />
+            <Button
+              intent="primary"
+              icon="refresh"
+              onClick={() => refetchServiceDashboard.current?.()}
+              minimal
+              tooltipProps={{ isDark: true }}
+              tooltip={getString('common.refresh')}
+              disabled={isPageLoading}
+            />
           )
         }
       />
@@ -72,35 +77,7 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
         />
       ) : (
         <DeploymentsTimeRangeContext.Provider value={{ timeRange: resultTimeFilterRange, setTimeRange }}>
-          <div className={css.tabs}>
-            <Tabs
-              id={'serviceLandingPageTabs'}
-              defaultSelectedTabId={'dashboard'}
-              onChange={(newTabId: TabId, prevTabId: TabId) => {
-                if (newTabId === prevTabId) return
-                // clear pagination query params as APIs used in <ServicesDashboardPage /> and <ServicesListPage /> are different
-                replaceQueryParams({})
-              }}
-              tabList={[
-                {
-                  id: 'dashboard',
-                  title: getString('dashboardLabel'),
-                  panel: <ServicesDashboardPage />
-                },
-                {
-                  id: 'manageServices',
-                  title: getString('cd.serviceDashboard.manageServiceLabel'),
-                  panel: (
-                    <ServicesListPage
-                      setShowBanner={status => {
-                        setShowBanner(status)
-                      }}
-                    />
-                  )
-                }
-              ]}
-            />
-          </div>
+          <ServicesDashboardPage />
         </DeploymentsTimeRangeContext.Provider>
       )}
     </ServiceStoreContext.Provider>

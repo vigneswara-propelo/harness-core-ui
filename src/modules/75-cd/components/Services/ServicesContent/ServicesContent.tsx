@@ -7,7 +7,8 @@
 
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, Card, Layout } from '@harness/uicore'
+import { Card, Container, Layout } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
 import moment from 'moment'
 import { Page } from '@common/exports'
 import {
@@ -34,11 +35,12 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { Sort, SortFields } from '@common/utils/listUtils'
-import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
+import { convertStringToDateTimeRange, getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
+import { startOfDay, TimeRangeSelector } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import css from '@cd/components/Services/ServicesContent/ServicesContent.module.scss'
 
 export const ServicesContent: React.FC = () => {
-  const { view, fetchDeploymentList } = useServiceStore()
+  const { view, fetchDeploymentList, refetchServiceDashboard, setIsPageLoading } = useServiceStore()
   const { getString } = useStrings()
 
   const { timeRange, setTimeRange } = useContext(DeploymentsTimeRangeContext)
@@ -46,6 +48,13 @@ export const ServicesContent: React.FC = () => {
     [SortFields, Sort] | undefined
   >(PreferenceScope.USER, 'sortOptionServiceDash')
   const [sort, setSort] = useState<[SortFields, Sort]>(savedSortOption || [SortFields.LastModifiedAt, Sort.DESC])
+
+  const resultTimeFilterRange = convertStringToDateTimeRange(
+    defaultTo(timeRange, {
+      range: [startOfDay(moment().subtract(1, 'month').add(1, 'day')), startOfDay(moment())],
+      label: getString('common.duration.month')
+    })
+  )
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
 
@@ -126,42 +135,41 @@ export const ServicesContent: React.FC = () => {
     )
   }
   const refetchMostActiveServicesRef = useRef<MostActiveServicesRef>(null)
-  const refreshServices = () => {
+  const refreshServices = React.useCallback(() => {
     serviceDetailsRefetch()
     refetchGetServicesGrowthTrend()
     refetchMostActiveServicesRef.current?.refetchData()
-  }
+  }, [refetchGetServicesGrowthTrend, serviceDetailsRefetch])
+
+  useEffect(() => {
+    refetchServiceDashboard.current = refreshServices
+    setIsPageLoading?.(serviceDetailsLoading || servicesGrowthTrendLoading)
+  }, [refetchServiceDashboard, refreshServices, serviceDetailsLoading, servicesGrowthTrendLoading, setIsPageLoading])
+
   return (
     <Page.Body className={css.pageBody}>
-      <Layout.Vertical className={css.container}>
-        <Layout.Horizontal className={css.refreshButton}>
-          <Button
-            intent="primary"
-            icon="refresh"
-            onClick={refreshServices}
-            minimal
-            tooltipProps={{ isDark: true }}
-            tooltip={getString('common.refresh')}
-            disabled={serviceDetailsLoading || servicesGrowthTrendLoading}
-          />
-        </Layout.Horizontal>
-        <DeploymentsTimeRangeContext.Provider value={{ timeRange, setTimeRange }}>
+      <DeploymentsTimeRangeContext.Provider value={{ timeRange, setTimeRange }}>
+        <Layout.Vertical className={css.container}>
           {view === Views.INSIGHT && (
-            <Layout.Horizontal margin={{ bottom: 'large' }}>
-              <ServiceInstancesWidget {...serviceInstanceProps} />
-              <Card className={css.card}>
+            <Card className={css.card}>
+              <Container flex margin={{ bottom: 'large' }} className={css.timeSelectorClass}>
+                <TimeRangeSelector timeRange={resultTimeFilterRange?.range} setTimeRange={setTimeRange} minimal />
+              </Container>
+              <Layout.Horizontal>
+                <ServiceInstancesWidget {...serviceInstanceProps} />
+                <div className={css.separator} />
                 <MostActiveServicesWidgetRef
                   title={getString('common.mostActiveServices')}
                   ref={refetchMostActiveServicesRef}
                 />
                 <div className={css.separator} />
                 <DeploymentsWidget />
-              </Card>
-            </Layout.Horizontal>
+              </Layout.Horizontal>
+            </Card>
           )}
-          <ServicesList {...serviceDetailsProps} />
-        </DeploymentsTimeRangeContext.Provider>
-      </Layout.Vertical>
+        </Layout.Vertical>
+        <ServicesList {...serviceDetailsProps} />
+      </DeploymentsTimeRangeContext.Provider>
     </Page.Body>
   )
 }

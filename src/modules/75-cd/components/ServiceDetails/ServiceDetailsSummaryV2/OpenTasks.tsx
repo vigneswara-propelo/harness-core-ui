@@ -93,6 +93,12 @@ export default function OpenTasks(): JSX.Element {
     }
   }
 
+  const onDrawerClose = (): void => {
+    setDrawerOpen?.(false)
+    drawerOpenFromBanner.current && setNotificationPopoverVisibility?.(true)
+    drawerOpenFromBanner.current = false
+  }
+
   return (
     <>
       {bannerVisible && countOfTasks ? (
@@ -128,17 +134,20 @@ export default function OpenTasks(): JSX.Element {
           />
         </Container>
       ) : null}
-      <Drawer enforceFocus={false} size={'calc(100% - 650px)'} isOpen={!!drawerOpen} data-testid={'openTaskDrawer'}>
+      <Drawer
+        enforceFocus={false}
+        size={'calc(100% - 650px)'}
+        isOpen={!!drawerOpen}
+        data-testid={'openTaskDrawer'}
+        canOutsideClickClose={true}
+        onClose={onDrawerClose}
+      >
         <Button
           minimal
           className={style.almostFullScreenCloseBtn}
           icon="cross"
           withoutBoxShadow
-          onClick={() => {
-            setDrawerOpen?.(false)
-            drawerOpenFromBanner.current && setNotificationPopoverVisibility?.(true)
-            drawerOpenFromBanner.current = false
-          }}
+          onClick={onDrawerClose}
         />
         <Layout.Vertical padding="xxxlarge" className={css.openTasksBgColor} height={'100vh'}>
           <Text font={{ variation: FontVariation.BLOCKQUOTE }} padding={{ bottom: 'xlarge' }}>

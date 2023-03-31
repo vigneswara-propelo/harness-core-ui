@@ -25,13 +25,19 @@ export type ParamsType = {
 export interface ServiceStore {
   view: Views
   setView: Dispatch<SetStateAction<Views>>
-  fetchDeploymentList: MutableRefObject<(() => void) | unknown>
+  fetchDeploymentList: MutableRefObject<(() => void) | null>
+  refetchServiceDashboard: MutableRefObject<(() => void) | null>
+  isPageLoading: boolean
+  setIsPageLoading: Dispatch<SetStateAction<boolean>>
 }
 
-export const ServiceStoreContext = createContext({
+export const ServiceStoreContext = createContext<ServiceStore>({
   view: Views.INSIGHT,
   setView: noop,
-  fetchDeploymentList: createRef()
+  fetchDeploymentList: createRef(),
+  refetchServiceDashboard: createRef(),
+  isPageLoading: false,
+  setIsPageLoading: noop
 })
 
 export const useServiceStore = (): ServiceStore => useContext(ServiceStoreContext)

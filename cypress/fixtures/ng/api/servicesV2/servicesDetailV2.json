@@ -1,0 +1,38 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "serviceDeploymentDetailsList": [
+      {
+        "serviceName": "testService",
+        "serviceIdentifier": "testService",
+        "description": "Test Service Description",
+        "tags": { "serviceTag": "" },
+        "deploymentTypeList": null,
+        "totalDeployments": 0,
+        "totalDeploymentChangeRate": {
+          "percentChange": 0,
+          "trend": "NO_CHANGE"
+        },
+        "successRate": 0,
+        "successRateChangeRate": {
+          "percentChange": 0,
+          "trend": "NO_CHANGE"
+        },
+        "failureRate": 0,
+        "failureRateChangeRate": {
+          "percentChange": 0,
+          "trend": "NO_CHANGE"
+        },
+        "frequency": 0,
+        "frequencyChangeRate": {
+          "percentChange": 0,
+          "trend": "NO_CHANGE"
+        },
+        "instanceCountDetails": null,
+        "lastPipelineExecuted": null
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "cb1a9445-483e-462e-8158-411b312f12b8"
+}
