@@ -3,7 +3,7 @@
 exports[`RouteWithLayout basic 1`] = `
 <div>
   <div
-    class="main"
+    class="main flex"
     data-layout="default"
   >
     <div>
@@ -99,7 +99,7 @@ exports[`RouteWithLayout minimal 1`] = `
 exports[`RouteWithLayout that the license store will render the child if the license value is not present 1`] = `
 <div>
   <div
-    class="main"
+    class="main flex"
     data-layout="default"
   >
     <div>
@@ -184,7 +184,7 @@ exports[`RouteWithLayout that the license store will route to the CI trial page 
 exports[`RouteWithLayout that the license store will route to the subscriptions page if the trial is expired 1`] = `
 <div>
   <div
-    class="main"
+    class="main flex"
     data-layout="default"
   >
     <div>
