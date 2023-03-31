@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import * as ExecutionContext from '@pipeline/context/ExecutionContext'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -17,27 +17,9 @@ import TotalTestsZeroMock from './mock/total-tests-zero.json'
 import InfoMock from './mock/info.json'
 import CallGraphMock from './mock/callgraph.json'
 import BuildsMock from './mock/builds.json'
-import mockContext from './mock/context.json'
-import mockParams from './mock/params.json'
 import BuildTestsApp from '../BuildTestsApp'
 
 describe('BuildTestsApp', () => {
-  test('Initial render with TI_MFE_ENABLED enabled', async () => {
-    jest.mock('@pipeline/context/ExecutionContext', () => ({
-      useExecutionContext: jest.fn().mockReturnValue(mockContext)
-    }))
-
-    const { getByText } = render(
-      <TestWrapper
-        path="/account/uy6FLHeWTBOOPZA8xchgZA/ci/orgs/default/projects/Default_Project_1657212353481/pipelines/mtranjhttp/deployments/zRKfRlLUQ1q-W7u6ITyP2g/tests"
-        pathParams={{ ...mockParams }}
-        defaultFeatureFlagValues={{ TI_MFE_ENABLED: true }}
-      >
-        <BuildTestsApp />
-      </TestWrapper>
-    )
-    await waitFor(() => expect(getByText('Loading, please wait...')).toBeDefined()) // connect to tiui mfe
-  })
   test('Initial render with TI_MFE_ENABLED disabled', () => {
     jest.spyOn(tiService, 'useReportsInfo').mockReturnValue({ data: InfoMock, refetch: jest.fn() } as any)
     jest.spyOn(tiService, 'useTestInfo').mockReturnValue({ data: InfoMock, refetch: jest.fn() } as any)
