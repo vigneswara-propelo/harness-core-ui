@@ -7,11 +7,14 @@
 
 import type { CompletionItemKind } from 'vscode-languageserver-types'
 import type { GetYamlSchemaQueryParams } from 'services/cd-ng'
+import type { PluginMetadataResponse } from 'services/ci'
+import type { Status } from '@common/utils/Constants'
 
 export interface YamlBuilderHandlerBinding {
   getLatestYaml: () => string
   setLatestYaml?: (json: Record<string, any>) => void
   getYAMLValidationErrorMap: () => Map<number, string>
+  addUpdatePluginIntoExistingYAML?: (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean) => void
 }
 
 export type InvocationMapFunction = (
@@ -55,6 +58,8 @@ export interface YamlBuilderProps {
   shouldShowPluginsPanel?: boolean
   onEditorResize?: (isExpanded: boolean) => void
   customCss?: React.HTMLAttributes<HTMLDivElement>['className']
+  setPlugin?: (plugin: Record<string, any>) => void
+  setPluginOpnStatus?: (status: Status) => void
 }
 
 export interface CompletionItemInterface {
@@ -81,4 +86,19 @@ export interface SnippetFetchResponse {
   snippet: string
   error?: any
   loading: boolean
+}
+
+export enum PluginType {
+  Script = 'script',
+  Plugin = 'plugin',
+  Bitrise = 'bitrise',
+  Action = 'action'
+}
+
+export interface PluginAddUpdateMetadata {
+  pluginType: PluginType
+  pluginData: Record<string, any>
+  pluginName: PluginMetadataResponse['name']
+  pluginUses?: PluginMetadataResponse['uses']
+  shouldInsertYAML: boolean
 }

@@ -8,14 +8,12 @@
 import React from 'react'
 import { act, screen, fireEvent, render, waitFor } from '@testing-library/react'
 import { useListPlugins } from 'services/ci'
+import { Status } from '@common/utils/Constants'
+import routes from '@common/RouteDefinitions'
+import { projectPathProps, pipelinePathProps, modulePathProps } from '@common/utils/routeUtils'
+import { TestWrapper } from '@common/utils/testUtils'
 import { PluginsPanel } from '../PluginsPanel'
 import { pluginsWithRequiredField, pluginsWithoutRequiredField } from './mocks'
-
-jest.mock('framework/strings', () => ({
-  useStrings: () => ({
-    getString: (key: string) => key
-  })
-}))
 
 const mockFetch = jest.fn(() => Promise.resolve(pluginsWithRequiredField))
 
@@ -27,14 +25,36 @@ jest.mock('services/ci', () => ({
   }))
 }))
 
+const testPath = routes.toPipelineStudioV1({
+  ...projectPathProps,
+  ...pipelinePathProps,
+  ...modulePathProps
+})
+
+const pathParams = {
+  accountId: 'dummy',
+  orgIdentifier: 'default',
+  projectIdentifier: 'dummyProject',
+  module: 'ci',
+  pipelineIdentifier: 'sample_pipeline_id'
+}
+
 describe('Test PluginsPanel component', () => {
   test('Initial render is ok', () => {
-    const { container } = render(<PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />)
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />
+      </TestWrapper>
+    )
     expect(container.querySelectorAll('[class*="pluginCategory"]').length).toBe(6)
   })
 
   test('Should not load plugins via api call for Run step category', () => {
-    const { getByText } = render(<PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />)
+    const { getByText } = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />
+      </TestWrapper>
+    )
     const runStepCategory = getByText('runPipelineText step')
     expect(runStepCategory).toBeDefined()
     act(() => {
@@ -44,7 +64,11 @@ describe('Test PluginsPanel component', () => {
   })
 
   test('Ensure plugins are filtered for Harness Plugins category', async () => {
-    const { container, getByText } = render(<PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />)
+    const { container, getByText } = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />
+      </TestWrapper>
+    )
     const harnessPluginsCategory = getByText('harness common.plugins')
     expect(harnessPluginsCategory).toBeDefined()
     act(() => {
@@ -75,7 +99,13 @@ describe('Test PluginsPanel component', () => {
     Object.defineProperty(window.location, 'href', {
       set: setHrefSpy
     })
-    const { container, getByText } = render(<PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />)
+
+    const { container, getByText, getAllByText } = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />
+      </TestWrapper>
+    )
+
     act(() => {
       fireEvent.click(getByText('harness common.plugins'))
     })
@@ -85,6 +115,7 @@ describe('Test PluginsPanel component', () => {
     })
     expect(getByText('Parallel')).toBeInTheDocument()
     expect(getByText('Stackname')).toBeInTheDocument()
+    expect(getAllByText('createOrSelectSecret').length).toBe(3)
     const addBtn = container.querySelector('button[type="submit"]')!
     act(() => {
       fireEvent.click(addBtn)
@@ -96,7 +127,11 @@ describe('Test PluginsPanel component', () => {
   })
 
   test('Select plugin label and plugins filter should be visible for Plugin categories with listing', async () => {
-    const { container, getByText } = render(<PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />)
+    const { container, getByText } = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />
+      </TestWrapper>
+    )
 
     // go to list view for Harness Plugins
     const harnessPluginsCategory = getByText('harness common.plugins')
@@ -111,7 +146,11 @@ describe('Test PluginsPanel component', () => {
   })
 
   test('Select plugin label and plugins filter should not be visible for Harness built-in steps', async () => {
-    const { container, getByText } = render(<PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />)
+    const { container, getByText } = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />
+      </TestWrapper>
+    )
     const runStepPluginCategory = getByText('runPipelineText step')
     expect(runStepPluginCategory).toBeInTheDocument()
     await act(async () => {
@@ -125,7 +164,11 @@ describe('Test PluginsPanel component', () => {
   })
 
   test('Arrow navigation takes user to correct Panel view', async () => {
-    const { container, getByText } = render(<PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />)
+    const { container, getByText } = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />
+      </TestWrapper>
+    )
     expect(getByText('runPipelineText step')).toBeInTheDocument()
 
     // nav for Harness built-in steps
@@ -177,7 +220,11 @@ describe('Test PluginsPanel component', () => {
       data: pluginsWithRequiredField,
       refetch: mockFetch
     }))
-    const { getByText } = render(<PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />)
+    const { getByText } = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />
+      </TestWrapper>
+    )
     act(() => {
       fireEvent.click(getByText('harness common.plugins'))
     })
@@ -185,5 +232,66 @@ describe('Test PluginsPanel component', () => {
       fireEvent.click(getByText('AWS CloudFormation')!)
     })
     expect(getByText('common.optionalConfig')).toBeInTheDocument()
+  })
+
+  test('Should search for plugin when its selected from the YAML view', () => {
+    ;(useListPlugins as jest.Mock).mockImplementation(() => ({
+      loading: false,
+      data: pluginsWithRequiredField,
+      refetch: mockFetch
+    }))
+    render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <PluginsPanel
+          onPluginAddUpdate={jest.fn()}
+          onPluginDiscard={jest.fn()}
+          selectedPluginFromYAMLView={{ name: 'sample_plugin' }}
+        />
+      </TestWrapper>
+    )
+    expect(mockFetch).toBeCalled()
+  })
+
+  test('Click on Add button shows success message', async () => {
+    const { container, getByText, rerender } = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />
+      </TestWrapper>
+    )
+    act(() => {
+      fireEvent.click(getByText('harness common.plugins'))
+    })
+    expect(getByText('AWS CloudFormation')).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(getByText('AWS CloudFormation')!)
+    })
+
+    const addBtn = container.querySelector('button[type="submit"]')!
+
+    const templateInputField = container.querySelector('input[name="template"]') as HTMLElement
+
+    expect(templateInputField).toBeInTheDocument()
+
+    act(() => {
+      fireEvent.change(templateInputField, {
+        target: { value: 'test_value' }
+      })
+    })
+
+    act(() => {
+      fireEvent.click(addBtn)
+    })
+
+    rerender(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <PluginsPanel
+          onPluginAddUpdate={jest.fn()}
+          onPluginDiscard={jest.fn()}
+          pluginAddUpdateOpnStatus={Status.SUCCESS}
+        />
+      </TestWrapper>
+    )
+
+    expect(getByText('common.successfullyAdded')).toBeInTheDocument()
   })
 })

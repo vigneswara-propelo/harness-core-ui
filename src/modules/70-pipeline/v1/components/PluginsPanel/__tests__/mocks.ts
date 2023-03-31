@@ -35,7 +35,7 @@ export const pluginsWithoutRequiredField = {
             name: 'stackname',
             description: 'the name of the CloudFormation stack. Required for all but validate mode.',
             required: false,
-            secret: false,
+            secret: true,
             default: null,
             allowed_values: null
           },
@@ -170,7 +170,7 @@ export const pluginsWithRequiredField = {
           {
             name: 'template',
             description: 'the path to the CloudFormation template. Required for all but delete mode.',
-            required: false,
+            required: true,
             secret: false,
             default: null,
             allowed_values: null

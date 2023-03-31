@@ -30,29 +30,16 @@ import {
 import { Input, PluginMetadataResponse, useListPlugins } from 'services/ci'
 import { useStrings } from 'framework/strings'
 import { Status } from '@common/utils/Constants'
+import { PluginType, PluginAddUpdateMetadata } from '@common/interfaces/YAMLBuilderProps'
+import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 
 import css from './PluginsPanel.module.scss'
-
-export enum PluginType {
-  Script = 'script',
-  Plugin = 'plugin',
-  Bitrise = 'bitrise',
-  Action = 'action'
-}
 
 export enum PluginKind {
   HarnessBuiltIn = 'harness-built-in',
   Harness = 'harness',
   Bitrise = 'bitrise',
   GitHubActions = 'action'
-}
-
-export interface PluginAddUpdateMetadata {
-  pluginType: PluginType
-  pluginData: Record<string, any>
-  pluginName: PluginMetadataResponse['name']
-  pluginUses?: PluginMetadataResponse['uses']
-  shouldInsertYAML: boolean
 }
 
 enum PluginPanelView {
@@ -72,7 +59,7 @@ enum PluginCategory {
 
 interface PluginsPanelInterface {
   selectedPluginFromYAMLView?: Record<string, any>
-  onPluginAddUpdate: (pluginMetadata: PluginAddUpdateMetadata, isEdit: boolean) => void
+  onPluginAddUpdate?: (pluginMetadata: PluginAddUpdateMetadata, isEdit: boolean) => void
   onPluginDiscard: () => void
   height?: React.CSSProperties['height']
   shouldEnableFormView?: boolean
@@ -85,7 +72,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     onPluginAddUpdate,
     onPluginDiscard,
     selectedPluginFromYAMLView = {},
-    pluginAddUpdateOpnStatus: pluginCrudOpnStatus = Status.TO_DO
+    pluginAddUpdateOpnStatus = Status.TO_DO
   } = props
   const { getString } = useStrings()
   const [selectedPlugin, setSelectedPlugin] = useState<PluginMetadataResponse | undefined>()
@@ -180,7 +167,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
       default:
         return <></>
     }
-  }, [pluginPanelView, pluginCategory, plugins, loading, error, query, selectedPlugin])
+  }, [pluginPanelView, pluginCategory, plugins, loading, error, query, selectedPlugin, pluginAddUpdateOpnStatus])
 
   const getPluginCategoryForPluginKind = useCallback((kind: PluginKind): PluginCategory | undefined => {
     switch (kind) {
@@ -445,7 +432,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
             formName="pluginsForm"
             onSubmit={formValues => {
               try {
-                onPluginAddUpdate(
+                onPluginAddUpdate?.(
                   {
                     pluginName:
                       kind === PluginKind.HarnessBuiltIn && selectedPluginName ? selectedPluginName : pluginName,
@@ -484,7 +471,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                         </a>
                       ) : null}
                     </Layout.Horizontal>
-                    {[Status.SUCCESS, Status.ERROR].includes(pluginCrudOpnStatus) ? (
+                    {[Status.SUCCESS, Status.ERROR].includes(pluginAddUpdateOpnStatus) ? (
                       <Container padding={{ top: 'small', bottom: 'xsmall' }}>
                         {renderPluginAddUpdateOpnStatus()}
                       </Container>
@@ -501,32 +488,44 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     ) : (
       <></>
     )
-  }, [selectedPlugin])
+  }, [selectedPlugin, pluginAddUpdateOpnStatus])
 
   const renderPluginCongigurationFormField = useCallback(
     ({ field, index }: { field: Input; index: number }): JSX.Element => {
-      const { name, type, default: defaultValue } = field
-      return name ? (
-        <Layout.Horizontal padding="xmall" key={index}>
-          {type === 'Textarea' ? (
-            <FormInput.TextArea
-              name={name}
-              label={generateLabelForPluginField(field)}
-              style={{ width: '100%' }}
-              placeholder={defaultValue}
-            />
-          ) : (
-            <FormInput.Text
-              name={name}
-              label={generateLabelForPluginField(field)}
-              style={{ width: '100%' }}
-              placeholder={defaultValue}
-            />
-          )}
-        </Layout.Horizontal>
-      ) : (
-        <></>
-      )
+      const { name, type, default: defaultValue, secret: isFieldOfSecretType } = field
+      if (name) {
+        switch (type) {
+          case 'Textarea':
+            return (
+              <FormInput.TextArea
+                name={name}
+                label={generateLabelForPluginField(field)}
+                style={{ width: '100%' }}
+                placeholder={defaultValue}
+                key={index}
+              />
+            )
+          case 'String':
+          default:
+            return isFieldOfSecretType ? (
+              <MultiTypeSecretInput
+                name={name}
+                label={generateFriendlyPluginName(name)}
+                type={'SecretText'}
+                key={index}
+              />
+            ) : (
+              <FormInput.Text
+                name={name}
+                label={generateLabelForPluginField(field)}
+                style={{ width: '100%' }}
+                placeholder={defaultValue}
+                key={index}
+              />
+            )
+        }
+      }
+      return <></>
     },
     []
   )
@@ -604,7 +603,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   }, [])
 
   const renderPluginAddUpdateOpnStatus = useCallback((): React.ReactElement => {
-    switch (pluginCrudOpnStatus) {
+    switch (pluginAddUpdateOpnStatus) {
       case Status.SUCCESS:
         return (
           <Layout.Horizontal spacing="small">
@@ -624,7 +623,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
       default:
         return <></>
     }
-  }, [pluginCrudOpnStatus, isPluginUpdateAction])
+  }, [pluginAddUpdateOpnStatus, isPluginUpdateAction])
 
   //#endregion
 

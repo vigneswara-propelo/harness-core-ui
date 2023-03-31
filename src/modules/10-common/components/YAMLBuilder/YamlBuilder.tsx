@@ -44,6 +44,7 @@ import type {
   CompletionItemInterface,
   Theme
 } from '@common/interfaces/YAMLBuilderProps'
+import { PluginAddUpdateMetadata, PluginType } from '@common/interfaces/YAMLBuilderProps'
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
 import { Status } from '@common/utils/Constants'
@@ -91,7 +92,6 @@ import {
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
-import { PluginAddUpdateMetadata, PluginsPanel, PluginType } from '../PluginsPanel/PluginsPanel'
 
 import css from './YamlBuilder.module.scss'
 import './resizer.scss'
@@ -153,7 +153,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     displayBorder = true,
     shouldShowPluginsPanel = false,
     onEditorResize,
-    customCss
+    customCss,
+    setPlugin,
+    setPluginOpnStatus
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
@@ -172,8 +174,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const editorVersionRef = useRef<number>()
   const currentCursorPosition = useRef<Position>()
   const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
-  const [selectedPlugin, setSelectedPlugin] = useState<Record<string, any>>()
-  const [pluginAddUpdateOpnStatus, setPluginAddUpdateOpnStatus] = useState<Status>()
   const [isEditorExpanded, setIsEditorExpanded] = useState<boolean>(true)
   const { module } = useParams<{
     module: Module
@@ -195,9 +195,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         setLatestYaml: (json: Record<string, any>) => {
           attempt(verifyIncomingJSON, json)
         },
-        getYAMLValidationErrorMap: () => yamlValidationErrorsRef.current
+        getYAMLValidationErrorMap: () => yamlValidationErrorsRef.current,
+        addUpdatePluginIntoExistingYAML: (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean) =>
+          addUpdatePluginIntoExistingYAML(pluginMetadata, isPluginUpdate)
       } as YamlBuilderHandlerBinding),
-    []
+    [currentYaml]
   )
 
   useEffect(() => {
@@ -715,7 +717,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const commandId = editorRef.current?.editor?.addCommand(
         0,
         () => {
-          setPluginAddUpdateOpnStatus(Status.TO_DO)
+          setPluginOpnStatus?.(Status.TO_DO)
           try {
             const numberOfLinesInSelection = getSelectionRangeOnSettingsBtnClick(cursorPosition, currentYaml)
             if (numberOfLinesInSelection) {
@@ -844,7 +846,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           })
           const stepYAMLPath = getStepYAMLPathForStepInsideAStage(closestStageIndex, closestStepIndex)
           const pluginAsStep = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
-          setSelectedPlugin(pluginAsStep)
+          setPlugin?.(pluginAsStep)
           const stepValueTokens = yamlStringify(pluginAsStep).split('\n').length
           return stepValueTokens
         } catch (e) {
@@ -986,7 +988,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           updatedYAML = yamlStringify(set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps))
           onYamlChange(updatedYAML)
           setCurrentYaml(updatedYAML)
-          setPluginAddUpdateOpnStatus(Status.SUCCESS)
+          setPluginOpnStatus?.(Status.SUCCESS)
           spotLightInsertedYAML({
             noOflinesInserted: countAllKeysInObject(pluginValuesAsStep),
             closestStageIndex,
@@ -1045,18 +1047,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           </div>
         </div>
       </Layout.Vertical>
-      {isEditorExpanded ? (
-        <PluginsPanel
-          height={height}
-          onPluginAddUpdate={addUpdatePluginIntoExistingYAML}
-          onPluginDiscard={() => {
-            setSelectedPlugin(undefined)
-            setPluginAddUpdateOpnStatus(Status.TO_DO)
-          }}
-          selectedPluginFromYAMLView={selectedPlugin}
-          pluginAddUpdateOpnStatus={pluginAddUpdateOpnStatus}
-        />
-      ) : null}
     </Layout.Horizontal>
   ) : (
     <div className={cx(customCss, { [css.main]: displayBorder }, { [css.darkBg]: theme === 'DARK' })}>
