@@ -136,7 +136,7 @@ export const getMetricAndAreaChartCustomProps = (
 
   const showSLIAreaChart =
     (isRatioBased && isWindow) || !isWindow
-      ? Boolean(goodRequestMetric) || Boolean(validRequestMetric)
+      ? Boolean(goodRequestMetric) && Boolean(validRequestMetric)
       : Boolean(validRequestMetric)
 
   return { showSLIAreaChart, validRequestGraphColor }
@@ -165,11 +165,7 @@ export const getMetricTitleAndLoading = ({
   const validRequestMetricTitle = `${getString('cv.slos.slis.ratioMetricType.validRequestsMetrics')} ( ${
     activeValidMetric?.label || validRequestMetric
   } )`
-  const metricPercentageGraphTitle = `${
-    eventType === SLIEventTypes.BAD
-      ? getString('cv.slos.slis.ratioMetricType.badRequestsByValidRequest')
-      : getString('cv.slos.slis.ratioMetricType.goodRequestsByValidRequest')
-  } ( ${activeGoodMetric?.label || goodRequestMetric} / ${activeValidMetric?.label || validRequestMetric} )`
+  const metricPercentageGraphTitle = `${getString('cv.slos.slis.ratioMetricType.goodRequestsByValidRequest')}`
   return {
     goodRequestMetricLoading,
     goodRequestMetricTitle,

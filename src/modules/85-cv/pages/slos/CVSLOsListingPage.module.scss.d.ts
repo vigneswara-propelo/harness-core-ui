@@ -9,6 +9,7 @@
 declare const styles: {
   readonly addAnnotationLink: string
   readonly annotationIcon: string
+  readonly burndownWrapper: string
   readonly cardSloAndSli: string
   readonly cardSloAndSliForCardView: string
   readonly clearButton: string
@@ -36,6 +37,7 @@ declare const styles: {
   readonly sloListingPageHeader: string
   readonly sloRiskFilterCard: string
   readonly sloTags: string
+  readonly sloWrapper: string
   readonly timelineSlider: string
   readonly titleInSloTable: string
 }

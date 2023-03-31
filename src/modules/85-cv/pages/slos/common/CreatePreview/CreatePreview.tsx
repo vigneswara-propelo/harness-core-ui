@@ -182,6 +182,7 @@ export const CreatePreview = ({ id, data }: CreatePreviewProps): JSX.Element => 
                       {eventType === SLIEventTypes.GOOD
                         ? getString('cv.slos.goodRequestMetric')
                         : getString('cv.slos.badRequestMetric')}
+                      :
                     </Text>
                     <Text font={{ variation: FontVariation.BODY }}>{goodRequestMetric}</Text>
                   </Layout.Horizontal>

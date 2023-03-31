@@ -15,7 +15,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import SliFormula from '@cv/assets/sliFormula.svg'
+import RequestFormula from '@cv/assets/RequestFormula.svg'
+import TimeWindowFormula from '@cv/assets/TimeWindowFormula.svg'
 import SLOTargetChartWrapper from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart'
 import type { SLIProps } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
@@ -44,7 +45,7 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
   const { showError } = useToaster()
   const { SRM_ENABLE_REQUEST_SLO: enableRequestSLO } = useFeatureFlags()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & { identifier: string }>()
-  const { showSLIMetricChart } = useConfigureSLIContext()
+  const { showSLIMetricChart, isWindowBased } = useConfigureSLIContext()
 
   const [metricsNames, setMetricsNames] = useState<MetricNames>({
     activeGoodMetric: { label: '', value: '' },
@@ -214,7 +215,7 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
               <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'light' }}>
                 {getString('cv.slos.sliTypeSubtitle')}
               </Text>
-              <img src={SliFormula} />
+              <img src={isWindowBased ? TimeWindowFormula : RequestFormula} />
               <PickMetric
                 formikProps={formikProps}
                 {...rest}

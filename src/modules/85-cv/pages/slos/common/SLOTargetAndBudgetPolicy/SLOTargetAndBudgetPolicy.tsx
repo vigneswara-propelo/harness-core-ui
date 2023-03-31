@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput, Heading, Icon, Layout, Text, Container } from '@harness/uicore'
+import { FormInput, Icon, Layout, Text, Container } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import SLOTargetChartWrapper from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart'
@@ -117,19 +117,12 @@ const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ chi
 
   return (
     <>
-      <Heading level={2} font={{ variation: FontVariation.FORM_TITLE }} margin={{ bottom: 'xsmall' }}>
-        {getString('cv.slos.sloTargetAndBudget.setSLOTarget')}
-      </Heading>
       <Layout.Horizontal flex={{ justifyContent: flexStart, alignItems: 'stretch' }}>
         <Container width="50%" border={{ right: true }} padding={{ right: 'xlarge' }}>
           <Layout.Vertical width="100%">
-            <Heading
-              level={4}
-              font={{ variation: FontVariation.FORM_SUB_SECTION }}
-              margin={{ top: 'small', bottom: 'medium' }}
-            >
+            <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'semi-bold' }}>
               {getString('cv.slos.sloTargetAndBudget.complianceTimePeriodTitle')}
-            </Heading>
+            </Text>
             <SloPeriodLength periodType={periodType} periodLengthType={periodLengthType} />
             <FormInput.Text
               name={SLOV2FormFields.SLO_TARGET_PERCENTAGE}

@@ -7,12 +7,6 @@ exports[`Test SLOTargetAndBudgetPolicy component should render SLOTargetAndBudge
     class="FormikForm--main"
   >
     <div>
-      <h2
-        class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--font-variation-form-title StyledProps--margin-bottom-xsmall"
-        level="2"
-      >
-        cv.slos.sloTargetAndBudget.setSLOTarget
-      </h2>
       <div
         class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-stretch"
       >
@@ -24,12 +18,11 @@ exports[`Test SLOTargetAndBudgetPolicy component should render SLOTargetAndBudge
             class="Layout--vertical StyledProps--main"
             style="width: 100%;"
           >
-            <h4
-              class="StyledProps--font StyledProps--font-h4 StyledProps--main StyledProps--font-variation-form-sub-section StyledProps--margin-top-small StyledProps--margin-bottom-medium"
-              level="4"
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
             >
               cv.slos.sloTargetAndBudget.complianceTimePeriodTitle
-            </h4>
+            </p>
             <div
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
             >

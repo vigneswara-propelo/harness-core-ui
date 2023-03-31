@@ -212,7 +212,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
                 >
-                  cv.CompositeSLO.DefineSLO
+                  cv.SimpleSLO.DefineSLO
                    
                 </p>
               </div>
@@ -223,7 +223,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
               >
-                cv.slos.defineSLOSubttitle
+                cv.SimpleSLO.DefineSLOSubtitle
               </p>
             </div>
             <div

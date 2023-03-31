@@ -283,8 +283,8 @@ export default function CreateSimpleSLOForm({
               stepList={[
                 {
                   id: CreateSimpleSLOSteps.Define_SLO_Identification,
-                  title: getString('cv.CompositeSLO.DefineSLO'),
-                  subTitle: getString('cv.slos.defineSLOSubttitle'),
+                  title: getString('cv.SimpleSLO.DefineSLO'),
+                  subTitle: getString('cv.SimpleSLO.DefineSLOSubtitle'),
                   panel: (
                     <SLOName<SLOV2Form>
                       isMultiSelect

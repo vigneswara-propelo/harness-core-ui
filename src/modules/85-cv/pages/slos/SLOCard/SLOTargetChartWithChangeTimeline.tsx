@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useCallback, useMemo, useState } from 'react'
+import cx from 'classnames'
 import { Button, ButtonVariation, Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { getMonitoredServiceIdentifiers } from '@cv/utils/CommonUtils'
@@ -27,6 +28,7 @@ import { SLOTargetChartWithChangeTimelineProps, SLOCardToggleViews } from '../CV
 import { getSLOAndErrorBudgetGraphOptions, getTimeFormatForAnomaliesCard } from '../CVSLOListingPage.utils'
 import AnnotationDetails from './components/AnnotationDetails/AnnotationDetails'
 import { addAnnotationsDrawerOptions } from './SLOCard.constants'
+import { getLeftContainerOffset } from './SLOCardContent.utils'
 import css from '../CVSLOsListingPage.module.scss'
 
 const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelineProps> = ({
@@ -63,6 +65,7 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
   const monitoredServiceIdentifiers = getMonitoredServiceIdentifiers(true, monitoredServiceDetails)
   const { startTime = currentPeriodStartTime, endTime = _endTime } = chartTimeRange ?? {}
   const isAnnotationsEnabled = useFeatureFlag(FeatureFlag.SRM_SLO_ANNOTATIONS)
+  const isSLOView = type === SLOCardToggleViews.SLO
 
   const {
     data: sloWidgetsData,
@@ -120,6 +123,8 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
     [type, sloPerformanceTrend, errorBudgetBurndown]
   )
 
+  const leftContainerOffset = getLeftContainerOffset(isSLOView, isCardView)
+
   return (
     <>
       {isAnnotationsEnabled ? (
@@ -143,7 +148,12 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
         }}
         data-testid="timeline-slider-container"
       >
-        <Container padding={{ left: isCardView ? 'huge' : 'none' }}>
+        <Container
+          className={cx({
+            [css.burndownWrapper]: isCardView && !isSLOView,
+            [css.sloWrapper]: isCardView && isSLOView
+          })}
+        >
           <SLOTargetChart
             dataPoints={dataPoints}
             customChartOptions={getSLOAndErrorBudgetGraphOptions({
@@ -162,7 +172,7 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
             minSliderWidth={75}
             maxSliderWidth={300}
             initialSliderWidth={75}
-            leftContainerOffset={85}
+            leftContainerOffset={leftContainerOffset}
             resetFocus={resetSlider}
             hideSlider={!showTimelineSlider}
             className={css.timelineSlider}

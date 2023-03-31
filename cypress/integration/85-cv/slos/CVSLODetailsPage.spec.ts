@@ -91,7 +91,7 @@ describe('CVSLODetailsPage', () => {
 
     cy.intercept('GET', getServiceLevelObjective, responseSLODashboardDetailOfCalendarType)
     cy.findByRole('button', { name: /Edit/i }).click()
-    cy.contains('p', 'Define SLO Identification').should('be.visible')
+    cy.contains('p', 'SLO Details').should('be.visible')
     cy.contains('div', 'Details').click()
 
     cy.findByRole('button', { name: /Reset Error Budget/i }).click()

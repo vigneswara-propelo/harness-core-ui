@@ -8030,6 +8030,8 @@ export interface StringsMap {
   'cv.SLOPerformanceTrend': string
   'cv.SLOTarget': string
   'cv.SLOWithName': string
+  'cv.SimpleSLO.DefineSLO': string
+  'cv.SimpleSLO.DefineSLOSubtitle': string
   'cv.ThresholdSLIValueGoodIf': string
   'cv.ThresholdValidrequests': string
   'cv.aMaximumOfThreeSLOCanBeComparedWithTheServiceHealth': string
@@ -8189,6 +8191,7 @@ export interface StringsMap {
   'cv.errorBudgetRecalculationInProgress': string
   'cv.errorBudgetRemaining': string
   'cv.errorBudgetRemainingWithMins': string
+  'cv.errorBudgetRemainingWithRequest': string
   'cv.evaluationPeriod': string
   'cv.executionLogs': string
   'cv.externalAPICalls': string
@@ -8830,6 +8833,7 @@ export interface StringsMap {
   'cv.reasonIsRequired': string
   'cv.remainingErrorBudget': string
   'cv.request': string
+  'cv.requestsRemaining': string
   'cv.required': string
   'cv.resetErrorBudget': string
   'cv.response': string

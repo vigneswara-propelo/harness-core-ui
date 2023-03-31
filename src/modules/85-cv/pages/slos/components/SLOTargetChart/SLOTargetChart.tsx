@@ -180,7 +180,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
   )
 
   if (showSLIMetricChart || showSLIAreaChart) {
-    if (isRatioBased && isInvalidRatioBased) {
+    if ((isRatioBased || !isWindowBased) && isInvalidRatioBased) {
       return getEmptyState(
         isGoodAndValidMetricSame ? getString('cv.metricForGoodAndValidRequestsShouldBeDifferent') : ''
       )

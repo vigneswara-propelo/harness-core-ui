@@ -10,7 +10,6 @@ import { Layout, Container, Heading, PillToggle, PillToggleProps, Text, Card, us
 import { Color, FontVariation } from '@harness/design-system'
 import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import UserHint from '@cv/pages/components/UserHint/UserHint'
 import type { SLODashboardWidget } from 'services/cv'
@@ -36,9 +35,7 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
   const { notificationTime } = useQueryParams<{ notificationTime?: number }>()
   const location = useLocation()
   const history = useHistory()
-  const { SRM_ENABLE_REQUEST_SLO: enableRequestSLO } = useFeatureFlags()
   const isRequestBased = serviceLevelObjective?.evaluationType === EvaluationType.REQUEST
-  const hideErrorBudgetGauge = !(enableRequestSLO && isRequestBased)
 
   const resetSlider = useCallback(() => {
     setShowTimelineSlider(false)
@@ -196,20 +193,20 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
             {renderRecalculation(serviceLevelObjective)}
             <Container height={200} className={css.errorBudgetGaugeContainer}>
               <Heading font={{ variation: headingVariation }} data-tooltip-id={'errorBudgetRemaining'}>
-                {getString('cv.errorBudgetRemainingWithMins')}
+                {getString(isRequestBased ? 'cv.errorBudgetRemainingWithRequest' : 'cv.errorBudgetRemainingWithMins')}
               </Heading>
               <ErrorBudgetGauge customChartOptions={getErrorBudgetGaugeOptions(serviceLevelObjective)} />
-              {hideErrorBudgetGauge && (
-                <Text
-                  font={{ variation: FontVariation.SMALL }}
-                  className={css.errorBudgetRemaining}
-                  width={175}
-                  data-testid="errorBudgetRemaining"
-                >
-                  {serviceLevelObjective.errorBudgetRemaining}
-                  <span style={{ display: 'block' }}>{getString('cv.minutesRemaining')}</span>
-                </Text>
-              )}
+              <Text
+                font={{ variation: FontVariation.SMALL }}
+                className={css.errorBudgetRemaining}
+                width={175}
+                margin="small"
+                data-testid="errorBudgetRemaining"
+              >
+                {`${serviceLevelObjective.errorBudgetRemaining} ${getString(
+                  isRequestBased ? 'cv.requestsRemaining' : 'cv.minutesRemaining'
+                )}`}
+              </Text>
             </Container>
             <Container className={css.flexGrowOne} style={{ overflow: 'auto' }}>
               <Container flex={{ alignItems: 'flex-start' }} margin={{ bottom: 'small' }}>

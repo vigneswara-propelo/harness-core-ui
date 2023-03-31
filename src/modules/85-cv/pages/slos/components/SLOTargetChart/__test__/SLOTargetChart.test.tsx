@@ -10,6 +10,7 @@ import userEvent from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/react'
 import type { Point } from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
+import { ConfigureSLIProvider } from '@cv/pages/slos/common/SLI/SLIContext'
 import {
   serviceLevelIndicator,
   testWrapperProps,
@@ -157,19 +158,21 @@ describe('SLOTargetChartWrapper', () => {
 
     render(
       <TestWrapper {...testWrapperProps}>
-        <SLOTargetChartWrapper
-          monitoredServiceIdentifier="Service_1_Environment_1"
-          serviceLevelIndicator={serviceLevelIndicatorThreshold}
-          retryOnError={jest.fn()}
-          showMetricChart
-          showSLIMetricChart
-          sliGraphData={{
-            dataPoints: [
-              { timeStamp: 1000, value: 10 },
-              { timeStamp: 1200, value: 11 }
-            ]
-          }}
-        />
+        <ConfigureSLIProvider showSLIMetricChart={true} isRatioBased={false} isWindowBased={true}>
+          <SLOTargetChartWrapper
+            monitoredServiceIdentifier="Service_1_Environment_1"
+            serviceLevelIndicator={serviceLevelIndicatorThreshold}
+            retryOnError={jest.fn()}
+            showMetricChart
+            showSLIMetricChart
+            sliGraphData={{
+              dataPoints: [
+                { timeStamp: 1000, value: 10 },
+                { timeStamp: 1200, value: 11 }
+              ]
+            }}
+          />
+        </ConfigureSLIProvider>
       </TestWrapper>
     )
 

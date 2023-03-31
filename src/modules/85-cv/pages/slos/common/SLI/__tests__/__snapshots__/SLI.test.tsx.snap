@@ -1544,7 +1544,7 @@ exports[`Test SLI component should render SLI metric chart component for Ratio a
                   class="StyledProps--font StyledProps--font-h6 StyledProps--main StyledProps--color StyledProps--color-primary10"
                   level="6"
                 >
-                  cv.slos.slis.ratioMetricType.goodRequestsByValidRequest ( appdMetric 1 / appdMetric 2 )
+                  cv.slos.slis.ratioMetricType.goodRequestsByValidRequest
                 </h6>
                 <h4
                   class="StyledProps--font StyledProps--font-h4 StyledProps--main StyledProps--margin-bottom-small"

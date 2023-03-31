@@ -926,7 +926,7 @@ slos:
       rolling: Rolling
       calendar: Calendar
     setSLOTarget: Set the SLO time window and target
-    complianceTimePeriodTitle: Compliance time period for evaluating SLO
+    complianceTimePeriodTitle: Time period for evaluating you SLO
   slis:
     HealthSource: Health Source to manage the service level
     HealthSourceSubTitle: It uses logs and metrics to track changes in the Service's health trend
@@ -971,6 +971,9 @@ slos:
       calendarBased: Calendar-based
       calendarBasedDefinition: Compliance periods can be set to calendar periods like a weekly, monthly or quarterly. At the end of a calendar period, you are given a performance score. The performance score, which is calculated against the performance threshold, tells you whether your service was compliant or not. Even though you may view the performance throughout the period when you use a calendar period, you only get a compliance rating for every compliance period.
       calendarBasedDefinition2: Calendar windows are more closely aligned with business planning and project work.
+SimpleSLO:
+  DefineSLO: SLO Details
+  DefineSLOSubtitle: Provide the name, description, and tags for the SLO.
 CompositeSLO:
   CreateTitle: Create a Composite Service Level Objective (SLO)
   CreateMessage: Combines multiple SLOs to measure the services for a specific time frame that contribute to a single budget.
@@ -1059,7 +1062,9 @@ errorBudgetRecalculationInProgress: Error Budget recalculation in progress
 sloAnalysisTakingLong: The SLO analysis is taking too long. Please check the execution logs and third party API call logs.
 errorBudgetRemaining: Error Budget Remaining
 errorBudgetRemainingWithMins: Error Budget Remaining (mins)
+errorBudgetRemainingWithRequest: Error Budget Remaining (requests)
 minutesRemaining: minutes remaining
+requestsRemaining: requests remaining
 errorBudgetBurnDown: Error Budget Burndown
 SLITriggered: SLI Triggered
 burnRatePerDay: Burn Rate/Day
