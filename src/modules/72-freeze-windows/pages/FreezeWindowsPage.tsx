@@ -18,7 +18,7 @@ import {
 import { Color } from '@harness/design-system'
 import React, { ReactElement, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, defer } from 'lodash-es'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useUpdateQueryParams, useQueryParams, useMutateAsGet } from '@common/hooks'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -63,7 +63,7 @@ function _FreezeWindowsPage(): React.ReactElement {
   const searchRef = useRef({} as ExpandingSearchInputHandle)
 
   const resetFilter = (): void => {
-    searchRef.current.clear()
+    defer(() => searchRef.current.clear())
     replaceQueryParams({})
   }
 
