@@ -28,7 +28,9 @@ export function NodeStatusIndicator(props: NodeStatusIndicatorProps): JSX.Elemen
 
     if (nodeStatus === ExecutionStatusEnum.Success) {
       successfulStagesCount += 1
-    } else if (nodeStatus === ExecutionStatusEnum.Failed) {
+    } else if (
+      [ExecutionStatusEnum.Failed, ExecutionStatusEnum.IgnoreFailed, ExecutionStatusEnum.Aborted].includes(nodeStatus)
+    ) {
       failedStagesCount += 1
     } else if (nodeStatus === ExecutionStatusEnum.Running) {
       runningStagesCount += 1

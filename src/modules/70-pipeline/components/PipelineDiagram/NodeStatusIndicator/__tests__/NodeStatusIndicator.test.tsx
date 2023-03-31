@@ -15,7 +15,15 @@ describe('Node Status Indicator Test', () => {
   test('Should render diagramnodes', () => {
     const { container } = render(
       <TestWrapper>
-        <NodeStatusIndicator nodeState={[{ status: 'Success' }, { status: 'Failed' }, { status: 'Running' } as any]} />
+        <NodeStatusIndicator
+          nodeState={[
+            { status: 'Success' },
+            { status: 'Failed' },
+            { status: 'Running' },
+            { status: 'IgnoreFailed' },
+            { status: 'Aborted' } as any
+          ]}
+        />
       </TestWrapper>
     )
     const successStatusLabel = container.querySelector(`[data-icon="success-tick"]`)
