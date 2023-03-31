@@ -1151,3 +1151,55 @@ export const serviceScreenLogsRadarClusterData = {
     }
   ]
 }
+
+export const monitoredServiceSLOsListResponse = {
+  status: 'SUCCESS',
+  data: {
+    totalPages: 1,
+    totalItems: 4,
+    pageItemCount: 4,
+    pageSize: 10,
+    content: [
+      {
+        sloIdentifier: 'managerapidash',
+        name: 'manager-api-dash',
+        orgName: 'cvng',
+        projectName: 'SRM QA Sign Off Automation',
+        monitoredServiceIdentifier: 'CD_prod',
+        monitoredServiceName: 'CD_prod',
+        healthSourceIdentifier: 'appdprod',
+        healthSourceName: 'appd-prod',
+        serviceIdentifier: 'CD',
+        serviceName: 'CD',
+        environmentIdentifier: 'prod',
+        environmentName: 'prod',
+        tags: { serviceLevelIndicatorType: 'AVAILABILITY' },
+        userJourneyName: 'sanity',
+        userJourneys: [{ identifier: 'sanity', name: 'sanity' }],
+        burnRate: 7.5,
+        errorBudgetRemainingPercentage: 70.0,
+        errorBudgetRemaining: 7,
+        totalErrorBudget: 10,
+        sloTargetType: 'Calender',
+        sliType: 'Availability',
+        sloType: 'Simple',
+        sloTargetPercentage: 99.9,
+        noOfActiveAlerts: 1,
+        projectParams: {
+          accountIdentifier: '-k53qRQAQ1O7DBLb9ACnjQ',
+          orgIdentifier: 'cvng',
+          projectIdentifier: 'SRM_QA_Sign_Off_Automation'
+        },
+        errorBudgetRisk: 'OBSERVE'
+      }
+    ],
+    pageIndex: 0,
+    empty: false
+  },
+  correlationId: '3827fe2c-f386-4656-8463-335d42cd22cb'
+}
+
+export const monitoredServiceSLOsFetchCall =
+  '/cv/api/slo-dashboard/widgets/list?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&monitoredServiceIdentifier=appd_prod&pageNumber=0&pageSize=10&filter='
+export const monitoredServiceSLOsRiskCountCall =
+  '/cv/api/slo-dashboard/risk-count?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&monitoredServiceIdentifier=appd_prod&filter='

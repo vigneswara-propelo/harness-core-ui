@@ -34,7 +34,9 @@ import {
   responseSLODashboardDetail,
   listMonitoredServicesForSLOs,
   listMonitoredServicesCallResponseForSLOs,
-  createSloV2
+  createSloV2,
+  accountsSLOCall,
+  accountsSLORiskCall
 } from '../../../support/85-cv/slos/constants'
 
 describe('Create SLO', () => {
@@ -42,7 +44,7 @@ describe('Create SLO', () => {
     cy.login('test', 'test')
 
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse).as('updatedListSLOsCallResponse')
-    cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
+    cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse).as('sloRiskCountCall')
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
@@ -522,5 +524,38 @@ describe('Create SLO', () => {
     cy.findByRole('button', { name: /New Health Source/i }).click()
 
     cy.contains('p', 'Add New Health Source').should('be.visible')
+  })
+
+  it('should call correct API when accounts tab is opened', () => {
+    cy.intercept('GET', getSLODetails, responseSLODashboardDetail)
+    cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse).as('getMonitoredService')
+    cy.intercept('GET', listSLOsCallWithCVNGProd, updatedListSLOsCallResponse)
+    cy.intercept('GET', getSLORiskCountWithCVNGProd, getSLORiskCountResponse)
+    cy.intercept('GET', getServiceLevelObjective, getServiceLevelObjectiveResponse)
+
+    cy.intercept('GET', accountsSLOCall, updatedListSLOsCallResponse).as('accountsTabSloCall')
+    cy.intercept('GET', accountsSLORiskCall, getSLORiskCountResponse).as('accountsRiskCall')
+
+    cy.wait('@updatedListSLOsCallResponse')
+    cy.wait('@sloRiskCountCall')
+
+    cy.get('[value="Period Type: All"]').click()
+
+    cy.findByText(/Rolling/i)
+      .scrollIntoView()
+      .click({ force: true })
+
+    cy.get('[value="Period Type: Rolling"]').should('exist')
+
+    cy.wait('@updatedListSLOsCallResponse')
+
+    cy.get('div[data-tab-id="AccountTab"]').scrollIntoView().click()
+
+    // Makes correct API call
+    cy.wait('@accountsTabSloCall')
+    cy.wait('@accountsRiskCall')
+
+    // Resets the filter
+    cy.get('[value="Period Type: All"]').should('exist')
   })
 })

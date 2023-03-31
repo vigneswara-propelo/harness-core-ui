@@ -75,6 +75,12 @@ export const getServicesCall = `/ng/api/services?routingId=${accountId}&accountI
 export const getEnvironmentsCall = `/ng/api/environments?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const createSloV2 = `/cv/api/slo/v2?*`
 
+// Accounts tab SLO calls
+export const accountsSLOCall =
+  '/cv/api/slo-dashboard/widgets/list?routingId=accountId&accountId=accountId&pageNumber=0&pageSize=10&filter='
+
+export const accountsSLORiskCall = '/cv/api/slo-dashboard/risk-count?routingId=accountId&accountId=accountId&filter='
+
 export const listSLOsCallResponse = {
   status: 'SUCCESS',
   data: { totalPages: 0, totalItems: 0, pageItemCount: 0, pageSize: 4, content: [], pageIndex: 0, empty: false },
