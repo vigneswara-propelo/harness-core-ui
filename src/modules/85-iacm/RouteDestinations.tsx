@@ -27,6 +27,7 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import PipelineStudioV1 from '@pipeline/v1/components/PipelineStudioV1/PipelineStudioV1'
+import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { IACMApp } from './components/IACMApp'
 
 const moduleParams: ModulePathParams = {
@@ -78,6 +79,7 @@ function IACMRoutes(): JSX.Element {
           sidebarProps={IACMSideNavProps}
           pipelineStudioComponentV1={PipelineStudioV1}
         />
+        <TriggersRouteDestinations moduleParams={moduleParams} sidebarProps={IACMSideNavProps} />
       </Route>
       <RouteWithLayout
         sidebarProps={IACMSideNavProps}
