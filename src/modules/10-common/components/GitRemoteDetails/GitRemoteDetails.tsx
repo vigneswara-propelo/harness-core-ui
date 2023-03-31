@@ -69,7 +69,7 @@ const GitRemoteDetails = ({
             tooltip={filePath && getTooltipContent(filePath, fileUrl)}
             tooltipProps={{
               isDark: true,
-              interactionKind: PopoverInteractionKind.HOVER,
+              interactionKind: PopoverInteractionKind.CLICK,
               position: Position.BOTTOM_LEFT
             }}
             lineClamp={1}
@@ -92,7 +92,7 @@ const GitRemoteDetails = ({
       )}
       {showBranch ? (
         readOnly ? (
-          <Text lineClamp={1} className={css.repoDetails}>
+          <Text lineClamp={1} className={css.branchDetails}>
             {branch}
           </Text>
         ) : (

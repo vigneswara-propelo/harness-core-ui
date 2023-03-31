@@ -9,5 +9,7 @@
 declare const styles: {
   readonly cachedcopy: string
   readonly dialogStyles: string
+  readonly popover: string
+  readonly reload: string
 }
 export default styles

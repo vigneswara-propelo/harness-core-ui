@@ -26,3 +26,20 @@
   }
   overflow: hidden;
 }
+
+.popover {
+  margin: 0;
+  padding: var(--spacing-5);
+  height: 100%;
+  color: white;
+  max-width: 400px;
+  border-radius: var(--spacing-3);
+  font-size: var(--font-size-small);
+  line-height: var(--font-size-medium);
+  outline: none;
+  background: var(--primary-9-dark);
+}
+
+.reload {
+  cursor: pointer;
+}

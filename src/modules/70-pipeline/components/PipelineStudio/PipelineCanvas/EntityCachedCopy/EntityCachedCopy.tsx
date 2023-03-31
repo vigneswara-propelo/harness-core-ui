@@ -8,9 +8,8 @@
 import React, { useEffect } from 'react'
 import type { GetDataError } from 'restful-react'
 import cx from 'classnames'
-import { Icon, IconName, Layout, useToggleOpen, ConfirmationDialog } from '@harness/uicore'
-import { Intent } from '@harness/design-system'
-import { Tooltip } from '@blueprintjs/core'
+import { Icon, IconName, Layout, useToggleOpen, ConfirmationDialog, Button, ButtonVariation } from '@harness/uicore'
+import { Intent, Color } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
@@ -24,6 +23,7 @@ export interface EntityCachedCopyProps {
   fetchError?: GetDataError<Failure | Error> | null
   readonly?: boolean
   className?: string
+  inlineReload?: boolean
 }
 
 export interface EntityCachedCopyHandle {
@@ -38,9 +38,9 @@ const cacheStateToIconMap: Record<CacheResponseMetadata['cacheState'], IconName>
 
 function EntityCachedCopyInner(
   props: EntityCachedCopyProps,
-  ref: React.ForwardedRef<EntityCachedCopyHandle>
+  ref?: React.ForwardedRef<EntityCachedCopyHandle>
 ): React.ReactElement {
-  const { reloadContent, cacheResponse, fetchError, reloadFromCache, readonly, className } = props
+  const { reloadContent, cacheResponse, fetchError, reloadFromCache, readonly, className, inlineReload = true } = props
   const { getString } = useStrings()
   const { isOpen: isModalOpen, close: hideModal, open: showConfirmationModal } = useToggleOpen(false)
   const { isOpen: isErrorModalOpen, close: hideErrorModal, open: showErrorModal } = useToggleOpen(false)
@@ -57,10 +57,19 @@ function EntityCachedCopyInner(
   }
 
   const tooltipContent = (
-    <>
+    <div className={css.popover}>
       <span>{getString('pipeline.pipelineCachedCopy.cachedCopyText')}</span>:{' '}
       {formatDatetoLocale(cacheResponse.lastUpdatedAt)}
-    </>
+      {inlineReload && (
+        <Icon
+          name="refresh"
+          color={Color.PRIMARY_4}
+          onClick={showConfirmationModal}
+          padding={{ left: 'small' }}
+          className={css.reload}
+        />
+      )}
+    </div>
   )
 
   React.useImperativeHandle(ref, () => ({
@@ -87,9 +96,14 @@ function EntityCachedCopyInner(
     <>
       <div className={cx(css.cachedcopy, className)}>
         <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }} spacing="small">
-          <Tooltip position="bottom" content={tooltipContent}>
-            <Icon name={cacheStateToIconMap[cacheResponse.cacheState]} />
-          </Tooltip>
+          <Button
+            minimal
+            variation={ButtonVariation.ICON}
+            icon={cacheStateToIconMap[cacheResponse.cacheState]}
+            withoutCurrentColor
+            tooltipProps={{ isDark: true, interactionKind: 'hover', position: 'bottom' }}
+            tooltip={tooltipContent}
+          />
         </Layout.Horizontal>
       </div>
       <ConfirmationDialog

@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly branchDetails: string
   readonly branchSelector: string
   readonly normalInputStyle: string
   readonly repoDetails: string

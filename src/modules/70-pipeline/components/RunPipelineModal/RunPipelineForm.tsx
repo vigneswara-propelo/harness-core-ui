@@ -223,7 +223,11 @@ function RunPipelineFormBasic({
     }
   })
 
-  const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
+  const {
+    data: pipelineResponse,
+    loading: loadingPipeline,
+    refetch: refetchPipeline
+  } = useGetPipeline({
     pipelineIdentifier,
     queryParams: {
       accountIdentifier: accountId,
@@ -811,6 +815,7 @@ function RunPipelineFormBasic({
                     stageExecutionData={stageExecutionData}
                     executionStageList={executionStageList}
                     runModalHeaderTitle={formTitleText}
+                    refetchPipeline={refetchPipeline}
                   />
                   <RequiredStagesInfo
                     selectedStageData={selectedStageData}

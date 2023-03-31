@@ -22,6 +22,7 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type {
+  CacheResponseMetadata,
   ResponseInputSetTemplateWithReplacedExpressionsResponse,
   ResponseListStageExecutionResponse,
   ResponsePMSPipelineResponseDTO
@@ -39,6 +40,7 @@ import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetai
 import GitPopover from '../GitPopover/GitPopover'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 
+import { EntityCachedCopy } from '../PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import css from './RunPipelineForm.module.scss'
 
 export interface RunModalHeaderProps {
@@ -57,6 +59,7 @@ export interface RunModalHeaderProps {
   stageExecutionData: ResponseListStageExecutionResponse | null
   executionStageList: SelectOption[]
   runModalHeaderTitle: string
+  refetchPipeline: any
 }
 
 export default function RunModalHeader(props: RunModalHeaderProps): React.ReactElement | null {
@@ -75,7 +78,8 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
     formErrors,
     stageExecutionData,
     executionStageList,
-    runModalHeaderTitle
+    runModalHeaderTitle,
+    refetchPipeline
   } = props
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
@@ -93,6 +97,12 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
   const isStageExecutionDisabled = (): boolean => {
     //stageExecutionData?.data is empty array when allowStageExecution is set to false in advanced tab
     return Boolean(pipelineExecutionId) || isEmpty(stageExecutionData?.data)
+  }
+
+  const handleReloadFromCache = () => {
+    refetchPipeline({
+      requestOptions: { headers: { 'Load-From-Cache': 'false' } }
+    })
   }
 
   const stageExecutionDisabledTooltip = isStageExecutionDisabled() ? 'stageExecutionDisabled' : undefined
@@ -195,6 +205,13 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
             fileUrl={pipelineResponse?.data?.gitDetails?.fileUrl}
             flags={{ readOnly: true }}
           />
+          {!isEmpty(pipelineResponse?.data?.cacheResponse) && (
+            <EntityCachedCopy
+              reloadContent={getString('common.pipeline')}
+              cacheResponse={pipelineResponse?.data?.cacheResponse as CacheResponseMetadata}
+              reloadFromCache={handleReloadFromCache}
+            />
+          )}
         </div>
       )}
       {runClicked ? <ErrorsStrip domRef={formRefDom} formErrors={formErrors} /> : null}
