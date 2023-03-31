@@ -60,7 +60,7 @@ function RedirectToIDPDefaultPath(): React.ReactElement {
       staleTime: 15 * 60 * 1000
     }
   )
-  const onboardingStatus = data?.content?.status?.currentStatus
+  const onboardingStatus = data?.content?.status?.current_status
 
   if (!isEmpty(onboardingStatus)) {
     if (onboardingStatus === 'COMPLETED') {
