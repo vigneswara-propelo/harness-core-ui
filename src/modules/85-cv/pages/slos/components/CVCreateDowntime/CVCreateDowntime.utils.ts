@@ -21,7 +21,7 @@ import type {
   OnetimeSpec,
   RecurringDowntimeSpec
 } from 'services/cv'
-import { timezoneToOffsetObject } from '@cv/utils/dateUtils'
+import { timezoneToOffsetObjectWithDaylightSaving } from '@cv/utils/dateUtils'
 import {
   DowntimeCategory,
   DowntimeForm,
@@ -49,9 +49,11 @@ export const getFormattedTime = ({
   format?: string
 }): string => {
   if (time && timezone) {
-    const offsetFromLocal = new Date(time).getTimezoneOffset()
+    const offsetFromLocal = new Date().getTimezoneOffset()
     const offsetFromSelectedTimezone =
-      Number(timezoneToOffsetObject[timezone as keyof typeof timezoneToOffsetObject]) * 60
+      Number(
+        timezoneToOffsetObjectWithDaylightSaving[timezone as keyof typeof timezoneToOffsetObjectWithDaylightSaving]
+      ) * 60
 
     return moment(time * 1000)
       .add(offsetFromSelectedTimezone + offsetFromLocal, 'minutes')
@@ -238,7 +240,9 @@ const getEntitiesRule = (msList: MonitoredServiceDetail[], entitiesRuleType: Ent
 const getEpochTime = (time: string, timezone: string): number => {
   const offsetFromLocal = new Date(time).getTimezoneOffset()
   const offsetFromSelectedTimezone =
-    Number(timezoneToOffsetObject[timezone as keyof typeof timezoneToOffsetObject]) * 60
+    Number(
+      timezoneToOffsetObjectWithDaylightSaving[timezone as keyof typeof timezoneToOffsetObjectWithDaylightSaving]
+    ) * 60
 
   return moment(time).unix() - (offsetFromSelectedTimezone + offsetFromLocal) * 60
 }
