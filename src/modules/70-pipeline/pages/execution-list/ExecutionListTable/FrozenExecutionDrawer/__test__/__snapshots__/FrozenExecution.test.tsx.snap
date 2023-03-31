@@ -69,9 +69,12 @@ exports[`FrozenExecutionDrawer initial render - snaphshot testing 1`] = `
               />
             </svg>
           </span>
-          <span>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main text"
+            style="--text-line-clamp: 1;"
+          >
             pipeline.executionStatus.AbortedByFreeze
-          </span>
+          </p>
         </div>
       </div>
       <span

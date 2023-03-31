@@ -1009,9 +1009,12 @@ exports[`ServicesList render 1`] = `
                         />
                       </svg>
                     </span>
-                    <span>
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main text"
+                      style="--text-line-clamp: 1;"
+                    >
                       pipeline.executionStatus.Success
-                    </span>
+                    </p>
                   </div>
                 </div>
               </div>

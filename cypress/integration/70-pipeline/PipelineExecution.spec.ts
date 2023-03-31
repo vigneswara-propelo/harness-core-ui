@@ -60,7 +60,7 @@ describe('Pipeline Execution', () => {
 
     cy.get('*[class^="ExecutionStatusLabel"]').within(() => {
       cy.get('span[data-icon="loading"]').should('be.visible')
-      cy.contains('span', 'RUNNING').should('be.visible')
+      cy.contains('p', 'RUNNING').should('be.visible')
     })
     cy.wait(3000)
     cy.contains('div', 'testPipeline_Cypressss').should('be.visible')
@@ -92,7 +92,7 @@ describe('Pipeline Execution', () => {
           cy.get('span[icon="warning-sign"]')
             .should('be.visible')
             .siblings()
-            .contains('span', 'FAILED')
+            .contains('p', 'FAILED')
             .should('be.visible')
           cy.contains('p', 'testService').should('be.visible')
           cy.contains('p', 'testEnv').should('be.visible')
@@ -134,11 +134,7 @@ describe('Pipeline Execution', () => {
         cy.contains('div', 'Error Summary').should('be.visible')
         cy.contains('p', "File 'src/' not found").should('be.visible')
 
-        cy.get('span[icon="warning-sign"]')
-          .should('be.visible')
-          .siblings()
-          .contains('span', 'FAILED')
-          .should('be.visible')
+        cy.get('span[icon="warning-sign"]').should('be.visible').siblings().contains('p', 'FAILED').should('be.visible')
         cy.contains('div', 'testService').should('be.visible')
         cy.contains('li', 'testEnv').should('be.visible')
       })
@@ -181,7 +177,7 @@ describe('Pipeline Execution', () => {
     cy.get('*[class^="ExecutionStatusLabel"]').should('have.css', 'background-color').and('eq', 'rgb(2, 120, 213)')
     cy.get('*[class^="ExecutionStatusLabel"]').within(() => {
       cy.get('span[data-icon="loading"]').should('be.visible')
-      cy.contains('span', 'RUNNING').should('be.visible')
+      cy.contains('p', 'RUNNING').should('be.visible')
     })
 
     cy.wait(3000)
@@ -204,7 +200,7 @@ describe('Pipeline Execution', () => {
     cy.get("span[data-icon='execution-success']").should('be.visible')
     cy.get('*[class^="ExecutionStatusLabel"]').within(() => {
       cy.get('span[icon="tick-circle"]').should('be.visible')
-      cy.contains('span', 'SUCCESS').should('be.visible')
+      cy.contains('p', 'SUCCESS').should('be.visible')
     })
 
     cy.get('.Pane.horizontal.Pane1').within(() => {
@@ -213,11 +209,7 @@ describe('Pipeline Execution', () => {
       cy.get('.default-node').should('be.visible').trigger('mouseenter')
       cy.get('[class^="DynamicPopover-module_dynamic-popover"]').should('be.visible')
       cy.get('[class^="DynamicPopover-module_dynamic-popover"]').within(() => {
-        cy.get('span[icon="tick-circle"]')
-          .should('be.visible')
-          .siblings()
-          .contains('span', 'SUCCESS')
-          .should('be.visible')
+        cy.get('span[icon="tick-circle"]').should('be.visible').siblings().contains('p', 'SUCCESS').should('be.visible')
         cy.contains('p', 'testService').should('be.visible')
         cy.contains('p', 'testEnv').should('be.visible')
       })
@@ -276,7 +268,7 @@ describe('Pipeline Execution', () => {
     // Check for current status - Running
     cy.get('*[class^="ExecutionStatusLabel"]').within(() => {
       cy.get('span[data-icon="loading"]').should('be.visible')
-      cy.contains('span', 'RUNNING').should('be.visible')
+      cy.contains('p', 'RUNNING').should('be.visible')
     })
     cy.wait(3000)
     // Check for correct pipeline name
@@ -312,11 +304,7 @@ describe('Pipeline Execution', () => {
 
       cy.get('[class^="DynamicPopover-module_dynamic-popover"]').should('be.visible')
       cy.get('[class^="DynamicPopover-module_dynamic-popover"]').within(() => {
-        cy.get('span[icon="warning-sign"]')
-          .should('be.visible')
-          .siblings()
-          .contains('span', 'FAILED')
-          .should('be.visible')
+        cy.get('span[icon="warning-sign"]').should('be.visible').siblings().contains('p', 'FAILED').should('be.visible')
         cy.contains('p', 'Service 1').should('be.visible')
         cy.contains('p', 'Env 1').should('be.visible')
       })
@@ -328,11 +316,7 @@ describe('Pipeline Execution', () => {
     cy.get('.Pane.horizontal.Pane2').within(() => {
       cy.contains('div', 'Service 1').should('be.visible')
       cy.contains('li', 'Env 1').should('be.visible')
-      cy.get('span[icon="warning-sign"]')
-        .should('be.visible')
-        .siblings()
-        .contains('span', 'FAILED')
-        .should('be.visible')
+      cy.get('span[icon="warning-sign"]').should('be.visible').siblings().contains('p', 'FAILED').should('be.visible')
       cy.contains('div', 'Error Summary').should('be.visible')
       cy.contains(
         'p',
@@ -398,7 +382,7 @@ describe('Pipeline Execution', () => {
     cy.get('*[class^="ExecutionStatusLabel"]').should('have.css', 'background-color').and('eq', 'rgb(2, 120, 213)')
     cy.get('*[class^="ExecutionStatusLabel"]').within(() => {
       cy.get('span[data-icon="loading"]').should('be.visible')
-      cy.contains('span', 'RUNNING').should('be.visible')
+      cy.contains('p', 'RUNNING').should('be.visible')
     })
     cy.wait(1000)
     cy.contains('div', 'testPipeline_Cypressss').should('be.visible')
@@ -429,7 +413,7 @@ describe('Pipeline Execution', () => {
 
     cy.get('*[class^="ExecutionStatusLabel"]').should('have.css', 'background-color').and('eq', 'rgb(217, 218, 229)')
     cy.get('*[class^="ExecutionStatusLabel"]').within(() => {
-      cy.contains('span', 'ABORTED').should('be.visible')
+      cy.contains('p', 'ABORTED').should('be.visible')
     })
   })
 })

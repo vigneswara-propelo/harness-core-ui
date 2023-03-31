@@ -32,6 +32,7 @@ declare const styles: {
   readonly success: string
   readonly suspended: string
   readonly taskwaiting: string
+  readonly text: string
   readonly timedwaiting: string
 }
 export default styles

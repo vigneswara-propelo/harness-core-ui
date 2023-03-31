@@ -840,9 +840,12 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                             />
                           </svg>
                         </span>
-                        <span>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main text"
+                          style="--text-line-clamp: 1;"
+                        >
                           pipeline.executionStatus.Failed
-                        </span>
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -1110,9 +1113,12 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                             </circle>
                           </svg>
                         </span>
-                        <span>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main text"
+                          style="--text-line-clamp: 1;"
+                        >
                           pipeline.executionStatus.Running
-                        </span>
+                        </p>
                       </div>
                     </div>
                   </div>

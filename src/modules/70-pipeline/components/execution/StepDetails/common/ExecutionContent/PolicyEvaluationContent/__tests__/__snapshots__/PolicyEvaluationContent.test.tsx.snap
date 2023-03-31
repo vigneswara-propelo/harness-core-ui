@@ -161,9 +161,12 @@ exports[`Policy Evaluation Content snapshot for all policy set statuses and poli
                       />
                     </svg>
                   </span>
-                  <span>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main text"
+                    style="--text-line-clamp: 1;"
+                  >
                     pipeline.executionStatus.Success
-                  </span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -255,9 +258,12 @@ exports[`Policy Evaluation Content snapshot for all policy set statuses and poli
                       />
                     </svg>
                   </span>
-                  <span>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main text"
+                    style="--text-line-clamp: 1;"
+                  >
                     pipeline.executionStatus.Failed
-                  </span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -470,9 +476,12 @@ exports[`Policy Info under Policy Evaluation Content snapshot renders for failed
           />
         </svg>
       </span>
-      <span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main text"
+        style="--text-line-clamp: 1;"
+      >
         pipeline.executionStatus.Failed
-      </span>
+      </p>
     </div>
   </div>
 </div>
@@ -544,9 +553,12 @@ exports[`Policy Info under Policy Evaluation Content snapshot renders for failed
           />
         </svg>
       </span>
-      <span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main text"
+        style="--text-line-clamp: 1;"
+      >
         pipeline.executionStatus.Failed
-      </span>
+      </p>
     </div>
   </div>
 </div>
@@ -617,9 +629,12 @@ exports[`Policy Info under Policy Evaluation Content snapshot renders for failed
           />
         </svg>
       </span>
-      <span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main text"
+        style="--text-line-clamp: 1;"
+      >
         pipeline.executionStatus.Failed
-      </span>
+      </p>
     </div>
   </div>
 </div>
@@ -671,9 +686,12 @@ exports[`Policy Info under Policy Evaluation Content snapshot renders for passed
           />
         </svg>
       </span>
-      <span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main text"
+        style="--text-line-clamp: 1;"
+      >
         pipeline.executionStatus.Success
-      </span>
+      </p>
     </div>
   </div>
 </div>

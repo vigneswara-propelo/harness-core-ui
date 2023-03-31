@@ -7,12 +7,11 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Icon } from '@harness/uicore'
+import { Icon, Text } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import { String } from 'framework/strings'
-import type { StringKeys } from 'framework/strings'
+import { StringKeys, useStrings } from 'framework/strings'
 
 import css from './ExecutionStatusLabel.module.scss'
 
@@ -87,12 +86,19 @@ export default function ExecutionStatusLabel({
   label,
   withoutIcon = false
 }: ExecutionStatusLabelProps): React.ReactElement | null {
+  const { getString } = useStrings()
   if (!status) return null
 
   return (
     <div className={cx(css.status, css[status.toLowerCase() as keyof typeof css], className)}>
       {iconMap[status] && !withoutIcon ? <Icon {...iconMap[status]} className={css.icon} /> : null}
-      {label ? label : <String stringID={stringsMap[status] || 'pipeline.executionStatus.Unknown'} />}
+      {label ? (
+        label
+      ) : (
+        <Text className={css.text} lineClamp={1}>
+          {getString(stringsMap[status] || 'pipeline.executionStatus.Unknown')}
+        </Text>
+      )}
     </div>
   )
 }

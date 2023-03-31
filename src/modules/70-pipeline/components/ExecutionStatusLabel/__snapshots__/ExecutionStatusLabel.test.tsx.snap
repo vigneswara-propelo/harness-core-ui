@@ -26,9 +26,12 @@ exports[`<ExecutionStatusLabel /> tests Aborted 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Aborted
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -59,9 +62,12 @@ exports[`<ExecutionStatusLabel /> tests AbortedByFreeze 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.AbortedByFreeze
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -90,9 +96,12 @@ exports[`<ExecutionStatusLabel /> tests ApprovalRejected 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.ApprovalRejected
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -121,9 +130,12 @@ exports[`<ExecutionStatusLabel /> tests ApprovalWaiting 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Waiting
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -190,9 +202,12 @@ exports[`<ExecutionStatusLabel /> tests AsyncWaiting 1`] = `
         </circle>
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Running
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -223,9 +238,12 @@ exports[`<ExecutionStatusLabel /> tests Discontinuing 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Aborted
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -254,9 +272,12 @@ exports[`<ExecutionStatusLabel /> tests Errored 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Failed
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -283,9 +304,12 @@ exports[`<ExecutionStatusLabel /> tests Expired 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Expired
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -314,9 +338,12 @@ exports[`<ExecutionStatusLabel /> tests Failed 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Failed
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -345,9 +372,12 @@ exports[`<ExecutionStatusLabel /> tests IgnoreFailed 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Success
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -414,9 +444,12 @@ exports[`<ExecutionStatusLabel /> tests InputWaiting 1`] = `
         </circle>
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Waiting
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -445,9 +478,12 @@ exports[`<ExecutionStatusLabel /> tests InterventionWaiting 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Waiting
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -474,9 +510,12 @@ exports[`<ExecutionStatusLabel /> tests NotStarted 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.NotStarted
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -505,9 +544,12 @@ exports[`<ExecutionStatusLabel /> tests Paused 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Paused
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -536,9 +578,12 @@ exports[`<ExecutionStatusLabel /> tests Pausing 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Pausing
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -563,9 +608,12 @@ exports[`<ExecutionStatusLabel /> tests Queued 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Queued
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -590,9 +638,12 @@ exports[`<ExecutionStatusLabel /> tests QueuedExecutionConcurrencyReached 1`] = 
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.QueuedExecutionConcurrencyReached
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -617,9 +668,12 @@ exports[`<ExecutionStatusLabel /> tests QueuedLicenseLimitReached 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.QueuedLicenseLimitReached
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -648,9 +702,12 @@ exports[`<ExecutionStatusLabel /> tests ResourceWaiting 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Waiting
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -717,9 +774,12 @@ exports[`<ExecutionStatusLabel /> tests Running 1`] = `
         </circle>
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Running
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -744,9 +804,12 @@ exports[`<ExecutionStatusLabel /> tests Skipped 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Skipped
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -775,9 +838,12 @@ exports[`<ExecutionStatusLabel /> tests Success 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Success
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -804,9 +870,12 @@ exports[`<ExecutionStatusLabel /> tests Suspended 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Suspended
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -873,9 +942,12 @@ exports[`<ExecutionStatusLabel /> tests TaskWaiting 1`] = `
         </circle>
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Running
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -942,9 +1014,12 @@ exports[`<ExecutionStatusLabel /> tests TimedWaiting 1`] = `
         </circle>
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Running
-    </span>
+    </p>
   </div>
 </div>
 `;
@@ -973,9 +1048,12 @@ exports[`<ExecutionStatusLabel /> tests WaitStepRunning 1`] = `
         />
       </svg>
     </span>
-    <span>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main text"
+      style="--text-line-clamp: 1;"
+    >
       pipeline.executionStatus.Waiting
-    </span>
+    </p>
   </div>
 </div>
 `;

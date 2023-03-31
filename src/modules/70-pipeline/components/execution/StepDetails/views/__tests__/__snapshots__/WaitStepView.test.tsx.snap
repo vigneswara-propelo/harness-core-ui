@@ -593,9 +593,12 @@ exports[`Wait Step View Test renders snapshot: Policy Enforcement Tab - Wait Ste
                       />
                     </svg>
                   </span>
-                  <span>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main text"
+                    style="--text-line-clamp: 1;"
+                  >
                     pipeline.executionStatus.Success
-                  </span>
+                  </p>
                 </div>
               </div>
             </div>

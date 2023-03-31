@@ -246,9 +246,12 @@ exports[`<CustomApprovalTab/> tests failed scenario 1`] = `
           />
         </svg>
       </span>
-      <span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main text"
+        style="--text-line-clamp: 1;"
+      >
         pipeline.executionStatus.Failed
-      </span>
+      </p>
     </div>
     <div
       class="errorMsg"
