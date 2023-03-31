@@ -661,10 +661,10 @@ exports[`FrozenExecutionDrawer initial render - snaphshot testing 1`] = `
               style="width: 8%;"
             >
               <p
-                class="StyledProps--font StyledProps--main status StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-primary7"
-                data-state="ACTIVE"
+                class="StyledProps--font StyledProps--main status StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey700"
+                data-state="INACTIVE"
               >
-                ACTIVE
+                INACTIVE
               </p>
             </div>
             <div
