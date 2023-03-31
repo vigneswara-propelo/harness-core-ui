@@ -16,11 +16,13 @@ import {
   getByTestId,
   screen,
   findByText,
-  findByRole
+  findByRole,
+  within
 } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { noop } from 'lodash-es'
 import userEvent from '@testing-library/user-event'
+import produce from 'immer'
 import { TestWrapper, findDialogContainer, findPopoverContainer } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import * as pipelineng from 'services/pipeline-ng'
@@ -30,6 +32,7 @@ import { useMutateAsGet } from '@common/hooks'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { GetYamlDiffDelResponse } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { PipelineDetailsResponse } from '../../pipeline-details/__tests__/PipelineDetailsMocks'
 import InputSetList from '../InputSetList'
 import {
@@ -43,6 +46,7 @@ import {
   GetInputSetYamlDiff,
   ValidInputSetsListResponse
 } from './InputSetListMocks'
+import { INPUT_SETS_PAGE_SIZE } from '../Util'
 
 const successResponse = (): Promise<{ status: string }> => Promise.resolve({ status: 'SUCCESS', data: {} })
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -438,4 +442,55 @@ describe('Input Set List - Reconcile Button', () => {
     userEvent.click(deleteOverlayISBtn)
     await waitFor(() => expect(pipelineng.useDeleteInputSetForPipeline).toHaveBeenCalled())
   })
+})
+
+test('should render with correct default values for page size and sort', () => {
+  render(
+    <TestWrapper
+      path={TEST_PATH}
+      pathParams={{
+        accountId: 'testAcc',
+        orgIdentifier: 'testOrg',
+        projectIdentifier: 'test',
+        pipelineIdentifier: 'pipeline',
+        module: 'cd'
+      }}
+      defaultAppStoreValues={defaultAppStoreValues}
+    >
+      <InputSetList />
+    </TestWrapper>
+  )
+
+  expect(screen.getByText(`${INPUT_SETS_PAGE_SIZE}`)).toBeInTheDocument()
+  expect(screen.getByText(`Newest`)).toBeInTheDocument()
+})
+
+test('should render correct page size options when FF is enabled', async () => {
+  const updatedAppStoreValues = produce(defaultAppStoreValues, draft => {
+    draft.featureFlags.PL_NEW_PAGE_SIZE = true
+    return draft
+  })
+  const { container } = render(
+    <TestWrapper
+      path={TEST_PATH}
+      pathParams={{
+        accountId: 'testAcc',
+        orgIdentifier: 'testOrg',
+        projectIdentifier: 'test',
+        pipelineIdentifier: 'pipeline',
+        module: 'cd'
+      }}
+      defaultAppStoreValues={updatedAppStoreValues}
+    >
+      <InputSetList />
+    </TestWrapper>
+  )
+
+  const pageSizeDropdownWrapper = container.querySelector('.Pagination--pageSizeDropdown')
+  expect(pageSizeDropdownWrapper).toBeInTheDocument()
+  const pageSizeDropdown = within(pageSizeDropdownWrapper as HTMLElement).getByTestId('dropdown-button')
+  expect(pageSizeDropdown).toBeInTheDocument()
+
+  userEvent.click(pageSizeDropdown)
+  expect(await screen.findByText(`${COMMON_DEFAULT_PAGE_SIZE}`)).toBeInTheDocument()
 })

@@ -45,6 +45,9 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { UseStringsReturn } from 'framework/strings'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import type { GitQueryParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { useQueryParams } from '@common/hooks'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import {
@@ -68,7 +71,6 @@ interface TriggersListSectionProps {
   goToDetails: ({ triggerIdentifier, triggerType }: GoToEditWizardInterface) => void
   isPipelineInvalid?: boolean
   gitAwareForTriggerEnabled?: boolean
-  gotoPage: (pageNumber: number) => void
 }
 
 // type CustomColumn<T extends object> = Column<T> & {
@@ -573,15 +575,15 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
   goToEditWizard,
   goToDetails,
   isPipelineInvalid,
-  gitAwareForTriggerEnabled,
-  gotoPage
+  gitAwareForTriggerEnabled
 }): JSX.Element => {
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<PipelinePathProps>()
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const data = get(triggerListData, 'content')
   const pageIndex = get(triggerListData, 'pageIndex', DEFAULT_PAGE_INDEX)
-  const pageSize = get(triggerListData, 'pageSize', DEFAULT_PAGE_SIZE)
+  const pageSize = get(triggerListData, 'pageSize', PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : DEFAULT_PAGE_SIZE)
   const totalItems = get(triggerListData, 'totalItems', 0)
   const totalPages = get(triggerListData, 'totalPages', 0)
 
@@ -710,18 +712,19 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
     [goToEditWizard, refetchTriggerList, getString, gitAwareForTriggerEnabled]
   )
 
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: totalItems,
+    pageSize,
+    pageCount: totalPages,
+    pageIndex
+  })
+
   return (
     <TableV2<NGTriggerDetailsResponse>
       className={css.table}
       columns={columns}
       data={data || /* istanbul ignore next */ []}
-      pagination={{
-        itemCount: totalItems,
-        pageSize,
-        pageCount: totalPages,
-        pageIndex,
-        gotoPage
-      }}
+      pagination={paginationProps}
       onRowClick={item => goToDetails({ triggerIdentifier: item.identifier || '' })}
     />
   )

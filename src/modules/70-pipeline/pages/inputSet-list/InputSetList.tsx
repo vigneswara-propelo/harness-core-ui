@@ -24,7 +24,7 @@ import type { Error } from 'services/template-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { OverlayInputSetForm } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
 import routes from '@common/RouteDefinitions'
-import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
@@ -35,22 +35,23 @@ import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncInterface'
-import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import ListHeader from '@common/components/ListHeader/ListHeader'
 import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-
 import { InputSetListView } from './InputSetListView'
+import { InputSetListQueryParams, useInputSetListQueryParamOptions } from './Util'
 import css from './InputSetList.module.scss'
 
 function InputSetList(): React.ReactElement {
-  const [searchParam, setSearchParam] = React.useState('')
-  const [page, setPage] = React.useState(0)
   const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.InputSetList}`)
-  const { connectorRef, repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
+  const queryParamOptions = useInputSetListQueryParamOptions()
+  const { connectorRef, repoIdentifier, repoName, branch, storeType, page, size, searchTerm } =
+    useQueryParams(queryParamOptions)
+  const { updateQueryParams } = useUpdateQueryParams<InputSetListQueryParams>()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<PipelinePathProps> & { accountId: string }
   >()
@@ -72,8 +73,8 @@ function InputSetList(): React.ReactElement {
       projectIdentifier,
       pipelineIdentifier,
       pageIndex: page,
-      pageSize: 20,
-      searchTerm: searchParam,
+      pageSize: size,
+      searchTerm: searchTerm?.trim(),
       ...(!isEmpty(repoIdentifier) && !isEmpty(branch)
         ? {
             repoIdentifier,
@@ -84,7 +85,7 @@ function InputSetList(): React.ReactElement {
       sortOrders: [sortPreference]
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
-    debounce: !isEmpty(searchParam) ? 300 : false
+    debounce: !isEmpty(searchTerm) ? 300 : false
   })
 
   const { showMigrateResourceModal: showImportResourceModal } = useMigrateResource({
@@ -336,9 +337,9 @@ function InputSetList(): React.ReactElement {
             leftIconProps={{ name: 'thinner-search', size: 14, color: Color.GREY_700 }}
             placeholder={getString('inputSets.searchInputSet')}
             wrapperClassName={css.searchWrapper}
-            value={searchParam}
+            value={searchTerm}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setSearchParam(e.target.value.trim())
+              updateQueryParams({ searchTerm: e.target.value || undefined })
             }}
           />
         </Layout.Horizontal>
@@ -376,7 +377,6 @@ function InputSetList(): React.ReactElement {
             />
             <InputSetListView
               data={inputSet?.data}
-              gotoPage={setPage}
               pipelineHasRuntimeInputs={pipelineHasRuntimeInputs}
               isPipelineInvalid={isPipelineInvalid}
               pipelineStoreType={pipelineMetadata?.data?.storeType as StoreType}

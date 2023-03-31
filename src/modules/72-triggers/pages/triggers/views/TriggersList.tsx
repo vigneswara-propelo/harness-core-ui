@@ -29,6 +29,7 @@ import ListHeader from '@common/components/ListHeader/ListHeader'
 import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
@@ -46,6 +47,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
   const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled } = props
   const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.TriggersPage}`)
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const {
     branch,
     repoIdentifier,
@@ -53,7 +55,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
     repoName,
     storeType,
     page = DEFAULT_PAGE_INDEX,
-    size = DEFAULT_PAGE_SIZE,
+    size = PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : DEFAULT_PAGE_SIZE,
     searchTerm
   } = useQueryParams<GitQueryParams & Pick<GetTriggerListForTargetQueryParams, 'page' | 'size' | 'searchTerm'>>()
   const { CD_TRIGGER_V2, CD_TRIGGER_CATALOG_API_ENABLED, CDS_GOOGLE_CLOUD_FUNCTION, BAMBOO_ARTIFACT_NG } =
@@ -257,6 +259,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
           sortOptions={[...sortByCreated, ...sortByName]}
           onSortMethodChange={option => {
             setSortPreference(option.value as SortMethod)
+            updateQueryParams({ page: DEFAULT_PAGE_INDEX })
           }}
           totalCount={triggerListResponse?.data?.totalItems}
           className={css.listHeader}
@@ -268,7 +271,6 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
           goToDetails={goToDetails}
           isPipelineInvalid={isPipelineInvalid}
           gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
-          gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
         />
       </Page.Body>
     </>

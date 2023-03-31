@@ -69,9 +69,9 @@ export const GetInputSetsResponse: UseGetReturnData<ResponsePageInputSetSummaryR
     status: 'SUCCESS',
     data: {
       totalPages: 1,
-      totalItems: 3,
-      pageItemCount: 3,
-      pageSize: 10,
+      totalItems: 2,
+      pageItemCount: 2,
+      pageSize: 20,
       content: [
         {
           identifier: 'OverLayInput',
@@ -113,9 +113,9 @@ export const ValidInputSetsListResponse: UseGetReturnData<ResponsePageInputSetSu
     status: 'SUCCESS',
     data: {
       totalPages: 1,
-      totalItems: 3,
-      pageItemCount: 3,
-      pageSize: 10,
+      totalItems: 2,
+      pageItemCount: 2,
+      pageSize: 20,
       content: [
         {
           identifier: 'OverLayInputSet1',

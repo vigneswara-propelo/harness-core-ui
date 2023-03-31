@@ -34,16 +34,19 @@ import { CodeSourceCell } from '@pipeline/pages/pipeline-list/PipelineListTable/
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
 import useDeleteConfirmationDialog from '../utils/DeleteConfirmDialog'
 import { Badge } from '../utils/Badge/Badge'
+import { INPUT_SETS_PAGE_SIZE } from './Util'
 import css from './InputSetList.module.scss'
 
 interface InputSetListViewProps {
   data?: PageInputSetSummaryResponse
   goToInputSetDetail?: (inputSet?: InputSetSummaryResponse) => void
   refetchInputSet?: () => void
-  gotoPage: (pageNumber: number) => void
   canUpdate?: boolean
   pipelineHasRuntimeInputs?: boolean
   isPipelineInvalid?: boolean
@@ -322,7 +325,6 @@ const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }
 
 export function InputSetListView({
   data,
-  gotoPage,
   goToInputSetDetail,
   refetchInputSet,
   canUpdate = true,
@@ -336,8 +338,9 @@ export function InputSetListView({
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const totalItems = get(data, 'totalItems', 0)
-  const pageSize = get(data, 'pageSize', 10)
+  const pageSize = get(data, 'pageSize', PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : INPUT_SETS_PAGE_SIZE)
   const totalPages = get(data, 'totalPages', -1)
   const pageIndex = get(data, 'pageIndex', 0)
   const columns: CustomColumn<InputSetLocal>[] = React.useMemo(
@@ -408,13 +411,20 @@ export function InputSetListView({
     columns.splice(1, 1)
   }
 
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: totalItems,
+    pageSize: pageSize,
+    pageCount: totalPages,
+    pageIndex: pageIndex
+  })
+
   return (
     <TableV2<InputSetLocal>
       className={css.table}
       columns={columns}
       data={get(data, 'content', [])}
       onRowClick={item => !isPipelineInvalid && pipelineHasRuntimeInputs && goToInputSetDetail?.(item)}
-      pagination={{ itemCount: totalItems, pageSize: pageSize, pageCount: totalPages, pageIndex: pageIndex, gotoPage }}
+      pagination={paginationProps}
     />
   )
 }
