@@ -40,6 +40,7 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
     selectedChildStageId,
     selectedStepId,
     selectedStageExecutionId,
+    isDataLoadedForSelectedStage,
     queryParams,
     loading
   } = useExecutionContext()
@@ -219,8 +220,9 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
               !isEmpty(selectedStageExecutionId) &&
               newIdentifier.includes(selectedStageExecutionId)) ||
               newIdentifier.includes(selectedStageId)) &&
-            !loading &&
-            (prevSelectedStageIdRef.current === stage.nodeUuid ||
+            isDataLoadedForSelectedStage &&
+            (!loading ||
+              prevSelectedStageIdRef.current === stage.nodeUuid ||
               prevSelectedStageExecutionId.current === stage.nodeExecutionId)
 
           return (
