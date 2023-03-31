@@ -49,8 +49,6 @@ export function TimelineRow(props: TimelineRowProps): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timelineRowRef?.current, data, endTimestamp, startTimestamp, leftOffset])
 
-  // [data, endTimestamp, startTimestamp, leftOffset]
-
   useEffect(() => {
     const widgetsGroupedWithStartTime: { [key: string]: TimelineDataPoint[] } =
       getWidgetsGroupedWithStartTime(dataWithPositions)

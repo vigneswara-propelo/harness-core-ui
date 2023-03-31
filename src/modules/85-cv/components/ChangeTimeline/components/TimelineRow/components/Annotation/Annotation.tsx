@@ -145,7 +145,7 @@ export default function Annotation(props: AnnotationProps): JSX.Element {
                 </Text>
                 <Container flex={{ justifyContent: 'flex-start' }} padding={{ bottom: 'small' }}>
                   <Text font={{ weight: 'bold' }} className={css.annotationTextElements}>
-                    {'Period: '}
+                    {`${getString('cv.slos.sloDetailsChart.period')}: `}
                   </Text>
                   <Text className={css.annotationTextElements}>{moment(new Date(startTime)).format(DATE_FORMAT)}</Text>
                   <Text className={css.annotationTextElements}>{' - '}</Text>

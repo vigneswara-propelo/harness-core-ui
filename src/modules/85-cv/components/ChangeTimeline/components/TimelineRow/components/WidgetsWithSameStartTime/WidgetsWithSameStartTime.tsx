@@ -171,7 +171,7 @@ export default function WidgetsWithSameStartTime(props: WidgetsWithSameStartTime
                       </Text>
                       <Container flex={{ justifyContent: 'flex-start' }} padding={{ bottom: 'small' }}>
                         <Text font={{ weight: 'bold' }} className={css.annotationTextElements}>
-                          {'Period: '}
+                          {`${getString('cv.slos.sloDetailsChart.period')}: `}
                         </Text>
                         <Text className={css.annotationTextElements}>
                           {moment(new Date(startTimeForAnnotation)).format(DATE_FORMAT)}

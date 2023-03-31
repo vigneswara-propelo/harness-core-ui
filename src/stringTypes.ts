@@ -9012,6 +9012,7 @@ export interface StringsMap {
   'cv.slos.sloDetailsChart.deleteMessageConfirmation': string
   'cv.slos.sloDetailsChart.editAnnotation': string
   'cv.slos.sloDetailsChart.endDate': string
+  'cv.slos.sloDetailsChart.period': string
   'cv.slos.sloDetailsChart.startDate': string
   'cv.slos.sloDetailsChart.updateAnnotationMessage': string
   'cv.slos.sloEditWarningMessage': string
