@@ -15,7 +15,8 @@ import type {
   Failure,
   ResponseListServiceNowFieldNG,
   GetServiceNowTicketTypesQueryParams,
-  GetServiceNowIssueCreateMetadataQueryParams
+  GetServiceNowIssueCreateMetadataQueryParams,
+  GetServiceNowTicketTypesV2QueryParams
 } from 'services/cd-ng'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getDefaultCriterias } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
@@ -75,6 +76,12 @@ export interface ServiceNowFormContentInterface {
     ResponseListServiceNowTicketTypeDTO,
     Failure | Error,
     GetServiceNowTicketTypesQueryParams,
+    unknown
+  >
+  getServiceNowTicketTypesV2Query: UseGetReturn<
+    ResponseListServiceNowTicketTypeDTO,
+    Failure | Error,
+    GetServiceNowTicketTypesV2QueryParams,
     unknown
   >
   getServiceNowIssueCreateMetadataQuery: UseGetReturn<

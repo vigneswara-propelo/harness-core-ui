@@ -20,10 +20,15 @@ import { useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { useGetServiceNowIssueCreateMetadata, useGetServiceNowTicketTypes } from 'services/cd-ng'
+import {
+  useGetServiceNowIssueCreateMetadata,
+  useGetServiceNowTicketTypes,
+  useGetServiceNowTicketTypesV2
+} from 'services/cd-ng'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { ServiceNowTicketTypeSelectOption, SnowApprovalDeploymentModeProps } from './types'
 import { getDateTimeOptions } from './ServiceNowApprovalChangeWindow'
@@ -52,6 +57,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
     branch
   }
   const { expressions } = useVariablesExpression()
+  const { CDS_SERVICENOW_TICKET_TYPE_V2 } = useFeatureFlags()
 
   const getServiceNowTicketTypesQuery = useGetServiceNowTicketTypes({
     lazy: true,
@@ -60,8 +66,17 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
       connectorRef: ''
     }
   })
+
+  const getServiceNowTicketTypesV2Query = useGetServiceNowTicketTypesV2({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: ''
+    }
+  })
+
   const serviceNowTicketTypesOptions: ServiceNowTicketTypeSelectOption[] =
-    getServiceNowTicketTypesQuery.data?.data?.map(ticketType => ({
+    (getServiceNowTicketTypesQuery.data?.data || getServiceNowTicketTypesV2Query.data?.data)?.map(ticketType => ({
       label: defaultTo(ticketType.name, ''),
       value: defaultTo(ticketType.key, ''),
       key: defaultTo(ticketType.key, '')
@@ -77,12 +92,21 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
 
   useEffect(() => {
     if (!isEmpty(snowConnector) && getMultiTypeFromValue(snowConnector) === MultiTypeInputType.FIXED) {
-      getServiceNowTicketTypesQuery.refetch({
-        queryParams: {
-          ...commonParams,
-          connectorRef: snowConnector.toString()
-        }
-      })
+      if (CDS_SERVICENOW_TICKET_TYPE_V2) {
+        getServiceNowTicketTypesV2Query.refetch({
+          queryParams: {
+            ...commonParams,
+            connectorRef: snowConnector.toString()
+          }
+        })
+      } else {
+        getServiceNowTicketTypesQuery.refetch({
+          queryParams: {
+            ...commonParams,
+            connectorRef: snowConnector.toString()
+          }
+        })
+      }
     }
   }, [snowConnector])
 
@@ -116,6 +140,8 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
       }
     }
   }
+
+  const ticketTypesLoading = getServiceNowTicketTypesQuery.loading || getServiceNowTicketTypesV2Query.loading
 
   return (
     <Fragment>
@@ -177,7 +203,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
             dataTooltipId: 'serviceNowApprovalTicketType'
           }}
           selectItems={
-            getServiceNowTicketTypesQuery.loading
+            ticketTypesLoading
               ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
               : serviceNowTicketTypesOptions
           }
@@ -185,16 +211,19 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           label={getString('pipeline.serviceNowApprovalStep.ticketType')}
           className={css.deploymentViewMedium}
           placeholder={
-            getServiceNowTicketTypesQuery.loading
+            ticketTypesLoading
               ? getString(fetchingTicketTypesPlaceholder)
-              : getServiceNowTicketTypesQuery.error?.message || getString('select')
+              : getServiceNowTicketTypesQuery.error?.message ||
+                getServiceNowTicketTypesQuery.error?.message ||
+                getString('select')
           }
           useValue
-          disabled={isApprovalStepFieldDisabled(readonly, getServiceNowTicketTypesQuery.loading)}
+          disabled={isApprovalStepFieldDisabled(readonly, ticketTypesLoading)}
           multiTypeInputProps={{
             selectProps: {
               addClearBtn: true,
-              items: getServiceNowTicketTypesQuery.loading
+              allowCreatingNewItems: true,
+              items: ticketTypesLoading
                 ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                 : serviceNowTicketTypesOptions
             },

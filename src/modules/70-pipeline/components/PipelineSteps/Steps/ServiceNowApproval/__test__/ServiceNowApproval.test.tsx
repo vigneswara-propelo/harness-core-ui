@@ -23,7 +23,8 @@ import {
   getServiceNowApprovalEditModeProps,
   getServiceNowApprovalEditModePropsWithValues,
   getServiceNowApprovalDeploymentModeProps,
-  ConnectorsResponse
+  ConnectorsResponse,
+  mockTicketTypesResponseV2
 } from './ServiceNowApprovalTestHelper'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -31,6 +32,7 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('services/cd-ng', () => ({
   useGetConnector: () => mockConnectorResponse,
   useGetServiceNowTicketTypes: () => mockTicketTypesResponse,
+  useGetServiceNowTicketTypesV2: () => mockTicketTypesResponseV2,
   useGetServiceNowIssueCreateMetadata: () => mockServiceNowCreateMetadataResponse,
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(ConnectorsResponse.data)),
   getServiceNowTicketTypesPromise: jest.fn(() => Promise.resolve(mockTicketTypesResponse.data))

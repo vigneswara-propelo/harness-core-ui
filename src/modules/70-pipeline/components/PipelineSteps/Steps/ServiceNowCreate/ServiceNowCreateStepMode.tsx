@@ -36,7 +36,8 @@ import {
   ServiceNowTicketTypeDTO,
   useGetServiceNowIssueMetadata,
   useGetServiceNowTemplateMetadata,
-  useGetServiceNowTicketTypes
+  useGetServiceNowTicketTypes,
+  useGetServiceNowTicketTypesV2
 } from 'services/cd-ng'
 import type {
   AccountPathProps,
@@ -54,6 +55,7 @@ import { ServiceNowTemplateFieldsRenderer } from '@pipeline/components/PipelineS
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@connectors/constants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ServiceNowTicketTypeSelectOption } from '../ServiceNowApproval/types'
 import { getGenuineValue } from '../ServiceNowApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -87,16 +89,10 @@ function FormContent({
   readonly,
   allowableTypes,
   stepViewType,
-  refetchServiceNowTicketTypes,
-  fetchingServiceNowTicketTypes,
-  serviceNowTicketTypesResponse,
-  serviceNowMetadataResponse,
-  serviceNowTicketTypesFetchError,
-  refetchServiceNowMetadata,
-  fetchingServiceNowMetadata,
-  refetchServiceNowTemplate,
-  serviceNowTemplateResponse,
-  fetchingServiceNowTemplate
+  getServiceNowTicketTypesQuery,
+  getServiceNowTicketTypesV2Query,
+  getServiceNowIssueCreateMetadataQuery,
+  getServiceNowTemplateMetaDataQuery
 }: ServiceNowCreateFormContentInterface): JSX.Element {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -110,7 +106,7 @@ function FormContent({
   )
   const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
   const [ticketValueType, setTicketValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
-
+  const { CDS_SERVICENOW_TICKET_TYPE_V2 } = useFeatureFlags()
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -132,12 +128,21 @@ function FormContent({
 
   useEffect(() => {
     if (connectorRefFixedValue && connectorValueType === MultiTypeInputType.FIXED) {
-      refetchServiceNowTicketTypes({
-        queryParams: {
-          ...commonParams,
-          connectorRef: connectorRefFixedValue.toString()
-        }
-      })
+      if (CDS_SERVICENOW_TICKET_TYPE_V2) {
+        getServiceNowTicketTypesV2Query.refetch({
+          queryParams: {
+            ...commonParams,
+            connectorRef: connectorRefFixedValue.toString()
+          }
+        })
+      } else {
+        getServiceNowTicketTypesQuery.refetch({
+          queryParams: {
+            ...commonParams,
+            connectorRef: connectorRefFixedValue.toString()
+          }
+        })
+      }
     } else if (connectorRefFixedValue !== undefined) {
       formik.setFieldValue('spec.selectedFields', [])
       setTicketFieldList([])
@@ -147,14 +152,15 @@ function FormContent({
   useEffect(() => {
     // Set ticket types
     let options: ServiceNowTicketTypeSelectOption[] = []
-    const ticketTypesResponseList: ServiceNowTicketTypeDTO[] = serviceNowTicketTypesResponse?.data || []
+    const ticketTypesResponseList: ServiceNowTicketTypeDTO[] =
+      getServiceNowTicketTypesQuery.data?.data || getServiceNowTicketTypesV2Query.data?.data || []
     options = ticketTypesResponseList.map((ticketType: ServiceNowTicketTypeDTO) => ({
       label: defaultTo(ticketType.name, ''),
       value: defaultTo(ticketType.key, ''),
       key: defaultTo(ticketType.key, '')
     }))
     setServiceNowTicketTypesOptions(options)
-  }, [serviceNowTicketTypesResponse?.data])
+  }, [getServiceNowTicketTypesQuery.data?.data, getServiceNowTicketTypesV2Query.data?.data])
   useEffect(() => {
     if (
       connectorRefFixedValue &&
@@ -163,7 +169,7 @@ function FormContent({
       ticketValueType === MultiTypeInputType.FIXED &&
       getMultiTypeFromValue(templateName) === MultiTypeInputType.FIXED
     ) {
-      refetchServiceNowTemplate({
+      getServiceNowTemplateMetaDataQuery.refetch({
         queryParams: {
           ...commonParams,
           connectorRef: connectorRefFixedValue.toString(),
@@ -177,7 +183,7 @@ function FormContent({
   }, [connectorRefFixedValue, ticketTypeKeyFixedValue, templateName])
   useDeepCompareEffect(() => {
     if (connectorRefFixedValue && ticketTypeKeyFixedValue && ticketValueType === MultiTypeInputType.FIXED) {
-      refetchServiceNowMetadata({
+      getServiceNowIssueCreateMetadataQuery.refetch({
         queryParams: {
           ...commonParams,
           connectorRef: connectorRefFixedValue.toString(),
@@ -189,9 +195,9 @@ function FormContent({
   useEffect(() => {
     const formikSelectedFields: ServiceNowFieldNGWithValue[] = []
     if (ticketTypeKeyFixedValue) {
-      setTicketFieldList(serviceNowMetadataResponse?.data || [])
-      if (formik.values.spec.fields && serviceNowMetadataResponse?.data) {
-        serviceNowMetadataResponse?.data.forEach(field => {
+      setTicketFieldList(getServiceNowIssueCreateMetadataQuery.data?.data || [])
+      if (formik.values.spec.fields && getServiceNowIssueCreateMetadataQuery.data?.data) {
+        getServiceNowIssueCreateMetadataQuery.data?.data.forEach(field => {
           if (
             field &&
             field.key !== ServiceNowStaticFields.short_description &&
@@ -218,21 +224,25 @@ function FormContent({
         setTicketFieldList([])
       }
     }
-  }, [serviceNowMetadataResponse?.data])
+  }, [getServiceNowIssueCreateMetadataQuery.data?.data])
 
   useEffect(() => {
-    if (serviceNowTemplateResponse && serviceNowTemplateResponse.data) {
+    if (getServiceNowTemplateMetaDataQuery.data && getServiceNowTemplateMetaDataQuery.data.data) {
       setIsTemplateSectionAvailable(true)
-      if (serviceNowTemplateResponse && serviceNowTemplateResponse?.data.length > 0 && templateName) {
+      if (
+        getServiceNowTemplateMetaDataQuery.data &&
+        getServiceNowTemplateMetaDataQuery.data?.data?.length > 0 &&
+        templateName
+      ) {
         formik.setFieldValue(
           'spec.templateFields',
-          convertTemplateFieldsForDisplay(serviceNowTemplateResponse?.data[0].fields)
+          convertTemplateFieldsForDisplay(getServiceNowTemplateMetaDataQuery.data.data[0].fields)
         )
       } else {
         formik.setFieldValue('spec.templateFields', [])
       }
     }
-  }, [serviceNowTemplateResponse?.data])
+  }, [getServiceNowTemplateMetaDataQuery.data?.data])
   useEffect(() => {
     // Clear field list to be displayed under dynamic field selector or template section, if fixed ticket type is not chosen
     if (ticketValueType !== MultiTypeInputType.FIXED) {
@@ -301,6 +311,8 @@ function FormContent({
       </Text>
     )
   }
+
+  const ticketTypesLoading = getServiceNowTicketTypesQuery.loading || getServiceNowTicketTypesV2Query.loading
 
   return (
     <React.Fragment>
@@ -392,25 +404,26 @@ function FormContent({
               dataTooltipId: 'serviceNowApprovalTicketType'
             }}
             selectItems={
-              fetchingServiceNowTicketTypes
+              ticketTypesLoading
                 ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                 : serviceNowTicketTypesOptions
             }
             label={getString('pipeline.serviceNowApprovalStep.ticketType')}
             name="spec.ticketType"
             placeholder={
-              fetchingServiceNowTicketTypes
+              ticketTypesLoading
                 ? getString(fetchingTicketTypesPlaceholder)
-                : serviceNowTicketTypesFetchError?.message
-                ? serviceNowTicketTypesFetchError?.message
-                : getString('select')
+                : getServiceNowTicketTypesQuery?.error?.message ||
+                  getServiceNowTicketTypesV2Query?.error?.message ||
+                  getString('select')
             }
             useValue
-            disabled={isApprovalStepFieldDisabled(readonly, fetchingServiceNowTicketTypes)}
+            disabled={isApprovalStepFieldDisabled(readonly, ticketTypesLoading)}
             multiTypeInputProps={{
               selectProps: {
                 addClearBtn: true,
-                items: fetchingServiceNowTicketTypes
+                allowCreatingNewItems: true,
+                items: ticketTypesLoading
                   ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                   : serviceNowTicketTypesOptions
               },
@@ -459,7 +472,7 @@ function FormContent({
         />
         {formik.values.spec.fieldType === FieldType.ConfigureFields && (
           <div>
-            {fetchingServiceNowMetadata ? (
+            {getServiceNowIssueCreateMetadataQuery.loading ? (
               <PageSpinner
                 message={getString('pipeline.serviceNowCreateStep.fetchingFields')}
                 className={css.fetching}
@@ -571,7 +584,7 @@ function FormContent({
         )}
         {formik.values.spec.fieldType === FieldType.CreateFromTemplate && (
           <div>
-            {fetchingServiceNowTemplate ? (
+            {getServiceNowTemplateMetaDataQuery.loading ? (
               <PageSpinner
                 message={getString('pipeline.serviceNowCreateStep.fetchingTemplateDetails')}
                 className={css.fetching}
@@ -638,12 +651,7 @@ function ServiceNowCreateStepMode(
     branch
   }
 
-  const {
-    refetch: refetchServiceNowTicketTypes,
-    data: serviceNowTicketTypesResponse,
-    error: serviceNowTicketTypesFetchError,
-    loading: fetchingServiceNowTicketTypes
-  } = useGetServiceNowTicketTypes({
+  const getServiceNowTicketTypesQuery = useGetServiceNowTicketTypes({
     lazy: true,
     queryParams: {
       ...commonParams,
@@ -651,24 +659,22 @@ function ServiceNowCreateStepMode(
     }
   })
 
-  const {
-    refetch: refetchServiceNowMetadata,
-    data: serviceNowMetadataResponse,
-    error: serviceNowMetadataFetchError,
-    loading: fetchingServiceNowMetadata
-  } = useGetServiceNowIssueMetadata({
+  const getServiceNowTicketTypesV2Query = useGetServiceNowTicketTypesV2({
     lazy: true,
     queryParams: {
       ...commonParams,
       connectorRef: ''
     }
   })
-  const {
-    refetch: refetchServiceNowTemplate,
-    data: serviceNowTemplateResponse,
-    error: serviceNowTemplateFetchError,
-    loading: fetchingServiceNowTemplate
-  } = useGetServiceNowTemplateMetadata({
+
+  const getServiceNowIssueCreateMetadataQuery = useGetServiceNowIssueMetadata({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: ''
+    }
+  })
+  const getServiceNowTemplateMetaDataQuery = useGetServiceNowTemplateMetadata({
     lazy: true,
     queryParams: {
       ...commonParams,
@@ -739,18 +745,10 @@ function ServiceNowCreateStepMode(
               stepViewType={stepViewType}
               readonly={readonly}
               isNewStep={isNewStep}
-              refetchServiceNowTicketTypes={refetchServiceNowTicketTypes}
-              fetchingServiceNowTicketTypes={fetchingServiceNowTicketTypes}
-              serviceNowTicketTypesResponse={serviceNowTicketTypesResponse}
-              serviceNowTicketTypesFetchError={serviceNowTicketTypesFetchError}
-              refetchServiceNowMetadata={refetchServiceNowMetadata}
-              fetchingServiceNowMetadata={fetchingServiceNowMetadata}
-              serviceNowMetadataResponse={serviceNowMetadataResponse}
-              serviceNowMetadataFetchError={serviceNowMetadataFetchError}
-              refetchServiceNowTemplate={refetchServiceNowTemplate}
-              serviceNowTemplateResponse={serviceNowTemplateResponse}
-              serviceNowTemplateFetchError={serviceNowTemplateFetchError}
-              fetchingServiceNowTemplate={fetchingServiceNowTemplate}
+              getServiceNowTemplateMetaDataQuery={getServiceNowTemplateMetaDataQuery}
+              getServiceNowTicketTypesQuery={getServiceNowTicketTypesQuery}
+              getServiceNowTicketTypesV2Query={getServiceNowTicketTypesV2Query}
+              getServiceNowIssueCreateMetadataQuery={getServiceNowIssueCreateMetadataQuery}
             />
           </FormikForm>
         )

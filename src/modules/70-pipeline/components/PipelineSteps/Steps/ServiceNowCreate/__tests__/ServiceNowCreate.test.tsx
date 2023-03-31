@@ -12,7 +12,10 @@ import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { FieldType } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
-import { mockTicketTypesResponse } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/__test__/ServiceNowApprovalTestHelper'
+import {
+  mockTicketTypesResponse,
+  mockTicketTypesResponseV2
+} from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/__test__/ServiceNowApprovalTestHelper'
 import { ServiceNowFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
 import { factory, TestStepWidget } from '../../__tests__/StepTestUtil'
 import { ServiceNowCreate } from '../ServiceNowCreate'
@@ -34,6 +37,7 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('services/cd-ng', () => ({
   useGetConnector: () => mockConnectorResponse,
   useGetServiceNowTicketTypes: () => mockTicketTypesResponse,
+  useGetServiceNowTicketTypesV2: () => mockTicketTypesResponseV2,
   useGetServiceNowIssueMetadata: () => mockServiceNowMetadataResponse,
   useGetServiceNowTemplateMetadata: () => mockServiceNowTemplateResponse
 }))

@@ -1515,3 +1515,34 @@ export const ConnectorsResponse = {
     }
   }
 }
+
+export const mockTicketTypesResponseV2: UseGetMockData<ResponseListServiceNowTicketTypeDTO> = {
+  loading: false,
+  // eslint-disable-next-line
+  // @ts-ignore
+  refetch: jest.fn(),
+  data: {
+    correlationId: '',
+    status: 'SUCCESS',
+    metaData: null as unknown as undefined,
+    data: [
+      {
+        key: 'change_request',
+        name: 'Change Request'
+      },
+      {
+        key: 'change_task',
+        name: 'Change Task'
+      },
+
+      {
+        key: 'release_task',
+        name: 'Feature Task'
+      },
+      {
+        key: 'incident_task',
+        name: 'Incident Task'
+      }
+    ]
+  }
+}

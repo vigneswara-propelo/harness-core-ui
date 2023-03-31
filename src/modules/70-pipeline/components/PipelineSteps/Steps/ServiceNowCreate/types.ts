@@ -6,7 +6,7 @@
  */
 
 import type { FormikProps } from 'formik'
-import type { GetDataError } from 'restful-react'
+import type { UseGetReturn } from 'restful-react'
 import type { MultiSelectOption, AllowedTypes, SelectOption } from '@harness/uicore'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
@@ -15,12 +15,12 @@ import type {
   StepElementConfig,
   ResponseListServiceNowFieldNG,
   ResponseListServiceNowTicketTypeDTO,
-  UseGetServiceNowTicketTypesProps,
-  UseGetServiceNowIssueMetadataProps,
-  UseGetServiceNowTemplateMetadataProps,
-  UseGetServiceNowIssueCreateMetadataProps,
   ResponseListServiceNowTemplate,
-  ServiceNowFieldValueNG
+  ServiceNowFieldValueNG,
+  GetServiceNowTicketTypesV2QueryParams,
+  GetServiceNowTicketTypesQueryParams,
+  GetServiceNowIssueCreateMetadataQueryParams,
+  GetServiceNowTemplateMetadataQueryParams
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { ServiceNowTicketTypeSelectOption } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/types'
@@ -75,18 +75,30 @@ export interface ServiceNowCreateFormContentInterface {
   allowableTypes: AllowedTypes
   isNewStep?: boolean
   readonly?: boolean
-  refetchServiceNowTicketTypes: (props: UseGetServiceNowTicketTypesProps) => Promise<void>
-  serviceNowTicketTypesFetchError?: GetDataError<Failure | Error> | null
-  fetchingServiceNowTicketTypes: boolean
-  serviceNowTicketTypesResponse: ResponseListServiceNowTicketTypeDTO | null
-  refetchServiceNowMetadata: (props: UseGetServiceNowIssueMetadataProps) => Promise<void>
-  serviceNowMetadataFetchError?: GetDataError<Failure | Error> | null
-  fetchingServiceNowMetadata: boolean
-  serviceNowMetadataResponse: ResponseListServiceNowFieldNG | null
-  refetchServiceNowTemplate: (props: UseGetServiceNowTemplateMetadataProps) => Promise<void>
-  serviceNowTemplateResponse: ResponseListServiceNowTemplate | null
-  fetchingServiceNowTemplate: boolean
-  serviceNowTemplateFetchError?: GetDataError<Failure | Error> | null
+  getServiceNowTicketTypesQuery: UseGetReturn<
+    ResponseListServiceNowTicketTypeDTO,
+    Failure | Error,
+    GetServiceNowTicketTypesQueryParams,
+    unknown
+  >
+  getServiceNowTicketTypesV2Query: UseGetReturn<
+    ResponseListServiceNowTicketTypeDTO,
+    Failure | Error,
+    GetServiceNowTicketTypesV2QueryParams,
+    unknown
+  >
+  getServiceNowIssueCreateMetadataQuery: UseGetReturn<
+    ResponseListServiceNowFieldNG,
+    Failure | Error,
+    GetServiceNowIssueCreateMetadataQueryParams,
+    unknown
+  >
+  getServiceNowTemplateMetaDataQuery: UseGetReturn<
+    ResponseListServiceNowTemplate,
+    Failure | Error,
+    GetServiceNowTemplateMetadataQueryParams,
+    unknown
+  >
 }
 
 export enum ServiceNowCreateFormFieldSelector {
@@ -122,14 +134,24 @@ export interface ServiceNowCreateDeploymentModeProps {
 }
 
 export interface ServiceNowCreateDeploymentModeFormContentInterface extends ServiceNowCreateDeploymentModeProps {
-  refetchServiceNowTicketTypes: (props: UseGetServiceNowTicketTypesProps) => Promise<void>
-  serviceNowTicketTypesFetchError?: GetDataError<Failure | Error> | null
-  fetchingServiceNowTicketTypes: boolean
-  serviceNowTicketTypesResponse: ResponseListServiceNowTicketTypeDTO | null
-  refetchServiceNowMetadata: (props: UseGetServiceNowIssueCreateMetadataProps) => Promise<void>
-  serviceNowMetadataFetchError?: GetDataError<Failure | Error> | null
-  fetchingServiceNowMetadata: boolean
-  serviceNowMetadataResponse: ResponseListServiceNowFieldNG | null
+  getServiceNowTicketTypesQuery: UseGetReturn<
+    ResponseListServiceNowTicketTypeDTO,
+    Failure | Error,
+    GetServiceNowTicketTypesQueryParams,
+    unknown
+  >
+  getServiceNowTicketTypesV2Query: UseGetReturn<
+    ResponseListServiceNowTicketTypeDTO,
+    Failure | Error,
+    GetServiceNowTicketTypesV2QueryParams,
+    unknown
+  >
+  getServiceNowIssueCreateMetadataQuery: UseGetReturn<
+    ResponseListServiceNowFieldNG,
+    Failure | Error,
+    GetServiceNowIssueCreateMetadataQueryParams,
+    unknown
+  >
 }
 
 export enum ServiceNowStaticFields {

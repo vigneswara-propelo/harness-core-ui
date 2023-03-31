@@ -13,7 +13,10 @@ import {
   mockServiceNowMetadataResponse,
   mockServiceNowTemplateResponse
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/__tests__/ServiceNowCreateTestHelper'
-import { mockTicketTypesResponse } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/__test__/ServiceNowApprovalTestHelper'
+import {
+  mockTicketTypesResponse,
+  mockTicketTypesResponseV2
+} from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/__test__/ServiceNowApprovalTestHelper'
 import { FieldType } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import {
   getServiceNowUpdateDeploymentModeProps,
@@ -34,6 +37,7 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('services/cd-ng', () => ({
   useGetConnector: () => mockConnectorResponse,
   useGetServiceNowTicketTypes: () => mockTicketTypesResponse,
+  useGetServiceNowTicketTypesV2: () => mockTicketTypesResponseV2,
   useGetServiceNowIssueMetadata: () => mockServiceNowMetadataResponse,
   useGetServiceNowTemplateMetadata: () => mockServiceNowTemplateResponse
 }))

@@ -46,7 +46,11 @@ import { isApprovalStepFieldDisabled } from '@pipeline/components/PipelineSteps/
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ApprovalRejectionCriteriaType } from '@pipeline/components/PipelineSteps/Steps/Common/types'
-import { useGetServiceNowIssueCreateMetadata, useGetServiceNowTicketTypes } from 'services/cd-ng'
+import {
+  useGetServiceNowIssueCreateMetadata,
+  useGetServiceNowTicketTypes,
+  useGetServiceNowTicketTypesV2
+} from 'services/cd-ng'
 import {
   getApprovalRejectionCriteriaForInitialValues,
   getGenuineValue
@@ -55,6 +59,7 @@ import { StringKeys, useStrings } from 'framework/strings'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@connectors/constants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ServiceNowApprovalRejectionCriteria } from './ServiceNowApprovalRejectionCriteria'
 import { ServiceNowApprovalChangeWindow } from './ServiceNowApprovalChangeWindow'
 import css from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/ServiceNowApproval.module.scss'
@@ -69,6 +74,7 @@ function FormContent({
   allowableTypes,
   stepViewType,
   getServiceNowTicketTypesQuery,
+  getServiceNowTicketTypesV2Query,
   getServiceNowIssueCreateMetadataQuery
 }: ServiceNowFormContentInterface): JSX.Element {
   const { getString } = useStrings()
@@ -85,6 +91,7 @@ function FormContent({
     repoIdentifier,
     branch
   }
+  const { CDS_SERVICENOW_TICKET_TYPE_V2 } = useFeatureFlags()
   const connectorRefFixedValue = getGenuineValue(formik.values.spec.connectorRef)
 
   const ticketTypeKeyFixedValue =
@@ -94,8 +101,10 @@ function FormContent({
       : undefined
 
   const serviceNowTicketTypesOptions: ServiceNowTicketTypeSelectOption[] =
-    connectorRefFixedValue && connectorValueType === MultiTypeInputType.FIXED && !getServiceNowTicketTypesQuery.loading
-      ? getServiceNowTicketTypesQuery.data?.data?.map(ticketType => ({
+    connectorRefFixedValue &&
+    connectorValueType === MultiTypeInputType.FIXED &&
+    (!getServiceNowTicketTypesQuery.loading || !getServiceNowTicketTypesV2Query.loading)
+      ? (getServiceNowTicketTypesQuery.data?.data || getServiceNowTicketTypesV2Query.data?.data)?.map(ticketType => ({
           label: defaultTo(ticketType.name, ''),
           value: defaultTo(ticketType.key, ''),
           key: defaultTo(ticketType.key, '')
@@ -109,12 +118,21 @@ function FormContent({
 
   useEffect(() => {
     if (connectorRefFixedValue && connectorValueType === MultiTypeInputType.FIXED) {
-      getServiceNowTicketTypesQuery.refetch({
-        queryParams: {
-          ...commonParams,
-          connectorRef: connectorRefFixedValue.toString()
-        }
-      })
+      if (CDS_SERVICENOW_TICKET_TYPE_V2) {
+        getServiceNowTicketTypesV2Query.refetch({
+          queryParams: {
+            ...commonParams,
+            connectorRef: connectorRefFixedValue.toString()
+          }
+        })
+      } else {
+        getServiceNowTicketTypesQuery.refetch({
+          queryParams: {
+            ...commonParams,
+            connectorRef: connectorRefFixedValue.toString()
+          }
+        })
+      }
     }
   }, [connectorRefFixedValue])
 
@@ -133,6 +151,8 @@ function FormContent({
       formik.setFieldValue('spec.rejectionCriteria', rejectionCriteria)
     }
   }, [ticketTypeKeyFixedValue, connectorRefFixedValue])
+
+  const ticketTypesLoading = getServiceNowTicketTypesQuery.loading || getServiceNowTicketTypesV2Query.loading
 
   return (
     <Fragment>
@@ -221,23 +241,24 @@ function FormContent({
               dataTooltipId: 'serviceNowApprovalTicketType'
             }}
             selectItems={
-              getServiceNowTicketTypesQuery.loading
+              ticketTypesLoading
                 ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                 : serviceNowTicketTypesOptions
             }
             label={getString('pipeline.serviceNowApprovalStep.ticketType')}
             name="spec.ticketType"
             placeholder={
-              getServiceNowTicketTypesQuery.loading
+              ticketTypesLoading
                 ? getString(fetchingTicketTypesPlaceholder)
                 : getServiceNowTicketTypesQuery.error?.message || getString('select')
             }
             useValue
-            disabled={isApprovalStepFieldDisabled(readonly, getServiceNowTicketTypesQuery.loading)}
+            disabled={isApprovalStepFieldDisabled(readonly, ticketTypesLoading)}
             multiTypeInputProps={{
               selectProps: {
                 addClearBtn: true,
-                items: getServiceNowTicketTypesQuery.loading
+                allowCreatingNewItems: true,
+                items: ticketTypesLoading
                   ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                   : serviceNowTicketTypesOptions
               },
@@ -350,6 +371,14 @@ function ServiceNowApprovalStepMode(
     }
   })
 
+  const getServiceNowTicketTypesV2Query = useGetServiceNowTicketTypesV2({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: ''
+    }
+  })
+
   const getServiceNowIssueCreateMetadataQuery = useGetServiceNowIssueCreateMetadata({
     lazy: true,
     queryParams: {
@@ -419,6 +448,7 @@ function ServiceNowApprovalStepMode(
               readonly={readonly}
               isNewStep={isNewStep}
               getServiceNowTicketTypesQuery={getServiceNowTicketTypesQuery}
+              getServiceNowTicketTypesV2Query={getServiceNowTicketTypesV2Query}
               getServiceNowIssueCreateMetadataQuery={getServiceNowIssueCreateMetadataQuery}
             />
           </FormikForm>
