@@ -156,7 +156,7 @@ describe('Create SLO', () => {
     cy.get('input[name="SLIMissingDataType"]').should('have.value', 'Good')
 
     cy.contains('span', 'Next').click({ force: true })
-    cy.contains('p', 'Time period for evaluating you SLO').should('be.visible')
+    cy.contains('p', 'Time period for evaluating your SLO').should('be.visible')
 
     cy.get('input[name="periodType"]').should('have.value', 'Rolling')
     cy.get('input[name="periodLength"]').should('have.value', '30')
@@ -262,7 +262,7 @@ describe('Create SLO', () => {
 
     cy.contains('span', 'Next').click({ force: true })
 
-    cy.contains('p', 'Time period for evaluating you SLO').should('be.visible')
+    cy.contains('p', 'Time period for evaluating your SLO').should('be.visible')
 
     cy.contains('span', 'Back').click({ force: true })
 
@@ -423,7 +423,7 @@ describe('Create SLO', () => {
     cy.contains('p', 'Health Source to manage the service level').should('be.visible')
 
     cy.findByRole('button', { name: /Next/i }).click()
-    cy.contains('p', 'Time period for evaluating you SLO').should('be.visible')
+    cy.contains('p', 'Time period for evaluating your SLO').should('be.visible')
 
     cy.intercept('PUT', getServiceLevelObjective, { statusCode: 200 }).as('updateSLO')
     cy.intercept('GET', listSLOsCallWithCVNGProd, getSLODashboardWidgetsAfterEdit).as('getSLODashboardWidgetsAfterEdit')

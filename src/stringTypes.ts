@@ -8033,6 +8033,8 @@ export interface StringsMap {
   'cv.SLOWithName': string
   'cv.SimpleSLO.DefineSLO': string
   'cv.SimpleSLO.DefineSLOSubtitle': string
+  'cv.SimpleSLO.RatioSubtitle': string
+  'cv.SimpleSLO.ThresholdSubtitle': string
   'cv.ThresholdSLIValueGoodIf': string
   'cv.ThresholdValidrequests': string
   'cv.aMaximumOfThreeSLOCanBeComparedWithTheServiceHealth': string
@@ -8984,7 +8986,6 @@ export interface StringsMap {
   'cv.slos.sliMetricChartSubHeader': string
   'cv.slos.sliType': string
   'cv.slos.sliTypeChooseMetric': string
-  'cv.slos.sliTypeSubtitle': string
   'cv.slos.slis.HealthSource': string
   'cv.slos.slis.HealthSourceSubTitle': string
   'cv.slos.slis.SLIChartTitle': string

@@ -888,7 +888,6 @@ slos:
   selectHealthsource: Select Health Source
   healthSourceForSLI: Health Source for SLI
   sliType: SLI Type
-  sliTypeSubtitle: Measures how available your service was to users or valid requests served successfully
   sliTypeChooseMetric: SLI Type - Choose a metric
   latencySLI: Latency SLI measures the proportion of requests that were faster than some threshold.
   pickMetricsSLI: Pick metrics powering the SLI
@@ -926,7 +925,7 @@ slos:
       rolling: Rolling
       calendar: Calendar
     setSLOTarget: Set the SLO time window and target
-    complianceTimePeriodTitle: Time period for evaluating you SLO
+    complianceTimePeriodTitle: Time period for evaluating your SLO
   slis:
     HealthSource: Health Source to manage the service level
     HealthSourceSubTitle: It uses logs and metrics to track changes in the Service's health trend
@@ -974,6 +973,8 @@ slos:
 SimpleSLO:
   DefineSLO: SLO Details
   DefineSLOSubtitle: Provide the name, description, and tags for the SLO.
+  ThresholdSubtitle: Time Window SLIs measure a service’s reliability threshold over a specified period of time.
+  RatioSubtitle: Measure a service’s reliability by the ratio of the number of good/bad requests  to the total requests.
 CompositeSLO:
   CreateTitle: Create a Composite Service Level Objective (SLO)
   CreateMessage: Combines multiple SLOs to measure the services for a specific time frame that contribute to a single budget.

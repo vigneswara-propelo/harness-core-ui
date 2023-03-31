@@ -108,6 +108,8 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
     }
   }, [])
 
+  const gaugeConfig = React.useMemo(() => getErrorBudgetGaugeOptions(serviceLevelObjective), [serviceLevelObjective])
+
   return (
     <Layout.Vertical
       spacing="large"
@@ -195,7 +197,7 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
               <Heading font={{ variation: headingVariation }} data-tooltip-id={'errorBudgetRemaining'}>
                 {getString(isRequestBased ? 'cv.errorBudgetRemainingWithRequest' : 'cv.errorBudgetRemainingWithMins')}
               </Heading>
-              <ErrorBudgetGauge customChartOptions={getErrorBudgetGaugeOptions(serviceLevelObjective)} />
+              <ErrorBudgetGauge customChartOptions={gaugeConfig} />
               <Text
                 font={{ variation: FontVariation.SMALL }}
                 className={css.errorBudgetRemaining}

@@ -213,7 +213,7 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
                 />
               </Container>
               <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'light' }}>
-                {getString('cv.slos.sliTypeSubtitle')}
+                {getString(isWindowBased ? 'cv.SimpleSLO.ThresholdSubtitle' : 'cv.SimpleSLO.RatioSubtitle')}
               </Text>
               <img src={isWindowBased ? TimeWindowFormula : RequestFormula} />
               <PickMetric

@@ -188,6 +188,7 @@ export default function CreateSimpleSLOForm({
   }
 
   const debounceFetchSliGraphData = useCallback(debounce(fetchSliGraphData, 2000), [])
+  const debounceFetchSliMetricGraphData = useCallback(debounce(fetchSliMetricGraphData, 2000), [])
 
   const notificationsTableData = useMemo(
     () =>
@@ -241,7 +242,7 @@ export default function CreateSimpleSLOForm({
         goodRequestMetric,
         monitoredServiceIdentifier: formikProps.values.monitoredServiceRef || ''
       })
-      fetchSliMetricGraphData(metricPayload)
+      debounceFetchSliMetricGraphData(metricPayload)
     }
   }
 
