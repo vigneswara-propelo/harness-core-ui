@@ -208,11 +208,11 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
 
   const canFetchTags = (): boolean => {
     return (
-      !!(
-        lastQueryData.connectorRef != connectorRefValue ||
+      (!dockerdata?.data && !fetchTagsError) ||
+      ((lastQueryData.connectorRef != connectorRefValue ||
         lastQueryData.imagePath !== imagePathValue ||
-        getMultiTypeFromValue(artifact?.spec?.imagePath) === MultiTypeInputType.EXPRESSION
-      ) && shouldFetchTagsSource([connectorRefValue, imagePathValue])
+        getMultiTypeFromValue(artifact?.spec?.imagePath) === MultiTypeInputType.EXPRESSION) &&
+        shouldFetchTagsSource([connectorRefValue, imagePathValue]))
     )
   }
 

@@ -288,12 +288,13 @@ const Content = (props: ECRRenderContent): JSX.Element => {
   }
 
   const canFetchTags = (): boolean => {
-    return !!(
-      (lastQueryData.connectorRef != connectorRefValue ||
+    return (
+      (!ecrTagsData?.data && !fetchTagsError) ||
+      ((lastQueryData.connectorRef != connectorRefValue ||
         lastQueryData.imagePath !== imagePathValue ||
         getMultiTypeFromValue(artifact?.spec?.imagePath) === MultiTypeInputType.EXPRESSION ||
         lastQueryData.region !== regionValue) &&
-      checkIfQueryParamsisNotEmpty([connectorRefValue, imagePathValue, regionValue])
+        checkIfQueryParamsisNotEmpty([connectorRefValue, imagePathValue, regionValue]))
     )
   }
 

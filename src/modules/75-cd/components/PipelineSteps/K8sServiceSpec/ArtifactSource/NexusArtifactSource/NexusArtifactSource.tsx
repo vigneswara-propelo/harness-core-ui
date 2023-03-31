@@ -269,26 +269,29 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   }, [lastQueryData])
 
   const canFetchTags = (): boolean => {
-    return !!(repositoryFormatValue === RepositoryFormatTypes.Maven
-      ? lastQueryData.repositoryFormat !== repositoryFormatValue ||
-        lastQueryData.repository !== repositoryValue ||
-        lastQueryData.artifactId !== artifactIdValue ||
-        lastQueryData.groupId !== groupIdValue ||
-        lastQueryData.extension !== extensionValue ||
-        lastQueryData.classifier !== classifierValue
-      : repositoryFormatValue === RepositoryFormatTypes.Docker
-      ? lastQueryData.repositoryFormat !== repositoryFormatValue ||
-        lastQueryData.repository !== repositoryValue ||
-        lastQueryData.artifactPath !== artifactPathValue ||
-        lastQueryData.repositoryUrl !== repositoryUrlValue ||
-        lastQueryData.repositoryPort !== repositoryPortValue
-      : repositoryFormatValue === RepositoryFormatTypes.Raw
-      ? lastQueryData.repositoryFormat !== repositoryFormatValue ||
-        lastQueryData.repository !== repositoryValue ||
-        lastQueryData.group !== groupValue
-      : lastQueryData.repositoryFormat !== repositoryFormatValue ||
-        lastQueryData.repository !== repositoryValue ||
-        lastQueryData.packageName !== packageNameValue)
+    return (
+      (!data?.data && !nexusTagError) ||
+      (repositoryFormatValue === RepositoryFormatTypes.Maven
+        ? lastQueryData.repositoryFormat !== repositoryFormatValue ||
+          lastQueryData.repository !== repositoryValue ||
+          lastQueryData.artifactId !== artifactIdValue ||
+          lastQueryData.groupId !== groupIdValue ||
+          lastQueryData.extension !== extensionValue ||
+          lastQueryData.classifier !== classifierValue
+        : repositoryFormatValue === RepositoryFormatTypes.Docker
+        ? lastQueryData.repositoryFormat !== repositoryFormatValue ||
+          lastQueryData.repository !== repositoryValue ||
+          lastQueryData.artifactPath !== artifactPathValue ||
+          lastQueryData.repositoryUrl !== repositoryUrlValue ||
+          lastQueryData.repositoryPort !== repositoryPortValue
+        : repositoryFormatValue === RepositoryFormatTypes.Raw
+        ? lastQueryData.repositoryFormat !== repositoryFormatValue ||
+          lastQueryData.repository !== repositoryValue ||
+          lastQueryData.group !== groupValue
+        : lastQueryData.repositoryFormat !== repositoryFormatValue ||
+          lastQueryData.repository !== repositoryValue ||
+          lastQueryData.packageName !== packageNameValue)
+    )
   }
 
   const fetchTags = (): void => {

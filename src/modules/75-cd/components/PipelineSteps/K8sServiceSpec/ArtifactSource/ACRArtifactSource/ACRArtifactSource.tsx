@@ -315,12 +315,12 @@ const Content = (props: ACRRenderContent): JSX.Element => {
 
   const canFetchTags = (): boolean => {
     return (
-      !!(
-        lastQueryData.connectorRef !== connectorRefValue ||
+      (!acrTagsData?.data && !fetchTagsError) ||
+      ((lastQueryData.connectorRef !== connectorRefValue ||
         lastQueryData.subscriptionId !== subscriptionIdValue ||
         lastQueryData.registry !== registryValue ||
-        lastQueryData.repository !== repositoryValue
-      ) && shouldFetchTagsSource([connectorRefValue, subscriptionIdValue, registryValue, repositoryValue])
+        lastQueryData.repository !== repositoryValue) &&
+        shouldFetchTagsSource([connectorRefValue, subscriptionIdValue, registryValue, repositoryValue]))
     )
   }
 

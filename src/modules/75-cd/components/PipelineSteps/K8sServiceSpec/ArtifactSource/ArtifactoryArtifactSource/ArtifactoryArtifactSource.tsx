@@ -636,12 +636,13 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       }
 
   const canFetchTags = (): boolean => {
-    return !!(
-      (lastQueryData.connectorRef != connectorRefValue ||
+    return (
+      (!artifactoryTagsData?.data && !fetchTagsError) ||
+      ((lastQueryData.connectorRef != connectorRefValue ||
         lastQueryData.artifactPaths !== artifactPathValue ||
         getMultiTypeFromValue(artifact?.spec?.artifactPath) === MultiTypeInputType.EXPRESSION ||
         lastQueryData.repository !== repositoryValue) &&
-      shouldFetchTagsSource([connectorRefValue, artifactPathValue, repositoryValue])
+        shouldFetchTagsSource([connectorRefValue, artifactPathValue, repositoryValue]))
     )
   }
 

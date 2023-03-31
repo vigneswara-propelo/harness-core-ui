@@ -176,12 +176,13 @@ const Content = (props: GCRRenderContent): JSX.Element => {
   }
 
   const canFetchTags = (): boolean => {
-    return !!(
-      (lastQueryData.connectorRef != connectorRefValue ||
+    return (
+      (!gcrTagsData?.data && !fetchTagsError) ||
+      ((lastQueryData.connectorRef != connectorRefValue ||
         lastQueryData.imagePath !== imagePathValue ||
         getMultiTypeFromValue(artifact?.spec?.imagePath) === MultiTypeInputType.EXPRESSION ||
         lastQueryData.registryHostname !== registryHostnameValue) &&
-      shouldFetchTagsSource([connectorRefValue, imagePathValue, registryHostnameValue])
+        shouldFetchTagsSource([connectorRefValue, imagePathValue, registryHostnameValue]))
     )
   }
 
