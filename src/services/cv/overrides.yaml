@@ -203,6 +203,7 @@ allowpaths:
   - /account/{accountIdentifier}/annotation
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/annotation/identifier/{identifier}
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/annotation
+  - /account/{accountIdentifier}/annotation/identifier/{identifier}
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/log-feedback
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/log-feedback/{logFeedbackId}
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/log-feedback/{logFeedbackId}/history

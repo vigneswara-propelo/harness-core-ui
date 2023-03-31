@@ -5,9 +5,10 @@ import moment from 'moment'
 import { Intent, Popover, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { useDeleteAnnotation, useGetSecondaryEventDetails } from 'services/cv'
+import { useDeleteAccountLevelAnnotation, useDeleteAnnotation, useGetSecondaryEventDetails } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import { getIsAccountLevel } from '@cv/pages/slos/SLOCard/components/AnnotationDetails/AnnotationDetails.utils'
 import type { TimelineDataPoint } from '../../TimelineRow.types'
 import { getWidgetsGroupedByType } from './WidgetsWithSameStartTime.utils'
 import { DATE_FORMAT, INITIAL_MESSAGE_DETAILS, SLO_WIDGETS } from '../../TimelineRow.constants'
@@ -46,6 +47,7 @@ export default function WidgetsWithSameStartTime(props: WidgetsWithSameStartTime
   } = widgetWithAnnotationType || {}
   const { height, width } = icon
   const initialPosition = getInitialPositionOfWidget(position, height, width)
+  const isAccountLevel = getIsAccountLevel(orgIdentifier, projectIdentifier, accountId)
 
   const {
     data: secEventDetailsData,
@@ -69,6 +71,11 @@ export default function WidgetsWithSameStartTime(props: WidgetsWithSameStartTime
     orgIdentifier,
     projectIdentifier
   })
+
+  const { mutate: accountLevelDeleteAnnotation, loading: accountLevelDeleteAnnotationMessageLoading } =
+    useDeleteAccountLevelAnnotation({
+      accountIdentifier: accountId
+    })
 
   const { openDialog } = useConfirmationDialog({
     titleText: getString('cv.slos.sloDetailsChart.deleteMessageConfirmation'),
@@ -108,7 +115,11 @@ export default function WidgetsWithSameStartTime(props: WidgetsWithSameStartTime
 
   const handleDeleteNestedAnnotationMessage = async (identifier: string): Promise<void> => {
     try {
-      await deleteAnnotations(identifier)
+      if (isAccountLevel) {
+        await accountLevelDeleteAnnotation(identifier)
+      } else {
+        await deleteAnnotations(identifier)
+      }
       await fetchSecondaryEvents?.()
       showSuccess(getString('cv.slos.sloDetailsChart.annotationMessageDeleted'))
     } catch (error) {
@@ -116,7 +127,8 @@ export default function WidgetsWithSameStartTime(props: WidgetsWithSameStartTime
     }
   }
 
-  const loading = deleteAnnotationsMessageLoading || secEventDetailsLoading
+  const loading =
+    deleteAnnotationsMessageLoading || accountLevelDeleteAnnotationMessageLoading || secEventDetailsLoading
 
   return (
     <Container key={`${startTimeForWidgets}-${position}-${index}`} className={css.event} style={initialPosition}>
@@ -127,116 +139,107 @@ export default function WidgetsWithSameStartTime(props: WidgetsWithSameStartTime
         content={
           <Container className={css.downTimeContainer} padding={'small'}>
             <Layout.Vertical>
-              <Text padding={{ bottom: 'small' }} className={css.downTimeTextElements}>
+              <Text padding={{ bottom: 'small' }} className={css.annotationTextElements}>
                 {moment(new Date(startTimeForWidgets)).format(DATE_FORMAT)}
               </Text>
               <hr className={css.division} />
               {widgetWithAnnotationType ? (
-                <Popover
-                  interactionKind={PopoverInteractionKind.CLICK}
-                  popoverClassName={css.annotationsWidgetPopover}
-                  position={PopoverPosition.LEFT}
-                  content={
-                    <Container className={css.annotationContainer} padding={'small'}>
-                      {loading ? (
-                        <Container
-                          flex={{ justifyContent: 'center', alignItems: 'center' }}
-                          height={124}
-                          data-testid="loading"
-                        >
-                          <Icon name="spinner" color={Color.GREY_400} size={30} />
-                        </Container>
-                      ) : (
-                        <>
-                          <Text
-                            onClick={() => {
-                              addAnnotation?.({
-                                message: '',
-                                startTime: startTimeForAnnotation,
-                                endTime: endTimeForAnnotation,
-                                id: ''
-                              })
-                            }}
-                            className={css.addAnnotationText}
-                            padding={{ bottom: 'small' }}
-                          >
-                            {getString('cv.slos.sloDetailsChart.addAnnotation')}
-                          </Text>
-                          <Container flex={{ justifyContent: 'flex-start' }} padding={{ bottom: 'small' }}>
-                            <Text className={css.annotationTextElements}>{'Period: '}</Text>
-                            <Text className={css.annotationTextElements}>
-                              {moment(new Date(startTimeForAnnotation)).format(DATE_FORMAT)}
-                            </Text>
-                            <Text className={css.annotationTextElements}>{' - '}</Text>
-                            <Text className={css.annotationTextElements}>{`${moment(
-                              new Date(endTimeForAnnotation)
-                            ).format(DATE_FORMAT)}`}</Text>
-                          </Container>
-                          {Array.isArray(messages) && messages.length
-                            ? messages.map(messageData => {
-                                const { message = '', createdAt, uuid } = messageData || {}
-                                return (
-                                  <Layout.Vertical key={message}>
-                                    <Container flex={{ justifyContent: 'space-between' }}>
-                                      <Text
-                                        className={css.annotationMessageStartTime}
-                                        padding={{ top: 'small', bottom: 'small' }}
-                                      >
-                                        {`${moment(new Date(createdAt)).format(DATE_FORMAT)}`}
-                                      </Text>
-                                      <Container flex={{ justifyContent: 'flex-start' }}>
-                                        <Icon
-                                          className={css.annotationActionIcons}
-                                          data-testid="editAnnotations"
-                                          padding={'xsmall'}
-                                          name="Edit"
-                                          title={getString('edit')}
-                                          size={16}
-                                          onClick={e => {
-                                            e.stopPropagation()
-                                            addAnnotation?.({
-                                              message,
-                                              startTime: startTimeForAnnotation,
-                                              endTime: endTimeForAnnotation,
-                                              id: uuid
-                                            })
-                                          }}
-                                        />
-                                        <Icon
-                                          className={css.annotationActionIcons}
-                                          data-testid="deleteAnnotations"
-                                          padding={'xsmall'}
-                                          name="main-trash"
-                                          title={getString('delete')}
-                                          size={16}
-                                          onClick={e => {
-                                            e.stopPropagation()
-                                            setMessageDetailsInfo({
-                                              message,
-                                              id: uuid
-                                            })
-                                            openDialog()
-                                          }}
-                                        />
-                                      </Container>
-                                    </Container>
-                                    <Text className={css.annotationTextElements} padding={{ bottom: 'small' }}>
-                                      {message}
-                                    </Text>
-                                    <hr className={css.division} />
-                                  </Layout.Vertical>
-                                )
-                              })
-                            : null}
-                        </>
-                      )}
+                <Container className={css.annotationContainer}>
+                  {loading ? (
+                    <Container
+                      flex={{ justifyContent: 'center', alignItems: 'center' }}
+                      height={124}
+                      data-testid="loading"
+                    >
+                      <Icon name="spinner" color={Color.GREY_400} size={30} />
                     </Container>
-                  }
-                >
-                  <Text className={css.annotationText} padding={{ bottom: 'small' }}>
-                    {getString('cv.slos.sloDetailsChart.annotation')}
-                  </Text>
-                </Popover>
+                  ) : (
+                    <>
+                      <Text
+                        onClick={() => {
+                          addAnnotation?.({
+                            message: '',
+                            startTime: startTimeForAnnotation,
+                            endTime: endTimeForAnnotation,
+                            id: ''
+                          })
+                        }}
+                        className={css.addAnnotationText}
+                        padding={{ bottom: 'small' }}
+                      >
+                        {getString('cv.slos.sloDetailsChart.addAnnotation')}
+                      </Text>
+                      <Container flex={{ justifyContent: 'flex-start' }} padding={{ bottom: 'small' }}>
+                        <Text font={{ weight: 'bold' }} className={css.annotationTextElements}>
+                          {'Period: '}
+                        </Text>
+                        <Text className={css.annotationTextElements}>
+                          {moment(new Date(startTimeForAnnotation)).format(DATE_FORMAT)}
+                        </Text>
+                        <Text className={css.annotationTextElements}>{' - '}</Text>
+                        <Text className={css.annotationTextElements}>{`${moment(new Date(endTimeForAnnotation)).format(
+                          DATE_FORMAT
+                        )}`}</Text>
+                      </Container>
+                      {Array.isArray(messages) && messages.length
+                        ? messages.map(messageData => {
+                            const { message = '', createdAt, uuid } = messageData || {}
+                            return (
+                              <Layout.Vertical key={message}>
+                                <Container flex={{ justifyContent: 'space-between' }}>
+                                  <Text
+                                    className={css.annotationMessageStartTime}
+                                    padding={{ top: 'small', bottom: 'small' }}
+                                  >
+                                    {`${moment(new Date(createdAt)).format(DATE_FORMAT)}`}
+                                  </Text>
+                                  <Container flex={{ justifyContent: 'flex-start' }}>
+                                    <Icon
+                                      className={css.annotationActionIcons}
+                                      data-testid="editAnnotations"
+                                      padding={'xsmall'}
+                                      name="Edit"
+                                      title={getString('edit')}
+                                      size={16}
+                                      onClick={e => {
+                                        e.stopPropagation()
+                                        addAnnotation?.({
+                                          message,
+                                          startTime: startTimeForAnnotation,
+                                          endTime: endTimeForAnnotation,
+                                          id: uuid
+                                        })
+                                      }}
+                                    />
+                                    <Icon
+                                      className={css.annotationActionIcons}
+                                      data-testid="deleteAnnotations"
+                                      padding={'xsmall'}
+                                      name="main-trash"
+                                      title={getString('delete')}
+                                      size={16}
+                                      onClick={e => {
+                                        e.stopPropagation()
+                                        setMessageDetailsInfo({
+                                          message,
+                                          id: uuid
+                                        })
+                                        openDialog()
+                                      }}
+                                    />
+                                  </Container>
+                                </Container>
+                                <Text className={css.annotationTextElements} padding={{ bottom: 'small' }}>
+                                  {message}
+                                </Text>
+                                <hr className={css.division} />
+                              </Layout.Vertical>
+                            )
+                          })
+                        : null}
+                    </>
+                  )}
+                </Container>
               ) : null}
             </Layout.Vertical>
 

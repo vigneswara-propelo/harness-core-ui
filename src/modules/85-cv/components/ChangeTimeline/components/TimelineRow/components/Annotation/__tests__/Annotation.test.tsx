@@ -30,7 +30,8 @@ jest.mock('services/cv', () => ({
     error: null,
     refetch: jest.fn()
   })),
-  useDeleteAnnotation: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
+  useDeleteAnnotation: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useDeleteAccountLevelAnnotation: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
 
 describe('Unit tests for Annotation', () => {

@@ -10,6 +10,9 @@
 .downTimeContainer {
   display: flex;
   flex-direction: column;
+  padding: var(--spacing-medium) !important;
+  max-height: 246px;
+  overflow-y: scroll;
 }
 
 .downTimeTextElements {
@@ -41,6 +44,7 @@
 
 .annotationText {
   font-size: var(--font-size-small) !important;
+  font-weight: bold !important;
   line-height: 16px !important;
   color: var(--primary-5) !important;
   cursor: pointer;
@@ -110,6 +114,6 @@
 
 .division {
   border-color: var(--grey-200);
-  margin: var(--spacing-8) 0 var(--spacing-2) 0;
+  margin: var(--spacing-8) 0 var(--spacing-4) 0;
   opacity: 0.3;
 }

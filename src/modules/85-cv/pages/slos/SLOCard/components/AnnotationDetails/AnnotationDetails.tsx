@@ -9,13 +9,19 @@ import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import { DateTimePicker } from '@common/components/DateTimePicker/DateTimePicker'
 import type { AnnotationMessage } from '@cv/components/ChangeTimeline/components/TimelineRow/components/Annotation/Annotation.types'
-import { useSaveAnnotation, useUpdateAnnotation } from 'services/cv'
+import {
+  useSaveAccountLevelAnnotation,
+  useSaveAnnotation,
+  useUpdateAccountLevelAnnotation,
+  useUpdateAnnotation
+} from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { AnnotationDetailsForm } from './AnnotationDetails.types'
 import {
   getAnnotationDetailsFormInitialValues,
   getAnnotationReqBody,
+  getIsAccountLevel,
   validateAnnotationDetailsForm
 } from './AnnotationDetails.utils'
 import { AnnotationDetailsFields, DATE_PARSE_FORMAT } from './AnnotationDetails.constants'
@@ -37,6 +43,7 @@ export default function AnnotationDetails(props: AnnotationDetailsProps): JSX.El
   const title = isEdit
     ? getString('cv.slos.sloDetailsChart.editAnnotation')
     : getString('cv.slos.sloDetailsChart.addAnnotation')
+  const isAccountLevel = getIsAccountLevel(orgIdentifier, projectIdentifier, accountId)
   const isDisabled = !isEmpty(annotationMessage)
 
   const { mutate: saveAnnotation, loading: saveAnnotationLoading } = useSaveAnnotation({
@@ -45,12 +52,23 @@ export default function AnnotationDetails(props: AnnotationDetailsProps): JSX.El
     orgIdentifier
   })
 
+  const { mutate: accountLevelSaveAnnotation, loading: accountLevelSaveAnnotationLoading } =
+    useSaveAccountLevelAnnotation({
+      accountIdentifier: accountId
+    })
+
   const { mutate: updateAnnotation, loading: updateAnnotationLoading } = useUpdateAnnotation({
     accountIdentifier: accountId,
     projectIdentifier,
     orgIdentifier,
     identifier: annotationMessage?.id as string
   })
+
+  const { mutate: accountLevelUpdateAnnotation, loading: accountLevelUpdateAnnotationLoading } =
+    useUpdateAccountLevelAnnotation({
+      accountIdentifier: accountId,
+      identifier: annotationMessage?.id as string
+    })
 
   const handleSubmitAnnotation = async (annotationDetails: AnnotationDetailsForm): Promise<void> => {
     const { startDateTime, endDateTime, annotationMessage: message } = annotationDetails
@@ -62,13 +80,15 @@ export default function AnnotationDetails(props: AnnotationDetailsProps): JSX.El
       sloIdentifier,
       startDateTime
     })
+    const updateAnnotationCall = isAccountLevel ? accountLevelUpdateAnnotation : updateAnnotation
+    const saveAnnotationCall = isAccountLevel ? accountLevelSaveAnnotation : saveAnnotation
     try {
       if (isEdit) {
-        await updateAnnotation(annotationReqBody)
+        await updateAnnotationCall(annotationReqBody)
         await fetchSecondaryEvents()
         showSuccess(getString('cv.slos.sloDetailsChart.updateAnnotationMessage'))
       } else {
-        await saveAnnotation(annotationReqBody)
+        await saveAnnotationCall(annotationReqBody)
         await fetchSecondaryEvents()
         showSuccess(getString('cv.slos.sloDetailsChart.addAnnotationMessage'))
       }
@@ -78,7 +98,11 @@ export default function AnnotationDetails(props: AnnotationDetailsProps): JSX.El
     }
   }
 
-  const isAnnotationsLoading = saveAnnotationLoading || updateAnnotationLoading
+  const isAnnotationsLoading =
+    saveAnnotationLoading ||
+    updateAnnotationLoading ||
+    accountLevelSaveAnnotationLoading ||
+    accountLevelUpdateAnnotationLoading
 
   return (
     <Container padding={{ left: 'medium', top: 'medium' }}>

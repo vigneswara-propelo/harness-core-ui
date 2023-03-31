@@ -5,9 +5,10 @@ import moment from 'moment'
 import { Intent, Popover, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { useDeleteAnnotation, useGetSecondaryEventDetails } from 'services/cv'
+import { useDeleteAccountLevelAnnotation, useDeleteAnnotation, useGetSecondaryEventDetails } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import { getIsAccountLevel } from '@cv/pages/slos/SLOCard/components/AnnotationDetails/AnnotationDetails.utils'
 import type { TimelineDataPoint } from '../../TimelineRow.types'
 import { DATE_FORMAT, INITIAL_MESSAGE_DETAILS, SLO_WIDGETS } from '../../TimelineRow.constants'
 import type { AnnotationMessage } from './Annotation.types'
@@ -40,6 +41,7 @@ export default function Annotation(props: AnnotationProps): JSX.Element {
   const { height, width, url } = icon
   const initialPosition = getInitialPositionOfWidget(position, height, width)
   const { showError, showSuccess } = useToaster()
+  const isAccountLevel = getIsAccountLevel(orgIdentifier, projectIdentifier, accountId)
 
   const {
     data: secondaryEventDetailsData,
@@ -61,6 +63,11 @@ export default function Annotation(props: AnnotationProps): JSX.Element {
     orgIdentifier,
     projectIdentifier
   })
+
+  const { mutate: accountLevelDeleteAnnotation, loading: accountLevelDeleteAnnotationMessageLoading } =
+    useDeleteAccountLevelAnnotation({
+      accountIdentifier: accountId
+    })
 
   const { openDialog } = useConfirmationDialog({
     titleText: getString('cv.slos.sloDetailsChart.deleteMessageConfirmation'),
@@ -93,7 +100,11 @@ export default function Annotation(props: AnnotationProps): JSX.Element {
 
   const handleDeleteAnnotationMessage = async (identifier: string): Promise<void> => {
     try {
-      await deleteAnnotation(identifier)
+      if (isAccountLevel) {
+        await accountLevelDeleteAnnotation(identifier)
+      } else {
+        await deleteAnnotation(identifier)
+      }
       await fetchSecondaryEvents?.()
       showSuccess(getString('cv.slos.sloDetailsChart.annotationMessageDeleted'))
     } catch (error) {
@@ -101,7 +112,8 @@ export default function Annotation(props: AnnotationProps): JSX.Element {
     }
   }
 
-  const loading = deleteAnnotationMessageLoading || secondaryEventDetailsLoading
+  const loading =
+    deleteAnnotationMessageLoading || accountLevelDeleteAnnotationMessageLoading || secondaryEventDetailsLoading
 
   return (
     <Container key={`${startTime}-${position}-${index}`} className={css.event} style={initialPosition}>
@@ -132,7 +144,9 @@ export default function Annotation(props: AnnotationProps): JSX.Element {
                   {getString('cv.slos.sloDetailsChart.addAnnotation')}
                 </Text>
                 <Container flex={{ justifyContent: 'flex-start' }} padding={{ bottom: 'small' }}>
-                  <Text className={css.annotationTextElements}>{'Period: '}</Text>
+                  <Text font={{ weight: 'bold' }} className={css.annotationTextElements}>
+                    {'Period: '}
+                  </Text>
                   <Text className={css.annotationTextElements}>{moment(new Date(startTime)).format(DATE_FORMAT)}</Text>
                   <Text className={css.annotationTextElements}>{' - '}</Text>
                   <Text className={css.annotationTextElements}>{`${moment(new Date(endTime)).format(

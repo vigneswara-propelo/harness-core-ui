@@ -30,7 +30,8 @@ jest.mock('services/cv', () => ({
     error: null,
     refetch: jest.fn()
   })),
-  useDeleteAnnotation: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
+  useDeleteAnnotation: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useDeleteAccountLevelAnnotation: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
 
 describe('Unit tests for WidgetsWithSameStartTime', () => {
@@ -41,9 +42,6 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
     userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
 
-    // Verify if nested annotation is present
-    expect(getByText('cv.slos.sloDetailsChart.annotation')).toBeInTheDocument()
-    userEvent.click(getByText('cv.slos.sloDetailsChart.annotation'))
     for (const annotation of mockedSecondaryEventsDetailsResponse.data.details.annotations) {
       expect(getByText(annotation.message)).toBeInTheDocument()
     }
@@ -57,10 +55,6 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
 
     userEvent.click(multiWidgetsIcon)
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
-
-    // Verify if nested annotation is present
-    expect(getByText('cv.slos.sloDetailsChart.annotation')).toBeInTheDocument()
-    userEvent.click(getByText('cv.slos.sloDetailsChart.annotation'))
   })
 
   test('should be able to click on Edit annotation link when annotations icon is clicked for nested annotations card', async () => {
@@ -69,10 +63,6 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
 
     userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
-
-    // Verify if nested annotation is present
-    expect(getByText('cv.slos.sloDetailsChart.annotation')).toBeInTheDocument()
-    userEvent.click(getByText('cv.slos.sloDetailsChart.annotation'))
 
     const editAnnotationIcons = getAllByTestId('editAnnotations')
     expect(editAnnotationIcons.length).toEqual(mockedSecondaryEventsDetailsResponse.data.details.annotations.length)
@@ -88,10 +78,6 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
 
     userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
-
-    // Verify if nested annotation is present
-    expect(getByText('cv.slos.sloDetailsChart.annotation')).toBeInTheDocument()
-    userEvent.click(getByText('cv.slos.sloDetailsChart.annotation'))
 
     const deleteAnnotationIcons = getAllByTestId('deleteAnnotations')
     expect(deleteAnnotationIcons.length).toEqual(mockedSecondaryEventsDetailsResponse.data.details.annotations.length)
@@ -112,10 +98,6 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
 
     userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
-
-    // Verify if nested annotation is present
-    expect(getByText('cv.slos.sloDetailsChart.annotation')).toBeInTheDocument()
-    userEvent.click(getByText('cv.slos.sloDetailsChart.annotation'))
 
     const deleteAnnotationIcons = getAllByTestId('deleteAnnotations')
     expect(deleteAnnotationIcons.length).toEqual(mockedSecondaryEventsDetailsResponse.data.details.annotations.length)
@@ -147,11 +129,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
     userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
 
-    // Verify if nested annotation is present
-    expect(getByText('cv.slos.sloDetailsChart.annotation')).toBeInTheDocument()
-
-    // When annotationIcon is clicked user should be able to see the loading state
-    userEvent.click(getByText('cv.slos.sloDetailsChart.annotation'))
+    // Verify loading
     expect(getByTestId('loading')).toBeInTheDocument()
   })
 
@@ -174,11 +152,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
     userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
 
-    // Verify if nested annotation is present
-    expect(getByText('cv.slos.sloDetailsChart.annotation')).toBeInTheDocument()
-
-    // When annotationIcon is clicked user should be able to see the loading state
-    userEvent.click(getByText('cv.slos.sloDetailsChart.annotation'))
+    // Verify error
     expect(getByText('Failed to fetch secondary event details')).toBeInTheDocument()
   })
 

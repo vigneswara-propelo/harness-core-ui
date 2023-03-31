@@ -62,3 +62,7 @@ export function getAnnotationReqBody({
     startTime: moment(startDateTime, DATE_PARSE_FORMAT).valueOf() / 1000
   }
 }
+
+export function getIsAccountLevel(orgIdentifier: string, projectIdentifier: string, accountId: string): boolean {
+  return !orgIdentifier && !projectIdentifier && !!accountId
+}

@@ -7006,6 +7006,165 @@ export const saveAccountLevelAnnotationPromise = (
     SaveAccountLevelAnnotationPathParams
   >('POST', getConfig('cv/api'), `/account/${accountIdentifier}/annotation`, props, signal)
 
+export interface DeleteAccountLevelAnnotationPathParams {
+  accountIdentifier: string
+}
+
+export type DeleteAccountLevelAnnotationProps = Omit<
+  MutateProps<RestResponseBoolean, unknown, void, string, DeleteAccountLevelAnnotationPathParams>,
+  'path' | 'verb'
+> &
+  DeleteAccountLevelAnnotationPathParams
+
+/**
+ * delete annotation
+ */
+export const DeleteAccountLevelAnnotation = ({ accountIdentifier, ...props }: DeleteAccountLevelAnnotationProps) => (
+  <Mutate<RestResponseBoolean, unknown, void, string, DeleteAccountLevelAnnotationPathParams>
+    verb="DELETE"
+    path={`/account/${accountIdentifier}/annotation/identifier`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteAccountLevelAnnotationProps = Omit<
+  UseMutateProps<RestResponseBoolean, unknown, void, string, DeleteAccountLevelAnnotationPathParams>,
+  'path' | 'verb'
+> &
+  DeleteAccountLevelAnnotationPathParams
+
+/**
+ * delete annotation
+ */
+export const useDeleteAccountLevelAnnotation = ({
+  accountIdentifier,
+  ...props
+}: UseDeleteAccountLevelAnnotationProps) =>
+  useMutate<RestResponseBoolean, unknown, void, string, DeleteAccountLevelAnnotationPathParams>(
+    'DELETE',
+    (paramsInPath: DeleteAccountLevelAnnotationPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/annotation/identifier`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * delete annotation
+ */
+export const deleteAccountLevelAnnotationPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: MutateUsingFetchProps<RestResponseBoolean, unknown, void, string, DeleteAccountLevelAnnotationPathParams> & {
+    accountIdentifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseBoolean, unknown, void, string, DeleteAccountLevelAnnotationPathParams>(
+    'DELETE',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/annotation/identifier`,
+    props,
+    signal
+  )
+
+export interface UpdateAccountLevelAnnotationPathParams {
+  accountIdentifier: string
+  identifier: string
+}
+
+export type UpdateAccountLevelAnnotationProps = Omit<
+  MutateProps<
+    RestResponseAnnotationResponse,
+    unknown,
+    void,
+    AnnotationDTORequestBody,
+    UpdateAccountLevelAnnotationPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateAccountLevelAnnotationPathParams
+
+/**
+ * updates annotation message
+ */
+export const UpdateAccountLevelAnnotation = ({
+  accountIdentifier,
+  identifier,
+  ...props
+}: UpdateAccountLevelAnnotationProps) => (
+  <Mutate<
+    RestResponseAnnotationResponse,
+    unknown,
+    void,
+    AnnotationDTORequestBody,
+    UpdateAccountLevelAnnotationPathParams
+  >
+    verb="PUT"
+    path={`/account/${accountIdentifier}/annotation/identifier/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateAccountLevelAnnotationProps = Omit<
+  UseMutateProps<
+    RestResponseAnnotationResponse,
+    unknown,
+    void,
+    AnnotationDTORequestBody,
+    UpdateAccountLevelAnnotationPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateAccountLevelAnnotationPathParams
+
+/**
+ * updates annotation message
+ */
+export const useUpdateAccountLevelAnnotation = ({
+  accountIdentifier,
+  identifier,
+  ...props
+}: UseUpdateAccountLevelAnnotationProps) =>
+  useMutate<
+    RestResponseAnnotationResponse,
+    unknown,
+    void,
+    AnnotationDTORequestBody,
+    UpdateAccountLevelAnnotationPathParams
+  >(
+    'PUT',
+    (paramsInPath: UpdateAccountLevelAnnotationPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/annotation/identifier/${paramsInPath.identifier}`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, identifier }, ...props }
+  )
+
+/**
+ * updates annotation message
+ */
+export const updateAccountLevelAnnotationPromise = (
+  {
+    accountIdentifier,
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseAnnotationResponse,
+    unknown,
+    void,
+    AnnotationDTORequestBody,
+    UpdateAccountLevelAnnotationPathParams
+  > & { accountIdentifier: string; identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseAnnotationResponse,
+    unknown,
+    void,
+    AnnotationDTORequestBody,
+    UpdateAccountLevelAnnotationPathParams
+  >('PUT', getConfig('cv/api'), `/account/${accountIdentifier}/annotation/identifier/${identifier}`, props, signal)
+
 export interface ChangeEventListForAccountQueryParams {
   serviceIdentifiers?: string[]
   envIdentifiers?: string[]

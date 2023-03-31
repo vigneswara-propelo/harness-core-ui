@@ -29,7 +29,9 @@ function WrapperComponent(props: AnnotationDetailsProps): JSX.Element {
 
 jest.mock('services/cv', () => ({
   useSaveAnnotation: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
-  useUpdateAnnotation: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
+  useSaveAccountLevelAnnotation: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useUpdateAnnotation: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useUpdateAccountLevelAnnotation: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
 
 describe('Unit tests for AnnotationDetails', () => {

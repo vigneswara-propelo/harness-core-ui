@@ -47,14 +47,14 @@ export function TimelineRow(props: TimelineRowProps): JSX.Element {
     const containerWidth = (timelineRowRef.current.parentElement?.getBoundingClientRect().width || 0) - leftOffset
     setDataWithPositions(getDataWithPositions(containerWidth, startTimestamp, endTimestamp, data))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timelineRowRef?.current, data, endTimestamp, startTimestamp])
+  }, [timelineRowRef?.current, data, endTimestamp, startTimestamp, leftOffset])
+
+  // [data, endTimestamp, startTimestamp, leftOffset]
 
   useEffect(() => {
-    if (dataWithPositions.length) {
-      const widgetsGroupedWithStartTime: { [key: string]: TimelineDataPoint[] } =
-        getWidgetsGroupedWithStartTime(dataWithPositions)
-      setDataGroupedWithStartTime(widgetsGroupedWithStartTime)
-    }
+    const widgetsGroupedWithStartTime: { [key: string]: TimelineDataPoint[] } =
+      getWidgetsGroupedWithStartTime(dataWithPositions)
+    setDataGroupedWithStartTime(widgetsGroupedWithStartTime)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataWithPositions])
 
