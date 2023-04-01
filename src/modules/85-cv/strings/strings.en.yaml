@@ -843,7 +843,7 @@ slos:
   subTitle: Review the status and error budget of all your defined service level objectives
   completeTitle: Service Level Objectives (SLOs)
   defineSLOSubttitle: Select the Monitored Service for which you want to define the SLO
-  configureSLI: Configure Service Level Indicatiors (SLIs)
+  configureSLI: Configure Service Level Indicators (SLIs)
   configureSLISubtitle: Calculate your SLI by defining which aspect of your service you wish to measure for performance.
   setSLOSubtitle: Set a time period for compliance and a target for “good service”
   errorBudgetPolicySubtitle: Notifications are sent to channels as soon as conditions meet a threshold specified by the rule.
