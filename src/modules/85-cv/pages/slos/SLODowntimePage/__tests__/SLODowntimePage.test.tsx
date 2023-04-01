@@ -114,8 +114,11 @@ describe('SLO Downtime page', () => {
     expect(getByText('cv.sloDowntime.allMonitoredServices')).toBeInTheDocument()
     expect(getAllByText('deploymentText')).toHaveLength(2)
 
-    act(() => {
-      fireEvent.mouseOver(container.querySelectorAll('[class="statusIcon"]')[0])
+    // check status icon tooltip
+    const statusRunningIcon = container.querySelector('[data-icon="status-running"]')
+    fireEvent.mouseOver(statusRunningIcon!)
+    await waitFor(() => {
+      expect(getByText('active')).toBeInTheDocument()
     })
 
     fireEvent.click(getByText('common.history'))

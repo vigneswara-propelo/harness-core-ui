@@ -18,7 +18,6 @@ import {
   AffectedEntity,
   DowntimeDuration,
   DowntimeListView,
-  DowntimeStatusDetails,
   ResponsePageDowntimeListView,
   useDeleteDowntimeData,
   useEnablesDisablesDowntime,
@@ -29,12 +28,10 @@ import emptyData from '@cv/assets/emptyData.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import {
-  getDowntimeCategoryLabel,
-  getFormattedTime
-} from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.utils'
+import { getDowntimeCategoryLabel } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.utils'
+import DowntimeTooltip from '@cv/pages/slos/common/DowntimeTooltip/DowntimeTooltip'
 import DowntimeActions from './components/DowntimeActions/DowntimeActions'
-import { getDowntimeStatusLabel, getDowntimeWindowInfo, getDuration, getIsSetPreviousPage } from './DowntimeList.utils'
+import { getDowntimeWindowInfo, getDuration, getIsSetPreviousPage } from './DowntimeList.utils'
 import { DowntimeStatus } from '../../SLODowntimePage.types'
 import { FiltersContext } from '../../FiltersContext'
 import DowntimeFilters from '../DowntimeFilters/DowntimeFilters'
@@ -169,28 +166,6 @@ const DowntimeList = ({
     }
   }
 
-  const RenderTooltip = ({
-    downtimeStatusDetails,
-    timezone
-  }: {
-    downtimeStatusDetails: DowntimeStatusDetails
-    timezone: string
-  }): JSX.Element => {
-    const { status, endTime = Date.now() / 1000 } = downtimeStatusDetails
-
-    return (
-      <Layout.Vertical padding={'medium'} spacing={'xsmall'} className={css.tooltip}>
-        <Text>{getDowntimeStatusLabel(getString, status)}</Text>
-        {status === DowntimeStatus.ACTIVE && (
-          <Text>
-            <span className={css.bolder}>{getString('cv.ends')}</span>{' '}
-            {getFormattedTime({ time: endTime, timezone, format: 'LLLL' })} ({timezone})
-          </Text>
-        )}
-      </Layout.Vertical>
-    )
-  }
-
   const RenderDowntimeToggle: Renderer<CellProps<DowntimeListView>> = ({ row }) => {
     const downtime = row?.original
     const { enabled = true, name = '', identifier = '' } = downtime
@@ -207,7 +182,7 @@ const DowntimeList = ({
     return (
       <Text
         flex
-        tooltip={<RenderTooltip downtimeStatusDetails={downtimeStatusDetails} timezone={timezone} />}
+        tooltip={<DowntimeTooltip downtimeStatusDetails={downtimeStatusDetails} timezone={timezone} />}
         tooltipProps={{
           isDark: true,
           interactionKind: PopoverInteractionKind.HOVER,

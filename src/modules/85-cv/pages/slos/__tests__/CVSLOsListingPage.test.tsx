@@ -96,7 +96,7 @@ describe('CVSLOsListingPage', () => {
   })
 
   test('Should render created SLOs and display all the fields for the created SLO', async () => {
-    const { getByText } = render(<ComponentWrapper />)
+    const { getByText, getAllByText } = render(<ComponentWrapper />)
     await waitFor(() => {
       expect(getByText('SLO-4')).toBeInTheDocument()
       expect(getByText('env_appd')).toBeInTheDocument()
@@ -105,9 +105,9 @@ describe('CVSLOsListingPage', () => {
       expect(getByText('Journey-3')).toBeInTheDocument()
       expect(getByText('12')).toBeInTheDocument()
       expect(getByText('43 m')).toBeInTheDocument()
-      expect(getByText('100.00%')).toBeInTheDocument()
+      expect(getAllByText('100.00%')).toHaveLength(2)
       expect(getByText('97%')).toBeInTheDocument()
-      expect(getByText('HEALTHY')).toBeInTheDocument()
+      expect(getAllByText('HEALTHY')).toHaveLength(2)
     })
   })
 
@@ -331,6 +331,16 @@ describe('CVSLOsListingPage', () => {
     expect(container.querySelector('div[data-test-id="Healthy_tooltip"]')?.parentElement).not.toHaveClass(
       'Card--selected'
     )
+  })
+
+  test('rendering the downtime status tooltip', async () => {
+    const { container, getByText } = render(<ComponentWrapper />)
+
+    const downtimeIcon = container.querySelector('[class*="downtimeIcon"]')
+    fireEvent.mouseOver(downtimeIcon!)
+    await waitFor(() => {
+      expect(getByText('cv.sloDowntime.downtimeEndsOn')).toBeInTheDocument()
+    })
   })
 
   test('deleting a widget', async () => {

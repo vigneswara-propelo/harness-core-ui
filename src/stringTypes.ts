@@ -8890,6 +8890,7 @@ export interface StringsMap {
   'cv.sloDowntime.confirmDeleteDowntime': string
   'cv.sloDowntime.createSLODowntime': string
   'cv.sloDowntime.downtimeCreated': string
+  'cv.sloDowntime.downtimeEndsOn': string
   'cv.sloDowntime.downtimeName': string
   'cv.sloDowntime.downtimeToggle': string
   'cv.sloDowntime.downtimeUpdated': string

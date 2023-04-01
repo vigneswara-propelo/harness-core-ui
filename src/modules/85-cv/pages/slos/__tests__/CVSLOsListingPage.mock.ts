@@ -212,6 +212,36 @@ export const mockSLODashboardWidgetsData = {
         noOfActiveAlerts: 12,
         errorBudgetRisk: 'HEALTHY',
         sloType: 'Composite'
+      },
+      {
+        sloIdentifier: 'SLO5',
+        name: 'SLO-5',
+        monitoredServiceIdentifier: 'downtime_testing',
+        monitoredServiceName: 'downtime_testing',
+        healthSourceIdentifier: 'appd1',
+        healthSourceName: 'appd1',
+        serviceIdentifier: 'downtime',
+        environmentIdentifier: 'testing',
+        environmentName: 'testing',
+        serviceName: 'downtime',
+        tags: {},
+        description: 'renders downtime status tooltip',
+        userJourneyIdentifier: 'Journey4',
+        userJourneyName: 'Journey-4',
+        burnRate: 0.0,
+        errorBudgetRemainingPercentage: 100.0,
+        errorBudgetRemaining: 90,
+        totalErrorBudget: 90,
+        sloTargetType: 'Rolling',
+        sloTargetPercentage: 90.0,
+        noOfActiveAlerts: 5,
+        errorBudgetRisk: 'HEALTHY',
+        sloType: 'Simple',
+        downtimeStatusDetails: {
+          status: 'Active',
+          startTime: 1680262730,
+          endTime: 1680348600
+        }
       }
     ],
     pageIndex: 0,

@@ -7,8 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly actionIcons: string
-  readonly actions: string
-  readonly downtimeIcon: string
+  readonly bolder: string
+  readonly tooltip: string
 }
 export default styles

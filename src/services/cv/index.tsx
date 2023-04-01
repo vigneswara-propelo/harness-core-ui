@@ -4148,6 +4148,7 @@ export interface PartialSchemaDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   namespace?: string
@@ -5899,6 +5900,7 @@ export interface SLOErrorBudgetResetDTO {
 export interface SLOHealthListView {
   burnRate: number
   description?: string
+  downtimeStatusDetails?: DowntimeStatusDetails
   environmentIdentifier?: string
   environmentName?: string
   errorBudgetRemaining: number
@@ -6862,6 +6864,7 @@ export interface YamlSchemaMetadata {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   )[]
@@ -6887,6 +6890,7 @@ export interface YamlSchemaWithDetails {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   schema?: JsonNode

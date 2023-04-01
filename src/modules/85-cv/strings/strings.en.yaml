@@ -1027,6 +1027,7 @@ sloDowntime:
   allMonitoredServices: All monitored services
   repeatEvery: Repeat every
   repeatEndsOn: Repeat ends on
+  downtimeEndsOn: Downtime ends on
   durationText: from start time
   numberOfSLOs: NUMBER OF SLOs ASSIGNED
   downtimeCreated: SLO Downtime created successfully

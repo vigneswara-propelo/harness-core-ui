@@ -8,8 +8,12 @@
 import React from 'react'
 import { Icon, Layout, useConfirmationDialog, Text } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
+import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import type { SLOHealthListView } from 'services/cv'
+import type { DowntimeStatusDetails, SLOHealthListView } from 'services/cv'
+import downTime from '@cv/assets/downTime.svg'
+import { DowntimeStatus } from '../../SLODowntimePage/SLODowntimePage.types'
+import DowntimeTooltip from '../../common/DowntimeTooltip/DowntimeTooltip'
 import css from './SLOActions.module.scss'
 
 export interface SLOActionsProps {
@@ -18,10 +22,11 @@ export interface SLOActionsProps {
   sloIdentifier: string
   title: string
   sloType?: SLOHealthListView['sloType']
+  downtimeStatusDetails: DowntimeStatusDetails
 }
 
-export default function SLOActions(props: SLOActionsProps) {
-  const { onDelete, onEdit, sloIdentifier, title, sloType } = props
+export default function SLOActions(props: SLOActionsProps): JSX.Element {
+  const { onDelete, onEdit, sloIdentifier, title, sloType, downtimeStatusDetails } = props
   const { getString } = useStrings()
 
   const { openDialog } = useConfirmationDialog({
@@ -39,11 +44,24 @@ export default function SLOActions(props: SLOActionsProps) {
   })
 
   return (
-    <Layout.Horizontal className={css.actions}>
+    <Layout.Horizontal className={css.actions} spacing={'medium'}>
+      {downtimeStatusDetails && downtimeStatusDetails.status === DowntimeStatus.ACTIVE && (
+        <Text
+          flex
+          tooltip={<DowntimeTooltip downtimeStatusDetails={downtimeStatusDetails} renderOnSLOListingPage />}
+          tooltipProps={{
+            isDark: true,
+            interactionKind: PopoverInteractionKind.HOVER,
+            position: Position.BOTTOM_RIGHT,
+            usePortal: false
+          }}
+        >
+          <img className={css.downtimeIcon} src={downTime} />
+        </Text>
+      )}
       <Icon
         className={css.actionIcons}
         padding={'xsmall'}
-        margin={{ right: 'medium' }}
         name="Edit"
         title={getString('edit')}
         size={16}
