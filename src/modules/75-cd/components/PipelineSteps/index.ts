@@ -128,6 +128,7 @@ import { AwsLambdaRollbackStep } from './AwsLambda/AwsLambdaRollbackStep/AwsLamb
 import { TerraformCloudRun } from './TerraformCloudRunStep/TerraformCloudRun'
 import { TerraformCloudRollback } from './TerraformCloudRollbackStep/TerraformCloudRollback'
 import { RouteMappingStep } from './RouteMappingStep/RouteMappingStep'
+import { K8sAwsInfrastructureSpec } from './K8sAwsInfrastructureSpec/K8sAwsInfrastructureSpec'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -146,6 +147,7 @@ factory.registerStep(new ShellScriptStep())
 factory.registerStep(new ContainerStep())
 factory.registerStep(new KubernetesInfraSpec())
 factory.registerStep(new GcpInfrastructureSpec())
+factory.registerStep(new K8sAwsInfrastructureSpec())
 factory.registerStep(new PDCInfrastructureSpec())
 factory.registerStep(new SshWinRmAwsInfrastructureSpec())
 factory.registerStep(new SshWinRmAzureInfrastructureSpec())

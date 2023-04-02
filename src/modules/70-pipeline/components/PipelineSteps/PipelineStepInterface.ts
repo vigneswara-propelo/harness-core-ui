@@ -198,7 +198,8 @@ export enum StepType {
   Prowler = 'Prowler',
   Sniper = 'Sniper',
   Metasploit = 'Metasploit',
-  Brakeman = 'Brakeman'
+  Brakeman = 'Brakeman',
+  KubernetesAws = 'KubernetesAws'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

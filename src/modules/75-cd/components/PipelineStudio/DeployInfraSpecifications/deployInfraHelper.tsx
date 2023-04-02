@@ -76,7 +76,8 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
-    case InfraDeploymentType.KubernetesGcp: {
+    case InfraDeploymentType.KubernetesGcp:
+    case InfraDeploymentType.KubernetesAws: {
       const connectorRef = infrastructure?.spec?.connectorRef
       const namespace = infrastructure?.spec?.namespace
       const releaseName = infrastructure?.spec?.releaseName ?? DEFAULT_RELEASE_NAME
@@ -90,6 +91,7 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+
     case InfraDeploymentType.ServerlessAwsLambda: {
       const connectorRef = infrastructure?.spec?.connectorRef
       const region = infrastructure?.spec?.region
@@ -267,7 +269,8 @@ export interface InfrastructureGroup {
 export const getInfraGroups = (
   deploymentType: ServiceDefinition['type'],
   getString: UseStringsReturn['getString'],
-  isSvcEnvEntityEnabled: boolean
+  isSvcEnvEntityEnabled: boolean,
+  NG_CDS_NATIVE_EKS_SUPPORT?: boolean
 ): InfrastructureGroup[] => {
   const serverlessInfraGroups: InfrastructureGroup[] = [
     {
@@ -389,7 +392,14 @@ export const getInfraGroups = (
     },
     {
       groupLabel: getString('pipelineSteps.deploy.infrastructure.viaCloudProvider'),
-      items: getInfraGroupItems([InfraDeploymentType.KubernetesGcp, InfraDeploymentType.KubernetesAzure], getString)
+      items: getInfraGroupItems(
+        [
+          InfraDeploymentType.KubernetesGcp,
+          InfraDeploymentType.KubernetesAzure,
+          ...(NG_CDS_NATIVE_EKS_SUPPORT ? [InfraDeploymentType.KubernetesAws] : [])
+        ],
+        getString
+      )
     }
   ]
 
@@ -478,6 +488,11 @@ const infraGroupItems: {
     label: 'cd.steps.azureInfraStep.azure',
     icon: 'microsoft-azure',
     value: InfraDeploymentType.KubernetesAzure
+  },
+  [InfraDeploymentType.KubernetesAws]: {
+    label: 'cd.steps.eks.eks',
+    icon: 'eks',
+    value: InfraDeploymentType.KubernetesAws
   },
   [InfraDeploymentType.Elastigroup]: {
     label: 'pipeline.serviceDeploymentTypes.elastigroup',

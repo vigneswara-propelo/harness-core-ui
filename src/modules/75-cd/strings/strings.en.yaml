@@ -71,6 +71,8 @@ steps:
     resourceGroupPlaceholder: 'Select or specify Resource Group'
     resourceGroupError: 'No resource groups found with given Subscription'
     clusterError: 'No cluster found with given Resource Group'
+  eks:
+    eks: Elastic Kubernetes Service
   azureWebAppInfra:
     azureWebApp: '{{ $.pipeline.azureWebApp.name }}'
     subscription: '{{ $.common.subscriptionId }}'

@@ -75,8 +75,7 @@ import {
 import type { ServerlessAwsLambdaSpec } from '@cd/components/PipelineSteps/ServerlessAWSLambda/ServerlessAwsLambdaSpec'
 import type { ServerlessGCPSpec } from '@cd/components/PipelineSteps/ServerlessGCP/ServerlessGCPSpec'
 import type { ServerlessAzureSpec } from '@cd/components/PipelineSteps/ServerlessAzure/ServerlessAzureSpec'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import type { ECSInfraSpec } from '@cd/components/PipelineSteps/ECSInfraSpec/ECSInfraSpec'
 import type { CustomDeploymentInfrastructureSpec } from '@cd/components/PipelineSteps/CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
@@ -88,6 +87,7 @@ import type {
   GoogleCloudFunctionInfraSpec
 } from '@cd/components/PipelineSteps/GoogleCloudFunction/GoogleCloudFunctionInfraSpec/GoogleCloudFunctionInfraSpec'
 import type { AwsLambdaInfraSpec } from '@cd/components/PipelineSteps/AwsLambda/AwsLambdaInfraSpec/AwsLambdaInfraSpec'
+import type { K8sAwsInfrastructureSpec } from '@cd/components/PipelineSteps/K8sAwsInfrastructureSpec/K8sAwsInfrastructureSpec'
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
@@ -173,22 +173,23 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
     [updateStage]
   )
 
+  const { NG_CDS_NATIVE_EKS_SUPPORT, NG_SVC_ENV_REDESIGN: isSvcEnvEnabled } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   const { accountId } = useParams<{
     accountId: string
   }>()
 
-  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-
   const [selectedInfrastructureType, setSelectedInfrastructureType] = React.useState<string | undefined>()
 
   const [selectedDeploymentType, setSelectedDeploymentType] = React.useState<
     GetExecutionStrategyYamlQueryParams['serviceDefinitionType']
-  >(getServiceDefinitionType(stage, getStageFromPipeline, isNewServiceEnvEntity, isSvcEnvEnabled, templateServiceData))
+  >(
+    getServiceDefinitionType(stage, getStageFromPipeline, isNewServiceEnvEntity, !!isSvcEnvEnabled, templateServiceData)
+  )
 
   const [infraGroups, setInfraGroups] = React.useState<InfrastructureGroup[]>(
-    getInfraGroups(selectedDeploymentType, getString, isSvcEnvEnabled)
+    getInfraGroups(selectedDeploymentType, getString, !!isSvcEnvEnabled, NG_CDS_NATIVE_EKS_SUPPORT)
   )
 
   useEffect(() => {
@@ -251,7 +252,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       stage,
       getStageFromPipeline,
       isNewServiceEnvEntity,
-      isSvcEnvEnabled,
+      !!isSvcEnvEnabled,
       templateServiceData
     )
 
@@ -262,7 +263,12 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       infraReset = true
     }
 
-    const initialInfraGroups = getInfraGroups(newDeploymentType, getString, isSvcEnvEnabled)
+    const initialInfraGroups = getInfraGroups(
+      newDeploymentType,
+      getString,
+      !!isSvcEnvEnabled,
+      NG_CDS_NATIVE_EKS_SUPPORT
+    )
 
     const filteredInfraGroups = initialInfraGroups.map(group => ({
       ...group,
@@ -276,7 +282,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
         : deploymentTypeInfraTypeMap[newDeploymentType])
 
     setSelectedInfrastructureType(infrastructureType)
-    setInfraGroups(getInfraGroups(newDeploymentType, getString, isSvcEnvEnabled))
+    setInfraGroups(getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled, NG_CDS_NATIVE_EKS_SUPPORT))
 
     const initialInfraDefValues = getInfrastructureDefaultValue(stage, infrastructureType)
     setInitialInfrastructureDefinitionValues(initialInfraDefValues)
@@ -446,6 +452,32 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           />
         )
       }
+      case InfraDeploymentType.KubernetesAws: {
+        return (
+          <StepWidget<K8sAwsInfrastructureSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as K8sAwsInfrastructureSpec}
+            type={StepType.KubernetesAws}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  cluster: value.cluster,
+                  namespace: value.namespace,
+                  releaseName: value.releaseName,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.KubernetesAws
+              )
+            }
+          />
+        )
+      }
+
       case InfraDeploymentType.KubernetesAzure: {
         return (
           <StepWidget<AzureInfrastructureSpec>

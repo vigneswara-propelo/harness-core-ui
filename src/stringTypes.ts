@@ -5976,6 +5976,7 @@ export interface StringsMap {
   'cd.steps.ecsRunTaskStep.runTaskDefinition': string
   'cd.steps.ecsRunTaskStep.runTaskRequestDefinition': string
   'cd.steps.ecsRunTaskStep.skipSteadyStateCheck': string
+  'cd.steps.eks.eks': string
   'cd.steps.elastigroup.connectorSpot': string
   'cd.steps.elastigroup.elastigroupConfig': string
   'cd.steps.elastigroup.elastigroupConfigDetails': string
