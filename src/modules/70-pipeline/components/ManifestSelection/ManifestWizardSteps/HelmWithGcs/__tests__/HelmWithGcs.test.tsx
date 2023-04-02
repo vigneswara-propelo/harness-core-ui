@@ -6,11 +6,12 @@
  */
 
 import React from 'react'
-import { render, queryByAttribute, fireEvent, act, waitFor } from '@testing-library/react'
+import { render, queryByAttribute, fireEvent, act, waitFor, findByText } from '@testing-library/react'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import HelmWithGcs from '../HelmWithGcs'
+import * as useGetHelmChartVersionData from '../../CommonManifestDetails/useGetHelmChartVersionData'
 
 const props = {
   stepName: 'Manifest details',
@@ -34,6 +35,17 @@ jest.mock('services/cd-ng', () => ({
   }),
   useHelmCmdFlags: jest.fn().mockImplementation(() => ({ data: { data: ['Template', 'Pull'] }, refetch: jest.fn() }))
 }))
+const useGetHelmChartVersionDataMock = {
+  chartVersions: [
+    { label: 'v1', value: 'v1' },
+    { label: 'v2', value: 'v2' }
+  ],
+  loadingChartVersions: false,
+  chartVersionsError: null,
+  fetchChartVersions: jest.fn(),
+  setLastQueryData: jest.fn()
+}
+jest.spyOn(useGetHelmChartVersionData, 'useGetHelmChartVersionData').mockReturnValue(useGetHelmChartVersionDataMock)
 
 describe('helm with http tests', () => {
   test(`renders without crashing`, () => {
@@ -175,6 +187,17 @@ describe('helm with http tests', () => {
       await fireEvent.change(queryByNameAttribute('chartName')!, { target: { value: 'testchart' } })
       await fireEvent.change(queryByNameAttribute('chartVersion')!, { target: { value: 'v1' } })
     })
+    //  Manual chart version dropdown input assertion
+    const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
+    fireEvent.click(dropdownIcons[1]!)
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    fireEvent.change(queryByNameAttribute('chartVersion')!, { target: { value: 'test' } })
+    expect(portalDivs.length).toBe(1)
+    const chartVersionDropdownPortal = portalDivs[0]
+    const chartVersionSelectList = chartVersionDropdownPortal.querySelector('.bp3-menu')
+    const selectedChartVersion = await findByText(chartVersionSelectList as HTMLElement, 'test')
+    fireEvent.click(selectedChartVersion)
+
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     expect(container).toMatchSnapshot()
     await waitFor(() => {
@@ -195,12 +218,47 @@ describe('helm with http tests', () => {
               type: undefined
             },
             chartName: 'testchart',
-            chartVersion: 'v1',
+            chartVersion: 'test',
             helmVersion: 'V2',
             skipResourceVersioning: false
           }
         }
       })
     })
+  })
+
+  test(`chartVersion field placeholder should be loading when chart versions are being fetched`, async () => {
+    jest
+      .spyOn(useGetHelmChartVersionData, 'useGetHelmChartVersionData')
+      .mockReturnValue({ ...useGetHelmChartVersionDataMock, loadingChartVersions: true })
+
+    const initialValues = {
+      identifier: 'test',
+      type: ManifestDataType.HelmChart,
+      chartName: 'name',
+      chartVersion: '',
+      spec: {
+        helmVersion: 'V2',
+        skipResourceVersioning: false,
+        store: {
+          type: 'Gcs',
+          spec: {
+            connectorRef: 'connectorref',
+            bucketName: { label: 'testbucket', value: 'testbucket' },
+            folderPath: 'folderPath'
+          }
+        }
+      },
+      commandFlags: [{ commandType: 'Fetch', flag: 'flag', id: 'a1' }]
+    }
+
+    const { container } = render(
+      <TestWrapper>
+        <HelmWithGcs initialValues={initialValues} {...props} />
+      </TestWrapper>
+    )
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    const chartVersionSelect = queryByNameAttribute('chartVersion') as HTMLInputElement
+    expect(chartVersionSelect.placeholder).toBe('loading')
   })
 })

@@ -11,6 +11,7 @@ import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import HelmWithOCI from '../HelmWithOCI'
+import * as useGetHelmChartVersionData from '../../CommonManifestDetails/useGetHelmChartVersionData'
 
 const props = {
   stepName: 'Manifest details',
@@ -92,6 +93,18 @@ jest.mock('services/cd-ng', () => ({
   useHelmCmdFlags: jest.fn().mockImplementation(() => ({ data: { data: ['Template', 'Pull'] }, refetch: jest.fn() }))
 }))
 
+const useGetHelmChartVersionDataMock = {
+  chartVersions: [
+    { label: 'v1', value: 'v1' },
+    { label: 'v2', value: 'v2' }
+  ],
+  loadingChartVersions: false,
+  chartVersionsError: null,
+  fetchChartVersions: jest.fn(),
+  setLastQueryData: jest.fn()
+}
+
+jest.spyOn(useGetHelmChartVersionData, 'useGetHelmChartVersionData').mockReturnValue(useGetHelmChartVersionDataMock)
 describe('helm with OCI tests', () => {
   test(`renders without crashing`, () => {
     const initialValues = {
@@ -156,7 +169,7 @@ describe('helm with OCI tests', () => {
       'input[placeholder="pipeline.manifestType.http.chartNamePlaceHolder"]'
     ) as HTMLInputElement
     expect(chartName.value).toBe('cName')
-
+    expect(container).toMatchSnapshot()
     const chartVersion = container.querySelector('input[placeholder="<+input>"]') as HTMLInputElement
     expect(chartVersion.value).toBe('<+input>')
   })
@@ -292,5 +305,27 @@ describe('helm with OCI tests', () => {
         }
       })
     })
+  })
+  test(`chartVersion field placeholder should be loading when chart versions are being fetched`, async () => {
+    jest
+      .spyOn(useGetHelmChartVersionData, 'useGetHelmChartVersionData')
+      .mockReturnValue({ ...useGetHelmChartVersionDataMock, loadingChartVersions: true })
+
+    const initialValues = {
+      ...initValue,
+      spec: {
+        ...initValue.spec,
+        chartVersion: ''
+      }
+    }
+
+    const { container } = render(
+      <TestWrapper>
+        <HelmWithOCI initialValues={initialValues} {...props} />
+      </TestWrapper>
+    )
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    const chartVersionSelect = queryByNameAttribute('chartVersion') as HTMLInputElement
+    expect(chartVersionSelect.placeholder).toBe('loading')
   })
 })

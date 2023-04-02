@@ -16707,7 +16707,6 @@ export type TanzuApplicationServiceSpec = ServiceSpec & {}
 
 export type TasAppResizeStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  ignoreInstanceCountManifest?: boolean
   newAppInstances: TasInstanceSelectionWrapper
   oldAppInstances?: TasInstanceSelectionWrapper
 }
@@ -48615,7 +48614,7 @@ export interface GetHelmChartVersionDetailsQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   serviceId?: string
-  fqnPath: string
+  fqnPath?: string
   connectorRef?: string
   chartName?: string
   region?: string
@@ -48668,12 +48667,75 @@ export const getHelmChartVersionDetailsPromise = (
     signal
   )
 
+export interface GetHelmChartVersionDetailsV1QueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorRef: string
+  chartName: string
+  region?: string
+  bucketName?: string
+  folderPath?: string
+  lastTag?: string
+  storeType: string
+  helmVersion?: string
+}
+
+export type GetHelmChartVersionDetailsV1Props = Omit<
+  GetProps<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsV1QueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets helm chart version details
+ */
+export const GetHelmChartVersionDetailsV1 = (props: GetHelmChartVersionDetailsV1Props) => (
+  <Get<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsV1QueryParams, void>
+    path={`/manifests/helm/v1/chart/version`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetHelmChartVersionDetailsV1Props = Omit<
+  UseGetProps<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsV1QueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets helm chart version details
+ */
+export const useGetHelmChartVersionDetailsV1 = (props: UseGetHelmChartVersionDetailsV1Props) =>
+  useGet<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsV1QueryParams, void>(
+    `/manifests/helm/v1/chart/version`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets helm chart version details
+ */
+export const getHelmChartVersionDetailsV1Promise = (
+  props: GetUsingFetchProps<
+    ResponseHelmChartResponseDTO,
+    Failure | Error,
+    GetHelmChartVersionDetailsV1QueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsV1QueryParams, void>(
+    getConfig('ng/api'),
+    `/manifests/helm/v1/chart/version`,
+    props,
+    signal
+  )
+
 export interface GetHelmChartVersionDetailsWithYamlQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
   pipelineIdentifier: string
-  serviceId?: string
+  serviceId: string
   fqnPath: string
   connectorRef?: string
   chartName?: string

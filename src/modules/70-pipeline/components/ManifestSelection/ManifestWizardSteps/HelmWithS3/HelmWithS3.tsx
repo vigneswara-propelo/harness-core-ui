@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import type { FormikValues } from 'formik'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { defaultTo, get, isEmpty, memoize, merge } from 'lodash-es'
+import { defaultTo, get, isEmpty, merge } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import {
   Text,
@@ -42,6 +42,9 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import { useListAwsRegions } from 'services/portal'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { HelmWithGcsDataType, HelmWithS3ManifestLastStepPrevStepData } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
@@ -53,6 +56,7 @@ import {
 } from '../../Manifesthelper'
 import { handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
+import { useGetHelmChartVersionData } from '../CommonManifestDetails/useGetHelmChartVersionData'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 
@@ -88,6 +92,19 @@ function HelmWithS3({
   const [regions, setRegions] = useState<SelectOption[]>([])
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+  const { chartVersions, loadingChartVersions, chartVersionsError, fetchChartVersions, setLastQueryData } =
+    useGetHelmChartVersionData({ modifiedPrevStepData, fields: ['region', 'chartName', 'bucketName', 'folderPath'] })
+
+  React.useEffect(() => {
+    const specValues = get(initialValues, 'spec.store.spec', null)
+    /* istanbul ignore next */
+    setLastQueryData({
+      region: defaultTo(specValues?.region, ''),
+      chartName: defaultTo(initialValues?.spec?.chartName, ''),
+      bucketName: defaultTo(specValues?.bucketName, ''),
+      folderPath: defaultTo(specValues?.folderPath, '')
+    })
+  }, [initialValues])
 
   /* Code related to region */
   const { data: regionData } = useListAwsRegions({
@@ -142,19 +159,22 @@ function HelmWithS3({
     }
     return getSelectItems()
   }
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={loading}
-        onClick={handleClick}
-      />
-    </div>
-  ))
+  const itemRenderer = React.useCallback(
+    (item: { label: string }, { handleClick }) => (
+      <div key={item.label.toString()}>
+        <Menu.Item
+          text={
+            <Layout.Horizontal spacing="small">
+              <Text>{item.label}</Text>
+            </Layout.Horizontal>
+          }
+          disabled={loading}
+          onClick={handleClick}
+        />
+      </div>
+    ),
+    [loading]
+  )
 
   /* Code related to bucketName */
 
@@ -281,6 +301,9 @@ function HelmWithS3({
             placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
             name="bucketName"
             multiTextInputProps={{ expressions, allowableTypes }}
+            onChange={() => {
+              resetFieldValue(formik, 'chartVersion')
+            }}
           />
           {getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.RUNTIME && (
             <ConfigureOptions
@@ -323,7 +346,8 @@ function HelmWithS3({
               if (!bucketData?.data && (formik.values?.region || formik.values?.region?.value)) {
                 fetchBucket(defaultTo(formik.values?.region.value, formik.values?.region))
               }
-            }
+            },
+            onChange: () => resetFieldValue(formik, 'chartVersion')
           }}
         />
         {getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.RUNTIME && (
@@ -416,6 +440,7 @@ function HelmWithS3({
                         if (getMultiTypeFromValue(formik.values.bucketName) === MultiTypeInputType.FIXED) {
                           formik.setFieldValue('bucketName', '')
                         }
+                        resetFieldValue(formik, 'chartVersion')
                       }
                     }}
                     label={getString('regionLabel')}
@@ -451,6 +476,9 @@ function HelmWithS3({
                     placeholder={getString('pipeline.manifestType.chartPathPlaceholder')}
                     name="folderPath"
                     multiTextInputProps={{ expressions, allowableTypes }}
+                    onChange={() => {
+                      resetFieldValue(formik, 'chartVersion')
+                    }}
                   />
                   {getMultiTypeFromValue(formik.values?.folderPath) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
@@ -477,6 +505,9 @@ function HelmWithS3({
                     multiTextInputProps={{ expressions, allowableTypes }}
                     label={getString('pipeline.manifestType.http.chartName')}
                     placeholder={getString('pipeline.manifestType.http.chartNamePlaceHolder')}
+                    onChange={() => {
+                      resetFieldValue(formik, 'chartVersion')
+                    }}
                   />
                   {getMultiTypeFromValue(formik.values?.chartName) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
@@ -500,22 +531,64 @@ function HelmWithS3({
                       getMultiTypeFromValue(formik.values?.chartVersion) === MultiTypeInputType.RUNTIME
                   })}
                 >
-                  <FormInput.MultiTextInput
+                  <FormInput.MultiTypeInput
                     name="chartVersion"
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    selectItems={chartVersions}
+                    disabled={isReadonly}
+                    useValue
                     label={getString('pipeline.manifestType.http.chartVersion')}
-                    placeholder={getString('pipeline.manifestType.http.chartVersionPlaceHolder')}
-                    isOptional
+                    placeholder={
+                      loadingChartVersions
+                        ? getString('loading')
+                        : getString('pipeline.manifestType.http.chartVersionPlaceHolder')
+                    }
+                    isOptional={true}
+                    multiTypeInputProps={{
+                      expressions,
+                      disabled: isReadonly,
+                      allowableTypes,
+                      selectProps: {
+                        noResults: (
+                          <Text lineClamp={1}>
+                            {getRBACErrorMessage(chartVersionsError as RBACError) ||
+                              getString('pipeline.manifestType.http.noResultsChartVersion')}
+                          </Text>
+                        ),
+                        addClearBtn: !(loadingChartVersions || isReadonly),
+                        items: chartVersions,
+                        allowCreatingNewItems: true,
+                        itemRenderer: itemRenderer
+                      },
+                      onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                        /* istanbul ignore else */ /* istanbul ignore next */ if (
+                          e?.target?.type !== 'text' ||
+                          (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                        ) {
+                          return
+                        }
+                        !loadingChartVersions &&
+                          fetchChartVersions({
+                            region: formik.values?.region,
+                            bucketName: defaultTo(
+                              (formik.values?.bucketName as SelectOption)?.value,
+                              formik.values?.bucketName
+                            ),
+                            folderPath: formik.values?.folderPath,
+                            chartName: formik.values?.chartName
+                          })
+                      }
+                    }}
                   />
                   {getMultiTypeFromValue(formik.values?.chartVersion) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      style={{ alignSelf: 'center', marginBottom: 5 }}
-                      value={formik.values?.chartVersion}
+                    <SelectConfigureOptions
+                      options={chartVersions}
+                      style={{ alignSelf: 'center', marginBottom: 3 }}
+                      value={formik.values?.chartVersion as string}
                       type="String"
                       variableName="chartVersion"
                       showRequiredField={false}
                       showDefaultField={false}
-                      onChange={value => formik.setFieldValue('chartVersion', value)}
+                      onChange={/* istanbul ignore next */ value => formik.setFieldValue('chartVersion', value)}
                       isReadonly={isReadonly}
                     />
                   )}

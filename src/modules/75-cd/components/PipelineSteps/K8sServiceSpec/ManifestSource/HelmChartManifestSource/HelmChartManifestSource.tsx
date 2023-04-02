@@ -21,7 +21,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { NameValuePair, useListAwsRegions } from 'services/portal'
-import { useGetBucketsInManifests, useGetGCSBucketList, useGetHelmChartVersionDetails } from 'services/cd-ng'
+import { useGetBucketsInManifests, useGetGCSBucketList, useGetHelmChartVersionDetailsWithYaml } from 'services/cd-ng'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
@@ -100,12 +100,19 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     loading: loadingChartVersions,
     refetch: refetchChartVersions,
     error: chartVersionsError
-  } = useGetHelmChartVersionDetails({
+  } = useMutateAsGet(useGetHelmChartVersionDetailsWithYaml, {
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
-      serviceId: serviceIdentifier,
+      pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+      serviceId: serviceIdentifier as string,
       fqnPath: getFqnPathForChart(stageIdentifier, manifest?.identifier as string),
       connectorRef: get(initialValues, connectorRefPath),
       chartName: get(initialValues, `${manifestPath}.spec.chartName`),

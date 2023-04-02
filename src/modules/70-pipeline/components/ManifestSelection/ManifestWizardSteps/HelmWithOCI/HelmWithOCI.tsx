@@ -18,17 +18,24 @@ import {
   Text,
   ButtonVariation,
   AllowedTypes,
-  FormikForm
+  FormikForm,
+  SelectOption
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import type { HelmWithOCIDataType, HelmWithOCIManifestLastStepPrevStepData } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
@@ -39,6 +46,7 @@ import {
 } from '../../Manifesthelper'
 import { filePathWidth, handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
+import { useGetHelmChartVersionData } from '../CommonManifestDetails/useGetHelmChartVersionData'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 
@@ -69,9 +77,19 @@ function HelmWithOCI({
 }: StepProps<ConnectorConfigDTO> & HelmWithOCIPropType): React.ReactElement {
   const { getString } = useStrings()
   const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
+  const { getRBACErrorMessage } = useRBACError()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+  const { chartVersions, loadingChartVersions, chartVersionsError, fetchChartVersions, setLastQueryData } =
+    useGetHelmChartVersionData({ modifiedPrevStepData, fields: ['chartName'] })
+  React.useEffect(() => {
+    const specValues = get(initialValues, 'spec.store.spec', null)
+    if (!isEmpty(specValues?.chartName)) {
+      /* istanbul ignore next */
+      setLastQueryData({ chartName: specValues.chartName })
+    }
+  }, [initialValues])
 
   const getInitialValues = (): HelmWithOCIDataType => {
     const specValues = get(initialValues, 'spec.store.spec.config.spec', null)
@@ -154,6 +172,18 @@ function HelmWithOCI({
     handleSubmit(manifestObj)
   }
 
+  const itemRenderer = React.useCallback(
+    (item: SelectOption, itemProps: IItemRendererProps) => (
+      <ItemRendererWithMenuItem
+        item={item}
+        itemProps={itemProps}
+        disabled={loadingChartVersions || !!chartVersionsError}
+        style={chartVersionsError ? { lineClamp: 1, width: 400, padding: 'small' } : {}}
+      />
+    ),
+    [chartVersionsError, loadingChartVersions]
+  )
+
   return (
     <Layout.Vertical spacing="xxlarge" padding="small" className={css.manifestStore}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
@@ -199,7 +229,7 @@ function HelmWithOCI({
           })
         }}
       >
-        {(formik: { setFieldValue: (a: string, b: string) => void; values: HelmWithOCIDataType }) => (
+        {formik => (
           <FormikForm>
             <div className={helmcss.helmGitForm}>
               <Layout.Horizontal flex spacing="huge">
@@ -248,6 +278,9 @@ function HelmWithOCI({
                     multiTextInputProps={{ expressions, allowableTypes }}
                     label={getString('pipeline.manifestType.http.chartName')}
                     placeholder={getString('pipeline.manifestType.http.chartNamePlaceHolder')}
+                    onChange={() => {
+                      resetFieldValue(formik, 'chartVersion')
+                    }}
                   />
                   {getMultiTypeFromValue(formik.values?.chartName) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
@@ -267,16 +300,50 @@ function HelmWithOCI({
                       getMultiTypeFromValue(formik.values?.chartVersion) === MultiTypeInputType.RUNTIME
                   })}
                 >
-                  <FormInput.MultiTextInput
+                  <FormInput.MultiTypeInput
                     name="chartVersion"
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    selectItems={chartVersions}
+                    disabled={isReadonly}
+                    useValue
                     label={getString('pipeline.manifestType.http.chartVersion')}
-                    placeholder={getString('pipeline.manifestType.http.chartVersionPlaceHolder')}
+                    placeholder={
+                      loadingChartVersions
+                        ? getString('loading')
+                        : getString('pipeline.manifestType.http.chartVersionPlaceHolder')
+                    }
                     isOptional={true}
+                    multiTypeInputProps={{
+                      expressions,
+                      disabled: isReadonly,
+                      allowableTypes,
+                      selectProps: {
+                        noResults: (
+                          <Text lineClamp={1}>
+                            {getRBACErrorMessage(chartVersionsError as RBACError) ||
+                              getString('pipeline.manifestType.http.noResultsChartVersion')}
+                          </Text>
+                        ),
+                        addClearBtn: !(loadingChartVersions || isReadonly),
+                        items: chartVersions,
+                        allowCreatingNewItems: true,
+                        itemRenderer: itemRenderer
+                      },
+                      onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                        /* istanbul ignore else */ /* istanbul ignore next */ if (
+                          e?.target?.type !== 'text' ||
+                          (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                        ) {
+                          return
+                        }
+                        !loadingChartVersions && fetchChartVersions({ chartName: formik.values?.chartName })
+                      }
+                    }}
                   />
                   {getMultiTypeFromValue(formik.values?.chartVersion) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      value={formik.values?.chartVersion}
+                    <SelectConfigureOptions
+                      options={chartVersions}
+                      style={{ alignSelf: 'center', marginBottom: 3 }}
+                      value={formik.values?.chartVersion as string}
                       type="String"
                       variableName="chartVersion"
                       showRequiredField={false}

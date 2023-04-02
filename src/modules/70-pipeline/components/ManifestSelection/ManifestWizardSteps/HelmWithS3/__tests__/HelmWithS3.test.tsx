@@ -6,13 +6,14 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { render, fireEvent, waitFor, findByText } from '@testing-library/react'
 import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
-import { TestWrapper } from '@common/utils/testUtils'
+import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import * as ngServices from 'services/cd-ng'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import HelmWithS3 from '../HelmWithS3'
+import * as useGetHelmChartVersionData from '../../CommonManifestDetails/useGetHelmChartVersionData'
 
 const props = {
   stepName: 'Manifest details',
@@ -33,6 +34,16 @@ const mockRegions = {
 const mockBuckets = {
   resource: [{ name: 'test-bucket', value: 'test-bucket' }]
 }
+const useGetHelmChartVersionDataMock = {
+  chartVersions: [
+    { label: 'v1', value: 'v1' },
+    { label: 'v2', value: 'v2' }
+  ],
+  loadingChartVersions: false,
+  chartVersionsError: null,
+  fetchChartVersions: jest.fn(),
+  setLastQueryData: jest.fn()
+}
 
 jest.mock('services/portal', () => ({
   useListAwsRegions: jest.fn().mockImplementation(() => {
@@ -44,6 +55,8 @@ jest.mock('services/cd-ng', () => ({
   useGetBucketListForS3: jest.fn(),
   useHelmCmdFlags: jest.fn().mockImplementation(() => ({ data: { data: ['Template', 'Fetch'] }, refetch: jest.fn() }))
 }))
+
+jest.spyOn(useGetHelmChartVersionData, 'useGetHelmChartVersionData').mockReturnValue(useGetHelmChartVersionDataMock)
 
 describe('helm with S3 tests', () => {
   beforeAll(() => {
@@ -147,6 +160,16 @@ describe('helm with S3 tests', () => {
         <HelmWithS3 {...props} initialValues={initialValues} />
       </TestWrapper>
     )
+    //  Manual chart version dropdown input assertion
+    const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
+    fireEvent.click(dropdownIcons[2]!)
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    fireEvent.change(queryByNameAttribute('chartVersion', container)!, { target: { value: 'test' } })
+    expect(portalDivs.length).toBe(1)
+    const chartVersionDropdownPortal = portalDivs[0]
+    const chartVersionSelectList = chartVersionDropdownPortal.querySelector('.bp3-menu')
+    const selectedChartVersion = await findByText(chartVersionSelectList as HTMLElement, 'test')
+    userEvent.click(selectedChartVersion)
 
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     expect(container.querySelector('button[type="submit"]')).toBeTruthy()
@@ -167,7 +190,7 @@ describe('helm with S3 tests', () => {
               type: undefined
             },
             chartName: 'testchart',
-            chartVersion: 'v1',
+            chartVersion: 'test',
             helmVersion: 'V2',
             skipResourceVersioning: false
           }
@@ -239,5 +262,37 @@ describe('bucketFetch loading true', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+  test(`chartVersion field placeholder should be loading when chart versions are being fetched`, async () => {
+    jest
+      .spyOn(useGetHelmChartVersionData, 'useGetHelmChartVersionData')
+      .mockReturnValue({ ...useGetHelmChartVersionDataMock, loadingChartVersions: true })
+
+    const initialValues = {
+      identifier: 'testidentifier',
+      spec: {
+        store: {
+          spec: {
+            bucketName: 'test-bucket',
+            connectorRef: '',
+            folderPath: 'testFolder',
+            region: 'region1'
+          }
+        },
+        chartName: 'testchart',
+        chartVersion: 'v1',
+        helmVersion: 'V2',
+        skipResourceVersioning: false
+      },
+      type: ManifestDataType.HelmChart
+    }
+
+    const { container } = render(
+      <TestWrapper>
+        <HelmWithS3 initialValues={initialValues} {...props} />
+      </TestWrapper>
+    )
+    const chartVersionSelect = queryByNameAttribute('chartVersion', container) as HTMLInputElement
+    expect(chartVersionSelect.placeholder).toBe('loading')
   })
 })
