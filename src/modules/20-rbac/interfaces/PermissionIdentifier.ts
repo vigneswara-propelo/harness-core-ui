@@ -221,5 +221,12 @@ export enum PermissionIdentifier {
   DELETE_STREAMING_DESTINATION = 'core_streamingDestination_delete',
 
   //IDP Permisssions
-  IDP_SETTINGS_MANAGE = 'idp_idpsettings_manage'
+  IDP_SETTINGS_MANAGE = 'idp_idpsettings_manage',
+
+  //Harness Code permissions
+  CODE_REPO_EDIT = 'code_repo_edit',
+  CODE_REPO_CREATE = 'code_repo_create',
+  CODE_REPO_DELETE = 'code_repo_delete',
+  CODE_REPO_VIEW = 'code_repo_view',
+  CODE_REPO_PUSH = 'code_repo_push'
 }

@@ -56,6 +56,7 @@ permissionLabels:
   evaluate: Evaluate
   approveReject: Approve / Reject
   copy: '{{$.common.copy}}'
+  push: Push
   toggleFlag: Toggle Feature Flag
 categoryLabels:
   sharedResources: Shared Resources

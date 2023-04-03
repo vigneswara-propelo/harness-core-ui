@@ -1371,6 +1371,7 @@ export interface StringsMap {
   'rbac.permissionLabels.invite': string
   'rbac.permissionLabels.manage': string
   'rbac.permissionLabels.pipelineExecution': string
+  'rbac.permissionLabels.push': string
   'rbac.permissionLabels.toggleFlag': string
   'rbac.permissionLabels.view': string
   'rbac.permissionOn': string
@@ -3427,6 +3428,7 @@ export interface StringsMap {
   'code.branches': string
   'code.homepageHeading': string
   'code.learnMore': string
+  'code.missingPermission': string
   'code.pullRequests': string
   'code.webhooks': string
   'et.homepage.learnMore': string
