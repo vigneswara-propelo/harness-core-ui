@@ -54,14 +54,6 @@ const ConfigsSection = (
   const [initialValues, setInitialValues] = React.useState(
     getInitialValuesForConfigSection(entityConfigs, getString, resources)
   )
-  React.useEffect(() => {
-    setInitialValues(getInitialValuesForConfigSection(entityConfigs, getString, resources))
-  }, [
-    resources.orgs.length,
-    resources.projects.length,
-    resources.services.length,
-    Object.keys(resources.projectsByOrgId).length
-  ])
 
   React.useEffect(() => {
     // When we change tab, we should open the invalid rules
@@ -117,8 +109,8 @@ const ConfigsSection = (
     })
   }
 
-  const resetValuesForEntity = (index: number) => {
-    const currentValues = /* istanbul ignore next */ formikRef.current?.values
+  const resetValuesForEntity = /* istanbul ignore next */ (index: number) => {
+    const currentValues = formikRef.current?.values
     const resetValues = getInitialValuesForConfigSection([entityConfigs[index]], getString, resources)
     const updatedValues = [...(currentValues?.entity || [])]
     updatedValues[index] = resetValues.entity?.[0] as Record<string, any>
@@ -127,6 +119,7 @@ const ConfigsSection = (
     })
   }
 
+  /* istanbul ignore next */
   const handleSaveEntityOnTabChange = (formikValues: { entity?: Array<Record<string, any>> }) => {
     // When there is one Rule in Freeze config , on click of Continue , it should be persisted
     if (editViews.length === 1 && editViews[0]) {

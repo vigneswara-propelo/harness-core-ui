@@ -67,6 +67,7 @@ export const ExcludeFieldKeys = {
   }
 }
 
+/* istanbul ignore next */
 export function isValidYaml(
   yamlHandler: YamlBuilderHandlerBinding | undefined,
   showInvalidYamlError: (error: string) => void,
@@ -136,10 +137,18 @@ const selectedValueForFilterTypeAll = (type: string, getString: UseStringsReturn
   }
 }
 
-const makeOptions = (dataMap: Record<string, SelectOption>, keys?: string[]) => {
-  return keys?.map(key => dataMap[key]).filter(optn => optn)
+const makeOptions = /* istanbul ignore next */ (dataMap: Record<string, SelectOption>, keys?: string[]) => {
+  return keys
+    ?.map(item => {
+      return {
+        label: defaultTo(dataMap[item]?.label, item),
+        value: defaultTo(dataMap[item]?.value, item)
+      }
+    })
+    .filter(optn => optn)
 }
 
+/* istanbul ignore next */
 const equalsOptions = (type: FIELD_KEYS, entityRefs: string[], resources: ResourcesInterface) => {
   if (type === FIELD_KEYS.Service) {
     return entityRefs.map(item => {

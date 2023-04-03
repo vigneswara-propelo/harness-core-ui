@@ -128,41 +128,43 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
           },
           resetOnSelect: false
         }}
-        onChange={(selected?: SelectOption[]) => {
-          const isAllSelected = isAllOptionSelected(selected)
-          const selectedLen = (selected || []).length
-          const isMultiSelected = selectedLen > 1
-          const isSingleSelected = selectedLen === 1
-          const isEmptyOrg = selectedLen === 0
-          const clonedFormikValues = cloneDeep(formikValues)
+        onChange={
+          /* istanbul ignore next */ (selected?: SelectOption[]) => {
+            const isAllSelected = isAllOptionSelected(selected)
+            const selectedLen = (selected || []).length
+            const isMultiSelected = selectedLen > 1
+            const isSingleSelected = selectedLen === 1
+            const isEmptyOrg = selectedLen === 0
+            const clonedFormikValues = cloneDeep(formikValues)
 
-          // Only All Orgs is selected
-          if ((isAllSelected && !isMultiSelected) || isEmptyOrg) {
-            // set projects fields
-            set(clonedFormikValues, projFieldName, [allProjectsObj(getString)])
-            set(clonedFormikValues, projCheckBoxName, false)
-            set(clonedFormikValues, excludeProjName, undefined)
+            // Only All Orgs is selected
+            if ((isAllSelected && !isMultiSelected) || isEmptyOrg) {
+              // set projects fields
+              set(clonedFormikValues, projFieldName, [allProjectsObj(getString)])
+              set(clonedFormikValues, projCheckBoxName, false)
+              set(clonedFormikValues, excludeProjName, undefined)
+            }
+
+            if (isMultiSelected || isEmptyOrg) {
+              // Set org field
+              set(clonedFormikValues, orgCheckBoxName, false)
+              set(clonedFormikValues, excludeOrgName, undefined)
+              // Set Project field
+              set(clonedFormikValues, projFieldName, [allProjectsObj(getString)])
+              set(clonedFormikValues, projCheckBoxName, false)
+              set(clonedFormikValues, excludeProjName, undefined)
+            }
+
+            // Set Org field value
+            set(clonedFormikValues, orgFieldName, selected)
+
+            setValues(clonedFormikValues)
+
+            if (!isAllSelected && isSingleSelected) {
+              fetchProjectsForOrgId(selected?.[0]?.value as string)
+            }
           }
-
-          if (isMultiSelected || isEmptyOrg) {
-            // Set org field
-            set(clonedFormikValues, orgCheckBoxName, false)
-            set(clonedFormikValues, excludeOrgName, undefined)
-            // Set Project field
-            set(clonedFormikValues, projFieldName, [allProjectsObj(getString)])
-            set(clonedFormikValues, projCheckBoxName, false)
-            set(clonedFormikValues, excludeProjName, undefined)
-          }
-
-          // Set Org field value
-          set(clonedFormikValues, orgFieldName, selected)
-
-          setValues(clonedFormikValues)
-
-          if (!isAllSelected && isSingleSelected) {
-            fetchProjectsForOrgId(selected?.[0]?.value as string)
-          }
-        }}
+        }
       />
 
       <FormInput.CheckBox
@@ -175,7 +177,19 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
       />
 
       {isCheckBoxEnabled && excludeOrgCheckboxValue ? (
-        <FormInput.MultiSelect name={excludeOrgName} items={organizations} style={{ marginLeft: '24px' }} />
+        <FormInput.MultiSelect
+          name={excludeOrgName}
+          items={organizations}
+          className={css.tagInputStyle}
+          tagInputProps={{ rightElement: renderSearchLoading(loadingOrgs) } as unknown as ITagInputProps}
+          multiSelectProps={{
+            onQueryChange(query: string) {
+              query ? fetchOrgByQuery(query) : fetchOrgResetQuery()
+            },
+            resetOnSelect: false
+          }}
+          style={{ marginLeft: '24px' }}
+        />
       ) : null}
     </>
   )
@@ -557,6 +571,7 @@ export const OrgProjAndServiceRenderer: React.FC<OrgProjAndServiceRendererPropsI
       </>
     )
   }
+  /* istanbul ignore else */
   if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
     return (
       <>

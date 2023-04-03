@@ -7,7 +7,7 @@
  */
 
 import React from 'react'
-import { render, waitForElementToBeRemoved, screen, fireEvent } from '@testing-library/react'
+import { render, waitForElementToBeRemoved, screen, fireEvent, waitFor, within } from '@testing-library/react'
 import userEvent, { TargetElement } from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
@@ -29,7 +29,7 @@ jest.mock('services/cd-ng', () => ({
   useGetFreeze: jest.fn().mockImplementation(() => ({})),
   useCreateFreeze: jest.fn().mockImplementation(() => ({})),
   useUpdateFreeze: jest.fn().mockImplementation(() => ({})),
-  useGetProjectList: jest.fn().mockImplementation(() => ({})),
+  useGetProjectList: jest.fn().mockImplementation(() => ({ loading: false, data: [], refetch: jest.fn() })),
   useGetServiceList: jest.fn().mockImplementation(() => ({ loading: false, data: serviceData, refetch: jest.fn() })),
   useGetEnvironmentListV2: jest.fn().mockImplementation(() => ({ loading: false, data: [], refetch: jest.fn() }))
 }))
@@ -145,6 +145,12 @@ describe('Freeze Window Studio Config Section', () => {
 
     userEvent.type(inputEl as TargetElement, 'Rule Number 1')
 
+    userEvent.click(document.querySelector('input[name="entity[0].ExcludeOrgCheckbox"]') as HTMLElement)
+    const excludeOrgs = document.querySelector('input[name="entity[0].ExcludeOrg"]') as HTMLElement
+    await waitFor(() => expect(excludeOrgs).toBeTruthy())
+    userEvent.type(excludeOrgs, 'v2')
+    expect(excludeOrgs).toHaveValue('v2')
+
     const tickButton = container.querySelector('.tickButton')
     userEvent.click(tickButton as TargetElement)
 
@@ -241,5 +247,66 @@ describe('Freeze Window Studio Config Section', () => {
     //error toaster
     expect(document.getElementsByClassName('bp3-toast-message')).toBeDefined()
     expect(getByText('Duration: Value must be greater than or equal to "30m"')).toBeInTheDocument()
+  })
+
+  test('it should verify search query for fields at ORG LEVEL', async () => {
+    const { container, getByText, getAllByText } = render(
+      <TestWrapper
+        path="/account/:accountId/settings/organizations/:orgIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
+        pathParams={{ accountId, orgIdentifier, windowIdentifier: '-1' }}
+      >
+        <FreezeWindowStudioPage />
+      </TestWrapper>
+    )
+
+    fillAtForm([
+      {
+        container,
+        type: InputTypes.TEXTFIELD,
+        fieldId: 'name',
+        value: 'org level freeze'
+      }
+    ])
+
+    const configTab = getByText('common.coverage')
+    expect(configTab).toBeDefined()
+    userEvent.click(configTab)
+    expect(await screen.findByText('Add rule')).toBeInTheDocument()
+
+    // Click on Add rule
+    const addRule = getByText('Add rule')
+    userEvent.click(addRule)
+    expect(await screen.findByText('envType')).toBeInTheDocument()
+    const inputEl = document.querySelector('input[name="entity[0].name"]')
+
+    // Fields should be renderer
+    expect(inputEl).toBeDefined()
+    expect(getByText('projectsText')).toBeInTheDocument()
+    expect(getByText('freezeWindows.freezeStudio.excludeProjects')).toBeInTheDocument()
+    expect(getAllByText('services')).toBeTruthy()
+    expect(getByText('envType')).toBeInTheDocument()
+
+    userEvent.type(inputEl as TargetElement, 'Rule Number 1')
+
+    userEvent.click(document.querySelector('input[name="entity[0].ExcludeProjCheckbox"]') as HTMLElement)
+    const excludeProject = document.querySelector('input[name="entity[0].ExcludeProj"]') as HTMLElement
+    await waitFor(() => expect(excludeProject).toBeTruthy())
+    userEvent.type(excludeProject, 'v2')
+    expect(excludeProject).toHaveValue('v2')
+
+    userEvent.click(document.querySelector('input[name="entity[0].EnvType"]') as HTMLElement)
+    const envTypeDropdownOptions = document.querySelectorAll('.bp3-popover-content')?.[1] as HTMLElement
+    const prodType = await within(envTypeDropdownOptions).findByText('production')
+    userEvent.click(prodType)
+
+    userEvent.click(document.querySelector('input[name="entity[0].EnvType"]') as HTMLElement)
+    userEvent.click(await within(envTypeDropdownOptions).findByText('common.allEnvironments'))
+
+    //save
+    const tickButton = container.querySelector('.tickButton')
+    userEvent.click(tickButton as TargetElement)
+
+    expect(await screen.findByText('Rule Number 1')).toBeInTheDocument()
+    expect(getByText('envType: common.allEnvironments')).toBeInTheDocument()
   })
 })
