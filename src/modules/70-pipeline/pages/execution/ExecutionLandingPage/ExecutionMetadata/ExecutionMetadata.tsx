@@ -70,7 +70,10 @@ function ExecutionMetadataTrigger(): React.ReactElement {
     storeType
   })
 
-  if (triggerType === 'WEBHOOK' || triggerType === 'WEBHOOK_CUSTOM' || triggerType === 'SCHEDULER_CRON') {
+  if (
+    (triggerType === 'WEBHOOK' || triggerType === 'WEBHOOK_CUSTOM' || triggerType === 'SCHEDULER_CRON') &&
+    !hasparentpipeline
+  ) {
     return (
       <div className={css.trigger}>
         <Icon
@@ -93,16 +96,7 @@ function ExecutionMetadataTrigger(): React.ReactElement {
   } else {
     return (
       <div className={css.userLabelContainer}>
-        <UserLabel
-          name={
-            pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.identifier ||
-            pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.extraInfo?.email ||
-            ''
-          }
-          email={pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.extraInfo?.email}
-          iconProps={{ size: 16 }}
-        />
-        {hasparentpipeline && (
+        {hasparentpipeline ? (
           <Link
             to={routes.toExecutionPipelineView({
               accountId,
@@ -131,6 +125,16 @@ function ExecutionMetadataTrigger(): React.ReactElement {
               {`(ID: ${runsequence})`}
             </Text>
           </Link>
+        ) : (
+          <UserLabel
+            name={
+              pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.identifier ||
+              pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.extraInfo?.email ||
+              ''
+            }
+            email={pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.extraInfo?.email}
+            iconProps={{ size: 16 }}
+          />
         )}
       </div>
     )

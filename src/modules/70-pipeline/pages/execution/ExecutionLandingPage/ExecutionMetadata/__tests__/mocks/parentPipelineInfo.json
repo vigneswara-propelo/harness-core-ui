@@ -1,0 +1,111 @@
+{
+  "pipelineIdentifier": "child",
+  "orgIdentifier": "default",
+  "projectIdentifier": "pro",
+  "planExecutionId": "nuvaZmhSTpSuIoX86jU6zQ",
+  "name": "child",
+  "status": "Success",
+  "tags": [],
+  "executionTriggerInfo": {
+    "triggerType": "WEBHOOK_CUSTOM",
+    "triggeredBy": {
+      "uuid": "systemUser",
+      "identifier": "custom",
+      "extraInfo": {
+        "execution_trigger_tag_needed_for_abort": "kmpySmUISimoRrJL6NL73w:default:pro:parent",
+        "triggerRef": "kmpySmUISimoRrJL6NL73w/default/pro/custom",
+        "eventCorrelationId": "642687019411d30de36f1214"
+      }
+    },
+    "isRerun": false
+  },
+  "governanceMetadata": {
+    "id": "",
+    "deny": false,
+    "details": [],
+    "message": "FF: [OPA_PIPELINE_GOVERNANCE] is disabled for account: [kmpySmUISimoRrJL6NL73w]",
+    "timestamp": "0",
+    "status": "",
+    "accountId": "",
+    "orgId": "",
+    "projectId": "",
+    "entity": "",
+    "type": "",
+    "action": "",
+    "created": "0"
+  },
+  "moduleInfo": {},
+  "layoutNodeMap": {
+    "9WZMcQZMSqy8Ku-bFpeDtA": {
+      "nodeType": "Custom",
+      "nodeGroup": "STAGE",
+      "nodeIdentifier": "stage1",
+      "name": "stage1",
+      "nodeUuid": "9WZMcQZMSqy8Ku-bFpeDtA",
+      "status": "Success",
+      "module": "pms",
+      "moduleInfo": { "pms": {} },
+      "startTs": 1680246540555,
+      "endTs": 1680246546436,
+      "edgeLayoutList": { "currentNodeChildren": [], "nextIds": [] },
+      "nodeRunInfo": {
+        "whenCondition": "\u003c+OnPipelineSuccess\u003e",
+        "evaluatedCondition": true,
+        "expressions": [
+          {
+            "expression": "OnPipelineSuccess",
+            "expressionValue": "true",
+            "count": 1
+          }
+        ]
+      },
+      "failureInfo": {
+        "message": ""
+      },
+      "failureInfoDTO": { "message": "", "failureTypeList": [], "responseMessages": [] },
+      "nodeExecutionId": "M4yJsy0GRvGgU8xT5H8rQQ",
+      "executionInputConfigured": false,
+      "isRollbackStageNode": false
+    }
+  },
+  "modules": ["pms"],
+  "startingNodeId": "9WZMcQZMSqy8Ku-bFpeDtA",
+  "startTs": 1680246539624,
+  "endTs": 1680246546921,
+  "createdAt": 1680246539725,
+  "canRetry": true,
+  "showRetryHistory": false,
+  "runSequence": 76,
+  "successfulStagesCount": 1,
+  "runningStagesCount": 0,
+  "failedStagesCount": 0,
+  "totalStagesCount": 1,
+  "storeType": "INLINE",
+  "executionInputConfigured": false,
+  "parentStageInfo": {
+    "hasparentpipeline": true,
+    "stagenodeid": "HIxFUyz3TS-7EYFzkR6Q8Q",
+    "executionid": "Y_SANiOmTyGNU70Wv0S2iQ",
+    "identifier": "parent",
+    "projectid": "pro",
+    "orgid": "default",
+    "runsequence": 73,
+    "triggerjsonpayload": "{\"sample_key\": \"sample_value\"}",
+    "triggerpayload": { "type": "WEBHOOK", "headers": {}, "sourcetype": "CUSTOM_REPO", "version": 3 },
+    "triggerinfo": {
+      "triggerType": "WEBHOOK_CUSTOM",
+      "triggeredBy": {
+        "uuid": "systemUser",
+        "identifier": "custom",
+        "extraInfo": {
+          "execution_trigger_tag_needed_for_abort": "kmpySmUISimoRrJL6NL73w:default:pro:parent",
+          "triggerRef": "kmpySmUISimoRrJL6NL73w/default/pro/custom",
+          "eventCorrelationId": "642687019411d30de36f1214"
+        }
+      },
+      "isRerun": false
+    }
+  },
+  "allowStageExecutions": false,
+  "stagesExecution": false
+}

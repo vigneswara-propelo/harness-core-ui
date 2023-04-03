@@ -6,16 +6,19 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import { get } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { PipelineStageInfo } from 'services/pipeline-ng'
 import ExecutionMetadata from '../ExecutionMetadata'
 import branchMock from './mocks/branch.json'
 import tagMock from './mocks/tag.json'
 import pullRequestMock from './mocks/pullRequest.json'
+import parentPipelineInfoMock from './mocks/parentPipelineInfo.json'
 
 jest.mock('@pipeline/context/ExecutionContext', () => ({
   useExecutionContext: jest.fn()
@@ -84,5 +87,42 @@ describe('<ExecutionMetadata.test /> tests', () => {
     )
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('prioritize parent pipeline info over trigger and user info', async () => {
+    ;(useExecutionContext as jest.Mock).mockImplementation(() => ({
+      pipelineExecutionDetail: {
+        pipelineExecutionSummary: parentPipelineInfoMock
+      }
+    }))
+
+    const { executionid, identifier, orgid, projectid, stagenodeid, runsequence } = get(
+      parentPipelineInfoMock,
+      'parentStageInfo',
+      {} as PipelineStageInfo
+    )
+    const triggerIdentifier = parentPipelineInfoMock.executionTriggerInfo.triggeredBy.identifier
+
+    const { queryByText } = render(
+      <TestWrapper path={TEST_EXECUTION_PATH} pathParams={pathParams as unknown as Record<string, string>}>
+        <ExecutionMetadata />
+      </TestWrapper>
+    )
+
+    const parentPipelineLink = await screen.findByRole('link', { name: `parent (ID: ${runsequence})` })
+    expect(queryByText(triggerIdentifier)).not.toBeInTheDocument()
+    expect(parentPipelineLink).toHaveAttribute(
+      'href',
+      routes.toExecutionPipelineView({
+        accountId: pathParams.accountId,
+        orgIdentifier: orgid,
+        projectIdentifier: projectid,
+        pipelineIdentifier: identifier,
+        executionIdentifier: executionid,
+        module: pathParams.module,
+        source: pathParams.source,
+        stage: stagenodeid
+      })
+    )
   })
 })
