@@ -54,6 +54,12 @@ exports[`Custom Variables can add a string variable 1`] = `
           myVar
         </span>
       </p>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main descriptionRow StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+        style="--text-line-clamp: 3;"
+      >
+        -
+      </p>
       <div
         class="valueRow"
       >
@@ -228,6 +234,11 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
       >
+        description
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+      >
         valueLabel
       </p>
     </div>
@@ -299,6 +310,12 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
       >
         string
       </span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main"
+        style="--text-line-clamp: 1;"
+      >
+        -
+      </p>
       <div
         class="valueColumn"
         data-type="FIXED"
@@ -510,6 +527,12 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
       >
         number
       </span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main"
+        style="--text-line-clamp: 1;"
+      >
+        -
+      </p>
       <div
         class="valueColumn"
         data-type="FIXED"
@@ -708,6 +731,11 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
       >
+        description
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+      >
         valueLabel
       </p>
     </div>
@@ -779,6 +807,12 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       >
         string
       </span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main"
+        style="--text-line-clamp: 1;"
+      >
+        -
+      </p>
       <div
         class="valueColumn"
         data-type="FIXED"
@@ -990,6 +1024,12 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       >
         number
       </span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main"
+        style="--text-line-clamp: 1;"
+      >
+        -
+      </p>
       <div
         class="valueColumn"
         data-type="FIXED"
@@ -1201,6 +1241,12 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       >
         secretType
       </span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main"
+        style="--text-line-clamp: 1;"
+      >
+        -
+      </p>
       <div
         class="valueColumn"
         data-type="RUNTIME"
@@ -1493,6 +1539,11 @@ exports[`Custom Variables should render variables 1`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
       >
+        description
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+      >
         valueLabel
       </p>
     </div>
@@ -1564,6 +1615,12 @@ exports[`Custom Variables should render variables 1`] = `
       >
         string
       </span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main"
+        style="--text-line-clamp: 1;"
+      >
+        -
+      </p>
       <div
         class="valueColumn"
         data-type="FIXED"
@@ -1775,6 +1832,12 @@ exports[`Custom Variables should render variables 1`] = `
       >
         number
       </span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main"
+        style="--text-line-clamp: 1;"
+      >
+        -
+      </p>
       <div
         class="valueColumn"
         data-type="FIXED"
@@ -1986,6 +2049,12 @@ exports[`Custom Variables should render variables 1`] = `
       >
         secretType
       </span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main"
+        style="--text-line-clamp: 1;"
+      >
+        -
+      </p>
       <div
         class="valueColumn"
         data-type="RUNTIME"

@@ -18,6 +18,7 @@ import {
   AllowedTypes,
   Popover
 } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { Formik, FieldArray } from 'formik'
 import { v4 as uuid } from 'uuid'
@@ -43,7 +44,6 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { isValueRuntimeInput } from '@common/utils/utils'
 import AddEditCustomVariable from './AddEditCustomVariable'
 import type { VariableState } from './AddEditCustomVariable'
 import { VariableType } from './CustomVariableUtils'
@@ -69,7 +69,6 @@ export interface CustomVariableEditableExtraProps {
   path?: string
   hideExecutionTimeField?: boolean
   allowedVarialblesTypes?: VariableType[]
-  isDescriptionEnabled?: boolean
   headerComponent?: JSX.Element
   allowedConnectorTypes?: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
   addVariableLabel?: StringKeys
@@ -99,7 +98,6 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
     hideExecutionTimeField,
     allowableTypes,
     allowedVarialblesTypes,
-    isDescriptionEnabled,
     headerComponent,
     addVariableLabel,
     isDrawerMode = false
@@ -166,7 +164,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
             }
 
             function handleUpdate(index: number, variable: AllNGVariables): void {
-              variable.value = isValueRuntimeInput(variable.value) ? variable.value : ''
+              // variable.value = isValueRuntimeInput(variable.value) ? variable.value : ''
               replace(index, variable)
             }
 
@@ -180,12 +178,12 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                 <AddEditCustomVariable
                   addNewVariable={handleAdd}
                   updateVariable={handleUpdate}
+                  allowableTypes={allowableTypes}
                   selectedVariable={selectedVariable}
                   setSelectedVariable={setSelectedVariable}
                   existingVariables={values.variables}
                   formName={formName}
                   allowedVarialblesTypes={allowedVarialblesTypes}
-                  isDescriptionEnabled={isDescriptionEnabled}
                 />
                 {values.canAddVariable ? (
                   <div className={css.headerRow}>
@@ -268,11 +266,14 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                           />
                         </Text>
                       )}
-                      {isDescriptionEnabled && (
-                        <Text lineClamp={1} className="descriptionRow">
-                          {isEmpty(variable?.description) ? '-' : variable?.description}
-                        </Text>
-                      )}
+                      <Text
+                        className={css.descriptionRow}
+                        color={Color.GREY_500}
+                        lineClamp={3}
+                        font={{ variation: FontVariation.BODY }}
+                      >
+                        {isEmpty(variable?.description) ? '-' : variable?.description}
+                      </Text>
                       <div
                         className={cx(css.valueRow, {
                           [css.selectedSearchTextValueRow]: searchText?.length && isValidValueMatch,

@@ -137,6 +137,7 @@ export function VariablesListTable<T>(props: VariableListTableProps<T>): React.R
                 }}
               />
             )}
+            <span />
 
             <Text
               className={css.valueSection}

@@ -130,7 +130,6 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                 VariableType.Number,
                 VariableType.Connector
               ]}
-              isDescriptionEnabled={true}
               enableValidation={true}
               addVariableLabel={'variables.newVariable'}
               validationSchema={getDTInfraVariablesValidationField}

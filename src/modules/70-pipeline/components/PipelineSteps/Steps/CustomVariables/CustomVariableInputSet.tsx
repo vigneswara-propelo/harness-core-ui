@@ -6,17 +6,16 @@
  */
 
 import React from 'react'
-import { Text, MultiTypeInputType, getMultiTypeFromValue, AllowedTypes } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Text, MultiTypeInputType, getMultiTypeFromValue, AllowedTypes, Layout } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { cloneDeep, defaultTo, get } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
-import type { InputSetData } from '@pipeline/components/AbstractSteps/Step'
+import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
@@ -60,7 +59,6 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
   const {
     initialValues,
     template,
-    stepViewType = StepViewType.Edit,
     path,
     variableNamePrefix = '',
     domId,
@@ -68,6 +66,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
     formik,
     allowableTypes,
     className,
+    allValues,
     isDrawerMode
   } = props
   const basePath = path?.length ? `${path}.variables` : 'variables'
@@ -108,11 +107,17 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
 
   return (
     <div className={cx(css.customVariablesInputSets, 'customVariables', className)} id={domId}>
-      {stepViewType === StepViewType.StageVariable && initialValues.variables.length > 0 && (
+      {initialValues.variables.length > 0 && (
         <section className={css.subHeader}>
-          <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('name')}</Text>
-          <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('typeLabel')}</Text>
-          <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('valueLabel')}</Text>
+          <Text font={{ variation: FontVariation.SMALL_BOLD, size: 'normal' }} color={Color.GREY_500}>
+            {getString('name')}
+          </Text>
+          <Text font={{ variation: FontVariation.SMALL_BOLD, size: 'normal' }} color={Color.GREY_500}>
+            {getString('description')}
+          </Text>
+          <Text font={{ variation: FontVariation.SMALL_BOLD, size: 'normal' }} color={Color.GREY_500}>
+            {getString('valueLabel')}
+          </Text>
         </section>
       )}
       {template?.variables?.map?.(variable => {
@@ -124,11 +129,26 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
         if (getMultiTypeFromValue(value as string) !== MultiTypeInputType.RUNTIME) {
           return
         }
-
+        const description = get(allValues, `variables[${index}].description`, '')
         return (
           <div key={`${variable.name}${index}`} className={css.variableListTable}>
-            <Text>{`${variableNamePrefix}${variable.name}`}</Text>
-            <Text>{variable.type}</Text>
+            <Layout.Vertical>
+              <Text
+                font={{ variation: FontVariation.SMALL_BOLD, size: 'normal' }}
+                color={Color.BLACK}
+              >{`${variableNamePrefix}${variable.name}`}</Text>
+              <Text font={{ size: 'small' }} color={Color.GREY_600}>
+                {variable.type}
+              </Text>
+            </Layout.Vertical>
+            <Text
+              className={css.descriptionRow}
+              color={Color.GREY_500}
+              lineClamp={3}
+              font={{ variation: FontVariation.BODY }}
+            >
+              {isEmpty(description) ? '-' : description}
+            </Text>
             <div className={css.valueRow}>
               {(variable.type as CustomDeploymentNGVariable['type']) === VariableType.Connector ? (
                 <FormMultiTypeConnectorField

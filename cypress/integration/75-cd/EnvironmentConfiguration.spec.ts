@@ -63,9 +63,11 @@ describe('EnvironmentsV2 Configuration Page', () => {
     cy.get('@selectType').click()
     cy.get('@typeString').click()
     cy.get('@saveButton').click()
+    cy.get('@saveButton').should('not.be.visible')
+    cy.wait(500)
     cy.contains('span[data-testid="variables[0].type"]', 'String').should('be.visible')
 
-    cy.get('span[data-icon="fixed-input"]').should('be.visible').click()
+    cy.get('[data-testid="multi-type-button"]').should('be.visible').click()
     cy.get('a.bp3-menu-item').should('have.length', 3).as('valueList')
     cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
     cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')
@@ -84,6 +86,8 @@ describe('EnvironmentsV2 Configuration Page', () => {
     cy.get('@selectType').click()
     cy.get('@typeNumber').click()
     cy.get('@saveButton').click()
+    cy.get('@saveButton').should('not.be.visible')
+    cy.wait(500)
 
     cy.get('input[name="variables[1].name"]').should('be.disabled').should('have.value', 'var2')
     cy.contains('span[data-testid="variables[1].type"]', 'Number').should('be.visible')
@@ -100,6 +104,8 @@ describe('EnvironmentsV2 Configuration Page', () => {
     cy.get('@selectType').click()
     cy.get('@typeSecret').click()
     cy.get('@saveButton').click()
+    cy.get('@saveButton').should('not.be.visible')
+    cy.wait(500)
 
     cy.get('input[name="variables[2].name"]').should('be.disabled').should('have.value', 'var3')
     cy.contains('span[data-testid="variables[2].type"]', 'Secret').should('be.visible')
@@ -124,6 +130,8 @@ describe('EnvironmentsV2 Configuration Page', () => {
     cy.get('@selectType').click()
     cy.get('@typeString').click()
     cy.get('@saveButton').click()
+    cy.get('@saveButton').should('not.be.visible')
+    cy.wait(500)
 
     cy.get('input[name="variables[3].name"]').should('be.disabled').should('have.value', 'var4')
     cy.contains('span[data-testid="variables[3].type"]', 'String').should('be.visible')
@@ -143,6 +151,8 @@ describe('EnvironmentsV2 Configuration Page', () => {
     cy.get('@selectType').click()
     cy.get('@typeSecret').click()
     cy.get('@saveButton').click()
+    cy.get('@saveButton').should('not.be.visible')
+    cy.wait(500)
 
     cy.get('button[data-testid="create-or-select-secret"]').eq(1).should('not.be.disabled').click()
     cy.wait('@envSecretCall', { timeout: 10000 })

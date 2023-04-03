@@ -151,7 +151,6 @@ export default function DeploymentTemplateCard(props: DeploymentTemplateCardProp
                         VariableType.Number,
                         VariableType.Connector
                       ],
-                      isDescriptionEnabled: true,
                       headerComponent: headerComponent,
                       addVariableLabel: 'variables.newVariable',
                       isDrawerMode: true

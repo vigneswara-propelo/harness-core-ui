@@ -4122,6 +4122,7 @@ exports[`ZeroNorth Step InputVariable View should render properly 1`] = `
       >
         identifier
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4141,6 +4142,7 @@ exports[`ZeroNorth Step InputVariable View should render properly 1`] = `
       >
         name
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4160,6 +4162,7 @@ exports[`ZeroNorth Step InputVariable View should render properly 1`] = `
       >
         description
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4179,6 +4182,7 @@ exports[`ZeroNorth Step InputVariable View should render properly 1`] = `
       >
         timeout
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4198,6 +4202,7 @@ exports[`ZeroNorth Step InputVariable View should render properly 1`] = `
       >
         settings
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4225,6 +4230,7 @@ exports[`ZeroNorth Step InputVariable View should render properly 1`] = `
       >
         memory
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4244,6 +4250,7 @@ exports[`ZeroNorth Step InputVariable View should render properly 1`] = `
       >
         cpu
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"

@@ -92,7 +92,7 @@ const runModalProps: IDialogProps = {
   canOutsideClickClose: false,
   enforceFocus: false,
   className: css.runPipelineDialog,
-  style: { width: 872, height: 'fit-content', overflow: 'auto' },
+  style: { width: 1028, height: 'fit-content', overflow: 'auto' },
   isCloseButtonShown: false
 }
 

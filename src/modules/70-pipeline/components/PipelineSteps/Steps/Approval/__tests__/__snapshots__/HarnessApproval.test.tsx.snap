@@ -529,6 +529,7 @@ exports[`Harness Approval tests Basic snapshot - input variable view: harness-ap
       >
         identifier
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -546,6 +547,7 @@ exports[`Harness Approval tests Basic snapshot - input variable view: harness-ap
       >
         approvalMessage
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -565,6 +567,7 @@ exports[`Harness Approval tests Basic snapshot - input variable view: harness-ap
       >
         includePipelineExecutionHistory
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -584,6 +587,7 @@ exports[`Harness Approval tests Basic snapshot - input variable view: harness-ap
       >
         userGroups
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -601,6 +605,7 @@ exports[`Harness Approval tests Basic snapshot - input variable view: harness-ap
       >
         minimumCount
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -620,6 +625,7 @@ exports[`Harness Approval tests Basic snapshot - input variable view: harness-ap
       >
         approverInputs
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"

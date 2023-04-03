@@ -7,11 +7,13 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { Button, Formik, FormikForm, FormInput, ButtonVariation, Dialog } from '@harness/uicore'
+import { Button, Formik, FormikForm, FormInput, ButtonVariation, Dialog, Layout, AllowedTypes } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'
 
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { getVaribaleTypeOptions, VariableType } from './CustomVariableUtils'
 
 const MAX_LENGTH = 128
@@ -26,10 +28,10 @@ export interface AddEditCustomVariableProps {
   setSelectedVariable(variable: VariableState | null): void
   addNewVariable(variable: AllNGVariables): void
   updateVariable(index: number, variable: AllNGVariables): void
+  allowableTypes: AllowedTypes
   existingVariables?: AllNGVariables[]
   formName?: string
   allowedVarialblesTypes?: VariableType[]
-  isDescriptionEnabled?: boolean
 }
 
 export default function AddEditCustomVariable(props: AddEditCustomVariableProps): React.ReactElement {
@@ -40,14 +42,14 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
     updateVariable,
     existingVariables,
     formName,
-    allowedVarialblesTypes,
-    isDescriptionEnabled
+    allowableTypes,
+    allowedVarialblesTypes
   } = props
   const { getString } = useStrings()
 
   const existingNames: string[] = Array.isArray(existingVariables) ? existingVariables.map(v => v?.name || '') : []
   const isEdit = selectedVariable && typeof selectedVariable.index === 'number' && selectedVariable.index > -1
-
+  const { expressions } = useVariablesExpression()
   // remove current variable name in case of edit
   if (isEdit) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -65,6 +67,7 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
       className={'padded-dialog'}
       isOpen={!!selectedVariable}
       enforceFocus={false}
+      style={{ width: 600 }}
       title={isEdit ? getString('common.editVariable') : getString('variables.newVariable')}
       onClose={closeModal}
     >
@@ -97,24 +100,48 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
           }
         }}
       >
-        {({ submitForm }) => (
+        {({ submitForm, values }) => (
           <FormikForm data-testid="add-edit-variable">
-            <FormInput.Text
-              name="name"
-              label={getString('variableNameLabel')}
-              placeholder={getString('pipeline.variable.variableNamePlaceholder')}
-            />
-            {isDescriptionEnabled && (
-              <FormInput.TextArea name="description" isOptional={true} label={getString('description')} />
+            <Layout.Horizontal spacing="medium">
+              <FormInput.Select
+                name="type"
+                items={getVaribaleTypeOptions(allowedVarialblesTypes, getString)}
+                label={getString('typeLabel')}
+                style={{ width: 150 }}
+                placeholder={getString('pipeline.variable.typePlaceholder')}
+                selectProps={{
+                  usePortal: true
+                }}
+              />
+              <FormInput.Text
+                name="name"
+                style={{ flex: 1 }}
+                label={getString('name')}
+                placeholder={getString('pipeline.variable.variableNamePlaceholder')}
+              />
+            </Layout.Horizontal>
+            {values?.type === VariableType.Secret ? (
+              <MultiTypeSecretInput name={`value`} label={getString('valueLabel')} />
+            ) : (
+              <FormInput.MultiTextInput
+                name="value"
+                label={getString('valueLabel')}
+                multiTextInputProps={{
+                  defaultValueToReset: '',
+                  expressions,
+                  textProps: {
+                    type: values?.type === VariableType.Number ? 'number' : 'text'
+                  },
+                  allowableTypes
+                }}
+                data-testid="variables-test"
+              />
             )}
-            <FormInput.Select
-              name="type"
-              items={getVaribaleTypeOptions(allowedVarialblesTypes, getString)}
-              label={getString('typeLabel')}
-              placeholder={getString('pipeline.variable.typePlaceholder')}
-              selectProps={{
-                usePortal: true
-              }}
+            <FormInput.TextArea
+              name="description"
+              isOptional={true}
+              placeholder={getString('common.descriptionPlaceholder')}
+              label={getString('description')}
             />
             <div className="buttons-container">
               <Button

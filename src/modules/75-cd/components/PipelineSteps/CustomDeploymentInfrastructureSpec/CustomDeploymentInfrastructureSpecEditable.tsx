@@ -130,7 +130,6 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
                       VariableType.Number,
                       VariableType.Connector
                     ],
-                    isDescriptionEnabled: true,
                     tabName: DeployTabs.INFRASTRUCTURE,
                     formName: 'addEditInfraVariableForm',
                     isDrawerMode: true

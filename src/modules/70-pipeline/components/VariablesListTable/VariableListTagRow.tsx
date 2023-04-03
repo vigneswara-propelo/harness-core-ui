@@ -83,6 +83,7 @@ export default function VariableListTagRow(props: VariableRowProps): React.React
             }}
           />
         )}
+        <span></span>
 
         <div className={cx(css.tagsValueSection, props.valueSectionClassName)}>
           {!isEmpty(props?.tags) && (

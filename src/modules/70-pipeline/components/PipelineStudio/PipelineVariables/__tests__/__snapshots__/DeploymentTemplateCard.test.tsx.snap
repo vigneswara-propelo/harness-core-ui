@@ -115,6 +115,7 @@ exports[`DeploymentTemplateCard test renders init 1`] = `
                 >
                   instancesListPath
                 </span>
+                <span />
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                   style="--text-line-clamp: 1;"
@@ -138,6 +139,7 @@ exports[`DeploymentTemplateCard test renders init 1`] = `
                 >
                   content
                 </span>
+                <span />
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                   style="--text-line-clamp: 1;"
@@ -375,6 +377,7 @@ exports[`DeploymentTemplateCard test renders when name is not set 1`] = `
                 >
                   instancesListPath
                 </span>
+                <span />
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                   style="--text-line-clamp: 1;"
@@ -398,6 +401,7 @@ exports[`DeploymentTemplateCard test renders when name is not set 1`] = `
                 >
                   content
                 </span>
+                <span />
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                   style="--text-line-clamp: 1;"

@@ -4059,6 +4059,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         identifier
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4078,6 +4079,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         name
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4097,6 +4099,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         timeout
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4116,6 +4119,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         connectorRef
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4135,6 +4139,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         repo
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4154,6 +4159,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         tags
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4173,6 +4179,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         dockerfile
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4192,6 +4199,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         context
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4211,6 +4219,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         labels
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4234,6 +4243,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         buildArgs
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4257,6 +4267,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         optimize
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4276,6 +4287,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         target
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4295,6 +4307,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         remoteCacheRepo
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4314,6 +4327,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         memory
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -4333,6 +4347,7 @@ exports[`DockerHub Step InputVariable View should render properly 1`] = `
       >
         cpu
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"

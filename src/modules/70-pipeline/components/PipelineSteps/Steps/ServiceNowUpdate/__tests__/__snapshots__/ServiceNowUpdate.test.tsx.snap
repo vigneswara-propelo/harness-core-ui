@@ -379,6 +379,7 @@ exports[`ServiceNow Update tests Basic snapshot - input variable view: serviceNo
       >
         identifier
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -396,6 +397,7 @@ exports[`ServiceNow Update tests Basic snapshot - input variable view: serviceNo
       >
         connectorRef
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -413,6 +415,7 @@ exports[`ServiceNow Update tests Basic snapshot - input variable view: serviceNo
       >
         ticketType
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"

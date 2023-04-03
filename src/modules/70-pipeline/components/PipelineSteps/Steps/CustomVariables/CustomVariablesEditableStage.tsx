@@ -37,7 +37,6 @@ import { getVariablesValidationField } from '@pipeline/components/PipelineSteps/
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { isValueRuntimeInput } from '@common/utils/utils'
 import { SecretConfigureOptions } from '@secrets/components/SecretConfigureOptions/SecretConfigureOptions'
 import type { CustomVariableEditableProps, CustomVariablesData } from './CustomVariableEditable'
 import { VariableType, labelStringMap } from './CustomVariableUtils'
@@ -69,7 +68,6 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
     tabName = 'OVERVIEW',
     allowableTypes,
     allowedVarialblesTypes,
-    isDescriptionEnabled,
     validationSchema,
     isDrawerMode,
     addVariableLabel
@@ -131,7 +129,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
               }
 
               function handleUpdate(index: number, variable: AllNGVariables): void {
-                variable.value = isValueRuntimeInput(variable.value) ? variable.value : ''
+                // variable.value = isValueRuntimeInput(variable.value) ? variable.value : ''
                 replace(index, variable)
               }
 
@@ -147,18 +145,16 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                     setSelectedVariable={setSelectedVariable}
                     addNewVariable={handleAdd}
                     updateVariable={handleUpdate}
+                    allowableTypes={allowableTypes}
                     existingVariables={values.variables}
                     formName={formName}
                     allowedVarialblesTypes={allowedVarialblesTypes}
-                    isDescriptionEnabled={isDescriptionEnabled}
                   />
                   {values.variables?.length > 0 ? (
                     <div className={cx(css.tableRow, css.headerRow, 'variablesTableRow')}>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('name')}</Text>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('typeLabel')}</Text>
-                      {isDescriptionEnabled && (
-                        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('description')}</Text>
-                      )}
+                      <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('description')}</Text>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('valueLabel')}</Text>
                     </div>
                   ) : null}
@@ -187,10 +183,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                           stringID={labelStringMap[variable.type as VariableType]}
                           data-testid={`variables[${index}].type`}
                         />
-                        {isDescriptionEnabled && (
-                          <Text lineClamp={1}>{isEmpty(variable?.description) ? '-' : variable?.description}</Text>
-                        )}
-
+                        <Text lineClamp={1}>{isEmpty(variable?.description) ? '-' : variable?.description}</Text>
                         <div className={css.valueColumn} data-type={getMultiTypeFromValue(variable.value as string)}>
                           {(variable.type as CustomDeploymentNGVariable['type']) === VariableType.Connector ? (
                             <FormMultiTypeConnectorField

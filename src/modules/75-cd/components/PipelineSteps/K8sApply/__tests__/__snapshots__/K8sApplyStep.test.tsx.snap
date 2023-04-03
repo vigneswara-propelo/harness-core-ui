@@ -3835,6 +3835,7 @@ exports[`Test K8sApplyStep should render variable view 1`] = `
       >
         skipDryRun
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -3854,6 +3855,7 @@ exports[`Test K8sApplyStep should render variable view 1`] = `
       >
         skipSteadyStateCheck
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -3873,6 +3875,7 @@ exports[`Test K8sApplyStep should render variable view 1`] = `
       >
         skipRendering
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"

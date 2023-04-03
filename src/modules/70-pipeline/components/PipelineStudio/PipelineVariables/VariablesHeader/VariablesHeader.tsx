@@ -73,6 +73,9 @@ export function VariablesHeader(props: VariablesHeaderProps): JSX.Element {
           {getString('variableLabel')}
         </Text>
         <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_600}>
+          {getString('description')}
+        </Text>
+        <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_600}>
           {getString('common.input')}
         </Text>
       </div>

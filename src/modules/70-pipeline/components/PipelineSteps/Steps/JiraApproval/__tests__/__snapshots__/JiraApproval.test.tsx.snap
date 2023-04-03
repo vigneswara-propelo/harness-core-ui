@@ -1036,6 +1036,7 @@ exports[`Jira Approval tests Basic snapshot - input variable view: jira-approval
       >
         identifier
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -1053,6 +1054,7 @@ exports[`Jira Approval tests Basic snapshot - input variable view: jira-approval
       >
         connectorRef
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -1070,6 +1072,7 @@ exports[`Jira Approval tests Basic snapshot - input variable view: jira-approval
       >
         projectKey
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -1087,6 +1090,7 @@ exports[`Jira Approval tests Basic snapshot - input variable view: jira-approval
       >
         issueKey
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
@@ -1104,6 +1108,7 @@ exports[`Jira Approval tests Basic snapshot - input variable view: jira-approval
       >
         issueType
       </span>
+      <span />
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"

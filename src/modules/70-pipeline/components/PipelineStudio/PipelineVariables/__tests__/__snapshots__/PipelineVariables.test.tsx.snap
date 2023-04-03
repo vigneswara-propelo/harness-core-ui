@@ -251,6 +251,11 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey600"
         >
+          description
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey600"
+        >
           common.input
         </p>
       </div>
@@ -368,6 +373,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                       >
                         name
                       </span>
+                      <span />
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                         style="--text-line-clamp: 1;"
@@ -387,6 +393,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                       >
                         description
                       </span>
+                      <span />
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                         style="--text-line-clamp: 1;"
@@ -408,6 +415,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                       >
                         tags label
                       </span>
+                      <span />
                       <div
                         class="tagsValueSection"
                       >
@@ -601,6 +609,12 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                   pvar
                                 </span>
                               </p>
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main descriptionRow StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                                style="--text-line-clamp: 3;"
+                              >
+                                -
+                              </p>
                               <div
                                 class="valueRow"
                               >
@@ -762,6 +776,12 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                 >
                                   pvar2
                                 </span>
+                              </p>
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main descriptionRow StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                                style="--text-line-clamp: 3;"
+                              >
+                                -
                               </p>
                               <div
                                 class="valueRow"
@@ -1032,6 +1052,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                               >
                                 name
                               </span>
+                              <span />
                               <p
                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                 style="--text-line-clamp: 1;"
@@ -1051,6 +1072,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                               >
                                 description
                               </span>
+                              <span />
                               <p
                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                 style="--text-line-clamp: 1;"
@@ -1214,6 +1236,12 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                           stage_var1
                                         </span>
                                       </p>
+                                      <p
+                                        class="StyledProps--font Text--lineclamp StyledProps--main descriptionRow StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                                        style="--text-line-clamp: 3;"
+                                      >
+                                        -
+                                      </p>
                                       <div
                                         class="valueRow"
                                       >
@@ -1375,6 +1403,12 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                         >
                                           stage_var2
                                         </span>
+                                      </p>
+                                      <p
+                                        class="StyledProps--font Text--lineclamp StyledProps--main descriptionRow StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                                        style="--text-line-clamp: 3;"
+                                      >
+                                        -
                                       </p>
                                       <div
                                         class="valueRow"
@@ -1748,6 +1782,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                       >
                                         environmentRef
                                       </span>
+                                      <span />
                                       <p
                                         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                         style="--text-line-clamp: 1;"
@@ -2078,6 +2113,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                               >
                                                 name
                                               </span>
+                                              <span />
                                               <p
                                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                                 style="--text-line-clamp: 1;"
@@ -2097,6 +2133,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                               >
                                                 timeout
                                               </span>
+                                              <span />
                                               <p
                                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                                 style="--text-line-clamp: 1;"
@@ -2224,6 +2261,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                               >
                                                 name
                                               </span>
+                                              <span />
                                               <p
                                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                                 style="--text-line-clamp: 1;"
@@ -2347,6 +2385,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                                       >
                                                         name
                                                       </span>
+                                                      <span />
                                                       <p
                                                         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                                         style="--text-line-clamp: 1;"
@@ -2366,6 +2405,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                                       >
                                                         timeout
                                                       </span>
+                                                      <span />
                                                       <p
                                                         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                                         style="--text-line-clamp: 1;"
@@ -2493,6 +2533,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                                       >
                                                         name
                                                       </span>
+                                                      <span />
                                                       <p
                                                         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                                         style="--text-line-clamp: 1;"
@@ -2512,6 +2553,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                                       >
                                                         timeout
                                                       </span>
+                                                      <span />
                                                       <p
                                                         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                                         style="--text-line-clamp: 1;"
@@ -2655,6 +2697,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                               >
                                 name
                               </span>
+                              <span />
                               <p
                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                 style="--text-line-clamp: 1;"
@@ -2674,6 +2717,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                               >
                                 description
                               </span>
+                              <span />
                               <p
                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                 style="--text-line-clamp: 1;"
@@ -3047,6 +3091,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                       >
                                         environmentRef
                                       </span>
+                                      <span />
                                       <p
                                         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                         style="--text-line-clamp: 1;"
@@ -3377,6 +3422,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                               >
                                                 name
                                               </span>
+                                              <span />
                                               <p
                                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                                 style="--text-line-clamp: 1;"
@@ -3396,6 +3442,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                               >
                                                 timeout
                                               </span>
+                                              <span />
                                               <p
                                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                                 style="--text-line-clamp: 1;"
@@ -3535,6 +3582,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                               >
                                 name
                               </span>
+                              <span />
                               <p
                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                 style="--text-line-clamp: 1;"
@@ -3554,6 +3602,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                               >
                                 description
                               </span>
+                              <span />
                               <p
                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                 style="--text-line-clamp: 1;"
@@ -3927,6 +3976,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                       >
                                         environmentRef
                                       </span>
+                                      <span />
                                       <p
                                         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                         style="--text-line-clamp: 1;"
@@ -4257,6 +4307,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                               >
                                                 name
                                               </span>
+                                              <span />
                                               <p
                                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                                 style="--text-line-clamp: 1;"
@@ -4276,6 +4327,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                               >
                                                 timeout
                                               </span>
+                                              <span />
                                               <p
                                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                                 style="--text-line-clamp: 1;"
@@ -4415,6 +4467,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                               >
                                 name
                               </span>
+                              <span />
                               <p
                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                 style="--text-line-clamp: 1;"
@@ -4434,6 +4487,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                               >
                                 description
                               </span>
+                              <span />
                               <p
                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                 style="--text-line-clamp: 1;"
@@ -4807,6 +4861,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                       >
                                         environmentRef
                                       </span>
+                                      <span />
                                       <p
                                         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                         style="--text-line-clamp: 1;"
@@ -5137,6 +5192,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                               >
                                                 name
                                               </span>
+                                              <span />
                                               <p
                                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                                 style="--text-line-clamp: 1;"
@@ -5156,6 +5212,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                               >
                                                 timeout
                                               </span>
+                                              <span />
                                               <p
                                                 class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
                                                 style="--text-line-clamp: 1;"
