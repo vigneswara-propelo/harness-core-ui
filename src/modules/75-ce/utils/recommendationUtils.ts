@@ -6,8 +6,6 @@
  */
 
 import type { IconName } from '@harness/uicore'
-import type { IState } from '@ce/components/NodeRecommendation/constants'
-import type { RecommendClusterRequest } from 'services/ce/recommenderService'
 import { ResourceType } from 'services/ce/services'
 import routes from '@common/RouteDefinitions'
 
@@ -72,57 +70,6 @@ export const calculateNodes = (
 
   return { maximumNodes, minimumNodes }
 }
-
-export const convertStateToRecommendClusterPayload = (
-  state: IState,
-  resourceRequirement: RecommendClusterRequest,
-  buffer: number
-): RecommendClusterRequest => {
-  const sumCpuWithBuffer = addBufferToValue(state.sumCpu, buffer)
-  const sumMemWithBuffer = addBufferToValue(state.sumMem, buffer)
-
-  const { maximumNodes, minimumNodes } = calculateNodes(
-    sumCpuWithBuffer,
-    sumMemWithBuffer,
-    state.maxCpu,
-    +state.maxMemory,
-    +state.minNodes
-  )
-
-  return {
-    ...resourceRequirement,
-    sumCpu: +sumCpuWithBuffer,
-    sumMem: +sumMemWithBuffer,
-    minCpu: +state.maxCpu,
-    minMem: +state.maxMemory,
-    maxNodes: maximumNodes,
-    minNodes: minimumNodes,
-    includeSeries: state.includeSeries,
-    includeTypes: state.includeTypes,
-    excludeSeries: state.excludeSeries,
-    excludeTypes: state.excludeTypes
-  }
-}
-
-export const addBufferToState = (state: IState, buffer: number): IState => ({
-  ...state,
-  sumCpu: addBufferToValue(state.sumCpu, buffer),
-  sumMem: addBufferToValue(state.sumMem, buffer)
-})
-
-interface InstanceFamilies {
-  includeSeries: string[]
-  includeTypes: string[]
-  excludeSeries: string[]
-  excludeTypes: string[]
-}
-
-export const getInstanceFamiliesFromState = (state: IState): InstanceFamilies => ({
-  includeSeries: state.includeSeries,
-  includeTypes: state.includeTypes,
-  excludeSeries: state.excludeSeries,
-  excludeTypes: state.excludeTypes
-})
 
 export type RouteFn = (
   params: {

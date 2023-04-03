@@ -37,7 +37,6 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String as LocaleString } from 'framework/strings'
-import RecommendationFilters from '@ce/components/RecommendationFilters'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
@@ -50,17 +49,13 @@ import CECOEditGatewayPage from './pages/co-edit-gateway/CECOEditGatewayPage'
 import CECOLoadBalancersPage from './pages/co-access-points/CECOAccessPointsPage'
 import CETrialHomePage from './pages/home/CETrialHomePage'
 
-import RecommendationList from './pages/recommendationList/RecommendationList'
-import RecommendationDetailsPage from './pages/recommendationDetails/RecommendationDetailsPage'
 import PerspectiveDetailsPage from './pages/perspective-details/PerspectiveDetailsPage'
 import CreatePerspectivePage from './pages/perspective-builder/CreatePerspectivePage'
 import PerspectiveListPage from './pages/perspective-list/PerspectiveListPage'
 import OverviewPage from './pages/overview/OverviewPage'
-import NodeRecommendationDetailsPage from './pages/node-recommendation-details/NodeRecommendationDetailsPage'
 import AnomaliesOverviewPage from './pages/anomalies-overview/AnomaliesOverviewPage'
 import formatCost from './utils/formatCost'
 import BusinessMapping from './pages/business-mapping/BusinessMapping'
-import ECSRecommendationDetailsPage from './pages/ecs-recommendation-details/ECSRecommendationDetailsPage'
 import OverviewAddCluster from './components/OverviewPage/OverviewAddCluster'
 import CORuleDetailsPage from './pages/co-rule-details/CORuleDetailsPage'
 import CommitmentOrchestration from './pages/CommitmentOrchestration/CommitmentOrchestration'
@@ -508,57 +503,6 @@ const CENonMFERoutes = (
     <RouteWithLayout
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CESideNavProps}
-      path={routes.toCERecommendations({ ...accountPathProps, ...projectPathProps })}
-      exact
-      pageName={PAGE_NAME.CERecommendationList}
-    >
-      <RecommendationList />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCERecommendationDetails({
-        ...accountPathProps,
-        ...projectPathProps,
-        recommendationName: ':recommendationName',
-        recommendation: ':recommendation'
-      })}
-      exact
-      pageName={PAGE_NAME.CERecommendationDetailsPage}
-    >
-      <RecommendationDetailsPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCENodeRecommendationDetails({
-        ...accountPathProps,
-        ...projectPathProps,
-        recommendationName: ':recommendationName',
-        recommendation: ':recommendation'
-      })}
-      exact
-      pageName={PAGE_NAME.CENodeRecommendationDetailsPage}
-    >
-      <NodeRecommendationDetailsPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCEECSRecommendationDetails({
-        ...accountPathProps,
-        ...projectPathProps,
-        recommendationName: ':recommendationName',
-        recommendation: ':recommendation'
-      })}
-      exact
-      pageName={PAGE_NAME.CEECSRecommendationDetailsPage}
-    >
-      <ECSRecommendationDetailsPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
       path={routes.toCECreatePerspective({
         ...accountPathProps,
         perspectiveId: ':perspectiveId'
@@ -864,7 +808,6 @@ const CERoutes: React.FC = () => {
             <ChildAppMounter<CCMUIAppCustomProps>
               customComponents={{
                 OverviewAddCluster,
-                RecommendationFilters,
                 AnomaliesFilter,
                 ConnectorReferenceField,
                 GatewayListFilters,
