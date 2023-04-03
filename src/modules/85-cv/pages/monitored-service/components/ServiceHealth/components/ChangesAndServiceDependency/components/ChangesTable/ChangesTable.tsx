@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { defaultTo, noop } from 'lodash-es'
 import type { IDrawerProps } from '@blueprintjs/core'
 import { useParams, Link } from 'react-router-dom'
@@ -14,6 +14,7 @@ import { Icon, Container, NoDataCard, PageError, TableV2, Pagination, Layout } f
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useChangeEventList, useChangeEventListForAccount } from 'services/cv'
+import { useDeepCompareEffect } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   getCVMonitoringServicesSearchParam,
@@ -45,7 +46,9 @@ export default function ChangesTable({
   changeSourceTypes,
   recordsPerPage,
   dataTooltipId,
-  monitoredServiceDetails
+  monitoredServiceDetails,
+  resetFilters,
+  isChangesPage
 }: ChangesTableInterface): JSX.Element {
   const [page, setPage] = useState(0)
   const { getString } = useStrings()
@@ -53,6 +56,8 @@ export default function ChangesTable({
     ProjectPathProps & { identifier: string }
   >()
   const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
+
+  const projectRef = useRef(projectIdentifier)
 
   const drawerOptions = {
     size: '800px',
@@ -63,10 +68,6 @@ export default function ChangesTable({
     drawerOptions,
     showConfirmationDuringClose: false
   })
-
-  useEffect(() => {
-    setPage(0)
-  }, [startTime, endTime])
 
   const monitoredServiceIdentifiers = useMemo(
     () => getMonitoredServiceIdentifiers(isAccountLevel, monitoredServiceDetails),
@@ -105,6 +106,14 @@ export default function ChangesTable({
     changeCategories,
     page
   ])
+
+  const { pageIndex: _, ...changeEventListQueryParamsExceptPage } = changeEventListQueryParams
+
+  useDeepCompareEffect(() => {
+    if (projectRef.current === projectIdentifier) {
+      setPage(0)
+    }
+  }, [changeEventListQueryParamsExceptPage])
 
   const {
     data: accountLevelChangeEventListData,
@@ -148,7 +157,7 @@ export default function ChangesTable({
   const wrapperProps: ChangesTableContentWrapper = { isCardView, totalItems, dataTooltipId }
 
   useEffect(() => {
-    if (startTime && endTime) {
+    if (startTime && endTime && projectRef.current === projectIdentifier) {
       refetch({
         queryParams: changeEventListQueryParams,
         queryParamStringifyOptions: {
@@ -158,6 +167,14 @@ export default function ChangesTable({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startTime, endTime, page, changeEventListQueryParams])
+
+  useEffect(() => {
+    if (projectRef.current !== projectIdentifier && isChangesPage) {
+      projectRef.current = projectIdentifier
+      setPage(0)
+      resetFilters?.()
+    }
+  }, [projectIdentifier])
 
   const columns: Column<any>[] = useMemo(
     () =>
