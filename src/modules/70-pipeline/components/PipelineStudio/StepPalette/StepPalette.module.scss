@@ -152,6 +152,7 @@
   .categoriesRenderer {
     width: 280px;
     height: 100vh;
+    overflow-y: auto;
 
     font-family: var(--font-family);
     font-style: normal;
