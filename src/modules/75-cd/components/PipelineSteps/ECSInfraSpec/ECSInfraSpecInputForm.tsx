@@ -14,6 +14,7 @@ import type { IItemRendererProps } from '@blueprintjs/select'
 import { Layout, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, SelectOption, Text } from '@harness/uicore'
 
 import { EcsInfrastructure, useClusters } from 'services/cd-ng'
+
 import { useListAwsRegions } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -27,6 +28,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { connectorTypes, EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import type { ConnectorRefFormValueType } from '@cd/utils/connectorUtils'
 import type { ECSInfraSpecCustomStepProps } from './ECSInfraSpec'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -147,9 +149,15 @@ const ECSInfraSpecInputForm = ({
   const connectorFieldName = isEmpty(path) ? 'connectorRef' : `${path}.connectorRef`
   const regionFieldName = isEmpty(path) ? 'region' : `${path}.region`
   const clusterFieldName = isEmpty(path) ? 'cluster' : `${path}.cluster`
+  const provisionerName = isEmpty(path) ? 'provisioner' : `${path}.provisioner`
 
   return (
     <Layout.Vertical spacing="small">
+      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && customStepProps?.provisioner && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <ProvisionerSelectField name={provisionerName} path={path} provisioners={customStepProps?.provisioner} />
+        </div>
+      )}
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField

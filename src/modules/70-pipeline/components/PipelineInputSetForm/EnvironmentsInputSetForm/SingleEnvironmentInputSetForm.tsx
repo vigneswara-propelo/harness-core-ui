@@ -329,7 +329,8 @@ export default function SingleEnvironmentInputSetForm({
                           customStepProps={{
                             ...getCustomStepProps((deploymentStage?.deploymentType as StepType) || '', getString),
                             environmentRef: environment.environmentRef,
-                            infrastructureRef: infraInputs.identifier
+                            infrastructureRef: infraInputs.identifier,
+                            provisioner: deploymentStage?.environment?.provisioner?.steps || undefined
                           }}
                           onUpdate={data => {
                             /* istanbul ignore next */

@@ -206,12 +206,13 @@ export const getInfrastructureDefaultValue = (
       }
     }
     case InfraDeploymentType.ECS: {
-      const { connectorRef, region, cluster } = infrastructure?.spec || {}
+      const { connectorRef, region, cluster, provisioner } = infrastructure?.spec || {}
       return {
         connectorRef,
         region,
         cluster,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.Asg:

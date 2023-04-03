@@ -1130,6 +1130,7 @@ export type AsgConfigurationManifest = ManifestAttributes & {
 export type AsgInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
+  provisioner?: string
   region: string
 }
 
@@ -1384,6 +1385,7 @@ export type AwsLambdaFunctionAliasDefinitionManifest = ManifestAttributes & {
 export type AwsLambdaInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
+  provisioner?: string
   region: string
 }
 
@@ -1463,6 +1465,7 @@ export type AwsSamDirectoryManifest = ManifestAttributes & {
 export type AwsSamInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
+  provisioner?: string
   region: string
 }
 
@@ -1835,6 +1838,7 @@ export type AzureUserAssignedMSIAuth = AzureAuthCredentialDTO & {
 
 export type AzureWebAppInfrastructure = Infrastructure & {
   connectorRef: string
+  provisioner?: string
   resourceGroup: string
   subscriptionId: string
 }
@@ -2087,6 +2091,7 @@ export interface CDPipelineModuleInfo {
 
 export interface CDStageMetaDataDTO {
   environmentRef?: string
+  filteredProvisionerRefs?: string[]
   serviceEnvRefList?: ServiceEnvRef[]
   serviceRef?: string
 }
@@ -2942,6 +2947,7 @@ export interface CustomDeploymentInfraResponse {
 export type CustomDeploymentInfrastructure = Infrastructure & {
   customDeploymentRef: StepTemplateRef
   metadata?: string
+  provisioner?: string
   variables?: CustomDeploymentNGVariable[]
 }
 
@@ -3663,6 +3669,7 @@ export type EcsInfrastructure = Infrastructure & {
   cluster: string
   connectorRef: string
   metadata?: string
+  provisioner?: string
   region: string
 }
 
@@ -3774,6 +3781,7 @@ export type ElastigroupInfrastructure = Infrastructure & {
   configuration: ElastigroupConfiguration
   connectorRef: string
   metadata?: string
+  provisioner?: string
 }
 
 export interface ElastigroupInstances {
@@ -8474,6 +8482,7 @@ export type GoogleFunctionsInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
   project: string
+  provisioner?: string
   region: string
 }
 
@@ -9419,6 +9428,7 @@ export interface JsonNode {
 export type K8SDirectInfrastructure = Infrastructure & {
   connectorRef: string
   namespace: string
+  provisioner?: string
   releaseName: string
 }
 
@@ -9437,6 +9447,7 @@ export type K8sAwsInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
   namespace: string
+  provisioner?: string
   releaseName: string
 }
 
@@ -9444,6 +9455,7 @@ export type K8sAzureInfrastructure = Infrastructure & {
   cluster: string
   connectorRef: string
   namespace: string
+  provisioner?: string
   releaseName: string
   resourceGroup: string
   subscriptionId: string
@@ -9506,6 +9518,7 @@ export type K8sGcpInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
   namespace: string
+  provisioner?: string
   releaseName: string
 }
 
@@ -11233,13 +11246,13 @@ export type PdcInfrastructure = Infrastructure & {
   connectorRef?: string
   credentialsRef: string
   delegateSelectors?: string[]
-  dynamicallyProvisioned?: boolean
+  hostArrayPath?: string
   hostAttributes?: {
     [key: string]: string
   }
   hostFilter: HostFilter
-  hostObjectArray?: JsonNode
   hosts?: string[]
+  provisioner?: string
 }
 
 export type PdcInstanceInfoDTO = InstanceInfoDTO & {
@@ -15467,6 +15480,7 @@ export type ServerlessAwsLambdaDeployStepInfo = StepSpecType & {
 export type ServerlessAwsLambdaInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
+  provisioner?: string
   region: string
   stage: string
 }
@@ -16169,6 +16183,7 @@ export type SshWinRmAwsInfrastructure = Infrastructure & {
   connectorRef: string
   credentialsRef: string
   hostConnectionType: 'PublicIP' | 'PrivateIP'
+  provisioner?: string
   region: string
 }
 
@@ -16176,6 +16191,7 @@ export type SshWinRmAzureInfrastructure = Infrastructure & {
   connectorRef: string
   credentialsRef: string
   hostConnectionType: 'Hostname' | 'PrivateIP' | 'PublicIP'
+  provisioner?: string
   resourceGroup: string
   subscriptionId: string
   tags?: {
@@ -16700,6 +16716,7 @@ export type TanzuApplicationServiceInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
   organization: string
+  provisioner?: string
   space: string
 }
 

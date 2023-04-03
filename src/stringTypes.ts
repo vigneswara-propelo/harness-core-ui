@@ -4475,6 +4475,7 @@ export interface StringsMap {
   'pipeline.previewTemplateLabel': string
   'pipeline.progressPercentage': string
   'pipeline.projectHelperText': string
+  'pipeline.provisionerField.description': string
   'pipeline.provisionerSteps': string
   'pipeline.queueStep.keyPlaceholder': string
   'pipeline.queueStep.keyRequired': string

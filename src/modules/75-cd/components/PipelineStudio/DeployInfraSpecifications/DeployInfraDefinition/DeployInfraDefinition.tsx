@@ -699,7 +699,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   connectorRef: value.connectorRef,
                   region: value.region,
                   cluster: value.cluster,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner || undefined
                 },
                 InfraDeploymentType.ECS
               )

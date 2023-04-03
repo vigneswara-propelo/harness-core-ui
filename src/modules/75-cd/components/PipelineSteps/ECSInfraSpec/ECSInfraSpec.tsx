@@ -13,7 +13,7 @@ import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import { EcsInfrastructure, getConnectorListV2Promise } from 'services/cd-ng'
+import { EcsInfrastructure, getConnectorListV2Promise, ExecutionElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -49,6 +49,7 @@ export interface ECSInfraSpecCustomStepProps {
   serviceRef?: string
   environmentRef?: string
   infrastructureRef?: string
+  provisioner?: ExecutionElementConfig['steps']
 }
 
 const AwsConnectorRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
@@ -136,6 +137,25 @@ export class ECSInfraSpec extends PipelineStep<EcsInfrastructureStep> {
     }
   }
 
+  validateProvisionerField({ data, template, getString, errors }: ValidateFieldArg): void {
+    if (getString && getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME) {
+      const provisioner = Yup.object().shape({
+        region: Yup.lazy((): Yup.Schema<unknown> => {
+          return Yup.string().required(getString('common.validation.fieldIsRequired', { name: 'provisioner' }))
+        })
+      })
+      try {
+        provisioner.validateSync(data)
+      } catch (e) {
+        if (e instanceof Yup.ValidationError) {
+          const err = yupToFormErrors(e)
+
+          Object.assign(errors, err)
+        }
+      }
+    }
+  }
+
   validateClusterField({ data, template, getString, errors }: ValidateFieldArg): void {
     if (getString && getMultiTypeFromValue(template?.cluster) === MultiTypeInputType.RUNTIME) {
       const cluster = Yup.object().shape({
@@ -173,6 +193,7 @@ export class ECSInfraSpec extends PipelineStep<EcsInfrastructureStep> {
     }
     this.validateRegionField({ data, template, getString, errors })
     this.validateClusterField({ data, template, getString, errors })
+    this.validateProvisionerField({ data, template, getString, errors })
 
     return errors
   }

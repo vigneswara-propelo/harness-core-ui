@@ -40,6 +40,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { connectorTypes, EXPRESSION_STRING } from '@pipeline/utils/constants'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import { checkIfQueryParamsisNotEmpty, resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getECSInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
@@ -155,11 +156,13 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
             connectorRef: undefined,
             region: value.region === '' ? undefined : value.region,
             cluster: value.cluster === '' ? undefined : value.cluster,
-            allowSimultaneousDeployments: value.allowSimultaneousDeployments
+            allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+            provisioner: value.provisioner === '' ? undefined : value.provisioner
           }
           if (value.connectorRef) {
             data.connectorRef = getConnectorRefValue(value.connectorRef as ConnectorRefFormValueType)
           }
+
           delayedOnUpdate(data)
         }}
         validationSchema={validationSchema}
@@ -170,6 +173,9 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
           formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
+              <Layout.Horizontal className={css.formRow} spacing="medium">
+                <ProvisionerField name="provisioner" isReadonly />
+              </Layout.Horizontal>
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"
