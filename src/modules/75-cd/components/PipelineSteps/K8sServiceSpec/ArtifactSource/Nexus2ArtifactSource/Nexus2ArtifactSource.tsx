@@ -20,7 +20,10 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
-import { checkIfQueryParamsisNotEmpty } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import {
+  checkIfQueryParamsisNotEmpty,
+  isArtifactInMultiService
+} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { queryInterface } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Nexus3Artifact/Nexus3Artifact'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -142,6 +145,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.packageName`, '')
   )
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   const {
     data: repositoryDetails,
     refetch: refetchRepositoryDetails,
@@ -170,7 +175,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'repository'
+        'repository',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   })
@@ -234,7 +241,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'tag'
+        'tag',
+        serviceIdentifier as string,
+        isMultiService
       )
     },
     lazy: true
