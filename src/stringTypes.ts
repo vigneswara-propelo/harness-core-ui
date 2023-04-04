@@ -662,6 +662,7 @@ export interface StringsMap {
   'common.noAvailableTags': string
   'common.noConnectorAvailable': string
   'common.noDelegateForTask': string
+  'common.noDelegateLogs': string
   'common.noDeployments': string
   'common.noInfo': string
   'common.noNotifications': string
