@@ -5910,7 +5910,7 @@ export interface StringsMap {
   'cd.serviceDashboard.helmChartDetails': string
   'cd.serviceDashboard.helmChartName': string
   'cd.serviceDashboard.helmRopoUrl': string
-  'cd.serviceDashboard.helmSubChartName': string
+  'cd.serviceDashboard.helmSubChartPathName': string
   'cd.serviceDashboard.host': string
   'cd.serviceDashboard.in': string
   'cd.serviceDashboard.instanceCountHistory': string

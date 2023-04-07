@@ -63,7 +63,7 @@ describe('Deployment Template creation and assertion', () => {
       'stepListCall'
     )
     cy.intercept('GET', templateInputsCallAfterSelection, deploymentTemplateInputCallAfterSelectionResponse).as(
-      'Step Template Input'
+      'stepTemplateInput'
     )
     cy.intercept('POST', connectorsListCall, { fixture: 'ng/api/connectors' })
     cy.visitPageAssertion('[class*=TemplatesPage-module_templatesPageBody]')
@@ -153,9 +153,9 @@ describe('Deployment Template creation and assertion', () => {
 
     cy.get('span[icon="plus"]').click()
     cy.get('span[data-icon="template-library"]').eq(1).click()
-    cy.wait(500)
+    cy.wait('@stepTemplateListCallDeploymentTemplates')
     cy.get('p[data-testid="testStepTemplate_Cypress"]').click()
-    cy.wait(500)
+    cy.wait('@stepTemplateInput')
     cy.contains('p', 'testStepTemplate_Cypress (212)').should('be.visible')
     cy.contains('p', 'HTTP Step').should('be.visible')
     cy.contains('span', 'Use Template').click()

@@ -402,7 +402,7 @@ manifestType:
   pathPlaceholder: Enter File Path
   folderPathPlaceholder: Enter Folder Path
   chartPathPlaceholder: Enter Chart Path
-  subChart: Sub-Chart Name
+  subChart: Sub-Chart Path
   subChartPlaceholder: Enter Sub Chart Name
   bucketName: '{{$.common.bucketName}}'
   gitFetchTypeLabel: Git Fetch Type

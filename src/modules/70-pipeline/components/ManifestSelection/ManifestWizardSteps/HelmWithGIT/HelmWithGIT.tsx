@@ -113,7 +113,7 @@ function HelmWithGIT({
         folderPath: specValues.folderPath,
         repoName: getRepositoryName(modifiedPrevStepData, initialValues),
         helmVersion: initialValues.spec?.helmVersion,
-        subChartName: initialValues.spec?.subChartName,
+        subChartPath: initialValues.spec?.subChartPath,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
         enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
         valuesPaths:
@@ -136,7 +136,7 @@ function HelmWithGIT({
       commitId: undefined,
       gitFetchType: 'Branch',
       folderPath: '/',
-      subChartName: '',
+      subChartPath: '',
       helmVersion: 'V3',
       skipResourceVersioning: false,
       enableDeclarativeRollback: false,
@@ -159,7 +159,7 @@ function HelmWithGIT({
               folderPath: formData?.folderPath
             }
           },
-          subChartName: formData?.subChartName,
+          subChartPath: formData?.subChartPath,
           valuesPaths:
             typeof formData?.valuesPaths === 'string'
               ? formData?.valuesPaths
@@ -384,25 +384,25 @@ function HelmWithGIT({
                   <div
                     className={cx(helmcss.halfWidth, {
                       [helmcss.runtimeInput]:
-                        getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME
+                        getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME
                     })}
                   >
                     <FormInput.MultiTextInput
                       label={getString('pipeline.manifestType.subChart')}
                       placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
-                      name="subChartName"
+                      name="subChartPath"
                       multiTextInputProps={{ expressions, allowableTypes }}
                       isOptional
                     />
-                    {getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME && (
+                    {getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
                         style={{ alignSelf: 'center', marginBottom: 5 }}
-                        value={formik.values?.subChartName as string}
+                        value={formik.values?.subChartPath as string}
                         type="String"
-                        variableName="subChartName"
+                        variableName="subChartPath"
                         showRequiredField={false}
                         showDefaultField={false}
-                        onChange={value => formik.setFieldValue('subChartName', value)}
+                        onChange={value => formik.setFieldValue('subChartPath', value)}
                         isReadonly={isReadonly}
                         allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                       />

@@ -710,12 +710,12 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
         )}
       </div>
 
-      {NG_CDS_HELM_SUB_CHARTS && isFieldRuntime(`${manifestPath}.spec.subChartName`, template) && (
+      {NG_CDS_HELM_SUB_CHARTS && isFieldRuntime(`${manifestPath}.spec.subChartPath`, template) && (
         <TextFieldInputSetView
           template={template}
-          fieldPath={`${manifestPath}.spec.subChartName`}
-          disabled={isFieldDisabled(`${manifestPath}.spec.subChartName`)}
-          name={`${path}.${manifestPath}.spec.subChartName`}
+          fieldPath={`${manifestPath}.spec.subChartPath`}
+          disabled={isFieldDisabled(`${manifestPath}.spec.subChartPath`)}
+          name={`${path}.${manifestPath}.spec.subChartPath`}
           multiTextInputProps={{
             expressions,
             allowableTypes
