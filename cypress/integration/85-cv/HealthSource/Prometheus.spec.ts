@@ -244,8 +244,8 @@ describe('Health Source - Prometheus', () => {
     cy.contains('span', 'Additional Filter').click()
 
     cy.get('input[name="aggregator"]').click({ force: true })
-    cy.contains('p', 'avg (calculate the average over dimensions)').click()
-
+    cy.contains('p', 'avg (calculate the average over dimensions)').click({ force: true })
+    cy.wait(1000)
     cy.contains('div', 'Assign').click()
     cy.get('input[name="sli"]').click({ force: true })
 
