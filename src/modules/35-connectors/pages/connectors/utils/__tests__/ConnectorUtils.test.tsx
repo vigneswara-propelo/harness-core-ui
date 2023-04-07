@@ -802,6 +802,7 @@ describe('Connector Utils', () => {
           name: 'Vault 2 - P024',
           identifier: 'Vault_2_P024',
           description: '',
+          delegateType: DelegateTypes.DELEGATE_OUT_CLUSTER,
           orgIdentifier: null,
           projectIdentifier: null,
           tags: {},

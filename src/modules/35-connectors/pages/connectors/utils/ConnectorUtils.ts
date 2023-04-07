@@ -1870,7 +1870,7 @@ export const buildAzureKeyVaultMetadataPayload = (
   connectorInfo: ConnectorInfoDTO | void
 ): SecretManagerMetadataRequestDTO => {
   const delegateType = formData?.delegateType
-  const isDelegateOutCluster = delegateType === DelegateTypes.DELEGATE_OUT_CLUSTERR
+  const isDelegateOutCluster = delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER
   const isDelegateInCluster = delegateType === DelegateTypes.DELEGATE_IN_CLUSTER
   const delegateOutClusterFields = isDelegateOutCluster
     ? {
@@ -1904,7 +1904,7 @@ export const buildAzureKeyVaultMetadataPayload = (
 
 export const buildAzureKeyVaultPayload = (formData: FormData): BuildAzureKeyVaultPayloadReturnType => {
   const delegateType = formData?.delegateType
-  const isDelegateOutCluster = delegateType === DelegateTypes.DELEGATE_OUT_CLUSTERR
+  const isDelegateOutCluster = delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER
   const isDelegateInCluster = delegateType === DelegateTypes.DELEGATE_IN_CLUSTER
   const delegateOutClusterFields = isDelegateOutCluster
     ? {
