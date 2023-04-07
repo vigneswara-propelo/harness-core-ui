@@ -103,9 +103,11 @@ export function TextWithSearchMarkersAndLinks(props: TextWithSearchMarkersProps)
   return (
     <span className={className}>
       {tokens.map((token, i) => {
-        // Change the html entities back to actual characters
-        // as we are no longer using dangerouslySetInnerHTML.
-        // React will take care of rendering them properly.
+        /***Change the html entities back to actual characters
+        as we are no longer using dangerouslySetInnerHTML.
+        React will take care of rendering them properly.
+        Rendering the logs content with sanitized version
+        because that still depends on dangerouslySetInnerHTML***/
         const updatedTokenContent: React.ReactChild = token.content.replace(/&lt;/g, '<').replace(/&amp;/g, '&')
         const matches = searchText ? defaultTo(updatedTokenContent.match(searchRegex), []) : []
 
@@ -113,7 +115,7 @@ export function TextWithSearchMarkersAndLinks(props: TextWithSearchMarkersProps)
           <TextWithSearchMarkers
             searchText={searchText}
             currentSearchIndex={currentSearchIndex}
-            txt={updatedTokenContent}
+            txt={token.content}
             searchIndices={searchIndices?.slice(offset)}
           />
         )
