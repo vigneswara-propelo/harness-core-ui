@@ -28,6 +28,7 @@ import {
   mockApplicationResponse
 } from './SyncStepTestHelper'
 import { SyncStep } from '../SyncStep'
+import { POLICY_OPTIONS } from '../types'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -157,15 +158,16 @@ describe('Sync step tests', () => {
     expect(queryByText('validation.timeout10SecMinimum')).toBeTruthy()
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('Basic functions - edit stage view validations and submit form', async () => {
+  test('Basic functions - edit stage view validations and submit form', async () => {
     const ref = React.createRef<StepFormikRef<unknown>>()
     const props = getSyncStepEditModeProps()
+    const onUpdate = jest.fn()
     const { container, queryByText, getByText } = render(
       <TestStepWidget
         initialValues={props.initialValues}
         type={StepType.GitOpsSync}
         stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
         ref={ref}
       />
     )
@@ -177,13 +179,40 @@ describe('Sync step tests', () => {
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
 
     fireEvent.change(queryByNameAttribute('name')!, { target: { value: 'gitsync step' } })
+    act(() => {
+      fireEvent.click(getByText('pipelineSteps.timeoutLabel'))
+    })
+    fireEvent.change(queryByNameAttribute('timeout')!, { target: { value: '10m' } })
 
-    fireEvent.click(getByText('pipeline.advancedConfiguration'))
-
-    fireEvent.change(queryByNameAttribute('timeout')!, { target: { value: '10s' } })
-
-    await act(() => ref.current?.submitForm()!)
-    expect(container).toMatchSnapshot()
+    await ref.current?.submitForm()
+    expect(onUpdate).toHaveBeenCalledWith({
+      identifier: 'gitsync_step',
+      name: 'gitsync step',
+      type: StepType.GitOpsSync,
+      timeout: '10m',
+      spec: {
+        prune: false,
+        dryRun: false,
+        applyOnly: false,
+        forceApply: false,
+        applicationsList: [],
+        retry: true,
+        retryStrategy: {
+          limit: 2,
+          baseBackoffDuration: '5s',
+          increaseBackoffByFactor: 2,
+          maxBackoffDuration: '3m5s'
+        },
+        syncOptions: {
+          skipSchemaValidation: false,
+          autoCreateNamespace: false,
+          pruneResourcesAtLast: false,
+          applyOutOfSyncOnly: false,
+          replaceResources: false,
+          prunePropagationPolicy: POLICY_OPTIONS.FOREGROUND
+        }
+      }
+    })
   })
 
   test('Basic functions - edit stage view validations with empty spec', async () => {
