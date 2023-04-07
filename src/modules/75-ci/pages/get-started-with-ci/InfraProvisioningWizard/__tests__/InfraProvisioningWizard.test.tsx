@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, waitFor } from '@testing-library/react'
+import { render, act, fireEvent, waitFor, Matcher, SelectorMatcherOptions } from '@testing-library/react'
+import mockImport from 'framework/utils/mockImport'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
@@ -30,6 +31,16 @@ jest.mock('services/pipeline-ng', () => ({
     })
   )
 }))
+
+const generatedYAMLResponseMock = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    data: {
+      status: 'SUCCESS',
+      data: 'name: sample pipeline\nstages:\n- name: build\n  spec:\n    steps:\n    - name: npm_install\n      spec:\n        run: npm install\n      type: script\n    - name: npm_test\n      spec:\n        run: npm run test\n      type: script\n    - name: npm_test\n      spec:\n        run: npm run lint\n      type: script\n    - name: docker_build\n      spec:\n        image: plugins/docker\n        with:\n          dry_run: true\n          repo: hello/world\n          tags: latest\n      type: plugin\n  type: ci\nversion: 1\n'
+    },
+    loading: false
+  })
+})
 
 const updateConnector = jest.fn()
 const createConnector = jest.fn(() =>
@@ -82,6 +93,9 @@ jest.mock('services/cd-ng', () => ({
   useCreateConnector: jest.fn().mockImplementation(() => ({ mutate: createConnector })),
   useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
     return { data: mockBranches, refetch: fetchBranches }
+  }),
+  generateYamlPromise: jest.fn().mockImplementation(() => {
+    return generatedYAMLResponseMock()
   })
 }))
 
@@ -143,13 +157,17 @@ describe('Render and test InfraProvisioningWizard', () => {
     expect(routesToPipelineStudio).toHaveBeenCalled()
   })
 
-  test('Test pipeline creation using existing YAML', async () => {
-    global.fetch = jest.fn()
-    const { container, getByText } = render(
-      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
-        <InfraProvisioningWizard enableFieldsForTesting={true} />
-      </TestWrapper>
-    )
+  const setupGitRepo = async ({
+    container,
+    getByText
+  }: {
+    container: HTMLElement
+    getByText: (
+      text: Matcher,
+      options?: SelectorMatcherOptions | undefined,
+      waitForElementOptions?: unknown
+    ) => HTMLElement
+  }): Promise<void> => {
     await act(async () => {
       fireEvent.click((Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[])[0])
     })
@@ -173,7 +191,17 @@ describe('Render and test InfraProvisioningWizard', () => {
     await act(async () => {
       fireEvent.click(testConnectionBtn)
     })
+  }
 
+  const setupRepository = async ({
+    getByText
+  }: {
+    getByText: (
+      text: Matcher,
+      options?: SelectorMatcherOptions | undefined,
+      waitForElementOptions?: unknown
+    ) => HTMLElement
+  }): Promise<void> => {
     await act(async () => {
       fireEvent.click(getByText('next: common.selectRepository'))
     })
@@ -185,6 +213,19 @@ describe('Render and test InfraProvisioningWizard', () => {
     await act(async () => {
       fireEvent.click(getByText('next: ci.getStartedWithCI.configurePipeline'))
     })
+  }
+
+  test('Test pipeline creation using existing YAML', async () => {
+    global.fetch = jest.fn()
+    const { container, getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard enableImportYAMLOption={true} />
+      </TestWrapper>
+    )
+
+    await setupGitRepo({ container, getByText })
+
+    await setupRepository({ getByText })
 
     await act(async () => {
       fireEvent.click(getByText('ci.getStartedWithCI.importExistingYAML'))
@@ -203,7 +244,7 @@ describe('Render and test InfraProvisioningWizard', () => {
     const { container, getByText } = render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
         <InfraProvisioningWizard
-          enableFieldsForTesting={true}
+          enableImportYAMLOption={true}
           lastConfiguredWizardStepId={InfraProvisiongWizardStepId.ConfigurePipeline}
         />
       </TestWrapper>
@@ -244,5 +285,25 @@ describe('Render and test InfraProvisioningWizard', () => {
     })
 
     expect(routesToPipelineStudio).toHaveBeenCalled()
+  })
+
+  test('Test generate YAML flow with FF on/off', async () => {
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CI_YAML_VERSIONING: true })
+    })
+    global.fetch = jest.fn()
+    const { container, getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard />
+      </TestWrapper>
+    )
+
+    await setupGitRepo({ container, getByText })
+
+    await setupRepository({ getByText })
+
+    expect(getByText('ci.getStartedWithCI.generatePipelineConfig')).toBeDefined()
+
+    await waitFor(() => expect(generatedYAMLResponseMock).toBeCalled())
   })
 })

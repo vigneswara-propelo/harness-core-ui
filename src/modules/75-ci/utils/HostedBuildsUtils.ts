@@ -13,7 +13,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import { StringUtils } from '@common/exports'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { Connectors } from '@connectors/constants'
-import { GIT_EXTENSION } from '@pipeline/utils/CIUtils'
+import { GIT_EXTENSION, YAMLVersion } from '@pipeline/utils/CIUtils'
 import {
   BitbucketPRTriggerActions,
   GitHubPRTriggerActions,
@@ -130,7 +130,8 @@ export const addDetailsToPipeline = ({
   projectIdentifier,
   orgIdentifier,
   connectorRef,
-  repoName
+  repoName,
+  yamlVersion = YAMLVersion.V0
 }: {
   originalPipeline: PipelineConfig
   name: string
@@ -139,8 +140,12 @@ export const addDetailsToPipeline = ({
   orgIdentifier: string
   connectorRef?: string
   repoName?: string
+  yamlVersion?: YAMLVersion
 }): PipelineConfig => {
   let updatedPipeline = { ...originalPipeline }
+  if (yamlVersion === YAMLVersion.V1) {
+    return set(updatedPipeline, 'name', name)
+  }
   updatedPipeline = set(updatedPipeline, 'pipeline.name', name)
   updatedPipeline = set(updatedPipeline, 'pipeline.identifier', identifier)
   updatedPipeline = set(updatedPipeline, 'pipeline.projectIdentifier', projectIdentifier)
@@ -322,6 +327,10 @@ export const getCIStarterPipelineV1 = (): Record<string, any> => {
       }
     ]
   }
+}
+
+export const getCIStarterPipeline = (yamlVersion: YAMLVersion): PipelineConfig => {
+  return yamlVersion === YAMLVersion.V1 ? getCIStarterPipelineV1() : getCloudPipelinePayloadWithCodebase()
 }
 
 export const getPipelinePayloadWithCodebase = (): Record<string, any> => {

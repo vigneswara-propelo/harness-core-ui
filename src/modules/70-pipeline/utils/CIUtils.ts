@@ -225,3 +225,8 @@ export const isSimplifiedYAMLEnabledForCI = (module?: Module, isSimpliedYAMLFFEn
     ? module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
     : false
 }
+
+export enum YAMLVersion {
+  V0 = 'v0',
+  V1 = 'v1'
+}

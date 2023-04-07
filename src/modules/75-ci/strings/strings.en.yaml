@@ -212,6 +212,7 @@ getStartedWithCI:
   storeInGit: Store in Git
   enterBranch: Enter branch name
   createBranchIfNotExists: Create branch if not exists
+  generatingYAMLFromRepo: Generating pipeline YAML from your repository...
   carousel:
     labels:
       harnessCIFeatures: Harness CI

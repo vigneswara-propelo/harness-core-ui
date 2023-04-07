@@ -19,7 +19,7 @@ export interface InfraProvisioningWizardProps {
     secretForPreSelectedConnector?: SecretDTOV2
   }
   lastConfiguredWizardStepId?: InfraProvisiongWizardStepId
-  enableFieldsForTesting?: boolean
+  enableImportYAMLOption?: boolean
 }
 
 export const enum Hosting {

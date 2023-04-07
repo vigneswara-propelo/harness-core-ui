@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { get, set, isNull, isUndefined, omitBy } from 'lodash-es'
+import { get, isNull, isUndefined, omitBy } from 'lodash-es'
 import {
   Container,
   Button,
@@ -20,20 +20,27 @@ import {
 import { useStrings } from 'framework/strings'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import routes from '@common/RouteDefinitions'
-import type { ConnectorInfoDTO, ResponseMessage, UserRepoResponse } from 'services/cd-ng'
+import {
+  ConnectorInfoDTO,
+  generateYamlPromise,
+  ResponseMessage,
+  ResponseString,
+  UserRepoResponse
+} from 'services/cd-ng'
 import {
   createPipelineV2Promise,
   NGTriggerConfigV2,
   ResponseNGTriggerResponse,
   ResponsePipelineSaveResponse,
   createTriggerPromise,
-  PipelineInfoConfig,
-  CreatePipelineV2QueryParams
+  CreatePipelineV2QueryParams,
+  PipelineConfig
 } from 'services/pipeline-ng'
-import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import type { GitQueryParams, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { Status } from '@common/utils/Constants'
 import { Connectors } from '@connectors/constants'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   eventTypes,
   clearNullUndefined,
@@ -45,8 +52,14 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CIOnboardingActions } from '@common/constants/TrackingConstants'
 import { StoreType } from '@common/constants/GitSyncTypes'
-import { getScopedValueFromDTO, ScopedValueObjectDTO } from '@common/components/EntityReference/EntityReference.types'
+import {
+  getScopedValueFromDTO,
+  getScopeFromDTO,
+  ScopedValueObjectDTO
+} from '@common/components/EntityReference/EntityReference.types'
+import { getIdentifierFromName } from '@common/utils/StringUtils'
 import { defaultValues as CodebaseDefaultValues } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
+import { isSimplifiedYAMLEnabledForCI, YAMLVersion } from '@pipeline/utils/CIUtils'
 import { BuildTabs } from '@ci/components/PipelineStudio/CIPipelineStagesUtils'
 import {
   InfraProvisioningWizardProps,
@@ -57,7 +70,7 @@ import {
   GitAuthenticationMethod,
   NonGitOption
 } from './Constants'
-import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
+import { SelectGitProvider, SelectGitProviderRef, SupportedGitProvidersForCIOnboarding } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
 import {
   ConfigurePipeline,
@@ -77,7 +90,8 @@ import {
   getCloudPipelinePayloadWithoutCodebase,
   getCIStarterPipelineV1,
   addRepositoryInfoToPipeline,
-  getGitConnectorRepoBasedOnRepoUrl
+  getGitConnectorRepoBasedOnRepoUrl,
+  getCIStarterPipeline
 } from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -85,7 +99,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const {
     lastConfiguredWizardStepId = InfraProvisiongWizardStepId.SelectGitProvider,
     precursorData,
-    enableFieldsForTesting
+    enableImportYAMLOption
   } = props
   const { preSelectedGitConnector, connectorsEligibleForPreSelection } = precursorData || {}
   const { getString } = useStrings()
@@ -93,7 +107,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const [currentWizardStepId, setCurrentWizardStepId] =
     useState<InfraProvisiongWizardStepId>(lastConfiguredWizardStepId)
   const [showError, setShowError] = useState<boolean>(false)
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const history = useHistory()
   const [pageLoader, setPageLoader] = useState<{ show: boolean; message?: string }>({ show: false })
   const [configuredGitConnector, setConfiguredGitConnector] = useState<ConnectorInfoDTO>()
@@ -104,9 +118,12 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const { showError: showErrorToaster } = useToaster()
   const [buttonLabel, setButtonLabel] = useState<string>('')
   const { trackEvent } = useTelemetry()
-  const [generatedYAMLAsJSON, setGeneratedYAMLAsJSON] = useState<PipelineInfoConfig>({ name: '', identifier: '-1' })
-
+  const [generatedYAMLAsJSON, setGeneratedYAMLAsJSON] = useState<PipelineConfig>({})
   const { CIE_HOSTED_VMS, CI_YAML_VERSIONING } = useFeatureFlags()
+  const enableSavePipelinetoRemoteOption =
+    CI_YAML_VERSIONING &&
+    configuredGitConnector &&
+    SupportedGitProvidersForCIOnboarding.includes(configuredGitConnector.type)
 
   useEffect(() => {
     setCurrentWizardStepId(lastConfiguredWizardStepId)
@@ -123,48 +140,6 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     }
   }, [preSelectedGitConnector])
 
-  // TODO enable this back once api is merged to develop
-  // useEffect(() => {
-  //   if (
-  //     configuredGitConnector &&
-  //     configurePipelineRef.current?.configuredOption &&
-  //     selectRepositoryRef.current?.repository &&
-  //     StarterConfigIdToOptionMap[configurePipelineRef.current?.configuredOption.id] ===
-  //       PipelineConfigurationOption.GenerateYAML
-  //   ) {
-  //     setDisableBtn(true)
-  //     try {
-  //       generateYamlPromise({
-  //         queryParams: {
-  //           accountIdentifier: accountId,
-  //           projectIdentifier,
-  //           orgIdentifier,
-  //           connectorIdentifier: getScopedValueFromDTO(configuredGitConnector),
-  //           repo: getFullRepoName(selectRepositoryRef.current.repository)
-  //         }
-  //       }).then((response: ResponseString) => {
-  //         const { status, data } = response || {}
-  //         const newPipelineName = `${DefaultCIPipelineName}_${new Date().getTime().toString()}`
-  //         if (status === Status.SUCCESS && data) {
-  //           setGeneratedYAMLAsJSON(set(parse<PipelineInfoConfig>(data), 'name', newPipelineName))
-  //         } else {
-  //           setGeneratedYAMLAsJSON(set(getCIStarterPipelineV1() as PipelineInfoConfig, 'name', newPipelineName))
-  //         }
-  //         setDisableBtn(false)
-  //       })
-  //     } catch (e) {
-  //       setDisableBtn(false)
-  //     }
-  //   }
-  // }, [
-  //   configuredGitConnector,
-  //   accountId,
-  //   projectIdentifier,
-  //   orgIdentifier,
-  //   configurePipelineRef.current?.configuredOption,
-  //   selectRepositoryRef.current?.repository
-  // ])
-
   useEffect(() => {
     if (
       configuredGitConnector &&
@@ -173,8 +148,61 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       StarterConfigIdToOptionMap[configurePipelineRef.current?.configuredOption.id] ===
         PipelineConfigurationOption.GenerateYAML
     ) {
-      const newPipelineName = `${DefaultCIPipelineName}_${new Date().getTime().toString()}`
-      setGeneratedYAMLAsJSON(set(getCIStarterPipelineV1() as PipelineInfoConfig, 'name', newPipelineName))
+      setDisableBtn(true)
+      setPageLoader({ show: true, message: getString('ci.getStartedWithCI.generatingYAMLFromRepo') })
+      try {
+        const yamlVersion = isSimplifiedYAMLEnabledForCI(module, CI_YAML_VERSIONING) ? YAMLVersion.V1 : YAMLVersion.V0
+        const connectorRef = getScopedValueFromDTO(configuredGitConnector)
+        const connectorScope = getScopeFromDTO(configuredGitConnector)
+        const repoNameWithNamespace = getFullRepoName(selectRepositoryRef.current.repository)
+        generateYamlPromise({
+          queryParams: {
+            accountIdentifier: accountId,
+            connectorIdentifier: configuredGitConnector?.identifier,
+            repo: repoNameWithNamespace,
+            yamlVersion,
+            ...(connectorScope === Scope.ORG
+              ? {
+                  orgIdentifier
+                }
+              : connectorScope === Scope.PROJECT
+              ? { projectIdentifier, orgIdentifier }
+              : {})
+          }
+        }).then((response: ResponseString) => {
+          const { status, data: generatedPipelineYAML } = response || {}
+          const newPipelineName = `${DefaultCIPipelineName}_${new Date().getTime().toString()}`
+          const commonArgs = {
+            name: newPipelineName,
+            identifier: getIdentifierFromName(newPipelineName),
+            projectIdentifier,
+            orgIdentifier,
+            connectorRef,
+            repoName: repoNameWithNamespace,
+            yamlVersion
+          }
+          if (status === Status.SUCCESS && generatedPipelineYAML) {
+            setGeneratedYAMLAsJSON(
+              addDetailsToPipeline({
+                originalPipeline: parse<PipelineConfig>(generatedPipelineYAML),
+                ...commonArgs
+              })
+            )
+          } else {
+            setGeneratedYAMLAsJSON(
+              addDetailsToPipeline({
+                originalPipeline: getCIStarterPipeline(yamlVersion),
+                ...commonArgs
+              })
+            )
+          }
+          setDisableBtn(false)
+          setPageLoader({ show: false })
+        })
+      } catch (e) {
+        setDisableBtn(false)
+        setPageLoader({ show: false })
+      }
     }
   }, [
     configuredGitConnector,
@@ -182,7 +210,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     projectIdentifier,
     orgIdentifier,
     configurePipelineRef.current?.configuredOption,
-    selectRepositoryRef.current?.repository
+    selectRepositoryRef.current?.repository,
+    CI_YAML_VERSIONING
   ])
 
   const constructPipelinePayloadWithCodebase = React.useCallback(
@@ -354,15 +383,13 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
 
   const getPipelineAndTriggerSetupPromise = useCallback(
     (isGitSaveRetry?: boolean): Promise<void> | undefined => {
-      const { type: connectorType } = configuredGitConnector || {}
       const {
         branch = '',
         storeInGit = false,
         yamlPath = '',
         defaultBranch = ''
-      } = CI_YAML_VERSIONING ? (configurePipelineRef.current?.values as SavePipelineToRemoteInterface) : {}
-      const shouldSavePipelineToGit =
-        (connectorType && [Connectors.GITHUB, Connectors.BITBUCKET].includes(connectorType) && storeInGit) || false
+      } = CI_YAML_VERSIONING ? (configurePipelineRef.current?.values as SavePipelineToRemoteInterface) || {} : {}
+      const shouldSavePipelineToGit = (enableSavePipelinetoRemoteOption && storeInGit) || false
       const connectorRef = getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO)
       if (selectRepositoryRef.current?.repository && configuredGitConnector) {
         const commonGitParams: GitQueryParams = {
@@ -498,14 +525,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       try {
         let setupPipelineAndTriggerPromise = getPipelineAndTriggerSetupPromise()
         if (setupPipelineAndTriggerPromise) {
-          const { type: connectorType } = configuredGitConnector || {}
           const { storeInGit, createBranchIfNotExists, branch } =
             (configurePipelineRef.current?.values as SavePipelineToRemoteInterface) || {}
-          const shouldSavePipelineToGit =
-            CI_YAML_VERSIONING &&
-            connectorType &&
-            [Connectors.GITHUB, Connectors.BITBUCKET].includes(connectorType) &&
-            storeInGit
+          const shouldSavePipelineToGit = enableSavePipelinetoRemoteOption && storeInGit
           // if pipeline is being saved to Git and create branch if not specified is selected, we will attempt to save pipeline to Git twice
           // Once to directly save pipeline to the specified branch with git param isNewBranch as "false"
           // If above fails, save pipeline to the specified branch with git param isNewBranch as "true" and pass default branch of the repo as base branch
@@ -538,7 +560,12 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         wrapUpAPIOperation(createPipelineAndTriggerErr)
       }
     }
-  }, [selectRepositoryRef.current?.repository, configuredGitConnector, generatedYAMLAsJSON, CI_YAML_VERSIONING])
+  }, [
+    selectRepositoryRef.current?.repository,
+    configuredGitConnector,
+    generatedYAMLAsJSON,
+    enableSavePipelinetoRemoteOption
+  ])
 
   const setupPipelineWithoutCodebaseAndTriggers = React.useCallback((): void => {
     try {
@@ -706,7 +733,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             showError={showError}
             disableNextBtn={() => setDisableBtn(true)}
             enableNextBtn={() => setDisableBtn(false)}
-            enableForTesting={enableFieldsForTesting}
+            enableImportYAMLOption={enableImportYAMLOption}
           />
         ),
         onClickBack: () => {
@@ -734,7 +761,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           const selectedConfigOption = StarterConfigIdToOptionMap[configuredOption.id]
 
           if (
-            CI_YAML_VERSIONING &&
+            enableSavePipelinetoRemoteOption &&
             [PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.GenerateYAML].includes(
               selectedConfigOption
             )

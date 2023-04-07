@@ -7,7 +7,9 @@
 import { get } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { ConnectorInfoDTO, UserRepoResponse } from 'services/cd-ng'
+import type { PipelineConfig } from 'services/pipeline-ng'
 import { Connectors } from '@connectors/constants'
+import { YAMLVersion } from '@pipeline/utils/CIUtils'
 import {
   getBackendServerUrl,
   isEnvironmentAllowedForOAuth
@@ -166,7 +168,8 @@ describe('Test HostedBuildsUtils methods', () => {
   })
 
   test('Test addDetailsToPipeline method', () => {
-    const updatedPipeline = addDetailsToPipeline({
+    // test for v0 pipeline
+    const updatedV0Pipeline = addDetailsToPipeline({
       originalPipeline: { pipeline: { identifier: '', name: '' } },
       name: 'sample pipeline',
       orgIdentifier: 'orgId',
@@ -175,11 +178,53 @@ describe('Test HostedBuildsUtils methods', () => {
       connectorRef: 'account.github_connector',
       repoName: 'test-repo'
     })
-    expect(updatedPipeline.pipeline?.name).toBe('sample pipeline')
-    expect(updatedPipeline.pipeline?.orgIdentifier).toBe('orgId')
-    expect(updatedPipeline.pipeline?.projectIdentifier).toBe('projectId')
-    expect(updatedPipeline.pipeline?.properties?.ci?.codebase?.connectorRef).toBe('account.github_connector')
-    expect(updatedPipeline.pipeline?.properties?.ci?.codebase?.repoName).toBe('test-repo')
+    expect(updatedV0Pipeline.pipeline?.name).toBe('sample pipeline')
+    expect(updatedV0Pipeline.pipeline?.orgIdentifier).toBe('orgId')
+    expect(updatedV0Pipeline.pipeline?.projectIdentifier).toBe('projectId')
+    expect(updatedV0Pipeline.pipeline?.properties?.ci?.codebase?.connectorRef).toBe('account.github_connector')
+    expect(updatedV0Pipeline.pipeline?.properties?.ci?.codebase?.repoName).toBe('test-repo')
+
+    // test for V1 pipeline
+    const v1Pipeline = {
+      version: 1,
+      name: 'default',
+      stages: [
+        {
+          name: 'build',
+          type: 'ci',
+          spec: {
+            steps: [
+              {
+                name: 'Run echo_1',
+                type: 'script',
+                spec: {
+                  run: 'echo "Hello build1!"'
+                }
+              },
+              {
+                name: 'Run echo_2',
+                type: 'script',
+                spec: {
+                  run: 'echo "Hello build1!"'
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+
+    const updatedV1Pipeline = addDetailsToPipeline({
+      originalPipeline: v1Pipeline as PipelineConfig,
+      name: 'sample pipeline',
+      orgIdentifier: 'orgId',
+      projectIdentifier: 'projectId',
+      identifier: 'sample_pipeline_identifier',
+      connectorRef: 'account.github_connector',
+      repoName: 'test-repo',
+      yamlVersion: YAMLVersion.V1
+    })
+    expect(get(updatedV1Pipeline, 'name')).toBe('sample pipeline')
   })
 
   test('Test getFullRepoName method', () => {

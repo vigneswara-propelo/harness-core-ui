@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, act } from '@testing-library/react'
+import { render, act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
@@ -17,6 +17,23 @@ import { InfraProvisiongWizardStepId } from '../Constants'
 import { ConfigurePipeline } from '../ConfigurePipeline'
 
 const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }
+
+const mockBranches = {
+  status: 'SUCCESS',
+  data: {
+    branches: [{ name: 'main' }, { name: 'main-demo' }, { name: 'main-patch' }, { name: 'dev' }],
+    defaultBranch: { name: 'main' }
+  },
+  metaData: null,
+  correlationId: 'correlationId'
+}
+const fetchBranches = jest.fn(() => Promise.resolve(mockBranches))
+
+jest.mock('services/cd-ng', () => ({
+  useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
+    return { data: mockBranches, refetch: fetchBranches }
+  })
+}))
 
 describe('Test ConfigurePipeline component', () => {
   test('Select Starter pipeline config option', async () => {
@@ -29,45 +46,49 @@ describe('Test ConfigurePipeline component', () => {
       userEvent.click(getByText('ci.getStartedWithCI.createPipeline'))
     })
     await act(async () => {
-      userEvent.click(getByText('ci.getStartedWithCI.starterPipelineConfig'))
+      userEvent.click(getByText('ci.getStartedWithCI.generatePipelineConfig'))
     })
     expect(container.querySelectorAll('.bp3-card')[0]).toHaveClass('Card--selected')
   })
 
-  test('Select Starter configuration option', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
-        <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.ConfigurePipeline} />
-      </TestWrapper>
-    )
-    const starterConfigCards = container.querySelectorAll('.bp3-card')
-    expect(starterConfigCards.length).toBe(6)
-    const dotNetStarterConfig = getByText('Build and test a .NET or ASP.NET Core project')
-    await act(async () => {
-      userEvent.click(dotNetStarterConfig)
-    })
-    expect(starterConfigCards[1]).toHaveClass('Card--selected')
-  })
-
-  test('Select Starter configuration option with CIE_HOSTED_VMS FF', async () => {
+  test('Advanced Options section should be not be visible for FF CI_YAML_VERSIONING off', async () => {
     jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      CIE_HOSTED_VMS: true
+      CI_YAML_VERSIONING: false
     })
-    const { container, getByText } = render(
+    render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
-        <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.ConfigurePipeline} />
+        <ConfigurePipeline
+          repoName="test-repo"
+          disableNextBtn={jest.fn()}
+          enableNextBtn={jest.fn()}
+          configuredGitConnector={{ identifier: 'id', name: 'test-connector', spec: {}, type: 'Github' }}
+        />
       </TestWrapper>
     )
-    const starterConfigCards = container.querySelectorAll('.bp3-card')
-    expect(starterConfigCards.length).toBe(6)
-    const dotNetStarterConfig = getByText('Build and test a .NET or ASP.NET Core project')
-    await act(async () => {
-      userEvent.click(dotNetStarterConfig)
-    })
-    expect(starterConfigCards[1]).toHaveClass('Card--selected')
+    expect(screen.queryByText('common.seeAdvancedOptions')).toBeNull()
   })
 
-  test('Select Starter configuration option should show expected validation error message', async () => {
+  test('Advanced Options section should be be visible for FF CI_YAML_VERSIONING on', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CI_YAML_VERSIONING: true
+    })
+    const { getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <ConfigurePipeline
+          repoName="test-repo"
+          disableNextBtn={jest.fn()}
+          enableNextBtn={jest.fn()}
+          configuredGitConnector={{ identifier: 'id', name: 'test-connector', spec: {}, type: 'Github' }}
+        />
+      </TestWrapper>
+    )
+    expect(getByText('common.seeAdvancedOptions')).toBeInTheDocument()
+  })
+
+  test('Advanced Options section should show expected validation error message', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CI_YAML_VERSIONING: true
+    })
     const props = {
       repoName: 'test-repo',
       disableNextBtn: jest.fn(),
@@ -77,8 +98,7 @@ describe('Test ConfigurePipeline component', () => {
         name: 'test-connector',
         spec: {},
         type: 'Github' as ConnectorConfigDTO['type']
-      },
-      enableForTesting: true
+      }
     }
     const { container, getByText, rerender } = render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
@@ -87,14 +107,13 @@ describe('Test ConfigurePipeline component', () => {
           disableNextBtn={jest.fn()}
           enableNextBtn={jest.fn()}
           configuredGitConnector={{ identifier: 'id', name: 'test-connector', spec: {}, type: 'Github' }}
-          enableForTesting={true}
         />
       </TestWrapper>
     )
     await act(async () => {
-      userEvent.click(getByText('ci.getStartedWithCI.importExistingYAML'))
+      userEvent.click(getByText('common.seeAdvancedOptions'))
     })
-    expect(getByText('gitsync.selectBranchTitle')).toBeInTheDocument()
+    expect(getByText('pipelineSteps.deploy.inputSet.branch')).toBeInTheDocument()
     expect(getByText('gitsync.gitSyncForm.yamlPathLabel')).toBeInTheDocument()
     rerender(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
@@ -102,30 +121,23 @@ describe('Test ConfigurePipeline component', () => {
       </TestWrapper>
     )
     await act(async () => {
-      userEvent.click(getByText('ci.getStartedWithCI.importExistingYAML'))
+      userEvent.click(getByText('common.seeAdvancedOptions'))
     })
-    const yamlPathValidationError = container.querySelector('div[class*="FormError--errorDiv"][data-name="yamlPath"]')
+    const yamlPathValidationError = container.querySelector('div[class*="FormError--errorDiv"][data-name="branch"]')
     expect(yamlPathValidationError).toBeInTheDocument()
   })
 
-  test('Configure Pipeline view for GitLab connector', async () => {
-    const { getByText } = render(
+  test('Configure Pipeline view for GitLab connector - Advanced section should not be visible', async () => {
+    render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
         <ConfigurePipeline
           repoName="test-repo"
           disableNextBtn={jest.fn()}
           enableNextBtn={jest.fn()}
           configuredGitConnector={{ identifier: 'id', name: 'test-connector', spec: {}, type: 'Gitlab' }}
-          enableForTesting={true}
         />
       </TestWrapper>
     )
-    try {
-      getByText('ci.getStartedWithCI.importExistingYAML')
-    } catch (error) {
-      expect((error as any)?.message as string).toContain(
-        'Unable to find an element with the text: ci.getStartedWithCI.importExistingYAML'
-      )
-    }
+    expect(screen.queryByText('common.seeAdvancedOptions')).toBeNull()
   })
 })
