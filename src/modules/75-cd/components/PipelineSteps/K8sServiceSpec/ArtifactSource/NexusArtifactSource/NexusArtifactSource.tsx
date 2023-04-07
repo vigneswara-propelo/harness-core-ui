@@ -407,6 +407,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 branch: defaultTo(branch, ''),
                 getDefaultFromOtherRepo: true
               }}
+              version={'3.x'}
             />
           )}
           <div className={css.inputFieldLayout}>

@@ -361,6 +361,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 branch: defaultTo(branch, ''),
                 getDefaultFromOtherRepo: true
               }}
+              version={'2.x'}
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (
