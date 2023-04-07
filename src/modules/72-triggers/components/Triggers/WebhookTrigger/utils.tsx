@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty, isUndefined } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import { string, array, object, ObjectSchema } from 'yup'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import type { PanelInterface } from '@triggers/components/TabWizard/TabWizard'
@@ -297,7 +297,12 @@ export const getValidationSchema = (
       getString('triggers.validation.actions'),
       getString('triggers.validation.actions'),
       function (actions) {
-        return this.parent.sourceRepo === CUSTOM || !isUndefined(actions) || this.parent.event === eventTypes.PUSH
+        return (
+          this.parent.anyAction ||
+          this.parent.sourceRepo === CUSTOM ||
+          actions?.length !== 0 ||
+          this.parent.event === eventTypes.PUSH
+        )
       }
     ),
     sourceBranchOperator: string().test(

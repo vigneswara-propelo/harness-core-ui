@@ -415,7 +415,12 @@ export const getValidationSchema = (
         getString('triggers.validation.actions'),
         getString('triggers.validation.actions'),
         function (actions) {
-          return this.parent.sourceRepo === CUSTOM || !isUndefined(actions) || this.parent.event === eventTypes.PUSH
+          return (
+            this.parent.anyAction ||
+            this.parent.sourceRepo === CUSTOM ||
+            actions?.length !== 0 ||
+            this.parent.event === eventTypes.PUSH
+          )
         }
       ),
       sourceBranchOperator: string().test(
