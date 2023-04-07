@@ -9,7 +9,7 @@ import React from 'react'
 import { Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { isStatusError, isStatusLoading, isStatusSuccess, ValidationStatus } from './ValidationUtils'
+import { isStatusError, isStatusFailure, isStatusLoading, isStatusSuccess, ValidationStatus } from './ValidationUtils'
 import css from './ValidationBadge.module.scss'
 
 interface ValidationPopoverContentProps {
@@ -26,7 +26,7 @@ export function ValidationPopoverContent({
   // todo: show popover content for loading status when API supports validation of multiple entities
   if (!status || isStatusLoading(status)) return null
 
-  const isError = isStatusError(status)
+  const isErrorOrFailure = isStatusError(status) || isStatusFailure(status)
   const isSuccess = isStatusSuccess(status)
 
   return (
@@ -35,14 +35,14 @@ export function ValidationPopoverContent({
         font={{ variation: FontVariation.BODY2 }}
         color={Color.GREY_0}
         margin={{ bottom: 'xsmall' }}
-        {...(isError && { icon: 'warning-sign', iconProps: { color: Color.RED_700 } })}
+        {...(isErrorOrFailure && { icon: 'warning-sign', iconProps: { color: Color.RED_700 } })}
         {...(isSuccess && { icon: 'tick', iconProps: { color: Color.PRIMARY_4 } })}
       >
-        {isError && getString('pipeline.validation.nIssuesFound', { n: errorCount })}
+        {isErrorOrFailure && getString('pipeline.validation.nIssuesFound', { n: errorCount })}
         {isSuccess && getString('pipeline.validation.validationSuccessful')}
       </Text>
       <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_100}>
-        {isError && getString('pipeline.validation.errorText')}
+        {isErrorOrFailure && getString('pipeline.validation.errorText')}
         {isSuccess && getString('pipeline.validation.validationSuccessfulText')}
       </Text>
     </div>

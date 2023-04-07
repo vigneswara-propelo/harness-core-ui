@@ -26,6 +26,7 @@ import {
   getIconPropsByStatus,
   getPolicySetsErrorCount,
   isStatusError,
+  isStatusFailure,
   isStatusLoading,
   isStatusSuccess,
   minimalTimeagoFormatter,
@@ -142,11 +143,11 @@ export function ValidationBadge({ className }: ValidationBadgeProps): JSX.Elemen
       return
     }
 
-    if (validationResultError) {
+    if (isStatusError(status)) {
       return openValidationErrorModal()
     }
 
-    if (policyEval?.status === 'error' || policyEval?.status === 'warning' || isStatusSuccess(status)) {
+    if (isStatusSuccess(status) || isStatusFailure(status)) {
       return openValidationResultModal()
     }
   }
@@ -158,32 +159,32 @@ export function ValidationBadge({ className }: ValidationBadgeProps): JSX.Elemen
       case isStatusSuccess(status):
         return getString('pipeline.validation.validated')
       case isStatusError(status):
+      case isStatusFailure(status):
       default:
         return null
     }
   }, [getString, status])
 
   const iconProps = getIconPropsByStatus(status)
-  const badgeClassName = cx(
-    css.validationBadge,
-    {
-      [css.loading]: isStatusLoading(status),
-      [css.error]: isStatusError(status),
-      [css.success]: isStatusSuccess(status)
-    },
-    className
-  )
+  const badgeClassName = cx(css.validationBadge, {
+    [css.loading]: isStatusLoading(status),
+    [css.error]: isStatusError(status) || isStatusFailure(status),
+    [css.success]: isStatusSuccess(status)
+  })
 
-  const showTimeago = Number.isFinite(endTs) && !isNil(endTs) && (isStatusSuccess(status) || isStatusError(status))
-  const showPopover = isStatusSuccess(status) || isStatusError(status)
-  const showBadge = !(isUpdated && status === 'SUCCESS')
+  const showTimeago =
+    Number.isFinite(endTs) &&
+    !isNil(endTs) &&
+    (isStatusSuccess(status) || isStatusError(status) || isStatusFailure(status))
+  const showPopover = isStatusSuccess(status) || isStatusError(status) || isStatusFailure(status)
+  const showBadge = !(isUpdated && isStatusSuccess(status))
 
   if (!showBadge) {
     return null
   }
 
   return (
-    <>
+    <div className={className}>
       <Popover disabled={!showPopover} interactionKind="hover" popoverClassName={Classes.DARK} position="bottom">
         <div data-testid="validation-badge" className={badgeClassName} onClick={onBadgeClick}>
           {iconProps && <Icon {...iconProps} />}
@@ -211,6 +212,6 @@ export function ValidationBadge({ className }: ValidationBadgeProps): JSX.Elemen
         onClose={closeValidationErrorModal}
         onRevalidate={onRevalidate}
       />
-    </>
+    </div>
   )
 }

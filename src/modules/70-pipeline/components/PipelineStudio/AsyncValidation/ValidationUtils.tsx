@@ -16,17 +16,21 @@ export type ValidationStatus = 'INITIATED' | 'IN_PROGRESS' | 'SUCCESS' | 'FAILUR
 
 export const loadingStatus: ValidationStatus[] = ['INITIATED', 'IN_PROGRESS']
 export const successStatus: ValidationStatus[] = ['SUCCESS']
-export const errorStatus: ValidationStatus[] = ['ERROR', 'FAILURE', 'TERMINATED']
+export const failureStatus: ValidationStatus[] = ['FAILURE']
+export const errorStatus: ValidationStatus[] = ['ERROR', 'TERMINATED']
 
 export const isStatusLoading = (status: ValidationStatus | undefined): boolean =>
   !!status && loadingStatus.includes(status)
 export const isStatusSuccess = (status: ValidationStatus | undefined): boolean =>
   !!status && successStatus.includes(status)
+export const isStatusFailure = (status: ValidationStatus | undefined): boolean =>
+  !!status && failureStatus.includes(status)
 export const isStatusError = (status: ValidationStatus | undefined): boolean => !!status && errorStatus.includes(status)
 
 export const getIconPropsByStatus = (status: ValidationStatus | undefined): IconProps | undefined => {
   switch (true) {
     case isStatusError(status):
+    case isStatusFailure(status):
       return { name: 'warning-sign', color: Color.RED_700 }
     case isStatusLoading(status):
       return { name: 'steps-spinner', color: Color.PRIMARY_7 }

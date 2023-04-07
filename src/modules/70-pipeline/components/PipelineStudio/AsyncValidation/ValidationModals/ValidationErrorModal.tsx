@@ -6,8 +6,6 @@
  */
 
 import React from 'react'
-
-import { get } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 import { Color, FontVariation } from '@harness/design-system'
 import { Button, ButtonSize, ButtonVariation, Icon, ModalDialog, Text } from '@harness/uicore'
@@ -22,9 +20,8 @@ interface ValidationErrorModalProps {
   onRevalidate: () => Promise<void>
 }
 
-export function ValidationErrorModal({ isOpen, onClose, onRevalidate, error }: ValidationErrorModalProps): JSX.Element {
+export function ValidationErrorModal({ isOpen, onClose, onRevalidate }: ValidationErrorModalProps): JSX.Element {
   const { getString } = useStrings()
-  const errorMessage = get(error, 'data.message') ?? get(error, 'message') ?? ''
 
   return (
     <ModalDialog
@@ -38,7 +35,7 @@ export function ValidationErrorModal({ isOpen, onClose, onRevalidate, error }: V
       <div className={css.container}>
         <Icon name="warning-sign" size={32} color={Color.RED_700} margin={{ bottom: 'medium' }} />
         <Text lineClamp={2} font={{ variation: FontVariation.H6 }} color={Color.ORANGE_700}>
-          {getString('pipeline.validation.validationResultApiError', { message: errorMessage })}
+          {getString('pipeline.validation.validationResultApiError')}
         </Text>
         <div>
           <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK} inline>

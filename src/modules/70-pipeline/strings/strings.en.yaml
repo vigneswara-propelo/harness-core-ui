@@ -1715,7 +1715,7 @@ validation:
   evaluatingPolicySets: Evaluating Policy Sets
   pipelineValidated: Pipeline validated
   revalidate: Revalidate
-  validationResultApiError: Unable to complete validation due to [{{message}}] error.
+  validationResultApiError: Unable to complete validation due to an error.
 bamboo:
   planName: Plan Name
 planNamePlaceholder: Enter or Select Plan

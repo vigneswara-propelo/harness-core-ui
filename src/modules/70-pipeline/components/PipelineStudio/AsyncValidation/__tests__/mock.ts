@@ -62,6 +62,16 @@ export const successValidationResult: ResponsePipelineValidationResponseDTO = {
   correlationId: 'correlationId'
 }
 
+export const terminatedValidationResult: ResponsePipelineValidationResponseDTO = {
+  status: 'SUCCESS',
+  data: {
+    status: 'TERMINATED',
+    startTs: 1678790262904,
+    endTs: 1678790263029
+  },
+  correlationId: 'correlationId'
+}
+
 export const errorValidationResult: GetDataError<Failure | Error> = {
   message: 'Failed to fetch: 404 Not Found',
   data: {

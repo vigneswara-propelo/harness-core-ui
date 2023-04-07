@@ -17,7 +17,8 @@ import {
   successValidationResult,
   errorValidationResult,
   failureValidationResult,
-  inProgressValidationResult
+  inProgressValidationResult,
+  terminatedValidationResult
 } from './mock'
 
 mockImport('@governance/PolicyManagementEvaluationView', {
@@ -33,7 +34,7 @@ const renderValidationBadge = (): RenderResult => {
 }
 
 describe('ValidationBadge', () => {
-  test('renders relevant data when status is "SUCCESS"', async () => {
+  test('renders relevant data when status is SUCCESS', async () => {
     jest.spyOn(pipelineServices, 'useGetPipelineValidateResult').mockReturnValue({
       data: successValidationResult,
       loading: false,
@@ -76,15 +77,34 @@ describe('ValidationBadge', () => {
     })
   })
 
-  test('renders relevant data when status is "ERROR"', async () => {
+  test.each([
+    [
+      'ERROR',
+      {
+        data: null,
+        loading: false,
+        error: errorValidationResult,
+        absolutePath: '',
+        cancel: jest.fn(),
+        refetch: jest.fn(),
+        response: null
+      }
+    ],
+    [
+      'TERMINATED',
+      {
+        data: terminatedValidationResult,
+        loading: false,
+        error: null,
+        absolutePath: '',
+        cancel: jest.fn(),
+        refetch: jest.fn(),
+        response: null
+      }
+    ]
+  ])('renders relevant data when status is %s', async (status, returnValueMock) => {
     jest.spyOn(pipelineServices, 'useGetPipelineValidateResult').mockReturnValue({
-      data: null,
-      loading: false,
-      error: errorValidationResult,
-      absolutePath: '',
-      cancel: jest.fn(),
-      refetch: jest.fn(),
-      response: null
+      ...returnValueMock
     })
 
     const { baseElement } = renderValidationBadge()
@@ -92,7 +112,10 @@ describe('ValidationBadge', () => {
 
     expect(validationBadge).toBeInTheDocument()
     expect(baseElement.querySelector('[data-icon="warning-sign"]')).toBeInTheDocument()
-    expect(screen.queryByText('dummy date')).not.toBeInTheDocument()
+
+    if (status === 'TERMINATED') {
+      expect(screen.queryByText('dummy date')).toBeInTheDocument()
+    }
 
     fireEvent.mouseOver(validationBadge)
 
@@ -104,7 +127,7 @@ describe('ValidationBadge', () => {
     expect(await screen.findByText('retry')).toBeInTheDocument()
   })
 
-  test('renders relevant data when status is "FAILURE"', async () => {
+  test('renders relevant data when status is FAILURE', async () => {
     jest.spyOn(pipelineServices, 'useGetPipelineValidateResult').mockReturnValue({
       data: failureValidationResult,
       loading: false,
@@ -166,7 +189,7 @@ describe('ValidationBadge', () => {
     expect(screen.queryByText('dummy date')).not.toBeInTheDocument()
   })
 
-  test('should poll API if status is "IN_PROGRESS"', async () => {
+  test('should poll API if status is IN_PROGRESS', async () => {
     jest.spyOn(pipelineContext, 'usePipelineContext').mockReturnValue({
       state: {
         validationUuid: 'foo'
