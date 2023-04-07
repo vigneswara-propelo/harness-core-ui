@@ -639,8 +639,8 @@ export default function WebhookTriggerWizard(
             // set error
             showError(getString('triggers.cannotParseInputValues'))
           }
-        } else if (isNewGitSyncRemotePipeline) {
-          pipelineJson = resolvedMergedPipeline
+        } else {
+          pipelineJson = clearRuntimeInput(yamlTemplate)
         }
 
         triggerValues = {
@@ -755,8 +755,8 @@ export default function WebhookTriggerWizard(
             // set error
             showError(getString('triggers.cannotParseInputValues'))
           }
-        } else if (isNewGitSyncRemotePipeline) {
-          pipelineJson = resolvedMergedPipeline
+        } else {
+          pipelineJson = clearRuntimeInput(yamlTemplate)
         }
 
         triggerValues = {
@@ -1192,14 +1192,15 @@ export default function WebhookTriggerWizard(
       latestPipelineFromYamlView = getTriggerPipelineValues(triggerYaml, formikProps)
     }
 
-    const runPipelineFormErrors = isNewGitSyncRemotePipeline
-      ? null
-      : await getFormErrors({
-          latestPipeline: latestPipelineFromYamlView || latestPipeline,
-          latestYamlTemplate: yamlTemplate,
-          orgPipeline: values.pipeline,
-          setSubmitting
-        })
+    const runPipelineFormErrors =
+      isNewGitSyncRemotePipeline || formikProps.values.inputSetRefs?.length
+        ? null
+        : await getFormErrors({
+            latestPipeline: latestPipelineFromYamlView || latestPipeline,
+            latestYamlTemplate: yamlTemplate,
+            orgPipeline: values.pipeline,
+            setSubmitting
+          })
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined

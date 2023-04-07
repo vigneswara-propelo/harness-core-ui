@@ -502,8 +502,8 @@ export default function ScheduledTriggerWizard(
           // set error
           showError(getString('triggers.cannotParseInputValues'))
         }
-      } else if (isNewGitSyncRemotePipeline) {
-        pipelineJson = resolvedMergedPipeline
+      } else {
+        pipelineJson = clearRuntimeInput(yamlTemplate)
       }
       const expressionBreakdownValues = getBreakdownValues(expression)
       const newExpressionBreakdown = {
@@ -775,14 +775,15 @@ export default function ScheduledTriggerWizard(
       latestPipelineFromYamlView = getTriggerPipelineValues(triggerYaml, formikProps)
     }
 
-    const runPipelineFormErrors = isNewGitSyncRemotePipeline
-      ? null
-      : await getFormErrors({
-          latestPipeline: latestPipelineFromYamlView || latestPipeline,
-          latestYamlTemplate: yamlTemplate,
-          orgPipeline: values.pipeline,
-          setSubmitting
-        })
+    const runPipelineFormErrors =
+      isNewGitSyncRemotePipeline || formikProps.values.inputSetRefs?.length
+        ? null
+        : await getFormErrors({
+            latestPipeline: latestPipelineFromYamlView || latestPipeline,
+            latestYamlTemplate: yamlTemplate,
+            orgPipeline: values.pipeline,
+            setSubmitting
+          })
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined
