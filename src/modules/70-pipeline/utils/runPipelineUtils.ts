@@ -52,7 +52,7 @@ export function walkObjectRecursively(
   }
 }
 
-const RUNTIME_COLLECTION_FIELDS_WHITE_LIST = ['files', 'encryptedFiles', 'hostAttributes']
+const RUNTIME_COLLECTION_FIELDS_WHITE_LIST = ['files', 'encryptedFiles', 'hostAttributes', 'artifactPaths']
 const RUNTIME_FIELD_REMOVAL_LIST = ['when', 'failureStrategies', 'strategy']
 
 /**

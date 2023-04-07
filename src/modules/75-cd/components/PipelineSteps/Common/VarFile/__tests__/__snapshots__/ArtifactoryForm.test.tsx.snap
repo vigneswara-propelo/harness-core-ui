@@ -1241,7 +1241,7 @@ exports[`Terraform artifactory tests initial render with form data for var files
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-inline"
                     >
-                      cd.artifactPaths
+                      common.artifactPaths
                     </p>
                   </span>
                   <div
@@ -2876,7 +2876,7 @@ exports[`Terraform artifactory tests test submitting when terraform plan form 1`
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-inline"
                     >
-                      cd.artifactPaths
+                      common.artifactPaths
                     </p>
                   </span>
                   <div
@@ -3358,7 +3358,7 @@ exports[`Terraform artifactory tests when deleting a artifact path 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-inline"
                     >
-                      cd.artifactPaths
+                      common.artifactPaths
                     </p>
                   </span>
                   <div

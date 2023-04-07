@@ -306,7 +306,7 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
                     }
                     label={
                       <Text flex={{ inline: true }}>
-                        {getString(isConfig || isBackendConfig ? 'pipeline.artifactPathLabel' : 'cd.artifactPaths')}
+                        {getString(isConfig || isBackendConfig ? 'pipeline.artifactPathLabel' : 'common.artifactPaths')}
                         <HarnessDocTooltip useStandAlone={true} tooltipId="artifactory_file_path" />
                       </Text>
                     }

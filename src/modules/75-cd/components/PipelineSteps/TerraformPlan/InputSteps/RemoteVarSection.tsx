@@ -220,7 +220,7 @@ function TFRemoteSectionRef(
       {getMultiTypeFromValue(remoteVar.varFile?.spec?.store?.spec?.artifactPaths) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <List
-            label={getString('cd.artifactPaths')}
+            label={getString('common.artifactPaths')}
             name={`${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.artifactPaths`}
             disabled={readonly}
             style={{ marginBottom: 'var(--spacing-small)' }}

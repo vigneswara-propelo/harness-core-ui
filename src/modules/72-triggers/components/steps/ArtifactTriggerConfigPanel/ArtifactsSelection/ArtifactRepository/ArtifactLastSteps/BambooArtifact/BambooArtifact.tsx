@@ -253,7 +253,7 @@ function FormComponent(
         <div className={css.imagePathContainer}>
           <FormInput.MultiSelectTypeInput
             selectItems={defaultTo(artifactPaths, [])}
-            label={getString('pipeline.artifactPathLabel')}
+            label={getString('common.artifactPaths')}
             name="spec.artifactPaths"
             placeholder={fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder')}
             multiSelectTypeInputProps={{
@@ -334,8 +334,13 @@ export function BambooArtifact(
           })
         })}
         onSubmit={formData => {
+          const artifactPaths = formData.spec?.artifactPaths.map((path: MultiSelectOption) => path.value)
           handleSubmit({
             ...formData,
+            spec: {
+              ...formData.spec,
+              artifactPaths
+            },
             connectorRef: getConnectorIdValue(prevStepData)
           })
         }}

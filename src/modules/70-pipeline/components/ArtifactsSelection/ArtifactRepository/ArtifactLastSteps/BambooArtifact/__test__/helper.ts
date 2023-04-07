@@ -39,7 +39,7 @@ export const getEditRunTimeValues = (): BambooArtifactType => {
     identifier: 'test-bamboo-artifact',
     spec: {
       planKey: '<+input>',
-      artifactPaths: '<+input>',
+      artifactPaths: [''],
       build: '<+input>'
     },
     type: 'Bamboo'

@@ -152,13 +152,12 @@ function FormComponent({
   const artifactPathComponent = React.useMemo((): JSX.Element => {
     const commonProps = {
       selectItems: defaultTo(artifactPaths, []),
-      label: getString('pipeline.artifactPathLabel'),
+      label: getString('common.artifactPaths'),
       name: 'spec.artifactPaths',
       placeholder: fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder'),
-      ...(!isTasDeploymentTypeSelected && { multiSelectTypeInputProps: {} })
+      multiSelectTypeInputProps: {}
     }
-    const Component = isTasDeploymentTypeSelected ? FormInput.MultiTypeInput : FormInput.MultiSelectTypeInput
-    return <Component {...commonProps} />
+    return <FormInput.MultiSelectTypeInput {...commonProps} />
   }, [artifactPaths, fetchingArtifacts, getString, isTasDeploymentTypeSelected])
 
   useEffect(() => {

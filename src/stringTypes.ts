@@ -69,6 +69,7 @@ export interface StringsMap {
   'common.application': string
   'common.apply': string
   'common.approve': string
+  'common.artifactPaths': string
   'common.artifactTag': string
   'common.artifacts.googleCloudSourceRepositories.cloudSourceRepository': string
   'common.artifacts.googleCloudSourceRepositories.cloudSourceRepositoryPlaceholder': string
@@ -5300,7 +5301,6 @@ export interface StringsMap {
   'cd.artifactFormErrors.repositoryName': string
   'cd.artifactName': string
   'cd.artifactPath': string
-  'cd.artifactPaths': string
   'cd.artifactRepoTooltip': string
   'cd.artifactSource.artifactRepositoryTypeIsRequired': string
   'cd.artifactVersion': string

@@ -2043,11 +2043,8 @@ export const getTriggerArtifactInitialSpec = (
     }
     case 'Bamboo': {
       return {
-        artifactPaths: [],
-        build: '',
-        connectorRef,
-        eventConditions,
-        planKey: ''
+        connectorRef: '',
+        spec: { artifactPaths: [], eventConditions, planKey: '' }
       } as BambooRegistrySpec
     }
     case 'Ecr': {

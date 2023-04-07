@@ -41,6 +41,7 @@ import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelectio
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useMutateAsGet } from '@common/hooks'
+import { MultiSelectInputSetView } from '@pipeline/components/InputSetView/MultiSelectInputSetView/MultiSelectInputSetView'
 
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
@@ -86,7 +87,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
-  const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
+  const [artifactPaths, setArtifactPaths] = useState<MultiSelectOption[]>([])
   const [builds, setBambooBuilds] = useState<SelectOption[]>([])
   // const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
   const commonParams = {
@@ -120,6 +121,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
   const planFqnPath = getFqnPathForEntity('planKey')
   const artifactPathsFqnPath = getFqnPathForEntity('artifactPaths')
   const buildsFqnPath = getFqnPathForEntity('build')
+  const planKeyVal = get(initialValues?.artifacts, `${artifactPath}.spec.planKey`, '')
 
   const refetchingAllowedTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION] as MultiTypeInputType[]
 
@@ -137,18 +139,6 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
       getDefaultQueryParam(
         getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.planKey`, ''), artifact?.spec?.plankey),
         get(initialValues?.artifacts, `${artifactPath}.spec.planKey`, '')
-      )
-    )
-  )
-
-  const [artifactPathValue, setArtifactPathValue] = React.useState(
-    getFinalQueryParamValue(
-      getDefaultQueryParam(
-        getValidInitialValuePath(
-          get(artifacts, `${artifactPath}.spec.artifactPaths`, ''),
-          artifact?.spec?.artifactPaths
-        ),
-        get(initialValues?.artifacts, `${artifactPath}.spec.artifactPaths`, '')
       )
     )
   )
@@ -241,7 +231,12 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
             value: artifactPathVal
           } as MultiSelectOption
         }
-      )
+      ) || [
+        {
+          label: '',
+          value: ''
+        }
+      ]
       setArtifactPaths(artifactPathResponseFormatted)
     }
   }, [artifactPathsResponse])
@@ -286,6 +281,18 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
       setPlanDetails([])
     }
   }, [plansError])
+
+  useEffect(() => {
+    if (artifactPathError) {
+      setArtifactPaths([])
+    }
+  }, [artifactPathError])
+
+  useEffect(() => {
+    if (planKeyVal != '') {
+      refetchArtifactPaths()
+    }
+  }, [planKeyVal])
 
   const isFieldDisabled = (fieldName: string, isTag = false): boolean => {
     /* instanbul ignore else */
@@ -425,64 +432,31 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactPaths`, template) && (
-            <SelectInputSetView
+            <MultiSelectInputSetView
               fieldPath={`artifacts.${artifactPath}.spec.artifactPaths`}
               template={template}
-              label={getString('pipeline.artifactPathLabel')}
-              name={`${path}.artifacts.${artifactPath}.spec.artifactPaths`}
-              useValue
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactPaths`)}
+              selectItems={defaultTo(artifactPaths, [])}
+              label={getString('common.artifactPaths')}
+              name={`artifactPaths`}
               placeholder={
                 loadingArtifacts
                   ? getString('common.loadingFieldOptions', {
-                      fieldName: getString('cd.artifactPaths')
+                      fieldName: getString('common.artifactPaths')
                     })
-                  : getString('pipeline.artifactPathLabel')
+                  : getString('common.artifactPaths')
               }
-              multiTypeInputProps={{
-                onTypeChange: (type: MultiTypeInputType) =>
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.artifactPaths`, type),
-                width: 400,
-                expressions,
-                allowableTypes,
-                onChange: (newFilePath: any) => {
-                  const artifacthPath = typeof newFilePath === 'string' ? newFilePath : newFilePath?.value
-                  setArtifactPathValue(artifacthPath)
-                  setBambooBuilds([])
+              multiSelectTypeInputProps={{
+                allowableTypes: [MultiTypeInputType.FIXED],
+                multiSelectProps: {
+                  items: defaultTo(artifactPaths, [])
                 },
-                onClick: () => {
-                  if (
-                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(planKey as any, allowableTypes)) &&
-                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(connectorRefValue, allowableTypes))
-                  ) {
-                    refetchArtifactPaths()
-                  }
-                },
-                selectProps: {
-                  allowCreatingNewItems: true,
-                  addClearBtn: !readonly,
-                  items: defaultTo(artifactPaths, [
-                    {
-                      label: getString('common.loadingFieldOptions', {
-                        fieldName: getString('cd.artifactPaths')
-                      }),
-                      value: getString('common.loadingFieldOptions', {
-                        fieldName: getString('cd.artifactPaths')
-                      })
-                    }
-                  ]),
-                  noResults: loadingArtifacts ? (
-                    <Text lineClamp={1} width={500} height={35} padding="small">
-                      {artifactPathError
-                        ? get(artifactPathError, 'data.message', '')
-                        : getString('pipeline.cannotFetchOptions', {
-                            fieldName: getString('cd.artifactPaths')
-                          })}
-                    </Text>
-                  ) : null
+
+                onChange(value: any) {
+                  const filteredValArr = value.filter((val: any) => val !== '')
+                  const filteredValues = filteredValArr.map((val: MultiSelectOption) => val.value)
+                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.artifactPaths`, filteredValues)
                 }
               }}
-              selectItems={artifactPaths || []}
             />
           )}
           {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.build`, template) && (
@@ -496,7 +470,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
               placeholder={
                 fetchingBuild
                   ? getString('common.loadingFieldOptions', {
-                      fieldName: getString('buildsText')
+                      fieldName: getString('buildText')
                     })
                   : getString('pipeline.selectBambooBuildsPlaceholder')
               }
@@ -504,8 +478,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                 onClick: () => {
                   if (
                     refetchingAllowedTypes?.includes(getMultiTypeFromValue(connectorRefValue, allowableTypes)) &&
-                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(planKey as any, allowableTypes)) &&
-                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(artifactPathValue, allowableTypes))
+                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(planKey as any, allowableTypes))
                   ) {
                     refetchBambooBuild()
                   }
@@ -521,22 +494,26 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                   items: defaultTo(builds, [
                     {
                       label: getString('common.loadingFieldOptions', {
-                        fieldName: getString('buildsText')
+                        fieldName: getString('buildText')
                       }),
                       value: getString('common.loadingFieldOptions', {
-                        fieldName: getString('buildsText')
+                        fieldName: getString('buildText')
                       })
                     }
                   ]),
                   noResults: fetchingBuild ? (
+                    getString('common.loadingFieldOptions', {
+                      fieldName: getString('buildText')
+                    })
+                  ) : (
                     <Text lineClamp={1} width={500} height={35} padding="small">
                       {buildError
                         ? get(buildError, 'data.message', '')
                         : getString('pipeline.cannotFetchOptions', {
-                            fieldName: getString('buildsText')
+                            fieldName: getString('buildText')
                           })}
                     </Text>
-                  ) : null
+                  )
                 }
               }}
               selectItems={builds || []}

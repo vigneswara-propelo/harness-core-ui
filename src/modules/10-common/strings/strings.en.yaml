@@ -21,6 +21,7 @@ notEnabled: 'Not Enabled'
 apiStatus: 'API Status'
 gpgkey: 'GPG Key'
 warning: Warning
+artifactPaths: 'Artifact Paths'
 gnupgKeys: GnuPG Keys
 featureComingSoon: This feature is coming soon.
 skip: Skip
