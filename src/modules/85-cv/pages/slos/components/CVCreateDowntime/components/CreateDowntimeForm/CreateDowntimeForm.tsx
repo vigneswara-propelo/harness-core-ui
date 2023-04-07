@@ -65,59 +65,65 @@ export const CreateDowntimeForm = ({
   }, [msListData])
 
   return (
-    <>
-      <Stepper
-        id="createDowntimeTabs"
-        isStepValid={isStepValid}
-        runValidationOnMount={validateAllSteps}
-        stepList={[
-          {
-            id: CreateDowntimeSteps.DEFINE_DOWNTIME,
-            title: getString('cv.sloDowntime.steps.identification'),
-            panel: <DowntimeName identifier={identifier} />,
-            errorMessage: getErrorMessageByTabId(formikProps, CreateDowntimeSteps.DEFINE_DOWNTIME),
-            preview: <CreateDowntimePreview id={CreateDowntimeSteps.DEFINE_DOWNTIME} data={formikProps.values} />
-          },
-          {
-            id: CreateDowntimeSteps.SELECT_DOWNTIME_WINDOW,
-            title: getString('cv.sloDowntime.steps.downtimeWindow'),
-            panel: <DowntimeWindow />,
-            errorMessage: getErrorMessageByTabId(formikProps, CreateDowntimeSteps.SELECT_DOWNTIME_WINDOW),
-            preview: <CreateDowntimePreview id={CreateDowntimeSteps.SELECT_DOWNTIME_WINDOW} data={formikProps.values} />
-          },
-          {
-            id: CreateDowntimeSteps.SELECT_MONITORED_SERVICES,
-            title: getString('cv.sloDowntime.steps.monitoredServices'),
-            panel: (
-              <AddMonitoredServices
-                msListData={msListData}
-                msListLoading={msListLoading}
-                refetchMsList={refetchMsList}
-                msListError={msListError}
-                isCreateFlow={isCreateFlow}
-              />
-            ),
-            errorMessage: getErrorMessageByTabId(formikProps, CreateDowntimeSteps.SELECT_MONITORED_SERVICES)
-          }
-        ]}
-      />
-      <Page.Header
-        className={css.footer}
-        title={
-          <Layout.Horizontal spacing="medium">
-            <Button text={getString('cancel')} variation={ButtonVariation.SECONDARY} onClick={handleRedirect} />
-            <Button
-              text={getString('save')}
-              loading={loadingSaveButton}
-              variation={ButtonVariation.PRIMARY}
-              onClick={() => {
-                setValidateAllSteps(true)
-                formikProps.submitForm()
-              }}
-            />
-          </Layout.Horizontal>
-        }
-      />
-    </>
+    <Page.Body loading={msListLoading}>
+      {!msListLoading && (
+        <>
+          <Stepper
+            id="createDowntimeTabs"
+            isStepValid={isStepValid}
+            runValidationOnMount={validateAllSteps}
+            stepList={[
+              {
+                id: CreateDowntimeSteps.DEFINE_DOWNTIME,
+                title: getString('cv.sloDowntime.steps.identification'),
+                panel: <DowntimeName identifier={identifier} />,
+                errorMessage: getErrorMessageByTabId(formikProps, CreateDowntimeSteps.DEFINE_DOWNTIME),
+                preview: <CreateDowntimePreview id={CreateDowntimeSteps.DEFINE_DOWNTIME} data={formikProps.values} />
+              },
+              {
+                id: CreateDowntimeSteps.SELECT_DOWNTIME_WINDOW,
+                title: getString('cv.sloDowntime.steps.downtimeWindow'),
+                panel: <DowntimeWindow />,
+                errorMessage: getErrorMessageByTabId(formikProps, CreateDowntimeSteps.SELECT_DOWNTIME_WINDOW),
+                preview: (
+                  <CreateDowntimePreview id={CreateDowntimeSteps.SELECT_DOWNTIME_WINDOW} data={formikProps.values} />
+                )
+              },
+              {
+                id: CreateDowntimeSteps.SELECT_MONITORED_SERVICES,
+                title: getString('cv.sloDowntime.steps.monitoredServices'),
+                panel: (
+                  <AddMonitoredServices
+                    msListData={msListData}
+                    msListLoading={msListLoading}
+                    refetchMsList={refetchMsList}
+                    msListError={msListError}
+                    isCreateFlow={isCreateFlow}
+                  />
+                ),
+                errorMessage: getErrorMessageByTabId(formikProps, CreateDowntimeSteps.SELECT_MONITORED_SERVICES)
+              }
+            ]}
+          />
+          <Page.Header
+            className={css.footer}
+            title={
+              <Layout.Horizontal spacing="medium">
+                <Button text={getString('cancel')} variation={ButtonVariation.SECONDARY} onClick={handleRedirect} />
+                <Button
+                  text={getString('save')}
+                  loading={loadingSaveButton}
+                  variation={ButtonVariation.PRIMARY}
+                  onClick={() => {
+                    setValidateAllSteps(true)
+                    formikProps.submitForm()
+                  }}
+                />
+              </Layout.Horizontal>
+            }
+          />
+        </>
+      )}
+    </Page.Body>
   )
 }

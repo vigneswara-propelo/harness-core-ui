@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, Text, Icon, Layout, Page, Toggle, TableV2, useToaster, NoDataCard, Popover } from '@harness/uicore'
-import React, { useContext } from 'react'
+import { Container, Text, Icon, Layout, Page, Toggle, TableV2, useToaster, Popover } from '@harness/uicore'
+import React, { useContext, useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import moment from 'moment'
 import type { CellProps, Renderer } from 'react-table'
@@ -67,7 +67,7 @@ export const RenderServices = ({
             <Text title={serviceName} className={cx(css.firstLine, css.affectedServices)}>
               {serviceName}
             </Text>
-            <Text title={envName} font={{ size: 'small' }} className={css.affectedServices}>
+            <Text title={envName} className={cx(css.secondLine, css.affectedServices)}>
               {envName}
             </Text>
           </>
@@ -82,8 +82,10 @@ export const RenderServices = ({
             <Container padding={'medium'} className={css.popover}>
               {affectedEntities.slice(1).map(entity => (
                 <Layout.Vertical key={entity.monitoredServiceIdentifier}>
-                  <Text color={Color.GREY_0}>{entity.serviceName}</Text>
-                  <Text color={Color.GREY_400} font={{ size: 'small' }}>
+                  <Text className={css.firstLine} color={Color.GREY_0}>
+                    {entity.serviceName}
+                  </Text>
+                  <Text color={Color.GREY_300} font={{ size: 'small' }}>
                     {entity.envName}
                   </Text>
                 </Layout.Vertical>
@@ -141,6 +143,11 @@ const DowntimeList = ({
       })
     })
   }
+
+  const shouldShowLoader = useMemo(
+    () => appliedSearchAndFilter && (deleteDowntimeLoading || toggleDowntimeLoading || downtimeDataLoading),
+    [appliedSearchAndFilter, deleteDowntimeLoading, toggleDowntimeLoading, downtimeDataLoading]
+  )
 
   const onToggle = async (checked: boolean, identifier: string, name: string): Promise<void> => {
     try {
@@ -216,10 +223,10 @@ const DowntimeList = ({
 
     return (
       <Layout.Vertical spacing={'xsmall'}>
-        <Text title={timeFrame} className={css.windowFirstLine}>
+        <Text title={timeFrame} className={css.firstLine}>
           {timeFrame}
         </Text>
-        <Text title={downtimeType} className={css.windowSecondLine}>
+        <Text title={downtimeType} className={css.secondLine}>
           {downtimeType}
         </Text>
       </Layout.Vertical>
@@ -258,7 +265,7 @@ const DowntimeList = ({
 
     return (
       <Layout.Vertical>
-        <Text title={lastModifiedBy} className={css.firstLine}>
+        <Text lineClamp={1} title={lastModifiedBy} className={css.firstLine}>
           {lastModifiedBy}
         </Text>
         <Text className={css.secondLine}>{moment(lastModifiedAt).format('lll')}</Text>
@@ -268,10 +275,16 @@ const DowntimeList = ({
 
   const RenderDowntimeActions: Renderer<CellProps<DowntimeListView>> = ({ row }) => {
     const downtime = row?.original
-    const { identifier = '', name = '' } = downtime
+    const { identifier = '', name = '', pastOrActiveInstancesCount = 0 } = downtime
 
     return (
-      <DowntimeActions identifier={identifier} title={name} onDelete={onDelete} onEdit={(id: string) => onEdit(id)} />
+      <DowntimeActions
+        identifier={identifier}
+        title={name}
+        disabledDeleteButton={pastOrActiveInstancesCount > 0}
+        onDelete={onDelete}
+        onEdit={(id: string) => onEdit(id)}
+      />
     )
   }
 
@@ -330,12 +343,19 @@ const DowntimeList = ({
       <Container margin={'xlarge'} padding={{ left: 'small', right: 'small' }}>
         <DowntimeFilters listView />
         <Page.Body
-          loading={deleteDowntimeLoading || toggleDowntimeLoading || downtimeDataLoading}
+          loading={shouldShowLoader}
           error={downtimeError}
           retryOnError={() => refetchDowntimes({ ...pathParams, queryParams })}
           className={css.downtimeList}
+          noData={{
+            when: () => !content?.length && !downtimeDataLoading,
+            message: appliedSearchAndFilter
+              ? getString('common.filters.noMatchingFilterData')
+              : getString('cv.changeSource.noDataAvaiableForCard'),
+            image: emptyData
+          }}
         >
-          {content?.length ? (
+          {content?.length && (
             <Container margin={{ top: 'large' }}>
               <TableV2
                 sortable={false}
@@ -352,15 +372,6 @@ const DowntimeList = ({
                 }}
               />
             </Container>
-          ) : (
-            <NoDataCard
-              image={emptyData}
-              message={
-                appliedSearchAndFilter
-                  ? getString('common.filters.noMatchingFilterData')
-                  : getString('cv.changeSource.noDataAvaiableForCard')
-              }
-            />
           )}
         </Page.Body>
       </Container>

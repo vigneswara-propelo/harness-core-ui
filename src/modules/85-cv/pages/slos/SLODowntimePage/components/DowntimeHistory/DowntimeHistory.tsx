@@ -6,7 +6,7 @@
  */
 
 import React, { useContext } from 'react'
-import { Container, Layout, NoDataCard, Page, TableV2, Text } from '@harness/uicore'
+import { Container, Layout, Page, TableV2, Text } from '@harness/uicore'
 import type { CellProps, Renderer } from 'react-table'
 import { useStrings } from 'framework/strings'
 import type { DowntimeHistoryView, ResponsePageDowntimeHistoryView, UseGetHistoryProps } from 'services/cv'
@@ -170,12 +170,19 @@ const DowntimeHistory = ({
     <Container margin={'xlarge'} padding={{ left: 'small', right: 'small' }}>
       <DowntimeFilters />
       <Page.Body
-        loading={downtimeHistoryLoading}
+        loading={appliedSearchAndFilter && downtimeHistoryLoading}
         retryOnError={() => refetchHistoryData({ ...pathParams, queryParams })}
         error={downtimeHistoryError}
+        noData={{
+          when: () => !content?.length && !downtimeHistoryLoading,
+          message: appliedSearchAndFilter
+            ? getString('common.filters.noMatchingFilterData')
+            : getString('cv.changeSource.noDataAvaiableForCard'),
+          image: emptyData
+        }}
         className={css.downtimeList}
       >
-        {content?.length ? (
+        {content?.length && (
           <Container margin={{ top: 'large' }}>
             <TableV2
               sortable={false}
@@ -192,15 +199,6 @@ const DowntimeHistory = ({
               }}
             />
           </Container>
-        ) : (
-          <NoDataCard
-            image={emptyData}
-            message={
-              appliedSearchAndFilter
-                ? getString('common.filters.noMatchingFilterData')
-                : getString('cv.changeSource.noDataAvaiableForCard')
-            }
-          />
         )}
       </Page.Body>
     </Container>

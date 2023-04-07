@@ -92,6 +92,13 @@ export const SLODowntimePage = (): JSX.Element => {
     error: downtimeHistoryError
   } = useGetHistory({ ...pathParams, queryParams, lazy: true })
 
+  const { content } = downtimeData?.data ?? {}
+
+  const shouldShowLoader = useMemo(
+    () => !appliedSearchAndFilter && (downtimeDataLoading || downtimeHistoryLoading),
+    [appliedSearchAndFilter, downtimeDataLoading, downtimeHistoryLoading]
+  )
+
   useEffect(() => {
     if (tab === SLODowntimeTabs.DOWNTIME) {
       refetchDowntimes({ ...pathParams, queryParams })
@@ -101,7 +108,7 @@ export const SLODowntimePage = (): JSX.Element => {
   }, [queryParams, pathParams, tab])
 
   useEffect(() => {
-    if (downtimeData?.data?.content?.length === 0) {
+    if (content?.length === 0) {
       refetchHistoryData({ ...pathParams, queryParams })
     }
   }, [downtimeData])
@@ -171,8 +178,19 @@ export const SLODowntimePage = (): JSX.Element => {
           handleCreateButton
         }}
       >
-        <Page.Body className={css.pageBody} loading={!appliedSearchAndFilter && downtimeDataLoading}>
-          {shouldRenderNoDataCard(appliedSearchAndFilter, downtimeData, downtimeHistoryData) ? (
+        <Page.Body
+          className={css.pageBody}
+          loading={shouldShowLoader}
+          error={getErrorMessage(downtimeError)}
+          retryOnError={() => refetchDowntimes({ ...pathParams, queryParams })}
+        >
+          {shouldRenderNoDataCard(
+            appliedSearchAndFilter,
+            downtimeData,
+            downtimeHistoryData,
+            downtimeDataLoading,
+            downtimeHistoryLoading
+          ) ? (
             <NoDataCard
               image={noDowntimeData}
               messageTitle={getString('cv.sloDowntime.noData')}

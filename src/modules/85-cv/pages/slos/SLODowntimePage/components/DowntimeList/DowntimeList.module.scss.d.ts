@@ -14,7 +14,6 @@ declare const styles: {
   readonly popover: string
   readonly secondLine: string
   readonly statusIcon: string
-  readonly windowFirstLine: string
-  readonly windowSecondLine: string
+  readonly tooltip: string
 }
 export default styles

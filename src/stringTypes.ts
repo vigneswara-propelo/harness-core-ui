@@ -8952,6 +8952,7 @@ export interface StringsMap {
   'cv.sloDowntime.category': string
   'cv.sloDowntime.confirmDeleteDowntime': string
   'cv.sloDowntime.createSLODowntime': string
+  'cv.sloDowntime.disabledDelete': string
   'cv.sloDowntime.downtimeCreated': string
   'cv.sloDowntime.downtimeEndsOn': string
   'cv.sloDowntime.downtimeName': string

@@ -23,9 +23,15 @@ import css from './SLODowntimePage.module.scss'
 export const shouldRenderNoDataCard = (
   appliedSearchAndFilter: boolean,
   downtimeData: ResponsePageDowntimeListView | null,
-  downtimeHistoryData: ResponsePageDowntimeHistoryView | null
+  downtimeHistoryData: ResponsePageDowntimeHistoryView | null,
+  downtimeDataLoading: boolean,
+  downtimeHistoryLoading: boolean
 ): boolean =>
-  !downtimeData?.data?.content?.length && !downtimeHistoryData?.data?.content?.length && !appliedSearchAndFilter
+  !downtimeData?.data?.content?.length &&
+  !downtimeHistoryData?.data?.content?.length &&
+  !appliedSearchAndFilter &&
+  !downtimeDataLoading &&
+  !downtimeHistoryLoading
 
 export const getMonitoredServicesOptions = (
   monitoredServicesData: ResponsePageMSDropdownResponse | null,

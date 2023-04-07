@@ -1041,6 +1041,7 @@ sloDowntime:
   NoData: You don’t have any matching monitored services
   NoDataSuggestion: Try changing the filter or clearing your search input.
   confirmDeleteDowntime: 'Are you sure you want to delete downtime: {{ name }}?'
+  disabledDelete: Cannot delete a downtime that has already happened or is currently active
   validations:
     nameValidation: SLO Downtime is required
     categoryValidation: Category is required

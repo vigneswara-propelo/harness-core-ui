@@ -6,23 +6,25 @@
  */
 
 import React from 'react'
-import { Layout, useConfirmationDialog, Text, ButtonVariation } from '@harness/uicore'
+import { Layout, Container, useConfirmationDialog, Text, ButtonVariation } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import css from '@cv/pages/slos/components/SLOActions/SLOActions.module.scss'
+import listCss from '../../DowntimeList.module.scss'
 
 export interface DowntimeActionsProps {
   onDelete: (identifier: string, title: string) => Promise<void>
   onEdit: (identifier: string) => void
   identifier: string
   title: string
+  disabledDeleteButton: boolean
 }
 
 export default function DowntimeActions(props: DowntimeActionsProps): JSX.Element {
-  const { onDelete, onEdit, identifier, title } = props
+  const { onDelete, onEdit, identifier, title, disabledDeleteButton } = props
   const { getString } = useStrings()
 
   const { openDialog } = useConfirmationDialog({
@@ -48,12 +50,11 @@ export default function DowntimeActions(props: DowntimeActionsProps): JSX.Elemen
         padding={'small'}
         rightIcon="Edit"
         withoutCurrentColor
-        iconProps={{ color: Color.GREY_500 }}
         onClick={e => {
           e.stopPropagation()
           onEdit(identifier)
         }}
-        variation={ButtonVariation.LINK}
+        variation={ButtonVariation.ICON}
         permission={{
           permission: PermissionIdentifier.EDIT_DOWNTIME,
           resource: {
@@ -67,12 +68,20 @@ export default function DowntimeActions(props: DowntimeActionsProps): JSX.Elemen
         padding={'small'}
         rightIcon="main-trash"
         withoutCurrentColor
-        iconProps={{ color: Color.GREY_500 }}
         onClick={e => {
           e.stopPropagation()
           openDialog()
         }}
-        variation={ButtonVariation.LINK}
+        disabled={disabledDeleteButton}
+        tooltip={
+          disabledDeleteButton ? (
+            <Container padding={'medium'} className={listCss.tooltip}>
+              <Text color={Color.GREY_0}>{getString('cv.sloDowntime.disabledDelete')}</Text>
+            </Container>
+          ) : undefined
+        }
+        tooltipProps={{ isDark: true }}
+        variation={ButtonVariation.ICON}
         permission={{
           permission: PermissionIdentifier.DELETE_DOWNTIME,
           resource: {

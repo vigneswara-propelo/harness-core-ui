@@ -116,486 +116,492 @@ exports[`CVCreateDowntime should render create flow 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <div
-          class="Layout--vertical StyledProps--main StyledProps--margin-xlarge"
-          data-testid="Stepper_main"
+          class="StyledProps--font StyledProps--main PageBody--pageBody"
+          data-name="page-body"
+          data-testid="page-body"
         >
           <div
-            class="StyledProps--font StyledProps--main stepContainer"
+            class="Layout--vertical StyledProps--main StyledProps--margin-xlarge"
+            data-testid="Stepper_main"
           >
             <div
-              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+              class="StyledProps--font StyledProps--main stepContainer"
             >
               <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
-                data-testid="steptitle_DEFINE_DOWNTIME"
-                style="cursor: not-allowed;"
-              >
-                <span
-                  class="bp3-icon StyledProps--main iconNoBorder editIcon StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
-                  data-icon="Edit"
-                >
-                  <svg
-                    height="16"
-                    viewBox="0 0 16 16"
-                    width="16"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      clip-rule="evenodd"
-                      d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
-                      fill="currentColor"
-                      fill-rule="evenodd"
-                    />
-                    <path
-                      clip-rule="evenodd"
-                      d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
-                      fill="currentColor"
-                      fill-rule="evenodd"
-                      opacity="0.3"
-                    />
-                  </svg>
-                </span>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
-                >
-                  cv.sloDowntime.steps.identification
-                   
-                </p>
-              </div>
-            </div>
-            <div
-              class="StyledProps--font StyledProps--main alignContainerRight borderLeft stepMargin"
-              data-testid="step_container_DEFINE_DOWNTIME"
-            >
-              <div
-                class="StyledProps--font StyledProps--main"
+                class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
               >
                 <div
-                  class="bp3-card bp3-elevation-0 Card--card card"
-                  data-testid="panel_DEFINE_DOWNTIME"
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
+                  data-testid="steptitle_DEFINE_DOWNTIME"
+                  style="cursor: not-allowed;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main iconNoBorder editIcon StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
+                    data-icon="Edit"
+                  >
+                    <svg
+                      height="16"
+                      viewBox="0 0 16 16"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                      />
+                      <path
+                        clip-rule="evenodd"
+                        d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        opacity="0.3"
+                      />
+                    </svg>
+                  </span>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
+                  >
+                    cv.sloDowntime.steps.identification
+                     
+                  </p>
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main alignContainerRight borderLeft stepMargin"
+                data-testid="step_container_DEFINE_DOWNTIME"
+              >
+                <div
+                  class="StyledProps--font StyledProps--main"
                 >
                   <div
-                    class="Layout--vertical Layout--layout-spacing-huge StyledProps--main"
+                    class="bp3-card bp3-elevation-0 Card--card card"
+                    data-testid="panel_DEFINE_DOWNTIME"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main"
-                      style="width: 350px;"
+                      class="Layout--vertical Layout--layout-spacing-huge StyledProps--main"
                     >
                       <div
-                        class="StyledProps--font StyledProps--main main"
+                        class="StyledProps--font StyledProps--main"
+                        style="width: 350px;"
                       >
                         <div
-                          class="InputWithIdentifier--txtNameContainer TextInput--main"
+                          class="StyledProps--font StyledProps--main main"
                         >
                           <div
-                            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main InputWithIdentifier--txtIdContainer"
+                            class="InputWithIdentifier--txtNameContainer TextInput--main"
                           >
                             <div
-                              class="Text--withDocsTooltip"
-                              data-tooltip-id="universalInputNameWithId"
+                              class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main InputWithIdentifier--txtIdContainer"
                             >
+                              <div
+                                class="Text--withDocsTooltip"
+                                data-tooltip-id="universalInputNameWithId"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                >
+                                  Id
+                                </p>
+                              </div>
                               <p
                                 class="StyledProps--font StyledProps--main"
                               >
-                                Id
+                                :
                               </p>
-                            </div>
-                            <p
-                              class="StyledProps--font StyledProps--main"
-                            >
-                              :
-                            </p>
-                            <span
-                              class="bp3-popover-wrapper"
-                            >
                               <span
-                                class="bp3-popover-target"
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="bp3-editable-text bp3-editable-text-placeholder InputWithIdentifier--idValue"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="bp3-editable-text-content"
+                                      style="height: 1px; line-height: 1px; min-width: 0;"
+                                    />
+                                  </div>
+                                </span>
+                              </span>
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="Edit"
+                                style="vertical-align: middle; cursor: pointer;"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 16 16"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                                    fill="currentColor"
+                                    fill-rule="evenodd"
+                                  />
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                                    fill="currentColor"
+                                    fill-rule="evenodd"
+                                    opacity="0.3"
+                                  />
+                                </svg>
+                              </span>
+                            </div>
+                            <div
+                              class="bp3-form-group"
+                            >
+                              <label
+                                class="bp3-label"
+                                for="name"
+                              >
+                                <span
+                                  class="Tooltip--acenter"
+                                  data-tooltip-id="downtimeForm_name"
+                                >
+                                  cv.sloDowntime.downtimeName
+                                </span>
+                                 
+                                <span
+                                  class="bp3-text-muted"
+                                />
+                              </label>
+                              <div
+                                class="bp3-form-content"
                               >
                                 <div
-                                  class="bp3-editable-text bp3-editable-text-placeholder InputWithIdentifier--idValue"
-                                  tabindex="0"
+                                  class="bp3-input-group"
                                 >
-                                  <span
-                                    class="bp3-editable-text-content"
-                                    style="height: 1px; line-height: 1px; min-width: 0;"
+                                  <input
+                                    autocomplete="off"
+                                    class="bp3-input"
+                                    name="name"
+                                    placeholder="common.namePlaceholder"
+                                    type="text"
+                                    value=""
                                   />
                                 </div>
-                              </span>
-                            </span>
-                            <span
-                              class="bp3-icon StyledProps--main"
-                              data-icon="Edit"
-                              style="vertical-align: middle; cursor: pointer;"
-                            >
-                              <svg
-                                height="12"
-                                viewBox="0 0 16 16"
-                                width="12"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  clip-rule="evenodd"
-                                  d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
-                                  fill="currentColor"
-                                  fill-rule="evenodd"
-                                />
-                                <path
-                                  clip-rule="evenodd"
-                                  d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
-                                  fill="currentColor"
-                                  fill-rule="evenodd"
-                                  opacity="0.3"
-                                />
-                              </svg>
-                            </span>
-                          </div>
-                          <div
-                            class="bp3-form-group"
-                          >
-                            <label
-                              class="bp3-label"
-                              for="name"
-                            >
-                              <span
-                                class="Tooltip--acenter"
-                                data-tooltip-id="downtimeForm_name"
-                              >
-                                cv.sloDowntime.downtimeName
-                              </span>
-                               
-                              <span
-                                class="bp3-text-muted"
-                              />
-                            </label>
-                            <div
-                              class="bp3-form-content"
-                            >
-                              <div
-                                class="bp3-input-group"
-                              >
-                                <input
-                                  autocomplete="off"
-                                  class="bp3-input"
-                                  name="name"
-                                  placeholder="common.namePlaceholder"
-                                  type="text"
-                                  value=""
-                                />
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div
-                          class="StyledProps--font StyledProps--main"
-                        >
-                          <label
-                            class="Label--main bp3-label descriptionLabel"
+                          <div
+                            class="StyledProps--font StyledProps--main"
                           >
-                            optionalField
-                            <span
-                              class="bp3-icon StyledProps--main editOpen"
-                              data-icon="Edit"
-                              data-name="edit"
-                              data-testid="description-edit"
+                            <label
+                              class="Label--main bp3-label descriptionLabel"
                             >
-                              <svg
-                                height="12"
-                                viewBox="0 0 16 16"
-                                width="12"
-                                xmlns="http://www.w3.org/2000/svg"
+                              optionalField
+                              <span
+                                class="bp3-icon StyledProps--main editOpen"
+                                data-icon="Edit"
+                                data-name="edit"
+                                data-testid="description-edit"
                               >
-                                <path
-                                  clip-rule="evenodd"
-                                  d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
-                                  fill="currentColor"
-                                  fill-rule="evenodd"
-                                />
-                                <path
-                                  clip-rule="evenodd"
-                                  d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
-                                  fill="currentColor"
-                                  fill-rule="evenodd"
-                                  opacity="0.3"
-                                />
-                              </svg>
-                            </span>
-                          </label>
-                        </div>
-                        <div
-                          class="StyledProps--font StyledProps--main"
-                        >
-                          <label
-                            class="Label--main bp3-label descriptionLabel"
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 16 16"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                                    fill="currentColor"
+                                    fill-rule="evenodd"
+                                  />
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                                    fill="currentColor"
+                                    fill-rule="evenodd"
+                                    opacity="0.3"
+                                  />
+                                </svg>
+                              </span>
+                            </label>
+                          </div>
+                          <div
+                            class="StyledProps--font StyledProps--main"
                           >
-                            optionalField
-                            <span
-                              class="bp3-icon StyledProps--main editOpen"
-                              data-icon="Edit"
-                              data-name="edit"
-                              data-testid="tags-edit"
+                            <label
+                              class="Label--main bp3-label descriptionLabel"
                             >
-                              <svg
-                                height="12"
-                                viewBox="0 0 16 16"
-                                width="12"
-                                xmlns="http://www.w3.org/2000/svg"
+                              optionalField
+                              <span
+                                class="bp3-icon StyledProps--main editOpen"
+                                data-icon="Edit"
+                                data-name="edit"
+                                data-testid="tags-edit"
                               >
-                                <path
-                                  clip-rule="evenodd"
-                                  d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
-                                  fill="currentColor"
-                                  fill-rule="evenodd"
-                                />
-                                <path
-                                  clip-rule="evenodd"
-                                  d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
-                                  fill="currentColor"
-                                  fill-rule="evenodd"
-                                  opacity="0.3"
-                                />
-                              </svg>
-                            </span>
-                          </label>
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 16 16"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                                    fill="currentColor"
+                                    fill-rule="evenodd"
+                                  />
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                                    fill="currentColor"
+                                    fill-rule="evenodd"
+                                    opacity="0.3"
+                                  />
+                                </svg>
+                              </span>
+                            </label>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
-                      >
-                        cv.sloDowntime.selectCategory
-                      </p>
                       <div
-                        class="bp3-form-group ThumbnailSelect--mainContainer"
+                        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                       >
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+                        >
+                          cv.sloDowntime.selectCategory
+                        </p>
                         <div
-                          class="bp3-form-content"
+                          class="bp3-form-group ThumbnailSelect--mainContainer"
                         >
                           <div
-                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                            class="bp3-form-content"
                           >
-                            <label
-                              class="Thumbnail--squareCardContainer Thumbnail--large"
+                            <div
+                              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                             >
-                              <div
-                                class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
-                                tabindex="0"
+                              <label
+                                class="Thumbnail--squareCardContainer Thumbnail--large"
                               >
-                                <p
-                                  class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--color StyledProps--color-black"
+                                <div
+                                  class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                                  tabindex="0"
                                 >
-                                  cv.sloDowntime.scheduledMaintenance
-                                </p>
-                              </div>
-                              <input
-                                name="category"
-                                type="checkbox"
-                                value="ScheduledMaintenance"
-                              />
-                            </label>
-                            <label
-                              class="Thumbnail--squareCardContainer Thumbnail--large"
-                            >
-                              <div
-                                class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
-                                tabindex="0"
+                                  <p
+                                    class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--color StyledProps--color-black"
+                                  >
+                                    cv.sloDowntime.scheduledMaintenance
+                                  </p>
+                                </div>
+                                <input
+                                  name="category"
+                                  type="checkbox"
+                                  value="ScheduledMaintenance"
+                                />
+                              </label>
+                              <label
+                                class="Thumbnail--squareCardContainer Thumbnail--large"
                               >
-                                <p
-                                  class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--color StyledProps--color-black"
+                                <div
+                                  class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                                  tabindex="0"
                                 >
-                                  deploymentText
-                                </p>
-                              </div>
-                              <input
-                                name="category"
-                                type="checkbox"
-                                value="Deployment"
-                              />
-                            </label>
-                            <label
-                              class="Thumbnail--squareCardContainer Thumbnail--large"
-                            >
-                              <div
-                                class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
-                                tabindex="0"
+                                  <p
+                                    class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--color StyledProps--color-black"
+                                  >
+                                    deploymentText
+                                  </p>
+                                </div>
+                                <input
+                                  name="category"
+                                  type="checkbox"
+                                  value="Deployment"
+                                />
+                              </label>
+                              <label
+                                class="Thumbnail--squareCardContainer Thumbnail--large"
                               >
-                                <p
-                                  class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--color StyledProps--color-black"
+                                <div
+                                  class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                                  tabindex="0"
                                 >
-                                  common.other
-                                </p>
-                              </div>
-                              <input
-                                name="category"
-                                type="checkbox"
-                                value="Other"
-                              />
-                            </label>
+                                  <p
+                                    class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--color StyledProps--color-black"
+                                  >
+                                    common.other
+                                  </p>
+                                </div>
+                                <input
+                                  name="category"
+                                  type="checkbox"
+                                  value="Other"
+                                />
+                              </label>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-xlarge"
-                >
-                  <button
-                    aria-label="next"
-                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
-                    data-testid="nextButton"
-                    type="button"
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-xlarge"
                   >
-                    <span
-                      class="bp3-button-text"
+                    <button
+                      aria-label="next"
+                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                      data-testid="nextButton"
+                      type="button"
                     >
-                      next
-                    </span>
-                    <span
-                      class="bp3-icon bp3-icon-chevron-right StyledProps--main"
-                      icon="chevron-right"
-                    >
-                      <svg
-                        data-icon="chevron-right"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        width="16"
+                      <span
+                        class="bp3-button-text"
                       >
-                        <desc>
-                          chevron-right
-                        </desc>
-                        <path
-                          d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                          fill-rule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </button>
+                        next
+                      </span>
+                      <span
+                        class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                        icon="chevron-right"
+                      >
+                        <svg
+                          data-icon="chevron-right"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          width="16"
+                        >
+                          <desc>
+                            chevron-right
+                          </desc>
+                          <path
+                            d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="StyledProps--font StyledProps--main stepContainer"
-          >
             <div
-              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+              class="StyledProps--font StyledProps--main stepContainer"
             >
               <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
-                data-testid="steptitle_SELECT_DOWNTIME_WINDOW"
-                style="cursor: not-allowed;"
+                class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
               >
-                <span
-                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder defaultState StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
-                  icon="ring"
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
+                  data-testid="steptitle_SELECT_DOWNTIME_WINDOW"
+                  style="cursor: not-allowed;"
                 >
-                  <svg
-                    data-icon="ring"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    width="20"
+                  <span
+                    class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder defaultState StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
+                    icon="ring"
                   >
-                    <desc>
-                      ring
-                    </desc>
-                    <path
-                      d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
-                >
-                  cv.sloDowntime.steps.downtimeWindow
-                   
-                </p>
+                    <svg
+                      data-icon="ring"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <desc>
+                        ring
+                      </desc>
+                      <path
+                        d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
+                  >
+                    cv.sloDowntime.steps.downtimeWindow
+                     
+                  </p>
+                </div>
               </div>
+              <div
+                class="StyledProps--font StyledProps--main alignContainerRight borderLeft"
+                data-testid="step_container_SELECT_DOWNTIME_WINDOW"
+              />
             </div>
             <div
-              class="StyledProps--font StyledProps--main alignContainerRight borderLeft"
-              data-testid="step_container_SELECT_DOWNTIME_WINDOW"
-            />
-          </div>
-          <div
-            class="StyledProps--font StyledProps--main stepContainer bottomMargin"
-          >
-            <div
-              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+              class="StyledProps--font StyledProps--main stepContainer bottomMargin"
             >
               <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
-                data-testid="steptitle_SELECT_MONITORED_SERVICES"
-                style="cursor: not-allowed;"
+                class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
               >
-                <span
-                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder defaultState StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
-                  icon="ring"
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
+                  data-testid="steptitle_SELECT_MONITORED_SERVICES"
+                  style="cursor: not-allowed;"
                 >
-                  <svg
-                    data-icon="ring"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    width="20"
+                  <span
+                    class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder defaultState StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
+                    icon="ring"
                   >
-                    <desc>
-                      ring
-                    </desc>
-                    <path
-                      d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
-                >
-                  cv.sloDowntime.steps.monitoredServices
-                   
-                </p>
+                    <svg
+                      data-icon="ring"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <desc>
+                        ring
+                      </desc>
+                      <path
+                        d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
+                  >
+                    cv.sloDowntime.steps.monitoredServices
+                     
+                  </p>
+                </div>
               </div>
+              <div
+                class="StyledProps--font StyledProps--main alignContainerRight"
+                data-testid="step_container_SELECT_MONITORED_SERVICES"
+              />
             </div>
-            <div
-              class="StyledProps--font StyledProps--main alignContainerRight"
-              data-testid="step_container_SELECT_MONITORED_SERVICES"
-            />
           </div>
-        </div>
-        <div
-          class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard footer StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
-          data-testid="page-header"
-        >
           <div
-            class="Layout--vertical StyledProps--main"
+            class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard footer StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+            data-testid="page-header"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+              class="Layout--vertical StyledProps--main"
             >
-              <button
-                aria-label="cancel"
-                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
-                type="button"
+              <div
+                class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
               >
-                <span
-                  class="bp3-button-text"
+                <button
+                  aria-label="cancel"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+                  type="button"
                 >
-                  cancel
-                </span>
-              </button>
-              <button
-                aria-label="save"
-                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
-                type="button"
-              >
-                <span
-                  class="bp3-button-text"
+                  <span
+                    class="bp3-button-text"
+                  >
+                    cancel
+                  </span>
+                </button>
+                <button
+                  aria-label="save"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+                  type="button"
                 >
-                  save
-                </span>
-              </button>
+                  <span
+                    class="bp3-button-text"
+                  >
+                    save
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -744,457 +750,463 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
         class="OverlaySpinner--overlaySpinner"
       >
         <div
-          class="Layout--vertical StyledProps--main StyledProps--margin-xlarge"
-          data-testid="Stepper_main"
+          class="StyledProps--font StyledProps--main PageBody--pageBody"
+          data-name="page-body"
+          data-testid="page-body"
         >
           <div
-            class="StyledProps--font StyledProps--main stepContainer"
+            class="Layout--vertical StyledProps--main StyledProps--margin-xlarge"
+            data-testid="Stepper_main"
           >
             <div
-              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+              class="StyledProps--font StyledProps--main stepContainer"
             >
               <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
-                data-testid="steptitle_DEFINE_DOWNTIME"
-                style="cursor: pointer;"
-              >
-                <span
-                  class="bp3-icon bp3-icon-tick-circle StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary7"
-                  icon="tick-circle"
-                >
-                  <svg
-                    data-icon="tick-circle"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    width="20"
-                  >
-                    <desc>
-                      tick-circle
-                    </desc>
-                    <path
-                      d="M10 20C4.48 20 0 15.52 0 10S4.48 0 10 0s10 4.48 10 10-4.48 10-10 10zm5-14c-.28 0-.53.11-.71.29L8 12.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29.28 0 .53-.11.71-.29l7-7A1.003 1.003 0 0015 6z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary7"
-                >
-                  cv.sloDowntime.steps.identification
-                   
-                </p>
-              </div>
-            </div>
-            <div
-              class="StyledProps--font StyledProps--main alignContainerRight borderLeft stepMargin"
-              data-testid="step_container_DEFINE_DOWNTIME"
-            >
-              <div
-                class="StyledProps--font StyledProps--main"
-                data-testid="preview_DEFINE_DOWNTIME"
-                style="width: 500px;"
+                class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
               >
                 <div
-                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
+                  data-testid="steptitle_DEFINE_DOWNTIME"
+                  style="cursor: pointer;"
                 >
-                  <div
-                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
+                  <span
+                    class="bp3-icon bp3-icon-tick-circle StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary7"
+                    icon="tick-circle"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main label"
-                      style="width: 120px;"
-                      title="cv.sloDowntime.downtimeName"
+                    <svg
+                      data-icon="tick-circle"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
                     >
-                      cv.sloDowntime.downtimeName
-                    </p>
-                    <div
-                      class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main value"
-                      >
-                        SLO Downtime
-                      </p>
-                    </div>
-                  </div>
-                  <div
-                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
+                      <desc>
+                        tick-circle
+                      </desc>
+                      <path
+                        d="M10 20C4.48 20 0 15.52 0 10S4.48 0 10 0s10 4.48 10 10-4.48 10-10 10zm5-14c-.28 0-.53.11-.71.29L8 12.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29.28 0 .53-.11.71-.29l7-7A1.003 1.003 0 0015 6z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary7"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main label"
-                      style="width: 120px;"
-                      title="description"
-                    >
-                      description
-                    </p>
-                    <div
-                      class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main value"
-                      >
-                        Weekly downtime
-                      </p>
-                    </div>
-                  </div>
-                  <div
-                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main label"
-                      style="width: 120px;"
-                      title="cv.sloDowntime.category"
-                    >
-                      cv.sloDowntime.category
-                    </p>
-                    <div
-                      class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main value"
-                      >
-                        deploymentText
-                      </p>
-                    </div>
-                  </div>
+                    cv.sloDowntime.steps.identification
+                     
+                  </p>
                 </div>
               </div>
-            </div>
-          </div>
-          <div
-            class="StyledProps--font StyledProps--main stepContainer"
-          >
-            <div
-              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-            >
               <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
-                data-testid="steptitle_SELECT_DOWNTIME_WINDOW"
-                style="cursor: pointer;"
-              >
-                <span
-                  class="bp3-icon bp3-icon-tick-circle StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary7"
-                  icon="tick-circle"
-                >
-                  <svg
-                    data-icon="tick-circle"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    width="20"
-                  >
-                    <desc>
-                      tick-circle
-                    </desc>
-                    <path
-                      d="M10 20C4.48 20 0 15.52 0 10S4.48 0 10 0s10 4.48 10 10-4.48 10-10 10zm5-14c-.28 0-.53.11-.71.29L8 12.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29.28 0 .53-.11.71-.29l7-7A1.003 1.003 0 0015 6z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary7"
-                >
-                  cv.sloDowntime.steps.downtimeWindow
-                   
-                </p>
-              </div>
-            </div>
-            <div
-              class="StyledProps--font StyledProps--main alignContainerRight borderLeft stepMargin"
-              data-testid="step_container_SELECT_DOWNTIME_WINDOW"
-            >
-              <div
-                class="StyledProps--font StyledProps--main"
-                data-testid="preview_SELECT_DOWNTIME_WINDOW"
-                style="width: 500px;"
+                class="StyledProps--font StyledProps--main alignContainerRight borderLeft stepMargin"
+                data-testid="step_container_DEFINE_DOWNTIME"
               >
                 <div
-                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+                  class="StyledProps--font StyledProps--main"
+                  data-testid="preview_DEFINE_DOWNTIME"
+                  style="width: 500px;"
                 >
                   <div
-                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
+                    class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main label"
-                      style="width: 120px;"
-                      title="summary"
-                    >
-                      summary
-                    </p>
                     <div
-                      class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
                     >
                       <p
-                        class="StyledProps--font StyledProps--main value"
+                        class="StyledProps--font StyledProps--main label"
+                        style="width: 120px;"
+                        title="cv.sloDowntime.downtimeName"
                       >
-                        Starting on 2030-03-26 02:50 PM (Asia/Calcutta) till 2030-03-26 03:07 PM
+                        cv.sloDowntime.downtimeName
                       </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="StyledProps--font StyledProps--main stepContainer bottomMargin"
-          >
-            <div
-              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-            >
-              <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
-                data-testid="steptitle_SELECT_MONITORED_SERVICES"
-                style="cursor: pointer;"
-              >
-                <span
-                  class="bp3-icon bp3-icon-tick-circle StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary7"
-                  icon="tick-circle"
-                >
-                  <svg
-                    data-icon="tick-circle"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    width="20"
-                  >
-                    <desc>
-                      tick-circle
-                    </desc>
-                    <path
-                      d="M10 20C4.48 20 0 15.52 0 10S4.48 0 10 0s10 4.48 10 10-4.48 10-10 10zm5-14c-.28 0-.53.11-.71.29L8 12.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29.28 0 .53-.11.71-.29l7-7A1.003 1.003 0 0015 6z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary7"
-                >
-                  cv.sloDowntime.steps.monitoredServices
-                   
-                </p>
-              </div>
-            </div>
-            <div
-              class="StyledProps--font StyledProps--main alignContainerRight borderLeft stepMargin"
-              data-testid="step_container_SELECT_MONITORED_SERVICES"
-            >
-              <div
-                class="StyledProps--font StyledProps--main"
-              >
-                <div
-                  class="bp3-card bp3-elevation-0 Card--card card"
-                  data-testid="panel_SELECT_MONITORED_SERVICES"
-                >
-                  <div
-                    class="StyledProps--font StyledProps--main PageBody--pageBody minHeight"
-                    data-name="page-body"
-                    data-testid="page-body"
-                  >
-                    <div
-                      class="Layout--vertical Layout--layout-spacing-large StyledProps--main addMonitoredServices"
-                    >
                       <div
-                        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-top-small StyledProps--margin-left-small"
+                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+                          class="StyledProps--font StyledProps--main value"
                         >
-                          cv.sloDowntime.msList
+                          SLO Downtime
                         </p>
-                        <div
-                          class="Layout--horizontal StyledProps--main tagBox"
+                      </div>
+                    </div>
+                    <div
+                      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main label"
+                        style="width: 120px;"
+                        title="description"
+                      >
+                        description
+                      </p>
+                      <div
+                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main value"
                         >
-                          <span
-                            class="Tag--main"
+                          Weekly downtime
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main label"
+                        style="width: 120px;"
+                        title="cv.sloDowntime.category"
+                      >
+                        cv.sloDowntime.category
+                      </p>
+                      <div
+                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main value"
+                        >
+                          deploymentText
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main stepContainer"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
+                  data-testid="steptitle_SELECT_DOWNTIME_WINDOW"
+                  style="cursor: pointer;"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-tick-circle StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary7"
+                    icon="tick-circle"
+                  >
+                    <svg
+                      data-icon="tick-circle"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <desc>
+                        tick-circle
+                      </desc>
+                      <path
+                        d="M10 20C4.48 20 0 15.52 0 10S4.48 0 10 0s10 4.48 10 10-4.48 10-10 10zm5-14c-.28 0-.53.11-.71.29L8 12.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29.28 0 .53-.11.71-.29l7-7A1.003 1.003 0 0015 6z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary7"
+                  >
+                    cv.sloDowntime.steps.downtimeWindow
+                     
+                  </p>
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main alignContainerRight borderLeft stepMargin"
+                data-testid="step_container_SELECT_DOWNTIME_WINDOW"
+              >
+                <div
+                  class="StyledProps--font StyledProps--main"
+                  data-testid="preview_SELECT_DOWNTIME_WINDOW"
+                  style="width: 500px;"
+                >
+                  <div
+                    class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+                  >
+                    <div
+                      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main label"
+                        style="width: 120px;"
+                        title="summary"
+                      >
+                        summary
+                      </p>
+                      <div
+                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main value"
+                        >
+                          Starting on 2030-03-26 02:50 PM (Asia/Calcutta) till 2030-03-26 03:07 PM
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main stepContainer bottomMargin"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
+                  data-testid="steptitle_SELECT_MONITORED_SERVICES"
+                  style="cursor: pointer;"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-tick-circle StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary7"
+                    icon="tick-circle"
+                  >
+                    <svg
+                      data-icon="tick-circle"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <desc>
+                        tick-circle
+                      </desc>
+                      <path
+                        d="M10 20C4.48 20 0 15.52 0 10S4.48 0 10 0s10 4.48 10 10-4.48 10-10 10zm5-14c-.28 0-.53.11-.71.29L8 12.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29.28 0 .53-.11.71-.29l7-7A1.003 1.003 0 0015 6z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary7"
+                  >
+                    cv.sloDowntime.steps.monitoredServices
+                     
+                  </p>
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main alignContainerRight borderLeft stepMargin"
+                data-testid="step_container_SELECT_MONITORED_SERVICES"
+              >
+                <div
+                  class="StyledProps--font StyledProps--main"
+                >
+                  <div
+                    class="bp3-card bp3-elevation-0 Card--card card"
+                    data-testid="panel_SELECT_MONITORED_SERVICES"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main PageBody--pageBody minHeight"
+                      data-name="page-body"
+                      data-testid="page-body"
+                    >
+                      <div
+                        class="Layout--vertical Layout--layout-spacing-large StyledProps--main addMonitoredServices"
+                      >
+                        <div
+                          class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-top-small StyledProps--margin-left-small"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+                          >
+                            cv.sloDowntime.msList
+                          </p>
+                          <div
+                            class="Layout--horizontal StyledProps--main tagBox"
                           >
                             <span
-                              class="bp3-tag"
+                              class="Tag--main"
                             >
                               <span
-                                class="bp3-text-overflow-ellipsis bp3-fill"
+                                class="bp3-tag"
                               >
                                 <span
-                                  class="serviceName"
-                                />
-                                 - 
-                              </span>
-                              <button
-                                class="bp3-tag-remove"
-                                type="button"
-                              >
-                                <span
-                                  class="bp3-icon bp3-icon-small-cross"
-                                  icon="small-cross"
+                                  class="bp3-text-overflow-ellipsis bp3-fill"
                                 >
-                                  <svg
-                                    data-icon="small-cross"
-                                    height="16"
-                                    viewBox="0 0 16 16"
-                                    width="16"
-                                  >
-                                    <desc>
-                                      small-cross
-                                    </desc>
-                                    <path
-                                      d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                                      fill-rule="evenodd"
-                                    />
-                                  </svg>
+                                  <span
+                                    class="serviceName"
+                                  />
+                                   - 
                                 </span>
-                              </button>
+                                <button
+                                  class="bp3-tag-remove"
+                                  type="button"
+                                >
+                                  <span
+                                    class="bp3-icon bp3-icon-small-cross"
+                                    icon="small-cross"
+                                  >
+                                    <svg
+                                      data-icon="small-cross"
+                                      height="16"
+                                      viewBox="0 0 16 16"
+                                      width="16"
+                                    >
+                                      <desc>
+                                        small-cross
+                                      </desc>
+                                      <path
+                                        d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </button>
+                              </span>
                             </span>
-                          </span>
-                          <span
-                            class="Tag--main"
+                            <span
+                              class="Tag--main"
+                            >
+                              <span
+                                class="bp3-tag"
+                              >
+                                <span
+                                  class="bp3-text-overflow-ellipsis bp3-fill"
+                                >
+                                  <span
+                                    class="serviceName"
+                                  />
+                                   - 
+                                </span>
+                                <button
+                                  class="bp3-tag-remove"
+                                  type="button"
+                                >
+                                  <span
+                                    class="bp3-icon bp3-icon-small-cross"
+                                    icon="small-cross"
+                                  >
+                                    <svg
+                                      data-icon="small-cross"
+                                      height="16"
+                                      viewBox="0 0 16 16"
+                                      width="16"
+                                    >
+                                      <desc>
+                                        small-cross
+                                      </desc>
+                                      <path
+                                        d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </button>
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          <button
+                            aria-label="cv.sloDowntime.selectMonitoredServices"
+                            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--margin-left-small Button--with-current-color Button--variation Button--variation-secondary"
+                            type="button"
                           >
                             <span
-                              class="bp3-tag"
+                              class="bp3-button-text"
                             >
-                              <span
-                                class="bp3-text-overflow-ellipsis bp3-fill"
-                              >
-                                <span
-                                  class="serviceName"
-                                />
-                                 - 
-                              </span>
-                              <button
-                                class="bp3-tag-remove"
-                                type="button"
-                              >
-                                <span
-                                  class="bp3-icon bp3-icon-small-cross"
-                                  icon="small-cross"
-                                >
-                                  <svg
-                                    data-icon="small-cross"
-                                    height="16"
-                                    viewBox="0 0 16 16"
-                                    width="16"
-                                  >
-                                    <desc>
-                                      small-cross
-                                    </desc>
-                                    <path
-                                      d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                                      fill-rule="evenodd"
-                                    />
-                                  </svg>
-                                </span>
-                              </button>
+                              cv.sloDowntime.selectMonitoredServices
                             </span>
-                          </span>
+                          </button>
+                        </div>
+                        <div
+                          class="bp3-divider"
+                        />
+                        <div
+                          class="Layout--horizontal StyledProps--main checkbox StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        >
+                          <label
+                            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+                          >
+                            <input
+                              type="checkbox"
+                            />
+                            <span
+                              class="bp3-control-indicator"
+                            />
+                          </label>
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey1000"
+                          >
+                            cv.sloDowntime.selectAllMonitoredServices
+                          </p>
                         </div>
                       </div>
-                      <div
-                        class="StyledProps--font StyledProps--main"
-                      >
-                        <button
-                          aria-label="cv.sloDowntime.selectMonitoredServices"
-                          class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--margin-left-small Button--with-current-color Button--variation Button--variation-secondary"
-                          type="button"
-                        >
-                          <span
-                            class="bp3-button-text"
-                          >
-                            cv.sloDowntime.selectMonitoredServices
-                          </span>
-                        </button>
-                      </div>
-                      <div
-                        class="bp3-divider"
-                      />
-                      <div
-                        class="Layout--horizontal StyledProps--main checkbox StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                      >
-                        <label
-                          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
-                        >
-                          <input
-                            type="checkbox"
-                          />
-                          <span
-                            class="bp3-control-indicator"
-                          />
-                        </label>
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey1000"
-                        >
-                          cv.sloDowntime.selectAllMonitoredServices
-                        </p>
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-xlarge"
-                >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-secondary"
-                    data-testid="backButton"
-                    type="button"
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-xlarge"
                   >
-                    <span
-                      class="bp3-icon bp3-icon-chevron-left StyledProps--main"
-                      icon="chevron-left"
+                    <button
+                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-secondary"
+                      data-testid="backButton"
+                      type="button"
                     >
-                      <svg
-                        data-icon="chevron-left"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        width="16"
+                      <span
+                        class="bp3-icon bp3-icon-chevron-left StyledProps--main"
+                        icon="chevron-left"
                       >
-                        <desc>
-                          chevron-left
-                        </desc>
-                        <path
-                          d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
-                          fill-rule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                    <span
-                      class="bp3-button-text"
-                    >
-                      back
-                    </span>
-                  </button>
+                        <svg
+                          data-icon="chevron-left"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          width="16"
+                        >
+                          <desc>
+                            chevron-left
+                          </desc>
+                          <path
+                            d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      <span
+                        class="bp3-button-text"
+                      >
+                        back
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard footer StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
-          data-testid="page-header"
-        >
           <div
-            class="Layout--vertical StyledProps--main"
+            class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard footer StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+            data-testid="page-header"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+              class="Layout--vertical StyledProps--main"
             >
-              <button
-                aria-label="cancel"
-                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
-                type="button"
+              <div
+                class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
               >
-                <span
-                  class="bp3-button-text"
+                <button
+                  aria-label="cancel"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+                  type="button"
                 >
-                  cancel
-                </span>
-              </button>
-              <button
-                aria-label="save"
-                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
-                type="button"
-              >
-                <span
-                  class="bp3-button-text"
+                  <span
+                    class="bp3-button-text"
+                  >
+                    cancel
+                  </span>
+                </button>
+                <button
+                  aria-label="save"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+                  type="button"
                 >
-                  save
-                </span>
-              </button>
+                  <span
+                    class="bp3-button-text"
+                  >
+                    save
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
