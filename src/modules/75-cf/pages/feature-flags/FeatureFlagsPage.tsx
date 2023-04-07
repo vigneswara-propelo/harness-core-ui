@@ -220,7 +220,6 @@ const FeatureFlagsPage: React.FC = () => {
               refetchFlags={refetchFlags}
               deleteFlag={deleteFlag.mutate}
               queryParams={queryParams}
-              onRowClick={onRowClick}
             />
           ) : (
             <FeatureFlagsListing

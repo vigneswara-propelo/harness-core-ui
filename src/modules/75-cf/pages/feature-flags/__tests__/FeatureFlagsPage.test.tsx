@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, getByText, waitFor, RenderResult, screen } from '@testing-library/react'
+import { render, fireEvent, getByText, waitFor, RenderResult, screen, act } from '@testing-library/react'
 import { cloneDeep } from 'lodash-es'
 import userEvent from '@testing-library/user-event'
 import * as cfServices from 'services/cf'
@@ -127,7 +127,11 @@ describe('FeatureFlagsPage', () => {
   test('It should go to edit page by clicking a row', async () => {
     renderComponent()
 
-    fireEvent.click(document.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0] as HTMLElement)
+    await act(async () => {
+      await fireEvent.click(
+        document.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0] as HTMLElement
+      )
+    })
 
     expect(screen.getByTestId('location')).toHaveTextContent('dummy/feature-flags/hello_world')
   })
@@ -135,8 +139,10 @@ describe('FeatureFlagsPage', () => {
   test('Should go to edit page by clicking edit', async () => {
     renderComponent()
 
-    fireEvent.click(document.querySelector('[data-icon="Options"]') as HTMLElement)
-    fireEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
+    await act(async () => {
+      await fireEvent.click(document.querySelector('[data-icon="Options"]') as HTMLElement)
+      await fireEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
+    })
 
     expect(screen.getByTestId('location')).toHaveTextContent('feature-flags/hello_world')
   })
@@ -152,11 +158,14 @@ describe('FeatureFlagsPage', () => {
 
     renderComponent()
 
-    fireEvent.click(document.querySelector('[role="row"]:not(:first-of-type) [data-icon="Options"]') as HTMLElement)
-    fireEvent.click(document.querySelector('[icon="trash"]') as HTMLElement)
-
-    fireEvent.click(document.querySelector('button[class*=intent-danger]') as HTMLButtonElement)
-    await waitFor(() => expect(mutate).toBeCalledTimes(1))
+    await act(async () => {
+      await fireEvent.click(
+        document.querySelector('[role="row"]:not(:first-of-type) [data-icon="Options"]') as HTMLElement
+      )
+      await fireEvent.click(document.querySelector('[icon="trash"]') as HTMLElement)
+      await fireEvent.click(document.querySelector('button[class*=intent-danger]') as HTMLButtonElement)
+    })
+    expect(mutate).toBeCalledTimes(1)
   })
 
   test('It should render error correctly', async () => {
@@ -180,21 +189,21 @@ describe('FeatureFlagsPage', () => {
   })
 
   describe('FilterCards', () => {
-    test('should not render if there is no active Environment', async () => {
+    test('It should not render if there is no active Environment', async () => {
       mockEnvs(false)
       renderComponent()
 
       expect(screen.queryAllByTestId('filter-card')).toHaveLength(0)
     })
 
-    test('should render when Feature Flags exist and there is an active Environment', async () => {
+    test('It should render when Feature Flags exist and there is an active Environment', async () => {
       mockEnvs()
       renderComponent()
 
       expect(screen.queryAllByTestId('filter-card')).toHaveLength(6)
     })
 
-    test('should not render if there is an active Environment but no flags', async () => {
+    test('It should not render if there is an active Environment but no flags', async () => {
       mockEnvs()
       mockImport('services/cf', {
         useGetAllFeatures: () => ({ data: undefined, refetch: jest.fn() })

@@ -9,7 +9,7 @@ export default {
   status: 'SUCCESS',
   data: {
     totalPages: 2,
-    totalItems: 20,
+    totalItems: 16,
     pageItemCount: 15,
     pageSize: 15,
     content: [

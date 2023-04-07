@@ -32,7 +32,9 @@ const FlagEnvironmentsState: FC<FlagEnvironmentsStateProps> = ({ environmentsByT
             flex={{ distribution: 'space-between', align: 'center-center' }}
             padding="small"
             margin={{ right: 'medium' }}
+            spacing="medium"
             className={cx(css.environmentTypeContainer, envType === 'prod' ? css.prod : css.nonProd)}
+            data-testid="environmentTypeContainer"
           >
             <div className={css.rotatedLabel}>
               <Text color={Color.PRIMARY_9} font={{ variation: FontVariation.SMALL_BOLD }}>
@@ -42,12 +44,13 @@ const FlagEnvironmentsState: FC<FlagEnvironmentsStateProps> = ({ environmentsByT
             {environmentsByType[envType].map(env => (
               <Layout.Vertical
                 key={env.identifier}
-                padding={{ left: 'medium', right: 'medium' }}
+                padding="medium"
                 margin="small"
                 background={Color.WHITE}
                 height="100%"
                 flex={{ alignItems: 'start', justifyContent: 'space-around' }}
                 className={css.flagEnvironmentStatus}
+                data-testid="flagEnvironmentStatus"
               >
                 <Text color={Color.GREY_800} font={{ variation: FontVariation.BODY2 }}>
                   {env.name}

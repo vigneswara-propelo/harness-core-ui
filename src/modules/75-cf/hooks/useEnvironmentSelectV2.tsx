@@ -73,7 +73,7 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
     loading: loadingAllEnvironmentsFlags,
     error: fetchAllEnvironmentsFlagsError,
     data: allEnvironmentsFlags,
-    refetch: refetchAllEnvironmentssFlags
+    refetch: refetchAllEnvironmentsFlags
   } = useGetAllEnvironmentsFlags({
     identifier: projectIdentifier,
     queryParams,
@@ -154,7 +154,7 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
             if (selectedEnvironment?.value !== opt.value) {
               setSelectedEnvironment(opt)
               if (opt.value === getString('common.allEnvironments')) {
-                refetchAllEnvironmentssFlags()
+                refetchAllEnvironmentsFlags()
               } else {
                 onChange(
                   opt,

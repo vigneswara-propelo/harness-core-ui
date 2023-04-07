@@ -17,23 +17,20 @@ import FlagOptionsMenuButton from '@cf/components/FlagOptionsMenuButton/FlagOpti
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { formatDate } from '@cf/utils/CFUtils'
 import FlagEnvironmentsState from './FlagEnvironmentsState'
-
 export interface AllEnvironmentsFlagsListingProps {
   environments: EnvironmentResponseDTO[]
   allEnvironmentsFlags: AllEnvironmentsFlags
   refetchFlags: () => void
   deleteFlag: (data: string, mutateRequestOptions?: MutateRequestOptions<DeleteFeatureFlagQueryParams, void>) => void
   queryParams: DeleteFeatureFlagQueryParams
-  onRowClick: (flagId: string) => void
 }
 
-const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> = ({
+export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> = ({
   environments,
   allEnvironmentsFlags,
   refetchFlags,
   deleteFlag,
-  queryParams,
-  onRowClick
+  queryParams
 }) => {
   const prodEnvs = useMemo(() => environments.filter(e => e.type === 'Production'), [environments])
   const nonProdEnvs = useMemo(() => environments.filter(e => e.type === 'PreProduction'), [environments])
@@ -129,13 +126,7 @@ const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> = ({
     [nonProdEnvs, prodEnvs, queryParams, gitSync]
   )
 
-  return (
-    <TableV2<AllEnvironmentsFlag>
-      columns={allEnvironmentsColumns}
-      data={allEnvironmentsFlags?.flags || []}
-      onRowClick={feature => onRowClick(feature.identifier)}
-    />
-  )
+  return <TableV2<AllEnvironmentsFlag> columns={allEnvironmentsColumns} data={allEnvironmentsFlags?.flags || []} />
 }
 
 export default AllEnvironmentsFlagsListing
