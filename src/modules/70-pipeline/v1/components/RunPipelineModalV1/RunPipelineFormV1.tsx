@@ -143,7 +143,8 @@ function RunPipelineFormV1Basic({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      pipelineIdentifier
     }
   })
 

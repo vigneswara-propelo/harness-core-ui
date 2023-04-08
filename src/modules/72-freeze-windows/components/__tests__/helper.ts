@@ -41,5 +41,10 @@ export const resources: ResourcesInterface = {
   loadingOrgs: false,
   loadingProjects: false,
   fetchOrgResetQuery: () => null,
-  fetchProjectsResetQuery: () => null
+  fetchProjectsResetQuery: () => null,
+  fetchPipelinesByQuery: () => null,
+  fetchPipelinesResetQuery: () => null,
+  pipelineOptions: [],
+  pipelinesMap: {},
+  loadingPipelines: false
 }

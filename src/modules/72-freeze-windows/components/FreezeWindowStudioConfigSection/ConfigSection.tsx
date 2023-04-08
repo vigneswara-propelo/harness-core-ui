@@ -150,7 +150,9 @@ const ConfigsSection = (
                 [FIELD_KEYS.Environment, FIELD_KEYS.Org],
                 [FIELD_KEYS.Service, FIELD_KEYS.Proj],
                 [FIELD_KEYS.Environment, FIELD_KEYS.Proj],
-                [FIELD_KEYS.Service, FIELD_KEYS.Environment]
+                [FIELD_KEYS.Service, FIELD_KEYS.Environment],
+                [FIELD_KEYS.Service, FIELD_KEYS.Pipeline],
+                [FIELD_KEYS.Environment, FIELD_KEYS.Pipeline]
               ]
             )
           )

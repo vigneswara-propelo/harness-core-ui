@@ -25,7 +25,10 @@ export enum FIELD_KEYS {
   ExcludeOrg = 'ExcludeOrg',
   Proj = 'Project',
   ExcludeProjCheckbox = 'ExcludeProjCheckbox',
-  ExcludeProj = 'ExcludeProj'
+  ExcludeProj = 'ExcludeProj',
+  Pipeline = 'Pipeline',
+  ExcludePipeline = 'ExcludePipeline',
+  ExcludePipelineCheckbox = 'ExcludePipelineCheckbox'
 }
 
 export interface EntityType {
@@ -88,6 +91,11 @@ export interface ResourcesInterface {
   loadingProjects: boolean
   fetchOrgResetQuery: () => void
   fetchProjectsResetQuery: (orgId: string) => void
+  fetchPipelinesByQuery: (query: string) => void
+  fetchPipelinesResetQuery: () => void
+  pipelineOptions: SelectOption[]
+  pipelinesMap: Record<string, SelectOption>
+  loadingPipelines: boolean
 }
 
 type OptionalFreezeListUrlQueryParams = Pick<GetFreezeListQueryParams, 'page' | 'size'> &

@@ -5026,13 +5026,17 @@ export interface StringsMap {
   'freezeWindows.freezeStudio.defineResources': string
   'freezeWindows.freezeStudio.excludeFollowingOrg': string
   'freezeWindows.freezeStudio.excludeFollowingOrgs': string
+  'freezeWindows.freezeStudio.excludeFollowingPipeline': string
+  'freezeWindows.freezeStudio.excludeFollowingPipelines': string
   'freezeWindows.freezeStudio.excludeFollowingProject': string
   'freezeWindows.freezeStudio.excludeFollowingProjects': string
   'freezeWindows.freezeStudio.excludeOrgs': string
+  'freezeWindows.freezeStudio.excludePipelines': string
   'freezeWindows.freezeStudio.excludeProjects': string
   'freezeWindows.freezeStudio.freezeCreatedSuccessfully': string
   'freezeWindows.freezeStudio.freezeUpdatedSuccessfully': string
   'freezeWindows.freezeWindowConfig.accountLevelValidationMsg': string
+  'freezeWindows.freezeWindowConfig.allPipelines': string
   'freezeWindows.freezeWindowConfig.orgLevelValidationMsg': string
   'freezeWindows.freezeWindowConfig.projLevelValidationMsg': string
   'freezeWindows.freezeWindowsPage.aboutFeezeWindows': string

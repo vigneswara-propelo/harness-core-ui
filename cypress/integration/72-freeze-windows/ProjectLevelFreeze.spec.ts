@@ -137,7 +137,7 @@ describe('Project Level Freeze', () => {
     // Go To YAML - validate YAML
     cy.contains('div[data-name="toggle-option-two"]', 'YAML').should('be.visible').click()
     cy.wait(500)
-    cy.get('.view-lines div').should('have.length', 30)
+    cy.get('.view-lines div').should('have.length', 34)
     cy.contains('span', 'freeze').should('be.visible')
     cy.contains('span', 'name:').should('be.visible')
     cy.contains('span', 'project level freeze').should('be.visible')
@@ -178,6 +178,8 @@ describe('Project Level Freeze', () => {
   entityConfigs:
     - name: Rule Number 1
       entities:
+        - type: Pipeline
+          filterType: All
         - type: Service
           filterType: Equals
           entityRefs:
@@ -192,6 +194,8 @@ describe('Project Level Freeze', () => {
             - Production
     - name: Rule Number 2
       entities:
+        - type: Pipeline
+          filterType: All
         - type: Service
           filterType: All
         - type: Environment
@@ -241,6 +245,8 @@ describe('Project Level Freeze', () => {
   entityConfigs:
     - name: Rule Number 1
       entities:
+        - type: Pipeline
+          filterType: All
         - type: Service
           filterType: Equals
           entityRefs:

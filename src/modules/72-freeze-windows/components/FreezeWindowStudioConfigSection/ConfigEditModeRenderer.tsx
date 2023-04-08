@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, FormikForm, FormInput, Layout, SelectOption, Text } from '@harness/uicore'
+import { Button, Container, FormikForm, FormInput, Layout, SelectOption, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { get, upperCase } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
@@ -19,7 +19,12 @@ import {
 } from '@freeze-windows/utils/FreezeWindowStudioUtil'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
-import { EnvironmentTypeRenderer, Organizationfield, ProjectField } from './FreezeStudioConfigSectionRenderers'
+import {
+  EnvironmentTypeRenderer,
+  Organizationfield,
+  PipelineField,
+  ProjectField
+} from './FreezeStudioConfigSectionRenderers'
 import css from './FreezeWindowStudioConfigSection.module.scss'
 
 interface ConfigEditModeRendererProps {
@@ -37,6 +42,7 @@ const showErrorFn = (values: any, freezeWindowLevel: FreezeWindowLevels): boolea
   const envValue = get(values, FIELD_KEYS.Environment)?.length
   const projValue = get(values, FIELD_KEYS.Proj)?.length
   const orgValue = get(values, FIELD_KEYS.Org)?.length
+  const pipelineValue = get(values, FIELD_KEYS.Pipeline)?.length
 
   if (freezeWindowLevel === FreezeWindowLevels.ORG) {
     if (!serviceValue && !envValue && !projValue) {
@@ -51,7 +57,7 @@ const showErrorFn = (values: any, freezeWindowLevel: FreezeWindowLevels): boolea
   }
 
   if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
-    if (!serviceValue && !envValue) {
+    if (!serviceValue && !envValue && !pipelineValue) {
       return true
     }
   }
@@ -346,6 +352,22 @@ export const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
               </Layout.Horizontal>
             )}
           </Layout.Horizontal>
+          <Container width={'400px'}>
+            {fieldsVisibility.showPipelineField ? (
+              <PipelineField
+                getString={getString}
+                namePrefix={`entity[${index}]`}
+                values={formikProps.values?.entity?.[index] || {}}
+                formikValues={formikProps.values}
+                setValues={formikProps.setValues}
+                setFieldValue={formikProps.setFieldValue}
+                resources={resources}
+                fetchPipelinesByQuery={resources.fetchPipelinesByQuery}
+                loadingPipelines={resources.loadingPipelines}
+                fetchPipelinesResetQuery={resources.fetchPipelinesResetQuery}
+              />
+            ) : null}
+          </Container>
         </Layout.Vertical>
       </Layout.Vertical>
     </FormikForm>

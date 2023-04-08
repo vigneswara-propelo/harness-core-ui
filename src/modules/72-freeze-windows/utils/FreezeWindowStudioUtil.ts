@@ -42,9 +42,12 @@ export const allServicesObj = (getString: UseStringsReturn['getString']) => ({
   label: getString('common.allServices'),
   value: 'All'
 })
-
 export const allEnvironmentsObj = (getString: UseStringsReturn['getString']) => ({
   label: getString('common.allEnvironments'),
+  value: 'All'
+})
+export const allPipelinesObj = (getString: UseStringsReturn['getString']) => ({
+  label: getString('freezeWindows.freezeWindowConfig.allPipelines'),
   value: 'All'
 })
 
@@ -64,6 +67,10 @@ export const ExcludeFieldKeys = {
   [FIELD_KEYS.Proj]: {
     CheckboxKey: FIELD_KEYS.ExcludeProjCheckbox,
     ExcludeFieldKey: FIELD_KEYS.ExcludeProj
+  },
+  [FIELD_KEYS.Pipeline]: {
+    CheckboxKey: FIELD_KEYS.ExcludePipelineCheckbox,
+    ExcludeFieldKey: FIELD_KEYS.ExcludePipeline
   }
 }
 
@@ -103,17 +110,21 @@ export const getInitialValues = (freezeObj: any) => {
 export interface FieldVisibility {
   showOrgField: boolean
   showProjectField: boolean
+  showPipelineField: boolean
   freezeWindowLevel: FreezeWindowLevels
 }
 
 export const getFieldsVisibility = (freezeWindowLevel: FreezeWindowLevels): FieldVisibility => {
-  const obj = { showOrgField: false, showProjectField: false, freezeWindowLevel }
+  const obj = { showOrgField: false, showProjectField: false, showPipelineField: false, freezeWindowLevel }
   if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
     obj.showOrgField = true
     obj.showProjectField = true
   }
   if (freezeWindowLevel === FreezeWindowLevels.ORG) {
     obj.showProjectField = true
+  }
+  if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
+    obj.showPipelineField = true
   }
   return obj
 }
@@ -134,6 +145,9 @@ const selectedValueForFilterTypeAll = (type: string, getString: UseStringsReturn
   }
   if (type === FIELD_KEYS.Environment) {
     return [allEnvironmentsObj(getString)]
+  }
+  if (type === FIELD_KEYS.Pipeline) {
+    return [allPipelinesObj(getString)]
   }
 }
 
@@ -171,6 +185,9 @@ const equalsOptions = (type: FIELD_KEYS, entityRefs: string[], resources: Resour
   }
   if (type === FIELD_KEYS.Org) {
     return makeOptions(resources.orgsMap, entityRefs)
+  }
+  if (type === FIELD_KEYS.Pipeline) {
+    return makeOptions(resources.pipelinesMap, entityRefs)
   }
 
   // Single Select Field
@@ -226,7 +243,7 @@ export const getInitialValuesForConfigSection = (
         )
         // equals
       } else if (filterType === 'NotEquals') {
-        const excludeFieldKeys = ExcludeFieldKeys[type as 'Org' | 'Project']
+        const excludeFieldKeys = ExcludeFieldKeys[type as 'Org' | 'Project' | 'Pipeline']
         if (excludeFieldKeys) {
           const { CheckboxKey, ExcludeFieldKey } = excludeFieldKeys
           set(initialValues, `entity[${i}].${type}`, selectedValueForFilterTypeAll(type, getString))
@@ -350,6 +367,31 @@ const adaptForProjectField = (newValues: any, entities: EntityType[]) => {
   updateEntities(obj, entities, index)
 }
 
+const adaptForPipelineField = (newValues: any, entities: EntityType[]) => {
+  const fieldKey = FIELD_KEYS.Pipeline
+  const { isAllSelected, obj, index, isNewValueEmpty } = getMetaDataForField(fieldKey, entities, newValues)
+
+  // Value is empty initially and later also
+  if (index < 0 && !newValues[fieldKey]) {
+    return
+  }
+
+  if (isAllSelected) {
+    const hasExcludedPipeline =
+      newValues[FIELD_KEYS.ExcludePipelineCheckbox] && !isEmpty(newValues[FIELD_KEYS.ExcludePipeline])
+    obj.filterType = hasExcludedPipeline ? 'NotEquals' : 'All'
+    if (hasExcludedPipeline) {
+      obj.entityRefs.push(...(newValues[FIELD_KEYS.ExcludePipeline]?.map((field: SelectOption) => field.value) || []))
+    }
+  } else if (isNewValueEmpty) {
+    // Do Nothing here
+  } else {
+    obj.filterType = 'Equals'
+    obj.entityRefs.push(...(newValues[fieldKey]?.map((field: SelectOption) => field.value) || []))
+  }
+  updateEntities(obj, entities, index)
+}
+
 const adaptForServiceEnvField = (newValues: any, entities: EntityType[], fieldKeys: FIELD_KEYS) => {
   const fieldKey = fieldKeys
   const { isAllSelected, obj, index, isNewValueEmpty } = getMetaDataForField(fieldKey, entities, newValues)
@@ -402,6 +444,7 @@ export const convertValuesToYamlObj = (currentValues: any, newValues: any, field
   if (fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.PROJECT) {
     adaptForServiceEnvField(newValues, entities, FIELD_KEYS.Service)
     adaptForServiceEnvField(newValues, entities, FIELD_KEYS.Environment)
+    adaptForPipelineField(newValues, entities)
   }
 
   if (fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.ORG) {
@@ -427,6 +470,12 @@ export const getEmptyEntityConfig = (fieldsVisibility: FieldVisibility): EntityC
       filterType: 'All'
     })
   }
+  if (fieldsVisibility.showPipelineField) {
+    entities.push({
+      type: FIELD_KEYS.Pipeline,
+      filterType: 'All'
+    })
+  }
   entities.push({ type: FIELD_KEYS.Service, filterType: 'All' })
   entities.push({ type: FIELD_KEYS.Environment, filterType: 'All' })
   entities.push({ type: FIELD_KEYS.EnvType, filterType: 'All' })
@@ -439,13 +488,17 @@ export const getEmptyEntityConfig = (fieldsVisibility: FieldVisibility): EntityC
 export const getValidationSchema = (freezeWindowLevel: FreezeWindowLevels) => {
   if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
     return {
-      [FIELD_KEYS.Service]: Yup.string().when([FIELD_KEYS.Environment], {
-        is: val => !val?.length,
+      [FIELD_KEYS.Service]: Yup.string().when([FIELD_KEYS.Environment, FIELD_KEYS.Pipeline], {
+        is: (val1, val2) => !val1?.length && !val2?.length,
         then: Yup.string().required('Service is required')
       }),
-      [FIELD_KEYS.Environment]: Yup.string().when([FIELD_KEYS.Service], {
-        is: val => !val?.length,
+      [FIELD_KEYS.Environment]: Yup.string().when([FIELD_KEYS.Service, FIELD_KEYS.Pipeline], {
+        is: (val1, val2) => !val1?.length && !val2?.length,
         then: Yup.string().required('Environment is required')
+      }),
+      [FIELD_KEYS.Pipeline]: Yup.string().when([FIELD_KEYS.Service, FIELD_KEYS.Environment], {
+        is: (val1, val2) => !val1?.length && !val2?.length,
+        then: Yup.string().required('Pipeline is required')
       })
     }
   }

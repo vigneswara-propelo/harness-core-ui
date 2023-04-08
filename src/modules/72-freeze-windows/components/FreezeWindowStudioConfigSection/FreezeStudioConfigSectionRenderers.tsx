@@ -14,7 +14,12 @@ import { Color } from '@harness/design-system'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import type { UseStringsReturn } from 'framework/strings'
 import { EntityType, EnvironmentType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
-import { allProjectsObj, getEnvTypeMap, isAllOptionSelected } from '@freeze-windows/utils/FreezeWindowStudioUtil'
+import {
+  allPipelinesObj,
+  allProjectsObj,
+  getEnvTypeMap,
+  isAllOptionSelected
+} from '@freeze-windows/utils/FreezeWindowStudioUtil'
 import css from './FreezeWindowStudioConfigSection.module.scss'
 
 const All = 'All'
@@ -62,6 +67,13 @@ const getProjNameKeys = (namePrefix: string) => {
   const projCheckBoxName = `${namePrefix}.${FIELD_KEYS.ExcludeProjCheckbox}`
   const excludeProjName = `${namePrefix}.${FIELD_KEYS.ExcludeProj}`
   return { projFieldName, projCheckBoxName, excludeProjName }
+}
+
+const getPipelineNameKeys = (namePrefix: string) => {
+  const pipelineFieldName = `${namePrefix}.${FIELD_KEYS.Pipeline}`
+  const pipelineCheckBoxName = `${namePrefix}.${FIELD_KEYS.ExcludePipelineCheckbox}`
+  const excludePipelineName = `${namePrefix}.${FIELD_KEYS.ExcludePipeline}`
+  return { pipelineFieldName, pipelineCheckBoxName, excludePipelineName }
 }
 
 interface OrganizationfieldPropsInterface {
@@ -324,6 +336,106 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   )
 }
 
+interface PipelineFieldPropsInterface {
+  getString: UseStringsReturn['getString']
+  namePrefix: string
+  resources: ResourcesInterface
+  values: any
+  setFieldValue: any
+  formikValues: any
+  setValues: any
+  fetchPipelinesByQuery: (query: string) => void
+  loadingPipelines: boolean
+  fetchPipelinesResetQuery: () => void
+}
+export const PipelineField: React.FC<PipelineFieldPropsInterface> = ({
+  getString,
+  namePrefix,
+  resources,
+  values,
+  setFieldValue,
+  formikValues,
+  setValues,
+  fetchPipelinesByQuery,
+  loadingPipelines,
+  fetchPipelinesResetQuery
+}) => {
+  const { pipelineOptions } = resources
+  const [excludePipelines, setExcludePipelines] = React.useState(pipelineOptions)
+  const pipelineValue = values[FIELD_KEYS.Pipeline]
+  const excludePipelineValue = values[FIELD_KEYS.ExcludePipelineCheckbox]
+  const isCheckBoxEnabled = isAllOptionSelected(pipelineValue) && pipelineValue?.length === 1
+  const { excludePipelineName, pipelineCheckBoxName, pipelineFieldName } = getPipelineNameKeys(namePrefix)
+  const [allPipeline, setAllPipeline] = React.useState<SelectOption[]>([])
+
+  React.useEffect(() => {
+    if (pipelineOptions?.length) {
+      setAllPipeline([allPipelinesObj(getString), ...pipelineOptions])
+      setExcludePipelines(pipelineOptions)
+    }
+  }, [pipelineOptions])
+  return (
+    <>
+      <FormInput.MultiSelect
+        name={pipelineFieldName}
+        items={allPipeline}
+        label={getString('pipelines')}
+        className={css.tagInputStyle}
+        usePortal
+        tagInputProps={{ rightElement: renderSearchLoading(loadingPipelines) } as unknown as ITagInputProps}
+        multiSelectProps={{
+          onQueryChange(query: string) {
+            query ? fetchPipelinesByQuery(query) : fetchPipelinesResetQuery()
+          },
+          resetOnSelect: false,
+          resetOnQuery: false
+        }}
+        onChange={(selected?: SelectOption[]) => {
+          const isAllSelected = isAllOptionSelected(selected)
+          const isMultiSelected = (selected || []).length > 1
+
+          if (!isAllSelected || isMultiSelected) {
+            const clonedFormikValues = cloneDeep(formikValues)
+            set(clonedFormikValues, pipelineCheckBoxName, false)
+            set(clonedFormikValues, excludePipelineName, undefined)
+
+            // Set Pipeline field value
+            set(clonedFormikValues, pipelineFieldName, selected)
+            setValues(clonedFormikValues)
+          }
+        }}
+      />
+
+      <FormInput.CheckBox
+        name={pipelineCheckBoxName}
+        label={getString('freezeWindows.freezeStudio.excludePipelines')}
+        disabled={!isCheckBoxEnabled}
+        onChange={() => {
+          setFieldValue(excludePipelineName, undefined)
+        }}
+      />
+
+      {isCheckBoxEnabled && excludePipelineValue ? (
+        <FormInput.MultiSelect
+          className={css.tagInputStyle}
+          usePortal
+          tagInputProps={{ rightElement: renderSearchLoading(loadingPipelines) } as unknown as ITagInputProps}
+          multiSelectProps={{
+            onQueryChange(query: string) {
+              query ? fetchPipelinesByQuery(query) : fetchPipelinesResetQuery()
+            },
+            resetOnSelect: false,
+            resetOnQuery: false
+          }}
+          name={excludePipelineName}
+          items={excludePipelines}
+          style={{ marginLeft: '24px' }}
+        />
+      ) : null}
+    </>
+  )
+}
+
 export const EnvTypeRenderer: React.FC<{
   envType: EnvironmentType
   getString: UseStringsReturn['getString']
@@ -395,6 +507,69 @@ const ProjectLevelRender: React.FC<OrgProjAndServiceRendererPropsInterface> = ({
       </div>
     </>
   )
+}
+
+interface PipelineRendererPropsInterface {
+  entitiesMap: Record<FIELD_KEYS, EntityType>
+  pipelinesMap: Record<string, SelectOption>
+  getString: UseStringsReturn['getString']
+}
+
+const PipelineRenderer: React.FC<PipelineRendererPropsInterface> = ({ entitiesMap, pipelinesMap, getString }) => {
+  const entityMap = entitiesMap[FIELD_KEYS.Pipeline]
+  const filterType = entityMap?.filterType || All
+  const selectedItemIds = entityMap?.entityRefs || []
+  let nodesEl = null
+  if (filterType === All || selectedItemIds.length === 0) {
+    const nodes = <span className={css.badge}>{allPipelinesObj(getString).label}</span>
+    nodesEl = (
+      <>
+        <span>{getString('pipelines')}:</span> {nodes}
+      </>
+    )
+  } else if (filterType === NotEquals) {
+    const nodes = selectedItemIds.map(itemId => {
+      return (
+        <span key={itemId} className={css.badge}>
+          {pipelinesMap[itemId]?.label || itemId}
+        </span>
+      )
+    })
+
+    return (
+      <>
+        <div className={classnames(css.viewRowNode, css.marginSmaller)}>
+          <span>{getString('pipelines')}:</span> <span className={css.badge}>{allPipelinesObj(getString)?.label}</span>
+        </div>
+        <div className={css.viewRowNode}>
+          <span>
+            {getString(
+              selectedItemIds.length === 1
+                ? 'freezeWindows.freezeStudio.excludeFollowingPipeline'
+                : 'freezeWindows.freezeStudio.excludeFollowingPipelines'
+            )}
+            :
+          </span>{' '}
+          {nodes}
+        </div>
+      </>
+    )
+  } else if (filterType === Equals) {
+    const nodes = selectedItemIds.map(itemId => {
+      return (
+        <span key={itemId} className={css.badge}>
+          {pipelinesMap[itemId]?.label || itemId}
+        </span>
+      )
+    })
+    nodesEl = (
+      <>
+        <span>{getString('pipelines')}:</span> {nodes}
+      </>
+    )
+  }
+
+  return <div className={css.viewRowNode}>{nodesEl}</div>
 }
 
 const AccountLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = ({
@@ -558,12 +733,15 @@ export const OrgProjAndServiceRenderer: React.FC<OrgProjAndServiceRendererPropsI
 }) => {
   if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
     return (
-      <ProjectLevelRender
-        entitiesMap={entitiesMap}
-        resources={resources}
-        getString={getString}
-        freezeWindowLevel={freezeWindowLevel}
-      />
+      <>
+        <ProjectLevelRender
+          entitiesMap={entitiesMap}
+          resources={resources}
+          getString={getString}
+          freezeWindowLevel={freezeWindowLevel}
+        />
+        <PipelineRenderer entitiesMap={entitiesMap} pipelinesMap={resources.pipelinesMap || {}} getString={getString} />
+      </>
     )
   }
   if (freezeWindowLevel === FreezeWindowLevels.ORG) {

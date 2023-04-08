@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { debounce } from 'lodash-es'
+import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import type { SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import {
@@ -22,11 +22,13 @@ import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext
 import {
   allEnvironmentsObj,
   allOrgsObj,
+  allPipelinesObj,
   allProjectsObj,
   allServicesObj
 } from '@freeze-windows/utils/FreezeWindowStudioUtil'
 import { useMutateAsGet } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useGetPipelineList } from 'services/pipeline-ng'
 
 export const useFreezeStudioData = (): ResourcesInterface => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -78,6 +80,24 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     lazy: true
   })
 
+  const {
+    data: pipelinesData,
+    loading: fetchingPipelines,
+    refetch: refetchPipelines
+  } = useMutateAsGet(useGetPipelineList, {
+    body: {
+      filterType: 'PipelineSetup'
+    },
+    queryParamStringifyOptions: { arrayFormat: 'comma' },
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      size: 200
+    },
+    lazy: true
+  })
+
   const [orgs, setOrgs] = React.useState<SelectOption[]>([])
   const [orgsMap, setOrgsMap] = React.useState<Record<string, SelectOption>>({
     All: allOrgsObj(getString)
@@ -88,6 +108,11 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     All: allProjectsObj(getString)
   })
   const [projectsByOrgId, setProjectsByOrgId] = React.useState<Record<string, ProjctsByOrgId>>({})
+
+  const [pipelineOptions, setPipelineOptions] = React.useState<SelectOption[]>([])
+  const [pipelinesMap, setPipelinesMap] = React.useState<Record<string, SelectOption>>({
+    All: allPipelinesObj(getString)
+  })
 
   const [services, setServices] = React.useState<SelectOption[]>([allServicesObj(getString)])
   const [servicesMap, setServicesMap] = React.useState<Record<string, SelectOption>>({
@@ -196,6 +221,35 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     }
   }, [orgIdentifier, freezeWindowLevel])
 
+  React.useEffect(() => {
+    if (!fetchingPipelines && pipelinesData?.data?.content) {
+      const pipelineMap: Record<string, SelectOption> = { All: allPipelinesObj(getString) }
+
+      const pipelineDataToOptions = pipelinesData.data.content.map(pipelineResponse => {
+        const label = defaultTo(pipelineResponse?.name, '')
+        const value = defaultTo(pipelineResponse?.identifier, '')
+        const obj = {
+          label,
+          value
+        }
+        pipelineMap[value] = obj
+        return obj
+      })
+
+      const adaptedPipelinesData = pipelineDataToOptions.filter(item => !isEmpty(item.value))
+      if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
+        setPipelineOptions(adaptedPipelinesData)
+        setPipelinesMap(pipelineMap)
+      }
+    }
+  }, [fetchingPipelines, pipelinesData?.data?.content])
+
+  React.useEffect(() => {
+    if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
+      refetchPipelines()
+    }
+  }, [freezeWindowLevel])
+
   const fetchProjectsForOrgId = debounce((_orgIdentifier: string) => {
     if (!_orgIdentifier) return
     refetchProjects({
@@ -258,6 +312,32 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     fetchOrgs('')
   }, 5000)
 
+  const fetchPipelinesWithSearch = (query: string): void => {
+    if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
+      refetchPipelines({
+        body: {
+          filterType: 'PipelineSetup'
+        },
+        queryParamStringifyOptions: { arrayFormat: 'comma' },
+        queryParams: {
+          accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
+          size: 200,
+          searchTerm: (query || '').trim()
+        }
+      })
+    }
+  }
+  const fetchPipelinesByQuery = debounce((query: string) => {
+    fetchPipelinesWithSearch(query)
+  }, 500)
+
+  //additional debounce when we have to reset the options, so that user have enough time to select multiple from current search result.
+  const fetchPipelinesResetQuery = debounce(() => {
+    fetchPipelinesWithSearch('')
+  }, 5000)
+
   return {
     orgs,
     orgsMap,
@@ -275,6 +355,11 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     loadingOrgs,
     loadingProjects,
     fetchOrgResetQuery,
-    fetchProjectsResetQuery
+    fetchProjectsResetQuery,
+    fetchPipelinesByQuery,
+    fetchPipelinesResetQuery,
+    pipelineOptions,
+    pipelinesMap,
+    loadingPipelines: fetchingPipelines
   }
 }

@@ -616,6 +616,10 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
               </div>
             </div>
           </div>
+          <div
+            class="StyledProps--font StyledProps--main"
+            style="width: 400px;"
+          />
         </div>
       </div>
     </div>
@@ -963,6 +967,142 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
               </div>
             </div>
           </div>
+          <div
+            class="StyledProps--font StyledProps--main"
+            style="width: 400px;"
+          >
+            <div
+              class="bp3-form-group tagInputStyle"
+              data-id="entity[0].Pipeline-6"
+            >
+              <label
+                class="bp3-label"
+                for="entity[0].Pipeline"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="freezeWindowStudioConfigForm_entity[0].Pipeline"
+                >
+                  pipelines
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-popover-wrapper MultiSelect--main bp3-fill"
+                >
+                  <div
+                    class="bp3-popover-target"
+                  >
+                    <div
+                      class=""
+                    >
+                      <div
+                        class="bp3-input bp3-tag-input bp3-multi-select"
+                      >
+                        <div
+                          class="bp3-tag-input-values"
+                        >
+                          <span
+                            class="bp3-tag MultiSelect--tag"
+                            data-tag-index="0"
+                          >
+                            <span
+                              class="bp3-text-overflow-ellipsis bp3-fill"
+                            >
+                              freezeWindows.freezeWindowConfig.allPipelines
+                            </span>
+                            <button
+                              class="bp3-tag-remove"
+                              type="button"
+                            >
+                              <span
+                                class="bp3-icon bp3-icon-small-cross"
+                                icon="small-cross"
+                              >
+                                <svg
+                                  data-icon="small-cross"
+                                  height="16"
+                                  viewBox="0 0 16 16"
+                                  width="16"
+                                >
+                                  <desc>
+                                    small-cross
+                                  </desc>
+                                  <path
+                                    d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                          <input
+                            autocomplete="off"
+                            class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                            name="entity[0].Pipeline"
+                            value=""
+                          />
+                        </div>
+                        <span
+                          class="bp3-icon StyledProps--main StyledProps--margin-top-xsmall StyledProps--margin-right-medium"
+                          data-icon="spinner"
+                        >
+                          <svg
+                            fill="none"
+                            height="18"
+                            viewBox="0 0 36 36"
+                            width="18"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+                              stroke="currentColor"
+                              stroke-dasharray="75,100"
+                              stroke-linecap="round"
+                              stroke-width="2.8"
+                              style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group"
+              data-id="entity[0].ExcludePipelineCheckbox-7"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="entity[0].ExcludePipelineCheckbox"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="freezeWindowStudioConfigForm_entity[0].ExcludePipelineCheckbox"
+                  >
+                    freezeWindows.freezeStudio.excludePipelines
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1015,6 +1155,20 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
           class="badge"
         >
           common.allEnvironments
+        </span>
+      </div>
+      <div
+        class="viewRowNode"
+      >
+        <span>
+          pipelines
+          :
+        </span>
+         
+        <span
+          class="badge"
+        >
+          freezeWindows.freezeWindowConfig.allPipelines
         </span>
       </div>
       <h3
