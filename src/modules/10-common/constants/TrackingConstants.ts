@@ -14,7 +14,8 @@ export enum PageNames {
 export enum PurposeActions {
   ModuleContinue = 'Purpose Continue click',
   CDModuleContinue = 'CD Welcome Page Continue Clicked',
-  CDCGModuleSelected = 'CD Current Gen Continue Clicked'
+  CDCGModuleSelected = 'CD Current Gen Continue Clicked',
+  LearnMoreClicked = 'Purpose Learn More Clicked'
 }
 
 export enum TrialActions {
@@ -377,4 +378,9 @@ export enum CDOnboardingActions {
 export enum CFOverviewActions {
   OverviewStartFreePlan = 'FF Overview - Start a free plan',
   InviteCollaboratorsClick = 'Clicked Invite Collaborators'
+}
+
+export enum PLG_ELEMENTS {
+  RIGHT_COLUMN = 'Right column list',
+  MODULE_CARD = 'Module card'
 }
