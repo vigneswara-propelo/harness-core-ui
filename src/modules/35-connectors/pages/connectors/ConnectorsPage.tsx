@@ -76,7 +76,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CE_CONNECTOR_CLICK, CONNECTORS_PAGE } from '@connectors/trackingConstants'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { resourceAttributeMap } from '@rbac/pages/ResourceGroupDetails/utils'
-import { SettingType } from '@default-settings/interfaces/SettingType.types'
+import { SettingType } from '@common/constants/Utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectorsListView from './views/ConnectorsListView'
 import {

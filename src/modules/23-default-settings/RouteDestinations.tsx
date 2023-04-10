@@ -25,8 +25,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String, useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
+import { SettingType } from '@common/constants/Utils'
 import DefaultSettingsFactory from './factories/DefaultSettingsFactory'
-import { SettingType } from './interfaces/SettingType.types'
 import {
   DefaultSettingCheckBoxWithTrueAndFalse,
   DefaultSettingDurationField,
