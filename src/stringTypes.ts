@@ -136,6 +136,7 @@ export interface StringsMap {
   'common.blank': string
   'common.branchName': string
   'common.bucketName': string
+  'common.buildsIn': string
   'common.by': string
   'common.byType': string
   'common.cantDeleteEntity': string
@@ -335,6 +336,7 @@ export interface StringsMap {
   'common.extendTrial.feedback.suggestion': string
   'common.extendTrial.feedback.title': string
   'common.extendTrial.heading': string
+  'common.failedCount': string
   'common.failureRate': string
   'common.false': string
   'common.favorites': string
@@ -1111,6 +1113,7 @@ export interface StringsMap {
   'common.subscriptions.usage.stoScans': string
   'common.subscriptions.usage.stoScansTooltip': string
   'common.subtotal': string
+  'common.successCount': string
   'common.successfullCreate': string
   'common.successfullUpdate': string
   'common.successfullyAdded': string
