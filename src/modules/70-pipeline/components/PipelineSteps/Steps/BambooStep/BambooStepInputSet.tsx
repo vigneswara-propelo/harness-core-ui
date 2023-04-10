@@ -118,7 +118,7 @@ function BambooStepInputSet(
     }
   }, [plansResponse?.data?.planKeys])
 
-  const jobParameters = get(formik?.values, `${prefix}spec.planParameter`)
+  const jobParameters = get(formik?.values, `${prefix}spec.planParameter`) || []
   const planPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={loadingPlans} />
   ))
