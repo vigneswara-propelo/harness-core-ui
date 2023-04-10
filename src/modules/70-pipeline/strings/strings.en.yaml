@@ -247,6 +247,7 @@ jiraUpdateStep:
   fetchingStatus: Fetching Status List...
   selectStatus: Select Status
   projectIssueKeyDisclaimer: Only permitted fields are being displayed. Please check if there are sufficient permissions in Jira to perform this action.
+  statusDisclaimer: Only permitted statuses are being displayed. Please check if there are sufficient permissions in Jira to perform this action.
   validations:
     status: Status is required with transition.
 approvalCriteria:

@@ -4236,6 +4236,7 @@ export interface StringsMap {
   'pipeline.jiraUpdateStep.fetchingStatus': string
   'pipeline.jiraUpdateStep.projectIssueKeyDisclaimer': string
   'pipeline.jiraUpdateStep.selectStatus': string
+  'pipeline.jiraUpdateStep.statusDisclaimer': string
   'pipeline.jiraUpdateStep.statusTransitionAccordion': string
   'pipeline.jiraUpdateStep.transitionLabel': string
   'pipeline.jiraUpdateStep.transitionPlaceholder': string
