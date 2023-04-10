@@ -71,6 +71,12 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.MANDATE_CUSTOM_WEBHOOK
   settingCategory: 'PMS'
 })
 
+DefaultSettingsFactory.registerSettingHandler(SettingType.ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY, {
+  label: 'defaultSettings.allowUserToMarkStepAsFailedExplicitly',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'PMS'
+})
+
 DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_GIT_COMMANDS, {
   label: 'defaultSettings.enableGitCommands',
   settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,

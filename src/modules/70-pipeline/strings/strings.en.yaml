@@ -509,6 +509,7 @@ failureStrategies:
     ProceedWithDefaultValues: Proceed with Default Values
     StepGroupRollback: Rollback Step Group
     MarkAsFailure: Mark As Failure
+    UserMarkedFailure: Mark Stage As Failed
   errorTypeLabels:
     Authentication: Authentication Errors
     Authorization: Authorization Errors
@@ -608,6 +609,7 @@ execution:
     abortedMessage: Stage "{{stageName}}" has been aborted successfully
     pausedMessage: Stage "{{stageName}}" execution will pause once the currently running steps have completed.
     resumedMessage: Stage  "{{stageName}}" has been resumed successfully
+    userMarkFailedMessage: Stage "{{stageName}}" has been marked failed.
   actions:
     resumePipeline: Resume Pipeline
     rerunPipeline: Re-run Pipeline
@@ -629,6 +631,8 @@ execution:
   dialogMessages:
     abortExecution: Are you sure you want to abort the execution?
     abortTitle: Abort Execution?
+    markAsFailedTitle: Mark stage as failed?
+    markAsFailedConfirmation: Are you sure you want to mark this stage as failed? Doing so will mark the stage as failed and trigger the respective failure strategy.
 resourceConstraints:
   title: Resource Constraint
   infoText: You have {{executioncount}} Pipeline {{executiontext}} queued for this {{infraEntityText}}. Only one execution on the same {{infraEntityText}} is allowed at a time.

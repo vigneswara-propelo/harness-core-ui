@@ -1594,6 +1594,7 @@ export interface StringsMap {
   'rbac.youAreNotAuthorizedTo': string
   'defaultSettings.allowDifferentRepoForInputSets': string
   'defaultSettings.allowOverrides': string
+  'defaultSettings.allowUserToMarkStepAsFailedExplicitly': string
   'defaultSettings.concurrentActivePipelineExecutions': string
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
@@ -3925,6 +3926,8 @@ export interface StringsMap {
   'pipeline.execution.currentExecution': string
   'pipeline.execution.dialogMessages.abortExecution': string
   'pipeline.execution.dialogMessages.abortTitle': string
+  'pipeline.execution.dialogMessages.markAsFailedConfirmation': string
+  'pipeline.execution.dialogMessages.markAsFailedTitle': string
   'pipeline.execution.elapsedTime': string
   'pipeline.execution.emptyStepGroup': string
   'pipeline.execution.ignoreFailedWarningText': string
@@ -3945,6 +3948,7 @@ export interface StringsMap {
   'pipeline.execution.stageActionMessages.abortedMessage': string
   'pipeline.execution.stageActionMessages.pausedMessage': string
   'pipeline.execution.stageActionMessages.resumedMessage': string
+  'pipeline.execution.stageActionMessages.userMarkFailedMessage': string
   'pipeline.execution.stageTitlePrefix': string
   'pipeline.execution.stagesExecuted': string
   'pipeline.execution.stepGroupTitlePrefix': string
@@ -4056,6 +4060,7 @@ export interface StringsMap {
   'pipeline.failureStrategies.strategiesLabel.Retry': string
   'pipeline.failureStrategies.strategiesLabel.StageRollback': string
   'pipeline.failureStrategies.strategiesLabel.StepGroupRollback': string
+  'pipeline.failureStrategies.strategiesLabel.UserMarkedFailure': string
   'pipeline.failureStrategies.tabHasErrors': string
   'pipeline.failureStrategies.title': string
   'pipeline.failureStrategies.validation.actionRequired': string

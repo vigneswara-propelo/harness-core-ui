@@ -80,5 +80,6 @@ export enum SettingType {
   PIPELINE_TIMEOUT = 'pipeline_timeout',
   STAGE_TIMEOUT = 'stage_timeout',
   STEP_TIMEOUT = 'step_timeout',
-  CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS = 'concurrent_active_pipeline_executions'
+  CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS = 'concurrent_active_pipeline_executions',
+  ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY = 'allow_user_to_mark_step_as_failed_explicitly'
 }
