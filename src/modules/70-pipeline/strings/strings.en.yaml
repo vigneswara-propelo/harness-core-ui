@@ -1220,6 +1220,8 @@ stepDescription:
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
   DeployCloudFunction: Deploy a Google function.
   DeployCloudFunctionRollback: Roll back the Google function.
+  DeployCloudFunctionGenOne: Deploy a Google function (Gen One).
+  DeployCloudFunctionRollbackGenOne: Roll back the Google function (Gen One).
   DeployCloudFunctionNoTrafficShift: Deploy a Google function and route traffic to it.
   DeployCloudFunctionTrafficShift: Shift traffic between the existing revision and the new revision of a Google function.
   createPR: Create PR

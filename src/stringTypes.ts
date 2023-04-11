@@ -4728,8 +4728,10 @@ export interface StringsMap {
   'pipeline.stepDescription.Container': string
   'pipeline.stepDescription.CustomApproval': string
   'pipeline.stepDescription.DeployCloudFunction': string
+  'pipeline.stepDescription.DeployCloudFunctionGenOne': string
   'pipeline.stepDescription.DeployCloudFunctionNoTrafficShift': string
   'pipeline.stepDescription.DeployCloudFunctionRollback': string
+  'pipeline.stepDescription.DeployCloudFunctionRollbackGenOne': string
   'pipeline.stepDescription.DeployCloudFunctionTrafficShift': string
   'pipeline.stepDescription.DockerHub': string
   'pipeline.stepDescription.ECR': string
