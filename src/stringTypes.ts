@@ -9078,6 +9078,10 @@ export interface StringsMap {
   'cv.slos.slis.evaluationType.window': string
   'cv.slos.slis.metricOptions.ratioBased': string
   'cv.slos.slis.metricOptions.thresholdBased': string
+  'cv.slos.slis.optionalConfig.consecutiveDuration': string
+  'cv.slos.slis.optionalConfig.consecutiveMinsMax': string
+  'cv.slos.slis.optionalConfig.consecutiveMinsMin': string
+  'cv.slos.slis.optionalConfig.consecutiveMinutesFromTheStartAs': string
   'cv.slos.slis.ratioMetricType.badRequestsByValidRequest': string
   'cv.slos.slis.ratioMetricType.badRequestsMetrics': string
   'cv.slos.slis.ratioMetricType.eventType': string
