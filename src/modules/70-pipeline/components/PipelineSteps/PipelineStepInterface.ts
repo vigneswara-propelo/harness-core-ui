@@ -160,7 +160,7 @@ export enum StepType {
   Burp = 'Burp',
   Snyk = 'Snyk',
   Grype = 'Grype',
-  Gitleaks = 'GitLeaks',
+  Gitleaks = 'Gitleaks',
   Sonarqube = 'Sonarqube',
   Zap = 'Zap',
   CodeQL = 'CodeQL',
