@@ -9209,10 +9209,12 @@ export interface StringsMap {
   'sto.continuous': string
   'sto.exemptions': string
   'sto.failedToGetIssueCounts': string
+  'sto.fetchingSecurityResults': string
   'sto.gettingStarted': string
   'sto.issues': string
   'sto.noSecurityIssues': string
   'sto.noSecurityResults': string
+  'sto.processingSecurityResults': string
   'sto.scans': string
   'sto.securityStage.description': string
   'sto.stepDescription.AWSECR': string
