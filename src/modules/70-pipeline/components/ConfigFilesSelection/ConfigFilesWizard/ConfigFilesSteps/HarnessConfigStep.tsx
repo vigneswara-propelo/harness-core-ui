@@ -12,7 +12,6 @@ import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import type { ConfigFileWrapper, StoreConfigWrapper } from 'services/cd-ng'
-import { StringUtils } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { FILE_TYPE_VALUES, prepareConfigFilesValue } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
@@ -138,16 +137,7 @@ export function HarnessConfigStep({
               <Form className={css.configContainer}>
                 <div className={css.headerContainer}>
                   <Label htmlFor="identifier">{getString('pipeline.configFiles.identifierLabel')}</Label>
-                  <FormInput.Text
-                    name="identifier"
-                    className={css.identifierField}
-                    onChange={e => {
-                      const { value } = e.target as HTMLInputElement
-                      if (value) {
-                        formikProps.setFieldValue('identifier', StringUtils.getIdentifierFromName(value))
-                      }
-                    }}
-                  />
+                  <FormInput.Text name="identifier" className={css.identifierField} isIdentifier={true} />
                   {!isEditState && (
                     <>
                       <Label className={css.fileTypeLabel} htmlFor="fileType">

@@ -3607,8 +3607,9 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactId': string
   'pipeline.artifactsSelection.artifactIdPlaceholder': string
   'pipeline.artifactsSelection.artifactPathPlaceholder': string
-  'pipeline.artifactsSelection.artifactSourceName': string
-  'pipeline.artifactsSelection.artifactSourceNameRegexErrorMsg': string
+  'pipeline.artifactsSelection.artifactSourceId': string
+  'pipeline.artifactsSelection.artifactSourceIdPlaceholder': string
+  'pipeline.artifactsSelection.artifactSourceIdRegexErrorMsg': string
   'pipeline.artifactsSelection.artifactType': string
   'pipeline.artifactsSelection.artifactTyperequired': string
   'pipeline.artifactsSelection.artifactsArrayPath': string

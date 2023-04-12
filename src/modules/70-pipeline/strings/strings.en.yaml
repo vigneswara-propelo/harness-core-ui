@@ -365,7 +365,7 @@ manifestType:
   InheritFromManifest: 'Inherit From Manifest'
   customRemote: 'Custom Remote'
   httpHelmRepoConnectorLabel: 'HTTP Helm'
-  manifestIdentifier: Manifest Name
+  manifestIdentifier: Manifest Identifier
   manifestIdentifierRegexErrorMsg: '{{$.pipeline.manifestType.manifestIdentifier}} must start with a letter or _ and can then be followed by alphanumerics, _, or $'
   manifestPlaceholder: Enter Manifest Name
   ociHelmConnectorLabel: OCI Helm
@@ -969,8 +969,9 @@ artifactsSelection:
   addSidecar: Add Sidecar
   feed: Feed
   feedPlaceholder: Select Feed
-  artifactSourceName: Artifact Source Name
-  artifactSourceNameRegexErrorMsg: '{{$.pipeline.artifactsSelection.artifactSourceName}} must start with a letter or _ and can then be followed by alphanumerics, _, or $'
+  artifactSourceId: Artifact Source Identifier
+  artifactSourceIdPlaceholder: Enter Artifact Source Identifier
+  artifactSourceIdRegexErrorMsg: '{{$.pipeline.artifactsSelection.artifactSourceId}} must start with a letter or _ and can then be followed by alphanumerics, _, or $'
   projectPlaceholder: Enter Project
   projectIDPlaceholder: Enter Project ID
   repositoryTypePlaceholder: Select Repository Type
@@ -1002,8 +1003,8 @@ artifactsSelection:
   githubPackageRegistryTitle: Github Package Registry
   AmazonMachineImageTitle: Amazon Machine Image
   existingDocker:
-    sidecarId: Sidecar Name
-    sidecarIdPlaceholder: Enter Artifact Name
+    sidecarId: Sidecar Identifier
+    sidecarIdPlaceholder: Enter Sidecar Identifier
     imageNamePlaceholder: Enter Image Path
     enterTagRegex: Enter Tag Regex
   validation:
