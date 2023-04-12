@@ -9177,32 +9177,14 @@ export interface StringsMap {
   'iacm.ansible': string
   'iacm.cdk': string
   'iacm.cloudformation': string
-  'iacm.createStack': string
   'iacm.navTitle': string
-  'iacm.permissions.iacmStack': string
-  'iacm.permissions.iacmStacks': string
+  'iacm.permissions.iacmWorkspace': string
+  'iacm.permissions.iacmWorkspaces': string
   'iacm.pulumi': string
-  'iacm.stackWizard.autoApprove': string
-  'iacm.stackWizard.autoApproveRequired': string
-  'iacm.stackWizard.connectorRequired': string
-  'iacm.stackWizard.gitFetchTypeRequired': string
-  'iacm.stackWizard.provisionerDetails': string
-  'iacm.stackWizard.provisionerType': string
-  'iacm.stackWizard.provisionerTypeRequired': string
-  'iacm.stackWizard.provisionerVersion': string
-  'iacm.stackWizard.provisionerVersionRequired': string
-  'iacm.stackWizard.repoConnectorTypeRequired': string
-  'iacm.stackWizard.repoDetails': string
-  'iacm.stackWizard.scriptsPath': string
-  'iacm.stackWizard.scriptsPathRequired': string
-  'iacm.stackWizard.selectGitConnector': string
-  'iacm.stackWizard.ttl': string
-  'iacm.stackWizard.ttlRequired': string
-  'iacm.stackWizard.workspaceRequired': string
-  'iacm.stacks': string
   'iacm.stageDescription': string
   'iacm.stageTitle': string
   'iacm.terragrunt': string
+  'iacm.workspaces': string
   'sto.Critical': string
   'sto.Info': string
   'sto.Unassigned': string
