@@ -5073,6 +5073,7 @@ export interface StringsMap {
   'freezeWindows.freezeWindowsPage.freezeWindow': string
   'freezeWindows.freezeWindowsPage.newFreezeWindow': string
   'freezeWindows.freezeWindowsPage.noFreezeWindows': string
+  'freezeWindows.freezeWindowsPage.selectDateRange': string
   'freezeWindows.freezeWindowsPage.updateStatusFailure': string
   'freezeWindows.freezeWindowsPage.updateStatusSuccess': string
   'freezeWindows.globalFreeze.disableFreezeFailure': string
