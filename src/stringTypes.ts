@@ -6086,9 +6086,9 @@ export interface StringsMap {
   'cd.steps.pdcStep.dynamicProvision': string
   'cd.steps.pdcStep.filterHostAttributes': string
   'cd.steps.pdcStep.filterHostName': string
+  'cd.steps.pdcStep.hostArrayPath': string
   'cd.steps.pdcStep.hostDataMapping': string
   'cd.steps.pdcStep.hostDataMappingEmptyKey': string
-  'cd.steps.pdcStep.hostObjectPath': string
   'cd.steps.pdcStep.hostObjectPathPlaceholder': string
   'cd.steps.pdcStep.hostnameRqrd': string
   'cd.steps.pdcStep.hostsOptional': string
