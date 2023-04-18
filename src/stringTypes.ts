@@ -4853,6 +4853,9 @@ export interface StringsMap {
   'pipeline.syncStep.validation.skipSchemaValidation': string
   'pipeline.tagDependencyRequired': string
   'pipeline.targets.title': string
+  'pipeline.templateAlreadyExists.confirmation': string
+  'pipeline.templateAlreadyExists.content': string
+  'pipeline.templateAlreadyExists.title': string
   'pipeline.templateInputs': string
   'pipeline.templateSaved': string
   'pipeline.terraformStep.discardPendingRuns': string
