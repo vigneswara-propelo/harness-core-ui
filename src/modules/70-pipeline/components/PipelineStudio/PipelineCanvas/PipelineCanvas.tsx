@@ -17,7 +17,8 @@ import {
   SelectOption,
   useConfirmationDialog,
   useToaster,
-  VisualYamlSelectedView as SelectedView
+  VisualYamlSelectedView as SelectedView,
+  ModalDialog
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { matchPath, useHistory, useParams } from 'react-router-dom'
@@ -261,13 +262,13 @@ export function PipelineCanvas({
 
   useSaveTemplateListener()
 
-  const getDialogWidth = (): string => {
+  const dialogWidth = React.useMemo<number | undefined>(() => {
     if (supportingGitSimplification) {
-      return '800px'
-    } else {
-      return isGitSyncEnabled ? '614px' : 'auto'
+      return 800
+    } else if (isGitSyncEnabled) {
+      return 614
     }
-  }
+  }, [supportingGitSimplification, isGitSyncEnabled])
 
   const [showModal, hideModal] = useModalHook(() => {
     if (getOtherModal) {
@@ -281,15 +282,10 @@ export function PipelineCanvas({
     } else {
       return (
         <PipelineVariablesContextProvider pipeline={pipeline} storeMetadata={storeMetadata}>
-          <Dialog
-            style={{
-              width: getDialogWidth(),
-              background: 'var(--form-bg)',
-              paddingTop: '36px'
-            }}
+          <ModalDialog
+            width={dialogWidth}
             enforceFocus={false}
             isOpen={true}
-            className={'padded-dialog'}
             onClose={onCloseCreate}
             title={modalMode === 'create' ? getString('moduleRenderer.newPipeLine') : getString('editPipeline')}
           >
@@ -307,7 +303,7 @@ export function PipelineCanvas({
               primaryButtonText={modalMode === 'create' ? getString('start') : getString('continue')}
               isReadonly={isReadonly}
             />
-          </Dialog>
+          </ModalDialog>
         </PipelineVariablesContextProvider>
       )
     }
