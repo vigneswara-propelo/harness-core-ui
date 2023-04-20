@@ -41,7 +41,6 @@ import '@sto/components/PipelineSteps'
 import { StepViewType } from '../AbstractSteps/Step'
 import type { StageSelectionData } from '../../utils/runPipelineUtils'
 import { getSelectedStagesFromPipeline } from './CommonUtils/CommonUtils'
-import type { CustomVariablesData } from '../PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { DeployServiceEntityData } from '../PipelineInputSetForm/ServicesInputSetForm/ServicesInputSetForm'
 import { validateOutputPanelInputSet } from '../CommonPipelineStages/PipelineStage/PipelineStageOutputSection/utils'
 import { getFailureStrategiesValidationSchema } from '../PipelineSteps/AdvancedSteps/FailureStrategyPanel/validation'
@@ -357,7 +356,6 @@ interface ValidateStageProps {
   viewType: StepViewType
   template?: StageElementConfig
   originalStage?: StageElementConfig
-  isOptionalVariableAllowed?: boolean
 }
 
 export const validateStage = ({
@@ -365,8 +363,7 @@ export const validateStage = ({
   template,
   viewType,
   originalStage,
-  getString,
-  isOptionalVariableAllowed
+  getString
 }: ValidateStageProps): FormikErrors<StageElementConfig> => {
   if (originalStage?.template) {
     const errors = validateStage({
@@ -374,8 +371,7 @@ export const validateStage = ({
       template: template?.template?.templateInputs as StageElementConfig,
       viewType,
       originalStage: originalStage.template.templateInputs as StageElementConfig,
-      getString,
-      isOptionalVariableAllowed
+      getString
     })
     if (!isEmpty(errors)) {
       return set({}, 'template.templateInputs', errors)
@@ -440,19 +436,6 @@ export const validateStage = ({
           set(errors, `spec.service.serviceInputs.serviceDefinition.spec`, serviceStepErrorResponse)
         }
       }
-      if (!isOptionalVariableAllowed && stageConfig?.service?.serviceInputs?.serviceDefinition?.spec?.variables) {
-        const currentStepForVariable = factory.getStep(StepType.CustomVariable)
-        const variablesErrorsResponse = currentStepForVariable?.validateInputSet({
-          data: stageConfig?.service?.serviceInputs?.serviceDefinition?.spec,
-          template: templateStageConfig?.service?.serviceInputs?.serviceDefinition?.spec,
-          getString,
-          viewType
-        }) as FormikErrors<CustomVariablesData>
-
-        if (!isEmpty(variablesErrorsResponse?.variables)) {
-          set(errors, 'spec.service.serviceInputs.serviceDefinition.spec.variables', variablesErrorsResponse.variables)
-        }
-      }
     }
     if (stage.type === 'Deployment' && templateStageConfig?.services) {
       const currentStep = factory.getStep(StepType.DeployServiceEntity)
@@ -480,23 +463,6 @@ export const validateStage = ({
           })
           if (!isEmpty(serviceStepErrorResponse)) {
             set(errors, `spec.services.values[${index}].serviceInputs.serviceDefinition.spec`, serviceStepErrorResponse)
-          }
-          if (!isOptionalVariableAllowed && serviceInput.serviceInputs?.serviceDefinition?.spec?.variables) {
-            const variablesStep = factory.getStep(StepType.CustomVariable)
-            const variablesErrorResponse = variablesStep?.validateInputSet({
-              data: serviceInput.serviceInputs?.serviceDefinition?.spec,
-              template: templateStageConfig?.services?.values?.[index].serviceInputs?.serviceDefinition.spec,
-              getString,
-              viewType
-            }) as FormikErrors<CustomVariablesData>
-
-            if (!isEmpty(variablesErrorResponse?.variables)) {
-              set(
-                errors,
-                `spec.services.values[${index}].serviceInputs.serviceDefinition.spec.variables`,
-                variablesErrorResponse.variables
-              )
-            }
           }
         })
       }
@@ -561,15 +527,6 @@ export const validateStage = ({
       )
     }
 
-    if (!isOptionalVariableAllowed && stage?.variables) {
-      const step = factory.getStep(StepType.CustomVariable)
-      const errorsResponse: any = step?.validateInputSet({ data: stage, template, getString, viewType })
-
-      if (!isEmpty(errorsResponse)) {
-        set(errors, 'variables', errorsResponse?.variables)
-      }
-    }
-
     if (stage?.failureStrategies && stage.failureStrategies?.length > 0) {
       const failureStrategySchema = getFailureStrategiesValidationSchema(getString)
       const failureStrategy = Yup.object().shape({
@@ -597,20 +554,6 @@ export const validateStage = ({
 
       if (!isEmpty(errorsResponse)) {
         set(errors, 'spec.serviceConfig.serviceDefinition.spec', errorsResponse)
-      }
-
-      if (!isOptionalVariableAllowed && stageConfig?.serviceConfig?.serviceDefinition?.spec?.variables) {
-        const currentStep = factory.getStep(StepType.CustomVariable)
-        const stepErrorsResponse = currentStep?.validateInputSet({
-          data: stageConfig?.serviceConfig?.serviceDefinition?.spec,
-          template: templateStageConfig?.serviceConfig?.serviceDefinition?.spec,
-          getString,
-          viewType
-        }) as FormikErrors<CustomVariablesData>
-
-        if (!isEmpty(stepErrorsResponse?.variables)) {
-          set(errors, 'spec.serviceConfig.serviceDefinition.spec.variables', stepErrorsResponse.variables)
-        }
       }
     }
 
@@ -684,7 +627,6 @@ interface ValidatePipelineProps {
   path?: string
   viewTypeMetadata?: { [key: string]: boolean }
   selectedStageData?: StageSelectionData
-  isOptionalVariableAllowed?: boolean
   stagesToExecute?: string[]
 }
 
@@ -893,7 +835,6 @@ export const validatePipeline = ({
   path,
   viewTypeMetadata,
   selectedStageData,
-  isOptionalVariableAllowed,
   stagesToExecute
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   if (template?.template) {
@@ -904,8 +845,7 @@ export const validatePipeline = ({
       originalPipeline: originalPipeline?.template?.templateInputs as PipelineInfoConfig,
       resolvedPipeline,
       getString,
-      viewTypeMetadata,
-      isOptionalVariableAllowed
+      viewTypeMetadata
     })
     if (!isEmpty(errors)) {
       return set({}, 'template.templateInputs', errors)
@@ -943,15 +883,6 @@ export const validatePipeline = ({
 
           Object.assign(errors, err)
         }
-      }
-    }
-
-    if (!isOptionalVariableAllowed && pipeline?.variables) {
-      const step = factory.getStep(StepType.CustomVariable)
-      const errorsResponse: any = step?.validateInputSet({ data: pipeline, template, getString, viewType })
-
-      if (!isEmpty(errorsResponse)) {
-        set(errors, 'variables', errorsResponse.variables)
       }
     }
     const stages = stagesToExecute?.length
@@ -1002,8 +933,7 @@ export const validatePipeline = ({
             getString,
             path,
             viewTypeMetadata,
-            selectedStageData,
-            isOptionalVariableAllowed
+            selectedStageData
           })
           if (!isEmpty(chainedPipelineErrorsResponse)) {
             set(
@@ -1018,8 +948,7 @@ export const validatePipeline = ({
             template: filteredTemplate?.stages?.[index]?.stage,
             originalStage: originalStage?.stage,
             getString,
-            viewType,
-            isOptionalVariableAllowed
+            viewType
           })
           if (!isEmpty(errorsResponse)) {
             set(errors, `${isEmpty(path) ? '' : `${path}.`}stages[${index}].stage`, errorsResponse)
@@ -1067,8 +996,7 @@ export const validatePipeline = ({
                 getString,
                 path,
                 viewTypeMetadata,
-                selectedStageData,
-                isOptionalVariableAllowed
+                selectedStageData
               })
               if (!isEmpty(chainedPipelineErrorsResponse)) {
                 set(
@@ -1083,8 +1011,7 @@ export const validatePipeline = ({
                 template: filteredTemplate?.stages?.[index].parallel?.[indexP]?.stage,
                 originalStage: originalStage?.stage,
                 getString,
-                viewType,
-                isOptionalVariableAllowed
+                viewType
               })
               if (!isEmpty(errorsResponse)) {
                 set(
