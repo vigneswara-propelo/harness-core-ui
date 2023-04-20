@@ -282,6 +282,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
         inputSetTemplateYamlObj?: {
           pipeline: PipelineInfoConfig | Record<string, never>
         }
+        stagesToExecute?: string[]
       }
   >({ triggerType: triggerTypeOnNew })
   const isCreatingNewTrigger = useMemo(() => !onEditInitialValues?.identifier, [onEditInitialValues?.identifier])
@@ -387,7 +388,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
         ...newOnEditInitialValues
       })
     }
-  }, [triggerIdentifier, triggerResponse, template])
+  }, [triggerIdentifier, triggerResponse, template, originalPipeline])
 
   const returnToTriggersPage = (): void => {
     history.push(
@@ -427,7 +428,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
           pipelineBranchName = getDefaultPipelineReferenceBranch(),
           inputSetRefs,
           source: { type },
-          source
+          source,
+          stagesToExecute
         }
       } = triggerResponseJson
 
@@ -443,7 +445,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
         selectedArtifact = {
           identifier: artifactRef,
           type: artifactManifestType || _artifactType,
-          spec
+          spec,
+          stagesToExecute
         }
       }
 
@@ -480,6 +483,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
         name,
         identifier,
         description,
+        stagesToExecute,
         tags,
         source,
         pipeline: pipelineJson,
@@ -535,12 +539,14 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
     latestPipeline,
     latestYamlTemplate,
     orgPipeline,
-    setSubmitting
+    setSubmitting,
+    stagesToExecute
   }: {
     latestPipeline: { pipeline: PipelineInfoConfig }
     latestYamlTemplate: PipelineInfoConfig
     orgPipeline: PipelineInfoConfig | undefined
     setSubmitting: (bool: boolean) => void
+    stagesToExecute?: string[]
   }): Promise<any> => {
     let errors = formErrors
     function validateErrors(): Promise<
@@ -562,7 +568,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
                 getString,
                 viewType: StepViewType.TriggerForm,
                 viewTypeMetadata: { isTrigger: true },
-                isOptionalVariableAllowed
+                isOptionalVariableAllowed,
+                stagesToExecute
               }) as any) || formErrors
             resolve(validatedErrors)
           } catch (e) {
@@ -714,7 +721,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
         resolvedPipeline: resolvedMergedPipeline,
         inputSetTemplateYamlObj,
         pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew) || branch,
-        selectedArtifact: {}
+        selectedArtifact: {},
+        stagesToExecute: newPipeline?.stagesToExecute
       }
     }
     return {}
@@ -1059,7 +1067,6 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
     if (triggerYaml) {
       latestPipelineFromYamlView = getTriggerPipelineValues(triggerYaml, formikProps)
     }
-
     const runPipelineFormErrors =
       isNewGitSyncRemotePipeline || formikProps.values.inputSetRefs?.length
         ? null
@@ -1067,7 +1074,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
             latestPipeline: latestPipelineFromYamlView || latestPipeline,
             latestYamlTemplate: yamlTemplate,
             orgPipeline: values.pipeline,
-            setSubmitting
+            setSubmitting,
+            stagesToExecute: formikProps.values?.stagesToExecute
           })
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)
