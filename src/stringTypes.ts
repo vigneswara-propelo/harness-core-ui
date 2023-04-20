@@ -1601,6 +1601,7 @@ export interface StringsMap {
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
   'defaultSettings.enableNodeExecutionAuditEvents': string
+  'defaultSettings.enforceGitExperience': string
   'defaultSettings.harnessDefault': string
   'defaultSettings.inheritedFrom': string
   'defaultSettings.mandateAuthorizationForCustomWebhookTriggers': string

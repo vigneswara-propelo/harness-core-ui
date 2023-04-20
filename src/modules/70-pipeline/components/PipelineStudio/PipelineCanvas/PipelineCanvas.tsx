@@ -41,6 +41,8 @@ import type {
   RunPipelineQueryParams
 } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
@@ -57,6 +59,8 @@ import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hoo
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { Pipeline } from '@pipeline/utils/types'
+import { SettingType } from '@common/constants/Utils'
+import { useGetSettingValue } from 'services/cd-ng'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
@@ -171,6 +175,7 @@ export function PipelineCanvas({
     PipelineType<PipelinePathProps> & GitQueryParams
   >()
   const history = useHistory()
+  const isSettingEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
 
   // For remote pipeline queryParam will always as branch as selected branch except coming from list view
   // While opeining studio from list view, selected branch can be any branch as in pipeline response
@@ -262,6 +267,36 @@ export function PipelineCanvas({
 
   useSaveTemplateListener()
 
+  const {
+    data: enforceGitXSetting,
+    error: enforceGitXSettingError,
+    loading: loadingSetting
+  } = useGetSettingValue({
+    identifier: SettingType.ENFORCE_GIT_EXPERIENCE,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: isGitSyncEnabled || !isSettingEnabled || pipelineIdentifier !== DefaultNewPipelineId
+  })
+
+  const getPipelineStoreType = (): StoreMetadata['storeType'] => {
+    if (enforceGitXSetting?.data?.value === 'true') {
+      return StoreType.REMOTE // Createing new with GitX enforced
+    } else {
+      return defaultTo(storeType, StoreType.INLINE) //Handle rest all use cases
+    }
+  }
+
+  React.useEffect(() => {
+    if (!loadingSetting) {
+      if (enforceGitXSettingError) {
+        showError(enforceGitXSettingError.message)
+      }
+    }
+  }, [enforceGitXSettingError, showError, loadingSetting])
+
   const dialogWidth = React.useMemo<number | undefined>(() => {
     if (supportingGitSimplification) {
       return 800
@@ -287,6 +322,7 @@ export function PipelineCanvas({
             enforceFocus={false}
             isOpen={true}
             onClose={onCloseCreate}
+            showOverlay={loadingSetting}
             title={modalMode === 'create' ? getString('moduleRenderer.newPipeLine') : getString('editPipeline')}
           >
             <CreatePipelines
@@ -295,13 +331,14 @@ export function PipelineCanvas({
                 repo: repoName || gitDetails.repoIdentifier || '',
                 branch: branch || gitDetails.branch || '',
                 connectorRef: defaultTo(connectorRef, ''),
-                storeType: defaultTo(storeType, StoreType.INLINE),
+                storeType: getPipelineStoreType(),
                 filePath: gitDetails.filePath
               })}
               closeModal={onCloseCreate}
               gitDetails={{ ...gitDetails, remoteFetchFailed: Boolean(remoteFetchError) } as IGitContextFormProps}
               primaryButtonText={modalMode === 'create' ? getString('start') : getString('continue')}
               isReadonly={isReadonly}
+              isGitXEnforced={enforceGitXSetting?.data?.value === 'true'}
             />
           </ModalDialog>
         </PipelineVariablesContextProvider>
@@ -310,6 +347,8 @@ export function PipelineCanvas({
   }, [
     supportingGitSimplification,
     isGitSyncEnabled,
+    loadingSetting,
+    enforceGitXSetting?.data?.value,
     pipeline,
     pipelineIdentifier,
     repoName,
