@@ -2,6 +2,7 @@ import {
   cdFailureStrategiesYaml,
   gitSyncEnabledCall,
   pageHeaderClassName,
+  featureFlagsCall,
   pipelinesRoute,
   pipelineVariablesCall
 } from '../../support/70-pipeline/constants'
@@ -12,6 +13,20 @@ describe('Pipeline Variables', () => {
     cy.intercept('GET', cdFailureStrategiesYaml, { fixture: 'pipeline/api/pipelines/failureStrategiesYaml' }).as(
       'cdFailureStrategiesYaml'
     )
+    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+      cy.intercept('GET', featureFlagsCall, {
+        ...featureFlagsData,
+        resource: [
+          ...featureFlagsData.resource,
+          {
+            uuid: null,
+            name: 'NG_EXPRESSIONS_NEW_INPUT_ELEMENT',
+            enabled: true,
+            lastUpdatedAt: 0
+          }
+        ]
+      }).as('enableFeatureFlag')
+    })
 
     cy.initializeRoute()
 

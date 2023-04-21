@@ -18,6 +18,12 @@ describe('EnvironmentsV2 Configuration Page', () => {
             name: 'NG_SVC_ENV_REDESIGN',
             enabled: true,
             lastUpdatedAt: 0
+          },
+          {
+            uuid: null,
+            name: 'NG_EXPRESSIONS_NEW_INPUT_ELEMENT',
+            enabled: true,
+            lastUpdatedAt: 0
           }
         ]
       })
