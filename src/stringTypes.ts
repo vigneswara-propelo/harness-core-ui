@@ -1601,6 +1601,7 @@ export interface StringsMap {
   'defaultSettings.concurrentActivePipelineExecutions': string
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
+  'defaultSettings.enableMatrixFieldNames': string
   'defaultSettings.enableNodeExecutionAuditEvents': string
   'defaultSettings.enforceGitExperience': string
   'defaultSettings.harnessDefault': string
