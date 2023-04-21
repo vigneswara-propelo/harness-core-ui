@@ -1,5 +1,5 @@
 title: '{{$.common.purpose.errorTracking.title}}'
-continous: '{{$.common.purpose.cet.continuous}}'
+continuous: '{{$.common.purpose.cet.continuous}}'
 nav:
   settings: 'Error Tacking Settings'
 homepage:

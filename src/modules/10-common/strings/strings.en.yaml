@@ -533,6 +533,8 @@ subscriptions:
     developers: '{{ developers }} Developers'
   sto:
     developers: '{{ developers }} Developers'
+  cet:
+    agents: '{{ agents }} Agents'
   chaos:
     experiments: '{{ experiments }} Experiments per month'
     infrastructures: '{{ infrastructures }} Chaos Infrastructures'
@@ -569,6 +571,8 @@ subscriptions:
     cloudSpend: Total Cloud Spend
     ccmUsers: Active CCM Users
     ccmTooltip: Cloud Spend refers to the total spend (dollars) managed and optimized by Harness Cloud Cost Management.
+    cetAgents: Active Agents
+    cetAgentToolTip: An Agent refers to a constantly active error tracking component that is integrated with Harness platform for continuous monitoring and analysis.
 current: Current
 banners:
   email:

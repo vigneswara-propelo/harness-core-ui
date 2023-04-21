@@ -1071,6 +1071,7 @@ export interface StringsMap {
   'common.subscriptions.ccm.cloudSpend': string
   'common.subscriptions.cd.serviceInstances': string
   'common.subscriptions.cd.services': string
+  'common.subscriptions.cet.agents': string
   'common.subscriptions.chaos.experiments': string
   'common.subscriptions.chaos.infrastructures': string
   'common.subscriptions.ci.developers': string
@@ -1096,6 +1097,8 @@ export interface StringsMap {
   'common.subscriptions.usage.cdSITooltip': string
   'common.subscriptions.usage.cdServiceTooltip': string
   'common.subscriptions.usage.cdUsers': string
+  'common.subscriptions.usage.cetAgentToolTip': string
+  'common.subscriptions.usage.cetAgents': string
   'common.subscriptions.usage.ciTooltip': string
   'common.subscriptions.usage.ciUsers': string
   'common.subscriptions.usage.cloudSpend': string
@@ -8082,7 +8085,7 @@ export interface StringsMap {
   'ci.titleSettings': string
   'ci.usesLabel': string
   'ci.welcome': string
-  'et.continous': string
+  'et.continuous': string
   'et.homepage.learnMore': string
   'et.homepage.slogan': string
   'et.nav.settings': string
