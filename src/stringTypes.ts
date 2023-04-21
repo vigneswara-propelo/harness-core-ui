@@ -7673,6 +7673,7 @@ export interface StringsMap {
   'cf.onboarding.readme.xamarinAndroid': string
   'cf.onboarding.readme.xamarinIOS': string
   'cf.onboarding.sdkKeyDescription': string
+  'cf.onboarding.sdkWarning': string
   'cf.onboarding.secret': string
   'cf.onboarding.selectEnvAndSdk': string
   'cf.onboarding.selectLanguage': string
