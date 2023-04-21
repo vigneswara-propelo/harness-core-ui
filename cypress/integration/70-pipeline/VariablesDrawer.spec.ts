@@ -81,7 +81,7 @@ describe('Pipeline Variables', () => {
 
     cy.get('.bp3-menu>li>a').eq(2).click({ force: true })
     cy.wait(1000)
-    cy.get('input[name="variables[0].value"]').should('not.be.disabled').should('have.value', '')
+    cy.get('div[name="variables[0].value"]').should('not.be.disabled').should('have.value', '')
 
     cy.get('div[data-testid="pipeline.variables-panel"]')
       .get('.MultiTypeInput--EXPRESSION')

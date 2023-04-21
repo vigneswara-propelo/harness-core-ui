@@ -211,6 +211,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                               label=""
                               disabled={readonly}
                               multiTextInputProps={{
+                                newExpressionComponent: true,
                                 defaultValueToReset: '',
                                 expressions,
                                 textProps: {

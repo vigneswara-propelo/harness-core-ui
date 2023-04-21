@@ -306,6 +306,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                               label=""
                               disabled={readonly}
                               multiTextInputProps={{
+                                newExpressionComponent: true,
                                 mini: true,
                                 defaultValueToReset: '',
                                 expressions,

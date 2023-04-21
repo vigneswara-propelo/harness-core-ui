@@ -127,6 +127,7 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
                 name="value"
                 label={getString('valueLabel')}
                 multiTextInputProps={{
+                  newExpressionComponent: true,
                   defaultValueToReset: '',
                   expressions,
                   textProps: {
