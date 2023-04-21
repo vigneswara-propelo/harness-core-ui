@@ -144,6 +144,8 @@ export default function DeployServiceEntityWidget({
   stageIdentifier,
   setupModeType
 }: DeployServiceEntityWidgetProps): React.ReactElement {
+  const [isFetchingMergeServiceInputs, setIsFetchingMergeServiceInputs] = React.useState<boolean>(false)
+
   const { getString } = useStrings()
   const { showWarning } = useToaster()
 
@@ -237,7 +239,7 @@ export default function DeployServiceEntityWidget({
     return []
   }, [servicesList])
 
-  const loading = loadingServicesList || loadingServicesData
+  const loading = loadingServicesList || loadingServicesData || isFetchingMergeServiceInputs
 
   const updateServiceInputsForServices = React.useCallback(
     (serviceOrServices: Pick<FormState, 'service' | 'services'>): void => {
@@ -363,6 +365,10 @@ export default function DeployServiceEntityWidget({
           )
         )
       }
+
+      // Introduced this loading state so that ServiceEntitiesList's JSX is mounted
+      // only after mergeServiceInputsPromise returns data
+      setIsFetchingMergeServiceInputs(true)
       refetchPipelineVariable?.()
       const response = await mergeServiceInputsPromise(body)
       const mergedServiceInputsResponse = response?.data
@@ -375,6 +381,7 @@ export default function DeployServiceEntityWidget({
         }
       })
       updateServiceInputsData(updatedService.identifier, mergedServiceInputsResponse)
+      setIsFetchingMergeServiceInputs(false)
     }
   }
 
