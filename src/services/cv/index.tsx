@@ -5919,6 +5919,10 @@ export interface SLOErrorBudgetResetDTO {
   validUntil?: number
 }
 
+export type SLOErrorBudgetResetInstanceDetails = SecondaryEventDetails & {
+  errorBudgetIncrementMinutes?: number
+}
+
 export interface SLOHealthListView {
   burnRate: number
   description?: string
@@ -5995,16 +5999,16 @@ export interface SecondaryEventDetails {
 
 export interface SecondaryEventDetailsResponse {
   details: SecondaryEventDetails
-  endTime: number
+  endTime?: number
   startTime: number
-  type: 'Downtime' | 'DataCollectionFailure' | 'Annotation'
+  type: 'Downtime' | 'DataCollectionFailure' | 'Annotation' | 'ErrorBudgetReset'
 }
 
 export interface SecondaryEventsResponse {
   endTime?: number
   identifiers?: string[]
   startTime?: number
-  type?: 'Downtime' | 'DataCollectionFailure' | 'Annotation'
+  type?: 'Downtime' | 'DataCollectionFailure' | 'Annotation' | 'ErrorBudgetReset'
 }
 
 export interface ServiceDependencyDTO {
@@ -15647,7 +15651,7 @@ export const getServiceLevelObjectivesRiskCountPromise = (
 
 export interface GetSecondaryEventDetailsQueryParams {
   accountId: string
-  secondaryEventType: 'Downtime' | 'DataCollectionFailure' | 'Annotation'
+  secondaryEventType: 'Downtime' | 'DataCollectionFailure' | 'Annotation' | 'ErrorBudgetReset'
   identifiers: string[]
 }
 

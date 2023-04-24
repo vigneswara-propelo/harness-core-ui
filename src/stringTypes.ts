@@ -8314,6 +8314,7 @@ export interface StringsMap {
   'cv.ends': string
   'cv.errorBudget': string
   'cv.errorBudgetBurnDown': string
+  'cv.errorBudgetIncrease': string
   'cv.errorBudgetIsSuccessfullyReset': string
   'cv.errorBudgetRecalculationInProgress': string
   'cv.errorBudgetRemaining': string

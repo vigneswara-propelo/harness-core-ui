@@ -1070,6 +1070,7 @@ sloGraphUserHint: To view anomalies, metrics and logs for a specific time window
 sloRecalculationInProgress: SLO recalculation in progress
 errorBudgetRecalculationInProgress: Error Budget recalculation in progress
 sloAnalysisTakingLong: The SLO analysis is taking too long. Please check the execution logs and third party API call logs.
+errorBudgetIncrease: Error budget increased by {{ minutes }} minutes
 errorBudgetRemaining: Error Budget Remaining
 errorBudgetRemainingWithMins: Error Budget Remaining (mins)
 errorBudgetRemainingWithRequest: Error Budget Remaining (requests)
