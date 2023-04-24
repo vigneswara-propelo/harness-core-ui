@@ -847,7 +847,7 @@ feature:
     limitMessage:
       description: You've used {{limits}}
       thisMonth: This Month
-    planMessage: is supported in {{plan}} plan(s).
+    planMessage: is/are supported in {{plan}} plan(s).
 repositoryName: Repository Name
 mostActiveServices: Most active services
 monitoredServices: Monitored Services
