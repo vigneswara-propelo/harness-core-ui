@@ -840,6 +840,7 @@ export interface StringsMap {
   'common.pwsh': string
   'common.python': string
   'common.readOnly': string
+  'common.readOnlyConnectorWarning': string
   'common.readonlyPermissions': string
   'common.readonlyPermissionsForFile': string
   'common.recents': string

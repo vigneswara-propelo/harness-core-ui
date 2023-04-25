@@ -1447,3 +1447,4 @@ failedCount: 'Failed {{count}}'
 configurations: Configurations
 lastBuildDate: LAST BUILD DATE
 noActiveDeveloperData: No active Developer Record found
+readOnlyConnectorWarning: Read-only Vault connector is not allowed for Terraform/Terragrunt Plan steps.
