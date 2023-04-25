@@ -5951,14 +5951,20 @@ export interface StringsMap {
   'cd.serviceDashboard.asgName': string
   'cd.serviceDashboard.awsRegion': string
   'cd.serviceDashboard.bgEnv': string
+  'cd.serviceDashboard.bothTypeLabel': string
   'cd.serviceDashboard.buildName': string
   'cd.serviceDashboard.containerList': string
   'cd.serviceDashboard.deployedAt': string
   'cd.serviceDashboard.deployedBy': string
+  'cd.serviceDashboard.deployedByHotfix': string
   'cd.serviceDashboard.deploymentDetails': string
   'cd.serviceDashboard.deploymentSlot': string
+  'cd.serviceDashboard.driftDetection': string
   'cd.serviceDashboard.ec2InstanceId': string
   'cd.serviceDashboard.elastigroupId': string
+  'cd.serviceDashboard.envAndGroup': string
+  'cd.serviceDashboard.envGroupTitle': string
+  'cd.serviceDashboard.envGroupsHeader': string
   'cd.serviceDashboard.envName': string
   'cd.serviceDashboard.executionId': string
   'cd.serviceDashboard.frequency': string
@@ -5983,6 +5989,7 @@ export interface StringsMap {
   'cd.serviceDashboard.instancesDetails': string
   'cd.serviceDashboard.lastDeployment': string
   'cd.serviceDashboard.lastPipelineExecution': string
+  'cd.serviceDashboard.latestVersion': string
   'cd.serviceDashboard.manageServiceLabel': string
   'cd.serviceDashboard.memorySize': string
   'cd.serviceDashboard.moreDetails': string
@@ -6011,6 +6018,7 @@ export interface StringsMap {
   'cd.serviceDashboard.totalDeployments': string
   'cd.serviceDashboard.totalPipelines': string
   'cd.serviceDashboard.totalServices': string
+  'cd.serviceDashboard.triggeredByRollback': string
   'cd.serviceDashboard.unitDay': string
   'cd.serviceDashboard.updatedTime': string
   'cd.serviceDashboard.webApp': string
