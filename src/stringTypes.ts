@@ -7911,6 +7911,7 @@ export interface StringsMap {
   'chaos.homepage.slogan': string
   'chaos.navLabels.chaosExperiments': string
   'chaos.navLabels.chaosHubs': string
+  'chaos.navLabels.dashboards': string
   'chaos.navLabels.gamedays': string
   'chaos.navLabels.probes': string
   'chaos.noEnvironment.message': string

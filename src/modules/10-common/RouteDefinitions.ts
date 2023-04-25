@@ -2057,6 +2057,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/gamedays`
   ),
+  toChaosDashboards: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-dashboards`
+  ),
 
   // chaos enviroments
   toChaosEnvironments: withAccountId(
