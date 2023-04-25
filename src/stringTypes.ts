@@ -3129,51 +3129,6 @@ export interface StringsMap {
   'connectors.validation.serviceNowUrl': string
   'connectors.validationPath': string
   'connectors.verifyConnection': string
-  'userProfile.addSCM': string
-  'userProfile.awsCredentials': string
-  'userProfile.basicInformation': string
-  'userProfile.changeDefaultAccountMessage': string
-  'userProfile.changePassword': string
-  'userProfile.confirmDelete': string
-  'userProfile.confirmDeleteTitle': string
-  'userProfile.confirmPassword': string
-  'userProfile.currentPassword': string
-  'userProfile.editProfile': string
-  'userProfile.myGroups': string
-  'userProfile.myProjects': string
-  'userProfile.myTools': string
-  'userProfile.mysourceCodeManagers': string
-  'userProfile.newPassword': string
-  'userProfile.newPasswordShouldMeetTheRequirements': string
-  'userProfile.newPasswordShouldNotBeCurrentPassword': string
-  'userProfile.passwordChangedSuccessfully': string
-  'userProfile.passwordMatch': string
-  'userProfile.passwordMustBeBetweenMinAndMax': string
-  'userProfile.passwordReqs': string
-  'userProfile.plusSCM': string
-  'userProfile.qrCode': string
-  'userProfile.requiredField': string
-  'userProfile.scmCreateFail': string
-  'userProfile.scmCreateSuccess': string
-  'userProfile.scmDeleteFailure': string
-  'userProfile.scmDeleteSuccess': string
-  'userProfile.scmUpdateFail': string
-  'userProfile.scmUpdateSuccess': string
-  'userProfile.scmValidation.accessKey': string
-  'userProfile.scmValidation.secretKey': string
-  'userProfile.selectSCM': string
-  'userProfile.selectedSCM': string
-  'userProfile.twoFactor.description': string
-  'userProfile.twoFactor.disableSuccess': string
-  'userProfile.twoFactor.disableText': string
-  'userProfile.twoFactor.disableTitle': string
-  'userProfile.twoFactor.enableSuccess': string
-  'userProfile.twoFactor.enableTitle': string
-  'userProfile.twoFactor.resetTitle': string
-  'userProfile.twofactorAuth': string
-  'userProfile.userEditFail': string
-  'userProfile.userEditSuccess': string
-  'userProfile.yourCurrentPasswordIncorrect': string
   'auditTrail.Platform': string
   'auditTrail.actions.added_collaborator': string
   'auditTrail.actions.added_membership': string
@@ -3230,6 +3185,51 @@ export interface StringsMap {
   'auditTrail.streamingDestinations': string
   'auditTrail.supplementaryDetails': string
   'auditTrail.yamlDifference': string
+  'userProfile.addSCM': string
+  'userProfile.awsCredentials': string
+  'userProfile.basicInformation': string
+  'userProfile.changeDefaultAccountMessage': string
+  'userProfile.changePassword': string
+  'userProfile.confirmDelete': string
+  'userProfile.confirmDeleteTitle': string
+  'userProfile.confirmPassword': string
+  'userProfile.currentPassword': string
+  'userProfile.editProfile': string
+  'userProfile.myGroups': string
+  'userProfile.myProjects': string
+  'userProfile.myTools': string
+  'userProfile.mysourceCodeManagers': string
+  'userProfile.newPassword': string
+  'userProfile.newPasswordShouldMeetTheRequirements': string
+  'userProfile.newPasswordShouldNotBeCurrentPassword': string
+  'userProfile.passwordChangedSuccessfully': string
+  'userProfile.passwordMatch': string
+  'userProfile.passwordMustBeBetweenMinAndMax': string
+  'userProfile.passwordReqs': string
+  'userProfile.plusSCM': string
+  'userProfile.qrCode': string
+  'userProfile.requiredField': string
+  'userProfile.scmCreateFail': string
+  'userProfile.scmCreateSuccess': string
+  'userProfile.scmDeleteFailure': string
+  'userProfile.scmDeleteSuccess': string
+  'userProfile.scmUpdateFail': string
+  'userProfile.scmUpdateSuccess': string
+  'userProfile.scmValidation.accessKey': string
+  'userProfile.scmValidation.secretKey': string
+  'userProfile.selectSCM': string
+  'userProfile.selectedSCM': string
+  'userProfile.twoFactor.description': string
+  'userProfile.twoFactor.disableSuccess': string
+  'userProfile.twoFactor.disableText': string
+  'userProfile.twoFactor.disableTitle': string
+  'userProfile.twoFactor.enableSuccess': string
+  'userProfile.twoFactor.enableTitle': string
+  'userProfile.twoFactor.resetTitle': string
+  'userProfile.twofactorAuth': string
+  'userProfile.userEditFail': string
+  'userProfile.userEditSuccess': string
+  'userProfile.yourCurrentPasswordIncorrect': string
   'gitsync.PRTitle': string
   'gitsync.addFolder': string
   'gitsync.addNewHarnessFolderLabel': string
