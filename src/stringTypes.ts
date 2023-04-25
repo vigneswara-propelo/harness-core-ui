@@ -8137,6 +8137,8 @@ export interface StringsMap {
   'cv.CompositeSLO.CreateTitle': string
   'cv.CompositeSLO.DefineSLO': string
   'cv.CompositeSLO.ErrorBudgetPolicy': string
+  'cv.CompositeSLO.EvaluationTypeChangeWarning.message': string
+  'cv.CompositeSLO.EvaluationTypeChangeWarning.title': string
   'cv.CompositeSLO.MatchingSLO': string
   'cv.CompositeSLO.NoData': string
   'cv.CompositeSLO.NoDataSuggestion': string
