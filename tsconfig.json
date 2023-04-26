@@ -19,7 +19,7 @@
     "experimentalDecorators": true,
     "noEmitHelpers": true,
     "importHelpers": true,
-    "typeRoots": ["node_modules/@types", "./typings"],
+    "typeRoots": ["node_modules/@types", "./typings", "./node_modules/@types/pino-std-serializers/node_modules"],
     "resolveJsonModule": true,
     "importsNotUsedAsValues": "error",
     "noUnusedLocals": true,

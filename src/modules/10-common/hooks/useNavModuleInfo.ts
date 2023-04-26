@@ -67,7 +67,7 @@ interface ModuleInfo {
   backgroundColor?: string
 }
 
-const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
+export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CD]: {
     icon: 'cd-main',
     label: 'common.cdAndGitops',
