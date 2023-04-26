@@ -7528,6 +7528,7 @@ export interface StringsMap {
   'cf.featureFlags.defaultWillBeServed': string
   'cf.featureFlags.deleteFlag': string
   'cf.featureFlags.deleteFlagMessage': string
+  'cf.featureFlags.deleteFlagWarning': string
   'cf.featureFlags.false': string
   'cf.featureFlags.flagOff': string
   'cf.featureFlags.flagOn': string
