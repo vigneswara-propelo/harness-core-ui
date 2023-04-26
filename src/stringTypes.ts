@@ -5804,6 +5804,7 @@ export interface StringsMap {
   'cd.newAdapter': string
   'cd.newGitOpsServer': string
   'cd.noAdapterText': string
+  'cd.noCluster.title': string
   'cd.noEnvironment.message': string
   'cd.noEnvironment.title': string
   'cd.noGitOpsServerText': string
@@ -5865,6 +5866,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.multiEnvironmentsClearConfirmationText': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsConfirmationText': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsDialogTitleText': string
+  'cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployClusterLabel': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployLabel': string
   'cd.pipelineSteps.environmentTab.newEnvironment': string
   'cd.pipelineSteps.environmentTab.plusNewEnvironment': string

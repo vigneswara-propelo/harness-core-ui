@@ -269,6 +269,7 @@ pipelineSteps:
     viewInfrastructureInputs: View infrastructure inputs
     hideInfrastructureInputs: Hide infrastructure inputs
     multiEnvironmentsParallelDeployLabel: Deploy to Environments or Infrastructures in parallel?
+    multiEnvironmentsParallelDeployClusterLabel: Deploy to Environments or Clusters in parallel?
     environmentGroupDialogTitleText: Deploy to environment group?
     environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group? If you choose to proceed, your existing environments will be lost.
     multiEnvironmentsDialogTitleText: Deploy to multiple environments or infrastructures?
@@ -410,6 +411,8 @@ serviceDashboard:
 noEnvironment:
   title: You have no Environments
   message: Create an environment and let’s start configuring the deployment
+noCluster:
+  title: You have no Clusters
 gitOps: '{{ $.common.gitOps }}'
 addService: Add Service
 noService: You have no Services
