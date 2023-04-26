@@ -1188,6 +1188,7 @@ export interface StringsMap {
   'common.tokens': string
   'common.totalLines': string
   'common.totalSelected': string
+  'common.trialCommingSoon': string
   'common.trialInProgress': string
   'common.trialInProgressDescription': string
   'common.triggerLabel': string
