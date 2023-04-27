@@ -856,6 +856,7 @@ feature:
 repositoryName: Repository Name
 mostActiveServices: Most active services
 monitoredServices: Monitored Services
+newMonitoredService: New Monitored Service
 allErrors: All Errors
 connectivityErrors: Connectivity Errors
 apply: '{{ $.filters.apply }}'

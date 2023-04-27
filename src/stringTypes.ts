@@ -655,6 +655,7 @@ export interface StringsMap {
   'common.namespace': string
   'common.new': string
   'common.newLines': string
+  'common.newMonitoredService': string
   'common.newName': string
   'common.newVersion': string
   'common.nextStep': string
@@ -8593,7 +8594,6 @@ export interface StringsMap {
   'cv.monitoredServices.monitoredServiceToggle': string
   'cv.monitoredServices.monitoredServiceUpdated': string
   'cv.monitoredServices.nameValidation': string
-  'cv.monitoredServices.newMonitoredServices': string
   'cv.monitoredServices.noAvailableData': string
   'cv.monitoredServices.noAvailableLogData': string
   'cv.monitoredServices.noMatchingData': string
