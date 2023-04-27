@@ -4659,6 +4659,17 @@ export interface StringsMap {
   'pipeline.serviceDeploymentTypes.ssh': string
   'pipeline.serviceDeploymentTypes.tas': string
   'pipeline.serviceDeploymentTypes.winrm': string
+  'pipeline.serviceHooks.addServiceHook': string
+  'pipeline.serviceHooks.error.actionsRequired': string
+  'pipeline.serviceHooks.error.duplicateIdError': string
+  'pipeline.serviceHooks.hookType': string
+  'pipeline.serviceHooks.identifierLabel': string
+  'pipeline.serviceHooks.label': string
+  'pipeline.serviceHooks.postHook': string
+  'pipeline.serviceHooks.preHook': string
+  'pipeline.serviceHooks.selectActionType': string
+  'pipeline.serviceHooks.store': string
+  'pipeline.serviceHooks.title': string
   'pipeline.serviceLabel': string
   'pipeline.serviceNowApprovalStep.approvalChangeWindow': string
   'pipeline.serviceNowApprovalStep.connectToServiceNow': string
