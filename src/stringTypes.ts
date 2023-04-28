@@ -3490,6 +3490,42 @@ export interface StringsMap {
   'projectsOrgs.whyCreateProject': string
   'projectsOrgs.yesIamSure': string
   'projectsOrgs.youHaveNoProjects': string
+  'assessments.basedOnResultsHarnessRecommendations': string
+  'assessments.benchmark': string
+  'assessments.benchmarkComparison': string
+  'assessments.companyOverAllScore': string
+  'assessments.companyScore': string
+  'assessments.comparison': string
+  'assessments.copyLink': string
+  'assessments.determineMaturity': string
+  'assessments.developerEffectiveness': string
+  'assessments.downloadPDF': string
+  'assessments.downloadPDFReport': string
+  'assessments.enterEmailAddress': string
+  'assessments.inYourCompany': string
+  'assessments.invitationSent': string
+  'assessments.inviteToTakeAssessment': string
+  'assessments.learnHowWeCompare': string
+  'assessments.learnMoreAboutMaturity': string
+  'assessments.maturityLevelDefinition': string
+  'assessments.maturityScore': string
+  'assessments.maxScore': string
+  'assessments.question': string
+  'assessments.questions': string
+  'assessments.questionsAnswered': string
+  'assessments.recommendations': string
+  'assessments.score': string
+  'assessments.scoreCompare': string
+  'assessments.scoreOutOf10': string
+  'assessments.searchForQuestion': string
+  'assessments.sendInvite': string
+  'assessments.shareResults': string
+  'assessments.stronglyAgree': string
+  'assessments.stronglyDisagree': string
+  'assessments.survey': string
+  'assessments.typicalComparison': string
+  'assessments.yourScore': string
+  'assessments.yourTopOpportnities': string
   'code.branches': string
   'code.homepageHeading': string
   'code.learnMore': string
