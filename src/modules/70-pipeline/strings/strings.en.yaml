@@ -1548,7 +1548,7 @@ configFiles:
   fileType: 'File Type'
   encryptedLocation: 'Secrets Manager Name'
   addConfigFile: Add Config File
-  name: Config File Name,
+  name: Config File Name
   placeholder: Enter Config File Name
   paths: File Path for config files from Git
   error:
