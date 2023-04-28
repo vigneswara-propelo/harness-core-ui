@@ -581,7 +581,7 @@ subscriptions:
     ccmUsers: Active CCM Users
     ccmTooltip: Cloud Spend refers to the total spend (dollars) managed and optimized by Harness Cloud Cost Management.
     cetAgents: Active Agents
-    cetAgentToolTip: An Agent refers to a constantly active error tracking component that is integrated with Harness platform for continuous monitoring and analysis.
+    cetAgentToolTip: An agent is an independent unit of software that you install on a host or in a container that tracks for errors continuously and sends the error tracking data to the Harness Platform.
 current: Current
 banners:
   email:
