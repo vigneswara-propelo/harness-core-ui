@@ -79,7 +79,7 @@ const getLast3Months = () => {
   const today = new Date()
   const last3Months = []
 
-  for (let i = 1; i < 4; i++) {
+  for (let i = 0; i < 3; i++) {
     let month = today.getMonth() - i
     let year = today.getFullYear()
     if (month < 0) {
@@ -185,6 +185,9 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
   })
 
   useEffect(() => {
+    if (filterOptions.length === 4) {
+      return
+    }
     const currentMonth = currentDate.getMonth() + 1
     const currentYear = currentDate.getFullYear()
     const previousYear = currentDate.getFullYear() - 1
@@ -296,30 +299,21 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
             <Select
               onChange={selected => {
                 const currentMonth = currentDate.getMonth() + 1
-                const previousMonth = currentDate.getMonth()
                 const currentYear = currentDate.getFullYear()
                 const previousYear = currentDate.getFullYear() - 1
-                let yearPassed = currentYear
+                const yearPassed = currentYear
                 let year2Passed = currentYear
                 let year3Passed = currentYear
-                let monthPassed = previousMonth
-                let month2Passed = previousMonth - 1
-                let month3Passed = previousMonth - 2
+                const monthPassed = currentMonth
+                let month2Passed = currentMonth - 1
+                let month3Passed = currentMonth - 2
                 if (currentMonth === 1) {
-                  yearPassed = previousYear
-                  monthPassed = 12
-                  year2Passed = previousYear
-                  month2Passed = 11
-                  year3Passed = previousYear
-                  month3Passed = 10
-                }
-                if (currentMonth === 2) {
                   year2Passed = previousYear
                   month2Passed = 12
                   year3Passed = previousYear
                   month3Passed = 11
                 }
-                if (currentMonth === 3) {
+                if (currentMonth === 2) {
                   year3Passed = previousYear
                   month3Passed = 12
                 }
