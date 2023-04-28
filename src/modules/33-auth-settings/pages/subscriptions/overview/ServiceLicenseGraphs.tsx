@@ -47,11 +47,11 @@ let filterOptions = [
 
 export interface SummaryCardData {
   title: string
-  count: number
+  count: number | string
   className: string
 }
 
-export const summaryCardRenderer = (cardData: SummaryCardData): JSX.Element => {
+export const summaryCardRenderer = (cardData: SummaryCardData, isBuildCreditTable?: boolean): JSX.Element => {
   return (
     <Container className={pageCss.summaryCard} key={cardData.title}>
       <Text font={{ size: 'medium' }} color={Color.GREY_700} className={pageCss.cardTitle}>
@@ -59,7 +59,7 @@ export const summaryCardRenderer = (cardData: SummaryCardData): JSX.Element => {
       </Text>
 
       <Layout.Horizontal className={pageCss.frequencyContainer}>
-        <div className={cardData.className}></div>
+        {!isBuildCreditTable ? <div className={cardData.className}></div> : null}
         <Text color={Color.BLACK} font={{ size: 'large', weight: 'bold' }} className={pageCss.frequencyCount}>
           {cardData.count}
         </Text>
@@ -68,10 +68,10 @@ export const summaryCardRenderer = (cardData: SummaryCardData): JSX.Element => {
   )
 }
 
-export const getSummaryCardRenderers = (summaryCardsData: SummaryCardData[]): JSX.Element => {
+export const getSummaryCardRenderers = (summaryCardsData: SummaryCardData[], isBuildCredit?: boolean): JSX.Element => {
   return (
     <Container className={pageCss.summaryCardsContainer}>
-      {summaryCardsData?.map(currData => summaryCardRenderer(currData))}
+      {summaryCardsData?.map(currData => summaryCardRenderer(currData, isBuildCredit))}
     </Container>
   )
 }
