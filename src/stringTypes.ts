@@ -890,8 +890,21 @@ export interface StringsMap {
   'common.resourceCenter.productUpdates.releaseText': string
   'common.resourceCenter.productUpdates.title': string
   'common.resourceCenter.productUpdates.whatsnew': string
+  'common.resourceCenter.ticketmenu.attachments': string
+  'common.resourceCenter.ticketmenu.chooseAFile': string
+  'common.resourceCenter.ticketmenu.component': string
+  'common.resourceCenter.ticketmenu.issueType': string
+  'common.resourceCenter.ticketmenu.platform': string
+  'common.resourceCenter.ticketmenu.priority': string
   'common.resourceCenter.ticketmenu.submitDesc': string
   'common.resourceCenter.ticketmenu.submitTicket': string
+  'common.resourceCenter.ticketmenu.suggestionsPanel': string
+  'common.resourceCenter.ticketmenu.ticketDescription': string
+  'common.resourceCenter.ticketmenu.ticketDescriptionPlaceholder': string
+  'common.resourceCenter.ticketmenu.ticketDetails': string
+  'common.resourceCenter.ticketmenu.ticketIssue': string
+  'common.resourceCenter.ticketmenu.ticketSubject': string
+  'common.resourceCenter.ticketmenu.ticketSuccess': string
   'common.resourceCenter.ticketmenu.tickets': string
   'common.resourceCenter.ticketmenu.ticketsDesc': string
   'common.resourceCenter.ticketmenu.title': string
@@ -3139,7 +3152,6 @@ export interface StringsMap {
   'connectors.validation.serviceNowUrl': string
   'connectors.validationPath': string
   'connectors.verifyConnection': string
-  'auditTrail.Platform': string
   'auditTrail.actions.added_collaborator': string
   'auditTrail.actions.added_membership': string
   'auditTrail.actions.create_token': string
@@ -4280,7 +4292,6 @@ export interface StringsMap {
   'pipeline.jiraApprovalStep.fetchingProjectsPlaceholder': string
   'pipeline.jiraApprovalStep.issueKey': string
   'pipeline.jiraApprovalStep.issueKeyPlaceholder': string
-  'pipeline.jiraApprovalStep.issueType': string
   'pipeline.jiraApprovalStep.issueTypePlaceholder': string
   'pipeline.jiraApprovalStep.jexlExpressionApprovalCriteria': string
   'pipeline.jiraApprovalStep.jexlExpressionPlaceholder': string
@@ -8553,7 +8564,6 @@ export interface StringsMap {
   'cv.logs.jiraDetails.viewInJira': string
   'cv.logs.jiraDetails.viewTicket': string
   'cv.logs.jiraFormLable.assignee': string
-  'cv.logs.jiraFormLable.priority': string
   'cv.logs.jiraFormLable.ticketSummary': string
   'cv.logs.jiraFormValidation.issueType': string
   'cv.logs.jiraFormValidation.ticketSummary': string

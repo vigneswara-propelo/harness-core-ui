@@ -196,7 +196,6 @@ jiraApprovalStep:
   connectorRef: Jira Connector
   jiraConnectorPlaceholder: Select Jira Connector
   project: Jira Project
-  issueType: Issue Type
   issueTypePlaceholder: Select Issue Type
   issueKey: Issue Key
   issueKeyPlaceholder: Enter Issue Key

@@ -1220,7 +1220,6 @@ logs:
   feedbackUpdatedMessage: Updated event priority feedback will be applied in the next deployment run.
   reasonPlaceholder: Enter the reason for updating the event priority
   jiraFormLable:
-    priority: Priority
     ticketSummary: Ticket Summary
     assignee: Assignee
   jiraDetails:
