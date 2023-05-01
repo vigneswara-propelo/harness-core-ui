@@ -6065,17 +6065,20 @@ export interface StringsMap {
   'cd.serviceDashboard.headers.infras': string
   'cd.serviceDashboard.headers.infrastructures': string
   'cd.serviceDashboard.headers.instances': string
+  'cd.serviceDashboard.headers.rollbackStatus': string
   'cd.serviceDashboard.helmChartDetails': string
   'cd.serviceDashboard.helmChartName': string
   'cd.serviceDashboard.helmRopoUrl': string
   'cd.serviceDashboard.helmSubChartPathName': string
   'cd.serviceDashboard.host': string
+  'cd.serviceDashboard.hotfixed': string
   'cd.serviceDashboard.in': string
   'cd.serviceDashboard.instanceCountHistory': string
   'cd.serviceDashboard.instanceDataEmpty': string
   'cd.serviceDashboard.instanceDetails': string
   'cd.serviceDashboard.instanceId': string
   'cd.serviceDashboard.instancesDetails': string
+  'cd.serviceDashboard.lastDeployedText': string
   'cd.serviceDashboard.lastDeployment': string
   'cd.serviceDashboard.lastPipelineExecution': string
   'cd.serviceDashboard.latestVersion': string
@@ -6092,9 +6095,16 @@ export interface StringsMap {
   'cd.serviceDashboard.noServices': string
   'cd.serviceDashboard.nonProd': string
   'cd.serviceDashboard.pod': string
+  'cd.serviceDashboard.postProdRollback.emptyStateMsg': string
+  'cd.serviceDashboard.postProdRollback.rollbackConfirmationText': string
+  'cd.serviceDashboard.postProdRollback.rollbackConfirmationTitle': string
+  'cd.serviceDashboard.postProdRollback.rollbackTitle': string
+  'cd.serviceDashboard.postProdRollback.rollbackTriggedSuccessfully': string
+  'cd.serviceDashboard.postProdRollback.rollbackWarningText': string
   'cd.serviceDashboard.prod': string
   'cd.serviceDashboard.recentDeployments': string
   'cd.serviceDashboard.revision': string
+  'cd.serviceDashboard.rollbacked': string
   'cd.serviceDashboard.runTime': string
   'cd.serviceDashboard.runningServiceInstancesLabel': string
   'cd.serviceDashboard.seeMore': string
