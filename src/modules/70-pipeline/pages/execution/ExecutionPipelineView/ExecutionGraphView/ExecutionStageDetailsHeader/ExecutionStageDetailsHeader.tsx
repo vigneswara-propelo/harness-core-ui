@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, find, identity, isEmpty } from 'lodash-es'
+import { defaultTo, find, get, identity, isEmpty } from 'lodash-es'
 
 import { useParams } from 'react-router-dom'
 import { ButtonVariation, Text } from '@harness/uicore'
@@ -159,11 +159,23 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
                 refetch={refetch}
                 source={source}
                 params={{
-                  orgIdentifier,
+                  orgIdentifier: get(
+                    pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary,
+                    'orgIdentifier',
+                    orgIdentifier
+                  ),
                   pipelineIdentifier,
-                  projectIdentifier,
+                  projectIdentifier: get(
+                    pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary,
+                    'projectIdentifier',
+                    projectIdentifier
+                  ),
                   accountId,
-                  executionIdentifier,
+                  executionIdentifier: get(
+                    pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary,
+                    'planExecutionId',
+                    executionIdentifier
+                  ),
                   module,
                   repoIdentifier: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoIdentifier,
                   connectorRef: pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef,
