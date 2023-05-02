@@ -764,12 +764,14 @@ export interface ChangeEventMetadata {
 }
 
 export type ChangeImpactConditionSpec = NotificationRuleConditionSpec & {
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag' | 'ChaosExperiment')[]
   changeEventTypes?: ('Deployment' | 'Infrastructure' | 'Incident')[]
   period?: string
   threshold?: number
 }
 
 export type ChangeObservedConditionSpec = NotificationRuleConditionSpec & {
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag' | 'ChaosExperiment')[]
   changeEventTypes?: ('Deployment' | 'Infrastructure' | 'Incident')[]
 }
 
@@ -7015,7 +7017,7 @@ export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type SaveMonitoredServiceFromYamlBodyRequestBody = string
+export type UpdateMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface SaveAccountLevelAnnotationPathParams {
   accountIdentifier: string
@@ -13187,7 +13189,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -13201,7 +13203,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -13216,7 +13218,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -13230,7 +13232,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -13242,7 +13244,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -13251,7 +13253,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 
