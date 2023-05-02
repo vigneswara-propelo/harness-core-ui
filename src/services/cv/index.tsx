@@ -566,7 +566,7 @@ export interface BillingExportSpec {
 
 export interface BitbucketApiAccess {
   spec: BitbucketApiAccessSpecDTO
-  type: 'UsernameToken'
+  type: 'UsernameToken' | 'OAuth'
 }
 
 export interface BitbucketApiAccessSpecDTO {
@@ -599,6 +599,11 @@ export type BitbucketHttpCredentials = BitbucketCredentialsDTO & {
 
 export interface BitbucketHttpCredentialsSpecDTO {
   [key: string]: any
+}
+
+export type BitbucketOauth = BitbucketApiAccessSpecDTO & {
+  refreshTokenRef: string
+  tokenRef: string
 }
 
 export type BitbucketSshCredentials = BitbucketCredentialsDTO & {
@@ -1079,7 +1084,9 @@ export type CustomSecretManager = ConnectorConfigDTO & {
   workingDirectory?: string
 }
 
-export type DataCollectionFailureInstanceDetails = SecondaryEventDetails & { [key: string]: any }
+export type DataCollectionFailureInstanceDetails = SecondaryEventDetails & {
+  message: string
+}
 
 export interface DataCollectionInfo {
   collectHostData?: boolean
@@ -1795,6 +1802,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -1880,6 +1888,12 @@ export interface Error {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2233,6 +2247,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -2318,6 +2333,12 @@ export interface Failure {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2534,6 +2555,7 @@ export type GitlabSshCredentials = GitlabCredentialsDTO & {
 }
 
 export type GitlabTokenSpec = GitlabApiAccessSpecDTO & {
+  apiUrl?: string
   tokenRef: string
 }
 
@@ -4834,6 +4856,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -4919,6 +4942,12 @@ export interface ResponseMessage {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5835,16 +5864,16 @@ export interface SLIOnboardingGraphs {
 
 export interface SLOConsumptionBreakdown {
   contributedErrorBudgetBurned: number
-  environmentIdentifier: string
+  environmentIdentifier?: string
   errorBudgetBurned: number
-  failedState?: boolean
-  monitoredServiceIdentifier: string
+  monitoredServiceIdentifier?: string
   orgName?: string
   projectName?: string
   projectParams: ProjectParams
-  serviceName: string
+  serviceName?: string
   sliStatusPercentage: number
-  sliType: 'Availability' | 'Latency'
+  sliType?: 'Availability' | 'Latency'
+  sloError?: SLOError
   sloIdentifier: string
   sloName: string
   sloTargetPercentage: number
@@ -5894,6 +5923,7 @@ export interface SLODashboardWidget {
   recalculatingSLI?: boolean
   serviceIdentifier?: string
   serviceName?: string
+  sloError?: SLOError
   sloIdentifier: string
   sloPerformanceTrend: Point[]
   sloTargetPercentage: number
@@ -5905,7 +5935,14 @@ export interface SLODashboardWidget {
   timeRemainingDays: number
   title: string
   totalErrorBudget: number
+  totalErrorBudgetApplicable?: boolean
   type?: 'Availability' | 'Latency'
+}
+
+export interface SLOError {
+  errorMessage?: string
+  failedState: boolean
+  sloErrorType?: 'DataCollectionFailure' | 'SimpleSLODeletion'
 }
 
 export interface SLOErrorBudgetResetDTO {
@@ -5933,7 +5970,6 @@ export interface SLOHealthListView {
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
   evaluationType: 'Window' | 'Request'
-  failedState: boolean
   healthSourceIdentifier?: string
   healthSourceName?: string
   monitoredServiceIdentifier?: string
@@ -5946,16 +5982,17 @@ export interface SLOHealthListView {
   serviceIdentifier?: string
   serviceName?: string
   sliType?: 'Availability' | 'Latency'
+  sloError?: SLOError
   sloIdentifier: string
   sloTargetPercentage: number
-  sloTargetType: 'Rolling' | 'Calender'
+  sloTargetType?: 'Rolling' | 'Calender'
   sloType: 'Simple' | 'Composite'
   tags?: {
     [key: string]: string
   }
   totalErrorBudget: number
   userJourneyName?: string
-  userJourneys: UserJourneyDTO[]
+  userJourneys?: UserJourneyDTO[]
 }
 
 export interface SLORiskCountResponse {

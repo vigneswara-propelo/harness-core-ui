@@ -410,43 +410,6 @@
         }
       }
     },
-    "/learning-engine-dev/timeseries-risk-summary-by-time": {
-      "get": {
-        "tags": ["learning-engine-dev"],
-        "summary": "get risk analysis cumulative sums",
-        "description": "",
-        "operationId": "getRiskSummariesByTimeRange",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "verificationTaskId",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "analysisStartTime",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "analysisEndTime",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/RestResponseListTimeSeriesRiskSummary"
-            }
-          }
-        }
-      }
-    },
     "/learning-engine-dev/timeseries-anom-patterns-by-id": {
       "get": {
         "tags": ["learning-engine-dev"],
@@ -640,6 +603,43 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/RestResponseListClusteredLog"
+            }
+          }
+        }
+      }
+    },
+    "/learning-engine-dev/timeseries-risk-summary-by-time": {
+      "get": {
+        "tags": ["learning-engine-dev"],
+        "summary": "get risk analysis cumulative sums",
+        "description": "",
+        "operationId": "getRiskSummariesByTimeRange",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "verificationTaskId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "analysisStartTime",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "analysisEndTime",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseListTimeSeriesRiskSummary"
             }
           }
         }
@@ -1143,28 +1143,36 @@
         }
       }
     },
-    "/timeseries-analysis/timeseries-serviceguard-cumulative-sums": {
+    "/timeseries-analysis/time-series-data": {
       "get": {
         "tags": ["timeseries-analysis"],
-        "summary": "get risk analysis cumulative sums",
+        "summary": "get test timeseries data for a verification job and risk analysis",
         "description": "",
-        "operationId": "getCumulativeSums",
+        "operationId": "getTimeSeriesRecords",
         "produces": ["application/json"],
         "parameters": [
           {
             "name": "verificationTaskId",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
-            "name": "analysisStartTime",
+            "name": "startTime",
             "in": "query",
-            "required": false,
-            "type": "string"
+            "required": true,
+            "type": "integer",
+            "format": "int64"
           },
           {
-            "name": "analysisEndTime",
+            "name": "endTime",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "hosts",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1174,7 +1182,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/RestResponseMapStringMapStringListMetricSumDTO"
+              "$ref": "#/definitions/RestResponseListTimeSeriesRecordDTO"
             }
           }
         }
@@ -1230,6 +1238,43 @@
         }
       }
     },
+    "/timeseries-analysis/timeseries-serviceguard-cumulative-sums": {
+      "get": {
+        "tags": ["timeseries-analysis"],
+        "summary": "get risk analysis cumulative sums",
+        "description": "",
+        "operationId": "getCumulativeSums",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "verificationTaskId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "analysisStartTime",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "analysisEndTime",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseMapStringMapStringListMetricSumDTO"
+            }
+          }
+        }
+      }
+    },
     "/timeseries-analysis/timeseries-verification-task-save-analysis": {
       "post": {
         "tags": ["timeseries-analysis"],
@@ -1265,51 +1310,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/RestResponseVoid"
-            }
-          }
-        }
-      }
-    },
-    "/timeseries-analysis/time-series-data": {
-      "get": {
-        "tags": ["timeseries-analysis"],
-        "summary": "get test timeseries data for a verification job and risk analysis",
-        "description": "",
-        "operationId": "getTimeSeriesRecords",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "verificationTaskId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "startTime",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "endTime",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "hosts",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/RestResponseListTimeSeriesRecordDTO"
             }
           }
         }
@@ -3456,6 +3456,128 @@
         }
       }
     },
+    "/partial-yaml-schema/details": {
+      "get": {
+        "tags": ["partial-yaml-schema"],
+        "summary": "Get Partial Yaml Schema with details",
+        "description": "",
+        "operationId": "getPartialYamlSchemaWithDetails",
+        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": ["account", "org", "project", "unknown"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseYamlSchemaDetailsWrapper"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/partial-yaml-schema/merged": {
+      "post": {
+        "tags": ["partial-yaml-schema"],
+        "summary": "Get Merged Partial Yaml Schema",
+        "description": "",
+        "operationId": "getMergedPartialYamlSchema",
+        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": ["account", "org", "project", "unknown"]
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/YamlSchemaDetailsWrapper"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListPartialSchemaDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/partial-yaml-schema": {
       "get": {
         "tags": ["partial-yaml-schema"],
@@ -3751,7 +3873,7 @@
               "GITOPS_SYNC",
               "BambooBuild",
               "CdSscaOrchestration",
-              "TasRouteMapping",
+              "RouteMapping",
               "AWSSecurityHub",
               "CustomIngest",
               "BackstageEnvironmentVariable",
@@ -3759,7 +3881,8 @@
               "CodeQL",
               "Gitleaks",
               "DeployCloudFunctionGenOne",
-              "RollbackCloudFunctionGenOne"
+              "RollbackCloudFunctionGenOne",
+              "K8sBlueGreenStageScaleDown"
             ]
           },
           {
@@ -3782,128 +3905,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseJsonNode"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/partial-yaml-schema/details": {
-      "get": {
-        "tags": ["partial-yaml-schema"],
-        "summary": "Get Partial Yaml Schema with details",
-        "description": "",
-        "operationId": "getPartialYamlSchemaWithDetails",
-        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "scope",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "enum": ["account", "org", "project", "unknown"]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseYamlSchemaDetailsWrapper"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/partial-yaml-schema/merged": {
-      "post": {
-        "tags": ["partial-yaml-schema"],
-        "summary": "Get Merged Partial Yaml Schema",
-        "description": "",
-        "operationId": "getMergedPartialYamlSchema",
-        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "scope",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "enum": ["account", "org", "project", "unknown"]
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/YamlSchemaDetailsWrapper"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListPartialSchemaDTO"
             }
           },
           "400": {
@@ -6109,75 +6110,6 @@
         }
       }
     },
-    "/dynatrace/fetch-sample-data": {
-      "post": {
-        "tags": ["dynatrace"],
-        "summary": "get dynatrace sample data",
-        "description": "",
-        "operationId": "getDynatraceSampleData",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "connectorIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "tracingId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/DynatraceSampleDataRequestDTO"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListTimeSeriesSampleDTO"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
     "/dynatrace/services": {
       "get": {
         "tags": ["dynatrace"],
@@ -6419,6 +6351,75 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseSetMetricPackValidationResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/dynatrace/fetch-sample-data": {
+      "post": {
+        "tags": ["dynatrace"],
+        "summary": "get dynatrace sample data",
+        "description": "",
+        "operationId": "getDynatraceSampleData",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "connectorIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tracingId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/DynatraceSampleDataRequestDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListTimeSeriesSampleDTO"
             }
           },
           "400": {
@@ -10340,6 +10341,37 @@
         }
       }
     },
+    "/timeseries/metric-template": {
+      "get": {
+        "tags": ["timeseries"],
+        "summary": "get metric definition for a given data source config",
+        "description": "",
+        "operationId": "getMetricDefinitions",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cvConfigId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseListTimeSeriesMetricDefinition"
+            }
+          }
+        }
+      }
+    },
     "/timeseries/metric-group-data": {
       "get": {
         "tags": ["timeseries"],
@@ -10441,37 +10473,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/RestResponseTimeSeriesTestDataDTO"
-            }
-          }
-        }
-      }
-    },
-    "/timeseries/metric-template": {
-      "get": {
-        "tags": ["timeseries"],
-        "summary": "get metric definition for a given data source config",
-        "description": "",
-        "operationId": "getMetricDefinitions",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "cvConfigId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/RestResponseListTimeSeriesMetricDefinition"
             }
           }
         }
@@ -14233,6 +14234,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_SERVICE_DRIVER_EXCEPTION",
             "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
@@ -14317,7 +14319,13 @@
             "AWS_EKS_ERROR",
             "OPA_POLICY_EVALUATION_ERROR",
             "USER_MARKED_FAILURE",
-            "SSH_RETRY"
+            "SSH_RETRY",
+            "HTTP_CLIENT_ERROR_RESPONSE",
+            "HTTP_INTERNAL_SERVER_ERROR",
+            "HTTP_BAD_GATEWAY",
+            "HTTP_SERVICE_UNAVAILABLE",
+            "HTTP_GATEWAY_TIMEOUT",
+            "HTTP_SERVER_ERROR_RESPONSE"
           ]
         },
         "message": {
@@ -14632,6 +14640,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_SERVICE_DRIVER_EXCEPTION",
             "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
@@ -14716,7 +14725,13 @@
             "AWS_EKS_ERROR",
             "OPA_POLICY_EVALUATION_ERROR",
             "USER_MARKED_FAILURE",
-            "SSH_RETRY"
+            "SSH_RETRY",
+            "HTTP_CLIENT_ERROR_RESPONSE",
+            "HTTP_INTERNAL_SERVER_ERROR",
+            "HTTP_BAD_GATEWAY",
+            "HTTP_SERVICE_UNAVAILABLE",
+            "HTTP_GATEWAY_TIMEOUT",
+            "HTTP_SERVER_ERROR_RESPONSE"
           ]
         },
         "message": {
@@ -15030,6 +15045,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_SERVICE_DRIVER_EXCEPTION",
             "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
@@ -15114,7 +15130,13 @@
             "AWS_EKS_ERROR",
             "OPA_POLICY_EVALUATION_ERROR",
             "USER_MARKED_FAILURE",
-            "SSH_RETRY"
+            "SSH_RETRY",
+            "HTTP_CLIENT_ERROR_RESPONSE",
+            "HTTP_INTERNAL_SERVER_ERROR",
+            "HTTP_BAD_GATEWAY",
+            "HTTP_SERVICE_UNAVAILABLE",
+            "HTTP_GATEWAY_TIMEOUT",
+            "HTTP_SERVER_ERROR_RESPONSE"
           ]
         },
         "level": {
@@ -15241,102 +15263,6 @@
           "items": {
             "$ref": "#/definitions/ResponseMessage"
           }
-        }
-      }
-    },
-    "RestResponseListTimeSeriesRiskSummary": {
-      "type": "object",
-      "properties": {
-        "metaData": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object"
-          }
-        },
-        "resource": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/TimeSeriesRiskSummary"
-          }
-        },
-        "responseMessages": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ResponseMessage"
-          }
-        }
-      }
-    },
-    "TimeSeriesRiskSummary": {
-      "type": "object",
-      "properties": {
-        "uuid": {
-          "type": "string"
-        },
-        "verificationTaskId": {
-          "type": "string"
-        },
-        "analysisStartTime": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "analysisEndTime": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "transactionMetricRiskList": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/TransactionMetricRisk"
-          }
-        },
-        "overallRisk": {
-          "type": "number",
-          "format": "double"
-        },
-        "validUntil": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "createdAt": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "lastUpdatedAt": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "TransactionMetricRisk": {
-      "type": "object",
-      "properties": {
-        "transactionName": {
-          "type": "string"
-        },
-        "metricName": {
-          "type": "string"
-        },
-        "metricIdentifier": {
-          "type": "string"
-        },
-        "metricRisk": {
-          "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
-        },
-        "metricScore": {
-          "type": "number",
-          "format": "double"
-        },
-        "longTermPattern": {
-          "type": "boolean"
-        },
-        "lastSeenTime": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "anomalous": {
-          "type": "boolean"
         }
       }
     },
@@ -15937,6 +15863,102 @@
           "items": {
             "$ref": "#/definitions/ResponseMessage"
           }
+        }
+      }
+    },
+    "RestResponseListTimeSeriesRiskSummary": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "resource": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TimeSeriesRiskSummary"
+          }
+        },
+        "responseMessages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseMessage"
+          }
+        }
+      }
+    },
+    "TimeSeriesRiskSummary": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "verificationTaskId": {
+          "type": "string"
+        },
+        "analysisStartTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "analysisEndTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "transactionMetricRiskList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionMetricRisk"
+          }
+        },
+        "overallRisk": {
+          "type": "number",
+          "format": "double"
+        },
+        "validUntil": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastUpdatedAt": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "TransactionMetricRisk": {
+      "type": "object",
+      "properties": {
+        "transactionName": {
+          "type": "string"
+        },
+        "metricName": {
+          "type": "string"
+        },
+        "metricIdentifier": {
+          "type": "string"
+        },
+        "metricRisk": {
+          "type": "string",
+          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+        },
+        "metricScore": {
+          "type": "number",
+          "format": "double"
+        },
+        "longTermPattern": {
+          "type": "boolean"
+        },
+        "lastSeenTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "anomalous": {
+          "type": "boolean"
         }
       }
     },
@@ -16770,7 +16792,7 @@
         }
       }
     },
-    "RestResponseMapStringMapStringListMetricSumDTO": {
+    "RestResponseListTimeSeriesRecordDTO": {
       "type": "object",
       "properties": {
         "metaData": {
@@ -16780,15 +16802,9 @@
           }
         },
         "resource": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/MetricSumDTO"
-              }
-            }
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TimeSeriesRecordDTO"
           }
         },
         "responseMessages": {
@@ -16796,6 +16812,34 @@
           "items": {
             "$ref": "#/definitions/ResponseMessage"
           }
+        }
+      }
+    },
+    "TimeSeriesRecordDTO": {
+      "type": "object",
+      "properties": {
+        "verificationTaskId": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "metricName": {
+          "type": "string"
+        },
+        "metricIdentifier": {
+          "type": "string"
+        },
+        "groupName": {
+          "type": "string"
+        },
+        "epochMinute": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "metricValue": {
+          "type": "number",
+          "format": "double"
         }
       }
     },
@@ -16846,6 +16890,35 @@
               "items": {
                 "type": "number",
                 "format": "double"
+              }
+            }
+          }
+        },
+        "responseMessages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseMessage"
+          }
+        }
+      }
+    },
+    "RestResponseMapStringMapStringListMetricSumDTO": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "resource": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/MetricSumDTO"
               }
             }
           }
@@ -16978,57 +17051,6 @@
         },
         "anomalous": {
           "type": "boolean"
-        }
-      }
-    },
-    "RestResponseListTimeSeriesRecordDTO": {
-      "type": "object",
-      "properties": {
-        "metaData": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object"
-          }
-        },
-        "resource": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/TimeSeriesRecordDTO"
-          }
-        },
-        "responseMessages": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ResponseMessage"
-          }
-        }
-      }
-    },
-    "TimeSeriesRecordDTO": {
-      "type": "object",
-      "properties": {
-        "verificationTaskId": {
-          "type": "string"
-        },
-        "host": {
-          "type": "string"
-        },
-        "metricName": {
-          "type": "string"
-        },
-        "metricIdentifier": {
-          "type": "string"
-        },
-        "groupName": {
-          "type": "string"
-        },
-        "epochMinute": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "metricValue": {
-          "type": "number",
-          "format": "double"
         }
       }
     },
@@ -19187,68 +19209,6 @@
     "JsonNode": {
       "type": "object"
     },
-    "PartialSchemaDTO": {
-      "type": "object",
-      "properties": {
-        "schema": {
-          "$ref": "#/definitions/JsonNode"
-        },
-        "nodeType": {
-          "type": "string"
-        },
-        "nodeName": {
-          "type": "string"
-        },
-        "namespace": {
-          "type": "string"
-        },
-        "skipStageSchema": {
-          "type": "boolean"
-        },
-        "moduleType": {
-          "type": "string",
-          "enum": [
-            "CD",
-            "CI",
-            "CV",
-            "CF",
-            "CE",
-            "STO",
-            "CHAOS",
-            "SRM",
-            "IACM",
-            "CET",
-            "CODE",
-            "CORE",
-            "PMS",
-            "TEMPLATESERVICE",
-            "GOVERNANCE",
-            "IDP"
-          ]
-        }
-      }
-    },
-    "ResponseListPartialSchemaDTO": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PartialSchemaDTO"
-          }
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
     "ResponseYamlSchemaDetailsWrapper": {
       "type": "object",
       "properties": {
@@ -19375,6 +19335,68 @@
         },
         "availableAtProjectLevel": {
           "type": "boolean"
+        }
+      }
+    },
+    "PartialSchemaDTO": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "$ref": "#/definitions/JsonNode"
+        },
+        "nodeType": {
+          "type": "string"
+        },
+        "nodeName": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "skipStageSchema": {
+          "type": "boolean"
+        },
+        "moduleType": {
+          "type": "string",
+          "enum": [
+            "CD",
+            "CI",
+            "CV",
+            "CF",
+            "CE",
+            "STO",
+            "CHAOS",
+            "SRM",
+            "IACM",
+            "CET",
+            "CODE",
+            "CORE",
+            "PMS",
+            "TEMPLATESERVICE",
+            "GOVERNANCE",
+            "IDP"
+          ]
+        }
+      }
+    },
+    "ResponseListPartialSchemaDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PartialSchemaDTO"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
         }
       }
     },
@@ -21719,17 +21741,6 @@
         }
       }
     },
-    "DynatraceSampleDataRequestDTO": {
-      "type": "object",
-      "properties": {
-        "metricSelector": {
-          "type": "string"
-        },
-        "serviceId": {
-          "type": "string"
-        }
-      }
-    },
     "DynatraceServiceDTO": {
       "type": "object",
       "properties": {
@@ -21891,6 +21902,17 @@
           "items": {
             "$ref": "#/definitions/MetricPackDTO"
           }
+        }
+      }
+    },
+    "DynatraceSampleDataRequestDTO": {
+      "type": "object",
+      "properties": {
+        "metricSelector": {
+          "type": "string"
+        },
+        "serviceId": {
+          "type": "string"
         }
       }
     },
@@ -25255,7 +25277,7 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["UsernameToken"]
+          "enum": ["UsernameToken", "OAuth"]
         },
         "spec": {
           "$ref": "#/definitions/BitbucketApiAccessSpecDTO"
@@ -25342,6 +25364,25 @@
     },
     "BitbucketHttpCredentialsSpecDTO": {
       "type": "object"
+    },
+    "BitbucketOauth": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BitbucketApiAccessSpecDTO"
+        },
+        {
+          "type": "object",
+          "required": ["refreshTokenRef", "tokenRef"],
+          "properties": {
+            "tokenRef": {
+              "type": "string"
+            },
+            "refreshTokenRef": {
+              "type": "string"
+            }
+          }
+        }
+      ]
     },
     "BitbucketSshCredentials": {
       "allOf": [
@@ -26589,6 +26630,9 @@
           "required": ["tokenRef"],
           "properties": {
             "tokenRef": {
+              "type": "string"
+            },
+            "apiUrl": {
               "type": "string"
             }
           }
@@ -30093,6 +30137,22 @@
         }
       }
     },
+    "SLOError": {
+      "type": "object",
+      "required": ["failedState"],
+      "properties": {
+        "failedState": {
+          "type": "boolean"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "sloErrorType": {
+          "type": "string",
+          "enum": ["DataCollectionFailure", "SimpleSLODeletion"]
+        }
+      }
+    },
     "SLOHealthListView": {
       "type": "object",
       "required": [
@@ -30101,16 +30161,13 @@
         "errorBudgetRemainingPercentage",
         "errorBudgetRisk",
         "evaluationType",
-        "failedState",
         "name",
         "noOfActiveAlerts",
         "projectParams",
         "sloIdentifier",
         "sloTargetPercentage",
-        "sloTargetType",
         "sloType",
-        "totalErrorBudget",
-        "userJourneys"
+        "totalErrorBudget"
       ],
       "properties": {
         "sloIdentifier": {
@@ -30213,8 +30270,8 @@
         "projectParams": {
           "$ref": "#/definitions/ProjectParams"
         },
-        "failedState": {
-          "type": "boolean"
+        "sloError": {
+          "$ref": "#/definitions/SLOError"
         },
         "errorBudgetRisk": {
           "type": "string",
@@ -30585,11 +30642,17 @@
             "$ref": "#/definitions/Point"
           }
         },
+        "sloError": {
+          "$ref": "#/definitions/SLOError"
+        },
         "errorBudgetRisk": {
           "type": "string",
           "enum": ["EXHAUSTED", "UNHEALTHY", "NEED_ATTENTION", "OBSERVE", "HEALTHY"]
         },
         "calculatingSLI": {
+          "type": "boolean"
+        },
+        "totalErrorBudgetApplicable": {
           "type": "boolean"
         },
         "recalculatingSLI": {
@@ -30668,13 +30731,9 @@
       "type": "object",
       "required": [
         "contributedErrorBudgetBurned",
-        "environmentIdentifier",
         "errorBudgetBurned",
-        "monitoredServiceIdentifier",
         "projectParams",
-        "serviceName",
         "sliStatusPercentage",
-        "sliType",
         "sloIdentifier",
         "sloName",
         "sloTargetPercentage",
@@ -30729,8 +30788,8 @@
         "projectName": {
           "type": "string"
         },
-        "failedState": {
-          "type": "boolean"
+        "sloError": {
+          "$ref": "#/definitions/SLOError"
         }
       }
     },
@@ -30934,7 +30993,13 @@
           "$ref": "#/definitions/SecondaryEventDetails"
         },
         {
-          "type": "object"
+          "type": "object",
+          "required": ["message"],
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          }
         }
       ]
     },
