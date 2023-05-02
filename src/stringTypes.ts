@@ -5271,12 +5271,14 @@ export interface StringsMap {
   'triggers.conditionsPanel.attribute': string
   'triggers.conditionsPanel.branchName': string
   'triggers.conditionsPanel.changedFiles': string
+  'triggers.conditionsPanel.eventCondition': string
   'triggers.conditionsPanel.headerConditions': string
   'triggers.conditionsPanel.jexlCondition': string
   'triggers.conditionsPanel.jexlConditionPlaceholder': string
   'triggers.conditionsPanel.manifestVersion': string
   'triggers.conditionsPanel.matchesValue': string
   'triggers.conditionsPanel.matchesValuePlaceholder': string
+  'triggers.conditionsPanel.metadataConditions': string
   'triggers.conditionsPanel.operator': string
   'triggers.conditionsPanel.payloadConditions': string
   'triggers.conditionsPanel.sourceBranch': string

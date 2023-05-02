@@ -1097,6 +1097,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         pipelineJson = clearRuntimeInput(yamlTemplate)
       }
       const eventConditions = source?.spec?.spec?.eventConditions || []
+      const metaDataConditions = source?.spec?.spec?.metaDataConditions || []
+      const jexlCondition = source?.spec?.spec?.jexlCondition
       const { value: versionValue, operator: versionOperator } =
         eventConditions?.find(
           (eventCondition: AddConditionInterface) => eventCondition.key === EventConditionTypes.VERSION
@@ -1126,7 +1128,9 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         eventConditions: eventConditions?.filter(
           (eventCondition: AddConditionInterface) =>
             eventCondition.key !== EventConditionTypes.BUILD && eventCondition.key !== EventConditionTypes.VERSION
-        )
+        ),
+        metaDataConditions,
+        jexlCondition
       }
       if (type === TriggerTypes.ARTIFACT) {
         delete newOnEditInitialValues['manifestType']
@@ -1473,7 +1477,6 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     }
     return {}
   }
-
   const [initialValues, setInitialValues] = useState<FlatInitialValuesInterface>(
     Object.assign(getInitialValues(triggerTypeOnNew), onEditInitialValues)
   )
