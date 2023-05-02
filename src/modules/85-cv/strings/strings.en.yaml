@@ -900,6 +900,8 @@ slos:
   goodRequestMetric: Good request metric
   badRequestMetric: Bad request metric
   validRequestMetric: Valid request metric
+  dataCollectionFailure: SLO data collection failed
+  untilPresent: until present
   sloDetailsChart:
     annotation: Annotation
     editAnnotation: Edit Annotation

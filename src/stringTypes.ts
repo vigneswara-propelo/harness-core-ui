@@ -9214,6 +9214,7 @@ export interface StringsMap {
   'cv.slos.createCompositeSLO': string
   'cv.slos.createMonitoredService': string
   'cv.slos.createSLO': string
+  'cv.slos.dataCollectionFailure': string
   'cv.slos.defineSLOSubttitle': string
   'cv.slos.deleteSLO': string
   'cv.slos.errorBudgetPolicySubtitle': string
@@ -9296,6 +9297,7 @@ export interface StringsMap {
   'cv.slos.target': string
   'cv.slos.title': string
   'cv.slos.totalServices': string
+  'cv.slos.untilPresent': string
   'cv.slos.userJourney': string
   'cv.slos.userJourneyCreated': string
   'cv.slos.userJourneyPlaceholder': string
