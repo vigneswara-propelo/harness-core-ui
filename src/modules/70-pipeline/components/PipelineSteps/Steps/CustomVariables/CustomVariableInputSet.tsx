@@ -136,6 +136,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
               <Text
                 font={{ variation: FontVariation.SMALL_BOLD, size: 'normal' }}
                 color={Color.BLACK}
+                lineClamp={1}
               >{`${variableNamePrefix}${variable.name}`}</Text>
               <Text font={{ size: 'small' }} color={Color.GREY_600}>
                 {variable.type}
