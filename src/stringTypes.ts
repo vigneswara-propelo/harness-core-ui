@@ -1354,7 +1354,9 @@ export interface StringsMap {
   'rbac.communityErrorMessages.resourceGroup': string
   'rbac.communityErrorMessages.role': string
   'rbac.customResourceGroups': string
+  'rbac.customResourceGroupsTooltip': string
   'rbac.customRoles': string
+  'rbac.customRolesTooltip': string
   'rbac.generateToken': string
   'rbac.group': string
   'rbac.in': string
