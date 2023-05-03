@@ -16,7 +16,8 @@ import {
   tagsType,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  TabNavigation
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import React, { ReactNode, useEffect } from 'react'
@@ -258,7 +259,7 @@ export default function TriggersDetailPage(): JSX.Element {
     >
   >()
   const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION, CDS_TRIGGER_ACTIVITY_PAGE } = useFeatureFlags()
 
   const {
     data: triggerResponse,
@@ -417,7 +418,30 @@ export default function TriggersDetailPage(): JSX.Element {
     }
   }, [CI_YAML_VERSIONING, module])
 
-  const { CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
+  const routeParams = {
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    triggerIdentifier,
+    module,
+    repoIdentifier,
+    branch,
+    connectorRef,
+    repoName,
+    storeType
+  }
+
+  const triggerLinks = [
+    {
+      label: getString('details'),
+      to: routes.toTriggersDetailPage(routeParams)
+    },
+    {
+      label: getString('activityHistoryLabel'),
+      to: routes.toTriggersActivityHistoryPage(routeParams)
+    }
+  ]
 
   return (
     <>
@@ -443,7 +467,7 @@ export default function TriggersDetailPage(): JSX.Element {
                 }
                 size={35}
               />
-              <Layout.Horizontal spacing="small" data-testid={triggerResponse.data?.identifier}>
+              <Layout.Horizontal spacing="small" data-testid={triggerResponse.data?.identifier} width={'78%'}>
                 <Layout.Vertical padding={{ left: 'small' }}>
                   <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
                     <Text style={{ fontSize: 20, fontWeight: 600 }} color={Color.GREY_700}>
@@ -464,6 +488,7 @@ export default function TriggersDetailPage(): JSX.Element {
                   </Text>
                 </Layout.Vertical>
               </Layout.Horizontal>
+              {CDS_TRIGGER_ACTIVITY_PAGE && <TabNavigation links={triggerLinks} size={'small'} />}
             </Layout.Horizontal>
           )}
         </Layout.Vertical>

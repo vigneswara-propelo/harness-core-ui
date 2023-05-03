@@ -161,6 +161,7 @@ exports[`Test Trigger Details Page Test should test snapshot view 1`] = `
         <div
           class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
           data-testid="Trigger__1"
+          style="width: 78%;"
         >
           <div
             class="Layout--vertical StyledProps--main StyledProps--padding-left-small"
