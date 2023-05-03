@@ -4597,6 +4597,8 @@ export interface StringsMap {
   'pipeline.pipelineInputPanel.provide': string
   'pipeline.pipelineInputPanel.selectedExisitingOrProvide': string
   'pipeline.pipelineInputPanel.whatAreInputsets': string
+  'pipeline.pipelineRunFailed': string
+  'pipeline.pipelineRunFailedForRepoBranch': string
   'pipeline.pipelineSteps.approvalStageDescription': string
   'pipeline.pipelineSteps.chainedPipelineDescription': string
   'pipeline.pipelineSteps.customStage': string
