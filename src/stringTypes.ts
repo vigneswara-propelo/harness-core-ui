@@ -3040,6 +3040,8 @@ export interface StringsMap {
   'connectors.serviceNow.serviceNowViewPermissions': string
   'connectors.serviceNow.usernamePasswordAPIKey': string
   'connectors.showInstructions': string
+  'connectors.signalFXLabel': string
+  'connectors.signalfx.urlValidation': string
   'connectors.specifyArtifactRepo': string
   'connectors.specifyArtifactRepoType': string
   'connectors.splunk.connectorDetailsHeader': string
