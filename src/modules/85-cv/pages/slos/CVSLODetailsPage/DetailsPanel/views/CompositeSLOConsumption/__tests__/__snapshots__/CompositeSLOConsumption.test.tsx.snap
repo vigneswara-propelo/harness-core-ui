@@ -306,7 +306,8 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
                   </p>
                 </a>
                 <a
-                  href="/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/prommock_gcpl"
+                  href="/account/undefined/cv/orgs//projects//monitoringservices/edit/prommock_gcpl"
+                  target="_blank"
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-xsmall"
@@ -419,7 +420,8 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
                   </p>
                 </a>
                 <a
-                  href="/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/prommock_env"
+                  href="/account/undefined/cv/orgs//projects//monitoringservices/edit/prommock_env"
+                  target="_blank"
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-xsmall"

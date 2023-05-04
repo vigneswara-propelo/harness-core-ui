@@ -93,11 +93,11 @@ export const RenderMonitoredService: Renderer<CellProps<any>> = ({ row }) => {
       <Link
         to={routes.toCVAddMonitoringServicesEdit({
           accountId,
-          projectIdentifier,
-          orgIdentifier,
+          ...orgProjectParams,
           identifier,
           module: 'cv'
         })}
+        target="_blank"
       >
         <Text color={Color.PRIMARY_7} title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
           {environmentIdentifier}
