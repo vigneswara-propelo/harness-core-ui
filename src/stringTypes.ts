@@ -8031,6 +8031,10 @@ export interface StringsMap {
   'chaos.environments.pageTitle': string
   'chaos.homepage.chaosHomePageTitle': string
   'chaos.homepage.learnMore': string
+  'chaos.homepage.modal.description': string
+  'chaos.homepage.modal.title': string
+  'chaos.homepage.modal.welcomeFree': string
+  'chaos.homepage.modal.welcomeTrial': string
   'chaos.homepage.slogan': string
   'chaos.navLabels.chaosExperiments': string
   'chaos.navLabels.chaosHubs': string
@@ -8044,9 +8048,6 @@ export interface StringsMap {
   'chaos.pipelineStep.expectedResilienceScorePlaceholder': string
   'chaos.pipelineStep.experimentRefLabel': string
   'chaos.selectChaosExperiment': string
-  'chaos.trial.modal.description': string
-  'chaos.trial.modal.title': string
-  'chaos.trial.modal.welcome': string
   'ci.GHAPluginUsesPlaceholder': string
   'ci.GHAPluginWithKeyPlaceholder': string
   'ci.advancedLabel': string
