@@ -9,7 +9,6 @@ import React from 'react'
 import { noop } from 'lodash-es'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import { clickSubmit, fillAtForm, InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import CreateGCPSecretManager from '../CreateGCPSecretManager'
@@ -26,9 +25,6 @@ const commonProps = {
 
 const createConnector = jest.fn()
 const updateConnector = jest.fn()
-jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-  PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM: true
-})
 jest.mock('services/cd-ng', () => ({
   useUpdateConnector: jest.fn().mockImplementation(() => ({ mutate: updateConnector })),
   useCreateConnector: jest.fn().mockImplementation(() => ({ mutate: createConnector })),
@@ -54,7 +50,11 @@ jest.mock('services/portal', () => ({
 describe('Create Secret Manager Wizard', () => {
   test('should be able to render first and second step form', async () => {
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper
+        defaultFeatureFlagValues={{ PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM: true }}
+        path="/account/:accountId/resources/connectors"
+        pathParams={{ accountId: 'dummy' }}
+      >
         <CreateGCPSecretManager {...commonProps} isEditMode={false} connectorInfo={undefined} />
       </TestWrapper>
     )
@@ -82,7 +82,11 @@ describe('Create Secret Manager Wizard', () => {
   })
   test('Should render previous step for edit', async () => {
     const { container, queryByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper
+        defaultFeatureFlagValues={{ PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM: true }}
+        path="/account/:accountId/resources/connectors"
+        pathParams={{ accountId: 'dummy' }}
+      >
         <CreateGCPSecretManager {...commonProps} isEditMode={true} connectorInfo={connectorInfo} mock={mockResponse} />
       </TestWrapper>
     )
@@ -112,7 +116,11 @@ describe('Create Secret Manager Wizard', () => {
 
   test('Should render form for edit', async () => {
     const { container, queryByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper
+        defaultFeatureFlagValues={{ PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM: true }}
+        path="/account/:accountId/resources/connectors"
+        pathParams={{ accountId: 'dummy' }}
+      >
         <CreateGCPSecretManager {...commonProps} isEditMode={true} connectorInfo={connectorInfo} mock={mockResponse} />
       </TestWrapper>
     )
