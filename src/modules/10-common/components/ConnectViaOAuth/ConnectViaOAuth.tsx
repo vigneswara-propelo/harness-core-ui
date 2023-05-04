@@ -13,12 +13,7 @@ import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { Status } from '@common/utils/Constants'
-import {
-  MAX_TIMEOUT_OAUTH,
-  OAUTH_REDIRECT_URL_PREFIX
-} from '@connectors/components/CreateConnector/CreateConnectorUtils'
-import { Connectors } from '@connectors/constants'
-
+import { MAX_TIMEOUT_OAUTH, OAUTH_REDIRECT_URL_PREFIX } from '@common/components/ConnectViaOAuth/OAuthUtils'
 import css from './ConnectViaOAuth.module.scss'
 
 export interface ConnectViaOAuthProps {
@@ -113,7 +108,7 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
   const renderView = useCallback((): JSX.Element => {
     const commonPropsForOAuthConfiguredProperly = {
       iconProps: { size: 24, name: 'success-tick' as IconName },
-      label: getString(isOAuthGettingRelinked ? 'connectors.oAuth.reConfigured' : 'connectors.oAuth.configured'),
+      label: getString(isOAuthGettingRelinked ? 'common.oAuth.reConfigured' : 'common.oAuth.configured'),
       labelProps: { font: { weight: 'semi-bold' as FontWeight }, color: Color.GREEN_800 },
       layoutProps: {
         className: css.oAuthSuccess,
@@ -125,7 +120,7 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
         if (isOAuthAccessRevoked) {
           return renderIconAndLabel({
             iconProps: { size: 20, name: 'danger-icon' },
-            label: getString('connectors.oAuth.accessRevoked'),
+            label: getString('common.oAuth.accessRevoked'),
             labelProps: { font: { variation: FontVariation.BODY } }
           })
         } else if (isExistingConnectionHealthy) {
@@ -137,7 +132,7 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
       case Status.FAILURE:
         return renderIconAndLabel({
           iconProps: { size: 24, name: 'circle-cross', color: Color.RED_500 },
-          label: getString('connectors.oAuth.failed'),
+          label: getString('common.oAuth.failed'),
           labelProps: { font: { weight: 'semi-bold' }, color: Color.RED_500 },
           layoutProps: {
             className: css.oAuthFailure,
@@ -152,9 +147,9 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
 
   const getRelinkLabel = useCallback((): string => {
     switch (gitProviderType) {
-      case Connectors.GITHUB:
+      case 'Github':
         return getString('common.repo_provider.githubLabel')
-      case Connectors.GITLAB:
+      case 'Gitlab':
         return getString('common.repo_provider.gitlabLabel')
       default:
         return ''

@@ -1064,6 +1064,12 @@ contentRequired: Content is required
 defaultSettings: Default Settings
 freezeWindows: Freeze Windows
 oAuthLabel: OAuth
+oAuth:
+  inProgress: OAuth in progress...
+  failed: Error while authorizing user via OAuth. Please try using an access token instead.
+  configured: OAuth configured successfully
+  reConfigured: OAuth re-configured successfully
+  accessRevoked: Access revoked. Please reconfigure the connection.
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git
 moveEntitytoGit: Move {{resourceType}} To Git

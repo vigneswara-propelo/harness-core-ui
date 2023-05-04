@@ -685,6 +685,11 @@ export interface StringsMap {
   'common.noteAccountSwitch': string
   'common.notification': string
   'common.notificationPreferences': string
+  'common.oAuth.accessRevoked': string
+  'common.oAuth.configured': string
+  'common.oAuth.failed': string
+  'common.oAuth.inProgress': string
+  'common.oAuth.reConfigured': string
   'common.oAuthLabel': string
   'common.occurrence.oneTime': string
   'common.occurrence.recurring': string
@@ -2991,11 +2996,6 @@ export interface StringsMap {
   'connectors.nexus.nexus2Label': string
   'connectors.nexus.nexusLabel': string
   'connectors.nexus.nexusServerUrl': string
-  'connectors.oAuth.accessRevoked': string
-  'connectors.oAuth.configured': string
-  'connectors.oAuth.failed': string
-  'connectors.oAuth.inProgress': string
-  'connectors.oAuth.reConfigured': string
   'connectors.ociHelm.ociHelmUrl': string
   'connectors.optionalAuthentication': string
   'connectors.pagerDutyConnectorDetails': string
