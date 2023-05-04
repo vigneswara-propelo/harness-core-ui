@@ -9250,6 +9250,7 @@ export interface StringsMap {
   'cv.slos.selectMonitoredService': string
   'cv.slos.selectMonitoredServiceForSlo': string
   'cv.slos.setSLOSubtitle': string
+  'cv.slos.simpleSLODeletion': string
   'cv.slos.sli': string
   'cv.slos.sliMetricChartRatioBasedHeader': string
   'cv.slos.sliMetricChartSubHeader': string
@@ -9289,6 +9290,7 @@ export interface StringsMap {
   'cv.slos.sloDetailsChart.startDate': string
   'cv.slos.sloDetailsChart.updateAnnotationMessage': string
   'cv.slos.sloEditWarningMessage': string
+  'cv.slos.sloErrorBanner': string
   'cv.slos.sloFormula.subHeader': string
   'cv.slos.sloFormula.title': string
   'cv.slos.sloName': string
