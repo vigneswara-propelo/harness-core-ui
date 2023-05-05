@@ -1636,19 +1636,33 @@ export interface StringsMap {
   'defaultSettings.allowDifferentRepoForInputSets': string
   'defaultSettings.allowOverrides': string
   'defaultSettings.allowUserToMarkStepAsFailedExplicitly': string
+  'defaultSettings.awsIncludeCredit': string
+  'defaultSettings.awsIncludeDiscounts': string
+  'defaultSettings.awsIncludeRefunds': string
+  'defaultSettings.awsIncludeTaxes': string
+  'defaultSettings.azureIncludeRefunds': string
   'defaultSettings.concurrentActivePipelineExecutions': string
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
   'defaultSettings.enableMatrixFieldNames': string
   'defaultSettings.enablePipelineExecutionAuditEvents': string
   'defaultSettings.enforceGitExperience': string
+  'defaultSettings.gcpIncludeDiscounts': string
+  'defaultSettings.gcpIncludeTaxes': string
   'defaultSettings.harnessDefault': string
   'defaultSettings.inheritedFrom': string
   'defaultSettings.mandateAuthorizationForCustomWebhookTriggers': string
   'defaultSettings.mandateWebhookSecretsGithubTriggers': string
   'defaultSettings.noSettingToDisplay': string
+  'defaultSettings.perspectivePreferences': string
   'defaultSettings.pipelineTimeout': string
   'defaultSettings.restoreToDefault': string
+  'defaultSettings.showAnomalies': string
+  'defaultSettings.showAwsCostAs': string
+  'defaultSettings.showAzureCostAs': string
+  'defaultSettings.showGcpCostAs': string
+  'defaultSettings.showOthers': string
+  'defaultSettings.showUnallocatedClusterCost': string
   'defaultSettings.stageTimeout': string
   'defaultSettings.stepTimeout': string
   'governance.permissions.governancePolicies': string
