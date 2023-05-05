@@ -7785,8 +7785,13 @@ export interface StringsMap {
   'cf.gitSync.gitServiceApiError': string
   'cf.gitSync.goToGit': string
   'cf.gitSync.invalidYaml': string
+  'cf.gitSync.resetGitError': string
+  'cf.gitSync.resetGitSettings': string
+  'cf.gitSync.resetGitSuccess': string
+  'cf.gitSync.resetGitWarning': string
   'cf.gitSync.saveFlagToGit': string
   'cf.gitSync.setUpGitConnection': string
+  'cf.gitSync.setUpGitSuccess': string
   'cf.gitSync.syncingPaused': string
   'cf.gitSync.toggleGitSyncPause': string
   'cf.gitSync.turnOffGitAndContinue': string
