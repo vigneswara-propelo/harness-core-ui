@@ -4673,6 +4673,7 @@ export interface StringsMap {
   'pipeline.replacedExpressions': string
   'pipeline.repositoryPlaceholder': string
   'pipeline.repositoryUrlPlaceholder': string
+  'pipeline.requireInput': string
   'pipeline.requiredToFetch': string
   'pipeline.resilienceTab.title': string
   'pipeline.resourceConstraints.currentlyExecuting': string

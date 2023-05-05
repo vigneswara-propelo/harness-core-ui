@@ -65,6 +65,7 @@ poweredByHarness: powered by Harness
 linuxOnly: Supported on Linux only
 outOf: Out Of
 clickToExpandErrorDetails: Click to expand error details
+requireInput: 'Require User Input'
 totalCount: 'Total: {{ count }}'
 approvalStage:
   settingUpStage: Getting stage data
