@@ -3805,6 +3805,7 @@ export interface StringsMap {
   'pipeline.azureWebApp.strategy.basic': string
   'pipeline.azureWebApp.strategy.blueGreen': string
   'pipeline.azureWebApp.strategy.canary': string
+  'pipeline.bamboo.planKey': string
   'pipeline.bamboo.planName': string
   'pipeline.bambooBuilds': string
   'pipeline.bambooStep.addPlanParameters': string
