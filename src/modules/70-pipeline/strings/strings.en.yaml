@@ -94,6 +94,7 @@ utilitiesStep:
   to: Enter recipient email
   subject: Enter the email subject
   cc: Cc
+  certificateKey: Certificate Key
 terraformStep:
   provisionerIdentifier: Enter Provisioner Identifier
   workspace: Enter Workspace
@@ -302,6 +303,9 @@ serviceNowApprovalStep:
     issueNumber: Ticket Number is required
     windowStart: Window Start is required
     windowEnd: Window End is required
+httpStep:
+  validation:
+    certificate: Only certificateKey is provided, we need both certificate and certificateKey or only certificate
 serviceNowCreateStep:
   fieldType:
     configureFields: Configure Fields

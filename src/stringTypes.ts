@@ -4238,6 +4238,7 @@ export interface StringsMap {
   'pipeline.gitPullRequestNumber': string
   'pipeline.gitRepo': string
   'pipeline.guidedCDK8sGetStarted': string
+  'pipeline.httpStep.validation.certificate': string
   'pipeline.iacm.resourceStack': string
   'pipeline.iacm.workflow': string
   'pipeline.imagePathHelperText': string
@@ -5077,6 +5078,7 @@ export interface StringsMap {
   'pipeline.unsupportedImagesWarning': string
   'pipeline.utilitiesStep.assertion': string
   'pipeline.utilitiesStep.cc': string
+  'pipeline.utilitiesStep.certificateKey': string
   'pipeline.utilitiesStep.requestBody': string
   'pipeline.utilitiesStep.subject': string
   'pipeline.utilitiesStep.to': string
