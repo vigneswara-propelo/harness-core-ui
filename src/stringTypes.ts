@@ -16,6 +16,7 @@ export interface StringsMap {
   'common.HelmChartLabel': string
   'common.ID': string
   'common.My': string
+  'common.OAuthTryAgain': string
   'common.OFF': string
   'common.ON': string
   'common.OverUse': string
@@ -686,7 +687,11 @@ export interface StringsMap {
   'common.notification': string
   'common.notificationPreferences': string
   'common.oAuth.accessRevoked': string
+  'common.oAuth.accessTokenAlredyAdded': string
+  'common.oAuth.accessTokenCreateSuccess': string
   'common.oAuth.configured': string
+  'common.oAuth.connectToGitProviderLabel': string
+  'common.oAuth.connectToGitProviderPlaceholder': string
   'common.oAuth.failed': string
   'common.oAuth.inProgress': string
   'common.oAuth.reConfigured': string
@@ -3237,6 +3242,9 @@ export interface StringsMap {
   'auditTrail.streamingDestinations': string
   'auditTrail.supplementaryDetails': string
   'auditTrail.yamlDifference': string
+  'userProfile.accessTokenDeleteFailure': string
+  'userProfile.accessTokenDeleteSuccess': string
+  'userProfile.accessTokensForGitProviders': string
   'userProfile.addSCM': string
   'userProfile.awsCredentials': string
   'userProfile.basicInformation': string
@@ -3244,6 +3252,7 @@ export interface StringsMap {
   'userProfile.changePassword': string
   'userProfile.confirmDelete': string
   'userProfile.confirmDeleteTitle': string
+  'userProfile.confirmDeleteV2': string
   'userProfile.confirmPassword': string
   'userProfile.currentPassword': string
   'userProfile.editProfile': string
@@ -3254,6 +3263,7 @@ export interface StringsMap {
   'userProfile.newPassword': string
   'userProfile.newPasswordShouldMeetTheRequirements': string
   'userProfile.newPasswordShouldNotBeCurrentPassword': string
+  'userProfile.noAccessTokenLabel': string
   'userProfile.passwordChangedSuccessfully': string
   'userProfile.passwordMatch': string
   'userProfile.passwordMustBeBetweenMinAndMax': string

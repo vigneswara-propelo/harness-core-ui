@@ -1070,6 +1070,10 @@ oAuth:
   configured: OAuth configured successfully
   reConfigured: OAuth re-configured successfully
   accessRevoked: Access revoked. Please reconfigure the connection.
+  accessTokenAlredyAdded: Access token for selected git provider is already added.
+  accessTokenCreateSuccess: Access token added successfully.
+  connectToGitProviderLabel: Connect to a Git Provider
+  connectToGitProviderPlaceholder: Select a git Provider
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git
 moveEntitytoGit: Move {{resourceType}} To Git
@@ -1263,6 +1267,7 @@ timeRangeLimitWarning:
 viewAll: View all
 lastUpdatedAt: Last updated at
 tryAgain: Try Again
+OAuthTryAgain: Failed to generate OAuth token. Please try again.
 reload: Reload
 plugins: Plugins
 noPluginInputsRequired: No inputs are required for this plugin.
