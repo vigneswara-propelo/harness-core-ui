@@ -364,6 +364,7 @@ export interface StringsMap {
   'common.filters.unsavedFilter': string
   'common.findOutMore': string
   'common.firstGeneration': string
+  'common.for': string
   'common.forcedDeleteLabel': string
   'common.forcedDeleteWarning': string
   'common.freezeActiveBannerTextPrefix': string

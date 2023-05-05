@@ -657,6 +657,7 @@ filters:
 in: in
 on: on
 at: at
+for: for
 moreRefineSearch: '+{{number}} more (refine search)'
 switchAccount: Switch Account
 switchAccountSearch: Search by Account Name
