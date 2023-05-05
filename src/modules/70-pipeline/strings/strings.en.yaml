@@ -1003,6 +1003,7 @@ artifactsSelection:
   filePathRegexPlaceholder: Enter File Path Regex
   amazonS3Title: Amazon S3
   googleArtifactRegistryTitle: Google Artifact Registry
+  garNoDigestErrortest: No Digest Found for Given Version Details
   githubPackageRegistryTitle: Github Package Registry
   AmazonMachineImageTitle: Amazon Machine Image
   existingDocker:

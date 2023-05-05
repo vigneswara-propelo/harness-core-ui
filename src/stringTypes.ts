@@ -3738,6 +3738,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.feedPlaceholder': string
   'pipeline.artifactsSelection.filePathRegexLabel': string
   'pipeline.artifactsSelection.filePathRegexPlaceholder': string
+  'pipeline.artifactsSelection.garNoDigestErrortest': string
   'pipeline.artifactsSelection.githubPackageRegistryTitle': string
   'pipeline.artifactsSelection.googleArtifactRegistryTitle': string
   'pipeline.artifactsSelection.groupId': string
