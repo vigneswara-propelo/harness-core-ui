@@ -694,8 +694,11 @@ export interface StringsMap {
   'common.oAuth.connectToGitProviderLabel': string
   'common.oAuth.connectToGitProviderPlaceholder': string
   'common.oAuth.failed': string
+  'common.oAuth.fetchingUserAccessTokens': string
   'common.oAuth.inProgress': string
   'common.oAuth.reConfigured': string
+  'common.oAuth.setUpUserAccessTokenMessage': string
+  'common.oAuth.usingUserAccessTokens': string
   'common.oAuthLabel': string
   'common.occurrence.oneTime': string
   'common.occurrence.recurring': string
