@@ -296,7 +296,7 @@ export function OptionalVariables({
   variableTypePath
 }: {
   variablePath: string
-  variableTypePath: string
+  variableTypePath?: string
   allowableTypes: AllowedTypes
   readonly?: boolean
 }): React.ReactElement {
@@ -305,7 +305,7 @@ export function OptionalVariables({
 
   const { values: formValues, setFieldValue } = useFormikContext()
   const variableValue = get(formValues, variablePath)
-  const variableType = get(formValues, variableTypePath)
+  const variableType = variableTypePath ? get(formValues, variableTypePath) : undefined
   const commasInAllowedValues = useFeatureFlag(FeatureFlag.PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES)
 
   return (
