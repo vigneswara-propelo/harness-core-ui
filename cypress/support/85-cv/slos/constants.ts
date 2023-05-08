@@ -535,6 +535,7 @@ export const getServiceLevelObjectiveV2Response = {
       sloTarget: { type: 'Rolling', sloTargetPercentage: 88.0, spec: { periodLength: '1d' } },
       type: 'Composite',
       spec: {
+        sloFormulaType: 'WeightedAverage',
         serviceLevelObjectivesDetails: [
           {
             accountId: '-k53qRQAQ1O7DBLb9ACnjQ',

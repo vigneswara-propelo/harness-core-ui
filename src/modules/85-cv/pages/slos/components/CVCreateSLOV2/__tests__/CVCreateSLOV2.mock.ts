@@ -48,6 +48,7 @@ export const SLODetailsData = {
       type: 'Composite',
       spec: {
         evaluationType: 'Window',
+        sloFormulaType: 'WeightedAverage',
         serviceLevelObjectivesDetails: [
           {
             serviceLevelObjectiveRef: 'hHJYxnUFTCypZdmYr0Q0tQ',
@@ -390,7 +391,8 @@ export const initialData = {
   periodType: 'Rolling',
   serviceLevelIndicatorType: 'Availability',
   type: 'Simple',
-  userJourneyRef: []
+  userJourneyRef: [],
+  sloFormulaType: 'WeightedAverage'
 }
 
 export const serviceLevelObjectiveV2 = {

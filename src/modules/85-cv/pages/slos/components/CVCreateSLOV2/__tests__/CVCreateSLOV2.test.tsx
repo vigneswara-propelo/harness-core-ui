@@ -471,6 +471,9 @@ describe('CVCreateSloV2', () => {
 
     fireEvent.change(container.querySelector('[name="SLOTargetPercentage"]')!, { target: { value: 99 } })
 
+    userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
+    expect(container.querySelector('input[value="WeightedAverage"]')).toBeChecked()
+
     act(() => {
       userEvent.click(screen.getByText('save'))
     })

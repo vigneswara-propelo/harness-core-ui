@@ -8333,6 +8333,7 @@ export interface StringsMap {
   'cv.CompositeSLO.AddSLOValidation.minSLOCount': string
   'cv.CompositeSLO.AddSLOValidation.totalSLOWeight': string
   'cv.CompositeSLO.AddSLOValidation.weightMinMax': string
+  'cv.CompositeSLO.ChooseSLOFormula': string
   'cv.CompositeSLO.Consumption.ActualSlo': string
   'cv.CompositeSLO.Consumption.AssignedWeightage': string
   'cv.CompositeSLO.Consumption.ContributedErrorBudgetBurned': string
@@ -8356,6 +8357,11 @@ export interface StringsMap {
   'cv.CompositeSLO.Weightage': string
   'cv.CompositeSLO.compositeSloCreated': string
   'cv.CompositeSLO.compositeSloUpdated': string
+  'cv.CompositeSLO.impactPercentage': string
+  'cv.CompositeSLO.leastPerformance': string
+  'cv.CompositeSLO.leastPerformanceSubText': string
+  'cv.CompositeSLO.weightedAverage': string
+  'cv.CompositeSLO.weightedAverageSubtext': string
   'cv.Dependency.noData': string
   'cv.Dependency.serviceChanges': string
   'cv.Dependency.serviceList': string
