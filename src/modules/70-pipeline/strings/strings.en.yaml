@@ -667,6 +667,7 @@ barriers:
 executionStatus:
   Failed: FAILED
   Success: SUCCESS
+  IgnoreFailed: SUCCESS (FAILURE IGNORED)
   Aborted: ABORTED
   AbortedByFreeze: ABORTED BY FREEZE
   Error: ERROR

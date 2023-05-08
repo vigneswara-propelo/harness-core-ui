@@ -4107,6 +4107,7 @@ export interface StringsMap {
   'pipeline.executionStatus.Error': string
   'pipeline.executionStatus.Expired': string
   'pipeline.executionStatus.Failed': string
+  'pipeline.executionStatus.IgnoreFailed': string
   'pipeline.executionStatus.NotStarted': string
   'pipeline.executionStatus.Paused': string
   'pipeline.executionStatus.Pausing': string
