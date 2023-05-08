@@ -631,6 +631,10 @@ execution:
     viewCompiledYaml: View Compiled YAML
     compareExecutions: Compare Pipeline Executions
     reRunInDebugMode: Re-run in Debug Mode
+    reRun: Re-run
+    reRunLastFailedStage: From Last Failed Stage
+    reRunSelectedStage: Selected Stage(s)
+    reRunEntirePipeline: Entire Pipeline
   layouts:
     bottom: Align to bottom
     right: Align to right

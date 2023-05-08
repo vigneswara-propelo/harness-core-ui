@@ -4074,7 +4074,11 @@ export interface StringsMap {
   'pipeline.execution.actions.downloadLogs': string
   'pipeline.execution.actions.pausePipeline': string
   'pipeline.execution.actions.pauseStage': string
+  'pipeline.execution.actions.reRun': string
+  'pipeline.execution.actions.reRunEntirePipeline': string
   'pipeline.execution.actions.reRunInDebugMode': string
+  'pipeline.execution.actions.reRunLastFailedStage': string
+  'pipeline.execution.actions.reRunSelectedStage': string
   'pipeline.execution.actions.rerunPipeline': string
   'pipeline.execution.actions.rerunStage': string
   'pipeline.execution.actions.resumePipeline': string
