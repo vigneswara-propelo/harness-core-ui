@@ -259,13 +259,12 @@ export function parseInput(input: string, options?: parseInputOptions): ParsedIn
     } else if (fn.startsWith(InputSetFunction.DEFAULT)) {
       // slice the function name along with surrounding parenthesis
       const fnArgs = fn.slice(InputSetFunction.DEFAULT.length + 1).slice(0, -1)
-      const defValue = parseInputStringWithCommas(fnArgs)?.toString()
 
       try {
         parsedInput[InputSetFunction.DEFAULT] = variableType
           ? variableType === 'Number'
             ? yamlParse(fnArgs)
-            : defValue
+            : fnArgs
           : yamlParse(fnArgs)
       } catch (_) {
         parsedInput[InputSetFunction.DEFAULT] = fnArgs

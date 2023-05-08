@@ -223,6 +223,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
                     allowedValuesValidator={allowedValuesValidator}
                     getAllowedValuesCustomComponent={getAllowedValuesCustomComponent}
                     tagsInputSeparator={tagsInputSeparator}
+                    variableType={type}
                   />
                 ) : null}
                 {values.validation === Validation.Regex ? (

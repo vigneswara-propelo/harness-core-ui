@@ -25,13 +25,14 @@ export interface AllowedValuesFieldsProps {
     allowedValuesCustomComponentProps: AllowedValuesCustomComponentProps
   ) => React.ReactElement
   tagsInputSeparator?: string | RegExp | false
+  variableType: string | JSX.Element
 }
 
 interface RenderFieldProps extends Omit<AllowedValuesFieldsProps, 'showAdvanced'> {
   getString(key: StringKeys, vars?: Record<string, any>): string
 }
 
-interface GetTagProps extends Omit<AllowedValuesFieldsProps, 'showAdvanced' | 'isReadonly'> {
+interface GetTagProps extends Omit<AllowedValuesFieldsProps, 'showAdvanced' | 'isReadonly' | 'variableType'> {
   fieldKey: string
   inputValue: string
   setInputValue: any
@@ -80,11 +81,18 @@ export const RenderField = ({
   isReadonly,
   formik,
   getAllowedValuesCustomComponent,
-  tagsInputSeparator
+  tagsInputSeparator,
+  variableType
 }: RenderFieldProps): React.ReactElement => {
   const [inputValue, setInputValue] = React.useState('')
 
-  const separator = !isUndefined(tagsInputSeparator) ? { separator: tagsInputSeparator } : undefined
+  // disable values getting splitted on the commas - [default component behaviour is splitting on /[,\n\r]/ i.e. Comma, \n and \r]
+  const disableCommaSeparation = !isUndefined(allowedValuesType)
+    ? allowedValuesType === ALLOWED_VALUES_TYPE.TEXT
+    : typeof variableType === 'string' && variableType === 'String'
+  const separator = !isUndefined(tagsInputSeparator)
+    ? { separator: tagsInputSeparator }
+    : { separator: disableCommaSeparation ? '/[\n\r]/' : undefined }
 
   const extraProps = {
     tagsProps: {}
@@ -155,7 +163,8 @@ export default function AllowedValuesFields(props: AllowedValuesFieldsProps): Re
     allowedValuesValidator,
     formik,
     getAllowedValuesCustomComponent,
-    tagsInputSeparator
+    tagsInputSeparator,
+    variableType
   } = props
   const { getString } = useStrings()
   return (
@@ -168,6 +177,7 @@ export default function AllowedValuesFields(props: AllowedValuesFieldsProps): Re
         getAllowedValuesCustomComponent={getAllowedValuesCustomComponent}
         formik={formik}
         tagsInputSeparator={tagsInputSeparator}
+        variableType={variableType}
       />
     </div>
   )
