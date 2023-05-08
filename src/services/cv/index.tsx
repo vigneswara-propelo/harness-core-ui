@@ -901,7 +901,7 @@ export interface ClusteredLog {
   verificationTaskId?: string
 }
 
-export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
+export interface CompositeServiceLevelObjectiveSpec {
   evaluationType?: 'Window' | 'Request'
   serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
   sloFormulaType?: 'WeightedAverage' | 'LeastPerformance'
