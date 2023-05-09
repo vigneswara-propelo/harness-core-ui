@@ -28,7 +28,8 @@ import {
   initialData,
   serviceLevelObjectiveV2,
   editFormData,
-  ratioBasedSLO
+  ratioBasedSLO,
+  updateSLOMock
 } from './CVCreateSLOV2.mock'
 import {
   createOptionalConfigPayload,
@@ -483,6 +484,8 @@ describe('CVCreateSloV2', () => {
     act(() => {
       userEvent.click(document.querySelector('.bp3-dialog button')!)
     })
+
+    expect(updateSLO).toHaveBeenCalledWith(updateSLOMock)
   })
 
   test('Should be able to canel with unsaved changes', async () => {

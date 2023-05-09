@@ -462,3 +462,36 @@ export const editFormData = {
   periodLengthType: undefined,
   SLIMissingDataType: 'Good'
 }
+
+export const updateSLOMock = {
+  description: 'composite slo description',
+  identifier: 'new_slov2',
+  name: 'updated composite slo',
+  notificationRuleRefs: [],
+  orgIdentifier: 'cvng',
+  projectIdentifier: 'project1',
+  sloTarget: {
+    sloTargetPercentage: 99,
+    spec: {
+      periodLength: '3d'
+    },
+    type: 'Rolling'
+  },
+  spec: {
+    evaluationType: 'Window',
+    serviceLevelObjectivesDetails: [
+      {
+        serviceLevelObjectiveRef: 'hHJYxnUFTCypZdmYr0Q0tQ',
+        weightagePercentage: 50
+      },
+      {
+        serviceLevelObjectiveRef: '7b-_GIZxRu6VjFqAqqdVDQ',
+        weightagePercentage: 50
+      }
+    ],
+    sloFormulaType: 'WeightedAverage'
+  },
+  tags: {},
+  type: 'Composite',
+  userJourneyRefs: ['Second_Journey']
+}

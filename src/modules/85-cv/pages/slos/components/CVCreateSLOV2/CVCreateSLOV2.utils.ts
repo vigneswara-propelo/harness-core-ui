@@ -431,6 +431,7 @@ export const createSLOV2RequestPayload = (
         spec: { ...getSLOTarget(values) }
       },
       spec: {
+        sloFormulaType: values?.sloFormulaType,
         evaluationType: values?.evaluationType,
         serviceLevelObjectivesDetails: filterServiceLevelObjectivesDetailsFromSLOObjective(
           values.serviceLevelObjectivesDetails

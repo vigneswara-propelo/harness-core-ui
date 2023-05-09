@@ -1937,6 +1937,7 @@ export const createCompositeSLOPayload = {
   notificationRuleRefs: [],
   sloTarget: { sloTargetPercentage: 99, type: 'Rolling', spec: { periodLength: '7d' } },
   spec: {
+    sloFormulaType: 'WeightedAverage',
     serviceLevelObjectivesDetails: [
       {
         accountId: 'accountId',
@@ -1966,6 +1967,7 @@ export const createProjectLevelCompositeSLOPayload = {
   notificationRuleRefs: [],
   sloTarget: { sloTargetPercentage: 99, type: 'Rolling', spec: { periodLength: '7d' } },
   spec: {
+    sloFormulaType: 'WeightedAverage',
     serviceLevelObjectivesDetails: [
       {
         accountId: 'accountId',
