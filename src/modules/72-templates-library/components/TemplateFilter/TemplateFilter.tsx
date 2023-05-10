@@ -173,9 +173,10 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
         orgIdentifier,
         filterProperties: {
           filterType: 'Template',
-          tags: formValues.tags || [],
+          tags: formValues.tags || {},
           description: formValues.description,
-          templateNames: [formValues.templateNames]
+          templateNames:
+            formValues.templateNames && formValues.templateNames.length > 0 ? [formValues.templateNames] : null
         }
       }
 
