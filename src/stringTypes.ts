@@ -5119,6 +5119,7 @@ export interface StringsMap {
   'pipeline.testsReports.updatedTests': string
   'pipeline.testsReports.viewCallgraph': string
   'pipeline.testsReports.willBeDisplayedIfAvailable': string
+  'pipeline.ticketStatus': string
   'pipeline.timeRemainingSuffix': string
   'pipeline.totalCount': string
   'pipeline.traffic': string
