@@ -40,6 +40,9 @@ interface WrapperProps {
   getTemplate?: (data: GetTemplateProps) => Promise<GetTemplateResponse>
   isDrawerView?: boolean
   setInfraSaveInProgress?: (data: boolean) => void
+  handleInfrastructureUpdate?: (updatedInfrastructure: InfrastructureConfig) => void
+  updatedInfra?: InfrastructureConfig
+  isInfraUpdated?: boolean
 }
 
 export function BootstrapDeployInfraDefinitionWrapper(
@@ -56,7 +59,10 @@ export function BootstrapDeployInfraDefinitionWrapper(
     getTemplate,
     scope,
     isDrawerView = false,
-    setInfraSaveInProgress
+    setInfraSaveInProgress,
+    handleInfrastructureUpdate,
+    updatedInfra,
+    isInfraUpdated
   } = props
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -123,6 +129,7 @@ export function BootstrapDeployInfraDefinitionWrapper(
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
       initialValue={pipeline as PipelineInfoConfig}
       isReadOnly={!canEditInfrastructure}
+      handleInfrastructureUpdate={handleInfrastructureUpdate}
     >
       <PipelineVariablesContextProvider pipeline={pipeline}>
         <DeployStageErrorProvider>
@@ -140,6 +147,9 @@ export function BootstrapDeployInfraDefinitionWrapper(
             isDrawerView={isDrawerView}
             ref={infraDefinitionFormRef}
             setInfraSaveInProgress={setInfraSaveInProgress}
+            handleInfrastructureUpdate={handleInfrastructureUpdate}
+            isInfraUpdated={isInfraUpdated}
+            updatedInfra={updatedInfra}
           />
         </DeployStageErrorProvider>
       </PipelineVariablesContextProvider>

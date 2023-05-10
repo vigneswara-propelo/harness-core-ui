@@ -16,10 +16,20 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
   scope: Scope
   environmentIdentifier: string
   infraSaveInProgress?: boolean
+  isInfraUpdated?: boolean
   shouldShowActionButtons: boolean
+  openUnsavedChangesDiffModal: () => void
 }): JSX.Element {
-  const { discardChanges, applyChanges, scope, environmentIdentifier, infraSaveInProgress, shouldShowActionButtons } =
-    props
+  const {
+    discardChanges,
+    applyChanges,
+    scope,
+    environmentIdentifier,
+    infraSaveInProgress,
+    shouldShowActionButtons,
+    isInfraUpdated,
+    openUnsavedChangesDiffModal
+  } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const environmentEditPermissions: ButtonProps['permission'] = {
     resource: {
@@ -46,16 +56,26 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
             padding={{ top: 'xlarge', left: 'huge', bottom: 'large' }}
             className={css.modalFooter}
           >
+            {isInfraUpdated && (
+              <Button
+                variation={ButtonVariation.LINK}
+                intent="warning"
+                className={css.tagRender}
+                onClick={openUnsavedChangesDiffModal}
+              >
+                {getString('unsavedChanges')}
+              </Button>
+            )}
             <RbacButton
               text={getString('save')}
               variation={ButtonVariation.PRIMARY}
               onClick={applyChanges}
-              disabled={infraSaveInProgress}
+              disabled={infraSaveInProgress || !isInfraUpdated}
               loading={infraSaveInProgress}
               permission={environmentEditPermissions}
             />
             <Button
-              text={getString('cancel')}
+              text={getString('common.discard')}
               variation={ButtonVariation.SECONDARY}
               onClick={discardChanges}
               disabled={infraSaveInProgress}
