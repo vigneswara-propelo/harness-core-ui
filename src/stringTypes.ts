@@ -5406,6 +5406,7 @@ export interface StringsMap {
   'triggers.schedulePanel.TUE': string
   'triggers.schedulePanel.WED': string
   'triggers.schedulePanel.cronExpression': string
+  'triggers.schedulePanel.currentTime': string
   'triggers.schedulePanel.currentUTCTime': string
   'triggers.schedulePanel.dailyTabTitle': string
   'triggers.schedulePanel.dayOfMonthLabel': string
