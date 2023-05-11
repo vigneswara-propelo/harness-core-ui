@@ -176,7 +176,7 @@ export const getOrderedPipelineVariableValues = ({
   return currentPipelineVariables
 }
 
-export const DEFAULT_TRIGGER_BRANCH = '<+trigger.branch>'
+export const DEFAULT_TRIGGER_BRANCH = '<+trigger.payload.branch>'
 
 /**
  * Get proper branch to fetch Trigger InputSets

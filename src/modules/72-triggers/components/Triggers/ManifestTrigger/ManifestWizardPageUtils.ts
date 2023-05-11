@@ -31,6 +31,7 @@ import type {
 } from '@triggers/components/steps/ManifestTriggerConfigPanel/ManifestSelection/ManifestInterface'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { NameIdentifierSchema } from '@common/utils/Validation'
+import { DEFAULT_TRIGGER_BRANCH } from '../utils'
 
 export const eventTypes = {
   PUSH: 'Push',
@@ -425,8 +426,6 @@ export const getModifiedTemplateValues = (
   return returnInitialValuesForEdit
 }
 
-const DEFAULT_TRIGGER_BRANCH = '<+trigger.branch>'
-
 /**
  * Get proper branch to fetch Trigger InputSets
  * If gitAwareForTriggerEnabled is true, pipelineBranchName is used only if it's not DEFAULT_TRIGGER_BRANCH
@@ -585,7 +584,7 @@ export const getDefaultPipelineReferenceBranch = (triggerType = '', event = ''):
       case TriggerGitEvent.ISSUE_COMMENT:
       case TriggerGitEvent.PULL_REQUEST:
       default:
-        return ciCodebaseBuild.spec.branch
+        return DEFAULT_TRIGGER_BRANCH
     }
   }
 

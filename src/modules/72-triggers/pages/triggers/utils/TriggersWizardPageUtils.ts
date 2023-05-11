@@ -37,6 +37,7 @@ import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipelin
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
+import { DEFAULT_TRIGGER_BRANCH } from '@triggers/components/Triggers/utils'
 import { isCronValid } from '../views/subviews/ScheduleUtils'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
 import type {
@@ -2082,8 +2083,6 @@ export const getModifiedTemplateValues = (
   return returnInitialValuesForEdit
 }
 
-export const DEFAULT_TRIGGER_BRANCH = '<+trigger.branch>'
-
 /**
  * Get proper branch to fetch Trigger InputSets
  * If gitAwareForTriggerEnabled is true, pipelineBranchName is used only if it's not DEFAULT_TRIGGER_BRANCH
@@ -2236,7 +2235,7 @@ export const getDefaultPipelineReferenceBranch = (triggerType = '', event = ''):
       case TriggerGitEvent.ISSUE_COMMENT:
       case TriggerGitEvent.PULL_REQUEST:
       default:
-        return ciCodebaseBuild.spec.branch
+        return DEFAULT_TRIGGER_BRANCH
     }
   }
 
