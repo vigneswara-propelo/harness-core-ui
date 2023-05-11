@@ -1,7 +1,14 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useEffect, useRef } from 'react'
 import { Layout, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
-import { isEmpty, isArray } from 'lodash-es'
+import { isEmpty, isArray, defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
@@ -100,7 +107,7 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
             ...queryParams.filters,
             tags: isArray(queryParams.filters?.tags)
               ? queryParams.filters?.tags.reduce((acc: NgTagAcc, cur: NGTag) => {
-                  return { ...acc, [cur.key]: '' }
+                  return { ...acc, [cur.key]: defaultTo(cur.value, '') }
                 }, {})
               : {}
           },
