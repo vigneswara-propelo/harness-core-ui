@@ -2019,7 +2019,7 @@ export const getOrderedPipelineVariableValues = ({
   if (
     runtimeVariables &&
     currentPipelineVariables.some(
-      (variable: NGVariable, index: number) => variable.name !== runtimeVariables[index].name
+      (variable: NGVariable, index: number) => variable.name !== runtimeVariables[index]?.name
     )
   ) {
     return runtimeVariables.map(

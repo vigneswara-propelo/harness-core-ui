@@ -164,7 +164,7 @@ export const getOrderedPipelineVariableValues = ({
   if (
     originalPipelineVariables &&
     currentPipelineVariables.some(
-      (variable: NGVariable, index: number) => variable.name !== originalPipelineVariables[index].name
+      (variable: NGVariable, index: number) => variable.name !== originalPipelineVariables[index]?.name
     )
   ) {
     return originalPipelineVariables.map(
