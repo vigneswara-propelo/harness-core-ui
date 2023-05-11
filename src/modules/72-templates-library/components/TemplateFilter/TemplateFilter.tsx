@@ -35,8 +35,8 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { UseQueryParamsOptions } from '@common/hooks/useQueryParams'
 
 import {
-  useFilterWithValidFieldsWithMetaInfo,
-  usePipelineListFilterFieldToLabelMapping
+  useFilterWithValidFieldsWithMetaInfoForTemplates,
+  useTemplateListFilterFieldToLabelMapping
 } from '@pipeline/pages/utils/Filters/filters'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, DEFAULT_PIPELINE_LIST_TABLE_SORT } from '@pipeline/utils/constants'
 import { TemplateFilterFields } from './TemplateFilterFields'
@@ -114,11 +114,16 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
           filterVisibility: undefined
         } as FilterDTO)
       : null
-  const { name = '', filterVisibility, identifier = '', filterProperties } = appliedFilter || {}
-  const { templateNames, tags: templateTags, description } = (filterProperties as TemplateFilterProperties) || {}
+  const { name = '', filterVisibility = 'OnlyCreator', identifier = '', filterProperties } = appliedFilter || {}
+  const {
+    templateNames,
+    tags: templateTags,
+    description,
+    templateEntityTypes
+  } = (filterProperties as TemplateFilterProperties) || {}
 
-  const fieldToLabelMapping = usePipelineListFilterFieldToLabelMapping()
-  const filterWithValidFieldsWithMetaInfo = useFilterWithValidFieldsWithMetaInfo(
+  const fieldToLabelMapping = useTemplateListFilterFieldToLabelMapping()
+  const filterWithValidFieldsWithMetaInfo = useFilterWithValidFieldsWithMetaInfoForTemplates(
     appliedFilter?.filterProperties,
     fieldToLabelMapping
   )
@@ -158,7 +163,8 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
           {
             ...inputFormData,
             templateNames: inputFormData.templateNames ? [inputFormData.templateNames] : null,
-            tags: { ...templateTagsValid }
+            tags: { ...templateTagsValid },
+            templateEntityTypes: inputFormData.templateEntityTypes ? [inputFormData.templateEntityTypes] : null
           } || {}
       })
 
@@ -186,7 +192,8 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
           filterType: 'Template',
           tags: formValues.tags || {},
           description: formValues.description,
-          templateNames: formValues.templateNames ? [formValues.templateNames] : []
+          templateNames: formValues.templateNames ? [formValues.templateNames] : [],
+          templateEntityTypes: formValues.templateEntityTypes ? [formValues.templateEntityTypes] : []
         }
       }
 
@@ -228,7 +235,8 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
           formValues: {
             templateNames: isArray(templateNames) ? templateNames[0] : templateNames,
             tags: templateTags,
-            description
+            description,
+            templateEntityTypes: isArray(templateEntityTypes) ? templateEntityTypes[0] : templateEntityTypes
           },
           metadata: { name, filterVisibility, identifier, filterProperties: {} }
         }}
