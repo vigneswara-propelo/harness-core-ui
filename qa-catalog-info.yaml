@@ -4,7 +4,7 @@ metadata:
   name: example_service
   description: test service
   annotations:
-    harness.io/project-url: https://qa.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/cd/orgs/default/projects/cd_workshop/dashboard/
+    harness.io/project-url: https://qa.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/cd/orgs/default/projects/cd_workshop/dashboard
     
   tags:
     - java
