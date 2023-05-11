@@ -7172,6 +7172,7 @@ export interface StringsMap {
   'ce.k8sQuickCreate.time.10mins': string
   'ce.k8sQuickCreate.time.5mins': string
   'ce.learnMore': string
+  'ce.msp.sideNavText': string
   'ce.noSavingsDataMessage': string
   'ce.nodeRecommendation.addPreferredInstanceFamilies': string
   'ce.nodeRecommendation.aks': string
