@@ -4157,6 +4157,7 @@ export interface StringsMap {
   'pipeline.executionStatus.QueuedLicenseLimitReached': string
   'pipeline.executionStatus.Running': string
   'pipeline.executionStatus.Skipped': string
+  'pipeline.executionStatus.Started': string
   'pipeline.executionStatus.Starting': string
   'pipeline.executionStatus.Success': string
   'pipeline.executionStatus.Suspended': string
