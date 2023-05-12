@@ -925,6 +925,12 @@ export const inputSetAuthFields = (
             tooltipId: tooltipIds.authAccessId
           }
         }),
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.region) && {
+          [getInputSetFieldName(prefix, 'spec.auth.region')]: {
+            label: 'sto.stepField.authRegion',
+            tooltipId: tooltipIds.authAccessRegion
+          }
+        }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.type) && {
           [getInputSetFieldName(prefix, 'spec.auth.type')]: {
             label: 'typeLabel',
