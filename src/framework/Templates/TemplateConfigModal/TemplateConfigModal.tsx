@@ -7,7 +7,7 @@
 
 import React, { Dispatch, SetStateAction, useContext, useRef, useState } from 'react'
 import * as Yup from 'yup'
-import { defaultTo, isEmpty, isEqual, omit, pick, unset } from 'lodash-es'
+import { defaultTo, isEmpty, isEqual, omit, omitBy, pick, unset } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import {
   Button,
@@ -288,16 +288,20 @@ const BasicTemplateDetails = (
   const onSubmit = React.useCallback(
     (values: TemplateConfigValues) => {
       setLoading(true)
-      const storeMetadataValues = {
-        storeType: values.storeType,
-        connectorRef:
-          typeof values.connectorRef === 'string'
-            ? values.connectorRef
-            : (values.connectorRef as unknown as ConnectorSelectedValue)?.value,
-        repoName: values.repo,
-        branch: values.branch,
-        filePath: values.filePath
-      }
+      // Remove the empty value as these are part of API queryParams
+      const storeMetadataValues = omitBy(
+        {
+          storeType: values.storeType,
+          connectorRef:
+            typeof values.connectorRef === 'string'
+              ? values.connectorRef
+              : (values.connectorRef as unknown as ConnectorSelectedValue)?.value,
+          repoName: values.repo,
+          branch: values.branch,
+          filePath: values.filePath
+        },
+        isEmpty
+      ) as StoreMetadata
       const updateTemplate = omit(
         values,
         'repo',
@@ -316,7 +320,8 @@ const BasicTemplateDetails = (
         ...(!isEmpty(values.repo) && {
           updatedGitDetails: { ...gitDetails, repoIdentifier: values.repo, branch: values.branch }
         }),
-        ...(supportingTemplatesGitx ? { storeMetadata: storeMetadataValues } : {}),
+        // Pass storeMetadata only if template is Remote Enabled & supportingTemplatesGitx
+        ...(supportingTemplatesGitx && isInlineRemoteSelectionApplicable ? { storeMetadata: storeMetadataValues } : {}),
         ...(!isEmpty(values.comment?.trim()) && { comment: values.comment?.trim() }),
         saveAsNewVersionOfExistingTemplate
       })
@@ -660,7 +665,7 @@ const BasicTemplateDetails = (
   )
 }
 
-export const BasicTemplateDetailsWithRef = React.forwardRef(BasicTemplateDetails)
+const BasicTemplateDetailsWithRef = React.forwardRef(BasicTemplateDetails)
 
 const TemplateConfigModal = (
   props: ConfigModalProps,
