@@ -808,6 +808,20 @@ export const inputSetInstanceFields = (
             tooltipId: tooltipIds.instancePath,
             optional: true
           }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.instance?.username) && {
+          [getInputSetFieldName(prefix, 'spec.instance.username')]: {
+            label: 'username',
+            tooltipId: tooltipIds.instanceUsername,
+            optional: true
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.instance?.password) && {
+          [getInputSetFieldName(prefix, 'spec.instance.password')]: {
+            label: 'password',
+            tooltipId: tooltipIds.instancePassword,
+            optional: true
+          }
         })
       }
     : {}
@@ -895,6 +909,19 @@ export const inputSetToolFields = (
           [getInputSetFieldName(prefix, 'spec.tool.project_token')]: {
             label: 'sto.stepField.tool.projectToken',
             tooltipId: tooltipIds.toolProjectToken
+          }
+        }),
+        // TODO get feedback on multiple having multiple ways to extract burp data
+        // ...(shouldRenderRunTimeInputView(template?.spec.tool?.scan_id) && {
+        //   [getInputSetFieldName(prefix, 'spec.tool.scan_id')]: {
+        //     label: 'sto.stepField.tool.scanId',
+        //     tooltipId: tooltipIds.toolScanId
+        //   }
+        // }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.site_id) && {
+          [getInputSetFieldName(prefix, 'spec.tool.site_id')]: {
+            label: 'sto.stepField.tool.siteId',
+            tooltipId: tooltipIds.toolSiteId
           }
         })
       }
@@ -1034,6 +1061,8 @@ export const tooltipIds = {
   instanceProtocol: getTooltipName('InstanceProtocol'),
   instancePort: getTooltipName('InstancePort'),
   instancePath: getTooltipName('InstancePath'),
+  instanceUsername: getTooltipName('InstanceUsername'),
+  instancePassword: getTooltipName('InstancePassword'),
   toolContext: getTooltipName('ToolContext'),
   toolPort: getTooltipName('ToolPort'),
   toolInclude: getTooltipName('ToolInclude'),
@@ -1048,7 +1077,9 @@ export const tooltipIds = {
   toolProjectVersion: getTooltipName('ToolProjectVersion'),
   toolExclude: getTooltipName('ToolExclude'),
   toolTeamName: getTooltipName('ToolTeamName'),
-  toolProjectKey: getTooltipName('ToolProjectKey')
+  toolProjectKey: getTooltipName('ToolProjectKey'),
+  toolScanId: getTooltipName('ToolScanId'),
+  toolSiteId: getTooltipName('ToolSiteId')
 }
 
 export function getCustomTooltipPrefix(step: StepType): StepType {

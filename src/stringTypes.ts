@@ -9547,6 +9547,8 @@ export interface StringsMap {
   'sto.stepField.tool.projectKey': string
   'sto.stepField.tool.projectToken': string
   'sto.stepField.tool.projectVersion': string
+  'sto.stepField.tool.scanId': string
+  'sto.stepField.tool.siteId': string
   'sto.stepField.tool.teamName': string
   'sto.stepField.toolInclude': string
   'sto.stoExemption': string
