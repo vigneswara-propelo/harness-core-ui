@@ -90,9 +90,7 @@ const useRBACError = (): RbacErrorReturn => {
 
                 const resourceIdentifierLabel =
                   resourceIdentifier && resourceTypeHandler?.label
-                    ? ` ${getString(resourceTypeHandler?.label)} ${getString('common.with')} ${getString(
-                        'common.ID'
-                      )} ${resourceIdentifier}`
+                    ? ` ${getString('common.with')} ${getString('common.ID')} ${resourceIdentifier}`
                     : ''
                 if (permission && resourceType && resourceScope) {
                   const currentScope = getScopeFromDTO(
@@ -116,13 +114,14 @@ const useRBACError = (): RbacErrorReturn => {
                       key={`${permissionLabel}-${resourceType}`}
                     >
                       <Text font={{ size: 'small' }} color={Color.GREY_800}>
-                        {`${index + 1}. "${permissionLabel}" ${getString(
-                          'rbac.permissionOn'
-                        )}${resourceIdentifierLabel}`}
+                        {`${index + 1}. "${permissionLabel}" ${getString('rbac.permissionOn')}`}
                         <span className={css.textToLowercase}>
                           {` ${resourceTypeHandler?.label && getString(resourceTypeHandler?.label)}`}
                         </span>
-                        <span>{`${getString('rbac.in')} ${getScopeSuffix(currentScope, resourceScope)}`}</span>
+                        <span>{`${resourceIdentifierLabel} ${getString('rbac.in')} ${getScopeSuffix(
+                          currentScope,
+                          resourceScope
+                        )}`}</span>
                       </Text>
                     </Layout.Vertical>
                   )
