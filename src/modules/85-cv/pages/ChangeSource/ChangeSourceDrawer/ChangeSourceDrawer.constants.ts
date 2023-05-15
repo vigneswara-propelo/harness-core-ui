@@ -47,11 +47,6 @@ export const ChangeSourceCategoryOptions = [
 
 export const ChangeSourceConnectorOptions: CardSelectOption[] = [
   {
-    label: 'cv.onboarding.changeSourceTypes.HarnessCDNextGen.name',
-    value: ChangeSourceTypes.HarnessCDNextGen,
-    category: ChangeSourceCategoryName.DEPLOYMENT
-  },
-  {
     label: 'cv.onboarding.changeSourceTypes.HarnessCDCurrentGen.name',
     value: ChangeSourceTypes.HarnessCD,
     category: ChangeSourceCategoryName.DEPLOYMENT

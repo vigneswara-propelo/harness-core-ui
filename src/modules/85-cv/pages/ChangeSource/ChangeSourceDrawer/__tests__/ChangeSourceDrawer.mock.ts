@@ -8,13 +8,17 @@
 import { ChangeSourceCategoryName } from '../ChangeSourceDrawer.constants'
 
 export const changeSourceDrawerData = {
-  name: 'Harness CD Nextgen',
-  identifier: 'harness_cd_next_gen',
-  type: 'HarnessCDNextGen' as any,
-  desc: 'Deployments from Harness CD Nextgen',
+  name: 'Harness CD',
+  identifier: 'harness_cd',
+  type: 'HarnessCD' as any,
+  desc: 'Deployments from Harness CD',
   enabled: true,
   category: 'Deployment' as any,
-  spec: {}
+  spec: {
+    harnessApplicationId: { value: '6wJB5Y17TNKycUFBJTOKuQ' },
+    harnessEnvironmentId: { value: 'vvQoe7mHQZiO5_78ldj12A' },
+    harnessServiceId: { value: 'R8bdUf9dR1yV8fOcXzpKZA' }
+  }
 }
 
 export const pagerDutyChangeSourceDrawerDataWithoutService = {
@@ -75,7 +79,11 @@ export const changeSourceTableData = [
     desc: 'Deployments from Harness CD',
     enabled: true,
     category: 'Deployment' as any,
-    spec: {}
+    spec: {
+      harnessApplicationId: '6wJB5Y17TNKycUFBJTOKuQ',
+      harnessEnvironmentId: 'vvQoe7mHQZiO5_78ldj12A',
+      harnessServiceId: 'R8bdUf9dR1yV8fOcXzpKZA'
+    }
   }
 ]
 
@@ -85,18 +93,13 @@ export const onSuccessHarnessCD = [
     desc: 'Deployments from Harness CD',
     enabled: true,
     identifier: 'harness_cd',
-    name: 'Harness CD',
-    spec: {},
-    type: 'HarnessCD'
-  },
-  {
-    category: 'Deployment',
-    desc: 'Deployments from Harness CD Nextgen',
-    enabled: true,
-    identifier: 'harness_cd_next_gen',
     name: 'Updated Change Source',
-    spec: {},
-    type: 'HarnessCDNextGen'
+    spec: {
+      harnessApplicationId: '6wJB5Y17TNKycUFBJTOKuQ',
+      harnessEnvironmentId: 'vvQoe7mHQZiO5_78ldj12A',
+      harnessServiceId: 'R8bdUf9dR1yV8fOcXzpKZA'
+    },
+    type: 'HarnessCD'
   }
 ]
 

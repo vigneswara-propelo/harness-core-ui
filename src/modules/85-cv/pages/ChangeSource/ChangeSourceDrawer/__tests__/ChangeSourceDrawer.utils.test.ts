@@ -22,6 +22,8 @@ function mockGetString(name: string): string {
   switch (name) {
     case 'cv.onboarding.changeSourceTypes.HarnessCDNextGen.name':
       return 'Harness CD NextGen'
+    case 'cv.onboarding.changeSourceTypes.HarnessCDCurrentGen.name':
+      return 'Harness CD'
     case 'kubernetesText':
       return 'Kubernetes'
     case 'common.pagerDuty':
@@ -45,14 +47,8 @@ describe('Validate ChangeSource Utils', () => {
     expect(createCardOptions('Deployment', mockGetString, true)).toEqual([
       {
         category: 'Deployment',
-        icon: 'cd-main',
-        label: 'Harness CD NextGen',
-        value: 'HarnessCDNextGen'
-      },
-      {
-        category: 'Deployment',
         icon: 'harness',
-        label: '',
+        label: 'Harness CD',
         value: 'HarnessCD'
       },
       {

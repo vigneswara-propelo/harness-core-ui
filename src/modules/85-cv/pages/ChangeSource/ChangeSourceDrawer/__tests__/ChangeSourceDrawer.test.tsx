@@ -10,6 +10,7 @@ import { render, waitFor, fireEvent, act } from '@testing-library/react'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvServices from 'services/cv'
+import * as portalServices from 'services/portal'
 import { ChangeSourceDrawer } from '../ChangeSourceDrawer'
 import {
   changeSourceTableData,
@@ -47,6 +48,35 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 describe('Test Change Source Drawer', () => {
+  beforeEach(() => {
+    jest.spyOn(portalServices, 'useGetListApplications').mockImplementation(
+      () =>
+        ({
+          loading: false,
+          error: null,
+          data: {},
+          refetch: jest.fn()
+        } as any)
+    )
+    jest.spyOn(portalServices, 'useGetListEnvironments').mockImplementation(
+      () =>
+        ({
+          loading: false,
+          error: null,
+          data: {},
+          refetch: jest.fn()
+        } as any)
+    )
+    jest.spyOn(portalServices, 'useGetListServices').mockImplementation(
+      () =>
+        ({
+          loading: false,
+          error: null,
+          data: {},
+          refetch: jest.fn()
+        } as any)
+    )
+  })
   test('ChangeSource Drawer renders in create mode', async () => {
     const { container, getByText } = render(
       <TestWrapper>
@@ -107,12 +137,12 @@ describe('Test Change Source Drawer', () => {
 
     // change source name input and source type dropdown are rendered
     await waitFor(() => expect(container.querySelector('input[value="deploymentsText"]')).toBeTruthy())
-    await waitFor(() => expect(container.querySelector('input[value="HarnessCDNextGen"]')).toBeTruthy())
-    await waitFor(() => expect(getByText('cv.onboarding.changeSourceTypes.HarnessCDNextGen.name')).toBeTruthy())
+    await waitFor(() => expect(container.querySelector('input[value="HarnessCD"]')).toBeTruthy())
+    await waitFor(() => expect(getByText('cv.onboarding.changeSourceTypes.HarnessCDCurrentGen.name')).toBeTruthy())
 
     // category dropdown and thumbnailSelect are disabled in editmode
     await waitFor(() => expect(container.querySelector('input[value="deploymentsText"]')).toBeDisabled())
-    await waitFor(() => expect(container.querySelector('input[value="HarnessCDNextGen"]')).toBeDisabled())
+    await waitFor(() => expect(container.querySelector('input[value="HarnessCD"]')).toBeDisabled())
 
     setFieldValue({
       container,
