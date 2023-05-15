@@ -312,6 +312,7 @@ export interface AccessControlCheckError {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -397,6 +398,12 @@ export interface AccessControlCheckError {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -406,16 +413,21 @@ export interface AccessControlCheckError {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface AccountNotificationSettingDTO {
+  accountId: string
+  sendNotificationViaDelegate?: boolean
+  smtpConfig?: SmtpConfig
+}
+
 export interface AssessmentError {
   entityId?: string
-  entityType?: 'ASSESSMENT' | 'QUESTION' | 'OPTION' | 'SECTION' | 'BENCHMARK' | 'RECOMMENDATION' | 'INVITE'
+  entityType?: 'ASSESSMENT' | 'QUESTION' | 'OPTION' | 'SECTION' | 'BENCHMARK'
   errorMessages?: string[]
 }
 
 export interface AssessmentInviteDTO {
   assessmentId: string
   emails: string[]
-  errors?: AssessmentError[]
   invitedBy?: string
 }
 
@@ -433,39 +445,26 @@ export interface AssessmentResultsResponse {
   userScores?: Score[]
 }
 
-export interface AssessmentSummaryResponse {
-  assessmentId?: string
-  assessmentName?: string
-  createdOn?: number
-  majorVersion?: number
-  minorVersion?: number
-  numberOfResponses?: number
-  status?: 'DRAFT' | 'ACTIVE' | 'DEPRECATED'
-  updatedOn?: number
-}
-
 export interface AssessmentUploadRequest {
   assessmentId: string
   assessmentName: string
   expectedCompletionDuration: number
   questions?: UploadedQuestion[]
-  type: 'ASSESSMENT' | 'QUESTION' | 'OPTION' | 'SECTION' | 'BENCHMARK' | 'RECOMMENDATION' | 'INVITE'
 }
 
 export interface AssessmentUploadResponse {
-  assessmentId: string
-  assessmentName: string
+  assessmentId?: string
+  assessmentName?: string
   baseScore?: number
   createdAt?: number
   createdBy?: string
   errors?: AssessmentError[]
-  expectedCompletionDuration: number
+  expectedCompletionDuration?: number
   isPublished?: boolean
   lastUpdatedAt?: number
   majorVersion?: number
   minorVersion?: number
-  questions?: UploadedQuestion[]
-  type: 'ASSESSMENT' | 'QUESTION' | 'OPTION' | 'SECTION' | 'BENCHMARK' | 'RECOMMENDATION' | 'INVITE'
+  questions?: Question[]
 }
 
 export interface AttributeFilter {
@@ -480,19 +479,9 @@ export interface BenchmarkDTO {
   scores?: ScoreDTO[]
 }
 
-export interface BenchmarkUploadResponse {
-  assessmentId: string
-  benchmarks: BenchmarkDTO[]
-  errors?: AssessmentError[]
-  majorVersion: number
-  type: 'ASSESSMENT' | 'QUESTION' | 'OPTION' | 'SECTION' | 'BENCHMARK' | 'RECOMMENDATION' | 'INVITE'
-}
-
-export interface BenchmarksUploadRequest {
-  assessmentId: string
+export interface BenchmarksListRequest {
   benchmarks: BenchmarkDTO[]
   majorVersion: number
-  type: 'ASSESSMENT' | 'QUESTION' | 'OPTION' | 'SECTION' | 'BENCHMARK' | 'RECOMMENDATION' | 'INVITE'
 }
 
 export interface CacheResponseMetadata {
@@ -500,6 +489,22 @@ export interface CacheResponseMetadata {
   lastUpdatedAt: number
   ttlLeft: number
 }
+
+export interface DelegateMetaInfo {
+  host_name?: string
+  id?: string
+}
+
+export interface EmailDTO {
+  accountId: string
+  body: string
+  ccRecipients: string[]
+  notificationId: string
+  subject: string
+  toRecipients: string[]
+}
+
+export type EmailSettingDTO = NotificationSettingDTO & {}
 
 export interface EntityGitDetails {
   branch?: string
@@ -799,6 +804,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -884,6 +890,12 @@ export interface Error {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1171,6 +1183,7 @@ export interface ErrorMetadata {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -1256,6 +1269,12 @@ export interface ErrorMetadata {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   errorMessage?: string
 }
 
@@ -1549,6 +1568,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -1634,6 +1654,12 @@ export interface Failure {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1646,6 +1672,8 @@ export type FilterCreatorErrorResponse = ErrorMetadataDTO & {
 
 export type InvalidFieldsDTO = ErrorMetadataDTO & {}
 
+export type MSTeamSettingDTO = NotificationSettingDTO & {}
+
 export interface NodeErrorInfo {
   fqn?: string
   identifier?: string
@@ -1657,6 +1685,33 @@ export interface NodeInfo {
   identifier?: string
   localFqn?: string
   name?: string
+}
+
+export interface NotificationDTO {
+  accountIdentifier?: string
+  channelType?: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS'
+  id?: string
+  processingResponses?: boolean[]
+  retries?: number
+  team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'UNRECOGNIZED'
+}
+
+export interface NotificationProcessingResponse {
+  result?: boolean[]
+  shouldRetry?: boolean
+}
+
+export interface NotificationSettingDTO {
+  accountId: string
+  notificationId: string
+  recipient: string
+  type?: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS'
+}
+
+export interface NotificationTaskResponse {
+  delegateMetaInfo?: DelegateMetaInfo
+  errorMessage?: string
+  processingResponse?: NotificationProcessingResponse
 }
 
 export interface OptionResponse {
@@ -1672,6 +1727,17 @@ export interface OptionResponseWithSelection {
 
 export interface Page {
   content?: { [key: string]: any }[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageNotificationDTO {
+  content?: NotificationDTO[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -1714,6 +1780,8 @@ export interface PageRoleResponse {
   totalPages?: number
 }
 
+export type PagerDutySettingDTO = NotificationSettingDTO & {}
+
 export interface Permission {
   action: string
   allowedScopeLevels: string[]
@@ -1750,6 +1818,24 @@ export interface PrincipalV2 {
   name?: string
   scopeLevel?: string
   type: 'USER' | 'USER_GROUP' | 'SERVICE' | 'API_KEY' | 'SERVICE_ACCOUNT'
+}
+
+export interface Question {
+  maxScore?: number
+  possibleResponses?: QuestionOption[]
+  questionId?: string
+  questionNumber?: number
+  questionText?: string
+  questionType?: 'RATING' | 'LIKERT' | 'CHECKBOX' | 'RADIO_BUTTON' | 'YES_NO'
+  scoreWeightage?: number
+  sectionId?: string
+  sectionName?: string
+}
+
+export interface QuestionOption {
+  optionId?: string
+  optionPoints?: number
+  optionText?: string
 }
 
 export interface QuestionResponse {
@@ -1814,6 +1900,13 @@ export interface ResponseAccessCheckResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseBoolean {
+  correlationId?: string
+  data?: boolean
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseListPermissionResponse {
   correlationId?: string
   data?: PermissionResponse[]
@@ -1838,6 +1931,13 @@ export interface ResponseListSettingResponseDTO {
 export interface ResponseListSettingUpdateResponseDTO {
   correlationId?: string
   data?: SettingUpdateResponseDTO[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListTemplateDTO {
+  correlationId?: string
+  data?: TemplateDTO[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2121,6 +2221,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -2206,6 +2307,12 @@ export interface ResponseMessage {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2224,6 +2331,34 @@ export interface ResponseMessage {
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
+}
+
+export interface ResponseNotificationDTO {
+  correlationId?: string
+  data?: NotificationDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseNotificationTaskResponse {
+  correlationId?: string
+  data?: NotificationTaskResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseOptionalAccountNotificationSettingDTO {
+  correlationId?: string
+  data?: AccountNotificationSettingDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageNotificationDTO {
+  correlationId?: string
+  data?: PageNotificationDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
 export interface ResponsePageRoleAssignmentAggregate {
@@ -2292,6 +2427,13 @@ export interface ResponseSetString {
 export interface ResponseSettingValueResponseDTO {
   correlationId?: string
   data?: SettingValueResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseTemplateDTO {
+  correlationId?: string
+  data?: TemplateDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2456,8 +2598,8 @@ export interface Score {
 }
 
 export interface ScoreDTO {
-  entityId: string
-  maxScore?: number
+  entityId?: string
+  maxScore: number
   score: number
   scoreType: 'QUESTION_LEVEL' | 'SECTION_LEVEL' | 'ASSESSMENT_LEVEL'
 }
@@ -2465,13 +2607,13 @@ export interface ScoreDTO {
 export interface ScoreOverviewDTO {
   benchmarkId?: string
   benchmarkName?: string
-  benchmarkScore?: ScoreDTO
+  benchmarkScore?: Score
   best?: UserResponsesResponse[]
   numberOfResponses?: number
-  organizationScore?: ScoreDTO
+  organizationScore?: Score
   percentageDiffBenchmark?: number
   percentageDiffOrg?: number
-  selfScore?: ScoreDTO
+  selfScore?: Score
   worst?: UserResponsesResponse[]
 }
 
@@ -2531,6 +2673,20 @@ export interface SettingValueResponseDTO {
   valueType: 'String' | 'Boolean' | 'Number'
 }
 
+export type SlackSettingDTO = NotificationSettingDTO & {}
+
+export interface SmtpConfig {
+  encryptedPassword?: string
+  fromAddress?: string
+  host?: string
+  password?: string[]
+  port?: number
+  startTLS?: boolean
+  type?: string
+  useSSL?: boolean
+  username?: string
+}
+
 export interface StackTraceElement {
   classLoaderName?: string
   className?: string
@@ -2540,6 +2696,14 @@ export interface StackTraceElement {
   moduleName?: string
   moduleVersion?: string
   nativeMethod?: boolean
+}
+
+export interface TemplateDTO {
+  createdAt?: number
+  file?: string[]
+  identifier?: string
+  lastModifiedAt?: number
+  team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'UNRECOGNIZED'
 }
 
 export interface TemplateInfo {
@@ -2691,6 +2855,8 @@ export type YamlSchemaErrorWrapperDTO = ErrorMetadataDTO & {
   schemaErrors?: YamlSchemaErrorDTO[]
 }
 
+export type AssessmentUploadRequestRequestBody = AssessmentUploadRequest
+
 export type RoleRequestBody = Role
 
 export type RoleAssignmentRequestBody = RoleAssignment
@@ -2699,7 +2865,7 @@ export type RoleAssignmentFilterRequestBody = RoleAssignmentFilter
 
 export type UserResponsesRequestRequestBody = UserResponsesRequest
 
-export type UploadAssessmentYAMLRequestBody = void
+export type InsertOrUpdateTemplateRequestBody = void
 
 export type SendAssessmentInviteProps = Omit<
   MutateProps<AssessmentInviteDTO, unknown, void, AssessmentInviteDTO, void>,
@@ -3042,3 +3208,86 @@ export const getAssessmentResultsPromise = (
     props,
     signal
   )
+
+export interface GetAssessmentSectionResultsQueryParams {
+  benchmarkId?: string
+}
+
+export interface GetAssessmentSectionResultsPathParams {
+  resultCode: string
+}
+
+export type GetAssessmentSectionResultsProps = Omit<
+  GetProps<
+    AssessmentResultsResponse,
+    unknown,
+    GetAssessmentSectionResultsQueryParams,
+    GetAssessmentSectionResultsPathParams
+  >,
+  'path'
+> &
+  GetAssessmentSectionResultsPathParams
+
+/**
+ * View section wise results of an assessment previously attempted.
+ */
+export const GetAssessmentSectionResults = ({ resultCode, ...props }: GetAssessmentSectionResultsProps) => (
+  <Get<
+    AssessmentResultsResponse,
+    unknown,
+    GetAssessmentSectionResultsQueryParams,
+    GetAssessmentSectionResultsPathParams
+  >
+    path={`/v1/section-results/${resultCode}`}
+    base={getConfig('assessments/api')}
+    {...props}
+  />
+)
+
+export type UseGetAssessmentSectionResultsProps = Omit<
+  UseGetProps<
+    AssessmentResultsResponse,
+    unknown,
+    GetAssessmentSectionResultsQueryParams,
+    GetAssessmentSectionResultsPathParams
+  >,
+  'path'
+> &
+  GetAssessmentSectionResultsPathParams
+
+/**
+ * View section wise results of an assessment previously attempted.
+ */
+export const useGetAssessmentSectionResults = ({ resultCode, ...props }: UseGetAssessmentSectionResultsProps) =>
+  useGet<
+    AssessmentResultsResponse,
+    unknown,
+    GetAssessmentSectionResultsQueryParams,
+    GetAssessmentSectionResultsPathParams
+  >((paramsInPath: GetAssessmentSectionResultsPathParams) => `/v1/section-results/${paramsInPath.resultCode}`, {
+    base: getConfig('assessments/api'),
+    pathParams: { resultCode },
+    ...props
+  })
+
+/**
+ * View section wise results of an assessment previously attempted.
+ */
+export const getAssessmentSectionResultsPromise = (
+  {
+    resultCode,
+    ...props
+  }: GetUsingFetchProps<
+    AssessmentResultsResponse,
+    unknown,
+    GetAssessmentSectionResultsQueryParams,
+    GetAssessmentSectionResultsPathParams
+  > & { resultCode: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    AssessmentResultsResponse,
+    unknown,
+    GetAssessmentSectionResultsQueryParams,
+    GetAssessmentSectionResultsPathParams
+  >(getConfig('assessments/api'), `/v1/section-results/${resultCode}`, props, signal)

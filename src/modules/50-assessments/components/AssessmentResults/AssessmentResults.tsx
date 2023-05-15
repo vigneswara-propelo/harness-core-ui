@@ -107,7 +107,7 @@ export default function AssessmentResults(): JSX.Element {
 
   return (
     <>
-      {resultsLoading && <PageSpinner />}
+      {resultsLoading && <PageSpinner data-testid={'page-spinner'} />}
       {!resultsLoading && resultsError && (
         <PageError
           message={get(resultsError?.data as Error, 'message') || resultsError?.message}
@@ -208,14 +208,14 @@ export default function AssessmentResults(): JSX.Element {
                         </Link>
                       </Layout.Vertical>
                       <PercentageCard
-                        title={getString('assessments.inYourCompany').toLocaleUpperCase()}
+                        title={getString('assessments.inYourCompany')?.toLocaleUpperCase()}
                         percentage={percentageDiffOrg}
                         textLineOne={getString('assessments.companyOverAllScore')}
                         textLineTwo={`Score ${orgScore}/${orgMaxScore} (Based on ${numberOfResponses} survey)`}
                       />
                       {percentageDiffBenchmark ? (
                         <PercentageCard
-                          title={getString('assessments.benchmark').toLocaleUpperCase()}
+                          title={getString('assessments.benchmark')?.toLocaleUpperCase()}
                           percentage={Math.abs(percentageDiffBenchmark)}
                           percentageTitle={isBenchMarkPercentageDiffHigher ? 'Higher' : 'Lower'}
                           textLineOne={benchmarkName as string}
@@ -236,18 +236,16 @@ export default function AssessmentResults(): JSX.Element {
                           const {
                             userScore,
                             organizationScore: questionOrgScore,
-                            benchmarkScore: questionBenchMarkScore,
-                            maxScore: questionMaxScore
+                            benchmarkScore: questionBenchMarkScore
                           } = el
                           return (
                             <>
                               <Card className={css.recommendationsCardContainer}>
                                 <Text className={css.detailsCardQuestionName}>{el?.questionText}</Text>
                                 <Layout.Horizontal>
-                                  <Layout.Vertical padding={{ top: 'xlarge' }} width={120}>
+                                  <Layout.Vertical padding={{ top: 'xxxlarge' }} width={120}>
                                     <Text className={css.scoreLabels}>{getString('assessments.yourScore')}</Text>
                                     <Text className={css.scoreLabels}> {getString('assessments.companyScore')}</Text>
-                                    <Text className={css.scoreLabels}>{getString('assessments.maxScore')}</Text>
                                     {!isEmpty(benchmarkScore) ? (
                                       <Text className={css.scoreLabels}>{getString('assessments.benchmark')}</Text>
                                     ) : null}
@@ -257,8 +255,7 @@ export default function AssessmentResults(): JSX.Element {
                                     options={getScoreComparisonChartOptions({
                                       userScore,
                                       questionOrgScore,
-                                      questionBenchMarkScore,
-                                      questionMaxScore
+                                      questionBenchMarkScore
                                     })}
                                   />
                                 </Layout.Horizontal>
@@ -287,18 +284,16 @@ export default function AssessmentResults(): JSX.Element {
                             const {
                               userScore,
                               organizationScore: questionOrgScore,
-                              benchmarkScore: questionBenchMarkScore,
-                              maxScore: questionMaxScore
+                              benchmarkScore: questionBenchMarkScore
                             } = el
                             return (
                               <>
                                 <Card className={css.recommendationsCardContainer}>
                                   <Text className={css.detailsCardQuestionName}>{el?.questionText}</Text>
                                   <Layout.Horizontal>
-                                    <Layout.Vertical padding={{ top: 'xlarge' }} width={120}>
+                                    <Layout.Vertical padding={{ top: 'xxxlarge' }} width={120}>
                                       <Text className={css.scoreLabels}>{getString('assessments.yourScore')}</Text>
                                       <Text className={css.scoreLabels}>{getString('assessments.companyScore')}</Text>
-                                      <Text className={css.scoreLabels}>{getString('assessments.maxScore')}</Text>
                                       {!isEmpty(benchmarkScore) ? (
                                         <Text className={css.scoreLabels}>{getString('assessments.benchmark')}</Text>
                                       ) : null}
@@ -308,8 +303,7 @@ export default function AssessmentResults(): JSX.Element {
                                       options={getScoreComparisonChartOptions({
                                         userScore,
                                         questionOrgScore,
-                                        questionBenchMarkScore,
-                                        questionMaxScore
+                                        questionBenchMarkScore
                                       })}
                                     />
                                   </Layout.Horizontal>

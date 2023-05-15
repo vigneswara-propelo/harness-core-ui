@@ -3615,6 +3615,7 @@ export interface StringsMap {
   'assessments.inviteToTakeAssessment': string
   'assessments.learnHowWeCompare': string
   'assessments.learnMoreAboutMaturity': string
+  'assessments.level': string
   'assessments.maturityLevelDefinition': string
   'assessments.maturityScore': string
   'assessments.maxScore': string
@@ -3622,10 +3623,9 @@ export interface StringsMap {
   'assessments.questions': string
   'assessments.questionsAnswered': string
   'assessments.recommendations': string
-  'assessments.score': string
   'assessments.scoreCompare': string
   'assessments.scoreOutOf10': string
-  'assessments.searchForQuestion': string
+  'assessments.searchForCategory': string
   'assessments.sendInvite': string
   'assessments.shareResults': string
   'assessments.stronglyAgree': string

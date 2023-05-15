@@ -6,12 +6,12 @@ determineMaturity: 'Next: Determine Maturity'
 developerEffectiveness: Developer Effectiveness
 survey: Survey
 benchmarkComparison: 'Benchmark comparison:'
-searchForQuestion: Search for question
+searchForCategory: Search for category
 scoreOutOf10: score out of 10
-comparison: comparison
+comparison: score comparison
 recommendations: recommendations
 question: question
-score: 'Score:'
+level: 'Level:'
 yourScore: Your score
 companyScore: Company score
 maxScore: Maximum score

@@ -1,40 +1,53 @@
 import { Card, Container, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import React from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { Drawer } from '@blueprintjs/core'
-import type { UserResponsesResponse } from 'services/assessments'
 import { getScoreComparisonChartOptions } from '@assessments/components/AssessmentResults/AssessmentResults.utils'
 import { useStrings } from 'framework/strings'
 import { DrawerProps } from '../../AssessmentSurvey.constants'
-import Score from '../Score/Score'
+import type { Question } from '../../AssessmentSurvey'
+import { getSectionImage } from '../../AssessmentSurveyTableRows.utils'
 import css from '../../AssessmentSurvey.module.scss'
 
 interface SurveyDrawerProps {
   isOpen: boolean
   onHideCallback: () => void
-  currentRowDetails: UserResponsesResponse | null
+  currentRowDetails: Question | null
+  currentSection: string
 }
 
 export default function SurveyDrawer(props: SurveyDrawerProps): JSX.Element {
-  const { isOpen, onHideCallback, currentRowDetails } = props
-  const { userScore, maxScore, benchmarkScore, organizationScore, questionText } = currentRowDetails || {}
+  const { isOpen, onHideCallback, currentRowDetails, currentSection } = props
+  const { userScore, benchmarkScore, organizationScore, questionName, capability } = currentRowDetails || {}
   const { getString } = useStrings()
+  const sectionImage = getSectionImage(currentSection)
   return (
-    <Drawer {...DrawerProps} isOpen={isOpen} onClose={onHideCallback}>
+    <Drawer {...DrawerProps} isOpen={isOpen} onClose={onHideCallback} data-testid={'surveyDrawer'}>
       <Container className={css.drawerHeader}>
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-          <Layout.Vertical width={298}>
-            <Text padding={'medium'} className={css.questionLabel}>
-              {'QUESTION'}
+          <Layout.Vertical width={340}>
+            <Text padding={'medium'} font={{ weight: 'bold', size: 'medium' }} color={Color.GREY_900}>
+              {capability}
             </Text>
-            <Text padding={{ left: 'medium' }} className={css.questionTextDrawerHeader}>
-              {questionText}
+            <Text padding={{ left: 'medium' }} font={{ size: 'small' }} color={Color.GREY_500}>
+              {questionName}
             </Text>
           </Layout.Vertical>
-          <Container margin={{ top: 'xxxlarge', right: 'xxxlarge' }}>
-            <Score userScore={currentRowDetails?.userScore} />
-          </Container>
+          <Layout.Horizontal
+            flex={{ justifyContent: 'center', alignItems: 'center' }}
+            margin={{ top: 'xxxlarge', left: 'xxxlarge' }}
+          >
+            <img src={sectionImage} width="30" height="30" alt="" />
+            <Text
+              padding={{ left: 'small', right: 'medium', top: 'medium', bottom: 'medium' }}
+              font={{ weight: 'semi-bold', size: 'normal' }}
+              color={Color.GREY_600}
+            >
+              {currentSection}
+            </Text>
+          </Layout.Horizontal>
         </Layout.Horizontal>
       </Container>
       <Card className={css.charts}>
@@ -48,9 +61,6 @@ export default function SurveyDrawer(props: SurveyDrawerProps): JSX.Element {
               <Text className={css.scoreLabels} padding={{ top: 'xxsmall' }}>
                 {getString('assessments.companyScore')}
               </Text>
-              <Text className={css.scoreLabels} padding={{ top: 'xxsmall' }}>
-                {getString('assessments.maxScore')}
-              </Text>
               {benchmarkScore ? (
                 <Text className={css.scoreLabels} padding={{ top: 'xxsmall' }}>
                   {getString('assessments.benchmark')}
@@ -62,8 +72,7 @@ export default function SurveyDrawer(props: SurveyDrawerProps): JSX.Element {
               options={getScoreComparisonChartOptions({
                 userScore: userScore,
                 questionOrgScore: organizationScore,
-                questionBenchMarkScore: benchmarkScore,
-                questionMaxScore: maxScore
+                questionBenchMarkScore: benchmarkScore
               })}
             />
           </Layout.Horizontal>

@@ -23,9 +23,6 @@
       "name": "roles"
     },
     {
-      "name": "assessment-admin"
-    },
-    {
       "name": "assessment-evaluation"
     },
     {
@@ -42,6 +39,15 @@
     },
     {
       "name": "settings"
+    },
+    {
+      "name": "channels"
+    },
+    {
+      "name": "notifications"
+    },
+    {
+      "name": "templates"
     }
   ],
   "schemes": ["https", "http"],
@@ -198,15 +204,48 @@
         }
       }
     },
-    "/roleassignments/aggregate": {
+    "/roleassignments/filter/internal": {
       "post": {
         "tags": ["roleassignments"],
-        "summary": "Get Role Assignments Aggregate",
+        "summary": "Get Filtered Role Assignments",
         "description": "",
-        "operationId": "getRoleAssignmentsAggregate",
+        "operationId": "getFilteredRoleAssignmentsWithInternalRoles",
         "consumes": ["application/json", "application/yaml"],
         "produces": ["application/json", "application/yaml"],
         "parameters": [
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "format": "int32"
+          },
+          {
+            "name": "sortOrders",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "pageToken",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
           {
             "name": "accountIdentifier",
             "in": "query",
@@ -238,7 +277,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ResponseRoleAssignmentAggregateResponse"
+              "$ref": "#/definitions/ResponsePageRoleAssignmentResponse"
             }
           },
           "400": {
@@ -426,48 +465,15 @@
         }
       }
     },
-    "/roleassignments/filter/internal": {
+    "/roleassignments/aggregate": {
       "post": {
         "tags": ["roleassignments"],
-        "summary": "Get Filtered Role Assignments",
+        "summary": "Get Role Assignments Aggregate",
         "description": "",
-        "operationId": "getFilteredRoleAssignmentsWithInternalRoles",
+        "operationId": "getRoleAssignmentsAggregate",
         "consumes": ["application/json", "application/yaml"],
         "produces": ["application/json", "application/yaml"],
         "parameters": [
-          {
-            "name": "pageIndex",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 0,
-            "format": "int32"
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 50,
-            "maximum": 100,
-            "format": "int32"
-          },
-          {
-            "name": "sortOrders",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "pageToken",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
           {
             "name": "accountIdentifier",
             "in": "query",
@@ -499,7 +505,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ResponsePageRoleAssignmentResponse"
+              "$ref": "#/definitions/ResponseRoleAssignmentAggregateResponse"
             }
           },
           "400": {
@@ -1455,77 +1461,6 @@
         }
       }
     },
-    "/v1/assessment/summary": {
-      "get": {
-        "tags": ["assessment-admin"],
-        "summary": "Get assessment summary",
-        "description": "",
-        "operationId": "getAssessmentSummary",
-        "produces": ["application/json"],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/AssessmentSummaryResponse"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/assessment/{assessmentId}/template": {
-      "get": {
-        "tags": ["assessment-admin"],
-        "summary": "Get an assessment in the system.",
-        "description": "",
-        "operationId": "getAssessment",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "assessmentId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/AssessmentUploadResponse"
-            }
-          }
-        }
-      }
-    },
-    "/v1/assessment/{assessmentId}/template/yaml": {
-      "get": {
-        "tags": ["assessment-admin"],
-        "summary": "Get an assessment in the system.",
-        "description": "",
-        "operationId": "getAssessmentYAML",
-        "produces": ["application/octet-stream"],
-        "parameters": [
-          {
-            "name": "assessmentId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/AssessmentUploadRequest"
-            }
-          }
-        }
-      }
-    },
     "/v1/attempt/{assessmentId}": {
       "post": {
         "tags": ["assessment-evaluation"],
@@ -1625,12 +1560,82 @@
         }
       }
     },
+    "/v1/assessment/{assessmentInviteId}": {
+      "get": {
+        "tags": ["assessment-evaluation"],
+        "summary": "View assessment for a particular invite code",
+        "description": "",
+        "operationId": "getAssessmentForUser",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "assessmentInviteId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserAssessmentDTO"
+            }
+          }
+        }
+      }
+    },
     "/v1/results/{resultCode}": {
       "get": {
         "tags": ["assessment-result"],
         "summary": "View results of an assessment previously attempted.",
         "description": "",
         "operationId": "getAssessmentResults",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "resultCode",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "benchmarkId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AssessmentResultsResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v1/section-results/{resultCode}": {
+      "get": {
+        "tags": ["assessment-result"],
+        "summary": "View section wise results of an assessment previously attempted.",
+        "description": "",
+        "operationId": "getAssessmentSectionResults",
         "produces": ["application/json"],
         "parameters": [
           {
@@ -1682,6 +1687,32 @@
             }
           }
         }
+      },
+      "put": {
+        "tags": ["assessment-upload"],
+        "summary": "Update an assessment to the system.",
+        "description": "",
+        "operationId": "updateAssessment",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/AssessmentUploadRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AssessmentUploadResponse"
+            }
+          }
+        }
       }
     },
     "/v1/assessment/{assessmentId}/publish": {
@@ -1709,20 +1740,19 @@
         }
       }
     },
-    "/v1/assessment/yaml": {
-      "post": {
+    "/v1/assessment/{assessmentId}/template": {
+      "get": {
         "tags": ["assessment-upload"],
-        "summary": "Upload an assessment to the system.",
+        "summary": "Get an assessment in the system.",
         "description": "",
-        "operationId": "uploadAssessmentYAML",
-        "consumes": ["multipart/form-data"],
+        "operationId": "getAssessment",
         "produces": ["application/json"],
         "parameters": [
           {
-            "name": "file",
-            "in": "formData",
-            "required": false,
-            "type": "file"
+            "name": "assessmentId",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -1770,7 +1800,7 @@
         }
       }
     },
-    "/v1/benchmark": {
+    "/v1/benchmark/{assessmentId}": {
       "post": {
         "tags": ["benchmark"],
         "summary": "Upload an benchmark against a assessment to the system.",
@@ -1780,80 +1810,25 @@
         "produces": ["application/json"],
         "parameters": [
           {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/BenchmarksUploadRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/BenchmarkUploadResponse"
-            }
-          }
-        }
-      }
-    },
-    "/v1/benchmark/{assessmentId}/{majorVersion}/yaml": {
-      "get": {
-        "tags": ["benchmark"],
-        "summary": "Get list of benchmarks against an assessment in the system YAML.",
-        "description": "",
-        "operationId": "getBenchmarksYAML",
-        "produces": ["application/octet-stream"],
-        "parameters": [
-          {
             "name": "assessmentId",
             "in": "path",
             "required": true,
             "type": "string"
           },
           {
-            "name": "majorVersion",
-            "in": "path",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
+            "in": "body",
+            "name": "body",
+            "required": false,
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/BenchmarksUploadRequest"
-              }
+              "$ref": "#/definitions/BenchmarksListRequest"
             }
           }
-        }
-      }
-    },
-    "/v1/benchmark/yaml": {
-      "post": {
-        "tags": ["benchmark"],
-        "summary": "Upload an benchmark to the system YAML.",
-        "description": "",
-        "operationId": "uploadBenchmarkYAML",
-        "consumes": ["multipart/form-data"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "file",
-            "in": "formData",
-            "required": false,
-            "type": "file"
-          }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/BenchmarkUploadResponse"
+              "$ref": "#/definitions/BenchmarkDTO"
             }
           }
         }
@@ -1946,9 +1921,9 @@
     "/settings": {
       "get": {
         "tags": ["settings"],
-        "summary": "Get list of settings",
+        "summary": "Get NotificationSetting",
         "description": "",
-        "operationId": "getSettingsList",
+        "operationId": "getNotificationSetting",
         "consumes": ["application/json", "application/yaml"],
         "produces": ["application/json", "application/yaml"],
         "parameters": [
@@ -1957,53 +1932,13 @@
             "in": "query",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "category",
-            "in": "query",
-            "required": true,
-            "type": "string",
-            "enum": [
-              "CD",
-              "CI",
-              "CE",
-              "CV",
-              "CF",
-              "STO",
-              "CORE",
-              "PMS",
-              "TEMPLATESERVICE",
-              "GOVERNANCE",
-              "CHAOS",
-              "SCIM",
-              "GIT_EXPERIENCE",
-              "CONNECTORS"
-            ]
-          },
-          {
-            "name": "group",
-            "in": "query",
-            "required": false,
-            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ResponseListSettingResponseDTO"
+              "$ref": "#/definitions/ResponseOptionalAccountNotificationSettingDTO"
             }
           },
           "400": {
@@ -2022,39 +1957,61 @@
       },
       "put": {
         "tags": ["settings"],
-        "summary": "Updates the settings",
+        "summary": "Set sendNotificationViaDelegate",
         "description": "",
-        "operationId": "updateSettingValue",
+        "operationId": "postSendNotificationViaDelegate",
         "consumes": ["application/json", "application/yaml"],
         "produces": ["application/json", "application/yaml"],
         "parameters": [
           {
             "name": "accountIdentifier",
             "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "projectIdentifier",
+            "name": "SendNotificationViaDelegate",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseOptionalAccountNotificationSettingDTO"
+            }
           },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/channels/test": {
+      "post": {
+        "tags": ["channels"],
+        "summary": "Test notification setting",
+        "description": "",
+        "operationId": "testNotificationSetting",
+        "produces": ["application/json"],
+        "parameters": [
           {
             "in": "body",
             "name": "body",
             "required": false,
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/SettingRequestDTO"
-              }
+              "$ref": "#/definitions/NotificationSettingDTO"
             }
           }
         ],
@@ -2062,7 +2019,450 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ResponseListSettingUpdateResponseDTO"
+              "$ref": "#/definitions/ResponseBoolean"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/channels/email": {
+      "post": {
+        "tags": ["channels"],
+        "summary": "Send email",
+        "description": "",
+        "operationId": "sendEmail",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/EmailDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseNotificationTaskResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/{id}": {
+      "get": {
+        "tags": ["notifications"],
+        "summary": "Get details of a notification",
+        "description": "",
+        "operationId": "getNotification",
+        "consumes": ["application/json", "application/yaml"],
+        "produces": ["application/json", "application/yaml"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseNotificationDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "get": {
+        "tags": ["notifications"],
+        "summary": "List notifications",
+        "description": "",
+        "operationId": "listNotifications",
+        "consumes": ["application/json", "application/yaml"],
+        "produces": ["application/json", "application/yaml"],
+        "parameters": [
+          {
+            "name": "team",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": ["OTHER", "CD", "CV", "CI", "FFM", "PIPELINE", "PL", "GTM", "UNRECOGNIZED"]
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "format": "int32"
+          },
+          {
+            "name": "sortOrders",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "pageToken",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePageNotificationDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/templates": {
+      "get": {
+        "tags": ["templates"],
+        "summary": "Get templates",
+        "description": "",
+        "operationId": "getTemplates",
+        "consumes": ["application/json", "application/yaml"],
+        "produces": ["application/json", "application/yaml"],
+        "parameters": [
+          {
+            "name": "team",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": ["OTHER", "CD", "CV", "CI", "FFM", "PIPELINE", "PL", "GTM", "UNRECOGNIZED"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListTemplateDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["templates"],
+        "summary": "Create a template",
+        "description": "",
+        "operationId": "postTemplate",
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json", "application/yaml"],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "required": false,
+            "type": "file"
+          },
+          {
+            "name": "team",
+            "in": "formData",
+            "required": false,
+            "type": "string",
+            "enum": ["OTHER", "CD", "CV", "CI", "FFM", "PIPELINE", "PL", "GTM", "UNRECOGNIZED"]
+          },
+          {
+            "name": "identifier",
+            "in": "formData",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "harnessManaged",
+            "in": "formData",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseTemplateDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/templates/insertOrUpdate": {
+      "put": {
+        "tags": ["templates"],
+        "summary": "Update a template if exists else create",
+        "description": "",
+        "operationId": "insertOrUpdateTemplate",
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json", "application/yaml"],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "required": false,
+            "type": "file"
+          },
+          {
+            "name": "team",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": ["OTHER", "CD", "CV", "CI", "FFM", "PIPELINE", "PL", "GTM", "UNRECOGNIZED"]
+          },
+          {
+            "name": "identifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "harnessManaged",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseTemplateDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/templates/{identifier}": {
+      "get": {
+        "tags": ["templates"],
+        "summary": "Get template by identifier",
+        "description": "",
+        "operationId": "getTemplate",
+        "consumes": ["application/json", "application/yaml"],
+        "produces": ["application/json", "application/yaml"],
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "team",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": ["OTHER", "CD", "CV", "CI", "FFM", "PIPELINE", "PL", "GTM", "UNRECOGNIZED"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseTemplateDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["templates"],
+        "summary": "Update a template",
+        "description": "",
+        "operationId": "putTemplate",
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json", "application/yaml"],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "required": false,
+            "type": "file"
+          },
+          {
+            "name": "team",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": ["OTHER", "CD", "CV", "CI", "FFM", "PIPELINE", "PL", "GTM", "UNRECOGNIZED"]
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "harnessManaged",
+            "in": "path",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseTemplateDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["templates"],
+        "summary": "Delete a template",
+        "description": "",
+        "operationId": "deleteTemplate",
+        "consumes": ["application/json", "application/yaml"],
+        "produces": ["application/json", "application/yaml"],
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "team",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": ["OTHER", "CD", "CV", "CI", "FFM", "PIPELINE", "PL", "GTM", "UNRECOGNIZED"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBoolean"
             }
           },
           "400": {
@@ -2475,6 +2875,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_SERVICE_DRIVER_EXCEPTION",
             "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
@@ -2559,7 +2960,13 @@
             "AWS_EKS_ERROR",
             "OPA_POLICY_EVALUATION_ERROR",
             "USER_MARKED_FAILURE",
-            "SSH_RETRY"
+            "SSH_RETRY",
+            "HTTP_CLIENT_ERROR_RESPONSE",
+            "HTTP_INTERNAL_SERVER_ERROR",
+            "HTTP_BAD_GATEWAY",
+            "HTTP_SERVICE_UNAVAILABLE",
+            "HTTP_GATEWAY_TIMEOUT",
+            "HTTP_SERVER_ERROR_RESPONSE"
           ]
         },
         "message": {
@@ -2941,6 +3348,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_SERVICE_DRIVER_EXCEPTION",
             "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
@@ -3025,7 +3433,13 @@
             "AWS_EKS_ERROR",
             "OPA_POLICY_EVALUATION_ERROR",
             "USER_MARKED_FAILURE",
-            "SSH_RETRY"
+            "SSH_RETRY",
+            "HTTP_CLIENT_ERROR_RESPONSE",
+            "HTTP_INTERNAL_SERVER_ERROR",
+            "HTTP_BAD_GATEWAY",
+            "HTTP_SERVICE_UNAVAILABLE",
+            "HTTP_GATEWAY_TIMEOUT",
+            "HTTP_SERVER_ERROR_RESPONSE"
           ]
         },
         "message": {
@@ -3331,6 +3745,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_SERVICE_DRIVER_EXCEPTION",
             "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
@@ -3415,7 +3830,13 @@
             "AWS_EKS_ERROR",
             "OPA_POLICY_EVALUATION_ERROR",
             "USER_MARKED_FAILURE",
-            "SSH_RETRY"
+            "SSH_RETRY",
+            "HTTP_CLIENT_ERROR_RESPONSE",
+            "HTTP_INTERNAL_SERVER_ERROR",
+            "HTTP_BAD_GATEWAY",
+            "HTTP_SERVICE_UNAVAILABLE",
+            "HTTP_GATEWAY_TIMEOUT",
+            "HTTP_SERVER_ERROR_RESPONSE"
           ]
         },
         "errorMessage": {
@@ -3795,6 +4216,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_SERVICE_DRIVER_EXCEPTION",
             "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
@@ -3879,7 +4301,13 @@
             "AWS_EKS_ERROR",
             "OPA_POLICY_EVALUATION_ERROR",
             "USER_MARKED_FAILURE",
-            "SSH_RETRY"
+            "SSH_RETRY",
+            "HTTP_CLIENT_ERROR_RESPONSE",
+            "HTTP_INTERNAL_SERVER_ERROR",
+            "HTTP_BAD_GATEWAY",
+            "HTTP_SERVICE_UNAVAILABLE",
+            "HTTP_GATEWAY_TIMEOUT",
+            "HTTP_SERVER_ERROR_RESPONSE"
           ]
         },
         "level": {
@@ -4333,18 +4761,81 @@
         }
       }
     },
-    "ResourceGroup": {
+    "Page": {
       "type": "object",
       "properties": {
-        "identifier": {
-          "type": "string"
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
         },
-        "name": {
+        "totalItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageItemCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "pageIndex": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "empty": {
+          "type": "boolean"
+        },
+        "pageToken": {
           "type": "string"
         }
       }
     },
-    "ResponseRoleAssignmentAggregateResponse": {
+    "PageRoleAssignmentResponse": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageItemCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RoleAssignmentResponse"
+          }
+        },
+        "pageIndex": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "empty": {
+          "type": "boolean"
+        },
+        "pageToken": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponsePageRoleAssignmentResponse": {
       "type": "object",
       "properties": {
         "status": {
@@ -4352,48 +4843,13 @@
           "enum": ["SUCCESS", "FAILURE", "ERROR"]
         },
         "data": {
-          "$ref": "#/definitions/RoleAssignmentAggregateResponse"
+          "$ref": "#/definitions/PageRoleAssignmentResponse"
         },
         "metaData": {
           "type": "object"
         },
         "correlationId": {
           "type": "string"
-        }
-      }
-    },
-    "Role": {
-      "type": "object",
-      "required": ["identifier", "name"],
-      "properties": {
-        "identifier": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "permissions": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string"
-          }
-        },
-        "allowedScopeLevels": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string"
-          }
-        },
-        "description": {
-          "type": "string"
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
         }
       }
     },
@@ -4424,44 +4880,15 @@
         }
       }
     },
-    "RoleAssignmentAggregateResponse": {
+    "RoleAssignmentResponse": {
       "type": "object",
+      "required": ["roleAssignment", "scope"],
       "properties": {
-        "roleAssignments": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RoleAssignment"
-          }
+        "roleAssignment": {
+          "$ref": "#/definitions/RoleAssignment"
         },
         "scope": {
           "$ref": "#/definitions/Scope"
-        },
-        "roles": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RoleResponse"
-          }
-        },
-        "resourceGroups": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ResourceGroup"
-          }
-        }
-      }
-    },
-    "RoleResponse": {
-      "type": "object",
-      "required": ["role", "scope"],
-      "properties": {
-        "role": {
-          "$ref": "#/definitions/Role"
-        },
-        "scope": {
-          "$ref": "#/definitions/Scope"
-        },
-        "harnessManaged": {
-          "type": "boolean"
         },
         "createdAt": {
           "type": "integer",
@@ -4470,6 +4897,9 @@
         "lastModifiedAt": {
           "type": "integer",
           "format": "int64"
+        },
+        "harnessManaged": {
+          "type": "boolean"
         }
       }
     },
@@ -4774,6 +5204,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_SERVICE_DRIVER_EXCEPTION",
             "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
@@ -4858,7 +5289,13 @@
             "AWS_EKS_ERROR",
             "OPA_POLICY_EVALUATION_ERROR",
             "USER_MARKED_FAILURE",
-            "SSH_RETRY"
+            "SSH_RETRY",
+            "HTTP_CLIENT_ERROR_RESPONSE",
+            "HTTP_INTERNAL_SERVER_ERROR",
+            "HTTP_BAD_GATEWAY",
+            "HTTP_SERVICE_UNAVAILABLE",
+            "HTTP_GATEWAY_TIMEOUT",
+            "HTTP_SERVER_ERROR_RESPONSE"
           ]
         },
         "message": {
@@ -4953,43 +5390,6 @@
           "items": {
             "type": "string"
           }
-        }
-      }
-    },
-    "Page": {
-      "type": "object",
-      "properties": {
-        "totalPages": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "totalItems": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "pageItemCount": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "pageSize": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "content": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
-        },
-        "pageIndex": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "empty": {
-          "type": "boolean"
-        },
-        "pageToken": {
-          "type": "string"
         }
       }
     },
@@ -5157,6 +5557,41 @@
         }
       }
     },
+    "Role": {
+      "type": "object",
+      "required": ["identifier", "name"],
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "permissions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "allowedScopeLevels": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "RoleAssignmentAggregate": {
       "type": "object",
       "required": ["principal"],
@@ -5189,6 +5624,29 @@
         },
         "harnessManaged": {
           "type": "boolean"
+        }
+      }
+    },
+    "RoleResponse": {
+      "type": "object",
+      "required": ["role", "scope"],
+      "properties": {
+        "role": {
+          "$ref": "#/definitions/Role"
+        },
+        "scope": {
+          "$ref": "#/definitions/Scope"
+        },
+        "harnessManaged": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastModifiedAt": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -5325,44 +5783,18 @@
         }
       }
     },
-    "PageRoleAssignmentResponse": {
+    "ResourceGroup": {
       "type": "object",
       "properties": {
-        "totalPages": {
-          "type": "integer",
-          "format": "int64"
+        "identifier": {
+          "type": "string"
         },
-        "totalItems": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "pageItemCount": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "pageSize": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "content": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RoleAssignmentResponse"
-          }
-        },
-        "pageIndex": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "empty": {
-          "type": "boolean"
-        },
-        "pageToken": {
+        "name": {
           "type": "string"
         }
       }
     },
-    "ResponsePageRoleAssignmentResponse": {
+    "ResponseRoleAssignmentAggregateResponse": {
       "type": "object",
       "properties": {
         "status": {
@@ -5370,7 +5802,7 @@
           "enum": ["SUCCESS", "FAILURE", "ERROR"]
         },
         "data": {
-          "$ref": "#/definitions/PageRoleAssignmentResponse"
+          "$ref": "#/definitions/RoleAssignmentAggregateResponse"
         },
         "metaData": {
           "type": "object"
@@ -5380,26 +5812,29 @@
         }
       }
     },
-    "RoleAssignmentResponse": {
+    "RoleAssignmentAggregateResponse": {
       "type": "object",
-      "required": ["roleAssignment", "scope"],
       "properties": {
-        "roleAssignment": {
-          "$ref": "#/definitions/RoleAssignment"
+        "roleAssignments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RoleAssignment"
+          }
         },
         "scope": {
           "$ref": "#/definitions/Scope"
         },
-        "createdAt": {
-          "type": "integer",
-          "format": "int64"
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RoleResponse"
+          }
         },
-        "lastModifiedAt": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "harnessManaged": {
-          "type": "boolean"
+        "resourceGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceGroup"
+          }
         }
       }
     },
@@ -5627,201 +6062,6 @@
         }
       }
     },
-    "AssessmentSummaryResponse": {
-      "type": "object",
-      "properties": {
-        "assessmentId": {
-          "type": "string"
-        },
-        "assessmentName": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string",
-          "enum": ["DRAFT", "ACTIVE", "DEPRECATED"]
-        },
-        "numberOfResponses": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "majorVersion": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "minorVersion": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "createdOn": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "updatedOn": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "AssessmentError": {
-      "type": "object",
-      "properties": {
-        "entityType": {
-          "type": "string",
-          "enum": ["ASSESSMENT", "QUESTION", "OPTION", "SECTION", "BENCHMARK", "RECOMMENDATION", "INVITE"]
-        },
-        "entityId": {
-          "type": "string"
-        },
-        "errorMessages": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "AssessmentUploadResponse": {
-      "type": "object",
-      "required": ["assessmentId", "assessmentName", "expectedCompletionDuration", "type"],
-      "properties": {
-        "assessmentId": {
-          "type": "string"
-        },
-        "assessmentName": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string",
-          "enum": ["ASSESSMENT", "QUESTION", "OPTION", "SECTION", "BENCHMARK", "RECOMMENDATION", "INVITE"]
-        },
-        "questions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/UploadedQuestion"
-          },
-          "maxItems": 100,
-          "minItems": 1
-        },
-        "expectedCompletionDuration": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "majorVersion": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "minorVersion": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "baseScore": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "errors": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AssessmentError"
-          }
-        },
-        "createdAt": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "createdBy": {
-          "type": "string"
-        },
-        "isPublished": {
-          "type": "boolean"
-        },
-        "lastUpdatedAt": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "UploadedOption": {
-      "type": "object",
-      "required": ["optionId", "optionText"],
-      "properties": {
-        "optionId": {
-          "type": "string"
-        },
-        "optionText": {
-          "type": "string"
-        },
-        "optionPoints": {
-          "type": "integer",
-          "format": "int64",
-          "minimum": 0,
-          "maximum": 10
-        }
-      }
-    },
-    "UploadedQuestion": {
-      "type": "object",
-      "required": ["possibleResponses", "questionId", "questionText", "questionType"],
-      "properties": {
-        "questionId": {
-          "type": "string"
-        },
-        "questionNumber": {
-          "type": "integer",
-          "format": "int64",
-          "minimum": 1,
-          "maximum": 100
-        },
-        "questionType": {
-          "type": "string",
-          "enum": ["RATING", "LIKERT", "CHECKBOX", "RADIO_BUTTON", "YES_NO"]
-        },
-        "sectionId": {
-          "type": "string"
-        },
-        "sectionName": {
-          "type": "string"
-        },
-        "questionText": {
-          "type": "string"
-        },
-        "possibleResponses": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/UploadedOption"
-          },
-          "maxItems": 20,
-          "minItems": 2
-        }
-      }
-    },
-    "AssessmentUploadRequest": {
-      "type": "object",
-      "required": ["assessmentId", "assessmentName", "expectedCompletionDuration", "type"],
-      "properties": {
-        "assessmentId": {
-          "type": "string"
-        },
-        "assessmentName": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string",
-          "enum": ["ASSESSMENT", "QUESTION", "OPTION", "SECTION", "BENCHMARK", "RECOMMENDATION", "INVITE"]
-        },
-        "questions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/UploadedQuestion"
-          },
-          "maxItems": 100,
-          "minItems": 1
-        },
-        "expectedCompletionDuration": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
     "AssessmentResultsResponse": {
       "type": "object",
       "properties": {
@@ -5842,12 +6082,6 @@
         "status": {
           "type": "string",
           "enum": ["NOT_STARTED", "ONGOING", "COMPLETED"]
-        },
-        "responses": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/UserResponsesResponse"
-          }
         },
         "userScores": {
           "type": "array",
@@ -5872,6 +6106,12 @@
         },
         "resultLink": {
           "type": "string"
+        },
+        "responses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserResponsesResponse"
+          }
         }
       }
     },
@@ -5934,7 +6174,7 @@
     },
     "ScoreDTO": {
       "type": "object",
-      "required": ["entityId", "score", "scoreType"],
+      "required": ["maxScore", "score", "scoreType"],
       "properties": {
         "scoreType": {
           "type": "string",
@@ -5960,13 +6200,13 @@
       "type": "object",
       "properties": {
         "selfScore": {
-          "$ref": "#/definitions/ScoreDTO"
+          "$ref": "#/definitions/Score"
         },
         "organizationScore": {
-          "$ref": "#/definitions/ScoreDTO"
+          "$ref": "#/definitions/Score"
         },
         "benchmarkScore": {
-          "$ref": "#/definitions/ScoreDTO"
+          "$ref": "#/definitions/Score"
         },
         "numberOfResponses": {
           "type": "integer",
@@ -6162,48 +6402,215 @@
         }
       }
     },
-    "BenchmarkUploadResponse": {
+    "AssessmentError": {
       "type": "object",
-      "required": ["assessmentId", "benchmarks", "majorVersion", "type"],
+      "properties": {
+        "entityType": {
+          "type": "string",
+          "enum": ["ASSESSMENT", "QUESTION", "OPTION", "SECTION", "BENCHMARK"]
+        },
+        "entityId": {
+          "type": "string"
+        },
+        "errorMessages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "AssessmentUploadResponse": {
+      "type": "object",
       "properties": {
         "assessmentId": {
           "type": "string"
         },
-        "type": {
-          "type": "string",
-          "enum": ["ASSESSMENT", "QUESTION", "OPTION", "SECTION", "BENCHMARK", "RECOMMENDATION", "INVITE"]
+        "assessmentName": {
+          "type": "string"
         },
         "majorVersion": {
           "type": "integer",
           "format": "int64"
         },
-        "benchmarks": {
+        "minorVersion": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "questions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/BenchmarkDTO"
-          },
-          "maxItems": 50,
-          "minItems": 1
+            "$ref": "#/definitions/Question"
+          }
+        },
+        "expectedCompletionDuration": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "baseScore": {
+          "type": "integer",
+          "format": "int64"
         },
         "errors": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/AssessmentError"
           }
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "isPublished": {
+          "type": "boolean"
+        },
+        "lastUpdatedAt": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
-    "BenchmarksUploadRequest": {
+    "Question": {
       "type": "object",
-      "required": ["assessmentId", "benchmarks", "majorVersion", "type"],
+      "properties": {
+        "questionId": {
+          "type": "string"
+        },
+        "questionNumber": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "questionType": {
+          "type": "string",
+          "enum": ["RATING", "LIKERT", "CHECKBOX", "RADIO_BUTTON", "YES_NO"]
+        },
+        "sectionId": {
+          "type": "string"
+        },
+        "sectionName": {
+          "type": "string"
+        },
+        "questionText": {
+          "type": "string"
+        },
+        "possibleResponses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QuestionOption"
+          }
+        },
+        "scoreWeightage": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "maxScore": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "QuestionOption": {
+      "type": "object",
+      "properties": {
+        "optionId": {
+          "type": "string"
+        },
+        "optionText": {
+          "type": "string"
+        },
+        "optionPoints": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 0,
+          "maximum": 10
+        }
+      }
+    },
+    "AssessmentUploadRequest": {
+      "type": "object",
+      "required": ["assessmentId", "assessmentName", "expectedCompletionDuration"],
       "properties": {
         "assessmentId": {
           "type": "string"
         },
-        "type": {
-          "type": "string",
-          "enum": ["ASSESSMENT", "QUESTION", "OPTION", "SECTION", "BENCHMARK", "RECOMMENDATION", "INVITE"]
+        "assessmentName": {
+          "type": "string"
         },
+        "questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UploadedQuestion"
+          },
+          "maxItems": 100,
+          "minItems": 1
+        },
+        "expectedCompletionDuration": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "UploadedOption": {
+      "type": "object",
+      "required": ["optionId", "optionText"],
+      "properties": {
+        "optionId": {
+          "type": "string"
+        },
+        "optionText": {
+          "type": "string"
+        },
+        "optionPoints": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 0,
+          "maximum": 10
+        }
+      }
+    },
+    "UploadedQuestion": {
+      "type": "object",
+      "required": ["possibleResponses", "questionId", "questionText", "questionType"],
+      "properties": {
+        "questionId": {
+          "type": "string"
+        },
+        "questionNumber": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "questionType": {
+          "type": "string",
+          "enum": ["RATING", "LIKERT", "CHECKBOX", "RADIO_BUTTON", "YES_NO"]
+        },
+        "sectionId": {
+          "type": "string"
+        },
+        "sectionName": {
+          "type": "string"
+        },
+        "questionText": {
+          "type": "string"
+        },
+        "possibleResponses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UploadedOption"
+          },
+          "maxItems": 20,
+          "minItems": 2
+        }
+      }
+    },
+    "BenchmarksListRequest": {
+      "type": "object",
+      "required": ["benchmarks", "majorVersion"],
+      "properties": {
         "majorVersion": {
           "type": "integer",
           "format": "int64"
@@ -6235,12 +6642,6 @@
         },
         "invitedBy": {
           "type": "string"
-        },
-        "errors": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AssessmentError"
-          }
         }
       }
     },
@@ -6452,6 +6853,414 @@
         "lastModifiedAt": {
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "ResponseBoolean": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "boolean"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "EmailSettingDTO": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationSettingDTO"
+        },
+        {
+          "type": "object",
+          "properties": {}
+        }
+      ]
+    },
+    "MSTeamSettingDTO": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationSettingDTO"
+        },
+        {
+          "type": "object",
+          "properties": {}
+        }
+      ]
+    },
+    "NotificationSettingDTO": {
+      "type": "object",
+      "required": ["accountId", "notificationId", "recipient"],
+      "discriminator": "type",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "notificationId": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["EMAIL", "SLACK", "PAGERDUTY", "MSTEAMS"]
+        }
+      }
+    },
+    "PagerDutySettingDTO": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationSettingDTO"
+        },
+        {
+          "type": "object",
+          "properties": {}
+        }
+      ]
+    },
+    "SlackSettingDTO": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationSettingDTO"
+        },
+        {
+          "type": "object",
+          "properties": {}
+        }
+      ]
+    },
+    "DelegateMetaInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "host_name": {
+          "type": "string"
+        }
+      }
+    },
+    "NotificationProcessingResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          }
+        },
+        "shouldRetry": {
+          "type": "boolean"
+        }
+      }
+    },
+    "NotificationTaskResponse": {
+      "type": "object",
+      "properties": {
+        "processingResponse": {
+          "$ref": "#/definitions/NotificationProcessingResponse"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "delegateMetaInfo": {
+          "$ref": "#/definitions/DelegateMetaInfo"
+        }
+      }
+    },
+    "ResponseNotificationTaskResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/NotificationTaskResponse"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "EmailDTO": {
+      "type": "object",
+      "required": ["accountId", "body", "ccRecipients", "notificationId", "subject", "toRecipients"],
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "ccRecipients": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "toRecipients": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "notificationId": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        }
+      }
+    },
+    "NotificationDTO": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "accountIdentifier": {
+          "type": "string"
+        },
+        "team": {
+          "type": "string",
+          "enum": ["OTHER", "CD", "CV", "CI", "FFM", "PIPELINE", "PL", "GTM", "UNRECOGNIZED"]
+        },
+        "channelType": {
+          "type": "string",
+          "enum": ["EMAIL", "SLACK", "PAGERDUTY", "MSTEAMS"]
+        },
+        "processingResponses": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          }
+        },
+        "retries": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ResponseNotificationDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/NotificationDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "PageNotificationDTO": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageItemCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NotificationDTO"
+          }
+        },
+        "pageIndex": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "empty": {
+          "type": "boolean"
+        },
+        "pageToken": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponsePageNotificationDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/PageNotificationDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "AccountNotificationSettingDTO": {
+      "type": "object",
+      "required": ["accountId"],
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "sendNotificationViaDelegate": {
+          "type": "boolean"
+        },
+        "smtpConfig": {
+          "$ref": "#/definitions/SmtpConfig"
+        }
+      }
+    },
+    "ResponseOptionalAccountNotificationSettingDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/AccountNotificationSettingDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "SmtpConfig": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fromAddress": {
+          "type": "string"
+        },
+        "useSSL": {
+          "type": "boolean"
+        },
+        "startTLS": {
+          "type": "boolean"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "encryptedPassword": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseTemplateDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/TemplateDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "TemplateDTO": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "team": {
+          "type": "string",
+          "enum": ["OTHER", "CD", "CV", "CI", "FFM", "PIPELINE", "PL", "GTM", "UNRECOGNIZED"]
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastModifiedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "file": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "ResponseListTemplateDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TemplateDTO"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
         }
       }
     }

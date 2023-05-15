@@ -1,5 +1,4 @@
 import {
-  Button,
   Container,
   ExpandingSearchInput,
   Layout,
@@ -13,34 +12,57 @@ import {
 import React, { useCallback, useEffect, useState } from 'react'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import {
-  AssessmentResultsResponse,
-  useGetAssessmentResults,
-  useGetBenchmarks,
-  UserResponsesResponse
-} from 'services/assessments'
+import { useGetAssessmentResults, useGetBenchmarks } from 'services/assessments'
 import { getErrorMessage } from '@auth-settings/utils'
 import { useStrings } from 'framework/strings'
 import SideNav from '../SideNav/SideNav'
-import { SCORE_FILTER_OPTIONS } from './AssessmentSurvey.constants'
+import { mockDataForSectionsGroupedQuestions, LEVEL_FILTER_OPTIONS } from './AssessmentSurvey.constants'
 import {
   getBenchMarkItems,
   getDefaultBenchMark,
-  getFilteredResultsForScore,
+  getFilteredResultsForLevel,
   getFilteredResultsForSearch
 } from './AssessmentSurvey.utils'
-import { RenderQuestion, RenderScore, RenderComparison, RenderRecommendations } from './AssessmentSurveyTableRows.utils'
-import SurveyDrawer from './components/SurveyDrawer/SurveyDrawer'
+import {
+  RenderComparison,
+  RenderRecommendations,
+  ToggleAccordionCell,
+  RenderCategory,
+  RenderLevelForSection,
+  RenderWeightage
+} from './AssessmentSurveyTableRows.utils'
+import QuestionsSection from './components/QuestionsSection/QuestionsSection'
 import css from './AssessmentSurvey.module.scss'
+
+export interface SectionsGroupedQuestions {
+  sectionId: string
+  sectionName: string
+  weightage: number
+  level: string
+  userScore: number
+  organizationScore: number
+  benchmarkScore: number
+  recommendations: number
+  questions: Question[]
+}
+
+export interface Question {
+  questionName: string
+  capability: string
+  level: string
+  userScore: number
+  organizationScore: number
+  benchmarkScore?: number
+  recommendations: string
+}
 
 export default function AssessmentSurvey(): JSX.Element {
   const { showError } = useToaster()
   const { getString } = useStrings()
   const [selectedBenchmark, setSelectedBenchmark] = useState<SelectOption>()
-  const [selectedScore, setSelectedScore] = useState<SelectOption | null>(null)
-  const [isOpen, setDrawerOpen] = useState<boolean>(false)
-  const [currentRowDetails, setCurrentRowDetails] = useState<UserResponsesResponse | null>(null)
-  const [currentResponses, setCurrentResponses] = useState<AssessmentResultsResponse['responses']>([])
+  const [selectedLevel, setSelectedLevel] = useState<SelectOption | null>(null)
+
+  const [currentResponses, setCurrentResponses] = useState<SectionsGroupedQuestions[]>([])
   const [search, setSearch] = useState<string | null>(null)
   const { resultsCode } = useParams<{ resultsCode: string }>()
 
@@ -54,10 +76,20 @@ export default function AssessmentSurvey(): JSX.Element {
       benchmarkId: selectedBenchmark?.value as string
     }
   })
-  const { assessmentId = '', majorVersion, responses = [], minorVersion } = resultsData || {}
+  const {
+    assessmentId = '',
+    majorVersion,
+    minorVersion
+    // responses = [],
+  } = resultsData || {}
+
+  // TODO - this will be replaced by commented code when actual backend api is available
+  const responses = mockDataForSectionsGroupedQuestions
 
   useEffect(() => {
-    setCurrentResponses(resultsData?.responses)
+    // TODO - this will be replaced by commented code when actual backend api is available
+    // setCurrentResponses(resultsData?.responses)
+    setCurrentResponses(mockDataForSectionsGroupedQuestions)
   }, [resultsData])
 
   const {
@@ -86,13 +118,19 @@ export default function AssessmentSurvey(): JSX.Element {
   }, [benchmarksData])
 
   useEffect(() => {
-    const filteredResults: AssessmentResultsResponse['responses'] = getFilteredResultsForScore(selectedScore, responses)
+    const filteredResults: SectionsGroupedQuestions[] = getFilteredResultsForLevel(
+      selectedLevel,
+      responses as SectionsGroupedQuestions[]
+    )
     setCurrentResponses(filteredResults)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedScore])
+  }, [selectedLevel])
 
   useEffect(() => {
-    const filteredResults: AssessmentResultsResponse['responses'] = getFilteredResultsForSearch(responses, search)
+    const filteredResults: SectionsGroupedQuestions[] = getFilteredResultsForSearch(
+      responses as SectionsGroupedQuestions[],
+      search
+    )
     setCurrentResponses(filteredResults)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
@@ -110,11 +148,15 @@ export default function AssessmentSurvey(): JSX.Element {
   const handleBenchmarkChange = useCallback((option: SelectOption) => {
     setSelectedBenchmark(option)
   }, [])
-  const handleScoreChange = useCallback((option: SelectOption) => {
-    setSelectedScore(option)
+
+  const handleLevelChange = useCallback((option: SelectOption) => {
+    setSelectedLevel(option)
   }, [])
 
-  const onHideCallback = (): void => setDrawerOpen(false)
+  const renderRowSubComponent = useCallback(({ row }) => {
+    const { questions, sectionName } = row?.original || {}
+    return <QuestionsSection questions={questions} currentSection={sectionName} />
+  }, [])
 
   return (
     <Layout.Horizontal>
@@ -134,15 +176,15 @@ export default function AssessmentSurvey(): JSX.Element {
                 color={Color.GREY_800}
                 padding={{ left: 'large', top: 'small' }}
               >
-                {getString('assessments.score')}
+                {getString('assessments.level')}
               </Text>
               <Select
-                items={SCORE_FILTER_OPTIONS}
-                value={selectedScore}
+                items={LEVEL_FILTER_OPTIONS}
+                value={selectedLevel}
                 inputProps={{
                   placeholder: '- Select -'
                 }}
-                onChange={handleScoreChange}
+                onChange={handleLevelChange}
                 className={css.scoreDropdown}
               />
             </Layout.Vertical>
@@ -169,32 +211,40 @@ export default function AssessmentSurvey(): JSX.Element {
           <Layout.Vertical>
             <ExpandingSearchInput
               width={250}
-              throttle={100}
               defaultValue={search as string}
               key={search}
               onChange={setSearch}
               autoFocus={false}
-              placeholder={getString('assessments.searchForQuestion')}
+              placeholder={getString('assessments.searchForCategory')}
               className={css.searchInput}
             />
           </Layout.Vertical>
         </Layout.Horizontal>
         <TableV2
           sortable={true}
-          onRowClick={rowDetails => {
-            setCurrentRowDetails(rowDetails)
-            setDrawerOpen(true)
-          }}
           columns={[
             {
-              Header: getString('assessments.question').toLocaleUpperCase(),
-              width: '30%',
-              Cell: RenderQuestion
+              Header: '',
+              id: 'rowSelectOrExpander',
+              Cell: ToggleAccordionCell,
+              disableSortBy: true,
+              width: '2%'
             },
             {
-              Header: getString('assessments.scoreOutOf10').toLocaleUpperCase(),
+              Header: 'CATEGORY',
+              id: 'categoryName',
+              width: '30%',
+              Cell: RenderCategory
+            },
+            {
+              Header: 'WEIGHTAGE',
               width: '15%',
-              Cell: RenderScore
+              Cell: RenderWeightage
+            },
+            {
+              Header: 'LEVEL',
+              width: '15%',
+              Cell: RenderLevelForSection
             },
             {
               Header: getString('assessments.comparison').toLocaleUpperCase(),
@@ -203,25 +253,15 @@ export default function AssessmentSurvey(): JSX.Element {
             },
             {
               Header: getString('assessments.recommendations').toLocaleUpperCase(),
-              width: '20%',
+              width: '18%',
               Cell: RenderRecommendations
             }
           ]}
-          data={currentResponses as UserResponsesResponse[]}
+          data={currentResponses as SectionsGroupedQuestions[]}
           className={css.surveyTable}
+          renderRowSubComponent={renderRowSubComponent}
+          autoResetExpanded={false}
         />
-        <>
-          <SurveyDrawer isOpen={isOpen} onHideCallback={onHideCallback} currentRowDetails={currentRowDetails} />
-          {isOpen ? (
-            <Button
-              minimal
-              className={css.almostFullScreenCloseBtn}
-              icon="cross"
-              withoutBoxShadow
-              onClick={onHideCallback}
-            />
-          ) : null}
-        </>
       </Layout.Vertical>
     </Layout.Horizontal>
   )

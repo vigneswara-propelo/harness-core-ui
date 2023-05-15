@@ -1,10 +1,10 @@
 import type { SelectOption } from '@harness/uicore'
-import type { BenchmarkDTO, UserResponsesResponse } from 'services/assessments'
+import type { BenchmarkDTO } from 'services/assessments'
+import type { SectionsGroupedQuestions } from '../AssessmentSurvey'
 import {
   getBenchMarkItems,
   getDefaultBenchMark,
-  getFilteredResponsesForRange,
-  getFilteredResultsForScore,
+  getFilteredResultsForLevel,
   getFilteredResultsForSearch
 } from '../AssessmentSurvey.utils'
 
@@ -61,50 +61,44 @@ describe('AssessmentSurvey', () => {
     const result = getDefaultBenchMark(mockData)
     expect(result).toEqual(expectedOutput)
   })
-
-  test('filters out UserResponsesResponse objects with a userScore outside the specified range', () => {
-    const mockData: UserResponsesResponse[] = [{ userScore: 5 }, { userScore: 10 }, { userScore: 15 }]
-    const expectedOutput: UserResponsesResponse[] = [{ userScore: 10 }, { userScore: 15 }]
-    const result = getFilteredResponsesForRange([], mockData, [8, 16])
-    expect(result).toEqual(expectedOutput)
-  })
-
-  test('returns an empty array if both the filteredResults and responses parameters are undefined', () => {
-    const result = getFilteredResponsesForRange(undefined, undefined, [0, 10])
-    expect(result).toEqual([])
-  })
 })
 
-describe('test getFilteredResultsForScore method', () => {
-  const responses = [{ userScore: 3 }, { userScore: 7 }, { userScore: 10 }, { userScore: 2 }, { userScore: 5 }]
+describe('test getFilteredResultsForLevel method', () => {
+  const responses = [
+    { level: 'Level 3' },
+    { level: 'Level 2' },
+    { level: 'Level 1' },
+    { level: 'Level 3' },
+    { level: 'Level 2' }
+  ] as SectionsGroupedQuestions[]
 
   test('should return an empty array when selectedScore is null', () => {
     const selectedScore = null
-    const filteredResults = getFilteredResultsForScore(selectedScore, responses)
+    const filteredResults = getFilteredResultsForLevel(selectedScore, responses)
     expect(filteredResults).toEqual([])
   })
 
-  test('should return an array of responses with scores between 0 and 3 when selectedScore is "0_3"', () => {
-    const selectedScore = { value: '0_3', label: '0-3' }
-    const filteredResults = getFilteredResultsForScore(selectedScore, responses)
-    expect(filteredResults).toEqual([{ userScore: 3 }, { userScore: 2 }])
+  test('should return an array of responses with scores between 0 and 3 when selectedScore is "Level 3"', () => {
+    const selectedScore = { value: 'Level 3', label: 'Level 3' }
+    const filteredResults = getFilteredResultsForLevel(selectedScore, responses)
+    expect(filteredResults).toEqual([{ level: 'Level 3' }, { level: 'Level 3' }])
   })
 
   test('should return an array of responses with scores between 4 and 7 when selectedScore is "4_7"', () => {
-    const selectedScore = { value: '4_7', label: '4-7' }
-    const filteredResults = getFilteredResultsForScore(selectedScore, responses)
-    expect(filteredResults).toEqual([{ userScore: 7 }, { userScore: 5 }])
+    const selectedScore = { value: 'Level 2', label: 'Level 2' }
+    const filteredResults = getFilteredResultsForLevel(selectedScore, responses)
+    expect(filteredResults).toEqual([{ level: 'Level 2' }, { level: 'Level 2' }])
   })
 
   test('should return an array of responses with scores between 8 and 10 when selectedScore is "8_10"', () => {
-    const selectedScore = { value: '8_10', label: '8-10' }
-    const filteredResults = getFilteredResultsForScore(selectedScore, responses)
-    expect(filteredResults).toEqual([{ userScore: 10 }])
+    const selectedScore = { value: 'Level 1', label: 'Level 1' }
+    const filteredResults = getFilteredResultsForLevel(selectedScore, responses)
+    expect(filteredResults).toEqual([{ level: 'Level 1' }])
   })
 
   test('should return an array of all responses when selectedScore is "all"', () => {
     const selectedScore = { value: 'all', label: 'All' }
-    const filteredResults = getFilteredResultsForScore(selectedScore, responses)
+    const filteredResults = getFilteredResultsForLevel(selectedScore, responses)
     expect(filteredResults).toEqual(responses)
   })
 })
@@ -112,26 +106,23 @@ describe('test getFilteredResultsForScore method', () => {
 describe('test getFilteredResultsForSearch method', () => {
   const mockResponses = [
     {
-      id: 1,
-      questionText: 'What is your name?',
+      sectionName: 'What is your name?',
       userScore: 8
     },
     {
-      id: 2,
-      questionText: 'What is your favorite color?',
+      sectionName: 'What is your favorite color?',
       userScore: 5
     },
     {
-      id: 3,
-      questionText: 'What is your favorite food?',
+      sectionName: 'What is your favorite food?',
       userScore: 10
     }
-  ]
+  ] as SectionsGroupedQuestions[]
 
   test('returns filtered results when search matches question text', () => {
     const filteredResults = getFilteredResultsForSearch(mockResponses, 'favorite')
     expect(filteredResults).toHaveLength(2)
-    expect((filteredResults?.[0] as any)?.id).toEqual(2)
+    expect((filteredResults?.[0] as any)?.sectionName).toEqual('What is your favorite color?')
   })
 
   test('returns empty array when search does not match any question text', () => {

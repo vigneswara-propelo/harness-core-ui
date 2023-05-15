@@ -22,7 +22,7 @@ export default function Score(props: ScoreProps): JSX.Element {
             [css.highScore]: isUserScoreHigh
           })}
         >
-          {userScore}
+          {`${userScore} %`}
         </Text>
       </Container>
     )

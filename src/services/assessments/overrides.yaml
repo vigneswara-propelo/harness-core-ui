@@ -5,6 +5,7 @@ allowpaths:
   - /v1/results/{resultCode}
   - /v1/benchmark/{assessmentId}/{majorVersion}
   - /v1/assessment/invite
+  - /v1/section-results/{resultCode}
 
 operationIdOverrides:
   /v1/attempt/{assessmentId}.post: submitAssessmentForUser

@@ -7,15 +7,13 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly almostFullScreenCloseBtn: string
   readonly benchmarkDropdown: string
   readonly charts: string
   readonly drawerHeader: string
   readonly heading: string
   readonly leftNavigation: string
-  readonly questionLabel: string
   readonly questionText: string
-  readonly questionTextDrawerHeader: string
+  readonly recommendationContainer: string
   readonly rightNavigation: string
   readonly scoreDropdown: string
   readonly scoreLabels: string
@@ -23,6 +21,7 @@ declare const styles: {
   readonly sideDrawerTitle: string
   readonly subHeader: string
   readonly surveyTable: string
+  readonly toggleAccordion: string
   readonly topHeader: string
 }
 export default styles

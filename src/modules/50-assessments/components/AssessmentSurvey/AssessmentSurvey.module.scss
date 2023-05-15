@@ -50,7 +50,7 @@
 .scoreLabels {
   font-weight: 500 !important;
   font-size: var(--font-size-small) !important;
-  line-height: 18px !important;
+  line-height: 15px !important;
   color: var(--grey-800) !important;
 }
 
@@ -65,35 +65,11 @@
   color: #383946 !important;
 }
 
-.almostFullScreenCloseBtn:global(.bp3-button.bp3-minimal) {
-  position: fixed;
-  top: 0;
-  right: 40%;
-  background: #00ade4 !important;
-  color: var(--white) !important;
-  border-radius: 4px 0 0 4px !important;
-  padding: 0 !important;
-  z-index: 99;
-}
-
 .drawerHeader {
-  height: 138px;
+  height: 102px;
   background: var(--white) !important;
   box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
-}
-
-.questionLabel {
-  font-weight: 400 !important;
-  font-size: 10.6666px !important;
-  line-height: 19px !important;
-  color: #6b6d85 !important;
-}
-
-.questionTextDrawerHeader {
-  font-weight: 600 !important;
-  font-size: 16px !important;
-  line-height: 24px !important;
-  color: #383946 !important;
+  overflow-y: scroll;
 }
 
 .searchInput {
@@ -112,4 +88,19 @@
   font-size: var(--font-size-medium) !important;
   line-height: 24px !important;
   color: var(--grey-700) !important;
+}
+
+.toggleAccordion {
+  // to have better click target area for toggle
+  padding: var(--spacing-none) var(--spacing-small) !important;
+}
+
+.recommendationContainer {
+  padding: 2px 12px 2px 8px;
+  gap: 4px;
+  width: 174px;
+  height: 28px;
+  background: var(--primary-1);
+  border: 1px solid var(--primary-2);
+  border-radius: var(--spacing-xsmall);
 }
