@@ -266,7 +266,7 @@ export default function EnvironmentDetails(): React.ReactElement {
                       },
                       {
                         id: EnvironmentDetailsTab.SERVICE_OVERRIDES,
-                        title: getString('common.serviceOverrides'),
+                        title: getString('common.serviceOverrides.labelText'),
                         panel: <ServiceOverrides />
                       },
                       {

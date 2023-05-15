@@ -71,6 +71,7 @@ export enum PAGE_NAME {
   ServiceStudio = 'ServiceStudio',
   Environments = 'Environments',
   EnvironmentGroups = 'EnvironmentGroups',
+  ServiceOverrides = 'ServiceOverrides',
   CDPipelineStudio = 'CDPipelineStudio',
   CDPipelineDeploymentList = 'CDPipelineDeploymentList',
   CDTemplateStudioWrapper = 'CDTemplateStudioWrapper',

@@ -285,7 +285,7 @@ export function ServiceOverrides(): React.ReactElement {
             font={{ weight: 'bold' }}
             data-tooltip-id="serviceOverrides"
           >
-            {getString('common.serviceOverrides')}
+            {getString('common.serviceOverrides.labelText')}
             <HarnessDocTooltip useStandAlone={true} tooltipId="serviceOverrides" />
           </Text>
           <RbacButton

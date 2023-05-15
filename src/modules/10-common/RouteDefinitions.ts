@@ -979,6 +979,24 @@ const routes = {
       return queryString.length > 0 ? `${routePath}?${queryString}` : routePath
     }
   ),
+  toServiceOverrides: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      accountRoutePlacement
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }>) => {
+      return getEnvServiceRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path: 'serviceOverrides',
+        accountRoutePlacement
+      })
+    }
+  ),
   toPipelineDetail: withAccountId(
     ({ orgIdentifier, projectIdentifier, pipelineIdentifier, module }: PipelineType<PipelinePathProps>) => {
       const basePath = module || 'home'

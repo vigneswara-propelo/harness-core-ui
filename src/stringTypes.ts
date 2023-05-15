@@ -723,6 +723,7 @@ export interface StringsMap {
   'common.other': string
   'common.overSubscribed': string
   'common.override': string
+  'common.overrides': string
   'common.overuse': string
   'common.pagerDuty': string
   'common.paste': string
@@ -1024,7 +1025,11 @@ export interface StringsMap {
   'common.serviceName': string
   'common.serviceOverrideInputs': string
   'common.serviceOverridePrefix': string
-  'common.serviceOverrides': string
+  'common.serviceOverrides.environmentServiceSpecific': string
+  'common.serviceOverrides.globalEnvironment': string
+  'common.serviceOverrides.globalInfra': string
+  'common.serviceOverrides.infrastructureServiceSpecific': string
+  'common.serviceOverrides.labelText': string
   'common.servicePrefix': string
   'common.serviceReliabilityManagement': string
   'common.serviceType': string

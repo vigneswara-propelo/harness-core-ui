@@ -1060,6 +1060,7 @@ addName: Add {{name}}
 editName: Edit {{name}}
 selectName: Select {{name}}
 override: Override
+overrides: Overrides
 plusNewName: + New {{name}}
 newName: New {{name}}
 fetchingBranches: Fetching branches
@@ -1087,7 +1088,6 @@ import: Import
 importEntityFromGit: Import {{resourceType}} From Git
 moveEntitytoGit: Move {{resourceType}} To Git
 environmentOverrides: Environment Overrides
-serviceOverrides: Service Overrides
 invalidIdentifiers: 'Identifier must not be one of the following values: {{identifiers}}'
 repositoryFormat: Repository Format
 scopeLabel: Scope
@@ -1499,3 +1499,9 @@ readOnlyConnectorWarning: Read-only Vault connector is not allowed for Terraform
 enabledFlags: ENABLED FLAGS
 expiresOn: Expires on
 friendlyName: Friendly Name
+serviceOverrides:
+  labelText: Service Overrides
+  globalEnvironment: Global Environment
+  environmentServiceSpecific: Service Specific
+  globalInfra: Infrastructure Specific
+  infrastructureServiceSpecific: Service & Infrastructure Specific

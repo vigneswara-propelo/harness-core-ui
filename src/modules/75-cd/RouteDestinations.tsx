@@ -74,6 +74,7 @@ import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Envi
 import EnvironmentDetails from './components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetails'
 import EnvironmentGroups from './components/EnvironmentGroups/EnvironmentGroups'
 import EnvironmentGroupDetails from './components/EnvironmentGroups/EnvironmentGroupDetails/EnvironmentGroupDetails'
+import ServiceOverrides from './components/ServiceOverrides/ServiceOverrides'
 
 import CDTrialHomePage from './pages/home/CDTrialHomePage'
 
@@ -628,6 +629,17 @@ export default (
       pageName={PAGE_NAME.EnvironmentGroupDetails}
     >
       <EnvironmentGroupDetails />
+    </RouteWithLayout>
+
+    {/* ServiceOverrides Page */}
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={[routes.toServiceOverrides({ ...projectPathProps, ...moduleParams })]}
+      pageName={PAGE_NAME.ServiceOverrides}
+    >
+      <ServiceOverrides />
     </RouteWithLayout>
 
     {

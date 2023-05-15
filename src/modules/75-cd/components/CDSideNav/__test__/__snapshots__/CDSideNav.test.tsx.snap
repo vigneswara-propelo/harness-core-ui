@@ -15,7 +15,7 @@ exports[`Sidenav render 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        Overview
+        overview
       </p>
     </a>
     <a
@@ -25,7 +25,7 @@ exports[`Sidenav render 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        Deployments
+        deploymentsText
       </p>
     </a>
     <a
@@ -35,7 +35,7 @@ exports[`Sidenav render 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        Pipelines
+        pipelines
       </p>
     </a>
     <a
@@ -45,7 +45,7 @@ exports[`Sidenav render 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        Services
+        services
       </p>
     </a>
     <a
@@ -55,7 +55,7 @@ exports[`Sidenav render 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        Environments
+        environments
       </p>
     </a>
     <a

@@ -64,7 +64,7 @@ export default function CDSideNav(): React.ReactElement {
   const location = useLocation()
   const module = 'cd'
   const { updateAppStore, selectedProject } = useAppStore()
-  const { GITOPS_ONPREM_ENABLED } = useFeatureFlags()
+  const { GITOPS_ONPREM_ENABLED, CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
   const { getString } = useStrings()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const isCommunity = useGetCommunity()
@@ -232,12 +232,15 @@ export default function CDSideNav(): React.ReactElement {
             <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
           )}
           {!isCommunity && !isCDGetStartedVisible && (
-            <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module })} />
+            <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module })} />
           )}
-          <SidebarLink label="Deployments" to={routes.toDeployments({ ...params, module })} />
-          <SidebarLink label="Pipelines" to={routes.toPipelines({ ...params, module })} />
-          <SidebarLink label="Services" to={routes.toServices({ ...params, module })} />
-          <SidebarLink label="Environments" to={routes.toEnvironment({ ...params, module })} />
+          <SidebarLink label={getString('deploymentsText')} to={routes.toDeployments({ ...params, module })} />
+          <SidebarLink label={getString('pipelines')} to={routes.toPipelines({ ...params, module })} />
+          <SidebarLink label={getString('services')} to={routes.toServices({ ...params, module })} />
+          <SidebarLink label={getString('environments')} to={routes.toEnvironment({ ...params, module })} />
+          {CDS_SERVICE_OVERRIDES_2_0 && (
+            <SidebarLink label={getString('common.overrides')} to={routes.toServiceOverrides({ ...params, module })} />
+          )}
           {!isCommunity && !hideGitopsOnPrem ? (
             <SidebarLink label={getString('cd.gitOps')} to={routes.toGitOps({ ...params, module })} />
           ) : null}
