@@ -98,11 +98,11 @@ exports[`CICodebaseInputSetFormV1 tests Run Pipeline Form  Initial Render 1`] = 
                   >
                     <label
                       class="bp3-label"
-                      for="repository.reference.value"
+                      for="options.clone.ref.value"
                     >
                       <span
                         class="Tooltip--acenter"
-                        data-tooltip-id="test-form_repository.reference.value"
+                        data-tooltip-id="test-form_options.clone.ref.value"
                       >
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
@@ -127,7 +127,7 @@ exports[`CICodebaseInputSetFormV1 tests Run Pipeline Form  Initial Render 1`] = 
                           <input
                             autocomplete="off"
                             class="bp3-input"
-                            name="repository.reference.value"
+                            name="options.clone.ref.value"
                             placeholder=""
                             type="text"
                             value=""
@@ -274,11 +274,11 @@ exports[`CICodebaseInputSetFormV1 tests Run Pipeline Form  Re-Run Pipeline Rende
                   >
                     <label
                       class="bp3-label"
-                      for="repository.reference.value"
+                      for="options.clone.ref.value"
                     >
                       <span
                         class="Tooltip--acenter"
-                        data-tooltip-id="test-form_repository.reference.value"
+                        data-tooltip-id="test-form_options.clone.ref.value"
                       >
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
@@ -303,7 +303,7 @@ exports[`CICodebaseInputSetFormV1 tests Run Pipeline Form  Re-Run Pipeline Rende
                           <input
                             autocomplete="off"
                             class="bp3-input"
-                            name="repository.reference.value"
+                            name="options.clone.ref.value"
                             placeholder=""
                             type="text"
                             value=""

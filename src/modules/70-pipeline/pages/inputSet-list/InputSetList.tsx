@@ -141,7 +141,7 @@ function InputSetList(): React.ReactElement {
         }
       })
         .then(response => {
-          pipelineInputs = response
+          pipelineInputs = response.content
         })
         .catch(err => (inputsError = err))
         .finally(() => setIsLoading(false))

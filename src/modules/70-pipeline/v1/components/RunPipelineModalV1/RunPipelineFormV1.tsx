@@ -89,7 +89,7 @@ export interface PipelineV1InfoConfig {
   orgIdentifier?: string
   projectIdentifier?: string
   inputs?: JsonNode
-  repository?: JsonNode
+  options?: JsonNode
   stages?: JsonNode[]
   tags?: {
     [key: string]: string
@@ -384,7 +384,7 @@ function RunPipelineFormV1Basic({
     runPipelineFormContent = (
       <>
         <Formik
-          initialValues={defaultTo(inputSetYaml, {})}
+          initialValues={inputSetYaml}
           formName="runPipeline"
           onSubmit={values => {
             // DO NOT return from here, causing the Formik form to handle loading state inconsistently

@@ -261,7 +261,7 @@ exports[`Input Sets V1 render Edit Input Set Form view 1`] = `
                                   class="bp3-editable-text-content"
                                   style="height: 1px; line-height: 1px; min-width: 0;"
                                 >
-                                  asv
+                                  test1
                                 </span>
                               </div>
                             </span>
@@ -298,7 +298,7 @@ exports[`Input Sets V1 render Edit Input Set Form view 1`] = `
                                 disabled=""
                                 name="name"
                                 type="text"
-                                value="asv"
+                                value="test1"
                               />
                             </div>
                           </div>
@@ -678,7 +678,7 @@ exports[`Input Sets V1 render Edit Input Set Form view: expanded 1`] = `
                                   class="bp3-editable-text-content"
                                   style="height: 1px; line-height: 1px; min-width: 0;"
                                 >
-                                  asv
+                                  test1
                                 </span>
                               </div>
                             </span>
@@ -715,7 +715,7 @@ exports[`Input Sets V1 render Edit Input Set Form view: expanded 1`] = `
                                 disabled=""
                                 name="name"
                                 type="text"
-                                value="asv"
+                                value="test1"
                               />
                             </div>
                           </div>
@@ -1096,7 +1096,7 @@ exports[`Input Sets V1 render Input Set Form view 1`] = `
                                   class="bp3-editable-text-content"
                                   style="height: 1px; line-height: 1px; min-width: 0;"
                                 >
-                                  asv
+                                  test1
                                 </span>
                               </div>
                             </span>
@@ -1158,7 +1158,7 @@ exports[`Input Sets V1 render Input Set Form view 1`] = `
                                 class="bp3-input"
                                 name="name"
                                 type="text"
-                                value="asv"
+                                value="test1"
                               />
                             </div>
                           </div>

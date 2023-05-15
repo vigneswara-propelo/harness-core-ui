@@ -93,9 +93,9 @@ function CICodebaseInputSetFormV1Internal({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const formattedPath = isEmpty(path) ? '' : `${path}.`
-  const buildPath = `${formattedPath}repository.reference.value`
-  const codeBaseTypePath = `${formattedPath}repository.reference.type`
-  const codeBaseInputFieldFormName = `${formattedPath}repository.reference.value`
+  const buildPath = `${formattedPath}options.clone.ref.value`
+  const codeBaseTypePath = `${formattedPath}options.clone.ref.type`
+  const codeBaseInputFieldFormName = `${formattedPath}options.clone.ref.value`
   const [codeBaseType, setCodeBaseType] = useState<CodebaseTypes | undefined>(get(formik?.values, codeBaseTypePath))
 
   const [isFetchingBranches, setIsFetchingBranches] = useState<boolean>(false)
@@ -127,7 +127,7 @@ function CICodebaseInputSetFormV1Internal({
     if (type) {
       setCodeBaseType(type)
     }
-    const ctrRef = connectorRef ?? (get(originalPipeline, 'repository.connector') as string)
+    const ctrRef = connectorRef ?? (get(originalPipeline, 'options.repository.connector') as string)
     setConnectorReference(ctrRef)
     setConnectorId(getIdentifierFromValue(ctrRef))
   }, [formik?.values])
@@ -136,7 +136,7 @@ function CICodebaseInputSetFormV1Internal({
     // OnEdit Case, persists saved ciCodebase build spec
     if (codeBaseType) {
       savedValues.current = Object.assign(savedValues.current, {
-        [codeBaseType]: get(formik?.values, `${formattedPath}repository.reference.value`, '')
+        [codeBaseType]: get(formik?.values, `${formattedPath}options.clone.ref.value`, '')
       })
       const existingValues = { ...formik?.values }
       const updatedValues = set(existingValues, codeBaseTypePath, codeBaseType)
@@ -173,9 +173,9 @@ function CICodebaseInputSetFormV1Internal({
         fetchBranchesForRepo(getCodebaseRepoNameFromConnector(codebaseConnector))
       } else if (
         codebaseConnectorConnectionType === ConnectionType.Account &&
-        !get(originalPipeline, 'repository.name', '').includes(RUNTIME_INPUT_VALUE_V1)
+        !get(originalPipeline, 'options.repository.name', '').includes(RUNTIME_INPUT_VALUE_V1)
       ) {
-        fetchBranchesForRepo(repoIdentifier ?? get(originalPipeline, 'repository.name', ''))
+        fetchBranchesForRepo(repoIdentifier ?? get(originalPipeline, 'options.repository.name', ''))
       }
     }
   }, [codebaseConnector, originalPipeline])

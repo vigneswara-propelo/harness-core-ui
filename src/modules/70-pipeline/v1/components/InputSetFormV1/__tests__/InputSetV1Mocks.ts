@@ -21,7 +21,7 @@ export const PipelineResponse: UseGetReturnData<ResponsePMSPipelineResponseDTO> 
     status: 'SUCCESS',
     data: {
       yamlPipeline:
-        'version: 1\nname: Yaml Simp Inline\ninputs:\n  image:\n    type: string\n    desc: image name\n    default: golang\n    required: true\n  repo:\n    type: string\n    desc: repository name\n    required: true\n    prompt: true\nrepository:\n  connector: gitconnector\n  name: <+inputs.repo>\nstages:\n  - name: output variable\n    type: ci\n    spec:\n      steps:\n        - name: one test\n          type: script\n          spec:\n            image: <+inputs.image>\n            run: export foo=bar\n            shell: sh\n            outputs:\n              - foo\n        - name: two\n          type: script\n          spec:\n            image: alpine\n            run: echo <+steps.one_test.output.outputVariables.foo>\n            pull: always\n',
+        'version: 1\nname: Java with Gradle Remote\ninputs:\n  name:\n    desc: Repo Name\n    type: string\noptions:\n  repository:\n    connector: Github\n    name: <+input.name>\nstages:\n  - name: Build and test Java app\n    type: ci\n    spec:\n      steps:\n        - name: Build\n          type: script\n          spec:\n            run: echo "Hello world"\n',
       entityValidityDetails: { valid: true, invalidYaml: '' },
       modules: [],
       storeType: 'INLINE'
@@ -132,10 +132,10 @@ export const GetInputSetEdit: UseGetReturnData<ResponseInputSetResponse> = {
       orgIdentifier: 'default',
       projectIdentifier: 'default_project',
       pipelineIdentifier: 'Yaml_Simp_Inline',
-      identifier: 'asv',
+      identifier: 'test1',
       inputSetYaml:
-        'name: asv\ndata:\n  inputs:\n    image: golang\n    repo: "asdgvbasvb "\n  repository:\n    reference:\n      type: branch\n      value: main\nversion: 1\nidentifier: asv\norgIdentifier: default\nprojectIdentifier: default_project\n',
-      name: 'asv',
+        'name: test1\ndata:\n  options:\n    clone:\n      ref:\n        type: branch\n        name: <+input>\n        value: main\n  inputs:\n    name: goHelloWorldServer\nversion: 1\nidentifier: test1\norgIdentifier: default\nprojectIdentifier: default_project\n',
+      name: 'test1',
       tags: {},
       entityValidityDetails: { valid: true, invalidYaml: undefined },
       storeType: 'INLINE',

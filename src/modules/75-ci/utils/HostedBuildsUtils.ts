@@ -292,7 +292,7 @@ export const addRepositoryInfoToPipeline = ({
   connectorRef: string
   repoName: string
 }): Record<string, any> => {
-  return set(currentPipeline, 'repository', { connector: connectorRef, name: repoName })
+  return set(currentPipeline, 'options.repository', { connector: connectorRef, name: repoName })
 }
 
 export const getCIStarterPipelineV1 = (): Record<string, any> => {

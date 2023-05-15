@@ -10,7 +10,7 @@ export const getMockFor_useGetPipeline = (): any => ({
     status: 'SUCCESS',
     data: {
       yamlPipeline:
-        'version: 1\nname: Yaml Simp 2\ninputs:\n  image:\n    type: string\n    desc: image name\n    default: golang\n    required: true\n  repo:\n    type: string\n    desc: repository name\n    required: true\n    prompt: true\nrepository:\n  connector: account.github\n  name: <+inputs.repo>\nstages:\n  - name: output variable\n    type: ci\n    spec:\n      steps:\n        - name: one test\n          type: script\n          spec:\n            image: <+inputs.image>\n            run: export foo=bar\n            shell: sh\n            outputs:\n              - foo\n        - name: two\n          type: script\n          spec:\n            image: alpine\n            run: echo <+steps.one_test.output.outputVariables.foo>\n            pull: always\n',
+        'version: 1\nname: Java with Gradle Remote\ninputs:\n  name:\n    desc: Repo Name\n    type: string\noptions:\n  repository:\n    connector: Github\n    name: <+input.name>\nstages:\n  - name: Build and test Java app\n    type: ci\n    spec:\n      steps:\n        - name: Build\n          type: script\n          spec:\n            run: echo "Hello world"\n',
       entityValidityDetails: { valid: true, invalidYaml: null },
       modules: [],
       storeType: 'INLINE'
@@ -40,10 +40,12 @@ export const PipelineInputsMetadata = {
     image: { prompt: false, required: true, default: 'golang', type: 'string', desc: 'image name' },
     repo: { prompt: true, required: true, type: 'string', desc: 'repository name' }
   },
-  repository: {
-    reference: {
-      type: { prompt: false, required: true, type: 'string', enums: ['branch', 'tag', 'pr'] },
-      value: { prompt: false, required: true, type: 'string' }
+  options: {
+    clone: {
+      ref: {
+        type: { prompt: false, required: true, type: 'string', enums: ['branch', 'tag', 'pr'] },
+        value: { prompt: false, required: true, type: 'string' }
+      }
     }
   }
 }
@@ -54,10 +56,12 @@ export const getMockFor_useGetTemplateFromPipeline = (): any => ({
 
 export const getCICodebaseInputSetFormInitialValues = () => ({
   inputs: {},
-  repository: {
-    reference: {
-      type: 'branch',
-      value: ''
+  options: {
+    clone: {
+      ref: {
+        type: 'branch',
+        value: ''
+      }
     }
   }
 })
@@ -209,8 +213,10 @@ export const getCICodebaseInputSetFormProps = (formik: any): any => ({
         required: true
       }
     },
-    repository: {
-      connector: 'github'
+    options: {
+      repository: {
+        connector: 'github'
+      }
     },
     stages: [
       {

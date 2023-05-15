@@ -71,7 +71,9 @@ import css from '../../../components/InputSetForm/InputSetForm.module.scss'
 
 const getDefaultInputSet = (orgIdentifier: string, projectIdentifier: string) => ({
   name: '',
-  data: {},
+  data: {
+    options: {}
+  },
   version: 1,
   identifier: '',
   description: undefined,

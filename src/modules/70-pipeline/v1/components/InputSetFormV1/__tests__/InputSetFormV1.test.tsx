@@ -278,18 +278,20 @@ describe('Input Sets V1', () => {
           desc: 'repository name'
         }
       },
-      repository: {
-        reference: {
-          type: {
-            prompt: false,
-            required: true,
-            type: 'string',
-            enums: ['branch', 'tag', 'pr']
-          },
-          value: {
-            prompt: false,
-            required: true,
-            type: 'string'
+      options: {
+        clone: {
+          ref: {
+            type: {
+              prompt: false,
+              required: true,
+              type: 'string',
+              enums: ['branch', 'tag', 'pr']
+            },
+            value: {
+              prompt: false,
+              required: true,
+              type: 'string'
+            }
           }
         }
       }
@@ -299,10 +301,12 @@ describe('Input Sets V1', () => {
         image: '',
         repo: ''
       },
-      repository: {
-        reference: {
-          type: 'branch',
-          value: ''
+      options: {
+        clone: {
+          ref: {
+            type: 'branch',
+            value: ''
+          }
         }
       }
     }
@@ -367,10 +371,12 @@ describe('Input Sets V1', () => {
             image: '',
             repo: ''
           },
-          repository: {
-            reference: {
-              type: 'branch',
-              value: ''
+          options: {
+            clone: {
+              ref: {
+                type: 'branch',
+                value: ''
+              }
             }
           }
         }

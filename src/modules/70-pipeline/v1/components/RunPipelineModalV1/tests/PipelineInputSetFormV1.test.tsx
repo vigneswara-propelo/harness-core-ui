@@ -39,8 +39,10 @@ const getPropsForCIStage = (formik: any): PipelineInputSetFormV1Props => ({
         required: true
       }
     },
-    repository: {
-      connector: 'github'
+    options: {
+      repository: {
+        connector: 'github'
+      }
     },
     stages: [
       {

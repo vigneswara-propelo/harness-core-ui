@@ -20,8 +20,10 @@ export interface useInputSetsProps {
 export type pipelineInputsV1 = { [key: string]: string }
 export interface InputsYaml {
   inputs?: pipelineInputsV1
-  repository?: {
-    reference: { [key: string]: any }
+  options: {
+    clone?: {
+      ref: { [key: string]: any }
+    }
   }
 }
 
@@ -29,7 +31,7 @@ export function useInputSetsV1(props: useInputSetsProps) {
   const { branch, repoIdentifier, orgIdentifier, connectorRef, projectIdentifier, pipelineIdentifier } = props
 
   const {
-    data: pipelineInputs,
+    data,
     error: error,
     isLoading
   } = useGetPipelineInputsQuery({
@@ -43,10 +45,12 @@ export function useInputSetsV1(props: useInputSetsProps) {
     }
   })
 
-  const hasRuntimeInputs = !isEmpty(pipelineInputs?.inputs)
-  const hasCodebaseInputs = !isEmpty(pipelineInputs?.repository)
+  const pipelineInputs = data?.content
 
-  const inputSetYaml: InputsYaml = {}
+  const hasRuntimeInputs = !isEmpty(pipelineInputs?.inputs)
+  const hasCodebaseInputs = !isEmpty(pipelineInputs?.options?.clone)
+
+  const inputSetYaml: InputsYaml = { options: {}, inputs: {} }
 
   if (!isEmpty(pipelineInputs?.inputs)) {
     inputSetYaml.inputs = {}
@@ -57,12 +61,12 @@ export function useInputSetsV1(props: useInputSetsProps) {
       }
     }
   }
-  if (!isEmpty(pipelineInputs?.repository)) {
-    inputSetYaml.repository = {
-      reference: {}
+  if (!isEmpty(pipelineInputs?.options?.clone)) {
+    inputSetYaml.options.clone = {
+      ref: {}
     }
-    for (const key in pipelineInputs?.repository?.reference) {
-      inputSetYaml.repository.reference[key] = ''
+    for (const key in pipelineInputs?.options?.clone?.ref) {
+      inputSetYaml.options.clone.ref[key] = ''
     }
   }
 

@@ -155,7 +155,9 @@ export default function FormikInputSetFormV1(props: FormikInputSetFormV1Props): 
     return omittedInputSet
   }
   const inputSetV1FormInitialValues = React.useMemo(() => {
-    return !isEmpty(inputSet.data) ? getPipelineData(inputSet.data) : getPipelineData(inputSetYaml)
+    return !isEmpty(inputSet.data?.options) || !isEmpty(inputSet.data?.inputs)
+      ? getPipelineData(inputSet.data)
+      : getPipelineData(inputSetYaml)
   }, [inputSet.data, inputSetYaml])
 
   const hasError = useMemo(() => {

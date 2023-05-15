@@ -1877,10 +1877,10 @@
     "@types/qs" "^6.9.7"
     qs "^6.9.4"
 
-"@harnessio/react-pipeline-service-client@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@harnessio/react-pipeline-service-client/-/react-pipeline-service-client-1.1.0.tgz#8bb82164232f91597f588047494cc031f60564a6"
-  integrity sha512-92VxHs3OnmrAkkCZIj/s6R6CM2C1utqwdvRtdkcehyvC6DLH+S/EP5HC7gyWItin0CuMMY8rIpSrMQS86aj69w==
+"@harnessio/react-pipeline-service-client@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-pipeline-service-client/-/react-pipeline-service-client-1.3.0.tgz#907b5963d8788e5200d2c256bbcf04afbff76f72"
+  integrity sha512-AgVxu2AD2lLKUUHj29JnR2xd0K2oiGwjuzcX/luqGzIZa/AlUuZhjke5hg391vHP+Nx32PzUgVLR9iAd6sVdCw==
   dependencies:
     "@tanstack/react-query" "4.20.4"
     "@types/qs" "^6.9.7"
