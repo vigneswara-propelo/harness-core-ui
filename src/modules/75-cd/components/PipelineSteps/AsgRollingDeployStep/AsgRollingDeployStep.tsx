@@ -151,6 +151,9 @@ function AsgRollingDeployWidget(
                       <div className={cx(stepCss.formGroup, stepCss.lg)}>
                         <FormInput.MultiTextInput
                           name="spec.minimumHealthyPercentage"
+                          tooltipProps={{
+                            dataTooltipId: 'asgMinimumHealthyPercentage'
+                          }}
                           placeholder={getString('cd.minimumHealthyPercentagePlaceholder')}
                           label={getString('cd.minimumHealthyPercentageLabel')}
                           disabled={readonly}
@@ -182,6 +185,9 @@ function AsgRollingDeployWidget(
                           name="spec.instanceWarmup"
                           placeholder={getString('cd.instanceWarmupPlaceholder')}
                           label={getString('cd.instanceWarmupLabel')}
+                          tooltipProps={{
+                            dataTooltipId: 'asgInstanceWarmup'
+                          }}
                           disabled={readonly}
                           multiTextInputProps={{
                             expressions,
