@@ -164,6 +164,14 @@ jest.mock('services/portal', () => ({
       error: null,
       loading: false
     }
+  }),
+  useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return []
+  }),
+  useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return []
   })
 }))
 

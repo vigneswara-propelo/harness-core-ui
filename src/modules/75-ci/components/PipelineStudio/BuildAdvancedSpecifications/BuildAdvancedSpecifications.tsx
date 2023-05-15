@@ -21,6 +21,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { FailureStrategyWithRef } from '@pipeline/components/PipelineStudio/FailureStrategy/FailureStrategy'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import ConditionalExecution from '@pipeline/components/PipelineStudio/ConditionalExecution/ConditionalExecution'
+import { DelegateSelectorWithRef } from '@pipeline/components/PipelineStudio/DelegateSelector/DelegateSelector'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StepActions } from '@common/constants/TrackingConstants'
@@ -54,6 +55,40 @@ const BuildAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childre
   return (
     <div className={cx(css.stageSection, css.editStageGrid)}>
       <div className={css.contentSection} ref={scrollRef}>
+        <div className={css.tabHeading}>
+          <span data-tooltip-id="delegateSelectorDeployStage">
+            {getString('pipeline.delegate.DelegateSelectorOptional')}
+          </span>
+        </div>
+        <Card className={css.sectionCard} id="delegateSelector">
+          <Layout.Horizontal>
+            <div>
+              <DelegateSelectorWithRef
+                selectedStage={stage}
+                isReadonly={isReadonly}
+                ref={formikRef}
+                onUpdate={delegateSelectors => {
+                  const valuePassed = delegateSelectors.delegateSelectors
+                  const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+                  /* istanbul ignore else */
+                  if (pipelineStage && pipelineStage.stage) {
+                    const stageData = produce(pipelineStage, draft => {
+                      set(draft, 'stage.delegateSelectors', valuePassed)
+                      if (isEmpty(valuePassed) || valuePassed[0] === '') {
+                        unset(draft.stage, 'delegateSelectors')
+                      }
+                    })
+                    /* istanbul ignore else */
+                    if (stageData.stage) {
+                      updateStage(stageData.stage)
+                    }
+                  }
+                }}
+                tabName={BuildTabs.ADVANCED}
+              />
+            </div>
+          </Layout.Horizontal>
+        </Card>
         <div className={css.tabHeading}>
           <span data-tooltip-id="conditionalExecutionBuildStage">
             {getString('pipeline.conditionalExecution.title')}
