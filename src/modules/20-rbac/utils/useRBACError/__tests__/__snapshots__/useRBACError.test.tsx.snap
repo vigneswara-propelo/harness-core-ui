@@ -206,7 +206,7 @@ exports[`useRbacError testRBACError with multiple errors 1`] = `
         }
       }
     >
-      1. "core_connector_view" rbac.permissionOn 
+      1. "core_connector_view" rbac.permissionOn
       <span
         className="textToLowercase"
       >
@@ -230,7 +230,7 @@ exports[`useRbacError testRBACError with multiple errors 1`] = `
         }
       }
     >
-      2. "core_connector_edit" rbac.permissionOn 
+      2. "core_connector_edit" rbac.permissionOn
       <span
         className="textToLowercase"
       >
@@ -254,7 +254,7 @@ exports[`useRbacError testRBACError with multiple errors 1`] = `
         }
       }
     >
-      3. "core_connector_delete" rbac.permissionOn 
+      3. "core_connector_delete" rbac.permissionOn
       <span
         className="textToLowercase"
       >
