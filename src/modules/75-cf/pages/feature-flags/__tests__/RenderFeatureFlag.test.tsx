@@ -70,4 +70,12 @@ describe('RenderFeatureFlag', () => {
       expect(warningToolTip).not.toBeInTheDocument()
     })
   })
+
+  test('it should render the Flag name, description and Flag identifier', async () => {
+    renderFlagComponent({ numberOfEnvs: 1 })
+
+    expect(screen.getByText(cellMock.row.original.name)).toBeInTheDocument()
+    expect(screen.getByText(cellMock.row.original.description)).toBeInTheDocument()
+    expect(screen.getByText(cellMock.row.original.identifier)).toBeInTheDocument()
+  })
 })

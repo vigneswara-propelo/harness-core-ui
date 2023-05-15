@@ -1,8 +1,15 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { FC, useEffect, useRef, useState, ReactElement } from 'react'
 import { Button, Container, Heading, Layout, Text, Utils, Popover } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { Classes, Position, Switch, PopoverInteractionKind } from '@blueprintjs/core'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import type { Cell } from 'react-table'
 import { useToaster } from '@common/exports'
 import type { Feature, GitSyncErrorResponse } from 'services/cf'
@@ -231,11 +238,11 @@ export const RenderFeatureFlag: FC<RenderFeatureFlagProps> = ({
         <Layout.Vertical flex className={css.generalInfo} ref={ref}>
           <Text
             style={{
-              color: '#22222A',
               fontWeight: 500,
               fontSize: '13px',
               lineHeight: '16px'
             }}
+            color={Color.GREY_800}
             margin={{ right: 'xsmall' }}
             width={flagNameTextSize}
             lineClamp={2}
@@ -247,13 +254,23 @@ export const RenderFeatureFlag: FC<RenderFeatureFlagProps> = ({
               </Text>
             )}
           </Text>
+          {data.identifier && (
+            <Text
+              padding={{ top: 'xsmall' }}
+              lineClamp={1}
+              color={Color.GREY_400}
+              font={{ variation: FontVariation.TINY }}
+            >
+              {data.identifier}
+            </Text>
+          )}
           {data.description && (
             <Text
               style={{
-                color: '#22222A',
                 fontSize: '12px',
                 lineHeight: '24px'
               }}
+              color={Color.GREY_800}
               width={flagNameTextSize}
               lineClamp={1}
             >

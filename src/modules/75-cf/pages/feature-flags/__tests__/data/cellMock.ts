@@ -12,7 +12,7 @@ export default {
       createdAt: 1647437611100,
       defaultOffVariation: 'false',
       defaultOnVariation: 'true',
-      description: '',
+      description: 'description of b flag',
       envProperties: {
         defaultServe: {
           variation: 'true'
@@ -30,7 +30,7 @@ export default {
       identifier: 'b',
       kind: 'boolean',
       modifiedAt: 1647437611100,
-      name: 'b',
+      name: 'b flag',
       owner: ['crystal.fong@harness.io'],
       permanent: false,
       prerequisites: [],
