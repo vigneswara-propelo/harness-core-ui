@@ -219,8 +219,7 @@ describe('Create empty monitored service', () => {
     cy.get('.bp3-overlay button[type="submit"]').click({ force: true })
 
     cy.contains('div', 'Query Specifications and mapping').click({ force: true })
-    cy.get('span[data-icon="expression-input"]').scrollIntoView().should('have.length', 1)
-    cy.get('span[data-icon="expression-input"]').should('be.visible').click({ force: true })
+    cy.get('span[data-icon="expression-input"]').scrollIntoView().should('have.length', 1).click({ force: true })
     cy.get('a.bp3-menu-item').should('have.length', 2).as('valueList')
     cy.get('@valueList').eq(0).should('contain.text', 'Runtime input').as('runtimeValue')
     cy.get('@valueList').eq(1).should('contain.text', 'Expression').as('expressionValue')
