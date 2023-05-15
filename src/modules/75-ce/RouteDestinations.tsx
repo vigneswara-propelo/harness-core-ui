@@ -330,9 +330,7 @@ const CESideNavProps: SidebarContext = {
   navComponent: CESideNav,
   subtitle: 'CLOUD COST',
   title: 'Management',
-  icon: 'ce-main',
-  launchButtonText: 'common.ce.visibilityLaunchButton',
-  launchButtonRedirectUrl: '#/account/{replaceAccountId}/continuous-efficiency/overview'
+  icon: 'ce-main'
 }
 
 const RedirectToModuleTrialHome = (): React.ReactElement => {
