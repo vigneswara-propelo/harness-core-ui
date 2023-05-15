@@ -428,8 +428,8 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
               <div className={css.savePublishContainer}>
                 {isUpdated && !isReadonly && (
                   <Button
-                    variation={ButtonVariation.LINK}
-                    intent="warning"
+                    variation={ButtonVariation.TERTIARY}
+                    padding={'small'}
                     className={css.unsavedChanges}
                     onClick={openDiffModal}
                   >

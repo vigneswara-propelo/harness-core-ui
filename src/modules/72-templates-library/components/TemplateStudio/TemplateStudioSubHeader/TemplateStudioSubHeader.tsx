@@ -133,12 +133,7 @@ function TemplateStudioSubHeader(
                   </Container>
                 )}
                 {isUpdated && !isReadonly && (
-                  <Button
-                    variation={ButtonVariation.LINK}
-                    intent="warning"
-                    className={css.tagRender}
-                    onClick={openDiffModal}
-                  >
+                  <Button variation={ButtonVariation.TERTIARY} className={css.tagRender} onClick={openDiffModal}>
                     {getString('unsavedChanges')}
                   </Button>
                 )}

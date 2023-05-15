@@ -286,8 +286,8 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view 1`] = `
         </div>
       </div>
       <div
-        class="Layout--horizontal StyledProps--main"
-        style="width: 42%;"
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
+        style="width: 97%;"
       >
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
@@ -452,6 +452,18 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view 1`] = `
             </div>
           </div>
         </div>
+        <button
+          aria-label="View Diff"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+          style="margin-left: 15px;"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            View Diff
+          </span>
+        </button>
         <span
           class="bp3-popover-wrapper bp3-dark reconcileMenu"
         >
@@ -730,8 +742,8 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
         </div>
       </div>
       <div
-        class="Layout--horizontal StyledProps--main"
-        style="width: 42%;"
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
+        style="width: 97%;"
       >
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
@@ -896,6 +908,18 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
             </div>
           </div>
         </div>
+        <button
+          aria-label="View Diff"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+          style="margin-left: 15px;"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            View Diff
+          </span>
+        </button>
         <span
           class="bp3-popover-wrapper bp3-dark reconcileMenu"
         >
@@ -1673,8 +1697,8 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
         </div>
       </div>
       <div
-        class="Layout--horizontal StyledProps--main"
-        style="width: 42%;"
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
+        style="width: 97%;"
       >
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
@@ -1706,6 +1730,18 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
             </div>
           </div>
         </div>
+        <button
+          aria-label="View Diff"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+          style="margin-left: 15px;"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            View Diff
+          </span>
+        </button>
         <span
           class="bp3-popover-wrapper bp3-dark reconcileMenu"
         >
@@ -2586,8 +2622,8 @@ exports[`Render Forms - Snapshot Testing render NewInputSetModal 1`] = `
               </div>
             </div>
             <div
-              class="Layout--horizontal StyledProps--main"
-              style="width: 42%;"
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
+              style="width: 97%;"
             >
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
@@ -2619,6 +2655,18 @@ exports[`Render Forms - Snapshot Testing render NewInputSetModal 1`] = `
                   </div>
                 </div>
               </div>
+              <button
+                aria-label="View Diff"
+                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+                style="margin-left: 15px;"
+                type="button"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  View Diff
+                </span>
+              </button>
               <span
                 class="bp3-popover-wrapper bp3-dark reconcileMenu"
               >
@@ -3053,8 +3101,8 @@ exports[`Render Forms - Snapshot Testing render inputset with no inputSetRespons
         </div>
       </div>
       <div
-        class="Layout--horizontal StyledProps--main"
-        style="width: 42%;"
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
+        style="width: 97%;"
       >
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
@@ -3086,6 +3134,18 @@ exports[`Render Forms - Snapshot Testing render inputset with no inputSetRespons
             </div>
           </div>
         </div>
+        <button
+          aria-label="View Diff"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+          style="margin-left: 15px;"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            View Diff
+          </span>
+        </button>
         <span
           class="bp3-popover-wrapper bp3-dark reconcileMenu"
         >

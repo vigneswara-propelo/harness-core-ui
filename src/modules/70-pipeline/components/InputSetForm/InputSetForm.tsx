@@ -56,7 +56,7 @@ import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
-import { parse, yamlParse } from '@common/utils/YamlHelperMethods'
+import { parse, stringify, yamlParse } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, InputSetType, Pipeline, InputSet } from '@pipeline/utils/types'
@@ -68,6 +68,8 @@ import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetai
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import useDiffDialog from '@common/hooks/useDiffDialog'
+
 import GitPopover from '../GitPopover/GitPopover'
 import FormikInputSetForm from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
@@ -377,6 +379,22 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
     [pipeline?.data?.yamlPipeline]
   )
 
+  const parsedInputSetObj = parse<InputSet>(defaultTo(inputSetResponse?.data?.inputSetYaml, ''))
+
+  const latestYamlPipeline = React.useMemo(() => {
+    if (selectedView === SelectedView.YAML) {
+      const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
+      return stringify(parse<InputSet>(yaml)?.inputSet?.pipeline)
+    }
+  }, [selectedView, yamlHandler])
+
+  const { open: openDiffModal } = useDiffDialog({
+    originalYaml: stringify(parsedInputSetObj?.inputSet?.pipeline),
+    updatedYaml:
+      selectedView === SelectedView.VISUAL ? stringify(formikRef?.current?.values?.pipeline) : latestYamlPipeline ?? '',
+    title: getString('pipeline.piplineDiffTitle')
+  })
+
   React.useEffect(() => {
     setResolvedPipeline(
       yamlParse<PipelineConfig>(defaultTo(pipeline?.data?.resolvedTemplatesPipelineYaml, ''))?.pipeline
@@ -616,6 +634,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       handleMenu={handleMenu}
       onBranchChange={branchChangeHandler}
       handleReloadFromCache={handleReloadFromCache}
+      openDiffModal={openDiffModal}
     >
       {child()}
     </InputSetFormWrapper>
@@ -637,6 +656,7 @@ export interface InputSetFormWrapperProps {
   handleMenu: (state: boolean) => void
   onBranchChange?: (branch?: string) => void
   handleReloadFromCache?: (loadFromCache?: boolean) => void
+  openDiffModal: any
 }
 
 export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.ReactElement {
@@ -678,7 +698,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
         <PageHeader
           className={css.pageHeaderStyles}
           title={
-            <Layout.Horizontal width="42%">
+            <Layout.Horizontal width="97%" flex={{ justifyContent: 'space-between', alignItems: 'start' }}>
               <Text
                 lineClamp={1}
                 color={Color.GREY_800}
@@ -731,6 +751,12 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                   showDisableToggleReason={!hasStoreTypeMismatch(storeType, inputSet?.storeType, isEdit)}
                 />
               </div>
+              <Button
+                text="View Diff"
+                variation={ButtonVariation.PRIMARY}
+                onClick={props.openDiffModal}
+                style={{ marginLeft: '15px' }}
+              />
               <Popover
                 className={cx(Classes.DARK, css.reconcileMenu)}
                 position={Position.LEFT}
