@@ -1336,7 +1336,7 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
               />
               <span
                 class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
-                data-tooltip-id="harnessApproval_spec.isAutoRejectEnabled"
+                data-tooltip-id="autoRejectPreviousDeploymentsTooltip"
               >
                 pipeline.approvalStep.isAutoRejectEnabled
               </span>
@@ -1921,7 +1921,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
               />
               <span
                 class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
-                data-tooltip-id="harnessApproval_spec.isAutoRejectEnabled"
+                data-tooltip-id="autoRejectPreviousDeploymentsTooltip"
               >
                 pipeline.approvalStep.isAutoRejectEnabled
               </span>
@@ -2600,7 +2600,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
               />
               <span
                 class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
-                data-tooltip-id="harnessApproval_spec.isAutoRejectEnabled"
+                data-tooltip-id="autoRejectPreviousDeploymentsTooltip"
               >
                 pipeline.approvalStep.isAutoRejectEnabled
               </span>
@@ -3251,7 +3251,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
               />
               <span
                 class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
-                data-tooltip-id="harnessApproval_spec.isAutoRejectEnabled"
+                data-tooltip-id="autoRejectPreviousDeploymentsTooltip"
               >
                 pipeline.approvalStep.isAutoRejectEnabled
               </span>

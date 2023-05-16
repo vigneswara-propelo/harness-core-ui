@@ -182,6 +182,7 @@ function FormContent({
         disabled={isApprovalStepFieldDisabled(readonly)}
       />
       <FormInput.CheckBox
+        tooltipProps={{ dataTooltipId: 'autoRejectPreviousDeploymentsTooltip' }}
         name="spec.isAutoRejectEnabled"
         label={getString('pipeline.approvalStep.isAutoRejectEnabled')}
         disabled={isApprovalStepFieldDisabled(readonly)}
