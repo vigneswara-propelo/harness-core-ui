@@ -23,6 +23,7 @@ import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtil
 import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
 import { usePolling } from '@common/hooks/usePolling'
 import DeployOverviewPopover, { FailedStatus } from './DeploymentOverviewPopover'
+import ErrorCard, { ErrorCardSize } from '../ErrorCard/ErrorCard'
 import css from './NotificationsCard.module.scss'
 
 const getBadge = (type: string, deployStat: PipelineExecutionInfo[], isLastIndex: boolean): JSX.Element | null => {
@@ -177,26 +178,33 @@ export const NotificationsCard: React.FC<NotificationsCardProps> = ({ timeRange 
     )
   }
 
-  if (error) {
-    return null
-  }
-
   return (
     <Layout.Vertical className={css.container}>
-      <Container className={css.header}>
-        <Text color={Color.GREY_800} font={{ variation: FontVariation.CARD_TITLE }}>
-          {getString('common.notification')}
-        </Text>
-      </Container>
-      <Container className={css.badgesContainer}>
-        {loading && !pollingStarted ? (
-          <Container flex={{ justifyContent: 'center' }} className={css.loadingContainer}>
-            <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
+      {error ? (
+        <ErrorCard
+          size={ErrorCardSize.MEDIUM}
+          onRetry={() => {
+            refetch()
+          }}
+        />
+      ) : (
+        <>
+          <Container className={css.header}>
+            <Text color={Color.GREY_800} font={{ variation: FontVariation.CARD_TITLE }}>
+              {getString('common.notification')}
+            </Text>
           </Container>
-        ) : (
-          renderBadges()
-        )}
-      </Container>
+          <Container className={css.badgesContainer}>
+            {loading && !pollingStarted ? (
+              <Container flex={{ justifyContent: 'center' }} className={css.loadingContainer}>
+                <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
+              </Container>
+            ) : (
+              renderBadges()
+            )}
+          </Container>
+        </>
+      )}
     </Layout.Vertical>
   )
 }

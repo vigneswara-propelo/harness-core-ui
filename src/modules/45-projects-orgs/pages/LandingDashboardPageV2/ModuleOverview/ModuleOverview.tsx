@@ -136,7 +136,7 @@ const ModuleOverview: React.FC<ModuleOverviewProps> = ({
           </Text>
           <Icon className={css.icon} name={icon} size={isExpanded ? 68 : 32} />
         </Layout.Horizontal>
-        <Container className={css.flex1} padding={{ right: 'medium' }}>
+        <Container className={css.flex1}>
           {Component ? <Component isExpanded={isExpanded} timeRange={timeRange} isEmptyState={showEmptyState} /> : null}
         </Container>
         <Text className={css.clickToExpandText} color={Color.GREY_400} font={{ variation: FontVariation.TINY }}>

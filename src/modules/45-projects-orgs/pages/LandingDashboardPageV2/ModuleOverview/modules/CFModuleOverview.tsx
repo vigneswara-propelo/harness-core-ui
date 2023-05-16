@@ -19,6 +19,7 @@ import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
 import DefaultFooter from '../EmptyState/DefaultFooter'
+import ErrorCard from '../../ErrorCard/ErrorCard'
 import css from '../ModuleOverview.module.scss'
 
 const getConfig = (data: SeriesOptionsType[], isExpanded: boolean, total: string): Highcharts.Options => {
@@ -87,7 +88,7 @@ const CFModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmp
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
 
-  const { data, loading } = useGetUserFlagOverview({ queryParams: { accountIdentifier: accountId } })
+  const { data, loading, error, refetch } = useGetUserFlagOverview({ queryParams: { accountIdentifier: accountId } })
 
   if (isEmptyState) {
     if (isExpanded) {
@@ -112,6 +113,16 @@ const CFModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmp
       <Container flex={{ justifyContent: 'center' }} height="100%">
         <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
       </Container>
+    )
+  }
+
+  if (error) {
+    return (
+      <ErrorCard
+        onRetry={() => {
+          refetch()
+        }}
+      />
     )
   }
 

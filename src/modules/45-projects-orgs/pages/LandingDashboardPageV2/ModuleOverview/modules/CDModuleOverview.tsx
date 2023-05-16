@@ -26,13 +26,13 @@ import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
 import ModuleColumnChart from '../../ModuleColumnChart/ModuleColumnChart'
 import DefaultFooter from '../EmptyState/DefaultFooter'
+import ErrorCard from '../../ErrorCard/ErrorCard'
 
 const CDModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeRange, isEmptyState }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
 
-  // This will be removed, data will come from the parent component.
-  const { data, loading } = useGetDeploymentStatsOverview({
+  const { data, loading, error, refetch } = useGetDeploymentStatsOverview({
     queryParams: {
       accountIdentifier: accountId,
       startTime: getGMTStartDateTime(timeRange?.from),
@@ -96,6 +96,16 @@ const CDModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
       <Container flex={{ justifyContent: 'center' }} height="100%">
         <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
       </Container>
+    )
+  }
+
+  if (error) {
+    return (
+      <ErrorCard
+        onRetry={() => {
+          refetch()
+        }}
+      />
     )
   }
 

@@ -16,6 +16,7 @@ import type { StringKeys } from 'framework/strings'
 import type { TimeRangeFilterType } from '@common/types'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import OverviewGlanceCardV2 from './OverviewGlanceCardV2/OverviewGlanceCardV2'
+import ErrorCard, { ErrorCardSize } from '../ErrorCard/ErrorCard'
 import css from './OverviewGlanceCardsContainer.module.scss'
 
 export enum OverviewGalanceCardV2 {
@@ -41,7 +42,12 @@ interface OverviewGlanceCardsV2Props {
 const OverviewGlanceCardsV2: React.FC<OverviewGlanceCardsV2Props> = ({ timeRange }) => {
   const { accountId } = useParams<AccountPathProps>()
 
-  const { data: countResponse, loading } = useGetCounts({
+  const {
+    data: countResponse,
+    loading,
+    error,
+    refetch
+  } = useGetCounts({
     queryParams: {
       accountIdentifier: accountId,
       startTime: getGMTStartDateTime(timeRange.from),
@@ -88,17 +94,26 @@ const OverviewGlanceCardsV2: React.FC<OverviewGlanceCardsV2Props> = ({ timeRange
 
   return (
     <Layout.Horizontal className={css.container}>
-      {GLANCE_CARDS.map(card => {
-        return (
-          <OverviewGlanceCardV2
-            key={card.type}
-            className={css.card}
-            loading={loading}
-            redirectUrl={card.url}
-            {...card}
-          />
-        )
-      })}
+      {error ? (
+        <ErrorCard
+          size={ErrorCardSize.MEDIUM}
+          onRetry={() => {
+            refetch()
+          }}
+        />
+      ) : (
+        GLANCE_CARDS.map(card => {
+          return (
+            <OverviewGlanceCardV2
+              key={card.type}
+              className={css.card}
+              loading={loading}
+              redirectUrl={card.url}
+              {...card}
+            />
+          )
+        })
+      )}
     </Layout.Horizontal>
   )
 }

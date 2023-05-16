@@ -21,11 +21,17 @@ import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
 import DefaultFooter from '../EmptyState/DefaultFooter'
 import ModuleColumnChart from '../../ModuleColumnChart/ModuleColumnChart'
+import ErrorCard from '../../ErrorCard/ErrorCard'
 
 const CEModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmptyState, timeRange }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
-  const { data: ccmData, loading } = useGetCCMOverview({
+  const {
+    data: ccmData,
+    loading,
+    error,
+    refetch
+  } = useGetCCMOverview({
     queryParams: {
       accountIdentifier: accountId,
       startTime: getGMTStartDateTime(timeRange?.from),
@@ -65,6 +71,16 @@ const CEModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmp
       color: '#01C9CC'
     }
   ]
+
+  if (error) {
+    return (
+      <ErrorCard
+        onRetry={() => {
+          refetch()
+        }}
+      />
+    )
+  }
 
   return (
     <ModuleColumnChart

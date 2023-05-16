@@ -23,12 +23,13 @@ import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
 import DefaultFooter from '../EmptyState/DefaultFooter'
 import ModuleColumnChart from '../../ModuleColumnChart/ModuleColumnChart'
+import ErrorCard from '../../ErrorCard/ErrorCard'
 
 const CIModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeRange, isEmptyState }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
 
-  const { data, loading } = useGetBuildExecution({
+  const { data, loading, error, refetch } = useGetBuildExecution({
     queryParams: {
       accountIdentifier: accountId,
       startTime: getGMTStartDateTime(timeRange?.from),
@@ -89,6 +90,16 @@ const CIModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
       <Container flex={{ justifyContent: 'center' }} height="100%">
         <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
       </Container>
+    )
+  }
+
+  if (error) {
+    return (
+      <ErrorCard
+        onRetry={() => {
+          refetch()
+        }}
+      />
     )
   }
 
