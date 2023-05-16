@@ -43,12 +43,11 @@ AuditTrailFactory.registerResourceHandler('DEPLOYMENT_FREEZE', {
   resourceUrl: (windowIdentifier: ResourceDTO, resourceScope: ResourceScope) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
     if (windowIdentifier.identifier) {
-      return routes.toFreezeWindowStudio({
+      return routes.toFreezeWindows({
         module: 'cd',
         orgIdentifier,
         projectIdentifier,
-        accountId: accountIdentifier,
-        windowIdentifier: windowIdentifier.identifier
+        accountId: accountIdentifier
       })
     }
     return undefined
