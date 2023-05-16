@@ -32,6 +32,7 @@ export interface Artifact {
   isSbomAttested?: string
   violations?: number
   node?: ExecutionNode
+  stage: string
 }
 
 export interface ArtifactsColumnActions {

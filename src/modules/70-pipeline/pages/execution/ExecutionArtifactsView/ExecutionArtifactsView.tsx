@@ -18,6 +18,7 @@ import type {
   PipelineExecutionDetail,
   PipelineExecutionSummary
 } from 'services/pipeline-ng'
+import { useQueryParams } from '@common/hooks'
 import type { ArtifactGroup } from './ArtifactsComponent/ArtifactsComponent'
 import ArtifactsComponent from './ArtifactsComponent/ArtifactsComponent'
 import type { Artifact } from './ArtifactsTable/ArtifactsTable'
@@ -77,50 +78,59 @@ export const getArtifactGroups: (stages: ExecutionNode[]) => ArtifactGroup[] = s
   })
 }
 
-export const getArtifacts: (stages: ExecutionNode[]) => Artifact[] = stages => {
-  return stages.reduce<Artifact[]>((artifacts, node) => {
-    const outcomeWithImageArtifacts = Array.isArray(node.outcomes)
-      ? node.outcomes?.find(outcome => outcome.imageArtifacts)
-      : node.outcomes?.integrationStageOutcome
-    const imageArtifacts: Artifact[] =
-      outcomeWithImageArtifacts?.imageArtifacts?.map((artifact: any) => ({
-        ...artifact,
-        type: 'Image',
-        node
-      })) ?? []
+// Only steps artifacts but not the stage integrated artifacts
+export const getStepArtifacts: (data: ExecutionGraph | undefined, stageIds: string[], stage?: string) => Artifact[] = (
+  data,
+  stageIds,
+  stage
+) => {
+  return Object.values(data?.nodeMap ?? {})
+    .filter(node => {
+      const { setupId = '', identifier = '' } = node
+      return (
+        !stageIds.includes(setupId) ||
+        !['liteEngineTask', 'harness-git-clone', 'execution', 'deploy'].includes(identifier)
+      )
+    })
+    .reduce<Artifact[]>((artifacts, node) => {
+      Object.values(node.outcomes || {}).forEach(item => {
+        if (item?.stepArtifacts) {
+          const {
+            publishedFileArtifacts = [],
+            publishedImageArtifacts = [],
+            publishedSbomArtifacts = []
+          } = item.stepArtifacts
 
-    const outcomeWithFileArtifacts = Array.isArray(node.outcomes)
-      ? node.outcomes?.find(outcome => outcome.fileArtifacts)
-      : node.outcomes?.integrationStageOutcome
-    const fileArtifacts: Artifact[] =
-      outcomeWithFileArtifacts?.fileArtifacts?.map((artifact: any) => ({
-        ...artifact,
-        type: 'File',
-        node
-      })) ?? []
-
-    const outcomeWithSbomArtifacts = Array.isArray(node.outcomes)
-      ? node.outcomes?.find(outcome => outcome.sbomArtifacts)
-      : node.outcomes?.integrationStageOutcome
-    const sbomArtifacts: Artifact[] =
-      outcomeWithSbomArtifacts?.sbomArtifacts?.map((artifact: any) => ({
-        ...artifact,
-        type: 'Sbom',
-        node
-      })) || []
-
-    // CD stage
-    if (node.stepDetails && !isEmpty(node.stepDetails)) {
-      Object.values(node.stepDetails).forEach(item => {
-        if (!isEmpty(item.sbomArtifact)) {
-          sbomArtifacts.push({ ...(item.sbomArtifact as any), type: 'Sbom', node })
+          artifacts.push(
+            ...publishedFileArtifacts.map((artifact: Artifact) => ({
+              ...artifact,
+              type: 'File',
+              node,
+              stage
+            })),
+            ...publishedImageArtifacts.map((artifact: Artifact) => ({
+              ...artifact,
+              type: 'Image',
+              node,
+              stage
+            })),
+            ...publishedSbomArtifacts.map((artifact: Artifact) => ({
+              ...artifact,
+              type: 'Sbom',
+              node,
+              stage
+            }))
+          )
+        } else {
+          // CD stage steps
+          if (!isEmpty(item.sbomArtifact)) {
+            artifacts.push({ ...(item.sbomArtifact as any), type: 'Sbom', node, stage })
+          }
         }
       })
-    }
 
-    artifacts.push(...imageArtifacts, ...fileArtifacts, ...sbomArtifacts)
-    return artifacts
-  }, [])
+      return artifacts
+    }, [])
 }
 
 export default function ExecutionArtifactsView(): React.ReactElement {
@@ -130,16 +140,19 @@ export default function ExecutionArtifactsView(): React.ReactElement {
     context?.pipelineExecutionDetail,
     {} as PipelineExecutionDetail
   )
+  const { stage } = useQueryParams<{ stage: string }>()
 
   const stageSetupIds = getStageSetupIds(pipelineExecutionSummary)
   const stageNodes = getStageNodesWithArtifacts(executionGraph, stageSetupIds)
+  const stepArtifacts = getStepArtifacts(
+    executionGraph,
+    stageSetupIds,
+    pipelineExecutionSummary?.layoutNodeMap?.[stage]?.name
+  )
   const artifactGroups = getArtifactGroups(stageNodes)
 
   return SSCA_ENABLED ? (
-    <ExecutionArtifactListView
-      artifacts={getArtifacts(stageNodes)}
-      pipelineExecutionSummary={pipelineExecutionSummary}
-    />
+    <ExecutionArtifactListView artifacts={stepArtifacts} pipelineExecutionSummary={pipelineExecutionSummary} />
   ) : (
     <div className={css.wrapper}>
       <StageSelector layoutNodeMap={pipelineExecutionSummary?.layoutNodeMap} />

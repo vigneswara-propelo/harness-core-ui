@@ -61,7 +61,7 @@ export const ArtifactCell: CellType = ({ row }) => {
   const { getString } = useStrings()
 
   return (
-    <Layout.Vertical>
+    <Layout.Vertical spacing="xsmall">
       <a href={data.url} target="_blank" rel="noopener noreferrer">
         <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
           {data.imageName || data.url}
@@ -78,10 +78,17 @@ export const ArtifactCell: CellType = ({ row }) => {
 
 export const PipelineStageCell: CellType = ({ row }) => {
   const data = row.original
+
   return (
-    <Text font={{ variation: FontVariation.SMALL }} lineClamp={2}>
-      {data.node?.name}
-    </Text>
+    <Layout.Vertical spacing="xsmall">
+      <Text font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
+        {data.node?.name}
+      </Text>
+
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} lineClamp={1}>
+        {data.stage}
+      </Text>
+    </Layout.Vertical>
   )
 }
 
@@ -109,6 +116,6 @@ export const SbomCell: CellType = ({ row }) => {
       </Layout.Horizontal>
     </a>
   ) : (
-    <Text font={{ variation: FontVariation.SMALL }}>{getString('pipeline.notGenerated')}</Text>
+    <Text font={{ variation: FontVariation.SMALL }}>{getString('na')}</Text>
   )
 }
