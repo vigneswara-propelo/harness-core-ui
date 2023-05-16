@@ -6,7 +6,7 @@
  */
 
 import { cloneDeep, isNil, set, get, defaultTo } from 'lodash-es'
-import React from 'react'
+import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import type {
   ExecutionGraphAddStepEvent,
@@ -25,6 +25,7 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import type { DeploymentStageConfig } from 'services/cd-ng'
+import { StageType } from '@pipeline/utils/stageHelpers'
 
 interface AddStepTemplateReturnType {
   addTemplate: (event: ExecutionGraphAddStepEvent) => Promise<void>
@@ -79,7 +80,6 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
     customDeploymentTemplateRef,
     {}
   ) as Record<string, string | string[]>
-  const [allChildTypes, setAllChildTypes] = React.useState<string[]>([])
 
   const { data: stepsData } = useMutateAsGet(useGetStepsV2, {
     queryParams: { accountId },
@@ -88,21 +88,31 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
     }
   })
 
-  React.useEffect(() => {
-    if (stepsData?.data?.stepCategories) {
-      setAllChildTypes([
-        ...getStepTypesFromCategories(stepsData.data.stepCategories),
-        selectedStage?.stage?.type as string
-      ])
+  const childTypes = useMemo(() => {
+    if (!stepsData?.data?.stepCategories || !Array.isArray(stepsData?.data?.stepCategories)) {
+      return []
     }
-  }, [stepsData?.data?.stepCategories])
 
-  const addTemplate = async (event: ExecutionGraphAddStepEvent) => {
+    const types = getStepTypesFromCategories(stepsData.data?.stepCategories)
+    const selectedStageType = selectedStage?.stage?.type
+
+    if (selectedStageType) {
+      types.push(selectedStageType)
+    }
+
+    // to list step group templates of custom stage when selected stage type is Deployment
+    if (selectedStageType === StageType.DEPLOY) {
+      types.push(StageType.CUSTOM)
+    }
+    return types
+  }, [selectedStage?.stage?.type, stepsData?.data?.stepCategories])
+
+  const addTemplate = async (event: ExecutionGraphAddStepEvent): Promise<void> => {
     try {
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
         filterProperties: {
-          childTypes: allChildTypes,
+          childTypes,
           ...(event.isLinkedTemplate && {
             templateIdentifiers: get(resolvedCustomDeploymentDetails, 'linkedTemplateRefs') as string[]
           })
