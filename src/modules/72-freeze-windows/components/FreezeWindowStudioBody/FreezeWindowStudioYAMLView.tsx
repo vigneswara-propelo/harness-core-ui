@@ -125,6 +125,7 @@ export const FreezeWindowStudioYAMLView = () => {
               },
               permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE
             }}
+            disabled={isActiveFreeze}
             variation={ButtonVariation.SECONDARY}
             text={getString('common.editYaml')}
             onClick={() => {
