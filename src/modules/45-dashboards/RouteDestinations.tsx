@@ -12,7 +12,6 @@ import { accountPathProps } from '@common/utils/routeUtils'
 import { RouteWithLayout } from '@common/router'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { MinimalLayout } from '@common/layouts'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
@@ -55,7 +54,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.DASHBOARDS, {
 // eslint-disable-next-line import/no-unresolved
 const CdbMicroFrontendPath = React.lazy(() => import('cdbui/MicroFrontendApp'))
 
-const CdbNonMfeRoutes = (
+export const CdbNonMfeRoutes = (
   <>
     <Route path={routes.toOldCustomDashboard({ ...accountPathProps })}>
       <RedirectToHome />
@@ -89,29 +88,19 @@ const CdbNonMfeRoutes = (
   </>
 )
 
-const CustomDashboardsRoutes: React.FC = () => {
-  const { CUSTOM_DASHBOARDS_NEXT } = useFeatureFlags()
-  const enableMicroFrontend = CUSTOM_DASHBOARDS_NEXT
-
-  const mfePaths = [
-    routes.toOldCustomDashboard({ ...accountPathProps }),
-    routes.toCustomDashboard({ ...accountPathProps }),
-    routes.toCustomDashboardHome({ ...accountPathProps, folderId: ':folderId' }),
-    routes.toCustomFolderHome({ ...accountPathProps }),
-    routes.toViewCustomDashboard({ ...accountPathProps, ...viewPathProps })
-  ]
-
-  return (
-    <>
-      {enableMicroFrontend ? (
-        <RouteWithLayout layout={MinimalLayout} path={[...mfePaths]}>
-          <ChildAppMounter ChildApp={CdbMicroFrontendPath} />
-        </RouteWithLayout>
-      ) : (
-        CdbNonMfeRoutes.props.children
-      )}
-    </>
-  )
-}
-
-export default CustomDashboardsRoutes
+export const CdbMfeRoutes = (
+  <>
+    <RouteWithLayout
+      layout={MinimalLayout}
+      path={[
+        routes.toOldCustomDashboard({ ...accountPathProps }),
+        routes.toCustomDashboard({ ...accountPathProps }),
+        routes.toCustomDashboardHome({ ...accountPathProps, folderId: ':folderId' }),
+        routes.toCustomFolderHome({ ...accountPathProps }),
+        routes.toViewCustomDashboard({ ...accountPathProps, ...viewPathProps })
+      ]}
+    >
+      <ChildAppMounter ChildApp={CdbMicroFrontendPath} />
+    </RouteWithLayout>
+  </>
+)

@@ -34,7 +34,7 @@ import IDPRoutes from '@idp/RouteDestinations'
 import GovernanceRoutes from '@governance/RouteDestinations'
 import IACMRoutes from '@iacm/RouteDestinations'
 import ChaosRoutes from '@chaos/RouteDestinations'
-import CustomDashboardsRoutes from '@dashboards/RouteDestinations'
+import { CdbMfeRoutes, CdbNonMfeRoutes } from '@dashboards/RouteDestinations'
 import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
@@ -61,7 +61,8 @@ export default function RouteDestinations(): React.ReactElement {
     IACM_ENABLED,
     SSCA_ENABLED,
     IDP_ENABLED,
-    CET_ENABLED
+    CET_ENABLED,
+    CUSTOM_DASHBOARDS_NEXT
   } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
@@ -104,7 +105,7 @@ export default function RouteDestinations(): React.ReactElement {
           <CERoutes />
         </Route>
       ) : null}
-      <CustomDashboardsRoutes />
+      {CUSTOM_DASHBOARDS_NEXT ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children}
       {CFNG_ENABLED ? CFRoutes({})?.props.children : null}
       {IACM_ENABLED ? IACMRoutes().props.children : null}
       {SSCA_ENABLED ? SSCARoutes.props.children : null}
