@@ -115,9 +115,9 @@ const routes = {
       const queryString = qs.stringify(rest, { skipNulls: true })
       let path
       if (queryString.length > 0) {
-        path = `freeze-window-studio/window/${windowIdentifier}/?${queryString}`
+        path = `freeze-windows/studio/window/${windowIdentifier}/?${queryString}`
       } else {
-        path = `freeze-window-studio/window/${windowIdentifier}/`
+        path = `freeze-windows/studio/window/${windowIdentifier}/`
       }
       return getScopeBasedRoute({
         scope: {

@@ -46,7 +46,7 @@ describe('Freeze Window Studio Config Section', () => {
   test('it should render Config section in create mode - PROJECT LEVEL', async () => {
     const { container, getByText, getAllByText } = render(
       <TestWrapper
-        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
+        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-windows/studio/window/:windowIdentifier/"
         pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
       >
         <FreezeWindowStudioPage />
@@ -110,7 +110,7 @@ describe('Freeze Window Studio Config Section', () => {
   test('it should render Config section in create mode - ACCOUNT LEVEL', async () => {
     const { container, getByText, getAllByText } = render(
       <TestWrapper
-        path="/account/:accountId/settings/freeze-window-studio/window/:windowIdentifier/"
+        path="/account/:accountId/settings/freeze-windows/studio/window/:windowIdentifier/"
         pathParams={{ accountId, windowIdentifier: '-1' }}
       >
         <FreezeWindowStudioPage />
@@ -190,7 +190,7 @@ describe('Freeze Window Studio Config Section', () => {
   test('it should render Config section Tabs onNext and onBack', async () => {
     const { container, getByRole } = render(
       <TestWrapper
-        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
+        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-windows/studio/window/:windowIdentifier/"
         pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
       >
         <FreezeWindowStudioPage />
@@ -224,7 +224,7 @@ describe('Freeze Window Studio Config Section', () => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
     const { container, getByText } = render(
       <TestWrapper
-        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
+        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-windows/studio/window/:windowIdentifier/"
         pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
       >
         <FreezeWindowContext.Provider
@@ -260,7 +260,7 @@ describe('Freeze Window Studio Config Section', () => {
   test('it should verify search query for fields at ORG LEVEL', async () => {
     const { container, getByText, getAllByText } = render(
       <TestWrapper
-        path="/account/:accountId/settings/organizations/:orgIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
+        path="/account/:accountId/settings/organizations/:orgIdentifier/setup/freeze-windows/studio/window/:windowIdentifier/"
         pathParams={{ accountId, orgIdentifier, windowIdentifier: '-1' }}
       >
         <FreezeWindowStudioPage />
@@ -321,7 +321,7 @@ describe('Freeze Window Studio Config Section', () => {
   test('test ScheduleSection recurrence', async () => {
     const { container, getByText } = render(
       <TestWrapper
-        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
+        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-windows/studio/window/:windowIdentifier/"
         pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
       >
         <FreezeWindowContext.Provider
