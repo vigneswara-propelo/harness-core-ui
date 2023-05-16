@@ -29,7 +29,7 @@ interface AsgRollingRollbackStepVariableStepProps {
 
 export class AsgRollingRollbackStep extends PipelineStep<StepElementConfig> {
   protected type = StepType.AsgRollingRollback
-  protected stepName = 'Asg Rolling Rollback'
+  protected stepName = 'ASG Rolling Rollback'
   protected stepIcon: IconName = 'asg-deploy'
   protected referenceId = 'AsgRollingRollback'
   protected stepDescription: keyof StringsMap = 'cd.asgRollingRollbackStepDescription'

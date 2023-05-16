@@ -1296,7 +1296,7 @@ executionStrategy:
   strategies:
     rolling:
       description: All pods/instances in a single environment are incrementally replaced with a new service version without downtime.
-      learnMoreLink: https://docs.harness.io/article/0zsf97lo3c-deployment-concepts#rolling_deployment
+      learnMoreLink: https://developer.harness.io/docs/continuous-delivery/manage-deployments/deployment-concepts/#rolling-deployment
       steps:
         step1:
           description: Test the new version.
@@ -1306,7 +1306,7 @@ executionStrategy:
           description: Replace new version.
     blueGreen:
       description: 'Two identical environments for staging and production traffic run simultaneously with different versions of the service. Deployment of a new service version is first done to the staging environment. Once the new version is verified, network traffic is switched between the two environments. The staging environment is now the production environment.'
-      learnMoreLink: https://docs.harness.io/article/0zsf97lo3c-deployment-concepts#blue_green_deployment
+      learnMoreLink: https://developer.harness.io/docs/continuous-delivery/manage-deployments/deployment-concepts/#bluegreen-deployment
       steps:
         step1:
           description: Maintain two identical fleets of servers.
@@ -1316,7 +1316,7 @@ executionStrategy:
           description: After verification, switch the load balancer to point to the newly-deployed fleet.
     canary:
       description: 'Harness performs a two phase deployment: Phase 1 adds new pods/instances with the new service version to a single environment. Phase 2 performs a Rolling Update in the same environment.'
-      learnMoreLink: https://docs.harness.io/article/0zsf97lo3c-deployment-concepts#canary_deployment
+      learnMoreLink: https://developer.harness.io/docs/continuous-delivery/manage-deployments/deployment-concepts/#canary-deployment
       steps:
         step1:
           title: 'Canary deployment:'
@@ -1331,7 +1331,7 @@ executionStrategy:
       actualName: '{{$.common.default}}'
       displayName: Blank Canvas
       description: A blank slate for custom processes. You can use any combination of steps. Only recommended for advanced users.
-      learnMoreLink: https://docs.harness.io/article/0zsf97lo3c-deployment-concepts#basic_deployment
+      learnMoreLink: https://developer.harness.io/docs/continuous-delivery/manage-deployments/deployment-concepts/
     basic:
       description: In a Basic deployment, all nodes within a single environment are replaced at the same time with new nodes containing the new service/artifact version.Basic deployments are useful for development, learning Harness, and any non-mission critical workflows.
     common:

@@ -345,7 +345,7 @@ const AsgRollingDeployVariableStep: React.FC<AsgRollingDeployVariableStepProps> 
 const AsgRollingDeployWidgetWithRef = React.forwardRef(AsgRollingDeployWidget)
 export class AsgRollingDeploy extends PipelineStep<AsgRollingDeployData> {
   protected type = StepType.AsgRollingDeploy
-  protected stepName = 'Asg Rolling Deploy'
+  protected stepName = 'ASG Rolling Deploy'
   protected referenceId = 'AsgRollingDeploy'
   protected stepIcon: IconName = 'asg-deploy'
   protected stepDescription: keyof StringsMap = 'cd.asgRollingDeployStepDescription'

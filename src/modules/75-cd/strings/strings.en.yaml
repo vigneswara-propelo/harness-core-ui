@@ -342,7 +342,7 @@ serviceDashboard:
   instanceId: 'Instance Id'
   strategy: 'Strategy'
   bgEnv: 'BG Env'
-  asgName: 'Asg Name'
+  asgName: 'ASG Name'
   frequency: '{{$.common.frequency}}'
   totalServices: 'Total Services: {{total}}'
   lastDeployment: 'last deployment'
@@ -605,13 +605,13 @@ overrideYaml: Override Yaml Values
 manifestId: Manifest Id
 azureWebAppRollbackDescription: Rollback to the last successfully deployed app.
 azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.
-asgCanaryDeleteStepDescription: Asg Canary Delete
-asgRollingDeployStepDescription: Asg Rolling Deploy
-asgRollingRollbackStepDescription: Asg Rolling Rollback
-asgBlueGreenRollbackStepDescription: Asg Blue Green Rollback
-asgBlueGreenSwapServiceStepDescription: Asg Blue Green Swap Service
+asgCanaryDeleteStepDescription: ASG Canary Delete
+asgRollingDeployStepDescription: ASG Rolling Deploy
+asgRollingRollbackStepDescription: ASG Rolling Rollback
+asgBlueGreenRollbackStepDescription: ASG Blue Green Rollback
+asgBlueGreenSwapServiceStepDescription: ASG Blue Green Swap Service
 downsizeOldAsg: Downsize old ASG
-asgBlueGreenDeployStepDescription: Asg Blue Green Deploy
+asgBlueGreenDeployStepDescription: ASG Blue Green Deploy
 minimumHealthyPercentageMaxLimit: Minimum Healthy Percentage should be less than 100%
 minimumHealthyPercentageMinLimit: Minimum Healthy Percentage should be positive percentage
 instanceWarmupError: Instance Warmup must be a positive number

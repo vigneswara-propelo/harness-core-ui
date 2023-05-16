@@ -280,7 +280,7 @@ export class AsgCanaryDeployStep extends PipelineStep<AsgCanaryDeployData> {
   }
 
   protected type = StepType.AsgCanaryDeploy
-  protected stepName = 'Asg Canary Deploy'
+  protected stepName = 'ASG Canary Deploy'
   protected referenceId = 'AsgCanaryDeploy'
   protected stepIcon: IconName = 'asg-canary'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sCanaryDeploy'

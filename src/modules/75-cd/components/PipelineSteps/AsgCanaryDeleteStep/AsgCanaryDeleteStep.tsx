@@ -32,7 +32,7 @@ interface AsgCanaryDeleteStepVariableStepProps {
 
 export class AsgCanaryDeleteStep extends PipelineStep<StepElementConfig> {
   protected type = StepType.AsgCanaryDelete
-  protected stepName = 'Asg Canary Delete'
+  protected stepName = 'ASG Canary Delete'
   protected stepIcon: IconName = 'asg-canary-delete'
   protected referenceId = 'AsgCanaryDelete'
   protected stepDescription: keyof StringsMap = 'cd.asgCanaryDeleteStepDescription'
