@@ -15,7 +15,7 @@ import {
   SelectOption,
   useToaster
 } from '@harness/uicore'
-import { defaultTo, get, isArray, isEmpty, isNil, merge } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, merge } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
@@ -236,25 +236,26 @@ export function DeployServiceEntityInputStep({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [servicesData, serviceIdentifiers])
 
-  function handleServicesChange(values: SelectOption[]): void {
+  function handleServicesChange(values: string | SelectOption[]): void {
     if (isValueRuntimeInput(values)) {
       updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${fullPathPrefix}values`)
       formik.setFieldValue(`${localPathPrefix}values`, RUNTIME_INPUT_VALUE)
     } else {
-      const newValues = values?.map(val => {
-        let serviceInputs: any = RUNTIME_INPUT_VALUE
-        if (isArray(servicesValue)) {
-          const existingServiceInputs = servicesValue.find((ser: any) => ser.serviceRef === (val.value as string))
-          if (existingServiceInputs) {
-            serviceInputs = existingServiceInputs.serviceInputs
-          }
-        }
+      const newValues =
+        typeof values !== 'string'
+          ? values.map(val => {
+              let serviceInputs: any = RUNTIME_INPUT_VALUE
+              const existingServiceInputs = servicesValue.find((ser: any) => ser.serviceRef === (val.value as string))
+              if (existingServiceInputs) {
+                serviceInputs = existingServiceInputs.serviceInputs
+              }
 
-        return {
-          serviceRef: val.value as string,
-          serviceInputs: serviceInputs
-        }
-      })
+              return {
+                serviceRef: val.value as string,
+                serviceInputs: serviceInputs
+              }
+            })
+          : undefined
 
       formik.setFieldValue(`${localPathPrefix}values`, newValues)
     }
