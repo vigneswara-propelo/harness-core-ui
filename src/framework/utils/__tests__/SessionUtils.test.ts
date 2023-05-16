@@ -7,7 +7,7 @@
 
 import { renderHook } from '@testing-library/react-hooks'
 import { act } from 'react-dom/test-utils'
-import { getLoginPageURL, useLogout, parseJwtToken } from '../SessionUtils'
+import { getLoginPageURL, useLogout, parseJwtToken, ErrorCode } from '../SessionUtils'
 const mockHistoryPush = jest.fn()
 // eslint-disable-next-line jest-no-mock
 jest.mock('react-router-dom', () => ({
@@ -39,12 +39,13 @@ describe('Session Utils', () => {
     const { result } = renderHook(() => useLogout())
     expect(typeof result.current.forceLogout).toBe('function')
     act(() => {
-      result.current.forceLogout()
+      result.current.forceLogout(ErrorCode.unauth)
     })
     expect(mockHistoryPush).toBeCalledTimes(1)
     expect(mockHistoryPush).toBeCalledWith({
       pathname: '/redirect',
-      search: '?returnUrl=%2F%23%2Flogin%3Faction%3Dsignout%26returnUrl%3Dhttp%253A%252F%252Flocalhost%252F'
+      search:
+        '?returnUrl=%2F%23%2Flogin%3Faction%3Dsignout%26returnUrl%3Dhttp%253A%252F%252Flocalhost%252F%26errorCode%3Dunauth'
     })
 
     act(() => {

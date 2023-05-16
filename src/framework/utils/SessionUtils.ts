@@ -11,17 +11,33 @@ import { returnUrlParams } from '@common/utils/routeUtils'
 import SecureStorage from './SecureStorage'
 import { getLocationPathName } from './WindowLocation'
 
-interface GetLoginPageURL {
-  returnUrl?: string
+// Enum for ErrorCode that are handled by ng-auth-ui
+export enum ErrorCode {
+  GATEWAY_SSO_REDIRECT_ERROR = 'GATEWAY_SSO_REDIRECT_ERROR',
+  unauth = 'unauth',
+  invalidsso = 'invalidsso',
+  email_verify_fail = 'email_verify_fail',
+  INVITE_EXPIRED = 'INVITE_EXPIRED',
+  INVITE_INVALID = 'INVITE_INVALID',
+  DOMAIN_WHITELIST_FAILED = 'DOMAIN_WHITELIST_FAILED'
 }
 
-export const getLoginPageURL = ({ returnUrl }: GetLoginPageURL): string => {
+interface GetLoginPageURL {
+  returnUrl?: string
+  errorCode?: ErrorCode
+}
+
+export const getLoginPageURL = ({ returnUrl, errorCode }: GetLoginPageURL): string => {
   const locationPath = getLocationPathName().replace(/\/ng\/?/, '/')
   const basePath = window.HARNESS_ENABLE_NG_AUTH_UI ? `${locationPath}auth/#/signin` : `${locationPath}#/login`
-
-  return returnUrl
-    ? `${basePath}?action=signout&returnUrl=${encodeURIComponent(returnUrl)}`
-    : `${basePath}?action=signout`
+  let finalUrl = `${basePath}?action=signout`
+  if (returnUrl) {
+    finalUrl += `&returnUrl=${encodeURIComponent(returnUrl)}`
+  }
+  if (errorCode) {
+    finalUrl += `&errorCode=${errorCode}`
+  }
+  return finalUrl
 }
 
 export const getForgotPasswordURL = (): string => {
@@ -32,20 +48,20 @@ export const getForgotPasswordURL = (): string => {
 }
 
 export interface UseLogoutReturn {
-  forceLogout: () => void
+  forceLogout: (errorCode?: ErrorCode) => void
 }
 
 export const useLogout = (): UseLogoutReturn => {
   const history = useHistory()
   let isTriggered = false
 
-  const forceLogout = (): void => {
+  const forceLogout = (errorCode?: ErrorCode): void => {
     if (!isTriggered) {
       isTriggered = true
       SecureStorage.clear()
       history.push({
         pathname: routes.toRedirect(),
-        search: returnUrlParams(getLoginPageURL({ returnUrl: window.location.href }))
+        search: returnUrlParams(getLoginPageURL({ returnUrl: window.location.href, errorCode }))
       })
     }
   }

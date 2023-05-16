@@ -15,6 +15,7 @@ export function decode<T = unknown>(arg: string): T {
 
 export default class SecureStorage {
   public static exceptions: string[] = []
+  public static sessionExceptions: string[] = []
 
   public static set(key: string, value: unknown): void {
     const str = encode(value)
@@ -30,9 +31,17 @@ export default class SecureStorage {
     SecureStorage.exceptions.push(key)
   }
 
+  public static registerCleanupSessionException(key: string): void {
+    SecureStorage.sessionExceptions.push(key)
+  }
+
   public static clear(): void {
     // clear localStorage, except fields to persist across user-sessions:
     const storage: [string, string][] = SecureStorage.exceptions.map(key => [key, localStorage.getItem(key) || ''])
+    const sessionKeys: [string, string][] = SecureStorage.sessionExceptions.map(key => [
+      key,
+      sessionStorage.getItem(key) || ''
+    ])
 
     localStorage.clear()
 
@@ -42,6 +51,10 @@ export default class SecureStorage {
 
     storage.forEach(([key, val]) => {
       localStorage.setItem(key, val)
+    })
+
+    sessionKeys.forEach(([key, val]) => {
+      sessionStorage.setItem(key, val)
     })
   }
 }

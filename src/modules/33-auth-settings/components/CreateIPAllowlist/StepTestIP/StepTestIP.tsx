@@ -50,6 +50,7 @@ const StepTestIP: React.FC<StepTestIPProps> = props => {
   const [validatedResponse, setValidatedResponse] = useState<IpAllowlistConfigValidateResponse>({})
 
   const onTestIPSubmit = async (formData: any) => {
+    modalErrorHandler?.hide()
     try {
       const response = await validateIpAddressAllowlistedOrNot({
         queryParams: { ip_address: formData.testIP, custom_ip_address_block: formData.ipAddress }

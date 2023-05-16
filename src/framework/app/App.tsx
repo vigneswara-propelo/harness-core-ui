@@ -29,7 +29,7 @@ import { LicenseStoreProvider } from 'framework/LicenseStore/LicenseStoreContext
 import RouteDestinationsWithoutAuth from 'modules/RouteDestinationsWithoutAuth'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { StringsContextProvider } from 'framework/strings/StringsContextProvider'
-import { useLogout } from 'framework/utils/SessionUtils'
+import { useLogout, ErrorCode } from 'framework/utils/SessionUtils'
 import SecureStorage from 'framework/utils/SecureStorage'
 import { SideNavProvider } from 'framework/SideNavStore/SideNavContext'
 import { useRefreshToken } from 'services/portal'
@@ -48,11 +48,14 @@ const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
 const TOO_MANY_REQUESTS_MESSAGE = 'Too many requests received, please try again later'
 
+const NOT_WHITELISTED_IP_MESSAGE = 'NOT_WHITELISTED_IP_MESSAGE'
+
 FocusStyleManager.onlyShowFocusOnTabs()
 SecureStorage.registerCleanupException(PREFERENCES_TOP_LEVEL_KEY)
 SecureStorage.registerCleanupException(MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY)
 SecureStorage.registerCleanupException(HELP_PANEL_STORAGE_KEY)
 SecureStorage.registerCleanupException(REFERER_URL)
+SecureStorage.registerCleanupSessionException(NOT_WHITELISTED_IP_MESSAGE)
 
 // set up Immer
 setAutoFreeze(false)
@@ -79,7 +82,7 @@ export const getRequestOptions = (): Partial<RequestInit> => {
 }
 
 const getNotWhitelistedMessage = (res: any): any => {
-  return res?.responseMessages?.find((message: any) => message?.code === 'NOT_WHITELISTED_IP')
+  return (res?.body || res)?.responseMessages?.find((message: any) => message?.code === 'NOT_WHITELISTED_IP')
 }
 
 const notifyBugsnag = (
@@ -192,7 +195,8 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
                 const msg = notWhiteListedMessage.message
                 showError(msg)
                 // NG-Auth-UI expects to read "NOT_WHITELISTED_IP_MESSAGE" from session
-                sessionStorage.setItem('NOT_WHITELISTED_IP_MESSAGE', msg)
+                sessionStorage.setItem(NOT_WHITELISTED_IP_MESSAGE, msg)
+                forceLogout(ErrorCode.unauth)
               }
             })
             .catch(() => {
