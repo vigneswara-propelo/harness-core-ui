@@ -59,8 +59,8 @@ describe('AmazonS3 Trigger', () => {
     cy.contains('span', 'Apply').click()
     cy.contains('span', 'Continue').click()
     cy.contains('span', 'Continue').click()
-    cy.contains('span', 'Create Trigger').click()
     cy.intercept(createTriggerAPI).as('createTrigger')
+    cy.contains('span', 'Create Trigger').click()
     cy.intercept('GET', getTriggerListAPI, {
       fixture: 'pipeline/api/triggers/triggersList.json'
     }).as('getTriggerList')
@@ -98,8 +98,8 @@ describe('AmazonS3 Trigger', () => {
     cy.contains('span', 'Apply').click()
     cy.contains('span', 'Continue').click()
     cy.contains('span', 'Continue').click()
-    cy.contains('span', 'Create Trigger').click()
     cy.intercept(createTriggerAPI).as('createTrigger')
+    cy.contains('span', 'Create Trigger').click()
     cy.intercept('GET', getTriggerListAPI, {
       fixture: 'pipeline/api/triggers/triggersList.json'
     }).as('getTriggerList')

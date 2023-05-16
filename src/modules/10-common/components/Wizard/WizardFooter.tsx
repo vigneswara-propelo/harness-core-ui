@@ -52,7 +52,6 @@ export const WizardFooter = ({
   onYamlSubmit,
   yamlObjectKey,
   yamlHandler,
-  elementsRef,
   showError,
   formikProps,
   yamlBuilderReadOnlyModeProps,
@@ -119,19 +118,14 @@ export const WizardFooter = ({
             event.preventDefault()
             setSubmittedForm(true)
 
-            if (
-              elementsRef.current.some(
-                (element): boolean =>
-                  !!element?.current?.firstElementChild?.classList?.contains('bp3-icon-warning-sign')
-              )
-            ) {
-              setValidateOnChange(true)
-              showError(getString('addressErrorFields'))
-            }
             const validateErrors = await validate?.()
             if (isEmpty(validateErrors)) {
               // submit form if given validate is empty
               formikProps.submitForm()
+            } else {
+              // Show error is there is a validation error
+              setValidateOnChange(true)
+              showError(getString('addressErrorFields'))
             }
           }}
         />
@@ -164,6 +158,8 @@ export const WizardFooter = ({
               }
               /* istanbul ignore next */
               if (!isEmpty(await validate?.({ latestYaml }))) {
+                // Show error is there is a validation error
+                showError(getString('addressErrorFields'))
                 return
               } else {
                 /* istanbul ignore next */

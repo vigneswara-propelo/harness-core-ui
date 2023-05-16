@@ -1293,25 +1293,23 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       >
     > {
       return new Promise(resolve => {
-        setTimeout(() => {
-          try {
-            const validatedErrors =
-              (validatePipeline({
-                pipeline: { ...clearRuntimeInput(latestPipeline.pipeline) },
-                template: latestYamlTemplate,
-                originalPipeline: orgPipeline,
-                resolvedPipeline: resolvedMergedPipeline,
-                getString,
-                viewType: StepViewType.TriggerForm,
-                viewTypeMetadata: { isTrigger: true },
-                stagesToExecute
-              }) as any) || formErrors
-            resolve(validatedErrors)
-          } catch (e) {
-            setErrorToasterMessage(getString('triggers.cannotParseTriggersYaml'))
-            setSubmitting(false)
-          }
-        }, 300)
+        try {
+          const validatedErrors =
+            (validatePipeline({
+              pipeline: { ...clearRuntimeInput(latestPipeline.pipeline) },
+              template: latestYamlTemplate,
+              originalPipeline: orgPipeline,
+              resolvedPipeline: resolvedMergedPipeline,
+              getString,
+              viewType: StepViewType.TriggerForm,
+              viewTypeMetadata: { isTrigger: true },
+              stagesToExecute
+            }) as any) || formErrors
+          resolve(validatedErrors)
+        } catch (e) {
+          setErrorToasterMessage(getString('triggers.cannotParseTriggersYaml'))
+          setSubmitting(false)
+        }
       })
     }
     if (latestPipeline?.pipeline && latestYamlTemplate && orgPipeline) {

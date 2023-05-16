@@ -249,7 +249,6 @@ describe('Wizard tests', () => {
       const submitButton = queryByText(container, result.current.getString('submit')) as HTMLButtonElement
       await waitFor(() => expect(submitButton).toBeInTheDocument())
       fireEvent.click(submitButton)
-      expect(queryByText(document.body, result.current.getString('addressErrorFields'))).not.toBeNull()
       expect(document.body.querySelectorAll('[icon="warning-sign"]')?.length).toEqual(1)
       fireEvent.click(tab2)
       await waitFor(() => expect(document.querySelector('[name="numberOnly"]')).toBeTruthy())

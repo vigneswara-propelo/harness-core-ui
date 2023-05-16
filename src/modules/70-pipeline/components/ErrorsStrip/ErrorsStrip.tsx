@@ -14,7 +14,6 @@ import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useStrings } from 'framework/strings'
-import type { StringsMap } from 'stringTypes'
 import { useDeepCompareEffect } from '@common/hooks'
 import { focusOnNode } from '@common/utils/utils'
 import css from './ErrorsStrip.module.scss'
@@ -142,7 +141,7 @@ export function ErrorsStrip(props: ErrorStripProps): React.ReactElement {
     >
       <Layout.Horizontal>
         <Icon name="warning-sign" intent={Intent.DANGER} margin={{ right: 'small' }} />
-        <Text intent="danger">{getString('common.errorCount' as keyof StringsMap, { count: errorCount })}</Text>
+        <Text intent="danger">{getString('common.errorCount', { count: errorCount })}</Text>
         <Utils.WrapOptionalTooltip
           tooltip={
             <div className={css.runPipelineErrorDesc}>

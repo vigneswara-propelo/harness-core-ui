@@ -47,7 +47,6 @@ export default function TabWizardFooter({
   onYamlSubmit,
   yamlObjectKey,
   yamlHandler,
-  elementsRef,
   formikProps,
   yamlBuilderReadOnlyModeProps,
   loadingYamlView,
@@ -118,18 +117,13 @@ export default function TabWizardFooter({
                   event.preventDefault()
                   setSubmittedForm(true)
 
-                  if (
-                    elementsRef.current.some(
-                      (element): boolean =>
-                        !!element?.current?.firstElementChild?.classList?.contains('bp3-icon-warning-sign')
-                    )
-                  ) {
-                    showError(getString('addressErrorFields'))
-                  }
                   const validateErrors = await validate?.()
                   if (isEmpty(validateErrors)) {
                     // submit form if given validate is empty
                     formikProps.submitForm()
+                  } else {
+                    // Show error is there is a validation error
+                    showError(getString('addressErrorFields'))
                   }
                 }}
               />
@@ -153,6 +147,8 @@ export default function TabWizardFooter({
               }
 
               if (!isEmpty(await validate?.({ latestYaml }))) {
+                // Show error is there is a validation error
+                showError(getString('addressErrorFields'))
                 return
               } else {
                 formikProps.setSubmitting(true)
