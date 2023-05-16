@@ -6,7 +6,9 @@
  */
 
 import React, { CSSProperties, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { FormGroup, IFormGroupProps, Intent, PopoverInteractionKind } from '@blueprintjs/core'
+import { useFormikContext } from 'formik'
 import {
   Layout,
   Icon,
@@ -69,6 +71,9 @@ import {
   getScopeFromDTO,
   ScopeAndIdentifier
 } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
+import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
+import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ConnectorsEmptyState from './connectors-no-data.png'
 import css from './ConnectorReferenceField.module.scss'
 
@@ -958,3 +963,29 @@ function getConnectorSelectorSchema(selected: ConnectorSelectedValue, getString:
       return deafultSchema
   }
 }
+// This is used to register default connector setting
+export const DefaultSettingConnectorField: React.FC<SettingRendererProps & { type: Array<ConnectorInfoDTO['type']> }> =
+  ({ onSettingSelectionChange, identifier, setFieldValue, settingValue, type }) => {
+    const { getString } = useStrings()
+    const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+    const formik = useFormikContext<any>()
+    return (
+      <ConnectorReferenceField
+        name={identifier}
+        width={350}
+        type={type}
+        selected={formik.values[identifier]}
+        label={''}
+        placeholder={`- ${getString('select')} -`}
+        accountIdentifier={accountId}
+        {...(orgIdentifier ? { orgIdentifier } : {})}
+        {...(projectIdentifier ? { projectIdentifier } : {})}
+        onChange={(value, scope) => {
+          const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
+          setFieldValue(identifier, connectorRefWithScope)
+          onSettingSelectionChange(connectorRefWithScope)
+        }}
+        disabled={settingValue && !settingValue.isSettingEditable}
+      />
+    )
+  }

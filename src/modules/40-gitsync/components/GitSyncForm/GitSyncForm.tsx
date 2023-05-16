@@ -5,13 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import type { FormikContextType } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { Container, FormInput, Layout, SelectOption } from '@harness/uicore'
+import { Container, FormInput, Layout, SelectOption, useToaster } from '@harness/uicore'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import {
   ConnectorReferenceField,
@@ -28,7 +28,9 @@ import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/E
 import { Connectors } from '@connectors/constants'
 import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
 import { yamlPathRegex } from '@common/utils/StringUtils'
-import type { ConnectorInfoDTO } from 'services/cd-ng'
+import { ConnectorInfoDTO, GetConnectorQueryParams, useGetConnector, useGetSettingValue } from 'services/cd-ng'
+import { SettingType } from '@common/constants/Utils'
+import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import css from './GitSyncForm.module.scss'
 
 export interface GitSyncFormFields {
@@ -53,6 +55,7 @@ interface GitSyncFormProps<T> {
   entityScope?: Scope
   className?: string
   filePathPrefix?: string
+  skipDefaultConnectorSetting?: boolean
 }
 
 export const gitSyncFormSchema = (
@@ -100,13 +103,95 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
     errorData,
     entityScope = Scope.PROJECT,
     className = '',
-    filePathPrefix
+    filePathPrefix,
+    skipDefaultConnectorSetting = false
   } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
+  const { showError } = useToaster()
   const [errorResponse, setErrorResponse] = useState<ResponseMessage[]>(errorData ?? [])
   const [filePathTouched, setFilePathTouched] = useState<boolean>()
+  const formikConnectorRef =
+    typeof formikProps.values.connectorRef === 'string'
+      ? formikProps.values.connectorRef
+      : formikProps.values.connectorRef?.value
+
+  const defaultSettingConnector = useRef<string>('')
+  const getConnectorScope = (): Scope => getScopeFromValue(defaultSettingConnector.current || '')
+  const getConnectorId = (): string => getIdentifierFromValue(defaultSettingConnector.current || '')
+  const getConnectorQueryParams = (): GetConnectorQueryParams => {
+    return {
+      accountIdentifier: accountId,
+      orgIdentifier:
+        getConnectorScope() === Scope.ORG || getConnectorScope() === Scope.PROJECT ? orgIdentifier : undefined,
+      projectIdentifier: getConnectorScope() === Scope.PROJECT ? projectIdentifier : undefined
+    }
+  }
+
+  const {
+    data: defaultConnectorSetting,
+    error: defaultConnectorSettingError,
+    loading: loadingSetting
+  } = useGetSettingValue({
+    identifier: SettingType.DEFAULT_CONNECTOR_FOR_GIT_EXPERIENCE,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: !!(formikProps.values.connectorRef || connectorRef) || skipDefaultConnectorSetting
+  })
+
+  const {
+    data: connectorData,
+    loading: loadingDefaultConnector,
+    error: connectorFetchError,
+    refetch
+  } = useGetConnector({
+    identifier: '',
+    queryParams: getConnectorQueryParams(),
+    lazy: true
+  })
+
+  useEffect(() => {
+    if (!loadingSetting) {
+      if (defaultConnectorSettingError) {
+        showError(defaultConnectorSettingError.message)
+      } else if (
+        defaultConnectorSetting?.data?.value &&
+        defaultConnectorSetting?.data?.value !== 'false' &&
+        !(formikConnectorRef || connectorRef)
+      ) {
+        defaultSettingConnector.current = defaultConnectorSetting?.data?.value
+        refetch({
+          pathParams: { identifier: getConnectorId() },
+          queryParams: getConnectorQueryParams()
+        })
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultConnectorSettingError, loadingSetting])
+
+  const preSelectedConnector = connectorRef || defaultConnectorSetting?.data?.value
+
+  useEffect(() => {
+    if (!loadingDefaultConnector) {
+      if (defaultConnectorSettingError) {
+        showError(connectorFetchError?.message)
+      } else if (connectorData?.data?.connector) {
+        const value = connectorData?.data?.connector
+        formikProps.setFieldValue('connectorRef', {
+          label: defaultTo(value?.name, ''),
+          value: defaultSettingConnector.current,
+          scope: getConnectorScope(),
+          live: connectorData?.data?.status?.status === 'SUCCESS',
+          connector: value
+        })
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connectorFetchError, loadingDefaultConnector])
 
   useEffect(() => {
     setErrorResponse(errorData as ResponseMessage[])
@@ -133,11 +218,6 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
     setErrorResponse([])
   }, [formikProps.values.connectorRef])
 
-  const formikConnectorRef =
-    typeof formikProps.values.connectorRef === 'string'
-      ? formikProps.values.connectorRef
-      : formikProps.values.connectorRef?.value
-
   return (
     <Container padding={{ top: 'large' }} className={cx(css.gitSyncForm, className)}>
       <Layout.Horizontal>
@@ -149,7 +229,9 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
             selected={defaultTo(formikProps.values.connectorRef, connectorRef)}
             error={formikProps.submitCount > 0 ? (formikProps?.errors?.connectorRef as string) : undefined}
             label={getString('connectors.title.gitConnector')}
-            placeholder={`- ${getString('select')} -`}
+            placeholder={
+              loadingSetting ? getString('defaultSettings.fetchingDefaultConnector') : `- ${getString('select')} -`
+            }
             accountIdentifier={accountId}
             {...(entityScope === Scope.ACCOUNT ? {} : { orgIdentifier })}
             {...(entityScope === Scope.PROJECT ? { projectIdentifier } : {})}
@@ -166,12 +248,12 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
               formikProps.setFieldValue?.('repo', '')
               formikProps.setFieldValue?.('branch', '')
             }}
-            disabled={isEdit || disableFields.connectorRef}
+            disabled={isEdit || disableFields.connectorRef || loadingSetting}
           />
 
           <RepositorySelect
             formikProps={formikProps}
-            connectorRef={formikConnectorRef || connectorRef}
+            connectorRef={formikConnectorRef || preSelectedConnector}
             onChange={() => {
               if (errorResponse?.length === 0) {
                 formikProps.setFieldValue?.('branch', '')
@@ -183,7 +265,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
           />
           <RepoBranchSelectV2
             key={formikProps?.values?.repo}
-            connectorIdentifierRef={formikConnectorRef || connectorRef}
+            connectorIdentifierRef={formikConnectorRef || preSelectedConnector}
             repoName={formikProps?.values?.repo}
             onChange={(selected: SelectOption) => {
               // This is to handle auto fill after default selection, without it form validation will fail

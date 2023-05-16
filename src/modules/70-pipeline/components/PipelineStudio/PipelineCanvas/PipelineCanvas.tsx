@@ -287,10 +287,8 @@ export function PipelineCanvas({
   }
 
   React.useEffect(() => {
-    if (!loadingSetting) {
-      if (enforceGitXSettingError) {
-        showError(enforceGitXSettingError.message)
-      }
+    if (!loadingSetting && enforceGitXSettingError) {
+      showError(enforceGitXSettingError.message)
     }
   }, [enforceGitXSettingError, showError, loadingSetting])
 

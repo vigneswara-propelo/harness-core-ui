@@ -8,6 +8,8 @@ mandateAuthorizationForCustomWebhookTriggers: Mandate Authorization for Custom W
 enableForceDelete: Enable Force Delete of Harness Resources
 enableGitCommands: Use Git client for commits
 allowDifferentRepoForInputSets: Allow different repo for Pipeline and InputSets
+defaultGitConnector: Default Connector For Git Experience with Entities - Pipelines/InputSets/Templates
+fetchingDefaultConnector: Checking for default connector
 enforceGitExperience: Enforce git experience for pipelines and templates
 pipelineTimeout: Pipeline Timeout
 stageTimeout: Stage Timeout

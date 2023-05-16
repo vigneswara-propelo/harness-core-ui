@@ -106,7 +106,12 @@ export const GitSyncSetupModal: FC<GitSyncSetupModalProps> = ({ hideModal }) => 
           onClose={hideModal}
         >
           <FormikForm>
-            <GitSyncForm formikProps={formikProps} isEdit={false} initialValues={{}} />
+            <GitSyncForm
+              formikProps={formikProps}
+              isEdit={false}
+              initialValues={{}}
+              skipDefaultConnectorSetting={true}
+            />
           </FormikForm>
         </ModalDialog>
       )}

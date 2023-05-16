@@ -23,10 +23,14 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import { String } from 'framework/strings'
 import { AccountSideNavProps } from '@common/RouteDestinations'
 import type { ResourceDTO } from 'services/audit'
+import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
+import { SettingType } from '@common/constants/Utils'
+import { DefaultSettingConnectorField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import ConnectorResourceModalBody from './components/ConnectorResourceModalBody/ConnectorResourceModalBody'
 import ConnectorAttributeModalBody from './components/ConnectorAttributeModalBody/ConnectorAttributeModalBody'
 import ConnectorAttributeRenderer from './components/ConnectorAttributeRenderer/ConnectorAttributeRenderer'
 import ConnectorResourceRenderer from './components/ConnectorResourceRenderer/ConnectorResourceRenderer'
+import { Connectors } from './constants'
 
 RbacFactory.registerResourceTypeHandler(ResourceType.CONNECTOR, {
   icon: 'res-connectors',
@@ -63,6 +67,17 @@ AuditTrailFactory.registerResourceHandler('CONNECTOR', {
       projectIdentifier
     })
   }
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.DEFAULT_CONNECTOR_FOR_GIT_EXPERIENCE, {
+  label: 'defaultSettings.defaultGitConnector',
+  settingRenderer: props => (
+    <DefaultSettingConnectorField
+      {...props}
+      type={[Connectors.GITHUB, Connectors.BITBUCKET, Connectors.AZURE_REPO, Connectors.GITLAB]}
+    />
+  ),
+  settingCategory: 'GIT_EXPERIENCE'
 })
 
 export default (

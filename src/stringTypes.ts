@@ -1664,11 +1664,13 @@ export interface StringsMap {
   'defaultSettings.awsIncludeTaxes': string
   'defaultSettings.azureIncludeRefunds': string
   'defaultSettings.concurrentActivePipelineExecutions': string
+  'defaultSettings.defaultGitConnector': string
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
   'defaultSettings.enableMatrixFieldNames': string
   'defaultSettings.enablePipelineExecutionAuditEvents': string
   'defaultSettings.enforceGitExperience': string
+  'defaultSettings.fetchingDefaultConnector': string
   'defaultSettings.gcpIncludeDiscounts': string
   'defaultSettings.gcpIncludeTaxes': string
   'defaultSettings.harnessDefault': string
