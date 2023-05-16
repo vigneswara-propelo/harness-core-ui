@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import type { FormikProps } from 'formik'
 import {
   Formik,
@@ -27,8 +27,7 @@ import { useStrings, String as LocaleString } from 'framework/strings'
 import {
   AdvancedPanels,
   StepCommandsProps,
-  Values,
-  TabTypes
+  Values
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
@@ -66,15 +65,20 @@ export interface AdvancedStepsProps extends Omit<StepCommandsProps, 'onUseTempla
 type Step = StepElementConfig | StepGroupElementConfig
 
 export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: StepFormikFowardRef): React.ReactElement {
-  const { step, onChange, onUpdate } = props
+  const { step, onChange } = props
   const { getString } = useStrings()
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedUpdate = React.useCallback(
-    debounce((data: FormValues): void => {
-      onChange?.({ ...data, tab: TabTypes.Advanced })
-    }, 300),
-    [onUpdate]
+  const onChangeRef = useRef(onChange)
+  useEffect(() => {
+    onChangeRef.current = onChange
+  }, [onChange])
+
+  const debouncedOnChange = useMemo(
+    () =>
+      debounce((data: FormValues): void => {
+        onChangeRef.current?.(data)
+      }, 300),
+    []
   )
 
   const failureStrategies =
@@ -105,7 +109,7 @@ export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: Step
         strategy
       }}
       onSubmit={noop}
-      validate={debouncedUpdate}
+      validate={debouncedOnChange}
       formName="pipelineAdvancedSteps"
       validationSchema={Yup.object().shape({
         failureStrategies: getFailureStrategiesValidationSchema(getString)

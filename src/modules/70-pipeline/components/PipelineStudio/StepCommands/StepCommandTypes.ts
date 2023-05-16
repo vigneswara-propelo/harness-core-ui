@@ -76,8 +76,6 @@ export type StepOrStepGroupOrTemplateStepData =
   | StepGroupWithStageElementConfig
 
 export type Values = StepOrStepGroupOrTemplateStepData & {
-  tab?: TabTypes
-  shouldKeepOpen?: boolean
   delegateSelectors?: string[]
   when?: StepWhenCondition
   failureStrategies?: FailureStrategyConfig[]

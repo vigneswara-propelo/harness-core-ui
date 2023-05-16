@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { Container, Formik, FormikForm, FormInput, Layout, AllowedTypes, Heading, PageError } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
@@ -116,42 +116,55 @@ function TemplateStepWidget(
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
-  const updateFormValues = (newTemplateInputs?: StepElementConfig) => {
-    const updateValues = produce(initialValues, draft => {
+  const onUpdateRef = useRef(onUpdate)
+  useEffect(() => {
+    onUpdateRef.current = onUpdate
+  }, [onUpdate])
+
+  const initialValuesRef = useRef(initialValues)
+  useEffect(() => {
+    initialValuesRef.current = initialValues
+  }, [initialValues])
+
+  const updateFormValues = useCallback((newTemplateInputs?: StepElementConfig): void => {
+    const updateValues = produce(initialValuesRef.current, draft => {
       set(draft, 'template.templateInputs', !isEmpty(newTemplateInputs) ? newTemplateInputs : undefined)
     })
     setFormValues(updateValues)
-    onUpdate?.(updateValues)
-  }
+    onUpdateRef.current?.(updateValues)
+  }, [])
 
-  const retainInputsAndUpdateFormValues = (newTemplateInputs?: StepElementConfig) => {
-    if (isEmpty(newTemplateInputs)) {
-      updateFormValues(newTemplateInputs)
-    } else {
-      setLoadingMergedTemplateInputs(true)
-      try {
-        getsMergedTemplateInputYamlPromise({
-          body: {
-            oldTemplateInputs: stringify(defaultTo(initialValues.template?.templateInputs, '')),
-            newTemplateInputs: stringify(newTemplateInputs)
-          },
-          queryParams: {
-            accountIdentifier: queryParams.accountId
-          }
-        }).then(response => {
-          if (response && response.status === 'SUCCESS') {
-            setLoadingMergedTemplateInputs(false)
-            updateFormValues(parse<StepElementConfig>(defaultTo(response.data?.mergedTemplateInputs, '')))
-          } else {
-            throw response
-          }
-        })
-      } catch (error) {
-        setLoadingMergedTemplateInputs(false)
+  const retainInputsAndUpdateFormValues = useCallback(
+    (newTemplateInputs?: StepElementConfig): void => {
+      if (isEmpty(newTemplateInputs)) {
         updateFormValues(newTemplateInputs)
+      } else {
+        setLoadingMergedTemplateInputs(true)
+        try {
+          getsMergedTemplateInputYamlPromise({
+            body: {
+              oldTemplateInputs: stringify(defaultTo(initialValuesRef.current.template?.templateInputs, '')),
+              newTemplateInputs: stringify(newTemplateInputs)
+            },
+            queryParams: {
+              accountIdentifier: queryParams.accountId
+            }
+          }).then(response => {
+            if (response && response.status === 'SUCCESS') {
+              setLoadingMergedTemplateInputs(false)
+              updateFormValues(parse<StepElementConfig>(defaultTo(response.data?.mergedTemplateInputs, '')))
+            } else {
+              throw response
+            }
+          })
+        } catch (error) {
+          setLoadingMergedTemplateInputs(false)
+          updateFormValues(newTemplateInputs)
+        }
       }
-    }
-  }
+    },
+    [queryParams.accountId, updateFormValues]
+  )
 
   React.useEffect(() => {
     if (stepTemplateInputSetLoading) {
@@ -162,7 +175,7 @@ function TemplateStepWidget(
       setTemplateInputs(newTemplateInputs)
       retainInputsAndUpdateFormValues(newTemplateInputs)
     }
-  }, [stepTemplateInputSetLoading])
+  }, [retainInputsAndUpdateFormValues, stepTemplateInputSetLoading, stepTemplateInputSetYaml?.data])
 
   const validateForm = (values: TemplateStepNode) => {
     if (!isEmpty((templateInputs as StepGroupElementConfig)?.steps)) {
@@ -194,7 +207,7 @@ function TemplateStepWidget(
     }
   }
 
-  const refetch = () => {
+  const refetch = (): void => {
     refetchStepTemplate()
     refetchStepTemplateInputSet()
   }

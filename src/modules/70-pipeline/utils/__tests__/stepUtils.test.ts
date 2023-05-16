@@ -6,7 +6,6 @@
  */
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { TabTypes } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import type { StageElementConfig } from 'services/cd-ng'
 import {
   getAllStepPaletteModuleInfos,
@@ -57,7 +56,6 @@ describe('Test stepUtils', () => {
     expect(
       getStepDataFromValues(
         {
-          tab: TabTypes.StepConfiguration,
           type: 'Security'
         },
         {
@@ -75,7 +73,6 @@ describe('Test stepUtils', () => {
     expect(
       getStepDataFromValues(
         {
-          tab: TabTypes.Advanced,
           type: 'Security',
           description: 'testDescription',
           failureStrategies: [
@@ -98,6 +95,7 @@ describe('Test stepUtils', () => {
     ).toStrictEqual({
       identifier: 'testId',
       name: 'testName',
+      description: 'testDescription',
       type: 'Unknown',
       failureStrategies: [
         {

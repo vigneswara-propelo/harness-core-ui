@@ -8,7 +8,7 @@
 import React, { SyntheticEvent, useState } from 'react'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
 import { Button, ButtonSize, ButtonVariation, Container, useConfirmationDialog } from '@harness/uicore'
-import { cloneDeep, defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isNil, noop, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
@@ -43,12 +43,7 @@ import { usePrevious } from '@common/hooks/usePrevious'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
-import {
-  StepCommandsViews,
-  StepOrStepGroupOrTemplateStepData,
-  TabTypes,
-  Values
-} from '../StepCommands/StepCommandTypes'
+import { StepCommandsViews, StepOrStepGroupOrTemplateStepData, Values } from '../StepCommands/StepCommandTypes'
 import { StepPalette } from '../StepPalette/StepPalette'
 import { addService, addStepOrGroup, getStepFromId } from '../ExecutionGraph/ExecutionGraphUtil'
 import PipelineVariables, { PipelineVariablesRef } from '../PipelineVariables/PipelineVariables'
@@ -162,13 +157,11 @@ export const updateStepWithinStage = (
 }
 
 const addReplace = (item: Partial<Values>, node: any): void => {
-  if (item.name && item.tab !== TabTypes.Advanced) node.name = item.name
-  if (item.identifier && item.tab !== TabTypes.Advanced) node.identifier = item.identifier
-  if ((item as StepElementConfig).description && item.tab !== TabTypes.Advanced)
-    node.description = (item as StepElementConfig).description
-  if (item.when && item.tab === TabTypes.Advanced) node.when = item.when
-  if ((item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced)
-    node.timeout = (item as StepElementConfig).timeout
+  if (item.name) node.name = item.name
+  if (item.identifier) node.identifier = item.identifier
+  if ((item as StepElementConfig).description) node.description = (item as StepElementConfig).description
+  if (item.when) node.when = item.when
+  if ((item as StepElementConfig).timeout) node.timeout = (item as StepElementConfig).timeout
 }
 
 const processNodeImpl = (
@@ -177,11 +170,14 @@ const processNodeImpl = (
   trackEvent: TrackEvent
 ): StepElementConfig & TemplateStepNode & StepGroupElementConfig => {
   return produce(data.stepConfig.node as StepElementConfig & TemplateStepNode & StepGroupElementConfig, node => {
-    // Add/replace values only if they are presented
+    // Add/replace values only if they are present
     addReplace(item, node)
 
     // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
-    if (Array.isArray(item.failureStrategies) || isValueRuntimeInput(item.failureStrategies as any)) {
+    if (
+      (Array.isArray(item.failureStrategies) && item.failureStrategies.length > 0) ||
+      isValueRuntimeInput(item.failureStrategies as any)
+    ) {
       node.failureStrategies = item.failureStrategies
 
       if (Array.isArray(item.failureStrategies)) {
@@ -191,13 +187,17 @@ const processNodeImpl = (
         }))
         telemetryData.length && trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
       }
+    } else {
+      delete node.failureStrategies
     }
-    if (!data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
+
+    if (!data.stepConfig?.isStepGroup && item.delegateSelectors) {
       set(node, 'spec.delegateSelectors', item.delegateSelectors)
-    } else if (data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
+    } else if (data.stepConfig?.isStepGroup && item.delegateSelectors) {
       set(node, 'delegateSelectors', item.delegateSelectors)
     }
-    if ((item as StepElementConfig)?.spec?.commandOptions && item.tab !== TabTypes.Advanced) {
+
+    if ((item as StepElementConfig)?.spec?.commandOptions) {
       set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
     }
 
@@ -209,11 +209,11 @@ const processNodeImpl = (
       set(node, 'strategy', item.strategy)
     }
 
-    if (item?.policySets && item.tab === TabTypes.Advanced) {
+    if (item?.policySets) {
       set(node, 'enforce.policySets', item.policySets)
     }
 
-    if (item.commandFlags && item.tab === TabTypes.Advanced) {
+    if (item.commandFlags) {
       const commandFlags = item.commandFlags.map((commandFlag: CommandFlags) =>
         commandFlag.commandType && commandFlag.flag
           ? {
@@ -227,38 +227,26 @@ const processNodeImpl = (
     }
 
     // Delete values if they were already added and now removed
-    if (node.timeout && !(item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced) delete node.timeout
-    if (node.description && !(item as StepElementConfig).description && item.tab !== TabTypes.Advanced)
-      delete node.description
-    if (node.failureStrategies && !item.failureStrategies && item.tab === TabTypes.Advanced)
-      delete node.failureStrategies
-    if (
-      node.enforce?.policySets &&
-      (!item?.policySets || item.policySets?.length === 0) &&
-      item.tab === TabTypes.Advanced
-    ) {
+    if (node.timeout && !(item as StepElementConfig).timeout) delete node.timeout
+    if (node.description && !(item as StepElementConfig).description) delete node.description
+    if (node.failureStrategies && !item.failureStrategies) delete node.failureStrategies
+    if (node.enforce?.policySets && (!item?.policySets || item.policySets?.length === 0)) {
       delete node.enforce
     }
     if (
       !data.stepConfig?.isStepGroup &&
       node.spec?.delegateSelectors &&
-      (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
-      item.tab === TabTypes.Advanced
+      (!item.delegateSelectors || item.delegateSelectors?.length === 0)
     ) {
       delete node.spec.delegateSelectors
     }
-    if (
-      node.spec?.commandFlags &&
-      (!item.commandFlags || item.commandFlags?.length === 0) &&
-      item.tab === TabTypes.Advanced
-    ) {
+    if (node.spec?.commandFlags && (!item.commandFlags || item.commandFlags?.length === 0)) {
       delete node.spec.commandFlags
     }
     if (
       data.stepConfig?.isStepGroup &&
       node.delegateSelectors &&
-      (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
-      item.tab === TabTypes.Advanced
+      (!item.delegateSelectors || item.delegateSelectors?.length === 0)
     ) {
       delete node.delegateSelectors
     }
@@ -266,8 +254,7 @@ const processNodeImpl = (
     if (
       node.spec?.commandOptions &&
       (!(item as StepElementConfig)?.spec?.commandOptions ||
-        (item as StepElementConfig)?.spec?.commandOptions?.length === 0) &&
-      item.tab !== TabTypes.Advanced
+        (item as StepElementConfig)?.spec?.commandOptions?.length === 0)
     ) {
       delete (item as StepElementConfig)?.spec?.commandOptions
       delete node.spec.commandOptions
@@ -276,8 +263,8 @@ const processNodeImpl = (
     if (item.template) {
       node.template = item.template
     }
-    if ((item as StepElementConfig).spec && item.tab !== TabTypes.Advanced) {
-      node.spec = { ...(item as StepElementConfig).spec }
+    if ((item as StepElementConfig).spec) {
+      node.spec = Object.assign(defaultTo(node.spec, {}), (item as StepElementConfig).spec)
     }
   })
 }
@@ -994,20 +981,7 @@ export function RightDrawer(): React.ReactElement {
           isNewStep={!data.stepConfig.stepsMap.get(data.stepConfig.node.identifier)?.isSaved}
           stepsFactory={stepsFactory}
           hasStepGroupAncestor={!!data?.stepConfig?.isUnderStepGroup}
-          onUpdate={value => {
-            onSubmitStep(
-              value,
-              DrawerTypes.StepConfig,
-              data,
-              trackEvent,
-              selectedStage,
-              updatePipelineView,
-              updateStage,
-              pipelineView,
-              Boolean(isRollbackToggled),
-              provisionerPath
-            )
-          }}
+          onUpdate={noop}
           viewType={StepCommandsViews.Pipeline}
           allowableTypes={allowableTypes}
           onUseTemplate={(selectedTemplate: TemplateSummaryResponse) =>
@@ -1169,20 +1143,7 @@ export function RightDrawer(): React.ReactElement {
           isNewStep={!data.stepConfig.stepsMap.get(data.stepConfig.node.identifier)?.isSaved}
           stepsFactory={stepsFactory}
           hasStepGroupAncestor={!!data?.stepConfig?.isUnderStepGroup}
-          onUpdate={value =>
-            onSubmitStep(
-              value,
-              DrawerTypes.ProvisionerStepConfig,
-              data,
-              trackEvent,
-              selectedStage,
-              updatePipelineView,
-              updateStage,
-              pipelineView,
-              Boolean(isRollbackToggled),
-              provisionerPath
-            )
-          }
+          onUpdate={noop}
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           selectedStage={selectedStage}

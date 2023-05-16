@@ -8,6 +8,7 @@
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { PipelineContextInterface } from '../../PipelineContext/PipelineContext'
+import { DrawerTypes } from '../../PipelineContext/PipelineActions'
 
 const stateMock = {
   pipeline: {
@@ -181,7 +182,7 @@ const stateMock = {
   error: ''
 }
 
-const pipelineContextMock: PipelineContextInterface = {
+export const getPipelineContextMock = (): PipelineContextInterface => ({
   state: stateMock as any,
   contextType: 'Pipeline',
   allowableTypes: [
@@ -250,7 +251,7 @@ const pipelineContextMock: PipelineContextInterface = {
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn(),
   setValidationUuid: jest.fn()
-}
+})
 
 export const updateStageFnArg1 = {
   description: '',
@@ -354,6 +355,14 @@ export const updatePipelineViewFnArg1 = {
   }
 }
 
+export const closeDrawerPayload = {
+  ...stateMock.pipelineView,
+  isDrawerOpened: false,
+  drawerData: {
+    type: DrawerTypes.AddStep
+  }
+}
+
 export const mockBarriers = [
   {
     identifier: 'demo',
@@ -374,4 +383,298 @@ export const mockBarriers = [
   }
 ]
 
+export const getProvisionerPipelineContextMock = (): PipelineContextInterface => {
+  const state = {
+    pipeline: {
+      name: 'pip provisioner',
+      identifier: 'pip_provisioner',
+      projectIdentifier: 'testrr18',
+      orgIdentifier: 'default',
+      tags: {},
+      stages: [
+        {
+          stage: {
+            name: 's1',
+            identifier: 's1',
+            description: '',
+            type: 'Deployment',
+            spec: {
+              deploymentType: 'Kubernetes',
+              service: {
+                serviceRef: '<+input>',
+                serviceInputs: '<+input>'
+              },
+              environment: {
+                environmentRef: '<+input>',
+                deployToAll: false,
+                provisioner: {
+                  steps: [
+                    {
+                      step: {
+                        type: 'ShellScriptProvision',
+                        name: 'ssp',
+                        identifier: 'ssp',
+                        spec: {
+                          source: {
+                            type: 'Inline',
+                            spec: {
+                              script: '<+input>'
+                            }
+                          },
+                          environmentVariables: []
+                        },
+                        timeout: '<+input>',
+                        when: '<+input>'
+                      }
+                    }
+                  ]
+                },
+                environmentInputs: '<+input>',
+                serviceOverrideInputs: '<+input>',
+                infrastructureDefinitions: '<+input>'
+              },
+              execution: {
+                steps: [
+                  {
+                    step: {
+                      name: 'Rollout Deployment',
+                      identifier: 'rolloutDeployment',
+                      type: 'K8sRollingDeploy',
+                      timeout: '10m',
+                      spec: {
+                        skipDryRun: false,
+                        pruningEnabled: false
+                      }
+                    }
+                  }
+                ],
+                rollbackSteps: [
+                  {
+                    step: {
+                      name: 'Rollback Rollout Deployment',
+                      identifier: 'rollbackRolloutDeployment',
+                      type: 'K8sRollingRollback',
+                      timeout: '10m',
+                      spec: {
+                        pruningEnabled: false
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            tags: {},
+            failureStrategies: [
+              {
+                onFailure: {
+                  errors: ['AllErrors'],
+                  action: {
+                    type: 'StageRollback'
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    originalPipeline: {
+      name: 'pip provisioner',
+      identifier: 'pip_provisioner',
+      projectIdentifier: 'testrr18',
+      orgIdentifier: 'default',
+      tags: {},
+      stages: [
+        {
+          stage: {
+            name: 's1',
+            identifier: 's1',
+            description: '',
+            type: 'Deployment',
+            spec: {
+              deploymentType: 'Kubernetes',
+              service: {
+                serviceRef: '<+input>',
+                serviceInputs: '<+input>'
+              },
+              environment: {
+                environmentRef: '<+input>',
+                deployToAll: false,
+                provisioner: {
+                  steps: [
+                    {
+                      step: {
+                        type: 'ShellScriptProvision',
+                        name: 'ssp',
+                        identifier: 'ssp',
+                        spec: {
+                          source: {
+                            type: 'Inline',
+                            spec: {
+                              script: '<+input>'
+                            }
+                          },
+                          environmentVariables: []
+                        },
+                        timeout: '<+input>',
+                        when: '<+input>'
+                      }
+                    }
+                  ]
+                },
+                environmentInputs: '<+input>',
+                serviceOverrideInputs: '<+input>',
+                infrastructureDefinitions: '<+input>'
+              },
+              execution: {
+                steps: [
+                  {
+                    step: {
+                      name: 'Rollout Deployment',
+                      identifier: 'rolloutDeployment',
+                      type: 'K8sRollingDeploy',
+                      timeout: '10m',
+                      spec: {
+                        skipDryRun: false,
+                        pruningEnabled: false
+                      }
+                    }
+                  }
+                ],
+                rollbackSteps: [
+                  {
+                    step: {
+                      name: 'Rollback Rollout Deployment',
+                      identifier: 'rollbackRolloutDeployment',
+                      type: 'K8sRollingRollback',
+                      timeout: '10m',
+                      spec: {
+                        pruningEnabled: false
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            tags: {},
+            failureStrategies: [
+              {
+                onFailure: {
+                  errors: ['AllErrors'],
+                  action: {
+                    type: 'StageRollback'
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    pipelineIdentifier: 'pip_provisioner',
+    pipelineView: {
+      isSplitViewOpen: true,
+      isDrawerOpened: true,
+      isYamlEditable: false,
+      splitViewData: {
+        type: 'StageView'
+      },
+      drawerData: {
+        type: 'ProvisionerStepConfig',
+        data: {
+          stepConfig: {
+            node: {
+              type: 'ShellScriptProvision',
+              name: 'ssp',
+              identifier: 'ssp',
+              spec: {
+                source: {
+                  type: 'Inline',
+                  spec: {
+                    script: '<+input>'
+                  }
+                },
+                environmentVariables: []
+              },
+              timeout: '<+input>',
+              when: '<+input>'
+            },
+            stepsMap: new Map(),
+            isStepGroup: false,
+            addOrEdit: 'edit',
+            hiddenAdvancedPanels: ['preRequisites']
+          }
+        }
+      },
+      isRollbackToggled: true
+    },
+    schemaErrors: false,
+    storeMetadata: {
+      storeType: 'INLINE'
+    },
+    gitDetails: {},
+    entityValidityDetails: {
+      valid: true
+    },
+    templateTypes: {},
+    templateIcons: {},
+    templateServiceData: {},
+    resolvedCustomDeploymentDetailsByRef: {},
+    isLoading: false,
+    isIntermittentLoading: false,
+    isBEPipelineUpdated: false,
+    isDBInitialized: true,
+    isDBInitializationFailed: false,
+    isUpdated: false,
+    modules: ['cd', 'pms'],
+    isInitialized: true,
+    selectionState: {
+      selectedStageId: 's1',
+      selectedSectionId: 'ENVIRONMENT'
+    },
+    error: '',
+    yamlSchemaErrorWrapper: {},
+    validationUuid: 'validationUuid',
+    yamlHandler: {}
+  } as any
+
+  return {
+    ...getPipelineContextMock(),
+    state,
+    stepsFactory: {
+      getStep: (type: string) => {
+        switch (type) {
+          case 'ShellScriptProvision':
+            return {
+              icon: 'script',
+              name: 'Shell Script Provision',
+              type: 'ShellScriptProvision'
+            }
+        }
+      },
+      getStepDescription: (type: string) => {
+        return 'Awesome description for step ' + type
+      },
+      getStepAdditionalInfo: (type: string) => {
+        return 'Awesome additional info for step ' + type
+      },
+      getStepIsHarnessSpecific: (type: string) => {
+        if (type) {
+          return true
+        }
+      },
+      getStepIconColor: () => undefined,
+      getStepData: () => ({
+        icon: 'script',
+        name: 'Shell Script Provision',
+        type: 'ShellScriptProvision'
+      }),
+      getStepIcon: () => 'script',
+      getStepName: () => 'Shell Script Provision'
+    } as any,
+    getStageFromPipeline: () => ({ stage: state.pipeline.stages[0] as any, parent: undefined })
+  }
+}
+
+const pipelineContextMock = getPipelineContextMock()
 export default pipelineContextMock

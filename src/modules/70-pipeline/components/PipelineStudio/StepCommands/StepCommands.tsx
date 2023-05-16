@@ -10,7 +10,7 @@ import { Container, Tab, Tabs, Layout } from '@harness/uicore'
 import { Expander } from '@blueprintjs/core'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { defaultTo, isEmpty, noop, omit } from 'lodash-es'
+import { defaultTo, isEmpty, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import stableStringify from 'fast-json-stable-stringify'
 import { HelpPanel, HelpPanelType, FloatingButton } from '@harness/help-panel'
@@ -19,7 +19,6 @@ import { StepWidgetWithFormikRef } from '@pipeline/components/AbstractSteps/Step
 import { AdvancedStepsWithRef } from '@pipeline/components/PipelineSteps/AdvancedSteps/AdvancedSteps'
 import type { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageConfig, StepElementConfig } from 'services/cd-ng'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
@@ -27,7 +26,7 @@ import type { TemplateStepNode } from 'services/pipeline-ng'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { getStepDataFromValues } from '@pipeline/utils/stepUtils'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import { StepCommandsProps, StepCommandsViews, TabTypes, Values } from './StepCommandTypes'
+import { StepCommandsProps, StepCommandsViews, Values } from './StepCommandTypes'
 import css from './StepCommands.module.scss'
 
 export type StepFormikRef<T = unknown> = {
@@ -116,6 +115,22 @@ export function StepCommands(
       ? StepType.Template
       : ((step as StepElementConfig).type as StepType)
 
+  const getValues = (): Partial<Values> => {
+    const stepObj =
+      isStepGroup && !isTemplateStep
+        ? (stepsFactory.getStep(StepType.StepGroup) as PipelineStep<any>)
+        : stepType === StepType.Template
+        ? (stepsFactory.getStep(StepType.Template) as PipelineStep<any>)
+        : (stepsFactory.getStep((step as StepElementConfig).type) as PipelineStep<any>)
+
+    const values = {
+      ...(stepRef.current ? stepObj.processFormData(stepRef.current.values) : {}),
+      ...(isTemplateStep ? {} : (advancedConfRef.current?.values as Partial<Values>))
+    }
+
+    return values
+  }
+
   React.useImperativeHandle(ref, () => ({
     setFieldError(fieldName: string, error: string) {
       if (activeTab === StepCommandTabs.StepConfiguration && stepRef.current) {
@@ -123,137 +138,96 @@ export function StepCommands(
       }
     },
     isDirty() {
-      if (activeTab === StepCommandTabs.StepConfiguration && stepRef.current) {
+      let isStepFormDirty = false,
+        isAdvancedFormDirty = false
+
+      if (stepRef.current) {
         const currentStep = stepsFactory.getStep(stepType) as PipelineStep<any>
         const processFormData = currentStep?.processFormData
         if (processFormData) {
           const processedInitialValues = processFormData(stepRef.current.initialValues)
           const processedValues = processFormData(stepRef.current.values)
 
-          return stableStringify(processedInitialValues) !== stableStringify(processedValues)
+          isStepFormDirty = stableStringify(processedInitialValues) !== stableStringify(processedValues)
+        } else {
+          isStepFormDirty = stepRef.current.dirty
         }
-
-        return stepRef.current.dirty
       }
 
-      if (activeTab === StepCommandTabs.Advanced && advancedConfRef.current) {
-        return advancedConfRef.current.dirty
+      if (advancedConfRef.current) {
+        isAdvancedFormDirty = advancedConfRef.current.dirty
       }
+
+      return isStepFormDirty || isAdvancedFormDirty
     },
-    submitForm() {
-      if (activeTab === StepCommandTabs.StepConfiguration && stepRef.current) {
-        return stepRef.current.submitForm()
-      }
-
-      if (activeTab === StepCommandTabs.Advanced && advancedConfRef.current) {
-        return advancedConfRef.current.submitForm()
-      }
-      return Promise.resolve()
+    async submitForm() {
+      await stepRef.current?.submitForm()
+      await advancedConfRef.current?.submitForm()
     },
     getErrors() {
-      return activeTab === StepCommandTabs.StepConfiguration && stepRef.current
-        ? stepRef.current.errors
-        : activeTab === StepCommandTabs.Advanced && advancedConfRef.current
-        ? advancedConfRef.current.errors
-        : {}
+      return {
+        ...stepRef.current?.errors,
+        ...advancedConfRef.current?.errors
+      }
     },
-    getValues() {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const stepObj =
-        isStepGroup && !isTemplateStep
-          ? (stepsFactory.getStep(StepType.StepGroup) as PipelineStep<any>)
-          : stepType === StepType.Template
-          ? (stepsFactory.getStep(StepType.Template) as PipelineStep<any>)
-          : (stepsFactory.getStep((step as StepElementConfig).type) as PipelineStep<any>)
-      return activeTab === StepCommandTabs.StepConfiguration && stepRef.current
-        ? stepObj.processFormData(stepRef.current.values)
-        : activeTab === StepCommandTabs.Advanced && advancedConfRef.current
-        ? { ...(advancedConfRef.current.values as Partial<Values>), tab: TabTypes.Advanced }
-        : {}
-    },
+    getValues,
     resetForm() {
-      if (activeTab === StepCommandTabs.StepConfiguration && stepRef.current) {
-        return stepRef.current?.resetForm()
-      }
-      if (activeTab === StepCommandTabs.Advanced && advancedConfRef.current) {
-        return advancedConfRef.current.resetForm()
-      }
-      return noop
+      stepRef.current?.resetForm()
+      advancedConfRef.current?.resetForm()
     }
   }))
 
-  const getStepDataForTemplate = async (): Promise<StepElementConfig> => {
-    const stepObj = stepsFactory.getStep((step as StepElementConfig).type) as PipelineStep<any>
-    if (activeTab === StepCommandTabs.StepConfiguration && stepRef.current) {
+  const getValuesForTemplate = async (): Promise<StepElementConfig> => {
+    const stepObj = stepsFactory.getStep(
+      isStepGroup ? StepType.StepGroup : (step as StepElementConfig).type
+    ) as PipelineStep<any>
+
+    if (!stepRef.current && !advancedConfRef.current) return step as StepElementConfig
+
+    if (stepRef.current) {
       await stepRef.current.validateForm()
       const errors = omit(stepRef.current.errors, 'name')
-      if (isEmpty(errors)) {
-        return getStepDataFromValues(stepObj.processFormData(stepRef.current.values), step)
-      } else {
+      if (!isEmpty(errors)) {
         await stepRef.current.submitForm()
         throw errors
       }
-    } else if (activeTab === StepCommandTabs.Advanced && advancedConfRef.current) {
+    }
+
+    if (advancedConfRef.current) {
       await advancedConfRef.current.validateForm()
       const errors = omit(advancedConfRef.current.errors, 'name')
-      if (isEmpty(errors)) {
-        return getStepDataFromValues(
-          { ...(advancedConfRef.current.values as Partial<Values>), tab: TabTypes.Advanced },
-          step
-        )
-      } else {
+      if (!isEmpty(errors)) {
         await advancedConfRef.current.submitForm()
         throw errors
       }
-    } else {
-      return step as StepElementConfig
     }
+
+    let stepParameterValues = {
+      ...(stepRef.current && stepObj.processFormData(stepRef.current.values))
+    }
+    if (isStepGroup) {
+      stepParameterValues = {
+        ...omit(stepParameterValues, 'spec'),
+        stageType: selectedStage?.stage?.type
+      }
+    }
+    const advancedConfValues = advancedConfRef.current?.values as Partial<Values>
+
+    return getStepDataFromValues(Object.assign(stepParameterValues, advancedConfValues), step)
   }
 
-  const getStepGroupDataForTemplate = async (): Promise<StepOrStepGroupOrTemplateStepData> => {
-    const stepObj = stepsFactory.getStep(StepType.StepGroup) as PipelineStep<any>
-    if (activeTab === StepCommandTabs.StepConfiguration && stepRef.current) {
-      await stepRef.current.validateForm()
-      const errors = omit(stepRef.current.errors, 'name')
-      if (isEmpty(errors)) {
-        return {
-          ...omit(getStepDataFromValues(stepObj.processFormData(stepRef.current.values), step), 'spec'),
-          stageType: selectedStage?.stage?.type
-        }
-      } else {
-        await stepRef.current.submitForm()
-        throw errors
-      }
-    } else if (activeTab === StepCommandTabs.Advanced && advancedConfRef.current) {
-      await advancedConfRef.current.validateForm()
-      const errors = omit(advancedConfRef.current.errors, 'name')
-
-      if (isEmpty(errors)) {
-        return getStepDataFromValues(
-          { ...(advancedConfRef.current.values as Partial<Values>), tab: TabTypes.Advanced },
-          step
-        )
-      } else {
-        await advancedConfRef.current.submitForm()
-        throw errors
-      }
-    } else {
-      return step as StepOrStepGroupOrTemplateStepData
-    }
-  }
-
-  const SaveButtonProps = React.useMemo(() => {
+  const saveButtonProps = (() => {
     if (isStepGroup) {
       return {
-        getData: getStepGroupDataForTemplate,
+        getData: getValuesForTemplate,
         type: StepType.StepGroup
       }
     }
     return {
-      getData: getStepDataForTemplate,
+      getData: getValuesForTemplate,
       type: 'Step'
     }
-  }, [isStepGroup])
+  })()
 
   const getStepWidgetWithFormikRef = (): JSX.Element => {
     return (
@@ -263,8 +237,12 @@ export function StepCommands(
         initialValues={step}
         readonly={isReadonly}
         isNewStep={isNewStep}
-        onChange={onChange}
-        onUpdate={onUpdate}
+        onChange={() => {
+          onChange?.(getValues())
+        }}
+        onUpdate={() => {
+          onUpdate?.(getValues())
+        }}
         type={stepType}
         stepViewType={stepViewType}
         ref={stepRef}
@@ -296,7 +274,7 @@ export function StepCommands(
       ) : (
         <div className={props.helpPanelVisible ? css.helpPanelGridVisible : css.helpPanelGridHidden}>
           <Container className={cx(css.stepTabs, { stepTabsAdvanced: activeTab === StepCommandTabs.Advanced })}>
-            <Tabs id="step-commands" selectedTabId={activeTab} onChange={handleTabChange}>
+            <Tabs id="step-commands" selectedTabId={activeTab} onChange={handleTabChange} renderAllTabPanels>
               <Tab
                 id={StepCommandTabs.StepConfiguration}
                 title={isStepGroup ? getString('stepGroupConfiguration') : getString('stepConfiguration')}
@@ -312,8 +290,12 @@ export function StepCommands(
                     isReadonly={isReadonly}
                     stepsFactory={stepsFactory}
                     allowableTypes={allowableTypes}
-                    onChange={onChange}
-                    onUpdate={onUpdate}
+                    onChange={() => {
+                      onChange?.(getValues())
+                    }}
+                    onUpdate={() => {
+                      onUpdate?.(getValues())
+                    }}
                     hiddenPanels={hiddenPanels}
                     isStepGroup={isStepGroup}
                     hasStepGroupAncestor={hasStepGroupAncestor}
@@ -334,8 +316,8 @@ export function StepCommands(
                   <>
                     <Expander />
                     <SaveTemplateButton
-                      data={SaveButtonProps.getData}
-                      type={SaveButtonProps.type as SaveButtonType}
+                      data={saveButtonProps.getData}
+                      type={saveButtonProps.type as SaveButtonType}
                       gitDetails={gitDetails}
                       storeMetadata={storeMetadata}
                     />

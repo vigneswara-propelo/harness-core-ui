@@ -1,9 +1,15 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { set } from 'lodash-es'
 import produce from 'immer'
 import { TestWrapper } from '@common/utils/testUtils'
-import { TabTypes } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import pipelineContextMock from '@pipeline/components/PipelineStudio/RightDrawer/__tests__/stateMock'
@@ -25,7 +31,7 @@ jest.mock('@pipeline/components/PipelineSteps/AdvancedSteps/AdvancedSteps', () =
       <div className="step-group-advancedstep-mock">
         <button
           onClick={() => {
-            onChange?.({ when: { stageStatus: 'All' }, delegateSelectors: ['test1'], tab: TabTypes.Advanced })
+            onChange?.({ when: { stageStatus: 'All' }, delegateSelectors: ['test1'] })
           }}
         >
           onChange Button

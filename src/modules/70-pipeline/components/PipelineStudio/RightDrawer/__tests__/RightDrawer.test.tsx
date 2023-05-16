@@ -6,10 +6,9 @@
  */
 
 import React from 'react'
-import { fireEvent, render, act, waitFor, getByRole, screen } from '@testing-library/react'
+import { fireEvent, render, waitFor, getByRole, screen } from '@testing-library/react'
 import { Formik, FormikForm, FormInput, IconName } from '@harness/uicore'
 import type { FormikProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
-import { cloneDeep } from 'lodash-es'
 import type { StepElementConfig } from 'services/cd-ng'
 import * as cdng from 'services/cd-ng'
 import * as pipelineng from 'services/pipeline-ng'
@@ -26,7 +25,12 @@ import {
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import * as PipelineVariablesContext from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { RightDrawer } from '../RightDrawer'
-import pipelineContextMock, { updatePipelineViewFnArg1, updateStageFnArg1 } from './stateMock'
+import {
+  closeDrawerPayload,
+  getPipelineContextMock,
+  getProvisionerPipelineContextMock,
+  updateStageFnArg1
+} from './stateMock'
 import { DrawerTypes } from '../../PipelineContext/PipelineActions'
 import type { StepCommandsProps } from '../../StepCommands/StepCommandTypes'
 import {
@@ -413,6 +417,7 @@ jest.mock('../../PiplineHooks/useVariablesExpression', () => ({
 describe('Right Drawer tests', () => {
   describe('StepConfig tests', () => {
     test('Edit step works as expected', async () => {
+      const pipelineContextMock = getPipelineContextMock()
       const { findByText } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
           <TestWrapper>
@@ -421,14 +426,14 @@ describe('Right Drawer tests', () => {
         </PipelineContext.Provider>
       )
       const applyBtn = await findByText('applyChanges')
-      act(() => {
-        fireEvent.click(applyBtn)
-      })
-      expect(pipelineContextMock.updateStage).toHaveBeenCalled()
-      expect(pipelineContextMock.updateStage).toHaveBeenCalledWith(updateStageFnArg1)
+
+      fireEvent.click(applyBtn)
+
+      await waitFor(() => expect(pipelineContextMock.updateStage).toHaveBeenCalledWith(updateStageFnArg1))
     })
 
     test('Step save succeeds with allowed key values in step configuration', async () => {
+      const pipelineContextMock = getPipelineContextMock()
       const { container, findByText } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
           <TestWrapper>
@@ -437,15 +442,16 @@ describe('Right Drawer tests', () => {
         </PipelineContext.Provider>
       )
       const applyBtn = await findByText('applyChanges')
-      act(() => {
-        fireEvent.click(applyBtn)
-      })
+
+      fireEvent.click(applyBtn)
+
       expect(container).toMatchSnapshot()
-      expect(pipelineContextMock.updateStage).toHaveBeenCalled()
-      expect(pipelineContextMock.updateStage).toHaveBeenCalledWith(updateStageFnArg1)
+
+      await waitFor(() => expect(pipelineContextMock.updateStage).toHaveBeenCalledWith(updateStageFnArg1))
     })
 
     test('discard changes works as expected', async () => {
+      const pipelineContextMock = getPipelineContextMock()
       const { findByText } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
           <TestWrapper>
@@ -454,14 +460,16 @@ describe('Right Drawer tests', () => {
         </PipelineContext.Provider>
       )
       const discardBtn = await findByText('pipeline.discard')
-      act(() => {
-        fireEvent.click(discardBtn)
+
+      fireEvent.click(discardBtn)
+
+      await waitFor(() => {
+        expect(pipelineContextMock.updatePipelineView).toHaveBeenCalledWith(closeDrawerPayload)
       })
-      expect(pipelineContextMock.updatePipelineView).toHaveBeenCalled()
-      expect(pipelineContextMock.updatePipelineView).toHaveBeenCalledWith(updatePipelineViewFnArg1)
     })
 
-    test('clicking on close button should close drawer', () => {
+    test('clicking on close button should close drawer', async () => {
+      const pipelineContextMock = getPipelineContextMock()
       const { container } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
           <TestWrapper>
@@ -470,19 +478,18 @@ describe('Right Drawer tests', () => {
         </PipelineContext.Provider>
       )
       const closeBtn = getByRole(container, 'button', { name: 'cross' })
-      act(() => {
-        fireEvent.click(closeBtn)
+
+      fireEvent.click(closeBtn)
+      await waitFor(() => {
+        expect(pipelineContextMock.updatePipelineView).toHaveBeenCalledWith(closeDrawerPayload)
       })
-      expect(pipelineContextMock.updatePipelineView).toHaveBeenCalled()
-      expect(pipelineContextMock.updatePipelineView).toHaveBeenCalledWith(updatePipelineViewFnArg1)
     })
 
     test('Apply Changes button should be disabled if isReadOnly is true', async () => {
-      const contextValue = cloneDeep(pipelineContextMock)
-
-      contextValue.isReadonly = true
+      const pipelineContextMock = getPipelineContextMock()
+      pipelineContextMock.isReadonly = true
       render(
-        <PipelineContext.Provider value={contextValue}>
+        <PipelineContext.Provider value={pipelineContextMock}>
           <TestWrapper>
             <RightDrawer />
           </TestWrapper>
@@ -495,6 +502,7 @@ describe('Right Drawer tests', () => {
 
   describe('StepPallete tests', () => {
     test('Add step should work as expected when paletteData is not there', async () => {
+      const pipelineContextMock = getPipelineContextMock()
       pipelineContextMock.state.pipelineView.drawerData.type = DrawerTypes.AddStep
       pipelineContextMock.state.pipelineView?.drawerData?.data &&
         (pipelineContextMock.state.pipelineView.drawerData.data.paletteData = {
@@ -515,14 +523,13 @@ describe('Right Drawer tests', () => {
 
       const step = getByText('Run').closest('section')?.parentElement
 
-      act(() => {
-        fireEvent.click(step!)
-      })
-      await waitFor(() => expect(pipelineContextMock.updatePipelineView).toBeCalled())
-      expect(pipelineContextMock.updatePipelineView).toBeCalledWith(updatePipelineViewFnArg1)
+      fireEvent.click(step!)
+
+      await waitFor(() => expect(pipelineContextMock.updatePipelineView).toBeCalledWith(closeDrawerPayload))
     })
 
     test('Add step should work as expected when paletteData is there', async () => {
+      const pipelineContextMock = getPipelineContextMock()
       pipelineContextMock.state.pipelineView.drawerData.type = DrawerTypes.AddStep
       pipelineContextMock.state.pipelineView?.drawerData?.data &&
         (pipelineContextMock.state.pipelineView.drawerData.data.paletteData = {
@@ -544,16 +551,38 @@ describe('Right Drawer tests', () => {
 
       const step = getByText('Run').closest('section')?.parentElement
 
-      act(() => {
-        fireEvent.click(step!)
-      })
-      await waitFor(() => expect(pipelineContextMock.updatePipelineView).toBeCalled())
-      expect(pipelineContextMock.updatePipelineView).toBeCalledWith(updatePipelineViewFnArg1)
+      fireEvent.click(step!)
+
+      await waitFor(() =>
+        expect(pipelineContextMock.updatePipelineView).toBeCalledWith({
+          drawerData: {
+            data: {
+              stepConfig: {
+                addOrEdit: 'edit',
+                isStepGroup: false,
+                node: {
+                  identifier: 'Run_1',
+                  name: 'Run_1',
+                  spec: {},
+                  type: 'Run'
+                }
+              }
+            },
+            type: 'StepConfig'
+          },
+          isDrawerOpened: true,
+          isSplitViewOpen: true,
+          splitViewData: {
+            type: 'StageView'
+          }
+        })
+      )
     })
   })
 
   describe('PipelineVariables tests', () => {
-    beforeAll(() => {
+    test('should render fine', async () => {
+      const pipelineContextMock = getPipelineContextMock()
       pipelineContextMock.stepsFactory.getStepData = () => undefined
       pipelineContextMock.state.pipelineView.drawerData.type = DrawerTypes.PipelineVariables
       pipelineContextMock.state.pipelineView?.drawerData?.data &&
@@ -561,8 +590,6 @@ describe('Right Drawer tests', () => {
           isRollback: false,
           isParallelNodeClicked: false
         } as any)
-    })
-    test('should render fine', async () => {
       const { findByText } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
           <TestWrapper>
@@ -574,7 +601,15 @@ describe('Right Drawer tests', () => {
       expect(variablesHeader).toBeInTheDocument()
     })
 
-    test('clicking on close button should close drawer', () => {
+    test('clicking on close button should close drawer', async () => {
+      const pipelineContextMock = getPipelineContextMock()
+      pipelineContextMock.stepsFactory.getStepData = () => undefined
+      pipelineContextMock.state.pipelineView.drawerData.type = DrawerTypes.PipelineVariables
+      pipelineContextMock.state.pipelineView?.drawerData?.data &&
+        (pipelineContextMock.state.pipelineView.drawerData.data.paletteData = {
+          isRollback: false,
+          isParallelNodeClicked: false
+        } as any)
       const { container } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
           <PipelineVariablesContext.PipelineVariablesContext.Provider value={pipelineVariablesContextMock}>
@@ -585,17 +620,18 @@ describe('Right Drawer tests', () => {
         </PipelineContext.Provider>
       )
       const closeBtn = getByRole(container, 'button', { name: 'cross' })
-      act(() => {
-        fireEvent.click(closeBtn)
-      })
-      expect(pipelineContextMock.updatePipelineView).toHaveBeenCalled()
-      expect(pipelineContextMock.updatePipelineView).toHaveBeenCalledWith(updatePipelineViewFnArg1)
+
+      fireEvent.click(closeBtn)
+
+      await waitFor(() => expect(pipelineContextMock.updatePipelineView).toHaveBeenCalled())
+      expect(pipelineContextMock.updatePipelineView).toHaveBeenCalledWith(closeDrawerPayload)
       expect(pipelineVariablesContextMock.onSearchInputChange).toHaveBeenCalled()
     })
   })
 
   describe('Templates tests', () => {
     test('should render fine', async () => {
+      const pipelineContextMock = getPipelineContextMock()
       pipelineContextMock.stepsFactory.getStepData = () => undefined
       pipelineContextMock.state.pipelineView.drawerData.type = DrawerTypes.Templates
       pipelineContextMock.state.pipelineView?.drawerData?.data &&
@@ -618,7 +654,8 @@ describe('Right Drawer tests', () => {
   })
 
   describe('ExecutionStrategy tests', () => {
-    beforeAll(() => {
+    test('should render fine', async () => {
+      const pipelineContextMock = getPipelineContextMock()
       pipelineContextMock.stepsFactory.getStepData = () => undefined
       pipelineContextMock.state.pipelineView.drawerData.type = DrawerTypes.ExecutionStrategy
       pipelineContextMock.state.pipelineView?.drawerData?.data &&
@@ -626,9 +663,6 @@ describe('Right Drawer tests', () => {
           isRollback: false,
           isParallelNodeClicked: false
         } as any)
-    })
-
-    test('should render fine', async () => {
       const { findByText } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
           <TestWrapper>
@@ -639,26 +673,11 @@ describe('Right Drawer tests', () => {
       const executionStrategyHeader = await findByText('pipeline.executionStrategy.executionStrategies')
       expect(executionStrategyHeader).toBeInTheDocument()
     })
-
-    test('clicking on close button should close drawer', () => {
-      const { container } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
-      const closeBtn = getByRole(container, 'button', { name: 'cross' })
-      act(() => {
-        fireEvent.click(closeBtn)
-      })
-      expect(pipelineContextMock.updatePipelineView).toHaveBeenCalled()
-      expect(pipelineContextMock.updatePipelineView).toHaveBeenCalledWith(updatePipelineViewFnArg1)
-    })
   })
 
   describe('PipelineNotifications tests', () => {
     test('should render fine', async () => {
+      const pipelineContextMock = getPipelineContextMock()
       pipelineContextMock.stepsFactory.getStepData = () => undefined
       pipelineContextMock.state.pipelineView.drawerData.type = DrawerTypes.PipelineNotifications
       pipelineContextMock.state.pipelineView?.drawerData?.data &&
@@ -682,6 +701,7 @@ describe('Right Drawer tests', () => {
 
   describe('ConfigureService tests', () => {
     test('Edit step should work as expected', async () => {
+      const pipelineContextMock = getPipelineContextMock()
       pipelineContextMock.stepsFactory.getStepData = () => ({
         icon: 'dependency-step',
         name: 'Configure Service Dependency',
@@ -706,14 +726,20 @@ describe('Right Drawer tests', () => {
       const configServiceHeader = await findByText('Configure Service Dependency')
       expect(configServiceHeader).toBeInTheDocument()
       const applyBtn = await findByText('applyChanges')
-      act(() => {
-        fireEvent.click(applyBtn)
-      })
-      expect(pipelineContextMock.updatePipelineView).toHaveBeenCalled()
-      expect(pipelineContextMock.updatePipelineView).toHaveBeenCalledWith(updatePipelineViewFnArg1)
+
+      fireEvent.click(applyBtn)
+
+      await waitFor(() =>
+        expect(pipelineContextMock.updatePipelineView).toHaveBeenCalledWith({
+          ...pipelineContextMock.state.pipelineView,
+          isDrawerOpened: false,
+          drawerData: { type: DrawerTypes.ConfigureService }
+        })
+      )
     })
 
     test('Add step should work as expected', async () => {
+      const pipelineContextMock = getPipelineContextMock()
       pipelineContextMock.stepsFactory.getStepData = () => ({
         icon: 'dependency-step',
         name: 'Configure Service Dependency',
@@ -740,16 +766,22 @@ describe('Right Drawer tests', () => {
       const configServiceHeader = await findByText('Configure Service Dependency')
       expect(configServiceHeader).toBeInTheDocument()
       const applyBtn = await findByText('applyChanges')
-      act(() => {
-        fireEvent.click(applyBtn)
-      })
-      expect(pipelineContextMock.updatePipelineView).toHaveBeenCalled()
-      expect(pipelineContextMock.updatePipelineView).toHaveBeenCalledWith(updatePipelineViewFnArg1)
+
+      fireEvent.click(applyBtn)
+
+      await waitFor(() =>
+        expect(pipelineContextMock.updatePipelineView).toHaveBeenCalledWith({
+          ...pipelineContextMock.state.pipelineView,
+          isDrawerOpened: false,
+          drawerData: { type: DrawerTypes.ConfigureService }
+        })
+      )
     })
   })
 
   describe('AddProvisionerStep tests', () => {
     test('Add provisioner step should work as expected', async () => {
+      const pipelineContextMock = getPipelineContextMock()
       pipelineContextMock.state.pipelineView.drawerData.type = DrawerTypes.AddProvisionerStep
       pipelineContextMock.state.pipelineView?.drawerData?.data &&
         (pipelineContextMock.state.pipelineView.drawerData.data.paletteData = {
@@ -770,30 +802,38 @@ describe('Right Drawer tests', () => {
 
       const step = getByText('Run').closest('section')?.parentElement
 
-      act(() => {
-        fireEvent.click(step!)
-      })
-      await waitFor(() => expect(pipelineContextMock.updatePipelineView).toBeCalled())
-      expect(pipelineContextMock.updatePipelineView).toBeCalledWith(updatePipelineViewFnArg1)
+      fireEvent.click(step!)
+
+      await waitFor(() => expect(pipelineContextMock.updatePipelineView).toBeCalledWith(closeDrawerPayload))
     })
   })
 
   describe('ProvisionerStepConfig tests', () => {
     test('Edit step works as expected', async () => {
-      pipelineContextMock.state.pipelineView.drawerData.type = DrawerTypes.ProvisionerStepConfig
+      const context = getProvisionerPipelineContextMock()
+
       const { findByText } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
+        <TestWrapper defaultFeatureFlagValues={{ NG_SVC_ENV_REDESIGN: true }}>
+          <PipelineContext.Provider value={context}>
             <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
+          </PipelineContext.Provider>
+        </TestWrapper>
       )
       const applyBtn = await findByText('applyChanges')
-      act(() => {
-        fireEvent.click(applyBtn)
+
+      fireEvent.click(applyBtn)
+
+      await waitFor(() => {
+        expect(context.updatePipelineView).toHaveBeenCalledWith(
+          expect.objectContaining({
+            isDrawerOpened: false,
+            drawerData: expect.objectContaining({
+              type: 'AddCommand'
+            })
+          })
+        )
       })
-      expect(pipelineContextMock.updateStage).toHaveBeenCalled()
-      expect(pipelineContextMock.updateStage).toHaveBeenCalledWith(updateStageFnArg1)
+      expect(context.updateStage).toHaveBeenCalled()
     })
   })
 })

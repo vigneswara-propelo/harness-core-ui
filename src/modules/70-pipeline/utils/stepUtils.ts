@@ -15,9 +15,8 @@ import type {
   StageElementWrapperConfig,
   StepElementConfig
 } from 'services/pipeline-ng'
-import {
+import type {
   StepOrStepGroupOrTemplateStepData,
-  TabTypes,
   Values
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { sanitize } from '@common/utils/JSONUtils'
@@ -278,40 +277,41 @@ export function getStepDataFromValues(
   initialValues: StepOrStepGroupOrTemplateStepData
 ): StepElementConfig {
   const processNode = produce(initialValues as StepElementConfig, node => {
-    if (item.tab !== TabTypes.Advanced) {
-      if ((item as StepElementConfig).description) {
-        node.description = (item as StepElementConfig).description
-      } else if (node.description) {
-        delete node.description
-      }
-      if ((item as StepElementConfig).timeout) {
-        node.timeout = (item as StepElementConfig).timeout
-      } else if (node.timeout) {
-        delete node.timeout
-      }
-      if ((item as StepElementConfig).spec) {
-        node.spec = { ...(item as StepElementConfig).spec }
-      }
-    } else {
-      if (item.when) {
-        node.when = item.when
-      }
-      if (!isEmpty(item.delegateSelectors)) {
-        set(node, 'spec.delegateSelectors', item.delegateSelectors)
-      } else if (node.spec?.delegateSelectors) {
-        delete node.spec.delegateSelectors
-      }
-      if (!isEmpty(item.strategy)) {
-        node.strategy = item.strategy
-      } else if (node.strategy) {
-        delete node.strategy
-      }
-      if (!isEmpty(item?.policySets)) {
-        set(node, 'enforce.policySets', item.policySets)
-      } else if (node.enforce?.policySets) {
-        delete node.enforce
-      }
+    if ((item as StepElementConfig).description) {
+      node.description = (item as StepElementConfig).description
+    } else if (node.description) {
+      delete node.description
     }
+    if ((item as StepElementConfig).timeout) {
+      node.timeout = (item as StepElementConfig).timeout
+    } else if (node.timeout) {
+      delete node.timeout
+    }
+    if ((item as StepElementConfig).spec) {
+      node.spec = { ...(item as StepElementConfig).spec }
+    }
+
+    if (item.when) {
+      node.when = item.when
+    } else {
+      delete node.when
+    }
+    if (!isEmpty(item.delegateSelectors)) {
+      set(node, 'spec.delegateSelectors', item.delegateSelectors)
+    } else if (node.spec?.delegateSelectors) {
+      delete node.spec.delegateSelectors
+    }
+    if (!isEmpty(item.strategy)) {
+      node.strategy = item.strategy
+    } else if (node.strategy) {
+      delete node.strategy
+    }
+    if (!isEmpty(item?.policySets)) {
+      set(node, 'enforce.policySets', item.policySets)
+    } else if (node.enforce?.policySets) {
+      delete node.enforce
+    }
+
     // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
     if (
       !isEmpty(item.failureStrategies) &&
