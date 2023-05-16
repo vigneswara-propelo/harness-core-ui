@@ -17,7 +17,7 @@ export const ToggleAllSelection: FC<{ data: FreezeSummaryResponse[]; canEdit: bo
   return (
     <div className={css.checkbox}>
       <Checkbox
-        readOnly={!canEdit}
+        disabled={!canEdit}
         aria-label="Select all rows"
         indeterminate={selectedItems.length > 0 && selectedItems.length !== data.length}
         large
