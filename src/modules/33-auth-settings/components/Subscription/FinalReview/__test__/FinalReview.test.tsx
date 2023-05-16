@@ -94,7 +94,13 @@ describe('FinalReview', () => {
   test('render', () => {
     const { container } = render(
       <TestWrapper>
-        <FinalReview className="" setView={jest.fn()} subscriptionProps={subscriptionProps} invoiceData={invoiceData} />
+        <FinalReview
+          className=""
+          setView={jest.fn()}
+          subscriptionProps={subscriptionProps}
+          invoiceData={invoiceData}
+          module={'cd'}
+        />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -105,6 +111,7 @@ describe('FinalReview', () => {
     const { getByText } = render(
       <TestWrapper>
         <FinalReview
+          module={'cd'}
           className=""
           setView={setViewMock}
           subscriptionProps={subscriptionProps}

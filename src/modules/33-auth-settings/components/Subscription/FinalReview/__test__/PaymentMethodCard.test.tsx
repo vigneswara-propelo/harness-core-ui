@@ -28,7 +28,7 @@ describe('PaymentMethodCard', () => {
   test('render', async () => {
     const { container } = render(
       <TestWrapper>
-        <PaymentMethodCard {...props} />
+        <PaymentMethodCard {...props} module={'cd'} />
       </TestWrapper>
     )
     await waitFor(() => {
@@ -39,7 +39,7 @@ describe('PaymentMethodCard', () => {
   test('setView', async () => {
     const { getByText } = render(
       <TestWrapper>
-        <PaymentMethodCard {...props} />
+        <PaymentMethodCard {...props} module={'cd'} />
       </TestWrapper>
     )
     userEvent.click(getByText('edit'))

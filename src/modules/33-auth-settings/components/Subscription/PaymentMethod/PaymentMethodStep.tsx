@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { isEmpty, trim } from 'lodash-es'
 import { Layout } from '@harness/uicore'
 import type {
@@ -14,6 +14,9 @@ import type {
   SubscribeViews,
   SubscriptionProps
 } from '@common/constants/SubscriptionTypes'
+import { CreditCard, Category } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import type { Module } from 'framework/types/ModuleName'
 import type { InvoiceDetailDTO } from 'services/cd-ng'
 import { Footer } from './Footer'
 import PaymentMethod from './PaymentMethod'
@@ -25,14 +28,17 @@ interface BillingInfoProp {
   setInvoiceData: (value: InvoiceDetailDTO) => void
   setSubscriptionProps: (props: SubscriptionProps) => void
   className: string
+  module: Module
 }
 export default function PaymentMethodStep({
   subscriptionProps,
   setView,
   setInvoiceData,
   setSubscriptionProps,
-  className
+  className,
+  module
 }: BillingInfoProp): JSX.Element {
+  const { trackEvent } = useTelemetry()
   const canPay = (): boolean => {
     let canPayBill = false
     const {
@@ -52,6 +58,19 @@ export default function PaymentMethodStep({
 
     return canPayBill
   }
+
+  useEffect(() => {
+    trackEvent(CreditCard.CalculatorStripeElementLoaded, {
+      category: Category.CREDIT_CARD,
+      module
+    })
+    return () => {
+      trackEvent(CreditCard.CalculatorPaymentMethodStepExited, {
+        category: Category.CREDIT_CARD,
+        module
+      })
+    }
+  }, [])
 
   return (
     <Layout.Vertical className={className}>

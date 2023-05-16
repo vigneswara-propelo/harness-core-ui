@@ -11,7 +11,7 @@ import { pick } from 'lodash-es'
 import { Layout, PageSpinner, PageError } from '@harness/uicore'
 import { useToaster } from '@common/components'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { Category, PlanActions } from '@common/constants/TrackingConstants'
+import { Category, PlanActions, CreditCard } from '@common/constants/TrackingConstants'
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useStrings } from 'framework/strings'
 import { StartTrialDTO, useGetLicensesAndSummary, useStartFreeLicense, useGetEditionActions } from 'services/cd-ng'
@@ -189,12 +189,18 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
       },
       handleContactSales: openMarketoContactSales,
       handleManageSubscription,
-      handleUpgrade: () =>
+      handleUpgrade: () => {
+        trackEvent(CreditCard.UpgradePlan, {
+          category: Category.CREDIT_CARD,
+          module,
+          plan: planEdition || Editions.FREE
+        })
         openSubscribeModal({
           _module: moduleName.toLowerCase() as ModuleType,
           _time: timeType,
           _plan: planEdition || Editions.FREE
-        }),
+        })
+      },
       btnLoading,
       actions: actions?.data,
       isSelfServiceEnabled

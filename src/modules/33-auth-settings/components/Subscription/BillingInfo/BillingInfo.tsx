@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { Button, ButtonVariation, Container, Formik, FormikForm, Layout, PageError } from '@harness/uicore'
 import * as Yup from 'yup'
 import { defaultTo } from 'lodash-es'
@@ -13,6 +13,8 @@ import { useParams } from 'react-router-dom'
 import { SubscribeViews, SubscriptionProps, BillingContactProps } from '@common/constants/SubscriptionTypes'
 import { InvoiceDetailDTO, useCreateSubscription } from 'services/cd-ng/index'
 import { useStrings } from 'framework/strings'
+import { CreditCard, Category } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import { getErrorMessage } from '@auth-settings/utils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
@@ -45,6 +47,7 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
   module
 }) => {
   const { accountId } = useParams<AccountPathProps>()
+  const { trackEvent } = useTelemetry()
   const handleBack = (): void => setView(SubscribeViews.CALCULATE)
   const { getString } = useStrings()
 
@@ -58,6 +61,19 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
   const { mutate: createNewSubscription, loading: creatingNewSubscription } = useCreateSubscription({
     queryParams: { accountIdentifier: accountId }
   })
+
+  useEffect(() => {
+    trackEvent(CreditCard.CalculatorBillingStepLoaded, {
+      category: Category.CREDIT_CARD,
+      module
+    })
+    return () => {
+      trackEvent(CreditCard.CalculatorBillingStepExited, {
+        category: Category.CREDIT_CARD,
+        module
+      })
+    }
+  }, [])
 
   const handleSubmitData = (values: InitialBillingInfo) => {
     switch (module) {
@@ -240,7 +256,13 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
                 </Button>
                 <Button
                   variation={ButtonVariation.PRIMARY}
-                  onClick={() => formik.handleSubmit()}
+                  onClick={() => {
+                    trackEvent(CreditCard.CalculatorBillingStepSubmitted, {
+                      category: Category.CREDIT_CARD,
+                      module
+                    })
+                    formik.handleSubmit()
+                  }}
                   rightIcon="chevron-right"
                 >
                   {getString('authSettings.billing.next')}

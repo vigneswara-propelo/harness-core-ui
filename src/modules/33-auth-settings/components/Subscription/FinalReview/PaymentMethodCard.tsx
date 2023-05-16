@@ -8,18 +8,23 @@
 import React from 'react'
 import { Layout, Card, Text, Button, ButtonVariation } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
+import { CreditCard, Category } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import type { Module } from 'framework/types/ModuleName'
 import { SubscribeViews, PaymentMethodProps } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
 interface PaymentMethodCardProps {
   paymentMethodInfo: PaymentMethodProps
   setView: (view: SubscribeViews) => void
+  module: Module
 }
 
-const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({ paymentMethodInfo, setView }) => {
+const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({ paymentMethodInfo, setView, module }) => {
   const { getString } = useStrings()
   const { last4digits, cardType, expireDate } = paymentMethodInfo
   const paymentDescr = `${cardType} ending in ${last4digits}`
   const expireDescr = `Expires ${expireDate}`
+  const { trackEvent } = useTelemetry()
   return (
     <Card>
       <Layout.Vertical>
@@ -28,6 +33,10 @@ const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({ paymentMethodInfo
           <Button
             variation={ButtonVariation.LINK}
             onClick={() => {
+              trackEvent(CreditCard.CalculatorReviewStepEditPayment, {
+                category: Category.CREDIT_CARD,
+                module
+              })
               setView(SubscribeViews.PAYMENT_METHOD)
             }}
           >

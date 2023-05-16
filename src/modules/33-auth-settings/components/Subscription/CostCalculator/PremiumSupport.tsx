@@ -10,6 +10,8 @@ import { Text, Layout, Checkbox, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { PopoverInteractionKind, Classes, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
+import { CreditCard, Category } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import css from './CostCalculator.module.scss'
 
 const PremLabel: React.FC = () => {
@@ -49,6 +51,7 @@ export const PremiumSupport: React.FC<PremiumSupportProps> = ({
   isFirstSubDone
 }) => {
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
   const checkbox = disabled ? (
     <Popover
       interactionKind={PopoverInteractionKind.HOVER}
@@ -65,7 +68,21 @@ export const PremiumSupport: React.FC<PremiumSupportProps> = ({
       <Checkbox
         size={12}
         checked={premiumSupport}
-        onChange={() => onChange(!premiumSupport)}
+        onChange={() => {
+          const value = !premiumSupport
+          if (value === true) {
+            trackEvent(CreditCard.PremiumSupportEnabled, {
+              category: Category.CREDIT_CARD,
+              module
+            })
+          } else if (value === false) {
+            trackEvent(CreditCard.PremiumSupportDisabled, {
+              category: Category.CREDIT_CARD,
+              module
+            })
+          }
+          onChange(!premiumSupport)
+        }}
         disabled
         className={css.checkbox}
       />

@@ -24,7 +24,7 @@ describe('SubscriptionDetailsCard', () => {
   test('render', async () => {
     const { container } = render(
       <TestWrapper>
-        <SubscriptionDetailsCard {...props} />
+        <SubscriptionDetailsCard {...props} module={'cd'} />
       </TestWrapper>
     )
     await waitFor(() => {
@@ -35,7 +35,7 @@ describe('SubscriptionDetailsCard', () => {
   test('setView', async () => {
     const { getByText } = render(
       <TestWrapper>
-        <SubscriptionDetailsCard {...props} />
+        <SubscriptionDetailsCard {...props} module={'cd'} />
       </TestWrapper>
     )
     userEvent.click(getByText('edit'))

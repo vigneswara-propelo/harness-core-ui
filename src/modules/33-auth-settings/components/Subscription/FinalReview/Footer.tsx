@@ -10,6 +10,9 @@ import { Layout, Button, ButtonVariation, useToaster } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { usePayInvoice } from 'services/cd-ng/index'
+import { CreditCard, Category } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import type { Module } from 'framework/types/ModuleName'
 import { SubscribeViews } from '@common/constants/SubscriptionTypes'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -17,13 +20,15 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 interface FooterProps {
   setView: (view: SubscribeViews) => void
   invoiceId?: string
+  module?: Module
 }
 
-export const Footer: React.FC<FooterProps> = ({ setView, invoiceId = '' }) => {
+export const Footer: React.FC<FooterProps> = ({ setView, invoiceId = '', module }) => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const [loading, setLoading] = useState<boolean>(false)
   const { accountId } = useParams<AccountPathProps>()
+  const { trackEvent } = useTelemetry()
 
   const { mutate: payInvoice } = usePayInvoice({
     queryParams: {
@@ -43,6 +48,10 @@ export const Footer: React.FC<FooterProps> = ({ setView, invoiceId = '' }) => {
 
   async function handleNext(): Promise<void> {
     setLoading(true)
+    trackEvent(CreditCard.CalculatorReviewStepSubmitted, {
+      category: Category.CREDIT_CARD,
+      module
+    })
     try {
       await payInvoice()
       setView(SubscribeViews.SUCCESS)

@@ -8,18 +8,23 @@
 import React from 'react'
 import { Layout, Card, Text, Button, ButtonVariation } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
+import { CreditCard, Category } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import type { Module } from 'framework/types/ModuleName'
 import { SubscribeViews, BillingContactProps } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
 
 interface BillingContactCardProps {
   billingContactInfo: BillingContactProps
   setView: (view: SubscribeViews) => void
+  module: Module
 }
 
-const BillingContactCard: React.FC<BillingContactCardProps> = ({ billingContactInfo, setView }) => {
+const BillingContactCard: React.FC<BillingContactCardProps> = ({ billingContactInfo, setView, module }) => {
   const { name, email, billingAddress, city, state, country, zipCode } = billingContactInfo
   const { getString } = useStrings()
   const address = `${billingAddress}, ${city}, ${state}, ${zipCode}, ${country}`
+  const { trackEvent } = useTelemetry()
   return (
     <Card>
       <Layout.Vertical>
@@ -28,6 +33,10 @@ const BillingContactCard: React.FC<BillingContactCardProps> = ({ billingContactI
           <Button
             variation={ButtonVariation.LINK}
             onClick={() => {
+              trackEvent(CreditCard.CalculatorReviewStepEditBilling, {
+                category: Category.CREDIT_CARD,
+                module
+              })
               setView(SubscribeViews.BILLINGINFO)
             }}
           >

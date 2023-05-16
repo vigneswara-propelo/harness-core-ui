@@ -197,6 +197,7 @@ const LeftView = ({
           invoiceData={invoiceData}
           subscriptionProps={subscriptionProps}
           className={css.leftView}
+          module={module}
         />
       )
     case SubscribeViews.PAYMENT_METHOD:
@@ -208,6 +209,7 @@ const LeftView = ({
             setInvoiceData={setInvoiceData}
             setSubscriptionProps={setSubscriptionProps}
             className={css.leftView}
+            module={module}
           />
         </Elements>
       ) : (
@@ -215,6 +217,7 @@ const LeftView = ({
           subscriptionProps={subscriptionProps}
           setInvoiceData={setInvoiceData}
           setSubscriptionProps={setSubscriptionProps}
+          module={module}
         />
       )
     case SubscribeViews.BILLINGINFO:

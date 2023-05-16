@@ -10,6 +10,9 @@ import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { Container, PageError } from '@harness/uicore'
 import { usePolling } from '@common/hooks/usePolling'
+import { CreditCard, Category } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import type { Module } from 'framework/types/ModuleName'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { SubscriptionProps } from '@common/constants/SubscriptionTypes'
 import { InvoiceDetailDTO, ItemDTO, useRetrieveSubscription } from 'services/cd-ng'
@@ -20,6 +23,7 @@ interface SubscriptionPollProps {
   subscriptionProps: SubscriptionProps
   setInvoiceData: (value: InvoiceDetailDTO) => void
   setSubscriptionProps: (props: SubscriptionProps) => void
+  module: Module
 }
 const MAX_POLL_COUNT = 10
 const getTaxItem = (items: ItemDTO[]): ItemDTO | undefined =>
@@ -27,10 +31,12 @@ const getTaxItem = (items: ItemDTO[]): ItemDTO | undefined =>
 function SubscriptionPoll({
   subscriptionProps,
   setInvoiceData,
-  setSubscriptionProps
+  setSubscriptionProps,
+  module
 }: SubscriptionPollProps): JSX.Element {
   const { accountId } = useParams<AccountPathProps>()
   const [pollCount, setPollCount] = useState<number>(0)
+  const { trackEvent } = useTelemetry()
   const {
     data,
     error,
@@ -49,6 +55,10 @@ function SubscriptionPoll({
   }
 
   useEffect(() => {
+    trackEvent(CreditCard.CalculatorPaymentMethodStepLoaded, {
+      category: Category.CREDIT_CARD,
+      module
+    })
     fetchSubscriptionData().then(() => setPollCount(pollCount + 1))
   }, [])
 

@@ -14,8 +14,10 @@ import { useStrings } from 'framework/strings'
 import { TimeType, SubscriptionProps, CurrencyType } from '@common/constants/SubscriptionTypes'
 import { Module, ModuleName } from 'framework/types/ModuleName'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import { getAmountInCurrency, getDollarAmount } from '@auth-settings/utils'
 import type { InvoiceDetailDTO } from 'services/cd-ng'
+import { Category, CreditCard } from '@common/constants/TrackingConstants'
 import SubcriptionDetails from './SubscriptionDetails'
 import {
   getRenewDate,
@@ -163,6 +165,7 @@ const PricePreview: React.FC<PricePreviewProps> = ({
   invoiceData
 }) => {
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
   const { paymentFreq, productPrices, premiumSupport, quantities, taxAmount } = subscriptionDetails
   const products = useMemo(() => {
     return getSubscriptionBreakdownsByModuleAndFrequency({ module, subscriptionDetails })
@@ -244,12 +247,20 @@ const PricePreview: React.FC<PricePreviewProps> = ({
         paymentFrequency={paymentFreq}
         setPaymentFrequency={(value: TimeType) => {
           if (value === TimeType.MONTHLY) {
+            trackEvent(CreditCard.MonthlyBillingCycleSelected, {
+              category: Category.CREDIT_CARD,
+              module
+            })
             setSubscriptionDetails({
               ...subscriptionDetails,
               paymentFreq: value,
               premiumSupport: false
             })
           } else {
+            trackEvent(CreditCard.YearlyBillingCycleSelected, {
+              category: Category.CREDIT_CARD,
+              module
+            })
             setSubscriptionDetails({
               ...subscriptionDetails,
               paymentFreq: value

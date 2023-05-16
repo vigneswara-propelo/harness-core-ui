@@ -11,6 +11,9 @@ import { Layout, Card, Text, Button, ButtonVariation } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 // import { useParams } from 'react-router-dom'
 import { Editions, SubscribeViews } from '@common/constants/SubscriptionTypes'
+import { CreditCard, Category } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import type { Module } from 'framework/types/ModuleName'
 import { useStrings } from 'framework/strings'
 // import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 // import { useRetrieveSubscription } from 'services/cd-ng'
@@ -21,11 +24,13 @@ interface SubscriptionDetailsCardProps {
   items: string[]
   setView: (view: SubscribeViews) => void
   subscriptionId: string
+  module: Module
 }
 const SubscriptionDetailsCard: React.FC<SubscriptionDetailsCardProps> = ({
   newPlan,
   items,
-  setView
+  setView,
+  module
   // subscriptionId
 }) => {
   const { getString } = useStrings()
@@ -33,7 +38,7 @@ const SubscriptionDetailsCard: React.FC<SubscriptionDetailsCardProps> = ({
 
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const { data } = useRetrieveSubscription({ subscriptionId, queryParams: { accountIdentifier: accountId } })
-
+  const { trackEvent } = useTelemetry()
   return (
     <Card>
       <Layout.Vertical>
@@ -48,6 +53,10 @@ const SubscriptionDetailsCard: React.FC<SubscriptionDetailsCardProps> = ({
           <Button
             variation={ButtonVariation.LINK}
             onClick={() => {
+              trackEvent(CreditCard.CalculatorReviewStepEditSubscription, {
+                category: Category.CREDIT_CARD,
+                module
+              })
               setView(SubscribeViews.CALCULATE)
             }}
           >

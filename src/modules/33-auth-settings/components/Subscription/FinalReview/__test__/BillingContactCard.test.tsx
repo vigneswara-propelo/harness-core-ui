@@ -10,6 +10,7 @@ import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SubscribeViews } from '@common/constants/SubscriptionTypes'
+import type { Module } from 'framework/types/ModuleName'
 import BillingContactCard from '../BillingContactCard'
 
 describe('BillingContactCard', () => {
@@ -25,7 +26,8 @@ describe('BillingContactCard', () => {
       zipCode: '12345',
       companyName: 'Harness'
     },
-    setView: setViewMock
+    setView: setViewMock,
+    module: 'cd' as Module
   }
 
   test('render', async () => {

@@ -5,10 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Layout } from '@harness/uicore'
 import type { SubscribeViews, SubscriptionProps } from '@common/constants/SubscriptionTypes'
 import type { InvoiceDetailDTO } from 'services/cd-ng/index'
+import { CreditCard, Category } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import type { Module } from 'framework/types/ModuleName'
 import BillingContactCard from './BillingContactCard'
 import SubscriptionDetailsCard from './SubscriptionDetailsCard'
 import PaymentMethodCard from './PaymentMethodCard'
@@ -21,14 +24,33 @@ interface FinalReviewProps {
   invoiceData?: InvoiceDetailDTO
   subscriptionProps: SubscriptionProps
   className: string
+  module: Module
 }
-export const FinalReview: React.FC<FinalReviewProps> = ({ setView, invoiceData, subscriptionProps, className }) => {
+export const FinalReview: React.FC<FinalReviewProps> = ({
+  setView,
+  invoiceData,
+  subscriptionProps,
+  className,
+  module
+}) => {
   const items =
     invoiceData?.items?.reduce((acc: string[], curr) => {
       acc.push(`${curr.description}`)
       return acc
     }, []) || []
-
+  const { trackEvent } = useTelemetry()
+  useEffect(() => {
+    trackEvent(CreditCard.CalculatorReviewStepLoaded, {
+      category: Category.CREDIT_CARD,
+      module
+    })
+    return () => {
+      trackEvent(CreditCard.CalculatorReviewStepExited, {
+        category: Category.CREDIT_CARD,
+        module
+      })
+    }
+  }, [])
   return (
     <Layout.Vertical className={className}>
       <Header step={3} />
@@ -38,11 +60,16 @@ export const FinalReview: React.FC<FinalReviewProps> = ({ setView, invoiceData, 
           items={items}
           newPlan={subscriptionProps.edition}
           setView={setView}
+          module={module}
         />
-        <BillingContactCard billingContactInfo={subscriptionProps.billingContactInfo} setView={setView} />
-        <PaymentMethodCard paymentMethodInfo={subscriptionProps.paymentMethodInfo} setView={setView} />
+        <BillingContactCard
+          billingContactInfo={subscriptionProps.billingContactInfo}
+          setView={setView}
+          module={module}
+        />
+        <PaymentMethodCard paymentMethodInfo={subscriptionProps.paymentMethodInfo} setView={setView} module={module} />
       </Layout.Vertical>
-      <Footer setView={setView} invoiceId={invoiceData?.invoiceId} />
+      <Footer setView={setView} invoiceId={invoiceData?.invoiceId} module={module} />
     </Layout.Vertical>
   )
 }

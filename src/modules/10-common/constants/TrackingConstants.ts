@@ -219,7 +219,32 @@ export enum Category {
   LICENSE = 'License',
   FEEDBACK = 'Feedback',
   ENFORCEMENT = 'Enforcement',
-  FEATUREFLAG = 'Featureflag'
+  FEATUREFLAG = 'Featureflag',
+  CREDIT_CARD = 'CreditCard'
+}
+export enum CreditCard {
+  UpgradePlan = 'Upgrade Plan',
+  CalculatorSubscriptionStepLoaded = 'Calculator Subscription Step Loaded',
+  PremiumSupportEnabled = 'Premium Support Enabled',
+  PremiumSupportDisabled = 'Premium Support Disabled',
+  MonthlyBillingCycleSelected = 'Monthly Billing Cycle Selected',
+  YearlyBillingCycleSelected = 'Yearly Billing Cycle Selected',
+  CalculatorSubscriptionStepSubmitted = 'Calculator Subscription Step Submitted',
+  CalculatorSubscriptionStepExited = 'Calculator Subscription Step Exited',
+  CalculatorTeamPlanExited = 'Calculator Team Plan Exited',
+  CalculatorEnterprisePlanExited = 'Calculator Enterprise Plan Exited',
+  CalculatorBillingStepLoaded = 'Calculator Billing Step Loaded',
+  CalculatorBillingStepSubmitted = 'Calculator Billing Step Loaded',
+  CalculatorBillingStepExited = 'Calculator Billing Step Exited',
+  CalculatorPaymentMethodStepLoaded = 'Calculator Payment Method Step Loaded',
+  CalculatorStripeElementLoaded = 'Calculator Stripe Element Loaded',
+  CalculatorPaymentMethodStepExited = 'Calculator Payment Method Step Exited',
+  CalculatorReviewStepLoaded = 'Calculator Review Step Loaded',
+  CalculatorReviewStepEditSubscription = 'Calculator Review Step Edit Subscription',
+  CalculatorReviewStepEditBilling = 'Calculator Review Step Edit Billing',
+  CalculatorReviewStepEditPayment = 'Calculator Review Step Edit Payment',
+  CalculatorReviewStepSubmitted = 'Calculator Review Step Submitted',
+  CalculatorReviewStepExited = 'Calculator Review Step Exited'
 }
 
 export enum ManifestActions {

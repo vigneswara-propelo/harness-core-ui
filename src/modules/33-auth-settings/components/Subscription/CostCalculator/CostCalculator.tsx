@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Layout, PageError, Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { cloneDeep, defaultTo, isEmpty } from 'lodash-es'
@@ -26,10 +26,12 @@ import {
 } from '@common/constants/SubscriptionTypes'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { CreditCard, Category } from '@common/constants/TrackingConstants'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { useDeepCompareEffect, useMutateAsGet } from '@common/hooks'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { PLAN_TYPES } from '@auth-settings/components/Subscription/subscriptionUtils'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import ChoosePlan from './ChoosePlan'
 import { Footer } from './Footer'
 import { PremiumSupport } from './PremiumSupport'
@@ -76,9 +78,28 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   const currentPlan = (licenseInformation[module.toUpperCase()]?.edition || Editions.FREE) as Editions
   const usageAndLimitInfo = useGetUsageAndLimit(module.toUpperCase() as ModuleName)
   const { accountId } = useParams<AccountPathProps>()
+  const { trackEvent } = useTelemetry()
   const [quantities, setQuantities] = useState<SubscriptionProps['quantities'] | undefined>(
     subscriptionProps.quantities
   )
+  useEffect(() => {
+    trackEvent(CreditCard.CalculatorSubscriptionStepLoaded, {
+      category: Category.CREDIT_CARD,
+      module,
+      plan: currentPlan
+    })
+    return () => {
+      let creditCardEvent = CreditCard.CalculatorTeamPlanExited
+      if (currentPlan === Editions.ENTERPRISE) {
+        creditCardEvent = CreditCard.CalculatorEnterprisePlanExited
+      }
+      trackEvent(creditCardEvent, {
+        category: Category.CREDIT_CARD,
+        module,
+        plan: currentPlan
+      })
+    }
+  }, [])
   const [isPremiumSupported, setIsPremiumSupported] = useState<boolean>(false)
   const [isPlanChanged, setIsPlanChanged] = useState<boolean>(false)
   const [isFirstSubscriptionDone, setIsFirstSubscriptionDone] = useState<boolean>(false)
@@ -343,7 +364,7 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
           disabled={isFirstSubscriptionDone || subscriptionProps.paymentFreq === TimeType.MONTHLY || isPremiumSupported}
         />
       </Layout.Vertical>
-      <Footer setView={setView} disabled={isEmpty(subscriptionProps.quantities)} />
+      <Footer setView={setView} disabled={isEmpty(subscriptionProps.quantities)} module={module} />
     </Layout.Vertical>
   )
 }
