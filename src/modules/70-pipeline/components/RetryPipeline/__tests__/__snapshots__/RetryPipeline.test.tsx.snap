@@ -15,7 +15,7 @@ exports[`Retry Pipeline tests should not allow submit if form is incomplete 1`] 
           class="StyledProps--font StyledProps--font-h2 StyledProps--main runModalHeaderTitle StyledProps--font-weight-bold StyledProps--color StyledProps--color-black100"
           level="2"
         >
-          pipeline.retryPipeline
+          pipeline.execution.actions.reRunSpecificStageTitle
         </h2>
         <div
           class="optionBtns"
@@ -221,7 +221,7 @@ exports[`Retry Pipeline tests should not allow submit if form is incomplete 1`] 
           class="Layout--horizontal StyledProps--main actionButtons"
         >
           <button
-            aria-label="pipeline.retryPipeline"
+            aria-label="pipeline.execution.actions.reRun"
             class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main StyledProps--intent-success Button--with-current-color Button--variation Button--variation-primary"
             data-testid="retry-failed-pipeline"
             disabled=""
@@ -257,7 +257,7 @@ exports[`Retry Pipeline tests should not allow submit if form is incomplete 1`] 
             <span
               class="bp3-button-text"
             >
-              pipeline.retryPipeline
+              pipeline.execution.actions.reRun
             </span>
           </button>
           <div

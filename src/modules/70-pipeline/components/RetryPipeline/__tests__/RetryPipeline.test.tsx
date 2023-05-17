@@ -81,8 +81,9 @@ describe('Retry Pipeline tests', () => {
         <RetryPipeline {...commonProps} />
       </TestWrapper>
     )
-    expect(queryAllByText('pipeline.retryPipeline')[0]).not.toBeNull()
-    expect(queryAllByText('pipeline.retryPipeline').length).toEqual(2)
+    expect(queryAllByText('pipeline.execution.actions.reRun')[0]).not.toBeNull()
+    expect(queryAllByText('pipeline.execution.actions.reRunSpecificStageTitle').length).toEqual(1)
+    expect(queryAllByText('pipeline.execution.actions.reRun').length).toEqual(1)
   })
 
   test('toggle between visual and yaml mode', async () => {
@@ -96,7 +97,7 @@ describe('Retry Pipeline tests', () => {
     expect(noExecutionText).toBeDefined()
 
     fireEvent.click(getByText('VISUAL'))
-    await waitFor(() => expect(queryAllByText('pipeline.retryPipeline')[0]).toBeInTheDocument())
+    await waitFor(() => expect(queryAllByText('pipeline.execution.actions.reRun')[0]).toBeInTheDocument())
   })
 
   test('retry button should be disabled initially', () => {
@@ -105,7 +106,7 @@ describe('Retry Pipeline tests', () => {
         <RetryPipeline {...commonProps} />
       </TestWrapper>
     )
-    const retryButton = getByRole('button', { name: 'pipeline.retryPipeline' })
+    const retryButton = getByRole('button', { name: 'pipeline.execution.actions.reRun' })
     expect(retryButton).toBeDisabled()
   })
 
@@ -129,7 +130,7 @@ describe('Retry Pipeline tests', () => {
     )
     const retryStageInfo = await findByText(container, 'pipeline.stagetoRetryFrom')
     expect(retryStageInfo).toBeDefined()
-    expect(getByRole('button', { name: 'pipeline.retryPipeline' })).toBeDisabled()
+    expect(getByRole('button', { name: 'pipeline.execution.actions.reRun' })).toBeDisabled()
   })
 
   test('retry button should be enabled on stage selection', async () => {
@@ -140,7 +141,7 @@ describe('Retry Pipeline tests', () => {
     )
     const retryStageInfo = await findByText(container, 'pipeline.stagetoRetryFrom')
     expect(retryStageInfo).toBeDefined()
-    expect(getByRole('button', { name: 'pipeline.retryPipeline' })).toBeDisabled()
+    expect(getByRole('button', { name: 'pipeline.execution.actions.reRun' })).toBeDisabled()
 
     await waitFor(() => expect(container.querySelector('.bp3-popover-target')).toBeTruthy())
     await fillAtForm([
@@ -154,7 +155,7 @@ describe('Retry Pipeline tests', () => {
 
     await waitFor(() => expect(getByText('stage1')).toBeTruthy())
     fireEvent.click(getByText('stage1'))
-    expect(getByRole('button', { name: 'pipeline.retryPipeline' })).not.toBeDisabled()
+    expect(getByRole('button', { name: 'pipeline.execution.actions.reRun' })).not.toBeDisabled()
   })
 
   test('parallel stage select option should be present', async () => {
@@ -165,7 +166,7 @@ describe('Retry Pipeline tests', () => {
     )
     const retryStageInfo = await findByText(container, 'pipeline.stagetoRetryFrom')
     expect(retryStageInfo).toBeDefined()
-    expect(getByRole('button', { name: 'pipeline.retryPipeline' })).toBeDisabled()
+    expect(getByRole('button', { name: 'pipeline.execution.actions.reRun' })).toBeDisabled()
 
     await fillAtForm([
       {
@@ -181,7 +182,7 @@ describe('Retry Pipeline tests', () => {
     fireEvent.click(selectedStage)
     expect(getByText('pipeline.runAllParallelstages')).toBeTruthy()
     expect(getByText('pipeline.runFailedStages')).toBeTruthy()
-    expect(getByRole('button', { name: 'pipeline.retryPipeline' })).toBeEnabled()
+    expect(getByRole('button', { name: 'pipeline.execution.actions.reRun' })).toBeEnabled()
   })
 
   test('should not allow submit if form is incomplete', async () => {

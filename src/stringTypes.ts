@@ -4097,9 +4097,12 @@ export interface StringsMap {
   'pipeline.execution.actions.pauseStage': string
   'pipeline.execution.actions.reRun': string
   'pipeline.execution.actions.reRunEntirePipeline': string
+  'pipeline.execution.actions.reRunFromStage': string
   'pipeline.execution.actions.reRunInDebugMode': string
   'pipeline.execution.actions.reRunLastFailedStage': string
+  'pipeline.execution.actions.reRunLastFailedStageTitle': string
   'pipeline.execution.actions.reRunSelectedStage': string
+  'pipeline.execution.actions.reRunSpecificStageTitle': string
   'pipeline.execution.actions.rerunPipeline': string
   'pipeline.execution.actions.rerunStage': string
   'pipeline.execution.actions.resumePipeline': string

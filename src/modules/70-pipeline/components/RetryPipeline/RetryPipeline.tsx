@@ -874,7 +874,9 @@ function RetryPipeline({
                   color={Color.BLACK_100}
                   className={css.runModalHeaderTitle}
                 >
-                  {getString('pipeline.retryPipeline')}
+                  {preSelectLastStage
+                    ? getString('pipeline.execution.actions.reRunLastFailedStageTitle')
+                    : getString('pipeline.execution.actions.reRunSpecificStageTitle')}
                 </Heading>
                 {isGitSyncEnabled && (
                   <GitSyncStoreProvider>
@@ -1020,7 +1022,7 @@ function RetryPipeline({
                   variation={ButtonVariation.PRIMARY}
                   intent="success"
                   type="submit"
-                  text={getString('pipeline.retryPipeline')}
+                  text={getString('pipeline.execution.actions.reRun')}
                   onClick={event => {
                     event.stopPropagation()
                     setRetryClicked(true)

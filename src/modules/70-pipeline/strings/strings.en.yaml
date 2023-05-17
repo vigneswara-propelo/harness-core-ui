@@ -632,9 +632,12 @@ execution:
     compareExecutions: Compare Pipeline Executions
     reRunInDebugMode: Re-run in Debug Mode
     reRun: Re-run
+    reRunFromStage: Re-run from Stage
     reRunLastFailedStage: From Last Failed Stage
-    reRunSelectedStage: Selected Stage(s)
+    reRunSelectedStage: From Specific Stage
     reRunEntirePipeline: Entire Pipeline
+    reRunSpecificStageTitle: '{{ $.pipeline.execution.actions.reRun }} {{ $.pipeline.execution.actions.reRunSelectedStage }} '
+    reRunLastFailedStageTitle: '{{ $.pipeline.execution.actions.reRun }} {{ $.pipeline.execution.actions.reRunLastFailedStage }} '
   layouts:
     bottom: Align to bottom
     right: Align to right

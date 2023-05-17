@@ -20,10 +20,10 @@ describe('RETRY FAILED PIPELINE', () => {
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineExecutionSummary')
     cy.get('[role="row"]').get('[data-icon="Options"]').eq(3).scrollIntoView().click({ force: true })
-    cy.contains('div', 'Retry Failed Pipeline').click()
+    cy.contains('div', 'Re-run from Stage').click()
 
-    // Modal header for retry failed pipeline dialog should be Retry Failed Pipeline
-    cy.contains('h2', 'Retry Failed Pipeline').should('be.visible')
+    // Modal header for retry failed pipeline dialog should be Re-run From Specific Stage
+    cy.contains('h2', 'Re-run From Specific Stage').should('be.visible')
 
     // Select stage option should be present by default
     cy.contains('div', 'Select the stage that you would like to resume from').should('be.visible')

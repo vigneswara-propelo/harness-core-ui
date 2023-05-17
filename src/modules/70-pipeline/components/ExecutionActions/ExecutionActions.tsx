@@ -82,6 +82,7 @@ export interface ExecutionActionsProps {
   onReRunInDebugMode?: (() => void) | undefined
   menuOnlyActions?: boolean
   isExecutionListView?: boolean
+  hideRetryOption?: boolean
 }
 
 export function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
@@ -166,7 +167,8 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     onCompareExecutions,
     onReRunInDebugMode,
     menuOnlyActions,
-    isExecutionListView
+    isExecutionListView,
+    hideRetryOption = false
   } = props
   const {
     orgIdentifier,
@@ -291,7 +293,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     trackEvent(PipelineExecutionActions.RetryPipeline, { triggered_from: 'kebab-menu' })
     openRetryPipelineModal()
   }
-  const showRetryPipelineOption = isRetryPipelineAllowed(executionStatus) && canRetry
+  const showRetryPipelineOption = isRetryPipelineAllowed(executionStatus) && canRetry && !hideRetryOption
 
   /*--------------------------------------Retry Pipeline---------------------------------------------*/
 
@@ -379,7 +381,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
               <RbacMenuItem
                 data-test-id="retry-failed-pipeline"
                 featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
-                text={getString('pipeline.retryPipeline')}
+                text={getString('pipeline.execution.actions.reRunFromStage')}
                 onClick={retryPipeline}
                 disabled={!canRerun || isPipelineInvalid}
               />

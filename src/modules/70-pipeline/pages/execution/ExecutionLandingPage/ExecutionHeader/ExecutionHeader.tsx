@@ -7,10 +7,10 @@
 
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { defaultTo, isEmpty } from 'lodash-es'
-import { ButtonSize, ButtonVariation, Icon, Layout, SplitButton, SplitButtonOption, Text } from '@harness/uicore'
+import { defaultTo, isEmpty, noop } from 'lodash-es'
+import { ButtonSize, ButtonVariation, Icon, IconName, Layout, Popover, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { PopoverInteractionKind } from '@blueprintjs/core'
+import { Menu, MenuItem, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import routes from '@common/RouteDefinitions'
 import { Duration } from '@common/components/Duration/Duration'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -46,6 +46,8 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { useOpenRetryPipelineModal } from '@pipeline/components/ExecutionActions/useOpenRetryPipelineModal'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PipelineExecutionActions } from '@common/constants/TrackingConstants'
+import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
+import RbacButton from '@rbac/components/Button/Button'
 import css from './ExecutionHeader.module.scss'
 
 export interface ExecutionHeaderProps {
@@ -209,6 +211,21 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     openRetryPipelineModal(fromLastStage)
   }
 
+  const commonReRunProps = {
+    variation: ButtonVariation.SECONDARY,
+    dataTestid: 'retry-pipeline',
+    icon: 'repeat' as IconName,
+    text: getString('pipeline.execution.actions.reRun'),
+    minimal: true,
+    size: ButtonSize.SMALL,
+    iconProps: { size: 12 },
+    onClick: reRunPipeline,
+    tooltipProps: {
+      dataTooltipId: 'retry-pipeline'
+    },
+    disabled: !canExecute || isPipelineInvalid
+  }
+
   let moduleLabel = getString('common.pipelineExecution')
   if (module) {
     switch (module.toUpperCase() as ModuleName) {
@@ -223,6 +240,44 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
         break
     }
   }
+
+  const ReRunPipelineButtonPopover = (
+    <Popover
+      minimal
+      content={
+        <Menu>
+          <MenuItem
+            data-test-id="retry-failed-pipeline"
+            onClick={() => retryPipeline(true)}
+            text={getString('pipeline.execution.actions.reRunLastFailedStage')}
+            disabled={isPipelineInvalid}
+          />
+
+          <MenuItem
+            data-test-id="retry-failed-pipeline-specific-stage"
+            onClick={() => retryPipeline()}
+            text={getString('pipeline.execution.actions.reRunSelectedStage')}
+            disabled={isPipelineInvalid}
+          />
+          <MenuItem
+            data-test-id="rerun-pipeline"
+            onClick={reRunPipeline}
+            text={getString('common.pipeline')}
+            disabled={isPipelineInvalid}
+          />
+        </Menu>
+      }
+      position={Position.BOTTOM_RIGHT}
+      disabled={!canExecute || isPipelineInvalid}
+    >
+      <RbacButton
+        {...commonReRunProps}
+        rightIcon="caret-down"
+        onClick={noop}
+        featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
+      />
+    </Popover>
+  )
 
   return (
     <header className={css.header}>
@@ -294,44 +349,16 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
             <Icon name="Edit" size={12} />
             <String stringID="editPipeline" />
           </Link>
-          {canRerun && (
-            <SplitButton
-              variation={ButtonVariation.SECONDARY}
-              data-testid="retry-pipeline"
-              icon={'repeat'}
-              text={getString('pipeline.execution.actions.reRun')}
-              minimal
-              size={ButtonSize.SMALL}
-              iconProps={{ size: 12 }}
-              onClick={reRunPipeline}
-              tooltipProps={{
-                dataTooltipId: 'retry-pipeline'
-              }}
-              usePortal={true}
-              disabled={!canExecute || isPipelineInvalid}
-            >
-              {showRetryPipelineOption && (
-                <>
-                  <SplitButtonOption
-                    data-test-id="retry-failed-pipeline"
-                    onClick={() => retryPipeline(true)}
-                    text={getString('pipeline.execution.actions.reRunLastFailedStage')}
-                    disabled={isPipelineInvalid}
-                  />
-                  <SplitButtonOption
-                    data-test-id="retry-failed-pipeline-specific-stage"
-                    onClick={() => retryPipeline()}
-                    text={getString('pipeline.execution.actions.reRunSelectedStage')}
-                    disabled={isPipelineInvalid}
-                  />
-                </>
-              )}
-              <SplitButtonOption
-                onClick={reRunPipeline}
-                text={getString('pipeline.execution.actions.reRunEntirePipeline')}
+          {canRerun &&
+            (showRetryPipelineOption ? (
+              ReRunPipelineButtonPopover
+            ) : (
+              <RbacButton
+                {...commonReRunProps}
+                text={getString('pipeline.execution.actions.rerunPipeline')}
+                featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
               />
-            </SplitButton>
-          )}
+            ))}
           <ExecutionActions
             executionStatus={pipelineExecutionSummary.status as ExecutionStatus}
             refetch={refetch}
@@ -351,6 +378,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
                 : undefined
             }
             onViewCompiledYaml={/* istanbul ignore next */ () => setViewCompiledYaml(pipelineExecutionSummary)}
+            hideRetryOption={true}
           />
         </div>
       </div>

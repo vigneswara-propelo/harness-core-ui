@@ -162,7 +162,7 @@ describe('Pipeline Execution History', () => {
 
       cy.get('span[data-icon="Options"]').click({ force: true })
     })
-    cy.findByText('Retry Failed Pipeline').should('not.exist')
+    cy.findByText('Re-run from Stage').should('not.exist')
     cy.get('body').type('{esc}')
     cy.get('div[class="TableV2--body"]  > :nth-child(1)').click()
     cy.url().should(
@@ -179,7 +179,7 @@ describe('Pipeline Execution History', () => {
 
       cy.get('span[data-icon="Options"]').click({ force: true })
     })
-    cy.findByText('Retry Failed Pipeline').should('exist')
+    cy.findByText('Re-run from Stage').should('exist')
     cy.get('body').type('{esc}')
     cy.get('div[class="TableV2--body"] > :nth-child(2)').click()
     cy.url().should(
@@ -196,7 +196,7 @@ describe('Pipeline Execution History', () => {
 
       cy.get('span[data-icon="Options"]').click({ force: true })
     })
-    cy.findByText('Retry Failed Pipeline').should('exist')
+    cy.findByText('Re-run from Stage').should('exist')
     cy.get('body').type('{esc}')
     cy.get('div[class="TableV2--body"]  > :nth-child(3)').click()
     cy.url().should(
@@ -231,7 +231,7 @@ describe('Pipeline Execution History', () => {
     cy.findAllByRole('checkbox').eq(1).click({ force: true })
     cy.findByRole('button', {
       name: /compare/i
-    }).click()
+    }).click({ force: true })
     cy.wait('@executionMetadata')
     cy.findAllByRole('heading', { name: 'testPipeline_Cypress' }).should('have.length', 2)
   })
