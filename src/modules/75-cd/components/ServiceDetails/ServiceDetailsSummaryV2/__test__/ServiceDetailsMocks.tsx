@@ -452,7 +452,8 @@ export const openTaskMock: ResponseOpenTaskDetails = {
         status: 'FAILED',
         deployedById: 'testUser',
         deployedByName: undefined,
-        lastExecutedAt: 1676713790901
+        lastExecutedAt: 1676713790901,
+        failureDetail: 'activeInstance_Clone deployment failed with reason: Unauthorized'
       },
       {
         pipelineExecutionId: 'testPipeExecId2',

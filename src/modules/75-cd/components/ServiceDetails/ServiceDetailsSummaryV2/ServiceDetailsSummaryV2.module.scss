@@ -425,21 +425,6 @@
   padding-right: var(--spacing-5) !important;
 }
 
-.openTaskCardStyle {
-  display: flex !important;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px var(--spacing-8) 18px var(--spacing-6) !important;
-  margin-bottom: var(--spacing-5);
-
-  [data-icon='expired'],
-  [data-icon='circle-stop'] {
-    path {
-      fill: var(--grey-700) !important;
-    }
-  }
-}
-
 .overflowOpenTasks {
   overflow: auto;
   height: calc(100vh - 140px);

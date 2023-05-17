@@ -6,49 +6,29 @@
  */
 
 import React, { useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { Drawer } from '@blueprintjs/core'
 import {
   Button,
   ButtonSize,
   ButtonVariation,
-  Card,
   Container,
   getErrorInfoFromErrorObject,
   Icon,
   Layout,
   PageError,
-  Text,
-  useToaster
+  Text
 } from '@harness/uicore'
-import ReactTimeago from 'react-timeago'
-import { Drawer } from '@blueprintjs/core'
-import { defaultTo } from 'lodash-es'
-import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
-import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
+
 import { GetOpenTasksQueryParams, useGetOpenTasks } from 'services/cd-ng'
-import { iconMap } from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
-import { mapToExecutionStatus } from '@pipeline/components/Dashboards/shared'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { useStrings } from 'framework/strings'
+import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { useServiceContext } from '@cd/context/ServiceContext'
-import { StringKeys, useStrings } from 'framework/strings'
-import routes from '@common/RouteDefinitions'
-import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import openTaskEmptyState from './openTaskEmptyState.svg'
+import { OpenTaskCard } from './OpenTaskCard/OpenTaskCard'
 import css from './ServiceDetailsSummaryV2.module.scss'
 import style from '@pipeline/components/PipelineStudio/RightDrawer/RightDrawer.module.scss'
-
-interface StatusMapFields {
-  color: string
-  message: StringKeys
-}
-
-const statusMap: Partial<Record<ExecutionStatus, StatusMapFields>> = {
-  Aborted: { color: Color.GREY_700, message: 'cd.openTask.openTaskStatusMsgAborted' },
-  AbortedByFreeze: { color: Color.GREY_700, message: 'cd.openTask.openTaskStatusMsgAbortedByFreeze' },
-  Failed: { color: Color.RED_600, message: 'cd.openTask.openTaskStatusMsgFailed' },
-  Expired: { color: Color.GREY_700, message: 'cd.openTask.openTaskStatusMsgExpired' },
-  ApprovalWaiting: { color: Color.ORANGE_700, message: 'cd.openTask.openTaskStatusMsgApprovalWaiting' }
-}
 
 export default function OpenTasks(): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
@@ -56,7 +36,6 @@ export default function OpenTasks(): JSX.Element {
   const { drawerOpen, setDrawerOpen, setNotificationPopoverVisibility } = useServiceContext()
   const drawerOpenFromBanner = React.useRef(false)
   const { getString } = useStrings()
-  const { showError } = useToaster()
 
   //3 days ago
   const startTime = useMemo(() => Date.now() - 3 * 24 * 60 * 60000, [])
@@ -73,25 +52,6 @@ export default function OpenTasks(): JSX.Element {
 
   const openTasksData = data?.data
   const countOfTasks = openTasksData?.pipelineDeploymentDetails?.length
-
-  /* istanbul ignore next */
-  function handleClick(pipelineId?: string, executionIdentifier?: string): void {
-    if (pipelineId && executionIdentifier) {
-      const route = routes.toExecutionPipelineView({
-        orgIdentifier,
-        pipelineIdentifier: pipelineId,
-        executionIdentifier,
-        projectIdentifier,
-        accountId,
-        module: 'cd',
-        source: 'deployments'
-      })
-
-      window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
-    } else {
-      showError(getString('cd.serviceDashboard.noLastDeployment'))
-    }
-  }
 
   const onDrawerClose = (): void => {
     setDrawerOpen?.(false)
@@ -156,38 +116,7 @@ export default function OpenTasks(): JSX.Element {
           <Layout.Vertical className={css.overflowOpenTasks}>
             {openTasksData?.pipelineDeploymentDetails?.length ? (
               openTasksData.pipelineDeploymentDetails?.map((item, idx) => {
-                const status = defaultTo(mapToExecutionStatus(defaultTo(item.status, '').toUpperCase()), '')
-                return (
-                  item && (
-                    <Card key={`${item.identifier}_${idx}`} className={css.openTaskCardStyle}>
-                      <Layout.Horizontal flex={{ alignItems: 'center' }}>
-                        {status && <Icon {...iconMap[status]} color={statusMap[status]?.color} size={16} />}
-                        <Layout.Vertical padding={{ left: 'medium' }}>
-                          <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_600}>{`${defaultTo(
-                            item.name,
-                            '-'
-                          )} ${
-                            status
-                              ? getString(defaultTo(statusMap[status]?.message, 'pipeline.executionStatus.Unknown'))
-                              : ''
-                          }`}</Text>
-                          {item.lastExecutedAt && (
-                            <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500}>
-                              {getString('cd.since')} <ReactTimeago date={item.lastExecutedAt} />
-                            </Text>
-                          )}
-                        </Layout.Vertical>
-                      </Layout.Horizontal>
-                      <Button
-                        variation={ButtonVariation.SECONDARY}
-                        size={ButtonSize.SMALL}
-                        height={32}
-                        text={getString('cd.openExecution')}
-                        onClick={() => handleClick(item.identifier, item.planExecutionId)}
-                      />
-                    </Card>
-                  )
-                )
+                return item && <OpenTaskCard key={`${item.identifier}_${idx}`} openTask={item} />
               })
             ) : (
               <Layout.Vertical

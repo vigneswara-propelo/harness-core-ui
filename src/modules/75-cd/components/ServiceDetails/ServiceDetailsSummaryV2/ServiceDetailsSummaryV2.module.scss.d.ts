@@ -44,7 +44,6 @@ declare const styles: {
   readonly noRollbackBtn: string
   readonly openExecBtn: string
   readonly openTaskBannerStyle: string
-  readonly openTaskCardStyle: string
   readonly openTaskEmptyState: string
   readonly openTasksBgColor: string
   readonly overflow: string
