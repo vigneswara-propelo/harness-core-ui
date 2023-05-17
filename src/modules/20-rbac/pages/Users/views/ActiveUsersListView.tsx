@@ -59,8 +59,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { getUserName, useGetCommunity } from '@common/utils/utils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -314,8 +313,6 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
     userIdentifier: data.uuid
   })
 
-  const isExternallyManagedUserDeletionEnabled = useFeatureFlag(FeatureFlag.PL_REMOVE_EXTERNAL_USER_ORG_PROJECT)
-
   return (
     <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
       <Popover
@@ -377,7 +374,7 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
               permission={permissionRequest}
             />
           ) : null}
-          {data.externallyManaged && (scope === Scope.ACCOUNT || !isExternallyManagedUserDeletionEnabled) ? (
+          {data.externallyManaged && scope === Scope.ACCOUNT ? (
             <Popover
               position={Position.TOP}
               fill
