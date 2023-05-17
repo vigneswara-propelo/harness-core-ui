@@ -165,7 +165,7 @@ const SscaEnforcementStepEdit = (
                     tooltipProps={{ dataTooltipId: 'image' }}
                     placeholder={getString('imagePlaceholder')}
                   >
-                    {getString('image')}
+                    {getString('ssca.enforcementStep.attestedImage')}
                   </Text>
                 }
                 multiTextInputProps={{

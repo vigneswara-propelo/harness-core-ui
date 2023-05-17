@@ -8350,6 +8350,7 @@ export interface StringsMap {
   'idp.adminHome': string
   'idp.layout': string
   'ssca.allowDenyList': string
+  'ssca.enforcementStep.attestedImage': string
   'ssca.enforcementStep.policyConfiguration': string
   'ssca.enforcementStep.verifyAttestation': string
   'ssca.orchestrationStep.artifactSource': string

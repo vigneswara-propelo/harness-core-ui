@@ -76,8 +76,9 @@ export const ArtifactCell: CellType = ({ row }) => {
   )
 }
 
-export const PipelineStageCell: CellType = ({ row }) => {
+export const PipelineStepCell: CellType = ({ row }) => {
   const data = row.original
+  const { getString } = useStrings()
 
   return (
     <Layout.Vertical spacing="xsmall">
@@ -86,7 +87,7 @@ export const PipelineStageCell: CellType = ({ row }) => {
       </Text>
 
       <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} lineClamp={1}>
-        {data.stage}
+        {`${getString('common.stage').toLowerCase()}: ${data.stage}`}
       </Text>
     </Layout.Vertical>
   )
@@ -117,5 +118,14 @@ export const SbomCell: CellType = ({ row }) => {
     </a>
   ) : (
     <Text font={{ variation: FontVariation.SMALL }}>{getString('na')}</Text>
+  )
+}
+
+export const TypeCell: CellType = ({ row }) => {
+  const data = row.original
+  return (
+    <Text font={{ variation: FontVariation.SMALL }} lineClamp={2} className={css.uppercase}>
+      {data.type}
+    </Text>
   )
 }

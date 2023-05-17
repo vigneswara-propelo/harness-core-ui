@@ -9,4 +9,5 @@ orchestrationStep:
 enforcementStep:
   verifyAttestation: Verify Attestation
   policyConfiguration: Policy Configuration
+  attestedImage: Attested Image
 publicKey: Public Key

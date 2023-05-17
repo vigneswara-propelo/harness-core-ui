@@ -9,5 +9,6 @@
 declare const styles: {
   readonly table: string
   readonly toggleAccordion: string
+  readonly uppercase: string
 }
 export default styles

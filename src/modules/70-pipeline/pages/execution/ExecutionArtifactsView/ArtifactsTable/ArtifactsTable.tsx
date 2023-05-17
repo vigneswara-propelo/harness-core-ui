@@ -15,7 +15,14 @@ import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { ArtifactExpandedView } from './ArtifactExpandedView'
-import { ArtifactCell, PipelineStageCell, SbomCell, ToggleAccordionCell, ViolationsCell } from './ArtifactTableCells'
+import {
+  ArtifactCell,
+  PipelineStepCell,
+  SbomCell,
+  ToggleAccordionCell,
+  TypeCell,
+  ViolationsCell
+} from './ArtifactTableCells'
 import css from './ArtifactsTable.module.scss'
 
 export type ArtifactType = 'File' | 'Image' | 'Sbom'
@@ -62,9 +69,14 @@ export function ArtifactsTable({ artifacts }: ArtifactsTableProps): React.ReactE
         Cell: ArtifactCell
       },
       {
-        Header: getString('common.pipelineStage'),
+        Header: getString('step'),
         accessor: 'node',
-        Cell: PipelineStageCell
+        Cell: PipelineStepCell
+      },
+      {
+        Header: getString('pipeline.artifactsSelection.artifactType'),
+        accessor: 'type',
+        Cell: TypeCell
       },
       {
         Header: getString('common.violations'),
