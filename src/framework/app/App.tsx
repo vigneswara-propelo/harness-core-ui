@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, Suspense, useRef } from 'react'
+import React, { useEffect, Suspense } from 'react'
 
 import { useParams } from 'react-router-dom'
 import { RestfulProvider } from 'restful-react'
@@ -13,13 +13,10 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { FocusStyleManager } from '@blueprintjs/core'
 import { PageSpinner, useToaster, MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY } from '@harness/uicore'
 import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
-import { HarnessReactAPIClient as AuditServiceClient } from '@harnessio/react-audit-service-client'
-import { IDPServiceAPIClient } from '@harnessio/react-idp-service-client'
-import { PipelineServiceAPIClient } from '@harnessio/react-pipeline-service-client'
-import { NGManagerServiceAPIClient } from '@harnessio/react-ng-manager-client'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import { debounce } from 'lodash-es'
 import SessionToken, { TokenTimings } from 'framework/utils/SessionToken'
+import useOpenApiClients from 'framework/hooks/useOpenAPIClients'
 import { queryClient } from 'services/queryClient'
 import { AppStoreProvider } from 'framework/AppStore/AppStoreContext'
 import { PreferenceStoreProvider, PREFERENCES_TOP_LEVEL_KEY } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -114,10 +111,61 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   // if user lands on /, they'll first get redirected to a path with accountId
   const { accountId } = useParams<AccountPathProps>()
   const { forceLogout } = useLogout()
-  const auditServiceClientObjRef = useRef<AuditServiceClient>()
-  const idpServiceClientObjRef = useRef<IDPServiceAPIClient>()
-  const pipelineServiceClientObjRef = useRef<PipelineServiceAPIClient>()
-  const ngManagerServiceClientObjRef = useRef<NGManagerServiceAPIClient>()
+  const globalResponseHandler = (response: Response): void => {
+    if (!response.ok) {
+      switch (response.status) {
+        case 401: {
+          response
+            .clone()
+            .json()
+            .then(res => {
+              const notWhiteListedMessage = getNotWhitelistedMessage(res)
+              if (notWhiteListedMessage) {
+                const msg = notWhiteListedMessage.message
+                showError(msg)
+                // NG-Auth-UI expects to read "NOT_WHITELISTED_IP_MESSAGE" from session
+                sessionStorage.setItem(NOT_WHITELISTED_IP_MESSAGE, msg)
+                forceLogout(ErrorCode.unauth)
+              }
+            })
+            .catch(() => {
+              notifyBugsnag('Error handling 401 status code', '401 Details', response, username, accountId)
+            })
+            .finally(() => {
+              forceLogout()
+              return
+            })
+          break
+        }
+        case 400: {
+          response
+            .clone()
+            .json()
+            .then(res => {
+              const notWhiteListedMessage = getNotWhitelistedMessage(res)
+              if (notWhiteListedMessage) {
+                showError(notWhiteListedMessage.message)
+                forceLogout()
+              }
+            })
+            .catch(() => {
+              notifyBugsnag('Error handling 400 status code', '400 Details', response, username, accountId)
+            })
+          return
+        }
+        case 429: {
+          response
+            .clone()
+            .json()
+            .then(res => {
+              showError(res.message || TOO_MANY_REQUESTS_MESSAGE)
+            })
+        }
+      }
+    }
+  }
+  const { auditServiceClientRef, idpServiceClientRef, pipelineServiceClientRef, ngManagerServiceClientRef } =
+    useOpenApiClients(globalResponseHandler, accountId)
 
   const getQueryParams = React.useCallback(() => {
     return {
@@ -182,60 +230,6 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     return removeEventListners
   }, [])
 
-  const globalResponseHandler = (response: Response): void => {
-    if (!response.ok) {
-      switch (response.status) {
-        case 401: {
-          response
-            .clone()
-            .json()
-            .then(res => {
-              const notWhiteListedMessage = getNotWhitelistedMessage(res)
-              if (notWhiteListedMessage) {
-                const msg = notWhiteListedMessage.message
-                showError(msg)
-                // NG-Auth-UI expects to read "NOT_WHITELISTED_IP_MESSAGE" from session
-                sessionStorage.setItem(NOT_WHITELISTED_IP_MESSAGE, msg)
-                forceLogout(ErrorCode.unauth)
-              }
-            })
-            .catch(() => {
-              notifyBugsnag('Error handling 401 status code', '401 Details', response, username, accountId)
-            })
-            .finally(() => {
-              forceLogout()
-              return
-            })
-          break
-        }
-        case 400: {
-          response
-            .clone()
-            .json()
-            .then(res => {
-              const notWhiteListedMessage = getNotWhitelistedMessage(res)
-              if (notWhiteListedMessage) {
-                showError(notWhiteListedMessage.message)
-                forceLogout()
-              }
-            })
-            .catch(() => {
-              notifyBugsnag('Error handling 400 status code', '400 Details', response, username, accountId)
-            })
-          return
-        }
-        case 429: {
-          response
-            .clone()
-            .json()
-            .then(res => {
-              showError(res.message || TOO_MANY_REQUESTS_MESSAGE)
-            })
-        }
-      }
-    }
-  }
-
   useGlobalEventListener('PROMISE_API_RESPONSE', ({ detail }) => {
     if (detail && detail.response) {
       globalResponseHandler(detail.response)
@@ -243,64 +237,11 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   })
 
   const updateHeadersForOpenApiClients = (headers: Record<string, any>): void => {
-    auditServiceClientObjRef.current?.updateHeaders(headers)
-    idpServiceClientObjRef.current?.updateHeaders(headers)
-    pipelineServiceClientObjRef.current?.updateHeaders(headers)
-    ngManagerServiceClientObjRef.current?.updateHeaders(headers)
+    auditServiceClientRef.current?.updateHeaders(headers)
+    idpServiceClientRef.current?.updateHeaders(headers)
+    pipelineServiceClientRef.current?.updateHeaders(headers)
+    ngManagerServiceClientRef.current?.updateHeaders(headers)
   }
-
-  useEffect(() => {
-    // Initializing open-api clients
-    auditServiceClientObjRef.current = new AuditServiceClient({
-      responseInterceptor: response => {
-        globalResponseHandler(response.clone())
-        return response
-      },
-      urlInterceptor: (url: string) => {
-        return window.getApiBaseUrl(url)
-      },
-      getRequestHeaders: () => {
-        return { token: SessionToken.getToken(), 'Harness-Account': accountId }
-      }
-    })
-    idpServiceClientObjRef.current = new IDPServiceAPIClient({
-      responseInterceptor: response => {
-        globalResponseHandler(response.clone())
-        return response
-      },
-      urlInterceptor: window.getApiBaseUrl,
-      getRequestHeaders: () => {
-        return {
-          token: SessionToken.getToken(),
-          'Harness-Account': accountId
-        }
-      }
-    })
-    pipelineServiceClientObjRef.current = new PipelineServiceAPIClient({
-      responseInterceptor: response => {
-        globalResponseHandler(response.clone())
-        return response
-      },
-      urlInterceptor: (url: string) => {
-        return window.getApiBaseUrl(url)
-      },
-      getRequestHeaders: () => {
-        return { token: SessionToken.getToken(), 'Harness-Account': accountId }
-      }
-    })
-    ngManagerServiceClientObjRef.current = new NGManagerServiceAPIClient({
-      responseInterceptor: response => {
-        globalResponseHandler(response.clone())
-        return response
-      },
-      urlInterceptor: (url: string) => {
-        return window.getApiBaseUrl(url)
-      },
-      getRequestHeaders: () => {
-        return { token: SessionToken.getToken(), 'Harness-Account': accountId }
-      }
-    })
-  }, [accountId])
 
   return (
     <RestfulProvider
