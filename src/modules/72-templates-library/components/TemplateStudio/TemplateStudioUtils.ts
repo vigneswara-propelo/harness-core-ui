@@ -11,6 +11,7 @@ import type { StringKeys } from 'framework/strings'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
+import { DefaultNewTemplateId } from 'framework/Templates/templates'
 
 export function getContentAndTitleStringKeys(isYamlError: boolean): {
   navigationContentText: StringKeys
@@ -49,4 +50,8 @@ export function isValidYaml(
 
 export const isPipelineOrStageType = (type: TemplateType) => {
   return type === TemplateType.Pipeline || type === TemplateType.Stage
+}
+
+export const isNewTemplate = (templateIdentifier: string | undefined): boolean | undefined => {
+  return templateIdentifier === DefaultNewTemplateId
 }

@@ -58,6 +58,7 @@ import {
   EntityCachedCopyHandle
 } from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import { StoreType } from '@common/constants/GitSyncTypes'
+import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
 import css from './TemplateStudioSubHeaderLeftView.module.scss'
 
 /**
@@ -66,7 +67,7 @@ import css from './TemplateStudioSubHeaderLeftView.module.scss'
  * With edit  permission, only Identifier and VersionLabel should be disabled.
  */
 const getDisabledFields = (templateIdentifier: string, isReadonly: boolean): Array<Fields> => {
-  if (templateIdentifier === DefaultNewTemplateId) {
+  if (isNewTemplate(templateIdentifier)) {
     return []
   } else if (isReadonly) {
     return [Fields.VersionLabel, Fields.Identifier, Fields.Name, Fields.Description, Fields.Tags]
@@ -328,13 +329,13 @@ export function TemplateStudioSubHeaderLeftView(
                   setModalProps({
                     initialValues: template,
                     promise: onSubmit,
-                    ...(templateIdentifier !== DefaultNewTemplateId && { gitDetails }),
+                    ...(!isNewTemplate(templateIdentifier) && { gitDetails }),
                     title: getString('templatesLibrary.createNewModal.editHeading', {
                       entity: templateFactory.getTemplateLabel(template.type)
                     }),
-                    intent: templateIdentifier === DefaultNewTemplateId ? Intent.START : Intent.EDIT,
+                    intent: isNewTemplate(templateIdentifier) ? Intent.START : Intent.EDIT,
                     disabledFields: getDisabledFields(templateIdentifier, isReadonly),
-                    allowScopeChange: templateIdentifier === DefaultNewTemplateId,
+                    allowScopeChange: isNewTemplate(templateIdentifier),
                     storeMetadata,
                     gitDetails
                   })
@@ -344,7 +345,7 @@ export function TemplateStudioSubHeaderLeftView(
             )}
           </Layout.Horizontal>
         </Container>
-        {templateIdentifier !== DefaultNewTemplateId && (
+        {!isNewTemplate(templateIdentifier) && (
           <VersionsDropDown
             onChange={item => goToTemplateVersion(item.value.toString())}
             items={versionOptions}
@@ -378,7 +379,7 @@ export function TemplateStudioSubHeaderLeftView(
               <GitPopoverV2
                 storeMetadata={storeMetadata}
                 gitDetails={gitDetails}
-                branchChangeDisabled={templateIdentifier === DefaultNewTemplateId}
+                branchChangeDisabled={isNewTemplate(templateIdentifier)}
                 onGitBranchChange={onGitBranchChange!}
                 btnClassName={css.gitBtn}
                 customIcon={

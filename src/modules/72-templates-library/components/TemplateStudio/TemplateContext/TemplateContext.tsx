@@ -51,6 +51,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { initialState, TemplateReducer, TemplateReducerState, TemplateViewData } from './TemplateReducer'
 import { ActionReturnType, TemplateContextActions } from './TemplateActions'
+import { isNewTemplate } from '../TemplateStudioUtils'
 
 const logger = loggerFor(ModuleName.TEMPLATES)
 
@@ -330,7 +331,7 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
     dispatch(TemplateContextActions.fetching())
     let data: TemplatePayload = await IdbTemplate.get(IdbTemplateStoreName, id)
     let templateMetadata: TemplateMetadataSummaryResponse[] = []
-    if ((!data || forceFetch) && templateIdentifier !== DefaultNewTemplateId) {
+    if ((!data || forceFetch) && !isNewTemplate(templateIdentifier)) {
       try {
         templateMetadata = await getTemplateMetadata(
           {
@@ -502,7 +503,7 @@ const _fetchTemplateV1 = async (props: FetchTemplateBoundProps, params: FetchTem
   if (IdbTemplate) {
     dispatch(TemplateContextActions.fetching())
     let data: TemplatePayload = await IdbTemplate.get(IdbTemplateStoreName, id)
-    if ((!data || forceFetch) && templateIdentifier !== DefaultNewTemplateId) {
+    if ((!data || forceFetch) && !isNewTemplate(templateIdentifier)) {
       try {
         const templatesList: TemplateSummaryResponse[] = await getTemplatesByIdentifier(
           {
@@ -1013,7 +1014,7 @@ export const TemplateProvider: React.FC<{
   }, [templateIdentifier, versionLabel])
 
   React.useEffect(() => {
-    if (templateIdentifier !== DefaultNewTemplateId) {
+    if (!isNewTemplate(templateIdentifier)) {
       fetchTemplate({ forceFetch: true, forceUpdate: true })
     }
   }, [repoIdentifier, branch])

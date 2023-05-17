@@ -19,7 +19,6 @@ import { useStrings } from 'framework/strings'
 import type { StepData, StepPalleteModuleInfo } from 'services/pipeline-ng'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
-import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepPalette } from '@pipeline/components/PipelineStudio/StepPalette/StepPalette'
 import { StageType } from '@pipeline/utils/stageHelpers'
@@ -27,6 +26,7 @@ import { getAllStepPaletteModuleInfos, getStepPaletteModuleInfosFromStage } from
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ModuleName } from 'framework/types/ModuleName'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
 import css from './StepTemplateDiagram.module.scss'
 
 export const StepTemplateDiagram = (): JSX.Element => {
@@ -122,7 +122,7 @@ export const StepTemplateDiagram = (): JSX.Element => {
         <Container>
           <Layout.Horizontal
             spacing={'medium'}
-            onClick={templateIdentifier === DefaultNewTemplateId ? openStepSelector : noop}
+            onClick={isNewTemplate(templateIdentifier) ? openStepSelector : noop}
             data-testid={'change-step'}
             flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
           >

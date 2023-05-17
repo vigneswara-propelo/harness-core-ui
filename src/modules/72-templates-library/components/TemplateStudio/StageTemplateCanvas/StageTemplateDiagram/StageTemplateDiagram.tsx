@@ -21,7 +21,6 @@ import {
 import { useGlobalEventListener } from '@common/hooks'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { getCommonStyles, PopoverData } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { DefaultNewStageId } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateForm/StageTemplateForm'
@@ -29,6 +28,7 @@ import { SplitViewTypes } from '@pipeline/components/PipelineStudio/PipelineCont
 import CreateNodeStage from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStage'
 import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
+import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
 import css from './StageTemplateDiagram.module.scss'
 import stageBuilderCss from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilder.module.scss'
 const CREATE_NODE_ID = 'create-node'
@@ -134,7 +134,7 @@ export const StageTemplateDiagram = (): JSX.Element => {
 
   const onClickHandler = (_event: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
     dynamicPopoverHandler?.hide()
-    if (templateIdentifier === DefaultNewTemplateId) {
+    if (isNewTemplate(templateIdentifier)) {
       openStageSelection(CREATE_NODE_ID)
     }
   }

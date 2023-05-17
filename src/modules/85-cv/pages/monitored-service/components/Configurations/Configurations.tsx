@@ -28,7 +28,6 @@ import {
 } from 'services/cv'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 import { PageSpinner, useToaster, NavigationCheck } from '@common/components'
-import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
@@ -37,6 +36,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useStrings } from 'framework/strings'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { SLODetailsPageTabIds } from '@cv/pages/slos/CVSLODetailsPage/CVSLODetailsPage.types'
+import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
 import Service, { ServiceWithRef } from './components/Service/Service'
 import Dependency from './components/Dependency/Dependency'
 import { getInitFormData } from './components/Service/Service.utils'
@@ -208,7 +208,7 @@ export default function Configurations(
   useEffect(() => {
     if (identifier) {
       fetchMonitoredService()
-    } else if ((isTemplate && templateIdentifier === DefaultNewTemplateId) || (!isTemplate && !identifier)) {
+    } else if ((isTemplate && isNewTemplate(templateIdentifier)) || (!isTemplate && !identifier)) {
       fetchMonitoredServiceYAML()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -218,7 +218,7 @@ export default function Configurations(
     () => {
       const formInitiaValues = getInitFormData(
         defaultMonitoredService,
-        isTemplate ? templateIdentifier !== DefaultNewTemplateId : !!identifier,
+        isTemplate ? !isNewTemplate(templateIdentifier) : !!identifier,
         isTemplate,
         isTemplate ? templateValue : dataMonitoredServiceById?.data?.monitoredService,
         templateScope

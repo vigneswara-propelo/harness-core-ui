@@ -29,7 +29,6 @@ import {
   SaveTemplateHandle,
   SaveTemplatePopoverWithRef
 } from '@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover'
-import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import {
   TemplateStudioSubHeaderLeftViewHandle,
   TemplateStudioSubHeaderLeftViewWithRef
@@ -41,6 +40,7 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { isNewTemplate } from '../TemplateStudioUtils'
 
 import css from './TemplateStudioSubHeader.module.scss'
 
@@ -70,7 +70,6 @@ function TemplateStudioSubHeader(
   const templateStudioSubHeaderLeftViewHandleRef = React.useRef<TemplateStudioSubHeaderLeftViewHandle | null>(null)
   const { supportingGitSimplification } = useAppStore()
   const isPipelineRemote = supportingGitSimplification && storeMetadata?.storeType === StoreType.REMOTE
-  const isNewTemplate = templateIdentifier === DefaultNewTemplateId
 
   React.useImperativeHandle(
     ref,
@@ -139,7 +138,7 @@ function TemplateStudioSubHeader(
                 )}
                 <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
                   {!isReadonly && <SaveTemplatePopoverWithRef getErrors={getErrors} ref={saveTemplateHandleRef} />}
-                  {isNewTemplate ? null : (
+                  {isNewTemplate(templateIdentifier) ? null : (
                     <React.Fragment>
                       {isReadonly ? null : (
                         <Button

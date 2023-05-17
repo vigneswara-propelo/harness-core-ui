@@ -15,6 +15,7 @@ import { TemplateContextTestWrapper } from '@templates-library/utils/templateCon
 
 import { DefaultTemplate } from 'framework/Templates/templates'
 import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { getMockFor_Generic_useMutate } from '@pipeline/components/RunPipelineModal/__tests__/mocks'
 import { TemplateStudioInternal } from '../TemplateStudioInternal'
 import templateContextProps from './__mock__/templateContextProps.json'
 
@@ -29,7 +30,7 @@ jest.mock('services/cd-ng-rq', () => ({
 
 jest.mock('services/template-ng', () => ({
   useGetTemplateSchema: jest.fn(() => ({})),
-  useValidateTemplateInputs: jest.fn(() => ({})),
+  useValidateTemplateInputs: jest.fn(() => getMockFor_Generic_useMutate()),
   useUpdateStableTemplate: jest.fn().mockImplementation(() => {
     return {
       mutate: () =>

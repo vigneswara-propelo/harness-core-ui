@@ -43,7 +43,6 @@ import TemplateYamlView from '@templates-library/components/TemplateStudio/Templ
 import { accountPathProps, orgPathProps, pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import type { GetErrorResponse } from '@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover'
-import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { useQueryParams } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -58,7 +57,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ErrorNodeSummary, useValidateTemplateInputs } from 'services/template-ng'
 import { useCheckIfTemplateUsingV1Stage, ResponseEOLBannerResponseDTO } from 'services/cd-ng'
 import { TemplateContext } from './TemplateContext/TemplateContext'
-import { getContentAndTitleStringKeys, isValidYaml, isPipelineOrStageType } from './TemplateStudioUtils'
+import { getContentAndTitleStringKeys, isValidYaml, isPipelineOrStageType, isNewTemplate } from './TemplateStudioUtils'
 import css from './TemplateStudio.module.scss'
 
 export type TemplateFormikRef<T = unknown> = {
@@ -320,7 +319,13 @@ export function TemplateStudioInternal(): React.ReactElement {
   }
 
   React.useEffect(() => {
-    if (templateIdentifier === DefaultNewTemplateId) {
+    if (isInitialized && !isEmpty(template) && !isNewTemplate(templateIdentifier)) {
+      handleReconcile()
+    }
+  }, [isInitialized])
+
+  React.useEffect(() => {
+    if (isNewTemplate(templateIdentifier)) {
       setView(SelectedView.VISUAL)
     } else if (entityValidityDetails.valid === false || view === SelectedView.YAML) {
       setView(SelectedView.YAML)
@@ -406,7 +411,7 @@ export function TemplateStudioInternal(): React.ReactElement {
             !matchDefault?.isExact &&
             isUpdated &&
             !isReadonly &&
-            !(templateIdentifier === DefaultNewTemplateId && isEmpty(template?.name))
+            !(isNewTemplate(templateIdentifier) && isEmpty(template?.name))
           )
         }}
         textProps={{

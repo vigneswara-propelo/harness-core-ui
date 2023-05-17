@@ -41,6 +41,7 @@ import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHa
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import routes from '@common/RouteDefinitions'
+import { isNewTemplate } from '../TemplateStudioUtils'
 import css from './SaveTemplatePopover.module.scss'
 
 export interface GetErrorResponse extends Omit<Failure, 'errors'> {
@@ -110,7 +111,7 @@ function SaveTemplatePopover(
     onConfirmationCallback: async () => {
       try {
         await saveAndPublish(template, {
-          isEdit: templateIdentifier !== DefaultNewTemplateId,
+          isEdit: !isNewTemplate(templateIdentifier),
           comment: savedComment,
           storeMetadata,
           updatedGitDetails: gitDetails,
@@ -124,7 +125,7 @@ function SaveTemplatePopover(
   })
 
   const customDeleteTemplateCache = async (details?: EntityGitDetails) => {
-    if (templateIdentifier === DefaultNewTemplateId) {
+    if (isNewTemplate(templateIdentifier)) {
       await updateTemplate(
         produce(originalTemplate, draft => {
           unset(draft, 'type')
@@ -165,7 +166,7 @@ function SaveTemplatePopover(
     const isInlineTemplate = isEmpty(updatedGitDetails) && updatedStoreMetadata?.storeType !== StoreType.REMOTE
     if (isInlineTemplate) {
       clear()
-      if (templateIdentifier === DefaultNewTemplateId) {
+      if (isNewTemplate(templateIdentifier)) {
         showSuccess(getString('common.template.saveTemplate.publishTemplate'))
         await customDeleteTemplateCache()
         navigateToLocation(latestTemplate, updatedGitDetails)
@@ -182,7 +183,7 @@ function SaveTemplatePopover(
       }
     } else {
       // If new template creation
-      if (templateIdentifier === DefaultNewTemplateId) {
+      if (isNewTemplate(templateIdentifier)) {
         await customDeleteTemplateCache(updatedGitDetails)
         navigateToLocation(latestTemplate, updatedGitDetails)
       } else {
@@ -228,7 +229,7 @@ function SaveTemplatePopover(
 
   const onError = (error: any, comment?: string) => {
     if (!isEmpty((error as any)?.metadata?.errorNodeSummary)) {
-      const isEdit = templateIdentifier !== DefaultNewTemplateId
+      const isEdit = !isNewTemplate(templateIdentifier)
       openTemplateErrorsModal({
         error: (error as any)?.metadata?.errorNodeSummary,
         originalYaml: yamlStringify(
@@ -386,7 +387,7 @@ function SaveTemplatePopover(
     )
   }
 
-  if (templateIdentifier === DefaultNewTemplateId) {
+  if (isNewTemplate(templateIdentifier)) {
     return (
       <Button
         variation={ButtonVariation.PRIMARY}

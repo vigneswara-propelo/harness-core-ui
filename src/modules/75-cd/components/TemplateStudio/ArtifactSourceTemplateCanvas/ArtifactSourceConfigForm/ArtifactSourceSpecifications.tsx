@@ -19,7 +19,6 @@ import {
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { usePrevious } from '@common/hooks/usePrevious'
 import type { GitQueryParams, ProjectPathProps, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
@@ -59,6 +58,7 @@ import type { ArtifactSourceConfigFormData } from '@cd/components/TemplateStudio
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { getConnectorListVersionQueryParam } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
 import css from './ArtifactSourceConfigForm.module.scss'
 
 const ALLOWABLE_TYPES = [
@@ -304,7 +304,7 @@ export function ArtifactSourceSpecifications(props: {
             <ThumbnailSelect
               className={css.thumbnailSelect}
               name={'artifactType'}
-              isReadonly={isReadonly || templateIdentifier !== DefaultNewTemplateId}
+              isReadonly={isReadonly || !isNewTemplate(templateIdentifier)}
               items={supportedArtifactTypes}
               onChange={handleArtifactTypeSelection}
               layoutProps={{ className: css.wrapping }}
