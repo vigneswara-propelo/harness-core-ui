@@ -210,13 +210,13 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
     return <ChangeTimelineError error={getErrorMessage(error) || ''} />
   }
 
-  const skeletenLoadingCategory = enableRequestSLO ? defaultCategoryTimelineWithChaos : defaultCategoryTimeline
+  const skeletonLoadingCategory = enableRequestSLO ? defaultCategoryTimelineWithChaos : defaultCategoryTimeline
 
   return (
     <Timeline
       isLoading={loading}
       rowOffset={90}
-      timelineRows={Object.entries(categoryTimeline || skeletenLoadingCategory).map(timeline => ({
+      timelineRows={Object.entries(categoryTimeline || skeletonLoadingCategory).map(timeline => ({
         labelName: labelByCategory(timeline[0], getString),
         data: createTimelineSeriesData(timeline[0] as ChangeSourceTypes, getString, timeline[1])
       }))}

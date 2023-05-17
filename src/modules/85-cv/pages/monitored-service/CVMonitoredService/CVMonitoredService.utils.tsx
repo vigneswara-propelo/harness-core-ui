@@ -8,12 +8,12 @@
 import React, { ReactElement } from 'react'
 import { isNull, isNumber } from 'lodash-es'
 import Highcharts, { PointOptionsObject } from 'highcharts'
-import { Text, Layout, Tag, SelectOption } from '@harness/uicore'
+import { Text, Layout, Tag, SelectOption, IconName } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import HighchartsReact from 'highcharts-react-official'
 import type { Renderer, CellProps } from 'react-table'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import type { ChangeSummaryDTO, CountServiceDTO, MonitoredServiceListItemDTO, RiskData } from 'services/cv'
+import type { CategoryCountDetails, CountServiceDTO, MonitoredServiceListItemDTO, RiskData } from 'services/cv'
 import { getRiskColorValue, getRiskLabelStringId } from '@cv/utils/CommonUtils'
 import ImageDeleteService from '@cv/assets/delete-service.svg'
 import type { FilterCardItem } from '@cv/components/FilterCard/FilterCard.types'
@@ -121,21 +121,15 @@ export const RenderHealthScore: Renderer<CellProps<MonitoredServiceListItemDTO>>
   return <RiskTagWithLabel riskData={monitoredService.currentHealthScore} />
 }
 
-export const calculateChangePercentage = (changeSummary: ChangeSummaryDTO): { color: string; percentage: number } => {
-  if (changeSummary?.categoryCountMap) {
-    const { categoryCountMap } = changeSummary
-    const { Infrastructure, Deployment, Alert } = categoryCountMap as any
-    const totalCount = Infrastructure?.count + Deployment?.count + Alert?.count
-    const totalCountInPrecedingWindow =
-      Infrastructure?.countInPrecedingWindow + Deployment?.countInPrecedingWindow + Alert?.countInPrecedingWindow
-    const percentageChange: number =
-      ((totalCount - totalCountInPrecedingWindow) / (totalCount + totalCountInPrecedingWindow)) * 100
-    if (isNaN(totalCount) || isNaN(totalCountInPrecedingWindow) || isNaN(percentageChange)) {
-      return DefaultChangePercentage
-    }
+export const calculateTotalChangePercentage = (
+  changeSummaryTotal?: CategoryCountDetails
+): { color: string; percentage: number; icon: IconName } => {
+  if (changeSummaryTotal?.percentageChange) {
+    const { percentageChange } = changeSummaryTotal
     return {
       color: percentageChange > 0 ? Color.SUCCESS : Color.ERROR,
-      percentage: Math.abs(Math.floor(percentageChange))
+      percentage: Math.abs(percentageChange),
+      icon: percentageChange > 0 ? 'symbol-triangle-up' : 'symbol-triangle-down'
     }
   }
   return DefaultChangePercentage

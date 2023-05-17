@@ -34,7 +34,7 @@ import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import IconGrid from '../IconGrid/IconGrid'
 import {
-  calculateChangePercentage,
+  calculateTotalChangePercentage,
   RenderHealthTrend,
   RenderHealthScore,
   ServiceDeleteContext,
@@ -42,7 +42,7 @@ import {
 } from '../../CVMonitoredService.utils'
 import type { MonitoredServiceListViewProps } from '../../CVMonitoredService.types'
 import MonitoredServiceCategory from '../../../components/Configurations/components/Dependency/component/components/MonitoredServiceCategory/MonitoredServiceCategory'
-import { getIsSwitchEnabled, getListTitle } from './MonitoredServiceListView.utils'
+import { getChangeSummaryInfo, getIsSwitchEnabled, getListTitle } from './MonitoredServiceListView.utils'
 import SLOsIconGrid from '../SLOsIconGrid/SLOsIconGrid'
 import css from '../../CVMonitoredService.module.scss'
 
@@ -117,8 +117,8 @@ const RenderServiceChanges: Renderer<CellProps<MonitoredServiceListItemDTO>> = (
     return <></>
   }
 
-  const { Deployment, Infrastructure, Alert } = monitoredService.changeSummary.categoryCountMap
-  const { color, percentage } = calculateChangePercentage(monitoredService.changeSummary)
+  const { categoryCountMap, total } = monitoredService.changeSummary
+  const { color, percentage, icon } = calculateTotalChangePercentage(total)
   const styles = {
     font: { variation: FontVariation.H6 },
     color: Color.BLACK
@@ -126,32 +126,13 @@ const RenderServiceChanges: Renderer<CellProps<MonitoredServiceListItemDTO>> = (
 
   return (
     <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+      {Object.entries(categoryCountMap).map(([changeCategory, categoryCountDetails]) => (
+        <Text key={changeCategory} {...getChangeSummaryInfo(getString, changeCategory)} {...styles}>
+          {categoryCountDetails.count ?? 0}
+        </Text>
+      ))}
       <Text
-        tooltip={getString('deploymentText')}
-        icon="nav-project"
-        iconProps={{ size: 16, color: Color.GREY_700 }}
-        {...styles}
-      >
-        {Deployment.count ?? 0}
-      </Text>
-      <Text
-        tooltip={getString('infrastructureText')}
-        icon="infrastructure"
-        iconProps={{ size: 20, color: Color.GREY_700 }}
-        {...styles}
-      >
-        {Infrastructure.count ?? 0}
-      </Text>
-      <Text
-        tooltip={getString('cv.changeSource.tooltip.incidents')}
-        icon="warning-outline"
-        iconProps={{ size: 16 }}
-        {...styles}
-      >
-        {Alert.count ?? 0}
-      </Text>
-      <Text
-        icon="symbol-triangle-up"
+        icon={icon}
         color={color}
         font={{ variation: FontVariation.TINY_SEMI }}
         iconProps={{ size: 10, color: color }}
@@ -380,22 +361,22 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
               },
               {
                 Header: getString('cv.monitoredServices.sloErrorBudget'),
-                width: '13%',
+                width: '11%',
                 Cell: RenderSLOErrorBudgetData
               },
               {
                 Header: getString('cv.monitoredServices.table.changes'),
-                width: '15%',
+                width: '22%',
                 Cell: RenderServiceChanges
               },
               {
                 Header: getString('cv.monitoredServices.table.lastestHealthTrend'),
-                width: '18%',
+                width: '15%',
                 Cell: RenderHealthTrend
               },
               {
                 Header: getString('cv.monitoredServices.table.serviceHealthScore'),
-                width: '15%',
+                width: '13%',
                 Cell: RenderHealthScore
               },
               {

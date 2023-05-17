@@ -15,17 +15,17 @@ export enum ChangeSourceTypes {
 
 export const defaultCategoryTimeline = {
   Deployment: [],
-  FeatureFlag: [],
+  Infrastructure: [],
   Alert: [],
-  Infrastructure: []
+  FeatureFlag: []
 }
 
 export const defaultCategoryTimelineWithChaos = {
+  Deployment: [],
   Infrastructure: [],
   Alert: [],
-  ChaosExperiment: [],
   FeatureFlag: [],
-  Deployment: []
+  ChaosExperiment: []
 }
 
 export const TOTAL_DATA_POINTS = 48

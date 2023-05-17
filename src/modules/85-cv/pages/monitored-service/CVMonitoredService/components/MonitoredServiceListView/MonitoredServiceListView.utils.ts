@@ -5,8 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { Color } from '@harness/design-system'
+import type { TextProps } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
+import { ChangeSourceTypes } from '@cv/components/ChangeTimeline/ChangeTimeline.constants'
 import { FilterTypes } from '../../CVMonitoredService.types'
+import css from '../../CVMonitoredService.module.scss'
 
 export const getListTitle = (
   getString: UseStringsReturn['getString'],
@@ -55,4 +59,42 @@ export function getIsSwitchEnabled({
   }
 
   return false
+}
+
+export const getChangeSummaryInfo = (getString: UseStringsReturn['getString'], changeCategory: string): TextProps => {
+  switch (changeCategory) {
+    case ChangeSourceTypes.Alert:
+      return {
+        tooltip: getString('cv.changeSource.incident'),
+        icon: 'warning-outline',
+        iconProps: { size: 16 }
+      }
+    case ChangeSourceTypes.ChaosExperiment:
+      return {
+        tooltip: getString('cv.changeSource.chaosExperiment.event'),
+        icon: 'chaos-main'
+      }
+    case ChangeSourceTypes.Deployment:
+      return {
+        tooltip: getString('deploymentText'),
+        icon: 'pod',
+        iconProps: { size: 20, color: Color.GREEN_500 },
+        className: css.changeEventIcon
+      }
+    case ChangeSourceTypes.FeatureFlag:
+      return {
+        tooltip: `${getString('common.moduleTitles.cf')} ${getString('change')}`,
+        icon: 'cf-main',
+        iconProps: { size: 18 }
+      }
+    case ChangeSourceTypes.Infrastructure:
+      return {
+        tooltip: `${getString('infrastructureText')} ${getString('change')}`,
+        icon: 'hexagon-outline',
+        iconProps: { size: 21, color: Color.PRIMARY_5 },
+        className: css.changeEventIcon
+      }
+    default:
+      return {}
+  }
 }

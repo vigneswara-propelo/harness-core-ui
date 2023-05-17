@@ -6,6 +6,7 @@
  */
 
 import { Color } from '@harness/design-system'
+import type { IconName } from '@harness/icons'
 
 export const HistoricalTrendChartOption = {
   title: {
@@ -50,5 +51,6 @@ export const HistoricalTrendChartOption = {
 
 export const DefaultChangePercentage = {
   color: Color.BLACK_100,
-  percentage: 0
+  percentage: 0,
+  icon: 'symbol-triangle-up' as IconName
 }

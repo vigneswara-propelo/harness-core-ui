@@ -23,7 +23,7 @@ import {
   RenderHealthTrend,
   createTrendDataWithZone,
   getHistoricalTrendChartOption,
-  calculateChangePercentage
+  calculateTotalChangePercentage
 } from '../CVMonitoredService.utils'
 
 const trendChartMockData: RiskData[] = [
@@ -70,24 +70,27 @@ describe('Test util functions', () => {
     })
   })
 
-  test('calculateChangePercentage should return correct output', () => {
+  test('calculateTotalChangePercentage should return correct output', () => {
     // Change summary is empty
-    const outputWithEmptyObject = calculateChangePercentage({})
+    const outputWithEmptyObject = calculateTotalChangePercentage({})
     expect(outputWithEmptyObject).toEqual(DefaultChangePercentage)
+
     // With zero values for all changes
-    const outputWithDefaultObject = calculateChangePercentage(changeSummary)
+    const outputWithDefaultObject = calculateTotalChangePercentage(changeSummary.total)
     expect(outputWithDefaultObject).toEqual(DefaultChangePercentage)
 
-    const outputWithPositiveValue = calculateChangePercentage(changeSummaryWithPositiveChange)
+    const outputWithPositiveValue = calculateTotalChangePercentage(changeSummaryWithPositiveChange.total)
     expect(outputWithPositiveValue).toEqual({
       color: 'success',
-      percentage: 20
+      percentage: 50,
+      icon: 'symbol-triangle-up'
     })
 
-    const outputWithNegativeObject = calculateChangePercentage(changeSummaryWithNegativeChange)
+    const outputWithNegativeObject = calculateTotalChangePercentage(changeSummaryWithNegativeChange.total)
     expect(outputWithNegativeObject).toEqual({
       color: 'error',
-      percentage: 20
+      percentage: 33.3,
+      icon: 'symbol-triangle-down'
     })
   })
 

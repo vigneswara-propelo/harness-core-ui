@@ -369,7 +369,7 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
                 class="StyledProps--font Text--lineclamp StyledProps--main rowLabel"
                 style="--text-line-clamp: 1; width: 115px;"
               >
-                common.purpose.cf.continuous
+                infrastructureText
               </p>
               <div
                 class="StyledProps--font StyledProps--main timeline"
@@ -407,7 +407,7 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
                 class="StyledProps--font Text--lineclamp StyledProps--main rowLabel"
                 style="--text-line-clamp: 1; width: 115px;"
               >
-                infrastructureText
+                common.purpose.cf.continuous
               </p>
               <div
                 class="StyledProps--font StyledProps--main timeline"
