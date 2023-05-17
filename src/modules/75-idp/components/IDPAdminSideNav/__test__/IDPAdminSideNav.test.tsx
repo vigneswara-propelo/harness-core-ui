@@ -32,7 +32,7 @@ describe('IDP Sidenav', () => {
         <IDPAdminSideNav />
       </TestWrapper>
     )
-    expect(getByText('idp.adminHome')).toBeVisible()
+    expect(getByText('common.plugins')).toBeVisible()
     expect(container).toMatchSnapshot()
   })
 })

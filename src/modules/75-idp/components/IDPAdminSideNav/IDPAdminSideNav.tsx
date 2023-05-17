@@ -48,7 +48,8 @@ export default function IDPAdminSideNav(): React.ReactElement {
             className={css.backBtn}
             icon="main-chevron-left"
           />
-          <SidebarLink label={getString('idp.adminHome')} to={routes.toAdminHome(params)} />
+          {/*  TODO: Change default route to IDP Admin post beta */}
+          {/* <SidebarLink label={getString('idp.adminHome')} to={routes.toAdminHome(params)} /> */}
           <SidebarLink label={getString('common.plugins')} to={routes.toPluginsPage(params)} />
           <SidebarLink label={getString('common.configurations')} to={routes.toConfigurations(params)} />
           <SidebarLink label={getString('idp.layout')} to={routes.toLayoutConfig(params)} />

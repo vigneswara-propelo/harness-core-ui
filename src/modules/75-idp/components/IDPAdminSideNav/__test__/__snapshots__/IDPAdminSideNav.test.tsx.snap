@@ -34,16 +34,6 @@ exports[`IDP Sidenav render 1`] = `
     </a>
     <a
       class="link"
-      href="/account/accountId/idp-admin/home"
-    >
-      <p
-        class="StyledProps--font StyledProps--main text"
-      >
-        idp.adminHome
-      </p>
-    </a>
-    <a
-      class="link"
       href="/account/accountId/idp-admin/plugins"
     >
       <p
