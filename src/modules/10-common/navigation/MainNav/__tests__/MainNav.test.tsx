@@ -110,7 +110,6 @@ describe('main nav tests', () => {
         defaultFeatureFlagValues={{
           CING_ENABLED: true,
           CFNG_ENABLED: true,
-          CHAOS_ENABLED: true,
           NG_DASHBOARDS: true
         }}
       >
@@ -127,7 +126,6 @@ describe('main nav tests', () => {
         defaultFeatureFlagValues={{
           CING_ENABLED: true,
           CFNG_ENABLED: true,
-          CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
       >
@@ -157,10 +155,9 @@ describe('main nav tests', () => {
         defaultFeatureFlagValues={{
           CING_ENABLED: true,
           CFNG_ENABLED: true,
-          CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' }, CHAOS: { status: 'ACTIVE' } } }}
       >
         <MainNav />
       </TestWrapper>
@@ -190,10 +187,9 @@ describe('main nav tests', () => {
         defaultFeatureFlagValues={{
           CING_ENABLED: true,
           CFNG_ENABLED: false,
-          CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' }, CHAOS: { status: 'ACTIVE' } } }}
       >
         <MainNav />
       </TestWrapper>
@@ -222,7 +218,6 @@ describe('main nav tests', () => {
         defaultFeatureFlagValues={{
           CING_ENABLED: true,
           CFNG_ENABLED: false,
-          CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
       >
@@ -256,10 +251,11 @@ describe('main nav tests', () => {
         defaultFeatureFlagValues={{
           CING_ENABLED: true,
           CFNG_ENABLED: true,
-          CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
+        defaultLicenseStoreValues={{
+          licenseInformation: { CD: { status: 'ACTIVE' }, CHAOS: { status: 'ACTIVE' } }
+        }}
       >
         <MainNav />
       </TestWrapper>

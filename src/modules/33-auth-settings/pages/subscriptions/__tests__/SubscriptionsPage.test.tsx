@@ -136,7 +136,6 @@ const featureFlags = {
   CING_ENABLED: true,
   CENG_ENABLED: true,
   CFNG_ENABLED: true,
-  CHAOS_ENABLED: true,
   CET_ENABLED: true
 }
 
@@ -183,7 +182,8 @@ describe('Subscriptions Page', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -231,7 +231,8 @@ describe('Subscriptions Page', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -279,7 +280,8 @@ describe('Subscriptions Page', () => {
         pathParams={{ module: ModuleName.CI }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -324,7 +326,8 @@ describe('Subscriptions Page', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -367,7 +370,8 @@ describe('Subscriptions Page', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -413,7 +417,8 @@ describe('Subscriptions Page', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -456,7 +461,8 @@ describe('Subscriptions Page', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -498,7 +504,8 @@ describe('Subscriptions Page', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -540,7 +547,8 @@ describe('Subscriptions Page', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -581,7 +589,8 @@ describe('Subscriptions Page', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -619,7 +628,8 @@ describe('Subscriptions Page', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           },
           updateLicenseStore: updateLicenseStoreSpy
         }}
@@ -826,6 +836,11 @@ describe('Subscriptions Page', () => {
       const { container, getByText, getAllByText } = render(
         <TestWrapper
           defaultAppStoreValues={{ featureFlags }}
+          defaultLicenseStoreValues={{
+            licenseInformation: {
+              CHAOS: { edition: 'FREE', status: 'ACTIVE' }
+            }
+          }}
           pathParams={{ module: ModuleName.CI }}
           queryParams={{ moduleCard: ModuleName.CI }}
         >

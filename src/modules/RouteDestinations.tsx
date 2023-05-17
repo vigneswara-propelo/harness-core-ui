@@ -56,7 +56,6 @@ export default function RouteDestinations(): React.ReactElement {
     CING_ENABLED,
     CENG_ENABLED,
     CFNG_ENABLED,
-    CHAOS_ENABLED,
     CODE_ENABLED,
     IACM_ENABLED,
     SSCA_ENABLED,
@@ -88,7 +87,7 @@ export default function RouteDestinations(): React.ReactElement {
       {tempatesRoutes.props.children}
       {freezeWindowRoutes.props.children}
       {userProfileRoutes.props.children}
-      {CHAOS_ENABLED ? ChaosRoutes().props.children : null}
+      {ChaosRoutes().props.children}
       {CING_ENABLED ? CIRoutes.props.children : null}
       {CDRoutes.props.children}
       {isCVModuleEnabled ? CVRoutes.props.children : null}

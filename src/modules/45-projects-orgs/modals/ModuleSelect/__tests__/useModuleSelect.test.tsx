@@ -18,8 +18,7 @@ jest.spyOn(featureFlags, 'useFeatureFlags').mockImplementation(() => ({
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,
-  CFNG_ENABLED: true,
-  CHAOS_ENABLED: true
+  CFNG_ENABLED: true
 }))
 const TestComponent: React.FC = () => {
   const { openModuleSelectModal } = useModuleSelectModal({ onCloseModal: noop, onSuccess: noop })
@@ -45,7 +44,8 @@ describe('module select test', () => {
         pathParams={{ accountId: 'dummy' }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -70,8 +70,7 @@ describe('module select test', () => {
       CVNG_ENABLED: true,
       CING_ENABLED: true,
       CENG_ENABLED: true,
-      CFNG_ENABLED: true,
-      CHAOS_ENABLED: true
+      CFNG_ENABLED: true
     }))
     const { getByText } = render(
       <TestWrapper
@@ -79,7 +78,8 @@ describe('module select test', () => {
         pathParams={{ accountId: 'dummy' }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -103,7 +103,7 @@ describe('module select test', () => {
   test('go to Module  btn ', async () => {
     mockImport('framework/LicenseStore/LicenseStoreContext', {
       useLicenseStore: jest.fn().mockImplementation(() => ({
-        licenseInformation: { CD: { status: 'ACTIVE' } }
+        licenseInformation: { CD: { status: 'ACTIVE' }, CHAOS: { status: 'ACTIVE' } }
       }))
     })
     const { getByText } = render(
@@ -127,7 +127,7 @@ describe('module select test', () => {
   test('test on prem getting directly continue btn ', async () => {
     mockImport('framework/LicenseStore/LicenseStoreContext', {
       useLicenseStore: jest.fn().mockImplementation(() => ({
-        licenseInformation: { CD: { status: 'ACTIVE' } }
+        licenseInformation: { CD: { status: 'ACTIVE' }, CHAOS: { status: 'ACTIVE' } }
       }))
     })
     mockImport('@common/utils/utils', {

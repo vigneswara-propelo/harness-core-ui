@@ -102,8 +102,7 @@ const featureFlags = {
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,
-  CFNG_ENABLED: true,
-  CHAOS_ENABLED: true
+  CFNG_ENABLED: true
 }
 
 describe('Subscriptions Page', () => {
@@ -148,7 +147,8 @@ describe('Subscriptions Page', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' }
+            CD: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -192,6 +192,11 @@ describe('Subscriptions Page', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
         pathParams={{ module: ModuleName.CI }}
         queryParams={{ moduleCard: ModuleName.CI }}
       >

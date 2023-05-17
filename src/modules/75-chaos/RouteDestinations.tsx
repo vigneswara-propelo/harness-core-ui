@@ -63,8 +63,6 @@ import DelegateProfileDetails from '@delegates/pages/delegates/DelegateConfigura
 import DelegateTokens from '@delegates/components/DelegateTokens/DelegateTokens'
 import CreateSecretFromYamlPage from '@secrets/pages/createSecretFromYaml/CreateSecretFromYamlPage'
 import { validateYAMLWithSchema } from '@common/utils/YamlUtils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import PipelineStudioFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
@@ -194,64 +192,59 @@ const RedirectToChaosProject = (): React.ReactElement => {
 }
 
 export default function ChaosRoutes(): React.ReactElement {
-  const isChaosEnabled = useFeatureFlag(FeatureFlag.CHAOS_ENABLED)
+  // Pipeline registrations
+  PipelineStudioFactory.registerStep(new ChaosExperimentStep())
 
-  // Register Chaos into RBAC, PipelineStudio and AuditTrail Factory only when Feature Flag is enabled
-  if (isChaosEnabled) {
-    // Pipeline registrations
-    PipelineStudioFactory.registerStep(new ChaosExperimentStep())
+  // RBAC registrations
+  RbacFactory.registerResourceCategory(ResourceCategory.CHAOS, {
+    icon: 'chaos-main',
+    label: 'common.purpose.chaos.chaos'
+  })
 
-    // RBAC registrations
-    RbacFactory.registerResourceCategory(ResourceCategory.CHAOS, {
-      icon: 'chaos-main',
-      label: 'common.purpose.chaos.chaos'
-    })
+  RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_HUB, {
+    icon: 'chaos-main',
+    label: 'chaos.chaosHub',
+    category: ResourceCategory.CHAOS,
+    permissionLabels: {
+      [PermissionIdentifier.VIEW_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.view" />,
+      [PermissionIdentifier.EDIT_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+      [PermissionIdentifier.DELETE_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.delete" />
+    }
+  })
 
-    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_HUB, {
-      icon: 'chaos-main',
-      label: 'chaos.chaosHub',
-      category: ResourceCategory.CHAOS,
-      permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.delete" />
-      }
-    })
+  RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_EXPERIMENT, {
+    icon: 'chaos-main',
+    label: 'chaos.chaosExperiment',
+    category: ResourceCategory.CHAOS,
+    permissionLabels: {
+      [PermissionIdentifier.VIEW_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.view" />,
+      [PermissionIdentifier.EDIT_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+      [PermissionIdentifier.DELETE_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.delete" />,
+      [PermissionIdentifier.EXECUTE_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.execute" />
+    }
+  })
 
-    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_EXPERIMENT, {
-      icon: 'chaos-main',
-      label: 'chaos.chaosExperiment',
-      category: ResourceCategory.CHAOS,
-      permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.delete" />,
-        [PermissionIdentifier.EXECUTE_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.execute" />
-      }
-    })
+  RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_INFRASTRUCTURE, {
+    icon: 'chaos-main',
+    label: 'chaos.chaosInfrastructure',
+    category: ResourceCategory.CHAOS,
+    permissionLabels: {
+      [PermissionIdentifier.VIEW_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.view" />,
+      [PermissionIdentifier.EDIT_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+      [PermissionIdentifier.DELETE_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.delete" />
+    }
+  })
 
-    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_INFRASTRUCTURE, {
-      icon: 'chaos-main',
-      label: 'chaos.chaosInfrastructure',
-      category: ResourceCategory.CHAOS,
-      permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.delete" />
-      }
-    })
-
-    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_GAMEDAY, {
-      icon: 'chaos-main',
-      label: 'chaos.chaosGameday',
-      category: ResourceCategory.CHAOS,
-      permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.delete" />
-      }
-    })
-  }
+  RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_GAMEDAY, {
+    icon: 'chaos-main',
+    label: 'chaos.chaosGameday',
+    category: ResourceCategory.CHAOS,
+    permissionLabels: {
+      [PermissionIdentifier.VIEW_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.view" />,
+      [PermissionIdentifier.EDIT_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+      [PermissionIdentifier.DELETE_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.delete" />
+    }
+  })
 
   const RedirectToModuleTrialHome = (): React.ReactElement => {
     const { accountId } = useParams<{

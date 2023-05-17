@@ -1133,6 +1133,63 @@ exports[`<ExecutionLandingPage /> tests loading state - snapshot test 1`] = `
                   </span>
                 </a>
               </div>
+              <div
+                aria-controls="bp3-tab-panel_execution-tabs_resilience"
+                aria-disabled="false"
+                aria-expanded="false"
+                aria-selected="false"
+                class="bp3-tab"
+                data-tab-id="resilience"
+                id="bp3-tab-title_execution-tabs_resilience"
+                role="tab"
+                tabindex="0"
+              >
+                <a
+                  class="tabLink"
+                  href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/resilience"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="chaos-main"
+                  >
+                    <svg
+                      fill="none"
+                      height="16"
+                      viewBox="0 0 32 32"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M21.662 13.415a1.1 1.1 0 001.55 0 1.087 1.087 0 000-1.543l-5.647-5.62 6.837-3.929c1.6-.918 3.598.23 3.598 2.068v12.006l-8.265 1.968a1.09 1.09 0 10.51 2.122L28 18.641v8.968c0 1.838-1.999 2.986-3.598 2.068L14.89 24.21l1.331-9.568a1.092 1.092 0 00-.935-1.23 1.095 1.095 0 00-1.236.93l-1.209 8.69-8.642-4.966c-1.599-.919-1.599-3.216 0-4.134l11.4-6.551 6.063 6.033z"
+                        fill="url(#chaos-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="chaos-main_svg__a"
+                          x1="12.755"
+                          x2="27.888"
+                          y1="6.364"
+                          y2="29.992"
+                        >
+                          <stop
+                            stop-color="#FF61A2"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#D8005A"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span>
+                    pipeline.resilienceTab.title
+                  </span>
+                </a>
+              </div>
             </div>
           </div>
         </div>

@@ -48,7 +48,7 @@ const WelcomePage: React.FC = () => {
   const [ribbonImg, setRibbonImg] = useState<string>(ribbon_ci)
   useTelemetry({ pageName: PageNames.Purpose })
 
-  const { CVNG_ENABLED, CING_ENABLED, CFNG_ENABLED, CENG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CFNG_ENABLED, CENG_ENABLED } = useFeatureFlags()
 
   const CDNG_OPTIONS: ModuleProps = {
     enabled: true, // Continous delivery is enabled in CG
@@ -91,7 +91,7 @@ const WelcomePage: React.FC = () => {
   }
 
   const CHAOS_OPTIONS: ModuleProps = {
-    enabled: !!CHAOS_ENABLED,
+    enabled: true,
     titleIcon: 'chaos-with-text',
     bodyIcon: 'chaos-sketch',
     module: 'chaos',

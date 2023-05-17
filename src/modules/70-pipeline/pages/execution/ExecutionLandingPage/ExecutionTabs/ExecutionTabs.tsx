@@ -24,6 +24,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
+import type { ExecutionGraph } from 'services/pipeline-ng'
 import css from './ExecutionTabs.module.scss'
 
 const TAB_ID_MAP = {
@@ -45,6 +46,13 @@ interface ExecutionTabsProps {
   setSavedExecutionView: (data: string) => void
 }
 
+function isChaosStepInPipeline(data: ExecutionGraph | undefined): boolean {
+  return Object.values(data?.nodeMap ?? {}).some(entry => {
+    if (entry.stepType === 'Chaos') return true
+    return false
+  })
+}
+
 export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactElement {
   const { module } = useParams<PipelineType<ExecutionPathProps>>()
   const [selectedTabId, setSelectedTabId] = React.useState('')
@@ -62,7 +70,6 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const { licenseInformation } = useLicenseStore()
   const isSecurityEnabled = licenseInformation['STO']?.status === 'ACTIVE'
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
-  const isChaosEnabled = useFeatureFlag(FeatureFlag.CHAOS_ENABLED)
   const isIACMEnabled = useFeatureFlag(FeatureFlag.IACM_ENABLED)
   const isSSCAEnabled = useFeatureFlag(FeatureFlag.SSCA_ENABLED)
   const canUsePolicyEngine = useAnyEnterpriseLicense()
@@ -72,6 +79,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     view === SavedExecutionViewTypes.LOG || (!view && initialSelectedView === SavedExecutionViewTypes.LOG)
   const isCI = params.module === 'ci'
   const isCD = params.module === 'cd'
+  const isFF = params.module === 'cf'
   const isCIInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.ci
   const isSTOInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.sto
   const isCDInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.cd
@@ -285,7 +293,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if ((isCD || isCDInPipeline) && isChaosEnabled) {
+  if (isCD || isFF || isChaosStepInPipeline(pipelineExecutionDetail?.executionGraph)) {
     tabList.push({
       id: TAB_ID_MAP.RESILIENCE,
       title: (

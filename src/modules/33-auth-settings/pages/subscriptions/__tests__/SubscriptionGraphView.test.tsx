@@ -15,8 +15,7 @@ const featureFlags = {
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,
-  CFNG_ENABLED: true,
-  CHAOS_ENABLED: true
+  CFNG_ENABLED: true
 }
 
 describe('Subscriptions graph view undefined module flow  ', () => {
@@ -26,7 +25,8 @@ describe('Subscriptions graph view undefined module flow  ', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CF: { edition: 'FREE', status: 'ACTIVE' }
+            CF: { edition: 'FREE', status: 'ACTIVE' },
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
