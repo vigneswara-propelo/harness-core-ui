@@ -44,7 +44,6 @@ import type { FormState, ServiceData } from '../DeployServiceEntityUtils'
 import css from './ServiceEntitiesList.module.scss'
 
 export interface ServiceEntityCardProps extends ServiceData {
-  defaultExpanded?: boolean
   readonly?: boolean
   stageIdentifier?: string
   deploymentType?: string
@@ -71,7 +70,6 @@ const getScopedRefUsingIdentifier = (
 
 export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactElement {
   const {
-    defaultExpanded,
     service,
     serviceInputs,
     readonly,
@@ -83,7 +81,7 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
     cardClassName,
     isPropogateFromStage
   } = props
-  const [showInputs, setShowInputs] = React.useState(!!defaultExpanded)
+  const [showInputs, setShowInputs] = React.useState(false)
   const { getString } = useStrings()
   const formik = useFormikContext<FormState>()
   const scopedServiceRef = getScopedRefUsingIdentifier(formik, service)

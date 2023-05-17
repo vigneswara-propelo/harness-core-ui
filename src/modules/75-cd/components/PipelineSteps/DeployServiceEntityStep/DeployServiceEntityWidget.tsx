@@ -720,7 +720,6 @@ export default function DeployServiceEntityWidget({
                     stageIdentifier={stageIdentifier}
                     allowableTypes={allowableTypes}
                     onServiceEntityUpdate={onServiceEntityUpdate}
-                    isMultiSvc={isMultiSvc}
                     isPropogateFromStage={setupModeType === setupMode.PROPAGATE}
                   />
                 ) : null}

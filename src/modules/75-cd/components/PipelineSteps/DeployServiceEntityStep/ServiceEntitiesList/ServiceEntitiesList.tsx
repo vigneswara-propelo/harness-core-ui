@@ -48,7 +48,6 @@ export interface ServiceEntitiesListProps {
   allowableTypes: AllowedTypes
   onServiceEntityUpdate: (val: ServiceYaml) => void
   isPropogateFromStage: boolean
-  isMultiSvc?: boolean
 }
 
 export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.ReactElement {
@@ -63,8 +62,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
     stageIdentifier,
     onServiceEntityUpdate,
     allowableTypes,
-    isPropogateFromStage,
-    isMultiSvc
+    isPropogateFromStage
   } = props
   const { getString } = useStrings()
   const { accountId } = useParams<PipelinePathProps>()
@@ -119,7 +117,6 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
               allowableTypes={allowableTypes}
               readonly={readonly}
               deploymentType={selectedDeploymentType}
-              defaultExpanded={!isMultiSvc}
               isPropogateFromStage={isPropogateFromStage}
               cardClassName={servicesData.length - 1 !== index ? css.marginBottom : ''}
             />
