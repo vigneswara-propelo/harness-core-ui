@@ -4931,6 +4931,7 @@ export interface StringsMap {
   'pipeline.stepDescription.Bamboo': string
   'pipeline.stepDescription.Barrier': string
   'pipeline.stepDescription.BitrisePlugin': string
+  'pipeline.stepDescription.BlueGreenStageScaleDown': string
   'pipeline.stepDescription.Container': string
   'pipeline.stepDescription.CustomApproval': string
   'pipeline.stepDescription.DeployCloudFunction': string

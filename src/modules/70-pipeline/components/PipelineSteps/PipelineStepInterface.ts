@@ -43,6 +43,7 @@ export enum StepType {
   KubernetesDirect = 'KubernetesDirect',
   K8sServiceSpec = 'K8sServiceSpec',
   K8sRollingDeploy = 'K8sRollingDeploy',
+  K8sBlueGreenStageScaleDownStep = 'K8sBlueGreenStageScaleDownStep',
   CustomVariable = 'CustomVariable',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
   ServerlessGCP = 'ServerlessGCP',
