@@ -13,6 +13,7 @@ import { BlackduckStep } from './Blackduck/BlackduckStep'
 import { GrypeStep } from './GrypeStep/GrypeStep'
 import { GitleaksStep } from './GitleaksStep/GitleaksStep'
 import { SnykStep } from './SnykStep/SnykStep'
+import { SysdigStep } from './SysdigStep/SysdigStep'
 import { SonarqubeStep } from './SonarqubeStep/SonarqubeStep'
 import { ZapStep } from './ZapStep/ZapStep'
 import { PrismaCloudStep } from './PrismaCloudStep/PrismaCloudStep'
@@ -38,6 +39,7 @@ factory.registerStep(new BurpStep())
 factory.registerStep(new GrypeStep())
 factory.registerStep(new GitleaksStep())
 factory.registerStep(new SnykStep())
+factory.registerStep(new SysdigStep())
 factory.registerStep(new SonarqubeStep())
 factory.registerStep(new ZapStep())
 factory.registerStep(new PrismaCloudStep())

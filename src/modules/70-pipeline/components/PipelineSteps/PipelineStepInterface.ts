@@ -160,6 +160,7 @@ export enum StepType {
   BlackDuck = 'BlackDuck',
   Burp = 'Burp',
   Snyk = 'Snyk',
+  Sysdig = 'Sysdig',
   Grype = 'Grype',
   Gitleaks = 'Gitleaks',
   Sonarqube = 'Sonarqube',

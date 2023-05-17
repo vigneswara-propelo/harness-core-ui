@@ -9526,6 +9526,7 @@ export interface StringsMap {
   'sto.stepDescription.Sniper': string
   'sto.stepDescription.Snyk': string
   'sto.stepDescription.Sonarqube': string
+  'sto.stepDescription.Sysdig': string
   'sto.stepDescription.TwistLock': string
   'sto.stepDescription.Veracode': string
   'sto.stepDescription.WhiteSource': string
