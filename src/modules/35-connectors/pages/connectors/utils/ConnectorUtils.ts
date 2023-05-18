@@ -2713,7 +2713,7 @@ export const getConnectorDisplayName = (type: string): string => {
     case Connectors.TERRAFORM_CLOUD:
       return 'Terraform Cloud'
     case Connectors.SignalFX:
-      return 'Splunk Observability'
+      return 'Splunk Observability [SignalFX]'
     default:
       return ''
   }

@@ -46,7 +46,7 @@ export enum HealthSourceTypes {
   SumoLogic = 'SumoLogic',
   SumologicMetrics = 'SumologicMetrics',
   SumologicLogs = 'SumologicLogs',
-  SignalFX = 'Splunk Observability',
+  SignalFX = 'Splunk Observability [SignalFX]',
   SplunkSignalFXMetrics = 'SplunkSignalFXMetrics'
 }
 
