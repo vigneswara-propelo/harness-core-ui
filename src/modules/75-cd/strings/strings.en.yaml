@@ -991,3 +991,14 @@ identifiersDoNotExist: The following {{ entity }} identifier(s) do not exist - {
 infraDefinitionDiffTitle: infrastructureDefinition.yaml (saved) ↔ infrastructureDefinition.yaml (updated)
 closeInfrastructureDetails: Close Infrastructure Details?
 closeInfrastructureDetailsContent: Changes to your infrastructure will be lost if you do not apply your changes.
+customSequence:
+  resetToDefault: Reset to default
+  customSequence: Custom Sequence
+  envSlashGroupHeader: ENVIRONMENT/GROUP
+  saveSuccessMsg: Successfully saved custom sequence
+  saveFailedMsg: Failed to save custom sequence
+  envSequence: Environment Sequence
+  customSequenceDescription: Set the sequence in which the environment & group cards will be displayed
+  newlyAddedLabel: NEWLY ADDED
+  switchSuccessMsg: Successfully switched to {{sequence}} sequence
+  switchFailedMsg: Failed to switch

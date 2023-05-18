@@ -19,11 +19,13 @@ import {
   getErrorInfoFromErrorObject,
   PageError,
   DropDown,
-  SelectOption
+  SelectOption,
+  useToaster
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
+import { Switch } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
@@ -32,20 +34,29 @@ import {
   EnvironmentGroupInstanceDetail,
   GetArtifactInstanceDetailsQueryParams,
   GetEnvironmentInstanceDetailsQueryParams,
+  setCustomSequenceStatusPromise,
   useGetArtifactInstanceDetails,
+  useGetCustomSequenceStatus,
   useGetEnvironmentInstanceDetails
 } from 'services/cd-ng'
+import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import { EnvCardViewEmptyState } from './ServiceDetailEmptyStates'
 import ServiceDetailsDialog from './ServiceDetailsDialog'
 import { CardSortOption, CardView, createGroups, EnvCardProps, ServiceDetailsCardViewProps } from './ServiceDetailUtils'
 import { EnvCard } from './ServiceDetailCardViews/ServiceDetailEnvCardView'
 import { ArtifactCard } from './ServiceDetailCardViews/ServiceDetailArtifactCardView'
+import CustomSequenceDrawer from './CustomSequence/CustomSequence'
 
 import css from './ServiceDetailsSummaryV2.module.scss'
+
+const sortFilterParam = (sortFilter: string): string[] => {
+  return sortFilter === CardSortOption.ALL ? [CardSortOption.PROD, CardSortOption.PRE_PROD] : [sortFilter]
+}
 
 export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): React.ReactElement {
   const { setEnvId, setArtifactName } = props
   const { getString } = useStrings()
+  const { showSuccess, showError, clear } = useToaster()
   const [selectedEnv, setSelectedEnv] = useState<{ envId?: string; isEnvGroup: boolean }>()
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const [activeSlide, setActiveSlide] = useState<number>(1)
@@ -76,6 +87,18 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
     orgIdentifier,
     projectIdentifier
   }
+
+  const {
+    data: getCustomSeqStatus,
+    loading: getCustomSeqLoading,
+    refetch: refetchCustomSeqStatus
+  } = useGetCustomSequenceStatus({ queryParams })
+
+  //custom sequencing
+  const [isCustomSeqDrawerOpen, setCustomSeqDrawerOpen] = React.useState<boolean>(false)
+  const isCustomSeqEnabled = getCustomSeqStatus?.data?.shouldUseCustomSequence
+  const isCustomSeqNull = getCustomSeqStatus?.data?.nullCustomSequence
+  const [customSeqLoading, setCustomSeqLoading] = React.useState<boolean>(false)
 
   //Env Card
   const {
@@ -216,11 +239,53 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
     envRefetch({
       queryParams,
       body: {
-        filterType: 'Environment',
+        filterType: EntityType.Environment,
         environmentTypes: sortFilter
       }
     })
   }, [])
+
+  const afterSaveActions = (): void => {
+    envRefetch()
+    refetchCustomSeqStatus()
+    setSortOptions(CardSortOption.ALL)
+  }
+
+  const handleCustomSeqSwitchChange = async (event: React.FormEvent<HTMLInputElement>): Promise<void> => {
+    clear()
+    try {
+      const response = await setCustomSequenceStatusPromise({
+        queryParams: {
+          ...queryParams,
+          useCustomSequence: event.currentTarget.checked && !isCustomSeqEnabled
+        },
+        body: undefined
+      })
+
+      if (response.status === 'SUCCESS') {
+        showSuccess(
+          getString('cd.customSequence.switchSuccessMsg', {
+            sequence: response.data?.shouldUseCustomSequence ? 'custom' : 'default'
+          })
+        )
+        refetchCustomSeqStatus()
+        envRefetch({
+          queryParams,
+          body: {
+            filterType: EntityType.Environment,
+            environmentTypes: sortFilterParam(sortOptions)
+          }
+        })
+      } else {
+        showError(getString('cd.customSequence.switchFailedMsg'))
+      }
+    } catch (err: any) {
+      // istanbul ignore next
+      showError(getErrorInfoFromErrorObject(err))
+    } finally {
+      setCustomSeqLoading(false)
+    }
+  }
 
   return (
     <Container>
@@ -236,10 +301,10 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
           usePortal
           disabled={cardView === CardView.ARTIFACT}
         />
-        <div>
+        <div className={css.envCardViewHeaderLhs}>
           <Button
             variation={ButtonVariation.LINK}
-            style={{ paddingRight: 0, fontSize: 13 }}
+            style={{ paddingRight: 12, fontSize: 13 }}
             icon="panel-table"
             iconProps={{ size: 13 }}
             text={getString('cd.environmentDetailPage.viewInTable')}
@@ -251,6 +316,39 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
             }}
             disabled={!data || data.length === 0}
           />
+          {cardView === CardView.ENV ? (
+            <Layout.Horizontal flex={{ alignItems: 'center' }} className={css.customSeq}>
+              <Switch
+                disabled={getCustomSeqLoading || customSeqLoading || isCustomSeqNull || !data || data.length === 0}
+                onChange={event => {
+                  setCustomSeqLoading(true)
+                  handleCustomSeqSwitchChange(event)
+                }}
+                className={css.switch}
+                checked={isCustomSeqEnabled}
+              />
+              <Text
+                rightIconProps={{
+                  className: css.customSeqIcon,
+                  color: Color.PRIMARY_7,
+                  onClick: () => setCustomSeqDrawerOpen(true),
+                  size: 18
+                }}
+                rightIcon="code-settings"
+                font={{ variation: FontVariation.SMALL }}
+                color={Color.GREY_700}
+              >
+                {getString('cd.customSequence.customSequence')}
+              </Text>
+              {isCustomSeqDrawerOpen ? (
+                <CustomSequenceDrawer
+                  drawerOpen={isCustomSeqDrawerOpen}
+                  setDrawerOpen={setCustomSeqDrawerOpen}
+                  afterSaveActions={afterSaveActions}
+                />
+              ) : null}
+            </Layout.Horizontal>
+          ) : null}
           <ServiceDetailsDialog
             isOpen={isDetailsDialogOpen}
             setIsOpen={setIsDetailsDialogOpen}

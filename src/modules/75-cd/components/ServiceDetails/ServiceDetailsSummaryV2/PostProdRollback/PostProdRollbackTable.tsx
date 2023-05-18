@@ -227,7 +227,7 @@ export function PostProdRollbackListTable({
       if (response.data?.rollbackAllowed) {
         await triggerRollbackAction()
       } else {
-        showError(response.data?.message)
+        throw response
       }
     } catch (e: any) {
       // istanbul ignore next

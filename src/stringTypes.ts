@@ -5678,6 +5678,16 @@ export interface StringsMap {
   'cd.creating': string
   'cd.creatingGitOpsServer': string
   'cd.credentialsRef': string
+  'cd.customSequence.customSequence': string
+  'cd.customSequence.customSequenceDescription': string
+  'cd.customSequence.envSequence': string
+  'cd.customSequence.envSlashGroupHeader': string
+  'cd.customSequence.newlyAddedLabel': string
+  'cd.customSequence.resetToDefault': string
+  'cd.customSequence.saveFailedMsg': string
+  'cd.customSequence.saveSuccessMsg': string
+  'cd.customSequence.switchFailedMsg': string
+  'cd.customSequence.switchSuccessMsg': string
   'cd.dashboard.createProject': string
   'cd.dashboard.orSelectExisting': string
   'cd.dashboard.subHeading': string

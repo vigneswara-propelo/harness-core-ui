@@ -150,20 +150,24 @@
 }
 
 .pillToggle {
-  height: 18px;
-  margin-left: var(--spacing-7);
+  height: var(--spacing-7);
+  margin-left: var(--spacing-4);
   background-color: var(--grey-100);
-  border: 1px solid var(--grey-400) !important;
+  border: 1px solid var(--grey-300) !important;
+  border-radius: var(--spacing-2) !important;
 
   > div[class*='PillToggle--item'] {
     color: var(--grey-400);
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-3);
   }
 
   > div[class*='selected'] {
     background-color: var(--primary-1);
-    color: var(--primary-7);
-    border: 1px solid var(--primary-7);
-    height: 18px;
+    color: var(--primary-6);
+    border: 1px solid var(--primary-6);
+    height: var(--spacing-7);
     margin-left: -1px;
     margin-right: -1px;
   }
@@ -171,6 +175,12 @@
   :global(.PillToggle--item) {
     width: 100px !important;
     text-transform: uppercase;
+    border-radius: var(--spacing-2) !important;
+  }
+
+  div[data-name='toggle-option-two'] {
+    width: 80px !important;
+    padding-left: var(--spacing-4);
   }
 }
 
@@ -541,4 +551,31 @@
 .lastDeployedText {
   display: flex;
   gap: 3px;
+}
+
+.switch {
+  margin-bottom: 0 !important;
+}
+
+.envCardViewHeaderLhs {
+  display: flex;
+  align-items: center;
+}
+
+.customSeqIcon {
+  border-left: 1px solid var(--grey-200);
+  padding-left: 6px !important;
+  margin-left: var(--spacing-2) !important;
+
+  svg path {
+    fill: var(--primary-7) !important;
+  }
+  cursor: pointer;
+}
+
+.customSeq {
+  padding: var(--spacing-2) var(--spacing-3) !important;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--spacing-2);
+  margin-left: var(--spacing-4) !important;
 }

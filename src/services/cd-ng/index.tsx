@@ -2776,6 +2776,7 @@ export interface ConnectorCatalogueItem {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
   )[]
 }
 
@@ -2862,6 +2863,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
   )[]
 }
 
@@ -2924,6 +2926,7 @@ export interface ConnectorInfoDTO {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
 }
 
 export interface ConnectorResponse {
@@ -3003,6 +3006,7 @@ export interface ConnectorTypeStatistics {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
 }
 
 export interface ConnectorValidationResult {
@@ -9085,6 +9089,29 @@ export interface GovernanceMetadata {
   [key: string]: any
 }
 
+export interface HarnessApiAccess {
+  spec?: HarnessApiAccessSpecDTO
+  type: 'Token' | 'Jwt_Token'
+}
+
+export interface HarnessApiAccessSpecDTO {
+  [key: string]: any
+}
+
+export interface HarnessAuthentication {
+  spec: HarnessHttpCredentials
+  type: 'Http' | 'Ssh'
+}
+
+export type HarnessConnector = ConnectorConfigDTO & {
+  apiAccess?: HarnessApiAccess
+  authentication: HarnessAuthentication
+  executeOnDelegate?: boolean
+  type: 'Account' | 'Repo' | 'Project'
+  url: string
+  validationRepo?: string
+}
+
 export type HarnessFileStoreSource = ShellScriptBaseSource & {
   file?: string
 }
@@ -9099,6 +9126,19 @@ export interface HarnessForConfig {
   unit?: 'Percentage' | 'Count'
 }
 
+export interface HarnessHttpCredentials {
+  spec: HarnessHttpCredentialsSpecDTO
+  type: 'UsernameToken'
+}
+
+export interface HarnessHttpCredentialsSpecDTO {
+  [key: string]: any
+}
+
+export type HarnessJWTTokenSpec = HarnessApiAccessSpecDTO & {
+  tokenRef: string
+}
+
 export interface HarnessServiceInfoNG {
   envId?: string
   infraMappingId?: string
@@ -9110,6 +9150,15 @@ export interface HarnessServiceInfoNG {
 export type HarnessStore = StoreConfig & {
   files?: string[]
   secretFiles?: string[]
+}
+
+export type HarnessTokenSpec = HarnessApiAccessSpecDTO & {
+  tokenRef: string
+}
+
+export type HarnessUsernameToken = HarnessHttpCredentialsSpecDTO & {
+  tokenRef: string
+  username?: string
 }
 
 export interface HealthDeploymentDashboard {
@@ -10302,7 +10351,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -10310,6 +10359,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -11056,9 +11106,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -12973,6 +13024,13 @@ export interface ResponseCustomDeploymentRefreshYaml {
 export interface ResponseCustomDeploymentVariableResponse {
   correlationId?: string
   data?: CustomDeploymentVariableResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseCustomSequenceDTO {
+  correlationId?: string
+  data?: CustomSequenceDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -15110,6 +15168,13 @@ export interface ResponseSecretValidationResultDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseSequenceToggleDTO {
+  correlationId?: string
+  data?: SequenceToggleDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseServiceAccountAggregateDTO {
   correlationId?: string
   data?: ServiceAccountAggregateDTO
@@ -16532,6 +16597,11 @@ export type SecurityStepInfo = StepSpecType & {
   settings?: ParameterFieldMapStringJsonNode
 }
 
+export interface SequenceToggleDTO {
+  nullCustomSequence?: boolean
+  shouldUseCustomSequence?: boolean
+}
+
 export type ServerlessAwsLambdaDeployStepInfo = StepSpecType & {
   commandOptions?: string
   delegateSelectors?: string[]
@@ -16884,6 +16954,7 @@ export interface ServiceOverrideRequestDTO {
 }
 
 export interface ServiceOverrideRequestDTOV2 {
+  clusterIdentifier?: string
   environmentRef: string
   identifier?: string
   infraIdentifier?: string
@@ -16891,7 +16962,13 @@ export interface ServiceOverrideRequestDTOV2 {
   projectIdentifier?: string
   serviceRef?: string
   spec: ServiceOverridesSpec
-  type: 'INFRA_GLOBAL_OVERRIDE' | 'INFRA_SERVICE_OVERRIDE' | 'ENV_GLOBAL_OVERRIDE' | 'ENV_SERVICE_OVERRIDE'
+  type:
+    | 'INFRA_GLOBAL_OVERRIDE'
+    | 'INFRA_SERVICE_OVERRIDE'
+    | 'ENV_GLOBAL_OVERRIDE'
+    | 'ENV_SERVICE_OVERRIDE'
+    | 'CLUSTER_GLOBAL_OVERRIDE'
+    | 'CLUSTER_SERVICE_OVERRIDE'
 }
 
 export interface ServiceOverrideResponseDTO {
@@ -16917,6 +16994,7 @@ export interface ServiceOverridesMetadata {
 
 export interface ServiceOverridesResponseDTOV2 {
   accountId?: string
+  clusterIdentifier?: string
   environmentRef?: string
   identifier?: string
   infraIdentifier?: string
@@ -16924,7 +17002,13 @@ export interface ServiceOverridesResponseDTOV2 {
   projectIdentifier?: string
   serviceRef?: string
   spec?: ServiceOverridesSpec
-  type?: 'INFRA_GLOBAL_OVERRIDE' | 'INFRA_SERVICE_OVERRIDE' | 'ENV_GLOBAL_OVERRIDE' | 'ENV_SERVICE_OVERRIDE'
+  type?:
+    | 'INFRA_GLOBAL_OVERRIDE'
+    | 'INFRA_SERVICE_OVERRIDE'
+    | 'ENV_GLOBAL_OVERRIDE'
+    | 'ENV_SERVICE_OVERRIDE'
+    | 'CLUSTER_GLOBAL_OVERRIDE'
+    | 'CLUSTER_SERVICE_OVERRIDE'
 }
 
 export interface ServiceOverridesSpec {
@@ -16998,11 +17082,11 @@ export interface ServiceSequence {
   accountId?: string
   createdAt?: number
   customSequence?: CustomSequenceDTO
-  defaultSequence?: CustomSequenceDTO
   lastModifiedAt?: number
   orgIdentifier?: string
   projectIdentifier?: string
   serviceIdentifier?: string
+  shouldUseCustomSequence?: boolean
   uuid?: string
 }
 
@@ -19363,13 +19447,13 @@ export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
 export type DeleteManyFreezesBodyRequestBody = string[]
 
-export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
+export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
 
-export type UpdateWhitelistedDomainsBodyRequestBody = string[]
+export type UpdateSamlMetaDataForSamlSSOIdRequestBody = void
 
-export type UploadSamlMetaDataRequestBody = void
+export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
 export interface GetAccountSettingQueryParams {
   accountIdentifier: string
@@ -22562,7 +22646,7 @@ export type GetBuildDetailsForAcrArtifactWithYamlProps = Omit<
     ResponseAcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -22576,7 +22660,7 @@ export const GetBuildDetailsForAcrArtifactWithYaml = (props: GetBuildDetailsForA
     ResponseAcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -22591,7 +22675,7 @@ export type UseGetBuildDetailsForAcrArtifactWithYamlProps = Omit<
     ResponseAcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -22605,7 +22689,7 @@ export const useGetBuildDetailsForAcrArtifactWithYaml = (props: UseGetBuildDetai
     ResponseAcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/acr/getBuildDetailsV2`, { base: getConfig('ng/api'), ...props })
 
@@ -22617,7 +22701,7 @@ export const getBuildDetailsForAcrArtifactWithYamlPromise = (
     ResponseAcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -22626,7 +22710,7 @@ export const getBuildDetailsForAcrArtifactWithYamlPromise = (
     ResponseAcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/acr/getBuildDetailsV2`, props, signal)
 
@@ -23003,7 +23087,7 @@ export type GetAzureSubscriptionsForAcrArtifactWithYamlProps = Omit<
     ResponseAzureSubscriptionsDTO,
     Failure | Error,
     GetAzureSubscriptionsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -23019,7 +23103,7 @@ export const GetAzureSubscriptionsForAcrArtifactWithYaml = (
     ResponseAzureSubscriptionsDTO,
     Failure | Error,
     GetAzureSubscriptionsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -23034,7 +23118,7 @@ export type UseGetAzureSubscriptionsForAcrArtifactWithYamlProps = Omit<
     ResponseAzureSubscriptionsDTO,
     Failure | Error,
     GetAzureSubscriptionsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -23050,7 +23134,7 @@ export const useGetAzureSubscriptionsForAcrArtifactWithYaml = (
     ResponseAzureSubscriptionsDTO,
     Failure | Error,
     GetAzureSubscriptionsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/acr/v2/subscriptions`, { base: getConfig('ng/api'), ...props })
 
@@ -23062,7 +23146,7 @@ export const getAzureSubscriptionsForAcrArtifactWithYamlPromise = (
     ResponseAzureSubscriptionsDTO,
     Failure | Error,
     GetAzureSubscriptionsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -23071,7 +23155,7 @@ export const getAzureSubscriptionsForAcrArtifactWithYamlPromise = (
     ResponseAzureSubscriptionsDTO,
     Failure | Error,
     GetAzureSubscriptionsForAcrArtifactWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/acr/v2/subscriptions`, props, signal)
 
@@ -23100,7 +23184,7 @@ export type GetACRRegistriesForServiceWithYamlProps = Omit<
     ResponseAcrRegistriesDTO,
     Failure | Error,
     GetACRRegistriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -23114,7 +23198,7 @@ export const GetACRRegistriesForServiceWithYaml = (props: GetACRRegistriesForSer
     ResponseAcrRegistriesDTO,
     Failure | Error,
     GetACRRegistriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -23129,7 +23213,7 @@ export type UseGetACRRegistriesForServiceWithYamlProps = Omit<
     ResponseAcrRegistriesDTO,
     Failure | Error,
     GetACRRegistriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -23143,7 +23227,7 @@ export const useGetACRRegistriesForServiceWithYaml = (props: UseGetACRRegistries
     ResponseAcrRegistriesDTO,
     Failure | Error,
     GetACRRegistriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/acr/v3/container-registries`, { base: getConfig('ng/api'), ...props })
 
@@ -23155,7 +23239,7 @@ export const getACRRegistriesForServiceWithYamlPromise = (
     ResponseAcrRegistriesDTO,
     Failure | Error,
     GetACRRegistriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -23164,7 +23248,7 @@ export const getACRRegistriesForServiceWithYamlPromise = (
     ResponseAcrRegistriesDTO,
     Failure | Error,
     GetACRRegistriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/acr/v3/container-registries`, props, signal)
 
@@ -23194,7 +23278,7 @@ export type GetACRRepositoriesForServiceWithYamlProps = Omit<
     ResponseAcrRepositoriesDTO,
     Failure | Error,
     GetACRRepositoriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -23208,7 +23292,7 @@ export const GetACRRepositoriesForServiceWithYaml = (props: GetACRRepositoriesFo
     ResponseAcrRepositoriesDTO,
     Failure | Error,
     GetACRRepositoriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -23223,7 +23307,7 @@ export type UseGetACRRepositoriesForServiceWithYamlProps = Omit<
     ResponseAcrRepositoriesDTO,
     Failure | Error,
     GetACRRepositoriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -23237,7 +23321,7 @@ export const useGetACRRepositoriesForServiceWithYaml = (props: UseGetACRReposito
     ResponseAcrRepositoriesDTO,
     Failure | Error,
     GetACRRepositoriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/acr/v3/repositories`, { base: getConfig('ng/api'), ...props })
 
@@ -23249,7 +23333,7 @@ export const getACRRepositoriesForServiceWithYamlPromise = (
     ResponseAcrRepositoriesDTO,
     Failure | Error,
     GetACRRepositoriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -23258,7 +23342,7 @@ export const getACRRepositoriesForServiceWithYamlPromise = (
     ResponseAcrRepositoriesDTO,
     Failure | Error,
     GetACRRepositoriesForServiceWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/acr/v3/repositories`, props, signal)
 
@@ -26055,7 +26139,7 @@ export type GetBuildDetailsForEcrWithYamlProps = Omit<
     ResponseEcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForEcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -26069,7 +26153,7 @@ export const GetBuildDetailsForEcrWithYaml = (props: GetBuildDetailsForEcrWithYa
     ResponseEcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForEcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -26084,7 +26168,7 @@ export type UseGetBuildDetailsForEcrWithYamlProps = Omit<
     ResponseEcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForEcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -26098,7 +26182,7 @@ export const useGetBuildDetailsForEcrWithYaml = (props: UseGetBuildDetailsForEcr
     ResponseEcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForEcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/ecr/getBuildDetailsV2`, { base: getConfig('ng/api'), ...props })
 
@@ -26110,7 +26194,7 @@ export const getBuildDetailsForEcrWithYamlPromise = (
     ResponseEcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForEcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -26119,7 +26203,7 @@ export const getBuildDetailsForEcrWithYamlPromise = (
     ResponseEcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForEcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/ecr/getBuildDetailsV2`, props, signal)
 
@@ -26148,7 +26232,7 @@ export type GetImagesListForEcrProps = Omit<
     ResponseEcrListImagesDTO,
     Failure | Error,
     GetImagesListForEcrQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -26162,7 +26246,7 @@ export const GetImagesListForEcr = (props: GetImagesListForEcrProps) => (
     ResponseEcrListImagesDTO,
     Failure | Error,
     GetImagesListForEcrQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -26177,7 +26261,7 @@ export type UseGetImagesListForEcrProps = Omit<
     ResponseEcrListImagesDTO,
     Failure | Error,
     GetImagesListForEcrQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -26191,7 +26275,7 @@ export const useGetImagesListForEcr = (props: UseGetImagesListForEcrProps) =>
     ResponseEcrListImagesDTO,
     Failure | Error,
     GetImagesListForEcrQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/ecr/getImages`, { base: getConfig('ng/api'), ...props })
 
@@ -26203,7 +26287,7 @@ export const getImagesListForEcrPromise = (
     ResponseEcrListImagesDTO,
     Failure | Error,
     GetImagesListForEcrQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -26212,7 +26296,7 @@ export const getImagesListForEcrPromise = (
     ResponseEcrListImagesDTO,
     Failure | Error,
     GetImagesListForEcrQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/ecr/getImages`, props, signal)
 
@@ -27049,7 +27133,7 @@ export type GetBuildDetailsForGcrWithYamlProps = Omit<
     ResponseGcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForGcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -27063,7 +27147,7 @@ export const GetBuildDetailsForGcrWithYaml = (props: GetBuildDetailsForGcrWithYa
     ResponseGcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForGcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -27078,7 +27162,7 @@ export type UseGetBuildDetailsForGcrWithYamlProps = Omit<
     ResponseGcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForGcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -27092,7 +27176,7 @@ export const useGetBuildDetailsForGcrWithYaml = (props: UseGetBuildDetailsForGcr
     ResponseGcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForGcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/artifacts/gcr/getBuildDetailsV2`, { base: getConfig('ng/api'), ...props })
 
@@ -27104,7 +27188,7 @@ export const getBuildDetailsForGcrWithYamlPromise = (
     ResponseGcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForGcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -27113,7 +27197,7 @@ export const getBuildDetailsForGcrWithYamlPromise = (
     ResponseGcrResponseDTO,
     Failure | Error,
     GetBuildDetailsForGcrWithYamlQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/gcr/getBuildDetailsV2`, props, signal)
 
@@ -30057,7 +30141,13 @@ export interface UploadSamlMetaDataQueryParams {
 }
 
 export type UploadSamlMetaDataProps = Omit<
-  MutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
+  MutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -30065,7 +30155,13 @@ export type UploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
-  <Mutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>
+  <Mutate<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >
     verb="POST"
     path={`/authentication-settings/saml-metadata-upload`}
     base={getConfig('ng/api')}
@@ -30074,7 +30170,13 @@ export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
 )
 
 export type UseUploadSamlMetaDataProps = Omit<
-  UseMutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
+  UseMutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -30082,11 +30184,13 @@ export type UseUploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const useUploadSamlMetaData = (props: UseUploadSamlMetaDataProps) =>
-  useMutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
-    'POST',
-    `/authentication-settings/saml-metadata-upload`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >('POST', `/authentication-settings/saml-metadata-upload`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Create SAML Config
@@ -30096,18 +30200,18 @@ export const uploadSamlMetaDataPromise = (
     RestResponseSSOConfig,
     unknown,
     UploadSamlMetaDataQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
-    'POST',
-    getConfig('ng/api'),
-    `/authentication-settings/saml-metadata-upload`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/authentication-settings/saml-metadata-upload`, props, signal)
 
 export interface UpdateSamlMetaDataQueryParams {
   accountId: string
@@ -30173,7 +30277,7 @@ export type UpdateSamlMetaDataForSamlSSOIdProps = Omit<
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >,
   'path' | 'verb'
@@ -30188,7 +30292,7 @@ export const UpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UpdateSa
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >
     verb="PUT"
@@ -30203,7 +30307,7 @@ export type UseUpdateSamlMetaDataForSamlSSOIdProps = Omit<
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >,
   'path' | 'verb'
@@ -30218,7 +30322,7 @@ export const useUpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UseUp
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >(
     'PUT',
@@ -30238,7 +30342,7 @@ export const updateSamlMetaDataForSamlSSOIdPromise = (
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   > & { samlSSOId: string },
   signal?: RequestInit['signal']
@@ -30247,7 +30351,7 @@ export const updateSamlMetaDataForSamlSSOIdPromise = (
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >('PUT', getConfig('ng/api'), `/authentication-settings/saml-metadata-upload/${samlSSOId}`, props, signal)
 
@@ -32787,7 +32891,7 @@ export type ListBucketsWithServiceV2Props = Omit<
     ResponseListBucketResponse,
     Failure | Error,
     ListBucketsWithServiceV2QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -32801,7 +32905,7 @@ export const ListBucketsWithServiceV2 = (props: ListBucketsWithServiceV2Props) =
     ResponseListBucketResponse,
     Failure | Error,
     ListBucketsWithServiceV2QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -32816,7 +32920,7 @@ export type UseListBucketsWithServiceV2Props = Omit<
     ResponseListBucketResponse,
     Failure | Error,
     ListBucketsWithServiceV2QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -32830,7 +32934,7 @@ export const useListBucketsWithServiceV2 = (props: UseListBucketsWithServiceV2Pr
     ResponseListBucketResponse,
     Failure | Error,
     ListBucketsWithServiceV2QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/buckets/s3/v2/getBuckets`, { base: getConfig('ng/api'), ...props })
 
@@ -32842,7 +32946,7 @@ export const listBucketsWithServiceV2Promise = (
     ResponseListBucketResponse,
     Failure | Error,
     ListBucketsWithServiceV2QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -32851,7 +32955,7 @@ export const listBucketsWithServiceV2Promise = (
     ResponseListBucketResponse,
     Failure | Error,
     ListBucketsWithServiceV2QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/buckets/s3/v2/getBuckets`, props, signal)
 
@@ -32871,7 +32975,7 @@ export type GetBucketsInManifestsProps = Omit<
     ResponseMapStringString,
     Failure | Error,
     GetBucketsInManifestsQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -32885,7 +32989,7 @@ export const GetBucketsInManifests = (props: GetBucketsInManifestsProps) => (
     ResponseMapStringString,
     Failure | Error,
     GetBucketsInManifestsQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -32900,7 +33004,7 @@ export type UseGetBucketsInManifestsProps = Omit<
     ResponseMapStringString,
     Failure | Error,
     GetBucketsInManifestsQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -32914,7 +33018,7 @@ export const useGetBucketsInManifests = (props: UseGetBucketsInManifestsProps) =
     ResponseMapStringString,
     Failure | Error,
     GetBucketsInManifestsQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/buckets/s3/v2/getBucketsInManifests`, { base: getConfig('ng/api'), ...props })
 
@@ -32926,7 +33030,7 @@ export const getBucketsInManifestsPromise = (
     ResponseMapStringString,
     Failure | Error,
     GetBucketsInManifestsQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -32935,7 +33039,7 @@ export const getBucketsInManifestsPromise = (
     ResponseMapStringString,
     Failure | Error,
     GetBucketsInManifestsQueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/buckets/s3/v2/getBucketsInManifests`, props, signal)
 
@@ -32966,7 +33070,7 @@ export type GetFilePathsV2ForS3Props = Omit<
     ResponseListFilePaths,
     Failure | Error,
     GetFilePathsV2ForS3QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -32980,7 +33084,7 @@ export const GetFilePathsV2ForS3 = (props: GetFilePathsV2ForS3Props) => (
     ResponseListFilePaths,
     Failure | Error,
     GetFilePathsV2ForS3QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -32995,7 +33099,7 @@ export type UseGetFilePathsV2ForS3Props = Omit<
     ResponseListFilePaths,
     Failure | Error,
     GetFilePathsV2ForS3QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33009,7 +33113,7 @@ export const useGetFilePathsV2ForS3 = (props: UseGetFilePathsV2ForS3Props) =>
     ResponseListFilePaths,
     Failure | Error,
     GetFilePathsV2ForS3QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', `/buckets/s3/v2/getFilePaths`, { base: getConfig('ng/api'), ...props })
 
@@ -33021,7 +33125,7 @@ export const getFilePathsV2ForS3Promise = (
     ResponseListFilePaths,
     Failure | Error,
     GetFilePathsV2ForS3QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -33030,7 +33134,7 @@ export const getFilePathsV2ForS3Promise = (
     ResponseListFilePaths,
     Failure | Error,
     GetFilePathsV2ForS3QueryParams,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/buckets/s3/v2/getFilePaths`, props, signal)
 
@@ -33137,6 +33241,7 @@ export interface GetConnectorListQueryParams {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
   category?:
     | 'CLOUD_PROVIDER'
     | 'SECRET_MANAGER'
@@ -33544,6 +33649,7 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
 }
 
 export type GetAllAllowedFieldValuesProps = Omit<
@@ -34866,7 +34972,7 @@ export interface GetCustomSequenceQueryParams {
 }
 
 export type GetCustomSequenceProps = Omit<
-  GetProps<ResponseServiceSequence, Failure | Error, GetCustomSequenceQueryParams, void>,
+  GetProps<ResponseCustomSequenceDTO, Failure | Error, GetCustomSequenceQueryParams, void>,
   'path'
 >
 
@@ -34874,7 +34980,7 @@ export type GetCustomSequenceProps = Omit<
  * Get custom sequence for env and env groups
  */
 export const GetCustomSequence = (props: GetCustomSequenceProps) => (
-  <Get<ResponseServiceSequence, Failure | Error, GetCustomSequenceQueryParams, void>
+  <Get<ResponseCustomSequenceDTO, Failure | Error, GetCustomSequenceQueryParams, void>
     path={`/dashboard/customSequence`}
     base={getConfig('ng/api')}
     {...props}
@@ -34882,7 +34988,7 @@ export const GetCustomSequence = (props: GetCustomSequenceProps) => (
 )
 
 export type UseGetCustomSequenceProps = Omit<
-  UseGetProps<ResponseServiceSequence, Failure | Error, GetCustomSequenceQueryParams, void>,
+  UseGetProps<ResponseCustomSequenceDTO, Failure | Error, GetCustomSequenceQueryParams, void>,
   'path'
 >
 
@@ -34890,7 +34996,7 @@ export type UseGetCustomSequenceProps = Omit<
  * Get custom sequence for env and env groups
  */
 export const useGetCustomSequence = (props: UseGetCustomSequenceProps) =>
-  useGet<ResponseServiceSequence, Failure | Error, GetCustomSequenceQueryParams, void>(`/dashboard/customSequence`, {
+  useGet<ResponseCustomSequenceDTO, Failure | Error, GetCustomSequenceQueryParams, void>(`/dashboard/customSequence`, {
     base: getConfig('ng/api'),
     ...props
   })
@@ -34899,10 +35005,10 @@ export const useGetCustomSequence = (props: UseGetCustomSequenceProps) =>
  * Get custom sequence for env and env groups
  */
 export const getCustomSequencePromise = (
-  props: GetUsingFetchProps<ResponseServiceSequence, Failure | Error, GetCustomSequenceQueryParams, void>,
+  props: GetUsingFetchProps<ResponseCustomSequenceDTO, Failure | Error, GetCustomSequenceQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseServiceSequence, Failure | Error, GetCustomSequenceQueryParams, void>(
+  getUsingFetch<ResponseCustomSequenceDTO, Failure | Error, GetCustomSequenceQueryParams, void>(
     getConfig('ng/api'),
     `/dashboard/customSequence`,
     props,
@@ -34965,6 +35071,57 @@ export const saveCustomSequencePromise = (
     'POST',
     getConfig('ng/api'),
     `/dashboard/customSequence`,
+    props,
+    signal
+  )
+
+export interface DefaultSequenceQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceId?: string
+}
+
+export type DefaultSequenceProps = Omit<
+  GetProps<ResponseCustomSequenceDTO, Failure | Error, DefaultSequenceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get default sequence for env and env groups
+ */
+export const DefaultSequence = (props: DefaultSequenceProps) => (
+  <Get<ResponseCustomSequenceDTO, Failure | Error, DefaultSequenceQueryParams, void>
+    path={`/dashboard/defaultSequence`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDefaultSequenceProps = Omit<
+  UseGetProps<ResponseCustomSequenceDTO, Failure | Error, DefaultSequenceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get default sequence for env and env groups
+ */
+export const useDefaultSequence = (props: UseDefaultSequenceProps) =>
+  useGet<ResponseCustomSequenceDTO, Failure | Error, DefaultSequenceQueryParams, void>(`/dashboard/defaultSequence`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get default sequence for env and env groups
+ */
+export const defaultSequencePromise = (
+  props: GetUsingFetchProps<ResponseCustomSequenceDTO, Failure | Error, DefaultSequenceQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseCustomSequenceDTO, Failure | Error, DefaultSequenceQueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/defaultSequence`,
     props,
     signal
   )
@@ -36862,6 +37019,118 @@ export const getServiceDetailsV2Promise = (
   getUsingFetch<ResponseServiceDetailsInfoDTOV2, Failure | Error, GetServiceDetailsV2QueryParams, void>(
     getConfig('ng/api'),
     `/dashboard/serviceDetailsV2`,
+    props,
+    signal
+  )
+
+export interface GetCustomSequenceStatusQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceId?: string
+}
+
+export type GetCustomSequenceStatusProps = Omit<
+  GetProps<ResponseSequenceToggleDTO, Failure | Error, GetCustomSequenceStatusQueryParams, void>,
+  'path'
+>
+
+/**
+ * get the status of current sequence of env cards
+ */
+export const GetCustomSequenceStatus = (props: GetCustomSequenceStatusProps) => (
+  <Get<ResponseSequenceToggleDTO, Failure | Error, GetCustomSequenceStatusQueryParams, void>
+    path={`/dashboard/useCustomSequence`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetCustomSequenceStatusProps = Omit<
+  UseGetProps<ResponseSequenceToggleDTO, Failure | Error, GetCustomSequenceStatusQueryParams, void>,
+  'path'
+>
+
+/**
+ * get the status of current sequence of env cards
+ */
+export const useGetCustomSequenceStatus = (props: UseGetCustomSequenceStatusProps) =>
+  useGet<ResponseSequenceToggleDTO, Failure | Error, GetCustomSequenceStatusQueryParams, void>(
+    `/dashboard/useCustomSequence`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * get the status of current sequence of env cards
+ */
+export const getCustomSequenceStatusPromise = (
+  props: GetUsingFetchProps<ResponseSequenceToggleDTO, Failure | Error, GetCustomSequenceStatusQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseSequenceToggleDTO, Failure | Error, GetCustomSequenceStatusQueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/useCustomSequence`,
+    props,
+    signal
+  )
+
+export interface SetCustomSequenceStatusQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceId?: string
+  useCustomSequence: boolean
+}
+
+export type SetCustomSequenceStatusProps = Omit<
+  MutateProps<ResponseServiceSequence, Failure | Error, SetCustomSequenceStatusQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Save the status of current sequence of env cards
+ */
+export const SetCustomSequenceStatus = (props: SetCustomSequenceStatusProps) => (
+  <Mutate<ResponseServiceSequence, Failure | Error, SetCustomSequenceStatusQueryParams, void, void>
+    verb="POST"
+    path={`/dashboard/useCustomSequence`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseSetCustomSequenceStatusProps = Omit<
+  UseMutateProps<ResponseServiceSequence, Failure | Error, SetCustomSequenceStatusQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Save the status of current sequence of env cards
+ */
+export const useSetCustomSequenceStatus = (props: UseSetCustomSequenceStatusProps) =>
+  useMutate<ResponseServiceSequence, Failure | Error, SetCustomSequenceStatusQueryParams, void, void>(
+    'POST',
+    `/dashboard/useCustomSequence`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Save the status of current sequence of env cards
+ */
+export const setCustomSequenceStatusPromise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceSequence,
+    Failure | Error,
+    SetCustomSequenceStatusQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseServiceSequence, Failure | Error, SetCustomSequenceStatusQueryParams, void, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/dashboard/useCustomSequence`,
     props,
     signal
   )
@@ -56340,7 +56609,13 @@ export interface GetServiceOverrideListV2QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  type?: 'INFRA_GLOBAL_OVERRIDE' | 'INFRA_SERVICE_OVERRIDE' | 'ENV_GLOBAL_OVERRIDE' | 'ENV_SERVICE_OVERRIDE'
+  type?:
+    | 'INFRA_GLOBAL_OVERRIDE'
+    | 'INFRA_SERVICE_OVERRIDE'
+    | 'ENV_GLOBAL_OVERRIDE'
+    | 'ENV_SERVICE_OVERRIDE'
+    | 'CLUSTER_GLOBAL_OVERRIDE'
+    | 'CLUSTER_SERVICE_OVERRIDE'
 }
 
 export type GetServiceOverrideListV2Props = Omit<
@@ -59413,6 +59688,7 @@ export interface GetServiceV2QueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   deleted?: boolean
+  fetchResolvedYaml?: boolean
 }
 
 export interface GetServiceV2PathParams {
@@ -61283,12 +61559,18 @@ export const retrieveRecommendationRcPromise = (
   >('POST', getConfig('ng/api'), `/subscriptions/recommendation-rc`, props, signal)
 
 export type SyncStripeEventProps = Omit<
-  MutateProps<RestResponseVoid, Failure | Error, void, GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody, void>,
+  MutateProps<
+    RestResponseVoid,
+    Failure | Error,
+    void,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 export const SyncStripeEvent = (props: SyncStripeEventProps) => (
-  <Mutate<RestResponseVoid, Failure | Error, void, GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody, void>
+  <Mutate<RestResponseVoid, Failure | Error, void, GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody, void>
     verb="POST"
     path={`/subscriptions/sync_event`}
     base={getConfig('ng/api')}
@@ -61297,12 +61579,18 @@ export const SyncStripeEvent = (props: SyncStripeEventProps) => (
 )
 
 export type UseSyncStripeEventProps = Omit<
-  UseMutateProps<RestResponseVoid, Failure | Error, void, GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody, void>,
+  UseMutateProps<
+    RestResponseVoid,
+    Failure | Error,
+    void,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 export const useSyncStripeEvent = (props: UseSyncStripeEventProps) =>
-  useMutate<RestResponseVoid, Failure | Error, void, GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody, void>(
+  useMutate<RestResponseVoid, Failure | Error, void, GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody, void>(
     'POST',
     `/subscriptions/sync_event`,
     { base: getConfig('ng/api'), ...props }
@@ -61313,18 +61601,18 @@ export const syncStripeEventPromise = (
     RestResponseVoid,
     Failure | Error,
     void,
-    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<RestResponseVoid, Failure | Error, void, GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody, void>(
-    'POST',
-    getConfig('ng/api'),
-    `/subscriptions/sync_event`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    RestResponseVoid,
+    Failure | Error,
+    void,
+    GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/subscriptions/sync_event`, props, signal)
 
 export interface CancelSubscriptionQueryParams {
   accountIdentifier: string
@@ -68172,6 +68460,7 @@ export interface GetYamlSchemaQueryParams {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'

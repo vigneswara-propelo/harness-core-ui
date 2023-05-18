@@ -11,7 +11,8 @@ import type {
   ResponseInstanceDetailGroupedByPipelineExecutionList,
   ResponseInstanceGroupedByEnvironmentList,
   ResponseInstanceGroupedOnArtifactList,
-  ResponseOpenTaskDetails
+  ResponseOpenTaskDetails,
+  ResponseSequenceToggleDTO
 } from 'services/cd-ng'
 
 export const envInstanceDetailsMock: ResponseEnvironmentGroupInstanceDetails = {
@@ -469,4 +470,14 @@ export const openTaskMock: ResponseOpenTaskDetails = {
   },
   metaData: undefined,
   correlationId: 'd9c0ce00-6485-4603-ab74-a6a3aa6d1006'
+}
+
+export const getCustomSequenceStatusMock: ResponseSequenceToggleDTO = {
+  status: 'SUCCESS',
+  data: {
+    shouldUseCustomSequence: false,
+    nullCustomSequence: false
+  },
+  metaData: undefined,
+  correlationId: 'testCorrelationId'
 }

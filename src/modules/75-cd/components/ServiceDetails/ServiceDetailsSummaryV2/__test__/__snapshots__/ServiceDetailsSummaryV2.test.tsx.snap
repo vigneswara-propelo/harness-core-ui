@@ -133,11 +133,13 @@ exports[`Service Detail Summary -  Initial render - basic snapshot 1`] = `
             </div>
           </div>
         </div>
-        <div>
+        <div
+          class="envCardViewHeaderLhs"
+        >
           <button
             aria-label="cd.environmentDetailPage.viewInTable"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
-            style="padding-right: 0px; font-size: 13px;"
+            style="padding-right: 12px; font-size: 13px;"
             type="button"
           >
             <span
@@ -165,6 +167,45 @@ exports[`Service Detail Summary -  Initial render - basic snapshot 1`] = `
               cd.environmentDetailPage.viewInTable
             </span>
           </button>
+          <div
+            class="Layout--horizontal StyledProps--main customSeq StyledProps--flex StyledProps--flex-alignItems-center"
+          >
+            <label
+              class="bp3-control bp3-switch switch"
+            >
+              <input
+                type="checkbox"
+              />
+              <span
+                class="bp3-control-indicator"
+              />
+            </label>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey700"
+              style="display: flex; align-items: center;"
+            >
+              cd.customSequence.customSequence
+              <span
+                class="bp3-icon StyledProps--main customSeqIcon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7"
+                data-icon="code-settings"
+              >
+                <svg
+                  fill="none"
+                  height="18"
+                  viewBox="0 0 13 13"
+                  width="18"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M5.477 1.705c0-.27.218-.488.487-.488h.975c.27 0 .488.218.488.488v1.138c.31.084.606.206.879.363l.81-.807c.19-.189.498-.189.688 0l.69.688c.192.19.192.5 0 .691l-.807.804c.156.27.278.563.362.87h1.144c.269 0 .487.22.487.488v.975c0 .27-.218.488-.487.488h-1.144a3.687 3.687 0 01-.363.872l.807.803c.191.19.191.5 0 .691l-.69.688a.488.488 0 01-.689 0l-.81-.806a3.715 3.715 0 01-.877.362v1.138c0 .27-.219.487-.488.487h-.975a.488.488 0 01-.487-.487v-1.138a3.715 3.715 0 01-.88-.363l-.808.806a.488.488 0 01-.688 0l-.691-.688a.487.487 0 010-.69l.806-.804a3.685 3.685 0 01-.362-.871H1.71a.488.488 0 01-.487-.488V5.94c0-.269.218-.487.487-.487h1.143c.084-.308.206-.6.362-.87l-.807-.805a.488.488 0 010-.69l.69-.689c.191-.19.499-.19.689 0l.81.807c.272-.157.567-.28.879-.363zm.65.162v1.1a.493.493 0 01-.383.478 3.065 3.065 0 00-.911.377.493.493 0 01-.607-.069l-.782-.779-.46.459.779.776a.493.493 0 01.069.61c-.171.275-.3.58-.376.903a.493.493 0 01-.479.38H1.873v.65h1.104c.237 0 .428.167.479.382.077.324.205.628.376.903.117.188.1.443-.069.61l-.779.776.46.459.783-.78a.493.493 0 01.606-.068c.278.171.585.3.911.376.216.05.383.242.383.479v1.1h.65v-1.1c0-.237.167-.429.382-.479.326-.076.633-.205.91-.375a.493.493 0 01.607.068l.782.78.46-.46-.779-.776a.493.493 0 01-.068-.61c.17-.275.3-.58.376-.903a.493.493 0 01.478-.381h1.105v-.65H9.926a.493.493 0 01-.479-.381 3.036 3.036 0 00-.376-.903.493.493 0 01.07-.61l.78-.776-.461-.459-.783.78a.493.493 0 01-.607.068 3.065 3.065 0 00-.911-.377.493.493 0 01-.382-.478v-1.1zm.385 3.09a1.544 1.544 0 100 3.087 1.544 1.544 0 000-3.088zM4.32 6.5a2.194 2.194 0 114.387 0 2.194 2.194 0 01-4.387 0z"
+                    fill="#fff"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </p>
+          </div>
           <div
             class="PillToggle--optionBtns pillToggle"
           >

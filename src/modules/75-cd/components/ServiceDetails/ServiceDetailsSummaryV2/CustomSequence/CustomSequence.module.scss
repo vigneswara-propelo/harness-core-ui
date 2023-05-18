@@ -1,0 +1,102 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.customSequenceBgColor {
+  background-color: var(--primary-bg) !important;
+}
+
+.headerStyle {
+  padding: var(--spacing-8) var(--spacing-9) var(--spacing-3) var(--spacing-9) !important;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.emptyStateStyle {
+  margin-bottom: var(--spacing-9) !important;
+}
+
+.mainContainer {
+  width: 100%;
+  padding: 0px !important;
+  margin-top: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
+  border: none !important;
+}
+
+.customListContainer {
+  margin: 0px;
+  padding: var(--spacing-3) var(--spacing-small) !important;
+  display: grid !important;
+  grid-template-columns: 34px 43% 35% calc(22% - 34px);
+  border-radius: var(--spacing-2);
+}
+.leftBorderForNewlyAdded {
+  border-left: var(--spacing-2) solid var(--green-400) !important;
+}
+
+.table {
+  padding: var(--spacing-7) var(--spacing-8);
+  div[class*='TableV2--body'] {
+    overflow: auto;
+    max-height: calc(100% - 145px);
+  }
+}
+
+.environmentType {
+  display: inline-flex !important;
+  justify-content: center;
+  align-items: center;
+  height: 18px;
+  padding: var(--spacing-2) var(--spacing-3) !important;
+  background-color: var(--teal-50) !important;
+  color: var(--teal-700) !important;
+  font-weight: bold !important;
+  letter-spacing: 0.2px;
+  line-height: var(--font-size-normal) !important;
+  white-space: nowrap !important;
+  border: none;
+  border-radius: var(--spacing-10);
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 15px !important;
+
+  &.production {
+    background-color: var(--purple-50) !important;
+    color: var(--purple-700) !important;
+  }
+}
+
+.sortIconStyle {
+  display: grid !important;
+  grid-template-rows: 1fr 1fr;
+  padding-top: var(--spacing-1) !important;
+}
+
+.headerContentStyle {
+  display: grid !important;
+  grid-template-columns: 45% 40% 15%;
+  padding-left: var(--spacing-10) !important;
+  border-bottom: 1px solid var(--grey-200);
+  margin-bottom: var(--spacing-3) !important;
+}
+
+.newlyAddedLabel {
+  background-color: var(--green-50) !important;
+  width: 90px;
+  height: 24px;
+  padding: var(--spacing-2) !important;
+  border-radius: var(--spacing-2);
+}
+
+.customListBody {
+  overflow: auto;
+  height: calc(100vh - 215px);
+}

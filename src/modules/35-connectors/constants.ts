@@ -169,7 +169,8 @@ export const ConnectorLabels: Record<ConnectorInfoDTO['type'], string> = {
   Spot: 'Spot',
   Tas: 'TAS',
   TerraformCloud: 'TerraformCloud',
-  SignalFX: 'SignalFX'
+  SignalFX: 'SignalFX',
+  Harness: 'Harness'
 }
 
 export const ConnectorStatus: ConnectorStatusType = {

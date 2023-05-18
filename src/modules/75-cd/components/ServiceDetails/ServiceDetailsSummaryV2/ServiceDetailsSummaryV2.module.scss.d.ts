@@ -15,6 +15,8 @@ declare const styles: {
   readonly collapse: string
   readonly collapseHeader: string
   readonly cursor: string
+  readonly customSeq: string
+  readonly customSeqIcon: string
   readonly detailSummaryView: string
   readonly dialogBase: string
   readonly dialogWrap: string
@@ -23,6 +25,7 @@ declare const styles: {
   readonly envCardGrid: string
   readonly envCardTitle: string
   readonly envCardViewEmptyState: string
+  readonly envCardViewHeaderLhs: string
   readonly envCards: string
   readonly envColumnStyle: string
   readonly envGroupContainer: string
@@ -63,6 +66,7 @@ declare const styles: {
   readonly selected: string
   readonly separatorStyle: string
   readonly slideStyle: string
+  readonly switch: string
   readonly titleStyle: string
   readonly titleText: string
 }

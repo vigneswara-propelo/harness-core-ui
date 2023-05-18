@@ -29,6 +29,7 @@ import {
   artifactInstanceDetailsMock,
   artifactTableMock,
   envInstanceDetailsMock,
+  getCustomSequenceStatusMock,
   openTaskMock
 } from './ServiceDetailsMocks'
 
@@ -71,6 +72,9 @@ jest.mock('services/cd-ng', () => ({
   useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false }),
   useGetOpenTasks: jest.fn().mockImplementation(() => {
     return { data: openTaskMock, refetch: jest.fn(), loading: false, error: false }
+  }),
+  useGetCustomSequenceStatus: jest.fn().mockImplementation(() => {
+    return { data: getCustomSequenceStatusMock, refetch: jest.fn(), loading: false, error: false }
   })
 }))
 

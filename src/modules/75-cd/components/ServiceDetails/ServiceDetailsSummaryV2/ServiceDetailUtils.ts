@@ -10,8 +10,8 @@ import type { ArtifactDeploymentDetail, ArtifactInstanceDetail } from 'services/
 
 export enum CardSortOption {
   ALL = 'All',
-  PROD = 'PRODUCTION',
-  PRE_PROD = 'PREPRODUCTION'
+  PROD = 'Production',
+  PRE_PROD = 'PreProduction'
 }
 
 export interface ServiceDetailsCardViewProps {
