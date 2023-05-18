@@ -1506,3 +1506,4 @@ serviceOverrides:
   environmentServiceSpecific: Service Specific
   globalInfra: Infrastructure Specific
   infrastructureServiceSpecific: Service & Infrastructure Specific
+cloudSpends: Cloud Spends
