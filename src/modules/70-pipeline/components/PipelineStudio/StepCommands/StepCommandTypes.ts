@@ -9,7 +9,7 @@ import type { AllowedTypes, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type {
   StepElementConfig,
-  StepGroupElementConfig,
+  StepGroupElementConfigV2,
   StepWhenCondition,
   FailureStrategyConfig,
   StageElementConfig
@@ -65,13 +65,13 @@ export enum TabTypes {
   Advanced = 'ADVANCED'
 }
 
-export interface StepGroupWithStageElementConfig extends StepGroupElementConfig {
+export interface StepGroupWithStageElementConfig extends StepGroupElementConfigV2 {
   stageType?: string
 }
 
 export type StepOrStepGroupOrTemplateStepData =
   | StepElementConfig
-  | StepGroupElementConfig
+  | StepGroupElementConfigV2
   | TemplateStepNode
   | StepGroupWithStageElementConfig
 

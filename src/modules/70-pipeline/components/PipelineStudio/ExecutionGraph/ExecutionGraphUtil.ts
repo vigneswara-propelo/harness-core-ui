@@ -13,7 +13,7 @@ import type {
   ExecutionWrapperConfig,
   ParallelStepElementConfig,
   StepElementConfig,
-  StepGroupElementConfig
+  StepGroupElementConfigV2
 } from 'services/cd-ng'
 import type { DependencyElement } from 'services/ci'
 import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -217,8 +217,12 @@ const getStepFromIdInternal = (
   parallelParentIdx?: number
   parallelParentParent?: ExecutionWrapper[]
 } => {
-  let stepResp: ExecutionWrapper | StepElementConfig | ParallelStepElementConfig | StepGroupElementConfig | undefined =
-    undefined
+  let stepResp:
+    | ExecutionWrapper
+    | StepElementConfig
+    | ParallelStepElementConfig
+    | StepGroupElementConfigV2
+    | undefined = undefined
   let parent: ExecutionWrapper[] = []
   let parallelParent: ExecutionWrapper | undefined = undefined
   let parallelParentIdx: number | undefined

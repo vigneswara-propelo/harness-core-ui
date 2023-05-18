@@ -18,7 +18,7 @@ import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { setFormikRef, StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-import type { Error, ExecutionWrapperConfig, StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
+import type { Error, ExecutionWrapperConfig, StepElementConfig, StepGroupElementConfigV2 } from 'services/cd-ng'
 import type { ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { getsMergedTemplateInputYamlPromise, useGetTemplate, useGetTemplateInputSetYaml } from 'services/template-ng'
 import { PageSpinner } from '@common/components'
@@ -178,10 +178,10 @@ function TemplateStepWidget(
   }, [retainInputsAndUpdateFormValues, stepTemplateInputSetLoading, stepTemplateInputSetYaml?.data])
 
   const validateForm = (values: TemplateStepNode) => {
-    if (!isEmpty((templateInputs as StepGroupElementConfig)?.steps)) {
+    if (!isEmpty((templateInputs as StepGroupElementConfigV2)?.steps)) {
       const errorsResponse = validateSteps({
         steps: values.template?.templateInputs?.steps as ExecutionWrapperConfig[],
-        template: (templateInputs as StepGroupElementConfig)?.steps as ExecutionWrapperConfig[],
+        template: (templateInputs as StepGroupElementConfigV2)?.steps as ExecutionWrapperConfig[],
         originalSteps: initialValues?.template?.templateInputs?.steps as ExecutionWrapperConfig[],
         getString,
         viewType: StepViewType.DeploymentForm
@@ -265,17 +265,19 @@ function TemplateStepWidget(
                     <Heading level={5} color={Color.BLACK}>
                       {getString('pipeline.templateInputs')}
                     </Heading>
-                    {!isEmpty((templateInputs as StepGroupElementConfig)?.delegateSelectors) ? (
+                    {!isEmpty((templateInputs as StepGroupElementConfigV2)?.delegateSelectors) ? (
                       <MultiTypeDelegateSelector
                         name={`${TEMPLATE_INPUT_PATH}.delegateSelectors`}
                         inputProps={{ readonly, orgIdentifier, projectIdentifier }}
                         allowableTypes={allowableTypes}
                       />
                     ) : null}
-                    {!isEmpty((templateInputs as StepGroupElementConfig)?.steps) ? (
+                    {!isEmpty((templateInputs as StepGroupElementConfigV2)?.steps) ? (
                       <>
                         <ExecutionWrapperInputSetForm
-                          stepsTemplate={(templateInputs as StepGroupElementConfig)?.steps as ExecutionWrapperConfig[]}
+                          stepsTemplate={
+                            (templateInputs as StepGroupElementConfigV2)?.steps as ExecutionWrapperConfig[]
+                          }
                           formik={formik}
                           path={`${TEMPLATE_INPUT_PATH}.steps`}
                           allowableTypes={allowableTypes}
