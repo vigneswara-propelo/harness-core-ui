@@ -115,7 +115,12 @@ export function StepCommands(
       ? StepType.Template
       : ((step as StepElementConfig).type as StepType)
 
-  const getValues = (): Partial<Values> => {
+  const getValues = (
+    latestValues: {
+      stepValues?: Partial<Values>
+      advancedValues?: Partial<Values>
+    } = {}
+  ): Partial<Values> => {
     const stepObj =
       isStepGroup && !isTemplateStep
         ? (stepsFactory.getStep(StepType.StepGroup) as PipelineStep<any>)
@@ -123,9 +128,10 @@ export function StepCommands(
         ? (stepsFactory.getStep(StepType.Template) as PipelineStep<any>)
         : (stepsFactory.getStep((step as StepElementConfig).type) as PipelineStep<any>)
 
+    const { stepValues, advancedValues } = latestValues
     const values = {
-      ...(stepRef.current ? stepObj.processFormData(stepRef.current.values) : {}),
-      ...(isTemplateStep ? {} : (advancedConfRef.current?.values as Partial<Values>))
+      ...(stepRef.current ? defaultTo(stepValues, stepObj.processFormData(stepRef.current.values)) : {}),
+      ...(!isTemplateStep ? defaultTo(advancedValues, advancedConfRef.current?.values as Partial<Values>) : {})
     }
 
     return values
@@ -237,11 +243,11 @@ export function StepCommands(
         initialValues={step}
         readonly={isReadonly}
         isNewStep={isNewStep}
-        onChange={() => {
-          onChange?.(getValues())
+        onChange={values => {
+          onChange?.(getValues({ stepValues: values }))
         }}
-        onUpdate={() => {
-          onUpdate?.(getValues())
+        onUpdate={values => {
+          onUpdate?.(getValues({ stepValues: values }))
         }}
         type={stepType}
         stepViewType={stepViewType}
@@ -290,11 +296,11 @@ export function StepCommands(
                     isReadonly={isReadonly}
                     stepsFactory={stepsFactory}
                     allowableTypes={allowableTypes}
-                    onChange={() => {
-                      onChange?.(getValues())
+                    onChange={values => {
+                      onChange?.(getValues({ advancedValues: values }))
                     }}
-                    onUpdate={() => {
-                      onUpdate?.(getValues())
+                    onUpdate={values => {
+                      onUpdate?.(getValues({ advancedValues: values }))
                     }}
                     hiddenPanels={hiddenPanels}
                     isStepGroup={isStepGroup}
