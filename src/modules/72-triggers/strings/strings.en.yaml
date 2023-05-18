@@ -150,3 +150,8 @@ schedulePanel:
   cronExpression: '{{$.common.schedulePanel.cronExpression}}'
   unixExpression: 'UNIX Expression'
   quartzExpression: 'Quartz Expression'
+activityHistory:
+  eventCorrelationId: 'Event Correlation Id'
+  triggerStatus: 'Trigger Status'
+  executionDetails: 'Execution Details'
+  emptyStateMessage: 'No trigger activity history'

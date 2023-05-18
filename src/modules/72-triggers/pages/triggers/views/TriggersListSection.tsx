@@ -71,6 +71,7 @@ interface TriggersListSectionProps {
   goToDetails: ({ triggerIdentifier, triggerType }: GoToEditWizardInterface) => void
   isPipelineInvalid?: boolean
   gitAwareForTriggerEnabled?: boolean
+  goToActivityHistory: ({ triggerIdentifier }: GoToEditWizardInterface) => void
 }
 
 // type CustomColumn<T extends object> = Column<T> & {
@@ -93,6 +94,7 @@ interface RenderColumnMenuColumn {
   accountId: string
   pipelineIdentifier: string
   isTriggerRbacDisabled: boolean
+  goToActivityHistory: ({ triggerIdentifier }: GoToEditWizardInterface) => void
 }
 
 const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
@@ -112,7 +114,7 @@ const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
       targetIdentifier: column.pipelineIdentifier
     }
   })
-
+  const disableActivityHistory = data.type !== TriggerTypes.SCHEDULE && data.type !== TriggerTypes.WEBHOOK
   const { openDialog: confirmDelete } = useConfirmationDialog({
     contentText: `${column.getString('triggers.confirmDelete')} ${data.name || /* istanbul ignore next */ ''}`,
     titleText: column.getString('common.triggerLabel'),
@@ -175,6 +177,20 @@ const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
               }
               if (data?.identifier && data.type) {
                 column.goToEditWizard({ triggerIdentifier: data.identifier, triggerType: data.type })
+              }
+              setMenuOpen(false)
+            }}
+          />
+          <Menu.Divider />
+          <Menu.Item
+            icon="history"
+            text={column.getString('activityHistoryLabel')}
+            className={disableActivityHistory ? css.disabledOption : ''}
+            textClassName={disableActivityHistory ? css.disabledOption : ''}
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation()
+              if (data?.identifier && data.type) {
+                column.goToActivityHistory({ triggerIdentifier: data.identifier })
               }
               setMenuOpen(false)
             }}
@@ -575,7 +591,8 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
   goToEditWizard,
   goToDetails,
   isPipelineInvalid,
-  gitAwareForTriggerEnabled
+  gitAwareForTriggerEnabled,
+  goToActivityHistory
 }): JSX.Element => {
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -706,10 +723,11 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
         accountId,
         pipelineIdentifier,
         getString,
-        isTriggerRbacDisabled
+        isTriggerRbacDisabled,
+        goToActivityHistory
       }
     ],
-    [goToEditWizard, refetchTriggerList, getString, gitAwareForTriggerEnabled]
+    [goToEditWizard, refetchTriggerList, getString, gitAwareForTriggerEnabled, goToActivityHistory]
   )
 
   const paginationProps = useDefaultPaginationProps({
