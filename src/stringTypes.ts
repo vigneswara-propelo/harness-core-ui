@@ -9532,6 +9532,7 @@ export interface StringsMap {
   'sto.stepDescription.CustomIngestion': string
   'sto.stepDescription.Fortify': string
   'sto.stepDescription.FortifyOnDemand': string
+  'sto.stepDescription.Fossa': string
   'sto.stepDescription.Gitleaks': string
   'sto.stepDescription.Grype': string
   'sto.stepDescription.Mend': string
@@ -9543,6 +9544,7 @@ export interface StringsMap {
   'sto.stepDescription.PrismaCloud': string
   'sto.stepDescription.Prowler': string
   'sto.stepDescription.ScoutSuite': string
+  'sto.stepDescription.Semgrep': string
   'sto.stepDescription.Sniper': string
   'sto.stepDescription.Snyk': string
   'sto.stepDescription.Sonarqube': string
