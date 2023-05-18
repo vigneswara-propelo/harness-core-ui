@@ -2401,10 +2401,6 @@ export type CIModuleLicenseDTO = ModuleLicenseDTO & {
   numberOfCommitters?: number
 }
 
-export interface CIVolume {
-  type?: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
-}
-
 export type CVLicenseSummaryDTO = LicensesWithSummaryDTO & {
   totalServices?: number
 }
@@ -2417,11 +2413,6 @@ export interface CacheResponseMetadata {
   cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
   lastUpdatedAt: number
   ttlLeft: number
-}
-
-export interface Capabilities {
-  add?: string[]
-  drop?: string[]
 }
 
 export interface Capacity {
@@ -3026,32 +3017,6 @@ export interface ConnectorValidationResult {
   testedAt?: number
 }
 
-export interface ContainerInfraYamlSpec {
-  annotations?: {
-    [key: string]: string
-  }
-  automountServiceAccountToken?: boolean
-  connectorRef: string
-  containerSecurityContext?: SecurityContext
-  harnessImageConnectorRef?: string
-  hostNames?: string[]
-  initTimeout?: string
-  labels?: {
-    [key: string]: string
-  }
-  namespace: string
-  nodeSelector?: {
-    [key: string]: string
-  }
-  os?: 'Linux' | 'MacOS' | 'Windows'
-  priorityClassName?: string
-  resources: ContainerResource
-  runAsUser?: number
-  serviceAccountName?: string
-  tolerations?: Toleration[]
-  volumes?: CIVolume[]
-}
-
 export interface ContainerResource {
   limits: Limits
 }
@@ -3550,10 +3515,6 @@ export interface DelegateGroupListing {
 
 export interface DelegateGroupTags {
   tags?: string[]
-}
-
-export type DelegateInfra = StepGroupInfra & {
-  type: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export interface DelegateInner {
@@ -4270,17 +4231,6 @@ export interface EmbeddedUserDetails {
 export interface EmbeddedUserDetailsDTO {
   email?: string
   name?: string
-}
-
-export type EmptyDirYaml = CIVolume & {
-  mountPath: string
-  spec: EmptyDirYamlSpec
-  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
-}
-
-export interface EmptyDirYamlSpec {
-  medium?: string
-  size?: string
 }
 
 export interface EntityDetail {
@@ -5631,7 +5581,7 @@ export interface ExecutionStatusInfo {
 export interface ExecutionWrapperConfig {
   parallel?: ParallelStepElementConfig
   step?: StepElementConfig
-  stepGroup?: StepGroupElementConfigV2
+  stepGroup?: StepGroupElementConfig
 }
 
 export interface Failure {
@@ -9322,17 +9272,6 @@ export type HostNamesFilter = HostFilterSpec & {
   value?: string[]
 }
 
-export type HostPathYaml = CIVolume & {
-  mountPath: string
-  spec: HostPathYamlSpec
-  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
-}
-
-export interface HostPathYamlSpec {
-  path: string
-  type?: string
-}
-
 export interface HostValidationDTO {
   error?: ErrorDetail
   host?: string
@@ -10237,11 +10176,6 @@ export interface K8sContainer {
 export type K8sDeleteStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   deleteResources: DeleteResourcesWrapper
-}
-
-export type K8sDirectInfra = StepGroupInfra & {
-  spec: ContainerInfraYamlSpec
-  type: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export type K8sDryRunManifestStepInfo = StepSpecType & {
@@ -12104,17 +12038,6 @@ export interface PermissionCheck {
   resourceIdentifier?: string
   resourceScope?: ResourceScope
   resourceType?: string
-}
-
-export type PersistentVolumeClaimYaml = CIVolume & {
-  mountPath: string
-  spec: PersistentVolumeClaimYamlSpec
-  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
-}
-
-export interface PersistentVolumeClaimYamlSpec {
-  claimName: string
-  readOnly?: boolean
 }
 
 export type PhysicalDataCenterConnectorDTO = ConnectorConfigDTO & {
@@ -16664,17 +16587,6 @@ export interface SecretValidationResultDTO {
   success?: boolean
 }
 
-export interface SecurityContext {
-  allowPrivilegeEscalation?: boolean
-  capabilities?: Capabilities
-  privileged?: boolean
-  procMount?: string
-  readOnlyRootFilesystem?: boolean
-  runAsGroup?: number
-  runAsNonRoot?: boolean
-  runAsUser?: number
-}
-
 export type SecurityStepInfo = StepSpecType & {
   baseImageConnectorRefs?: ParameterFieldListString
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
@@ -17713,13 +17625,11 @@ export interface StepElementConfig {
   when?: StepWhenCondition
 }
 
-export interface StepGroupElementConfigV2 {
+export interface StepGroupElementConfig {
   delegateSelectors?: string[]
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
-  sharedPaths?: ParameterFieldListString
-  stepGroupInfra?: StepGroupInfra
   steps?: ExecutionWrapperConfig[]
   strategy?: StrategyConfig
   template?: TemplateLinkConfig
@@ -17728,10 +17638,6 @@ export interface StepGroupElementConfigV2 {
 
 export type StepGroupFailureActionConfig = FailureStrategyActionConfig & {
   type: 'StepGroupRollback'
-}
-
-export interface StepGroupInfra {
-  type?: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export interface StepSpecType {
@@ -18705,14 +18611,6 @@ export interface TokenDTO {
   valid?: boolean
   validFrom?: number
   validTo?: number
-}
-
-export interface Toleration {
-  effect?: string
-  key?: string
-  operator?: string
-  tolerationSeconds?: number
-  value?: string
 }
 
 export interface TotalDeploymentInfo {
