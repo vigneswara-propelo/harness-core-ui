@@ -46,7 +46,7 @@ export function VariableOutputPanel(): React.ReactElement {
     updateStage,
     getStageFromPipeline
   } = usePipelineContext()
-  const { metadataMap } = usePipelineVariables()
+  const { metadataMap, variablesPipeline } = usePipelineVariables()
   const { getString } = useStrings()
 
   const tabName = PipelineStageTabs.OUTPUTS
@@ -81,7 +81,10 @@ export function VariableOutputPanel(): React.ReactElement {
   }, [pipelineOutputs])
 
   const getYamlPropertiesForOutputs = (): YamlProperties[] =>
-    (cloneOriginalData?.stage as PipelineStageElementConfig)?.spec?.outputs?.map?.(
+    (
+      getStageFromPipeline(stage?.stage?.identifier || '', variablesPipeline)?.stage
+        ?.stage as PipelineStageElementConfig
+    )?.spec?.outputs?.map?.(
       output => metadataMap[(output as PipelineStageOutputs).value || '']?.yamlProperties || {}
     ) || []
 
