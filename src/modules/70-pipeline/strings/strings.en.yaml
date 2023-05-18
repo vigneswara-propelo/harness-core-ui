@@ -1824,3 +1824,10 @@ serviceHooks:
   error:
     actionsRequired: Actions is required
     duplicateIdError: 'A Service Hook with same identifier {{ servciceHookIdentifier }} already exists. Please provide a new unique identifier and save again.'
+pipelineExecutionEventData:
+  accountIdentifier: Account Identifier
+  orgIdentifier: Organization Identifier
+  projectIdentifier: Project Identifier
+  pipelineIdentifier: Pipeline Identifier
+  stageIdentifier: Stage Identifier
+  stageType: Stage Type

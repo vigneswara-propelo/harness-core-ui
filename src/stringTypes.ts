@@ -4691,6 +4691,12 @@ export interface StringsMap {
   'pipeline.pipelineChaining.pipelineOutputs': string
   'pipeline.pipelineChaining.removeOutput': string
   'pipeline.pipelineChaining.selectPipeline': string
+  'pipeline.pipelineExecutionEventData.accountIdentifier': string
+  'pipeline.pipelineExecutionEventData.orgIdentifier': string
+  'pipeline.pipelineExecutionEventData.pipelineIdentifier': string
+  'pipeline.pipelineExecutionEventData.projectIdentifier': string
+  'pipeline.pipelineExecutionEventData.stageIdentifier': string
+  'pipeline.pipelineExecutionEventData.stageType': string
   'pipeline.pipelineInputPanel.automaticallyExtractedFromText': string
   'pipeline.pipelineInputPanel.existing': string
   'pipeline.pipelineInputPanel.noRuntimeInputs': string
