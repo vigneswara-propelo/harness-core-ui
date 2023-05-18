@@ -83,6 +83,9 @@ export const getIconBySourceType = (type: string): IconName => {
     case 'SPLUNK':
     case 'Splunk':
     case 'SplunkMetric':
+    case HealthSourceTypes.SignalFX:
+    case HealthSourceTypes.SplunkSignalFXMetrics:
+    case 'SPLUNK_SIGNALFX_METRICS':
       return 'service-splunk'
     case 'ElasticSearch':
       return 'elk'
@@ -106,10 +109,7 @@ export const getIconBySourceType = (type: string): IconName => {
     case 'SUMOLOGIC_METRICS':
     case 'SUMOLOGIC_LOG':
       return 'service-sumologic'
-    case HealthSourceTypes.SignalFX:
-    case HealthSourceTypes.SplunkSignalFXMetrics:
-    case 'SPLUNK_SIGNALFX_METRICS':
-      return 'service-signalfx'
+
     default:
       return 'placeholder'
   }

@@ -25,7 +25,8 @@ import {
   DynatraceProductNames,
   ElkProduct,
   AWSDataSourceType,
-  DataSourceTypeFieldNames
+  DataSourceTypeFieldNames,
+  SplunkObservabilityDisplayName
 } from './DefineHealthSource.constant'
 import type {
   ConnectorDisableFunctionProps,
@@ -149,6 +150,8 @@ export const getConnectorPlaceholderText = (sourceType?: string, dataSourceType?
 
   if (sourceType === Connectors.AWS || dataSourceType === AWSDataSourceType) {
     return Connectors.AWS.toUpperCase()
+  } else if (sourceType === Connectors.SignalFX) {
+    return SplunkObservabilityDisplayName
   } else {
     return sourceType
   }
@@ -280,7 +283,7 @@ export const getFeatureOption = (
         }
       ]
 
-    case HealthSourceTypes.SignalFX: {
+    case Connectors.SignalFX: {
       return [
         {
           label: HealthSourceProducts[HealthSourceTypes.SignalFX].label,

@@ -73,8 +73,10 @@ export const SplunkProduct = {
   SPLUNK_METRICS: 'Splunk Metric'
 }
 
+export const SplunkObservabilityDisplayName = 'Splunk Observability'
+
 export const SignalFX = {
-  SIGNALFX_METRICS_DISPLAY_NAME: 'SignalFX Metrics',
+  SIGNALFX_METRICS_DISPLAY_NAME: 'Splunk Observability Metrics',
   SIGNALFX_METRICS: 'SplunkSignalFXMetrics'
 }
 

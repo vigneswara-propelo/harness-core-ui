@@ -171,7 +171,7 @@ export const LoadSourceByType = ({
         />
       )
 
-    case HealthSourceTypes.SignalFX:
+    case Connectors.SignalFX:
     case HealthSourceTypes.SplunkSignalFXMetrics: {
       if (!isSignalFXEnabled) {
         return null

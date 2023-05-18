@@ -214,6 +214,7 @@ export const getConnectorIconByType = (type: string): IconName => {
     case Connectors.APP_DYNAMICS:
       return 'service-appdynamics'
     case Connectors.SPLUNK:
+    case Connectors.SignalFX:
       return 'service-splunk'
     case Connectors.NEW_RELIC:
       return 'service-newrelic'
@@ -287,8 +288,6 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'tas'
     case Connectors.TERRAFORM_CLOUD:
       return 'terraform-cloud'
-    case Connectors.SignalFX:
-      return 'service-signalfx'
     default:
       return 'placeholder'
   }
