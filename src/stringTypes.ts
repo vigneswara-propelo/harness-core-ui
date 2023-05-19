@@ -5785,6 +5785,12 @@ export interface StringsMap {
   'cd.getStartedWithCD.backToClusterList': string
   'cd.getStartedWithCD.backToRepoList': string
   'cd.getStartedWithCD.cdWizardEventName': string
+  'cd.getStartedWithCD.cdresources.cdbasics': string
+  'cd.getStartedWithCD.cdresources.cdtuts': string
+  'cd.getStartedWithCD.cdresources.firstcdpipeline': string
+  'cd.getStartedWithCD.cdresources.pipelineModeling': string
+  'cd.getStartedWithCD.cdresources.svcinfra': string
+  'cd.getStartedWithCD.cdresources.terraformcli': string
   'cd.getStartedWithCD.checkAgentStatus': string
   'cd.getStartedWithCD.checkAnnonymously': string
   'cd.getStartedWithCD.checkAuthSettings': string
@@ -5835,6 +5841,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.failedSourceText': string
   'cd.getStartedWithCD.failedToAuthenticate': string
   'cd.getStartedWithCD.failedToProvisionCluster': string
+  'cd.getStartedWithCD.frequency': string
+  'cd.getStartedWithCD.getStartedBtn': string
   'cd.getStartedWithCD.gitOpsAgent': string
   'cd.getStartedWithCD.gitURL': string
   'cd.getStartedWithCD.gitopsOnboardingAgentStep': string
@@ -5892,11 +5900,13 @@ export interface StringsMap {
   'cd.getStartedWithCD.onBoardingSubTitle': string
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.prepareCluserInfo': string
+  'cd.getStartedWithCD.productivity': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.provideMyOwn': string
   'cd.getStartedWithCD.provisionedSuccessfully': string
   'cd.getStartedWithCD.provisioningInProgress': string
   'cd.getStartedWithCD.provisioningText': string
+  'cd.getStartedWithCD.quality': string
   'cd.getStartedWithCD.redisCache': string
   'cd.getStartedWithCD.redisCacheInstalled': string
   'cd.getStartedWithCD.registryDetails': string
@@ -5904,6 +5914,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.repoServer': string
   'cd.getStartedWithCD.repoServerInstalled': string
   'cd.getStartedWithCD.reposubheading': string
+  'cd.getStartedWithCD.restore': string
   'cd.getStartedWithCD.retryProvisioningHostedCluster': string
   'cd.getStartedWithCD.runDelegateSubtitle': string
   'cd.getStartedWithCD.sampleAppOnDockerRegistry': string
@@ -5934,6 +5945,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.setupaNewDelegate': string
   'cd.getStartedWithCD.sourceDetails': string
   'cd.getStartedWithCD.sourceOrSampleCode': string
+  'cd.getStartedWithCD.standardization': string
   'cd.getStartedWithCD.successFull': string
   'cd.getStartedWithCD.successfullyAuthenticated': string
   'cd.getStartedWithCD.syncApplication': string
@@ -5942,11 +5954,14 @@ export interface StringsMap {
   'cd.getStartedWithCD.testConnection': string
   'cd.getStartedWithCD.testesSuccessfully': string
   'cd.getStartedWithCD.tryAnotherCreds': string
+  'cd.getStartedWithCD.tryCICTA': string
   'cd.getStartedWithCD.useOwnManifest': string
   'cd.getStartedWithCD.useSample': string
   'cd.getStartedWithCD.usernameAndPassword': string
+  'cd.getStartedWithCD.velocity': string
   'cd.getStartedWithCD.viewDelegateDetails': string
   'cd.getStartedWithCD.whatDelegateSec': string
+  'cd.getStartedWithCD.whyHarnessCD': string
   'cd.getStartedWithCD.workloadDeploy': string
   'cd.gitFetchTypeRequired': string
   'cd.gitOps': string
