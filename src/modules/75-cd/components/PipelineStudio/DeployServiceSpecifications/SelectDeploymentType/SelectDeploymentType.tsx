@@ -269,14 +269,8 @@ export default function SelectDeploymentType({
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const {
-    NG_SVC_ENV_REDESIGN,
-    SPOT_ELASTIGROUP_NG,
-    CDS_TAS_NG,
-    CDS_ASG_NG,
-    CDS_GOOGLE_CLOUD_FUNCTION,
-    CDS_AWS_NATIVE_LAMBDA
-  } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, CDS_GOOGLE_CLOUD_FUNCTION, CDS_AWS_NATIVE_LAMBDA } =
+    useFeatureFlags()
 
   // Supported in NG (Next Gen - The one for which you are coding right now)
   const ngSupportedDeploymentTypes = React.useMemo(() => {
@@ -284,18 +278,10 @@ export default function SelectDeploymentType({
       NG_SVC_ENV_REDESIGN,
       SPOT_ELASTIGROUP_NG,
       CDS_TAS_NG,
-      CDS_ASG_NG,
       CDS_GOOGLE_CLOUD_FUNCTION,
       CDS_AWS_NATIVE_LAMBDA
     })
-  }, [
-    NG_SVC_ENV_REDESIGN,
-    SPOT_ELASTIGROUP_NG,
-    CDS_TAS_NG,
-    CDS_ASG_NG,
-    CDS_GOOGLE_CLOUD_FUNCTION,
-    CDS_AWS_NATIVE_LAMBDA
-  ])
+  }, [NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, CDS_GOOGLE_CLOUD_FUNCTION, CDS_AWS_NATIVE_LAMBDA])
 
   // Suppported in CG (First Gen - Old Version of Harness App)
   const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {

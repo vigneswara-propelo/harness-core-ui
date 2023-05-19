@@ -55,14 +55,8 @@ export interface GetNgSupportedDeploymentTypesProps {
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const {
-    NG_SVC_ENV_REDESIGN,
-    SPOT_ELASTIGROUP_NG,
-    CDS_TAS_NG,
-    CDS_ASG_NG,
-    CDS_GOOGLE_CLOUD_FUNCTION,
-    CDS_AWS_NATIVE_LAMBDA
-  } = props
+  const { NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, CDS_GOOGLE_CLOUD_FUNCTION, CDS_AWS_NATIVE_LAMBDA } =
+    props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -89,6 +83,11 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.winrm',
       icon: deploymentIconMap[ServiceDeploymentType.WinRm],
       value: ServiceDeploymentType.WinRm
+    },
+    {
+      label: 'pipeline.serviceDeploymentTypes.asg',
+      icon: deploymentIconMap[ServiceDeploymentType.Asg],
+      value: ServiceDeploymentType.Asg
     }
   ]
 
@@ -134,13 +133,6 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.tas',
       icon: deploymentIconMap[ServiceDeploymentType.TAS],
       value: ServiceDeploymentType.TAS
-    })
-  }
-  if (CDS_ASG_NG) {
-    baseTypes.push({
-      label: 'pipeline.serviceDeploymentTypes.asg',
-      icon: deploymentIconMap[ServiceDeploymentType.Asg],
-      value: ServiceDeploymentType.Asg
     })
   }
 
