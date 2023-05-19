@@ -100,7 +100,6 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     icon: 'ff-solid',
     label: 'common.purpose.cf.continuous',
     getHomePageUrl: (accountId: string) => routes.toCF({ accountId }),
-    featureFlagName: FeatureFlag.CFNG_ENABLED,
     color: '--ff-border',
     backgroundColor: '--ff-background',
     backgroundColorLight: '--ff-background-light'
