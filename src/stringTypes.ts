@@ -7989,6 +7989,7 @@ export interface StringsMap {
   'cf.onboarding.title': string
   'cf.onboarding.toggleError': string
   'cf.onboarding.tryItOut': string
+  'cf.onboarding.typeNewFeatureName': string
   'cf.onboarding.validatingFlagInfo': string
   'cf.onboarding.validatingYourFlag': string
   'cf.onboarding.youCreated': string
