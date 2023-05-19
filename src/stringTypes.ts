@@ -8368,10 +8368,14 @@ export interface StringsMap {
   'ci.runTestsStep.maven': string
   'ci.runTestsStep.nUnitConsole': string
   'ci.runTestsStep.namespaces': string
+  'ci.runTestsStep.pytest': string
   'ci.runTestsStep.sbt': string
   'ci.runTestsStep.scala': string
   'ci.runTestsStep.sixPointZero': string
+  'ci.runTestsStep.testGlobs': string
   'ci.runTestsStep.testReportPaths': string
+  'ci.runTestsStep.testRoot': string
+  'ci.runTestsStep.unittest': string
   'ci.runTestsStep.validation.namespacesRequiredWhenCsharp': string
   'ci.save': string
   'ci.secrets': string

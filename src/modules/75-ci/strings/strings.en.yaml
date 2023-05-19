@@ -58,6 +58,10 @@ runTestsStep:
   sixPointZero: '6.0'
   namespaces: Namespaces
   testReportPaths: Test Report Paths
+  pytest: Pytest
+  unittest: Unittest
+  testRoot: Test Root
+  testGlobs: Test Globs
   validation:
     namespacesRequiredWhenCsharp: 'Namespaces is required in case Language is C#'
 runTestsErrorTrackingSetupText: Do you want to enable Error Tracking?
