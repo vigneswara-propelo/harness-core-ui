@@ -59,6 +59,7 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 import type { Pipeline } from '@pipeline/utils/types'
 import { SettingType } from '@common/constants/Utils'
 import { useGetSettingValue } from 'services/cd-ng'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
@@ -218,7 +219,7 @@ export function PipelineCanvas({
   const [disableVisualView, setDisableVisualView] = React.useState(entityValidityDetails?.valid === false)
   const [useTemplate, setUseTemplate] = React.useState<boolean>(false)
   const [modalMode, setModalMode] = React.useState<'edit' | 'create'>('create')
-
+  const { getRBACErrorMessage } = useRBACError()
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
 
   React.useEffect(() => {
@@ -288,7 +289,7 @@ export function PipelineCanvas({
 
   React.useEffect(() => {
     if (!loadingSetting && enforceGitXSettingError) {
-      showError(enforceGitXSettingError.message)
+      showError(getRBACErrorMessage(enforceGitXSettingError))
     }
   }, [enforceGitXSettingError, showError, loadingSetting])
 

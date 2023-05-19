@@ -517,9 +517,8 @@ export function PreFlightCheckModal({
 }: PreFlightCheckModalProps & GitQueryParams): React.ReactElement {
   const [preFlightCheckId, setPreFlightCheckId] = useState<string | undefined>()
   const [preFlightCheckData, setPreFlightCheckData] = useState<ResponsePreFlightDTO | null>()
-
-  const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
+  const { showError } = useToaster()
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
