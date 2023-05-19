@@ -288,6 +288,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'tas'
     case Connectors.TERRAFORM_CLOUD:
       return 'terraform-cloud'
+    case 'GrafanaLoki':
+      return 'service-grafana-loki'
     default:
       return 'placeholder'
   }
